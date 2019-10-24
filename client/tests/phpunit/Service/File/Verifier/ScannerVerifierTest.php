@@ -3,7 +3,7 @@
 namespace AppBundle\Service\File\Verifier;
 
 use AppBundle\Entity\Report\Document;
-use AppBundle\Service\File\Scanner\FileScanner;
+use AppBundle\Service\File\Scanner\ClamFileScanner;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Monolog\Logger;
@@ -16,7 +16,7 @@ class ScannerVerifierTest extends TestCase
     /** @var VerifierInterface */
     private $verifier;
 
-    /** @var FileScanner | MockObject */
+    /** @var ClamFileScanner | MockObject */
     private $scanner;
 
     /** @var TranslatorInterface | MockObject */
@@ -36,7 +36,7 @@ class ScannerVerifierTest extends TestCase
 
     public function setUp(): void
     {
-        $this->scanner = $this->getMockBuilder(FileScanner::class)->disableOriginalConstructor()->getMock();
+        $this->scanner = $this->getMockBuilder(ClamFileScanner::class)->disableOriginalConstructor()->getMock();
         $this->translator = $this->createMock(TranslatorInterface::class);
         $this->logger = $this->getMockBuilder(Logger::class)->disableOriginalConstructor()->getMock();
         $this->verifier = new ScannerVerifier($this->scanner, $this->translator, $this->logger);

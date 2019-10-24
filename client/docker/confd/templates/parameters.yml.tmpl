@@ -65,5 +65,5 @@ parameters:
   {{ else }}
       validate: true
   {{ end }}
-    file_scanner_url: {{ if exists "/filescanner/url" }}{{ getv "/filescanner/url" }}{{ else }}https://file-scanner-api:8443{{ end }}
+    file_scanner_url: {{ if exists "/filescanner/url" }}{{ getv "/filescanner/url" }}{{ else }}http://file-scanner-rest:8080{{ end }}
     file_scanner_sslverify: {{ if exists "/filescanner/sslverify" }}{{ getv "/filescanner/sslverify" }}{{ else }}true{{ end }}
