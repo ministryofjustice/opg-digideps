@@ -1,4 +1,5 @@
 {% from 'AppBundle:Admin/Client/Report:macros.html.twig' import checklist_radios %}
+{% from 'AppBundle:Macros:macros.html.twig' import details %}
 
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
@@ -6,22 +7,15 @@
 
 <h3 class="govuk-heading-m" id="peopleConsulted">{{ (page ~ '.heading.contacts') | trans }}</h3>
 
-<div class="form-section">
-    <div class="form-group-outer">
-        {{ checklist_radios(form.consultationsSatisfactory) }}
-    </div>
+{{ checklist_radios(form.consultationsSatisfactory) }}
 
-    <details class="push--bottom">
-        <summary>
-            <span class="summary">{{ (page ~ '.revealTitle.contactsSummary') | trans }}</span>
-        </summary>
-        <div class="opg-indented-block">
-            <div>
-                {# Questions and answers table #}
-                {% include 'AppBundle:Report/Contact:_list.html.twig' with {
-                    hideEditLink: true
-                } %}
-            </div>
-        </div>
-    </details>
-</div>
+{% set contents %}
+    {% include 'AppBundle:Report/Contact:_list.html.twig' with {
+        hideEditLink: true
+    } %}
+{% endset %}
+
+{{ details({
+    summaryText: (page ~ '.revealTitle.contactsSummary') | trans,
+    text: contents,
+}) }}
