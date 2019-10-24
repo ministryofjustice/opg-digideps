@@ -6,7 +6,7 @@
 {% set page = 'checklistPage' %}
 
 <div class="js-sidebar">
-    <p class="govuk-body-s">
+    <p class="govuk-body-s behat-region-last-saved-by">
         {{ 'lastSaved' | trans({}, 'common') }}:
         {{ (checklist.lastModifiedOn) ? (checklist.lastModifiedOn | date("j F Y H:i")) : 'Not saved yet' }}
         <br>
@@ -16,7 +16,7 @@
     </p>
 
     {% if checklist.submittedOn %}
-        <p class="govuk-body-s">
+        <p class="govuk-body-s behat-region-last-submitted-by">
             {{ 'lastSubmitted' | trans({}, 'common') }}:
             {{ checklist.submittedOn | date("j F Y H:i") }}
             <br>
