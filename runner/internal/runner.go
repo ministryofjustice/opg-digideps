@@ -38,10 +38,9 @@ func (t *Runner) Update() {
 	t.Task = describeTasksOutput.Tasks[0]
 }
 
-func (r *Runner) GetStatus() *string {
+func (r *Runner) GetStatus() string {
 	r.Update()
-
-	return r.Task.LastStatus
+	return *r.Task.LastStatus
 }
 
 type containerExitCode struct{
@@ -64,10 +63,6 @@ func (r *Runner) GetContainerExitCodes() []containerExitCode {
 	}
 
 	return containerExitCodes
-}
-
-func (t *Runner) IsStopped() bool {
-	return *t.Task.LastStatus != "STOPPED"
 }
 
 func (t *Runner) GetTaskID() string {

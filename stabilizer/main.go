@@ -38,12 +38,7 @@ func main() {
 	ecsSvc := ecs.New(sess, &awsConfig)
 
 	delay := time.Second * 10
-
-	ctx := aws.BackgroundContext()
-	var cancelFn func()
-
-	ctx, cancelFn = context.WithTimeout(ctx, time.Duration(timeout) * time.Second)
-
+	ctx, cancelFn := context.WithTimeout(aws.BackgroundContext(), time.Duration(timeout) * time.Second)
 	defer cancelFn()
 
 	start := time.Now()
