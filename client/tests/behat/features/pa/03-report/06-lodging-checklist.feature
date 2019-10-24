@@ -10,7 +10,6 @@ Feature: Admin report checklist
     And I should see the "expected-date" region
     And each text should be present in the corresponding region:
       | Not saved yet     | last-saved-by                    |
-      | Not saved yet     | last-modified-by                 |
     #failing on master
       | Cly7              | checklist-client-firstname       |
       | Hent              | checklist-client-lastname        |

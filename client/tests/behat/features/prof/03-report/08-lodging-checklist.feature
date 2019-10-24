@@ -12,7 +12,6 @@ Feature: Admin report checklist
       | 01000010          | case-number                      |
       | Property and affairs: general | report-type-title    |
       | Not saved yet     | last-saved-by                    |
-      | Not saved yet     | last-modified-by                 |
       | 20 Mar 2016       | court-date                       |
       | 20 Mar 2018 to 19 Mar 2019 | expected-date           |
       | 20 Mar 2016 - 19 Mar 2017  | submitted-date          |
