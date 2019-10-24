@@ -1,4 +1,5 @@
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
+{% from 'AppBundle:Admin/Client/Report:macros.html.twig' import checklist_radios %}
 
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
@@ -10,9 +11,7 @@
 
 <div class="form-section push--bottom">
     <div class="form-group-outer">
-        {{ form_checkbox_group(form.paymentsMatchCostCertificate, (page ~ '.form.paymentsMatchCostCertificate'), {
-            'fieldSetClass' : 'inline'
-        }) }}
+        {{ checklist_radios(form.paymentsMatchCostCertificate) }}
     </div>
 
     <details>
@@ -36,9 +35,7 @@
 
 <div class="form-section push--bottom">
     <div class="form-group-outer">
-        {{ form_checkbox_group(form.profCostsReasonableAndProportionate, (page ~ '.form.profCostsReasonableAndProportionate'), {
-            'fieldSetClass' : 'inline'
-        }) }}
+        {{ checklist_radios(form.profCostsReasonableAndProportionate) }}
     </div>
 
     <details>
@@ -94,9 +91,7 @@
 
 <div class="form-section push--bottom">
     <div class="form-group-outer">
-        {{ form_checkbox_group(form.hasDeputyOverchargedFromPreviousEstimates, (page ~ '.form.hasDeputyOverchargedFromPreviousEstimates'), {
-            'fieldSetClass' : 'inline'
-        }) }}
+        {{ checklist_radios(form.hasDeputyOverchargedFromPreviousEstimates) }}
     </div>
 
     <details>

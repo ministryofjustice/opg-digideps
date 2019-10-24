@@ -1,4 +1,5 @@
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
+{% from 'AppBundle:Admin/Client/Report:macros.html.twig' import checklist_radios %}
 
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
@@ -6,13 +7,8 @@
 
 <h3 class="govuk-heading-m" id="nextReportingPeriod">{{ (page ~ '.heading.nextPeriod') | trans }}</h3>
 
-{{ form_checkbox_group(form.futureSignificantDecisions, (
-    report.hasSection('lifestyle') ? page ~ '.form.futureSignificantChanges':
-        page ~ '.form.futureSignificantDecisions'
-    ), {
-    'fieldSetClass' : 'inline',
-    'formGroupClass': 'push-half--bottom'
-}) }}
+{% set name = report.hasSection('lifestyle') ? 'futureSignificantChanges' : 'futureSignificantDecisions' %}
+{{ checklist_radios(form.futureSignificantDecisions, { name: name }) }}
 
 <details class="govuk-details" data-module="govuk-details">
     <summary class="govuk-details__summary">
@@ -46,10 +42,7 @@
 
 <hr />
 
-{{ form_checkbox_group(form.hasDeputyRaisedConcerns, (page ~ '.form.hasDeputyRaisedConcerns'), {
-    'fieldSetClass' : 'inline',
-    'formGroupClass': 'push-half--bottom'
-}) }}
+{{ checklist_radios(form.hasDeputyRaisedConcerns) }}
 
 <details class="govuk-details" data-module="govuk-details">
     <summary class="govuk-details__summary">
