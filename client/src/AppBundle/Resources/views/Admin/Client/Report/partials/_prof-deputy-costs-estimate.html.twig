@@ -1,4 +1,5 @@
 {% from 'AppBundle:Admin/Client/Report:macros.html.twig' import checklist_radios %}
+{% from 'AppBundle:Macros:macros.html.twig' import details %}
 
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
@@ -7,24 +8,17 @@
 
 <h3 class="govuk-heading-m" id="profDeputyCostsEstimate">{{ (page ~ '.heading.profDeputyCostsEstimate') | trans }}</h3>
 
-<div class="form-section push--bottom">
-    <div class="form-group-outer">
-        {{ checklist_radios(form.nextBillingEstimatesSatisfactory) }}
-    </div>
+{{ checklist_radios(form.nextBillingEstimatesSatisfactory) }}
 
-    <details>
-        <summary>
-            <span class="summary">{{ (page ~ '.revealTitle.profDeputyCostsEstimate') | trans }}</span>
-        </summary>
-        <div class="opg-indented-block">
-            <div>
-                {% include 'AppBundle:Report/ProfDeputyCostsEstimate:_answers.html.twig' with {
-                    'report': report,
-                    'hideEditLink' : hideEditLink,
-                    'submittedEstimateCosts': submittedEstimateCosts
-                } %}
-            </div>
-        </div>
-    </details>
+{% set contents %}
+    {% include 'AppBundle:Report/ProfDeputyCostsEstimate:_answers.html.twig' with {
+        'report': report,
+        'hideEditLink' : hideEditLink,
+        'submittedEstimateCosts': submittedEstimateCosts
+    } %}
+{% endset %}
 
-</div>
+{{ details({
+    summaryText: (page ~ '.revealTitle.profDeputyCostsEstimate') | trans,
+    text: contents,
+}) }}
