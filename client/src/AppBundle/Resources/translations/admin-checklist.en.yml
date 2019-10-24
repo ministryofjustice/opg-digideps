@@ -17,10 +17,9 @@ checklistPage:
     paFeeExpenses: L11. Deputy fees and expenses
     nextPeriod: L12. Next reporting period
     declaration: L13. Declaration
-  lodgingSummary:
-    heading: Lodging summary
+    lodgingSummary: Lodging summary
+    furtherInfo: Further information
   furtherInfo:
-    heading: Further information
     infoProvided: Information provided
     noInfoReceived: No information received
     history: Further information history (%count%)
