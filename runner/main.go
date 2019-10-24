@@ -1,10 +1,14 @@
 package main
 
 import (
+	"github.com/aws/aws-sdk-go/aws/awserr"
+	"time"
+	"context"
 	"flag"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
+	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudwatchlogs"
 	"github.com/aws/aws-sdk-go/service/ecs"
@@ -15,7 +19,7 @@ import (
 
 func main() {
 	flag.Usage = func() {
-		fmt.Println("Usage: deployer -task <task>")
+		fmt.Println("Usage: runner -task <task>")
 		flag.PrintDefaults()
 	}
 	var taskName string
@@ -57,38 +61,56 @@ func main() {
 		})
 	}
 
-	poll := Poll{
-		Count:    0,
-		Interval: 5,
-		Timeout:  timeout,
+	delay := time.Second * 10
+
+	ctx := aws.BackgroundContext()
+	var cancelFn func()
+
+	ctx, cancelFn = context.WithTimeout(ctx, time.Duration(timeout) * time.Second)
+
+	defer cancelFn()
+
+	input := &ecs.DescribeTasksInput{
+		Cluster: runner.Task.ClusterArn,
+		Tasks:   []*string{runner.Task.TaskArn},
+	}
+
+	err = runner.Svc.WaitUntilTasksStoppedWithContext(
+		ctx,
+		input,
+		request.WithWaiterRequestOptions(func(r *request.Request) {
+			for _, l := range cwLogs {
+				l.PrintLogEvents()
+			}
+		}),
+		request.WithWaiterDelay(request.ConstantWaiterDelay(delay)),
+	)
+
+	if err != nil {
+		if aerr, ok := err.(awserr.Error); ok {
+			switch aerr.Code() {
+			case request.CanceledErrorCode:
+				log.Fatalln("Timeout exceeded")
+			default:
+				log.Fatalln(aerr)
+			}
+		} else {
+			log.Fatalln(err)
+		}
 	}
 
 	runner.Update()
 
-	for runner.IsStopped() {
-		runner.Update()
-
-		for _, l := range cwLogs {
-			l.PrintLogEvents()
-		}
-
-		if poll.IsTimedOut() {
-			log.Fatalf("Timed out after %v\n", poll.Timeout)
-		}
-
-		poll.Sleep()
-	}
-
 	exitCode := 0
 
-	log.Printf("%s task stopped with status %s", taskName, *runner.Task.LastStatus)
+	log.Printf("%s task stopped with status %s", taskName, *runner.GetStatus())
 
 	for _, c := range runner.Task.Containers {
 		log.Printf("%s container exited with code %d", *c.Name, *c.ExitCode)
 		if *c.ExitCode > 0 {
-			exitCode ++
+			exitCode++
 		}
 	}
-	
+
 	os.Exit(exitCode)
 }
