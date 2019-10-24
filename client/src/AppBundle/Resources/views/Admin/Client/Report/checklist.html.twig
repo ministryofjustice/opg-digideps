@@ -51,14 +51,14 @@
         {% endif %}
     </dl>
 
+    <a name="anchor-lodging-checklist"></a>
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     <h2 class="govuk-heading-l">{{ 'checklistPage.heading.lodgingChecklist' | trans }}</h2>
     <hr class="govuk-section-break govuk-section-break--xl govuk-!-margin-top-1 govuk-section-break--visible">
 
-    <div class="grid-row">
-        <div class="column-two-thirds">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
             {# Attached documents #}
-
             {% if report.deputyDocuments is defined and (report.deputyDocuments is not empty)%}
                 <details class="push--bottom">
                     <summary>
@@ -153,13 +153,13 @@
 
             <div class="form-section push--bottom">
                 {{ form_input(form.lodgingSummary, (page ~ '.form.lodgingSummary'), {
-                    'formGroupClass': 'explanation js-auto-size',
+                    formGroupClass: 'explanation js-auto-size',
                 }) }}
             </div>
 
             <div class="form-section push--bottom">
                 {{ form_checkbox_group(form.finalDecision, (page ~ '.form.finalDecision'), {
-                    'legendClass': 'bold'
+                    legendClass: 'bold'
                 }) }}
             </div>
 
@@ -196,30 +196,30 @@
                 </tbody>
             </table>
 
-            <div class="form-section push-double--bottom">
+            <div class="govuk-form-group">
                 {{ form_input(form.furtherInformationReceived, (page ~ '.form.furtherInformationReceived'), {
-                    'formGroupClass': 'explanation js-auto-size',
-                }) }}
-                {{ form_submit(form.saveFurtherInformation, (page ~ '.form.saveFurtherInformation'), {
-                    'buttonClass': 'button-secondary behat-link-save-further-information'
+                    inputClass: 'govuk-!-width-full',
+                    formGroupClass: 'js-auto-size',
                 }) }}
             </div>
 
-            <div class="form-section push--bottom">
-                {{ form_submit(form.save, (page ~ '.form.save'), {
-                    'buttonClass': 'button-secondary push-half--right behat-link-save-progress'
-                }) }}
+            {{ form_submit(form.saveFurtherInformation, (page ~ '.form.saveFurtherInformation'), {
+                buttonClass: 'govuk-button--secondary behat-link-save-further-information'
+            }) }}
 
-                {{ form_submit(form.submitAndDownload, (page ~ '.form.submitAndDownload'), {
-                    'buttonClass': 'behat-link-submit-and-download'
-                }) }}
-            </div>
+            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-            <a href="{{ path('admin_client_details', {'id': report.client.id}) }}">{{ (page ~ '.backToClientDetails') | trans }}</a>
+            {{ form_submit(form.save, (page ~ '.form.save'), {
+                buttonClass: 'govuk-button--secondary behat-link-save-progress'
+            }) }}
+
+            {{ form_submit(form.submitAndDownload, (page ~ '.form.submitAndDownload'), {
+                buttonClass: 'behat-link-submit-and-download'
+            }) }}
 
             {{ form_end(form) }}
         </div>
-        <div class="column-third">
+        <div class="govuk-grid-column-one-third">
             <aside class="js-sidebar">
                 <p class="govuk-body-s">
                     {{ 'lastSaved' | trans({}, 'common') }}:
