@@ -5,7 +5,7 @@
 
 {% set page = 'checklistPage' %}
 
-<aside class="js-sidebar">
+<div class="js-sidebar">
     <p class="govuk-body-s">
         {{ 'lastSaved' | trans({}, 'common') }}:
         {{ (checklist.lastModifiedOn) ? (checklist.lastModifiedOn | date("j F Y H:i")) : 'Not saved yet' }}
@@ -41,7 +41,7 @@
         </li>
     </ul>
 
-    <nav role="navigation" aria-labelledby="related-items-title">
+    <nav role="navigation">
         <ul class="govuk-list govuk-!-font-size-16">
             <li><a href="#deputyAndClientInfo" class="govuk-link">{{ (page ~ '.heading.info') | trans }}</a></li>
             <li><a href="#decisionsMade" class="govuk-link">{{ (page ~ '.heading.decisions') | trans }}</a></li>
@@ -74,4 +74,4 @@
             <li><a href="#furtherInformation" class="govuk-link">{{ (page ~ '.furtherInfo.heading') | trans }}</a></li>
         </ul>
     </nav>
-</aside>
+</div>
