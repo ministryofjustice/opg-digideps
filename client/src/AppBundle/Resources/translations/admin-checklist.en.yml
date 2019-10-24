@@ -112,14 +112,6 @@ checklistPage:
         with any comments, are acceptable, appear reasonable, and are inline with the terms of
         the court order?
       qid: L7.3
-    deputyChargeAllowedByCourt:
-      label: Does the court order allow the deputy to charge for their services?
-      qid: L11.1
-    satisfiedWithPaExpenses:
-      label: |
-        Are you satisfied that responses have been provided that are in line with the terms of
-        the practice direction (including any explanation of non-claiming of fees)?
-      qid: L11.2
     bondAdequate:
       label: |
         Is the bond adequate protection for the client's assets? If ‘No’, refer to the Security
@@ -130,18 +122,6 @@ checklistPage:
         Does the bond amount on CASREC match that on the order? If ‘No’, refer to the Security
         Bonds Discrepancy Resolution Job Card.
       qid: L8.2
-    futureSignificantDecisions:
-      label: Are there any significant financial decision(s) in the next reporting period?
-      qid: L12.1
-    futureSignificantChanges:
-      label: Are there any significant changes in the next reporting period?
-      qid: L12.1
-    hasDeputyRaisedConcerns:
-      label: Does the deputy raise any concerns about their deputyship?
-      qid: L12.2
-    caseWorkerSatisified:
-      label: Are you satisfied with the deputy's declaration?
-      qid: L13.1
     paymentsMatchCostCertificate:
       label: |
         Do the payments received for previous billing periods (a billing period started during an earlier reporting
@@ -161,6 +141,26 @@ checklistPage:
       label: |
         Are you satisfied with the deputy’s estimated costs for the next billing period?
       qid: L10.1
+    deputyChargeAllowedByCourt:
+      label: Does the court order allow the deputy to charge for their services?
+      qid: L11.1
+    satisfiedWithPaExpenses:
+      label: |
+        Are you satisfied that responses have been provided that are in line with the terms of
+        the practice direction (including any explanation of non-claiming of fees)?
+      qid: L11.2
+    futureSignificantDecisions:
+      label: Are there any significant financial decision(s) in the next reporting period?
+      qid: L12.1
+    futureSignificantChanges:
+      label: Are there any significant changes in the next reporting period?
+      qid: L12.1
+    hasDeputyRaisedConcerns:
+      label: Does the deputy raise any concerns about their deputyship?
+      qid: L12.2
+    caseWorkerSatisified:
+      label: Are you satisfied with the deputy's declaration?
+      qid: L13.1
     totalEstimatedCosts:
       label: Total estimated costs
     lodgingSummary:
