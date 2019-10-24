@@ -14,9 +14,7 @@ bin/
 lib/
 node_modules/
 var/
-vendor/
-
-!runner/vendor/
+!ecs_helper/cmd/vendor/
 
 # Repo-specific excludes
 docker/log
@@ -24,4 +22,4 @@ terraform/to_import\.sh
 
 .certs
 
-runner/terraform.output.json
+ecs_helper/terraform.output.json

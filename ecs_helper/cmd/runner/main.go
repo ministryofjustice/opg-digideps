@@ -1,20 +1,20 @@
 package main
 
 import (
-	"github.com/aws/aws-sdk-go/aws/awserr"
-	"time"
 	"context"
 	"flag"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudwatchlogs"
 	"github.com/aws/aws-sdk-go/service/ecs"
-	. "github.com/ministryofjustice/opg-digideps/runner/internal"
+	. "github.com/ministryofjustice/opg-digideps/ecs_helper/internal"
 	"log"
 	"os"
+	"time"
 )
 
 func main() {
