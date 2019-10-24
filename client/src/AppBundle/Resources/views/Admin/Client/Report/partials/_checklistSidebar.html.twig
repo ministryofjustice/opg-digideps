@@ -47,26 +47,25 @@
             <li><a href="#decisionsMade" class="govuk-link">{{ (page ~ '.heading.decisions') | trans }}</a></li>
             <li><a href="#peopleConsulted" class="govuk-link">{{ (page ~ '.heading.contacts') | trans }}</a></li>
             <li><a href="#visitsAndCare" class="govuk-link">{{ (page ~ '.heading.visitsAndCare') | trans }}</a></li>
-            {% if report.hasSection('lifestyle') %}
+            {% if form.satisfiedWithHealthAndLifestyle is defined %}
                 <li><a href="#lifestyle" class="govuk-link">{{ (page ~ '.heading.healthAndLifestyle') | trans }}</a></li>
             {% endif %}
-            {% if report.hasSection('assets') or report.hasSection('debts') %}
+            {% if form.assetsDeclaredAndManaged is defined %}
                 <li><a href="#assetsAndDebts" class="govuk-link">{{ (page ~ '.heading.assetsAndDebts') | trans }}</a></li>
             {% endif %}
-            {% if report.hasSection('moneyInShort') or report.hasSection('moneyOutShort') or report.hasSection('gifts') or report.hasSection('deputyExpenses') %}
+            {% if form.openClosingBalancesMatch is defined %}
                 <li><a href="#moneyInOut" class="govuk-link">{{ (page ~ '.heading.money') | trans }}</a></li>
             {% endif %}
-            {% if report.hasSection('bankAccounts') %}
-                {% if report.hasSection('paDeputyExpenses') %}
-                    <li><a href="#paFeesExpenses" class="govuk-link">{{ (page ~ '.heading.paFeeExpenses') | trans }}</a></li>
-                {% else %}
-                    <li><a href="#bonds" class="govuk-link">{{ (page ~ '.heading.bonds') | trans }}</a></li>
-                {% endif %}
+            {% if form.satisfiedWithPaExpenses is defined %}
+                <li><a href="#paFeesExpenses" class="govuk-link">{{ (page ~ '.heading.paFeeExpenses') | trans }}</a></li>
             {% endif %}
-            {% if report.hasSection('profDeputyCosts') %}
+            {% if form.bondAdequate is defined %}
+                <li><a href="#bonds" class="govuk-link">{{ (page ~ '.heading.bonds') | trans }}</a></li>
+            {% endif %}
+            {% if form.paymentsMatchCostCertificate is defined %}
                 <li><a href="#profDeputyCosts" class="govuk-link">{{ (page ~ '.heading.profDeputyCosts') | trans }}</a></li>
             {% endif %}
-            {% if report.hasSection('profDeputyCostsEstimate') %}
+            {% if form.nextBillingEstimatesSatisfactory is defined %}
                 <li><a href="#profDeputyCostsEstimate" class="govuk-link">{{ (page ~ '.heading.profDeputyCostsEstimate') | trans }}</a></li>
             {% endif %}
             <li><a href="#nextReportingPeriod" class="govuk-link">{{ (page ~ '.heading.nextPeriod') | trans }}</a></li>

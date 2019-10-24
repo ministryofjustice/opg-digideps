@@ -100,36 +100,37 @@
             {% include 'AppBundle:Admin/Client/Report/partials:_contact-with-client.html.twig' %}
 
             {# Health & Lifestyle #}
-            {% if report.hasSection('lifestyle') %}
+            {% if form.satisfiedWithHealthAndLifestyle is defined %}
                 {% include 'AppBundle:Admin/Client/Report/partials:_health-and-lifestyle.html.twig' %}
             {% endif %}
 
             {# Assets and debts #}
-            {% if report.hasSection('assets') or report.hasSection('debts') %}
+            {% if form.assetsDeclaredAndManaged is defined %}
                 {% include 'AppBundle:Admin/Client/Report/partials:_assets-and-debts.html.twig' %}
             {% endif %}
 
             {# Money transfers, Money in and money out #}
-            {% if report.hasSection('moneyInShort') or report.hasSection('moneyOutShort') or report.hasSection('gifts') or report.hasSection('deputyExpenses') or report.hasSection('paDeputyExpenses') %}
+            {% if form.openClosingBalancesMatch is defined %}
                 {% include 'AppBundle:Admin/Client/Report/partials:_money-in-and-out.html.twig' %}
             {% endif %}
 
-            {# Bonds - hidden for PA checklist #}
-            {% if report.hasSection('bankAccounts') %} {# Assuming if it has bankAccounts, it should have bonds #}
-                {% if report.hasSection('paDeputyExpenses') %}
-                    {% include 'AppBundle:Admin/Client/Report/partials:_pa-fee-expenses.html.twig' %}
-                {% else %}
-                    {% include 'AppBundle:Admin/Client/Report/partials:_bonds.html.twig' %}
-                {% endif %}
+            {# PA fees and expenses #}
+            {% if form.satisfiedWithPaExpenses is defined %}
+                {% include 'AppBundle:Admin/Client/Report/partials:_pa-fee-expenses.html.twig' %}
+            {% endif %}
+
+            {# Bonds #}
+            {% if form.bondAdequate is defined %}
+                {% include 'AppBundle:Admin/Client/Report/partials:_bonds.html.twig' %}
             {% endif %}
 
             {# Deputy costs #}
-            {% if report.hasSection('profDeputyCosts') %}
+            {% if form.paymentsMatchCostCertificate is defined %}
                 {% include 'AppBundle:Admin/Client/Report/partials:_prof-deputy-costs.html.twig' %}
             {% endif %}
 
             {# Deputy costs estimates #}
-            {% if report.hasSection('profDeputyCostsEstimate') %}
+            {% if form.nextBillingEstimatesSatisfactory is defined %}
                 {% include 'AppBundle:Admin/Client/Report/partials:_prof-deputy-costs-estimate.html.twig' %}
             {% endif %}
 
