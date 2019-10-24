@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/aws/aws-sdk-go/aws/awserr"
+	"context"
 	"flag"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
@@ -14,8 +16,17 @@ import (
 import "log"
 
 func main() {
+	flag.Usage = func() {
+		fmt.Println("Usage: stabilizer")
+		flag.PrintDefaults()
+	}
+	var timeout int
 	var configFile string
-	flag.StringVar(&configFile, "config", "terraform.output.json", "config file for tasks")
+
+	flag.String("help", "", "this help information")
+	flag.IntVar(&timeout, "timeout", 300, "timeout for the services to stabilize")
+	flag.StringVar(&configFile, "config", "terraform.output.json", "config file for services")
+
 	config := LoadConfig(configFile)
 
 	sess, err := session.NewSession()
@@ -26,17 +37,35 @@ func main() {
 	awsConfig := aws.Config{Credentials: creds, Region: aws.String("eu-west-1")}
 	ecsSvc := ecs.New(sess, &awsConfig)
 
+	delay := time.Second * 10
+
+	ctx := aws.BackgroundContext()
+	var cancelFn func()
+
+	ctx, cancelFn = context.WithTimeout(ctx, time.Duration(timeout) * time.Second)
+
+	defer cancelFn()
+
 	start := time.Now()
 	err = ecsSvc.WaitUntilServicesInactiveWithContext(
-		aws.BackgroundContext(),
+		ctx,
 		config.Services.Value,
-		request.WithWaiterDelay(request.ConstantWaiterDelay(time.Second * 10)),
+		request.WithWaiterDelay(request.ConstantWaiterDelay(delay)),
 		request.WithWaiterRequestOptions(func(r *request.Request) {
-			fmt.Printf("waited %v for services to stabilize...\n", time.Since(start).Round(time.Second))
+			log.Printf("waited %v for services to stabilize...\n", time.Since(start).Round(time.Second))
 		}),
 	)
-	if err != nil {
-		log.Fatalln(err)
-	}
 
+	if err != nil {
+		if aerr, ok := err.(awserr.Error); ok {
+			switch aerr.Code() {
+			case request.CanceledErrorCode:
+				log.Fatalln("Timeout exceeded")
+			default:
+				log.Fatalln(aerr)
+			}
+		} else {
+			log.Fatalln(err)
+		}
+	}
 }
