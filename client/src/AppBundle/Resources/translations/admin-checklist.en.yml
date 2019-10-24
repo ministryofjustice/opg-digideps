@@ -31,6 +31,7 @@ checklistPage:
       (incompletes and casework).
     infoProvided: Information provided
     noInfoReceived: No information received
+    history: Further information history (%count%)
   backToQuestion: Back to question
   expected: Expected
   submitted: Submitted
