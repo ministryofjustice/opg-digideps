@@ -1,8 +1,9 @@
 checklistPage:
   htmlTitle: Administration - Report checklist
-  pageTitle: Admin
-  supportTitle: Lodging checklist
+  pageTitle: Checklist
+  supportTitle: Admin
   heading:
+    lodgingChecklist: Lodging checklist
     info: Deputy and client information
     decisions: Decisions made over the reporting period
     contacts: People consulted
@@ -14,7 +15,6 @@ checklistPage:
     nextPeriod: Next reporting period
     declaration: Declaration
     healthAndLifestyle: Health and lifestyle
-    contents: Checklist contents
     profDeputyCosts: Deputy costs
     profDeputyCostsEstimate: Estimated costs for next reporting period
   lodgingSummary:

@@ -78,10 +78,8 @@ bankAccount: Bank account
 notApplicable: Not applicable
 savedBy: Saved by
 dateSaved: Date saved
-lastSavedOn: Last saved on
-lastSavedBy: Last saved by
-lastSubmittedOn: Last submitted on
-lastSubmittedBy: Last submitted by
+lastSaved: Last saved
+lastSubmitted: Last submitted
 dischargedOn: Discharged on
 amount: Amount
 totalAmount: Total amount
