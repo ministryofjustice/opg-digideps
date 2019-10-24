@@ -10,69 +10,53 @@
 {% set append104 = report.get104TransSuffix %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
-{% block pageTitle %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block supportTitleTop %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
 
 {% block pageContent %}
+    <dl class="govuk-summary-list govuk-summary-list--no-border">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ 'client' | trans({}, 'common') }}:
+            </dt>
+            <dd class="govuk-summary-list__value behat-region-fullName">
+                {{ report.client.fullName }}
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ 'courtOrderNumber' | trans({}, 'common') }}:
+            </dt>
+            <dd class="govuk-summary-list__value behat-region-case-number">
+                {{ report.client.caseNumber }}
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ 'reportType' | trans({}, 'common') }}:
+            </dt>
+            <dd class="govuk-summary-list__value behat-region-report-type-title">
+                {{ ('reportTitles.' ~ report.reportTitle) | trans({}, 'report') }}
+            </dd>
+        </div>
+        {% if report.client.deletedAt %}
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    {{ 'dischargedOn' | trans({}, 'common') }}:
+                </dt>
+                <dd class="govuk-summary-list__value behat-region-discharged-on">
+                    {{ report.client.deletedAt | date("j M Y") }}
+                </dd>
+            </div>
+        {% endif %}
+    </dl>
+
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    <h2 class="govuk-heading-l">{{ 'checklistPage.heading.lodgingChecklist' | trans }}</h2>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-!-margin-top-1 govuk-section-break--visible">
+
     <div class="grid-row">
         <div class="column-two-thirds">
-            {% block supportTitleTop %}
-                <span class="heading-secondary">{{ (page ~ '.pageTitle') | trans }}</span>
-            {% endblock %}
-
-            {# Breadcrumbs #}
-
-            {% block breadcrumbs %}
-                <div class="breadcrumbs hard--bottom">
-                    <ol class="group">
-                        <li><a href="{{ path('admin_client_search') }}">{{ 'clients' | trans({}, 'common') }}</a></li>
-                        <li><a href="{{ path('admin_client_details', {'id' : report.client.id}) }}">{{ 'clientDetails' | trans({}, 'common') }}</a></li>
-                    </ol>
-                </div>
-            {% endblock %}
-
-            {% block helpline %}{% endblock %}
-
-            <p class="flush--bottom">
-                {{ 'client' | trans({}, 'common') }}:
-                <span class="bold behat-region-fullName">{{ report.client.fullName }}</span>
-            </p>
-            <p>
-                {{ 'courtOrderNumber' | trans({}, 'common') }}:
-                <span class="bold behat-region-case-number">{{ report.client.caseNumber }}</span>
-            </p>
-            <p>
-                {{ 'reportType' | trans({}, 'common') }}:
-                <span class="bold behat-region-report-type-title">{{ ('reportTitles.' ~ report.reportTitle) | trans({}, 'report') }}</span>
-            </p>
-            <p class="flush--bottom behat-region-last-saved-by">
-                {{ 'lastSavedBy' | trans({}, 'common') }}:
-                {% if (checklist.lastModifiedBy is defined) and (checklist.lastModifiedBy is not empty) %}
-                    <span class="bold behat-region-last-modified-by">{{ checklist.lastModifiedBy.fullName}}, {{ checklist.lastModifiedBy.roleFullName }}</span>
-                {% else %}
-                    <span class="bold behat-region-last-modified-by">{{ 'notSavedYet' | trans({}, 'common') }}</span>
-                {% endif %}
-            </p>
-            <p>
-                {{ 'lastSavedOn' | trans({}, 'common') }}:
-                <span class="bold">{{ (checklist.lastModifiedOn) ? (checklist.lastModifiedOn | date("j F Y H:i")) : 'Not saved yet' }}</span>
-            </p>
-            {% if report.client.deletedAt %}
-                <p>{{ 'dischargedOn' | trans({}, 'common') }}:
-                    Discharged on: <span class="bold behat-region-discharged-on">{{ report.client.deletedAt | date("j M Y") }}</span></p>
-            {% endif %}
-
-            {% if (checklist.submittedBy is defined) and (checklist.submittedBy is not empty) %}
-                <p class="flush--bottom behat-region-last-submitted-by">
-                    {{ 'lastSubmittedBy' | trans({}, 'common') }}:
-                    <span class="bold behat-region-last-modified-by">{{ checklist.submittedBy.fullName}}, {{ checklist.submittedBy.roleFullName }}</span>
-                </p>
-                <p>
-                    {{ 'lastSubmittedOn' | trans({}, 'common') }}:
-                    <span class="bold behat-region-last-modified-by">{{ (checklist.submittedOn) ? (checklist.submittedOn | date("j F Y H:i")) : '-' }}</span>
-                </p>
-            {% endif %}
-
             {# Attached documents #}
 
             {% if report.deputyDocuments is defined and (report.deputyDocuments is not empty)%}
@@ -236,8 +220,44 @@
             {{ form_end(form) }}
         </div>
         <div class="column-third">
-            <aside class="opg-related-items js-sidebar" role="complementary">
-                <h2 id="related-items-title" class="govuk-heading-m">{{ (page ~ '.heading.contents') | trans }}</h2>
+            <aside class="js-sidebar">
+                <p class="govuk-body-s">
+                    {{ 'lastSaved' | trans({}, 'common') }}:
+                    {{ (checklist.lastModifiedOn) ? (checklist.lastModifiedOn | date("j F Y H:i")) : 'Not saved yet' }}
+                    <br>
+                    {% if (checklist.lastModifiedBy is defined) and (checklist.lastModifiedBy is not empty) %}
+                        {{ checklist.lastModifiedBy.fullName}}, {{ checklist.lastModifiedBy.roleFullName }}
+                    {% endif %}
+                </p>
+
+                {% if checklist.submittedOn %}
+                    <p class="govuk-body-s">
+                        {{ 'lastSubmitted' | trans({}, 'common') }}:
+                        {{ checklist.submittedOn | date("j F Y H:i") }}
+                        <br>
+                        {{ checklist.submittedBy.fullName}}, {{ checklist.submittedBy.roleFullName }}
+                    </p>
+                {% endif %}
+
+                <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+                <ul class="govuk-list">
+                    <li class="govuk-!-margin-top-6">
+                        <a class="govuk-link govuk-body-s govuk-link--no-visited-state" href="#anchor-lodging-checklist">
+                            <svg role="presentation" focusable="false" class="govuk-!-margin-right-2" xmlns="http://www.w3.org/2000/svg" width="13" height="17" viewBox="0 0 13 17">
+                            <path fill="currentColor" d="M6.5 0L0 6.5 1.4 8l4-4v12.7h2V4l4.3 4L13 6.4z"></path>
+                            </svg>Back to top: Lodging checklist
+                        </a>
+                    </li>
+                    <li>
+                        <a class="govuk-link govuk-body-s govuk-link--no-visited-state" href="#">
+                            <svg role="presentation" focusable="false" class="govuk-!-margin-right-2" xmlns="http://www.w3.org/2000/svg" width="13" height="17" viewBox="0 0 13 17">
+                            <path fill="currentColor" d="M6.5 0L0 6.5 1.4 8l4-4v12.7h2V4l4.3 4L13 6.4z"></path>
+                            </svg>Back to top
+                        </a>
+                    </li>
+                </ul>
+
                 <nav role="navigation" aria-labelledby="related-items-title">
                     <ul class="govuk-list govuk-!-font-size-16">
                         <li><a href="#deputyAndClientInfo" class="govuk-link">{{ (page ~ '.heading.info') | trans }}</a></li>
