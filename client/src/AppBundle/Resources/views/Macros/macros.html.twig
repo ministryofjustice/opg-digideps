@@ -303,3 +303,14 @@
         <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
     </svg>
 {% endmacro %}
+
+{% macro details(options) %}
+    <details class="govuk-details {{ options.classes is defined ? options.classes }}" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">{{ options.summaryText }}</span>
+        </summary>
+        <div class="govuk-details__text">
+            {{ options.text }}
+        </div>
+    </details>
+{% endmacro %}

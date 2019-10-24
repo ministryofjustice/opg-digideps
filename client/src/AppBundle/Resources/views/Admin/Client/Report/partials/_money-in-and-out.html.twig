@@ -9,124 +9,122 @@
 
 {{ checklist_radios(form.openClosingBalancesMatch) }}
 
-<details class="govuk-details" data-module="govuk-details">
-    <summary class="govuk-details__summary">
-        <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.accountsBalances') | trans }}</span>
-    </summary>
+{% set contents %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
 
-    <div class="govuk-details__text">
-        <div class="grid-row">
-            <div class="column-one-half">
+            {% if report.previousReportData['financial-summary']['accounts'] is defined %}
 
-                {% if report.previousReportData['financial-summary']['accounts'] is defined %}
-
-                    <h3 class="heading-medium">
-                        {{ (page ~ '.closingBalancesPrevReport') | trans }}
-                        {% if report.previousReportData['report-summary']['type'] == 'ndr' %}
-                            ({{ report.previousReportData['report-summary']['type'] | upper }})
-                        {% endif %}
-                    </h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>{{ 'bankAccount' | trans({}, 'common') }}</th>
-                                <th class="numeric">{{ 'amount' | trans({}, 'common') }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for previousAccount in report.previousReportData['financial-summary']['accounts'] %}
-                                <tr>
-                                    <td>{{ previousAccount.nameOneLine }}</td>
-                                    <td class="numeric-small">£{{ previousAccount.closingBalance | money_format }}</td>
-                                </tr>
-                            {% endfor %}
-                            <tr class="no-border">
-                                <td class="bold">{{ 'totalAmount' | trans({}, 'common') }}</td>
-                                <td class="numeric-small">
-                                    <span class="bold behat-region-checklist-closing-balance-previous-report">£{{ report.previousReportData['financial-summary']['closing-balance-total'] | money_format }}</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                {% else %}
-
-                    <h3 class="heading-medium behat-region-checklist-no-previous-reports">{{ (page ~ '.closingBalancesPrevReportMissing') | trans }}</h3>
-
-                {% endif %}
-            </div>
-
-            <div class="column-one-half">
-
-                <h3 class="heading-medium">{{ (page ~ '.openingBalances') | trans }}</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>{{ 'bankAccount' | trans({}, 'common') }}</th>
-                            <th class="numeric">{{ 'amount' | trans({}, 'common') }}</th>
+                <h5 class="govuk-heading-m">
+                    {{ (page ~ '.closingBalancesPrevReport') | trans }}
+                    {% if report.previousReportData['report-summary']['type'] == 'ndr' %}
+                        ({{ report.previousReportData['report-summary']['type'] | upper }})
+                    {% endif %}
+                </h5>
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header">{{ 'bankAccount' | trans({}, 'common') }}</th>
+                            <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ 'amount' | trans({}, 'common') }}</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {% for account in report.bankAccounts %}
+                    <tbody class="govuk-table__body">
+                        {% for previousAccount in report.previousReportData['financial-summary']['accounts'] %}
                             <tr>
-                                <td>{{ account.getNameOneLine() }}</td>
-                                <td class="numeric-small">£{{ account.openingBalance | money_format }}</td>
+                                <td>{{ previousAccount.nameOneLine }}</td>
+                                <td class="numeric-small">£{{ previousAccount.closingBalance | money_format }}</td>
                             </tr>
                         {% endfor %}
-                        <tr class="no-border">
-                            <td class="bold">{{ 'totalAmount' | trans({}, 'common') }}</td>
-                            <td class="numeric-small">
-                                <span class="bold behat-region-checklist-accounts-opening-total">£{{ report.accountsOpeningBalanceTotal | money_format }}</span>
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">{{ 'totalAmount' | trans({}, 'common') }}</th>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <strong class="behat-region-checklist-closing-balance-previous-report">
+                                    £{{ report.previousReportData['financial-summary']['closing-balance-total'] | money_format }}
+                                </strong>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            {% else %}
+                <h5 class="govuk-heading-m behat-region-checklist-no-previous-reports">
+                    {{ (page ~ '.closingBalancesPrevReportMissing') | trans }}
+                </h5>
+            {% endif %}
         </div>
 
-        {% if report.previousReportData['financial-summary']['accounts'] is defined %}
+        <div class="govuk-grid-column-one-half">
 
-            <h3 class="heading-medium">
-                {{ (page ~ '.balanceDifference') | trans }}: £{{ (report.accountsOpeningBalanceTotal - report.previousReportData['financial-summary']['closing-balance-total']) | money_format }}
-            </h3>
-
-        {% endif %}
-
-
-        <div class="grid-row">
-            <div class="column-one-half">
-                <p class="text-white">Ignore this content. Only here to affect layout.</p>
-            </div>
-
-            <div class="column-one-half">
-
-                <h3 class="heading-medium">{{ (page ~ '.closingBalances') | trans }}</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>{{ 'bankAccount' | trans({}, 'common') }}</th>
-                            <th class="numeric">{{ 'amount' | trans({}, 'common') }}</th>
+            <h5 class="govuk-heading-m">{{ (page ~ '.openingBalances') | trans }}</h5>
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header">{{ 'bankAccount' | trans({}, 'common') }}</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ 'amount' | trans({}, 'common') }}</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    {% for account in report.bankAccounts %}
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">{{ account.getNameOneLine() }}</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">£{{ account.openingBalance | money_format }}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for account in report.bankAccounts %}
-                            <tr>
-                                <td>{{ account.getNameOneLine() }}</td>
-                                <td class="numeric-small">£{{ account.closingBalance | money_format }}</td>
-                            </tr>
-                        {% endfor %}
-                        <tr class="no-border">
-                            <td class="bold">{{ 'totalAmount' | trans({}, 'common') }}</td>
-                            <td class="numeric-small">
-                                <span class="bold behat-region-checklist-accounts-closing-total">£{{ report.accountsClosingBalanceTotal | money_format }}</span>
-                            </td>
-                            </tr>
-                    </tbody>
-                </table>
-            </div>
+                    {% endfor %}
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">{{ 'totalAmount' | trans({}, 'common') }}</th>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <strong class="behat-region-checklist-accounts-opening-total">
+                                £{{ report.accountsOpeningBalanceTotal | money_format }}
+                            </strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
-</details>
+
+    {% if report.previousReportData['financial-summary']['accounts'] is defined %}
+        <h5 class="govuk-heading-m govuk-!-margin-top-6">
+            {{ (page ~ '.balanceDifference') | trans }}: £{{ (report.accountsOpeningBalanceTotal - report.previousReportData['financial-summary']['closing-balance-total']) | money_format }}
+        </h5>
+    {% endif %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            &nbsp;
+        </div>
+
+        <div class="govuk-grid-column-one-half">
+            <h3 class="govuk-heading-m">{{ (page ~ '.closingBalances') | trans }}</h3>
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header">{{ 'bankAccount' | trans({}, 'common') }}</th>
+                        <th class="govuk-table__header govuk-table__header--numeric">{{ 'amount' | trans({}, 'common') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for account in report.bankAccounts %}
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">{{ account.getNameOneLine() }}</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">£{{ account.closingBalance | money_format }}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">{{ 'totalAmount' | trans({}, 'common') }}</th>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <strong class="behat-region-checklist-accounts-closing-total">£{{ report.accountsClosingBalanceTotal | money_format }}</strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endset %}
+
+{{ macros.details({
+    summaryText: (page ~ '.revealTitle.accountsBalances') | trans,
+    text: contents
+}) }}
 
 {% if report.hasSection('paDeputyExpenses') or report.hasSection('profDeputyCosts')%}
     {% set nonLayAppend = 'NonLay' %}
@@ -134,46 +132,41 @@
     {% set nonLayAppend = '' %}
 {% endif %}
 
-<hr />
-
 {% if form.accountsBalance is defined %}
     {{ checklist_radios(form.accountsBalance) }}
 
     {% if report.hasSection('moneyTransfers') %}
-        <details class="govuk-details" data-module="govuk-details">
-            <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.accountsBalanceSummary') | trans }}</span>
-            </summary>
-            <div class="govuk-details__text">
-                {# Balance table #}
-                {% include 'AppBundle:Report/Balance:_balance_table.html.twig' with {
-                    hideEditLink: true
-                } %}
+        {% set contents %}
+            {# Balance table #}
+            {% include 'AppBundle:Report/Balance:_balance_table.html.twig' with {
+                hideEditLink: true
+            } %}
 
-                {# Difference table #}
-                {% include 'AppBundle:Report/Balance:_difference_table.html.twig' with {
-                    hideEditLink: true
-                } %}
+            {# Difference table #}
+            {% include 'AppBundle:Report/Balance:_difference_table.html.twig' with {
+                hideEditLink: true
+            } %}
 
-                {% if not report.totalsMatch %}
-                    <h3 class="heading-medium">{{ 'form.explanation.label' | trans({}, 'report-balance') }}</h3>
-                    <dl class="govuk-summary-list columns-2 push--bottom">
-                        {{ macros.summaryListHeaderQA(true) }}
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                {{ 'cantFind.reasonNotBalancing' | trans({}, 'report-balance') }}
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                {{ report.balanceMismatchExplanation | nl2br }}
-                            </dd>
-                        </div>
-                    </dl>
-                {% endif %}
-            </div>
-        </details>
+            {% if not report.totalsMatch %}
+                <h5 class="govuk-heading-m">{{ 'form.explanation.label' | trans({}, 'report-balance') }}</h5>
+                <dl class="govuk-summary-list">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            {{ 'cantFind.reasonNotBalancing' | trans({}, 'report-balance') }}
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ report.balanceMismatchExplanation | nl2br }}
+                        </dd>
+                    </div>
+                </dl>
+            {% endif %}
+        {% endset %}
+
+        {{ macros.details({
+            summaryText: (page ~ '.revealTitle.accountsBalanceSummary') | trans,
+            text: contents
+        }) }}
     {% endif %}
-
-    <hr />
 {% endif %}
 
 {{ checklist_radios(form.moneyMovementsAcceptable) }}
@@ -181,90 +174,90 @@
 {# Don't show money transfers for short finance reports #}
 {% if report.hasSection('moneyTransfers') %}
     {% if report.enoughBankAccountForTransfers %}
-        <details class="govuk-details" data-module="govuk-details">
-            <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.moneyTransfersSummary') | trans }}</span>
-            </summary>
-            <div class="opg-indented-block">
-                <div>
-                    {# Questions and answers table #}
-                    {% include 'AppBundle:Report/MoneyTransfer:_list.html.twig' with {
-                        hideEditLink: true
-                    } %}
-                </div>
-            </div>
-        </details>
+        {% set contents %}
+            {% include 'AppBundle:Report/MoneyTransfer:_list.html.twig' with {
+                hideEditLink: true
+            } %}
+        {% endset %}
+
+        {{ macros.details({
+            summaryText: (page ~ '.revealTitle.moneyTransfersSummary') | trans,
+            text: contents,
+            classes: 'govuk-!-margin-bottom-0',
+        }) }}
     {% else %}
-        <p class="text">
+        <p class="govuk-body">
             {{ (page ~ '.noTransferToShow') | trans }}
         </p>
     {% endif %}
 {% endif %}
 
-<details class="govuk-details govuk-!-margin-bottom-0" data-module="govuk-details">
-    <summary class="govuk-details__summary">
-        <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.moneyInSummary') | trans }}</span>
-    </summary>
-    <div class="govuk-details__text">
-        {# Questions and answers table #}
-        {% if report.hasSection('moneyIn') %}
-            {% include 'AppBundle:Report/MoneyIn:_list.html.twig' with {
-                hideEditLink: true
-            } %}
-        {% elseif report.hasSection('moneyInShort') %}
-            {% include 'AppBundle:Report/MoneyInShort:_answers.html.twig' with {
-                hideEditLink: true
-            } %}
-        {% endif %}
-    </div>
-</details>
+{% set contents %}
+    {% if report.hasSection('moneyIn') %}
+        {% include 'AppBundle:Report/MoneyIn:_list.html.twig' with {
+            hideEditLink: true
+        } %}
+    {% elseif report.hasSection('moneyInShort') %}
+        {% include 'AppBundle:Report/MoneyInShort:_answers.html.twig' with {
+            hideEditLink: true
+        } %}
+    {% endif %}
+{% endset %}
 
-<details class="govuk-details govuk-!-margin-bottom-0" data-module="govuk-details">
-    <summary class="govuk-details__summary">
-        <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.moneyOutSummary') | trans }}</span>
-    </summary>
-    <div class="govuk-details__text">
-        {# Questions and answers table #}
-        {% if report.hasSection('moneyOut') %}
-            {% include 'AppBundle:Report/MoneyOut:_list.html.twig' with {
-                hideEditLink: true
-            } %}
-        {% elseif report.hasSection('moneyOutShort') %}
-            {% include 'AppBundle:Report/MoneyOutShort:_answers.html.twig' with {
-                hideEditLink: true
-            } %}
-        {% endif %}
-    </div>
-</details>
+{{ macros.details({
+    summaryText: (page ~ '.revealTitle.moneyInSummary') | trans,
+    text: contents,
+    classes: 'govuk-!-margin-bottom-0',
+}) }}
+
+{% set contents %}
+    {% if report.hasSection('moneyOut') %}
+        {% include 'AppBundle:Report/MoneyOut:_list.html.twig' with {
+            hideEditLink: true
+        } %}
+    {% elseif report.hasSection('moneyOutShort') %}
+        {% include 'AppBundle:Report/MoneyOutShort:_answers.html.twig' with {
+            hideEditLink: true
+        } %}
+    {% endif %}
+{% endset %}
+
+{{ macros.details({
+    summaryText: (page ~ '.revealTitle.moneyOutSummary') | trans,
+    text: contents,
+    classes: 'govuk-!-margin-bottom-0',
+}) }}
 
 {% if report.hasSection('gifts') %}
-    <details class="govuk-details govuk-!-margin-bottom-0" data-module="govuk-details">
-        <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.giftsSummary') | trans }}</span>
-        </summary>
-        <div class="govuk-details__text">
-            {# Questions and answers table #}
-            {% include 'AppBundle:Report/Gift:_list.html.twig' with {
-                hideEditLink: true
-            } %}
-        </div>
-    </details>
+    {% set contents %}
+        {% include 'AppBundle:Report/Gift:_list.html.twig' with {
+            hideEditLink: true
+        } %}
+    {% endset %}
+
+    {{ macros.details({
+        summaryText: (page ~ '.revealTitle.giftsSummary') | trans,
+        text: contents,
+        classes: 'govuk-!-margin-bottom-0',
+    }) }}
 {% endif %}
 
 {% if report.hasSection('deputyExpenses') %}
-    <details class="govuk-details govuk-!-margin-bottom-0" data-module="govuk-details">
-        <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.deputyExpensesSummary') | trans }}</span>
-        </summary>
-        <div class="govuk-details__text">
-            {# Questions and answers table #}
-            {% include 'AppBundle:Report/DeputyExpense:_list.html.twig' with {
-                hideEditLink: true
-            } %}
-        </div>
-    </details>
+    {% set contents %}
+        {% include 'AppBundle:Report/DeputyExpense:_list.html.twig' with {
+            hideEditLink: true
+        } %}
+    {% endset %}
+
+    {{ macros.details({
+        summaryText: (page ~ '.revealTitle.deputyExpensesSummary') | trans,
+        text: contents,
+        classes: 'govuk-!-margin-bottom-0',
+    }) }}
 {% endif %}
 
-<a href="#moneyInOut" class="behat-link-back-to-money-in-out">{{ (page ~ '.backToQuestion') | trans }}</a>
+<div class="govuk-!-margin-top-6 govuk-!-margin-bottom-6">
+    <a href="#moneyInOut" class="behat-link-back-to-money-in-out">{{ (page ~ '.backToQuestion') | trans }}</a>
+</div>
 
 

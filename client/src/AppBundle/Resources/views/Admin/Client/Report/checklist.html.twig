@@ -1,5 +1,7 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
+{% from 'AppBundle:Macros:macros.html.twig' import details %}
+
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
 
@@ -57,32 +59,28 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             {# Attached documents #}
-            {% if report.deputyDocuments is defined and (report.deputyDocuments is not empty)%}
-                <details class="push--bottom">
-                    <summary>
-                        <span class="summary">Attached documents</span>
-                    </summary>
-                    <div class="opg-indented-block">
-                        <div>
-                            <table>
-                                <thead>
-                                    <th>{{ 'summaryPage.filename' | trans({}, 'report-documents') }}</th>
-                                    <th class="text--right">{{ 'summaryPage.dateAttached' | trans({}, 'report-documents') }}</th>
-                                </thead>
-                                <tbody>
-                                    {% for document in report.deputyDocuments %}
-                                        <tr>
-                                            <td>{{ document.fileName }}</td>
-                                            <td class="numeric-small">{{ document.createdOn | date("j F Y H:i") }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </details>
-            {% else %}
-                <p>No attached documents</p>
+            {% if report.deputyDocuments is defined and (report.deputyDocuments is not empty) %}
+                {% set contents %}
+                    <table>
+                        <thead>
+                            <th>{{ 'summaryPage.filename' | trans({}, 'report-documents') }}</th>
+                            <th class="text--right">{{ 'summaryPage.dateAttached' | trans({}, 'report-documents') }}</th>
+                        </thead>
+                        <tbody>
+                            {% for document in report.deputyDocuments %}
+                                <tr>
+                                    <td>{{ document.fileName }}</td>
+                                    <td class="numeric-small">{{ document.createdOn | date("j F Y H:i") }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endset %}
+
+                {{ details({
+                    summaryText: 'Attached documents',
+                    text: contents,
+                }) }}
             {% endif %}
 
             {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-checklist-form' }}) }}
@@ -158,41 +156,39 @@
                 inputClass: 'govuk-!-width-full',
             }) }}
 
-            <details class="govuk-details" data-module="govuk-details">
-                <summary class="govuk-details__summary">
-                    <span class="govuk-details__summary-text">
-                        {{ (page ~ '.furtherInfo.history') | trans({ '%count%': checklist.checklistInformation | length }) }}
-                    </span>
-                </summary>
-                <div class="govuk-details__text">
-                    <table class="govuk-table">
-                        <thead class="govuk-table__head">
+            {% set contents %}
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row govuk-body-s">
+                            <th class="govuk-table__header" scope="col">{{ 'date' | trans({}, 'common') }}</th>
+                            <th class="govuk-table__header" scope="col">{{ 'savedBy' | trans({}, 'common') }}</th>
+                            <th class="govuk-table__header" scope="col">{{ (page ~ '.furtherInfo.infoProvided') | trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    {% if checklist.checklistInformation is not empty %}
+                        {% set counter = 1 %}
+                        {% for info in checklist.checklistInformation %}
                             <tr class="govuk-table__row govuk-body-s">
-                                <th class="govuk-table__header" scope="col">{{ 'date' | trans({}, 'common') }}</th>
-                                <th class="govuk-table__header" scope="col">{{ 'savedBy' | trans({}, 'common') }}</th>
-                                <th class="govuk-table__header" scope="col">{{ (page ~ '.furtherInfo.infoProvided') | trans }}</th>
+                                <td class="govuk-table__cell behat-region-created-on-{{ counter }} numeric no-wrap align--top">{{ info.createdOn | date("j F Y") }}</td>
+                                <td class="govuk-table__cell behat-region-information-created-by-{{ counter }} align--top">{{ info.createdBy.fullname }}, {{ info.createdBy.roleFullName }}</td>
+                                <td class="govuk-table__cell behat-region-information-{{ counter }}">{{ info.information | nl2br | raw }}</td>
                             </tr>
-                        </thead>
-                        <tbody class="govuk-table__body">
-                        {% if checklist.checklistInformation is not empty %}
-                            {% set counter = 1 %}
-                            {% for info in checklist.checklistInformation %}
-                                <tr class="govuk-table__row govuk-body-s">
-                                    <td class="govuk-table__cell behat-region-created-on-{{ counter }} numeric no-wrap align--top">{{ info.createdOn | date("j F Y") }}</td>
-                                    <td class="govuk-table__cell behat-region-information-created-by-{{ counter }} align--top">{{ info.createdBy.fullname }}, {{ info.createdBy.roleFullName }}</td>
-                                    <td class="govuk-table__cell behat-region-information-{{ counter }}">{{ info.information | nl2br | raw }}</td>
-                                </tr>
-                                {% set counter = counter + 1 %}
-                            {% endfor %}
-                        {% else %}
-                            <tr class="govuk-table__row govuk-body-s">
-                                <td colspan="3" class="govuk-table__cell">{{ (page ~ '.furtherInfo.noInfoReceived') | trans }}</td>
-                            </tr>
-                        {% endif %}
-                        </tbody>
-                    </table>
-                </div>
-            </details>
+                            {% set counter = counter + 1 %}
+                        {% endfor %}
+                    {% else %}
+                        <tr class="govuk-table__row govuk-body-s">
+                            <td colspan="3" class="govuk-table__cell">{{ (page ~ '.furtherInfo.noInfoReceived') | trans }}</td>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            {% endset %}
+
+            {{ details({
+                summaryText: (page ~ '.furtherInfo.history') | trans({ '%count%': checklist.checklistInformation | length }),
+                text: contents,
+            }) }}
 
             {{ form_submit(form.saveFurtherInformation, (page ~ '.form.saveFurtherInformation'), {
                 buttonClass: 'govuk-button--secondary behat-link-save-further-information'

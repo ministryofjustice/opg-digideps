@@ -172,7 +172,7 @@ checklistPage:
         Include changes made to CASREC details (or referrals to the MDU)
         Do not repeat statements made by the deputy unless they are relevant to a decision you have made.
     finalDecision:
-      label: Final decision
+      legend: Final decision
       options:
         forReview: I am referring the case for a staff review
         incomplete: The report is incomplete
