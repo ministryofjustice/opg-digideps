@@ -18,6 +18,11 @@ type Config struct {
 		Type      []interface{}
 		Value     map[string]*ecs.RunTaskInput
 	}
+	Services struct {
+		Sensitive bool
+		Type      interface{}
+		Value     *ecs.DescribeServicesInput
+	}
 }
 
 func LoadConfig(configFile string) Config {

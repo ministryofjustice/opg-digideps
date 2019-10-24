@@ -38,6 +38,34 @@ func (t *Runner) Update() {
 	t.Task = describeTasksOutput.Tasks[0]
 }
 
+func (r *Runner) GetStatus() *string {
+	r.Update()
+
+	return r.Task.LastStatus
+}
+
+type containerExitCode struct{
+	Name string
+	ExitCode int64
+}
+
+func (r *Runner) GetContainerExitCodes() []containerExitCode {
+	r.Update()
+
+	var containerExitCodes []containerExitCode
+
+	for _, c := range r.Task.Containers {
+		containerExitCodes = append(containerExitCodes,
+			containerExitCode{
+				Name: *c.Name,
+				ExitCode: *c.ExitCode,
+			},
+		)
+	}
+
+	return containerExitCodes
+}
+
 func (t *Runner) IsStopped() bool {
 	return *t.Task.LastStatus != "STOPPED"
 }
