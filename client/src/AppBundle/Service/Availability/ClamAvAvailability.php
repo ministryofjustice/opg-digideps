@@ -13,7 +13,7 @@ class ClamAvAvailability extends ServiceAvailabilityAbstract
     public function __construct(ContainerInterface $container)
     {
         try {
-            $response = $container->get('guzzle_file_scanner_client')->get('/ping/json');
+            $response = $container->get('guzzle_file_scanner_client')->get('/');
             if (200 !== $response->getStatusCode()) {
                 throw new \RuntimeException('returned HTTP code ' . $response->getStatusCode());
             }

@@ -33,7 +33,7 @@ resource "aws_ecs_task_definition" "scan" {
   network_mode             = "awsvpc"
   cpu                      = 1024
   memory                   = 2048
-  container_definitions    = "[${local.file_scanner_api_container},${local.file_scanner_worker_container},${local.file_scanner_redis_container}]"
+  container_definitions    = "[${local.file_scanner_rest_container},${local.file_scanner_server_container}]"
   task_role_arn            = aws_iam_role.scan.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
   tags                     = local.default_tags
@@ -77,11 +77,11 @@ resource "aws_security_group" "scan" {
   )
 }
 
-resource "aws_security_group_rule" "scan_https_in" {
+resource "aws_security_group_rule" "scan_http_in" {
   type                     = "ingress"
   protocol                 = "tcp"
-  from_port                = 8443
-  to_port                  = 8443
+  from_port                = 8080
+  to_port                  = 8080
   security_group_id        = aws_security_group.scan.id
   source_security_group_id = aws_security_group.front.id
 }
@@ -96,17 +96,17 @@ resource "aws_security_group_rule" "scan_out" {
 }
 
 locals {
-  file_scanner_api_container = <<EOF
+  file_scanner_rest_container = <<EOF
   {
-      "name": "api",
+      "name": "rest",
       "essential": true,
       "portMappings": [{
-        "containerPort": 8443,
-        "hostPort": 8443,
+        "containerPort": 8080,
+        "hostPort": 8080,
         "protocol": "tcp"
       }],
       "cpu": 0,
-      "image": "${local.images.file_scanner}",
+      "image": "lokori/clamav-rest",
       "mountPoints": [],
       "volumesFrom": [],
       "logConfiguration": {
@@ -118,49 +118,18 @@ locals {
         }
       },
       "environment": [
-        { "name": "SERVICE_ENABLE_UWSGI", "value": "yes" },
-        { "name": "SSL_CERT_FILENAME", "value": "/etc/ssl/self-signed.crt" },
-        { "name": "SSL_KEY_FILENAME", "value": "/etc/ssl/self-signed.key" },
-        { "name": "REDIS_URL", "value": "redis://localhost:6379/0" }
+        { "name": "CLAMD_HOST", "value": "127.0.0.1" }
       ]
   }
-  
+
 EOF
 
-
-  file_scanner_worker_container = <<EOF
+  file_scanner_server_container = <<EOF
   {
-      "name": "worker",
+      "name": "server",
       "essential": true,
       "cpu": 0,
-      "image": "${local.images.file_scanner}",
-      "mountPoints": [],
-      "volumesFrom": [],
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "${aws_cloudwatch_log_group.opg_digi_deps.name}",
-          "awslogs-region": "eu-west-1",
-          "awslogs-stream-prefix": "${aws_iam_role.scan.name}"
-        }
-      },
-      "environment": [
-        { "name": "SERVICE_ENABLE_CELERY", "value": "yes" },
-        { "name": "SERVICE_ENABLE_FRESHCLAM", "value": "yes" },
-        { "name": "SERVICE_ENABLE_CLAMD", "value": "yes" },
-        { "name": "REDIS_URL", "value": "redis://localhost:6379/0" }
-      ]
-  }
-  
-EOF
-
-
-  file_scanner_redis_container = <<EOF
-  {
-      "name": "redis",
-      "essential": true,
-      "cpu": 0,
-      "image": "redis:5",
+      "image": "mkodockx/docker-clamav",
       "mountPoints": [],
       "volumesFrom": [],
       "logConfiguration": {
@@ -172,7 +141,7 @@ EOF
         }
       }
   }
-  
+
 EOF
 
 }

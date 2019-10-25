@@ -1,3 +1,11 @@
+parameters:
+  bad_pdf_keywords:
+    - 'AcroForm'
+    - 'JavaScript'
+    - 'Launch'
+    - 'RichMedia'
+    - 'XFA'
+
 services:
   s3_client:
     class: Aws\S3\S3Client
@@ -34,14 +42,11 @@ services:
 
   scanner_verifier:
     class: AppBundle\Service\File\Verifier\ScannerVerifier
-    arguments: ['@file_scanner', '@translator', '@logger']
+    arguments: ['@clam_file_scanner', '@translator', '@logger']
 
-  file_scanner:
-    class: AppBundle\Service\File\Scanner\FileScanner
-    arguments: [ "@guzzle_file_scanner_client", "@logger" , "@scanner_endpoint_resolver" ]
-
-  scanner_endpoint_resolver:
-    class: AppBundle\Service\File\Scanner\ScannerEndpointResolver
+  clam_file_scanner:
+    class: AppBundle\Service\File\Scanner\ClamFileScanner
+    arguments: [ "@guzzle_file_scanner_client", "@logger", "%bad_pdf_keywords%"]
 
   file_uploader:
     class: AppBundle\Service\File\FileUploader

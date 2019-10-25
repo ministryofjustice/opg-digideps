@@ -197,10 +197,12 @@ class Team
         }
 
         $adminCount = 0;
-        /** @var User $member */
-        foreach ($this->members as $member) {
-            if ($member->isOrgAdministrator()) {
-                $adminCount++;
+        if (is_array($this->members)) {
+            /** @var User $member */
+            foreach ($this->members as $member) {
+                if ($member->isOrgAdministrator()) {
+                    $adminCount++;
+                }
             }
         }
 

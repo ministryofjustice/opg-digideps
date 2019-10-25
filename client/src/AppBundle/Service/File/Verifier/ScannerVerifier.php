@@ -3,15 +3,14 @@
 namespace AppBundle\Service\File\Verifier;
 
 use AppBundle\Entity\Report\Document;
-use AppBundle\Service\File\Scanner\Exception\RiskyFileException;
+use AppBundle\Service\File\Scanner\ClamFileScanner;
 use AppBundle\Service\File\Scanner\Exception\VirusFoundException;
-use AppBundle\Service\File\Scanner\FileScanner;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ScannerVerifier implements VerifierInterface
 {
-    /** @var FileScanner */
+    /** @var ClamFileScanner */
     private $scanner;
 
     /** @var TranslatorInterface */
@@ -21,11 +20,11 @@ class ScannerVerifier implements VerifierInterface
     private $logger;
 
     /**
-     * @param FileScanner $scanner
+     * @param ClamFileScanner $scanner
      * @param TranslatorInterface $translator
      * @param Logger $logger
      */
-    public function __construct(FileScanner $scanner, TranslatorInterface $translator, Logger $logger)
+    public function __construct(ClamFileScanner $scanner, TranslatorInterface $translator, Logger $logger)
     {
         $this->scanner = $scanner;
         $this->translator = $translator;
@@ -41,7 +40,14 @@ class ScannerVerifier implements VerifierInterface
             $this->scanner->scanFile($document->getFile());
         } catch (\Throwable $e) {
             $this->logger->error($e->getMessage());
-            $status->addError($this->buildErrorMessage($e));
+
+            $message = sprintf(
+                '%s: %s',
+                $document->getFile()->getClientOriginalName(),
+                $this->buildErrorMessage($e)
+            );
+
+            $status->addError($message);
         }
 
         return $status;
@@ -53,26 +59,10 @@ class ScannerVerifier implements VerifierInterface
      */
     private function buildErrorMessage(\Throwable $e): string
     {
-        $errorKey = $this->determineErrorType($e);
+        $errorKey = (get_class($e) === VirusFoundException::class) ? 'virusFound' : 'generic';
 
         return $this
             ->translator
             ->trans("document.file.errors.{$errorKey}", [], 'validators');
-    }
-
-    /**
-     * @param \Throwable $e
-     * @return string
-     */
-    private function determineErrorType(\Throwable $e): string
-    {
-        switch (get_class($e)) {
-            case RiskyFileException::class:
-                return 'risky';
-            case VirusFoundException::class:
-                return 'virusFound';
-            default:
-                return 'generic';
-        }
     }
 }
