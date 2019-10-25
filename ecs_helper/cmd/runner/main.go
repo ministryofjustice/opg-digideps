@@ -28,7 +28,7 @@ func main() {
 
 	flag.String("help", "", "this help information")
 	flag.StringVar(&taskName, "task", "", "task to run")
-	flag.IntVar(&timeout, "timeout", 120, "timeout for the task")
+	flag.IntVar(&timeout, "timeout", 300, "timeout for the task")
 	flag.StringVar(&configFile, "config", "terraform.output.json", "config file for tasks")
 
 	flag.Parse()
