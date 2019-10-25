@@ -12,6 +12,7 @@
     <div class="govuk-grid-column-two-thirds">
         {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
+        <a name="anchor-full-review-final-decision"></a>
         {{ form_checkbox_group(form.fullReviewDecision, (page ~ '.form.finalDecision'), {
             classes: 'govuk-radios--inline govuk-radios--small',
             legendClass: 'govuk-fieldset__legend--m',
@@ -35,6 +36,6 @@
         {{ form_end(form) }}
     </div>
     <div class="govuk-grid-column-one-third opg-sticky-menu">
-        Full review sidebar
+        {% include 'AppBundle:Admin/Client/Report/partials:_fullReviewChecklistSidebar.html.twig' %}
     </div>
 </div>
