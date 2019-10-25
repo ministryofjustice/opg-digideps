@@ -13,15 +13,6 @@
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block supportTitleTop %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
 
-{% block head %}
-    <style>
-        .opg-sticky-menu  {
-            position: sticky;
-            top: 1em;
-        }
-    </style>
-{% endblock %}
-
 {% block pageContent %}
     <dl class="govuk-summary-list govuk-summary-list--no-border">
         <div class="govuk-summary-list__row">
