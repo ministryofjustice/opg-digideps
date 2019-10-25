@@ -20,6 +20,7 @@ checklistPage:
     lodgingSummary: Lodging summary
     furtherInfo: Further information
     fullReviewChecklist: Full review checklist
+    finalDecision: Final decision
   furtherInfo:
     infoProvided: Information provided
     noInfoReceived: No information received
