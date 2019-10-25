@@ -17,19 +17,26 @@ workflows:
           requires: [ build pr, lint terraform ]
           filters: { branches: { ignore: [ master ] } }
 
-      - stabilize:
-          name: stabilize environment
+      - run-task:
+          name: backup environment
           requires: [ apply environment ]
           filters: { branches: { ignore: [ master ] } }
+          task_name: backup
+
+      - run-task:
+          name: restore environment
+          requires: [ backup environment ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: restore
 
       - client_integration_test:
           name: client integration test
-          requires: [ stabilize environment ]
+          requires: [ restore environment ]
           filters: { branches: { ignore: [ master ] } }
 
       - api_unit_test:
           name: api unit test
-          requires: [ stabilize environment ]
+          requires: [ restore environment ]
           filters: { branches: { ignore: [ master ] } }
 
       - cleanup:
@@ -70,33 +77,21 @@ workflows:
           filters: { branches: { only: [ master ] } }
           tf_workspace: master
 
-      - stabilize:
-          name: stabilize master
-          requires: [ apply master ]
-          filters: { branches: { only: [ master ] } }
-          tf_workspace: master
-
       - client_integration_test:
           name: client integration test
-          requires: [ stabilize master ]
+          requires: [ apply master  ]
           filters: { branches: { only: [ master ] } }
           tf_workspace: master
 
       - api_unit_test:
           name: api unit test
-          requires: [ stabilize master ]
+          requires: [ apply master ]
           filters: { branches: { only: [ master ] } }
           tf_workspace: master
 
       - apply:
           name: apply training
           requires: [ approve release to production ]
-          filters: { branches: { only: [ master ] } }
-          tf_workspace: training
-
-      - stabilize:
-          name: stabilize training
-          requires: [ apply training ]
           filters: { branches: { only: [ master ] } }
           tf_workspace: training
 
@@ -113,22 +108,16 @@ workflows:
           filters: { branches: { only: [ master ] } }
           tf_workspace: preprod
 
-      - stabilize:
-          name: stabilize preproduction
-          requires: [ apply preproduction ]
-          filters: { branches: { only: [ master ] } }
-          tf_workspace: preprod
-
       - slack/approval-notification:
           name: approve release to production notification
           message: "Production is ready for release and pending approval"
-          requires: [ stabilize preproduction ]
+          requires: [ apply preproduction ]
           filters: { branches: { only: [ master ] } }
 
       - approve:
           name: approve release to production
           type: approval
-          requires: [ stabilize preproduction ]
+          requires: [ apply preproduction ]
           filters: { branches: { only: [ master ] } }
 
       - apply:
@@ -137,16 +126,47 @@ workflows:
           filters: { branches: { only: [ master ] } }
           tf_workspace: production02
 
-      - stabilize:
-          name: stabilize production
+      - run-task:
+          name: backup production
           requires: [ apply production ]
           filters: { branches: { only: [ master ] } }
+          task_name: backup
           tf_workspace: production02
+
+      - run-task:
+          name: restore production to preproduction
+          requires: [ backup production ]
+          filters: { branches: { only: [ master ] } }
+          task_name: restore_from_production
+          tf_workspace: preprod
 
 orbs:
   aws-cli: circleci/aws-cli@0.1.13
   slack: circleci/slack@3.3.0
+  ecs_helper:
+    commands:
+      install:
+        steps:
+          - run:
+              name: Install runner
+              working_directory: ~/project/ecs_helper
+              command: go install -mod vendor ./cmd/runner
+          - run:
+              name: Install stabilizer
+              working_directory: ~/project/ecs_helper
+              command: go install -mod vendor ./cmd/stabilizer
   terraform:
+    executors:
+      terraform:
+        docker:
+          - image: circleci/golang:1.12
+        environment:
+          TF_VERSION: 0.12.12
+          TF_SHA256SUM: 67bc7a49c0946ad48b14cc6e95482fdd3e7e9f7dc6811f4ce6ff531fc565bd3a
+          TF_CLI_ARGS_plan: -input=false -lock=false
+          TF_CLI_ARGS_apply: -input=false -auto-approve
+          TF_CLI_ARGS_destroy: -input=false -auto-approve
+          TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
     commands:
       install:
         steps:
@@ -164,13 +184,7 @@ orbs:
               command: sudo unzip terraform_${TF_VERSION}_linux_amd64.zip -d /bin
 jobs:
   lint:
-    docker:
-      - image: circleci/ruby
-    environment:
-      TF_VERSION: 0.12.12
-      TF_SHA256SUM: 67bc7a49c0946ad48b14cc6e95482fdd3e7e9f7dc6811f4ce6ff531fc565bd3a
-      TF_CLI_ARGS_plan: -input=false -lock=false
-      TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
+    executor: terraform/terraform
     steps:
       - checkout
       - terraform/install
@@ -179,8 +193,7 @@ jobs:
           command: terraform fmt -diff -check -recursive
 
   apply:
-    docker:
-      - image: circleci/ruby
+    executor: terraform/terraform
     parameters:
       tf_workspace:
         description: terraform workspace
@@ -195,26 +208,30 @@ jobs:
         default: apply
         type: string
     environment:
-      TF_VERSION: 0.12.12
-      TF_SHA256SUM: 67bc7a49c0946ad48b14cc6e95482fdd3e7e9f7dc6811f4ce6ff531fc565bd3a
-      TF_CLI_ARGS_apply: -input=false -auto-approve
-      TF_CLI_ARGS_destroy: -input=false -auto-approve
-      TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
       TF_TIER: << parameters.tf_tier >>
       WORKSPACE: << parameters.tf_workspace >>
+    working_directory: ~/project/<< parameters.tf_tier >>
     steps:
-      - checkout
+      - checkout:
+          path: ~/project
       - terraform/install
-      - attach_workspace: { at: . }
+      - ecs_helper/install
+      - attach_workspace: { at: ~/project }
       - run:
           name: Initialize
-          command: terraform init ${TF_TIER}
+          command: terraform init
       - run:
           name: Set environment
           command: ~/project/.circleci/set_env.sh >> $BASH_ENV
       - run:
           name: Apply
-          command: terraform << parameters.tf_command >> -var-file=${TF_TIER}/terraform.tfvars.json ${TF_TIER}
+          command: terraform << parameters.tf_command >>
+      - run:
+          name: Output
+          command: terraform output -json > terraform.output.json
+      - run:
+          name: Stabilize
+          command: stabilizer
 
   client_integration_test:
     docker:
@@ -267,32 +284,6 @@ jobs:
       - run:
           name: Test API
           command: ruby deployer/run_task.rb test-${TF_WORKSPACE} test-api-${TF_WORKSPACE}
-
-  stabilize:
-    docker:
-      - image: circleci/ruby
-    parameters:
-      tf_workspace:
-        description: terraform workspace
-        type: string
-        default: ""
-    environment:
-      TF_VAR_default_role: digideps-ci
-      WORKSPACE: << parameters.tf_workspace >>
-    working_directory: ~/project/environment
-    steps:
-      - checkout:
-          path: ~/project
-      - run:
-          name: Bundle install
-          command: bundle install
-      - run:
-          name: Set environment
-          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
-      - run:
-          name: Check deployment
-          command: ruby deployer/check_deployment.rb scan-${TF_WORKSPACE} front-${TF_WORKSPACE} admin-${TF_WORKSPACE} wkhtmltopdf-${TF_WORKSPACE}
-
   build:
     docker:
       - image: circleci/python:2.7
@@ -343,3 +334,34 @@ jobs:
       - run:
           name: Push images
           command: docker-compose -f docker-compose.ci.yml push
+
+  run-task:
+    executor: terraform/terraform
+    parameters:
+      tf_workspace:
+        description: terraform workspace
+        type: string
+        default: ""
+      task_name:
+        description: name of task to run
+        type: string
+    environment:
+      WORKSPACE: << parameters.tf_workspace >>
+    working_directory: ~/project/environment
+    steps:
+      - checkout:
+          path: ~/project
+      - terraform/install
+      - ecs_helper/install
+      - run:
+          name: Initialize
+          command: terraform init
+      - run:
+          name: Set environment
+          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
+      - run:
+          name: Output
+          command: terraform output -json > terraform.output.json
+      - run:
+          name: Run task
+          command: runner -task << parameters.task_name >>
