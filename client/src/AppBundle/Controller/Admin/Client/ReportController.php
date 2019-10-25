@@ -8,6 +8,7 @@ use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Exception\DisplayableException;
+use AppBundle\Form\Admin\FullReviewType;
 use AppBundle\Form\Admin\ReportChecklistType;
 use AppBundle\Form\Admin\UnsubmitReportType;
 use AppBundle\Form\Admin\UnsubmitReportConfirmType;
@@ -245,6 +246,9 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
         $buttonClicked = $form->getClickedButton();
 
+        $reviewForm = $this->createForm(FullReviewType::class, $checklist);
+        $reviewForm->handleRequest($request);
+
         if ($buttonClicked instanceof SubmitButton) {
             $checklist->setButtonClicked($buttonClicked->getName());
         }
@@ -288,6 +292,7 @@ class ReportController extends AbstractController
             'report'   => $report,
             'submittedEstimateCosts' => $costBreakdown,
             'form'     => $form->createView(),
+            'reviewForm' => $reviewForm->createView(),
             'checklist' => $checklist,
             'previousReportData' => $report->getPreviousReportData()
         ];
