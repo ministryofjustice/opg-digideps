@@ -5,6 +5,7 @@ namespace AppBundle\Entity\Report;
 use AppBundle\Entity\Report\Traits\HasReportTrait;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\Traits\ModifyAudit;
+use AppBundle\Model\FullReviewChecklist;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -296,7 +297,7 @@ class Checklist
 
     /**
      * @var object
-     * @JMS\Type("array")
+     * @JMS\Type("AppBundle\Model\FullReviewChecklist")
      * @JMS\Groups({"report-checklist"})
      */
     private $fullReview;
@@ -919,7 +920,7 @@ class Checklist
     /**
      * @return string
      */
-    public function getFullReview(): array
+    public function getFullReview(): FullReviewChecklist
     {
         return $this->fullReview;
     }
@@ -929,7 +930,7 @@ class Checklist
      *
      * @return $this
      */
-    public function setFullReview(array $fullReview)
+    public function setFullReview(FullReviewChecklist $fullReview)
     {
         $this->fullReview = $fullReview;
         return $this;
