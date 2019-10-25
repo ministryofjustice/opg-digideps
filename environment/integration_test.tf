@@ -1,9 +1,9 @@
-module "test_integration" {
+module "integration_test" {
   source = "./task"
-  name   = "test-integration"
+  name   = "integration-test"
 
   cluster_name          = aws_ecs_cluster.main.name
-  container_definitions = "[${local.test_integration_container}]"
+  container_definitions = "[${local.integration_test_container}]"
   default_tags          = local.default_tags
   environment           = local.environment
   execution_role_arn    = aws_iam_role.execution_role.arn
@@ -13,9 +13,9 @@ module "test_integration" {
 }
 
 locals {
-  test_integration_container = <<EOF
+  integration_test_container = <<EOF
   {
-    "name": "test_integration",
+    "name": "integration-test",
     "image": "${local.images.test}",
     "logConfiguration": {
       "logDriver": "awslogs",
