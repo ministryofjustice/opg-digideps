@@ -303,6 +303,13 @@ class Checklist
     private $fullReview;
 
     /**
+     * @var string
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-checklist"})
+     */
+    private $fullReviewDecision;
+
+    /**
      * Checklist constructor.
      *
      * @param ReportInterface $report
@@ -918,21 +925,40 @@ class Checklist
     }
 
     /**
-     * @return string
+     * @return FullReviewChecklist
      */
-    public function getFullReview(): FullReviewChecklist
+    public function getFullReview(): ?FullReviewChecklist
     {
-        return $this->fullReview;
+        return $this->fullReview ?: new FullReviewChecklist();
     }
 
     /**
-     * @param string $buttonClicked
+     * @param FullReviewChecklist $fullReview
      *
      * @return $this
      */
     public function setFullReview(FullReviewChecklist $fullReview)
     {
         $this->fullReview = $fullReview;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullReviewDecision(): ?string
+    {
+        return $this->fullReviewDecision;
+    }
+
+    /**
+     * @param string $fullReviewDecision
+     *
+     * @return $this
+     */
+    public function setFullReviewDecision(string $fullReviewDecision)
+    {
+        $this->fullReviewDecision = $fullReviewDecision;
         return $this;
     }
 }
