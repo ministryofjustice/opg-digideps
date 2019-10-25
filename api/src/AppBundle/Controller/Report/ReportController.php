@@ -774,6 +774,7 @@ class ReportController extends RestController
             'final_decision' => 'setFinalDecision',
             'button_clicked' => 'setButtonClicked',
             'full_review' => 'setFullReview',
+            'full_review_decision' => 'setFullReviewDecision',
         ]);
 
         return $checklist;
