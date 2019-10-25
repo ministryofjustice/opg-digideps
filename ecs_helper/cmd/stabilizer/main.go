@@ -11,9 +11,9 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ecs"
 	. "github.com/ministryofjustice/opg-digideps/ecs_helper/internal"
+	"log"
 	"time"
 )
-import "log"
 
 func main() {
 	flag.Usage = func() {

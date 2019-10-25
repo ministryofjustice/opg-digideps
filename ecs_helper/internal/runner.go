@@ -1,10 +1,9 @@
 package internal
 
 import (
-	"log"
 	"github.com/aws/aws-sdk-go/service/ecs"
+	"log"
 	"regexp"
-
 )
 
 type Runner struct {
