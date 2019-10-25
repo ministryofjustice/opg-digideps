@@ -12,29 +12,29 @@ type Runner struct {
 	Input *ecs.RunTaskInput
 }
 
-func (t *Runner) Run() {
-	tasksOutput, err := t.Svc.RunTask(t.Input)
+func (r *Runner) Run() {
+	tasksOutput, err := r.Svc.RunTask(r.Input)
 
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	t.Task = tasksOutput.Tasks[0]
+	r.Task = tasksOutput.Tasks[0]
 }
 
-func (t *Runner) Update() {
+func (r *Runner) Update() {
 	describeTaskInput := &ecs.DescribeTasksInput{
-		Cluster: t.Task.ClusterArn,
-		Tasks:   []*string{t.Task.TaskArn},
+		Cluster: r.Task.ClusterArn,
+		Tasks:   []*string{r.Task.TaskArn},
 	}
 
-	describeTasksOutput, err := t.Svc.DescribeTasks(describeTaskInput)
+	describeTasksOutput, err := r.Svc.DescribeTasks(describeTaskInput)
 
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	t.Task = describeTasksOutput.Tasks[0]
+	r.Task = describeTasksOutput.Tasks[0]
 }
 
 func (r *Runner) GetStatus() string {
@@ -64,13 +64,13 @@ func (r *Runner) GetContainerExitCodes() []containerExitCode {
 	return containerExitCodes
 }
 
-func (t *Runner) GetTaskID() string {
-	return regexp.MustCompile("^.*/").ReplaceAllString(*t.Task.TaskArn, "")
+func (r *Runner) GetTaskID() string {
+	return regexp.MustCompile("^.*/").ReplaceAllString(*r.Task.TaskArn, "")
 }
 
-func (t *Runner) GetLogConfigurationOptions() map[string]*string {
-	output, err := t.Svc.DescribeTaskDefinition(&ecs.DescribeTaskDefinitionInput{
-		TaskDefinition: t.Input.TaskDefinition,
+func (r *Runner) GetLogConfigurationOptions() map[string]*string {
+	output, err := r.Svc.DescribeTaskDefinition(&ecs.DescribeTaskDefinitionInput{
+		TaskDefinition: r.Input.TaskDefinition,
 	})
 
 	if err != nil {
