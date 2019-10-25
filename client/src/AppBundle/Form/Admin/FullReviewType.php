@@ -16,14 +16,14 @@ class FullReviewType extends AbstractType
             ->add('fullReview', FullReviewChecklistType::class)
             ->add('fullReviewDecision', FormTypes\ChoiceType::class, [
                 'choices' => [
-                    'No further action required' => 'satisfied',
-                    'Further case work/actions are required' => 'further-casework-required',
-                    'Case escalated' => 'escalate',
+                    'checklistPage.form.finalDecision.fullReviewOptions.satisfied' => 'satisfied',
+                    'checklistPage.form.finalDecision.fullReviewOptions.furtherCaseworkRequired' => 'further-casework-required',
+                    'checklistPage.form.finalDecision.fullReviewOptions.escalate' => 'escalate',
                 ],
                 'expanded' => true,
-                'choice_translation_domain' => 'common',
             ])
-            ->add('save', FormTypes\SubmitType::class);
+            ->add('save', FormTypes\SubmitType::class)
+            ->add('submit', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
