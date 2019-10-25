@@ -15,7 +15,7 @@ module "reset_database" {
 locals {
   reset_database_container = <<EOF
   {
-    "name": "reset_database",
+    "name": "reset-database",
     "image": "${local.images.api}",
     "command": [ "sh", "scripts/resetdb.sh" ],
     "logConfiguration": {
