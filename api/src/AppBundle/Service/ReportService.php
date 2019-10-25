@@ -254,7 +254,6 @@ class ReportService
     /**
      * Clones instance of ReportInterface and returns new Report Bank Account
      *
-     * @param ReportInterface $toReport
      * @param BankAccountInterface $account
      * @return ReportBankAccount
      */
@@ -276,11 +275,12 @@ class ReportService
     /**
      * Set report submitted and create a new year report
      *
-     * @param Ndr|Report $currentReport
+     * @param ReportInterface $currentReport
      * @param User $user
      * @param \DateTime $submitDate
+     * @param null $ndrDocumentId
+     * @return Report
      *
-     * @return Report new year's report
      */
     public function submit(ReportInterface $currentReport, User $user, \DateTime $submitDate, $ndrDocumentId = null)
     {
@@ -296,7 +296,7 @@ class ReportService
 
         // create submission record with NEW documents (= documents not yet attached to a submission)
         $submission = new ReportSubmission($currentReport, $user);
-        if ($currentReport instanceof Ndr) {
+        if ($currentReport instanceof Ndr && (null !== $ndrDocumentId)) {
             $document = $this->_em->getRepository(Document::class)->find($ndrDocumentId);
             $document->setReportSubmission($submission);
         } else {
