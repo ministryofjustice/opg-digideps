@@ -1,9 +1,9 @@
-module "test_api" {
+module "api_unit_test" {
   source = "./task"
-  name   = "test-api"
+  name   = "api-unit-test"
 
   cluster_name          = aws_ecs_cluster.main.name
-  container_definitions = "[${local.test_api_container}]"
+  container_definitions = "[${local.api_unit_test_container}]"
   default_tags          = local.default_tags
   environment           = local.environment
   execution_role_arn    = aws_iam_role.execution_role.arn
@@ -13,9 +13,9 @@ module "test_api" {
 }
 
 locals {
-  test_api_container = <<EOF
+  api_unit_test_container = <<EOF
   {
-    "name": "test_api",
+    "name": "api-unit-test",
     "image": "${local.images.api}",
     "command": [ "sh", "scripts/apiunittest.sh" ],
     "logConfiguration": {

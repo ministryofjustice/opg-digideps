@@ -1,9 +1,9 @@
-module "test_front" {
+module "client_unit_test" {
   source = "./task"
-  name   = "test-front"
+  name   = "client-unit-test"
 
   cluster_name          = aws_ecs_cluster.main.name
-  container_definitions = "[${local.test_front_container}]"
+  container_definitions = "[${local.client_unit_test_container}]"
   default_tags          = local.default_tags
   environment           = local.environment
   execution_role_arn    = aws_iam_role.execution_role.arn
@@ -13,9 +13,9 @@ module "test_front" {
 }
 
 locals {
-  test_front_container = <<EOF
+  client_unit_test_container = <<EOF
   {
-    "name": "test_front",
+    "name": "client-unit-test",
     "image": "${local.images.client}",
     "command": [ "bin/phpunit", "-c", "tests/phpunit/" ],
     "logConfiguration": {
