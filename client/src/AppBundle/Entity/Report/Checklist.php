@@ -305,7 +305,7 @@ class Checklist
     /**
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({"report-checklist"})
+     * @JMS\Groups({"full-review-checklist"})
      */
     private $fullReviewDecision;
 
