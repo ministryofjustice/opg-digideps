@@ -13,6 +13,15 @@
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block supportTitleTop %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
 
+{% block head %}
+    <style>
+        .opg-sticky-menu  {
+            position: sticky;
+            top: 1em;
+        }
+    </style>
+{% endblock %}
+
 {% block pageContent %}
     <dl class="govuk-summary-list govuk-summary-list--no-border">
         <div class="govuk-summary-list__row">
@@ -196,19 +205,31 @@
                 buttonClass: 'govuk-button--secondary behat-link-save-further-information'
             }) }}
 
-            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+            {% if checklist.submittedOn %}
+                {{ form_submit(form.save, '', {
+                    buttonClass: 'hidden'
+                }) }}
 
-            {{ form_submit(form.save, (page ~ '.form.save'), {
-                buttonClass: 'govuk-button--secondary behat-link-save-progress'
-            }) }}
+                {{ form_submit(form.submitAndDownload, '', {
+                    buttonClass: 'hidden'
+                }) }}
+            {% else %}
 
-            {{ form_submit(form.submitAndDownload, (page ~ '.form.submitAndDownload'), {
-                buttonClass: 'behat-link-submit-and-download'
-            }) }}
+                <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+                {{ form_submit(form.save, (page ~ '.form.save'), {
+                    buttonClass: 'govuk-button--secondary behat-link-save-progress'
+                }) }}
+
+                {{ form_submit(form.submitAndDownload, (page ~ '.form.submitAndDownload'), {
+                    buttonClass: 'behat-link-submit-and-download'
+                }) }}
+
+            {% endif %}
 
             {{ form_end(form) }}
         </div>
-        <div class="govuk-grid-column-one-third">
+        <div class="govuk-grid-column-one-third opg-sticky-menu">
             {% include 'AppBundle:Admin/Client/Report/partials:_checklistSidebar.html.twig' %}
         </div>
     </div>
