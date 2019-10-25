@@ -298,7 +298,7 @@ class Checklist
     /**
      * @var object
      * @JMS\Type("AppBundle\Model\FullReviewChecklist")
-     * @JMS\Groups({"report-checklist"})
+     * @JMS\Groups({"full-review-checklist"})
      */
     private $fullReview;
 
