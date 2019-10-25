@@ -1,0 +1,40 @@
+{% from 'AppBundle:Admin/Client/Report:macros.html.twig' import checklist_radios %}
+
+{% trans_default_domain 'admin-checklist' %}
+{% set page = 'checklistPage' %}
+
+<a name="anchor-full-review-checklist"></a>
+<hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+<h2 class="govuk-heading-l govuk-!-margin-top-6">{{ 'checklistPage.heading.fullReviewChecklist' | trans }}</h2>
+<hr class="govuk-section-break govuk-section-break--xl govuk-!-margin-top-1 govuk-section-break--visible">
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+
+        {{ form_checkbox_group(form.fullReviewDecision, (page ~ '.form.finalDecision'), {
+            classes: 'govuk-radios--inline govuk-radios--small',
+            legendClass: 'govuk-fieldset__legend--m',
+            formGroupClass: 'govuk-!-margin-bottom-1',
+        }) }}
+
+        {{ form_input(form.fullReview.decisionExplanation, page ~ '.form.finalDecisionExplanation', {
+            inputClass: 'govuk-!-width-full',
+        }) }}
+
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+        {{ form_submit(form.save, (page ~ '.form.save'), {
+            buttonClass: 'govuk-button--secondary behat-link-save-progress'
+        }) }}
+
+        {{ form_submit(form.submit, (page ~ '.form.submitAndDownload'), {
+            buttonClass: 'behat-link-submit-and-download'
+        }) }}
+
+        {{ form_end(form) }}
+    </div>
+    <div class="govuk-grid-column-one-third opg-sticky-menu">
+        Full review sidebar
+    </div>
+</div>
