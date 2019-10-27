@@ -3,7 +3,7 @@ require('../scss/application.scss')
 require('./modules/bind.js')
 
 var GOVUKFrontend = require('govuk-frontend')
-var Stickyfill = require('stickyfill')
+var Stickyfill = require('stickyfilljs')
 var limitChars = require('./modules/characterLimiter.js')
 var cookieBanner = require('./modules/cookieBanner.js')
 var detailsExpander = require('./modules/detailsExpander.js')
