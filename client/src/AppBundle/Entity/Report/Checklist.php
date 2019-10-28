@@ -5,7 +5,6 @@ namespace AppBundle\Entity\Report;
 use AppBundle\Entity\Report\Traits\HasReportTrait;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\Traits\ModifyAudit;
-use AppBundle\Model\FullReviewChecklist;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -294,20 +293,6 @@ class Checklist
      * @JMS\Groups({"report-checklist"})
      */
     protected $buttonClicked;
-
-    /**
-     * @var object
-     * @JMS\Type("AppBundle\Model\FullReviewChecklist")
-     * @JMS\Groups({"full-review-checklist"})
-     */
-    private $fullReview;
-
-    /**
-     * @var string
-     * @JMS\Type("string")
-     * @JMS\Groups({"full-review-checklist"})
-     */
-    private $fullReviewDecision;
 
     /**
      * Checklist constructor.
@@ -921,44 +906,6 @@ class Checklist
     public function setButtonClicked($buttonClicked)
     {
         $this->buttonClicked = $buttonClicked;
-        return $this;
-    }
-
-    /**
-     * @return FullReviewChecklist
-     */
-    public function getFullReview(): ?FullReviewChecklist
-    {
-        return $this->fullReview ?: new FullReviewChecklist();
-    }
-
-    /**
-     * @param FullReviewChecklist $fullReview
-     *
-     * @return $this
-     */
-    public function setFullReview(FullReviewChecklist $fullReview)
-    {
-        $this->fullReview = $fullReview;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFullReviewDecision(): ?string
-    {
-        return $this->fullReviewDecision;
-    }
-
-    /**
-     * @param string $fullReviewDecision
-     *
-     * @return $this
-     */
-    public function setFullReviewDecision(string $fullReviewDecision)
-    {
-        $this->fullReviewDecision = $fullReviewDecision;
         return $this;
     }
 }
