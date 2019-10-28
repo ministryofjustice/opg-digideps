@@ -1,0 +1,37 @@
+{% extends 'AppBundle:Admin/Client/Report/sidebar:_sidebar.html.twig' %}
+
+{% trans_default_domain "admin-checklist" %}
+
+{% set checklistDomain = 'lodging' %}
+
+{% block links %}
+    <li><a href="#deputyAndClientInfo" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.info') | trans }}</a></li>
+    <li><a href="#decisionsMade" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.decisions') | trans }}</a></li>
+    <li><a href="#peopleConsulted" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.contacts') | trans }}</a></li>
+    <li><a href="#visitsAndCare" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.visitsAndCare') | trans }}</a></li>
+    {% if form.satisfiedWithHealthAndLifestyle is defined %}
+        <li><a href="#lifestyle" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.healthAndLifestyle') | trans }}</a></li>
+    {% endif %}
+    {% if form.assetsDeclaredAndManaged is defined %}
+        <li><a href="#assetsAndDebts" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.assetsAndDebts') | trans }}</a></li>
+    {% endif %}
+    {% if form.openClosingBalancesMatch is defined %}
+        <li><a href="#moneyInOut" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.money') | trans }}</a></li>
+    {% endif %}
+    {% if form.satisfiedWithPaExpenses is defined %}
+        <li><a href="#paFeesExpenses" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.paFeeExpenses') | trans }}</a></li>
+    {% endif %}
+    {% if form.bondAdequate is defined %}
+        <li><a href="#bonds" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.bonds') | trans }}</a></li>
+    {% endif %}
+    {% if form.paymentsMatchCostCertificate is defined %}
+        <li><a href="#profDeputyCosts" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.profDeputyCosts') | trans }}</a></li>
+    {% endif %}
+    {% if form.nextBillingEstimatesSatisfactory is defined %}
+        <li><a href="#profDeputyCostsEstimate" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.profDeputyCostsEstimate') | trans }}</a></li>
+    {% endif %}
+    <li><a href="#nextReportingPeriod" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.nextPeriod') | trans }}</a></li>
+    <li><a href="#declaration" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.declaration') | trans }}</a></li>
+    <li><a href="#anchor-lodging-summary" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.summary') | trans }}</a></li>
+    <li><a href="#anchor-further-information" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.furtherInfo') | trans }}</a></li>
+{% endblock %}

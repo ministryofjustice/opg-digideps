@@ -3,7 +3,7 @@
 {% trans_default_domain 'admin-checklist' %}
 {% set page = 'checklistPage' %}
 
-<a name="anchor-full-review-checklist"></a>
+<a name="anchor-fullReview-checklist"></a>
 <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 <h2 class="govuk-heading-l govuk-!-margin-top-6">{{ 'checklistPage.heading.fullReview.title' | trans }}</h2>
 <hr class="govuk-section-break govuk-section-break--xl govuk-!-margin-top-1 govuk-section-break--visible">
@@ -36,6 +36,6 @@
         {{ form_end(form) }}
     </div>
     <div class="govuk-grid-column-one-third opg-sticky-menu">
-        {% include 'AppBundle:Admin/Client/Report/partials:_fullReviewChecklistSidebar.html.twig' %}
+        {% include 'AppBundle:Admin/Client/Report/sidebar:_fullReview.html.twig' %}
     </div>
 </div>
