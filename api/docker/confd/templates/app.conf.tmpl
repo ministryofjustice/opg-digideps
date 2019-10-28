@@ -7,6 +7,9 @@ server {
     listen     443 ssl;
     root /var/www/web;
 
+
+    # This is handled by PHP
+    client_max_body_size 0;
     client_body_timeout 240s;
 
     ssl_certificate         /etc/nginx/certs/app.crt;
