@@ -226,7 +226,7 @@
     </div>
 
     {% if checklist.submittedOn and checklist.finalDecision == 'for-review' %}
-        {% include 'AppBundle:Admin/Client/Report:fullReviewChecklist.html.twig' with {form: reviewForm} %}
+        {% include 'AppBundle:Admin/Client/Report:fullReviewChecklist.html.twig' with {form: reviewForm, checklist: reviewChecklist} %}
     {% endif %}
 
 {% endblock %}
