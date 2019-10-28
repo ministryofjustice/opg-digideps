@@ -132,6 +132,7 @@ workflows:
           filters: { branches: { only: [ master ] } }
           task_name: backup
           tf_workspace: production02
+          timeout: "600"
 
       - run-task:
           name: restore production to preproduction
@@ -139,6 +140,7 @@ workflows:
           filters: { branches: { only: [ master ] } }
           task_name: restore_from_production
           tf_workspace: preprod
+          timeout: "600"
 
 orbs:
   aws-cli: circleci/aws-cli@0.1.13
@@ -345,6 +347,10 @@ jobs:
       task_name:
         description: name of task to run
         type: string
+      timeout:
+        description: time the task will run for before timing out
+        type: string
+        default: "120"
     environment:
       WORKSPACE: << parameters.tf_workspace >>
     working_directory: ~/project/environment
@@ -364,4 +370,4 @@ jobs:
           command: terraform output -json > terraform.output.json
       - run:
           name: Run task
-          command: runner -task << parameters.task_name >>
+          command: runner -task << parameters.task_name >> -timeout << parameters.timeout >>
