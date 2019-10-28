@@ -22,6 +22,6 @@ fi
 
 echo "Restoring ${LATEST_BACKUP}"
 
-pg_restore $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE --no-owner dump.sql
+psql $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE < dump.sql
 
 echo "Restore complete"

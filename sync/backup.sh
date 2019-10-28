@@ -7,7 +7,7 @@ source common.sh
 
 echo "Creating dump of ${POSTGRES_DATABASE} database from ${POSTGRES_HOST}..."
 
-pg_dump $POSTGRES_HOST_OPTS $POSTGRES_DATABASE | gzip > dump.sql.gz
+pg_dump $POSTGRES_HOST_OPTS $POSTGRES_DATABASE --no-owner | gzip > dump.sql.gz
 
 echo "Uploading dump to $S3_BUCKET"
 
