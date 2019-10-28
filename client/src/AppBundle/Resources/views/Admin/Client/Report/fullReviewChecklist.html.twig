@@ -13,13 +13,13 @@
         {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
         <a name="anchor-full-review-final-decision"></a>
-        {{ form_checkbox_group(form.fullReviewDecision, (page ~ '.form.finalDecision'), {
+        {{ form_checkbox_group(form.decision, (page ~ '.form.finalDecision'), {
             classes: 'govuk-radios--inline govuk-radios--small',
             legendClass: 'govuk-fieldset__legend--m',
             formGroupClass: 'govuk-!-margin-bottom-1',
         }) }}
 
-        {{ form_input(form.fullReview.decisionExplanation, page ~ '.form.finalDecisionExplanation', {
+        {{ form_input(form.answers.decisionExplanation, page ~ '.form.finalDecisionExplanation', {
             inputClass: 'govuk-!-width-full',
         }) }}
 

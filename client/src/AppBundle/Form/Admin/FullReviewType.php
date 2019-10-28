@@ -2,11 +2,10 @@
 
 namespace AppBundle\Form\Admin;
 
-use AppBundle\Entity\Report\Checklist;
+use AppBundle\Entity\Report\ReviewChecklist;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class FullReviewType extends AbstractType
@@ -17,8 +16,8 @@ class FullReviewType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('fullReview', FullReviewChecklistType::class)
-            ->add('fullReviewDecision', FormTypes\ChoiceType::class, [
+            ->add('answers', FullReviewChecklistType::class)
+            ->add('decision', FormTypes\ChoiceType::class, [
                 'choices' => [
                     'checklistPage.form.finalDecision.fullReviewOptions.satisfied' => 'satisfied',
                     'checklistPage.form.finalDecision.fullReviewOptions.furtherCaseworkRequired' => 'further-casework-required',
@@ -26,24 +25,17 @@ class FullReviewType extends AbstractType
                 ],
                 'expanded' => true,
             ])
-            ->add('save', FormTypes\SubmitType::class)
-            ->add('submit', FormTypes\SubmitType::class);
+            ->add(self::SAVE_ACTION, FormTypes\SubmitType::class, [
+                'validation_groups' => false,
+            ])
+            ->add(self::SUBMIT_ACTION, FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Checklist::class,
+            'data_class' => ReviewChecklist::class,
             'translation_domain' => 'admin-checklist',
-            'validation_groups'  => function (FormInterface $form) {
-                $ret = [];
-
-                if (self::SUBMIT_ACTION == $form->getClickedButton()->getName()) {
-                    $ret[] = 'submit-checklist';
-                }
-
-                return $ret;
-            },
         ]);
     }
 
