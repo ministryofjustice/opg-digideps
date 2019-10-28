@@ -7,6 +7,9 @@ server {
     listen     443 ssl;
     root /var/www/web;
 
+
+    # This is handled by PHP
+    client_max_body_size 0;
     client_body_timeout 240s;
 
     ssl_certificate         /etc/nginx/certs/app.crt;
@@ -36,6 +39,8 @@ server {
         # for more information).
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
         fastcgi_param DOCUMENT_ROOT $realpath_root;
+        
+        fastcgi_request_buffering off;
 
         # Prevents URIs that include the front controller. This will 404:
         # http://domain.tld/app.php/some-path
