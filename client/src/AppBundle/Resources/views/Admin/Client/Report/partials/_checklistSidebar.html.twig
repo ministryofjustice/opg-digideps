@@ -25,37 +25,37 @@
 
 <div class="opg-related-items">
     <span class="govuk-caption-m">{{ (page ~ '.jumpTo') | trans }}:</span>
-    <h3 class="govuk-heading-s">{{ (page ~ '.heading.lodgingChecklist') | trans }}</h3>
+    <h3 class="govuk-heading-s">{{ (page ~ '.heading.lodging.title') | trans }}</h3>
     <ul class="govuk-list">
-        <li><a href="#deputyAndClientInfo" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.info') | trans }}</a></li>
-        <li><a href="#decisionsMade" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.decisions') | trans }}</a></li>
-        <li><a href="#peopleConsulted" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.contacts') | trans }}</a></li>
-        <li><a href="#visitsAndCare" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.visitsAndCare') | trans }}</a></li>
+        <li><a href="#deputyAndClientInfo" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.info') | trans }}</a></li>
+        <li><a href="#decisionsMade" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.decisions') | trans }}</a></li>
+        <li><a href="#peopleConsulted" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.contacts') | trans }}</a></li>
+        <li><a href="#visitsAndCare" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.visitsAndCare') | trans }}</a></li>
         {% if form.satisfiedWithHealthAndLifestyle is defined %}
-            <li><a href="#lifestyle" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.healthAndLifestyle') | trans }}</a></li>
+            <li><a href="#lifestyle" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.healthAndLifestyle') | trans }}</a></li>
         {% endif %}
         {% if form.assetsDeclaredAndManaged is defined %}
-            <li><a href="#assetsAndDebts" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.assetsAndDebts') | trans }}</a></li>
+            <li><a href="#assetsAndDebts" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.assetsAndDebts') | trans }}</a></li>
         {% endif %}
         {% if form.openClosingBalancesMatch is defined %}
-            <li><a href="#moneyInOut" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.money') | trans }}</a></li>
+            <li><a href="#moneyInOut" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.money') | trans }}</a></li>
         {% endif %}
         {% if form.satisfiedWithPaExpenses is defined %}
-            <li><a href="#paFeesExpenses" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.paFeeExpenses') | trans }}</a></li>
+            <li><a href="#paFeesExpenses" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.paFeeExpenses') | trans }}</a></li>
         {% endif %}
         {% if form.bondAdequate is defined %}
-            <li><a href="#bonds" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.bonds') | trans }}</a></li>
+            <li><a href="#bonds" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.bonds') | trans }}</a></li>
         {% endif %}
         {% if form.paymentsMatchCostCertificate is defined %}
-            <li><a href="#profDeputyCosts" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.profDeputyCosts') | trans }}</a></li>
+            <li><a href="#profDeputyCosts" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.profDeputyCosts') | trans }}</a></li>
         {% endif %}
         {% if form.nextBillingEstimatesSatisfactory is defined %}
-            <li><a href="#profDeputyCostsEstimate" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.profDeputyCostsEstimate') | trans }}</a></li>
+            <li><a href="#profDeputyCostsEstimate" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.profDeputyCostsEstimate') | trans }}</a></li>
         {% endif %}
-        <li><a href="#nextReportingPeriod" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.nextPeriod') | trans }}</a></li>
-        <li><a href="#declaration" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.declaration') | trans }}</a></li>
-        <li><a href="#anchor-lodging-summary" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodgingSummary') | trans }}</a></li>
-        <li><a href="#anchor-further-information" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.furtherInfo') | trans }}</a></li>
+        <li><a href="#nextReportingPeriod" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.nextPeriod') | trans }}</a></li>
+        <li><a href="#declaration" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.declaration') | trans }}</a></li>
+        <li><a href="#anchor-lodging-summary" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.summary') | trans }}</a></li>
+        <li><a href="#anchor-further-information" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.furtherInfo') | trans }}</a></li>
     </ul>
 </div>
 
@@ -65,7 +65,7 @@
     <li>
         <a class="govuk-link govuk-body-s govuk-link--no-visited-state" href="#anchor-lodging-checklist">
             {{- macros.icon('arrow-up', 'govuk-!-margin-right-2') | spaceless -}}
-            {{ (page ~ '.backToTop') | trans }}: {{ (page ~ '.heading.lodgingChecklist') | trans }}
+            {{ (page ~ '.backToTop') | trans }}: {{ (page ~ '.heading.lodging.title') | trans }}
         </a>
     </li>
     <li>
