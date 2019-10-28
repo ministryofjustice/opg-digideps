@@ -246,16 +246,23 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
         $buttonClicked = $form->getClickedButton();
 
-        $reviewForm = $this->createForm(FullReviewType::class, $checklist);
+        $reviewChecklist = $this->getRestClient()->get('report/' . $report->getId() . '/checklist', 'Report\\ReviewChecklist');
+        $reviewChecklist = empty($reviewChecklist) ? new ReviewChecklist($report) : $reviewChecklist;
+        $reviewForm = $this->createForm(FullReviewType::class, $reviewChecklist);
         $reviewForm->handleRequest($request);
 
-        if ($reviewForm->isValid($reviewForm->getClickedButton())) {
+        if ($reviewForm->isValid()) {
+            if (!empty($reviewChecklist->getId())) {
+                $this->getRestClient()->put('report/' . $report->getId() . '/checklist', $reviewChecklist);
+            } else {
+                $this->getRestClient()->post('report/' . $report->getId() . '/checklist', $reviewChecklist);
+            }
 
             if (!$request->getSession()->getFlashBag()->has('notice')) {
                 $request->getSession()->getFlashBag()->add('notice', 'Review checklist saved');
             }
 
-            return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#');
+            return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#anchor-full-review-checklist');
         }
 
         if ($buttonClicked instanceof SubmitButton) {
