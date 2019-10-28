@@ -34,6 +34,7 @@ workflows:
           requires: [ restore environment ]
           filters: { branches: { ignore: [ master ] } }
           task_name: reset_database
+          timeout: 180
 
       - run-task:
           name: integration test
@@ -98,6 +99,7 @@ workflows:
           filters: { branches: { only: [ master ] } }
           task_name: reset_database
           tf_workspace: master
+          timeout: 180
 
       - run-task:
           name: integration test
