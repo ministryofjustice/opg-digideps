@@ -33,25 +33,25 @@ workflows:
           name: reset environment
           requires: [ restore environment ]
           filters: { branches: { ignore: [ master ] } }
-          task_name: reset-database
+          task_name: reset_database
 
       - run-task:
           name: integration test
           requires: [ reset environment ]
           filters: { branches: { ignore: [ master ] } }
-          task_name: integration-test
+          task_name: integration_test
 
       - run-task:
           name: client unit test
           requires: [ restore environment  ]
           filters: { branches: { ignore: [ master ] } }
-          task_name: client-unit-test
+          task_name: client_unit_test
 
       - run-task:
           name: api unit test
           requires: [ restore environment ]
           filters: { branches: { ignore: [ master ] } }
-          task_name: api-unit-test
+          task_name: api_unit_test
 
       - cleanup:
           name: approve destroy environment
@@ -95,28 +95,28 @@ workflows:
           name: reset master
           requires: [ apply master ]
           filters: { branches: { only: [ master ] } }
-          task_name: reset-database
+          task_name: reset_database
           tf_workspace: master
 
       - run-task:
           name: integration test
           requires: [ reset master ]
           filters: { branches: { only: [ master ] } }
-          task_name: integration-test
+          task_name: integration_test
           tf_workspace: master
 
       - run-task:
           name: client unit test
           requires: [ apply master  ]
           filters: { branches: { only: [ master ] } }
-          task_name: client-unit-test
+          task_name: client_unit_test
           tf_workspace: master
 
       - run-task:
           name: api unit test
           requires: [ apply master ]
           filters: { branches: { only: [ master ] } }
-          task_name: api-unit-test
+          task_name: api_unit_test
           tf_workspace: master
 
       - apply:
