@@ -785,7 +785,7 @@ class ReportController extends RestController
      */
     public function getChecklist(Request $request, $report_id)
     {
-        $this->setJmsSerialiserGroups(['checklist']);
+        $this->setJmsSerialiserGroups(['checklist', 'last-modified', 'user']);
 
         $checklist = $this
             ->getRepository(EntityDir\Report\ReviewChecklist::class)
