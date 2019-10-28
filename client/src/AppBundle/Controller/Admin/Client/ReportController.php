@@ -296,20 +296,15 @@ class ReportController extends AbstractController
     /**
      * @Route("checklist-submitted", name="admin_report_checklist_submitted")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_CASE_MANAGER')")
-     * @param Request $request
      * @param $id
      *
      * @Template("AppBundle:Admin/Client/Report:checklistSubmitted.html.twig")
      *
      * @return array
      */
-    public function checklistSubmittedAction(Request $request, $id)
+    public function checklistSubmittedAction($id)
     {
-        $report = $this->getReport($id, array_merge(self::$reportGroupsAll, ['client', 'report', 'report-checklist', 'checklist-information', 'user']));
-
-        return [
-            'report' => $report
-        ];
+        return ['report' => $this->getReport($id)];
     }
 
     /**
@@ -323,7 +318,7 @@ class ReportController extends AbstractController
      */
     public function checklistPDFViewAction($id)
     {
-        $report = $this->getReport($id, array_merge(self::$reportGroupsAll, ['client', 'report', 'report-checklist', 'checklist-information', 'user']));
+        $report = $this->getReport($id, array_merge(self::$reportGroupsAll, ['report-checklist', 'checklist-information', 'user']));
         $pdfBinary = $this->get('AppBundle\Service\ReportSubmissionService')->getChecklistPdfBinaryContent($report);
 
         $response = new Response($pdfBinary);
