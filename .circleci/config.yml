@@ -40,6 +40,7 @@ workflows:
           requires: [ reset environment ]
           filters: { branches: { ignore: [ master ] } }
           task_name: integration_test
+          timeout: 1500
 
       - run-task:
           name: client unit test
@@ -104,6 +105,7 @@ workflows:
           filters: { branches: { only: [ master ] } }
           task_name: integration_test
           tf_workspace: master
+          timeout: 1500
 
       - run-task:
           name: client unit test
@@ -162,7 +164,7 @@ workflows:
           filters: { branches: { only: [ master ] } }
           task_name: backup
           tf_workspace: production02
-          timeout: "600"
+          timeout: 600
 
       - run-task:
           name: restore production to preproduction
@@ -170,7 +172,7 @@ workflows:
           filters: { branches: { only: [ master ] } }
           task_name: restore_from_production
           tf_workspace: preprod
-          timeout: "600"
+          timeout: 600
 
 orbs:
   aws-cli: circleci/aws-cli@0.1.13
@@ -327,8 +329,8 @@ jobs:
         type: string
       timeout:
         description: time the task will run for before timing out
-        type: string
-        default: "120"
+        type: integer
+        default: 120
     environment:
       WORKSPACE: << parameters.tf_workspace >>
     working_directory: ~/project/environment
