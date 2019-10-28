@@ -39,6 +39,8 @@ server {
         # for more information).
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
         fastcgi_param DOCUMENT_ROOT $realpath_root;
+        
+        fastcgi_request_buffering off;
 
         # Prevents URIs that include the front controller. This will 404:
         # http://domain.tld/app.php/some-path
