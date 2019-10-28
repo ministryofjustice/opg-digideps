@@ -25,7 +25,7 @@ class ReviewChecklist
      * @var AppBundle\Model\FullReviewChecklist
      *
      * @JMS\Type("AppBundle\Model\FullReviewChecklist")\
-     * @Assert\NotBlank(message="checklist.finalDecision.notBlank")
+     * @Assert\Valid
      */
     private $answers;
 
@@ -33,7 +33,7 @@ class ReviewChecklist
      * @var string
      *
      * @JMS\Type("string")
-     * @Assert\Valid
+     * @Assert\NotBlank(message="checklist.finalDecision.notBlank")
      */
     private $decision;
 
