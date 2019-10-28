@@ -73,7 +73,7 @@ Feature: Prof deputy is discharged
       | report_checklist_caseWorkerSatisified_0                | yes                |
       | report_checklist_finalDecision_0                       | for-review         |
       | report_checklist_lodgingSummary                        | I am not satisfied |
-    Then I click on "submit-and-download"
+    Then I click on "submit-and-continue"
     And the form should be valid
 
 

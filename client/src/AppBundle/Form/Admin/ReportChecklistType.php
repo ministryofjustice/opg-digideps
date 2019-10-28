@@ -16,7 +16,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ReportChecklistType extends AbstractType
 {
     const SAVE_ACTION = 'submitAndDownload';
-    const SUBMIT_AND_DOWNLOAD_ACTION = 'submitAndDownload';
+    const SUBMIT_AND_DOWNLOAD_ACTION = 'submitAndContinue';
 
     /**
      * @var Report
@@ -181,7 +181,7 @@ class ReportChecklistType extends AbstractType
             ->add('furtherInformationReceived', FormTypes\TextareaType::class, [])
             ->add('saveFurtherInformation', FormTypes\SubmitType::class)
             ->add('save', FormTypes\SubmitType::class)
-            ->add('submitAndDownload', FormTypes\SubmitType::class);
+            ->add('submitAndContinue', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

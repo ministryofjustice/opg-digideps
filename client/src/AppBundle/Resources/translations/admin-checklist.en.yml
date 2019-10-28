@@ -67,8 +67,8 @@ checklistPage:
   form:
     save:
       label: Save progress
-    submitAndDownload:
-      label: Submit checklist and download PDF
+    submitAndContinue:
+      label: Submit checklist and continue
     saveFurtherInformation:
       label: Save further information
     reportingPeriodAccurate:
@@ -162,3 +162,8 @@ checklistPage:
           sent an acknowledgment to the deputy(s)
     furtherInformationReceived:
       label: Further information received
+
+checklistSubmittedPage:
+  htmlTitle: Administration - Report checklist
+  pageTitle: Admin
+  supportTitle: Checklist submitted
