@@ -25,11 +25,9 @@
 
 <div class="opg-related-items">
     <span class="govuk-caption-m">{{ (page ~ '.jumpTo') | trans }}:</span>
-    <h3 class="govuk-heading-s">{{ (page ~ '.heading.fullReview.title') | trans }}</h3>
+    <h3 class="govuk-heading-s">{{ (page ~ '.heading.' ~ checklistDomain ~ '.title') | trans }}</h3>
     <ul class="govuk-list">
-        <li><a href="#anchor-full-review-final-decision" class="govuk-link govuk-!-font-size-16">
-            {{ (page ~ '.heading.fullReview.finalDecision') | trans }}
-        </a></li>
+        {% block links %}{% endblock %}
     </ul>
 </div>
 
@@ -37,9 +35,9 @@
 
 <ul class="govuk-list">
     <li>
-        <a class="govuk-link govuk-body-s govuk-link--no-visited-state" href="#anchor-full-review-checklist">
+        <a class="govuk-link govuk-body-s govuk-link--no-visited-state" href="#anchor-{{ checklistDomain }}-checklist">
             {{- macros.icon('arrow-up', 'govuk-!-margin-right-2') | spaceless -}}
-            {{ (page ~ '.backToTop') | trans }}: {{ (page ~ '.heading.fullReview.title') | trans }}
+            {{ (page ~ '.backToTop') | trans }}: {{ (page ~ '.heading.' ~ checklistDomain ~ '.title') | trans }}
         </a>
     </li>
     <li>
