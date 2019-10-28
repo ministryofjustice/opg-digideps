@@ -258,9 +258,7 @@ class ReportController extends AbstractController
                 $this->getRestClient()->post('report/' . $report->getId() . '/checklist', $reviewChecklist);
             }
 
-            if (!$request->getSession()->getFlashBag()->has('notice')) {
-                $request->getSession()->getFlashBag()->add('notice', 'Review checklist saved');
-            }
+            $request->getSession()->getFlashBag()->add('notice', 'Review checklist saved');
 
             return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#anchor-fullReview-checklist');
         }
