@@ -29,25 +29,34 @@ workflows:
           filters: { branches: { ignore: [ master ] } }
           task_name: restore
 
-      - client_integration_test:
-          name: client integration test
+      - run-task:
+          name: reset environment
           requires: [ restore environment ]
           filters: { branches: { ignore: [ master ] } }
+          task_name: reset-database
 
-      - client_unit_test:
+      - run-task:
+          name: integration test
+          requires: [ reset environment ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: integration-test
+
+      - run-task:
           name: client unit test
           requires: [ restore environment  ]
           filters: { branches: { ignore: [ master ] } }
+          task_name: client-unit-test
 
-      - api_unit_test:
+      - run-task:
           name: api unit test
           requires: [ restore environment ]
           filters: { branches: { ignore: [ master ] } }
+          task_name: api-unit-test
 
       - cleanup:
           name: approve destroy environment
           type: approval
-          requires: [ api unit test, client unit test, client integration test ]
+          requires: [ api unit test, client unit test, integration test ]
           filters: { branches: { ignore: [ master ] } }
 
       - apply:
@@ -82,22 +91,32 @@ workflows:
           filters: { branches: { only: [ master ] } }
           tf_workspace: master
 
-      - client_integration_test:
-          name: client integration test
-          requires: [ apply master  ]
-          filters: { branches: { only: [ master ] } }
-          tf_workspace: master
-
-      - client_unit_test:
-          name: client unit test
+      - run-task:
+          name: reset master
           requires: [ apply master ]
           filters: { branches: { only: [ master ] } }
+          task_name: reset-database
           tf_workspace: master
 
-      - api_unit_test:
+      - run-task:
+          name: integration test
+          requires: [ reset master ]
+          filters: { branches: { only: [ master ] } }
+          task_name: integration-test
+          tf_workspace: master
+
+      - run-task:
+          name: client unit test
+          requires: [ apply master  ]
+          filters: { branches: { only: [ master ] } }
+          task_name: client-unit-test
+          tf_workspace: master
+
+      - run-task:
           name: api unit test
           requires: [ apply master ]
           filters: { branches: { only: [ master ] } }
+          task_name: api-unit-test
           tf_workspace: master
 
       - apply:
@@ -108,7 +127,7 @@ workflows:
 
       - apply:
           name: apply shared-production
-          requires: [ api unit test, client unit test, client integration test ]
+          requires: [ api unit test, client unit test, integration test ]
           filters: { branches: { only: [ master ] } }
           tf_tier: shared
           tf_workspace: production
