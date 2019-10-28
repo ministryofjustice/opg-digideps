@@ -5,7 +5,7 @@
 {% trans_default_domain translationDomain %}
 {% set page = 'checklistPage' %}
 
-<h3 class="govuk-heading-m" id="nextReportingPeriod">{{ (page ~ '.heading.nextPeriod') | trans }}</h3>
+<h3 class="govuk-heading-m" id="nextReportingPeriod">{{ (page ~ '.heading.lodging.nextPeriod') | trans }}</h3>
 
 {% set name = report.hasSection('lifestyle') ? 'futureSignificantChanges' : 'futureSignificantDecisions' %}
 {{ checklist_radios(form.futureSignificantDecisions, { name: name }) }}
