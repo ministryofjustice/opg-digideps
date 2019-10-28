@@ -42,7 +42,7 @@ if [ "${S3_S3V4}" = "yes" ]; then
     aws configure set default.s3.signature_version s3v4
 fi
 
-if [ "${S3_ENDPOINT}" == "**None**" ]; then
+if [ "${S3_ENDPOINT}" = "**None**" ]; then
   AWS_ARGS=""
 else
   AWS_ARGS="--endpoint-url ${S3_ENDPOINT}"
