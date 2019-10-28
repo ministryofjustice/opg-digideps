@@ -1,0 +1,11 @@
+{% extends 'AppBundle:Admin/Client/Report/sidebar:_sidebar.html.twig' %}
+
+{% trans_default_domain "admin-checklist" %}
+
+{% set checklistDomain = 'fullReview' %}
+
+{% block links %}
+    <li><a href="#anchor-full-review-final-decision" class="govuk-link govuk-!-font-size-16">
+        {{ (page ~ '.heading.fullReview.finalDecision') | trans }}
+    </a></li>
+{% endblock %}
