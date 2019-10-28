@@ -6,10 +6,14 @@ use AppBundle\Entity\Report\Checklist;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class FullReviewType extends AbstractType
 {
+    const SAVE_ACTION = 'save';
+    const SUBMIT_ACTION = 'submit';
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -31,6 +35,15 @@ class FullReviewType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Checklist::class,
             'translation_domain' => 'admin-checklist',
+            'validation_groups'  => function (FormInterface $form) {
+                $ret = [];
+
+                if (self::SUBMIT_ACTION == $form->getClickedButton()->getName()) {
+                    $ret[] = 'submit-checklist';
+                }
+
+                return $ret;
+            },
         ]);
     }
 

@@ -249,10 +249,7 @@ class ReportController extends AbstractController
         $reviewForm = $this->createForm(FullReviewType::class, $checklist);
         $reviewForm->handleRequest($request);
 
-        if ($reviewForm->isValid()) {
-            $this->getRestClient()->put('report/' . $report->getId() . '/checked', $checklist, [
-                'full-review-checklist',
-            ]);
+        if ($reviewForm->isValid($reviewForm->getClickedButton())) {
 
             if (!$request->getSession()->getFlashBag()->has('notice')) {
                 $request->getSession()->getFlashBag()->add('notice', 'Review checklist saved');
