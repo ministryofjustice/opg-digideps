@@ -27,14 +27,14 @@ locals {
     },
     "secrets": [
       { "name": "PGPASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
-      { "name": "FRONTEND_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_frontend_secret.arn}" }
+      { "name": "SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_frontend_secret.arn}" }
     ],
     "environment": [
       { "name": "PGHOST", "value": "${aws_db_instance.api.address}" },
       { "name": "PGDATABASE", "value": "${aws_db_instance.api.name}" },
       { "name": "PGUSER", "value": "digidepsmaster" },
-      { "name": "FRONTEND_ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
-      { "name": "FRONTEND_NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" }
+      { "name": "ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
+      { "name": "NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" }
     ]
   }
 EOF
