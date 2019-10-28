@@ -310,6 +310,7 @@ class ReportController extends AbstractController
             'form'     => $form->createView(),
             'reviewForm' => $reviewForm->createView(),
             'checklist' => $checklist,
+            'reviewChecklist' => $reviewChecklist,
             'previousReportData' => $report->getPreviousReportData()
         ];
     }
