@@ -247,7 +247,6 @@ class ReportController extends AbstractController
         $buttonClicked = $form->getClickedButton();
 
         $reviewChecklist = $this->getRestClient()->get('report/' . $report->getId() . '/checklist', 'Report\\ReviewChecklist');
-        $reviewChecklist = empty($reviewChecklist) ? new ReviewChecklist($report) : $reviewChecklist;
         $reviewForm = $this->createForm(FullReviewType::class, $reviewChecklist);
         $reviewForm->handleRequest($request);
 
