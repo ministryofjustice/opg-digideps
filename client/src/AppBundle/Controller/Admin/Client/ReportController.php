@@ -251,6 +251,10 @@ class ReportController extends AbstractController
         $reviewForm->handleRequest($request);
 
         if ($reviewForm->isValid()) {
+            if ($reviewForm->getClickedButton()->getName() === FullReviewType::SUBMIT_ACTION) {
+                $reviewChecklist->setIsSubmitted(true);
+            }
+
             if (!empty($reviewChecklist->getId())) {
                 $this->getRestClient()->put('report/' . $report->getId() . '/checklist', $reviewChecklist);
             } else {
