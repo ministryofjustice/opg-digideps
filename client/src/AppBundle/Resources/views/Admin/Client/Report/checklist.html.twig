@@ -196,27 +196,15 @@
                 buttonClass: 'govuk-button--secondary behat-link-save-further-information'
             }) }}
 
-            {% if checklist.submittedOn %}
-                {{ form_submit(form.save, '', {
-                    buttonClass: 'hidden'
-                }) }}
+            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-                {{ form_submit(form.submitAndDownload, '', {
-                    buttonClass: 'hidden'
-                }) }}
-            {% else %}
+            {{ form_submit(form.save, (page ~ '.form.save'), {
+                buttonClass: 'govuk-button--secondary behat-link-save-progress'
+            }) }}
 
-                <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-
-                {{ form_submit(form.save, (page ~ '.form.save'), {
-                    buttonClass: 'govuk-button--secondary behat-link-save-progress'
-                }) }}
-
-                {{ form_submit(form.submitAndDownload, (page ~ '.form.submitAndDownload'), {
-                    buttonClass: 'behat-link-submit-and-download'
-                }) }}
-
-            {% endif %}
+            {{ form_submit(form.submitAndDownload, (page ~ '.form.submitAndDownload'), {
+                buttonClass: 'behat-link-submit-and-download'
+            }) }}
 
             {{ form_end(form) }}
         </div>
