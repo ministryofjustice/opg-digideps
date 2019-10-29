@@ -9,11 +9,11 @@ variable "subnet_ids" { type = list(string) }
 variable "task_role_arn" { type = string }
 
 variable "memory" {
-    type = number
-    default = 512
+  type    = number
+  default = 512
 }
 
 variable "cpu" {
-    type = number
-    default = 256
+  type    = number
+  default = 256
 }
