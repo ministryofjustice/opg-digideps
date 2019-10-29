@@ -86,44 +86,46 @@ Feature: ndr / report submit
         And I should see "ndr"
 
     @ndr
+    Scenario: assert 2nd year report has been created
+        Given I am logged in as "behat-lay-deputy-ndr@publicguardian.gov.uk" with password "Abcd1234"
+        And I click on "report-start"
+        Then I should see a "#edit-contacts" element
+        And I should see a "#edit-decisions" element
+        And I should see a "#edit-bank_accounts" element
+        And I should see a "#edit-assets" element
+        # check bank accounts are added again
+        When I follow "edit-bank_accounts"
+        Then each text should be present in the corresponding region:
+            | Court Funds Office account | account-11cf |
+            | Saving account        | account-02ca |
+            | 445566                | account-02ca |
+            | HSBC - saving account | account-02ca |
+            | Saving account        | account-02ca |
+            | 445566                | account-02ca |
+        Then I click on "breadcrumbs-report-overview"
+        And I follow "edit-assets"
+        And each text should be present in the corresponding region:
+            | Yes                    | has-assets                   |
+            | Alfa Romeo 147 JTD     | asset-alfa-romeo-147-jtd     |
+            | £17,500.00             | asset-alfa-romeo-147-jtd     |
+            | 11 March 2015          | asset-alfa-romeo-147-jtd     |
+            | Impressionist painting | asset-impressionist-painting |
+            | £25,010.00             | asset-impressionist-painting |
+            | £42,510                | asset-total                 |
+
+    @ndr
     Scenario: NDR homepage and create new report
         Given I am logged in as "behat-lay-deputy-ndr@publicguardian.gov.uk" with password "Abcd1234"
         Then I should be on "/ndr"
         And I should see the "reports-history" region
-        # create report
-        When I click on "report-start"
-        Then the URL should match "report/create/\d+"
-        # simple validation check. Same form already tested from deputy, not need to check validation cases again
-        When I fill in the following:
-            | report_startDate_day |  |
-            | report_startDate_month |  |
-            | report_startDate_year |  |
-            | report_endDate_day |  |
-            | report_endDate_month |  |
-            | report_endDate_year |  |
-        And I press "report_save"
-        Then the following fields should have an error:
-            | report_startDate_day |
-            | report_startDate_month |
-            | report_startDate_year |
-            | report_endDate_day |
-            | report_endDate_month |
-            | report_endDate_year |
-        And I press "report_save"
-        Then the form should be invalid
-        # valid form
-        Then I fill in the following:
-            | report_startDate_day | 01 |
-            | report_startDate_month | 01 |
-            | report_startDate_year | 2016 |
-            | report_endDate_day | 31 |
-            | report_endDate_month | 12 |
-            | report_endDate_year | 2016 |
-        And I press "report_save"
-        Then the URL should match "/ndr"
-        # assert homepage with report created
-        When I go to "/"
-        And I click on "report-start"
-        Then the URL should match "report/\d+/overview"
-        And the response status code should be 200
+        # edit report period
+        And I click on "report-edit-period-inline"
+        # check the form loads the right value
+        Then the following fields should have the corresponding values:
+            | report_edit_startDate_day   | 02   |
+            | report_edit_startDate_month | 11   |
+            | report_edit_startDate_year  | 2018 |
+            | report_edit_endDate_day     | 01   |
+            | report_edit_endDate_month   | 11   |
+            | report_edit_endDate_year    | 2019 |
 

@@ -163,6 +163,16 @@ class Ndr implements ReportInterface
     private $agreedBehalfDeputyExplanation;
 
     /**
+     * @var User
+     *
+     * @JMS\Groups({"report-submitted-by"})
+     * @JMS\Type("AppBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", onDelete="SET NULL")
+     */
+    private $submittedBy;
+
+    /**
      * Ndr constructor.
      *
      * @param Client $client
@@ -592,5 +602,25 @@ class Ndr implements ReportInterface
     public function getReportTitle()
     {
         return 'ndr';
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubmittedBy()
+    {
+        return $this->submittedBy;
+    }
+
+    /**
+     * @param mixed $submittedBy
+     *
+     * @return Report
+     */
+    public function setSubmittedBy($submittedBy)
+    {
+        $this->submittedBy = $submittedBy;
+
+        return $this;
     }
 }
