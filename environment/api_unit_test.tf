@@ -10,6 +10,7 @@ module "api_unit_test" {
   subnet_ids            = data.aws_subnet.private[*].id
   task_role_arn         = data.aws_iam_role.sync.arn
   vpc_id                = data.aws_vpc.vpc.id
+  memory                = 1024
 }
 
 locals {
