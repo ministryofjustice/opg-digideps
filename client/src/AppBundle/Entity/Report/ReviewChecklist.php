@@ -5,6 +5,7 @@ namespace AppBundle\Entity\Report;
 use AppBundle\Entity\Report\Traits\HasReportTrait;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\Traits\ModifyAudit;
+use AppBundle\Entity\User;
 use AppBundle\Model\FullReviewChecklist;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -50,6 +51,13 @@ class ReviewChecklist
      * @JMS\Type("DateTime")
      */
     protected $submittedOn;
+
+    /**
+     * @var bool
+     *
+     * @JMS\Type("boolean")
+     */
+    protected $isSubmitted = false;
 
     /**
      * Checklist constructor.
@@ -153,6 +161,7 @@ class ReviewChecklist
     public function setSubmittedBy(User $submittedBy)
     {
         $this->submittedBy = $submittedBy;
+        $this->isSubmitted = true;
         return $this;
     }
 
@@ -172,6 +181,26 @@ class ReviewChecklist
     public function setSubmittedOn(\DateTime $submittedOn)
     {
         $this->submittedOn = $submittedOn;
+        $this->isSubmitted = true;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsSubmitted()
+    {
+        return $this->isSubmitted;
+    }
+
+    /**
+     * @param bool $isSubmitted
+     *
+     * @return $this
+     */
+    public function setIsSubmitted(bool $isSubmitted)
+    {
+        $this->isSubmitted = $isSubmitted;
         return $this;
     }
 }
