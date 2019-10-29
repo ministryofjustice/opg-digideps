@@ -10,15 +10,6 @@ resource "aws_security_group" "api_cache" {
   )
 }
 
-resource "aws_security_group_rule" "api_cache" {
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 6379
-  to_port                  = 6379
-  security_group_id        = aws_security_group.api_cache.id
-  source_security_group_id = aws_security_group.api_rds.id
-}
-
 resource "aws_security_group_rule" "api_cache_task_in" {
   type                     = "ingress"
   protocol                 = "tcp"
@@ -26,6 +17,15 @@ resource "aws_security_group_rule" "api_cache_task_in" {
   to_port                  = 6379
   security_group_id        = aws_security_group.api_cache.id
   source_security_group_id = aws_security_group.api_task.id
+}
+
+resource "aws_security_group_rule" "api_cache_unit_test_in" {
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 6379
+  to_port                  = 6379
+  security_group_id        = aws_security_group.api_cache.id
+  source_security_group_id = module.api_unit_test.security_group_id
 }
 
 resource "aws_elasticache_cluster" "api" {
