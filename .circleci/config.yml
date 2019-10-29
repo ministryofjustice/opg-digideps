@@ -54,6 +54,7 @@ workflows:
           requires: [ restore environment ]
           filters: { branches: { ignore: [ master ] } }
           task_name: api_unit_test
+          timeout: 600
 
       - cleanup:
           name: approve destroy environment
@@ -122,6 +123,7 @@ workflows:
           filters: { branches: { only: [ master ] } }
           task_name: api_unit_test
           tf_workspace: master
+          timeout: 600
 
       - apply:
           name: apply training
