@@ -174,7 +174,15 @@ Feature: Admin report checklist
       | report_checklist_caseWorkerSatisified_0                | yes                |
       | report_checklist_finalDecision_0                       | for-review         |
       | report_checklist_lodgingSummary                        | I am not satisfied |
-    Then I press "Save progress"
+    Then I click on "submit-and-download"
     And the form should be valid
+
+
+  Scenario: Admin marked as submitted
+    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    And I click on "admin-client-search, client-detail-01000010"
+    And I click on "checklist" in the "report-2016-to-2017" region
     Then each text should be present in the corresponding region:
+      | Case Manager1, Case Manager | last-saved-by     |
+      | Case Manager1, Case Manager | last-submitted-by |
       | Case Manager1, Case Manager | lodging-last-saved-by     |
