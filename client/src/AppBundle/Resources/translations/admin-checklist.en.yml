@@ -66,6 +66,8 @@ checklistPage:
       label: Save progress
     submitAndDownload:
       label: Submit checklist and download PDF
+    submit:
+      label: Submit checklist
     saveFurtherInformation:
       label: Save further information
     reportingPeriodAccurate:
