@@ -819,7 +819,7 @@ class ReportController extends RestController
             ->setAnswers($checklistData['answers'])
             ->setDecision($checklistData['decision']);
 
-        if ($checklistData['submitted']) {
+        if ($checklistData['is_submitted']) {
             $checklist->setSubmittedBy(($this->getUser()));
             $checklist->setSubmittedOn(new \DateTime());
         }
