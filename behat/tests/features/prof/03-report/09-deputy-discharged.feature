@@ -21,7 +21,7 @@ Feature: Prof deputy is discharged
     And I click on "admin-client-search, discharged-client-detail-01000010"
     And I click on "checklist" in the "report-2016-to-2017" region
     Then each text should be present in the corresponding region:
-      | Case Manager1, Case Manager | last-saved-by |
+      | Case Manager1, Case Manager | lodging-last-saved-by |
       | 24 Jul 2018 | discharged-on |
   # Begin scenario
     And I fill in "report_checklist_deputyFullNameAccurateInCasrec" with "1"
@@ -50,7 +50,7 @@ Feature: Prof deputy is discharged
     And the response status code should be 200
     And the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
-      | Case Manager1, Case Manager | last-saved-by |
+      | Case Manager1, Case Manager | lodging-last-saved-by |
   # Assert form reloads with fields saved
     Then the following fields should have the corresponding values:
       | report_checklist_reportingPeriodAccurate_0             | yes                |
@@ -73,9 +73,13 @@ Feature: Prof deputy is discharged
       | report_checklist_caseWorkerSatisified_0                | yes                |
       | report_checklist_finalDecision_0                       | for-review         |
       | report_checklist_lodgingSummary                        | I am not satisfied |
-    Then I click on "submit-and-download"
-    And the form should be valid
-
+    When I click on "submit-and-download"
+    And I go to admin page "/admin"
+    And I click on "admin-client-search, discharged-client-detail-01000010"
+    And I click on "checklist" in the "report-2016-to-2017" region
+    Then each text should be present in the corresponding region:
+      | Case Manager1, Case Manager | lodging-last-saved-by     |
+      | Case Manager1, Case Manager | lodging-last-submitted-by |
 
   Scenario: add deputy user from registration page
     Given emails are sent from "deputy" area
