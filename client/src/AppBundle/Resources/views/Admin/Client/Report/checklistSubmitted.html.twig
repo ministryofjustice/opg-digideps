@@ -18,13 +18,16 @@
                 </div>
             </div>
             <p class="govuk-body govuk-!-padding-top-6 govuk-!-padding-bottom-6">
-                Your PDF download should start automatically. <a href="{{ path('admin_checklist_pdf', {'id': report.id}) }}" class="behat-link-download-checklist-pdf">Click here</a> to download it if it does not download automatically.
+                {{ (page ~ '.downloadText') | trans({
+                    '%downloadLinkUrl%': path('admin_checklist_pdf', {'id': report.id}),
+                    '%downloadLinkClassList%': "behat-link-download-checklist-pdf"
+                }) | raw }}
             </p>
             <a href="{{ path('admin_report_checklist', {'id': report.id}) }}" role="button" draggable="false" class="govuk-button govuk-button--secondary govuk-!-margin-right-1" data-module="govuk-button">
-                Return to checklist
+                {{ (page ~ '.toChecklistButtonText') | trans }}
             </a>
-            <a href="{{ path('admin_client_search')}}" role="button" draggable="false" class="govuk-button govuk-button" data-module="govuk-button">
-                View client list
+            <a href="{{ path('admin_client_search')}}" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+                {{ (page ~ '.toClientListButtonText') | trans }}
             </a>
         </div>
     </div>
