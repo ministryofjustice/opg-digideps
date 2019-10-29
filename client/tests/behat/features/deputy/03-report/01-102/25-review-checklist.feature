@@ -5,7 +5,7 @@ Feature: Full review checklist
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "admin-client-search, client-detail-102"
     And I click on "checklist" in the "report-2016" region
-    And I press "Submit checklist and download PDF"
+    And I press "Submit checklist"
     Then the following fields should have an error:
         | full-review_decision_0 |
         | full-review_decision_1 |
@@ -33,7 +33,7 @@ Feature: Full review checklist
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "admin-client-search, client-detail-102"
     And I click on "checklist" in the "report-2016" region
-    And I press "Submit checklist and download PDF"
+    And I press "Submit checklist"
     Then the form should be valid
     And each text should be present in the corresponding region:
       | Admin User, OPG Admin | fullReview-last-saved-by     |
