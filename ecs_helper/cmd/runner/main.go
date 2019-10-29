@@ -77,6 +77,7 @@ func main() {
 			}
 		}),
 		request.WithWaiterDelay(request.ConstantWaiterDelay(delay)),
+		request.WithWaiterMaxAttempts(0),
 	)
 
 	if err != nil {

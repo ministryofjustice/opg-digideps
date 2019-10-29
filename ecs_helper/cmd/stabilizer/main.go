@@ -49,6 +49,7 @@ func main() {
 		request.WithWaiterRequestOptions(func(r *request.Request) {
 			log.Printf("waited %v for services to stabilize...\n", time.Since(start).Round(time.Second))
 		}),
+		request.WithWaiterMaxAttempts(0),
 	)
 
 	if err != nil {
