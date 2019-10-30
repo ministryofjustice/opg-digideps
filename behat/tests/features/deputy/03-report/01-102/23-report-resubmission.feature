@@ -79,8 +79,7 @@ Feature: Admin unsubmit report (from client page)
     And I press "unsubmit_report_confirm_save"
     Then I should see the "report-2016" region in the "report-group-incomplete" region
     And I should see "30 April 2022" in the "report-2016-due-date" region
-    When I go to the URL previously saved as "admin-client-search-client-102"
-    And I click on "checklist" in the "report-2016" region
+    When I open the "2016" checklist for client "102"
     And the response status code should be 200
 
 
