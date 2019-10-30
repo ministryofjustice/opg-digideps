@@ -69,7 +69,6 @@ dd-cache-clear()
 {
     dd-exec api sh -c "rm -rf var/cache/*"
     dd-exec frontend sh -c "rm -rf var/cache/*"
-    dd-exec test sh -c "rm -rf var/cache/*"
     dd-exec admin sh -c "rm -rf var/cache/*"
     echo "Cache reset"
 }
@@ -113,7 +112,7 @@ dd-behat-run()
       dd-cache-clear;
     fi
 
-    time docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run test sh scripts/clienttest.sh $@
+    time docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm test $@
 
     # Re-enable dev mode
     dd-mode-dev

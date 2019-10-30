@@ -2,19 +2,17 @@
 
 namespace DigidepsBehat;
 
-use AppBundle\Entity\Role;
-use AppBundle\Entity\User;
 use Behat\Gherkin\Node\TableNode;
 
 trait UserTrait
 {
     // added here for simplicity
     private static $roleStringToRoleName = [
-        'admin' => User::ROLE_ADMIN,
-        'lay deputy' => User::ROLE_LAY_DEPUTY,
-        'ad' => User::ROLE_AD,
-        'case manager' => User::ROLE_CASE_MANAGER,
-        'prof named' => User::ROLE_PROF_NAMED
+        'admin' => 'ROLE_ADMIN',
+        'lay deputy' => 'ROLE_LAY_DEPUTY',
+        'ad' => 'ROLE_AD',
+        'case manager' => 'ROLE_CASE_MANAGER',
+        'prof named' => 'ROLE_PROF_NAMED'
     ];
 
     /**
@@ -33,7 +31,7 @@ trait UserTrait
         }
         $roleName = self::$roleStringToRoleName[strtolower($role)];
 
-        if ($roleName === User::ROLE_LAY_DEPUTY || $roleName === User::ROLE_PA_NAMED || $roleName === User::ROLE_PROF_NAMED) {
+        if ($roleName === 'ROLE_LAY_DEPUTY' || $roleName === 'ROLE_PA_NAMED' || $roleName === 'ROLE_PROF_NAMED') {
             $this->fillField('admin_roleType_0', 'deputy');
             $this->fillField('admin_roleNameDeputy', $roleName);
             switch ($ndrType) {
