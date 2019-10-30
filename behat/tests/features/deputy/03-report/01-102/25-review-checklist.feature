@@ -10,7 +10,7 @@ Feature: Full review checklist
         | full-review_decision_0 |
         | full-review_decision_1 |
         | full-review_decision_2 |
-    When I press "Save progress"
+    When I press "Save progress" in the "full-review-checklist" region
     Then the form should be valid
     And I should see "Admin User, OPG Admin" in the "fullReview-last-saved-by" region
 
@@ -22,7 +22,7 @@ Feature: Full review checklist
     And I fill in the following:
         | full-review_decision_0                  | satisfied                   |
         | full-review_answers_decisionExplanation | I am happy with this report |
-    And I press "Save progress"
+    And I press "Save progress" in the "full-review-checklist" region
     Then the form should be valid
     And the following fields should have the corresponding values:
         | full-review_decision_0                  | satisfied                   |
