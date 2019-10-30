@@ -159,7 +159,7 @@ Feature: Admin report checklist
     And I fill in "report_checklist_caseWorkerSatisified_0" with "yes"
     And I fill in "report_checklist_finalDecision_0" with "for-review"
     And I fill in "report_checklist_lodgingSummary" with "I am not satisfied"
-    Then I click on "save-progress"
+    Then I click on "save-progress" in the "lodging-checklist" region
     And the response status code should be 200
     And the URL should match "/admin/report/\d+/checklist"
     When I click on "back-to-money-in-out"
