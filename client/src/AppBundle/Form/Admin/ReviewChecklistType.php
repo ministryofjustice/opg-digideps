@@ -8,7 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class FullReviewType extends AbstractType
+class ReviewChecklistType extends AbstractType
 {
     const SAVE_ACTION = 'save';
     const SUBMIT_ACTION = 'submit';

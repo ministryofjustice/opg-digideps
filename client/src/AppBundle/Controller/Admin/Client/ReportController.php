@@ -8,7 +8,7 @@ use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Exception\DisplayableException;
-use AppBundle\Form\Admin\FullReviewType;
+use AppBundle\Form\Admin\ReviewChecklistType;
 use AppBundle\Form\Admin\ReportChecklistType;
 use AppBundle\Form\Admin\UnsubmitReportType;
 use AppBundle\Form\Admin\UnsubmitReportConfirmType;
@@ -247,11 +247,11 @@ class ReportController extends AbstractController
         $buttonClicked = $form->getClickedButton();
 
         $reviewChecklist = $this->getRestClient()->get('report/' . $report->getId() . '/checklist', 'Report\\ReviewChecklist');
-        $reviewForm = $this->createForm(FullReviewType::class, $reviewChecklist);
+        $reviewForm = $this->createForm(ReviewChecklistType::class, $reviewChecklist);
         $reviewForm->handleRequest($request);
 
         if ($reviewForm->isValid()) {
-            if ($reviewForm->getClickedButton()->getName() === FullReviewType::SUBMIT_ACTION) {
+            if ($reviewForm->getClickedButton()->getName() === ReviewChecklistType::SUBMIT_ACTION) {
                 $reviewChecklist->setIsSubmitted(true);
             }
 
