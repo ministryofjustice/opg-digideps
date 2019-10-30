@@ -797,8 +797,7 @@ class ReportController extends RestController
     /**
      * Update a checklist for the report
      *
-     * @Route("/{report_id}/checklist", requirements={"report_id":"\d+"}, methods={"PUT"})
-     * @Route("/{report_id}/checklist", requirements={"report_id":"\d+"}, methods={"POST"})
+     * @Route("/{report_id}/checklist", requirements={"report_id":"\d+"}, methods={"POST", "PUT"})
      * @Security("has_role('ROLE_CASE_MANAGER')")
      */
     public function upsertChecklist(Request $request, $report_id)
