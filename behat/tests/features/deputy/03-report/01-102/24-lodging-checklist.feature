@@ -102,8 +102,7 @@ Feature: Admin report checklist
   @deputy
   Scenario: Case manager saves further information on checklist
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search, client-detail-102"
-    And I click on "checklist" in the "report-2016" region
+    When I open the "2016" checklist for client "102"
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
       | Admin User, OPG Admin | lodging-last-saved-by |
@@ -137,8 +136,7 @@ Feature: Admin report checklist
   Scenario: Admin completes checklist
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
-    When I click on "admin-client-search, client-detail-102"
-    And I click on "checklist" in the "report-2016" region
+    When I open the "2016" checklist for client "102"
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
       | Case Manager1, Case Manager | lodging-last-saved-by |
@@ -195,8 +193,7 @@ Feature: Admin report checklist
   Scenario: Admin marked as submitted
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
-    And I click on "admin-client-search, client-detail-102"
-    And I click on "checklist" in the "report-2016" region
+    When I open the "2016" checklist for client "102"
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
       | Admin User, OPG Admin | lodging-last-saved-by     |

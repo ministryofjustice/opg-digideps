@@ -3,8 +3,7 @@ Feature: Full review checklist
   @deputy
   Scenario: Full review checklist requires validation on submission
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "admin-client-search, client-detail-102"
-    And I click on "checklist" in the "report-2016" region
+    When I open the "2016" checklist for client "102"
     And I click on "submit" in the "full-review-checklist" region
     Then the following fields should have an error:
         | full-review_decision_0 |
@@ -17,8 +16,7 @@ Feature: Full review checklist
   @deputy
   Scenario: Can add details to the full review checklist
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "admin-client-search, client-detail-102"
-    And I click on "checklist" in the "report-2016" region
+    When I open the "2016" checklist for client "102"
     And I fill in the following:
         | full-review_decision_0                  | satisfied                   |
         | full-review_answers_decisionExplanation | I am happy with this report |
@@ -31,8 +29,7 @@ Feature: Full review checklist
   @deputy
   Scenario: Can submit full review checklist
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "admin-client-search, client-detail-102"
-    And I click on "checklist" in the "report-2016" region
+    When I open the "2016" checklist for client "102"
     And I click on "submit" in the "full-review-checklist" region
     Then the form should be valid
     And each text should be present in the corresponding region:
