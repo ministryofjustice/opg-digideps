@@ -2,8 +2,7 @@ Feature: Admin report checklist
 
   Scenario: Case manager submits empty Prof checklist for the report
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search, client-detail-01000010"
-    And I click on "checklist" in the "report-2016-to-2017" region
+    When I open the "2016-to-2017" checklist for client "01000010"
     Then the URL should match "/admin/report/\d+/checklist"
     And I should see the "court-date" region
     And I should see the "expected-date" region
@@ -87,8 +86,7 @@ Feature: Admin report checklist
 
   Scenario: Case manager saves further information on Prof checklist
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search, client-detail-01000010"
-    And I click on "checklist" in the "report-2016-to-2017" region
+    When I open the "2016-to-2017" checklist for client "01000010"
     Then each text should be present in the corresponding region:
       | Not saved yet | lodging-last-saved-by |
     # Begin scenario
@@ -120,8 +118,7 @@ Feature: Admin report checklist
 
   Scenario: Admin completes Prof checklist
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search, client-detail-01000010"
-    And I click on "checklist" in the "report-2016-to-2017" region
+    When I open the "2016-to-2017" checklist for client "01000010"
     Then each text should be present in the corresponding region:
       | Case Manager1, Case Manager | lodging-last-saved-by |
     # Begin scenario
@@ -180,8 +177,7 @@ Feature: Admin report checklist
 
   Scenario: Admin marked as submitted
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search, client-detail-01000010"
-    And I click on "checklist" in the "report-2016-to-2017" region
+    When I open the "2016-to-2017" checklist for client "01000010"
     Then each text should be present in the corresponding region:
       | Case Manager1, Case Manager | last-saved-by     |
       | Case Manager1, Case Manager | last-submitted-by |
