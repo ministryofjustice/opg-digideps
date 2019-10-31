@@ -1,33 +1,52 @@
+
 @startuml
-    [Internal]
-    [Sync]
-    [API]
+    !define AWSPuml https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/master/dist
 
-    package "Load Balancers" {
-        [Admin LB]
-        [Front LB]
-    }
+    !includeurl AWSPuml/AWSCommon.puml
+    !includeurl AWSPuml/AWSSimplified.puml
 
-    [Whitelisted IPs] -down-> [Admin LB]: HTTPS
-    [Whitelisted IPs] -down-> [Front LB]: HTTPS
-    [Whitelisted IPs] -down-> [Front LB]: HTTP
+    !includeurl AWSPuml/Compute/all.puml
+    !includeurl AWSPuml/Database/all.puml
+    !includeurl AWSPuml/DeveloperTools/all.puml
+    !includeurl AWSPuml/General/all.puml
+    !includeurl AWSPuml/NetworkingAndContentDelivery/all.puml
 
-    [Admin LB] -down-> [Admin]: HTTPS
-    [Front LB] -down-> [Front]: HTTPS
+    Cloud9(internal,"internal",)
+    ECSService(admin_service,"admin",)
+    ECSService(api_service,"api",)
+    ECSService(front_service,"front",)
+    ECSService(pdf_service,"pdf",)
+    ECSService(scan_service,"scan",)
+    ECSService(sync_task,"sync",)
+    ElastiCacheForRedis(admin_elasticache,"admin",)
+    ElastiCacheForRedis(api_elasticache,"api",)
+    ElastiCacheForRedis(front_elasticache,"front",)
+    ELBApplicationLoadBalancer(admin_lb,"admin",)
+    ELBApplicationLoadBalancer(front_lb,"front",)
+    InternetAlt1(whitelist, "whitelisted ips",)
+    RDSPostgreSQLinstance(rds,"rds",)
 
-    [Admin] -down-> [API]: HTTPS
-    [Admin] -left-> [Admin EC]: TCP:6379
-    [Admin] -down-> [PDF Generator]: HTTP
+    whitelist -[#blue]-> admin_lb: HTTPS
+    whitelist -[#blue]-> front_lb: HTTPS
+    whitelist -[#red]-> front_lb: HTTP
 
-    [API] -down-> [RDS]: TCP:5432
-    [API] -down-> [API EC]: TCP:6379
+    admin_lb -[#blue]-> admin_service: HTTPS
+    front_lb -[#blue]-> front_service: HTTPS
 
-    [Front] -> [API]: HTTPS
-    [Front] -right-> [Front EC]: TCP:6379
-    [Front] -down-> [PDF Generator]: HTTP
-    [Front] -> [Scan]: TCP:8443
+    admin_service -[#blue]-> api_service: HTTPS
+    admin_service -[#green]-> admin_elasticache: TCP:6379
 
-    [Sync] -down-> [RDS]: TCP:5432
+    admin_service -[#red]-> pdf_service: HTTP
 
-    [Internal] -down-> [RDS]: TCP:5432
+    api_service -[#purple]-> rds: TCP:5432
+    api_service -[#green]-> api_elasticache: TCP:6379
+
+    front_service -[#blue]-> api_service #blue: HTTPS
+    front_service -[#green]-> front_elasticache: TCP:6379
+    front_service -[#red]-> pdf_service: HTTP
+    front_service -[#red]-> scan_service: TCP:8443
+
+    sync_task -[#purple]up-> rds: TCP:5432
+
+    internal -[#purple]up-> rds: TCP:5432
 @enduml
