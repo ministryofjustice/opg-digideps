@@ -20,8 +20,8 @@ trait DebugTrait
         for ($i = 1; $i < 100; ++$i) {
             $iPadded = str_pad($i, 2, '0', STR_PAD_LEFT);
             $filename = $feature
-                       ? '/tmp/behat/behat-response-' . $feature . '-' . $iPadded . '.html'
-                       : '/tmp/behat/behat-response-' . $iPadded . '.html';
+                       ? '/tmp/html/behat-response-' . $feature . '-' . $iPadded . '.html'
+                       : '/tmp/html/behat-response-' . $iPadded . '.html';
             if (!file_exists($filename)) {
                 break;
             }
@@ -40,7 +40,7 @@ trait DebugTrait
      */
     public function iSaveThePageAs($name)
     {
-        $filename = '/tmp/behat/behat-screenshot-' . $name . '.html';
+        $filename = '/tmp/html/behat-screenshot-' . $name . '.html';
 
         $data = $this->getSession()->getPage()->getContent();
         if (!file_put_contents($filename, $data)) {
@@ -48,7 +48,7 @@ trait DebugTrait
         }
 
         $driver = $this->getSession()->getDriver();
-        $filename = '/tmp/behat/' . $name . '.png';
+        $filename = '/tmp/html/' . $name . '.png';
         if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
             $image_data = $this->getSession()->getDriver()->getScreenshot();
             if (!file_put_contents($filename, $image_data)) {

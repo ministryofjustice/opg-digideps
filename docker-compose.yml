@@ -152,7 +152,7 @@ services:
             - admin
         volumes:
             - ./behat/tests:/var/www/tests
-            - ./behat/snapshots:/tmp/behat
+            - ./behat/snapshots:/tmp/html
         env_file: ./behat/test.env
 
     wkhtmltopdf:

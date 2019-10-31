@@ -18,7 +18,8 @@ WORKDIR /var/www
 # Install dependencies
 RUN apk add --no-cache postgresql-client libzip-dev unzip
 
-RUN mkdir -p /tmp/behat
+RUN mkdir -p /tmp/html
+RUN mkdir -p /tmp/sql
 
 COPY --from=composer /app/vendor vendor
 COPY --from=composer /app/composer.json composer.json
