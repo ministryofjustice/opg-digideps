@@ -45,7 +45,24 @@ trait DebugTrait
     }
 
     /**
-     * Call debug() when an exception is thrown after as step.
+     * Clean the snapshot folder before running a suite
+     *
+     * @BeforeSuite
+     */
+    public static function cleanDebugSnapshots()
+    {
+        $handle = opendir(self::$DEBUG_SNAPSHOT_DIR);
+
+        while (false !== ($file = readdir($handle))) {
+            $path = self::$DEBUG_SNAPSHOT_DIR . '/' . $file;
+            if (is_file($path)) {
+                unlink($path);
+            }
+        }
+    }
+
+    /**
+     * Call debug() when an exception is thrown after a step.
      *
      * @AfterStep
      */
