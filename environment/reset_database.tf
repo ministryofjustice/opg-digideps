@@ -31,13 +31,11 @@ locals {
       { "name": "SECRET", "valueFrom": "${data.aws_secretsmanager_secret.api_secret.arn}" }
     ],
     "environment": [
-      { "name": "BEHAT_CONTROLLER_ENABLED", "value": "true" },
       { "name": "DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
       { "name": "DATABASE_NAME", "value": "${aws_db_instance.api.name}" },
       { "name": "DATABASE_PORT", "value": "${aws_db_instance.api.port}" },
       { "name": "DATABASE_USERNAME", "value": "digidepsmaster" },
-      { "name": "FIXTURES_ACCOUNTPASSWORD", "value": "Abcd1234" },
-      { "name": "REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" }
+      { "name": "FIXTURES_ACCOUNTPASSWORD", "value": "Abcd1234" }
     ]
   }
 EOF
