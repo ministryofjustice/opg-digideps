@@ -1,0 +1,33 @@
+@startuml
+    [Internal]
+    [Sync]
+    [API]
+
+    package "Load Balancers" {
+        [Admin LB]
+        [Front LB]
+    }
+
+    [Whitelisted IPs] -down-> [Admin LB]: HTTPS
+    [Whitelisted IPs] -down-> [Front LB]: HTTPS
+    [Whitelisted IPs] -down-> [Front LB]: HTTP
+
+    [Admin LB] -down-> [Admin]: HTTPS
+    [Front LB] -down-> [Front]: HTTPS
+
+    [Admin] -down-> [API]: HTTPS
+    [Admin] -left-> [Admin EC]: TCP:6379
+    [Admin] -down-> [PDF Generator]: HTTP
+
+    [API] -down-> [RDS]: TCP:5432
+    [API] -down-> [API EC]: TCP:6379
+
+    [Front] -> [API]: HTTPS
+    [Front] -right-> [Front EC]: TCP:6379
+    [Front] -down-> [PDF Generator]: HTTP
+    [Front] -> [Scan]: TCP:8443
+
+    [Sync] -down-> [RDS]: TCP:5432
+
+    [Internal] -down-> [RDS]: TCP:5432
+@enduml

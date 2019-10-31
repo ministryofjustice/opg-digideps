@@ -11,12 +11,11 @@ If any debt may lead to larger risks, it should be transferred to the risk board
 ## Infra
 - scheduled scaling for cost saving
 - remove dependency on semvertag
-- makefile deprecated
 - periodically rotate CI access key & ses users
 - move public routes to main route table
-- Per environment certificates or universal wildcard
 - Move to secrets per account
 - Nginx timeout is universally high to allow for some use cases (e.g. compiling zips)
+- Security group naming and descriptions are inconsistent - they should be standardised
 
 ## Application
 - Separate config files/entrypoints are inflexible and obfuscating, should use feature flags instead
