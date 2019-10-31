@@ -15,7 +15,7 @@ trait DebugTrait
     /**
      * @Then I save the page as :feature
      */
-    public function debug($feature = null, $line = null)
+    public function debug($feature = null)
     {
         for ($i = 1; $i < 100; ++$i) {
             $iPadded = str_pad($i, 2, '0', STR_PAD_LEFT);
@@ -51,7 +51,7 @@ trait DebugTrait
         ) {
             $feature = basename($scope->getFeature()->getFile());
             $line = $scope->getFeature()->getLine();
-            $this->debug($feature, $line);
+            $this->debug($feature);
         }
     }
 
