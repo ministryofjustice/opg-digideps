@@ -13,7 +13,7 @@ trait DebugTrait
     }
 
     /**
-     * @Then /^debug$/
+     * @Then I save the page as :feature
      */
     public function debug($feature = null, $line = null)
     {
@@ -36,28 +36,6 @@ trait DebugTrait
         //echo "- Status code: " . $session->getStatusCode() . "\n";
         $file = basename($filename);
         echo "- Response: saved into {$file} ({$bytes} bytes). View locally at https://digideps.local/behat-debugger.php?frame=page&f={$file} .\n";
-    }
-
-    /**
-     * @Then I save the page as :name
-     */
-    public function iSaveThePageAs($name)
-    {
-        $filename = '/tmp/html/behat-screenshot-' . $name . '.html';
-
-        $data = $this->getSession()->getPage()->getContent();
-        if (!file_put_contents($filename, $data)) {
-            echo "Cannot write screenshot into $filename \n";
-        }
-
-        $driver = $this->getSession()->getDriver();
-        $filename = '/tmp/html/' . $name . '.png';
-        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
-            $image_data = $this->getSession()->getDriver()->getScreenshot();
-            if (!file_put_contents($filename, $image_data)) {
-                echo "Cannot write screenshot into $filename \n";
-            }
-        }
     }
 
     /**
