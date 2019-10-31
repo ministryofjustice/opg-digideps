@@ -11,7 +11,7 @@ keys = [
     "/fixtures",
     "/admin",
     "/nonadmin",
-    "/behat",
+    "/mock",
     "/email",
     "/smtp",
     "/s3/bucketname",
