@@ -27,7 +27,10 @@ trait DebugTrait
             }
         }
         $session = $this->getSession();
-        $data = $session->getPage()->getContent();
+
+        $pageContent = $session->getPage()->getContent();
+        $data = str_replace('"/assets', '"https://digideps.local/assets', $pageContent);
+
         $bytes = file_put_contents($filename, $data);
         echo '- Url: ' . $session->getCurrentUrl() . "\n";
         //echo "- Status code: " . $session->getStatusCode() . "\n";
