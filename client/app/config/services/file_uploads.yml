@@ -1,0 +1,53 @@
+parameters:
+  bad_pdf_keywords:
+    - 'AcroForm'
+    - 'JavaScript'
+    - 'Launch'
+    - 'RichMedia'
+    - 'XFA'
+
+services:
+  s3_client:
+    class: Aws\S3\S3Client
+    arguments: ["%s3_client_params%"]
+
+  s3_storage:
+    class:  AppBundle\Service\File\Storage\S3Storage
+    arguments: [ "@s3_client", "%s3_bucket_name%", "@logger" ]
+
+  guzzle_file_scanner_client:
+    class: GuzzleHttp\Client
+    arguments:
+      $config:
+        base_uri: "%file_scanner_url%"
+        verify: "%file_scanner_sslverify%"
+        proxy: ""
+        debug: false
+        headers:
+          Content-Type: multipart-form-data
+        version: "1.1"
+
+        timeout: 10
+        allow_redirects: false
+
+  multi_file_form_upload_verifier:
+    class: AppBundle\Service\File\Verifier\MultiFileFormUploadVerifier
+    calls:
+      - [ addVerifier, ['@constraint_verifier'] ]
+      - [ addVerifier, ['@scanner_verifier'] ]
+
+  constraint_verifier:
+    class: AppBundle\Service\File\Verifier\ConstraintVerifier
+    arguments: ['@validator']
+
+  scanner_verifier:
+    class: AppBundle\Service\File\Verifier\ScannerVerifier
+    arguments: ['@clam_file_scanner', '@translator', '@logger']
+
+  clam_file_scanner:
+    class: AppBundle\Service\File\Scanner\ClamFileScanner
+    arguments: [ "@guzzle_file_scanner_client", "@logger", "%bad_pdf_keywords%"]
+
+  file_uploader:
+    class: AppBundle\Service\File\FileUploader
+    arguments: [ "@s3_storage", "@rest_client", "@logger" ]

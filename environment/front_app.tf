@@ -64,11 +64,10 @@ locals {
     "environment": [
       { "name": "ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
       { "name": "API_URL", "value": "https://${local.api_service_fqdn}" },
-      { "name": "BEHAT_CONTROLLER_ENABLED", "value": "${local.account.test_enabled ? "true" : "false"}" },
       { "name": "EMAIL_DOMAIN", "value": "${local.domain}" },
       { "name": "EMAIL_SEND_INTERNAL", "value": "${local.account.is_production == 1 ? "true" : "false"}" },
       { "name": "FILESCANNER_SSLVERIFY", "value": "False" },
-      { "name": "FILESCANNER_URL", "value": "https://${local.scan_service_fqdn}:8443" },
+      { "name": "FILESCANNER_URL", "value": "http://${local.scan_service_fqdn}:8080" },
       { "name": "GA_DEFAULT", "value": "${local.account.ga_default}" },
       { "name": "GA_GDS", "value": "${local.account.ga_gds}" },
       { "name": "NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
@@ -77,7 +76,7 @@ locals {
       { "name": "SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.front_redis.fqdn}" },
       { "name": "SMTP_DEFAULT_PASSWORD", "value": "${aws_iam_access_key.ses.ses_smtp_password}" },
       { "name": "SMTP_DEFAULT_USER", "value": "${aws_iam_access_key.ses.id}" },
-      { "name": "TEST_ENABLED", "value": "${local.account.test_enabled}" },
+      { "name": "MOCK_EMAILS", "value": "${local.account.mock_emails ? "true" : "false"}" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
       { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" }
     ]

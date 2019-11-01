@@ -1,4 +1,5 @@
 imports:
+    - { resource: services/file_uploads.yml }
     - { resource: services/mappers.yml }
     - { resource: services/resolvers.yml }
     - { resource: services/transformers.yml }
@@ -9,7 +10,6 @@ imports:
     - { resource: services_listeners.yml }
     - { resource: services_login.yml }
     - { resource: services_pa.yml }
-    - { resource: services_file_upload.yml }
 
 services:
 

@@ -69,7 +69,6 @@ dd-cache-clear()
 {
     dd-exec api sh -c "rm -rf var/cache/*"
     dd-exec frontend sh -c "rm -rf var/cache/*"
-    dd-exec test sh -c "rm -rf var/cache/*"
     dd-exec admin sh -c "rm -rf var/cache/*"
     echo "Cache reset"
 }
@@ -113,19 +112,11 @@ dd-behat-run()
       dd-cache-clear;
     fi
 
-    time docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run test sh scripts/clienttest.sh $@
+    time docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm test $@
 
     # Re-enable dev mode
     dd-mode-dev
 }
-
-# e.g.
-dd-behat-snapshot-import()
-{
-   if [ "$1" == "" ]; then echo "e.g. dd-behat-snapshot-import init"; return 1; fi
-   dd-exec test sh -c "psql < /tmp/behat/behat-snapshot-${1}.sql"
-}
-
 
 # phpunit
 alias dd-phpunit-frontend="docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm frontend bin/phpunit -c tests/phpunit"

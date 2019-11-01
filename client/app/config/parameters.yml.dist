@@ -22,7 +22,7 @@ parameters:
         default: null
         gds: null
     opg_docker_tag: 0.0.0
-    behat_controller_enabled: true
+    mock_emails: true
     log_level: warning
     log_path: /var/log/app/application.log
     # the following two paramters can be set to null on production
@@ -61,6 +61,6 @@ parameters:
       credentials:
         key: 'YOUR_ACCESS_KEY_ID'
         secret: 'YOUR_SECRET_ACCESS_KEY'
-    file_scanner_url: https://file-scanner-api:8443
+    file_scanner_url: http://file-scanner-rest:8080
     file_scanner_sslverify: false
     wkhtmltopdf_address: "http://wkhtmltopdf:80"
