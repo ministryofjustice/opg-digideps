@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-<?php declare(strict_types=1);
-=======
 <?php
 
 declare(strict_types=1);
->>>>>>> edabc5f58ef8f883f444549787a14322f3e658a1
 
 namespace Application\Migrations;
 
