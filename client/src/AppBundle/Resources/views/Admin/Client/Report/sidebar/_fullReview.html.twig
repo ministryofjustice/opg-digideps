@@ -4,8 +4,18 @@
 
 {% set checklistDomain = 'fullReview' %}
 
+{% set questions = [
+    'bankStatements',
+    'lodgingConcerns',
+    'spendingAndDebt',
+    'referral',
+    'finalDecision'
+] %}
+
 {% block links %}
-    <li><a href="#anchor-full-review-final-decision" class="govuk-link govuk-!-font-size-16">
-        {{ (page ~ '.heading.fullReview.finalDecision') | trans }}
-    </a></li>
+    {% for question in questions %}
+        <li><a href="#anchor-full-review-{{ question }}" class="govuk-link govuk-!-font-size-16">
+            {{ (page ~ '.heading.fullReview.' ~ question) | trans }}
+        </a></li>
+    {% endfor %}
 {% endblock %}
