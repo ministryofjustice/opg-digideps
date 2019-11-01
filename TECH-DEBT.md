@@ -16,6 +16,7 @@ If any debt may lead to larger risks, it should be transferred to the risk board
 - Move to secrets per account
 - Nginx timeout is universally high to allow for some use cases (e.g. compiling zips)
 - Security group naming and descriptions are inconsistent - they should be standardised
+- Restrict inbound and outbound rules - certain undesirable flows are permissible
 
 ## Application
 - Separate config files/entrypoints are inflexible and obfuscating, should use feature flags instead
