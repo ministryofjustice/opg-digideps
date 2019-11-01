@@ -11,9 +11,7 @@ parameters:
     database_password: {{ getv "/database/password" }}
     locale: en
     secret: {{ getv "/secret" }}
-{{ if exists "/redis/dsn" }}
     redis_dsn: '{{getv "/redis/dsn" }}'
-{{ end }}
 {{ if ls "/fixtures" }}
     fixtures:
         account_password: {{ getv "/fixtures/accountpassword" }}
