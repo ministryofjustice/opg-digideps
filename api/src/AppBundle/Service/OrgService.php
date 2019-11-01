@@ -129,6 +129,8 @@ class OrgService
             }
         }
 
+        $this->em->clear();
+
         sort($this->added['prof_users']);
         sort($this->added['pa_users']);
         sort($this->added['clients']);
