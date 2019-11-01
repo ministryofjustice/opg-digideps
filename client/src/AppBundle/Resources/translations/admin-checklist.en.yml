@@ -23,9 +23,9 @@ checklistPage:
     fullReview:
         title: Full review checklist
         bankStatements: R1. Bank statements
-        lodgingConcerns: R2. Lodging Concerns and Further Information
-        spendingAndDebt: R3. Review Spending and Debt
-        referral: R4. Onward Referral
+        lodgingConcerns: R2. Lodging concerns and further information
+        spendingAndDebt: R3. Review spending and debt
+        referral: R4. Onward referral
         finalDecision: Final decision
   furtherInfo:
     infoProvided: Information provided
