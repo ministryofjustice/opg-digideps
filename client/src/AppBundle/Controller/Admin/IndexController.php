@@ -16,6 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * @Route("/admin")
@@ -412,63 +413,76 @@ class IndexController extends AbstractController
 
         if ($form->isValid()) {
             $fileName = $form->get('file')->getData();
-            try {
-                $data = (new CsvToArray($fileName, false))
-                    ->setExpectedColumns([
-                        'Deputy No',
-                        //'Pat Create', 'Dship Create', //should hold reg date / Cour order date, but no specs given yet
-                        'Dep Postcode',
-                        'Dep Forename',
-                        'Dep Surname',
-                        'Dep Type', // 23 = PA (but not confirmed)
-                        'Dep Adrs1',
-                        'Dep Adrs2',
-                        'Dep Adrs3',
-                        'Dep Postcode',
-                        'Email', //mandatory, used as user ID whem uploading
-                        'Case', //case number, used as ID when uploading
-                        'Forename', 'Surname', //client forename and surname
-                        'Corref',
-                        'Typeofrep',
-                        'Last Report Day',
-                    ])
-                    ->setOptionalColumns([
-                        'Client Adrs1',
-                        'Client Adrs2',
-                        'Client Adrs3',
-                        'Client Postcode',
-                        'Client Phone',
-                        'Client Email',
-                        'Client Date of Birth',
-                    ])
-                    ->setUnexpectedColumns([
-                        'NDR'
-                    ])
-                    ->getData();
 
-                // small chunk => upload in same request
-                if (count($data) < $chunkSize) {
-                    $compressedData = CsvUploader::compressData($data);
-                    $this->get('org_service')->uploadAndSetFlashMessages($compressedData, $request->getSession()->getFlashBag());
-                    return $this->redirect($this->generateUrl('admin_org_upload'));
+            $data = (new CsvToArray($fileName, false))
+                ->setExpectedColumns([
+                    'Deputy No',
+                    //'Pat Create', 'Dship Create', //should hold reg date / Cour order date, but no specs given yet
+                    'Dep Postcode',
+                    'Dep Forename',
+                    'Dep Surname',
+                    'Dep Type', // 23 = PA (but not confirmed)
+                    'Dep Adrs1',
+                    'Dep Adrs2',
+                    'Dep Adrs3',
+                    'Dep Adrs4',
+                    'Dep Adrs5',
+                    'Dep Postcode',
+                    'Email', //mandatory, used as user ID whem uploading
+                    'Email2',
+                    'Email3',
+                    'Case', //case number, used as ID when uploading
+                    'Forename', 'Surname', //client forename and surname
+                    'Corref',
+                    'Typeofrep',
+                    'Last Report Day',
+                ])
+                ->setOptionalColumns([
+                    'Client Adrs1',
+                    'Client Adrs2',
+                    'Client Adrs3',
+                    'Client Postcode',
+                    'Client Phone',
+                    'Client Email',
+                    'Client Date of Birth',
+                    'Phone Main',
+                    'Phone Alternative',
+                    'Fee Payer',
+                    'Corres'
+                ])
+                ->setUnexpectedColumns([
+                    'NDR'
+                ])
+                ->getData();
+
+            $compressedData = CsvUploader::compressData($data);
+
+            $client = $this->get('guzzle_json_http_client');
+
+            $request = $client->post('org/bulk-add', [
+                'headers' => [
+                    'AuthToken' => '1_d22ee8c9fd29a65a1ae78080476453deecef26a4'
+                ],
+                'body' => json_encode($compressedData),
+                'timeout' => 600,
+                'stream' => true,
+            ]);
+
+            $stream = $request->getBody();
+            $response = new StreamedResponse();
+
+            $response->setCallback(function() use ($stream) {
+                while (!$stream->eof()) {
+                    echo $stream->read(1024);
+                    flush();
                 }
+            });
 
-                // big amount of data => save data into redis and redirect with nOfChunks param so that JS can do the upload with small AJAX calls
-                $chunks = array_chunk($data, $chunkSize);
+            $response->setStatusCode(200);
+            $response->headers->set('X-Accel-Buffering', 'no');
+            $response->headers->set('Content-Type', 'text/plain; charset=utf-8');
 
-                foreach ($chunks as $k => $chunk) {
-
-                    $compressedData = CsvUploader::compressData($chunk);
-                    $this->get('snc_redis.default')->set('org_chunk' . $k, $compressedData);
-                }
-                return $this->redirect($this->generateUrl('admin_org_upload', ['nOfChunks' => count($chunks)]));
-            } catch (\Throwable $e) {
-                $message = $e->getMessage();
-                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
-                    $message = $e->getData()['message'];
-                }
-                $form->get('file')->addError(new FormError($message));
-            }
+            return $response;
         }
 
         return [
