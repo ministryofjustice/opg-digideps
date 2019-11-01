@@ -2,14 +2,15 @@
 @startuml
     !define AWSPuml https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/master/dist
 
-    !includeurl AWSPuml/AWSCommon.puml
-    !includeurl AWSPuml/AWSSimplified.puml
+    !include AWSPuml/AWSCommon.puml
+    !include AWSPuml/AWSSimplified.puml
 
-    !includeurl AWSPuml/Compute/all.puml
-    !includeurl AWSPuml/Database/all.puml
-    !includeurl AWSPuml/DeveloperTools/all.puml
-    !includeurl AWSPuml/General/all.puml
-    !includeurl AWSPuml/NetworkingAndContentDelivery/all.puml
+    !include AWSPuml/Compute/all.puml
+    !include AWSPuml/Database/all.puml
+    !include AWSPuml/DeveloperTools/all.puml
+    !include AWSPuml/General/all.puml
+    !include AWSPuml/NetworkingAndContentDelivery/all.puml
+    !include AWSPuml/Storage/all.puml
 
     Cloud9(internal,"internal",)
     ECSService(admin_service,"admin",)
@@ -17,7 +18,11 @@
     ECSService(front_service,"front",)
     ECSService(pdf_service,"pdf",)
     ECSService(scan_service,"scan",)
-    ECSService(sync_task,"sync",)
+    ECSService(backup_task,"backup",)
+    ECSService(restore_task,"restore",)
+    ECSService(api_unit_test_task,"api_unit_test",)
+    ECSService(integration_test_task,"integration_test",)
+    ECSService(client_unit_test_task,"client_unit_test",)
     ElastiCacheForRedis(admin_elasticache,"admin",)
     ElastiCacheForRedis(api_elasticache,"api",)
     ElastiCacheForRedis(front_elasticache,"front",)
@@ -25,6 +30,8 @@
     ELBApplicationLoadBalancer(front_lb,"front",)
     InternetAlt1(whitelist, "whitelisted ips",)
     RDSPostgreSQLinstance(rds,"rds",)
+    S3Bucket(backup_bucket, "backup",)
+    S3Bucket(pa_uploads_bucket, "pa-uploads",)
 
     whitelist -[#blue]-> admin_lb: HTTPS
     whitelist -[#blue]-> front_lb: HTTPS
@@ -35,8 +42,14 @@
 
     admin_service -[#blue]-> api_service: HTTPS
     admin_service -[#green]-> admin_elasticache: TCP:6379
+    admin_service -[#blue]-> pa_uploads_bucket: HTTPS
 
     admin_service -[#red]-> pdf_service: HTTP
+
+    api_unit_test_task -[#green]-> api_elasticache: TCP:6379
+
+    integration_test_task -[#blue]-> admin_lb: HTTPS
+    integration_test_task -[#blue]-> front_lb: HTTPS
 
     api_service -[#purple]-> rds: TCP:5432
     api_service -[#green]-> api_elasticache: TCP:6379
@@ -45,8 +58,13 @@
     front_service -[#green]-> front_elasticache: TCP:6379
     front_service -[#red]-> pdf_service: HTTP
     front_service -[#red]-> scan_service: TCP:8443
+    front_service -[#blue]-> pa_uploads_bucket: HTTPS
 
-    sync_task -[#purple]up-> rds: TCP:5432
+    backup_task -[#purple]up-> rds: TCP:5432
+    backup_task -[#blue]up-> backup_bucket: HTTPS
+
+    restore_task -[#purple]up-> rds: TCP:5432
+    restore_task -[#blue]up-> backup_bucket: HTTPS
 
     internal -[#purple]up-> rds: TCP:5432
 @enduml
