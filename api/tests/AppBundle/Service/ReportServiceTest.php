@@ -238,7 +238,7 @@ class ReportServiceTest extends TestCase
         //assert new year report
         $this->assertEquals(Report::TYPE_102, $newYearReport->getType());
         $this->assertEquals('06-06', $newYearReport->getStartDate()->format('m-d'));
-        $this->assertEquals('06-05  ', $newYearReport->getEndDate()->format('m-d'));
+        $this->assertEquals('06-05', $newYearReport->getEndDate()->format('m-d'));
 
         // assert assets/accounts added
         $newAsset = $newYearReport->getAssets()->first();
