@@ -22,7 +22,7 @@ parameters:
         default: null
         gds: null
     opg_docker_tag: 0.0.0
-    behat_controller_enabled: true
+    mock_emails: true
     log_level: warning
     log_path: /var/log/app/application.log
     # the following two paramters can be set to null on production

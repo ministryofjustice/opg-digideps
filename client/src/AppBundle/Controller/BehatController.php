@@ -2,9 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Report\Report;
-use AppBundle\Service\Mailer\MailFactory;
-use Monolog\Logger;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +11,7 @@ class BehatController extends AbstractController
 {
     private function securityChecks(Request $request)
     {
-        if (!$this->container->getParameter('behat_controller_enabled')) {
+        if (!$this->container->getParameter('mock_emails')) {
             throw $this->createNotFoundException();
         }
 
@@ -69,33 +66,5 @@ class BehatController extends AbstractController
             'isAdmin' => $this->container->getParameter('env') === 'admin',
             'host' => $_SERVER['HTTP_HOST'],
         ];
-    }
-
-    /**
-     * Display emails into a webpage
-     * Login is required
-     *
-     * @Route("/email-viewer/{action}/{type}", name="email-viewer", defaults={"type"="html"})
-     */
-    public function emailViewerAction($action, $type = 'html')
-    {
-        $type = $type === 'html' ? $type : 'text';
-        $emailToView = 'AppBundle:Email:' . $action . '.' . $type . '.twig';
-
-        return $this->render($emailToView, [
-            'homepageUrl' => 'https://complete-deputy-report.service.gov.uk/',
-            'domain' => 'https://complete-deputy-report.service.gov.uk/',
-            'deputyFirstName' => 'Peter White',
-            'fullDeputyName' => 'Peter White',
-            'fullClientName'  => 'John Smith',
-            'caseNumber'      => '123456789',
-            'link' => 'https://complete-deputy-report.service.gov.uk/',
-            'submittedReport' => new Report(),
-            'newReport' => new Report(),
-            'response' => [
-                'satisfactionLevel' => 'Satisfied',
-            ],
-            'recipientRole' => MailFactory::getRecipientRole($this->getUser())
-        ]);
     }
 }

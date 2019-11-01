@@ -118,14 +118,6 @@ dd-behat-run()
     dd-mode-dev
 }
 
-# e.g.
-dd-behat-snapshot-import()
-{
-   if [ "$1" == "" ]; then echo "e.g. dd-behat-snapshot-import init"; return 1; fi
-   dd-exec test sh -c "psql < /tmp/behat/behat-snapshot-${1}.sql"
-}
-
-
 # phpunit
 alias dd-phpunit-frontend="docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm frontend bin/phpunit -c tests/phpunit"
 alias dd-phpunit-api="docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm api sh scripts/apiunittest.sh"

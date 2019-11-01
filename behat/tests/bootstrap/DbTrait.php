@@ -41,7 +41,7 @@ trait DbTrait
      */
     private static function getSnapshotPath($name)
     {
-        return '/tmp/behat/behat-snapshot-'
+        return '/tmp/sql/behat-snapshot-'
                 . strtolower(preg_replace('/[^\w]+/', '-', $name))
                 . '.sql';
     }
@@ -51,7 +51,7 @@ trait DbTrait
      */
     public function deleteBehatSnapshots()
     {
-        foreach (glob('/tmp/behat/behat-snapshot-*.sql') as $file) { // iterate files
+        foreach (glob('/tmp/sql/behat-snapshot-*.sql') as $file) { // iterate files
           if (is_file($file)) {
               unlink($file);
           }
@@ -150,9 +150,9 @@ trait DbTrait
      */
     public function hasBeenAddedToTheOrganisation($userEmail, $organisationEmailIdentifier)
     {
-        $query = "INSERT INTO organisation_user (user_id, organisation_id) VALUES  
+        $query = "INSERT INTO organisation_user (user_id, organisation_id) VALUES
           (
-            (SELECT id FROM dd_user WHERE email = '{$userEmail}'), 
+            (SELECT id FROM dd_user WHERE email = '{$userEmail}'),
             (SELECT id FROM organisation WHERE email_identifier = '{$organisationEmailIdentifier}')
           )";
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
