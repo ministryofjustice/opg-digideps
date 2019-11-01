@@ -34,7 +34,40 @@
 
         {{ form_submit(form.upload, '', {'labelText': 'Upload PA/Prof users'}) }}
 
+        <progress id="uploadProgress" value="0" min="0" max="1" />
+
         {{ form_end(form) }}
+
+        <script>
+            $button = document.querySelector('#admin_upload_upload');
+            $progress = document.querySelector('#uploadProgress');
+
+            $button.addEventListener('click', (event) => {
+                event.preventDefault();
+
+                var formData = new FormData(document.querySelector('form'));
+
+                fetch('{{ path('admin_org_upload') }}', { method: 'POST', body: formData })
+                    .then(response => {
+                        const reader = response.body.getReader();
+
+                        readPartial = (result) => {
+                            if (result.done) {
+                                $progress.value = 1;
+                                return;
+                            }
+
+                            const progress = new TextDecoder("utf-8").decode(result.value);
+
+                            $progress.value = parseFloat(progress, 100);
+
+                            reader.read().then(readPartial); //recurse through the stream
+                        }
+
+                        reader.read().then(readPartial);
+                    });
+            });
+        </script>
 
     {% endif %}
 
