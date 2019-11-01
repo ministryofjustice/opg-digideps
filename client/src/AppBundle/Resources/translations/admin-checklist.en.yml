@@ -22,6 +22,10 @@ checklistPage:
         furtherInfo: Further information
     fullReview:
         title: Full review checklist
+        bankStatements: R1. Bank statements
+        lodgingConcerns: R2. Lodging Concerns and Further Information
+        spendingAndDebt: R3. Review Spending and Debt
+        referral: R4. Onward Referral
         finalDecision: Final decision
   furtherInfo:
     infoProvided: Information provided
@@ -177,6 +181,30 @@ checklistPage:
         Explain the decisions you've made and any further action taken
         Include changes made to CASREC details (or referrals to the MDU)
         Do not repeat statements made by the deputy unless they are relevant to a decision you have made.
+    fullBankStatementsExist:
+      qid: R1.1
+      label: Do we have full bank statements covering the entire accounting period?
+    anyLodgingConcerns:
+      qid: R2.1
+      label: Have all concerns raised at the Lodging stage been addressed?
+    spendingAcceptable:
+      qid: R3.1
+      label: Is spending in line with the court order and/or previous reports and acceptable?
+    expensesReasonable:
+      qid: R3.2
+      label: Are deputy expenses reasonable?
+    giftingReasonable:
+      qid: R3.3
+      label: Is gifting reasonable?
+    debtManageable:
+      qid: R3.4
+      label: Is debt manageable and in the client’s best interest?
+    anySpendingConcerns:
+      qid: R3.5
+      label: Are there any aspects of spending and debt that give cause for concern?
+    needReferral:
+      qid: R4.1
+      label: Does the case need to be referred on for any further action? E.g. Investigations
     finalDecision:
       legend: Final decision
       options:
