@@ -20,13 +20,14 @@
     ECSService(scan_service,"scan",)
     ECSService(backup_task,"backup",)
     ECSService(restore_task,"restore",)
+    ECSService(reset_database_task,"reset_database",)
     ECSService(api_unit_test_task,"api_unit_test",)
     ECSService(integration_test_task,"integration_test",)
     ECSService(client_unit_test_task,"client_unit_test",)
     EC2ContainerRegistryResource(digideps_registry, "digideps_registry",)
-    ElastiCacheForRedis(admin_elasticache,"admin",)
-    ElastiCacheForRedis(api_elasticache,"api",)
-    ElastiCacheForRedis(front_elasticache,"front",)
+    ElastiCacheForRedis(admin_redis,"admin",)
+    ElastiCacheForRedis(api_redis,"api",)
+    ElastiCacheForRedis(front_redis,"front",)
     ELBApplicationLoadBalancer(admin_lb,"admin",)
     ELBApplicationLoadBalancer(front_lb,"front",)
     InternetAlt1(whitelist, "whitelisted ips",)
@@ -45,32 +46,38 @@
     front_lb -[#blue]-> front_service: HTTPS
 
     admin_service -[#blue]-> api_service: HTTPS
-    admin_service -[#green]-> admin_elasticache: TCP:6379
+    admin_service -[#green]-> admin_redis: TCP:6379
     admin_service -[#blue]-> pa_uploads_bucket: HTTPS
     admin_service -[#blue]-> ecr_endpoint: HTTPS
     admin_service -[#blue]-> S3_endpoint: HTTPS
     admin_service -[#blue]-> logs_endpoint: HTTPS
     admin_service -[#red]-> pdf_service: HTTP
 
-    api_unit_test_task -[#green]-> api_elasticache: TCP:6379
+    api_unit_test_task -[#green]-> api_redis: TCP:6379
     api_unit_test_task -[#blue]-> ecr_endpoint: HTTPS
     api_unit_test_task -[#blue]-> S3_endpoint: HTTPS
     api_unit_test_task -[#blue]-> logs_endpoint: HTTPS
+    api_unit_test_task -[#purple]-> rds: TCP:5432
+
+    client_unit_test_task -[#blue]-> ecr_endpoint: HTTPS
+    client_unit_test_task -[#blue]-> S3_endpoint: HTTPS
+    client_unit_test_task -[#blue]-> logs_endpoint: HTTPS
 
     integration_test_task -[#blue]-> admin_lb: HTTPS
     integration_test_task -[#blue]-> front_lb: HTTPS
     integration_test_task -[#blue]-> ecr_endpoint: HTTPS
     integration_test_task -[#blue]-> S3_endpoint: HTTPS
     integration_test_task -[#blue]-> logs_endpoint: HTTPS
+    integration_test_task -[#purple]-> rds: TCP:5432
 
     api_service -[#purple]-> rds: TCP:5432
-    api_service -[#green]-> api_elasticache: TCP:6379
+    api_service -[#green]-> api_redis: TCP:6379
     api_service -[#blue]-> ecr_endpoint: HTTPS
     api_service -[#blue]-> S3_endpoint: HTTPS
     api_service -[#blue]-> logs_endpoint: HTTPS
 
     front_service -[#blue]-> api_service #blue: HTTPS
-    front_service -[#green]-> front_elasticache: TCP:6379
+    front_service -[#green]-> front_redis: TCP:6379
     front_service -[#red]-> pdf_service: HTTP
     front_service -[#red]-> scan_service: TCP:8443
     front_service -[#blue]-> pa_uploads_bucket: HTTPS
@@ -83,6 +90,11 @@
     backup_task -[#blue]-> ecr_endpoint: HTTPS
     backup_task -[#blue]-> S3_endpoint: HTTPS
     backup_task -[#blue]-> logs_endpoint: HTTPS
+
+    reset_database_task -[#purple]up-> rds: TCP:5432
+    reset_database_task -[#blue]-> ecr_endpoint: HTTPS
+    reset_database_task -[#blue]-> S3_endpoint: HTTPS
+    reset_database_task -[#blue]-> logs_endpoint: HTTPS
 
     restore_task -[#purple]up-> rds: TCP:5432
     restore_task -[#blue]up-> backup_bucket: HTTPS
