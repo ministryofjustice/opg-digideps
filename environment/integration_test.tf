@@ -12,6 +12,24 @@ module "integration_test" {
   vpc_id                = data.aws_vpc.vpc.id
 }
 
+resource "aws_security_group_rule" "integration_test_postgres_out_rds" {
+  from_port                = 5432
+  protocol                 = "tcp"
+  security_group_id        = module.integration_test.security_group_id
+  to_port                  = 5432
+  type                     = "egress"
+  source_security_group_id = aws_security_group.api_rds.id
+}
+
+resource "aws_security_group_rule" "integration_test_https_out" {
+  from_port                = 443
+  protocol                 = "tcp"
+  security_group_id        = module.integration_test.security_group_id
+  to_port                  = 443
+  type                     = "egress"
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
 locals {
   integration_test_container = <<EOF
   {

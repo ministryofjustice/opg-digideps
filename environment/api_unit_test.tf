@@ -13,6 +13,24 @@ module "api_unit_test" {
   memory                = 1024
 }
 
+resource "aws_security_group_rule" "api_unit_test_postgres_out_rds" {
+  from_port                = 5432
+  protocol                 = "tcp"
+  security_group_id        = module.api_unit_test.security_group_id
+  to_port                  = 5432
+  type                     = "egress"
+  source_security_group_id = aws_security_group.api_rds.id
+}
+
+resource "aws_security_group_rule" "api_unit_test_redis_out_cache" {
+  from_port                = 6379
+  protocol                 = "tcp"
+  security_group_id        = module.api_unit_test.security_group_id
+  to_port                  = 6379
+  type                     = "egress"
+  source_security_group_id = aws_security_group.api_cache.id
+}
+
 locals {
   api_unit_test_container = <<EOF
   {
