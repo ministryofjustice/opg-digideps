@@ -23,4 +23,5 @@ terraform/to_import\.sh
 
 .certs
 
-ecs_helper/terraform.output.json
+**/terraform.output.json
+
