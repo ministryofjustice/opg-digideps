@@ -12,6 +12,15 @@ module "backup" {
   vpc_id                = data.aws_vpc.vpc.id
 }
 
+resource "aws_security_group_rule" "backup_postgres_out_rds" {
+  from_port                = 5432
+  protocol                 = "tcp"
+  security_group_id        = module.backup.security_group_id
+  to_port                  = 5432
+  type                     = "egress"
+  source_security_group_id = aws_security_group.api_rds.id
+}
+
 locals {
   backup_container = <<EOF
 {
