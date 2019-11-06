@@ -53,16 +53,12 @@ services:
             - wkhtmltopdf
             - router
             - localstack
-
-        volumes_from:
-            - testresults
         volumes:
             - ./client/app/config/security.yml:/var/www/app/config/security.yml
             - ./client/app/config/config.yml:/var/www/app/config/config.yml
             - ./client/app/config/services.yml:/var/www/app/config/services.yml
             - ./client/app/config/services:/var/www/app/config/services
             - ./client/src:/var/www/src:ro
-            - ./client/scripts:/var/www/scripts
             - ./client/tests:/var/www/tests
         environment:
             VIRTUAL_HOST: www.digideps.local,digideps.local
@@ -92,7 +88,6 @@ services:
             - ./client/app/config/services.yml:/var/www/app/config/services.yml
             - ./client/app/config/services:/var/www/app/config/services
             - ./client/src:/var/www/src:ro
-            - ./client/scripts:/var/www/scripts
             - ./client/tests:/var/www/tests
         environment:
             VIRTUAL_HOST: admin.digideps.local
@@ -150,31 +145,15 @@ services:
         restart: always
 
     test:
-        build: ./client
-        command: tail -f /dev/null
+        build: ./behat
         depends_on:
             - postgres
             - frontend
             - admin
-        volumes_from:
-            - testresults
         volumes:
-            - ./client/app/config/security.yml:/var/www/app/config/security.yml
-            - ./client/app/config/config.yml:/var/www/app/config/config.yml
-            - ./client/app/config/services.yml:/var/www/app/config/services.yml
-            - ./client/app/config/services:/var/www/app/config/services
-            - ./client/src:/var/www/src:ro
-            - ./client/scripts:/var/www/scripts
-            - ./client/tests:/var/www/tests
-        env_file:
-            - ./client/docker/env/frontend.env
-            - ./client/docker/env/test.env
-
-    testresults:
-        image: busybox
-        command: tail -f /dev/null
-        volumes:
-            - /tmp/behat
+            - ./behat/tests:/var/www/tests
+            - ./behat/snapshots:/tmp/html
+        env_file: ./behat/test.env
 
     wkhtmltopdf:
         image: registry.service.opg.digital/opguk/wkhtmlpdf:0.1.209

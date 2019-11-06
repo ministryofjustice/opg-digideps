@@ -63,14 +63,11 @@ class NdrController extends RestController
         $ndr->setSubmitted(true);
         $ndr->setSubmitDate(new \DateTime($data['submit_date']));
 
-        $submission = new EntityDir\Report\ReportSubmission($ndr, $this->getUser());
+        // submit and create new year's report
+        $nextYearReport = $this->get('opg_digideps.report_service')
+            ->submit($ndr, $this->getUser(), new \DateTime($data['submit_date']), $documentId);
 
-        $document = $this->getEntityManager()->getRepository(EntityDir\Report\Document::class)->find($documentId);
-        $document->setReportSubmission($submission);
-
-        $this->getEntityManager()->flush();
-
-        return ['id' => $submission->getId()];
+        return ['id' => $nextYearReport->getId()];
     }
 
     /**

@@ -19,7 +19,7 @@ variable "accounts" {
       is_production        = number
       secrets_prefix       = string
       task_count           = number
-      test_enabled         = bool
+      mock_emails          = bool
       db_subnet_group      = string
       ec_subnet_group      = string
     })

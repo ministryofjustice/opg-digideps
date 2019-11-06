@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Ndr;
 
+use AppBundle\Entity\AssetInterface;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -9,7 +10,7 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  */
-class AssetProperty extends Asset
+class AssetProperty extends Asset implements AssetInterface
 {
     const OCCUPANTS_OTHER = 'other';
     const OWNED_FULLY = 'fully';

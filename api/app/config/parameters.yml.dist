@@ -10,7 +10,6 @@ parameters:
     database_password: setme
     locale: en
     secret: setme
-    behat_controller_enabled: true
     redis_dsn: redis://localhost
     fixtures:
         ad@publicguardian.gsi.gov.uk:

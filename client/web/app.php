@@ -17,7 +17,7 @@ $loader->register(true);
 require_once __DIR__ . '/../app/AppKernel.php';
 //require_once __DIR__.'/../app/AppCache.php';
 
-$kernel = new AppKernel(strtolower(getenv('TEST_ENABLED')) === 'true' ? 'test' : 'prod', false);
+$kernel = new AppKernel(strtolower(getenv('MOCK_EMAILS')) === 'true' ? 'test' : 'prod', false);
 //$kernel->loadClassCache();
 //$kernel = new AppCache($kernel);
 $request = Request::createFromGlobals();

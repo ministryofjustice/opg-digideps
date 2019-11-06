@@ -29,20 +29,37 @@ workflows:
           filters: { branches: { ignore: [ master ] } }
           task_name: restore
 
-      - client_integration_test:
-          name: client integration test
+      - run-task:
+          name: reset environment
           requires: [ restore environment ]
           filters: { branches: { ignore: [ master ] } }
+          task_name: reset_database
+          timeout: 180
 
-      - api_unit_test:
+      - run-task:
+          name: integration test
+          requires: [ reset environment ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: integration_test
+          timeout: 1500
+
+      - run-task:
+          name: client unit test
+          requires: [ restore environment  ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: client_unit_test
+
+      - run-task:
           name: api unit test
           requires: [ restore environment ]
           filters: { branches: { ignore: [ master ] } }
+          task_name: api_unit_test
+          timeout: 600
 
       - cleanup:
           name: approve destroy environment
           type: approval
-          requires: [ api unit test, client integration test ]
+          requires: [ api unit test, client unit test, integration test ]
           filters: { branches: { ignore: [ master ] } }
 
       - apply:
@@ -77,17 +94,36 @@ workflows:
           filters: { branches: { only: [ master ] } }
           tf_workspace: master
 
-      - client_integration_test:
-          name: client integration test
+      - run-task:
+          name: reset master
+          requires: [ apply master ]
+          filters: { branches: { only: [ master ] } }
+          task_name: reset_database
+          tf_workspace: master
+          timeout: 180
+
+      - run-task:
+          name: integration test
+          requires: [ reset master ]
+          filters: { branches: { only: [ master ] } }
+          task_name: integration_test
+          tf_workspace: master
+          timeout: 1500
+
+      - run-task:
+          name: client unit test
           requires: [ apply master  ]
           filters: { branches: { only: [ master ] } }
+          task_name: client_unit_test
           tf_workspace: master
 
-      - api_unit_test:
+      - run-task:
           name: api unit test
           requires: [ apply master ]
           filters: { branches: { only: [ master ] } }
+          task_name: api_unit_test
           tf_workspace: master
+          timeout: 600
 
       - apply:
           name: apply training
@@ -97,7 +133,7 @@ workflows:
 
       - apply:
           name: apply shared-production
-          requires: [ api unit test, client integration test ]
+          requires: [ api unit test, client unit test, integration test ]
           filters: { branches: { only: [ master ] } }
           tf_tier: shared
           tf_workspace: production
@@ -132,7 +168,7 @@ workflows:
           filters: { branches: { only: [ master ] } }
           task_name: backup
           tf_workspace: production02
-          timeout: "600"
+          timeout: 600
 
       - run-task:
           name: restore production to preproduction
@@ -140,7 +176,7 @@ workflows:
           filters: { branches: { only: [ master ] } }
           task_name: restore_from_production
           tf_workspace: preprod
-          timeout: "600"
+          timeout: 600
 
 orbs:
   aws-cli: circleci/aws-cli@0.1.13
@@ -234,58 +270,6 @@ jobs:
       - run:
           name: Stabilize
           command: stabilizer
-
-  client_integration_test:
-    docker:
-      - image: circleci/ruby
-    parameters:
-      tf_workspace:
-        description: terraform workspace
-        type: string
-        default: ""
-    environment:
-      TF_VAR_default_role: digideps-ci
-      WORKSPACE: << parameters.tf_workspace >>
-    working_directory: ~/project/environment
-    steps:
-      - checkout:
-          path: ~/project
-      - run:
-          name: Bundle install
-          command: bundle install
-      - run:
-          name: Set environment
-          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
-      - run:
-          name: Reset database
-          command: ruby deployer/run_task.rb test-${TF_WORKSPACE} reset-database-${TF_WORKSPACE}
-      - run:
-          name: Test Client
-          command: ruby deployer/run_task.rb test-${TF_WORKSPACE} test-front-${TF_WORKSPACE}
-  api_unit_test:
-    docker:
-      - image: circleci/ruby
-    parameters:
-      tf_workspace:
-        description: terraform workspace
-        type: string
-        default: ""
-    environment:
-      TF_VAR_default_role: digideps-ci
-      WORKSPACE: << parameters.tf_workspace >>
-    working_directory: ~/project/environment
-    steps:
-      - checkout:
-          path: ~/project
-      - run:
-          name: Bundle install
-          command: bundle install
-      - run:
-          name: Set environment
-          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
-      - run:
-          name: Test API
-          command: ruby deployer/run_task.rb test-${TF_WORKSPACE} test-api-${TF_WORKSPACE}
   build:
     docker:
       - image: circleci/python:2.7
@@ -349,8 +333,8 @@ jobs:
         type: string
       timeout:
         description: time the task will run for before timing out
-        type: string
-        default: "120"
+        type: integer
+        default: 120
     environment:
       WORKSPACE: << parameters.tf_workspace >>
     working_directory: ~/project/environment

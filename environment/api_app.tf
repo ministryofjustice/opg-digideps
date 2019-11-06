@@ -129,7 +129,6 @@ locals {
       { "name": "SECRETS_ADMIN_PERMISSIONS", "value": "[ROLE_ADMIN, ROLE_AD, ROLE_CASE_MANAGER]" },
       { "name": "DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
       { "name": "DATABASE_NAME", "value": "${aws_db_instance.api.name}" },
-      { "name": "BEHAT_CONTROLLER_ENABLED", "value": "${local.account.test_enabled ? "true" : "false"}" },
       { "name": "SECRETS_FRONT_PERMISSIONS", "value": "[ROLE_LAY_DEPUTY, ROLE_PA, ROLE_PROF, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER]" },
       { "name": "DATABASE_USERNAME", "value": "digidepsmaster" }
     ]

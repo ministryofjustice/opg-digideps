@@ -11,6 +11,5 @@ keys = [
     "/redis",
     "/url",
     "/fixtures",
-    "/secrets",
-    "/behat"
+    "/secrets"
 ]

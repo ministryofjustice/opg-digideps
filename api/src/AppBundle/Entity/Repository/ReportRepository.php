@@ -152,9 +152,9 @@ class ReportRepository extends EntityRepository
             ->andWhere('r.submitted = false OR r.submitted is null');
 
         if ($q = $query->get('q')) {
-            $qb->andWhere('lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike OR c.caseNumber = :q');
+            $qb->andWhere('lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike OR lower(c.caseNumber) = :q');
             $qb->setParameter('qLike', '%' . strtolower($q) . '%');
-            $qb->setParameter('q', $q);
+            $qb->setParameter('q', strtolower($q));
         }
 
         $endOfToday = new \DateTime('today midnight');
