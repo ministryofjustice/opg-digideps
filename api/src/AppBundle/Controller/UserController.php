@@ -284,9 +284,9 @@ class UserController extends RestController
                 $qb->leftJoin('u.clients', 'c');
                 $qb->andWhere('lower(c.caseNumber) = :cn');
                 $qb->setParameter('cn', strtolower($q));
-            } else { // mail or first/lastname or user or client
+            } else {
                 $qb->leftJoin('u.clients', 'c');
-                $qb->andWhere('lower(u.email) LIKE :qLike OR lower(u.firstname) LIKE :qLike OR lower(u.lastname) LIKE :qLike OR lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike ');
+                $qb->andWhere('lower(u.email) LIKE :qLike OR lower(u.firstname) LIKE :qLike OR lower(u.lastname) LIKE :qLike ');
                 $qb->setParameter('qLike', '%' . strtolower($q) . '%');
             }
         }
