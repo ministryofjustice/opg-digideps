@@ -12,8 +12,29 @@ class FullReviewChecklistType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $yesNoOptions = [
+            'choices' => ['yes' => 'yes', 'no' => 'no'],
+            'expanded' => true,
+            'choice_translation_domain' => 'common',
+        ];
+
+        $yesNoNaOptions = [
+            'choices' => ['yes' => 'yes', 'no' => 'no', 'notApplicable' => 'na'],
+            'expanded' => true,
+            'choice_translation_domain' => 'common',
+        ];
+
         $builder
-            ->add('decisionExplanation', FormTypes\TextAreaType::class);
+            ->add('decisionExplanation', FormTypes\TextAreaType::class)
+            ->add('fullBankStatementsExist', FormTypes\ChoiceType::class, $yesNoNaOptions)
+            ->add('anyLodgingConcerns', FormTypes\ChoiceType::class, $yesNoNaOptions)
+            ->add('spendingAcceptable', FormTypes\ChoiceType::class, $yesNoNaOptions)
+            ->add('expensesReasonable', FormTypes\ChoiceType::class, $yesNoNaOptions)
+            ->add('giftingReasonable', FormTypes\ChoiceType::class, $yesNoNaOptions)
+            ->add('debtManageable', FormTypes\ChoiceType::class, $yesNoNaOptions)
+            ->add('anySpendingConcerns', FormTypes\ChoiceType::class, $yesNoNaOptions)
+            ->add('needReferral', FormTypes\ChoiceType::class, $yesNoOptions)
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
