@@ -22,12 +22,12 @@ resource "aws_security_group_rule" "integration_test_postgres_out_rds" {
 }
 
 resource "aws_security_group_rule" "integration_test_https_out" {
-  from_port                = 443
-  protocol                 = "tcp"
-  security_group_id        = module.integration_test.security_group_id
-  to_port                  = 443
-  type                     = "egress"
-  cidr_blocks = ["0.0.0.0/0"]
+  from_port         = 443
+  protocol          = "tcp"
+  security_group_id = module.integration_test.security_group_id
+  to_port           = 443
+  type              = "egress"
+  cidr_blocks       = ["0.0.0.0/0"]
 }
 
 locals {
