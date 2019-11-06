@@ -1,0 +1,41 @@
+{% from 'AppBundle:Admin/Client/Report:macros.html.twig' import checklist_radios %}
+
+{% trans_default_domain 'admin-checklist' %}
+{% set page = 'checklistPage' %}
+
+<a name="anchor-fullReview-checklist"></a>
+<hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+<h2 class="govuk-heading-l govuk-!-margin-top-6">{{ 'checklistPage.heading.fullReview.title' | trans }}</h2>
+<hr class="govuk-section-break govuk-section-break--xl govuk-!-margin-top-1 govuk-section-break--visible">
+
+<div class="govuk-grid-row behat-region-full-review-checklist">
+    <div class="govuk-grid-column-two-thirds">
+        {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+
+        <a name="anchor-full-review-final-decision"></a>
+        {{ form_checkbox_group(form.decision, (page ~ '.form.finalDecision'), {
+            classes: 'govuk-radios--inline govuk-radios--small',
+            legendClass: 'govuk-fieldset__legend--m',
+            formGroupClass: 'govuk-!-margin-bottom-1',
+        }) }}
+
+        {{ form_input(form.answers.decisionExplanation, page ~ '.form.finalDecisionExplanation', {
+            inputClass: 'govuk-!-width-full',
+        }) }}
+
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+        {{ form_submit(form.save, (page ~ '.form.save'), {
+            buttonClass: 'govuk-button--secondary behat-link-save-progress'
+        }) }}
+
+        {{ form_submit(form.submit, (page ~ '.form.submit'), {
+            buttonClass: 'behat-link-submit'
+        }) }}
+
+        {{ form_end(form) }}
+    </div>
+    <div class="govuk-grid-column-one-third opg-sticky-menu">
+        {% include 'AppBundle:Admin/Client/Report/sidebar:_fullReview.html.twig' %}
+    </div>
+</div>

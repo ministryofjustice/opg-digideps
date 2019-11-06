@@ -8,6 +8,7 @@ use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Exception\DisplayableException;
+use AppBundle\Form\Admin\ReviewChecklistType;
 use AppBundle\Form\Admin\ReportChecklistType;
 use AppBundle\Form\Admin\UnsubmitReportType;
 use AppBundle\Form\Admin\UnsubmitReportConfirmType;
@@ -245,6 +246,26 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
         $buttonClicked = $form->getClickedButton();
 
+        $reviewChecklist = $this->getRestClient()->get('report/' . $report->getId() . '/checklist', 'Report\\ReviewChecklist');
+        $reviewForm = $this->createForm(ReviewChecklistType::class, $reviewChecklist);
+        $reviewForm->handleRequest($request);
+
+        if ($reviewForm->isValid()) {
+            if ($reviewForm->getClickedButton()->getName() === ReviewChecklistType::SUBMIT_ACTION) {
+                $reviewChecklist->setIsSubmitted(true);
+            }
+
+            if (!empty($reviewChecklist->getId())) {
+                $this->getRestClient()->put('report/' . $report->getId() . '/checklist', $reviewChecklist);
+            } else {
+                $this->getRestClient()->post('report/' . $report->getId() . '/checklist', $reviewChecklist);
+            }
+
+            $request->getSession()->getFlashBag()->add('notice', 'Review checklist saved');
+
+            return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#anchor-fullReview-checklist');
+        }
+
         if ($buttonClicked instanceof SubmitButton) {
             $checklist->setButtonClicked($buttonClicked->getName());
         }
@@ -288,7 +309,9 @@ class ReportController extends AbstractController
             'report'   => $report,
             'submittedEstimateCosts' => $costBreakdown,
             'form'     => $form->createView(),
+            'reviewForm' => $reviewForm->createView(),
             'checklist' => $checklist,
+            'reviewChecklist' => $reviewChecklist,
             'previousReportData' => $report->getPreviousReportData()
         ];
     }
