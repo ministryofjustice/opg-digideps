@@ -307,20 +307,6 @@ class Checklist
      */
     private $buttonClicked;
 
-    /**
-     * @var array
-     * @JMS\Groups({"report-checklist"})
-     * @ORM\Column(type="json", name="full_review", nullable=true)
-     */
-    private $fullReview;
-
-    /**
-     * @var string
-     * @JMS\Groups({"report-checklist"})
-     * @ORM\Column(type="string", name="full_review_decision", nullable=true)
-     */
-    private $fullReviewDecision;
-
     public function __construct(ReportInterface $report)
     {
         $this->setReport($report);
@@ -955,44 +941,6 @@ class Checklist
     public function setButtonClicked($buttonClicked)
     {
         $this->buttonClicked = $buttonClicked;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFullReview(): array
-    {
-        return $this->fullReview;
-    }
-
-    /**
-     * @param string $buttonClicked
-     *
-     * @return $this
-     */
-    public function setFullReview(array $fullReview)
-    {
-        $this->fullReview = $fullReview;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFullReviewDecision(): string
-    {
-        return $this->fullReviewDecision;
-    }
-
-    /**
-     * @param string $buttonClicked
-     *
-     * @return $this
-     */
-    public function setFullReviewDecision(string $fullReviewDecision)
-    {
-        $this->fullReviewDecision = $fullReviewDecision;
         return $this;
     }
 }
