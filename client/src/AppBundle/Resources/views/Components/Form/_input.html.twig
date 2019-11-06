@@ -1,3 +1,4 @@
+{% set describedby = '' %}
 <div id="form-group-{{ element.vars.id }}" class="govuk-form-group{% if not element.vars.valid %} govuk-form-group--error{% endif %}{% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
 
     {% if labelRaw is defined and labelRaw %}
@@ -11,16 +12,18 @@
     {% endif %}
 
     {% if (hintText is defined) and (hintText is not empty) %}
+        {% set describedby = element.vars.id ~ '-hint' %}
         <span class="govuk-hint" id="{{ element.vars.id }}-hint">
             {{ hintText }}
         </span>
-        {% if hintListArray is defined and hintListArray is not empty %}
-            <ul class="govuk-hint govuk-list govuk-list--bullet">
-                {% for hintList in hintListArray %}
-                    <li>{{ hintList }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+    {% endif %}
+
+    {% if hintListArray is defined and hintListArray is not empty %}
+        <ul class="govuk-hint govuk-list govuk-list--bullet">
+            {% for hintList in hintListArray %}
+                <li>{{ hintList }}</li>
+            {% endfor %}
+        </ul>
     {% endif %}
 
     {{ form_errors(element) }}
@@ -44,7 +47,7 @@
             'attr': {
                 'class': class,
                 'rows': '5',
-                'aria-describedby': element.vars.id ~ '-hint',
+                'aria-describedby': describedby,
             }
         }) }}
     {% else %}
@@ -53,7 +56,7 @@
                 'class': class ~ ' govuk-' ~ inputType ~ '--error',
                 'aria-invalid': 'true',
                 'rows': '5',
-                'aria-describedby': element.vars.id ~ '-hint ' ~ element.vars.id ~ '-error',
+                'aria-describedby': describedby ~ ' ' ~ element.vars.id ~ '-error',
             }
         }) }}
     {% endif %}

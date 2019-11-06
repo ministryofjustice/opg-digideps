@@ -9,7 +9,6 @@ Feature: Admin report checklist
     # check default values
     And each text should be present in the corresponding region:
       | Not saved yet | last-saved-by |
-      | Not saved yet | last-modified-by |
       | 1 Nov 2017 | court-date |
       | Health and welfare | report-type-title |
       | 1 Nov 2018 to 31 Oct 2019 | expected-date |
