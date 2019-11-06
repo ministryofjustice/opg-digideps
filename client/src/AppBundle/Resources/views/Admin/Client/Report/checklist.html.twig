@@ -53,10 +53,10 @@
 
     <a name="anchor-lodging-checklist"></a>
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-    <h2 class="govuk-heading-l govuk-!-margin-top-6">{{ 'checklistPage.heading.lodgingChecklist' | trans }}</h2>
+    <h2 class="govuk-heading-l govuk-!-margin-top-6">{{ 'checklistPage.heading.lodging.title' | trans }}</h2>
     <hr class="govuk-section-break govuk-section-break--xl govuk-!-margin-top-1 govuk-section-break--visible">
 
-    <div class="govuk-grid-row">
+    <div class="govuk-grid-row behat-region-lodging-checklist">
         <div class="govuk-grid-column-two-thirds">
             {# Attached documents #}
             {% if report.deputyDocuments is defined and (report.deputyDocuments is not empty) %}
@@ -208,9 +208,13 @@
 
             {{ form_end(form) }}
         </div>
-        <div class="govuk-grid-column-one-third">
-            {% include 'AppBundle:Admin/Client/Report/partials:_checklistSidebar.html.twig' %}
+        <div class="govuk-grid-column-one-third opg-sticky-menu">
+            {% include 'AppBundle:Admin/Client/Report/sidebar:_lodging.html.twig' %}
         </div>
     </div>
+
+    {% if checklist.submittedOn and checklist.finalDecision == 'for-review' %}
+        {% include 'AppBundle:Admin/Client/Report:fullReviewChecklist.html.twig' with {form: reviewForm, checklist: reviewChecklist} %}
+    {% endif %}
 
 {% endblock %}
