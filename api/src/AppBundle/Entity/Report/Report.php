@@ -526,13 +526,17 @@ class Report implements ReportInterface
     }
 
     /**
-     * set Due date to +8 weeks after end date
+     * set Due date to +21 days after end date or +56 days if end date before 13/11/19
      */
     public function updateDueDateBasedOnEndDate()
     {
-        // due date set to 8 exactly weeks (56 days) after the start date
+        // due date set to 8 exactly weeks (21 days) after the start date
         $this->dueDate = clone $this->endDate;
-        $this->dueDate->add(new \DateInterval('P56D'));
+        if ($this->getEndDate()->format('Ymd') > '20191113') {
+            $this->dueDate->add(new \DateInterval('P21D'));
+        } else {
+            $this->dueDate->add(new \DateInterval('P56D'));
+        }
     }
 
     /**
