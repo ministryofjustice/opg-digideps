@@ -32,7 +32,7 @@
                 <div class="govuk-grid-column-one-half text--right">
                     <a href="{{ path('org_organisation_add_member', { id: organisation.id }) }}" class="behat-link-add">
                         <strong>
-                            <span class="icon icon-plus"></span>
+                            <span class="opg-icon opg-icon--plus"></span>
                             {{ 'viewPage.addUser' | trans }}
                         </strong>
                     </a>
@@ -46,7 +46,7 @@
                 <th scope="col" class="govuk-table__header">{{ 'viewPage.nameAndJob' | trans }}</th>
                 <th scope="col" class="govuk-table__header">{{ 'viewPage.contactInfo' | trans }}</th>
                 <th scope="col" class="govuk-table__header">
-                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                    <span class="govuk-visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
                 </th>
             </tr>
         </thead>
