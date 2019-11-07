@@ -293,6 +293,19 @@ jobs:
           name: Install semvertag
           command: sudo pip install https://github.com/ministryofjustice/semvertag/archive/master.zip
       - run:
+          name: Install trivy
+          command: |
+            apk add --update curl
+            VERSION=$(
+                curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | \
+                grep '"tag_name":' | \
+                sed -E 's/.*"v([^"]+)".*/\1/'
+            )
+
+            wget https://github.com/aquasecurity/trivy/releases/download/v${VERSION}/trivy_${VERSION}_Linux-64bit.tar.gz
+            tar zxvf trivy_${VERSION}_Linux-64bit.tar.gz
+            mv trivy /usr/local/bin
+      - run:
           name: Bump version
           command: semvertag bump patch << parameters.semver_stage >> >> ~/project/VERSION
       - persist_to_workspace:
@@ -324,8 +337,19 @@ jobs:
           name: List client packages
           command: docker-compose -f docker-compose.ci.yml run --rm client apk list | sort
       - run:
+          name: Scan the API image with trivy
+          command: trivy --exit-code 0 --no-progress --auto-refresh ${AWS_REGISTRY}/digideps/api:${VERSION}
+      - run:
+          name: Scan the client image with trivy
+          command: trivy --exit-code 0 --no-progress --auto-refresh ${AWS_REGISTRY}/digideps/client:${VERSION}
+      - run:
           name: Push images
           command: docker-compose -f docker-compose.ci.yml push
+      - save_cache:
+          key: vulnerability-db
+          paths:
+            - $HOME/.cache/trivy
+
 
   run-task:
     executor: terraform/terraform
