@@ -95,13 +95,17 @@ resource "aws_security_group_rule" "wkhtmltopdf_admin_http_in" {
   source_security_group_id = aws_security_group.admin.id
 }
 
-resource "aws_security_group_rule" "wkhtmltopdf_out" {
-  type              = "egress"
-  protocol          = "-1"
-  from_port         = 0
-  to_port           = 0
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.wkhtmltopdf.id
+resource "aws_security_group_rule" "wkhtmltopdf_task_out" {
+  for_each = local.common_sg_rules
+
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = each.value.port
+  to_port                  = each.value.port
+  security_group_id        = aws_security_group.wkhtmltopdf.id
+  source_security_group_id = contains(keys(each.value), "security_group_id") ? each.value.security_group_id : null
+  prefix_list_ids          = contains(keys(each.value), "prefix_list_id") ? [each.value.prefix_list_id] : null
+  description              = each.key
 }
 
 locals {
