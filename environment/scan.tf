@@ -90,11 +90,11 @@ locals {
   scan_sg_rules = {
     logs = local.common_sg_rules.logs,
     registry_docker_io = {
-      port = 443
+      port        = 443
       cidr_blocks = ["0.0.0.0/0"]
     }
     db_local_clamav_net = {
-      port = 80
+      port        = 80
       cidr_blocks = ["0.0.0.0/0"]
     }
   }
