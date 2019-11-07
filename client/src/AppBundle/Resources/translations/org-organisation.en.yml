@@ -46,5 +46,8 @@ form:
         label: Job title (optional)
     phoneMain:
         label: Phone (optional)
+    roleName:
+        label: Grant user administrator access
+        hint: Administrator access will allow the new user to add and remove other users of the service
     save:
         label: Save

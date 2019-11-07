@@ -31,6 +31,8 @@
 
     {{ form_input(form.phoneMain,'form.phoneMain') }}
 
+    {{ form_checkbox_group(form.roleName, 'form.roleName', {}) }}
+
     {{ form_submit(form.save,'form.save', {'buttonClass': 'behat-link-save'}) }}
 
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {

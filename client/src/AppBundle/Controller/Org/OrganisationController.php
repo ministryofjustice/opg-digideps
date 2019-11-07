@@ -74,7 +74,18 @@ class OrganisationController extends AbstractController
             throw $this->createNotFoundException('Organisation not found');
         }
 
-        $form = $this->createForm(FormDir\Org\OrganisationMemberType::class);
+        if ($this->isGranted(EntityDir\User::ROLE_PA)) {
+            $adminRole = EntityDir\User::ROLE_PA_ADMIN;
+            $memberRole = EntityDir\User::ROLE_PA_TEAM_MEMBER;
+        } else {
+            $adminRole = EntityDir\User::ROLE_PROF_ADMIN;
+            $memberRole = EntityDir\User::ROLE_PROF_TEAM_MEMBER;
+        }
+
+        $form = $this->createForm(FormDir\Org\OrganisationMemberType::class, null, [
+            'role_admin' => $adminRole,
+            'role_member' => $memberRole,
+        ]);
 
         $form->handleRequest($request);
 
@@ -85,18 +96,12 @@ class OrganisationController extends AbstractController
                 $existingUser = $this->getRestClient()->get('user/get-team-names-by-email/' . $email, 'User');
 
                 if ($existingUser->getId()) {
-                    // existing users just get added to tthe organisation
+                    // existing users just get added to the organisation
                     $this->getRestClient()->put('v2/organisation/' . $organisation->getId() . '/user/' . $existingUser->getId(), '');
                 } else {
                     /** @var $user EntityDir\User */
                     $user = $form->getData();
-                    if ($this->isGranted(EntityDir\User::ROLE_PA)) {
-                        $user->setRoleName(EntityDir\User::ROLE_PA_ADMIN);
-                    }
 
-                    if ($this->isGranted(EntityDir\User::ROLE_PROF)) {
-                        $user->setRoleName(EntityDir\User::ROLE_PROF_ADMIN);
-                    }
                     $user = $this->getRestClient()->post('user', $user, ['org_team_add'], 'User');
                     $activationEmail = $this->getMailFactory()->createActivationEmail($user);
                     $this->getMailSender()->send($activationEmail, ['text', 'html']);
@@ -147,7 +152,18 @@ class OrganisationController extends AbstractController
 
         $this->denyAccessUnlessGranted('edit-user', $user);
 
-        $form = $this->createForm(FormDir\Org\OrganisationMemberType::class, $user);
+        if ($this->isGranted(EntityDir\User::ROLE_PA)) {
+            $adminRole = EntityDir\User::ROLE_PA_ADMIN;
+            $memberRole = EntityDir\User::ROLE_PA_TEAM_MEMBER;
+        } else {
+            $adminRole = EntityDir\User::ROLE_PROF_ADMIN;
+            $memberRole = EntityDir\User::ROLE_PROF_TEAM_MEMBER;
+        }
+
+        $form = $this->createForm(FormDir\Org\OrganisationMemberType::class, $user, [
+            'role_admin' => $adminRole,
+            'role_member' => $memberRole,
+        ]);
 
         $form->handleRequest($request);
 
