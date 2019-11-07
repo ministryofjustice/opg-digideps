@@ -71,7 +71,7 @@ locals {
         security_group_id = aws_security_group.wkhtmltopdf.id
       },
       scan = {
-        port              = 80
+        port              = 8080
         security_group_id = aws_security_group.scan.id
       }
     }
