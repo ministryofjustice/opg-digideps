@@ -54,46 +54,6 @@ resource "aws_ecs_service" "api" {
   }
 }
 
-resource "aws_security_group" "api_task" {
-  name_prefix = aws_ecs_task_definition.api.family
-  vpc_id      = data.aws_vpc.vpc.id
-  tags        = local.default_tags
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_security_group_rule" "api_https_admin_in" {
-  type      = "ingress"
-  protocol  = "tcp"
-  from_port = 443
-  to_port   = 443
-
-  security_group_id        = aws_security_group.api_task.id
-  source_security_group_id = aws_security_group.admin.id
-}
-
-resource "aws_security_group_rule" "api_https_front_in" {
-  type      = "ingress"
-  protocol  = "tcp"
-  from_port = 443
-  to_port   = 443
-
-  security_group_id        = aws_security_group.api_task.id
-  source_security_group_id = aws_security_group.front.id
-}
-
-resource "aws_security_group_rule" "api_out" {
-  type      = "egress"
-  protocol  = "-1"
-  from_port = 0
-  to_port   = 0
-
-  security_group_id = aws_security_group.api_task.id
-  cidr_blocks       = ["0.0.0.0/0"]
-}
-
 locals {
   api_container = <<EOF
   {
