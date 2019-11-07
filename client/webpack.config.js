@@ -1,3 +1,4 @@
+var fs = require('fs')
 var path = require('path')
 var del = require('del')
 var CopyPlugin = require('copy-webpack-plugin')
@@ -64,6 +65,17 @@ module.exports = {
     ]),
     new MiniCssExtractPlugin({
       filename: 'stylesheets/[name].css'
-    })
+    }),
+    {
+      apply: function (compiler) {
+        // Copy CSS file into main assets folder
+        compiler.hooks.afterEmit.tap('CopyOutputPlugin', () => {
+          fs.copyFileSync(
+            path.resolve(__dirname, 'web/assets/' + tag + '/stylesheets/application.css'),
+            path.resolve(__dirname, 'web/images/application.css')
+          )
+        })
+      }
+    }
   ]
 }
