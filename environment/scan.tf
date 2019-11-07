@@ -86,13 +86,32 @@ resource "aws_security_group_rule" "scan_http_in" {
   source_security_group_id = aws_security_group.front.id
 }
 
-resource "aws_security_group_rule" "scan_out" {
-  type              = "egress"
-  protocol          = "-1"
-  from_port         = 0
-  to_port           = 0
-  security_group_id = aws_security_group.scan.id
-  cidr_blocks       = ["0.0.0.0/0"]
+locals {
+  scan_sg_rules = {
+    logs = local.common_sg_rules.logs,
+    registry_docker_io = {
+      port = 443
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+    db_local_clamav_net = {
+      port = 80
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+}
+
+resource "aws_security_group_rule" "scan_task_out" {
+  for_each = local.scan_sg_rules
+
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = each.value.port
+  to_port                  = each.value.port
+  security_group_id        = aws_security_group.scan.id
+  source_security_group_id = contains(keys(each.value), "security_group_id") ? each.value.security_group_id : null
+  prefix_list_ids          = contains(keys(each.value), "prefix_list_id") ? [each.value.prefix_list_id] : null
+  description              = each.key
+  cidr_blocks              = contains(keys(each.value), "cidr_blocks") ? each.value.cidr_blocks : null
 }
 
 locals {

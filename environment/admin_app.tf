@@ -21,7 +21,7 @@ resource "aws_ecs_service" "admin" {
   tags                    = local.default_tags
 
   network_configuration {
-    security_groups  = [aws_security_group.admin.id]
+    security_groups  = [aws_security_group.admin_service.id]
     subnets          = data.aws_subnet.private.*.id
     assign_public_ip = false
   }
@@ -33,37 +33,6 @@ resource "aws_ecs_service" "admin" {
   }
 
   depends_on = [aws_lb_listener.admin]
-}
-
-# TODO: breakout to individual rules
-resource "aws_security_group" "admin" {
-  name_prefix = aws_ecs_task_definition.admin.family
-  vpc_id      = data.aws_vpc.vpc.id
-
-  ingress {
-    protocol        = "tcp"
-    from_port       = 443
-    to_port         = 443
-    security_groups = [aws_security_group.admin_elb.id]
-  }
-
-  egress {
-    protocol    = "-1"
-    from_port   = 0
-    to_port     = 0
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  tags = merge(
-    local.default_tags,
-    {
-      "Name" = "admin"
-    },
-  )
 }
 
 locals {

@@ -11,7 +11,7 @@ resource "aws_security_group_rule" "admin_cache_task_in" {
   from_port                = 6379
   to_port                  = 6379
   security_group_id        = aws_security_group.admin_cache.id
-  source_security_group_id = aws_security_group.admin.id
+  source_security_group_id = aws_security_group.admin_service.id
 }
 
 resource "aws_elasticache_cluster" "admin" {

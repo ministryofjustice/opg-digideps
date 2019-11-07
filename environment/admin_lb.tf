@@ -23,7 +23,7 @@ resource "aws_security_group_rule" "admin_elb_in" {
 
 resource "aws_security_group_rule" "admin_elb_out" {
   security_group_id        = aws_security_group.admin_elb.id
-  source_security_group_id = aws_security_group.admin.id
+  source_security_group_id = aws_security_group.admin_service.id
   type                     = "egress"
   protocol                 = "tcp"
   from_port                = 443
