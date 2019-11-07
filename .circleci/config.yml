@@ -318,6 +318,12 @@ jobs:
           name: Build images
           command: docker-compose -f docker-compose.ci.yml build --parallel
       - run:
+          name: List API packages
+          command: docker-compose -f docker-compose.ci.yml run --rm api apk list | sort
+      - run:
+          name: List client packages
+          command: docker-compose -f docker-compose.ci.yml run --rm client apk list | sort
+      - run:
           name: Push images
           command: docker-compose -f docker-compose.ci.yml push
 
