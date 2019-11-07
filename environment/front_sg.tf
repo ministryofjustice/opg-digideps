@@ -24,37 +24,7 @@ resource "aws_security_group_rule" "front_task_in" {
   source_security_group_id = aws_security_group.front_lb.id
 }
 
-data "aws_vpc_endpoint" "ecr_endpoint" {
-  service_name = "com.amazonaws.eu-west-1.ecr.dkr"
-  vpc_id       = data.aws_vpc.vpc.id
-}
-
-data "aws_vpc_endpoint" "logs_endpoint" {
-  service_name = "com.amazonaws.eu-west-1.logs"
-  vpc_id       = data.aws_vpc.vpc.id
-}
-
-data "aws_vpc_endpoint" "s3_endpoint" {
-  service_name = "com.amazonaws.eu-west-1.s3"
-  vpc_id       = data.aws_vpc.vpc.id
-}
-
 locals {
-  common_sg_rules = {
-    ecr = {
-      port              = 443
-      security_group_id = tolist(data.aws_vpc_endpoint.ecr_endpoint.security_group_ids)[0]
-    },
-    logs = {
-      port              = 443
-      security_group_id = tolist(data.aws_vpc_endpoint.logs_endpoint.security_group_ids)[0]
-    },
-    s3 = {
-      port           = 443
-      prefix_list_id = data.aws_vpc_endpoint.s3_endpoint.prefix_list_id
-    }
-  }
-
   front_sg_rules = merge(
     local.common_sg_rules,
     {
