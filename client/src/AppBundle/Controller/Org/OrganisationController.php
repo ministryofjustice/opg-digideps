@@ -61,6 +61,8 @@ class OrganisationController extends AbstractController
      */
     public function addAction(Request $request, int $id)
     {
+        $this->denyAccessUnlessGranted('add-user');
+
         try {
             $organisation = $this->getRestClient()->get('v2/organisation/' . $id, 'Organisation');
             if (!$organisation->getIsDomainIdentifier()) {
@@ -143,6 +145,8 @@ class OrganisationController extends AbstractController
             throw $this->createNotFoundException();
         }
 
+        $this->denyAccessUnlessGranted('edit-user', $user);
+
         $form = $this->createForm(FormDir\Org\OrganisationMemberType::class, $user);
 
         $form->handleRequest($request);
@@ -190,6 +194,8 @@ class OrganisationController extends AbstractController
         if (!($user instanceof EntityDir\User)) {
             throw $this->createNotFoundException();
         }
+
+        $this->denyAccessUnlessGranted('delete-user', $user, 'Access denied');
 
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
