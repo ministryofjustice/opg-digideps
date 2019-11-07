@@ -60,7 +60,7 @@ Feature: Users can edit members of their organisation
     When I go to "/org/settings"
     And I follow "User accounts"
     Then I should not see the "Add" link
-# assert direct access denied
+    # assert direct access denied
     When I go to "/org/settings/organisation/add-user"
     Then the response status code should be 500
 
@@ -110,3 +110,50 @@ Feature: Users can edit members of their organisation
     Then the URL should match "/org/settings/organisation/\d+"
     And I should not see "Yvonne Lacasse"
     And I should not see "yvonne.lacasse@publicguardian.gov.uk"
+
+  @prof
+  Scenario: Admin users can edit themselves from the organisation page
+    Given I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
+    When I go to "/org/settings/organisation"
+    And I click on "edit" in the "team-user-behat-prof-adminpublicguardiangovuk" region
+    Then I should be on "/org/settings/your-details/edit"
+
+  @prof
+  Scenario: Admin users can add other admins
+    Given I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
+    When I go to "/org/settings/organisation"
+    And I follow "Add user"
+    And I fill in the following:
+      | organisation_member_firstname  | Keneth                         |
+      | organisation_member_lastname   | Damore                         |
+      | organisation_member_email      | k.damore@publicguardian.gov.uk |
+      | organisation_member_roleName_1 | ROLE_PROF_ADMIN                |
+    And I press "Save"
+    Then I should see "k.damore@publicguardian.gov.uk"
+
+  @prof
+  Scenario: Additional admins can also edit and remove users
+    Given emails are sent from "deputy" area
+    When I open the "/user/activate/" link from the email
+    And I activate the user with password "Abcd1234"
+    And I am logged in as "k.damore@publicguardian.gov.uk" with password "Abcd1234"
+    And I go to "/org/settings/organisation"
+    Then I should see "Add user"
+    And I should see "Edit" in the "team-user-behat-prof-adminpublicguardiangovuk" region
+    And I should see "Remove" in the "team-user-behat-prof-adminpublicguardiangovuk" region
+
+  @prof
+  Scenario: Team members cannot edit or remove users
+    Given I am logged in as "behat-prof-team-member@publicguardian.gov.uk" with password "Abcd1234"
+    When I go to "/org/settings/organisation"
+    Then I should not see "Add user"
+    And I should not see "Edit" in the "team-user-behat-prof-adminpublicguardiangovuk" region
+    And I should not see the "delete" link
+    And I should not see the "send-activation-email" link
+
+  @prof
+  Scenario: Team members can edit themselves
+    Given I am logged in as "behat-prof-team-member@publicguardian.gov.uk" with password "Abcd1234"
+    When I go to "/org/settings/organisation"
+    And I click on "edit" in the "team-user-behat-prof-team-memberpublicguardiangovuk" region
+    Then I should be on "/org/settings/your-details/edit"
