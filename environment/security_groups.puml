@@ -13,15 +13,25 @@
     !include AWSPuml/Storage/all.puml
     !include AWSPuml/ManagementAndGovernance/all.puml
 
-    'top to bottom direction
-'    skinparam linetype ortho
     skinparam Shadowing false
     skinparam ArrowThickness 5
     skinparam rectangle {
         BorderColor transparent
     }
-    skinparam LegendBackgroundColor transparent
-    skinparam LegendBorderColor transparent
+    skinparam roundcorner 40
+    skinparam DefaultFontSize 25
+    skinparam DefaultFontColor AWS_SYMBOL_COLOR
+
+    skinparam Legend {
+        BackgroundColor transparent
+        BorderColor transparent
+    }
+
+    skinparam Package {
+        BorderColor AWS_BORDER_COLOR
+        FontSize 50
+
+    }
 
     legend top left
         |=Colour |= Protocol |
@@ -35,7 +45,7 @@
 
     rectangle {
         rectangle {
-            package "amazon" {
+            rectangle {
                 EC2ContainerRegistryResource(digideps_registry, "digideps_registry",)
                 S3Bucket(backup_bucket, "backup",)
                 S3Bucket(pa_uploads_bucket, "pa-uploads",)
@@ -53,16 +63,13 @@
                 }
             }
 
-            package "public_subnet" {
+            rectangle {
                 InternetGateway(igw, "igw",)
 
                 rectangle {
-                     VPCNATGateway(nat, "nat",)
-
-                     package "loadbalancers" {
-                         ELBApplicationLoadBalancer(admin_lb,"admin elb",)
-                         ELBApplicationLoadBalancer(front_lb,"front alb",)
-                     }
+                      VPCNATGateway(nat, "nat",)
+                      ELBApplicationLoadBalancer(front_lb,"front alb",)
+                      ELBApplicationLoadBalancer(admin_lb,"admin elb",)
                 }
             }
 
@@ -73,7 +80,7 @@
 
         package "private_subnet" {
             Cloud9(internal,"Cloud 9 Workstation",)
-            package "services" {
+            rectangle {
                 rectangle {
                     rectangle {
                         ECSService(front_service,"front",)
@@ -99,7 +106,7 @@
             }
 
             RDSPostgreSQLinstance(rds,"rds",)
-            package "tasks" {
+            rectangle {
                 ECSService(backup_task,"backup",)
                 ECSService(restore_task,"restore",)
                 ECSService(reset_database_task,"reset_database",)
