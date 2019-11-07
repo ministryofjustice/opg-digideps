@@ -303,7 +303,6 @@ jobs:
 
             wget https://github.com/aquasecurity/trivy/releases/download/v${VERSION}/trivy_${VERSION}_Linux-64bit.tar.gz
             tar zxvf trivy_${VERSION}_Linux-64bit.tar.gz
-            mv trivy /bin
       - run:
           name: Bump version
           command: semvertag bump patch << parameters.semver_stage >> >> ~/project/VERSION
