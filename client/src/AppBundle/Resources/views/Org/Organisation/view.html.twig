@@ -62,6 +62,10 @@
                     {% if user.jobTitle != '' %}
                         <br />{{ user.jobTitle }}
                     {% endif %}
+                    {% if user.isOrgAdministrator or user.isOrgNamedDeputy %}
+                        <br />
+                        <span class="govuk-tag">{{ 'listPage.roleAdmin' | trans }}</span>
+                    {% endif %}
                 </td>
                 <td class="govuk-table__cell">
                     <strong>{{ 'email' | trans({}, 'common') }}</strong><br>
