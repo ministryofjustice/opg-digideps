@@ -28,7 +28,7 @@
                 <div class="govuk-grid-column-one-half">
                     {{ 'viewPage.tableHeading' | trans }}
                 </div>
-                {% if organisation.getIsDomainIdentifier %}
+                {% if organisation.getIsDomainIdentifier and is_granted('add-user') %}
                 <div class="govuk-grid-column-one-half text--right">
                     <a href="{{ path('org_organisation_add_member', { id: organisation.id }) }}" class="behat-link-add">
                         <strong>
@@ -73,13 +73,13 @@
                     {% endif %}
                 </td>
                 <td class="govuk-table__cell text--right">
-                    {% if user.id != app.user.id %}
+                    {% if user.id != app.user.id and is_granted('edit-user', user) %}
                         <a class="behat-link-edit" href="{{  path('org_organisation_edit_member', {orgId: organisation.id, userId: user.id}) }}">{{ 'edit' | trans({}, 'common' ) }}</a><br>
                     {% endif %}
-                    {% if user.id != app.user.id %}
+                    {% if user.id != app.user.id and is_granted('delete-user', user) %}
                         <a class="behat-link-delete" href="{{  path('org_organisation_delete_member', {orgId: organisation.id, userId: user.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a><br>
                     {% endif %}
-                    {% if user.id != app.user.id and not user.active %}
+                    {% if user.id != app.user.id and not user.active and is_granted('edit-user', user) %}
                         <a class="behat-link-send-activation-email" href="{{ path('org_organisation_send_activation_link', {orgId: organisation.id, userId: user.id}) }}">{{ 'listPage.resendActivation' | trans }}</a>
                     {% endif %}
                 </td>
