@@ -15,7 +15,7 @@ resource "aws_security_group_rule" "api_https_admin_in" {
   to_port   = 443
 
   security_group_id        = aws_security_group.api_task.id
-  source_security_group_id = aws_security_group.admin.id
+  source_security_group_id = aws_security_group.admin_service.id
 }
 
 resource "aws_security_group_rule" "api_https_front_in" {
