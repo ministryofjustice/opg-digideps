@@ -699,7 +699,7 @@ class ReportController extends RestController
             $this->getEntityManager()->persist($info);
         }
 
-        if ($checklistData['button_clicked'] == 'submitAndDownload') {
+        if ($checklistData['button_clicked'] == 'submitAndContinue') {
             $checklist->setSubmittedBy(($this->getUser()));
             $checklist->setSubmittedOn(new \DateTime());
         }
@@ -733,7 +733,7 @@ class ReportController extends RestController
             $this->getEntityManager()->persist($info);
         }
 
-        if ($checklistData['button_clicked'] == 'submitAndDownload') {
+        if ($checklistData['button_clicked'] == 'submitAndContinue') {
             $checklist->setSubmittedBy(($this->getUser()));
             $checklist->setSubmittedOn(new \DateTime());
         }

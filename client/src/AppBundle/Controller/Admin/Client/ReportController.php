@@ -222,7 +222,7 @@ class ReportController extends AbstractController
      *
      * @Template("AppBundle:Admin/Client/Report:checklist.html.twig")
      *
-     * @return array
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function checklistAction(Request $request, $id)
     {
@@ -291,8 +291,8 @@ class ReportController extends AbstractController
                     $this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#furtherInformation'
                 );
             } else {
-                if ($buttonClicked->getName() == 'submitAndDownload') {
-                    return $this->checklistPDFViewAction($report->getId());
+                if ($buttonClicked->getName() == 'submitAndContinue') {
+                    return $this->redirect($this->generateUrl('admin_report_checklist_submitted', ['id'=>$report->getId()]));
                 } else {
                     return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#');
                 }
@@ -317,16 +317,31 @@ class ReportController extends AbstractController
     }
 
     /**
+     * @Route("checklist-submitted", name="admin_report_checklist_submitted")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_CASE_MANAGER')")
+     * @param $id
+     *
+     * @Template("AppBundle:Admin/Client/Report:checklistSubmitted.html.twig")
+     *
+     * @return array
+     */
+    public function checklistSubmittedAction($id)
+    {
+        return ['report' => $this->getReport($id)];
+    }
+
+    /**
      * Generate and return Checklist as Response object
      *
-     * @Route("checklist-{reportId}.pdf", name="admin_checklist_pdf")
+     * @Route("checklist.pdf", name="admin_checklist_pdf")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_CASE_MANAGER')")
      *
-     * @param $reportId
+     * @param $id
      * @return Response
      */
-    public function checklistPDFViewAction($reportId)
+    public function checklistPDFViewAction($id)
     {
-        $report = $this->getReport($reportId, array_merge(self::$reportGroupsAll, ['client', 'report', 'report-checklist', 'checklist-information', 'user']));
+        $report = $this->getReport($id, array_merge(self::$reportGroupsAll, ['report-checklist', 'checklist-information', 'user']));
         $pdfBinary = $this->get('AppBundle\Service\ReportSubmissionService')->getChecklistPdfBinaryContent($report);
 
         $response = new Response($pdfBinary);

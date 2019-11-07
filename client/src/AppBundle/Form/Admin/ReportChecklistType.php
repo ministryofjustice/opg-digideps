@@ -16,7 +16,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ReportChecklistType extends AbstractType
 {
     const SAVE_ACTION = 'save';
-    const SUBMIT_AND_DOWNLOAD_ACTION = 'submitAndDownload';
+    const SUBMIT_AND_CONTINUE_ACTION = 'submitAndContinue';
 
     /**
      * @var Report
@@ -116,7 +116,7 @@ class ReportChecklistType extends AbstractType
             ->add('furtherInformationReceived', FormTypes\TextareaType::class)
             ->add('saveFurtherInformation', FormTypes\SubmitType::class)
             ->add(self::SAVE_ACTION, FormTypes\SubmitType::class)
-            ->add(self::SUBMIT_AND_DOWNLOAD_ACTION, FormTypes\SubmitType::class);
+            ->add(self::SUBMIT_AND_CONTINUE_ACTION, FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -127,7 +127,7 @@ class ReportChecklistType extends AbstractType
             'name'               => 'checklist',
             'validation_groups'  => function (FormInterface $form) {
                 $ret = [];
-                if (self::SUBMIT_AND_DOWNLOAD_ACTION == $form->getClickedButton()->getName()) {
+                if (self::SUBMIT_AND_CONTINUE_ACTION == $form->getClickedButton()->getName()) {
                     $ret[] = 'submit-common-checklist';
 
                     $sectionsToValidate = $this->report->getAvailableSections();

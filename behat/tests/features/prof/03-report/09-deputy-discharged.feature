@@ -73,7 +73,7 @@ Feature: Prof deputy is discharged
       | report_checklist_caseWorkerSatisified_0                | yes                |
       | report_checklist_finalDecision_0                       | for-review         |
       | report_checklist_lodgingSummary                        | I am not satisfied |
-    When I click on "submit-and-download"
+    When I click on "submit-and-continue"
     And I go to admin page "/admin"
     And I click on "admin-client-search, discharged-client-detail-01000010"
     And I click on "checklist" in the "report-2016-to-2017" region
