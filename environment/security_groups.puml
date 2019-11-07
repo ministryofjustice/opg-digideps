@@ -96,6 +96,9 @@
         }
     }
 
+    [clam_av] -> internet
+    [https://registry-1.docker.io] -> internet
+
     internet -[#orange]-|> igw
     igw -[#blue]down-|> admin_lb
     igw -[#orange]down-|> front_lb
@@ -113,6 +116,8 @@
     front_service -[#red]-|> pdf_service
     admin_service -[#red]-|> pdf_service
 
+    scan_service -[#blue]|> nat
+
     api_unit_test_task -[#green]-|> api_redis
     api_unit_test_task -[#purple]--|> rds
 
@@ -122,7 +127,7 @@
     api_service -[#purple]|> rds
     api_service -[#green]|> api_redis
 
-    nat -[#blue]right---|> loadbalancers
+    nat -[#blue]right---|> igw
 
     backup_task -[#purple]-|> rds
     reset_database_task -[#purple]-|> rds
