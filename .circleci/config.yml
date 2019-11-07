@@ -327,7 +327,6 @@ jobs:
           name: Push images
           command: docker-compose -f docker-compose.ci.yml push
 
-
   run-task:
     executor: terraform/terraform
     parameters:
