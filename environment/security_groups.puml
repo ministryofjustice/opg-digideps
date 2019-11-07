@@ -25,6 +25,8 @@
 
     legend top right
         |=Colour |= Protocol |
+        |<size:50><color:#red><&arrow-right></size>||<size:20>HTTP</size>|
+        |<size:50><color:#magenta><&arrow-right></size>||<size:20>HTTP:8080</size>|
         |<size:50><color:#blue><&arrow-right></color></size>||<size:20>HTTPS</size>|
         |<size:50><color:#orange><&arrow-right></size>||<size:20>HTTP & HTTPS</size>|
         |<size:50><color:#purple><&arrow-right></size>||<size:20>Postgres</size>|
@@ -101,9 +103,9 @@
     admin_lb -[#blue]down-|> admin_service
     front_lb -[#blue]down-|> front_service
 
-    front_service -[#blue]> api_service
+    front_service -[#blue]|> api_service
     front_service -[#green]right-|> front_redis
-    front_service -[#red]> scan_service
+    front_service -[#magenta]|> scan_service
 
     admin_service -[#blue]down-|> api_service
     admin_service -[#green]right-|> admin_redis
@@ -115,10 +117,10 @@
     api_unit_test_task -[#purple]--|> rds
 
     integration_test_task -[#blue]up-|> nat
-    integration_test_task -[#purple]> rds
+    integration_test_task -[#purple]|> rds
 
-    api_service -[#purple]> rds
-    api_service -[#green]> api_redis
+    api_service -[#purple]|> rds
+    api_service -[#green]|> api_redis
 
     nat -[#blue]right---|> loadbalancers
 
