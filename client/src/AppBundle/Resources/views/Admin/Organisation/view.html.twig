@@ -34,6 +34,7 @@
             <tr class="govuk-table__row">
                 <th class="govuk-table__header" scope="col">{{ (page ~ '.users.name') | trans }}</th>
                 <th class="govuk-table__header" scope="col">{{ (page ~ '.users.emailAddress') | trans }}</th>
+                <th class="govuk-table__header" scope="col">{{ (page ~ '.users.admin') | trans }}</th>
                 <th class="govuk-table__header" scope="col">{{ (page ~ '.users.active') | trans }}</th>
                 <th class="govuk-table__header" scope="col">
                     <span class="govuk-visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
@@ -51,6 +52,9 @@
                     </td>
                     <td class="govuk-table__cell">
                         {{ user.email }}
+                    </td>
+                    <td class="govuk-table__cell">
+                        {{ (user.isOrgAdministrator or user.isOrgNamedDeputy ? 'yes' : 'no') | trans({}, 'common') }}
                     </td>
                     <td class="govuk-table__cell">
                         {{ (user.active ? 'yes' : 'no') | trans({}, 'common') }}
