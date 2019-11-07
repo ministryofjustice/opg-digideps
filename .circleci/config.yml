@@ -336,10 +336,10 @@ jobs:
           command: docker-compose -f docker-compose.ci.yml run --rm client apk list | sort
       - run:
           name: Scan the API image with trivy
-          command: ./trivy --exit-code 0 --no-progress --auto-refresh ${AWS_REGISTRY}/digideps/api:${VERSION}
+          command: ./trivy --exit-code 1 --severity MEDIUM,HIGH,CRITICAL --no-progress --auto-refresh ${AWS_REGISTRY}/digideps/api:${VERSION}
       - run:
           name: Scan the client image with trivy
-          command: ./trivy --exit-code 0 --no-progress --auto-refresh ${AWS_REGISTRY}/digideps/client:${VERSION}
+          command: ./trivy --exit-code 1 --severity MEDIUM,HIGH,CRITICAL --no-progress --auto-refresh ${AWS_REGISTRY}/digideps/client:${VERSION}
       - run:
           name: Push images
           command: docker-compose -f docker-compose.ci.yml push
