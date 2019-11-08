@@ -23,13 +23,13 @@ To run the entire test suite, reset the database and run the `test` image.
 
 ```sh
 docker-compose run --rm api sh scripts/resetdb.sh
-docker-compose run --rm test
+docker-compose -f docker-compose.dev.yml run --rm test
 ```
 
 You can supply additional commands to Behat to run individual suites or tags.
 
 ```sh
-docker-compose run --rm test --suite=admin
+docker-compose -f docker-compose.dev.yml run --rm test --suite=admin
 ```
 
 ## PHPUnit
