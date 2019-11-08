@@ -18,20 +18,8 @@ workflows:
           filters: { branches: { ignore: [ master ] } }
 
       - run-task:
-          name: backup environment
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: backup
-
-      - run-task:
-          name: restore environment
-          requires: [ backup environment ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: restore
-
-      - run-task:
           name: reset environment
-          requires: [ restore environment ]
+          requires: [ apply environment ]
           filters: { branches: { ignore: [ master ] } }
           task_name: reset_database
           timeout: 180
@@ -45,21 +33,33 @@ workflows:
 
       - run-task:
           name: client unit test
-          requires: [ restore environment  ]
+          requires: [ apply environment  ]
           filters: { branches: { ignore: [ master ] } }
           task_name: client_unit_test
 
       - run-task:
           name: api unit test
-          requires: [ restore environment ]
+          requires: [ apply environment ]
           filters: { branches: { ignore: [ master ] } }
           task_name: api_unit_test
           timeout: 600
 
+      - run-task:
+          name: backup environment
+          requires: [ api unit test, client unit test, integration test ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: backup
+
+      - run-task:
+          name: restore environment
+          requires: [ backup environment ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: restore
+
       - cleanup:
           name: approve destroy environment
           type: approval
-          requires: [ api unit test, client unit test, integration test ]
+          requires: [ restore environment ]
           filters: { branches: { ignore: [ master ] } }
 
       - apply:
