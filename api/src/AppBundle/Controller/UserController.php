@@ -255,6 +255,7 @@ class UserController extends RestController
         $roleName = $request->get('role_name');
         $adManaged = $request->get('ad_managed');
         $ndrEnabled = $request->get('ndr_enabled');
+        $includeClients = $request->get('include_clients');
         $q = $request->get('q');
 
         $qb = $this->getRepository(EntityDir\User::class)->createQueryBuilder('u');
@@ -287,6 +288,11 @@ class UserController extends RestController
             } else {
                 $qb->leftJoin('u.clients', 'c');
                 $qb->andWhere('lower(u.email) LIKE :qLike OR lower(u.firstname) LIKE :qLike OR lower(u.lastname) LIKE :qLike ');
+
+                if ($includeClients) {
+                    $qb->orWhere('lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike ');
+                }
+
                 $qb->setParameter('qLike', '%' . strtolower($q) . '%');
             }
         }
