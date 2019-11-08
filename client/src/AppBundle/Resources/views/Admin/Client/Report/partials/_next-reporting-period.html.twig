@@ -1,98 +1,88 @@
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
+{% from 'AppBundle:Admin/Client/Report:macros.html.twig' import checklist_radios %}
 
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
 {% set page = 'checklistPage' %}
 
-<h3 class="heading-medium underline" id="nextReportingPeriod">{{ (page ~ '.heading.nextPeriod') | trans }}</h3>
+<h3 class="govuk-heading-m" id="nextReportingPeriod">{{ (page ~ '.heading.lodging.nextPeriod') | trans }}</h3>
 
-{{ form_checkbox_group(form.futureSignificantDecisions, (
-    report.hasSection('lifestyle') ? page ~ '.form.futureSignificantChanges':
-        page ~ '.form.futureSignificantDecisions'
-    ), {
-    'fieldSetClass' : 'inline',
-    'formGroupClass': 'push-half--bottom'
-}) }}
+{% set name = report.hasSection('lifestyle') ? 'futureSignificantChanges' : 'futureSignificantDecisions' %}
+{{ checklist_radios(form.futureSignificantDecisions, { name: name }) }}
 
-<details class="govuk-details" data-module="govuk-details">
-    <summary class="govuk-details__summary">
-        <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.deputysResponses') | trans }}</span>
-    </summary>
-    <div class="govuk-details__text">
-        <div>
-            <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        {{ ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions, 'report-actions') }}
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        {{ report.action.doYouExpectFinancialDecisions | capitalize }}
-                    </dd>
-                </div>
-                {% if report.action.doYouExpectFinancialDecisions == 'yes' %}
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            {{ ('form.doYouExpectFinancialDecisionsDetails.label' ~ append104) | trans(transOptions, 'report-actions') }}
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ report.action.doYouExpectFinancialDecisionsDetails | nl2br }}
-                        </dd>
-                    </div>
-                {% endif %}
-            </dl>
+{% set contents %}
+    <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions, 'report-actions') }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.action.doYouExpectFinancialDecisions | capitalize }}
+            </dd>
         </div>
-    </div>
-</details>
+        {% if report.action.doYouExpectFinancialDecisions == 'yes' %}
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    {{ ('form.doYouExpectFinancialDecisionsDetails.label' ~ append104) | trans(transOptions, 'report-actions') }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{ report.action.doYouExpectFinancialDecisionsDetails | nl2br }}
+                </dd>
+            </div>
+        {% endif %}
+    </dl>
+{% endset %}
 
-<hr />
-
-{{ form_checkbox_group(form.hasDeputyRaisedConcerns, (page ~ '.form.hasDeputyRaisedConcerns'), {
-    'fieldSetClass' : 'inline',
-    'formGroupClass': 'push-half--bottom'
+{{ macros.details({
+    summaryText: (page ~ '.revealTitle.deputysResponses') | trans,
+    text: contents,
 }) }}
 
-<details class="govuk-details" data-module="govuk-details">
-    <summary class="govuk-details__summary">
-        <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.deputysResponses') | trans }}</span>
-    </summary>
-    <div class="govuk-details__text">
-        <dl class="govuk-summary-list">
+
+{{ checklist_radios(form.hasDeputyRaisedConcerns) }}
+
+{% set contents %}
+    <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ 'form.doYouHaveConcerns.label' | trans(transOptions, 'report-actions') }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.action.doYouHaveConcerns | capitalize }}
+            </dd>
+        </div>
+        {% if report.action.doYouHaveConcerns == 'yes' %}
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
-                    {{ 'form.doYouHaveConcerns.label' | trans(transOptions, 'report-actions') }}
+                    {{ 'form.doYouHaveConcernsDetails.label' | trans(transOptions, 'report-actions') }}
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    {{ report.action.doYouHaveConcerns | capitalize }}
+                    {{ report.action.doYouHaveConcernsDetails | nl2br }}
                 </dd>
             </div>
-            {% if report.action.doYouHaveConcerns == 'yes' %}
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        {{ 'form.doYouHaveConcernsDetails.label' | trans(transOptions, 'report-actions') }}
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        {{ report.action.doYouHaveConcernsDetails | nl2br }}
-                    </dd>
-                </div>
-            {% endif %}
+        {% endif %}
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ 'form.actionMoreInfo.label' | trans(transOptions, 'report-more-info') }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.actionMoreInfo | capitalize }}
+            </dd>
+        </div>
+        {% if report.actionMoreInfo == 'yes' %}
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
-                    {{ 'form.actionMoreInfo.label' | trans(transOptions, 'report-more-info') }}
+                    {{ 'form.actionMoreInfoDetails.label' | trans(transOptions, 'report-more-info') }}
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    {{ report.actionMoreInfo | capitalize }}
+                    {{ report.actionMoreInfoDetails | nl2br }}
                 </dd>
             </div>
-            {% if report.actionMoreInfo == 'yes' %}
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        {{ 'form.actionMoreInfoDetails.label' | trans(transOptions, 'report-more-info') }}
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        {{ report.actionMoreInfoDetails | nl2br }}
-                    </dd>
-                </div>
-            {% endif %}
-        </dl>
-    </div>
-</details>
+        {% endif %}
+    </dl>
+{% endset %}
+
+{{ macros.details({
+    summaryText: (page ~ '.revealTitle.deputysResponses') | trans,
+    text: contents,
+}) }}

@@ -53,9 +53,6 @@ services:
             - wkhtmltopdf
             - router
             - localstack
-
-        volumes_from:
-            - testresults
         volumes:
             - ./client/app/config/security.yml:/var/www/app/config/security.yml
             - ./client/app/config/config.yml:/var/www/app/config/config.yml
@@ -153,17 +150,10 @@ services:
             - postgres
             - frontend
             - admin
-        volumes_from:
-            - testresults
         volumes:
             - ./behat/tests:/var/www/tests
+            - ./behat/snapshots:/tmp/html
         env_file: ./behat/test.env
-
-    testresults:
-        image: busybox
-        command: tail -f /dev/null
-        volumes:
-            - /tmp/behat
 
     wkhtmltopdf:
         image: registry.service.opg.digital/opguk/wkhtmlpdf:0.1.209

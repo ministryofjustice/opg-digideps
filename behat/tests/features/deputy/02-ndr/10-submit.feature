@@ -122,10 +122,10 @@ Feature: ndr / report submit
         And I click on "report-edit-period-inline"
         # check the form loads the right value
         Then the following fields should have the corresponding values:
-            | report_edit_startDate_day   | 02   |
+            | report_edit_startDate_day   | 01   |
             | report_edit_startDate_month | 11   |
             | report_edit_startDate_year  | 2018 |
-            | report_edit_endDate_day     | 01   |
-            | report_edit_endDate_month   | 11   |
+            | report_edit_endDate_day     | 31   |
+            | report_edit_endDate_month   | 10   |
             | report_edit_endDate_year    | 2019 |
 

@@ -52,10 +52,6 @@ security:
             pattern: ^/manage/
             security: false
             methods: [GET]
-        # disabled at the controller level if "behat_controller_enabled" param is equal to false
-        behat:
-            pattern: ^/behat/
-            security: false
         feedbackHomepage:
             pattern: ^/feedback/homepage
             security: false

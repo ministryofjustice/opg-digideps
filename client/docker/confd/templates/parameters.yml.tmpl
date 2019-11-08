@@ -19,7 +19,7 @@ parameters:
         default: {{ getv "/ga/default" }}
         gds: {{ getv "/ga/gds" }}
     opg_docker_tag: {{ getv "/opg/docker/tag" }}
-    behat_controller_enabled: {{ getv "/behat/controller/enabled" }}
+    mock_emails: {{ if eq (getv "/mock/emails") "true" }}true{{ else }}false{{ end }}
     email_send:
         from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
         to_email: -

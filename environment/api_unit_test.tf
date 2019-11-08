@@ -34,7 +34,6 @@ locals {
       { "name": "SECRETS_FRONT_KEY", "valueFrom": "${data.aws_secretsmanager_secret.front_api_client_secret.arn}" }
     ],
     "environment": [
-      { "name": "BEHAT_CONTROLLER_ENABLED", "value": "true" },
       { "name": "DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
       { "name": "DATABASE_NAME", "value": "${aws_db_instance.api.name}" },
       { "name": "DATABASE_PORT", "value": "${aws_db_instance.api.port}" },

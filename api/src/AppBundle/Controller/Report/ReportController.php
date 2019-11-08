@@ -699,7 +699,7 @@ class ReportController extends RestController
             $this->getEntityManager()->persist($info);
         }
 
-        if ($checklistData['button_clicked'] == 'submitAndDownload') {
+        if ($checklistData['button_clicked'] == 'submitAndContinue') {
             $checklist->setSubmittedBy(($this->getUser()));
             $checklist->setSubmittedOn(new \DateTime());
         }
@@ -733,7 +733,7 @@ class ReportController extends RestController
             $this->getEntityManager()->persist($info);
         }
 
-        if ($checklistData['button_clicked'] == 'submitAndDownload') {
+        if ($checklistData['button_clicked'] == 'submitAndContinue') {
             $checklist->setSubmittedBy(($this->getUser()));
             $checklist->setSubmittedOn(new \DateTime());
         }
@@ -776,5 +776,57 @@ class ReportController extends RestController
         ]);
 
         return $checklist;
+    }
+
+    /**
+     * Get a checklist for the report
+     * @Route("/{report_id}/checklist", requirements={"report_id":"\d+"}, methods={"GET"})
+     * @Security("has_role('ROLE_CASE_MANAGER')")
+     */
+    public function getChecklist(Request $request, $report_id)
+    {
+        $this->setJmsSerialiserGroups(['checklist', 'last-modified', 'user']);
+
+        $checklist = $this
+            ->getRepository(EntityDir\Report\ReviewChecklist::class)
+            ->findOneBy([ 'report' => $report_id ]);
+
+        return $checklist;
+    }
+
+    /**
+     * Update a checklist for the report
+     *
+     * @Route("/{report_id}/checklist", requirements={"report_id":"\d+"}, methods={"POST", "PUT"})
+     * @Security("has_role('ROLE_CASE_MANAGER')")
+     */
+    public function upsertChecklist(Request $request, $report_id)
+    {
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $report_id, 'Report not found');
+
+        $checklistData = $this->deserializeBodyContent($request);
+
+        $checklist = $this
+            ->getRepository(EntityDir\Report\ReviewChecklist::class)
+            ->findOneBy([ 'report' => $report->getId() ]);
+
+        if (is_null($checklist))  {
+            $checklist = new EntityDir\Report\ReviewChecklist($report);
+        }
+
+        $checklist
+            ->setAnswers($checklistData['answers'])
+            ->setDecision($checklistData['decision']);
+
+        if ($checklistData['is_submitted']) {
+            $checklist->setSubmittedBy(($this->getUser()));
+            $checklist->setSubmittedOn(new \DateTime());
+        }
+
+        $checklist->setLastModifiedBy($this->getUser());
+
+        $this->persistAndFlush($checklist);
+
+        return ['checklist' => $checklist->getId()];
     }
 }
