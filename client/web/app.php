@@ -4,6 +4,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 function empty_shutdown() {
     if (!headers_sent()) {
+        http_response_code(500);
         echo file_get_contents(__DIR__ . '/error.html');
     }
 }
