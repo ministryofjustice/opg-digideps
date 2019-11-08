@@ -1,25 +1,21 @@
 <?php
 
-use Symfony\Component\ClassLoader\ApcClassLoader;
 use Symfony\Component\HttpFoundation\Request;
 
-$loader = require __DIR__ . '/../vendor/autoload.php';
-//$loader = require_once __DIR__ . '/../app/bootstrap.php.cache';
+function empty_shutdown() {
+    if (!headers_sent()) {
+        http_response_code(500);
+        echo file_get_contents(__DIR__ . '/error.html');
+    }
+}
 
-// Use APC for autoloading to improve performance.
-// Change 'sf2' to a unique prefix in order to prevent cache key conflicts
-// with other applications also using APC.
-/*
-$loader = new ApcClassLoader('sf2', $loader);
-$loader->register(true);
-*/
+register_shutdown_function('empty_shutdown');
+
+$loader = require __DIR__ . '/../vendor/autoload.php';
 
 require_once __DIR__ . '/../app/AppKernel.php';
-//require_once __DIR__.'/../app/AppCache.php';
 
 $kernel = new AppKernel(strtolower(getenv('MOCK_EMAILS')) === 'true' ? 'test' : 'prod', false);
-//$kernel->loadClassCache();
-//$kernel = new AppCache($kernel);
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();
