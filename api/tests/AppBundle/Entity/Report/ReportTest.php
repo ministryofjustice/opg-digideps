@@ -31,7 +31,7 @@ class ReportTest extends TestCase
 
     public function setUp(): void
     {
-        $this->client = m::mock(Client::class, ['getUnsubmittedReports'=>new ArrayCollection(), 'getSubmittedReports'=>new ArrayCollection()]);
+        $this->client = m::mock(Client::class, ['getUnsubmittedReports' => new ArrayCollection(), 'getSubmittedReports' => new ArrayCollection()]);
         $this->validReportCtorArgs = [$this->client, Report::TYPE_102, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
         $this->report = m::mock(Report::class . '[has106Flag]', $this->validReportCtorArgs);
 
@@ -87,8 +87,8 @@ class ReportTest extends TestCase
             (new MoneyTransaction($this->report))->setCategory('broadband')->setAmount(3),
             (new MoneyTransaction($this->report))->setCategory('food')->setAmount(4),
         ]));
-        $this->assertEquals(1+2, $this->report->getMoneyInTotal());
-        $this->assertEquals(3+4, $this->report->getMoneyOutTotal());
+        $this->assertEquals(1 + 2, $this->report->getMoneyInTotal());
+        $this->assertEquals(3 + 4, $this->report->getMoneyOutTotal());
 
         // 103
         $this->report->setType(Report::TYPE_103);
@@ -100,8 +100,8 @@ class ReportTest extends TestCase
             (new MoneyTransactionShortOut($this->report))->setAmount(30),
             (new MoneyTransactionShortOut($this->report))->setAmount(40),
         ]));
-        $this->assertEquals(10+20, $this->report->getMoneyInTotal());
-        $this->assertEquals(30+40, $this->report->getMoneyOutTotal());
+        $this->assertEquals(10 + 20, $this->report->getMoneyInTotal());
+        $this->assertEquals(30 + 40, $this->report->getMoneyOutTotal());
     }
 
     public function testGetAccountsOpeningBalanceTotal()
@@ -176,7 +176,7 @@ class ReportTest extends TestCase
             (new ProfDeputyOtherCost($this->report, 'id2', false, 10)),
         ]));
 
-        $this->assertEquals(-1 -1 -3 - 10 - 10, $this->report->getCalculatedBalance());
+        $this->assertEquals(-1 - 1 - 3 - 10 - 10, $this->report->getCalculatedBalance());
 
         //change interim yes->no
         $this->report->setProfDeputyCostsHasInterim('yes');
@@ -184,7 +184,7 @@ class ReportTest extends TestCase
             (new ProfDeputyInterimCost($this->report, new \DateTime('now'), 11)),
             (new ProfDeputyInterimCost($this->report, new \DateTime('now'), 11)),
         ]));
-        $this->assertEquals(-1 -1 -11 -11 -10 -10, $this->report->getCalculatedBalance());
+        $this->assertEquals(-1 - 1 - 11 - 11 - 10 - 10, $this->report->getCalculatedBalance());
 
     }
 
@@ -219,7 +219,7 @@ class ReportTest extends TestCase
 
     public function testgetFeesTotal()
     {
-        $fee1 = m::mock(Fee::class, ['getAmount'=>2]);
+        $fee1 = m::mock(Fee::class, ['getAmount' => 2]);
         $reportWith = function ($fees) {
             return m::mock(Report::class . '[getFees]', $this->validReportCtorArgs)
                 ->shouldReceive('getFees')->andReturn($fees)
@@ -227,12 +227,12 @@ class ReportTest extends TestCase
         };
 
         $this->assertEquals(0, $reportWith([])->getFeesTotal());
-        $this->assertEquals(2+2, $reportWith([$fee1, $fee1])->getFeesTotal());
+        $this->assertEquals(2 + 2, $reportWith([$fee1, $fee1])->getFeesTotal());
     }
 
     public function testgetExpensesTotal()
     {
-        $exp1 = m::mock(Expense::class, ['getAmount'=>1]);
+        $exp1 = m::mock(Expense::class, ['getAmount' => 1]);
 
         $reportWith = function ($expenses) {
             return m::mock(Report::class . '[getExpenses]', $this->validReportCtorArgs)
@@ -241,7 +241,7 @@ class ReportTest extends TestCase
         };
 
         $this->assertEquals(0, $reportWith([])->getExpensesTotal());
-        $this->assertEquals(1+1, $reportWith([$exp1, $exp1])->getExpensesTotal());
+        $this->assertEquals(1 + 1, $reportWith([$exp1, $exp1])->getExpensesTotal());
     }
 
     public function testgetAssetsTotalValue()
@@ -285,7 +285,7 @@ class ReportTest extends TestCase
 
     public function testGetPreviousReportData()
     {
-        $mockClient =  m::mock(Client::class);
+        $mockClient = m::mock(Client::class);
         $mockClient->shouldReceive('getUnsubmittedReports')->andReturn(new ArrayCollection());
         $mockClient->shouldReceive('getSubmittedReports')->andReturn(new ArrayCollection());
 
@@ -433,5 +433,69 @@ class ReportTest extends TestCase
 
             $this->assertEquals($this->report->getAgreedBehalfDeputy(), $value);
         }
+    }
+
+    public function reportTypesWithEndDateProvider()
+    {
+        return [
+            // Lay deputies (56 daye)
+            ['102', '2019-11-12', '2020-01-07'],
+            ['103', '2019-11-12', '2020-01-07'],
+            ['104', '2019-11-12', '2020-01-07'],
+            ['103-4', '2019-11-12', '2020-01-07'],
+            ['102-4', '2019-11-12', '2020-01-07'],
+            // PA  (56 daye)
+            ['102-6', '2019-11-12', '2020-01-07'],
+            ['103-6', '2019-11-12', '2020-01-07'],
+            ['104-6', '2019-11-12', '2020-01-07'],
+            ['103-4-6', '2019-11-12', '2020-01-07'],
+            ['102-4-6', '2019-11-12', '2020-01-07'],
+            // Professional  (56 daye)
+            ['102-5', '2019-11-12', '2020-01-07'],
+            ['103-5', '2019-11-12', '2020-01-07'],
+            ['104-5', '2019-11-12', '2020-01-07'],
+            ['103-4-5', '2019-11-12', '2020-01-07'],
+            ['102-4-5', '2019-11-12', '2020-01-07'],
+            // end date beyond 13/11/19
+            // Lay deputies (21 days)
+            ['102', '2019-11-13', '2019-12-04'],
+            ['103', '2019-11-13', '2019-12-04'],
+            ['104', '2019-11-13', '2019-12-04'],
+            ['103-4', '2019-11-13', '2019-12-04'],
+            ['102-4', '2019-11-13', '2019-12-04'],
+            // PA (56 daye)
+            ['102-6', '2019-11-13', '2020-01-08'],
+            ['103-6', '2019-11-13', '2020-01-08'],
+            ['104-6', '2019-11-13', '2020-01-08'],
+            ['103-4-6', '2019-11-13', '2020-01-08'],
+            ['102-4-6', '2019-11-13', '2020-01-08'],
+            // Professional  (56 daye)
+            ['102-5', '2019-11-13', '2020-01-08'],
+            ['103-5', '2019-11-13', '2020-01-08'],
+            ['104-5', '2019-11-13', '2020-01-08'],
+            ['103-4-5', '2019-11-13', '2020-01-08'],
+            ['102-4-5', '2019-11-13', '2020-01-08'],
+
+        ];
+    }
+
+    /**
+     * @dataProvider reportTypesWithEndDateProvider
+     * */
+    public function testUpdateDuetDateBasedOnEndDate($type, $endDate, $expectedDueDate)
+    {
+        $client = new Client();
+        $endDate = new \DateTime($endDate);
+        $startDate = clone $endDate;
+        $startDate = $startDate->modify('-1 year');
+
+        $report = new Report($client, $type, $startDate, $endDate);
+
+        $report->updateDueDateBasedOnEndDate();
+
+        $this->assertEquals($expectedDueDate, $report->getDueDate()->format('Y-m-d'));
+        $this->assertEquals($endDate, $report->getEndDate());
+        $this->assertEquals($startDate, $report->getStartDate());
+
     }
 }
