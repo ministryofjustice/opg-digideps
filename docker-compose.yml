@@ -1,7 +1,4 @@
-# To change/add variables on live environments, submit a PR here
-# https://gitlab.service.opg.digital/opsforks/opg-digi-deps-deploy/tree/master/pillar
-
-version: '2'
+version: '3.7'
 
 services:
     router:
@@ -144,17 +141,6 @@ services:
         image: redis:2.8.21
         restart: always
 
-    test:
-        build: ./behat
-        depends_on:
-            - postgres
-            - frontend
-            - admin
-        volumes:
-            - ./behat/tests:/var/www/tests
-            - ./behat/snapshots:/tmp/html
-        env_file: ./behat/test.env
-
     wkhtmltopdf:
         image: registry.service.opg.digital/opguk/wkhtmlpdf:0.1.209
         restart: always
@@ -168,25 +154,6 @@ services:
             - 8085:8080
         environment:
             CLAMD_HOST: file-scanner-server
-
-    npm:
-        image: node:8-alpine
-        working_dir: /app
-        volumes:
-            - ./client/:/app
-        entrypoint: npm
-        environment:
-            NODE_ENV: production
-
-    composerapi:
-        image: composer
-        volumes:
-            - ./api/:/app
-
-    composerfront:
-        image: composer
-        volumes:
-            - ./client/:/app
 
     sync:
         build: ./sync
