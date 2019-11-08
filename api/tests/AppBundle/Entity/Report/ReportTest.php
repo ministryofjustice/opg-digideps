@@ -438,45 +438,53 @@ class ReportTest extends TestCase
     public function reportTypesWithEndDateProvider()
     {
         return [
-            // Lay deputies (56 daye)
+            // lay pre-changover (56 daye)
             ['102', '2019-11-12', '2020-01-07'],
-            ['103', '2019-11-12', '2020-01-07'],
-            ['104', '2019-11-12', '2020-01-07'],
-            ['103-4', '2019-11-12', '2020-01-07'],
-            ['102-4', '2019-11-12', '2020-01-07'],
-            // PA  (56 daye)
-            ['102-6', '2019-11-12', '2020-01-07'],
-            ['103-6', '2019-11-12', '2020-01-07'],
-            ['104-6', '2019-11-12', '2020-01-07'],
-            ['103-4-6', '2019-11-12', '2020-01-07'],
-            ['102-4-6', '2019-11-12', '2020-01-07'],
-            // Professional  (56 daye)
-            ['102-5', '2019-11-12', '2020-01-07'],
-            ['103-5', '2019-11-12', '2020-01-07'],
-            ['104-5', '2019-11-12', '2020-01-07'],
-            ['103-4-5', '2019-11-12', '2020-01-07'],
-            ['102-4-5', '2019-11-12', '2020-01-07'],
-            // end date beyond 13/11/19
-            // Lay deputies (21 days)
+            // lay post cchangeover (21 days)
             ['102', '2019-11-13', '2019-12-04'],
-            ['103', '2019-11-13', '2019-12-04'],
-            ['104', '2019-11-13', '2019-12-04'],
-            ['103-4', '2019-11-13', '2019-12-04'],
-            ['102-4', '2019-11-13', '2019-12-04'],
-            // PA (56 daye)
-            ['102-6', '2019-11-13', '2020-01-08'],
-            ['103-6', '2019-11-13', '2020-01-08'],
-            ['104-6', '2019-11-13', '2020-01-08'],
-            ['103-4-6', '2019-11-13', '2020-01-08'],
-            ['102-4-6', '2019-11-13', '2020-01-08'],
-            // Professional  (56 daye)
+            // non-lay pre changover (56 days)
+            ['102-5', '2019-11-12', '2020-01-07'],
+            // non lay post changeover (56 days)
             ['102-5', '2019-11-13', '2020-01-08'],
-            ['103-5', '2019-11-13', '2020-01-08'],
-            ['104-5', '2019-11-13', '2020-01-08'],
-            ['103-4-5', '2019-11-13', '2020-01-08'],
-            ['102-4-5', '2019-11-13', '2020-01-08'],
-
         ];
+    }
+
+    public function layReportTypesProvider()
+    {
+        return [
+            // Lay deputies
+            ['102', true],
+            ['103', true],
+            ['104', true],
+            ['103-4', true],
+            ['102-4', true],
+            // PA
+            ['102-6', false],
+            ['103-6', false],
+            ['104-6', false],
+            ['103-4-6', false],
+            ['102-4-6', false],
+            // Professional
+            ['102-5', false],
+            ['103-5', false],
+            ['104-5', false],
+            ['103-4-5', false],
+            ['102-4-5', false]
+        ];
+    }
+
+    /**
+     * @dataProvider layReportTypesProvider
+     */
+    public function testIsLayReport($type, $expectedResult)
+    {
+        $client = new Client();
+        $endDate = new \DateTime();
+        $startDate = clone $endDate;
+        $startDate = $startDate->modify('-1 year');
+
+        $report = new Report($client, $type, $startDate, $endDate);
+        $this->assertEquals($expectedResult, $report->isLayReport());
     }
 
     /**
@@ -496,6 +504,5 @@ class ReportTest extends TestCase
         $this->assertEquals($expectedDueDate, $report->getDueDate()->format('Y-m-d'));
         $this->assertEquals($endDate, $report->getEndDate());
         $this->assertEquals($startDate, $report->getStartDate());
-
     }
 }
