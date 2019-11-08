@@ -1,7 +1,4 @@
-# To change/add variables on live environments, submit a PR here
-# https://gitlab.service.opg.digital/opsforks/opg-digi-deps-deploy/tree/master/pillar
-
-version: '2'
+version: '3.7'
 
 services:
     router:
