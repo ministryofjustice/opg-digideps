@@ -41,9 +41,12 @@ class OrgController extends RestController
                 $pa = $this->get('org_service');
                 $pa->addFromCasrecRows($chunk);
                 $progress = $i + 1;
-                echo ($progress / $chunkCount);
+                echo "PROG $progress $chunkCount\n";
                 flush();
             }
+
+            echo "END";
+            flush();
         });
 
         $response->setStatusCode(200);

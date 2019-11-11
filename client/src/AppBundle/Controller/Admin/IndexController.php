@@ -460,7 +460,7 @@ class IndexController extends AbstractController
 
             $request = $client->post('org/bulk-add', [
                 'headers' => [
-                    'AuthToken' => '1_d22ee8c9fd29a65a1ae78080476453deecef26a4'
+                    'AuthToken' => '1_93ba0f2f011ef967f69b9faa719ecba1d8117cd3'
                 ],
                 'body' => json_encode($compressedData),
                 'timeout' => 600,
