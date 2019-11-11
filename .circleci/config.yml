@@ -324,23 +324,6 @@ jobs:
           name: List client packages
           command: docker-compose -f docker-compose.ci.yml run --rm client apk list | sort
       - run:
-          name: Debug changed files
-          command: |
-            git diff --relative=api --name-only origin/master
-            echo "$"
-            git diff --relative=client --name-only origin/master
-            echo "£"
-            git diff --relative=api --name-only origin/master | grep .php
-            echo "1"
-            API_CHANGED_FILES=$(git diff --relative=api --name-only origin/master | grep .php)
-            echo $API_CHANGED_FILES
-            echo "2"
-            API_CHANGED_FILES_2=$(git diff --relative=api --name-only origin/master | grep .php) || [[ $? == 1 ]]
-            echo $API_CHANGED_FILES_2
-            echo "3"
-            API_CHANGED_FILES_3=$(git diff --relative=api --name-only origin/master | grep .php || [[ $? == 1 ]])
-            echo $API_CHANGED_FILES_3
-      - run:
           name: Check updated PHP files for errors
           command: |
             API_CHANGED_FILES=$(git diff --relative=api --name-only origin/master | grep .php) || [[ $? == 1 ]]
