@@ -287,11 +287,13 @@ class UserController extends RestController
                 $qb->setParameter('cn', strtolower($q));
             } else {
                 $qb->leftJoin('u.clients', 'c');
-                $qb->andWhere('lower(u.email) LIKE :qLike OR lower(u.firstname) LIKE :qLike OR lower(u.lastname) LIKE :qLike ');
+                $nameBasedQuery = 'lower(u.email) LIKE :qLike OR lower(u.firstname) LIKE :qLike OR lower(u.lastname) LIKE :qLike';
 
                 if ($includeClients) {
-                    $qb->orWhere('lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike ');
+                    $nameBasedQuery .= ' OR lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike';
                 }
+
+                $qb->andWhere($nameBasedQuery);
 
                 $qb->setParameter('qLike', '%' . strtolower($q) . '%');
             }
