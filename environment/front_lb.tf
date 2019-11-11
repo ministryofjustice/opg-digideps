@@ -1,45 +1,10 @@
-resource "aws_security_group" "front_lb" {
-  name_prefix = "front-lb-${local.environment}"
-  vpc_id      = data.aws_vpc.vpc.id
-  tags        = local.default_tags
-}
-
-resource "aws_security_group_rule" "front_lb_http_in" {
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = 80
-  to_port           = 80
-  security_group_id = aws_security_group.front_lb.id
-  cidr_blocks       = local.front_whitelist
-}
-
-resource "aws_security_group_rule" "front_lb_https_in" {
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = 443
-  to_port           = 443
-  security_group_id = aws_security_group.front_lb.id
-  cidr_blocks       = local.front_whitelist
-}
-
-resource "aws_security_group_rule" "front_lb_https_out" {
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = 443
-  to_port                  = 443
-  security_group_id        = aws_security_group.front_lb.id
-  source_security_group_id = module.front_security_group.id
-}
-
 resource "aws_lb" "front" {
   name               = "front-${local.environment}"
   internal           = false
   load_balancer_type = "application"
   subnets            = data.aws_subnet.public.*.id
 
-  security_groups = [
-    aws_security_group.front_lb.id,
-  ]
+  security_groups = [module.front_elb_security_group.id]
 
   tags = merge(
     local.default_tags,

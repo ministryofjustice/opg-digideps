@@ -1,7 +1,12 @@
 resource "aws_security_group" "task" {
   name_prefix = aws_ecs_task_definition.task.family
   vpc_id      = var.vpc_id
-  tags        = var.default_tags
+  tags = merge(
+    var.default_tags,
+    {
+      "Name" = "${var.name}-${var.environment}"
+    },
+  )
 
   lifecycle {
     create_before_destroy = true

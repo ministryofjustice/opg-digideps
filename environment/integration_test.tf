@@ -18,7 +18,7 @@ resource "aws_security_group_rule" "integration_test_postgres_out_rds" {
   security_group_id        = module.integration_test.security_group_id
   to_port                  = 5432
   type                     = "egress"
-  source_security_group_id = aws_security_group.api_rds.id
+  source_security_group_id = module.api_rds_security_group.id
 }
 
 resource "aws_security_group_rule" "integration_test_https_out" {
