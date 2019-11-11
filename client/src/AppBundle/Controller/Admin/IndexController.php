@@ -467,21 +467,46 @@ class IndexController extends AbstractController
                 'stream' => true,
             ]);
 
-            $stream = $request->getBody();
-            $response = new StreamedResponse();
+            if (isset($_GET['ajax'])) {
+                $stream = $request->getBody();
+                $response = new StreamedResponse();
 
-            $response->setCallback(function() use ($stream) {
-                while (!$stream->eof()) {
-                    echo $stream->read(1024);
+                $response->setCallback(function() use ($stream) {
+                    while (!$stream->eof()) {
+                        echo $stream->read(1024);
+                        flush();
+                    }
+                });
+
+                $response->setStatusCode(200);
+                $response->headers->set('X-Accel-Buffering', 'no');
+                $response->headers->set('Content-Type', 'text/plain; charset=utf-8');
+
+                return $response;
+            } else {
+                $stream = $request->getBody();
+                $response = new StreamedResponse();
+
+                $response->setCallback(function() use ($stream, $form) {
+                    while (!$stream->eof()) {
+                        $stream->read(1024);
+                        flush();
+                    }
+
+                    echo $this->render('AppBundle:Admin/Index:uploadOrgUsers.html.twig', [
+                        'nOfChunks'     => null,
+                        'form'          => $form->createView(),
+                        'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
+                    ]);
+
                     flush();
-                }
-            });
+                });
 
-            $response->setStatusCode(200);
-            $response->headers->set('X-Accel-Buffering', 'no');
-            $response->headers->set('Content-Type', 'text/plain; charset=utf-8');
+                $response->setStatusCode(200);
 
-            return $response;
+                return $response;
+            }
+
         }
 
         return [

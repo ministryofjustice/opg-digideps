@@ -47,7 +47,7 @@
 
                 var formData = new FormData(document.querySelector('form'));
 
-                fetch('{{ path('admin_org_upload') }}', { method: 'POST', body: formData })
+                fetch('{{ path('admin_org_upload') }}?ajax=1', { method: 'POST', body: formData })
                     .then(response => {
                         const reader = response.body.getReader();
 
