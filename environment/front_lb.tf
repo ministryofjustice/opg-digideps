@@ -28,7 +28,7 @@ resource "aws_security_group_rule" "front_lb_https_out" {
   from_port                = 443
   to_port                  = 443
   security_group_id        = aws_security_group.front_lb.id
-  source_security_group_id = aws_security_group.front.id
+  source_security_group_id = module.front_security_group.id
 }
 
 resource "aws_lb" "front" {
@@ -96,4 +96,3 @@ resource "aws_lb_listener" "front_http" {
     }
   }
 }
-
