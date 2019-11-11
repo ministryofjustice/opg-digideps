@@ -326,25 +326,25 @@ jobs:
       - run:
           name: Debug changed files
           command: |
-            git diff --relative=api --name-only master
+            git diff --relative=api --name-only origin/master
             echo "$"
-            git diff --relative=client --name-only master
+            git diff --relative=client --name-only origin/master
             echo "£"
-            git diff --relative=client --name-only master | grep .php
+            git diff --relative=api --name-only origin/master | grep .php
             echo "1"
-            CLIENT_CHANGED_FILES=$(git diff --relative=client --name-only master | grep .php)
-            echo $CLIENT_CHANGED_FILES
+            API_CHANGED_FILES=$(git diff --relative=api --name-only origin/master | grep .php)
+            echo $API_CHANGED_FILES
             echo "2"
-            CLIENT_CHANGED_FILES_2=$(git diff --relative=client --name-only master | grep .php) || [[ $? == 1 ]]
-            echo $CLIENT_CHANGED_FILES_2
+            API_CHANGED_FILES_2=$(git diff --relative=api --name-only origin/master | grep .php) || [[ $? == 1 ]]
+            echo $API_CHANGED_FILES_2
             echo "3"
-            CLIENT_CHANGED_FILES_3=$(git diff --relative=client --name-only master | grep .php || [[ $? == 1 ]])
-            echo $CLIENT_CHANGED_FILES_3
+            API_CHANGED_FILES_3=$(git diff --relative=api --name-only origin/master | grep .php || [[ $? == 1 ]])
+            echo $API_CHANGED_FILES_3
       - run:
           name: Check updated PHP files for errors
           command: |
-            API_CHANGED_FILES=$(git diff --relative=api --name-only master | grep .php) || [[ $? == 1 ]]
-            CLIENT_CHANGED_FILES=$(git diff --relative=client --name-only master | grep .php) || [[ $? == 1 ]]
+            API_CHANGED_FILES=$(git diff --relative=api --name-only origin/master | grep .php) || [[ $? == 1 ]]
+            CLIENT_CHANGED_FILES=$(git diff --relative=client --name-only origin/master | grep .php) || [[ $? == 1 ]]
 
             if [ -n "$API_CHANGED_FILES" ]; then
                 docker-compose -f docker-compose.ci.yml run --rm api bin/phpstan analyse $API_CHANGED_FILES --memory-limit=0 --level=max
