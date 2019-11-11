@@ -330,11 +330,11 @@ jobs:
             CLIENT_CHANGED_FILES=$(git diff --relative=client --name-only origin/master | grep .php) || [[ $? == 1 ]]
 
             if [ -n "$API_CHANGED_FILES" ]; then
-                docker-compose -f docker-compose.ci.yml run --rm api bin/phpstan analyse $API_CHANGED_FILES --memory-limit=0 --level=max
+                docker-compose -f docker-compose.ci.yml run --rm api php bin/phpstan analyse $API_CHANGED_FILES --memory-limit=0 --level=max
             fi
 
             if [ -n "$CLIENT_CHANGED_FILES" ]; then
-                docker-compose -f docker-compose.ci.yml run --rm client bin/phpstan analyse $CLIENT_CHANGED_FILES --memory-limit=0 --level=max
+                docker-compose -f docker-compose.ci.yml run --rm client php bin/phpstan analyse $CLIENT_CHANGED_FILES --memory-limit=0 --level=max
             fi
       - run:
           name: Push images
