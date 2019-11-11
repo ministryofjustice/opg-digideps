@@ -10,4 +10,4 @@ variable "rules" {
 
 variable "name" { type = string }
 variable "vpc_id" { type = string }
-variable "tags" { type = map(any) }
+variable "tags" { type = map(string) }

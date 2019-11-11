@@ -20,7 +20,7 @@ locals {
       type        = "ingress"
       protocol    = "tcp"
       target_type = "security_group_id"
-      target      = module.front_security_group.id
+      target      = module.front_service_security_group.id
     }
   }
 }

@@ -1,6 +1,6 @@
 module "restore_from_production" {
   source = "./task"
-  name   = "restore_from_production"
+  name   = "restore-from-production"
 
   cluster_name          = aws_ecs_cluster.main.name
   container_definitions = "[${local.restore_from_production_container}]"
@@ -18,7 +18,7 @@ resource "aws_security_group_rule" "restore_from_production_postgres_out_rds" {
   security_group_id        = module.restore_from_production.security_group_id
   to_port                  = 5432
   type                     = "egress"
-  source_security_group_id = aws_security_group.api_rds.id
+  source_security_group_id = module.api_rds_security_group.id
 }
 
 locals {

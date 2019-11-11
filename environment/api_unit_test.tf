@@ -19,7 +19,7 @@ resource "aws_security_group_rule" "api_unit_test_postgres_out_rds" {
   security_group_id        = module.api_unit_test.security_group_id
   to_port                  = 5432
   type                     = "egress"
-  source_security_group_id = aws_security_group.api_rds.id
+  source_security_group_id = module.api_rds_security_group.id
 }
 
 resource "aws_security_group_rule" "api_unit_test_redis_out_cache" {
@@ -28,7 +28,7 @@ resource "aws_security_group_rule" "api_unit_test_redis_out_cache" {
   security_group_id        = module.api_unit_test.security_group_id
   to_port                  = 6379
   type                     = "egress"
-  source_security_group_id = aws_security_group.api_cache.id
+  source_security_group_id = module.api_cache_security_group.id
 }
 
 locals {
