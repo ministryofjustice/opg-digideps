@@ -324,6 +324,11 @@ jobs:
           name: List client packages
           command: docker-compose -f docker-compose.ci.yml run --rm client apk list | sort
       - run:
+          name: Debug bin dir
+          command: |
+            docker-compose -f docker-compose.ci.yml run --rm api ls bin
+            docker-compose -f docker-compose.ci.yml run --rm client ls bin
+      - run:
           name: Check updated PHP files for errors
           command: |
             API_CHANGED_FILES=$(git diff --relative=api --name-only origin/master | grep .php) || [[ $? == 1 ]]
