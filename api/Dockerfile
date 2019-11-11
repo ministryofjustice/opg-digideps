@@ -64,6 +64,7 @@ CMD confd -onetime -backend env \
 # https://symfony.com/doc/3.4/quick_tour/the_architecture.html
 COPY docker/confd /etc/confd
 COPY --from=composer /app/app app
+COPY --from=composer /app/bin bin
 COPY --from=composer /app/vendor vendor
 COPY --from=composer /app/composer.lock composer.lock
 COPY app app
