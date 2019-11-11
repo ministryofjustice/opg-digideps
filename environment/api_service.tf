@@ -44,7 +44,7 @@ resource "aws_ecs_service" "api" {
   tags                    = local.default_tags
 
   network_configuration {
-    security_groups  = [module.api_security_group.id]
+    security_groups  = [module.api_service_security_group.id]
     subnets          = data.aws_subnet.private.*.id
     assign_public_ip = false
   }
