@@ -28,4 +28,28 @@ locals {
       prefix_list_id = data.aws_vpc_endpoint.s3_endpoint.prefix_list_id
     }
   }
+
+  common_sg_rules_new = {
+    ecr = {
+      port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = data.aws_security_group.ecr_endpoint.id
+    },
+    logs = {
+      port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = data.aws_security_group.logs_endpoint.id
+    },
+    s3 = {
+      port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "prefix_list_id"
+      target      = data.aws_vpc_endpoint.s3_endpoint.prefix_list_id
+    }
+  }
 }

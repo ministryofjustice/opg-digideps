@@ -49,7 +49,7 @@ resource "aws_ecs_service" "wkhtmltopdf" {
   propagate_tags          = "SERVICE"
 
   network_configuration {
-    security_groups  = [aws_security_group.wkhtmltopdf.id]
+    security_groups  = [module.wkhtmltopdf_security_group.id]
     subnets          = data.aws_subnet.private.*.id
     assign_public_ip = false
   }
@@ -59,53 +59,6 @@ resource "aws_ecs_service" "wkhtmltopdf" {
   }
 
   tags = local.default_tags
-}
-
-resource "aws_security_group" "wkhtmltopdf" {
-  name_prefix = aws_ecs_task_definition.wkhtmltopdf.family
-  vpc_id      = data.aws_vpc.vpc.id
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  tags = merge(
-    local.default_tags,
-    {
-      "Name" = "wkhtmltopdf"
-    },
-  )
-}
-
-resource "aws_security_group_rule" "wkhtmltopdf_front_http_in" {
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 80
-  to_port                  = 80
-  security_group_id        = aws_security_group.wkhtmltopdf.id
-  source_security_group_id = aws_security_group.front.id
-}
-
-resource "aws_security_group_rule" "wkhtmltopdf_admin_http_in" {
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 80
-  to_port                  = 80
-  security_group_id        = aws_security_group.wkhtmltopdf.id
-  source_security_group_id = aws_security_group.admin_service.id
-}
-
-resource "aws_security_group_rule" "wkhtmltopdf_task_out" {
-  for_each = local.common_sg_rules
-
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = each.value.port
-  to_port                  = each.value.port
-  security_group_id        = aws_security_group.wkhtmltopdf.id
-  source_security_group_id = contains(keys(each.value), "security_group_id") ? each.value.security_group_id : null
-  prefix_list_ids          = contains(keys(each.value), "prefix_list_id") ? [each.value.prefix_list_id] : null
-  description              = each.key
 }
 
 locals {
@@ -126,8 +79,7 @@ locals {
         }
       }
   }
-  
+
 EOF
 
 }
-

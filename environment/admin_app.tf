@@ -21,7 +21,7 @@ resource "aws_ecs_service" "admin" {
   tags                    = local.default_tags
 
   network_configuration {
-    security_groups  = [aws_security_group.admin_service.id]
+    security_groups  = [module.admin_security_group.id]
     subnets          = data.aws_subnet.private.*.id
     assign_public_ip = false
   }
@@ -85,4 +85,3 @@ locals {
 EOF
 
 }
-
