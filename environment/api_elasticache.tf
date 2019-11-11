@@ -16,7 +16,7 @@ resource "aws_security_group_rule" "api_cache_task_in" {
   from_port                = 6379
   to_port                  = 6379
   security_group_id        = aws_security_group.api_cache.id
-  source_security_group_id = aws_security_group.api_task.id
+  source_security_group_id = module.api_security_group.id
 }
 
 resource "aws_security_group_rule" "api_cache_unit_test_in" {
@@ -53,4 +53,3 @@ resource "aws_route53_record" "api_redis" {
   records = [aws_elasticache_cluster.api.cache_nodes[0].address]
   ttl     = 300
 }
-

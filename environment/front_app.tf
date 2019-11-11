@@ -21,7 +21,7 @@ resource "aws_ecs_service" "front" {
   tags                    = local.default_tags
 
   network_configuration {
-    security_groups  = [aws_security_group.front.id]
+    security_groups  = [module.front_security_group.id]
     subnets          = data.aws_subnet.private.*.id
     assign_public_ip = false
   }
@@ -86,4 +86,3 @@ locals {
 EOF
 
 }
-

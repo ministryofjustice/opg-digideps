@@ -15,7 +15,7 @@ resource "aws_security_group_rule" "front_cache_task_in" {
   from_port                = 6379
   to_port                  = 6379
   security_group_id        = aws_security_group.front_cache.id
-  source_security_group_id = aws_security_group.front.id
+  source_security_group_id = module.front_security_group.id
 }
 
 resource "aws_elasticache_cluster" "front" {
@@ -30,4 +30,3 @@ resource "aws_elasticache_cluster" "front" {
   security_group_ids   = [aws_security_group.front_cache.id]
   tags                 = local.default_tags
 }
-

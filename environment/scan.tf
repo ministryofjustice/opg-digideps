@@ -49,7 +49,7 @@ resource "aws_ecs_service" "scan" {
   propagate_tags          = "SERVICE"
 
   network_configuration {
-    security_groups  = [aws_security_group.scan.id]
+    security_groups  = [module.scan_security_group.id]
     subnets          = data.aws_subnet.private.*.id
     assign_public_ip = false
   }
@@ -59,59 +59,6 @@ resource "aws_ecs_service" "scan" {
   }
 
   tags = local.default_tags
-}
-
-resource "aws_security_group" "scan" {
-  name_prefix = aws_ecs_task_definition.scan.family
-  vpc_id      = data.aws_vpc.vpc.id
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  tags = merge(
-    local.default_tags,
-    {
-      "Name" = "scan"
-    },
-  )
-}
-
-resource "aws_security_group_rule" "scan_http_in" {
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 8080
-  to_port                  = 8080
-  security_group_id        = aws_security_group.scan.id
-  source_security_group_id = aws_security_group.front.id
-}
-
-locals {
-  scan_sg_rules = {
-    logs = local.common_sg_rules.logs,
-    registry_docker_io = {
-      port        = 443
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-    db_local_clamav_net = {
-      port        = 80
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-  }
-}
-
-resource "aws_security_group_rule" "scan_task_out" {
-  for_each = local.scan_sg_rules
-
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = each.value.port
-  to_port                  = each.value.port
-  security_group_id        = aws_security_group.scan.id
-  source_security_group_id = contains(keys(each.value), "security_group_id") ? each.value.security_group_id : null
-  prefix_list_ids          = contains(keys(each.value), "prefix_list_id") ? [each.value.prefix_list_id] : null
-  description              = each.key
-  cidr_blocks              = contains(keys(each.value), "cidr_blocks") ? each.value.cidr_blocks : null
 }
 
 locals {
@@ -164,4 +111,3 @@ EOF
 EOF
 
 }
-
