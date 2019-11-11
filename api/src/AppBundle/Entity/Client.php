@@ -12,7 +12,6 @@ use JMS\Serializer\Annotation as JMS;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-
 /**
  * Client.
  *
