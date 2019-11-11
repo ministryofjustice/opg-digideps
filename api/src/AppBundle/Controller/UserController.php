@@ -248,53 +248,10 @@ class UserController extends RestController
      */
     public function getAll(Request $request)
     {
-        $order_by = $request->get('order_by', 'id');
-        $sort_order = strtoupper($request->get('sort_order', 'DESC'));
-        $limit = $request->get('limit', 50);
-        $offset = $request->get('offset', 0);
-        $roleName = $request->get('role_name');
-        $adManaged = $request->get('ad_managed');
-        $ndrEnabled = $request->get('ndr_enabled');
-        $q = $request->get('q');
-
-        $qb = $this->getRepository(EntityDir\User::class)->createQueryBuilder('u');
-        $qb->setFirstResult($offset);
-        $qb->setMaxResults($limit);
-        $qb->orderBy('u.' . $order_by, $sort_order);
-
-        if ($roleName) {
-            if (strpos($roleName, '%')) {
-                $qb->andWhere('u.roleName LIKE :role');
-            } else {
-                $qb->andWhere('u.roleName = :role');
-            }
-            $qb->setParameter('role', $roleName);
-        }
-
-        if ($adManaged) {
-            $qb->andWhere('u.adManaged = true');
-        }
-
-        if ($ndrEnabled) {
-            $qb->andWhere('u.ndrEnabled = true');
-        }
-
-        if ($q) {
-            if (EntityDir\Client::isValidCaseNumber($q)) { // case number
-                $qb->leftJoin('u.clients', 'c');
-                $qb->andWhere('lower(c.caseNumber) = :cn');
-                $qb->setParameter('cn', strtolower($q));
-            } else { // mail or first/lastname or user or client
-                $qb->leftJoin('u.clients', 'c');
-                $qb->andWhere('lower(u.email) LIKE :qLike OR lower(u.firstname) LIKE :qLike OR lower(u.lastname) LIKE :qLike OR lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike ');
-                $qb->setParameter('qLike', '%' . strtolower($q) . '%');
-            }
-        }
-
-        $qb->groupBy('u.id');
         $this->setJmsSerialiserGroups(['user']);
+        $repository = $this->container->get('AppBundle\Entity\Repository\UserRepository');
 
-        return $qb->getQuery()->getResult();
+        return $repository->findUsersByQueryParameters($request);
     }
 
     /**
