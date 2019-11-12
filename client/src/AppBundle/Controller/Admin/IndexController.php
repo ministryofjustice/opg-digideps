@@ -10,6 +10,10 @@ use AppBundle\Form as FormDir;
 use AppBundle\Model\Email;
 use AppBundle\Service\CsvUploader;
 use AppBundle\Service\DataImporter\CsvToArray;
+use AppBundle\Service\OrgService;
+use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -82,12 +86,13 @@ class IndexController extends AbstractController
                 if (!$this->isGranted(EntityDir\User::ROLE_ADMIN) && $form->getData()->getRoleName() == EntityDir\User::ROLE_ADMIN) {
                     throw new \RuntimeException('Cannot add admin from non-admin user');
                 }
+                /** @var EntityDir\User $user */
                 $user = $this->getRestClient()->post('user', $form->getData(), ['admin_add_user'], 'User');
 
                 $activationEmail = $this->getMailFactory()->createActivationEmail($user);
                 $this->getMailSender()->send($activationEmail, ['text', 'html']);
 
-                $request->getSession()->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     'An activation email has been sent to the user.'
                 );
@@ -109,6 +114,8 @@ class IndexController extends AbstractController
      * @Template("AppBundle:Admin/Index:editUser.html.twig")
      *
      * @param Request $request
+     * @return array|Response
+     * @throws \Throwable
      */
     public function editUserAction(Request $request)
     {
@@ -151,17 +158,19 @@ class IndexController extends AbstractController
             try {
                 $this->getRestClient()->put('user/' . $user->getId(), $updateUser, ['admin_add_user']);
 
-                $request->getSession()->getFlashBag()->add('notice', 'Your changes were saved');
+                $this->addFlash('notice', 'Your changes were saved');
 
                 $this->redirectToRoute('admin_editUser', ['filter' => $user->getId()]);
             } catch (\Throwable $e) {
+                /** @var Translator $translator */
+                $translator = $this->get('translator');
                 switch ((int) $e->getCode()) {
                     case 422:
-                        $form->get('email')->addError(new FormError($this->get('translator')->trans('editUserForm.email.existingError', [], 'admin')));
+                        $form->get('email')->addError(new FormError($translator->trans('editUserForm.email.existingError', [], 'admin')));
                         break;
 
                     case 425:
-                        $form->get('roleType')->addError(new FormError($this->get('translator')->trans('editUserForm.roleType.mismatchError', [], 'admin')));
+                        $form->get('roleType')->addError(new FormError($translator->trans('editUserForm.roleType.mismatchError', [], 'admin')));
                         break;
 
                     default:
@@ -191,7 +200,7 @@ class IndexController extends AbstractController
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      *
      * @param Request $request
-     * @param $id
+     * @param integer $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function editNdrAction(Request $request, $id)
@@ -204,7 +213,7 @@ class IndexController extends AbstractController
             if ($ndrForm->isValid()) {
                 $updateNdr = $ndrForm->getData();
                 $this->getRestClient()->put('ndr/' . $id, $updateNdr, ['start_date']);
-                $request->getSession()->getFlashBag()->add('notice', 'Your changes were saved');
+                $this->addFlash('notice', 'Your changes were saved');
             }
         }
         /** @var EntityDir\Client $client */
@@ -227,14 +236,15 @@ class IndexController extends AbstractController
     {
         $userToDelete = $this->getRestClient()->get("user/{$id}", 'User');
 
-        if (!$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+        if (!$this->isGranted('ROLE_ADMIN')) {
             throw new DisplayableException('Only Admin can delete users');
         }
 
-        if ($this->getUser()->getId() == $userToDelete->getId()) {
+        /** @var EntityDir\User $loggedInUser */
+        $loggedInUser = $this->getUser();
+        if ($loggedInUser->getId() == $userToDelete->getId()) {
             throw new DisplayableException('Cannot delete logged user');
         }
-
         return ['user' => $userToDelete];
     }
 
@@ -302,13 +312,13 @@ class IndexController extends AbstractController
 
                     $this->getRestClient()->delete('casrec/truncate');
                     $ret = $this->getRestClient()->setTimeout(600)->post('v2/lay-deputyship/upload', $compressedData);
-                    $request->getSession()->getFlashBag()->add(
+                    $this->addFlash(
                         'notice',
                         sprintf('%d record uploaded, %d error(s)', $ret['added'], count($ret['errors']))
                     );
 
                     foreach ($ret['errors'] as $err) {
-                        $request->getSession()->getFlashBag()->add(
+                        $this->addFlash(
                             'error',
                             $err
                         );
@@ -319,9 +329,12 @@ class IndexController extends AbstractController
 
                 // big amount of data => store in redis + redirect
                 $chunks = array_chunk($data, $chunkSize);
+
+                /** @var \Redis $redis */
+                $redis = $this->get('snc_redis.default');
                 foreach ($chunks as $k => $chunk) {
                     $compressedData = CsvUploader::compressData($chunk);
-                    $this->get('snc_redis.default')->set('chunk' . $k, $compressedData);
+                    $redis->set('chunk' . $k, $compressedData);
                 }
 
 
@@ -366,13 +379,13 @@ class IndexController extends AbstractController
                     ->getData();
                 $compressedData = CsvUploader::compressData($data);
                 $ret = $this->getRestClient()->setTimeout(600)->post('codeputy/mldupgrade', $compressedData);
-                $request->getSession()->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     sprintf('Your file contained %d deputy numbers, %d were updated, with %d error(s)', $ret['requested_mld_upgrades'], $ret['updated'], count($ret['errors']))
                 );
 
                 foreach ($ret['errors'] as $err) {
-                    $request->getSession()->getFlashBag()->add(
+                    $this->addFlash(
                         'error',
                         $err
                     );
@@ -449,18 +462,26 @@ class IndexController extends AbstractController
                 // small chunk => upload in same request
                 if (count($data) < $chunkSize) {
                     $compressedData = CsvUploader::compressData($data);
-                    $this->get('org_service')->uploadAndSetFlashMessages($compressedData, $request->getSession()->getFlashBag());
+                    /** @var OrgService $orgService */
+                    $orgService = $this->get('org_service');
+                    /** @var Session $session */
+                    $session = $request->getSession();
+
+                    $orgService->uploadAndSetFlashMessages($compressedData, $session->getFlashBag());
                     return $this->redirect($this->generateUrl('admin_org_upload', ['csvType' => $csvObject->getCsvType()]));
                 }
 
                 // big amount of data => save data into redis and redirect with nOfChunks param so that JS can do the upload with small AJAX calls
                 $chunks = array_chunk($data, $chunkSize);
 
+                /** @var \Redis $redis */
+                $redis = $this->get('snc_redis.default');
+
                 foreach ($chunks as $k => $chunk) {
 
                     $compressedData = CsvUploader::compressData($chunk);
                     $chunkVariable = strtolower($csvObject->getCsvType()) . '_org_chunk' . $k;
-                    $this->get('snc_redis.default')->set($chunkVariable, $compressedData);
+                    $redis->set($chunkVariable, $compressedData);
                 }
                 return $this->redirect($this->generateUrl('admin_org_upload', ['csvType' => $csvObject->getCsvType(), 'nOfChunks' => count($chunks)]));
             } catch (\Throwable $e) {
@@ -493,7 +514,9 @@ class IndexController extends AbstractController
 
             $this->getMailSender()->send($resetPasswordEmail, ['text', 'html']);
         } catch (\Throwable $e) {
-            $this->get('logger')->debug($e->getMessage());
+            /** @var LoggerInterface $logger */
+            $logger = $this->get('logger');
+            $logger->debug($e->getMessage());
         }
 
         return new Response('[Link sent]');
