@@ -16,7 +16,7 @@
     skinparam Shadowing false
     skinparam ArrowThickness 5
     skinparam rectangle {
-        BorderColor red
+        BorderColor transparent
     }
     skinparam roundcorner 40
     skinparam DefaultFontSize 25
