@@ -21,6 +21,8 @@ resource "aws_security_group" "group" {
     create_before_destroy = true
   }
 
+  revoke_rules_on_delete = true
+
   tags = merge(
     var.tags,
     {

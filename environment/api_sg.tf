@@ -37,7 +37,7 @@ locals {
 module "api_service_security_group" {
   source = "./security_group"
   rules  = local.api_service_sg_rules
-  name   = aws_ecs_task_definition.api.family
+  name   = "api-service"
   tags   = local.default_tags
   vpc_id = data.aws_vpc.vpc.id
 }
@@ -65,7 +65,7 @@ locals {
 module "api_cache_security_group" {
   source = "./security_group"
   rules  = local.api_cache_sg_rules
-  name   = "api-cache-${local.environment}"
+  name   = "api-cache"
   tags   = local.default_tags
   vpc_id = data.aws_vpc.vpc.id
 }
@@ -99,7 +99,7 @@ locals {
 module "api_rds_security_group" {
   source = "./security_group"
   rules  = local.api_rds_sg_rules
-  name   = "api-rds-${local.environment}"
+  name   = "api-rds"
   tags   = local.default_tags
   vpc_id = data.aws_vpc.vpc.id
 }
