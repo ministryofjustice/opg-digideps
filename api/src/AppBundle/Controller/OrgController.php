@@ -35,17 +35,25 @@ class OrgController extends RestController
 
         $response = new StreamedResponse();
 
-        $response->setCallback(function() use ($data) {
+        /** @var \Doctrine\ORM\EntityManager $em */
+        $em  = $this->get('em');
+
+        /** @var \AppBundle\Service\OrgService $pa */
+        $pa = $this->get('org_service');
+
+        $response->setCallback(function() use ($data, $pa, $em) {
             $chunks = array_chunk($data, 10);
             $chunkCount = count($chunks);
             foreach ($chunks as $i => $chunk) {
-                /** @var \AppBundle\Service\OrgService $pa */
-                $pa = $this->get('org_service');
+                $start = microtime(true);
                 $pa->addFromCasrecRows($chunk);
+                $em->flush();
+                $em->clear();
                 $progress = $i + 1;
                 echo "PROG $progress $chunkCount\n";
                 gc_collect_cycles();
                 echo "MEM " . memory_get_usage() . "\n";
+                echo "TIME " . (microtime(true) - $start) . "\n";
                 flush();
             }
 
