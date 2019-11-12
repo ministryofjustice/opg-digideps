@@ -90,9 +90,7 @@ class IndexController extends AbstractController
                 $activationEmail = $this->getMailFactory()->createActivationEmail($user);
                 $this->getMailSender()->send($activationEmail, ['text', 'html']);
 
-                /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
-                $session = $request->getSession();
-                $session->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     'An activation email has been sent to the user.'
                 );
@@ -156,9 +154,7 @@ class IndexController extends AbstractController
             try {
                 $this->getRestClient()->put('user/' . $user->getId(), $updateUser, ['admin_add_user']);
 
-                /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
-                $session = $request->getSession();
-                $session->getFlashBag()->add('notice', 'Your changes were saved');
+                $this->addFlash('notice', 'Your changes were saved');
 
                 $this->redirectToRoute('admin_editUser', ['filter' => $user->getId()]);
             } catch (\Throwable $e) {
@@ -215,9 +211,7 @@ class IndexController extends AbstractController
                 $updateNdr = $ndrForm->getData();
                 $this->getRestClient()->put('ndr/' . $id, $updateNdr, ['start_date']);
 
-                /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
-                $session = $request->getSession();
-                $session->getFlashBag()->add('notice', 'Your changes were saved');
+                $this->addFlash('notice', 'Your changes were saved');
             }
         }
         /** @var EntityDir\Client $client */
@@ -321,15 +315,13 @@ class IndexController extends AbstractController
                     $this->getRestClient()->delete('casrec/truncate');
                     $ret = $this->getRestClient()->setTimeout(600)->post('v2/lay-deputyship/upload', $compressedData);
 
-                    /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
-                    $session = $request->getSession();
-                    $session->getFlashBag()->add(
+                    $this->addFlash(
                         'notice',
                         sprintf('%d record uploaded, %d error(s)', $ret['added'], count($ret['errors']))
                     );
 
                     foreach ($ret['errors'] as $err) {
-                        $session->getFlashBag()->add(
+                        $this->addFlash(
                             'error',
                             $err
                         );
@@ -390,15 +382,13 @@ class IndexController extends AbstractController
                 $compressedData = CsvUploader::compressData($data);
                 $ret = $this->getRestClient()->setTimeout(600)->post('codeputy/mldupgrade', $compressedData);
 
-                /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
-                $session = $request->getSession();
-                $session->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     sprintf('Your file contained %d deputy numbers, %d were updated, with %d error(s)', $ret['requested_mld_upgrades'], $ret['updated'], count($ret['errors']))
                 );
 
                 foreach ($ret['errors'] as $err) {
-                    $session->getFlashBag()->add(
+                    $this->addFlash(
                         'error',
                         $err
                     );
