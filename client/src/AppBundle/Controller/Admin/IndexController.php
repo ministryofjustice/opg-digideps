@@ -88,6 +88,7 @@ class IndexController extends AbstractController
                 if (!$this->isGranted(EntityDir\User::ROLE_ADMIN) && $form->getData()->getRoleName() == EntityDir\User::ROLE_ADMIN) {
                     throw new \RuntimeException('Cannot add admin from non-admin user');
                 }
+
                 /** @var EntityDir\User $user */
                 $user = $this->getRestClient()->post('user', $form->getData(), ['admin_add_user'], 'User');
 
@@ -202,7 +203,7 @@ class IndexController extends AbstractController
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      *
      * @param Request $request
-     * @param integer $id
+     * @param string $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function editNdrAction(Request $request, $id)
@@ -236,6 +237,8 @@ class IndexController extends AbstractController
      */
     public function deleteConfirmAction($id)
     {
+        /** @var \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker */
+        $authorizationChecker = $this->get('security.authorization_checker');
         $userToDelete = $this->getRestClient()->get("user/{$id}", 'User');
 
         if (!$this->isGranted('ROLE_ADMIN')) {
@@ -462,11 +465,18 @@ class IndexController extends AbstractController
 
             $compressedData = CsvUploader::compressData($data);
 
+            /** @var \GuzzleHttp\Client $client */
             $client = $this->get('guzzle_json_http_client');
+
+            /** @var \AppBundle\Service\Client\TokenStorage\RedisStorage $tokenStorage */
+            $tokenStorage = $this->get('redis_token_storage');
+
+            /** @var EntityDir\User $currentUser */
+            $currentUser = $this->getUser();
 
             $request = $client->post('org/bulk-add', [
                 'headers' => [
-                    'AuthToken' => $this->get('redis_token_storage')->get($this->getUser()->getId())
+                    'AuthToken' => $tokenStorage->get($currentUser->getId())
                 ],
                 'body' => json_encode($compressedData),
                 'timeout' => 600,
