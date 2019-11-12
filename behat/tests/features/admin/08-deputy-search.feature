@@ -1,6 +1,6 @@
 Feature: Deputy search
   @admin @deputy-search
-  Scenario: Search across all deputy roles, excluding clients
+  Scenario: Search broadly across all deputy roles, excluding clients
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I fill in "admin_q" with "User-2"
     When I press "admin_search"
@@ -8,7 +8,7 @@ Feature: Deputy search
     And I should see "Found 1 users"
 
   @admin @deputy-search
-  Scenario: Search across deputy by a role, excluding clients
+  Scenario: Search broadly across deputy by a role, excluding clients
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I fill in "admin_q" with "Manager1"
     And I select "ROLE_PA_NAMED" from "admin[role_name]"
@@ -19,7 +19,7 @@ Feature: Deputy search
     Then I should see "Found 1 users"
 
   @admin @deputy-search
-  Scenario: Search across all deputy roles, including clients
+  Scenario: Search broadly across all deputy roles, including clients
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I fill in "admin_q" with "103-client"
     When I press "admin_search"
@@ -31,7 +31,7 @@ Feature: Deputy search
     And I should see "LAY Deputy 103 User"
 
   @admin @deputy-search
-  Scenario: Search across deputy by a role, including clients
+  Scenario: Search broadly across deputy by a role, including clients
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I fill in "admin_q" with "103-6-client"
     And I check "Include clients"
@@ -40,3 +40,22 @@ Feature: Deputy search
     When I select "ROLE_PA_NAMED" from "admin[role_name]"
     And I press "admin_search"
     Then I should see "Found 1 users"
+
+  @admin @deputy-search
+  Scenario: Search exact name match across all deputy roles, excluding clients
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I fill in "admin_q" with "Admin User"
+    When I press "admin_search"
+    Then I should see "admin user"
+    And I should see "Found 1 users"
+
+  @admin @deputy-search
+  Scenario: Search exact name match across all deputy roles, including clients
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I fill in "admin_q" with "john 104-client"
+    When I press "admin_search"
+    Then I should see "Found 0 users"
+    When I check "Include clients"
+    And I press "admin_search"
+    Then I should see "Found 1 users"
+    And I should see "Lay Deputy 104 User"

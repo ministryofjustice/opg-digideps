@@ -116,15 +116,55 @@ class UserRepository extends AbstractEntityRepository
         } else {
             $this->qb->leftJoin('u.clients', 'c');
 
-            $nameBasedQuery = 'lower(u.email) LIKE :qLike OR lower(u.firstname) LIKE :qLike OR lower(u.lastname) LIKE :qLike';
-            if ($request->get('include_clients')) {
-                $nameBasedQuery .= ' OR lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike';
-            }
+            $searchTerms = explode(' ', $searchTerm);
+            $includeClients = (bool) $request->get('include_clients');
 
-            $this->qb->andWhere($nameBasedQuery);
-            $this->qb->setParameter('qLike', '%' . strtolower($searchTerm) . '%');
+            if (count($searchTerms) === 1) {
+                $this->addBroadMatchFilter($searchTerm, $includeClients);
+            } else {
+                $this->addFullNameExactMatchFilter($searchTerms[0], $searchTerms[1], $includeClients);
+            }
         }
 
         return $this;
+    }
+
+    /**
+     * @param string $searchTerm
+     * @param bool $includeClients
+     * @return string
+     */
+    function addBroadMatchFilter(string $searchTerm, bool $includeClients)
+    {
+        $nameBasedQuery = '(lower(u.email) LIKE :qLike OR lower(u.firstname) LIKE :qLike OR lower(u.lastname) LIKE :qLike)';
+
+        if ($includeClients) {
+            $nameBasedQuery .= ' OR (lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike)';
+        }
+
+        $this->qb->setParameter('qLike', '%' . strtolower($searchTerm) . '%');
+        $this->qb->andWhere($nameBasedQuery);
+    }
+
+    /**
+     * @param string $firstName
+     * @param string $lastname
+     * @param bool $includeClients
+     * @return string
+     */
+    function addFullNameExactMatchFilter(string $firstName, string $lastname, bool $includeClients)
+    {
+        $nameBasedQuery = '(lower(u.firstname) = :firstname AND lower(u.lastname) = :lastname)';
+
+        if ($includeClients) {
+            $nameBasedQuery .= ' OR (lower(c.firstname) = :firstname AND lower(c.lastname) = :lastname)';
+        }
+
+        $this->qb->setParameters([
+            'firstname' => strtolower($firstName),
+            'lastname' => strtolower($lastname),
+        ]);
+
+        $this->qb->andWhere($nameBasedQuery);
     }
 }
