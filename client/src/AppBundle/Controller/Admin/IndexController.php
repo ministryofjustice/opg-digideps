@@ -461,7 +461,7 @@ class IndexController extends AbstractController
 
             $request = $client->post('org/bulk-add', [
                 'headers' => [
-                    'AuthToken' => '1_93ba0f2f011ef967f69b9faa719ecba1d8117cd3'
+                    'AuthToken' => $this->get('redis_token_storage')->get($this->getUser()->getId())
                 ],
                 'body' => json_encode($compressedData),
                 'timeout' => 600,
