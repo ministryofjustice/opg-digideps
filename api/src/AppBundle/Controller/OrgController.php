@@ -27,6 +27,7 @@ class OrgController extends RestController
         $count = count($data);
 
         set_time_limit(0);
+        ini_set('memory_limit', '-1');
 
         if (!$count) {
             throw new \RuntimeException('No records received from the API');
@@ -38,10 +39,13 @@ class OrgController extends RestController
             $chunks = array_chunk($data, 10);
             $chunkCount = count($chunks);
             foreach ($chunks as $i => $chunk) {
+                /** @var \AppBundle\Service\OrgService $pa */
                 $pa = $this->get('org_service');
                 $pa->addFromCasrecRows($chunk);
                 $progress = $i + 1;
                 echo "PROG $progress $chunkCount\n";
+                gc_collect_cycles();
+                echo "MEM " . memory_get_usage() . "\n";
                 flush();
             }
 
