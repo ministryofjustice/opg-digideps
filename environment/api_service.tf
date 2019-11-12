@@ -61,7 +61,7 @@ locals {
     "essential": true,
     "image": "${local.images.api}",
     "mountPoints": [],
-    "name": "api_app",
+    "name": "api_service",
     "portMappings": [{
       "containerPort": 443,
       "hostPort": 443,

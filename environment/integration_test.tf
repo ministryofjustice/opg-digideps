@@ -4,30 +4,43 @@ module "integration_test" {
 
   cluster_name          = aws_ecs_cluster.main.name
   container_definitions = "[${local.integration_test_container}]"
-  default_tags          = local.default_tags
+  tags                  = local.default_tags
   environment           = local.environment
   execution_role_arn    = aws_iam_role.execution_role.arn
   subnet_ids            = data.aws_subnet.private[*].id
   task_role_arn         = data.aws_iam_role.sync.arn
   vpc_id                = data.aws_vpc.vpc.id
+  security_group_id     = module.integration_test_security_group.id
 }
 
-resource "aws_security_group_rule" "integration_test_postgres_out_rds" {
-  from_port                = 5432
-  protocol                 = "tcp"
-  security_group_id        = module.integration_test.security_group_id
-  to_port                  = 5432
-  type                     = "egress"
-  source_security_group_id = module.api_rds_security_group.id
+locals {
+  integration_test_sg_rules = merge(
+    local.common_sg_rules_new,
+    {
+      rds = {
+        port        = 5432
+        protocol    = "tcp"
+        type        = "egress"
+        target_type = "security_group_id"
+        target      = module.api_rds_security_group.id
+      }
+      front = {
+        port        = 443
+        protocol    = "tcp"
+        type        = "egress"
+        target_type = "cidr_block"
+        target      = "0.0.0.0/0"
+      }
+    }
+  )
 }
 
-resource "aws_security_group_rule" "integration_test_https_out" {
-  from_port         = 443
-  protocol          = "tcp"
-  security_group_id = module.integration_test.security_group_id
-  to_port           = 443
-  type              = "egress"
-  cidr_blocks       = ["0.0.0.0/0"]
+module "integration_test_security_group" {
+  source = "./security_group"
+  rules  = local.integration_test_sg_rules
+  name   = "integration-test"
+  tags   = local.default_tags
+  vpc_id = data.aws_vpc.vpc.id
 }
 
 locals {

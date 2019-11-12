@@ -28,7 +28,7 @@ locals {
 module "scan_security_group" {
   source = "./security_group"
   rules  = local.scan_sg_rules
-  name   = aws_ecs_task_definition.scan.family
+  name   = "scan"
   tags   = local.default_tags
   vpc_id = data.aws_vpc.vpc.id
 }
