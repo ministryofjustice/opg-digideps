@@ -59,7 +59,9 @@ class UserRepository extends AbstractEntityRepository
      */
     private function handleRoleNameFilter(Request $request): UserRepository
     {
-        if ('' === ($roleName = $request->get('role_name'))) return $this;
+        if (! ($roleName = $request->get('role_name'))) {
+            return $this;
+        }
 
         $operand = (strpos($roleName, '%')) !== false ? 'LIKE' : '=';
 
@@ -103,15 +105,23 @@ class UserRepository extends AbstractEntityRepository
      */
     private function handleSearchTermFilter(Request $request): UserRepository
     {
-        if (null === ($searchTerm = $request->get('q'))) return $this;
+        if (! ($searchTerm = $request->get('q'))) {
+            return $this;
+        }
 
-        if (Client::isValidCaseNumber($searchTerm)) { // case number
+        if (Client::isValidCaseNumber($searchTerm)) {
             $this->qb->leftJoin('u.clients', 'c');
             $this->qb->andWhere('lower(c.caseNumber) = :cn');
             $this->qb->setParameter('cn', strtolower($searchTerm));
         } else {
             $this->qb->leftJoin('u.clients', 'c');
-            $this->qb->andWhere('lower(u.email) LIKE :qLike OR lower(u.firstname) LIKE :qLike OR lower(u.lastname) LIKE :qLike OR lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike ');
+
+            $nameBasedQuery = 'lower(u.email) LIKE :qLike OR lower(u.firstname) LIKE :qLike OR lower(u.lastname) LIKE :qLike';
+            if ($request->get('include_clients')) {
+                $nameBasedQuery .= ' OR lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike';
+            }
+
+            $this->qb->andWhere($nameBasedQuery);
             $this->qb->setParameter('qLike', '%' . strtolower($searchTerm) . '%');
         }
 
