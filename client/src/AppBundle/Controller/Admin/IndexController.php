@@ -412,10 +412,11 @@ class IndexController extends AbstractController
         if ($form->isValid()) {
             $fileName = $form->get('file')->getData();
             try {
-                $data = (new CsvToArray($fileName, false))
-                    ->setExpectedColumns([
+                $csvObject = new CsvToArray($fileName, false);
+                $data = $csvObject->setExpectedColumns([
                         'Deputy No',
                         //'Pat Create', 'Dship Create', //should hold reg date / Cour order date, but no specs given yet
+                        'Dep Type',
                         'Dep Postcode',
                         'Dep Forename',
                         'Dep Surname',
@@ -449,7 +450,7 @@ class IndexController extends AbstractController
                 if (count($data) < $chunkSize) {
                     $compressedData = CsvUploader::compressData($data);
                     $this->get('org_service')->uploadAndSetFlashMessages($compressedData, $request->getSession()->getFlashBag());
-                    return $this->redirect($this->generateUrl('admin_org_upload'));
+                    return $this->redirect($this->generateUrl('admin_org_upload', ['csvType' => $csvObject->getCsvType()]));
                 }
 
                 // big amount of data => save data into redis and redirect with nOfChunks param so that JS can do the upload with small AJAX calls
@@ -458,9 +459,10 @@ class IndexController extends AbstractController
                 foreach ($chunks as $k => $chunk) {
 
                     $compressedData = CsvUploader::compressData($chunk);
-                    $this->get('snc_redis.default')->set('org_chunk' . $k, $compressedData);
+                    $chunkVariable = strtolower($csvObject->getCsvType()) . '_org_chunk' . $k;
+                    $this->get('snc_redis.default')->set($chunkVariable, $compressedData);
                 }
-                return $this->redirect($this->generateUrl('admin_org_upload', ['nOfChunks' => count($chunks)]));
+                return $this->redirect($this->generateUrl('admin_org_upload', ['csvType' => $csvObject->getCsvType(), 'nOfChunks' => count($chunks)]));
             } catch (\Throwable $e) {
                 $message = $e->getMessage();
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
@@ -471,6 +473,7 @@ class IndexController extends AbstractController
         }
 
         return [
+            'csvType'      => $request->get('csvType'),
             'nOfChunks'      => $request->get('nOfChunks'),
             'form'          => $form->createView(),
             'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
