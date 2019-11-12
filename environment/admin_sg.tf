@@ -14,7 +14,7 @@ locals {
         type        = "egress"
         protocol    = "tcp"
         target_type = "security_group_id"
-        target      = module.api_rds_security_group.id
+        target      = module.api_service_security_group.id
       }
       cache = {
         port        = 6379
@@ -37,7 +37,7 @@ locals {
 module "admin_service_security_group" {
   source = "./security_group"
   rules  = local.admin_sg_rules
-  name   = aws_ecs_task_definition.admin.family
+  name   = "admin-service"
   tags   = local.default_tags
   vpc_id = data.aws_vpc.vpc.id
 }
@@ -57,7 +57,7 @@ locals {
 module "admin_cache_security_group" {
   source = "./security_group"
   rules  = local.admin_cache_sg_rules
-  name   = "admin-cache-${local.environment}"
+  name   = "admin-cache"
   tags   = local.default_tags
   vpc_id = data.aws_vpc.vpc.id
 }
@@ -77,7 +77,7 @@ locals {
 module "admin_elb_security_group" {
   source = "./security_group"
   rules  = local.admin_elb_sg_rules
-  name   = "admin-elb-${local.environment}"
+  name   = "admin-elb"
   tags   = local.default_tags
   vpc_id = data.aws_vpc.vpc.id
 }

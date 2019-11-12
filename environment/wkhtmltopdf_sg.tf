@@ -23,7 +23,7 @@ locals {
 module "wkhtmltopdf_security_group" {
   source = "./security_group"
   rules  = local.wkhtmltopdf_sg_rules
-  name   = aws_ecs_task_definition.wkhtmltopdf.family
+  name   = "wkhtmltopdf"
   tags   = local.default_tags
   vpc_id = data.aws_vpc.vpc.id
 }

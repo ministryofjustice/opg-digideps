@@ -16,7 +16,7 @@
     skinparam Shadowing false
     skinparam ArrowThickness 5
     skinparam rectangle {
-        BorderColor transparent
+        BorderColor red
     }
     skinparam roundcorner 40
     skinparam DefaultFontSize 25
@@ -124,7 +124,7 @@
     igw -[#blue]up-|> registry_docker_io
 
     admin_lb -[#blue]down-|> admin_service
-    front_lb -[#blue]down-|> front_service
+    front_lb -[#blue]down--|> front_service
 
     front_service -[#blue]-|> api_service
     front_service -[#green]right-|> front_redis
