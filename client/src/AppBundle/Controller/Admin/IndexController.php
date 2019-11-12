@@ -317,6 +317,7 @@ class IndexController extends AbstractController
 
                     $this->getRestClient()->delete('casrec/truncate');
                     $ret = $this->getRestClient()->setTimeout(600)->post('v2/lay-deputyship/upload', $compressedData);
+
                     $this->addFlash(
                         'notice',
                         sprintf('%d record uploaded, %d error(s)', $ret['added'], count($ret['errors']))
@@ -384,6 +385,7 @@ class IndexController extends AbstractController
                     ->getData();
                 $compressedData = CsvUploader::compressData($data);
                 $ret = $this->getRestClient()->setTimeout(600)->post('codeputy/mldupgrade', $compressedData);
+
                 $this->addFlash(
                     'notice',
                     sprintf('Your file contained %d deputy numbers, %d were updated, with %d error(s)', $ret['requested_mld_upgrades'], $ret['updated'], count($ret['errors']))
