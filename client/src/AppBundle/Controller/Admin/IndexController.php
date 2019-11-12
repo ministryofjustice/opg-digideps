@@ -84,12 +84,16 @@ class IndexController extends AbstractController
                 if (!$this->isGranted(EntityDir\User::ROLE_ADMIN) && $form->getData()->getRoleName() == EntityDir\User::ROLE_ADMIN) {
                     throw new \RuntimeException('Cannot add admin from non-admin user');
                 }
+
+                /** @var EntityDir\User $user */
                 $user = $this->getRestClient()->post('user', $form->getData(), ['admin_add_user'], 'User');
 
                 $activationEmail = $this->getMailFactory()->createActivationEmail($user);
                 $this->getMailSender()->send($activationEmail, ['text', 'html']);
 
-                $request->getSession()->getFlashBag()->add(
+                /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+                $session = $request->getSession();
+                $session->getFlashBag()->add(
                     'notice',
                     'An activation email has been sent to the user.'
                 );
@@ -153,17 +157,22 @@ class IndexController extends AbstractController
             try {
                 $this->getRestClient()->put('user/' . $user->getId(), $updateUser, ['admin_add_user']);
 
-                $request->getSession()->getFlashBag()->add('notice', 'Your changes were saved');
+                /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+                $session = $request->getSession();
+                $session->getFlashBag()->add('notice', 'Your changes were saved');
 
                 $this->redirectToRoute('admin_editUser', ['filter' => $user->getId()]);
             } catch (\Throwable $e) {
+                /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
+                $translator = $this->get('translator');
+
                 switch ((int) $e->getCode()) {
                     case 422:
-                        $form->get('email')->addError(new FormError($this->get('translator')->trans('editUserForm.email.existingError', [], 'admin')));
+                        $form->get('email')->addError(new FormError($translator->trans('editUserForm.email.existingError', [], 'admin')));
                         break;
 
                     case 425:
-                        $form->get('roleType')->addError(new FormError($this->get('translator')->trans('editUserForm.roleType.mismatchError', [], 'admin')));
+                        $form->get('roleType')->addError(new FormError($translator->trans('editUserForm.roleType.mismatchError', [], 'admin')));
                         break;
 
                     default:
@@ -193,7 +202,7 @@ class IndexController extends AbstractController
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      *
      * @param Request $request
-     * @param $id
+     * @param string $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function editNdrAction(Request $request, $id)
@@ -206,7 +215,10 @@ class IndexController extends AbstractController
             if ($ndrForm->isValid()) {
                 $updateNdr = $ndrForm->getData();
                 $this->getRestClient()->put('ndr/' . $id, $updateNdr, ['start_date']);
-                $request->getSession()->getFlashBag()->add('notice', 'Your changes were saved');
+
+                /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+                $session = $request->getSession();
+                $session->getFlashBag()->add('notice', 'Your changes were saved');
             }
         }
         /** @var EntityDir\Client $client */
@@ -227,13 +239,18 @@ class IndexController extends AbstractController
      */
     public function deleteConfirmAction($id)
     {
+        /** @var \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker */
+        $authorizationChecker = $this->get('security.authorization_checker');
         $userToDelete = $this->getRestClient()->get("user/{$id}", 'User');
 
-        if (!$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+        if (!$authorizationChecker->isGranted('ROLE_ADMIN')) {
             throw new DisplayableException('Only Admin can delete users');
         }
 
-        if ($this->getUser()->getId() == $userToDelete->getId()) {
+        /** @var EntityDir\User $currentUser */
+        $currentUser = $this->getUser();
+
+        if ($currentUser->getId() == $userToDelete->getId()) {
             throw new DisplayableException('Cannot delete logged user');
         }
 
@@ -304,13 +321,16 @@ class IndexController extends AbstractController
 
                     $this->getRestClient()->delete('casrec/truncate');
                     $ret = $this->getRestClient()->setTimeout(600)->post('v2/lay-deputyship/upload', $compressedData);
-                    $request->getSession()->getFlashBag()->add(
+
+                    /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+                    $session = $request->getSession();
+                    $session->getFlashBag()->add(
                         'notice',
                         sprintf('%d record uploaded, %d error(s)', $ret['added'], count($ret['errors']))
                     );
 
                     foreach ($ret['errors'] as $err) {
-                        $request->getSession()->getFlashBag()->add(
+                        $session->getFlashBag()->add(
                             'error',
                             $err
                         );
@@ -323,7 +343,9 @@ class IndexController extends AbstractController
                 $chunks = array_chunk($data, $chunkSize);
                 foreach ($chunks as $k => $chunk) {
                     $compressedData = CsvUploader::compressData($chunk);
-                    $this->get('snc_redis.default')->set('chunk' . $k, $compressedData);
+                    /** @var \Predis\Client $redis */
+                    $redis = $this->get('snc_redis.default');
+                    $redis->set('chunk' . $k, $compressedData);
                 }
 
 
@@ -368,13 +390,16 @@ class IndexController extends AbstractController
                     ->getData();
                 $compressedData = CsvUploader::compressData($data);
                 $ret = $this->getRestClient()->setTimeout(600)->post('codeputy/mldupgrade', $compressedData);
-                $request->getSession()->getFlashBag()->add(
+
+                /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+                $session = $request->getSession();
+                $session->getFlashBag()->add(
                     'notice',
                     sprintf('Your file contained %d deputy numbers, %d were updated, with %d error(s)', $ret['requested_mld_upgrades'], $ret['updated'], count($ret['errors']))
                 );
 
                 foreach ($ret['errors'] as $err) {
-                    $request->getSession()->getFlashBag()->add(
+                    $session->getFlashBag()->add(
                         'error',
                         $err
                     );
@@ -449,11 +474,18 @@ class IndexController extends AbstractController
 
             $compressedData = CsvUploader::compressData($data);
 
+            /** @var \GuzzleHttp\Client $client */
             $client = $this->get('guzzle_json_http_client');
+
+            /** @var \AppBundle\Service\Client\TokenStorage\RedisStorage $tokenStorage */
+            $tokenStorage = $this->get('redis_token_storage');
+
+            /** @var EntityDir\User $currentUser */
+            $currentUser = $this->getUser();
 
             $request = $client->post('org/bulk-add', [
                 'headers' => [
-                    'AuthToken' => $this->get('redis_token_storage')->get($this->getUser()->getId())
+                    'AuthToken' => $tokenStorage->get($currentUser->getId())
                 ],
                 'body' => json_encode($compressedData),
                 'timeout' => 600,
@@ -522,7 +554,9 @@ class IndexController extends AbstractController
 
             $this->getMailSender()->send($resetPasswordEmail, ['text', 'html']);
         } catch (\Throwable $e) {
-            $this->get('logger')->debug($e->getMessage());
+            /** @var \Psr\Log\LoggerInterface $logger */
+            $logger = $this->get('logger');
+            $logger->debug($e->getMessage());
         }
 
         return new Response('[Link sent]');
