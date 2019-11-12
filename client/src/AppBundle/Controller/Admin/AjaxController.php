@@ -61,7 +61,8 @@ class AjaxController extends AbstractController
      */
     public function uploadPaAjaxAction(Request $request)
     {
-        $chunkId = 'org_chunk' . $request->get('chunk');
+        $csvType = $request->get('csvType');
+        $chunkId = strtolower($csvType) .'_org_chunk' . $request->get('chunk');
         $redis = $this->get('snc_redis.default');
 
         try {
