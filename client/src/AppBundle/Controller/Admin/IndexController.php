@@ -473,7 +473,7 @@ class IndexController extends AbstractController
             /** @var EntityDir\User $currentUser */
             $currentUser = $this->getUser();
 
-            $request = $client->post('org/bulk-add', [
+            $apiRequest = $client->post('org/bulk-add', [
                 'headers' => [
                     'AuthToken' => $tokenStorage->get($currentUser->getId())
                 ],
@@ -484,10 +484,10 @@ class IndexController extends AbstractController
 
             $outputStreamResponse = isset($_GET['ajax']);
 
-            $stream = $request->getBody();
+            $stream = $apiRequest->getBody();
             $response = new StreamedResponse();
 
-            $response->setCallback(function() use ($stream, $outputStreamResponse) {
+            $response->setCallback(function() use ($stream, $outputStreamResponse, $request) {
                 $errors = [];
                 $warnings = [];
                 $added = [
@@ -498,6 +498,10 @@ class IndexController extends AbstractController
                 ];
 
                 $carryover = '';
+
+                /** @var \Symfony\Component\HttpFoundation\Session\Session */
+                $session = $request->getSession();
+                $session->getFlashBag();
 
                 while (!$stream->eof()) {
                     $partial = $carryover . $stream->read(1024);
@@ -550,15 +554,16 @@ class IndexController extends AbstractController
                         $added['prof_users'],
                         $added['pa_users'],
                         $added['clients'],
-                        $added['reports'],
+                        $added['reports']
                     )
                 );
 
                 $redirectUrl = $this->generateUrl('admin_org_upload');
 
                 if ($outputStreamResponse) {
-                    echo 'REDIR ' . $redirectUrl;
-                    echo 'END';
+                    echo "REDIR $redirectUrl\n";
+                    echo "END\n";
+                    flush();
                 } else {
                     header('Location: '. $redirectUrl);
                 }
