@@ -117,6 +117,10 @@ uploadPA:
   supportTitle: PA/Prof user management
   heading: Upload PA/Prof users along with clients and reports
   uploading: Uploading... please wait.<br/>Do not refresh this page
+  upload:
+    label: Select CSV file
+  submit:
+    label: Upload PA/Prof users
 
 uploadUsers:
   htmlTitle: Administration - Upload users
