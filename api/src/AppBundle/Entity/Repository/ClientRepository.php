@@ -5,6 +5,7 @@ namespace AppBundle\Entity\Repository;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * ClientRepository.
@@ -14,6 +15,9 @@ use Doctrine\ORM\EntityRepository;
  */
 class ClientRepository extends EntityRepository
 {
+    /** @var QueryBuilder */
+    private $qb;
+
     /**
      * Search Clients
      *
@@ -27,28 +31,60 @@ class ClientRepository extends EntityRepository
      */
     public function searchClients($query = '', $orderBy = 'lastname', $sortOrder = 'ASC', $limit = 100, $offset = '0')
     {
-        $qb = $this->createQueryBuilder('c');
-        $qb->setFirstResult($offset);
-        $qb->setMaxResults($limit);
-        $qb->orderBy('c.' . $orderBy, $sortOrder);
+        $this->qb = $this->createQueryBuilder('c');
 
         if ($query) {
-            if (Client::isValidCaseNumber($query)) { // case number
-                $qb->andWhere('lower(c.caseNumber) = :cn');
-                $qb->setParameter('cn', strtolower($query));
-            } else { // client.lastname
-                $qb->andWhere('lower(c.lastname) LIKE :qLike ');
-                $qb->setParameter('qLike', '%' . strtolower($query) . '%');
-            }
+            $this->handleSearchTermFilter($query);
         }
 
-        // ensure max 100 results
         $limit = ($limit <= 100) ? $limit : 100;
-        $qb->setMaxResults($limit);
+        $this->qb->setMaxResults($limit);
+        $this->qb->setFirstResult($offset);
+        $this->qb->orderBy('c.' . $orderBy, $sortOrder);
+
         $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class); //disable softdelete for createdBy, needed from admin area
-        $clients = $qb->getQuery()->getResult(); /* @var $clients Client[] */
         $this->_em->getFilters()->enable('softdeleteable');
-        return $clients;
+
+        return $this->qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param $searchTerm
+     */
+    private function handleSearchTermFilter($searchTerm): void
+    {
+        if (Client::isValidCaseNumber($searchTerm)) {
+            $this->qb->andWhere('lower(c.caseNumber) = :cn');
+            $this->qb->setParameter('cn', strtolower($searchTerm));
+        } else {
+
+            $searchTerms = explode(' ', $searchTerm);
+
+            if (count($searchTerms) === 1) {
+                $this->addBroadMatchFilter($searchTerm);
+            } else {
+                $this->addFullNameExactMatchFilter($searchTerms[0], $searchTerms[1]);
+            }
+        }
+    }
+
+    /**
+     * @param $query
+     */
+    private function addBroadMatchFilter($query): void
+    {
+        $this->qb->andWhere('lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike ');
+        $this->qb->setParameter('qLike', '%' . strtolower($query) . '%');
+    }
+
+    /**
+     * @param string $firstName
+     * @param string $lastname
+     */
+    private function addFullNameExactMatchFilter(string $firstName, string $lastname): void
+    {
+        $this->qb->andWhere('(lower(c.firstname) = :firstname AND lower(c.lastname) = :lastname)');
+        $this->qb->setParameters(['firstname' => strtolower($firstName), 'lastname' => strtolower($lastname),]);
     }
 
     /**

@@ -414,6 +414,26 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('2016-01-01', $data['start_date']);
         $this->assertEquals('2016-11-30', $data['end_date']);
         $this->assertEquals('2017-01-25', $data['due_date']);
+
+        // repeat test with new end date beyond 13th November 2019
+        // assert put new end date
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenDeputy,
+            'data'        => [
+                'start_date'                   => '2019-01-01',
+                'end_date'                     => '2019-11-30',
+                'balance_mismatch_explanation' => 'bme',
+            ],
+        ]);
+        //assert both groups (quick)
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenDeputy,
+        ])['data'];
+        $this->assertEquals('2019-01-01', $data['start_date']);
+        $this->assertEquals('2019-11-30', $data['end_date']);
+        $this->assertEquals('2019-12-21', $data['due_date']);
     }
 
     public function testDebts()

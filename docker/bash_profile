@@ -118,6 +118,12 @@ dd-behat-run()
     dd-mode-dev
 }
 
+dd-phpstan() {
+  CONTAINER=$1
+  shift
+  docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm ${CONTAINER} bin/phpstan analyse $@ --memory-limit=0 --level=max
+}
+
 # phpunit
 alias dd-phpunit-frontend="docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm frontend bin/phpunit -c tests/phpunit"
 alias dd-phpunit-api="docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm api sh scripts/apiunittest.sh"
