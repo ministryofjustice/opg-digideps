@@ -497,10 +497,18 @@ class IndexController extends AbstractController
                     'reports' => 0,
                 ];
 
+                $carryover = '';
+
                 while (!$stream->eof()) {
-                    $partial = $stream->read(8192);
+                    $partial = $carryover . $stream->read(1024);
+                    $carryover = '';
 
                     $lines = explode("\n", $partial);
+
+                    // If partial didn't finish with a newline, carry over the last line
+                    if ($lines[count($lines) - 1] !== '') {
+                        $carryover = array_pop($lines);
+                    }
 
                     foreach ($lines as $line) {
                         if (substr($line, 0, 5) === 'PROG ' && $outputStreamResponse) {
