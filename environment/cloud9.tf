@@ -1,8 +1,19 @@
-resource "aws_security_group_rule" "api_rds_cloud9_in" {
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = 5432
-  to_port           = 5432
-  security_group_id = module.api_rds_security_group.id
-  cidr_blocks       = [data.aws_vpc.vpc.cidr_block]
+locals {
+  cloud9_sg_rules = {
+    rds = {
+      port        = 5432
+      protocol    = "tcp"
+      type        = "ingress"
+      target_type = "cidr_block"
+      target      = data.aws_vpc.vpc.cidr_block
+    }
+  }
+}
+
+module "cloud9_security_group" {
+  source = "./security_group"
+  rules  = local.cloud9_sg_rules
+  name   = "cloud9"
+  tags   = local.default_tags
+  vpc_id = data.aws_vpc.vpc.id
 }
