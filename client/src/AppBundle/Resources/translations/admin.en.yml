@@ -125,6 +125,8 @@ uploadUsers:
   heading: Upload users
   usersInTheDB: users in the database
   uploading: Uploading... please wait.<br/>Do not refresh this page
+  incidentsOccurred: "%count% %type% occurred"
+  moreDetails: More details
 
 cancel:
     label: Cancel
