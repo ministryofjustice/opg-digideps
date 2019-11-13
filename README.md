@@ -14,17 +14,17 @@ Clone [opg-file-scanner-service](https://github.com/ministryofjustice/opg-file-s
 - Check `https://digideps.local/` (Deputy area) and `https://admin.digideps.local/` (Admin area). Your browser will warn you about a self-signed certificate.
 - Run `./generate_certs.sh` to populate your certs directory
 
-## Traffic Flow Diagram
-
-![Digideps traffic flow diagram](./docs/traffic_flow_diagram.png)
-
-This diagram can be updated in `traffic_flow_diamgram.puml` and then rendered to PNG using `plantuml ./docs/traffic_flow_diamgram.puml -o ./docs`.
-
 ### Reset the database
 
 ```sh
 docker-compose run --rm api sh scripts/resetdb.sh
 ```
+
+## Traffic Flow Diagram
+
+![Digideps traffic flow diagram](./docs/traffic_flow_diagram.png)
+
+This diagram can be updated in `traffic_flow_diamgram.puml` and then rendered to PNG using `plantuml ./docs/traffic_flow_diamgram.puml -o ./docs`.
 
 ## Terraform installation
 
