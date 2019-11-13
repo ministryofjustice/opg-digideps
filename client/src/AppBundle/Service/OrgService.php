@@ -2,11 +2,7 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\User;
 use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\Client\TokenStorage\RedisStorage;
-use GuzzleHttp\Client;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Twig\Environment;
@@ -19,24 +15,9 @@ class OrgService
     private $restClient;
 
     /**
-     * @var Client
-     */
-    private $client;
-
-    /**
-     * @var RedisStorage
-     */
-    private $tokenStorage;
-
-    /**
      * @var Environment
      */
     private $twig;
-
-    /**
-     * @var Router
-     */
-    private $router;
 
     /**
      * @var Session
@@ -51,13 +32,10 @@ class OrgService
     /**
      * @param RestClient $restClient
      */
-    public function __construct(RestClient $restClient, Client $client, RedisStorage $tokenStorage, Environment $twig, Router $router, Session $session)
+    public function __construct(RestClient $restClient, Environment $twig, Session $session)
     {
         $this->restClient = $restClient;
-        $this->client = $client;
-        $this->tokenStorage = $tokenStorage;
         $this->twig = $twig;
-        $this->router = $router;
         $this->session = $session;
     }
 
@@ -69,12 +47,11 @@ class OrgService
         $this->outputToStream = $outputToStream;
     }
 
-    protected function generateResponse($request)
+    protected function generateResponse($stream, $redirectUrl)
     {
         $response = new StreamedResponse();
-        $stream = $request->getBody();
 
-        $response->setCallback(function() use ($stream) {
+        $response->setCallback(function() use ($stream, $redirectUrl) {
             $flashBag = $this->session->getFlashBag();
 
             $errors = [];
@@ -144,8 +121,6 @@ class OrgService
                 )
             );
 
-            $redirectUrl = $this->router->generate('admin_org_upload');
-
             if ($this->outputToStream) {
                 echo "REDIR $redirectUrl\n";
                 echo "END\n";
@@ -169,17 +144,19 @@ class OrgService
     /**
      * @param mixed $compressedData
      */
-    public function upload($compressedData, User $currentUser)
+    public function upload($compressedData, $redirectUrl)
     {
-        $request = $this->client->post('org/bulk-add', [
-            'headers' => [
-                'AuthToken' => $this->tokenStorage->get($currentUser->getId())
-            ],
-            'body' => json_encode($compressedData),
-            'timeout' => 600,
-            'stream' => true,
-        ]);
+        $stream = $this->restClient->apiCall(
+            'post',
+            'org/bulk-add',
+            json_encode($compressedData),
+            'raw',
+            [
+                'timeout' => 600,
+                'stream' => true,
+            ]
+        );
 
-        return $this->generateResponse($request);
+        return $this->generateResponse($stream, $redirectUrl);
     }
 }
