@@ -421,167 +421,180 @@ class IndexController extends AbstractController
      */
     public function uploadOrgUsersAction(Request $request)
     {
-        $chunkSize = 100;
-
         $form = $this->createForm(FormDir\UploadCsvType::class, null, [
             'method' => 'POST',
         ]);
 
         $form->handleRequest($request);
 
+        $outputStreamResponse = isset($_GET['ajax']);
+
         if ($form->isValid()) {
-            $fileName = $form->get('file')->getData();
+            try {
+                $fileName = $form->get('file')->getData();
 
-            $data = (new CsvToArray($fileName, false))
-                ->setExpectedColumns([
-                    'Deputy No',
-                    //'Pat Create', 'Dship Create', //should hold reg date / Cour order date, but no specs given yet
-                    'Dep Postcode',
-                    'Dep Forename',
-                    'Dep Surname',
-                    'Dep Type', // 23 = PA (but not confirmed)
-                    'Dep Adrs1',
-                    'Dep Adrs2',
-                    'Dep Adrs3',
-                    'Dep Postcode',
-                    'Email', //mandatory, used as user ID whem uploading
-                    'Case', //case number, used as ID when uploading
-                    'Forename', 'Surname', //client forename and surname
-                    'Corref',
-                    'Typeofrep',
-                    'Last Report Day',
-                ])
-                ->setOptionalColumns([
-                    'Client Adrs1',
-                    'Client Adrs2',
-                    'Client Adrs3',
-                    'Client Postcode',
-                    'Client Phone',
-                    'Client Email',
-                    'Client Date of Birth',
-                ])
-                ->setUnexpectedColumns([
-                    'NDR'
-                ])
-                ->getData();
+                $data = (new CsvToArray($fileName, false))
+                    ->setExpectedColumns([
+                        'Deputy No',
+                        //'Pat Create', 'Dship Create', //should hold reg date / Cour order date, but no specs given yet
+                        'Dep Postcode',
+                        'Dep Forename',
+                        'Dep Surname',
+                        'Dep Type', // 23 = PA (but not confirmed)
+                        'Dep Adrs1',
+                        'Dep Adrs2',
+                        'Dep Adrs3',
+                        'Dep Postcode',
+                        'Email', //mandatory, used as user ID whem uploading
+                        'Case', //case number, used as ID when uploading
+                        'Forename', 'Surname', //client forename and surname
+                        'Corref',
+                        'Typeofrep',
+                        'Last Report Day',
+                    ])
+                    ->setOptionalColumns([
+                        'Client Adrs1',
+                        'Client Adrs2',
+                        'Client Adrs3',
+                        'Client Postcode',
+                        'Client Phone',
+                        'Client Email',
+                        'Client Date of Birth',
+                    ])
+                    ->setUnexpectedColumns([
+                        'NDR'
+                    ])
+                    ->getData();
 
-            $compressedData = CsvUploader::compressData($data);
+                $compressedData = CsvUploader::compressData($data);
 
-            /** @var \GuzzleHttp\Client $client */
-            $client = $this->get('guzzle_json_http_client');
+                /** @var \GuzzleHttp\Client $client */
+                $client = $this->get('guzzle_json_http_client');
 
-            /** @var \AppBundle\Service\Client\TokenStorage\RedisStorage $tokenStorage */
-            $tokenStorage = $this->get('redis_token_storage');
+                /** @var \AppBundle\Service\Client\TokenStorage\RedisStorage $tokenStorage */
+                $tokenStorage = $this->get('redis_token_storage');
 
-            /** @var EntityDir\User $currentUser */
-            $currentUser = $this->getUser();
+                /** @var EntityDir\User $currentUser */
+                $currentUser = $this->getUser();
 
-            $apiRequest = $client->post('org/bulk-add', [
-                'headers' => [
-                    'AuthToken' => $tokenStorage->get($currentUser->getId())
-                ],
-                'body' => json_encode($compressedData),
-                'timeout' => 600,
-                'stream' => true,
-            ]);
+                $apiRequest = $client->post('org/bulk-add', [
+                    'headers' => [
+                        'AuthToken' => $tokenStorage->get($currentUser->getId())
+                    ],
+                    'body' => json_encode($compressedData),
+                    'timeout' => 600,
+                    'stream' => true,
+                ]);
 
-            $outputStreamResponse = isset($_GET['ajax']);
+                $stream = $apiRequest->getBody();
+                $response = new StreamedResponse();
 
-            $stream = $apiRequest->getBody();
-            $response = new StreamedResponse();
+                $response->setCallback(function() use ($stream, $outputStreamResponse, $request) {
+                    $errors = [];
+                    $warnings = [];
+                    $added = [
+                        'prof_users' => 0,
+                        'pa_users' => 0,
+                        'clients' => 0,
+                        'reports' => 0,
+                    ];
 
-            $response->setCallback(function() use ($stream, $outputStreamResponse, $request) {
-                $errors = [];
-                $warnings = [];
-                $added = [
-                    'prof_users' => 0,
-                    'pa_users' => 0,
-                    'clients' => 0,
-                    'reports' => 0,
-                ];
-
-                $carryover = '';
-
-                /** @var \Symfony\Component\HttpFoundation\Session\Session */
-                $session = $request->getSession();
-                $session->getFlashBag();
-
-                while (!$stream->eof()) {
-                    $partial = $carryover . $stream->read(1024);
                     $carryover = '';
 
-                    $lines = explode("\n", $partial);
+                    /** @var \Symfony\Component\HttpFoundation\Session\Session */
+                    $session = $request->getSession();
+                    $session->getFlashBag();
 
-                    // If partial didn't finish with a newline, carry over the last line
-                    if ($lines[count($lines) - 1] !== '') {
-                        $carryover = array_pop($lines);
-                    }
+                    while (!$stream->eof()) {
+                        $partial = $carryover . $stream->read(1024);
+                        $carryover = '';
 
-                    foreach ($lines as $line) {
-                        if (substr($line, 0, 5) === 'PROG ' && $outputStreamResponse) {
-                            echo $line . "\n";
-                            flush();
-                        } else if (substr($line, 0, 4) === 'ERR ') {
-                            $errors[] = substr($line, 4);
-                        } else if (substr($line, 0, 5) === 'WARN ') {
-                            $warnings[] = substr($line, 5);
-                        } else if (substr($line, 0, 4) === 'ADD ') {
-                            list(, $amount, $key) = explode(' ', $line);
-                            $added[strtolower($key)] += $amount;
+                        $lines = explode("\n", $partial);
+
+                        // If partial didn't finish with a newline, carry over the last line
+                        if ($lines[count($lines) - 1] !== '') {
+                            $carryover = array_pop($lines);
                         }
+
+                        foreach ($lines as $line) {
+                            if (substr($line, 0, 5) === 'PROG ' && $outputStreamResponse) {
+                                echo $line . "\n";
+                                flush();
+                            } else if (substr($line, 0, 4) === 'ERR ') {
+                                $errors[] = substr($line, 4);
+                            } else if (substr($line, 0, 5) === 'WARN ') {
+                                $warnings[] = substr($line, 5);
+                            } else if (substr($line, 0, 4) === 'ADD ') {
+                                list(, $amount, $key) = explode(' ', $line);
+                                $added[strtolower($key)] += $amount;
+                            }
+                        }
+
+                        gc_collect_cycles();
                     }
 
-                    gc_collect_cycles();
+                    if (count($errors)) {
+                        $flash = $this->renderView('AppBundle:Admin/Index:_uploadErrorAlert.html.twig', [
+                            'type' => 'errors',
+                            'errors' => $errors,
+                        ]);
+
+                        $this->addFlash('error', $flash);
+                    }
+
+                    if (count($warnings)) {
+                        $flash = $this->renderView('AppBundle:Admin/Index:_uploadErrorAlert.html.twig', [
+                            'type' => 'warnings',
+                            'errors' => $warnings,
+                        ]);
+
+                        $this->addFlash('warning', $flash);
+                    }
+
+                    $this->addFlash(
+                        'notice',
+                        sprintf('Added %d Prof users, %d PA users, %d clients and %d reports. Go to users tab to enable them',
+                            $added['prof_users'],
+                            $added['pa_users'],
+                            $added['clients'],
+                            $added['reports']
+                        )
+                    );
+
+                    $redirectUrl = $this->generateUrl('admin_org_upload');
+
+                    if ($outputStreamResponse) {
+                        echo "REDIR $redirectUrl\n";
+                        echo "END\n";
+                        flush();
+                    } else {
+                        header('Location: '. $redirectUrl);
+                    }
+
+                    die();
+                });
+
+                $response->setStatusCode(200);
+                if ($outputStreamResponse) {
+                    $response->headers->set('X-Accel-Buffering', 'no');
+                    $response->headers->set('Content-Type', 'text/plain; charset=utf-8');
                 }
 
-                if (count($errors)) {
-                    $flash = $this->renderView('AppBundle:Admin/Index:_uploadErrorAlert.html.twig', [
-                        'type' => 'errors',
-                        'errors' => $errors,
-                    ]);
+                return $response;
+            } catch (\Throwable $e) {
+                $message = $e->getMessage();
 
-                    $this->addFlash('error', $flash);
+                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
+                    $message = $e->getData()['message'];
                 }
-
-                if (count($warnings)) {
-                    $flash = $this->renderView('AppBundle:Admin/Index:_uploadErrorAlert.html.twig', [
-                        'type' => 'warnings',
-                        'errors' => $warnings,
-                    ]);
-
-                    $this->addFlash('warning', $flash);
-                }
-
-                $this->addFlash(
-                    'notice',
-                    sprintf('Added %d Prof users, %d PA users, %d clients and %d reports. Go to users tab to enable them',
-                        $added['prof_users'],
-                        $added['pa_users'],
-                        $added['clients'],
-                        $added['reports']
-                    )
-                );
-
-                $redirectUrl = $this->generateUrl('admin_org_upload');
 
                 if ($outputStreamResponse) {
-                    echo "REDIR $redirectUrl\n";
-                    echo "END\n";
-                    flush();
+                    $this->addFlash('error', $message);
+                    die();
                 } else {
-                    header('Location: '. $redirectUrl);
+                    $form->get('file')->addError(new FormError($message));
                 }
-
-                die();
-            });
-
-            $response->setStatusCode(200);
-            if ($outputStreamResponse) {
-                $response->headers->set('X-Accel-Buffering', 'no');
-                $response->headers->set('Content-Type', 'text/plain; charset=utf-8');
             }
-
-            return $response;
         }
 
         return [
