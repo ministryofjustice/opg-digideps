@@ -45,15 +45,32 @@ class OrgController extends RestController
             $chunks = array_chunk($data, 10);
             $chunkCount = count($chunks);
             foreach ($chunks as $i => $chunk) {
-                $start = microtime(true);
-                $pa->addFromCasrecRows($chunk);
+                $out = $pa->addFromCasrecRows($chunk);
                 $em->flush();
                 $em->clear();
+                gc_collect_cycles();
+
                 $progress = $i + 1;
                 echo "PROG $progress $chunkCount\n";
-                gc_collect_cycles();
-                echo "MEM " . memory_get_usage() . "\n";
-                echo "TIME " . (microtime(true) - $start) . "\n";
+
+                foreach($out['errors'] as $error) {
+                    echo "ERR $error\n";
+                    flush();
+                }
+
+                foreach($out['warnings'] as $warning) {
+                    echo "WARN $warning\n";
+                    flush();
+                }
+
+                foreach ($out['added'] as $group => $items) {
+                    if (!empty($items)) {
+                        $count = count($items);
+                        $groupUpper = strtoupper($group);
+                        echo "ADD $count $groupUpper\n";
+                    }
+                }
+
                 flush();
             }
 
