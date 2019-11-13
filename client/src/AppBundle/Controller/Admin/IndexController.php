@@ -7,7 +7,6 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
-use AppBundle\Model\Email;
 use AppBundle\Service\CsvUploader;
 use AppBundle\Service\DataImporter\CsvToArray;
 use AppBundle\Service\OrgService;
@@ -20,7 +19,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * @Route("/admin")
@@ -468,119 +466,15 @@ class IndexController extends AbstractController
 
                 $compressedData = CsvUploader::compressData($data);
 
-                /** @var \GuzzleHttp\Client $client */
-                $client = $this->get('guzzle_json_http_client');
+                /** @var \AppBundle\Service\OrgService $orgService */
+                $orgService = $this->get('org_service');
 
-                /** @var \AppBundle\Service\Client\TokenStorage\RedisStorage $tokenStorage */
-                $tokenStorage = $this->get('redis_token_storage');
+                $orgService->setOutputStream($outputStreamResponse);
 
                 /** @var EntityDir\User $currentUser */
                 $currentUser = $this->getUser();
 
-                $apiRequest = $client->post('org/bulk-add', [
-                    'headers' => [
-                        'AuthToken' => $tokenStorage->get($currentUser->getId())
-                    ],
-                    'body' => json_encode($compressedData),
-                    'timeout' => 600,
-                    'stream' => true,
-                ]);
-
-                $stream = $apiRequest->getBody();
-                $response = new StreamedResponse();
-
-                $response->setCallback(function() use ($stream, $outputStreamResponse, $request) {
-                    $errors = [];
-                    $warnings = [];
-                    $added = [
-                        'prof_users' => 0,
-                        'pa_users' => 0,
-                        'clients' => 0,
-                        'reports' => 0,
-                    ];
-
-                    $carryover = '';
-
-                    /** @var \Symfony\Component\HttpFoundation\Session\Session */
-                    $session = $request->getSession();
-                    $session->getFlashBag();
-
-                    while (!$stream->eof()) {
-                        $partial = $carryover . $stream->read(1024);
-                        $carryover = '';
-
-                        $lines = explode("\n", $partial);
-
-                        // If partial didn't finish with a newline, carry over the last line
-                        if ($lines[count($lines) - 1] !== '') {
-                            $carryover = array_pop($lines);
-                        }
-
-                        foreach ($lines as $line) {
-                            if (substr($line, 0, 5) === 'PROG ' && $outputStreamResponse) {
-                                echo $line . "\n";
-                                flush();
-                            } else if (substr($line, 0, 4) === 'ERR ') {
-                                $errors[] = substr($line, 4);
-                            } else if (substr($line, 0, 5) === 'WARN ') {
-                                $warnings[] = substr($line, 5);
-                            } else if (substr($line, 0, 4) === 'ADD ') {
-                                list(, $amount, $key) = explode(' ', $line);
-                                $added[strtolower($key)] += $amount;
-                            }
-                        }
-
-                        gc_collect_cycles();
-                    }
-
-                    if (count($errors)) {
-                        $flash = $this->renderView('AppBundle:Admin/Index:_uploadErrorAlert.html.twig', [
-                            'type' => 'errors',
-                            'errors' => $errors,
-                        ]);
-
-                        $this->addFlash('error', $flash);
-                    }
-
-                    if (count($warnings)) {
-                        $flash = $this->renderView('AppBundle:Admin/Index:_uploadErrorAlert.html.twig', [
-                            'type' => 'warnings',
-                            'errors' => $warnings,
-                        ]);
-
-                        $this->addFlash('warning', $flash);
-                    }
-
-                    $this->addFlash(
-                        'notice',
-                        sprintf('Added %d Prof users, %d PA users, %d clients and %d reports. Go to users tab to enable them',
-                            $added['prof_users'],
-                            $added['pa_users'],
-                            $added['clients'],
-                            $added['reports']
-                        )
-                    );
-
-                    $redirectUrl = $this->generateUrl('admin_org_upload');
-
-                    if ($outputStreamResponse) {
-                        echo "REDIR $redirectUrl\n";
-                        echo "END\n";
-                        flush();
-                    } else {
-                        header('Location: '. $redirectUrl);
-                    }
-
-                    die();
-                });
-
-                $response->setStatusCode(200);
-                if ($outputStreamResponse) {
-                    $response->headers->set('X-Accel-Buffering', 'no');
-                    $response->headers->set('Content-Type', 'text/plain; charset=utf-8');
-                }
-
-                return $response;
+                return $orgService->upload($compressedData, $currentUser);
             } catch (\Throwable $e) {
                 $message = $e->getMessage();
 

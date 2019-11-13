@@ -1,4 +1,4 @@
 services:
     org_service:
         class:  AppBundle\Service\OrgService
-        arguments: [ "@rest_client" ]
+        arguments: [ "@rest_client", "@guzzle_json_http_client", "@redis_token_storage", "@Twig\\Environment", "@router", "@session" ]
