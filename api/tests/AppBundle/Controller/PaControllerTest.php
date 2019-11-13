@@ -57,18 +57,22 @@ class PaControllerTest extends AbstractTestController
         $data = CsvUploader::compressData(array_fill(0, 30, 'example row'));
 
         $mockOrgService = m::mock(OrgService::class);
-        $mockOrgService->shouldReceive('addFromCasrecRows')->andReturn([
-                'added'    => ['prof_users' => [], 'pa_users' => ['test@gmail.com'], 'clients' => ['12345678', '23456789'], 'reports' => ['12345678-2017-03-04']],
-                'errors'   => ['Error generating row 10'],
-                'warnings' => ['Invalid email in row 21'],
-            ]);
+        /** @var \Mockery\ExpectationInterface $expectation */
+        $expectation = $mockOrgService->shouldReceive('addFromCasrecRows');
+        $expectation->andReturn([
+            'added'    => ['prof_users' => [], 'pa_users' => ['test@gmail.com'], 'clients' => ['12345678', '23456789'], 'reports' => ['12345678-2017-03-04']],
+            'errors'   => ['Error generating row 10'],
+            'warnings' => ['Invalid email in row 21'],
+        ]);
 
         $client = self::createClient([
             'environment' => 'test',
             'debug'       => false,
         ]);
 
-        $client->getContainer()->set('org_service', $mockOrgService);
+        /** @var \Symfony\Component\DependencyInjection\ContainerInterface $container */
+        $container = $client->getContainer();
+        $container->set('org_service', $mockOrgService);
 
         ob_start();
         $client->request(
@@ -84,6 +88,10 @@ class PaControllerTest extends AbstractTestController
 
         $response = ob_get_contents();
         ob_end_clean();
+
+        if (!$response) {
+            throw new \RuntimeException('Stream didn\'t return any content');
+        }
 
         $this->assertStringContainsString('END', $response);
         $this->assertStringContainsString('ERR Error generating row 10', $response);
