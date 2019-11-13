@@ -531,7 +531,7 @@ class IndexController extends AbstractController
                 }
 
                 if (count($errors)) {
-                    $flash = $this->render('AppBundle:Admin/Index:_uploadErrorAlert.html.twig', [
+                    $flash = $this->renderView('AppBundle:Admin/Index:_uploadErrorAlert.html.twig', [
                         'type' => 'errors',
                         'errors' => $errors,
                     ]);
@@ -540,7 +540,7 @@ class IndexController extends AbstractController
                 }
 
                 if (count($warnings)) {
-                    $flash = $this->render('AppBundle:Admin/Index:_uploadErrorAlert.html.twig', [
+                    $flash = $this->renderView('AppBundle:Admin/Index:_uploadErrorAlert.html.twig', [
                         'type' => 'warnings',
                         'errors' => $warnings,
                     ]);
