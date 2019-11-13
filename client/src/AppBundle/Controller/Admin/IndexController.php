@@ -467,10 +467,9 @@ class IndexController extends AbstractController
 
                 $orgService->setOutputStream($outputStreamResponse);
 
-                /** @var EntityDir\User $currentUser */
-                $currentUser = $this->getUser();
+                $redirectUrl = $this->generateUrl('admin_org_upload');
 
-                return $orgService->upload($compressedData, $currentUser);
+                return $orgService->upload($compressedData, $redirectUrl);
             } catch (\Throwable $e) {
                 $message = $e->getMessage();
 
