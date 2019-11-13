@@ -515,14 +515,14 @@ class IndexController extends AbstractController
 
                     foreach ($lines as $line) {
                         if (substr($line, 0, 5) === 'PROG ' && $outputStreamResponse) {
-                            echo $line;
+                            echo $line . "\n";
+                            gc_collect_cycles();
                             flush();
                         } else if (substr($line, 0, 4) === 'ERR ') {
                             $errors[] = substr($line, 4);
                         } else if (substr($line, 0, 5) === 'WARN ') {
                             $warnings[] = substr($line, 5);
                         } else if (substr($line, 0, 4) === 'ADD ') {
-                            echo $line;
                             list(, $amount, $key) = explode(' ', $line);
                             $added[strtolower($key)] += $amount;
                         }
