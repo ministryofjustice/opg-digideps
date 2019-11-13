@@ -482,46 +482,87 @@ class IndexController extends AbstractController
                 'stream' => true,
             ]);
 
-            if (isset($_GET['ajax'])) {
-                $stream = $request->getBody();
-                $response = new StreamedResponse();
+            $outputStreamResponse = isset($_GET['ajax']);
 
-                $response->setCallback(function() use ($stream) {
-                    while (!$stream->eof()) {
-                        echo $stream->read(1024);
-                        flush();
+            $stream = $request->getBody();
+            $response = new StreamedResponse();
+
+            $response->setCallback(function() use ($stream, $outputStreamResponse) {
+                $errors = [];
+                $warnings = [];
+                $added = [
+                    'prof_users' => 0,
+                    'pa_users' => 0,
+                    'clients' => 0,
+                    'reports' => 0,
+                ];
+
+                while (!$stream->eof()) {
+                    $partial = $stream->read(8192);
+
+                    $lines = explode("\n", $partial);
+
+                    foreach ($lines as $line) {
+                        if (substr($line, 0, 5) === 'PROG ' && $outputStreamResponse) {
+                            echo $line;
+                            flush();
+                        } else if (substr($line, 0, 4) === 'ERR ') {
+                            $errors[] = substr($line, 4);
+                        } else if (substr($line, 0, 5) === 'WARN ') {
+                            $warnings[] = substr($line, 5);
+                        } else if (substr($line, 0, 4) === 'ADD ') {
+                            echo $line;
+                            list(, $amount, $key) = explode(' ', $line);
+                            $added[strtolower($key)] += $amount;
+                        }
                     }
-                });
+                }
 
-                $response->setStatusCode(200);
-                $response->headers->set('X-Accel-Buffering', 'no');
-                $response->headers->set('Content-Type', 'text/plain; charset=utf-8');
-
-                return $response;
-            } else {
-                $stream = $request->getBody();
-                $response = new StreamedResponse();
-
-                $response->setCallback(function() use ($stream, $form) {
-                    while (!$stream->eof()) {
-                        $stream->read(1024);
-                        flush();
-                    }
-
-                    echo $this->render('AppBundle:Admin/Index:uploadOrgUsers.html.twig', [
-                        'nOfChunks'     => null,
-                        'form'          => $form->createView(),
-                        'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
+                if (count($errors)) {
+                    $flash = $this->render('AppBundle:Admin/Index:_uploadErrorAlert.html.twig', [
+                        'type' => 'errors',
+                        'errors' => $errors,
                     ]);
 
-                    flush();
-                });
+                    $this->addFlash('error', $flash);
+                }
 
-                $response->setStatusCode(200);
+                if (count($warnings)) {
+                    $flash = $this->render('AppBundle:Admin/Index:_uploadErrorAlert.html.twig', [
+                        'type' => 'warnings',
+                        'errors' => $warnings,
+                    ]);
 
-                return $response;
+                    $this->addFlash('info', $flash);
+                }
+
+                $this->addFlash(
+                    'notice',
+                    sprintf('Added %d Prof users, %d PA users, %d clients and %d reports. Go to users tab to enable them',
+                        $added['prof_users'],
+                        $added['pa_users'],
+                        $added['clients'],
+                        $added['reports'],
+                    )
+                );
+
+                $redirectUrl = $this->generateUrl('admin_org_upload');
+
+                if ($outputStreamResponse) {
+                    echo 'REDIR ' . $redirectUrl;
+                    echo 'END';
+                } else {
+                    header('Location: '. $redirectUrl);
+                }
+            });
+
+            $response->setStatusCode(200);
+            if ($outputStreamResponse) {
+                $response->headers->set('X-Accel-Buffering', 'no');
+                $response->headers->set('Content-Type', 'text/plain; charset=utf-8');
             }
 
+            return $response;
         }
 
         return [
