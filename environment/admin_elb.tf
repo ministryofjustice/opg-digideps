@@ -5,9 +5,7 @@ resource "aws_lb" "admin" {
   subnets            = data.aws_subnet.public.*.id
   idle_timeout       = 300
 
-  security_groups = [
-    module.admin_elb_security_group.id,
-  ]
+  security_groups = [module.admin_elb_security_group.id]
 
   tags = merge(
     local.default_tags,
