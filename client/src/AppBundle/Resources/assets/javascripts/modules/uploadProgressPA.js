@@ -1,41 +1,45 @@
-/* globals $ */
+/* globals $, FormData */
 var uploadProgressPA = function (element) {
-  // check if exists
-  if ($(element).length === 1) {
-    var nOfChunks = $(element).attr('max') - 1
+  var $form = $(element)
+  var $progress = $form.find('progress')
+  var $button = $form.find('.govuk-button')
 
-    $(window).on('load', function () {
-      setTimeout(function () {
-        uploadChunk(0, nOfChunks, element)
-      }, 50)
+  $button.on('click', (event) => {
+    event.preventDefault()
+
+    var redirectUrl = window.location.href
+    var submitUrl = $form.attr('action') || window.location.href
+
+    $progress.removeClass('hidden')
+    $button.prop('disabled', true)
+
+    $.ajax({
+      url: submitUrl + '?ajax=1',
+      type: 'POST',
+      data: new FormData($form[0]),
+      processData: false,
+      contentType: false,
+      xhrFields: {
+        onprogress: function (e) {
+          const lines = e.currentTarget.response.split('\n')
+
+          lines.forEach(line => {
+            const log = line.split(' ')
+            const command = log.shift()
+
+            if (command === 'PROG') {
+              $progress.val(parseInt(log[0]) / parseInt(log[1]))
+            } else if (command === 'REDIR') {
+              redirectUrl = log[0]
+            }
+          })
+        }
+      }
+    }).done(function () {
+      $progress.val(1)
+      window.location.href = redirectUrl
     })
-  }
-}
-
-var uploadChunk = function (currentChunk, nOfChunks, element) {
-  var csvType = $(element).data('csv-type')
-  var adminPaUploadUrl = $(element).data('path-admin-pa-upload')
-  var paAddAjaxUrl = $(element).data('path-pa-add-ajax')
-
-  if (currentChunk === nOfChunks + 1) {
-    window.location.href = adminPaUploadUrl
-    return
-  }
-
-  $.ajax({
-    url: paAddAjaxUrl + '?csvType=' + csvType + '&chunk=' + currentChunk,
-    method: 'POST',
-    async: false,
-    dataType: 'json',
-    success: function (data) {
-      $(element).val(currentChunk)
-    }
   })
-
-  // launch next
-  setTimeout(function () {
-    uploadChunk(currentChunk + 1, nOfChunks, element)
-  }, 100)
 }
 
 module.exports = uploadProgressPA
