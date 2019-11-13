@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Repository;
 
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Debt as ReportDebt;
 use AppBundle\Entity\Report\Fee as ReportFee;
 use AppBundle\Entity\Report\MoneyShortCategory as ReportMoneyShortCategory;
@@ -20,6 +21,9 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class ReportRepository extends EntityRepository
 {
+    /** @var QueryBuilder */
+    private $qb;
+
     const USER_DETERMINANT = 1;
     const ORG_DETERMINANT = 2;
 
@@ -136,55 +140,92 @@ class ReportRepository extends EntityRepository
      */
     public function getAllByDeterminant($id, $determinant, ParameterBag $query, $select, $status = null)
     {
-        $qb = $this->createQueryBuilder('r');
-        $qb
+        $this->qb = $this->createQueryBuilder('r');
+        $this->qb
             ->select(($select === 'count') ? 'COUNT(DISTINCT r)' : 'r,c')
             ->leftJoin('r.client', 'c');
 
         if ($determinant === self::USER_DETERMINANT) {
-            $qb->leftJoin('c.users', 'u')->where('u.id = ' . $id);
+            $this->qb->leftJoin('c.users', 'u')->where('u.id = ' . $id);
         } else {
-            $qb->leftJoin('c.organisation', 'o')->where('o.isActivated = true AND o.id = ' . $id);
+            $this->qb->leftJoin('c.organisation', 'o')->where('o.isActivated = true AND o.id = ' . $id);
         }
 
-        $qb
+        $this->qb
             ->andWhere('c.archivedAt IS NULL')
             ->andWhere('r.submitted = false OR r.submitted is null');
 
-        if ($q = $query->get('q')) {
-            $qb->andWhere('lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike OR lower(c.caseNumber) = :q');
-            $qb->setParameter('qLike', '%' . strtolower($q) . '%');
-            $qb->setParameter('q', strtolower($q));
+        if ($searchTerm = $query->get('q')) {
+            $this->handleSearchTermFilter($searchTerm);
         }
 
         $endOfToday = new \DateTime('today midnight');
 
         if ($status === Report::STATUS_READY_TO_SUBMIT) {
-            $qb->andWhere('r.reportStatusCached = :status AND r.endDate < :endOfToday')
+            $this->qb->andWhere('r.reportStatusCached = :status AND r.endDate < :endOfToday')
                 ->setParameter('status', $status)
                 ->setParameter('endOfToday', $endOfToday);
         } else if ($status === Report::STATUS_NOT_FINISHED) {
-            $qb->andWhere('r.reportStatusCached = :status OR (r.reportStatusCached = :readyToSubmit AND r.endDate >= :endOfToday)')
+            $this->qb->andWhere('r.reportStatusCached = :status OR (r.reportStatusCached = :readyToSubmit AND r.endDate >= :endOfToday)')
                 ->setParameter('status', $status)
                 ->setParameter('readyToSubmit', Report::STATUS_READY_TO_SUBMIT)
                 ->setParameter('endOfToday', $endOfToday);
         } else if ($status === Report::STATUS_NOT_STARTED) {
-            $qb->andWhere('r.reportStatusCached = :status')
+            $this->qb->andWhere('r.reportStatusCached = :status')
                 ->setParameter('status', $status);
         }
 
         if ($select === 'count') {
-            return $qb->getQuery()->getSingleScalarResult();
+            return $this->qb->getQuery()->getSingleScalarResult();
         }
 
-        $qb
+        $this->qb
             ->setFirstResult($query->get('offset', 0))
             ->setMaxResults($query->get('limit', 15))
             ->addOrderBy('r.endDate', 'ASC')
             ->addOrderBy('c.caseNumber', 'ASC');
 
-        $result = $qb->getQuery()->getArrayResult();
+        $result = $this->qb->getQuery()->getArrayResult();
 
         return count($result) === 0 ? null : $result;
+    }
+
+    /**
+     * @param $searchTerm
+     */
+    private function handleSearchTermFilter($searchTerm): void
+    {
+        if (Client::isValidCaseNumber($searchTerm)) {
+            $this->qb->andWhere('lower(c.caseNumber) = :cn');
+            $this->qb->setParameter('cn', strtolower($searchTerm));
+        } else {
+
+            $searchTerms = explode(' ', $searchTerm);
+
+            if (count($searchTerms) === 1) {
+                $this->addBroadMatchFilter($searchTerm);
+            } else {
+                $this->addFullNameExactMatchFilter($searchTerms[0], $searchTerms[1]);
+            }
+        }
+    }
+
+    /**
+     * @param $query
+     */
+    private function addBroadMatchFilter($query): void
+    {
+        $this->qb->andWhere('lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike ');
+        $this->qb->setParameter('qLike', '%' . strtolower($query) . '%');
+    }
+
+    /**
+     * @param string $firstName
+     * @param string $lastname
+     */
+    private function addFullNameExactMatchFilter(string $firstName, string $lastname): void
+    {
+        $this->qb->andWhere('(lower(c.firstname) = :firstname AND lower(c.lastname) = :lastname)');
+        $this->qb->setParameters(['firstname' => strtolower($firstName), 'lastname' => strtolower($lastname),]);
     }
 }
