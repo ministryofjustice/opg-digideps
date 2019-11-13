@@ -3,8 +3,8 @@
 namespace Tests\AppBundle\Controller;
 
 use AppBundle\Service\CsvUploader;
-
-use Tests\AppBundle\Service\OrgServiceTest;
+use AppBundle\Service\OrgService;
+use Mockery as m;
 
 class PaControllerTest extends AbstractTestController
 {
@@ -54,23 +54,41 @@ class PaControllerTest extends AbstractTestController
 
     public function testAddBulk()
     {
-        // add
-        $data = $this->assertJsonRequest('POST', '/org/bulk-add', [
-            'data' => CsvUploader::compressData(
-                [
-                    ['Dep Type'=>23] + OrgServiceTest::$deputy1 + OrgServiceTest::$client1,
-                    ['Dep Type'=>21] + OrgServiceTest::$deputy2 + OrgServiceTest::$client2
-                ]
-            ),
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenAdmin,
-        ])['data'];
+        $data = CsvUploader::compressData(array_fill(0, 30, 'example row'));
 
-        $this->assertEmpty($data['errors'], implode(',', $data['errors']));
-        $this->assertEmpty($data['warnings'], implode(',', $data['warnings']));
-        $this->assertEquals('dep1@provider.com', $data['added']['pa_users'][0]);
-        $this->assertEquals('dep2@provider.com', $data['added']['prof_users'][0]);
-        $this->assertEquals('00001111', $data['added']['clients'][0]);
-        $this->assertEquals('00001111-2014-12-16', $data['added']['reports'][0]);
+        $mockOrgService = m::mock(OrgService::class);
+        $mockOrgService->shouldReceive('addFromCasrecRows')->andReturn([
+                'added'    => ['prof_users' => [], 'pa_users' => ['test@gmail.com'], 'clients' => ['12345678', '23456789'], 'reports' => ['12345678-2017-03-04']],
+                'errors'   => ['Error generating row 10'],
+                'warnings' => ['Invalid email in row 21'],
+            ]);
+
+        $client = self::createClient([
+            'environment' => 'test',
+            'debug'       => false,
+        ]);
+
+        $client->getContainer()->set('org_service', $mockOrgService);
+
+        ob_start();
+        $client->request(
+            'POST',
+            '/org/bulk-add',
+            [], [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AuthToken' => self::$tokenAdmin,
+            ],
+            json_encode($data) ?: null
+        );
+
+        $response = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertStringContainsString('END', $response);
+        $this->assertStringContainsString('ERR Error generating row 10', $response);
+        $this->assertStringContainsString('WARN Invalid email in row 21', $response);
+        $this->assertStringContainsString('ADD 2 CLIENTS', $response);
+        $this->assertStringContainsString('ADD 1 REPORTS', $response);
     }
 }
