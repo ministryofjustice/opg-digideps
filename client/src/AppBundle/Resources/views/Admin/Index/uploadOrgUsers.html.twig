@@ -15,62 +15,22 @@
 
 {% block pageContent %}
 
-    {% if nOfChunks %}
+    <h2 class="govuk-heading-m">{{ (page ~ '.heading') | trans }}</h2>
 
-        <p class="text">{{ (page ~ '.uploading') | trans | raw }}</p>
+    {{ form_errors(form) }}
 
-        <progress id="uploadProgress" value="0" max="{{ nOfChunks }}" data-path-admin-pa-upload="{{ path('admin_org_upload') }}" data-path-pa-add-ajax="{{ path('org_add_ajax') }}" class="js-upload-progress-pa"/>
+    {{ form_start(form, {attr: {'data-module': 'csv-upload-progress', novalidate: 'novalidate' }}) }}
 
-    {% else %}
+    {{ form_input(form.file, 'uploadPA.upload', {
+        'inputClass': 'no-border'
+    }) }}
 
-        <h2 class="heading-medium">{{ (page ~ '.heading') | trans }}</h2>
+    {{ form_submit(form.upload, 'uploadPA.submit') }}
 
-        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+    <div class="govuk-form-group">
+        <progress value="0" min="0" max="1" class="hidden"></progress>
+    </div>
 
-        {{ form_input(form.file, '', {
-            'labelText': 'Select CSV file',
-            'inputClass': 'no-border'
-        }) }}
-
-        {{ form_submit(form.upload, '', {'labelText': 'Upload PA/Prof users'}) }}
-
-        <progress id="uploadProgress" value="0" min="0" max="1" />
-
-        {{ form_end(form) }}
-
-        <script>
-            $button = document.querySelector('#admin_upload_upload');
-            $progress = document.querySelector('#uploadProgress');
-
-            $button.addEventListener('click', (event) => {
-                event.preventDefault();
-
-                var formData = new FormData(document.querySelector('form'));
-
-                fetch('{{ path('admin_org_upload') }}?ajax=1', { method: 'POST', body: formData })
-                    .then(response => {
-                        const reader = response.body.getReader();
-
-                        readPartial = (result) => {
-                            if (result.done) {
-                                $progress.value = 1;
-                                return;
-                            }
-
-                            const log = new TextDecoder("utf-8").decode(result.value).split(' ');
-
-                            if (log[0] === 'PROG') {
-                                $progress.value = parseInt(log[1]) / parseInt(log[2]);
-                            }
-
-                            reader.read().then(readPartial); //recurse through the stream
-                        }
-
-                        reader.read().then(readPartial);
-                    });
-            });
-        </script>
-
-    {% endif %}
+    {{ form_end(form) }}
 
 {% endblock %}
