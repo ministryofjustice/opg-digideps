@@ -581,9 +581,7 @@ class IndexController extends AbstractController
         }
 
         return [
-            'nOfChunks'      => $request->get('nOfChunks'),
-            'form'          => $form->createView(),
-            'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
+            'form' => $form->createView(),
         ];
     }
 
