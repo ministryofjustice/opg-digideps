@@ -469,11 +469,11 @@ class IndexController extends AbstractController
                 /** @var \AppBundle\Service\OrgService $orgService */
                 $orgService = $this->get('org_service');
 
-                $orgService->setOutputStream($outputStreamResponse);
+                $orgService->setLogging($outputStreamResponse);
 
                 $redirectUrl = $this->generateUrl('admin_org_upload');
 
-                return $orgService->upload($compressedData, $redirectUrl);
+                return $orgService->process($compressedData, $redirectUrl);
             } catch (\Throwable $e) {
                 $message = $e->getMessage();
 
