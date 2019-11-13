@@ -516,7 +516,6 @@ class IndexController extends AbstractController
                     foreach ($lines as $line) {
                         if (substr($line, 0, 5) === 'PROG ' && $outputStreamResponse) {
                             echo $line . "\n";
-                            gc_collect_cycles();
                             flush();
                         } else if (substr($line, 0, 4) === 'ERR ') {
                             $errors[] = substr($line, 4);
@@ -527,6 +526,8 @@ class IndexController extends AbstractController
                             $added[strtolower($key)] += $amount;
                         }
                     }
+
+                    gc_collect_cycles();
                 }
 
                 if (count($errors)) {
