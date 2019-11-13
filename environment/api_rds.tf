@@ -26,9 +26,7 @@ resource "aws_db_instance" "api" {
   username                = "digidepsmaster"
   password                = data.aws_secretsmanager_secret_version.database_password.secret_string
 
-  vpc_security_group_ids = [
-    module.api_rds_security_group.id,
-  ]
+  vpc_security_group_ids = [module.api_rds_security_group.id]
 
   tags = merge(
     local.default_tags,
