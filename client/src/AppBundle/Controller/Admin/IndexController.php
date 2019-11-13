@@ -548,7 +548,7 @@ class IndexController extends AbstractController
                         'errors' => $warnings,
                     ]);
 
-                    $this->addFlash('info', $flash);
+                    $this->addFlash('warning', $flash);
                 }
 
                 $this->addFlash(
@@ -570,6 +570,8 @@ class IndexController extends AbstractController
                 } else {
                     header('Location: '. $redirectUrl);
                 }
+
+                die();
             });
 
             $response->setStatusCode(200);
