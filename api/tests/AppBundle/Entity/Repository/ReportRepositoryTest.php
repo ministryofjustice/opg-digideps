@@ -44,7 +44,7 @@ class ReportRepositoryTest extends WebTestCase
     {
         $this->mockEm = m::mock(EntityManagerInterface::class);
         $this->mockMetaClass = m::mock(ClassMetadata::class);
-        $this->mockReport = m::mock(ReportInterface::class);
+        $this->mockReport = m::mock(Report::class);
         $this->mockClient = m::mock(ClientInterface::class);
 
         $this->mockReport->shouldReceive('getClient')
