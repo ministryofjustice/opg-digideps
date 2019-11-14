@@ -54,12 +54,9 @@ class ReportRepository extends EntityRepository
     }
 
     /**
-     * add empty Fees to Report.
-     * Called from doctrine listener.
-     *
-     * @param Report $report
-     *
-     * @return int changed records
+     * @param ReportInterface $report
+     * @return int|void
+     * @throws \Doctrine\ORM\ORMException
      */
     public function addFeesToReportIfMissing(ReportInterface $report)
     {
@@ -114,7 +111,7 @@ class ReportRepository extends EntityRepository
 
     /**
      * @param array $caseNumbers
-     * @param $role
+     * @param string $role
      * @return mixed
      */
     public function findAllActiveReportsByCaseNumbersAndRole(array $caseNumbers, $role)
@@ -131,14 +128,14 @@ class ReportRepository extends EntityRepository
 
     /**
      * @param $id
-     * @param $determinant
+     * @param int $determinant
      * @param ParameterBag $query
-     * @param $select
-     * @param null $status
+     * @param string $select
+     * @param string|null $status
      * @return array|mixed|null
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getAllByDeterminant($id, $determinant, ParameterBag $query, $select, $status = null)
+    public function getAllByDeterminant($id, $determinant, ParameterBag $query, $select, $status)
     {
         $this->qb = $this->createQueryBuilder('r');
         $this->qb
@@ -191,7 +188,7 @@ class ReportRepository extends EntityRepository
     }
 
     /**
-     * @param $searchTerm
+     * @param string $searchTerm
      */
     private function handleSearchTermFilter($searchTerm): void
     {
@@ -211,7 +208,7 @@ class ReportRepository extends EntityRepository
     }
 
     /**
-     * @param $query
+     * @param string $query
      */
     private function addBroadMatchFilter($query): void
     {

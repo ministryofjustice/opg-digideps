@@ -82,7 +82,7 @@ class Fee
      * @param Report $report
      * @param string $feeTypeId
      * @param bool   $hasMoreDetails
-     * @param float  $amount
+     * @param float|null  $amount
      */
     public function __construct(ReportInterface $report, $feeTypeId, $amount)
     {

@@ -89,7 +89,7 @@ class Debt
      * @param Report $report
      * @param string $debtTypeId
      * @param bool   $hasMoreDetails
-     * @param float  $amount
+     * @param float|null  $amount
      */
     public function __construct(Report $report, $debtTypeId, $hasMoreDetails, $amount)
     {

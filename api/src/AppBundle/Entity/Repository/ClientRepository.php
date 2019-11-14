@@ -5,7 +5,9 @@ namespace AppBundle\Entity\Repository;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\ORM\QueryBuilder;
+use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 
 /**
  * ClientRepository.
@@ -29,8 +31,11 @@ class ClientRepository extends EntityRepository
      *
      * @return Client[]|array
      */
-    public function searchClients($query = '', $orderBy = 'lastname', $sortOrder = 'ASC', $limit = 100, $offset = '0')
+    public function searchClients($query = '', $orderBy = 'lastname', $sortOrder = 'ASC', $limit = 100, $offset = 0)
     {
+        /** @var SoftDeleteableFilter $filter */
+        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+
         $this->qb = $this->createQueryBuilder('c');
 
         if ($query) {
@@ -39,17 +44,17 @@ class ClientRepository extends EntityRepository
 
         $limit = ($limit <= 100) ? $limit : 100;
         $this->qb->setMaxResults($limit);
-        $this->qb->setFirstResult($offset);
+        $this->qb->setFirstResult((int)$offset);
         $this->qb->orderBy('c.' . $orderBy, $sortOrder);
 
-        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class); //disable softdelete for createdBy, needed from admin area
+        $filter->disableForEntity(Client::class);
         $this->_em->getFilters()->enable('softdeleteable');
 
         return $this->qb->getQuery()->getResult();
     }
 
     /**
-     * @param $searchTerm
+     * @param string $searchTerm
      */
     private function handleSearchTermFilter($searchTerm): void
     {
@@ -69,7 +74,7 @@ class ClientRepository extends EntityRepository
     }
 
     /**
-     * @param $query
+     * @param string $query
      */
     private function addBroadMatchFilter($query): void
     {
@@ -105,7 +110,7 @@ class ClientRepository extends EntityRepository
 
     /**
      * @param User $user
-     * @param $clientId
+     * @param int $clientId
      * @throws \Doctrine\DBAL\DBALException
      */
     public function saveUserToClient(User $user, $clientId)
@@ -120,7 +125,7 @@ class ClientRepository extends EntityRepository
 
     /**
      * @param User $user
-     * @param $teamId
+     * @param int $teamId
      * @throws \Doctrine\DBAL\DBALException
      */
     public function saveUserToTeam(User $user, $teamId)
@@ -134,7 +139,7 @@ class ClientRepository extends EntityRepository
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @return null
      */
     public function getArrayById($id)

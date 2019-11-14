@@ -12,7 +12,7 @@ class UserRepository extends AbstractEntityRepository
     private $qb;
 
     /**
-     * @param $id
+     * @param int $id
      * @return null|array
      */
     public function findUserArrayById($id)
