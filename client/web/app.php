@@ -1,6 +1,5 @@
 <?php
 
-use Symfony\Component\Debug\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
 function empty_shutdown() {
@@ -11,8 +10,6 @@ function empty_shutdown() {
 }
 
 register_shutdown_function('empty_shutdown');
-
-Debug::enable();
 
 $loader = require __DIR__ . '/../vendor/autoload.php';
 
