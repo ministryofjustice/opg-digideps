@@ -126,6 +126,7 @@ locals {
       { "name": "REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" },
       { "name": "DATABASE_PORT", "value": "${aws_db_instance.api.port}" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
+      { "name": "OPG_NGINX_INDEX", "value": "app_dev.php" },
       { "name": "SECRETS_ADMIN_PERMISSIONS", "value": "[ROLE_ADMIN, ROLE_AD, ROLE_CASE_MANAGER]" },
       { "name": "DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
       { "name": "DATABASE_NAME", "value": "${aws_db_instance.api.name}" },
@@ -137,4 +138,3 @@ locals {
 EOF
 
 }
-
