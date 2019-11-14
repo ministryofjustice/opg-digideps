@@ -34,13 +34,14 @@ class IndexController extends AbstractController
     public function indexAction(Request $request)
     {
         $filters = [
-            'limit'       => 100,
-            'offset'      => $request->get('offset', 'id'),
-            'role_name'   => '',
-            'q'           => '',
-            'ndr_enabled' => '',
-            'order_by'    => 'registrationDate',
-            'sort_order'  => 'DESC',
+            'limit'           => 100,
+            'offset'          => $request->get('offset', 'id'),
+            'role_name'       => '',
+            'q'               => '',
+            'ndr_enabled'     => '',
+            'include_clients' => '',
+            'order_by'        => 'registrationDate',
+            'sort_order'      => 'DESC',
         ];
 
         $form = $this->createForm(FormDir\Admin\SearchType::class, null, ['method' => 'GET']);
