@@ -141,7 +141,7 @@ class Fee
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getAmount()
     {
