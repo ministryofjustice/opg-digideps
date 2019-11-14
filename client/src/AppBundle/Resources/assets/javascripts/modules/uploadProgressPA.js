@@ -23,7 +23,7 @@ var uploadChunk = function (currentChunk, nOfChunks, element) {
   }
 
   $.ajax({
-    url: paAddAjaxUrl + '?csvType=' + csvType + '&chunk =' + currentChunk,
+    url: paAddAjaxUrl + '?csvType=' + csvType + '&chunk=' + currentChunk,
     method: 'POST',
     async: false,
     dataType: 'json',
