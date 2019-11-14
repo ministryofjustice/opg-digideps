@@ -54,16 +54,17 @@ class ReportRepository extends EntityRepository
     }
 
     /**
-     * @param ReportInterface $report
+     * @param Report $report
      * @return int|void
      * @throws \Doctrine\ORM\ORMException
      */
-    public function addFeesToReportIfMissing(ReportInterface $report)
+    public function addFeesToReportIfMissing(Report $report)
     {
         // do not add if there are no PAs associated to this client
         $isPaF = function ($user) {
             return $user->isPaDeputy();
         };
+
         if (0 === $report->getClient()->getUsers()->filter($isPaF)->count()) {
             return;
         }
@@ -127,7 +128,7 @@ class ReportRepository extends EntityRepository
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @param int $determinant
      * @param ParameterBag $query
      * @param string $select

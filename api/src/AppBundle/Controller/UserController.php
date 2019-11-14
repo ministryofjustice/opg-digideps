@@ -6,6 +6,7 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
 use AppBundle\Service\UserService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -170,13 +171,13 @@ class UserController extends RestController
     public function getOneByFilter(Request $request, $what, $filter)
     {
         if ($what == 'email') {
-            /** @var User $user */
+            /** @var User|null $user */
             $user = $this->getRepository(User::class)->findOneBy(['email' => $filter]);
             if (!$user) {
                 throw new \RuntimeException('User not found', 404);
             }
         } elseif ($what == 'case_number') {
-            /** @var Client $client */
+            /** @var Client|null $client */
             $client = $this->getRepository(Client::class)->findOneBy(['caseNumber' => $filter]);
             if (!$client) {
                 throw new \RuntimeException('Client not found', 404);
@@ -186,7 +187,7 @@ class UserController extends RestController
             }
             $user = $client->getUsers()[0];
         } elseif ($what == 'user_id') {
-            /** @var User $user */
+            /** @var User|null $user */
             $user = $this->getRepository(User::class)->find($filter);
             if (!$user) {
                 throw new \RuntimeException('User not found', 419);
@@ -426,7 +427,12 @@ class UserController extends RestController
             throw new \RuntimeException('User not found', 419);
         }
 
-        if ($requestedUser->getTeams()->first() !== $loggedInUser->getTeams()->first()) {
+        /** @var ArrayCollection $requestedUserTeams */
+        $requestedUserTeams = $requestedUser->getTeams();
+
+        /** @var ArrayCollection $loggedInUserTeams */
+        $loggedInUserTeams = $loggedInUser->getTeams();
+        if ($requestedUserTeams->first() !== $loggedInUserTeams->first()) {
             throw $this->createAccessDeniedException('User not part of the same team');
         }
 
@@ -436,6 +442,6 @@ class UserController extends RestController
 
         $this->setJmsSerialiserGroups($groups);
 
-        return $requestedUser->getTeams()->first();
+        return $requestedUserTeams->first();
     }
 }

@@ -27,7 +27,7 @@ class ClientRepository extends EntityRepository
      * @param string $orderBy   field to order by
      * @param string $sortOrder order of field order ASC|DESC
      * @param int    $limit     number of results to return
-     * @param string $offset
+     * @param int $offset
      *
      * @return Client[]|array
      */
@@ -35,6 +35,7 @@ class ClientRepository extends EntityRepository
     {
         /** @var SoftDeleteableFilter $filter */
         $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter->disableForEntity(Client::class);
 
         $this->qb = $this->createQueryBuilder('c');
 
@@ -47,7 +48,6 @@ class ClientRepository extends EntityRepository
         $this->qb->setFirstResult((int)$offset);
         $this->qb->orderBy('c.' . $orderBy, $sortOrder);
 
-        $filter->disableForEntity(Client::class);
         $this->_em->getFilters()->enable('softdeleteable');
 
         return $this->qb->getQuery()->getResult();
@@ -144,13 +144,15 @@ class ClientRepository extends EntityRepository
      */
     public function getArrayById($id)
     {
-        // called by ADMIN users so must include active and inactive orgs
+        /** @var SoftDeleteableFilter $filter */
+        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter->disableForEntity(Client::class);
+
         $query = $this
             ->getEntityManager()
             ->createQuery('SELECT c, r, ndr, o, nd FROM AppBundle\Entity\Client c LEFT JOIN c.reports r LEFT JOIN c.ndr ndr LEFT JOIN c.namedDeputy nd LEFT JOIN c.organisation o WHERE c.id = ?1')
             ->setParameter(1, $id);
 
-        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class);
         $result = $query->getArrayResult();
         $this->_em->getFilters()->enable('softdeleteable');
 

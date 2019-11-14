@@ -57,7 +57,7 @@ class Debt
     private $debtTypeId;
 
     /**
-     * @var float
+     * @var string
      *
      * @JMS\Type("string")
      * @JMS\Groups({"debt"})
@@ -89,9 +89,9 @@ class Debt
      * @param Report $report
      * @param string $debtTypeId
      * @param bool   $hasMoreDetails
-     * @param float|null  $amount
+     * @param string|null  $amount
      */
-    public function __construct(Report $report, $debtTypeId, $hasMoreDetails, $amount)
+    public function __construct(Report $report, $debtTypeId, $hasMoreDetails, $amount = null)
     {
         $this->report = $report;
         $report->addDebt($this);
