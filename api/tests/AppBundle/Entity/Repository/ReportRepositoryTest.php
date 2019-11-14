@@ -2,6 +2,7 @@
 
 namespace Tests\AppBundle\Entity\Repository;
 
+use AppBundle\Entity\Client;
 use AppBundle\Entity\ClientInterface;
 use AppBundle\Entity\Report\Fee;
 use AppBundle\Entity\Report\Report;
@@ -11,6 +12,7 @@ use AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Mockery\LegacyMockInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Tests\Fixtures;
 use Mockery as m;
@@ -24,19 +26,22 @@ class ReportRepositoryTest extends WebTestCase
     private static $repo;
 
     /**
-     * @var ReportRepository
+     * @var ReportRepository | LegacyMockInterface
      */
     private $sut;
 
     /**
-     * @var Report
+     * @var Report | LegacyMockInterface
      */
     private $mockReport;
 
     /**
-     * @var EntityManagerInterface
+     * @var EntityManagerInterface | LegacyMockInterface
      */
     private $mockEm;
+
+    /** @var Client | LegacyMockInterface */
+    private $mockClient;
 
     private $mockMetaClass;
 
