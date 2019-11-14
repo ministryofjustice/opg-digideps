@@ -420,7 +420,7 @@ class UserController extends RestController
         /** @var User $loggedInUser */
         $loggedInUser = $this->getUser();
 
-        /** @var User $requestedUser */
+        /** @var User|null $requestedUser */
         $requestedUser = $this->getRepository(User::class)->find($id);
 
         if (!$requestedUser) {

@@ -57,7 +57,7 @@ class Debt
     private $debtTypeId;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @JMS\Type("string")
      * @JMS\Groups({"debt"})
