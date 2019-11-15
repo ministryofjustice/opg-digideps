@@ -58,11 +58,6 @@ class OrgController extends RestController
                     flush();
                 }
 
-                foreach($out['warnings'] as $warning) {
-                    echo "WARN $warning\n";
-                    flush();
-                }
-
                 foreach ($out['added'] as $group => $items) {
                     if (!empty($items)) {
                         $count = count($items);
