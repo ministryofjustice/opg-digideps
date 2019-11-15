@@ -3,12 +3,14 @@ var uploadProgressPA = function (element) {
   var $form = $(element)
   var $progress = $form.find('progress')
   var $button = $form.find('.govuk-button')
+  var $uploadError = $form.find('[data-js="upload-error"]')
 
   $button.on('click', (event) => {
     event.preventDefault()
 
     var redirectUrl = window.location.href
     var submitUrl = $form.attr('action') || window.location.href
+    var isComplete = false
 
     $progress.removeClass('hidden')
     $button.prop('disabled', true)
@@ -31,13 +33,19 @@ var uploadProgressPA = function (element) {
               $progress.val(parseInt(log[0]) / parseInt(log[1]))
             } else if (command === 'REDIR') {
               redirectUrl = log[0]
+            } else if (command === 'END') {
+              isComplete = true
             }
           })
         }
       }
     }).done(function () {
-      $progress.val(1)
-      window.location.href = redirectUrl
+      if (isComplete) {
+        $progress.val(1)
+        window.location.href = redirectUrl
+      } else {
+        $uploadError.removeClass('hidden')
+      }
     })
   })
 }

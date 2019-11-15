@@ -117,6 +117,7 @@ uploadPA:
   supportTitle: PA/Prof user management
   heading: Upload PA/Prof users along with clients and reports
   uploading: Uploading... please wait.<br/>Do not refresh this page
+  uploadError: An error occured whilst uploading. Some records may not have been updated. Please try again.
   upload:
     label: Select CSV file
   submit:
