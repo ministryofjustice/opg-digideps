@@ -459,8 +459,6 @@ class IndexController extends AbstractController
                     ])
                     ->getData();
 
-                $compressedData = CsvUploader::compressData($data);
-
                 /** @var OrgService $orgService */
                 $orgService = $this->get('org_service');
 
@@ -468,7 +466,7 @@ class IndexController extends AbstractController
 
                 $redirectUrl = $this->generateUrl('admin_org_upload');
 
-                return $orgService->process($compressedData, $redirectUrl);
+                return $orgService->process($data, $redirectUrl);
             } catch (\Throwable $e) {
                 $message = $e->getMessage();
 

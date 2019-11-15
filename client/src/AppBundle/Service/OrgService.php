@@ -3,7 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Service\Client\RestClient;
-use GuzzleHttp\Psr7\Stream;
+use AppBundle\Service\CsvUploader;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Twig\Environment;
@@ -78,25 +78,6 @@ class OrgService
     }
 
     /**
-     * Parse a line of the API output
-     *
-     * @param string $line
-     */
-    protected function parseLine(string $line)
-    {
-        if (substr($line, 0, 5) === 'PROG ') {
-            $this->log($line);
-        } else if (substr($line, 0, 4) === 'ERR ') {
-            $this->output['errors'][] = substr($line, 4);
-        } else if (substr($line, 0, 5) === 'WARN ') {
-            $this->output['warnings'][] = substr($line, 5);
-        } else if (substr($line, 0, 4) === 'ADD ') {
-            list(, $amount, $key) = explode(' ', $line);
-            $this->output['added'][strtolower($key)] += $amount;
-        }
-    }
-
-    /**
      * Set flash messages about results of upload
      */
     protected function addFlashMessages()
@@ -142,10 +123,8 @@ class OrgService
         $response = new StreamedResponse();
         $response->setStatusCode(200);
 
-        if ($this->outputLogging) {
-            $response->headers->set('X-Accel-Buffering', 'no');
-            $response->headers->set('Content-Type', 'text/plain; charset=utf-8');
-        }
+        $response->headers->set('X-Accel-Buffering', 'no');
+        $response->headers->set('Content-Type', 'text/plain; charset=utf-8');
 
         return $response;
     }
@@ -165,64 +144,43 @@ class OrgService
             header('Location: '. $redirectUrl);
             echo ' ';
         }
-    }
-
-    /**
-     * Convert the API stream into suitable output
-     *
-     * @param Stream $stream
-     * @param string $redirectUrl
-     */
-    protected function convertStreamToOutput(Stream $stream, string $redirectUrl)
-    {
-        if ($this->outputLogging) {
-            $this->session->start();
-        }
-
-        $carryover = '';
-
-        while (!$stream->eof()) {
-            $partial = $carryover . $stream->read(1024);
-            $carryover = '';
-
-            $lines = explode("\n", $partial);
-
-            // If partial didn't finish with a newline, carry over the last line
-            if ($lines[count($lines) - 1] !== '') {
-                $carryover = array_pop($lines);
-            }
-
-            foreach ($lines as $line) {
-                $this->parseLine($line);
-            }
-
-            gc_collect_cycles();
-        }
-
-        $this->finishStream($redirectUrl);
 
         die();
     }
 
+    protected function logProgress($index, $total)
+    {
+        $this->log("PROG $index $total");
+    }
+
     /**
-     * @param mixed $data
-     * @return Stream
+     * Add the output of a chunk to service collectorss
+     *
+     * @param array $output
+     */
+    protected function addChunkOutput(array $output)
+    {
+        if (!empty($output['errors'])) {
+            $this->output['errors'] = array_merge($this->output['errors'], $output['errors']);
+        }
+
+        if (!empty($output['added'])) {
+            foreach ($output['added'] as $group => $count) {
+                $this->output['added'][$group] += (int) $count;
+            }
+        }
+    }
+
+    /**
+     * @param string $data
+     * @return array
      */
     public function upload($data)
     {
-        /** @var Stream $stream */
-        $stream = $this->restClient->apiCall(
-            'post',
-            'org/bulk-add',
-            json_encode($data),
-            'raw',
-            [
-                'timeout' => 600,
-                'stream' => true,
-            ]
-        );
+        /** @var array $response */
+        $response = $this->restClient->post('org/bulk-add', $data);
 
-        return $stream;
+        return $response;
     }
 
     /**
@@ -232,12 +190,25 @@ class OrgService
      */
     public function process($data, $redirectUrl)
     {
-        $stream = $this->upload($data);
+        $chunks = array_chunk($data, 100);
 
         $response = $this->generateStreamedResponse();
 
-        $response->setCallback(function() use ($stream, $redirectUrl) {
-            $this->convertStreamToOutput($stream, $redirectUrl);
+        $response->setCallback(function() use ($chunks, $redirectUrl) {
+            $this->session->start();
+
+            $chunkCount = count($chunks);
+
+            foreach ($chunks as $index => $chunk) {
+                $compressedChunk = CsvUploader::compressData($chunk);
+
+                $upload = $this->upload($compressedChunk);
+
+                $this->addChunkOutput($upload);
+                $this->logProgress($index, $chunkCount);
+            }
+
+            $this->finishStream($redirectUrl);
         });
 
         return $response;
