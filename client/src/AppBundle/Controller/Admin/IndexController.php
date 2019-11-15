@@ -12,7 +12,6 @@ use AppBundle\Service\DataImporter\CsvToArray;
 use AppBundle\Service\OrgService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -235,8 +234,6 @@ class IndexController extends AbstractController
      */
     public function deleteConfirmAction($id)
     {
-        /** @var \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker */
-        $authorizationChecker = $this->get('security.authorization_checker');
         $userToDelete = $this->getRestClient()->get("user/{$id}", 'User');
 
         if (!$this->isGranted('ROLE_ADMIN')) {
@@ -466,7 +463,7 @@ class IndexController extends AbstractController
 
                 $compressedData = CsvUploader::compressData($data);
 
-                /** @var \AppBundle\Service\OrgService $orgService */
+                /** @var OrgService $orgService */
                 $orgService = $this->get('org_service');
 
                 $orgService->setLogging($outputStreamResponse);
