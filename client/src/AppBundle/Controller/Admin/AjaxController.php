@@ -3,6 +3,8 @@
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
+use AppBundle\Service\OrgService;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -38,6 +40,7 @@ class AjaxController extends AbstractController
     public function uploadUsersAjaxAction(Request $request)
     {
         $chunkId = 'chunk' . $request->get('chunk');
+        /** @var \Redis $redis */
         $redis = $this->get('snc_redis.default');
 
         try {
@@ -61,16 +64,25 @@ class AjaxController extends AbstractController
      */
     public function uploadPaAjaxAction(Request $request)
     {
-        $chunkId = 'org_chunk' . $request->get('chunk');
-        $redis = $this->get('snc_redis.default');
+        $csvType = $request->get('csvType');
+        $chunkId = strtolower($csvType) .'_org_chunk' . $request->get('chunk');
 
         try {
+            /** @var \Redis $redis */
+            $redis = $this->get('snc_redis.default');
+
             $compressedData = $redis->get($chunkId);
-            if (!$compressedData) {
-                new JsonResponse('Chunk not found', 500);
+            if (!$compressedData || !is_string($compressedData)) {
+                return new JsonResponse('Chunk not found', 500);
             }
 
-            $ret = $this->get('org_service')->uploadAndSetFlashMessages($compressedData, $request->getSession()->getFlashBag());
+            /** @var OrgService $orgService */
+            $orgService = $this->get('org_service');
+            /** @var Session $session */
+            $session = $request->getSession();
+
+            $ret = $orgService->uploadAndSetFlashMessages($compressedData, $session->getFlashBag());
+
 
             $redis->del($chunkId);
 
