@@ -3,6 +3,7 @@ var uploadProgressPA = function (element) {
   var $form = $(element)
   var $progress = $form.find('progress')
   var $button = $form.find('.govuk-button')
+  var $uploadExplanation = $form.find('[data-js="upload-explanation"]')
   var $uploadError = $form.find('[data-js="upload-error"]')
 
   $button.on('click', (event) => {
@@ -13,6 +14,7 @@ var uploadProgressPA = function (element) {
     var isComplete = false
 
     $progress.removeClass('hidden')
+    $uploadExplanation.removeClass('hidden')
     $button.prop('disabled', true)
 
     $.ajax({
