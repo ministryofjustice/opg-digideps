@@ -176,7 +176,7 @@ class OrgService
             $upload = $this->restClient->post('org/bulk-add', $compressedChunk);
 
             $this->storeChunkOutput($upload);
-            $this->logProgress($index, $chunkCount);
+            $this->logProgress($index + 1, $chunkCount);
         }
 
     }
