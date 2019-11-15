@@ -129,8 +129,8 @@ class OrgService
         }
 
         if (!empty($output['added'])) {
-            foreach ($output['added'] as $group => $count) {
-                $this->output['added'][$group] += (int) $count;
+            foreach ($output['added'] as $group => $items) {
+                $this->output['added'][$group] += count($items);
             }
         }
     }
