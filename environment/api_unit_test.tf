@@ -15,26 +15,26 @@ module "api_unit_test" {
 }
 
 locals {
-  api_unit_test_sg_rules = merge(
-    local.common_sg_rules_new,
-    {
-      rds = {
-        port        = 5432
-        protocol    = "tcp"
-        type        = "egress"
-        target_type = "security_group_id"
-        target      = module.api_rds_security_group.id
-      }
-
-      cache = {
-        port        = 6379
-        protocol    = "tcp"
-        type        = "egress"
-        target_type = "security_group_id"
-        target      = module.api_cache_security_group.id
-      }
+  api_unit_test_sg_rules = {
+    ecr  = local.common_sg_rules.ecr
+    logs = local.common_sg_rules.logs
+    s3   = local.common_sg_rules.s3
+    rds = {
+      port        = 5432
+      protocol    = "tcp"
+      type        = "egress"
+      target_type = "security_group_id"
+      target      = module.api_rds_security_group.id
     }
-  )
+
+    cache = {
+      port        = 6379
+      protocol    = "tcp"
+      type        = "egress"
+      target_type = "security_group_id"
+      target      = module.api_cache_security_group.id
+    }
+  }
 }
 
 module "api_unit_test_security_group" {

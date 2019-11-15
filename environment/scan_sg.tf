@@ -1,6 +1,6 @@
 locals {
   scan_sg_rules = {
-    logs = local.common_sg_rules_new.logs,
+    logs = local.common_sg_rules.logs,
     registry_docker_io = {
       port        = 443
       type        = "egress"
