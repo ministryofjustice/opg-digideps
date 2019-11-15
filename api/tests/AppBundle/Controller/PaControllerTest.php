@@ -95,7 +95,6 @@ class PaControllerTest extends AbstractTestController
 
         $this->assertStringContainsString('END', $response);
         $this->assertStringContainsString('ERR Error generating row 10', $response);
-        $this->assertStringContainsString('WARN Invalid email in row 21', $response);
         $this->assertStringContainsString('ADD 2 CLIENTS', $response);
         $this->assertStringContainsString('ADD 1 REPORTS', $response);
     }
