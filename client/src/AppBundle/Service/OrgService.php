@@ -163,6 +163,7 @@ class OrgService
 
         if (!$this->outputLogging) {
             header('Location: '. $redirectUrl);
+            echo ' ';
         }
     }
 
