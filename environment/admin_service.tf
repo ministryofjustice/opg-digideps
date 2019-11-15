@@ -28,7 +28,7 @@ resource "aws_ecs_service" "admin" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.admin.arn
-    container_name   = "admin_service"
+    container_name   = "admin_app"
     container_port   = 443
   }
 
@@ -42,7 +42,7 @@ locals {
     "essential": true,
     "image": "${local.images.client}",
     "mountPoints": [],
-    "name": "admin_service",
+    "name": "admin_app",
     "portMappings": [{
       "containerPort": 443,
       "hostPort": 443,
