@@ -21,7 +21,7 @@ class OrgController extends RestController
      */
     public function addBulk(Request $request)
     {
-        $maxRecords = 1000;
+        $maxRecords = 10000;
 
         ini_set('memory_limit', '1024M');
 

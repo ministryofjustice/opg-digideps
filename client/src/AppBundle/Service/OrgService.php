@@ -164,7 +164,6 @@ class OrgService
 
     /**
      * @param array $chunks
-     * @param string $redirectUrl
      */
     protected function processChunks($chunks)
     {
@@ -196,7 +195,7 @@ class OrgService
         $response->setCallback(function() use ($chunks, $redirectUrl) {
             $this->session->start();
 
-            $this->processChunks($chunks, $redirectUrl);
+            $this->processChunks($chunks);
 
             $this->addFlashMessages();
             $this->finishStream($redirectUrl);
