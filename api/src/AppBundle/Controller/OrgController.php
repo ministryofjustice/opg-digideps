@@ -6,7 +6,6 @@ use AppBundle\Service\CsvUploader;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * @Route("/org")
@@ -22,61 +21,28 @@ class OrgController extends RestController
      */
     public function addBulk(Request $request)
     {
-        /** @var array $data */
+        $maxRecords = 1000;
+
+        ini_set('memory_limit', '1024M');
+
         $data = CsvUploader::decompressData($request->getContent());
         $count = count($data);
-
-        set_time_limit(0);
-        ini_set('memory_limit', '-1');
 
         if (!$count) {
             throw new \RuntimeException('No records received from the API');
         }
+        if ($count > $maxRecords) {
+            throw new \RuntimeException("Max $maxRecords records allowed in a single bulk insert");
+        }
 
-        $response = new StreamedResponse();
-
-        /** @var \Doctrine\ORM\EntityManager $em */
-        $em  = $this->get('em');
-
-        /** @var \AppBundle\Service\OrgService $pa */
         $pa = $this->get('org_service');
 
-        $response->setCallback(function() use ($data, $pa, $em) {
-            $chunks = array_chunk($data, 10);
-            $chunkCount = count($chunks);
-            foreach ($chunks as $i => $chunk) {
-                $out = $pa->addFromCasrecRows($chunk);
-                $em->flush();
-                $em->clear();
-                gc_collect_cycles();
-
-                $progress = $i + 1;
-                echo "PROG $progress $chunkCount\n";
-
-                foreach($out['errors'] as $error) {
-                    echo "ERR $error\n";
-                    flush();
-                }
-
-                foreach ($out['added'] as $group => $items) {
-                    if (!empty($items)) {
-                        $count = count($items);
-                        $groupUpper = strtoupper($group);
-                        echo "ADD $count $groupUpper\n";
-                    }
-                }
-
-                flush();
-            }
-
-            echo "END";
-            flush();
-        });
-
-        $response->setStatusCode(200);
-        $response->headers->set('X-Accel-Buffering', 'no');
-        $response->headers->set('Content-Type', 'text/plain; charset=utf-8');
-
-        return $response;
+        try {
+            $ret = $pa->addFromCasrecRows($data);
+            return $ret;
+        } catch (\Throwable $e) {
+            $added = ['prof_users' => [], 'pa_users' => [], 'clients' => [], 'reports' => []];
+            return ['added'=>$added, 'errors' => [$e->getMessage(), 'warnings'=>[]]];
+        }
     }
 }
