@@ -28,7 +28,7 @@ resource "aws_ecs_service" "front" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.front.arn
-    container_name   = "front_service"
+    container_name   = "front_app"
     container_port   = 443
   }
 
@@ -42,7 +42,7 @@ locals {
     "essential": true,
     "image": "${local.images.client}",
     "mountPoints": [],
-    "name": "front_service",
+    "name": "front_app",
     "portMappings": [{
       "containerPort": 443,
       "hostPort": 443,
