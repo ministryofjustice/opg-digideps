@@ -47,6 +47,8 @@ var uploadProgressPA = function (element) {
         window.location.href = redirectUrl
       } else {
         $uploadError.removeClass('hidden')
+        $uploadExplanation.addClass('hidden')
+        $progress.addClass('hidden')
       }
     })
   })
