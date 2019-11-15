@@ -1,37 +1,37 @@
 locals {
-  admin_sg_rules = merge(
-    local.common_sg_rules_new,
-    {
-      pdf = {
-        port        = 80
-        type        = "egress"
-        protocol    = "tcp"
-        target_type = "security_group_id"
-        target      = module.wkhtmltopdf_security_group.id
-      },
-      api = {
-        port        = 443
-        type        = "egress"
-        protocol    = "tcp"
-        target_type = "security_group_id"
-        target      = module.api_service_security_group.id
-      }
-      cache = {
-        port        = 6379
-        type        = "egress"
-        protocol    = "tcp"
-        target_type = "security_group_id"
-        target      = module.admin_cache_security_group.id
-      }
-      admin_elb = {
-        port        = 443
-        type        = "ingress"
-        protocol    = "tcp"
-        target_type = "security_group_id"
-        target      = module.admin_elb_security_group.id
-      }
+  admin_sg_rules = {
+    ecr  = local.common_sg_rules.ecr
+    logs = local.common_sg_rules.logs
+    s3   = local.common_sg_rules.s3
+    pdf = {
+      port        = 80
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.wkhtmltopdf_security_group.id
     }
-  )
+    api = {
+      port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.api_service_security_group.id
+    }
+    cache = {
+      port        = 6379
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.admin_cache_security_group.id
+    }
+    admin_elb = {
+      port        = 443
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.admin_elb_security_group.id
+    }
+  }
 }
 
 module "admin_service_security_group" {

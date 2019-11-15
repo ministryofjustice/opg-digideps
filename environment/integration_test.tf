@@ -14,25 +14,25 @@ module "integration_test" {
 }
 
 locals {
-  integration_test_sg_rules = merge(
-    local.common_sg_rules_new,
-    {
-      rds = {
-        port        = 5432
-        protocol    = "tcp"
-        type        = "egress"
-        target_type = "security_group_id"
-        target      = module.api_rds_security_group.id
-      }
-      front = {
-        port        = 443
-        protocol    = "tcp"
-        type        = "egress"
-        target_type = "cidr_block"
-        target      = "0.0.0.0/0"
-      }
+  integration_test_sg_rules = {
+    ecr  = local.common_sg_rules.ecr
+    logs = local.common_sg_rules.logs
+    s3   = local.common_sg_rules.s3
+    rds = {
+      port        = 5432
+      protocol    = "tcp"
+      type        = "egress"
+      target_type = "security_group_id"
+      target      = module.api_rds_security_group.id
     }
-  )
+    front = {
+      port        = 443
+      protocol    = "tcp"
+      type        = "egress"
+      target_type = "cidr_block"
+      target      = "0.0.0.0/0"
+    }
+  }
 }
 
 module "integration_test_security_group" {

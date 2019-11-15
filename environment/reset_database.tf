@@ -14,18 +14,18 @@ module "reset_database" {
 }
 
 locals {
-  reset_database_sg_rules = merge(
-    local.common_sg_rules_new,
-    {
-      rds = {
-        port        = 5432
-        protocol    = "tcp"
-        type        = "egress"
-        target_type = "security_group_id"
-        target      = module.api_rds_security_group.id
-      }
+  reset_database_sg_rules = {
+    ecr  = local.common_sg_rules.ecr
+    logs = local.common_sg_rules.logs
+    s3   = local.common_sg_rules.s3
+    rds = {
+      port        = 5432
+      protocol    = "tcp"
+      type        = "egress"
+      target_type = "security_group_id"
+      target      = module.api_rds_security_group.id
     }
-  )
+  }
 }
 
 module "reset_database_security_group" {

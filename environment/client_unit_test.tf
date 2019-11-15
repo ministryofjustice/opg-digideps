@@ -15,7 +15,7 @@ module "client_unit_test" {
 
 module "client_unit_test_security_group" {
   source = "./security_group"
-  rules  = local.common_sg_rules_new
+  rules  = local.common_sg_rules
   name   = "client-unit-test"
   tags   = local.default_tags
   vpc_id = data.aws_vpc.vpc.id

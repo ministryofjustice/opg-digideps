@@ -1,43 +1,44 @@
 locals {
-  front_sg_rules = merge(
-    local.common_sg_rules_new,
-    {
-      cache = {
-        port        = 6379
-        type        = "egress"
-        protocol    = "tcp"
-        target_type = "security_group_id"
-        target      = module.front_cache_security_group.id
-      }
-      api = {
-        port        = 443
-        type        = "egress"
-        protocol    = "tcp"
-        target_type = "security_group_id"
-        target      = module.api_service_security_group.id
-      }
-      pdf = {
-        port        = 80
-        type        = "egress"
-        protocol    = "tcp"
-        target_type = "security_group_id"
-        target      = module.wkhtmltopdf_security_group.id
-      }
-      scan = {
-        port        = 8080
-        type        = "egress"
-        protocol    = "tcp"
-        target_type = "security_group_id"
-        target      = module.scan_security_group.id
-      }
-      front_elb = {
-        port        = 443
-        type        = "ingress"
-        protocol    = "tcp"
-        target_type = "security_group_id"
-        target      = module.front_elb_security_group.id
-      }
-  })
+  front_sg_rules = {
+    ecr  = local.common_sg_rules.ecr
+    logs = local.common_sg_rules.logs
+    s3   = local.common_sg_rules.s3
+    cache = {
+      port        = 6379
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.front_cache_security_group.id
+    }
+    api = {
+      port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.api_service_security_group.id
+    }
+    pdf = {
+      port        = 80
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.wkhtmltopdf_security_group.id
+    }
+    scan = {
+      port        = 8080
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.scan_security_group.id
+    }
+    front_elb = {
+      port        = 443
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.front_elb_security_group.id
+    }
+  }
 }
 
 module "front_service_security_group" {
