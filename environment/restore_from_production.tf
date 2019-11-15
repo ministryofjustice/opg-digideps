@@ -14,18 +14,18 @@ module "restore_from_production" {
 }
 
 locals {
-  restore_from_production_sg_rules = merge(
-    local.common_sg_rules_new,
-    {
-      rds = {
-        port        = 5432
-        protocol    = "tcp"
-        type        = "egress"
-        target_type = "security_group_id"
-        target      = module.api_rds_security_group.id
-      }
+  restore_from_production_sg_rules = {
+    ecr  = local.common_sg_rules.ecr
+    logs = local.common_sg_rules.logs
+    s3   = local.common_sg_rules.s3
+    rds = {
+      port        = 5432
+      protocol    = "tcp"
+      type        = "egress"
+      target_type = "security_group_id"
+      target      = module.api_rds_security_group.id
     }
-  )
+  }
 }
 
 module "restore_from_production_security_group" {

@@ -14,22 +14,7 @@ data "aws_vpc_endpoint" "s3_endpoint" {
 }
 
 locals {
-  //  common_sg_rules = {
-  //    ecr = {
-  //      port              = 443
-  //      security_group_id = data.aws_security_group.ecr_endpoint.id
-  //    },
-  //    logs = {
-  //      port              = 443
-  //      security_group_id = data.aws_security_group.logs_endpoint.id
-  //    },
-  //    s3 = {
-  //      port           = 443
-  //      prefix_list_id = data.aws_vpc_endpoint.s3_endpoint.prefix_list_id
-  //    }
-  //  }
-
-  common_sg_rules_new = {
+  common_sg_rules = {
     ecr = {
       port        = 443
       type        = "egress"
