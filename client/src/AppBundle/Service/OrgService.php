@@ -35,7 +35,6 @@ class OrgService
      */
     private $output = [
         'errors' => [],
-        'warnings' => [],
         'added' => [
             'prof_users' => 0,
             'pa_users' => 0,
@@ -65,6 +64,22 @@ class OrgService
     }
 
     /**
+     * Generate a streamed response
+     *
+     * @return StreamedResponse
+     */
+    protected function generateStreamedResponse()
+    {
+        $response = new StreamedResponse();
+        $response->setStatusCode(200);
+
+        $response->headers->set('X-Accel-Buffering', 'no');
+        $response->headers->set('Content-Type', 'text/plain; charset=utf-8');
+
+        return $response;
+    }
+
+    /**
      * Push some output to the buffer, if enabled
      *
      * @param string $output
@@ -75,6 +90,49 @@ class OrgService
 
         echo $output . "\n";
         flush();
+    }
+
+    /**
+     * @param int $index
+     * @param int $total
+     */
+    protected function logProgress($index, $total)
+    {
+        $this->log("PROG $index $total");
+    }
+
+    /**
+     * Force a redirect and terminate the stream
+     *
+     * @param string $redirectUrl
+     */
+    protected function finishStream($redirectUrl)
+    {
+        $this->log("REDIR $redirectUrl");
+        $this->log('END');
+
+        if (!$this->outputLogging) {
+            header('Location: '. $redirectUrl);
+            echo ' ';
+        }
+    }
+
+    /**
+     * Add the output of a chunk to service collectorss
+     *
+     * @param array $output
+     */
+    protected function storeChunkOutput(array $output)
+    {
+        if (!empty($output['errors'])) {
+            $this->output['errors'] = array_merge($this->output['errors'], $output['errors']);
+        }
+
+        if (!empty($output['added'])) {
+            foreach ($output['added'] as $group => $count) {
+                $this->output['added'][$group] += (int) $count;
+            }
+        }
     }
 
     /**
@@ -93,15 +151,6 @@ class OrgService
             $flashBag->add('error', $flash);
         }
 
-        if (count($this->output['warnings'])) {
-            $flash = $this->twig->render('AppBundle:Admin/Index:_uploadErrorAlert.html.twig', [
-                'type' => 'warnings',
-                'errors' => $this->output['warnings'],
-            ]);
-
-            $flashBag->add('warning', $flash);
-        }
-
         $flashBag->add(
             'notice',
             sprintf('Added %d Prof users, %d PA users, %d clients and %d reports. Go to users tab to enable them',
@@ -114,73 +163,23 @@ class OrgService
     }
 
     /**
-     * Generate a streamed response
-     *
-     * @return StreamedResponse
-     */
-    protected function generateStreamedResponse()
-    {
-        $response = new StreamedResponse();
-        $response->setStatusCode(200);
-
-        $response->headers->set('X-Accel-Buffering', 'no');
-        $response->headers->set('Content-Type', 'text/plain; charset=utf-8');
-
-        return $response;
-    }
-
-    /**
-     * When the API stream has finished, force a redirect
-     *
+     * @param array $chunks
      * @param string $redirectUrl
      */
-    protected function finishStream($redirectUrl)
+    protected function processChunks($chunks)
     {
-        $this->addFlashMessages();
-        $this->log("REDIR $redirectUrl");
-        $this->log('END');
+        $chunkCount = count($chunks);
 
-        if (!$this->outputLogging) {
-            header('Location: '. $redirectUrl);
-            echo ' ';
+        foreach ($chunks as $index => $chunk) {
+            $compressedChunk = CsvUploader::compressData($chunk);
+
+            /** @var array $upload */
+            $upload = $this->restClient->post('org/bulk-add', $compressedChunk);
+
+            $this->storeChunkOutput($upload);
+            $this->logProgress($index, $chunkCount);
         }
 
-        die();
-    }
-
-    protected function logProgress($index, $total)
-    {
-        $this->log("PROG $index $total");
-    }
-
-    /**
-     * Add the output of a chunk to service collectorss
-     *
-     * @param array $output
-     */
-    protected function addChunkOutput(array $output)
-    {
-        if (!empty($output['errors'])) {
-            $this->output['errors'] = array_merge($this->output['errors'], $output['errors']);
-        }
-
-        if (!empty($output['added'])) {
-            foreach ($output['added'] as $group => $count) {
-                $this->output['added'][$group] += (int) $count;
-            }
-        }
-    }
-
-    /**
-     * @param string $data
-     * @return array
-     */
-    public function upload($data)
-    {
-        /** @var array $response */
-        $response = $this->restClient->post('org/bulk-add', $data);
-
-        return $response;
     }
 
     /**
@@ -197,17 +196,9 @@ class OrgService
         $response->setCallback(function() use ($chunks, $redirectUrl) {
             $this->session->start();
 
-            $chunkCount = count($chunks);
+            $this->processChunks($chunks, $redirectUrl);
 
-            foreach ($chunks as $index => $chunk) {
-                $compressedChunk = CsvUploader::compressData($chunk);
-
-                $upload = $this->upload($compressedChunk);
-
-                $this->addChunkOutput($upload);
-                $this->logProgress($index, $chunkCount);
-            }
-
+            $this->addFlashMessages();
             $this->finishStream($redirectUrl);
         });
 
