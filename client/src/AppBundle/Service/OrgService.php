@@ -73,8 +73,14 @@ class OrgService
         $response = new StreamedResponse();
         $response->setStatusCode(200);
 
+        if ($this->outputLogging) {
+            $contentType = 'text/plain';
+        } else {
+            $contentType = 'text/html';
+        }
+
+        $response->headers->set('Content-Type', "$contentType; charset=utf-8");
         $response->headers->set('X-Accel-Buffering', 'no');
-        $response->headers->set('Content-Type', 'text/plain; charset=utf-8');
 
         return $response;
     }
@@ -86,9 +92,12 @@ class OrgService
      */
     protected function log(string $output)
     {
-        if (!$this->outputLogging) return;
+        if ($this->outputLogging) {
+            echo $output . "\n";
+        } else {
+            echo ' ';
+        }
 
-        echo $output . "\n";
         flush();
     }
 
@@ -112,8 +121,7 @@ class OrgService
         $this->log('END');
 
         if (!$this->outputLogging) {
-            header('Location: '. $redirectUrl);
-            echo ' ';
+            echo "<meta http-equiv=\"refresh\" content=\"0;url=$redirectUrl\" />";
         }
     }
 
