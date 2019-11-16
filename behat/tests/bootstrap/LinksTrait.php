@@ -222,4 +222,16 @@ trait LinksTrait
 
         $element->click();
     }
+
+    /**
+     * @Given /^I follow meta refresh$/
+     */
+    public function iFollowMetaRefresh() {
+        while ($refresh = $this->getSession()->getPage()->find('css', 'meta[http-equiv="refresh"]')) {
+            $content = $refresh->getAttribute('content');
+            $url = preg_replace('/^\d+;\s*URL=/i', '', $content);
+            echo $url;
+            $this->getSession()->visit($url);
+        }
+    }
 }
