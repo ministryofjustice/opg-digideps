@@ -13,6 +13,7 @@ var uploadProgressPA = function (element) {
 }
 
 var uploadChunk = function (currentChunk, nOfChunks, element) {
+  var csvType = $(element).data('csv-type')
   var adminPaUploadUrl = $(element).data('path-admin-pa-upload')
   var paAddAjaxUrl = $(element).data('path-pa-add-ajax')
 
@@ -22,7 +23,7 @@ var uploadChunk = function (currentChunk, nOfChunks, element) {
   }
 
   $.ajax({
-    url: paAddAjaxUrl + '?chunk=' + currentChunk,
+    url: paAddAjaxUrl + '?csvType=' + csvType + '&chunk=' + currentChunk,
     method: 'POST',
     async: false,
     dataType: 'json',
