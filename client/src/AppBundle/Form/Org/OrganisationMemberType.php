@@ -38,7 +38,19 @@ class OrganisationMemberType extends AbstractType
                 ]
             ])
             ->add('jobTitle', FormTypes\TextType::class, ['required' => !empty($targetUser)])
-            ->add('phoneMain', FormTypes\TextType::class, ['required' => !empty($targetUser)]);
+            ->add('phoneMain', FormTypes\TextType::class, ['required' => !empty($targetUser)])
+            ->add('roleName', FormTypes\ChoiceType::class, [
+                'choices' => [
+                    'yes' => $options['role_admin'],
+                    'no' => $options['role_member']
+                ],
+                'choice_translation_domain' => 'common',
+                'expanded' => true,
+                'required' => true,
+                'constraints' => [
+                    new Constraints\NotBlank(['message' => 'user.role.notBlankPa']),
+                ]
+            ]);
 
         $builder->add('save', FormTypes\SubmitType::class);
     }
@@ -48,9 +60,10 @@ class OrganisationMemberType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'org-organisation',
             'data_class'         => User::class,
-            'validation_groups'  => ['org_team_add', 'email_same_domain'],
+            'validation_groups'  => ['org_team_add', 'email_same_domain', 'org_team_role_name'],
             'targetUser'         => null
-        ]);
+        ])
+        ->setRequired(['role_admin', 'role_member']);
     }
 
     public function getBlockPrefix()
