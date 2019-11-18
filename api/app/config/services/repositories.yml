@@ -1,9 +1,4 @@
 services:
-  AppBundle\Entity\Repository\ClientRepository:
-    class: AppBundle\Entity\Client
-    factory: ["@doctrine.orm.entity_manager", getRepository]
-    arguments:
-    - AppBundle\Entity\Client
 
   AppBundle\Entity\Repository\UserRepository:
     class: AppBundle\Entity\User
@@ -16,6 +11,16 @@ services:
     factory: ["@doctrine.orm.entity_manager", getRepository]
     arguments:
       - AppBundle\Entity\Report\Report
+    calls:
+      - [setSearchFilter, ["@AppBundle\\Service\\Search\\ClientSearchFilter"]]
+
+  AppBundle\Entity\Repository\ClientRepository:
+    class: AppBundle\Entity\Client
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments:
+      - AppBundle\Entity\Client
+    calls:
+      - [setSearchFilter, ["@AppBundle\\Service\\Search\\ClientSearchFilter"]]
 
   AppBundle\Entity\Repository\OrganisationRepository:
     class: AppBundle\Entity\Organisation

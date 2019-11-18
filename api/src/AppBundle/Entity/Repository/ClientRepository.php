@@ -4,9 +4,8 @@ namespace AppBundle\Entity\Repository;
 
 use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
+use AppBundle\Service\Search\ClientSearchFilter;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query\Filter\SQLFilter;
-use Doctrine\ORM\QueryBuilder;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 
 /**
@@ -17,8 +16,8 @@ use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
  */
 class ClientRepository extends EntityRepository
 {
-    /** @var QueryBuilder */
-    private $qb;
+    /** @var ClientSearchFilter */
+    private $filter;
 
     /**
      * Search Clients
@@ -37,59 +36,21 @@ class ClientRepository extends EntityRepository
         $filter = $this->_em->getFilters()->getFilter('softdeleteable');
         $filter->disableForEntity(Client::class);
 
-        $this->qb = $this->createQueryBuilder('c');
+        $alias = 'c';
+        $qb = $this->createQueryBuilder($alias);
 
         if ($query) {
-            $this->handleSearchTermFilter($query);
+            $this->filter->handleSearchTermFilter($query, $qb, $alias);
         }
 
         $limit = ($limit <= 100) ? $limit : 100;
-        $this->qb->setMaxResults($limit);
-        $this->qb->setFirstResult((int)$offset);
-        $this->qb->orderBy('c.' . $orderBy, $sortOrder);
+        $qb->setMaxResults($limit);
+        $qb->setFirstResult((int)$offset);
+        $qb->orderBy($alias . '.' . $orderBy, $sortOrder);
 
         $this->_em->getFilters()->enable('softdeleteable');
 
-        return $this->qb->getQuery()->getResult();
-    }
-
-    /**
-     * @param string $searchTerm
-     */
-    private function handleSearchTermFilter($searchTerm): void
-    {
-        if (Client::isValidCaseNumber($searchTerm)) {
-            $this->qb->andWhere('lower(c.caseNumber) = :cn');
-            $this->qb->setParameter('cn', strtolower($searchTerm));
-        } else {
-
-            $searchTerms = explode(' ', $searchTerm);
-
-            if (count($searchTerms) === 1) {
-                $this->addBroadMatchFilter($searchTerm);
-            } else {
-                $this->addFullNameExactMatchFilter($searchTerms[0], $searchTerms[1]);
-            }
-        }
-    }
-
-    /**
-     * @param string $query
-     */
-    private function addBroadMatchFilter($query): void
-    {
-        $this->qb->andWhere('lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike ');
-        $this->qb->setParameter('qLike', '%' . strtolower($query) . '%');
-    }
-
-    /**
-     * @param string $firstName
-     * @param string $lastname
-     */
-    private function addFullNameExactMatchFilter(string $firstName, string $lastname): void
-    {
-        $this->qb->andWhere('(lower(c.firstname) = :firstname AND lower(c.lastname) = :lastname)');
-        $this->qb->setParameters(['firstname' => strtolower($firstName), 'lastname' => strtolower($lastname),]);
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -157,5 +118,13 @@ class ClientRepository extends EntityRepository
         $this->_em->getFilters()->enable('softdeleteable');
 
         return count($result) === 0 ? null : $result[0];
+    }
+
+    /**
+     * @param ClientSearchFilter $filter
+     */
+    public function setSearchFilter(ClientSearchFilter $filter): void
+    {
+        $this->filter = $filter;
     }
 }

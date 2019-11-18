@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Repository\ClientRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,6 +13,17 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ClientController extends RestController
 {
+    /** @var ClientRepository */
+    private $repository;
+
+    /**
+     * @param ClientRepository $repository
+     */
+    public function __construct(ClientRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
     /**
      * Add/Edit a client.
      * When added, the current logged used will be added
@@ -22,11 +34,11 @@ class ClientController extends RestController
     public function upsertAction(Request $request)
     {
         $data = $this->deserializeBodyContent($request);
-        /** @var EntityDir\User $user */
+        /** @var EntityDir\User|null $user */
         $user = $this->getUser();
         $em = $this->getEntityManager();
 
-        if ($request->getMethod() == 'POST') {
+        if ($user && $request->getMethod() == 'POST') {
             $client = new EntityDir\Client();
             $client->addUser($user);
         } else {
@@ -80,10 +92,10 @@ class ClientController extends RestController
      * @Security("has_role('ROLE_DEPUTY')")
      *
      * @param Request $request
-     * @param $id
+     * @param int $id
      * @return null|object
      */
-    public function findByIdAction(Request $request, $id)
+    public function findByIdAction(Request $request, int $id)
     {
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['client'];
@@ -106,12 +118,12 @@ class ClientController extends RestController
      * @Security("has_role('ROLE_CASE_MANAGER')")
      *
      * @param Request $request
-     * @param $id
+     * @param int $id
      *
      * @return null|object
      *
      */
-    public function detailsAction(Request $request, $id)
+    public function detailsAction(Request $request, int $id)
     {
         $this->setJmsSerialiserGroups(['client', 'client-users', 'user', 'client-reports', 'client-ndr', 'ndr', 'report', 'status']);
 
@@ -151,7 +163,7 @@ class ClientController extends RestController
     {
         $this->setJmsSerialiserGroups(['client', 'active-period']);
 
-        return $this->getRepository(EntityDir\Client::class)->searchClients(
+        return $this->repository->searchClients(
             $request->get('q'),
             $request->get('order_by'),
             $request->get('sort_order'),
