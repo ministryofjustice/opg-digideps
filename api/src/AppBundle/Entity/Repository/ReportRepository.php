@@ -53,7 +53,7 @@ class ReportRepository extends EntityRepository
 
     /**
      * @param Report $report
-     * @return int|void
+     * @return int|null
      * @throws \Doctrine\ORM\ORMException
      */
     public function addFeesToReportIfMissing(Report $report)
@@ -64,7 +64,7 @@ class ReportRepository extends EntityRepository
         };
 
         if (0 === $report->getClient()->getUsers()->filter($isPaF)->count()) {
-            return;
+            return null;
         }
 
         $ret = 0;
