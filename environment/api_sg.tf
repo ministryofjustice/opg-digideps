@@ -79,6 +79,13 @@ locals {
       target_type = "security_group_id"
       target      = module.api_service_security_group.id
     }
+    cloud9 = {
+      port        = 5432
+      protocol    = "tcp"
+      type        = "ingress"
+      target_type = "cidr_block"
+      target      = data.aws_vpc.vpc.cidr_block
+    }
     backup = {
       port        = 5432
       type        = "ingress"
