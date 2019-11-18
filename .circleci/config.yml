@@ -199,8 +199,8 @@ orbs:
         docker:
           - image: circleci/golang:1.12
         environment:
-          TF_VERSION: 0.12.12
-          TF_SHA256SUM: 67bc7a49c0946ad48b14cc6e95482fdd3e7e9f7dc6811f4ce6ff531fc565bd3a
+          TF_VERSION: 0.12.13
+          TF_SHA256SUM: 63f765a3f83987b67b046a9c31acff1ec9ee618990d0eab4db34eca6c0d861ec
           TF_CLI_ARGS_plan: -input=false -lock=false
           TF_CLI_ARGS_apply: -input=false -auto-approve
           TF_CLI_ARGS_destroy: -input=false -auto-approve

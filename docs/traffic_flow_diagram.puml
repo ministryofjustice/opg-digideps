@@ -1,0 +1,170 @@
+
+@startuml
+    !define AWSPuml https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/master/dist
+
+    !include AWSPuml/AWSCommon.puml
+    !include AWSPuml/AWSSimplified.puml
+
+    !include AWSPuml/Compute/all.puml
+    !include AWSPuml/Database/all.puml
+    !include AWSPuml/DeveloperTools/all.puml
+    !include AWSPuml/General/all.puml
+    !include AWSPuml/NetworkingAndContentDelivery/all.puml
+    !include AWSPuml/Storage/all.puml
+    !include AWSPuml/ManagementAndGovernance/all.puml
+
+    skinparam Shadowing false
+    skinparam ArrowThickness 5
+    skinparam rectangle {
+        BorderColor transparent
+    }
+    skinparam roundcorner 40
+    skinparam DefaultFontSize 25
+    skinparam DefaultFontColor AWS_SYMBOL_COLOR
+
+    skinparam Legend {
+        BackgroundColor transparent
+        BorderColor transparent
+    }
+
+    skinparam Package {
+        BorderColor AWS_BORDER_COLOR
+        FontSize 50
+
+    }
+
+    legend top left
+        |=Colour |= Protocol |
+        |<size:50><color:#red><&arrow-right></size>||<size:20>HTTP</size>|
+        |<size:50><color:#magenta><&arrow-right></size>||<size:20>HTTP:8080</size>|
+        |<size:50><color:#blue><&arrow-right></color></size>||<size:20>HTTPS</size>|
+        |<size:50><color:#orange><&arrow-right></size>||<size:20>HTTP & HTTPS</size>|
+        |<size:50><color:#purple><&arrow-right></size>||<size:20>Postgres</size>|
+        |<size:50><color:#green><&arrow-right></size>||<size:20>Redis</size>|
+    end legend
+
+    rectangle {
+        rectangle {
+            rectangle {
+                EC2ContainerRegistryResource(digideps_registry, "digideps_registry",)
+                S3Bucket(backup_bucket, "backup",)
+                S3Bucket(pa_uploads_bucket, "pa-uploads",)
+                S3Bucket(ecr_images_bucket, "ecr images",)
+
+                rectangle {
+                    SimpleStorageServiceS3(s3,"S3",)
+                    ElasticContainerService(ecr,"ECR",)
+                    CloudWatch(cw,"Cloudwatch",)
+                }
+                rectangle {
+                    VPCEndpoints(ecr_endpoint, "ecr-endpoint",)
+                    VPCEndpoints(s3_endpoint, "S3-endpoint",)
+                    VPCEndpoints(logs_endpoint, "logs-endpoint",)
+                }
+            }
+
+            rectangle {
+                InternetGateway(igw, "igw",)
+
+                rectangle {
+                      VPCNATGateway(nat, "nat",)
+                      ELBApplicationLoadBalancer(front_lb,"front alb",)
+                      ELBApplicationLoadBalancer(admin_lb,"admin elb",)
+                }
+            }
+
+            InternetAlt1(internet, "Internet",)
+            InternetAlt2(db_local_clamav_net, "db.local.clamav.net",)
+            InternetAlt2(registry_docker_io, "registry-1.docker.io",)
+        }
+
+        package "private_subnet" {
+            Cloud9(internal,"Cloud 9 Workstation",)
+            rectangle {
+                rectangle {
+                    rectangle {
+                        ECSService(front_service,"front",)
+                        ElastiCacheForRedis(front_redis,"front cache",)
+                    }
+
+                    rectangle {
+                        ECSService(admin_service,"admin ",)
+                        ElastiCacheForRedis(admin_redis,"admin cache",)
+                    }
+                }
+
+                rectangle {
+                    rectangle {
+                        ECSService(api_service,"api",)
+                        ElastiCacheForRedis(api_redis,"api cache",)
+                    }
+
+                    ECSService(scan_service,"scan",)
+                    ECSService(pdf_service,"pdf",)
+
+                }
+            }
+
+            RDSPostgreSQLinstance(rds,"rds",)
+            rectangle {
+                ECSService(backup_task,"backup",)
+                ECSService(restore_task,"restore",)
+                ECSService(reset_database_task,"reset_database",)
+                ECSService(api_unit_test_task,"api_unit_test",)
+                ECSService(integration_test_task,"integration_test",)
+                ECSService(client_unit_test_task,"client_unit_test",)
+            }
+        }
+    }
+
+    internet -[#orange]-|> igw
+    igw -[#blue]down-|> admin_lb
+    igw -[#orange]down-|> front_lb
+    igw -[#red]up-|> db_local_clamav_net
+    igw -[#blue]up-|> registry_docker_io
+
+    admin_lb -[#blue]down-|> admin_service
+    front_lb -[#blue]down--|> front_service
+
+    front_service -[#blue]-|> api_service
+    front_service -[#green]right-|> front_redis
+    front_service -[#magenta]|> scan_service
+
+    admin_service -[#blue]down-|> api_service
+    admin_service -[#green]right-|> admin_redis
+
+    front_service -[#red]|> pdf_service
+    admin_service -[#red]-|> pdf_service
+
+    scan_service -[#orange]|> nat
+
+    api_unit_test_task -[#green]-|> api_redis
+    api_unit_test_task -[#purple]--|> rds
+
+    integration_test_task -[#blue]up-|> nat
+    integration_test_task -[#purple]|> rds
+
+    api_service -[#purple]|> rds
+    api_service -[#green]|> api_redis
+
+    nat -[#orange]right---|> igw
+
+    backup_task -[#purple]-|> rds
+    reset_database_task -[#purple]-|> rds
+    restore_task -[#purple]-|> rds
+
+    internal -[#purple]up-|> rds
+
+    private_subnet -[#blue]--|> logs_endpoint
+    logs_endpoint -[#blue]up-|> cw
+
+    private_subnet -[#blue]up--|> ecr_endpoint
+    ecr_endpoint -[#blue]up-|> ecr
+    ecr -[#blue]up-|> digideps_registry
+
+    private_subnet -[#blue]up---|> s3_endpoint
+    s3_endpoint -[#blue]up-|> s3
+    s3 -[#blue]up-|> backup_bucket
+    s3 -[#blue]up-|> pa_uploads_bucket
+    s3 -[#blue]up-|> ecr_images_bucket
+@enduml

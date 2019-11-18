@@ -49,7 +49,7 @@ resource "aws_ecs_service" "wkhtmltopdf" {
   propagate_tags          = "SERVICE"
 
   network_configuration {
-    security_groups  = [aws_security_group.wkhtmltopdf.id]
+    security_groups  = [module.wkhtmltopdf_security_group.id]
     subnets          = data.aws_subnet.private.*.id
     assign_public_ip = false
   }
@@ -59,49 +59,6 @@ resource "aws_ecs_service" "wkhtmltopdf" {
   }
 
   tags = local.default_tags
-}
-
-resource "aws_security_group" "wkhtmltopdf" {
-  name_prefix = aws_ecs_task_definition.wkhtmltopdf.family
-  vpc_id      = data.aws_vpc.vpc.id
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  tags = merge(
-    local.default_tags,
-    {
-      "Name" = "wkhtmltopdf"
-    },
-  )
-}
-
-resource "aws_security_group_rule" "wkhtmltopdf_front_http_in" {
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 80
-  to_port                  = 80
-  security_group_id        = aws_security_group.wkhtmltopdf.id
-  source_security_group_id = aws_security_group.front.id
-}
-
-resource "aws_security_group_rule" "wkhtmltopdf_admin_http_in" {
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 80
-  to_port                  = 80
-  security_group_id        = aws_security_group.wkhtmltopdf.id
-  source_security_group_id = aws_security_group.admin.id
-}
-
-resource "aws_security_group_rule" "wkhtmltopdf_out" {
-  type              = "egress"
-  protocol          = "-1"
-  from_port         = 0
-  to_port           = 0
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.wkhtmltopdf.id
 }
 
 locals {
@@ -122,8 +79,7 @@ locals {
         }
       }
   }
-  
+
 EOF
 
 }
-

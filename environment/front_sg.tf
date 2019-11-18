@@ -1,30 +1,110 @@
-# TODO: switch to name prefix
-resource "aws_security_group" "front" {
-  name        = "front-${local.environment}"
-  description = "frontend client access for ${local.environment}"
-  vpc_id      = data.aws_vpc.vpc.id
-  tags        = local.default_tags
-
-  lifecycle {
-    create_before_destroy = true
+locals {
+  front_sg_rules = {
+    ecr  = local.common_sg_rules.ecr
+    logs = local.common_sg_rules.logs
+    s3   = local.common_sg_rules.s3
+    cache = {
+      port        = 6379
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.front_cache_security_group.id
+    }
+    api = {
+      port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.api_service_security_group.id
+    }
+    pdf = {
+      port        = 80
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.wkhtmltopdf_security_group.id
+    }
+    scan = {
+      port        = 8080
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.scan_security_group.id
+    }
+    front_elb = {
+      port        = 443
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.front_elb_security_group.id
+    }
   }
 }
 
-resource "aws_security_group_rule" "front_task_in" {
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 443
-  to_port                  = 443
-  security_group_id        = aws_security_group.front.id
-  source_security_group_id = aws_security_group.front_lb.id
+module "front_service_security_group" {
+  source = "./security_group"
+  rules  = local.front_sg_rules
+  name   = "front-service"
+  tags   = local.default_tags
+  vpc_id = data.aws_vpc.vpc.id
 }
 
-resource "aws_security_group_rule" "front_task_out" {
-  type              = "egress"
-  protocol          = "-1"
-  from_port         = 0
-  to_port           = 0
-  security_group_id = aws_security_group.front.id
-  cidr_blocks       = ["0.0.0.0/0"]
+locals {
+  front_cache_sg_rules = {
+    front_service = {
+      port        = 6379
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.front_service_security_group.id
+    }
+  }
 }
 
+module "front_cache_security_group" {
+  source = "./security_group"
+  rules  = local.front_cache_sg_rules
+  name   = "front-cache"
+  tags   = local.default_tags
+  vpc_id = data.aws_vpc.vpc.id
+}
+
+locals {
+  front_elb_sg_rules = {
+    front_service = {
+      port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.front_service_security_group.id
+    }
+  }
+}
+
+module "front_elb_security_group" {
+  source = "./security_group"
+  rules  = local.front_elb_sg_rules
+  name   = "front-alb"
+  tags   = local.default_tags
+  vpc_id = data.aws_vpc.vpc.id
+}
+
+# Using resources rather than a module here due to a large list of IPs
+
+resource "aws_security_group_rule" "front_elb_http_in" {
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 80
+  to_port           = 80
+  security_group_id = module.front_elb_security_group.id
+  cidr_blocks       = local.front_whitelist
+}
+
+resource "aws_security_group_rule" "front_elb_https_in" {
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 443
+  to_port           = 443
+  security_group_id = module.front_elb_security_group.id
+  cidr_blocks       = local.front_whitelist
+}

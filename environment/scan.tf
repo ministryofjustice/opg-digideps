@@ -49,7 +49,7 @@ resource "aws_ecs_service" "scan" {
   propagate_tags          = "SERVICE"
 
   network_configuration {
-    security_groups  = [aws_security_group.scan.id]
+    security_groups  = [module.scan_security_group.id]
     subnets          = data.aws_subnet.private.*.id
     assign_public_ip = false
   }
@@ -59,40 +59,6 @@ resource "aws_ecs_service" "scan" {
   }
 
   tags = local.default_tags
-}
-
-resource "aws_security_group" "scan" {
-  name_prefix = aws_ecs_task_definition.scan.family
-  vpc_id      = data.aws_vpc.vpc.id
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  tags = merge(
-    local.default_tags,
-    {
-      "Name" = "scan"
-    },
-  )
-}
-
-resource "aws_security_group_rule" "scan_http_in" {
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 8080
-  to_port                  = 8080
-  security_group_id        = aws_security_group.scan.id
-  source_security_group_id = aws_security_group.front.id
-}
-
-resource "aws_security_group_rule" "scan_out" {
-  type              = "egress"
-  protocol          = "-1"
-  from_port         = 0
-  to_port           = 0
-  security_group_id = aws_security_group.scan.id
-  cidr_blocks       = ["0.0.0.0/0"]
 }
 
 locals {
@@ -145,4 +111,3 @@ EOF
 EOF
 
 }
-
