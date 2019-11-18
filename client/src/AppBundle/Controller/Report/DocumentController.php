@@ -109,7 +109,7 @@ class DocumentController extends AbstractController
 
         if ($request->get('error') == 'tooBig') {
             $message = $this->get('translator')->trans('document.file.errors.maxSizeMessage', [], 'validators');
-            $form->get('files')->addError(new FormError($message));
+            $form->get('file')->addError(new FormError($message));
         }
 
         $form->handleRequest($request);
