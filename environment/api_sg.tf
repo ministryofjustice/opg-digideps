@@ -93,6 +93,20 @@ locals {
       target_type = "security_group_id"
       target      = module.restore.security_group_id
     }
+    api_unit_test = {
+      port        = 5432
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.api_unit_test.security_group_id
+    }
+    integration_test = {
+      port        = 5432
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.integration_test.security_group_id
+    }
   }
 }
 
