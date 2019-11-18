@@ -107,6 +107,13 @@ locals {
       target_type = "security_group_id"
       target      = module.integration_test.security_group_id
     }
+    reset_database = {
+      port        = 5432
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.reset_database.security_group_id
+    }
   }
 }
 
