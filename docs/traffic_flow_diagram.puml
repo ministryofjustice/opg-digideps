@@ -6,6 +6,7 @@
     !include AWSPuml/AWSSimplified.puml
 
     !include AWSPuml/Compute/all.puml
+    !include AWSPuml/CustomerEngagement/all.puml
     !include AWSPuml/Database/all.puml
     !include AWSPuml/DeveloperTools/all.puml
     !include AWSPuml/General/all.puml
@@ -79,7 +80,7 @@
                 InternetAlt1(internet, "Internet",)
                 InternetAlt2(db_local_clamav_net, "db.local.clamav.net",)
                 InternetAlt2(registry_docker_io, "registry-1.docker.io",)
-                InternetAlt2(ses, "email-smtp.eu-west-1.amazonaws.com",)
+                SimpleEmailServiceSES(ses, "email-smtp.eu-west-1.amazonaws.com",)
             }
         }
 
