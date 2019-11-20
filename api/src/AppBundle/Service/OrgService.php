@@ -260,7 +260,7 @@ class OrgService
      */
     private function createOrganisationFromEmail(string $email)
     {
-        $organisation = $this->orgFactory->createFromFullEmail($email, $email);
+        $organisation = $this->orgFactory->createFromFullEmail($email);
         $this->em->persist($organisation);
         $this->em->flush($organisation);
 

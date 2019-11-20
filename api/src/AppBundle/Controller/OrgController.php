@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Service\CsvUploader;
+use AppBundle\Service\OrgService;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,6 +36,7 @@ class OrgController extends RestController
             throw new \RuntimeException("Max $maxRecords records allowed in a single bulk insert");
         }
 
+        /** @var OrgService $pa */
         $pa = $this->get('org_service');
 
         try {
