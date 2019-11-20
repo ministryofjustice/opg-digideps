@@ -58,7 +58,7 @@ $(document).ready(function () {
 
   // Check upload progress
   uploadProgress('.js-upload-progress')
-  uploadProgressPA('.js-upload-progress-pa')
+  uploadProgressPA('[data-module="csv-upload-progress"]')
 
   // Table Multi Select
   tableMultiSelect()

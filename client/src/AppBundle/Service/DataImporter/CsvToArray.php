@@ -40,11 +40,6 @@ class CsvToArray
     private $firstRow = [];
 
     /**
-     * @var string|bool
-     */
-    private $csvType = false;
-
-    /**
      * CsvToArray constructor.
      *
      * @param string $file
@@ -157,10 +152,6 @@ class CsvToArray
                         throw new \RuntimeException("Can't find $expectedColumn column in line $rowNumber");
                     }
                     $rowArray[$expectedColumn] = $row[$index];
-
-                    if ('Dep Type' == $expectedColumn && false === $this->getCsvType()) {
-                        $this->csvType = $rowArray['Dep Type'] == 23 ? 'pa' : 'prof';
-                    }
                 }
             }
             foreach ($this->optionalColumns as $optionalColumn) {
@@ -178,12 +169,6 @@ class CsvToArray
 
 
         return $ret;
-    }
-
-
-    public function getCsvType()
-    {
-        return $this->csvType;
     }
 
     public function __destruct()
