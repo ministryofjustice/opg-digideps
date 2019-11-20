@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Service\RestHandler;
 
@@ -82,7 +82,6 @@ class OrganisationRestHandler
         }
 
         $organisation = $this->organisationFactory->createFromEmailIdentifier(
-            $data['name'],
             $data['email_identifier'],
             (bool)$data['is_activated']
         );
@@ -116,7 +115,7 @@ class OrganisationRestHandler
         }
 
         if ($data['email_identifier'] !== $organisation->getEmailIdentifier() && $this->orgWithEmailIdExists($data['email_identifier'])) {
-            throw new OrganisationCreationException('Email identifer already in use');
+            throw new OrganisationUpdateException('Email identifer already in use');
         }
 
         $this->populateOrganisation($data, $organisation);
@@ -135,8 +134,7 @@ class OrganisationRestHandler
     private function verifyPostedData(array $data): bool
     {
         return
-            isset($data['name'])
-            && isset($data['email_identifier'])
+            isset($data['email_identifier'])
             && isset($data['is_activated']);
     }
 
@@ -158,7 +156,6 @@ class OrganisationRestHandler
     private function populateOrganisation(array $data, Organisation $organisation): void
     {
         $organisation
-            ->setName($data['name'])
             ->setEmailIdentifier($data['email_identifier'])
             ->setIsActivated((bool)$data['is_activated']);
     }
