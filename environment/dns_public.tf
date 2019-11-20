@@ -3,7 +3,7 @@ locals {
 }
 data "aws_route53_zone" "public" {
   name     = local.domain
-  provider = "aws.dns"
+  provider = aws.dns
 }
 
 resource "aws_route53_record" "front" {
@@ -16,7 +16,7 @@ resource "aws_route53_record" "front" {
     name                   = aws_lb.front.dns_name
     zone_id                = aws_lb.front.zone_id
   }
-  provider = "aws.dns"
+  provider = aws.dns
 }
 
 resource "aws_route53_record" "admin" {
@@ -29,7 +29,7 @@ resource "aws_route53_record" "admin" {
     name                   = aws_lb.admin.dns_name
     zone_id                = aws_lb.admin.zone_id
   }
-  provider = "aws.dns"
+  provider = aws.dns
 }
 
 resource "aws_route53_record" "www" {
@@ -42,5 +42,5 @@ resource "aws_route53_record" "www" {
     name                   = aws_lb.front.dns_name
     zone_id                = aws_lb.front.zone_id
   }
-  provider = "aws.dns"
+  provider = aws.dns
 }
