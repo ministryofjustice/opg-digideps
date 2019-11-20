@@ -24,7 +24,7 @@ docker-compose run --rm api sh scripts/resetdb.sh
 
 ![Digideps traffic flow diagram](./docs/traffic_flow_diagram.png)
 
-This diagram can be updated in `traffic_flow_diamgram.puml` and then rendered to PNG using `plantuml ./docs/traffic_flow_diamgram.puml -o ./docs`.
+This diagram can be updated in `traffic_flow_diagram.puml` and then rendered to PNG using `plantuml ./docs/traffic_flow_diagram.puml -o ./docs`.
 
 ## Terraform installation
 

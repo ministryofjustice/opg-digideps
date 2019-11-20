@@ -31,6 +31,13 @@ locals {
       target_type = "security_group_id"
       target      = module.admin_elb_security_group.id
     }
+    ses = {
+      port        = 587
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "0.0.0.0/0"
+    }
   }
 }
 
