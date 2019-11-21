@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Repository\ClientRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,7 +49,7 @@ class ClientController extends RestController
             'email'       => 'setEmail',
         ]);
 
-        if ($user && $user->isLayDeputy()) {
+        if ($user !== null && $user->isLayDeputy()) {
             // We come to this route from either editing or creating a client - need to support
             // both routes as an NDR needs to exist for the add client route for Lays
             $ndrRequired = ((array_key_exists('ndr_enabled', $data) && $data['ndr_enabled']) || $user->getNdrEnabled());
@@ -80,10 +81,10 @@ class ClientController extends RestController
      * @Security("has_role('ROLE_DEPUTY')")
      *
      * @param Request $request
-     * @param $id
+     * @param int $id
      * @return null|object
      */
-    public function findByIdAction(Request $request, $id)
+    public function findByIdAction(Request $request, int $id)
     {
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['client'];
@@ -106,12 +107,12 @@ class ClientController extends RestController
      * @Security("has_role('ROLE_CASE_MANAGER')")
      *
      * @param Request $request
-     * @param $id
+     * @param int $id
      *
      * @return null|object
      *
      */
-    public function detailsAction(Request $request, $id)
+    public function detailsAction(Request $request, int $id)
     {
         $this->setJmsSerialiserGroups(['client', 'client-users', 'user', 'client-reports', 'client-ndr', 'ndr', 'report', 'status']);
 
@@ -151,7 +152,10 @@ class ClientController extends RestController
     {
         $this->setJmsSerialiserGroups(['client', 'active-period']);
 
-        return $this->getRepository(EntityDir\Client::class)->searchClients(
+        /** @var ClientRepository $clientRepository */
+        $clientRepository = $this->getRepository(EntityDir\Client::class);
+
+        return $clientRepository->searchClients(
             $request->get('q'),
             $request->get('order_by'),
             $request->get('sort_order'),

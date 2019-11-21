@@ -3,9 +3,15 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Client;
+use AppBundle\Entity\User;
+use AppBundle\Service\UserService;
+use Nette\Neon\Encoder;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
 //TODO
 //http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
@@ -28,11 +34,13 @@ class UserController extends RestController
             'lastname' => 'mustExist',
         ]);
 
+        /** @var User $loggedInUser */
         $loggedInUser = $this->getUser();
-        $user = new EntityDir\User();
+        $user = new User();
 
         $user = $this->populateUser($user, $data);
 
+        /** @var UserService $userService */
         $userService = $this->get('user_service');
         $userService->addUser($loggedInUser, $user, $data);
 
@@ -48,17 +56,19 @@ class UserController extends RestController
      */
     public function update(Request $request, $id)
     {
-        $user = $this->findEntityBy(EntityDir\User::class, $id, 'User not found');
-        /* @var $user User */
-        $loggedInUser = $this->getUser();
-        $userService = $this->get('user_service');
-        $creatorIsOrg = $loggedInUser->isOrgNamedDeputy() || $loggedInUser->isOrgAdministrator();
+        $user = $this->findEntityBy(User::class, $id, 'User not found');
 
-        if ($this->getUser()->getId() != $user->getId()
-            && !$this->isGranted(EntityDir\User::ROLE_ADMIN)
-            && !$this->isGranted(EntityDir\User::ROLE_AD)
-            && !$this->isGranted(EntityDir\User::ROLE_ORG_NAMED)
-            && !$this->isGranted(EntityDir\User::ROLE_ORG_ADMIN)
+        /** @var User $loggedInUser */
+        $loggedInUser = $this->getUser();
+
+        /** @var UserService $userService */
+        $userService = $this->get('user_service');
+
+        if ($loggedInUser->getId() != $user->getId()
+            && !$this->isGranted(User::ROLE_ADMIN)
+            && !$this->isGranted(User::ROLE_AD)
+            && !$this->isGranted(User::ROLE_ORG_NAMED)
+            && !$this->isGranted(User::ROLE_ORG_ADMIN)
         ) {
             throw $this->createAccessDeniedException("Non-admin not authorised to change other user's data");
         }
@@ -79,10 +89,12 @@ class UserController extends RestController
     public function isPasswordCorrect(Request $request, $id)
     {
         // for both ADMIN and DEPUTY
+        $user = $this->findEntityBy(User::class, $id, 'User not found');
 
-        $user = $this->findEntityBy(EntityDir\User::class, $id, 'User not found');
-        /* @var $user User */
-        if ($this->getUser()->getId() != $user->getId()) {
+        /** @var User $loggedInUser */
+        $loggedInUser = $this->getUser();
+
+        if ($loggedInUser->getId() != $user->getId()) {
             throw $this->createAccessDeniedException("Not authorised to check other user's password");
         }
 
@@ -90,7 +102,11 @@ class UserController extends RestController
             'password' => 'notEmpty',
         ]);
 
-        $encoder = $this->get('security.encoder_factory')->getEncoder($user);
+        /** @var EncoderFactory $encoderFactory */
+        $encoderFactory = $this->get('security.encoder_factory');
+
+        /** @var PasswordEncoderInterface $encoder */
+        $encoder = $encoderFactory->getEncoder($user);
 
         $oldPassword = $encoder->encodePassword($data['password'], $user->getSalt());
         if ($oldPassword == $user->getPassword()) {
@@ -109,9 +125,12 @@ class UserController extends RestController
     {
         //for both admin and users
 
-        $user = $this->findEntityBy(EntityDir\User::class, $id, 'User not found');
-        /* @var $user EntityDir\User */
-        if ($this->getUser()->getId() != $user->getId()) {
+        $user = $this->findEntityBy(User::class, $id, 'User not found');
+
+        /** @var User $loggedInUser */
+        $loggedInUser = $this->getUser();
+
+        if ($loggedInUser->getId() != $user->getId()) {
             throw $this->createAccessDeniedException("Not authorised to change other user's data");
         }
 
@@ -119,7 +138,12 @@ class UserController extends RestController
             'password_plain' => 'notEmpty',
         ]);
 
-        $encoder = $this->get('security.encoder_factory')->getEncoder($user);
+        /** @var EncoderFactory $encoderFactory */
+        $encoderFactory = $this->get('security.encoder_factory');
+
+        /** @var PasswordEncoderInterface $encoder */
+        $encoder = $encoderFactory->getEncoder($user);
+
         $newPassword = $encoder->encodePassword($data['password_plain'], $user->getSalt());
 
         $user->setPassword($newPassword);
@@ -149,13 +173,18 @@ class UserController extends RestController
     public function getOneByFilter(Request $request, $what, $filter)
     {
         if ($what == 'email') {
-            $user = $this->getRepository(EntityDir\User::class)->findOneBy(['email' => $filter]);
+            $user = $this->getRepository(User::class)->findOneBy(['email' => $filter]);
             if (!$user) {
                 throw new \RuntimeException('User not found', 404);
             }
         } elseif ($what == 'case_number') {
-            $client = $this->getRepository(EntityDir\Client::class)->findOneBy(['caseNumber' => $filter]);
-            if (!$client) {
+            /** @var EntityDir\Repository\ClientRepository $clientRepository */
+            $clientRepository = $this->getRepository(Client::class);
+
+            /** @var Client|null $client */
+            $client = $clientRepository->findOneBy(['caseNumber' => $filter]);
+
+            if ($client === null) {
                 throw new \RuntimeException('Client not found', 404);
             }
             if (empty($client->getUsers())) {
@@ -163,7 +192,7 @@ class UserController extends RestController
             }
             $user = $client->getUsers()[0];
         } elseif ($what == 'user_id') {
-            $user = $this->getRepository(EntityDir\User::class)->find($filter);
+            $user = $this->getRepository(User::class)->find($filter);
             if (!$user) {
                 throw new \RuntimeException('User not found', 419);
             }
@@ -171,15 +200,17 @@ class UserController extends RestController
             throw new \RuntimeException('wrong query', 500);
         }
 
-        $requestedUserIsLogged = $this->getUser()->getId() == $user->getId();
+        /** @var User $loggedInuser */
+        $loggedInUser = $this->getUser();
+        $requestedUserIsLogged = $loggedInUser == $user->getId();
 
         $groups = $request->query->has('groups') ?
             $request->query->get('groups') : ['user'];
         $this->setJmsSerialiserGroups($groups);
 
         // only allow admins and case managers to access any user, otherwise the user can only see himself
-        if (!$this->isGranted(EntityDir\User::ROLE_CASE_MANAGER)
-            && !$this->isGranted(EntityDir\User::ROLE_AD)
+        if (!$this->isGranted(User::ROLE_CASE_MANAGER)
+            && !$this->isGranted(User::ROLE_AD)
             && !$requestedUserIsLogged) {
             throw $this->createAccessDeniedException("Not authorised to see other user's data");
         }
@@ -197,7 +228,7 @@ class UserController extends RestController
      */
     public function getUserTeamNames(Request $request, $email)
     {
-        $user = $this->getRepository(EntityDir\User::class)->findOneBy(['email' => $email]);
+        $user = $this->getRepository(User::class)->findOneBy(['email' => $email]);
 
         $this->setJmsSerialiserGroups(['user-id', 'team-names']);
 
@@ -215,10 +246,10 @@ class UserController extends RestController
      */
     public function delete($id)
     {
-        $user = $this->findEntityBy(EntityDir\User::class, $id);
-        /* @var $user EntityDir\User */
+        $user = $this->findEntityBy(User::class, $id);
+        /* @var $user User */
 
-        if ($user->getRoleName() !== EntityDir\User::ROLE_LAY_DEPUTY) {
+        if ($user->getRoleName() !== User::ROLE_LAY_DEPUTY) {
             throw $this->createAccessDeniedException('Cannot delete users with role ' . $user->getRoleName());
         }
 
@@ -258,7 +289,7 @@ class UserController extends RestController
         $includeClients = $request->get('include_clients');
         $q = $request->get('q');
 
-        $qb = $this->getRepository(EntityDir\User::class)->createQueryBuilder('u');
+        $qb = $this->getRepository(User::class)->createQueryBuilder('u');
         $qb->setFirstResult($offset);
         $qb->setMaxResults($limit);
         $qb->orderBy('u.' . $order_by, $sort_order);
@@ -281,7 +312,7 @@ class UserController extends RestController
         }
 
         if ($q) {
-            if (EntityDir\Client::isValidCaseNumber($q)) { // case number
+            if (Client::isValidCaseNumber($q)) { // case number
                 $qb->leftJoin('u.clients', 'c');
                 $qb->andWhere('lower(c.caseNumber) = :cn');
                 $qb->setParameter('cn', strtolower($q));
@@ -318,12 +349,12 @@ class UserController extends RestController
             throw new \RuntimeException('client secret not accepted.', 403);
         }
 
-        /** @var EntityDir\User $user */
-        $user = $this->findEntityBy(EntityDir\User::class, ['email' => strtolower($email)]);
+        /** @var User $user */
+        $user = $this->findEntityBy(User::class, ['email' => strtolower($email)]);
 
-        $hasAdminSecret = $this->getAuthService()->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request);
+        $hasAdminSecret = $this->getAuthService()->isSecretValidForRole(User::ROLE_ADMIN, $request);
 
-        if (!$hasAdminSecret && $user->getRoleName() == EntityDir\User::ROLE_ADMIN) {
+        if (!$hasAdminSecret && $user->getRoleName() == User::ROLE_ADMIN) {
             throw new \RuntimeException('Admin emails not accepted.', 403);
         }
 
@@ -345,7 +376,7 @@ class UserController extends RestController
             throw new \RuntimeException('client secret not accepted.', 403);
         }
 
-        $user = $this->findEntityBy(EntityDir\User::class, ['registrationToken' => $token], 'User not found');
+        $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
         /* @var $user User */
 
         if (!$this->getAuthService()->isSecretValidForRole($user->getRoleName(), $request)) {
@@ -367,8 +398,8 @@ class UserController extends RestController
             throw new \RuntimeException('client secret not accepted.', 403);
         }
 
-        $user = $this->findEntityBy(EntityDir\User::class, ['registrationToken' => $token], 'User not found');
-        /* @var $user EntityDir\User */
+        $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
+        /* @var $user User */
 
         if (!$this->getAuthService()->isSecretValidForRole($user->getRoleName(), $request)) {
             throw new \RuntimeException($user->getRoleName() . ' user role not allowed from this client.', 403);
@@ -385,10 +416,10 @@ class UserController extends RestController
      * call setters on User when $data contains values.
      * //TODO move to service
      *
-     * @param EntityDir\User $user
+     * @param User $user
      * @param array          $data
      */
-    private function populateUser(EntityDir\User $user, array $data)
+    private function populateUser(User $user, array $data)
     {
         // Cannot easily(*) use JSM deserialising with already constructed objects.
         // Also. It'd be possible to differentiate when a NULL value is intentional or not
@@ -439,12 +470,19 @@ class UserController extends RestController
      */
     public function getTeamByUserId(Request $request, $id)
     {
-        $user = $this->getRepository(EntityDir\User::class)->find($id);
+        $userRepository = $this->getRepository(User::class);
+
+        /** @var User|null $user */
+        $user = $userRepository->find($id);
+
+        /** @var User $loggedInUser */
+        $loggedInUser = $this->getUser();
+
         if (!$user) {
             throw new \RuntimeException('User not found', 419);
         }
 
-        if ($user->getTeams()->first() !== $this->getUser()->getTeams()->first()) {
+        if ($user->getTeams()->first() !== $loggedInUser->getTeams()->first()) {
             throw $this->createAccessDeniedException('User not part of the same team');
         }
 
