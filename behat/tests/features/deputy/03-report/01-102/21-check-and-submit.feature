@@ -139,8 +139,8 @@ Feature: Report submit
         When I follow "Download"
         Then the response status code should be 200
         And the response should have the "Content-Type" header containing "application/octet-stream"
-        And the response should have the "Content-Disposition" header containing "DigiRepTransactions"
-        And the response should have the "Content-Disposition" header containing ".csv"
+        And the response should have the "Content-Disposition" header containing "attachment"
+        And the response should have the "Content-Disposition" header containing "filename="
 
     @deputy
     Scenario: admin can download zips of a report's files
