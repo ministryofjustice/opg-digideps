@@ -22,9 +22,12 @@ services:
         resource: "@AppBundle/Controller/"
         tags: [controller.service_arguments]
 
-    redirector_service:
+    AppBundle\Service\Redirector:
         class: AppBundle\Service\Redirector
         arguments: [ "@security.token_storage", "@security.authorization_checker", "@router", "@session", "%env%" ]
+
+    redirector_service:
+        alias: AppBundle\Service\Redirector
 
     wkhtmltopdf:
         class: AppBundle\Service\WkHtmlToPdfGenerator
