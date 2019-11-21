@@ -39,29 +39,6 @@ class ClientVoterTest extends TestCase
          self::assertEquals($sut::ACCESS_GRANTED, $voteResult);
      }
 
-    public function testClientBelongsToInactiveOrgButUserBelongsToClient()
-    {
-        $orgMemberUser = new User();
-        $org = new Organisation();
-        $org->addUser($orgMemberUser);
-        $org->setIsActivated(false);
-
-        $subject = new Client();
-        $subject->setOrganisation($org);
-        $subject->setUsers([$orgMemberUser]);
-
-        $token = self::prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($orgMemberUser);
-
-        $security = self::prophesize(Security::class);
-        $sut = new ClientVoter($security->reveal());
-
-        $attributes = [$sut::VIEW, $sut::EDIT];
-        $voteResult = $sut->vote($token->reveal(), $subject, $attributes);
-
-        self::assertEquals($sut::ACCESS_GRANTED, $voteResult);
-    }
-
     public function testUserIsAdmin()
     {
         $user = new User();
@@ -142,53 +119,29 @@ class ClientVoterTest extends TestCase
     {
         return [
             [
-                'deputyBelongsToClient' =>  false, 'deputyBelongsToOrg' =>  false, 'clientBelongsToOrg' => false, 'orgIsActive' => false, 'expected' => VoterInterface::ACCESS_DENIED,
+                'deputyBelongsToOrg' =>  false, 'clientBelongsToOrg' => false, 'orgIsActive' => false, 'expected' => VoterInterface::ACCESS_DENIED,
             ],
             [
-                'deputyBelongsToClient' =>  false, 'deputyBelongsToOrg' =>  false, 'clientBelongsToOrg' => false, 'orgIsActive' => true, 'expected' => VoterInterface::ACCESS_DENIED,
+                'deputyBelongsToOrg' =>  false, 'clientBelongsToOrg' => false, 'orgIsActive' => true, 'expected' => VoterInterface::ACCESS_DENIED,
             ],
             [
-                'deputyBelongsToClient' =>  false, 'deputyBelongsToOrg' =>  false, 'clientBelongsToOrg' => true, 'orgIsActive' => false, 'expected' => VoterInterface::ACCESS_DENIED,
+                'deputyBelongsToOrg' =>  false, 'clientBelongsToOrg' => true, 'orgIsActive' => false, 'expected' => VoterInterface::ACCESS_DENIED,
             ],
             [
-                'deputyBelongsToClient' =>  false, 'deputyBelongsToOrg' =>  false, 'clientBelongsToOrg' => true, 'orgIsActive' => true, 'expected' => VoterInterface::ACCESS_DENIED,
+                'deputyBelongsToOrg' =>  false, 'clientBelongsToOrg' => true, 'orgIsActive' => true, 'expected' => VoterInterface::ACCESS_DENIED,
             ],
             [
-                'deputyBelongsToClient' =>  false, 'deputyBelongsToOrg' =>  true, 'clientBelongsToOrg' => false, 'orgIsActive' => false, 'expected' => VoterInterface::ACCESS_DENIED,
+                'deputyBelongsToOrg' =>  true, 'clientBelongsToOrg' => false, 'orgIsActive' => false, 'expected' => VoterInterface::ACCESS_DENIED,
             ],
             [
-                'deputyBelongsToClient' =>  false, 'deputyBelongsToOrg' =>  true, 'clientBelongsToOrg' => false, 'orgIsActive' => true, 'expected' => VoterInterface::ACCESS_DENIED,
+                'deputyBelongsToOrg' =>  true, 'clientBelongsToOrg' => false, 'orgIsActive' => true, 'expected' => VoterInterface::ACCESS_DENIED,
             ],
             [
-                'deputyBelongsToClient' =>  false, 'deputyBelongsToOrg' =>  true, 'clientBelongsToOrg' => true, 'orgIsActive' => false, 'expected' => VoterInterface::ACCESS_DENIED,
+                'deputyBelongsToOrg' =>  true, 'clientBelongsToOrg' => true, 'orgIsActive' => false, 'expected' => VoterInterface::ACCESS_DENIED,
             ],
             [
-                'deputyBelongsToClient' =>  false, 'deputyBelongsToOrg' =>  true, 'clientBelongsToOrg' => true, 'orgIsActive' => true, 'expected' => VoterInterface::ACCESS_GRANTED,
-            ],
-            [
-                'deputyBelongsToClient' =>  true, 'deputyBelongsToOrg' =>  false, 'clientBelongsToOrg' => false, 'orgIsActive' => false, 'expected' => VoterInterface::ACCESS_GRANTED,
-            ],
-            [
-                'deputyBelongsToClient' =>  true, 'deputyBelongsToOrg' =>  false, 'clientBelongsToOrg' => false, 'orgIsActive' => true, 'expected' => VoterInterface::ACCESS_GRANTED,
-            ],
-            [
-                'deputyBelongsToClient' =>  true, 'deputyBelongsToOrg' =>  false, 'clientBelongsToOrg' => true, 'orgIsActive' => false, 'expected' => VoterInterface::ACCESS_GRANTED,
-            ],
-            [
-                'deputyBelongsToClient' =>  true, 'deputyBelongsToOrg' =>  false, 'clientBelongsToOrg' => true, 'orgIsActive' => true, 'expected' => VoterInterface::ACCESS_GRANTED,
-            ],
-            [
-                'deputyBelongsToClient' =>  true, 'deputyBelongsToOrg' =>  true, 'clientBelongsToOrg' => false, 'orgIsActive' => false, 'expected' => VoterInterface::ACCESS_GRANTED,
-            ],
-            [
-                'deputyBelongsToClient' =>  true, 'deputyBelongsToOrg' =>  true, 'clientBelongsToOrg' => false, 'orgIsActive' => true, 'expected' => VoterInterface::ACCESS_GRANTED,
-            ],
-            [
-                'deputyBelongsToClient' =>  true, 'deputyBelongsToOrg' =>  true, 'clientBelongsToOrg' => true, 'orgIsActive' => false, 'expected' => VoterInterface::ACCESS_GRANTED,
-            ],
-            [
-                'deputyBelongsToClient' =>  true, 'deputyBelongsToOrg' =>  true, 'clientBelongsToOrg' => true, 'orgIsActive' => true, 'expected' => VoterInterface::ACCESS_GRANTED,
-            ],
+                'deputyBelongsToOrg' =>  true, 'clientBelongsToOrg' => true, 'orgIsActive' => true, 'expected' => VoterInterface::ACCESS_GRANTED,
+            ]
         ];
     }
 
@@ -196,7 +149,6 @@ class ClientVoterTest extends TestCase
      * @dataProvider getDeputyClienttVariations
      */
     public function testVoterGrantsPermission(
-        $deputyBelongsToClient,
         $deputyBelongsToOrg,
         $clientBelongsToOrg,
         $orgIsActive,
@@ -217,12 +169,6 @@ class ClientVoterTest extends TestCase
             $org->shouldReceive('containsUser')->with($loggedInUser)->andReturnTrue();
         } else {
             $org->shouldReceive('containsUser')->with($loggedInUser)->andReturnFalse();
-        }
-
-        if ($deputyBelongsToClient) {
-            $subject->shouldReceive('getUserIds')->andReturn([$loggedInUser->getId()]);
-        } else {
-            $subject->shouldReceive('getUserIds')->andReturn([]);
         }
 
         if ($clientBelongsToOrg) {

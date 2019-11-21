@@ -126,28 +126,21 @@ class ReportRepository extends EntityRepository
     }
 
     /**
-     * @param int $id
-     * @param int $determinant
+     * @param int $orgId
      * @param ParameterBag $query
      * @param string $select
      * @param string|null $status
      * @return array|mixed|null
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getAllByDeterminant($id, $determinant, ParameterBag $query, $select, $status)
+    public function getAllByOrganisation($orgId, ParameterBag $query, $select, $status)
     {
         $qb = $this->createQueryBuilder('r');
         $qb
             ->select(($select === 'count') ? 'COUNT(DISTINCT r)' : 'r,c')
-            ->leftJoin('r.client', 'c');
-
-        if ($determinant === self::USER_DETERMINANT) {
-            $qb->leftJoin('c.users', 'u')->where('u.id = ' . $id);
-        } else {
-            $qb->leftJoin('c.organisation', 'o')->where('o.isActivated = true AND o.id = ' . $id);
-        }
-
-        $qb
+            ->leftJoin('r.client', 'c')
+            ->leftJoin('c.organisation', 'o')
+            ->where('o.isActivated = true AND o.id = ' . $orgId)
             ->andWhere('c.archivedAt IS NULL')
             ->andWhere('r.submitted = false OR r.submitted is null');
 

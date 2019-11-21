@@ -1,33 +1,25 @@
 Feature: Users can access the correct clients
 
-  Scenario: User in a non active organisation can only see their own Clients
-    Given I am logged in as "behat-prof-org-1@org-1.co.uk" with password "Abcd1234"
+  Background:
+    Given "behat-prof-org-1@org-1.co.uk" has been added to the "org-1.co.uk" organisation
+
+  @prof @prof-report-acl
+  Scenario: User in an active organisation can only see the organisations Clients
+    Given the organisation "org-1.co.uk" is active
+    And I am logged in as "behat-prof-org-1@org-1.co.uk" with password "Abcd1234"
+    Then I should see "Showing 2 clients"
+    And I should see the "client-03000026" region
     And I should see the "client-03000025" region
-    And I should not see the "client-03000026" region
-    And I should see the "client" region exactly 1 times
-    When I click on "pa-report-open" in the "client-03000025" region
-    And I save the report as "client-03000025-report"
-    Then the response status code should be 200
-
-  Scenario: User in an inactive organisation edits a report
-    Given I am logged in as "behat-prof-org-2@org-1.co.uk" with password "Abcd1234"
     When I click on "pa-report-open" in the "client-03000026" region
-    And I save the report as "client-03000026-report"
     Then the response status code should be 200
+    And I save the report as "client-03000026-report"
 
-  Scenario: User attempts to view report not belonging to their client
-    Given I am logged in as "behat-prof-org-1@org-1.co.uk" with password "Abcd1234"
+  @prof @prof-report-acl
+  Scenario: User in an inactive Organisation can not edit the reports of any Clients in their Organisation
+    Given the organisation "org-1.co.uk" is inactive
+    And I am logged in as "behat-prof-org-1@org-1.co.uk" with password "Abcd1234"
+    Then I should see "No reports found"
+    # Attempt to access report of client 03000026 who is attached to the user for legacy reasons
     When I go to the report URL "overview" for "client-03000026-report"
     Then the response status code should be 500
 
-  Scenario: User in an active organisation can only see the organisations Clients
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And the organisation "behat-prof-org-3@org-2.co.uk" is active
-    And "behat-prof-org-3@org-2.co.uk" has been added to the "behat-prof-org-3@org-2.co.uk" organisation
-    When I am logged in as "behat-prof-org-3@org-2.co.uk" with password "Abcd1234"
-    Then I should not see the "client-03000025" region
-    And I should see the "client-03000027" region
-    And I should see the "client-03000028" region
-    When I click on "pa-report-open" in the "client-03000027" region
-    And I save the report as "client-03000027-report"
-    Then the response status code should be 200

@@ -78,10 +78,6 @@ class ClientVoter extends Voter
             return true;
         }
 
-        if (in_array($user->getId(), $client->getUserIds())) {
-            return true;
-        }
-
         return false;
     }
 }

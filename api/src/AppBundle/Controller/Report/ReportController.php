@@ -4,10 +4,12 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\Service\ReportService;
 use AppBundle\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\AbstractQuery;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -543,19 +545,6 @@ class ReportController extends RestController
     }
 
     /**
-     * @Route("/get-all-by-user", methods={"GET"})
-     * @Security("has_role('ROLE_ORG')")
-     *
-     * @param Request $request
-     * @return array
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function getAllByUser(Request $request)
-    {
-        return $this->getReponseByDeterminant($request, $this->getUser()->getId(), ReportRepository::USER_DETERMINANT);
-    }
-
-    /**
      * @Route("/get-all-by-org", methods={"GET"})
      * @Security("has_role('ROLE_ORG')")
      *
@@ -565,30 +554,22 @@ class ReportController extends RestController
      */
     public function getAllByOrg(Request $request)
     {
-        $organisation = $this->getUser()->getOrganisations()->first();
+        /** @var ArrayCollection $organisations */
+        $organisations = $this->getUser()->getOrganisations();
 
-        if (null === $organisation) {
-            throw new NotFoundHttpException('Organisation not found');
+        if ($organisations->isEmpty()) {
+            return $this->buildResponseForZeroReports();
         }
 
-        return $this->getReponseByDeterminant($request, $organisation->getId(), ReportRepository::ORG_DETERMINANT);
-    }
+        /** @var Organisation $organisation */
+        $organisation = $organisations->first();
 
-    /**
-     * @param Request $request
-     * @param $userId
-     * @param int $determinant
-     * @return array
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    private function getReponseByDeterminant(Request $request, $id, int $determinant): array
-    {
-        $data = $this->repository->getAllByDeterminant($id, $determinant, $request->query, 'reports', $request->query->get('status'));
+        $data = $this->repository->getAllByOrganisation($organisation->getId(), $request->query, 'reports', $request->query->get('status'));
         $this->updateReportStatusCache($this->getUser()->getId());
 
         $result = [];
         $result['reports'] = (null === $data) ? [] : $this->transformReports($data);
-        $result['counts'] = $this->getReportCountsByStatus($request, $id, $determinant);
+        $result['counts'] = $this->getReportCountsByStatus($request, $organisation->getId());
 
         return $result;
     }
@@ -625,18 +606,17 @@ class ReportController extends RestController
 
     /**
      * @param Request $request
-     * @param $id
-     * @param $determinant
+     * @param int $orgId
      * @return array
      * @throws \Exception
      */
-    private function getReportCountsByStatus(Request $request, $id, $determinant): array
+    private function getReportCountsByStatus(Request $request, $orgId): array
     {
 
         $counts = [
-            Report::STATUS_NOT_STARTED => $this->getCountOfReportsByStatus(Report::STATUS_NOT_STARTED, $id, $determinant, $request),
-            Report::STATUS_NOT_FINISHED => $this->getCountOfReportsByStatus(Report::STATUS_NOT_FINISHED, $id, $determinant, $request),
-            Report::STATUS_READY_TO_SUBMIT => $this->getCountOfReportsByStatus(Report::STATUS_READY_TO_SUBMIT, $id, $determinant, $request)
+            Report::STATUS_NOT_STARTED => $this->getCountOfReportsByStatus(Report::STATUS_NOT_STARTED, $orgId, $request),
+            Report::STATUS_NOT_FINISHED => $this->getCountOfReportsByStatus(Report::STATUS_NOT_FINISHED, $orgId, $request),
+            Report::STATUS_READY_TO_SUBMIT => $this->getCountOfReportsByStatus(Report::STATUS_READY_TO_SUBMIT, $orgId, $request)
         ];
 
         $counts['total'] = array_sum($counts);
@@ -645,17 +625,17 @@ class ReportController extends RestController
     }
 
     /**
-     * @param $status
-     * @param $orgId
+     * @param string $status
+     * @param int $orgId
      * @param Request $request
      * @return array|null
      * @throws \Exception
      */
-    private function getCountOfReportsByStatus($status, $id, $determinant, Request $request)
+    private function getCountOfReportsByStatus($status, $orgId, Request $request)
     {
         return $this
             ->repository
-            ->getAllByDeterminant($id, $determinant, $request->query, 'count', $status);
+            ->getAllByOrganisation($orgId, $request->query, 'count', $status);
     }
 
     /**
@@ -828,5 +808,22 @@ class ReportController extends RestController
         $this->persistAndFlush($checklist);
 
         return ['checklist' => $checklist->getId()];
+    }
+
+    /**
+     * @return array
+     */
+    private function buildResponseForZeroReports(): array
+    {
+        $result = [];
+        $result['reports'] = [];
+        $result['counts'] = [
+            Report::STATUS_NOT_STARTED => 0,
+            Report::STATUS_NOT_FINISHED => 0,
+            Report::STATUS_READY_TO_SUBMIT => 0,
+            'total' => 0
+        ];
+
+        return $result;
     }
 }

@@ -129,20 +129,24 @@ trait DbTrait
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
         exec($command);
     }
-
-    private function theOrganisationActiveIs($organisationEmailIdentifier, $active)
-    {
-        $query = "UPDATE organisation SET is_activated = '{$active}' WHERE email_identifier = '{$organisationEmailIdentifier}'";
-        $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
-        exec($command);
-    }
-
     /**
      * @Given the organisation :organisationEmailIdentifier is active
      */
     public function theOrganisationIsActive($organisationEmailIdentifier)
     {
-        $this->theOrganisationActiveIs($organisationEmailIdentifier, true);
+        $query = "UPDATE organisation SET is_activated = true WHERE email_identifier = '{$organisationEmailIdentifier}'";
+        $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
+        exec($command);
+    }
+
+    /**
+     * @Given the organisation :organisationEmailIdentifier is inactive
+     */
+    public function theOrganisationIsInactive($organisationEmailIdentifier)
+    {
+        $query = "UPDATE organisation SET is_activated = false WHERE email_identifier = '{$organisationEmailIdentifier}'";
+        $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
+        exec($command);
     }
 
     /**
@@ -154,7 +158,7 @@ trait DbTrait
           (
             (SELECT id FROM dd_user WHERE email = '{$userEmail}'),
             (SELECT id FROM organisation WHERE email_identifier = '{$organisationEmailIdentifier}')
-          )";
+          )  ON CONFLICT DO NOTHING";
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
         exec($command);
     }

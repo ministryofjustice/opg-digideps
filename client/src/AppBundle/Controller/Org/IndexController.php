@@ -31,11 +31,7 @@ class IndexController extends AbstractController
             'offset'            => $request->query->get('offset') ?: 0,
         ];
 
-        $endpoint = sprintf(
-            '%s?%s',
-            $this->getUser()->belongsToActiveOrganisation() ?'/report/get-all-by-org' : 'report/get-all-by-user',
-            http_build_query($currentFilters)
-        );
+        $endpoint = sprintf('/report/get-all-by-org?%s', http_build_query($currentFilters));
 
         $response = $this->getRestClient()->get($endpoint, 'array');
 
