@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/admin")
@@ -32,10 +33,16 @@ class ReportSubmissionController extends AbstractController
      */
     private $s3Storage;
 
-    public function __construct(DocumentDownloader $documentDownloader, S3Storage $s3Storage)
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(DocumentDownloader $documentDownloader, S3Storage $s3Storage, TranslatorInterface $translator)
     {
         $this->documentDownloader = $documentDownloader;
         $this->s3Storage = $s3Storage;
+        $this->translator = $translator;
     }
 
     /**
@@ -96,7 +103,7 @@ class ReportSubmissionController extends AbstractController
                 [$retrievedDocuments, $missingDocuments] = $this->documentDownloader->retrieveDocumentsFromS3ByReportSubmissionIds($request, $reportSubmissionIds);
                 $downloadLocation = $this->documentDownloader->zipDownloadedDocuments($retrievedDocuments);
             } catch(\Throwable $e) {
-                $request->getSession()->getFlashBag()->add('error', 'There was an error downloading the requested documents: ', $e->getMessage());
+                $this->addFlash('error', 'There was an error downloading the requested documents: ' . $e->getMessage());
                 return $this->redirectToRoute('admin_documents_download_ready');
             }
         }
@@ -157,7 +164,7 @@ class ReportSubmissionController extends AbstractController
     private function processPost(Request $request)
     {
         if (empty($request->request->get('checkboxes'))) {
-            $request->getSession()->getFlashBag()->add('error', 'Please select at least one report submission');
+            $this->addFlash('error', 'Please select at least one report submission');
             return;
         }
 
@@ -170,14 +177,14 @@ class ReportSubmissionController extends AbstractController
             switch ($action) {
                 case self::ACTION_ARCHIVE:
                     $this->processArchive($checkedBoxes);
-                    $notice = $this->get('translator')->transChoice(
+                    $notice = $this->translator->transChoice(
                         'page.postactions.archived.notice',
                         $totalChecked,
                         ['%count%' => $totalChecked],
                         'admin-documents'
                         );
 
-                    $request->getSession()->getFlashBag()->add('notice', $notice);
+                        $this->addFlash('notice', $notice);
                     break;
 
                 case self::ACTION_DOWNLOAD:
@@ -192,7 +199,7 @@ class ReportSubmissionController extends AbstractController
                         $fileName = $this->documentDownloader->zipDownloadedDocuments($retrievedDocuments);
                         return $this->documentDownloader->generateDownloadResponse($fileName);
                     } catch (\Throwable $e) {
-                        $request->getSession()->getFlashBag()->add('error', 'There was an error downloading the requested documents: ', $e->getMessage());
+                        $this->addFlash('error', 'There was an error downloading the requested documents: ' . $e->getMessage());
                         return $this->redirectToRoute('admin_documents');
                     }
 
