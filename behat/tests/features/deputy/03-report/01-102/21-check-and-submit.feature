@@ -127,11 +127,25 @@ Feature: Report submit
             | created_by_role | ROLE_LAY_DEPUTY |
         And I press "search_submit"
         Then I should see the "report-submission" region exactly 1 times
-        # assert submission and download
-        Given each text should be present in the corresponding region:
+        And each text should be present in the corresponding region:
             | John 102 | report-submission-1 |
             | 102 | report-submission-1 |
             | Report + docs | report-submission-1 |
+
+    @deputy
+    Scenario: admin can download individual report flies
+        Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+        And I click on "admin-documents"
+        When I follow "Download"
+        Then the response status code should be 200
+        And the response should have the "Content-Type" header containing "application/octet-stream"
+        And the response should have the "Content-Disposition" header containing "DigiRepTransactions"
+        And the response should have the "Content-Disposition" header containing ".csv"
+
+    @deputy
+    Scenario: admin can download zips of a report's files
+        Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+        And I click on "admin-documents"
         When I check "Select 102"
         Then I click on "download"
         # only checks one level deep. In this case, we check for a single report zip file
