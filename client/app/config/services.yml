@@ -57,6 +57,7 @@ services:
         class: AppBundle\Controller\Admin\ReportSubmissionController
         arguments:
             $documentDownloader: "@AppBundle\\Service\\DocumentDownloader"
+            $s3Storage: "@s3_storage"
 
     AppBundle\Service\DocumentDownloader:
         class: AppBundle\Service\DocumentDownloader

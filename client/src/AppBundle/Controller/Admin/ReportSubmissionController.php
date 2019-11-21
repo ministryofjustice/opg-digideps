@@ -4,13 +4,11 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Service\Client\TokenStorage\RedisStorage;
 use AppBundle\Service\DocumentDownloader;
-use AppBundle\Service\DocumentService;
+use AppBundle\Service\File\Storage\S3Storage;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -23,15 +21,21 @@ class ReportSubmissionController extends AbstractController
 {
     const ACTION_DOWNLOAD = 'download';
     const ACTION_ARCHIVE = 'archive';
-    
+
     /**
      * @var DocumentDownloader
      */
     private $documentDownloader;
 
-    public function __construct(DocumentDownloader $documentDownloader)
+    /**
+     * @var S3Storage
+     */
+    private $s3Storage;
+
+    public function __construct(DocumentDownloader $documentDownloader, S3Storage $s3Storage)
     {
         $this->documentDownloader = $documentDownloader;
+        $this->s3Storage = $s3Storage;
     }
 
     /**
@@ -99,6 +103,38 @@ class ReportSubmissionController extends AbstractController
 
         $response = new BinaryFileResponse($downloadLocation);
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+        return $response;
+    }
+
+    /**
+     * @Route("/documents/{submissionId}/{documentId}/download", name="admin_document_download", methods={"GET"})
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     */
+    public function downloadIndividualDocument(int $submissionId, int $documentId)
+    {
+        $client = $this->getRestClient();
+
+        /** @var EntityDir\Report\ReportSubmission $submission */
+        $submission = $client->get("report-submission/{$submissionId}", 'Report\\ReportSubmission');
+
+        $documents = array_values(array_filter($submission->getDocuments(), function ($document) use ($documentId) {
+            return $document->getId() === $documentId;
+        }));
+
+        if (count($documents) !== 1) {
+            throw $this->createNotFoundException('Document not found');
+        }
+
+        /** @var EntityDir\Report\Document $document */
+        $document = $documents[0];
+
+        $contents = $this->s3Storage->retrieve($document->getStorageReference());
+
+        $response = new Response($contents);
+        $response->headers->set('Content-Type', 'application/octet-stream');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $document->getFileName() . '"');
+        $response->sendHeaders();
+
         return $response;
     }
 
