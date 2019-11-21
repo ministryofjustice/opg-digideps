@@ -3,6 +3,11 @@
 namespace Tests\AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Repository\ClientRepository;
+use AppBundle\Entity\Repository\OrganisationRepository;
+use AppBundle\Entity\Repository\ReportRepository;
+use AppBundle\Entity\Repository\TeamRepository;
+use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Factory\OrganisationFactory;
 use AppBundle\Service\OrgService;
 use Doctrine\ORM\EntityManager;
@@ -124,7 +129,22 @@ class OrgServiceTest extends WebTestCase
     public function setUp(): void
     {
         $logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();
-        $this->pa = new OrgService(self::$em, $logger, new OrganisationFactory([]));
+        $userRepository = self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\UserRepository');
+        $reportRepository = self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\ReportRepository');
+        $clientRepository =self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\ClientRepository');
+        $organisationRepository = self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\OrganisationRepository');
+        $teamRepository = self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\TeamRepository');
+
+        $this->pa = new OrgService(self::$em,
+            $logger,
+            $userRepository,
+            $reportRepository,
+            $clientRepository,
+            $organisationRepository,
+            new OrganisationFactory([]),
+            $teamRepository
+        );
+
         Fixtures::deleteReportsData(['dd_user', 'client']);
         self::$em->clear();
     }

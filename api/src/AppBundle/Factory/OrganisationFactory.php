@@ -22,20 +22,20 @@ class OrganisationFactory
      * @param bool $isActivated
      * @return Organisation
      */
-    public function createFromFullEmail(string $email, bool $isActivated = false): Organisation
+    public function createFromFullEmail(?string $name, string $email, bool $isActivated = false): Organisation
     {
         $email = strtolower($email);
 
         $domainArray = explode('@', $email);
 
         if (count($domainArray) === 1 && !empty($domainArray[0])) {
-            return $this->createFromEmailIdentifier($domainArray[0], $isActivated);
+            return $this->createFromEmailIdentifier($name, $domainArray[0], $isActivated);
         }
 
         if (count($domainArray) === 2 && !empty($domainArray[1])) {
             $domain = $domainArray[1];
             $emailIdentifier = in_array($domain, $this->sharedDomains) ? $email : $domain;
-            return $this->create($emailIdentifier, $isActivated);
+            return $this->create($name, $emailIdentifier, $isActivated);
         }
 
         throw new \InvalidArgumentException(sprintf(
@@ -48,13 +48,13 @@ class OrganisationFactory
      * @param bool $isActivated
      * @return Organisation
      */
-    public function createFromEmailIdentifier(string $emailIdentifier, bool $isActivated = false): Organisation
+    public function createFromEmailIdentifier(?string $name, string $emailIdentifier, bool $isActivated = false): Organisation
     {
         $domainArray = explode('@', $emailIdentifier);
         if ((count($domainArray) == 1 && !empty($domainArray[0])) ||
             (count($domainArray) == 2 && !empty($domainArray[1]))
         )   {
-            return $this->create(strtolower($emailIdentifier), $isActivated);
+            return $this->create($name, strtolower($emailIdentifier), $isActivated);
         }
         throw new \InvalidArgumentException(sprintf(
             "Unable to create organisation from 'emailIdentifier': '%s'", $emailIdentifier
@@ -67,7 +67,7 @@ class OrganisationFactory
      * @param bool $isActivated
      * @return Organisation
      */
-    private function create(string $emailIdentifier, bool $isActivated): Organisation
+    private function create(?string $name, string $emailIdentifier, bool $isActivated): Organisation
     {
         if (empty($emailIdentifier)) {
             throw new \InvalidArgumentException(sprintf(
@@ -75,8 +75,10 @@ class OrganisationFactory
             ));
         }
 
+        $name = $name ?: self::DEFAULT_ORG_NAME;
+
         return (new Organisation())
-            ->setName(self::DEFAULT_ORG_NAME)
+            ->setName($name)
             ->setEmailIdentifier($emailIdentifier)
             ->setIsActivated($isActivated);
     }

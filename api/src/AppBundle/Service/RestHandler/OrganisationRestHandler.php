@@ -82,6 +82,7 @@ class OrganisationRestHandler
         }
 
         $organisation = $this->organisationFactory->createFromEmailIdentifier(
+            $data['name'],
             $data['email_identifier'],
             (bool)$data['is_activated']
         );
@@ -156,6 +157,7 @@ class OrganisationRestHandler
     private function populateOrganisation(array $data, Organisation $organisation): void
     {
         $organisation
+            ->setName($data['name'])
             ->setEmailIdentifier($data['email_identifier'])
             ->setIsActivated((bool)$data['is_activated']);
     }

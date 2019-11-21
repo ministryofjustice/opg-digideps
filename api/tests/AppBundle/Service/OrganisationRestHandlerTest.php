@@ -60,22 +60,29 @@ class OrganisationRestHandlerTest extends TestCase
 
     /**
      * @test
+     * @dataProvider validData
      * @group acs
      */
-    public function create_validOrgDetails()
+    public function create_validOrgDetails(array $data)
     {
         $this->orgRepository->findOneBy(Argument::any())->willReturn(null);
         $this->validator->validate(Argument::any())->willReturn([]);
-        $this->orgFactory->createFromEmailIdentifier(Argument::any(), Argument::any())->willReturn(new Organisation());
+        $this->orgFactory->createFromEmailIdentifier(Argument::any(), Argument::any(), Argument::any())->willReturn(new Organisation());
 
         $this->em->persist(Argument::type(Organisation::class))->shouldBeCalled();
         $this->em->flush()->shouldBeCalled();
 
         $sut = $this->generateSut();
 
-        self::assertInstanceOf(Organisation::class, $sut->create(
-            ['email_identifier' => 'abc.com', 'is_activated' => true])
-        );
+        self::assertInstanceOf(Organisation::class, $sut->create($data));
+    }
+
+    public function validData()
+    {
+        return [
+            'Org with name' => [['name' => 'ABC', 'email_identifier' => 'abc.com', 'is_activated' => true], "ABC"],
+            'Org with no name' => [['name' => null, 'email_identifier' => 'abc.com', 'is_activated' => false], "Your Organisation"],
+        ];
     }
 
     /**
@@ -115,7 +122,7 @@ class OrganisationRestHandlerTest extends TestCase
 
         self::expectException(OrganisationCreationException::class);
 
-        $sut->create(['email_identifier' => 'gmail.com', 'is_activated' => true]);
+        $sut->create(['name' => 'ABC', 'email_identifier' => 'gmail.com', 'is_activated' => true]);
     }
 
     /**
@@ -130,7 +137,7 @@ class OrganisationRestHandlerTest extends TestCase
 
         self::expectException(OrganisationCreationException::class);
 
-        $sut->create(['email_identifier' => 'gmail.com', 'is_activated' => true]);
+        $sut->create(['name' => 'ABC', 'email_identifier' => 'gmail.com', 'is_activated' => true]);
     }
 
     /**
@@ -141,7 +148,7 @@ class OrganisationRestHandlerTest extends TestCase
     {
         $this->orgRepository->findOneBy(Argument::any())->willReturn(null);
         $this->validator->validate(Argument::any())->willReturn(['an error']);
-        $this->orgFactory->createFromEmailIdentifier(Argument::any(), Argument::any())->willReturn(new Organisation());
+        $this->orgFactory->createFromEmailIdentifier(Argument::any(), Argument::any(), Argument::any())->willReturn(new Organisation());
 
         $sut = $this->generateSut();
 
@@ -171,7 +178,7 @@ class OrganisationRestHandlerTest extends TestCase
         $updatedOrg = $sut->update(['name' => 'ABC', 'email_identifier' => 'abc.com', 'is_activated' => true], 1);
 
         self::assertEquals('abc.com', $updatedOrg->getEmailIdentifier());
-        self::assertEquals('Your Organisation', $updatedOrg->getName());
+        self::assertEquals('ABC', $updatedOrg->getName());
         self::assertTrue($updatedOrg->isActivated());
     }
 

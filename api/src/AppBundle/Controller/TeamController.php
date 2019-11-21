@@ -81,6 +81,6 @@ class TeamController extends RestController
      */
     private function orgService()
     {
-        return $this->get('org_service');
+        return $this->get('AppBundle\Service\OrgService');
     }
 }

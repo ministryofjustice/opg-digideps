@@ -37,7 +37,7 @@ class OrgController extends RestController
         }
 
         /** @var OrgService $pa */
-        $pa = $this->get('org_service');
+        $pa = $this->get('AppBundle\Service\OrgService');
 
         try {
             $ret = $pa->addFromCasrecRows($data);

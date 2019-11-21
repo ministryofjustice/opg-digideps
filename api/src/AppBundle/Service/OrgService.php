@@ -8,13 +8,12 @@ use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Repository\ClientRepository;
 use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\Entity\Repository\ReportRepository;
+use AppBundle\Entity\Repository\TeamRepository;
 use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
 use AppBundle\Factory\OrganisationFactory;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Psr\Log\LoggerInterface;
@@ -28,24 +27,29 @@ class OrgService
     protected $em;
 
     /**
-     * @var OrganisationRepository|ObjectRepository
+     * @var OrganisationRepository
      */
     private $orgRepository;
 
     /**
-     * @var UserRepository|ObjectRepository
+     * @var UserRepository
      */
     private $userRepository;
 
     /**
-     * @var ReportRepository|ObjectRepository
+     * @var ReportRepository
      */
     private $reportRepository;
 
     /**
-     * @var ClientRepository|ObjectRepository
+     * @var ClientRepository
      */
     private $clientRepository;
+
+    /**
+     * @var TeamRepository
+     */
+    private $teamRepository;
 
     /**
      * @var LoggerInterface
@@ -84,22 +88,36 @@ class OrgService
      */
     private $log;
 
-
     /**
      * @param EntityManager $em
      * @param LoggerInterface $logger
+     * @param UserRepository $userRepository
+     * @param ReportRepository $reportRepository
+     * @param ClientRepository $clientRepository
+     * @param OrganisationRepository $orgRepository
      * @param OrganisationFactory $orgFactory
+     * @param TeamRepository $teamRepository
      */
-    public function __construct(EntityManager $em, LoggerInterface $logger, OrganisationFactory $orgFactory)
+    public function __construct(
+        EntityManager $em,
+        LoggerInterface $logger,
+        UserRepository $userRepository,
+        ReportRepository $reportRepository,
+        ClientRepository $clientRepository,
+        OrganisationRepository $orgRepository,
+        OrganisationFactory $orgFactory,
+        TeamRepository $teamRepository
+    )
     {
         $this->em = $em;
         $this->logger = $logger;
-        $this->userRepository = $em->getRepository(User::class);
-        $this->reportRepository = $em->getRepository(EntityDir\Report\Report::class);
-        $this->clientRepository = $em->getRepository(Client::class);
-        $this->orgRepository = $em->getRepository(Organisation::class);
-        $this->log = [];
+        $this->userRepository = $userRepository;
+        $this->reportRepository = $reportRepository;
+        $this->clientRepository = $clientRepository;
+        $this->orgRepository = $orgRepository;
         $this->orgFactory = $orgFactory;
+        $this->teamRepository = $teamRepository;
+        $this->log = [];
     }
 
     /**
@@ -271,7 +289,7 @@ class OrgService
         $this->currentOrganisation = $this->orgRepository->findByEmailIdentifier($csvRow['Email']);
         if (null === $this->currentOrganisation) {
             try {
-                $this->currentOrganisation = $this->createOrganisationFromEmail($csvRow['Email']);
+                $this->currentOrganisation = $this->createOrganisationFromEmail(null, $csvRow['Email']);
             } catch (\InvalidArgumentException $e) {
                 $this->warnings[] = $e->getMessage();
             }
@@ -285,9 +303,9 @@ class OrgService
      * @return Organisation
      * @throws \Doctrine\ORM\ORMException
      */
-    private function createOrganisationFromEmail(string $email)
+    private function createOrganisationFromEmail(?string $name, string $email)
     {
-        $organisation = $this->orgFactory->createFromFullEmail($email);
+        $organisation = $this->orgFactory->createFromFullEmail($name, $email);
         $this->em->persist($organisation);
         $this->em->flush($organisation);
 
@@ -463,7 +481,7 @@ class OrgService
      */
     public function getMemberById(User $userCreator, string $id)
     {
-        $user = $this->em->getRepository(User::class)->find($id);
+        $user = $this->userRepository->find($id);
         if (!array_key_exists($id, $userCreator->getMembersInAllTeams())) {
             throw new AccessDeniedException('User not part of the same team');
         }
@@ -477,13 +495,10 @@ class OrgService
      */
     public function addUserToUsersTeams(User $userWithTeams, User $userBeingAdded)
     {
-        $teamIds = $this->em->getRepository('AppBundle\Entity\Team')->findAllTeamIdsByUser($userWithTeams);
+        $teamIds = $this->teamRepository->findAllTeamIdsByUser($userWithTeams);
 
         foreach ($teamIds as $teamId) {
-            $this
-                ->em
-                ->getRepository('AppBundle\Entity\Client')
-                ->saveUserToTeam($userBeingAdded, $teamId);
+            $this->clientRepository->saveUserToTeam($userBeingAdded, $teamId);
         }
     }
 
@@ -493,13 +508,10 @@ class OrgService
      */
     public function addUserToUsersClients(User $userWithClients, User $userBeingAdded)
     {
-        $clientIds = $this->em->getRepository('AppBundle\Entity\Client')->findAllClientIdsByUser($userWithClients);
+        $clientIds = $this->clientRepository->findAllClientIdsByUser($userWithClients);
 
         foreach ($clientIds as $clientId) {
-            $this
-                ->em
-                ->getRepository('AppBundle\Entity\Client')
-                ->saveUserToClient($userBeingAdded, $clientId);
+            $this->clientRepository->saveUserToClient($userBeingAdded, $clientId);
         }
     }
 

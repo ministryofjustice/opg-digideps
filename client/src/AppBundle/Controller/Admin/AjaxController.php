@@ -77,7 +77,7 @@ class AjaxController extends AbstractController
             }
 
             /** @var OrgService $orgService */
-            $orgService = $this->get('org_service');
+            $orgService = $this->get('AppBundle\Service\OrgService');
             /** @var Session $session */
             $session = $request->getSession();
 

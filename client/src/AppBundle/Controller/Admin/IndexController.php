@@ -464,7 +464,7 @@ class IndexController extends AbstractController
                 if (count($data) < $chunkSize) {
                     $compressedData = CsvUploader::compressData($data);
                     /** @var OrgService $orgService */
-                    $orgService = $this->get('org_service');
+                    $orgService = $this->get('AppBundle\Service\OrgService');
                     /** @var Session $session */
                     $session = $request->getSession();
 
