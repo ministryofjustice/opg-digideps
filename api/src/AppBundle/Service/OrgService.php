@@ -302,6 +302,18 @@ class OrgService
             throw new \RuntimeException('Case number already used');
         }
 
+        if ($client && $this->clientHasNewOrganisation($client)) {
+            $csvDeputyNo = EntityDir\User::padDeputyNumber($row['Deputy No']);
+            if ($client->getNamedDeputy()->getDeputyNo() !== $csvDeputyNo) {
+                // discharge client and recreate new one
+                $this->dischargeClient($client);
+                unset($client);
+            } else {
+                //
+                $client->setOrganisation(null);
+            }
+        }
+
         if ($client) {
             $this->log('FOUND client in database with id: ' . $client->getId());
             $client->setUsers(new ArrayCollection());
@@ -521,5 +533,24 @@ class OrgService
     {
         $this->currentOrganisation->addClient($client);
         $client->setOrganisation($this->currentOrganisation);
+    }
+
+    /**
+     * Returns true if clients organisation has changed
+     *
+     * @param EntityDir\Client $client
+     * @return bool
+     */
+    private function clientHasNewOrganisation(EntityDir\Client $client)
+    {
+        if ($client->getOrganisation()->getId() !== $this->currentOrganisation->getId()) {
+            return true;
+        }
+        return false;
+    }
+
+    private function dischargeClient(EntityDir\Client $client)
+    {
+        $client->setDeletedAt(new\DateTime());
     }
 }
