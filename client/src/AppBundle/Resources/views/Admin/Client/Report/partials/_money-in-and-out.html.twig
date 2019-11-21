@@ -192,41 +192,7 @@
     {% endif %}
 {% endif %}
 
-{% set contents %}
-    {% if report.hasSection('moneyIn') %}
-        {% include 'AppBundle:Report/MoneyIn:_list.html.twig' with {
-            hideEditLink: true
-        } %}
-    {% elseif report.hasSection('moneyInShort') %}
-        {% include 'AppBundle:Report/MoneyInShort:_answers.html.twig' with {
-            hideEditLink: true
-        } %}
-    {% endif %}
-{% endset %}
-
-{{ macros.details({
-    summaryText: (page ~ '.revealTitle.moneyInSummary') | trans,
-    text: contents,
-    classes: 'govuk-!-margin-bottom-0',
-}) }}
-
-{% set contents %}
-    {% if report.hasSection('moneyOut') %}
-        {% include 'AppBundle:Report/MoneyOut:_list.html.twig' with {
-            hideEditLink: true
-        } %}
-    {% elseif report.hasSection('moneyOutShort') %}
-        {% include 'AppBundle:Report/MoneyOutShort:_answers.html.twig' with {
-            hideEditLink: true
-        } %}
-    {% endif %}
-{% endset %}
-
-{{ macros.details({
-    summaryText: (page ~ '.revealTitle.moneyOutSummary') | trans,
-    text: contents,
-    classes: 'govuk-!-margin-bottom-0',
-}) }}
+{% include 'AppBundle:Admin/Client/Report/partials:_money-summaries.html.twig' %}
 
 {% if report.hasSection('gifts') %}
     {% set contents %}
@@ -259,5 +225,3 @@
 <div class="govuk-!-margin-top-6 govuk-!-margin-bottom-6">
     <a href="#moneyInOut" class="behat-link-back-to-money-in-out">{{ (page ~ '.backToQuestion') | trans }}</a>
 </div>
-
-

@@ -310,7 +310,11 @@
             <span class="govuk-details__summary-text">{{ options.summaryText }}</span>
         </summary>
         <div class="govuk-details__text">
-            {{ options.text }}
+            {% if options.text is defined %}
+                {{ options.text }}
+            {% elseif options.html is defined %}
+                {{ options.html | raw }}
+            {% endif %}
         </div>
     </details>
 {% endmacro %}
