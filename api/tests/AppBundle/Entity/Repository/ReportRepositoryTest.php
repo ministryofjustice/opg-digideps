@@ -2,15 +2,16 @@
 
 namespace Tests\AppBundle\Entity\Repository;
 
+use AppBundle\Entity\Client;
 use AppBundle\Entity\ClientInterface;
 use AppBundle\Entity\Report\Fee;
 use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Mockery\MockInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Tests\Fixtures;
 use Mockery as m;
@@ -18,7 +19,7 @@ use Mockery as m;
 class ReportRepositoryTest extends WebTestCase
 {
     /**
-     * @var Fixtures
+     * @var Fixtures|null
      */
     private static $fixtures;
     private static $repo;
@@ -29,14 +30,17 @@ class ReportRepositoryTest extends WebTestCase
     private $sut;
 
     /**
-     * @var Report
+     * @var Report | MockInterface
      */
     private $mockReport;
 
     /**
-     * @var EntityManagerInterface
+     * @var EntityManagerInterface | MockInterface
      */
     private $mockEm;
+
+    /** @var ClientInterface | MockInterface */
+    private $mockClient;
 
     private $mockMetaClass;
 
@@ -44,7 +48,7 @@ class ReportRepositoryTest extends WebTestCase
     {
         $this->mockEm = m::mock(EntityManagerInterface::class);
         $this->mockMetaClass = m::mock(ClassMetadata::class);
-        $this->mockReport = m::mock(ReportInterface::class);
+        $this->mockReport = m::mock(Report::class);
         $this->mockClient = m::mock(ClientInterface::class);
 
         $this->mockReport->shouldReceive('getClient')

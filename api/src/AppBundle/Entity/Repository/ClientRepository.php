@@ -4,7 +4,9 @@ namespace AppBundle\Entity\Repository;
 
 use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
+use AppBundle\Service\Search\ClientSearchFilter;
 use Doctrine\ORM\EntityRepository;
+use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 
 /**
  * ClientRepository.
@@ -14,6 +16,9 @@ use Doctrine\ORM\EntityRepository;
  */
 class ClientRepository extends EntityRepository
 {
+    /** @var ClientSearchFilter */
+    private $filter;
+
     /**
      * Search Clients
      *
@@ -21,34 +26,31 @@ class ClientRepository extends EntityRepository
      * @param string $orderBy   field to order by
      * @param string $sortOrder order of field order ASC|DESC
      * @param int    $limit     number of results to return
-     * @param string $offset
+     * @param int $offset
      *
      * @return Client[]|array
      */
-    public function searchClients($query = '', $orderBy = 'lastname', $sortOrder = 'ASC', $limit = 100, $offset = '0')
+    public function searchClients($query = '', $orderBy = 'lastname', $sortOrder = 'ASC', $limit = 100, $offset = 0)
     {
-        $qb = $this->createQueryBuilder('c');
-        $qb->setFirstResult($offset);
-        $qb->setMaxResults($limit);
-        $qb->orderBy('c.' . $orderBy, $sortOrder);
+        /** @var SoftDeleteableFilter $filter */
+        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter->disableForEntity(Client::class);
+
+        $alias = 'c';
+        $qb = $this->createQueryBuilder($alias);
 
         if ($query) {
-            if (Client::isValidCaseNumber($query)) { // case number
-                $qb->andWhere('lower(c.caseNumber) = :cn');
-                $qb->setParameter('cn', strtolower($query));
-            } else { // client.lastname
-                $qb->andWhere('lower(c.lastname) LIKE :qLike ');
-                $qb->setParameter('qLike', '%' . strtolower($query) . '%');
-            }
+            $this->filter->handleSearchTermFilter($query, $qb, $alias);
         }
 
-        // ensure max 100 results
         $limit = ($limit <= 100) ? $limit : 100;
         $qb->setMaxResults($limit);
-        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class); //disable softdelete for createdBy, needed from admin area
-        $clients = $qb->getQuery()->getResult(); /* @var $clients Client[] */
+        $qb->setFirstResult((int)$offset);
+        $qb->orderBy($alias . '.' . $orderBy, $sortOrder);
+
         $this->_em->getFilters()->enable('softdeleteable');
-        return $clients;
+
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -69,7 +71,7 @@ class ClientRepository extends EntityRepository
 
     /**
      * @param User $user
-     * @param $clientId
+     * @param int $clientId
      * @throws \Doctrine\DBAL\DBALException
      */
     public function saveUserToClient(User $user, $clientId)
@@ -84,7 +86,7 @@ class ClientRepository extends EntityRepository
 
     /**
      * @param User $user
-     * @param $teamId
+     * @param int $teamId
      * @throws \Doctrine\DBAL\DBALException
      */
     public function saveUserToTeam(User $user, $teamId)
@@ -98,21 +100,31 @@ class ClientRepository extends EntityRepository
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @return null
      */
     public function getArrayById($id)
     {
-        // called by ADMIN users so must include active and inactive orgs
+        /** @var SoftDeleteableFilter $filter */
+        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter->disableForEntity(Client::class);
+
         $query = $this
             ->getEntityManager()
             ->createQuery('SELECT c, r, ndr, o, nd FROM AppBundle\Entity\Client c LEFT JOIN c.reports r LEFT JOIN c.ndr ndr LEFT JOIN c.namedDeputy nd LEFT JOIN c.organisation o WHERE c.id = ?1')
             ->setParameter(1, $id);
 
-        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class);
         $result = $query->getArrayResult();
         $this->_em->getFilters()->enable('softdeleteable');
 
         return count($result) === 0 ? null : $result[0];
+    }
+
+    /**
+     * @param ClientSearchFilter $filter
+     */
+    public function setSearchFilter(ClientSearchFilter $filter): void
+    {
+        $this->filter = $filter;
     }
 }
