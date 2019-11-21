@@ -161,11 +161,12 @@ class OrgService
 
         $flashBag->add(
             'notice',
-            sprintf('Added %d Prof users, %d PA users, %d clients and %d reports. Go to users tab to enable them',
+            sprintf('Added %d Prof users, %d PA users, %d clients and %d reports. %d clients discharged. Go to users tab to enable them',
                 $this->output['added']['prof_users'],
                 $this->output['added']['pa_users'],
                 $this->output['added']['clients'],
-                $this->output['added']['reports']
+                $this->output['added']['reports'],
+                $this->output['added']['discharged_clients']
             )
         );
     }

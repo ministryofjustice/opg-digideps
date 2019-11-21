@@ -105,7 +105,7 @@ class OrgService
     {
         $this->log('Received ' . count($data) . ' records');
 
-        $this->added = ['prof_users' => [],'pa_users' => [], 'clients' => [], 'reports' => []];
+        $this->added = ['prof_users' => [],'pa_users' => [], 'clients' => [], 'discharged_clients' => [], 'reports' => []];
         $errors = [];
         foreach ($data as $index => $row) {
             $row = array_map('trim', $row);
@@ -132,6 +132,7 @@ class OrgService
         sort($this->added['prof_users']);
         sort($this->added['pa_users']);
         sort($this->added['clients']);
+        sort($this->added['discharged_clients']);
         sort($this->added['reports']);
 
         return [
@@ -306,11 +307,14 @@ class OrgService
             $csvDeputyNo = EntityDir\User::padDeputyNumber($row['Deputy No']);
             if ($client->getNamedDeputy()->getDeputyNo() !== $csvDeputyNo) {
                 // discharge client and recreate new one
+
+                $clientCaseNo = $client->getCaseNumber();
                 $this->dischargeClient($client);
                 unset($client);
+                $this->added['discharged_clients'][] = $clientCaseNo;
+
             } else {
-                //
-                $client->setOrganisation(null);
+                //$client->setOrganisation(null);
             }
         }
 
