@@ -22,8 +22,8 @@ Feature: Users can access the correct clients
 
   Scenario: User in an active organisation can only see the organisations Clients
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And the organisation "behat-prof-org-3@org-2.co.uk" is active
-    And "behat-prof-org-3@org-2.co.uk" has been added to the "behat-prof-org-3@org-2.co.uk" organisation
+    And the organisation "org-2.co.uk" is active
+    And "behat-prof-org-3@org-2.co.uk" has been added to the "org-2.co.uk" organisation
     When I am logged in as "behat-prof-org-3@org-2.co.uk" with password "Abcd1234"
     Then I should not see the "client-03000025" region
     And I should see the "client-03000027" region
