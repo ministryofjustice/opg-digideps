@@ -14,9 +14,13 @@ imports:
 services:
 
     _defaults:
-        autowire: false
-        autoconfigure: false
+        autowire: true
+        autoconfigure: true
         public: true
+
+    AppBundle\Controller\:
+        resource: "@AppBundle/Controller/"
+        tags: [controller.service_arguments]
 
     redirector_service:
         class: AppBundle\Service\Redirector
@@ -67,9 +71,3 @@ services:
 
     AppBundle\Service\File\DocumentsZipFileCreator:
         class: AppBundle\Service\File\DocumentsZipFileCreator
-
-    AppBundle\Controller\Admin\IndexController:
-        class: AppBundle\Controller\Admin\IndexController
-        arguments:
-            - '@AppBundle\Service\OrgService'
-        public: true
