@@ -46,3 +46,12 @@ services:
       arguments:
           - '@AppBundle\Service\OrgService'
       public: true
+
+  AppBundle\Controller\UserController:
+      class: AppBundle\Controller\UserController
+      arguments:
+          - '@AppBundle\Service\UserService'
+          - '@security.encoder_factory'
+          - '@AppBundle\Entity\Repository\UserRepository'
+          - '@AppBundle\Entity\Repository\ClientRepository'
+      public: true
