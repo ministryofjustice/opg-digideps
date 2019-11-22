@@ -39,7 +39,9 @@
         {{ checklist_radios(form.answers.giftingReasonable) }}
         {% include 'AppBundle:Admin/Client/Report/partials:_gifting-summary.html.twig' %}
 
-        {{ checklist_radios(form.answers.debtManageable, { margin: 6 }) }}
+        {{ checklist_radios(form.answers.debtManageable) }}
+        {{ include('AppBundle:Admin/Client/Report/partials:_debts-summary.html.twig') }}
+
         {{ checklist_radios(form.answers.anySpendingConcerns, { margin: 6 }) }}
 
         <h3 class="govuk-heading-m" id="anchor-full-review-referral">{{ (page ~ '.heading.fullReview.referral') | trans }}</h3>
