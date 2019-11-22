@@ -62,6 +62,7 @@ checklistPage:
     lifestyleResponses: View health and lifestyle responses
     profDeputyCosts: View deputy's responses
     profDeputyCostsEstimate: View deputy's responses
+    lodgingSummary: View lodging summary
   noTransferToShow: No money transfers to view
   noDocuments: No supporting documents
   incompleteSubmitted: Incomplete submitted

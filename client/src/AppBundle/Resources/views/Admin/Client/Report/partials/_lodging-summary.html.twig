@@ -1,0 +1,36 @@
+{% from 'AppBundle:Macros:macros.html.twig' import details %}
+{% trans_default_domain 'admin-checklist' %}
+
+{% set contents %}
+    <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ (page ~ '.form.lodgingSummary.label') | trans }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.checklist.lodgingSummary }}
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ (page ~ '.form.finalDecision.legend') | trans }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.checklist.finalDecision }}
+            </dd>
+        </div>
+    </dl>
+
+    {% if report.checklist.checklistInformation %}
+        <h4 class="govuk-heading-m">{{ (page ~ '.form.furtherInformation.label') | trans }}</h4>
+
+        {{ include('AppBundle:Admin/Client/Report/partials:_further-information-table.html.twig', {
+            information: report.checklist.checklistInformation
+        }) }}
+    {% endif %}
+{% endset %}
+
+{{ details({
+    summaryText: (page ~ '.revealTitle.lodgingSummary') | trans,
+    text: contents,
+}) }}

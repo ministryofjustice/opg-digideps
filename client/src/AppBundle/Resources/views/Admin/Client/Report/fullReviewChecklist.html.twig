@@ -26,6 +26,7 @@
         <h3 class="govuk-heading-m" id="anchor-full-review-lodgingConcerns">{{ (page ~ '.heading.fullReview.lodgingConcerns') | trans }}</h3>
 
         {{ checklist_radios(form.answers.anyLodgingConcerns, { margin: 6 }) }}
+        {% include 'AppBundle:Admin/Client/Report/partials:_lodging-summary.html.twig' %}
 
         <h3 class="govuk-heading-m" id="anchor-full-review-spendingAndDebt">{{ (page ~ '.heading.fullReview.spendingAndDebt') | trans }}</h3>
 
