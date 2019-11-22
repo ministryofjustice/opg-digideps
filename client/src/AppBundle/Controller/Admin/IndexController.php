@@ -473,7 +473,7 @@ class IndexController extends AbstractController
 
                 $redirectUrl = $this->generateUrl('admin_org_upload');
 
-                return $orgService->process($data, $redirectUrl);
+                return $this->orgService->process($data, $redirectUrl);
             } catch (\Throwable $e) {
                 $message = $e->getMessage();
 
