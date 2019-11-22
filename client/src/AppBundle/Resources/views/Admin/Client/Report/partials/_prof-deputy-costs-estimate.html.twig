@@ -10,10 +10,6 @@
 
 {{ checklist_radios(form.nextBillingEstimatesSatisfactory) }}
 
-{% set contents %}
-    {%  %}
-{% endset %}
-
 {{ details({
     summaryText: (page ~ '.revealTitle.profDeputyCostsEstimate') | trans,
     html: include('AppBundle:Report/ProfDeputyCostsEstimate:_answers.html.twig', {
