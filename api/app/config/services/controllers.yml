@@ -40,3 +40,9 @@ services:
       - '@AppBundle\v2\Assembler\OrganisationAssembler'
       - '@AppBundle\v2\Transformer\OrganisationTransformer'
     public: true
+
+  AppBundle\Controller\OrgController:
+      class: AppBundle\Controller\OrgController
+      arguments:
+          - '@AppBundle\Service\OrgService'
+      public: true
