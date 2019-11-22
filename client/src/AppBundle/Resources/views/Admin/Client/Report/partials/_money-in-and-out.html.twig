@@ -195,17 +195,7 @@
 {% include 'AppBundle:Admin/Client/Report/partials:_money-summaries.html.twig' %}
 
 {% if report.hasSection('gifts') %}
-    {% set contents %}
-        {% include 'AppBundle:Report/Gift:_list.html.twig' with {
-            hideEditLink: true
-        } %}
-    {% endset %}
-
-    {{ macros.details({
-        summaryText: (page ~ '.revealTitle.giftsSummary') | trans,
-        text: contents,
-        classes: 'govuk-!-margin-bottom-0',
-    }) }}
+    {{ include('AppBundle:Admin/Client/Report/partials:_gifting-summary.html.twig', { collapseMargin: true }) }}
 {% endif %}
 
 {% if report.hasSection('deputyExpenses') %}
