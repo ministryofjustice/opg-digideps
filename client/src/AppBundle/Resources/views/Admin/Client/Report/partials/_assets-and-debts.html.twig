@@ -9,15 +9,9 @@
 
 {{ checklist_radios(form.assetsDeclaredAndManaged) }}
 
-{% set contents %}
-    {% include 'AppBundle:Report/Asset:_list.html.twig' with {
-        hideEditLink: true
-    } %}
-{% endset %}
-
 {{ details({
     summaryText: (page ~ '.revealTitle.assetsSummary') | trans,
-    text: contents,
+    html: include('AppBundle:Report/Asset:_list.html.twig', { hideEditLink: true })
 }) }}
 
 {{ checklist_radios(form.debtsManaged) }}

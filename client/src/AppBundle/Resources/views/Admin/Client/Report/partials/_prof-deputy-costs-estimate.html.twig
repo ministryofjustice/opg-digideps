@@ -11,14 +11,14 @@
 {{ checklist_radios(form.nextBillingEstimatesSatisfactory) }}
 
 {% set contents %}
-    {% include 'AppBundle:Report/ProfDeputyCostsEstimate:_answers.html.twig' with {
-        'report': report,
-        'hideEditLink' : hideEditLink,
-        'submittedEstimateCosts': submittedEstimateCosts
-    } %}
+    {%  %}
 {% endset %}
 
 {{ details({
     summaryText: (page ~ '.revealTitle.profDeputyCostsEstimate') | trans,
-    text: contents,
+    html: include('AppBundle:Report/ProfDeputyCostsEstimate:_answers.html.twig', {
+        report: report,
+        hideEditLink : hideEditLink,
+        submittedEstimateCosts: submittedEstimateCosts
+    })
 }) }}
