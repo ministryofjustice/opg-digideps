@@ -3,8 +3,14 @@
 namespace Tests\AppBundle\Controller;
 
 
+use AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker;
+use AppBundle\Service\BruteForce\AttemptsInTimeChecker;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\Fixtures;
 
 abstract class AbstractTestController extends WebTestCase
@@ -19,6 +25,12 @@ abstract class AbstractTestController extends WebTestCase
      */
     protected static $frameworkBundleClient;
 
+    /** @var string|false $deputySecret */
+    protected static $deputySecret;
+
+    /** @var string|false $adminSecret */
+    protected static $adminSecret;
+
     /**
      * Create static client and fixtures.
      */
@@ -30,12 +42,19 @@ abstract class AbstractTestController extends WebTestCase
         Fixtures::deleteReportsData();
 
         self::$frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false, ]);
-        $em = self::$frameworkBundleClient->getContainer()->get('em');
 
-        $t = self::$frameworkBundleClient->getContainer()->getParameter('fixtures');
+        /** @var Container $container */
+        $container = self::$frameworkBundleClient->getContainer();
+        /** @var EntityManager $em */
+        $em = $container->get('em');
+
+        $t = $container->getParameter('fixtures');
 
         self::$fixtures = new Fixtures($em);
         $em->clear();
+
+        self::$deputySecret = getenv('SECRETS_FRONT_KEY');
+        self::$adminSecret = getenv('SECRETS_ADMIN_KEY');
 
         unset($em);
     }
@@ -93,10 +112,14 @@ abstract class AbstractTestController extends WebTestCase
             $headers,
            $rawData
         );
-        $response = self::$frameworkBundleClient->getResponse();
 
-        $this->assertTrue($response->headers->contains('Content-Type', 'application/json'), 'wrong content type. Headers: ' . $response->headers);
-        $return = json_decode($response->getContent(), true);
+        /** @var Response $response */
+        $response = self::$frameworkBundleClient->getResponse();
+        $this->assertTrue($response->headers->contains('Content-Type', 'application/json'), 'wrong content type. Headers: ' . $headers['CONTENT_TYPE']);
+
+        /** @var string $content */
+        $content = $response->getContent();
+        $return = json_decode($content, true);
         $this->assertNotEmpty($return, 'Response not json');
         if (!empty($options['mustSucceed'])) {
             $this->assertTrue($return['success'], "Endpoint didn't succeed as expected. Response: " . print_r($return, true));
@@ -120,17 +143,27 @@ abstract class AbstractTestController extends WebTestCase
     /**
      * @param string $email
      * @param string $password
-     *
-     * @return string token
+     * @param string|false $clientSecret
+     * @return mixed token
+     * @throws \Exception
      */
-    public function login($email, $password, $clientSecret)
+    public function login(string $email, string $password, $clientSecret)
     {
         self::$frameworkBundleClient->request('GET', '/'); // warm up to get container
 
         // reset brute-force counters
         $key = 'email' . $email;
-        self::$frameworkBundleClient->getContainer()->get('attemptsInTimeChecker')->resetAttempts($key);
-        self::$frameworkBundleClient->getContainer()->get('attemptsIncrementalWaitingChecker')->resetAttempts($key);
+
+        /** @var Container $container */
+        $container = self::$frameworkBundleClient->getContainer();
+
+        /** @var AttemptsInTimeChecker $timeChecker */
+        $timeChecker = $container->get('attemptsInTimeChecker');
+        $timeChecker->resetAttempts($key);
+
+        /** @var AttemptsIncrementalWaitingChecker $waitingChecker */
+        $waitingChecker = $container->get('attemptsIncrementalWaitingChecker');
+        $waitingChecker->resetAttempts($key);
 
         $responseArray = $this->assertJsonRequest('POST', '/auth/login', [
             'mustSucceed' => true,
@@ -142,8 +175,9 @@ abstract class AbstractTestController extends WebTestCase
         ])['data'];
         $this->assertEquals($email, $responseArray['email']);
 
-        // check token
-        $token = self::$frameworkBundleClient->getResponse()->headers->get('AuthToken');
+        /** @var Response $response */
+        $response = self::$frameworkBundleClient->getResponse();
+        $token = $response->headers->get('AuthToken');
 
         return $token;
     }
@@ -183,7 +217,7 @@ abstract class AbstractTestController extends WebTestCase
      */
     protected function loginAsDeputy()
     {
-        return $this->login('deputy@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
+        return $this->login('deputy@example.org', 'Abcd1234', self::$deputySecret);
     }
 
     /**
@@ -191,7 +225,7 @@ abstract class AbstractTestController extends WebTestCase
      */
     protected function loginAsPa()
     {
-        return $this->login('pa@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
+        return $this->login('pa@example.org', 'Abcd1234', self::$deputySecret);
     }
 
     /**
@@ -199,7 +233,7 @@ abstract class AbstractTestController extends WebTestCase
      */
     protected function loginAsPaAdmin()
     {
-        return $this->login('pa_admin@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
+        return $this->login('pa_admin@example.org', 'Abcd1234', self::$deputySecret);
     }
 
     /**
@@ -207,7 +241,7 @@ abstract class AbstractTestController extends WebTestCase
      */
     protected function loginAsPaTeamMember()
     {
-        return $this->login('pa_team_member@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
+        return $this->login('pa_team_member@example.org', 'Abcd1234', self::$deputySecret);
     }
 
     /**
@@ -215,7 +249,7 @@ abstract class AbstractTestController extends WebTestCase
      */
     protected function loginAsProf()
     {
-        return $this->login('prof@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
+        return $this->login('prof@example.org', 'Abcd1234', self::$deputySecret);
     }
 
     /**
@@ -223,7 +257,7 @@ abstract class AbstractTestController extends WebTestCase
      */
     protected function loginAsAdmin()
     {
-        return $this->login('admin@example.org', 'Abcd1234', API_TOKEN_ADMIN);
+        return $this->login('admin@example.org', 'Abcd1234', self::$adminSecret);
     }
 
     /**
@@ -231,7 +265,7 @@ abstract class AbstractTestController extends WebTestCase
      */
     protected function loginAsCaseManager()
     {
-        return $this->login('casemanager@example.org', 'Abcd1234', API_TOKEN_ADMIN);
+        return $this->login('casemanager@example.org', 'Abcd1234', self::$adminSecret);
     }
 
     protected function tearDown(): void
