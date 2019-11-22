@@ -7,10 +7,13 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Repository\ReportRepository;
+use AppBundle\Entity\User;
 use AppBundle\Service\ReportService;
 use AppBundle\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\EntityManager;
+use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -67,7 +70,9 @@ class ReportController extends RestController
         ]);
 
         // report type is taken from CASREC. In case that's not available (shouldn't happen unless casrec table is dropped), use a 102
-        $reportType = $this->get('opg_digideps.report_service')->getReportTypeBasedOnCasrec($client) ?: Report::TYPE_102;
+        /** @var ReportService $reportService */
+        $reportService = $this->get('opg_digideps.report_service');
+        $reportType = $reportService->getReportTypeBasedOnCasrec($client) ?: Report::TYPE_102;
         $report = new Report($client, $reportType, new \DateTime($reportData['start_date']), new \DateTime($reportData['end_date']));
         $report->setReportSeen(true);
 
@@ -94,7 +99,10 @@ class ReportController extends RestController
 
         /* @var $report Report */
         if ($this->isGranted(EntityDir\User::ROLE_CASE_MANAGER)) {
-            $this->getEntityManager()->getFilters()->getFilter('softdeleteable')->disableForEntity(EntityDir\Client::class);
+            /** @var SoftDeleteableFilter $filter */
+            $filter = $this->getEntityManager()->getFilters()->getFilter('softdeleteable');
+            $filter->disableForEntity(EntityDir\Client::class);
+
             $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
             $this->getEntityManager()->getFilters()->enable('softdeleteable');
         } else {
@@ -125,7 +133,9 @@ class ReportController extends RestController
             throw new \InvalidArgumentException('Missing agreed_behalf_deputy');
         }
 
-        if ($data['agreed_behalf_deputy'] === 'not_deputy' && $this->getUser()->isLayDeputy()) {
+        /** @var User $user */
+        $user = $this->getUser();
+        if ($data['agreed_behalf_deputy'] === 'not_deputy' && $user->isLayDeputy()) {
             throw new \InvalidArgumentException('\'not_deputy\' is invalid option of agreed_behalf_deputy for lay deputies');
         }
 
@@ -134,12 +144,15 @@ class ReportController extends RestController
             ? $data['agreed_behalf_deputy_explanation'] : null;
         $currentReport->setAgreedBehalfDeputyExplanation($xplanation);
 
-        // submit and create new year's report
-        $nextYearReport = $this->get('opg_digideps.report_service')
-            ->submit($currentReport, $this->getUser(), new \DateTime($data['submit_date']));
+        /** @var ReportService $reportService */
+        $reportService = $this->get('opg_digideps.report_service');
 
-        //response to pass back. if the report was alreay submitted, no NY report is created
-        return $nextYearReport ? $nextYearReport->getId() : null;
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $nextYearReport = $reportService->submit($currentReport, $user, new \DateTime($data['submit_date']));
+
+        return $nextYearReport->getId();
     }
 
     /**
@@ -481,9 +494,7 @@ class ReportController extends RestController
      */
     public function unsubmit(Request $request, $id)
     {
-        /**
-         * @var $report Report
-         */
+        /** @var Report $report */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
         if (!$report->getSubmitted()) {
             throw new \RuntimeException('Cannot unsubmit an active report');
@@ -497,8 +508,8 @@ class ReportController extends RestController
             'end_date' => 'notEmpty',
         ]);
 
+        /** @var ReportService $rs */
         $rs = $this->get('opg_digideps.report_service');
-        /** @var $rs ReportService */
         $rs->unSubmit(
             $report,
             new \DateTime($data['un_submit_date']),
@@ -517,11 +528,14 @@ class ReportController extends RestController
      * Update users's reports cached status when not set
      * Flushes every 5 records to allow resuming in case of timeouts
      *
-     * @param $userId
+     * @param int $userId
      */
     private function updateReportStatusCache($userId)
     {
+        /** @var EntityManager $em */
         $em = $this->get('em');
+
+        /** @var ReportRepository $repo */
         $repo = $em->getRepository(Report::class);
 
         while (($reports = $repo
@@ -554,8 +568,11 @@ class ReportController extends RestController
      */
     public function getAllByOrg(Request $request)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
         /** @var ArrayCollection $organisations */
-        $organisations = $this->getUser()->getOrganisations();
+        $organisations = $user->getOrganisations();
 
         if ($organisations->isEmpty()) {
             return $this->buildResponseForZeroReports();
@@ -565,7 +582,7 @@ class ReportController extends RestController
         $organisation = $organisations->first();
 
         $data = $this->repository->getAllByOrganisation($organisation->getId(), $request->query, 'reports', $request->query->get('status'));
-        $this->updateReportStatusCache($this->getUser()->getId());
+        $this->updateReportStatusCache($user->getId());
 
         $result = [];
         $result['reports'] = (null === $data) ? [] : $this->transformReports($data);
@@ -644,17 +661,18 @@ class ReportController extends RestController
      */
     public function submitDocuments(Request $request, $id)
     {
+        /* @var Report $currentReport */
         $currentReport = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
-        /* @var $currentReport Report */
         $this->denyAccessIfReportDoesNotBelongToUser($currentReport);
 
-        $data = $this->deserializeBodyContent($request);
+        /** @var ReportService $reportService */
+        $reportService = $this->get('opg_digideps.report_service');
 
-        // submit and create new year's report
-        $report = $this->get('opg_digideps.report_service')
-            ->submitAdditionalDocuments($currentReport, $this->getUser(), new \DateTime());
+        /** @var User $user */
+        $user = $this->getUser();
 
-        //response to pass back
+        $reportService->submitAdditionalDocuments($currentReport, $user, new \DateTime());
+
         return ['reportId' => $currentReport->getId()];
     }
 
@@ -666,24 +684,29 @@ class ReportController extends RestController
      */
     public function insertChecklist(Request $request, $report_id)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        /** @var Report $report */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $report_id, 'Report not found');
 
         $checklistData = $this->deserializeBodyContent($request);
 
+        /** @var EntityDir\Report\Checklist $checklist */
         $checklist = new EntityDir\Report\Checklist($report);
         $checklist = $this->populateChecklistEntity($checklist, $checklistData);
 
         if (!empty($checklistData['further_information_received'])) {
             $info = new EntityDir\Report\ChecklistInformation($checklist, $checklistData['further_information_received']);
-            $info->setCreatedBy($this->getUser());
+            $info->setCreatedBy($user);
             $this->getEntityManager()->persist($info);
         }
 
         if ($checklistData['button_clicked'] == 'submitAndContinue') {
-            $checklist->setSubmittedBy(($this->getUser()));
+            $checklist->setSubmittedBy($user);
             $checklist->setSubmittedOn(new \DateTime());
         }
-        $checklist->setLastModifiedBy($this->getUser());
+        $checklist->setLastModifiedBy($user);
 
         $this->persistAndFlush($checklist);
 
@@ -698,6 +721,10 @@ class ReportController extends RestController
      */
     public function updateChecklist(Request $request, $report_id)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        /** @var Report $report */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $report_id, 'Report not found');
 
         $checklistData = $this->deserializeBodyContent($request);
@@ -709,16 +736,16 @@ class ReportController extends RestController
 
         if (!empty($checklistData['further_information_received'])) {
             $info = new EntityDir\Report\ChecklistInformation($checklist, $checklistData['further_information_received']);
-            $info->setCreatedBy($this->getUser());
+            $info->setCreatedBy($user);
             $this->getEntityManager()->persist($info);
         }
 
         if ($checklistData['button_clicked'] == 'submitAndContinue') {
-            $checklist->setSubmittedBy(($this->getUser()));
+            $checklist->setSubmittedBy($user);
             $checklist->setSubmittedOn(new \DateTime());
         }
 
-        $checklist->setLastModifiedBy($this->getUser());
+        $checklist->setLastModifiedBy($user);
         $this->persistAndFlush($checklist);
 
         return ['checklist' => $checklist->getId()];
@@ -782,10 +809,15 @@ class ReportController extends RestController
      */
     public function upsertChecklist(Request $request, $report_id)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        /** @var Report $report */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $report_id, 'Report not found');
 
         $checklistData = $this->deserializeBodyContent($request);
 
+        /** @var EntityDir\Report\ReviewChecklist|null $checklist */
         $checklist = $this
             ->getRepository(EntityDir\Report\ReviewChecklist::class)
             ->findOneBy([ 'report' => $report->getId() ]);
@@ -799,11 +831,11 @@ class ReportController extends RestController
             ->setDecision($checklistData['decision']);
 
         if ($checklistData['is_submitted']) {
-            $checklist->setSubmittedBy(($this->getUser()));
+            $checklist->setSubmittedBy($user);
             $checklist->setSubmittedOn(new \DateTime());
         }
 
-        $checklist->setLastModifiedBy($this->getUser());
+        $checklist->setLastModifiedBy($user);
 
         $this->persistAndFlush($checklist);
 

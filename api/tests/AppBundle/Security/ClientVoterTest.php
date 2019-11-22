@@ -10,6 +10,7 @@ use AppBundle\Entity\User;
 use AppBundle\Security\ClientVoter;
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Security;
@@ -27,9 +28,11 @@ class ClientVoterTest extends TestCase
          $subject = new Client();
          $subject->setOrganisation($org);
 
+         /** @var TokenInterface|ObjectProphecy $token */
          $token = self::prophesize(TokenInterface::class);
          $token->getUser()->willReturn($orgMemberUser);
 
+         /** @var Security|ObjectProphecy $security */
          $security = self::prophesize(Security::class);
          $sut = new ClientVoter($security->reveal());
 
@@ -45,9 +48,11 @@ class ClientVoterTest extends TestCase
 
         $subject = new Client();
 
+        /** @var TokenInterface|ObjectProphecy $token */
         $token = self::prophesize(TokenInterface::class);
         $token->getUser()->willReturn($user);
 
+        /** @var Security|ObjectProphecy $security */
         $security = self::prophesize(Security::class);
         $security->isGranted('ROLE_ADMIN')->willReturn(true);
         $sut = new ClientVoter($security->reveal());
@@ -68,9 +73,11 @@ class ClientVoterTest extends TestCase
         $subject = new Client();
         $subject->setOrganisation($org);
 
+        /** @var TokenInterface|ObjectProphecy $token */
         $token = self::prophesize(TokenInterface::class);
         $token->getUser()->willReturn($orgMemberUser);
 
+        /** @var Security|ObjectProphecy $security */
         $security = self::prophesize(Security::class);
         $sut = new ClientVoter($security->reveal());
 
@@ -84,8 +91,10 @@ class ClientVoterTest extends TestCase
     {
         $subject = new DateTime();
 
+        /** @var TokenInterface|ObjectProphecy $token */
         $token = self::prophesize(TokenInterface::class);
 
+        /** @var Security|ObjectProphecy $security */
         $security = self::prophesize(Security::class);
         $sut = new ClientVoter($security->reveal());
 
@@ -100,9 +109,11 @@ class ClientVoterTest extends TestCase
         $user = new User();
         $subject = new Client();
 
+        /** @var TokenInterface|ObjectProphecy $token */
         $token = self::prophesize(TokenInterface::class);
         $token->getUser()->willReturn($user);
 
+        /** @var Security|ObjectProphecy $security */
         $security = self::prophesize(Security::class);
         $sut = new ClientVoter($security->reveal());
 

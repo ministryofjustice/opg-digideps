@@ -163,4 +163,16 @@ trait DbTrait
         exec($command);
     }
 
+    /**
+     * @Given :userEmail has been removed from their organisation
+     */
+    public function hasBeenRemovedFromTheirOrganisation($userEmail)
+    {
+        $query = "DELETE FROM organisation_user WHERE user_id = 
+          (
+            SELECT id FROM dd_user WHERE email = '{$userEmail}'
+          )";
+        $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
+        exec($command);
+    }
 }
