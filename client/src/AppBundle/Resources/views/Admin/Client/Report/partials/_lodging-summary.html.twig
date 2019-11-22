@@ -1,6 +1,13 @@
 {% from 'AppBundle:Macros:macros.html.twig' import details %}
 {% trans_default_domain 'admin-checklist' %}
 
+{% set translations = {
+    'for-review': 'forReview',
+    incomplete: 'incomplete',
+    'further-casework-required': 'furtherCaseworkRequired',
+    satisfied: 'satisfied',
+} %}
+
 {% set contents %}
     <dl class="govuk-summary-list">
         <div class="govuk-summary-list__row">
@@ -16,7 +23,7 @@
                 {{ (page ~ '.form.finalDecision.legend') | trans }}
             </dt>
             <dd class="govuk-summary-list__value">
-                {{ report.checklist.finalDecision }}
+                {{ (page ~ '.form.finalDecision.options.' ~ translations[report.checklist.finalDecision]) | trans }}
             </dd>
         </div>
     </dl>
