@@ -202,7 +202,7 @@ class UserController extends RestController
 
         /** @var User $loggedInuser */
         $loggedInUser = $this->getUser();
-        $requestedUserIsLogged = $loggedInUser == $user->getId();
+        $requestedUserIsLogged = $loggedInUser->getId() == $user->getId();
 
         $groups = $request->query->has('groups') ?
             $request->query->get('groups') : ['user'];
