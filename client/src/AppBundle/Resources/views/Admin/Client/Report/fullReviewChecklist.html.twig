@@ -36,7 +36,9 @@
         {{ checklist_radios(form.answers.expensesReasonable) }}
         {% include 'AppBundle:Admin/Client/Report/partials:_expenses-summary.html.twig' %}
 
-        {{ checklist_radios(form.answers.giftingReasonable, { margin: 6 }) }}
+        {{ checklist_radios(form.answers.giftingReasonable) }}
+        {% include 'AppBundle:Admin/Client/Report/partials:_gifting-summary.html.twig' %}
+
         {{ checklist_radios(form.answers.debtManageable, { margin: 6 }) }}
         {{ checklist_radios(form.answers.anySpendingConcerns, { margin: 6 }) }}
 
