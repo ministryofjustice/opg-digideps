@@ -70,13 +70,10 @@ class UserController extends RestController
         /** @var User $newUser */
         $newUser = $this->populateUser(new User(), $data);
 
-        /** @var UserService $userService */
-        $userService = $this->get('user_service');
-
         /** @var User $loggedInUser */
         $loggedInUser = $this->getUser();
 
-        $userService->addUser($loggedInUser, $newUser, $data);
+        $this->userService->addUser($loggedInUser, $newUser, $data);
 
         $groups = $request->query->has('groups') ?
             $request->query->get('groups') : ['user', 'user-teams', 'team'];
