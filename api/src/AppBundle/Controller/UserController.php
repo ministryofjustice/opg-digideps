@@ -308,7 +308,7 @@ class UserController extends RestController
         }
 
         /** @var User $user */
-        $user = $this->userRepository->findOneBy(['email' => strtolower($email)]);
+        $user = $this->findEntityBy(User::class, ['email' => strtolower($email)]);
 
         $hasAdminSecret = $this->getAuthService()->isSecretValidForRole(User::ROLE_ADMIN, $request);
 
