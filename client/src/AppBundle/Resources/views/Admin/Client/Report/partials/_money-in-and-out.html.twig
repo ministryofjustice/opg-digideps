@@ -209,17 +209,7 @@
 {% endif %}
 
 {% if report.hasSection('deputyExpenses') %}
-    {% set contents %}
-        {% include 'AppBundle:Report/DeputyExpense:_list.html.twig' with {
-            hideEditLink: true
-        } %}
-    {% endset %}
-
-    {{ macros.details({
-        summaryText: (page ~ '.revealTitle.deputyExpensesSummary') | trans,
-        text: contents,
-        classes: 'govuk-!-margin-bottom-0',
-    }) }}
+    {% include 'AppBundle:Admin/Client/Report/partials:_expenses-summary.html.twig' %}
 {% endif %}
 
 <div class="govuk-!-margin-top-6 govuk-!-margin-bottom-6">
