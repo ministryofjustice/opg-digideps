@@ -31,14 +31,18 @@
     {% endif %}
 {% endif %}
 
-{{ details({
-    summaryText: (page ~ '.revealTitle.moneyInSummary') | trans,
-    html: include(moneyInSummary, { hideEditLink: true }),
-    classes: 'govuk-!-margin-bottom-0',
-}) }}
+{% if moneyInSummary is defined %}
+    {{ details({
+        summaryText: (page ~ '.revealTitle.moneyInSummary') | trans,
+        html: include(moneyInSummary, { hideEditLink: true }),
+        classes: 'govuk-!-margin-bottom-0',
+    }) }}
+{% endif %}
 
-{{ details({
-    summaryText: (page ~ '.revealTitle.moneyOutSummary') | trans,
-    html: include(moneyOutSummary, { hideEditLink: true }),
-    classes: (collapseMargin is defined and collapseMargin) ? 'govuk-!-margin-bottom-0' : '',
-}) }}
+{% if moneyOutSummary is defined %}
+    {{ details({
+        summaryText: (page ~ '.revealTitle.moneyOutSummary') | trans,
+        html: include(moneyOutSummary, { hideEditLink: true }),
+        classes: (collapseMargin is defined and collapseMargin) ? 'govuk-!-margin-bottom-0' : '',
+    }) }}
+{% endif %}
