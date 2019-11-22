@@ -13,6 +13,17 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ClientController extends RestController
 {
+    /** @var ClientRepository */
+    private $repository;
+
+    /**
+     * @param ClientRepository $repository
+     */
+    public function __construct(ClientRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
     /**
      * Add/Edit a client.
      * When added, the current logged used will be added
@@ -23,11 +34,11 @@ class ClientController extends RestController
     public function upsertAction(Request $request)
     {
         $data = $this->deserializeBodyContent($request);
-        /** @var EntityDir\User $user */
+        /** @var EntityDir\User|null $user */
         $user = $this->getUser();
         $em = $this->getEntityManager();
 
-        if ($request->getMethod() == 'POST') {
+        if ($user && $request->getMethod() == 'POST') {
             $client = new EntityDir\Client();
             $client->addUser($user);
         } else {
@@ -49,7 +60,7 @@ class ClientController extends RestController
             'email'       => 'setEmail',
         ]);
 
-        if ($user !== null && $user->isLayDeputy()) {
+        if ($user && $user->isLayDeputy()) {
             // We come to this route from either editing or creating a client - need to support
             // both routes as an NDR needs to exist for the add client route for Lays
             $ndrRequired = ((array_key_exists('ndr_enabled', $data) && $data['ndr_enabled']) || $user->getNdrEnabled());
@@ -152,10 +163,7 @@ class ClientController extends RestController
     {
         $this->setJmsSerialiserGroups(['client', 'active-period']);
 
-        /** @var ClientRepository $clientRepository */
-        $clientRepository = $this->getRepository(EntityDir\Client::class);
-
-        return $clientRepository->searchClients(
+        return $this->repository->searchClients(
             $request->get('q'),
             $request->get('order_by'),
             $request->get('sort_order'),

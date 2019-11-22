@@ -1,42 +1,50 @@
 Feature: Deputy search
-  @admin @deputy-search
-  Scenario: Search across all deputy roles, excluding clients
+  @admin @admin-search @deputy-search
+  Scenario: Search broadly across all deputy roles, excluding clients
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I fill in "admin_q" with "User-2"
-    When I press "admin_search"
+    And I search in admin for a deputy with the term "User-2"
     Then I should see "User-2"
     And I should see "Found 1 users"
 
-  @admin @deputy-search
-  Scenario: Search across deputy by a role, excluding clients
+  @admin @admin-search @deputy-search
+  Scenario: Search broadly across deputy by a role, excluding clients
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I fill in "admin_q" with "Manager1"
-    And I select "ROLE_PA_NAMED" from "admin[role_name]"
-    When I press "admin_search"
+    And I search in admin for a deputy with the term "Manager1" and filter role by "ROLE_PA_NAMED"
     Then I should see "Found 0 users"
-    When I select "ROLE_CASE_MANAGER" from "admin[role_name]"
+    When I search in admin for a deputy with the term "Manager1" and filter role by "ROLE_CASE_MANAGER"
     And I press "admin_search"
     Then I should see "Found 1 users"
 
-  @admin @deputy-search
-  Scenario: Search across all deputy roles, including clients
+  @admin @admin-search @deputy-search
+  Scenario: Search broadly across all deputy roles, including clients
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I fill in "admin_q" with "103-client"
-    When I press "admin_search"
+    And I search in admin for a deputy with the term "103-client"
     Then I should see "Found 0 users"
     And I should not see "LAY Deputy 103 User"
-    When I check "Include clients"
-    And I press "admin_search"
+    When I search in admin for a deputy with the term "103-client" and include clients
     Then I should see "Found 1 users"
     And I should see "LAY Deputy 103 User"
 
-  @admin @deputy-search
-  Scenario: Search across deputy by a role, including clients
+  @admin@admin-search  @deputy-search
+  Scenario: Search broadly across deputy by a role, including clients
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I fill in "admin_q" with "103-6-client"
-    And I check "Include clients"
-    When I press "admin_search"
+    When I search in admin for a deputy with the term "103-6-client" and include clients
     Then I should see "Found 3 users"
-    When I select "ROLE_PA_NAMED" from "admin[role_name]"
-    And I press "admin_search"
+    When I search in admin for a deputy with the term "103-6-client" and filter role by "ROLE_PA_NAMED" and include clients
     Then I should see "Found 1 users"
+
+  @admin @admin-search @deputy-search
+  Scenario: Search exact name match across all deputy roles, excluding clients
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I search in admin for a deputy with the term "Admin User"
+    Then I should see "admin user"
+    And I should see "Found 1 users"
+
+  @admin @admin-search @deputy-search
+  Scenario: Search exact name match across all deputy roles, including clients
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I search in admin for a deputy with the term "john 104-client"
+    Then I should see "Found 0 users"
+    When I search in admin for a deputy with the term "john 104-client" and include clients
+    Then I should see "Found 1 users"
+    And I should see "Lay Deputy 104 User"

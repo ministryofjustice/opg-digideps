@@ -6,10 +6,9 @@ use AppBundle\Entity\Report\Debt as ReportDebt;
 use AppBundle\Entity\Report\Fee as ReportFee;
 use AppBundle\Entity\Report\MoneyShortCategory as ReportMoneyShortCategory;
 use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\ReportInterface;
+use AppBundle\Service\Search\ClientSearchFilter;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -20,6 +19,9 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class ReportRepository extends EntityRepository
 {
+    /** @var ClientSearchFilter */
+    private $filter;
+
     const USER_DETERMINANT = 1;
     const ORG_DETERMINANT = 2;
 
@@ -50,21 +52,19 @@ class ReportRepository extends EntityRepository
     }
 
     /**
-     * add empty Fees to Report.
-     * Called from doctrine listener.
-     *
      * @param Report $report
-     *
-     * @return int changed records
+     * @return int|null
+     * @throws \Doctrine\ORM\ORMException
      */
-    public function addFeesToReportIfMissing(ReportInterface $report)
+    public function addFeesToReportIfMissing(Report $report)
     {
         // do not add if there are no PAs associated to this client
         $isPaF = function ($user) {
             return $user->isPaDeputy();
         };
+
         if (0 === $report->getClient()->getUsers()->filter($isPaF)->count()) {
-            return;
+            return null;
         }
 
         $ret = 0;
@@ -110,7 +110,7 @@ class ReportRepository extends EntityRepository
 
     /**
      * @param array $caseNumbers
-     * @param $role
+     * @param string $role
      * @return mixed
      */
     public function findAllActiveReportsByCaseNumbersAndRole(array $caseNumbers, $role)
@@ -126,15 +126,15 @@ class ReportRepository extends EntityRepository
     }
 
     /**
-     * @param $id
-     * @param $determinant
+     * @param int $id
+     * @param int $determinant
      * @param ParameterBag $query
-     * @param $select
-     * @param null $status
+     * @param string $select
+     * @param string|null $status
      * @return array|mixed|null
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getAllByDeterminant($id, $determinant, ParameterBag $query, $select, $status = null)
+    public function getAllByDeterminant($id, $determinant, ParameterBag $query, $select, $status)
     {
         $qb = $this->createQueryBuilder('r');
         $qb
@@ -151,10 +151,8 @@ class ReportRepository extends EntityRepository
             ->andWhere('c.archivedAt IS NULL')
             ->andWhere('r.submitted = false OR r.submitted is null');
 
-        if ($q = $query->get('q')) {
-            $qb->andWhere('lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike OR lower(c.caseNumber) = :q');
-            $qb->setParameter('qLike', '%' . strtolower($q) . '%');
-            $qb->setParameter('q', strtolower($q));
+        if ($searchTerm = $query->get('q')) {
+            $this->filter->handleSearchTermFilter($searchTerm, $qb, 'c');
         }
 
         $endOfToday = new \DateTime('today midnight');
@@ -186,5 +184,13 @@ class ReportRepository extends EntityRepository
         $result = $qb->getQuery()->getArrayResult();
 
         return count($result) === 0 ? null : $result;
+    }
+
+    /**
+     * @param ClientSearchFilter $filter
+     */
+    public function setSearchFilter(ClientSearchFilter $filter): void
+    {
+        $this->filter = $filter;
     }
 }

@@ -7,13 +7,11 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
-use AppBundle\Model\Email;
 use AppBundle\Service\CsvUploader;
 use AppBundle\Service\DataImporter\CsvToArray;
 use AppBundle\Service\OrgService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -87,6 +85,7 @@ class IndexController extends AbstractController
                 if (!$this->isGranted(EntityDir\User::ROLE_ADMIN) && $form->getData()->getRoleName() == EntityDir\User::ROLE_ADMIN) {
                     throw new \RuntimeException('Cannot add admin from non-admin user');
                 }
+
                 /** @var EntityDir\User $user */
                 $user = $this->getRestClient()->post('user', $form->getData(), ['admin_add_user'], 'User');
 
@@ -201,7 +200,7 @@ class IndexController extends AbstractController
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      *
      * @param Request $request
-     * @param integer $id
+     * @param string $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function editNdrAction(Request $request, $id)
@@ -415,22 +414,22 @@ class IndexController extends AbstractController
      */
     public function uploadOrgUsersAction(Request $request)
     {
-        $chunkSize = 100;
-
         $form = $this->createForm(FormDir\UploadCsvType::class, null, [
             'method' => 'POST',
         ]);
 
         $form->handleRequest($request);
 
+        $outputStreamResponse = isset($_GET['ajax']);
+
         if ($form->isValid()) {
-            $fileName = $form->get('file')->getData();
             try {
-                $csvObject = new CsvToArray($fileName, false);
-                $data = $csvObject->setExpectedColumns([
+                $fileName = $form->get('file')->getData();
+
+                $data = (new CsvToArray($fileName, false))
+                    ->setExpectedColumns([
                         'Deputy No',
                         //'Pat Create', 'Dship Create', //should hold reg date / Cour order date, but no specs given yet
-                        'Dep Type',
                         'Dep Postcode',
                         'Dep Forename',
                         'Dep Surname',
@@ -460,45 +459,32 @@ class IndexController extends AbstractController
                     ])
                     ->getData();
 
-                // small chunk => upload in same request
-                if (count($data) < $chunkSize) {
-                    $compressedData = CsvUploader::compressData($data);
-                    /** @var OrgService $orgService */
-                    $orgService = $this->get('AppBundle\Service\OrgService');
-                    /** @var Session $session */
-                    $session = $request->getSession();
+                /** @var OrgService $orgService */
+                $orgService = $this->get('org_service');
 
-                    $orgService->uploadAndSetFlashMessages($compressedData, $session->getFlashBag());
-                    return $this->redirect($this->generateUrl('admin_org_upload', ['csvType' => $csvObject->getCsvType()]));
-                }
+                $orgService->setLogging($outputStreamResponse);
 
-                // big amount of data => save data into redis and redirect with nOfChunks param so that JS can do the upload with small AJAX calls
-                $chunks = array_chunk($data, $chunkSize);
+                $redirectUrl = $this->generateUrl('admin_org_upload');
 
-                /** @var \Redis $redis */
-                $redis = $this->get('snc_redis.default');
-
-                foreach ($chunks as $k => $chunk) {
-
-                    $compressedData = CsvUploader::compressData($chunk);
-                    $chunkVariable = strtolower($csvObject->getCsvType()) . '_org_chunk' . $k;
-                    $redis->set($chunkVariable, $compressedData);
-                }
-                return $this->redirect($this->generateUrl('admin_org_upload', ['csvType' => $csvObject->getCsvType(), 'nOfChunks' => count($chunks)]));
+                return $orgService->process($data, $redirectUrl);
             } catch (\Throwable $e) {
                 $message = $e->getMessage();
+
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
                     $message = $e->getData()['message'];
                 }
-                $form->get('file')->addError(new FormError($message));
+
+                if ($outputStreamResponse) {
+                    $this->addFlash('error', $message);
+                    die();
+                } else {
+                    $form->get('file')->addError(new FormError($message));
+                }
             }
         }
 
         return [
-            'csvType'      => $request->get('csvType'),
-            'nOfChunks'      => $request->get('nOfChunks'),
-            'form'          => $form->createView(),
-            'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
+            'form' => $form->createView(),
         ];
     }
 

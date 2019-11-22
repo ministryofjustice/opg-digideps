@@ -27,7 +27,8 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         RegionTrait,
         ReportTrait,
         SiteNavigationTrait,
-        UserTrait;
+        UserTrait,
+        SearchTrait;
 
     protected static $dbName = 'api';
     protected static $sqlPath = 'tests/behat/sql/';

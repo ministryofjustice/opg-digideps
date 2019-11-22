@@ -72,6 +72,7 @@ COPY scripts scripts
 COPY src src
 COPY tests tests
 COPY web web
+COPY phpstan.neon .
 
 # Check for security issues
 RUN su-exec www-data php app/console security:check

@@ -10,6 +10,12 @@ services:
       - '@AppBundle\Entity\Repository\ReportRepository'
       - '@opg_digideps.report_service'
 
+  AppBundle\Controller\ClientController:
+    public: true
+    class: AppBundle\Controller\ClientController
+    arguments:
+      - '@AppBundle\Entity\Repository\ClientRepository'
+
   AppBundle\Controller\StatsController:
     public: true
     class: AppBundle\Controller\StatsController

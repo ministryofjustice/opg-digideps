@@ -46,5 +46,5 @@ data "aws_iam_policy_document" "sync" {
 
 data "aws_s3_bucket" "sync" {
   bucket   = "backup.complete-deputy-report.service.gov.uk"
-  provider = "aws.management"
+  provider = aws.management
 }
