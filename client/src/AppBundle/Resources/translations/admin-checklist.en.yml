@@ -45,6 +45,7 @@ checklistPage:
   revealTitle:
     contactDetails: View contact details
     decisionsSummary: View decisions summary
+    documentsSummary: View supporting documents
     contactsSummary: View contacts summary
     deputysResponses: View deputy's responses
     assetsSummary: View assets summary
@@ -62,6 +63,7 @@ checklistPage:
     profDeputyCosts: View deputy's responses
     profDeputyCostsEstimate: View deputy's responses
   noTransferToShow: No money transfers to view
+  noDocuments: No supporting documents
   incompleteSubmitted: Incomplete submitted
   dueDateSetTo: Due date set to
   sectionsMarkedIncomplete: Sections marked incomplete

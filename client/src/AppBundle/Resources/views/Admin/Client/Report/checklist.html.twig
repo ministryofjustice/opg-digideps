@@ -60,27 +60,7 @@
         <div class="govuk-grid-column-two-thirds">
             {# Attached documents #}
             {% if report.deputyDocuments is defined and (report.deputyDocuments is not empty) %}
-                {% set contents %}
-                    <table>
-                        <thead>
-                            <th>{{ 'summaryPage.filename' | trans({}, 'report-documents') }}</th>
-                            <th class="text--right">{{ 'summaryPage.dateAttached' | trans({}, 'report-documents') }}</th>
-                        </thead>
-                        <tbody>
-                            {% for document in report.deputyDocuments %}
-                                <tr>
-                                    <td>{{ document.fileName }}</td>
-                                    <td class="numeric-small">{{ document.createdOn | date("j F Y H:i") }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                {% endset %}
-
-                {{ details({
-                    summaryText: 'Attached documents',
-                    text: contents,
-                }) }}
+                {% include 'AppBundle:Admin/Client/Report/partials:_document-summary.html.twig' %}
             {% endif %}
 
             {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-checklist-form' }}) }}
