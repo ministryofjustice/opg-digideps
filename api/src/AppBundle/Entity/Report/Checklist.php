@@ -761,7 +761,7 @@ class Checklist
      * @param string $hasDeputyOverchargedFromPreviousEstimates
      * @return $this
      */
-    public function setHasDeputyOverchargedFromPreviousEstimates(string $hasDeputyOverchargedFromPreviousEstimates)
+    public function setHasDeputyOverchargedFromPreviousEstimates($hasDeputyOverchargedFromPreviousEstimates)
     {
         $this->hasDeputyOverchargedFromPreviousEstimates = $hasDeputyOverchargedFromPreviousEstimates;
         return $this;
@@ -779,7 +779,7 @@ class Checklist
      * @param string $nextBillingEstimatesSatisfactory
      * @return $this
      */
-    public function setNextBillingEstimatesSatisfactory(string $nextBillingEstimatesSatisfactory)
+    public function setNextBillingEstimatesSatisfactory($nextBillingEstimatesSatisfactory)
     {
         $this->nextBillingEstimatesSatisfactory = $nextBillingEstimatesSatisfactory;
         return $this;
