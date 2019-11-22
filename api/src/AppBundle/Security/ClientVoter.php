@@ -52,7 +52,6 @@ class ClientVoter extends Voter
             return false;
         }
 
-
         switch ($attribute) {
             case self::VIEW:
             case self::EDIT:
@@ -86,6 +85,6 @@ class ClientVoter extends Voter
      */
     private function clientBelongsToUser(Client $client, User $user): bool
     {
-        return in_array($user->getId(), $client->getUserIds());
+        return $client->getUsers()->contains($user);
     }
 }

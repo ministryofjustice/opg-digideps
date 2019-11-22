@@ -150,9 +150,10 @@ class ReportController extends RestController
         /** @var User $user */
         $user = $this->getUser();
 
+        /** @var Report|null $nextYearReport */
         $nextYearReport = $reportService->submit($currentReport, $user, new \DateTime($data['submit_date']));
 
-        return $nextYearReport->getId();
+        return $nextYearReport ? $nextYearReport->getId() : null;
     }
 
     /**

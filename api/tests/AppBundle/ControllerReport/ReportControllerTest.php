@@ -1,11 +1,12 @@
 <?php
 
-namespace Tests\AppBundle\Controller\Report;
+namespace Tests\AppBundle\ControllerReport;
 
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Fee;
 use AppBundle\Entity\Report\Report;
+use Doctrine\Common\Collections\ArrayCollection;
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class ReportControllerTest extends AbstractTestController
@@ -89,6 +90,21 @@ class ReportControllerTest extends AbstractTestController
         self::$pa3TeamMember = self::fixtures()->getRepo('User')->findOneByEmail('pa_team_member@example.org');
         self::$pa3Client1 = self::fixtures()->createClient(self::$pa3TeamMember, ['setFirstname' => 'pa3Client1']);
         self::$pa3Client1Report1 = self::fixtures()->createReport(self::$pa3Client1);
+
+        // Attach users and clients to an org
+        $pa1Org = self::fixtures()->createOrganisation('Example', 'example3941.org', true);
+        $pa2Org = self::fixtures()->createOrganisation('Example', 'example4032.org', true);
+        $pa3Org = self::fixtures()->createOrganisation('Example', 'example1194.org', true);
+        self::fixtures()->flush();
+
+        self::fixtures()->addClientToOrganisation(self::$pa1Client1->getId(), $pa1Org->getId());
+        self::fixtures()->addUserToOrganisation(self::$pa1->getId(), $pa1Org->getId());
+
+        self::fixtures()->addClientToOrganisation(self::$pa2Client1->getId(), $pa2Org->getId());
+        self::fixtures()->addUserToOrganisation(self::$pa2Admin->getId(), $pa2Org->getId());
+
+        self::fixtures()->addClientToOrganisation(self::$pa3Client1->getId(), $pa3Org->getId());
+        self::fixtures()->addUserToOrganisation(self::$pa3TeamMember->getId(), $pa3Org->getId());
 
         self::fixtures()->flush()->clear();
     }
@@ -764,7 +780,6 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());
 
         // assert checklist information created
-        /* @var $checklist \AppBundle\Entity\Report\Checklist */
         $checklistInfo = $checklist->getChecklistInformation();
         $this->assertCount(1, $checklistInfo);
 

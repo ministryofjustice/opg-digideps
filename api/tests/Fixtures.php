@@ -103,13 +103,13 @@ class Fixtures
     }
 
     /**
-     * @param Report $report
+     * @param mixed $report
      * @param string $filename
      *
      * @return EntityDir\Report\Document
      * @throws \Doctrine\ORM\ORMException
      */
-    public function createDocument(Report $report, string $filename)
+    public function createDocument($report, string $filename)
     {
         $doc = new EntityDir\Report\Document($report);
         $doc->setFileName($filename);

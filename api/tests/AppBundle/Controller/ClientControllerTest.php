@@ -78,8 +78,8 @@ class ClientControllerTest extends AbstractTestController
         self::fixtures()->flush();
         self::fixtures()->addClientToOrganisation(self::$pa1Client1->getId(), $org->getId());
         self::fixtures()->addUserToOrganisation(self::$pa1->getId(), $org->getId());
-        self::fixtures()->flush();
 
+        self::fixtures()->flush()->clear();
     }
 
     public function setUp(): void

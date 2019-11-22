@@ -54,7 +54,8 @@ class NoteControllerTest extends AbstractTestController
         self::fixtures()->addClientToOrganisation(self::$pa1Client1->getId(), $org->getId());
         self::fixtures()->addUserToOrganisation(self::$pa1->getId(), $org->getId());
         self::fixtures()->addUserToOrganisation(self::$pa2->getId(), $org->getId());
-        self::fixtures()->flush();
+
+        self::fixtures()->flush()->clear();
     }
 
     /**

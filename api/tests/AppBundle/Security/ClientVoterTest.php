@@ -2,200 +2,248 @@
 
 namespace Tests\AppBundle\Security;
 
-
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Organisation;
-use AppBundle\Entity\OrganisationInterface;
 use AppBundle\Entity\User;
 use AppBundle\Security\ClientVoter;
-use DateTime;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Security;
-use Mockery as m;
 
 class ClientVoterTest extends TestCase
 {
-     public function testClientBelongsToActiveOrg()
-     {
-         $orgMemberUser = new User();
-         $org = new Organisation();
-         $org->addUser($orgMemberUser);
-         $org->setIsActivated(true);
+    /** @var ClientVoter */
+    private $voter;
 
-         $subject = new Client();
-         $subject->setOrganisation($org);
+    /** @var Security|MockObject */
+    private $security;
 
-         /** @var TokenInterface|ObjectProphecy $token */
-         $token = self::prophesize(TokenInterface::class);
-         $token->getUser()->willReturn($orgMemberUser);
+    /** @var TokenInterface|MockObject */
+    private $token;
 
-         /** @var Security|ObjectProphecy $security */
-         $security = self::prophesize(Security::class);
-         $sut = new ClientVoter($security->reveal());
+    /** @var User */
+    private $user;
 
-         $attributes = [$sut::VIEW, $sut::EDIT];
-         $voteResult = $sut->vote($token->reveal(), $subject, $attributes);
+    /** @var int */
+    private $decision;
 
-         self::assertEquals($sut::ACCESS_GRANTED, $voteResult);
-     }
-
-    public function testUserIsAdmin()
+    public function setUp(): void
     {
-        $user = new User();
-
-        $subject = new Client();
-
-        /** @var TokenInterface|ObjectProphecy $token */
-        $token = self::prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($user);
-
-        /** @var Security|ObjectProphecy $security */
-        $security = self::prophesize(Security::class);
-        $security->isGranted('ROLE_ADMIN')->willReturn(true);
-        $sut = new ClientVoter($security->reveal());
-
-        $attributes = [$sut::VIEW, $sut::EDIT];
-        $voteResult = $sut->vote($token->reveal(), $subject, $attributes);
-
-        self::assertEquals($sut::ACCESS_GRANTED, $voteResult);
-    }
-
-    public function testClientBelongsToInactiveOrg()
-    {
-        $orgMemberUser = new User();
-        $org = new Organisation();
-        $org->addUser($orgMemberUser);
-        $org->setIsActivated(false);
-
-        $subject = new Client();
-        $subject->setOrganisation($org);
-
-        /** @var TokenInterface|ObjectProphecy $token */
-        $token = self::prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($orgMemberUser);
-
-        /** @var Security|ObjectProphecy $security */
-        $security = self::prophesize(Security::class);
-        $sut = new ClientVoter($security->reveal());
-
-        $attributes = [$sut::VIEW, $sut::EDIT];
-        $voteResult = $sut->vote($token->reveal(), $subject, $attributes);
-
-        self::assertEquals($sut::ACCESS_DENIED, $voteResult);
-    }
-
-    public function testSubjectIsNotClient()
-    {
-        $subject = new DateTime();
-
-        /** @var TokenInterface|ObjectProphecy $token */
-        $token = self::prophesize(TokenInterface::class);
-
-        /** @var Security|ObjectProphecy $security */
-        $security = self::prophesize(Security::class);
-        $sut = new ClientVoter($security->reveal());
-
-        $attributes = [$sut::VIEW, $sut::EDIT];
-        $voteResult = $sut->vote($token->reveal(), $subject, $attributes);
-
-        self::assertEquals($sut::ACCESS_ABSTAIN, $voteResult);
-    }
-
-    public function testUnrecognisedAttribute()
-    {
-        $user = new User();
-        $subject = new Client();
-
-        /** @var TokenInterface|ObjectProphecy $token */
-        $token = self::prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($user);
-
-        /** @var Security|ObjectProphecy $security */
-        $security = self::prophesize(Security::class);
-        $sut = new ClientVoter($security->reveal());
-
-        $attributes = ['some-other-attribute'];
-        $voteResult = $sut->vote($token->reveal(), $subject, $attributes);
-
-        self::assertEquals($sut::ACCESS_ABSTAIN, $voteResult);
+        $this->user = new User();
+        $this->token = $this->createMock(TokenInterface::class);
+        $this->security = $this->getMockBuilder(Security::class)->disableOriginalConstructor()->getMock();
+        $this->voter = new ClientVoter($this->security);
     }
 
     /**
-     * @return array
+     * @test
      */
-    public function getDeputyClienttVariations(): array
+    public function denies_access_to_unauthenticaated_users()
     {
-        return [
-            [
-                'deputyBelongsToOrg' =>  false, 'clientBelongsToOrg' => false, 'orgIsActive' => false, 'expected' => VoterInterface::ACCESS_DENIED,
-            ],
-            [
-                'deputyBelongsToOrg' =>  false, 'clientBelongsToOrg' => false, 'orgIsActive' => true, 'expected' => VoterInterface::ACCESS_DENIED,
-            ],
-            [
-                'deputyBelongsToOrg' =>  false, 'clientBelongsToOrg' => true, 'orgIsActive' => false, 'expected' => VoterInterface::ACCESS_DENIED,
-            ],
-            [
-                'deputyBelongsToOrg' =>  false, 'clientBelongsToOrg' => true, 'orgIsActive' => true, 'expected' => VoterInterface::ACCESS_DENIED,
-            ],
-            [
-                'deputyBelongsToOrg' =>  true, 'clientBelongsToOrg' => false, 'orgIsActive' => false, 'expected' => VoterInterface::ACCESS_DENIED,
-            ],
-            [
-                'deputyBelongsToOrg' =>  true, 'clientBelongsToOrg' => false, 'orgIsActive' => true, 'expected' => VoterInterface::ACCESS_DENIED,
-            ],
-            [
-                'deputyBelongsToOrg' =>  true, 'clientBelongsToOrg' => true, 'orgIsActive' => false, 'expected' => VoterInterface::ACCESS_DENIED,
-            ],
-            [
-                'deputyBelongsToOrg' =>  true, 'clientBelongsToOrg' => true, 'orgIsActive' => true, 'expected' => VoterInterface::ACCESS_GRANTED,
-            ]
-        ];
+        $this
+            ->ensureUserIsNotLoggedIn()
+            ->castVoteAgainstClient(new Client())
+            ->assertDecisionIs(ClientVoter::ACCESS_DENIED);
     }
 
     /**
-     * @dataProvider getDeputyClienttVariations
+     * @test
      */
-    public function testVoterGrantsPermission(
-        $deputyBelongsToOrg,
-        $clientBelongsToOrg,
-        $orgIsActive,
-        $expectedPermission
-    ) {
-        $loggedInUser = m::mock(User::class);
-        $loggedInUser->shouldReceive('getId')->andReturn(33);
+    public function grants_access_to_admin_users()
+    {
+        $this
+            ->ensureUserIsLoggedInWithRole('ROLE_ADMIN')
+            ->castVoteAgainstClient(new Client())
+            ->assertDecisionIs(ClientVoter::ACCESS_GRANTED);
+    }
 
-        $org = m::mock(OrganisationInterface::class)->makePartial();
-        $org->shouldReceive('isActivated')->andReturn($orgIsActive);
+    /**
+     * @test
+     */
+    public function grants_access_to_lay_users_if_client_belongs_to_them()
+    {
+        $client = new Client();
 
-        $token = m::mock(TokenInterface::class)->makePartial();
-        $token->shouldReceive('getUser')->andReturn($loggedInUser);
+        $this
+            ->ensureUserIsLoggedInWithRole('ROLE_LAY_DEPUTY')
+            ->ensureClientBelongsToUser($client)
+            ->castVoteAgainstClient($client)
+            ->assertDecisionIs(ClientVoter::ACCESS_GRANTED);
+    }
 
-        $subject = m::mock(Client::class)->makePartial();
+    /**
+     * @test
+     */
+    public function denies_access_to_lay_users_if_client_does_not_belong_to_them()
+    {
+        $client = new Client();
 
-        if ($deputyBelongsToOrg) {
-            $org->shouldReceive('containsUser')->with($loggedInUser)->andReturnTrue();
+        $this
+            ->ensureUserIsLoggedInWithRole('ROLE_LAY_DEPUTY')
+            ->ensureClientDoesNotBelongToUser($client)
+            ->castVoteAgainstClient($client)
+            ->assertDecisionIs(ClientVoter::ACCESS_DENIED);
+    }
+
+    /**
+     * @test
+     */
+    public function grants_access_to_non_lay_users_if_client_belongs_to_users_activated_organisation()
+    {
+        $client = new Client();
+        $organisation = new Organisation();
+        $organisation->setIsActivated(true);
+
+        $this
+            ->ensureUserIsLoggedInWithRole('NOT_LAY_DEPUTY')
+            ->ensureClientAndUserBelongToSameOrganisation($client, $organisation)
+            ->castVoteAgainstClient($client)
+            ->assertDecisionIs(ClientVoter::ACCESS_GRANTED);
+    }
+
+    /**
+     * @test
+     */
+    public function denies_access_to_non_lay_users_if_client_belongs_to_a_different_activated_organisation()
+    {
+        $client = new Client();
+        $organisation = new Organisation();
+        $organisation->setIsActivated(true);
+
+        $this
+            ->ensureUserIsLoggedInWithRole('NOT_LAY_DEPUTY')
+            ->ensureClientAndUserBelongToDifferentOrganisations($client, $organisation)
+            ->castVoteAgainstClient($client)
+            ->assertDecisionIs(ClientVoter::ACCESS_DENIED);
+    }
+
+    /**
+     * @test
+     */
+    public function denies_access_to_non_lay_users_if_client_belongs_to_users_inactive_organisation()
+    {
+        $client = new Client();
+        $organisation = new Organisation();
+        $organisation->setIsActivated(false);
+
+        $this
+            ->ensureUserIsLoggedInWithRole('NOT_LAY_DEPUTY')
+            ->ensureClientAndUserBelongToSameOrganisation($client, $organisation)
+            ->castVoteAgainstClient($client)
+            ->assertDecisionIs(ClientVoter::ACCESS_DENIED);
+    }
+
+    /**
+     * @test
+     */
+    public function denies_access_to_non_lay_users_if_client_belongs_to_users_inactivate_organisation_despite_client_belonging_to_user()
+    {
+        $client = new Client();
+        $organisation = new Organisation();
+        $organisation->setIsActivated(false);
+
+        $this
+            ->ensureUserIsLoggedInWithRole('NOT_LAY_DEPUTY')
+            ->ensureClientAndUserBelongToSameOrganisation($client, $organisation)
+            ->ensureClientBelongsToUser($client)
+            ->castVoteAgainstClient($client)
+            ->assertDecisionIs(ClientVoter::ACCESS_DENIED);
+    }
+
+    /**
+     * @param string $role
+     * @return ClientVoterTest
+     */
+    private function ensureUserIsLoggedInWithRole(string $role): ClientVoterTest
+    {
+        $this->token->method('getUser')->willReturn($this->user);
+
+        if ('ROLE_ADMIN' === $role) {
+            // The ROLE_ADMIN check verifies the users role with the isGranted($roleName) method.
+            $this->security->method('isGranted')->with($role)->willReturn(true);
         } else {
-            $org->shouldReceive('containsUser')->with($loggedInUser)->andReturnFalse();
+            $this->user->setRoleName($role);
         }
 
-        if ($clientBelongsToOrg) {
-            $subject->shouldReceive('getOrganisation')->zeroOrMoreTimes()->andReturn($org);
-        } else {
-            $subject->shouldReceive('getOrganisation')->zeroOrMoreTimes()->andReturnNull();
-        }
+        return $this;
+    }
 
-        $security = m::mock(Security::class);
-        $security->shouldReceive('isGranted')->with('ROLE_ADMIN')->andReturnFalse();
+    /**
+     * @return ClientVoterTest
+     */
+    private function ensureUserIsNotLoggedIn(): ClientVoterTest
+    {
+        $this->token->method('getUser')->willReturn(null);
 
-        $sut = new ClientVoter($security);
+        return $this;
+    }
 
-        $attributes = [$sut::VIEW, $sut::EDIT];
-        $voteResult = $sut->vote($token, $subject, $attributes);
+    /**
+     * @param Client $client
+     * @return ClientVoterTest
+     */
+    private function ensureClientBelongsToUser(Client $client): ClientVoterTest
+    {
+        $client->addUser($this->user);
 
-        self::assertEquals($expectedPermission, $voteResult);
+        return $this;
+    }
+
+    /**
+     * @param Client $client
+     * @return ClientVoterTest
+     */
+    private function ensureClientDoesNotBelongToUser(Client $client): ClientVoterTest
+    {
+        $client->removeUser($this->user);
+
+        return $this;
+    }
+
+
+    /**
+     * @param Client $client
+     * @param Organisation $organisation
+     * @return ClientVoterTest
+     */
+    private function ensureClientAndUserBelongToSameOrganisation(Client $client, Organisation $organisation): ClientVoterTest
+    {
+        $organisation->addUser($this->user);
+        $client->setOrganisation($organisation);
+
+        return $this;
+    }
+
+    /**
+     * @param Client $client
+     * @param Organisation $organisation
+     * @return ClientVoterTest
+     */
+    private function ensureClientAndUserBelongToDifferentOrganisations(Client $client, Organisation $organisation): ClientVoterTest
+    {
+        $organisation->addUser($this->user);
+        $client->setOrganisation((new Organisation())->setIsActivated(true));
+
+        return $this;
+    }
+
+    /**
+     * @param Client $client
+     * @return ClientVoterTest
+     */
+    private function castVoteAgainstClient(Client $client): ClientVoterTest
+    {
+        $this->decision = $this->voter->vote($this->token, $client, [ClientVoter::VIEW, ClientVoter::EDIT]);
+
+        return $this;
+    }
+
+    /**
+     * @param int $expectedDecision
+     */
+    private function assertDecisionIs(int $expectedDecision): void
+    {
+        $this->assertEquals($expectedDecision, $this->decision);
     }
 }
