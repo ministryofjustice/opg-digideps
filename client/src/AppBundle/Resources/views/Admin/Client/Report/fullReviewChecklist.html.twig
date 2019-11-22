@@ -25,7 +25,7 @@
 
         <h3 class="govuk-heading-m" id="anchor-full-review-lodgingConcerns">{{ (page ~ '.heading.fullReview.lodgingConcerns') | trans }}</h3>
 
-        {{ checklist_radios(form.answers.anyLodgingConcerns, { margin: 6 }) }}
+        {{ checklist_radios(form.answers.anyLodgingConcerns) }}
         {% include 'AppBundle:Admin/Client/Report/partials:_lodging-summary.html.twig' %}
 
         <h3 class="govuk-heading-m" id="anchor-full-review-spendingAndDebt">{{ (page ~ '.heading.fullReview.spendingAndDebt') | trans }}</h3>
@@ -33,7 +33,9 @@
         {{ checklist_radios(form.answers.spendingAcceptable) }}
         {% include 'AppBundle:Admin/Client/Report/partials:_money-summaries.html.twig' %}
 
-        {{ checklist_radios(form.answers.expensesReasonable, { margin: 6 }) }}
+        {{ checklist_radios(form.answers.expensesReasonable) }}
+        {% include 'AppBundle:Admin/Client/Report/partials:_expenses-summary.html.twig' %}
+
         {{ checklist_radios(form.answers.giftingReasonable, { margin: 6 }) }}
         {{ checklist_radios(form.answers.debtManageable, { margin: 6 }) }}
         {{ checklist_radios(form.answers.anySpendingConcerns, { margin: 6 }) }}
