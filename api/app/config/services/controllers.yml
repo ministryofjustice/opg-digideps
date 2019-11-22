@@ -55,3 +55,9 @@ services:
           - '@AppBundle\Entity\Repository\UserRepository'
           - '@AppBundle\Entity\Repository\ClientRepository'
       public: true
+
+  AppBundle\Controller\CoDeputyController:
+      class: AppBundle\Controller\CoDeputyController
+      arguments:
+          - '@AppBundle\Service\UserService'
+      public: true

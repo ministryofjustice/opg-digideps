@@ -34,7 +34,7 @@ services:
             $teamRepository: '@AppBundle\Entity\Repository\TeamRepository'
             $orgFactory: '@AppBundle\Factory\OrganisationFactory'
 
-    user_service:
+    AppBundle\Service\UserService:
         class: AppBundle\Service\UserService
         arguments:
             $em: '@em'
