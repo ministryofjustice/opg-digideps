@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AppBundle\Controller\Report;
+namespace Tests\AppBundle\ControllerReport;
 
 use AppBundle\Entity\Report\MentalCapacity;
 use AppBundle\Entity\Report\Report;

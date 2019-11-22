@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AppBundle\Controller\Report;
+namespace Tests\AppBundle\ControllerReport;
 
 use AppBundle\Entity\Report\Gift;
 use AppBundle\Entity\Report\Report;
@@ -34,13 +34,13 @@ class GiftControllerTest extends AbstractTestController
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
         self::$report1 = self::fixtures()->createReport(self::$client1);
-        self::$gift1 = (new Gift(self::$report1))->setExplanation('e1')->setAmount(1.1);
+        self::$gift1 = (new Gift(self::$report1))->setExplanation('e1')->setAmount("1.1");
 
         // deputy 2
         self::$deputy2 = self::fixtures()->createUser();
         self::$client2 = self::fixtures()->createClient(self::$deputy2);
         self::$report2 = self::fixtures()->createReport(self::$client2);
-        self::$gift2 = (new Gift(self::$report2))->setExplanation('e2')->setAmount(2.2);
+        self::$gift2 = (new Gift(self::$report2))->setExplanation('e2')->setAmount("2.2");
 
         self::fixtures()->persist(self::$gift1, self::$gift2)->flush()->clear();
     }

@@ -2,11 +2,9 @@
 
 namespace Tests\AppBundle\ControllerReport;
 
-use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Fee;
 use AppBundle\Entity\Report\Report;
-use Doctrine\Common\Collections\ArrayCollection;
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class ReportControllerTest extends AbstractTestController
