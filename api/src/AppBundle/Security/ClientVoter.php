@@ -68,16 +68,24 @@ class ClientVoter extends Voter
      * @param User $user
      * @return bool
      */
-    private function canManage(Client $client, User $user)
+    private function canManage(Client $client, User $user): bool
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
         }
 
-        if ($client->userBelongsToClientsOrganisation($user)) {
-            return true;
-        }
+        return $user->isLayDeputy()
+            ? $this->clientBelongsToUser($client, $user)
+            : $client->userBelongsToClientsOrganisation($user);
+    }
 
-        return false;
+    /**
+     * @param Client $client
+     * @param User $user
+     * @return bool
+     */
+    private function clientBelongsToUser(Client $client, User $user): bool
+    {
+        return in_array($user->getId(), $client->getUserIds());
     }
 }

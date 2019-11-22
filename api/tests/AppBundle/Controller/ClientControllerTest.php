@@ -73,7 +73,13 @@ class ClientControllerTest extends AbstractTestController
         // prof
         self::$prof1 = self::fixtures()->getRepo('User')->findOneByEmail('prof@example.org');
 
-        self::fixtures()->flush()->clear();
+        // Attach users and clients to an org
+        $org = self::fixtures()->createOrganisation('Example', 'example9543.org', true);
+        self::fixtures()->flush();
+        self::fixtures()->addClientToOrganisation(self::$pa1Client1->getId(), $org->getId());
+        self::fixtures()->addUserToOrganisation(self::$pa1->getId(), $org->getId());
+        self::fixtures()->flush();
+
     }
 
     public function setUp(): void
@@ -117,7 +123,8 @@ class ClientControllerTest extends AbstractTestController
         ]);
         self::fixtures()->clear();
 
-        $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client \AppBundle\Entity\Client */
+        /* @var $client \AppBundle\Entity\Client */
+        $client = self::fixtures()->getRepo('Client')->find($return['data']['id']);
         $this->assertEquals('Firstname', $client->getFirstname());
         $this->assertCount(1, $client->getUsers());
         $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());

@@ -67,9 +67,9 @@ abstract class AbstractTestController extends WebTestCase
     /**
      * @param array $options with keys method, uri, data, mustSucceed, mustFail, assertId
      *
-     * @return type
+     * @return array
      */
-    public function assertJsonRequest($method, $uri, array $options = [])
+    public function assertJsonRequest($method, $uri, array $options = []): array
     {
         $headers = ['CONTENT_TYPE' => 'application/json'];
         if (isset($options['AuthToken'])) {
