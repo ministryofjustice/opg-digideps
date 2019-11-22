@@ -192,14 +192,14 @@
     {% endif %}
 {% endif %}
 
-{% include 'AppBundle:Admin/Client/Report/partials:_money-summaries.html.twig' %}
+{{ include('AppBundle:Admin/Client/Report/partials:_money-summaries.html.twig', { collapseMargin: true }) }}
 
 {% if report.hasSection('gifts') %}
     {{ include('AppBundle:Admin/Client/Report/partials:_gifting-summary.html.twig', { collapseMargin: true }) }}
 {% endif %}
 
 {% if report.hasSection('deputyExpenses') %}
-    {% include 'AppBundle:Admin/Client/Report/partials:_expenses-summary.html.twig' %}
+    {{ include('AppBundle:Admin/Client/Report/partials:_expenses-summary.html.twig') }}
 {% endif %}
 
 <div class="govuk-!-margin-top-6 govuk-!-margin-bottom-6">

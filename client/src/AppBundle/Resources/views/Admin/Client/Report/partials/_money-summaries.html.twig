@@ -40,4 +40,5 @@
 {{ details({
     summaryText: (page ~ '.revealTitle.moneyOutSummary') | trans,
     html: include(moneyOutSummary, { hideEditLink: true }),
+    classes: (collapseMargin is defined and collapseMargin) ? 'govuk-!-margin-bottom-0' : '',
 }) }}
