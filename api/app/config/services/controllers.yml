@@ -67,3 +67,9 @@ services:
       arguments:
           - '@AppBundle\Service\UserService'
       public: true
+
+  AppBundle\Controller\Admin\IndexController:
+      class: AppBundle\Controller\Admin\IndexController
+      arguments:
+          - '@AppBundle\Service\OrgService'
+      public: true
