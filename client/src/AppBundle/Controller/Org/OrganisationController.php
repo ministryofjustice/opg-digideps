@@ -42,7 +42,7 @@ class OrganisationController extends AbstractController
      * @Route("/{id}", name="org_organisation_view")
      * @Template("AppBundle:Org/Organisation:view.html.twig")
      */
-    public function viewAction(Request $request, int $id)
+    public function viewAction(Request $request, string $id)
     {
         try {
             $organisation = $this->getRestClient()->get('v2/organisation/' . $id, 'Organisation');
