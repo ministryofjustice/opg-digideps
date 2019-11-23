@@ -6,12 +6,14 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/org/settings/organisation")
@@ -99,22 +101,26 @@ class OrganisationController extends AbstractController
                     // existing users just get added to the organisation
                     $this->getRestClient()->put('v2/organisation/' . $organisation->getId() . '/user/' . $existingUser->getId(), '');
                 } else {
-                    /** @var $user EntityDir\User */
+                    /** @var EntityDir\User $user */
                     $user = $form->getData();
 
+                    /** @var EntityDir\User $user */
                     $user = $this->getRestClient()->post('user', $user, ['org_team_add'], 'User');
+
                     $activationEmail = $this->getMailFactory()->createActivationEmail($user);
                     $this->getMailSender()->send($activationEmail, ['text', 'html']);
 
                     $this->getRestClient()->put('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId(), '');
                 }
 
-
                 return $this->redirectToRoute('org_organisation_view', ['id' => $organisation->getId()]);
             } catch (\Throwable $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
-                        $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'org-organisation')));
+                        /** @var TranslatorInterface */
+                        $translator = $this->get('translator');
+
+                        $form->get('email')->addError(new FormError($translator->trans('form.email.existingError', [], 'org-organisation')));
                         break;
 
                     default:
@@ -146,7 +152,10 @@ class OrganisationController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        if ($this->getUser()->getId() === $user->getId()) {
+        /** @var EntityDir\User */
+        $currentUser = $this->getUser();
+
+        if ($currentUser->getId() === $user->getId()) {
             throw $this->createNotFoundException();
         }
 
@@ -171,14 +180,16 @@ class OrganisationController extends AbstractController
             $user = $form->getData();
 
             try {
-                $this->getRestClient()->put('user/' . $user->getId(), $user, ['org_team_add'], 'User');
+                $this->getRestClient()->put('user/' . $user->getId(), $user, ['org_team_add']);
 
-                $request->getSession()->getFlashBag()->add('notice', 'The user has been edited');
+                $this->addFlash('notice', 'The user has been edited');
                 return $this->redirectToRoute('org_organisation_view', ['id' => $organisation->getId()]);
             } catch (\Throwable $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
-                        $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'org-organisation')));
+                        /** @var TranslatorInterface */
+                        $translator = $this->get('translator');
+                        $form->get('email')->addError(new FormError($translator->trans('form.email.existingError', [], 'org-organisation')));
                         break;
 
                     default:
@@ -218,14 +229,16 @@ class OrganisationController extends AbstractController
 
         if ($form->isValid()) {
             try {
-                $this->getRestClient()->delete('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId(), '');
+                $this->getRestClient()->delete('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId());
 
-                $request->getSession()->getFlashBag()->add('notice', 'User account removed from organisation');
+                $this->addFlash('notice', 'User account removed from organisation');
             } catch (\Throwable $e) {
-                $this->get('logger')->debug($e->getMessage());
+                /** @var LoggerInterface */
+                $logger = $this->get('logger');
+                $logger->debug($e->getMessage());
 
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
-                    $request->getSession()->getFlashBag()->add(
+                    $this->addFlash(
                         'error',
                         'User could not be removed'
                     );
@@ -265,13 +278,16 @@ class OrganisationController extends AbstractController
             $activationEmail = $this->getMailFactory()->createActivationEmail($user);
             $this->getMailSender()->send($activationEmail, ['text', 'html']);
 
-            $request->getSession()->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'An activation email has been sent to the user.'
             );
         } catch (\Throwable $e) {
-            $this->get('logger')->debug($e->getMessage());
-            $request->getSession()->getFlashBag()->add(
+            /** @var LoggerInterface */
+            $logger = $this->get('logger');
+            $logger->debug($e->getMessage());
+
+            $this->addFlash(
                 'error',
                 'An activation email could not be sent.'
             );
