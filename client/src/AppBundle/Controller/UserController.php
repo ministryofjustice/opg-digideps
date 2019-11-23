@@ -33,7 +33,7 @@ class UserController extends AbstractController
             $user = $this->getRestClient()->loadUserByToken($token);
             /* @var $user EntityDir\User */
         } catch (\Throwable $e) {
-            throw new \AppBundle\Exception\DisplayableException('This link is not working or has already been used');
+            return $this->renderError('This link is not working or has already been used');
         }
 
         // token expired

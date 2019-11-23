@@ -239,4 +239,19 @@ abstract class AbstractController extends Controller
     {
         return null;
     }
+
+    /**
+     * @param string $description
+     * @param int $statusCodes
+     * @return Respoonse
+     */
+    protected function renderError(string $description, $statusCode = 500)
+    {
+        $text = $this->renderView('TwigBundle:Exception:template.html.twig', [
+            'message' => 'Application error',
+            'description' => $description
+        ]);
+
+        return new Response($text, $statusCode);
+    }
 }
