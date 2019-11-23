@@ -177,7 +177,7 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getSubmitDate()
     {
