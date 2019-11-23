@@ -11,6 +11,7 @@ use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\StepRedirector;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 abstract class AbstractController extends Controller
@@ -92,7 +93,7 @@ abstract class AbstractController extends Controller
      * @param int   $reportId
      * @param array $groups
      *
-     * @throws \RuntimeException if report is submitted
+     * @throws \NotFoundException if report is submitted
      *
      * @return Report
      *
@@ -107,7 +108,7 @@ abstract class AbstractController extends Controller
         }
 
         if ($report->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
+            $this->createNotFoundException('Report already submitted and not editable.');
         }
 
         return $report;
@@ -132,7 +133,7 @@ abstract class AbstractController extends Controller
     /**
      * @param int $reportId
      *
-     * @throws \RuntimeException if report is submitted
+     * @throws \NotFoundException if report is submitted
      *
      * @return Ndr
      *
@@ -141,7 +142,7 @@ abstract class AbstractController extends Controller
     {
         $report = $this->getNdr($reportId, $groups);
         if ($report->getSubmitted()) {
-            throw new \RuntimeException('New deputy report already submitted and not editable.');
+            $this->createNotFoundException('New deputy report already submitted and not editable.');
         }
 
         return $report;
