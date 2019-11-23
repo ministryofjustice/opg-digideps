@@ -99,7 +99,7 @@ class RestClient
     /**
      * Error Messages.
      */
-    const ERROR_CONNECT = 'API returned an exception.';
+    const ERROR_CONNECT = 'API returned an exception';
     const ERROR_NO_SUCCESS = 'Endpoint failed with message %s';
     const ERROR_FORMAT = 'Cannot decode endpoint response';
 
@@ -386,11 +386,11 @@ class RestClient
                 $this->logger->warning('RestClient |  ' . $url . ' | ' . $e->getMessage());
             }
 
-            throw new AppException\RestClientException(self::ERROR_CONNECT, $e->getCode(), $data);
+            throw new AppException\RestClientException($e->getMessage(), $e->getCode(), $data);
         } catch (TransferException $e) {
             $this->logger->warning('RestClient | ' . $url . ' | ' . $e->getMessage());
 
-            throw new AppException\RestClientException(self::ERROR_CONNECT, $e->getCode());
+            throw new AppException\RestClientException($e->getMessage(), $e->getCode());
         }
     }
 
