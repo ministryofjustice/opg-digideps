@@ -81,7 +81,8 @@ class NdrController extends AbstractController
         $client = $this->getFirstClient(self::$ndrGroupsForValidation);
         $ndr = $client->getNdr();
         if ($ndr->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
+            $this->createNotFoundException('Report already submitted and not editable.');
+
         }
         $ndrStatus = new NdrStatusService($ndr);
 
@@ -163,10 +164,10 @@ class NdrController extends AbstractController
         // check status
         $ndrStatus = new NdrStatusService($ndr);
         if (!$ndrStatus->isReadyToSubmit()) {
-            throw new \RuntimeException('Report not ready for submission');
+            $this->createNotFoundException('Report not ready for submission');
         }
         if ($ndr->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
+            $this->createNotFoundException('Report already submitted and not editable.');
         }
 
         $user = $this->getUserWithData(['user-clients', 'client']);
@@ -222,12 +223,12 @@ class NdrController extends AbstractController
         $client = $this->getFirstClient(self::$ndrGroupsForValidation);
         $ndr = $client->getNdr();
         if ($ndr->getId() != $ndrId) {
-            throw new \RuntimeException('Not authorised to access this Report');
+            throw $this->createAccessDeniedException('Not authorised to access this Report');
         }
         $ndr->setClient($client);
 
         if (!$ndr->getSubmitted()) {
-            throw new \RuntimeException('Report not submitted');
+            throw $this->createNotFoundException('Report not submitted');
         }
 
         $ndrStatus = new NdrStatusService($ndr);
