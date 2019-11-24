@@ -4,6 +4,7 @@ namespace Tests;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Organisation;
+use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 
@@ -48,7 +49,7 @@ class Fixtures
     {
         // add clent, cot, report, needed for assets
         $user = new EntityDir\User();
-        $user->setEmail('temp' . microtime(1) . rand(100, 99999) . '@temp.com');
+        $user->setEmail('temp' . microtime(true) . rand(100, 99999) . '@temp.com');
         $user->setPassword('temp@temp.com');
         $user->setFirstname('name' . time());
         $user->setLastname('surname' . time());
@@ -102,11 +103,11 @@ class Fixtures
 
     /**
      * @param EntityDir\ReportInterface $report
-     * @param $filename
+     * @param string $filename
      *
      * @return EntityDir\Report\Document
      */
-    public function createDocument(EntityDir\ReportInterface $report, $filename)
+    public function createDocument(EntityDir\ReportInterface $report, string $filename)
     {
         $doc = new EntityDir\Report\Document($report);
         $doc->setFileName($filename);
@@ -323,10 +324,10 @@ class Fixtures
     }
 
     /**
-     * @param $amount
+     * @param int $amount
      * @throws \Doctrine\ORM\ORMException
      */
-    public function createOrganisations($amount)
+    public function createOrganisations(int $amount)
     {
         for ($i = 1; $i <= $amount; $i++) {
             $org = new EntityDir\Organisation();
@@ -339,13 +340,16 @@ class Fixtures
     }
 
     /**
-     * @param $userId
-     * @param $orgId
+     * @param int $userId
+     * @param int $orgId
      * @throws \Doctrine\ORM\ORMException
      */
-    public function addUserToOrganisation($userId, $orgId)
+    public function addUserToOrganisation(int $userId, int $orgId)
     {
+        /** @var Organisation $org */
         $org = $this->em->getRepository(Organisation::class)->find($orgId);
+
+        /** @var User $user */
         $user = $this->em->getRepository(User::class)->find($userId);
 
         $org->addUser($user);
@@ -402,31 +406,31 @@ class Fixtures
     }
 
     /**
-     * @param $id
+     * @param int $id
      *
-     * @return EntityDir\Report\Report
+     * @return Report
      */
-    public function getReportById($id)
+    public function getReportById(int $id)
     {
         return $this->getRepo('Report\Report')->find($id);
     }
 
     /**
-     * @param EntityDir\Report\Report $report
-     * @param $section
+     * @param Report $report
+     * @param string $section
      * @return array
      */
-    public function getReportFreshSectionStatus(EntityDir\Report\Report $report, $section)
+    public function getReportFreshSectionStatus(Report $report, string $section)
     {
         return $this->getReportById($report->getId())->getStatus()->getSectionStateNotCached($section);
     }
 
     /**
-     * @param $email
+     * @param string $email
      *
      * @return EntityDir\User
      */
-    public function findUserByEmail($email)
+    public function findUserByEmail(string $email)
     {
         return $this->getRepo('User')->findOneBy(['email'=>$email]);
     }

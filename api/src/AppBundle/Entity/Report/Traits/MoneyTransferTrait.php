@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Report\Traits;
 
 use AppBundle\Entity\Report\MoneyTransfer;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -26,7 +27,7 @@ trait MoneyTransferTrait
     private $noTransfersToAdd;
 
     /**
-     * @return MoneyTransfer[]
+     * @return ArrayCollection
      */
     public function getMoneyTransfers()
     {

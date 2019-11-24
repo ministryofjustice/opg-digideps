@@ -1,11 +1,12 @@
 <?php
 
-namespace Tests\AppBundle\Controller\Report;
+namespace Tests\AppBundle\ControllerReport;
 
+use AppBundle\Entity\Report\MentalCapacity;
 use AppBundle\Entity\Report\Report;
 use Tests\AppBundle\Controller\AbstractTestController;
 
-class ActionControllerTest extends AbstractTestController
+class MentalCapacityControllerTest extends AbstractTestController
 {
     private static $deputy1;
     private static $client1;
@@ -53,59 +54,57 @@ class ActionControllerTest extends AbstractTestController
 
     public function testupdateAuth()
     {
-        $url = '/report/' . self::$report1->getId() . '/action';
+        $url = '/report/' . self::$report1->getId() . '/mental-capacity';
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
     }
 
     public function testupdateAcl()
     {
-        $url2 = '/report/' . self::$report2->getId() . '/action';
+        $url2 = '/report/' . self::$report2->getId() . '/mental-capacity';
 
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
     }
 
     public function testupdate()
     {
-        $url = '/report/' . self::$report1->getId() . '/action';
+        $url = '/report/' . self::$report1->getId() . '/mental-capacity';
 
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
             'data' => [
-                'do_you_expect_financial_decisions' => 'yes',
-                'do_you_expect_financial_decisions_details' => 'fdd',
-                'do_you_have_concerns' => 'yes',
-                'do_you_have_concerns_details' => 'cd',
+                'has_capacity_changed' => MentalCapacity::CAPACITY_CHANGED,
+                'has_capacity_changed_details' => 'ccd',
+                'mental_assessment_date' => '2015-12-31',
             ],
         ]);
         $this->assertTrue($return['data']['id'] > 0);
 
         self::fixtures()->clear();
 
-        $action = self::fixtures()->getRepo('Report\Action')->find($return['data']['id']); /* @var $action \AppBundle\Entity\Report\Action */
-        $this->assertEquals('yes', $action->getDoYouExpectFinancialDecisions());
-        $this->assertEquals('fdd', $action->getDoYouExpectFinancialDecisionsDetails());
-        $this->assertEquals('yes', $action->getDoYouHaveConcerns());
-        $this->assertEquals('cd', $action->getDoYouHaveConcernsDetails());
+        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_DECISIONS));
+
+        $mc = self::fixtures()->getRepo('Report\MentalCapacity')->find($return['data']['id']); /* @var $mc \AppBundle\Entity\Report\MentalCapacity */
+        $this->assertEquals(MentalCapacity::CAPACITY_CHANGED, $mc->getHasCapacityChanged());
+        $this->assertEquals('ccd', $mc->getHasCapacityChangedDetails());
+        $this->assertEquals('2015-12-31', $mc->getMentalAssessmentDate()->format('Y-m-d'));
 
         // update with choice not requiring details. (covers record existing and also data cleaned up ok)
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
             'data' => [
-                'do_you_expect_financial_decisions' => 'no',
-                'do_you_have_concerns' => 'no',
+                'has_capacity_changed' => MentalCapacity::CAPACITY_STAYED_SAME,
+                'has_capacity_changed_details' => 'should no tbe saved',
+                'mental_assessment_date' => '2016-01-01',
             ],
         ]);
         $this->assertTrue($return['data']['id'] > 0);
         self::fixtures()->clear();
-        $action = self::fixtures()->getRepo('Report\Action')->find($return['data']['id']); /* @var $action \AppBundle\Entity\Report\Action */
-        $this->assertEquals('no', $action->getDoYouExpectFinancialDecisions());
-        $this->assertEquals(null, $action->getDoYouExpectFinancialDecisionsDetails());
-        $this->assertEquals('no', $action->getDoYouHaveConcerns());
-        $this->assertEquals(null, $action->getDoYouHaveConcernsDetails());
-
-        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_ACTIONS));
+        $mc = self::fixtures()->getRepo('Report\MentalCapacity')->find($return['data']['id']); /* @var $mc \AppBundle\Entity\Report\MentalCapacity */
+        $this->assertEquals(MentalCapacity::CAPACITY_STAYED_SAME, $mc->getHasCapacityChanged());
+        $this->assertEquals(null, $mc->getHasCapacityChangedDetails());
+        $this->assertEquals('2016-01-01', $mc->getMentalAssessmentDate()->format('Y-m-d'));
     }
 }
