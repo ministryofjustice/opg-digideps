@@ -109,7 +109,7 @@ class IndexController extends AbstractController
         $form->handleRequest($request);
 
         /** @var SubmitButton $submitBtn */
-        $submitBtn = $this->get('save');
+        $submitBtn = $form->get('save');
         if ($submitBtn->isClicked() && $form->isValid()) {
             if (true === $form->get('confirmArchive')->getData()) {
                 $this->getRestClient()->apiCall('put', 'client/' . $client->getId() . '/archive', null, 'array');

@@ -1,7 +1,7 @@
 Feature: PA client archive
 
   Scenario: PA archives a client
-    Given I load the application status from "team-users-complete"
+    Given I load the application status from "pa-users-uploaded"
     And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "pa-report-open" in the "client-01000016" region
     # archive-cancel

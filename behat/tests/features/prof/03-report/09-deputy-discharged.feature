@@ -195,7 +195,7 @@ Feature: Prof deputy is discharged
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     Then I should see the "client" region exactly 15 times
     When I click on "paginator-page-2"
-    Then I should see the "client" region exactly 2 times
+    Then I should see the "client" region exactly 8 times
   # check search
     When I fill in "search" with "01000010"
     And I press "search_submit"

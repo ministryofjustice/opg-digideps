@@ -1,5 +1,9 @@
 Feature: PA user edits report sections
 
+  Background:
+    Given the organisation "publicguardian.gov.uk" is active
+    And "behat-pa1@publicguardian.gov.uk" has been added to the "publicguardian.gov.uk" organisation
+
   Scenario: PA 102 deputy expenses (with fees)
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000014" region

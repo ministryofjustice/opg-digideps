@@ -3,39 +3,39 @@ Feature: PA cannot access other's PA's reports and clients
 # team2 = team with client 2000003
 
   Scenario: PA reload status from the point where team1 has been fully added
-    Given I load the application status from "team-users-complete"
+    Given I load the application status from "pa-users-uploaded"
 
-  Scenario: Assert team1 can only access its reports
-    # Named PA
-    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "pa-report-open" in the "client-01000010" region
-    Then the response status code should be 200
-    And the URL should match "report/\d+/overview"
-    And I save the current URL as "report-for-client-01000010.url"
-    But I should not see the "client-02000003" region
-    # Admin
-    Given I am logged in as "behat-pa1-admin@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "pa-report-open" in the "client-01000010" region
-    Then the response status code should be 200
-    And the current URL should match with the URL previously saved as "report-for-client-01000010.url"
-    But I should not see the "client-02000003" region
-    # team member
-    Given I am logged in as "behat-pa1-team-member@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "pa-report-open" in the "client-01000010" region
-    Then the response status code should be 200
-    And the current URL should match with the URL previously saved as "report-for-client-01000010.url"
-    But I should not see the "client-02000003" region
-
-  Scenario: team2 can access its client but not team1's data
-    # can access team2 reports
-    Given I am logged in as "behat-pa2@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "pa-report-open" in the "client-02000001" region
-    Then the response status code should be 200
-    And the URL should match "report/\d+/overview"
-    # cannot access team1 reports
-    But I should not see the "client-01000010" region
-    When I go to the URL previously saved as "report-for-client-01000010.url"
-    Then the response status code should be 500
+#  Scenario: Assert team1 can only access its reports
+#    # Named PA
+#    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+#    When I click on "pa-report-open" in the "client-01000010" region
+#    Then the response status code should be 200
+#    And the URL should match "report/\d+/overview"
+#    And I save the current URL as "report-for-client-01000010.url"
+#    But I should not see the "client-02000003" region
+#    # Admin
+#    Given I am logged in as "behat-pa1-admin@publicguardian.gov.uk" with password "Abcd1234"
+#    When I click on "pa-report-open" in the "client-01000010" region
+#    Then the response status code should be 200
+#    And the current URL should match with the URL previously saved as "report-for-client-01000010.url"
+#    But I should not see the "client-02000003" region
+#    # team member
+#    Given I am logged in as "behat-pa1-team-member@publicguardian.gov.uk" with password "Abcd1234"
+#    When I click on "pa-report-open" in the "client-01000010" region
+#    Then the response status code should be 200
+#    And the current URL should match with the URL previously saved as "report-for-client-01000010.url"
+#    But I should not see the "client-02000003" region
+#
+#  Scenario: team2 can access its client but not team1's data
+#    # can access team2 reports
+#    Given I am logged in as "behat-pa2@publicguardian.gov.uk" with password "Abcd1234"
+#    When I click on "pa-report-open" in the "client-02000001" region
+#    Then the response status code should be 200
+#    And the URL should match "report/\d+/overview"
+#    # cannot access team1 reports
+#    But I should not see the "client-01000010" region
+#    When I go to the URL previously saved as "report-for-client-01000010.url"
+#    Then the response status code should be 500
 
   Scenario: PA user cannot edit client
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
@@ -63,25 +63,27 @@ Feature: PA cannot access other's PA's reports and clients
     Then the response status code should be 500
 
   Scenario: PA_ADMIN logs in, edits own account and removes admin privilege should be logged out
-    Given I load the application status from "team-users-complete"
-    And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "org-settings, user-accounts"
-    When I click on "edit" in the "team-user-behat-pa1-adminpublicguardiangovuk" region
+    Given I load the application status from "pa-users-uploaded"
+    And "behat-pa-admin@publicguardian.gov.uk" has been added to the "publicguardian.gov.uk" organisation
+    When I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    And I click on "org-settings, user-accounts"
+    And I click on "edit" in the "team-user-behat-pa-adminpublicguardiangovuk" region
     And I fill in the following:
-      | team_member_account_roleName_1 | ROLE_PA_TEAM_MEMBER                             |
-    And I press "team_member_account_save"
+      | organisation_member_roleName_1 | ROLE_PA_TEAM_MEMBER                             |
+    And I press "organisation_member_save"
     Then the form should be valid
     And the response status code should be 200
     And I go to "/logout"
 
   Scenario: PA_ADMIN logs in, edits own account keeps admin privilege should remain logged in
-    Given I load the application status from "team-users-complete"
+    Given I load the application status from "pa-users-uploaded"
+    And "behat-pa-admin@publicguardian.gov.uk" has been added to the "publicguardian.gov.uk" organisation
     And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, user-accounts"
-    When I click on "edit" in the "team-user-behat-pa1-adminpublicguardiangovuk" region
+    When I click on "edit" in the "team-user-behat-pa-adminpublicguardiangovuk" region
     And I fill in the following:
-      | team_member_account_firstname  | edit                                             |
-    And I press "team_member_account_save"
+      | organisation_member_firstname  | edit                                             |
+    And I press "organisation_member_save"
     Then the form should be valid
     And the response status code should be 200
     And I go to "/org/team"
@@ -142,45 +144,56 @@ Feature: PA cannot access other's PA's reports and clients
     And I press "user_details_save"
     Then the form should be valid
 
-  Scenario: PA Org 1 can access own reports and clients
-    Given I am logged in as "behat-pa-org1@pa-org1.gov.uk" with password "Abcd1234"
-    # access report and save for future feature tests
-    Then I click on "pa-report-open" in the "client-40000041" region
+#  Scenario: PA Org 1 can access own reports and clients
+#    Given I am logged in as "behat-pa-org1@pa-org1.gov.uk" with password "Abcd1234"
+#    And "behat-pa1-admin@publicguardian.gov.uk" has been added to the "publicguardian.gov.uk" organisation
+#    # access report and save for future feature tests
+#    Then I click on "pa-report-open" in the "client-40000041" region
+#    And I save the report as "40000041-report"
+#    And I click on "client-edit"
+#    And the response status code should be 200
+#    And I save the current URL as "client-40000041-edit"
+#    Then I go to "/logout"
+#
+#  Scenario: PA Org 2 can access own reports and clients
+#    Given I am logged in as "behat-pa-org2@pa-org2.gov.uk" with password "Abcd1234"
+#    # access report and save for future feature tests
+#    Then I click on "pa-report-open" in the "client-40000042" region
+#    And I save the report as "40000042-report"
+#    And I click on "client-edit"
+#    And the response status code should be 200
+#    And I save the current URL as "client-40000042-edit"
+#    Then I go to "/logout"
+#
+#  Scenario: PA Org 1 user logs in and should only see their clients and reports (from the existing team structure)
+#    Given I am logged in as "behat-pa-org1@pa-org1.gov.uk" with password "Abcd1234"
+#    # check I'm in the dashboard and I see only my own client
+#    And I should see the "client-40000041" region
+#    And I should not see the "client-40000042" region
+#    Then I go to the report URL "overview" for "40000042-report"
+#    And the response status code should be 500
+#    Then I go to the URL previously saved as "client-40000042-edit"
+#    And the response status code should be 500
+
+  Scenario: PA org 1 deputy reports on client in their organisation
+    Given "behat-pa-org1@pa-org1.gov.uk" has been added to the "pa-org1.gov.uk" organisation
+    And the organisation "pa-org1.gov.uk" is active
+    And I am logged in as "behat-pa-org1@pa-org1.gov.uk" with password "Abcd1234"
+    When I click on "pa-report-open" in the "client-40000041" region
     And I save the report as "40000041-report"
     And I click on "client-edit"
-    And the response status code should be 200
-    And I save the current URL as "client-40000041-edit"
-    Then I go to "/logout"
+    Then the response status code should be 200
 
-  Scenario: PA Org 2 can access own reports and clients
-    Given I am logged in as "behat-pa-org2@pa-org2.gov.uk" with password "Abcd1234"
-    # access report and save for future feature tests
-    Then I click on "pa-report-open" in the "client-40000042" region
+  Scenario: PA org 2 deputy reports on client in their organisation
+    Given "behat-pa-org2@pa-org2.gov.uk" has been added to the "pa-org2.gov.uk" organisation
+    And the organisation "pa-org2.gov.uk" is active
+    And I am logged in as "behat-pa-org2@pa-org2.gov.uk" with password "Abcd1234"
+    When I click on "pa-report-open" in the "client-40000042" region
     And I save the report as "40000042-report"
     And I click on "client-edit"
-    And the response status code should be 200
-    And I save the current URL as "client-40000042-edit"
-    Then I go to "/logout"
+    Then the response status code should be 200
 
-  Scenario: PA Org 1 user logs in and should only see their clients and reports (from the existing team structure)
-    Given I am logged in as "behat-pa-org1@pa-org1.gov.uk" with password "Abcd1234"
-    # check I'm in the dashboard and I see only my own client
-    And I should see the "client-40000041" region
-    And I should not see the "client-40000042" region
-    Then I go to the report URL "overview" for "40000042-report"
-    And the response status code should be 500
-    Then I go to the URL previously saved as "client-40000042-edit"
-    And the response status code should be 500
-
-  Scenario: PA org 1 is activated
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I go to admin page "/admin/organisations"
-    When I click on "edit" in the "org-behat-pa-org1pa-org1govuk" region
-    And I fill in "organisation_isActivated_0" with "1"
-    And I press "Save organisation"
-
-  Scenario: PA org 1 deputy logs in and should now only see the clients in their organisation
-    # log in shown in PA dashboard
+  Scenario: Deputy can only access reports that belong to their own organisation
     Given I am logged in as "behat-pa-org1@pa-org1.gov.uk" with password "Abcd1234"
     Then I should see the "client-40000041" region
     And I should not see the "client-40000042" region
@@ -188,12 +201,4 @@ Feature: PA cannot access other's PA's reports and clients
     And the response status code should be 200
     Then I go to the report URL "overview" for "40000042-report"
     And the response status code should be 500
-
-  # Activate Org 2 should not change anything
-  Scenario: PA org 2 is activated
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I go to admin page "/admin/organisations"
-    When I click on "edit" in the "org-behat-pa-org2pa-org2govuk" region
-    And I fill in "organisation_isActivated_0" with "1"
-    And I press "Save organisation"
 

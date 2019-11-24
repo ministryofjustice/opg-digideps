@@ -2,8 +2,10 @@ Feature: PA user edits common report sections common to ALL report types
 
   @102 @103-6 @104
   Scenario: PA 102 user edit decisions section
-    Given I load the application status from "team-users-complete"
-    And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I load the application status from "pa-users-uploaded"
+    And the organisation "publicguardian.gov.uk" is active
+    And "behat-pa1@publicguardian.gov.uk" has been added to the "publicguardian.gov.uk" organisation
+    When I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000014" region
     Then the response status code should be 200
     And the URL should match "report/\d+/overview"

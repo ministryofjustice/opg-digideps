@@ -1,7 +1,7 @@
 Feature: PA settings
 
   Scenario: named PA logs in and views profile page
-    Given I load the application status from "team-users-complete"
+    Given I load the application status from "pa-users-uploaded"
     And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings"
     # settings page
@@ -40,7 +40,7 @@ Feature: PA settings
     And I should see "United Kingdom" in the "profile-address" region
 
   Scenario: PA Admin logs in and updates profile and sees removeAdmin field but does not
-    Given I am logged in as "behat-pa1-admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa-admin@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, profile-show, profile-edit"
     Then I should see "Give up administrator rights"
     Then I fill in the following:
@@ -58,7 +58,7 @@ Feature: PA settings
 
   Scenario: Notification email not sent for PA deputy changes
     Given emails are sent from "deputy" area
-    And I am logged in as "behat-pa-admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-pa1-admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "org-settings, profile-show, profile-edit"
     When I press "profile_save"
     Then I should be on "/org/settings/your-details"
@@ -73,15 +73,14 @@ Feature: PA settings
     Then the form should be valid
     And I should be on "/login"
 
-  Scenario: PA Admin is no longer admin and tests nav
-    Given I am logged in as "behat-pa1-admin@publicguardian.gov.uk" with password "Abcd1234"
+  Scenario: PA Admin is no longer admin
+    Given "behat-pa1-admin@publicguardian.gov.uk" has been added to the "publicguardian.gov.uk" organisation
+    And I am logged in as "behat-pa1-admin@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, user-accounts"
-    Then I should not see "Edit" in the "team-user-behat-pa1-adminpublicguardiangovuk" region
-    And I should not see "Edit" in the "team-user-behat-pa1-team-memberpublicguardiangovuk" region
-    But I should not see "Edit" in the "team-user-behat-pa1publicguardiangovuk" region
+    Then I should not see "Administrator" in the "team-user-behat-pa1-adminpublicguardiangovuk" region
 
   Scenario: PA Team member logs in and edits info
-    Given I am logged in as "behat-pa3-team-member@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa-team-member@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, profile-show, profile-edit"
     Then I should not see "Give up administrator rights"
     When I fill in the following:

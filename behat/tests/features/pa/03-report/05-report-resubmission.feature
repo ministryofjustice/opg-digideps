@@ -1,5 +1,9 @@
 Feature: Admin unsubmit and client re-submit
 
+  Background:
+    Given the organisation "publicguardian.gov.uk" is active
+    And "behat-pa1@publicguardian.gov.uk" has been added to the "publicguardian.gov.uk" organisation
+
   @deputy
   Scenario: Admin unsubmits report for client 01000014
     Given I load the application status from "pa-report-submitted"

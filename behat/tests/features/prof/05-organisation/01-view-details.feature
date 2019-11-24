@@ -3,10 +3,7 @@ Feature: Users can view their organisations
   @prof
   Scenario: Without organisation, user cannot access settings pages
     Given I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
-    When I go to "/org/settings"
-    And I follow "User accounts"
-    Then I should be on "/org/settings/user-accounts"
-    When I go to "/org/settings/organisation"
+    When I go to "/org/settings/organisation/1"
     Then the response status code should be 404
 
   @prof

@@ -1,5 +1,9 @@
 Feature: Admin report checklist
 
+  Background:
+    Given the organisation "publicguardian.gov.uk" is active
+    And "behat-pa1@publicguardian.gov.uk" has been added to the "publicguardian.gov.uk" organisation
+
   Scenario: Case manager submits empty PA checklist for the report
     Given I load the application status from "pa-report-submitted"
     And I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"

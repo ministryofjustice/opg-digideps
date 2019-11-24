@@ -15,7 +15,8 @@ Feature: Report submit (client 01000014)
     Scenario: 102 report submission
         Given emails are sent from "deputy" area
         # log in as team member to submit the report and test that named deputy details are displayed
-        And I am logged in as "behat-pa1-team-member@publicguardian.gov.uk" with password "Abcd1234"
+        And "behat-pa-team-member@publicguardian.gov.uk" has been added to the "publicguardian.gov.uk" organisation
+        When I am logged in as "behat-pa-team-member@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "pa-report-open" in the "client-01000014" region
         And I should see "Ready to submit" in the "report-detail-status" region
         And I click on "edit-report_submit"
@@ -38,7 +39,7 @@ Feature: Report submit (client 01000014)
         Then the URL should match "/org"
         And the response status code should be 200
         And the last email should contain "Thank you for submitting"
-        And the last email should have been sent to "behat-pa1-team-member@publicguardian.gov.uk"
+        And the last email should have been sent to "behat-pa-team-member@publicguardian.gov.uk"
 
     Scenario: 102 assert submitted report displays correctly in client profile page
         Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"

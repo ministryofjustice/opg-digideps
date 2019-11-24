@@ -17,6 +17,11 @@ Feature: Add PROF users and activate PROF user (journey)
     Then the response status code should be 200
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-prof1@publicguardian.gov.uk"
 
+  Scenario: Add test users to org and activate it
+    Given the organisation "publicguardian.gov.uk" is active
+    And "behat-prof1@publicguardian.gov.uk" has been added to the "publicguardian.gov.uk" organisation
+    And "behat-prof-admin@publicguardian.gov.uk" has been added to the "publicguardian.gov.uk" organisation
+
   Scenario: PROF user registration steps
     Given emails are sent from "admin" area
     And I go to "/logout"
@@ -46,8 +51,6 @@ Feature: Add PROF users and activate PROF user (journey)
     And I press "user_details_save"
     Then the form should be valid
     And the URL should match "/org"
-    # check I'm in the dashboard
-    And I should see the "client-01000010" region
 
   Scenario: Activation link is removed
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
@@ -76,8 +79,6 @@ Feature: Add PROF users and activate PROF user (journey)
       | user_details_phoneMain  | 20000000001 |
     And I press "user_details_save"
     Then the form should be valid
-    # check I'm in the dashboard
-    And I should see the "client-02000001" region
 
   Scenario: Register PROF3 user
     Given emails are sent from "admin" area
@@ -102,8 +103,6 @@ Feature: Add PROF users and activate PROF user (journey)
       | user_details_phoneMain  | 30000000001 |
     And I press "user_details_save"
     Then the form should be valid
-    # check I'm in the dashboard
-    And I should see the "client-03000001" region
 
   Scenario: Register PROF4 user
     Given emails are sent from "admin" area
@@ -190,7 +189,7 @@ Feature: Add PROF users and activate PROF user (journey)
     When I go to "/logout"
     # try logging in with the new email
     And I am logged in as "behat-prof2-edited@publicguardian.gov.uk" with password "Abcd1234"
-    Then I should see the "client-02000001" region
+    Then the URL should match "/org"
 
   Scenario: Edit PROF2 user email to an existing email
     Given I load the application status from "prof-users-uploaded"
