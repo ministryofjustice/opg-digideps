@@ -152,7 +152,7 @@ class User implements AdvancedUserInterface
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"user"})
      *
-     * @var \DateTime
+     * @var \DateTime|null
      */
     private $registrationDate;
 
@@ -249,7 +249,7 @@ class User implements AdvancedUserInterface
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"lastLoggedIn"})
      *
-     * @var \DateTime
+     * @var \DateTime|null
      */
     private $lastLoggedIn;
 
@@ -311,7 +311,7 @@ class User implements AdvancedUserInterface
      *
      * @var ArrayCollection
      */
-    private $teams = [];
+    private $teams;
 
     /**
      * @JMS\Type("boolean")
@@ -340,7 +340,13 @@ class User implements AdvancedUserInterface
      *
      * @var ArrayCollection
      */
-    private $organisations = [];
+    private $organisations;
+
+    public function __construct()
+    {
+        $this->teams = new ArrayCollection();
+        $this->organisations = new ArrayCollection();
+    }
 
     /**
      * @return int $id
@@ -452,7 +458,7 @@ class User implements AdvancedUserInterface
 
     public function getSalt()
     {
-        return;
+        return null;
     }
 
     public function setSalt($salt)
@@ -493,7 +499,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @return \DateTime $registrationDate
+     * @return \DateTime|null $registrationDate
      */
     public function getRegistrationDate()
     {
@@ -558,7 +564,7 @@ class User implements AdvancedUserInterface
     public function getGaTrackingId()
     {
         if (empty($this->gaTrackingId)) {
-            $this->gaTrackingId = md5($this->id);
+            $this->gaTrackingId = md5(strval($this->id));
         }
 
         return $this->gaTrackingId;
@@ -649,7 +655,7 @@ class User implements AdvancedUserInterface
     {
         $expiresSeconds = $hoursExpires * 3600;
 
-        $timeStampNow = (new \Datetime())->getTimestamp();
+        $timeStampNow = (new \DateTime())->getTimestamp();
         $timestampToken = $this->getTokenDate()->getTimestamp();
 
         $diffSeconds = $timeStampNow - $timestampToken;
@@ -753,7 +759,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getLastLoggedIn()
     {
@@ -1181,9 +1187,7 @@ class User implements AdvancedUserInterface
      */
     public function belongsToActiveOrganisation(): bool
     {
-        return
-            is_array($this->getOrganisations())
-            && count($this->getOrganisations()) > 0
+        return count($this->getOrganisations()) > 0
             && $this->getOrganisations()[0]->isActivated();
     }
 }
