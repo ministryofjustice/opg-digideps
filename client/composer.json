@@ -5,7 +5,7 @@
     "description": "The \"Symfony Standard Edition\" distribution",
     "autoload": {
         "psr-0": { "": "src/" },
-        "psr-4": {"DigidepsBehat\\": "tests/behat/bootstrap" }
+        "psr-4": { "DigidepsTests\\": "tests/phpunit" }
     },
     "require": {
         "php": ">=7.3.5",
