@@ -59,6 +59,8 @@ class RestClientTest extends TestCase
             $this->container,
             $this->client,
             $this->tokenStorage,
+            $this->serialiser,
+            $this->logger,
             $this->clientSecret
         );
 
@@ -459,6 +461,8 @@ class RestClientTest extends TestCase
             $this->container,
             $this->client,
             $this->tokenStorage,
+            $this->serialiser,
+            $this->logger,
             $this->clientSecret
         );
         $object->setLoggedUserId(1);
