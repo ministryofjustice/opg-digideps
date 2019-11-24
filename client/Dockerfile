@@ -90,6 +90,7 @@ COPY tests tests
 COPY web web
 COPY --from=webpack /app/web/assets web/assets
 COPY --from=webpack /app/web/images web/images
+COPY phpstan.neon .
 COPY docker/confd /etc/confd
 
 # Check for security issues
