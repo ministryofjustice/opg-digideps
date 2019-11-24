@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service\Client;
+namespace DigidepsTests\Service\Client;
 
 use AppBundle\Entity\User;
 use AppBundle\Service\Client\TokenStorage\TokenStorageInterface;
