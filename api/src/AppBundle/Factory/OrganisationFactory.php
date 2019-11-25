@@ -69,7 +69,7 @@ class OrganisationFactory
      */
     private function create(string $name, string $emailIdentifier, bool $isActivated): Organisation
     {
-        if (empty($emailIdentifier)) {
+        if (empty($name) || empty($emailIdentifier)) {
             throw new \InvalidArgumentException(sprintf(
                 "Unable to create organisation from 'emailIdentifier': '%s'", $emailIdentifier
             ));
