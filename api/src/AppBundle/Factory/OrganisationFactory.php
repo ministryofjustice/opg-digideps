@@ -63,6 +63,7 @@ class OrganisationFactory
     }
 
     /**
+     * @param string $name
      * @param string $emailIdentifier
      * @param bool $isActivated
      * @return Organisation
