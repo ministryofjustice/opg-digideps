@@ -7,6 +7,7 @@ use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Exception\DisplayableException;
+use AppBundle\Exception\RestClientException;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
@@ -108,7 +109,15 @@ abstract class AbstractController extends Controller
      */
     protected function getReportIfNotSubmitted($reportId, array $groups = [])
     {
-        $report = $this->getReport($reportId, $groups);
+        try {
+            $report = $this->getReport($reportId, $groups);
+        } catch (RestClientException $e) {
+            if ($e->getCode() === 403) {
+                throw $this->createNotFoundException($e->getData()['message']);
+            } else {
+                throw $e;
+            }
+        }
 
         $sectionId = $this->getSectionId();
         if ($sectionId && !$report->hasSection($sectionId)) {
