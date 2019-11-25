@@ -7,8 +7,10 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Exception\DisplayableException;
-use AppBundle\Form as FormDir;
-use AppBundle\Model as ModelDir;
+use AppBundle\Form\FeedbackReportType;
+use AppBundle\Form\Report\ReportDeclarationType;
+use AppBundle\Form\Report\ReportType;
+use AppBundle\Model\FeedbackReport;
 use AppBundle\Service\CsvGeneratorService;
 use AppBundle\Service\Redirector;
 use AppBundle\Service\ReportSubmissionService;
@@ -102,7 +104,7 @@ class ReportController extends AbstractController
 
         $clients = $user->getClients();
         if (empty($clients)) {
-            throw new \Exception('Client not added');
+            throw $this->createNotFoundException('Client not added');
         }
         $client = array_shift($clients);
 
@@ -133,7 +135,7 @@ class ReportController extends AbstractController
         /** @var User */
         $user = $this->getUser();
 
-        $editReportDatesForm = $formFactory->createNamed('report_edit', FormDir\Report\ReportType::class, $report, [ 'translation_domain' => 'report']);
+        $editReportDatesForm = $formFactory->createNamed('report_edit', ReportType::class, $report, [ 'translation_domain' => 'report']);
         $returnLink = $user->isDeputyOrg()
             ? $this->generateClientProfileLink($report->getClient())
             : $this->generateUrl('lay_home');
@@ -185,7 +187,7 @@ class ReportController extends AbstractController
 
         $form = $formFactory->createNamed(
             'report',
-            FormDir\Report\ReportType::class, $report, [
+            ReportType::class, $report, [
                 'translation_domain' => 'registration',
                 'action'             => $this->generateUrl('report_create', ['clientId' => $clientId]) //TODO useless ?
             ]
@@ -331,7 +333,7 @@ class ReportController extends AbstractController
 
         $user = $this->getUserWithData();
 
-        $form = $this->createForm(FormDir\Report\ReportDeclarationType::class, $report);
+        $form = $this->createForm(ReportDeclarationType::class, $report);
         $form->handleRequest($request);
         if ($form->isValid()) {
             /** @var User $currentUser */
@@ -373,7 +375,7 @@ class ReportController extends AbstractController
             throw $this->createNotFoundException($translator->trans('report.submissionExceptions.submitted', [], 'validators'));
         }
 
-        $form = $this->createForm(FormDir\FeedbackReportType::class, new ModelDir\FeedbackReport());
+        $form = $this->createForm(FeedbackReportType::class, new FeedbackReport());
 
         $form->handleRequest($request);
 
