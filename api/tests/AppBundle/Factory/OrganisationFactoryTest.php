@@ -26,19 +26,16 @@ class OrganisationFactoryTest extends TestCase
      * @dataProvider getEmailVariations
      * @param $fullEmail
      * @param $expectedEmailIdentifier
-     * @group acs
      */
     public function createFromFullEmail_determinesEmailIdentiferFromTheFullGivenEmail(
         string $fullEmail,
-        string $expectedEmailIdentifier,
-        string $expectedName,
-        ?string $name
+        string $expectedEmailIdentifier
     )
     {
-        $organisation = $this->factory->createFromFullEmail($name, $fullEmail, true);
+        $organisation = $this->factory->createFromFullEmail('Foo Inc.', $fullEmail, true);
 
         $this->assertInstanceOf(Organisation::class, $organisation);
-        $this->assertEquals($expectedName, $organisation->getName());
+        $this->assertEquals('Foo Inc.', $organisation->getName());
         $this->assertEquals($expectedEmailIdentifier, $organisation->getEmailIdentifier());
         $this->assertTrue($organisation->isActivated());
     }
@@ -49,27 +46,24 @@ class OrganisationFactoryTest extends TestCase
     public function getEmailVariations(): array
     {
         return [
-            ['fullEmail' => 'name@foo.com', 'expectedEmailIdentifier' => 'name@foo.com', 'expectedName' => 'Your Organisation', 'name' => null],
-            ['fullEmail' => 'name@Bar.co.uk', 'expectedEmailIdentifier' => 'name@bar.co.uk', 'expectedName' => 'Your Organisation', 'name' => null],
-            ['fullEmail' => 'name@private.com', 'expectedEmailIdentifier' => 'private.com', 'expectedName' => 'Your Organisation', 'name' => null],
-            ['fullEmail' => 'main-contact@private.com', 'expectedEmailIdentifier' => 'private.com', 'expectedName' => 'Your Organisation', 'name' => null],
-            ['fullEmail' => 'private.com', 'expectedEmailIdentifier' => 'private.com', 'expectedName' => 'Your Organisation', 'name' => null],
-            ['fullEmail' => 'jbloggs@private.com', 'expectedEmailIdentifier' => 'private.com', 'expectedName' => 'Private Inc.' , 'name' => 'Private Inc.']
-
-
+            ['fullEmail' => 'name@foo.com', 'expectedEmailIdentifier' => 'name@foo.com'],
+            ['fullEmail' => 'name@Bar.co.uk', 'expectedEmailIdentifier' => 'name@bar.co.uk'],
+            ['fullEmail' => 'name@private.com', 'expectedEmailIdentifier' => 'private.com'],
+            ['fullEmail' => 'main-contact@private.com', 'expectedEmailIdentifier' => 'private.com'],
+            ['fullEmail' => 'private.com', 'expectedEmailIdentifier' => 'private.com'],
+            ['fullEmail' => 'jbloggs@private.com', 'expectedEmailIdentifier' => 'private.com']
         ];
     }
 
     /**
      * @test
-     * @group acs
      */
     public function createFromEmailIdentifier_createsOrganisationUsingGivenArgAsEmailIdentifier()
     {
-        $organisation = $this->factory->createFromEmailIdentifier(null, 'Foo.Com', false);
+        $organisation = $this->factory->createFromEmailIdentifier('Foo Corp', 'Foo.Com', false);
 
         $this->assertInstanceOf(Organisation::class, $organisation);
-        $this->assertEquals('Your Organisation', $organisation->getName());
+        $this->assertEquals('Foo Corp', $organisation->getName());
         $this->assertEquals('foo.com', $organisation->getEmailIdentifier());
         $this->assertFalse($organisation->isActivated());
     }
@@ -78,12 +72,11 @@ class OrganisationFactoryTest extends TestCase
      * @test
      * @dataProvider getInvalidEmailInputs
      * @param $emailIdentifier
-     * @group acs
      */
     public function createFromFullEmail_throwsExceptionIfGivenBadData($emailIdentifier)
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->factory->createFromFullEmail(null, $emailIdentifier);
+        $this->factory->createFromFullEmail('Test Co.', $emailIdentifier);
     }
 
 
@@ -91,12 +84,11 @@ class OrganisationFactoryTest extends TestCase
      * @test
      * @dataProvider getInvalidEmailIdentifierInputs
      * @param $emailIdentifier
-     * @group acs
      */
     public function createFromEmailIdentifier_throwsExceptionIfGivenBadData($emailIdentifier)
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->factory->createFromEmailIdentifier(null, $emailIdentifier);
+        $this->factory->createFromEmailIdentifier('Test Co.', $emailIdentifier);
     }
 
     /**

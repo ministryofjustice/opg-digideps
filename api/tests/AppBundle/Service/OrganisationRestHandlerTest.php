@@ -60,10 +60,8 @@ class OrganisationRestHandlerTest extends TestCase
 
     /**
      * @test
-     * @dataProvider validData
-     * @group acs
      */
-    public function create_validOrgDetails(array $data)
+    public function create_validOrgDetails()
     {
         $this->orgRepository->findOneBy(Argument::any())->willReturn(null);
         $this->validator->validate(Argument::any())->willReturn([]);
@@ -74,21 +72,15 @@ class OrganisationRestHandlerTest extends TestCase
 
         $sut = $this->generateSut();
 
-        self::assertInstanceOf(Organisation::class, $sut->create($data));
-    }
-
-    public function validData()
-    {
-        return [
-            'Org with name' => [['name' => 'ABC', 'email_identifier' => 'abc.com', 'is_activated' => true], "ABC"],
-            'Org with no name' => [['name' => null, 'email_identifier' => 'abc.com', 'is_activated' => false], "Your Organisation"],
-        ];
+        self::assertInstanceOf(
+            Organisation::class,
+            $sut->create(['name' => 'ABC', 'email_identifier' => 'abc.com', 'is_activated' => true])
+        );
     }
 
     /**
      * @test
      * @dataProvider missingData
-     * @group acs
      * @param array $data
      */
     public function create_requiredDataMissing(array $data)
@@ -103,16 +95,19 @@ class OrganisationRestHandlerTest extends TestCase
     public function missingData()
     {
         return [
-            'Null email_identifier' => [['email_identifier' => null, 'is_activated' => true]],
-            'Null is_activated' => [['email_identifier' => 'abc.com', 'is_activated' => null]],
-            'Null email_identifier and is_activated' => [['email_identifier' => null, 'is_activated' => null]],
-            'Data missing' => [['is_activated' => true]],
+            'Null name' =>                              [['name' => null, 'email_identifier' => 'abc.com', 'is_activated' => true]],
+            'Null email_identifier' =>                  [['name' => 'ABC', 'email_identifier' => null, 'is_activated' => true]],
+            'Null is_activated' =>                      [['email_identifier' => 'abc.com', 'is_activated' => null]],
+            'Null name and is_activated' =>             [['name' =>null, 'email_identifier' => 'abc.com', 'is_activated' => null]],
+            'Null email_identifier and is_activated' => [['name' => 'ABC', 'email_identifier' => null, 'is_activated' => null]],
+            'Null name and email_identifier' =>         [['name' => null, 'email_identifier' => null, 'is_activated' => true]],
+            'All null' =>                               [['name' => null, 'email_identifier' => null, 'is_activated' => null]],
+            'Data missing' =>                           [['is_activated' => true]],
         ];
     }
 
     /**
      * @test
-     * @group acs
      */
     public function create_orgAlreadyExists()
     {
@@ -127,7 +122,6 @@ class OrganisationRestHandlerTest extends TestCase
 
     /**
      * @test
-     * @group acs
      */
     public function create_emailIdentifierInSharedDomains()
     {
@@ -142,7 +136,6 @@ class OrganisationRestHandlerTest extends TestCase
 
     /**
      * @test
-     * @group acs
      */
     public function create_orgValidationFails()
     {
@@ -154,12 +147,11 @@ class OrganisationRestHandlerTest extends TestCase
 
         self::expectException(OrganisationCreationException::class);
 
-        $sut->create(['email_identifier' => 'abc.com', 'is_activated' => true]);
+        $sut->create(['name' => 'ABC', 'email_identifier' => 'abccom', 'is_activated' => true]);
     }
 
     /**
      * @test
-     * @group acs
      */
     public function update_validOrgDetails()
     {
@@ -185,7 +177,6 @@ class OrganisationRestHandlerTest extends TestCase
     /**
      * @test
      * @dataProvider missingData
-     * @group acs
      */
     public function update_missingData($data)
     {
@@ -198,7 +189,6 @@ class OrganisationRestHandlerTest extends TestCase
 
     /**
      * @test
-     * @group acs
      */
     public function update_orgDoesNotExist()
     {
@@ -212,7 +202,6 @@ class OrganisationRestHandlerTest extends TestCase
 
     /**
      * @test
-     * @group acs
      */
     public function update_orgEmailIdentifierInUse()
     {
@@ -231,7 +220,6 @@ class OrganisationRestHandlerTest extends TestCase
 
     /**
      * @test
-     * @group acs
      */
     public function update_orgValidationFails()
     {

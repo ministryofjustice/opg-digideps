@@ -135,7 +135,8 @@ class OrganisationRestHandler
     private function verifyPostedData(array $data): bool
     {
         return
-            isset($data['email_identifier'])
+            isset($data['name'])
+            && isset($data['email_identifier'])
             && isset($data['is_activated']);
     }
 

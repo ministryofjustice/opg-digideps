@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Repository\ClientRepository;
 use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\Entity\Repository\ReportRepository;
@@ -12,6 +13,8 @@ use AppBundle\Factory\OrganisationFactory;
 use AppBundle\Service\OrgService;
 use Doctrine\ORM\EntityManager;
 use Mockery as m;
+use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -117,6 +120,36 @@ class OrgServiceTest extends WebTestCase
      */
     private $pa = null;
 
+    /**
+     * @var m\Mock
+     */
+    private $logger;
+
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
+     * @var ReportRepository
+     */
+    private $reportRepository;
+
+    /**
+     * @var ClientRepository
+     */
+    private $clientRepository;
+
+    /**
+     * @var OrganisationRepository
+     */
+    private $organisationRepository;
+
+    /**
+     * @var TeamRepository
+     */
+    private $teamRepository;
+
     public static function setUpBeforeClass(): void
     {
         self::$frameworkBundleClient = static::createClient(['environment' => 'test',
@@ -128,21 +161,21 @@ class OrgServiceTest extends WebTestCase
 
     public function setUp(): void
     {
-        $logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();
-        $userRepository = self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\UserRepository');
-        $reportRepository = self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\ReportRepository');
-        $clientRepository =self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\ClientRepository');
-        $organisationRepository = self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\OrganisationRepository');
-        $teamRepository = self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\TeamRepository');
+        $this->logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();
+        $this->userRepository = self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\UserRepository');
+        $this->reportRepository = self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\ReportRepository');
+        $this->clientRepository =self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\ClientRepository');
+        $this->organisationRepository = self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\OrganisationRepository');
+        $this->teamRepository = self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\TeamRepository');
 
         $this->pa = new OrgService(self::$em,
-            $logger,
-            $userRepository,
-            $reportRepository,
-            $clientRepository,
-            $organisationRepository,
+            $this->logger,
+            $this->userRepository,
+            $this->reportRepository,
+            $this->clientRepository,
+            $this->organisationRepository,
             new OrganisationFactory([]),
-            $teamRepository
+            $this->teamRepository
         );
 
         Fixtures::deleteReportsData(['dd_user', 'client']);
@@ -445,6 +478,55 @@ class OrgServiceTest extends WebTestCase
         $this->assertCount(1, $clients);
         $this->assertCount(1, $client1->getUsers());
         $this->assertEquals('testlaydeputy@digital.justice.gov.uk', $client1->getUsers()[0]->getEmail());
+    }
+
+    public function testOrgNameSetToDefaultDuringCSVUpload()
+    {
+        // Set up a lay deputy and client
+//        $deputy1 = self::$fixtures->createUser([
+//            'setRolename' => 'ROLE_LAY_DEPUTY',
+//            'setEmail' => 'testlaydeputy@digital.justice.gov.uk',
+//        ]);
+//        $client1 = self::$fixtures->createClient($deputy1, ['setCaseNumber' => '38973539']);
+//        self::$fixtures->flush()->clear();
+
+        // Add professional deputy with same case number
+        $row = [
+            'Deputy No'    => '01234567',
+            'Dep Forename' => 'Dep2',
+            'Dep Surname'  => 'Uty2',
+            'Dep Type'     => '21',
+            'Email'        => 'dep2@testing.com',
+            'Case'         => '38973539',
+            'Forename'     => 'Cly2',
+            'Surname'      => 'Hent2',
+            'Corref'       => 'L3',
+            'Typeofrep'    => 'OPG103',
+            'Last Report Day' => '04-Feb-2015',
+            'Name' => 'Test Org'
+        ];
+
+        /** @var OrganisationFactory|ObjectProphecy $orgFactory */
+        $orgFactory = self::prophesize(OrganisationFactory::class);
+        $orgFactory->createFromFullEmail('Your Organisation', Argument::any())
+            ->shouldBeCalled()
+            ->willReturn(new Organisation());
+
+        /** @var OrganisationRepository|ObjectProphecy $orgRespository */
+        $orgRespository = self::prophesize(OrganisationRepository::class);
+        $orgRespository->findByEmailIdentifier(Argument::any())->willReturn(null);
+
+        $sut = new OrgService(self::$em,
+            $this->logger,
+            $this->userRepository,
+            $this->reportRepository,
+            $this->clientRepository,
+            $orgRespository->reveal(),
+            $orgFactory->reveal(),
+            $this->teamRepository
+        );
+
+        $sut->addFromCasrecRows([$row]);
     }
 
     public function tearDown(): void

@@ -6,8 +6,6 @@ use AppBundle\Entity\Organisation;
 
 class OrganisationFactory
 {
-    const DEFAULT_ORG_NAME = 'Your Organisation';
-
     /** @var array */
     private $sharedDomains = [];
 
@@ -18,11 +16,12 @@ class OrganisationFactory
     }
 
     /**
+     * @param string $name
      * @param string $email
      * @param bool $isActivated
      * @return Organisation
      */
-    public function createFromFullEmail(?string $name, string $email, bool $isActivated = false): Organisation
+    public function createFromFullEmail(string $name, string $email, bool $isActivated = false): Organisation
     {
         $email = strtolower($email);
 
@@ -44,11 +43,12 @@ class OrganisationFactory
     }
 
     /**
+     * @param string $name
      * @param string $emailIdentifier
      * @param bool $isActivated
      * @return Organisation
      */
-    public function createFromEmailIdentifier(?string $name, string $emailIdentifier, bool $isActivated = false): Organisation
+    public function createFromEmailIdentifier(string $name, string $emailIdentifier, bool $isActivated = false): Organisation
     {
         $domainArray = explode('@', $emailIdentifier);
         if ((count($domainArray) == 1 && !empty($domainArray[0])) ||
@@ -67,15 +67,13 @@ class OrganisationFactory
      * @param bool $isActivated
      * @return Organisation
      */
-    private function create(?string $name, string $emailIdentifier, bool $isActivated): Organisation
+    private function create(string $name, string $emailIdentifier, bool $isActivated): Organisation
     {
         if (empty($emailIdentifier)) {
             throw new \InvalidArgumentException(sprintf(
                 "Unable to create organisation from 'emailIdentifier': '%s'", $emailIdentifier
             ));
         }
-
-        $name = $name ?: self::DEFAULT_ORG_NAME;
 
         return (new Organisation())
             ->setName($name)
