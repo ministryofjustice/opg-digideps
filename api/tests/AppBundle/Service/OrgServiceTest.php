@@ -482,15 +482,6 @@ class OrgServiceTest extends WebTestCase
 
     public function testOrgNameSetToDefaultDuringCSVUpload()
     {
-        // Set up a lay deputy and client
-//        $deputy1 = self::$fixtures->createUser([
-//            'setRolename' => 'ROLE_LAY_DEPUTY',
-//            'setEmail' => 'testlaydeputy@digital.justice.gov.uk',
-//        ]);
-//        $client1 = self::$fixtures->createClient($deputy1, ['setCaseNumber' => '38973539']);
-//        self::$fixtures->flush()->clear();
-
-        // Add professional deputy with same case number
         $row = [
             'Deputy No'    => '01234567',
             'Dep Forename' => 'Dep2',

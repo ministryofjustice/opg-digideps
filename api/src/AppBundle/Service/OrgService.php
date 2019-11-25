@@ -166,7 +166,11 @@ class OrgService
                     $client = $this->upsertClientFromCsv($row, $userOrgNamed);
                     if ($client instanceof Client) {
                         $this->upsertReportFromCsv($row, $client, $userOrgNamed);
+                    } else {
+                        throw new \RuntimeException('Client could not be identified or created');
                     }
+                } else {
+                    throw new \RuntimeException('Named deputy could not be identified or created');
                 }
             } catch (\Throwable $e) {
                 $message = 'Error for Case: ' . $row['Case'] . ' for Deputy No: ' . $row['Deputy No'] . ': ' . $e->getMessage();

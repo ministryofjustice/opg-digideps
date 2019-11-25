@@ -1,25 +1,25 @@
 <?php
 
-namespace Tests\AppBundle\Controller\Report;
+namespace Tests\AppBundle\ControllerReport;
 
-use AppBundle\Entity\Report\Expense;
+use AppBundle\Entity\Report\Gift;
 use AppBundle\Entity\Report\Report;
 use Tests\AppBundle\Controller\AbstractTestController;
 
-class ExpenseControllerTest extends AbstractTestController
+class GiftControllerTest extends AbstractTestController
 {
     private static $deputy1;
     private static $client1;
     private static $report1;
     /**
-     * @var Expense
+     * @var Gift
      */
-    private static $expense1;
+    private static $gift1;
     /**
-     * @var Expense
+     * @var Gift
      */
 
-    private static $expense2;
+    private static $gift2;
     private static $deputy2;
     private static $client2;
     private static $report2;
@@ -34,15 +34,15 @@ class ExpenseControllerTest extends AbstractTestController
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
         self::$report1 = self::fixtures()->createReport(self::$client1);
-        self::$expense1 = self::fixtures()->createReportExpense('other', self::$report1, ['setExplanation' => 'e1', 'setAmount' => 1.1]);
+        self::$gift1 = (new Gift(self::$report1))->setExplanation('e1')->setAmount("1.10");
 
         // deputy 2
         self::$deputy2 = self::fixtures()->createUser();
         self::$client2 = self::fixtures()->createClient(self::$deputy2);
         self::$report2 = self::fixtures()->createReport(self::$client2);
-        self::$expense2 = self::fixtures()->createReportExpense('other', self::$report2, ['setExplanation' => 'e2', 'setAmount' => 2.2]);
+        self::$gift2 = (new Gift(self::$report2))->setExplanation('e2')->setAmount("2.20");
 
-        self::fixtures()->flush()->clear();
+        self::fixtures()->persist(self::$gift1, self::$gift2)->flush()->clear();
     }
 
     /**
@@ -65,7 +65,7 @@ class ExpenseControllerTest extends AbstractTestController
 
     public function testgetOneByIdAuth()
     {
-        $url = '/report/' . self::$report1->getId() . '/expense/' . self::$expense1->getId();
+        $url = '/report/' . self::$report1->getId() . '/gift/' . self::$gift1->getId();
 
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
@@ -73,13 +73,13 @@ class ExpenseControllerTest extends AbstractTestController
 
     public function testgetOneByIdAcl()
     {
-        $url2 = '/report/' . self::$report1->getId() . '/expense/' . self::$expense2->getId();
+        $url2 = '/report/' . self::$report1->getId() . '/gift/' . self::$gift2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
     public function testgetOneById()
     {
-        $url = '/report/' . self::$report1->getId() . '/expense/' . self::$expense1->getId();
+        $url = '/report/' . self::$report1->getId() . '/gift/' . self::$gift1->getId();
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
@@ -87,38 +87,38 @@ class ExpenseControllerTest extends AbstractTestController
             'AuthToken'   => self::$tokenDeputy,
         ])['data'];
 
-        $this->assertEquals(self::$expense1->getId(), $data['id']);
-        $this->assertEquals(self::$expense1->getExplanation(), $data['explanation']);
-        $this->assertEquals(self::$expense1->getAmount(), $data['amount']);
+        $this->assertEquals(self::$gift1->getId(), $data['id']);
+        $this->assertEquals(self::$gift1->getExplanation(), $data['explanation']);
+        $this->assertEquals(self::$gift1->getAmount(), $data['amount']);
     }
 
     public function testPostPutAuth()
     {
-        $url = '/report/' . self::$report1->getId() . '/expense';
+        $url = '/report/' . self::$report1->getId() . '/gift';
         $this->assertEndpointNeedsAuth('POST', $url);
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
 
-        $url = '/report/' . self::$report1->getId() . '/expense/' . self::$expense1->getId();
+        $url = '/report/' . self::$report1->getId() . '/gift/' . self::$gift1->getId();
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
     }
 
     public function testPostPutAcl()
     {
-        $url2 = '/report/' . self::$report2->getId() . '/expense';
+        $url2 = '/report/' . self::$report2->getId() . '/gift';
         $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy);
 
-        $url2 = '/report/' . self::$report2->getId() . '/expense/' . self::$expense1->getId();
+        $url2 = '/report/' . self::$report2->getId() . '/gift/' . self::$gift1->getId();
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
 
-        $url3 = '/report/' . self::$report2->getId() . '/expense/' . self::$expense2->getId();
+        $url3 = '/report/' . self::$report2->getId() . '/gift/' . self::$gift2->getId();
         $this->assertEndpointNotAllowedFor('PUT', $url3, self::$tokenDeputy);
     }
 
     public function testPostPutGetAll()
     {
         //POST
-        $url = '/report/' . self::$report1->getId() . '/expense';
+        $url = '/report/' . self::$report1->getId() . '/gift';
         $return = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
@@ -127,18 +127,20 @@ class ExpenseControllerTest extends AbstractTestController
                 'explanation'    => 'e3',
             ],
         ]);
-        $expenseId = $return['data']['id'];
-        $this->assertTrue($expenseId > 0);
+        $giftId = $return['data']['id'];
+        $this->assertTrue($giftId > 0);
 
         self::fixtures()->clear();
 
-        $expense = self::fixtures()->getRepo('Report\Expense')->find($expenseId);
-        /* @var $expense \AppBundle\Entity\Report\Expense */
-        $this->assertEquals(3.3, $expense->getAmount());
-        $this->assertEquals('e3', $expense->getExplanation());
+        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_GIFTS));
+
+        $gift = self::fixtures()->getRepo('Report\Gift')->find($giftId);
+        /* @var $gift \AppBundle\Entity\Report\Gift */
+        $this->assertEquals(3.3, $gift->getAmount());
+        $this->assertEquals('e3', $gift->getExplanation());
 
         // UPDATE
-        $url = '/report/' . self::$report1->getId() . '/expense/' . $expenseId;
+        $url = '/report/' . self::$report1->getId() . '/gift/' . $giftId;
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
@@ -149,34 +151,32 @@ class ExpenseControllerTest extends AbstractTestController
         ]);
         self::fixtures()->clear();
 
-        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_DEPUTY_EXPENSES));
-
-        $expense = self::fixtures()->getRepo('Report\Expense')->find($expenseId);
-        /* @var $expense \AppBundle\Entity\Report\Expense */
-        $this->assertEquals(3.31, $expense->getAmount());
-        $this->assertEquals('e3.1', $expense->getExplanation());
+        $gift = self::fixtures()->getRepo('Report\Gift')->find($giftId);
+        /* @var $gift \AppBundle\Entity\Report\Gift */
+        $this->assertEquals(3.31, $gift->getAmount());
+        $this->assertEquals('e3.1', $gift->getExplanation());
 
         // GET ALL
         $url = '/report/' . self::$report1->getId();
-        $q = http_build_query(['groups' => ['expenses']]);
+        $q = http_build_query(['groups' => ['gifts']]);
         //assert both groups (quick)
         $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
 
-        $this->assertCount(2, $data['expenses']);
-        $this->assertTrue($data['expenses'][0]['id']>0);
-        $this->assertEquals('e1', $data['expenses'][0]['explanation']);
-        $this->assertEquals(1.1, $data['expenses'][0]['amount']);
-        $this->assertTrue($data['expenses'][1]['id']>0);
-        $this->assertEquals('e3.1', $data['expenses'][1]['explanation']);
-        $this->assertEquals(3.31, $data['expenses'][1]['amount']);
+        $this->assertCount(2, $data['gifts']);
+        $this->assertTrue($data['gifts'][0]['id']>0);
+        $this->assertEquals('e1', $data['gifts'][0]['explanation']);
+        $this->assertEquals(1.1, $data['gifts'][0]['amount']);
+        $this->assertTrue($data['gifts'][1]['id']>0);
+        $this->assertEquals('e3.1', $data['gifts'][1]['explanation']);
+        $this->assertEquals(3.31, $data['gifts'][1]['amount']);
     }
 
     public function testDeleteAuth()
     {
-        $url = '/report/' . self::$report1->getId() . '/expense/' . self::$expense1->getId();
+        $url = '/report/' . self::$report1->getId() . '/gift/' . self::$gift1->getId();
 
         $this->assertEndpointNeedsAuth('DELETE', $url);
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
@@ -184,8 +184,8 @@ class ExpenseControllerTest extends AbstractTestController
 
     public function testDeleteAcl()
     {
-        $url2 = '/report/' . self::$report1->getId() . '/expense/' . self::$expense2->getId();
-        $url3 = '/report/' . self::$report2->getId() . '/expense/' . self::$expense2->getId();
+        $url2 = '/report/' . self::$report1->getId() . '/gift/' . self::$gift2->getId();
+        $url3 = '/report/' . self::$report2->getId() . '/gift/' . self::$gift2->getId();
 
         $this->assertEndpointNotAllowedFor('DELETE', $url2, self::$tokenDeputy);
         $this->assertEndpointNotAllowedFor('DELETE', $url3, self::$tokenDeputy);
@@ -196,37 +196,36 @@ class ExpenseControllerTest extends AbstractTestController
      */
     public function testDelete()
     {
-        $url = '/report/' . self::$report1->getId() . '/expense/' . self::$expense1->getId();
+        $url = '/report/' . self::$report1->getId() . '/gift/' . self::$gift1->getId();
         $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
         ]);
 
-        $exp = self::fixtures()->clear()->getRepo('Report\Expense')->find(self::$expense1->getId());
-        $this->assertTrue(null === $exp);
+        $this->assertTrue(null === self::fixtures()->getRepo('Report\Gift')->find(self::$gift1->getId()));
     }
 
     /**
      * @depends testDelete
      */
-    public function testPaidAnything()
+    public function testGiftsExist()
     {
         $report = self::fixtures()->getReportById(self::$report1->getId());
-        $this->assertCount(1, $report->getExpenses());
-        $this->assertEquals('yes', $report->getPaidForAnything());
+        $this->assertCount(1, $report->getGifts());
+        $this->assertEquals('yes', $report->getGiftsExist());
 
         $url = '/report/' . self::$report1->getId() ;
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
             'data' => [
-                'paid_for_anything' => 'no'
+                'gifts_exist' => 'no'
             ]
         ]);
 
         self::fixtures()->clear();
         $report = self::fixtures()->getReportById(self::$report1->getId());
-        $this->assertEquals('no', $report->getPaidForAnything());
-        $this->assertCount(0, $report->getExpenses());
+        $this->assertEquals('no', $report->getGiftsExist());
+        $this->assertCount(0, $report->getGifts());
     }
 }
