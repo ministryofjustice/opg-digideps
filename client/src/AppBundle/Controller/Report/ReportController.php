@@ -234,12 +234,13 @@ class ReportController extends AbstractController
             $unsubmittedReport = $client->getUnsubmittedReport();
             if ($unsubmittedReport instanceof Report) {
                 $reportId = $unsubmittedReport->getId();
+
+                $activeReport = $client->getActiveReport();
+                if ($activeReport instanceof Report) {
+                    $activeReportId = $activeReport->getId();
+                }
             }
 
-            $activeReport = $client->getActiveReport();
-            if ($activeReport instanceof Report) {
-                $activeReportId = $activeReport->getId();
-            }
         } else { // Lay. keep the report Id
             $template = 'AppBundle:Report/Report:overview.html.twig';
         }
