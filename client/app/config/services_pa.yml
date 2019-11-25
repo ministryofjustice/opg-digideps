@@ -1,4 +1,4 @@
 services:
-    org_service:
+    AppBundle\Service\OrgService:
         class:  AppBundle\Service\OrgService
         arguments: [ "@rest_client", "@Twig\\Environment", "@session" ]

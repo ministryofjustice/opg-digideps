@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Repository\ClientRepository;
 use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
 use AppBundle\Service\UserService;
@@ -10,8 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 
 //TODO
 //http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
@@ -21,6 +21,39 @@ use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
  */
 class UserController extends RestController
 {
+    /**
+     * @var UserService
+     */
+    private $userService;
+
+    /**
+     * @var EncoderFactory
+     */
+    private $encoderFactory;
+
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
+     * @var ClientRepository
+     */
+    private $clientRepository;
+
+    public function __construct(
+        UserService $userService,
+        EncoderFactory $encoderFactory,
+        UserRepository $userRepository,
+        ClientRepository $clientRepository
+    )
+    {
+        $this->userService = $userService;
+        $this->encoderFactory = $encoderFactory;
+        $this->userRepository = $userRepository;
+        $this->clientRepository = $clientRepository;
+    }
+
     /**
      * @Route("", methods={"POST"})
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_ORG_NAMED') or has_role('ROLE_ORG_ADMIN')")
@@ -37,13 +70,10 @@ class UserController extends RestController
         /** @var User $newUser */
         $newUser = $this->populateUser(new User(), $data);
 
-        /** @var UserService $userService */
-        $userService = $this->get('user_service');
-
         /** @var User $loggedInUser */
         $loggedInUser = $this->getUser();
 
-        $userService->addUser($loggedInUser, $newUser, $data);
+        $this->userService->addUser($loggedInUser, $newUser, $data);
 
         $groups = $request->query->has('groups') ?
             $request->query->get('groups') : ['user', 'user-teams', 'team'];
@@ -72,15 +102,12 @@ class UserController extends RestController
             throw $this->createAccessDeniedException("Non-admin not authorised to change other user's data");
         }
 
-        /** @var UserService $userService */
-        $userService = $this->get('user_service');
-
         /** @var User $originalUser */
         $originalUser = clone $requestedUser;
 
         $data = $this->deserializeBodyContent($request);
         $this->populateUser($requestedUser, $data);
-        $userService->editUser($originalUser, $requestedUser);
+        $this->userService->editUser($originalUser, $requestedUser);
 
         return ['id' => $requestedUser->getId()];
     }
@@ -104,13 +131,7 @@ class UserController extends RestController
             'password' => 'notEmpty',
         ]);
 
-        /** @var EncoderFactoryInterface $encoderFactory */
-        $encoderFactory = $this->get('security.encoder_factory');
-
-        /** @var PasswordEncoderInterface $encoder */
-        $encoder = $encoderFactory->getEncoder($requestedUser);
-
-        $oldPassword = $encoder->encodePassword($data['password'], $requestedUser->getSalt());
+        $oldPassword = $this->encoderFactory->getEncoder($requestedUser)->encodePassword($data['password'], $requestedUser->getSalt());
 
         return $oldPassword == $requestedUser->getPassword();
     }
@@ -136,13 +157,7 @@ class UserController extends RestController
             'password_plain' => 'notEmpty',
         ]);
 
-        /** @var EncoderFactoryInterface $encoderFactory */
-        $encoderFactory = $this->get('security.encoder_factory');
-
-        /** @var PasswordEncoderInterface $encoder */
-        $encoder = $encoderFactory->getEncoder($requestedUser);
-
-        $newPassword = $encoder->encodePassword($data['password_plain'], $requestedUser->getSalt());
+        $newPassword = $this->encoderFactory->getEncoder($requestedUser)->encodePassword($data['password_plain'], $requestedUser->getSalt());
 
         $requestedUser->setPassword($newPassword);
 
@@ -172,13 +187,13 @@ class UserController extends RestController
     {
         if ($what == 'email') {
             /** @var User|null $user */
-            $user = $this->getRepository(User::class)->findOneBy(['email' => $filter]);
+            $user = $this->userRepository->findOneBy(['email' => $filter]);
             if (!$user) {
                 throw new \RuntimeException('User not found', 404);
             }
         } elseif ($what == 'case_number') {
             /** @var Client|null $client */
-            $client = $this->getRepository(Client::class)->findOneBy(['caseNumber' => $filter]);
+            $client = $client = $this->clientRepository->findOneBy(['caseNumber' => $filter]);
             if (!$client) {
                 throw new \RuntimeException('Client not found', 404);
             }
@@ -188,7 +203,7 @@ class UserController extends RestController
             $user = $client->getUsers()[0];
         } elseif ($what == 'user_id') {
             /** @var User|null $user */
-            $user = $this->getRepository(User::class)->find($filter);
+            $user = $this->userRepository->find($filter);
             if (!$user) {
                 throw new \RuntimeException('User not found', 419);
             }
@@ -224,7 +239,7 @@ class UserController extends RestController
      */
     public function getUserTeamNames(Request $request, $email)
     {
-        $user = $this->getRepository(User::class)->findOneBy(['email' => $email]);
+        $user = $this->userRepository->findOneBy(['email' => $email]);
 
         $this->setJmsSerialiserGroups(['user-id', 'team-names']);
 
@@ -242,8 +257,8 @@ class UserController extends RestController
      */
     public function delete($id)
     {
-        $user = $this->findEntityBy(User::class, $id);
-        /* @var $user User */
+        /** @var User $user */
+        $user = $this->userRepository->find($id);
 
         if ($user->getRoleName() !== User::ROLE_LAY_DEPUTY) {
             throw $this->createAccessDeniedException('Cannot delete users with role ' . $user->getRoleName());
@@ -276,11 +291,7 @@ class UserController extends RestController
     public function getAll(Request $request)
     {
         $this->setJmsSerialiserGroups(['user']);
-
-        /** @var UserRepository $repository */
-        $repository = $this->container->get('AppBundle\Entity\Repository\UserRepository');
-
-        return $repository->findUsersByQueryParameters($request);
+        return $this->userRepository->findUsersByQueryParameters($request);
     }
 
     /**
@@ -323,8 +334,9 @@ class UserController extends RestController
             throw new \RuntimeException('client secret not accepted.', 403);
         }
 
-        $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
         /* @var $user User */
+        $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
+
 
         if (!$this->getAuthService()->isSecretValidForRole($user->getRoleName(), $request)) {
             throw new \RuntimeException($user->getRoleName() . ' user role not allowed from this client.', 403);
@@ -421,7 +433,7 @@ class UserController extends RestController
         $loggedInUser = $this->getUser();
 
         /** @var User|null $requestedUser */
-        $requestedUser = $this->getRepository(User::class)->find($id);
+        $requestedUser = $this->userRepository->find($id);
 
         if (!$requestedUser) {
             throw new \RuntimeException('User not found', 419);
