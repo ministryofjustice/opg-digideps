@@ -71,7 +71,7 @@ class OrganisationFactory
     {
         if (empty($name) || empty($emailIdentifier)) {
             throw new \InvalidArgumentException(sprintf(
-                "Unable to create organisation from 'emailIdentifier': '%s'", $emailIdentifier
+                "Unable to create organisation with name '%s' from 'emailIdentifier': '%s'", $name,  $emailIdentifier
             ));
         }
 
