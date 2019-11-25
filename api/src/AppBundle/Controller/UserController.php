@@ -193,7 +193,7 @@ class UserController extends RestController
             }
         } elseif ($what == 'case_number') {
             /** @var Client|null $client */
-            $client = $client = $this->clientRepository->findOneBy(['caseNumber' => $filter]);
+            $client = $this->clientRepository->findOneBy(['caseNumber' => $filter]);
             if (!$client) {
                 throw new \RuntimeException('Client not found', 404);
             }
