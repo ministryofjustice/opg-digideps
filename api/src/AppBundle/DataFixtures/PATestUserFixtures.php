@@ -42,7 +42,7 @@ class PATestUserFixtures extends AbstractDataFixture
             'Dep Postcode' => 'SW1',
             'Dep Adrs4' => 'ADD4',
             'Dep Adrs5' => 'ADD5',
-            'phoneMain' => '10000000001',
+            'Phone Main' => '+4410000000001',
             'clients' => [
                 [
                     'firstname' => 'CLY1',
@@ -92,7 +92,7 @@ class PATestUserFixtures extends AbstractDataFixture
             'Dep Postcode' => 'SW1',
             'Dep Adrs4' => 'ADD4',
             'Dep Adrs5' => 'ADD5',
-            'phoneMain' => '10000000001',
+            'Phone Main' => '+4410000000002',
             'clients' => [
                 [
                     'firstname' => 'CLY301',
@@ -127,7 +127,7 @@ class PATestUserFixtures extends AbstractDataFixture
             'Dep Postcode' => 'SW1',
             'Dep Adrs4' => 'ADD4',
             'Dep Adrs5' => 'ADD5',
-            'phoneMain' => '10000000001',
+            'Phone Main' => '+4410000000003',
             'clients' => [
                 [
                     'firstname' => 'CLY201',
@@ -178,7 +178,7 @@ class PATestUserFixtures extends AbstractDataFixture
             ->setActive(isset($data['active']) ? $data['active'] : true)
             ->setRegistrationDate(new \DateTime())
             ->setNdrEnabled(false)
-            ->setPhoneMain(isset($data['phoneMain']) ? $data['phoneMain'] : null)
+            ->setPhoneMain(isset($data['Phone Main']) ? $data['Phone Main'] : null)
             ->setAddress1(isset($data['address1']) ? $data['address1'] : 'Victoria Road')
             ->setAddress2(isset($data['address2']) ? $data['address2'] : null)
             ->setAddress3(isset($data['address3']) ? $data['address3'] : null)
