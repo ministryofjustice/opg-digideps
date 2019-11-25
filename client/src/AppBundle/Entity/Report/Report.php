@@ -3,13 +3,12 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Client;
-
+use AppBundle\Entity\User;
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Validator\Constraints\StartEndDateComparableInterface;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use AppBundle\Validator\Constraints as AppAssert;
 
 /**
@@ -75,7 +74,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @Assert\NotBlank( message="report.startDate.notBlank", groups={"start-end-dates"} )
      * @Assert\Date( message="report.startDate.invalidMessage", groups={"start-end-dates"} )
      *
-     * @var \DateTime
+     * @var \DateTime|null
      */
     private $startDate;
 
@@ -86,7 +85,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @Assert\NotBlank( message="report.endDate.notBlank", groups={"start-end-dates"} )
      * @Assert\Date( message="report.endDate.invalidMessage", groups={"start-end-dates"} )
      *
-     * @var \DateTime
+     * @var \DateTime|null
      */
     private $endDate;
 
@@ -101,12 +100,12 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"report_due_date"})
      *
-     * @var \DateTime
+     * @var \DateTime|null
      */
     private $dueDate;
 
     /**
-     * @var \DateTime
+     * @var \DateTime|null
      *
      * @JMS\Type("DateTime")
      * @JMS\Groups({"submit"})
@@ -115,7 +114,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
 
     /**
-     * @var \DateTime
+     * @var \DateTime|null
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"unsubmit_date"})
@@ -161,21 +160,21 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     /**
      * @JMS\Type("AppBundle\Entity\Report\VisitsCare")
      *
-     * @var VisitsCare
+     * @var VisitsCare|null
      */
     private $visitsCare;
 
     /**
      * @JMS\Type("AppBundle\Entity\Report\Lifestyle")
      *
-     * @var Lifestyle
+     * @var Lifestyle|null
      */
     private $lifestyle;
 
     /**
      * @JMS\Type("AppBundle\Entity\Report\Action")
      *
-     * @var Action
+     * @var Action|null
      */
     private $action;
 
@@ -192,7 +191,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      *
      * @Assert\NotBlank( message="contact.reasonForNoContacts.notBlank", groups={"reasonForNoContacts"})
      *
-     * @var string
+     * @var string|null
      */
     private $reasonForNoContacts;
 
@@ -202,7 +201,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      *
      * @Assert\NotBlank( message="decision.reasonForNoDecisions.notBlank", groups={"reason-no-decisions"})
      *
-     * @var string
+     * @var string|null
      */
     private $reasonForNoDecisions;
 
@@ -381,7 +380,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getStartDate()
     {
@@ -389,7 +388,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @param \DateTime $startDate
+     * @param \DateTime|null $startDate
      *
      * @return Report
      */
@@ -404,7 +403,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @return \DateTime $endDate
+     * @return \DateTime|null $endDate
      */
     public function getEndDate()
     {
@@ -412,7 +411,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @param \DateTime $dueDate
+     * @param \DateTime|null $dueDate
      */
     public function setDueDate(\DateTime $dueDate = null)
     {
@@ -442,7 +441,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      */
     public function getDueDateDiffDays(\DateTime $currentDate = null)
     {
-        if (!$this->getDueDate()) {
+        if (is_null($this->getDueDate())) {
             return;
         }
 
@@ -462,7 +461,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     /**
      * Get submitDate.
      *
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getSubmitDate()
     {
@@ -470,7 +469,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @param \DateTime $submitDate
+     * @param \DateTime|null $submitDate
      *
      * @return Report
      */
@@ -482,7 +481,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getUnSubmitDate()
     {
@@ -527,15 +526,19 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     /**
      * Generates next reporting period's start date
      *
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getNextStartDate()
     {
+        if (is_null($this->getStartDate())) {
+            return null;
+        }
+
         $reportingPeriodInDays = $this->calculateReportingPeriod('%a');
         if (!empty($reportingPeriodInDays)) {
 
             $nextStart = clone $this->getStartDate();
-            $nextStart = $nextStart->modify('+ ' . ($reportingPeriodInDays + 1) . ' days');
+            $nextStart = $nextStart->modify('+ ' . (intval($reportingPeriodInDays) + 1) . ' days');
             $nextStart->setTime(0,0,0);
 
             return $nextStart;
@@ -547,14 +550,18 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * Generates next reporting period's end date.
      * Note: Date diff returns 'difference' and so 1 day needs to be added
      *
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getNextEndDate()
     {
+        if (is_null($this->getEndDate())) {
+            return null;
+        }
+
         $reportingPeriodInDays = $this->calculateReportingPeriod('%a');
         if (!empty($reportingPeriodInDays)) {
             $nextEnd = clone $this->getEndDate();
-            $nextEnd = $nextEnd->modify('+ ' . ($reportingPeriodInDays + 1) . ' days');
+            $nextEnd = $nextEnd->modify('+ ' . (intval($reportingPeriodInDays) + 1) . ' days');
 
             $nextEnd->setTime(0,0,0);
             return $nextEnd;
@@ -566,7 +573,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * Calculates the Reporting period according to $format
      *
      * @param string $format recognised by \DateTime
-     * @return string
+     * @return string|null
      */
     private function calculateReportingPeriod($format = '%a')
     {
@@ -616,7 +623,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @param int $client
+     * @param Client $client
      *
      * @return Report
      */
@@ -638,7 +645,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     /**
      * @param array $contacts
      *
-     * @return array $contacts
+     * @return $this
      */
     public function setContacts($contacts)
     {
@@ -692,7 +699,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @return string yes/no/null
+     * @return string|null
      */
     public function hasDecisions()
     {
@@ -722,7 +729,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @return string $reasonForNoContacts
+     * @return string|null
      */
     public function getReasonForNoContacts()
     {
@@ -742,7 +749,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @return string $reasonForNoDecisions
+     * @return string|null
      */
     public function getReasonForNoDecisions()
     {
@@ -999,7 +1006,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @param $wishToProvideDocumentation
+     * @param string $wishToProvideDocumentation
      * @return $this
      */
     public function setWishToProvideDocumentation($wishToProvideDocumentation)
@@ -1010,14 +1017,21 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @param $format string where %s are endDate (Y), submitDate Y-m-d, case number
+     * @param string $format string where %s are endDate (Y), submitDate Y-m-d, case number
      * @return string
      */
     public function createAttachmentName($format)
     {
+        $endDate = $this->getEndDate();
+        $submitDate = $this->getSubmitDate();
+
+        if (is_null($endDate)) {
+            throw new \RuntimeException('Cannot create an attachment for a report with no end date');
+        }
+
         $attachmentName = sprintf($format,
-            $this->getEndDate()->format('Y'),
-            $this->getSubmitDate() ? $this->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
+            $endDate->format('Y'),
+            $submitDate instanceof \DateTime ? $submitDate->format('Y-m-d') : 'n-a-', //some old reports have no submission date
             $this->getClient()->getCaseNumber()
         );
 
