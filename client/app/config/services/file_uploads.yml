@@ -30,7 +30,7 @@ services:
         timeout: 10
         allow_redirects: false
 
-  multi_file_form_upload_verifier:
+  AppBundle\Service\File\Verifier\MultiFileFormUploadVerifier:
     class: AppBundle\Service\File\Verifier\MultiFileFormUploadVerifier
     calls:
       - [ addVerifier, ['@constraint_verifier'] ]
