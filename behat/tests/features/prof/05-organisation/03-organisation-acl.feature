@@ -18,7 +18,7 @@ Feature: Users can access the correct clients
   Scenario: User attempts to view report not belonging to their client
     Given I am logged in as "behat-prof-org-1@org-1.co.uk" with password "Abcd1234"
     When I go to the report URL "overview" for "client-03000026-report"
-    Then the response status code should be 500
+    Then the response status code should be 404
 
   Scenario: User in an active organisation can only see the organisations Clients
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
