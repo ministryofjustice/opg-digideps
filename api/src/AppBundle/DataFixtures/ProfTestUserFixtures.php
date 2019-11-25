@@ -43,7 +43,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             'Dep Postcode' => 'SW1',
             'Dep Adrs4' => 'ADD4',
             'Dep Adrs5' => 'ADD5',
-            'phoneMain' => '10000000001',
+            'Phone Main' => '10000000001',
             'clients' => [
                 [
                     'firstname' => 'CLY1',
@@ -303,7 +303,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             'Dep Postcode' => 'SW1',
             'Dep Adrs4' => 'ADD4',
             'Dep Adrs5' => 'ADD5',
-            'phoneMain' => '10000000001',
+            'Phone Main' => '10000000002',
             'clients' => [
                 [
                     'firstname' => 'CLY201',
@@ -368,7 +368,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             'Dep Postcode' => 'SW1',
             'Dep Adrs4' => 'ADD4',
             'Dep Adrs5' => 'ADD5',
-            'phoneMain' => '10000000001',
+            'Phone Main' => '10000000003',
             'clients' => [
                 [
                     'firstname' => 'CLY301',
@@ -432,7 +432,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             'Dep Postcode' => 'SW1',
             'Dep Adrs4' => 'ADD4',
             'Dep Adrs5' => 'ADD5',
-            'phoneMain' => '10000000001',
+            'Phone Main' => '10000000004',
             'clients' => [
                 [
                     'firstname' => 'CLY401',
@@ -466,7 +466,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             'Dep Postcode' => 'SW1',
             'Dep Adrs4' => 'ADD4',
             'Dep Adrs5' => 'ADD5',
-            'phoneMain' => '012345123123',
+            'Phone Main' => '012345123123',
             'organisation' => 'abc-solicitors.uk',
             'clients' => [
                 [
@@ -517,10 +517,10 @@ class ProfTestUserFixtures extends AbstractDataFixture
             ->setFirstname(isset($data['Dep Forename']) ? $data['Dep Forename'] : 'test')
             ->setLastname(isset($data['Dep Surname']) ? $data['Dep Surname'] : $data['id'])
             ->setEmail(isset($data['Email']) ? $data['Email'] : $data['id'] . '@example.org')
-            ->setActive(isset($data['active']) ? $data['active'] : true)
+            ->setActive(isset($data ['active']) ? $data['active'] : true)
             ->setRegistrationDate(new \DateTime())
             ->setNdrEnabled(false)
-            ->setPhoneMain(isset($data['phoneMain']) ? $data['phoneMain'] : null)
+            ->setPhoneMain(isset($data['Phone Main']) ? $data['Phone Main'] : null)
             ->setAddress1(isset($data['Dep Adrs1']) ? $data['Dep Adrs1'] : 'Victoria Road')
             ->setAddress2(isset($data['Dep Adrs2']) ? $data['Dep Adrs2'] : null)
             ->setAddress3(isset($data['Dep Adrs3']) ? $data['Dep Adrs3'] : null)
