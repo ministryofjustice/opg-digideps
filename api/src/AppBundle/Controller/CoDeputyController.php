@@ -3,7 +3,9 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\User;
 use AppBundle\Service\CsvUploader;
+use AppBundle\Service\UserService;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +15,17 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CoDeputyController extends RestController
 {
+
+    /**
+     * @var UserService
+     */
+    private $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     /**
      * @Route("{count}", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN')")
@@ -40,16 +53,17 @@ class CoDeputyController extends RestController
             'email' => 'notEmpty',
         ]);
 
+        /** @var User $loggedInUser */
         $loggedInUser = $this->getUser();
-        $newUser = new EntityDir\User();
+        $newUser = new User();
 
         $newUser->setFirstname('');
         $newUser->setLastname('');
         $newUser->setEmail($data['email']);
         $newUser->recreateRegistrationToken();
-        $newUser->setRoleName(EntityDir\User::ROLE_LAY_DEPUTY);
+        $newUser->setRoleName(User::ROLE_LAY_DEPUTY);
 
-        $this->get('user_service')->addUser($loggedInUser, $newUser, $data);
+        $this->userService->addUser($loggedInUser, $newUser, $data);
 
         $this->setJmsSerialiserGroups(['user']);
 
@@ -62,7 +76,7 @@ class CoDeputyController extends RestController
      */
     public function update(Request $request, $id)
     {
-        $user = $this->findEntityBy(EntityDir\User::class, $id, 'User not found'); /* @var $user User */
+        $user = $this->findEntityBy(User::class, $id, 'User not found'); /* @var $user User */
 
         if (!$user->isCoDeputy()
             || !$this->getUser()->isCoDeputy()
@@ -74,8 +88,7 @@ class CoDeputyController extends RestController
         if (!empty($data['email'])) {
             $originalUser = clone $user;
             $user->setEmail($data['email']);
-            $userService = $this->get('user_service');
-            $userService->editUser($originalUser, $user);
+            $this->userService->editUser($originalUser, $user);
         }
 
         return [];
@@ -109,7 +122,7 @@ class CoDeputyController extends RestController
         $deputyNumbers = [];
         foreach ($data as $deputy) {
             if (array_key_exists('Deputy No', $deputy)) {
-                $deputyNumbers[] = EntityDir\User::padDeputyNumber($deputy['Deputy No']);
+                $deputyNumbers[] = User::padDeputyNumber($deputy['Deputy No']);
             }
         }
 
