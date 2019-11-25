@@ -3,6 +3,8 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\User;
+use AppBundle\Service\OrgService;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +26,10 @@ class TeamController extends RestController
 
         $this->setJmsSerialiserGroups($groups);
 
-        return $this->getUser()->getMembersInAllTeams();
+        /** @var User $user */
+        $user = $this->getUser();
+
+        return $user->getMembersInAllTeams();
     }
 
     /**
@@ -35,8 +40,10 @@ class TeamController extends RestController
     {
         $this->setJmsSerialiserGroups(['team', 'team-users', 'user', 'team-names']);
 
-        return $this->orgService()
-            ->getMemberById($this->getUser(), $id);
+        /** @var User $user */
+        $user = $this->getUser();
+
+        return $this->orgService()->getMemberById($user, $id);
     }
 
     /**
@@ -47,11 +54,14 @@ class TeamController extends RestController
      */
     public function addToTeam(Request $request, $userId)
     {
-        $user = $this->findEntityBy(EntityDir\User::class, $userId, 'User not found');
-        /* @var $user EntityDir\User */
+        /** @var User $user */
+        $user = $this->findEntityBy(User::class, $userId, 'User not found');
 
-        $this->orgService()->addUserToUsersClients($this->getUser(), $user);
-        $this->orgService()->addUserToUsersTeams($this->getUser(), $user);
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
+        $this->orgService()->addUserToUsersClients($currentUser, $user);
+        $this->orgService()->addUserToUsersTeams($currentUser, $user);
 
         return ['id' => $user->getId()];
     }
@@ -63,24 +73,29 @@ class TeamController extends RestController
      * @Security("has_role('ROLE_ORG_NAMED') or has_role('ROLE_ORG_ADMIN')")
      *
      * @param Request $request
-     * @param int     $userId
+     * @param string     $userId
      *
      * @return array
      */
-    public function deleteOrgTeamUser(Request $request, $userId)
+    public function deleteOrgTeamUser(Request $request, string $userId)
     {
-        /* @var $user EntityDir\User */
-        $user = $this->orgService()->getMemberById($this->getUser(), $userId);
-        $this->orgService()->removeUserFromTeamsOf($this->getUser(), $user);
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
+        /** @var User $user */
+        $user = $this->orgService()->getMemberById($currentUser, $userId);
+        $this->orgService()->removeUserFromTeamsOf($currentUser, $user);
 
         return [];
     }
 
     /**
-     * @return \AppBundle\Service\OrgService
+     * @return OrgService
      */
     private function orgService()
     {
-        return $this->get('org_service');
+        /** @var OrgService $orgService */
+        $orgService = $this->get('AppBundle\Service\OrgService');
+        return $orgService;
     }
 }

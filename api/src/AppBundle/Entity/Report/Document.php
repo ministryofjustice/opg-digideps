@@ -103,7 +103,7 @@ class Document
      * Report is initially required, but will be set to null at submission time,
      * and associated to a specific ReportSubmission instead
      *
-     * @param Report\Ndr $report
+     * @param mixed $report
      */
     public function __construct($report)
     {
@@ -190,11 +190,11 @@ class Document
     }
 
     /**
-     * @param Report|null $report
+     * @param Report $report
      *
      * @return $this
      */
-    public function setReport(Report $report = null)
+    public function setReport(Report $report)
     {
         $this->report = $report;
         return $this;

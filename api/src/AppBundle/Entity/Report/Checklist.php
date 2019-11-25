@@ -5,6 +5,7 @@ namespace AppBundle\Entity\Report;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\Traits\ModifyAudit;
 use AppBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -31,6 +32,8 @@ class Checklist
     private $id;
 
     /**
+     * @var Report
+     *
      * @JMS\Type("AppBundle\Entity\Report\Report")
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="checklist")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
@@ -263,7 +266,7 @@ class Checklist
     private $finalDecision;
 
     /**
-     * @var Checlist[]
+     * @var ArrayCollection
      *
      * @JMS\Type("array<AppBundle\Entity\Report\ChecklistInformation>")
      * @JMS\Groups({"checklist-information"})
@@ -294,6 +297,8 @@ class Checklist
     /**
      * Submitted on
      *
+     * @var \DateTime
+     *
      * @JMS\Type("DateTime")
      * @JMS\Groups({"report-checklist"})
      * @ORM\Column(type="datetime", name="submitted_on", nullable=true)
@@ -307,7 +312,10 @@ class Checklist
      */
     private $buttonClicked;
 
-    public function __construct(ReportInterface $report)
+    /**
+     * @param Report $report
+     */
+    public function __construct(Report $report)
     {
         $this->setReport($report);
     }
@@ -340,11 +348,11 @@ class Checklist
     }
 
     /**
-     * @param ReportInterface $report
+     * @param Report $report
      *
      * @return $this
      */
-    public function setReport(ReportInterface $report)
+    public function setReport(Report $report)
     {
         $this->report = $report;
 
@@ -750,7 +758,7 @@ class Checklist
     }
 
     /**
-     * @param $hasDeputyOverchargedFromPreviousEstimates
+     * @param string $hasDeputyOverchargedFromPreviousEstimates
      * @return $this
      */
     public function setHasDeputyOverchargedFromPreviousEstimates($hasDeputyOverchargedFromPreviousEstimates)
@@ -768,50 +776,12 @@ class Checklist
     }
 
     /**
-     * @param $nextBillingEstimatesSatisfactory
+     * @param string $nextBillingEstimatesSatisfactory
      * @return $this
      */
     public function setNextBillingEstimatesSatisfactory($nextBillingEstimatesSatisfactory)
     {
         $this->nextBillingEstimatesSatisfactory = $nextBillingEstimatesSatisfactory;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDecision()
-    {
-        return $this->decision;
-    }
-
-    /**
-     * @param string $decision
-     *
-     * @return $this
-     */
-    public function setDecision($decision)
-    {
-        $this->decision = $decision;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCaseManagerName()
-    {
-        return $this->caseManagerName;
-    }
-
-    /**
-     * @param string $caseManagerName
-     *
-     * @return $this
-     */
-    public function setCaseManagerName($caseManagerName)
-    {
-        $this->caseManagerName = $caseManagerName;
         return $this;
     }
 
@@ -878,9 +848,9 @@ class Checklist
     }
 
     /**
-     * @param string $furtherInformation
+     * @param string $furtherInformationReceived
      */
-    public function setFurtherInformationReceived($furtherInformationReceived)
+    public function setFurtherInformationReceived(string $furtherInformationReceived)
     {
         $this->furtherInformationReceived = $furtherInformationReceived;
     }
