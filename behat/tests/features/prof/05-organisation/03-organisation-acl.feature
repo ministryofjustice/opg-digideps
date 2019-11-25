@@ -19,7 +19,6 @@ Feature: Users can access the correct clients
     And I should not see the "client-03000026" region
     And I should see the "client" region exactly 1 times
     When I click on "pa-report-open" in the "client-03000025" region
-    And I save the report as "03000025-report"
     Then the response status code should be 200
 
   Scenario: User attempting to view report not belonging to their client
@@ -46,5 +45,4 @@ Feature: Users can access the correct clients
     And I should not see the "client-03000027" region
     And I should not see the "client-03000028" region
     When I click on "pa-report-open" in the "client-03000025" region
-    And I save the report as "client-03000025-report"
     Then the response status code should be 200
