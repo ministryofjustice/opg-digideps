@@ -55,9 +55,9 @@ cd environment
 aws-vault exec identity make
 ```
 
-## Testing
+## Testing & Debugging
 
-_See [testing documentation](docs/TESTING.md)_
+_See [testing](docs/TESTING.md)_ and [debugging ](docs/DEBUGGING.md) documentation.
 
 ## Deployment
 
