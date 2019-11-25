@@ -137,7 +137,7 @@ class DocumentController extends AbstractController
 
             if (is_array($files)) {
                 /** @var MultiFileFormUploadVerifier */
-                $multiFileVerifier = $this->container->get('MultiFileFormUploadVerifier');
+                $multiFileVerifier = $this->container->get('AppBundle\Service\File\Verifier\MultiFileFormUploadVerifier');
                 $verified = $multiFileVerifier->verify($files, $form, $report);
 
                 if ($verified) {
