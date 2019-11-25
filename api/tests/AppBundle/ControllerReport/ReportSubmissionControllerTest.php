@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AppBundle\Controller\Report;
+namespace Tests\AppBundle\ControllerReport;
 
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
@@ -155,11 +155,11 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
     /**
      * @dataProvider getDateRangeThresholds
-     * @param $fromDate
-     * @param $toDate
+     * @param string $fromDate
+     * @param string $toDate
      * @param array $expectedOutcomes
      */
-    public function testGetCaserecDataRetrievesWithinGivenDateRangesInclusive($fromDate, $toDate, array $expectedOutcomes)
+    public function testGetCaserecDataRetrievesWithinGivenDateRangesInclusive(string $fromDate, string $toDate, array $expectedOutcomes)
     {
         $this->updateReportSubmissionByIdWithNewDateTime(1, '2018-01-01 12:00:00');
         $this->updateReportSubmissionByIdWithNewDateTime(2, '2018-01-31 12:00:00');
@@ -229,10 +229,11 @@ class ReportSubmissionControllerTest extends AbstractTestController
     }
 
     /**
-     * @param $id
-     * @param $date
+     * @param int $id
+     * @param string $date
+     * @throws \Exception
      */
-    private function updateReportSubmissionByIdWithNewDateTime($id, $date)
+    private function updateReportSubmissionByIdWithNewDateTime(int $id, string $date)
     {
         $entity = self::fixtures()->getRepo('Report\ReportSubmission')->findOneById($id);
         $entity->setCreatedOn(new \DateTime($date));
@@ -241,11 +242,11 @@ class ReportSubmissionControllerTest extends AbstractTestController
     }
 
     /**
-     * @param $endpoint
+     * @param string $endpoint
      * @param array $params
      * @return mixed
      */
-    private function makeRequestAndReturnResults($endpoint, array $params)
+    private function makeRequestAndReturnResults(string $endpoint, array $params)
     {
         $url = sprintf('%s?%s', $endpoint, http_build_query($params));
 
@@ -258,10 +259,10 @@ class ReportSubmissionControllerTest extends AbstractTestController
     }
 
     /**
-     * @param $data
-     * @param $caseNumber
+     * @param array $data
+     * @param string $caseNumber
      */
-    private function assertResponseIncludesReportWithCaseNumber($data, $caseNumber)
+    private function assertResponseIncludesReportWithCaseNumber(array $data, string $caseNumber)
     {
         $testPassed = false;
         foreach ($data as $row) {
