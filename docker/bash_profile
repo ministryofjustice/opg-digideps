@@ -112,10 +112,16 @@ dd-behat-run()
       dd-cache-clear;
     fi
 
-    time docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm test $@
+    time docker-compose -f $DD_DOCKER_DIR/docker-compose.dev.yml run --rm test $@
 
     # Re-enable dev mode
     dd-mode-dev
+}
+
+dd-phpstan() {
+  CONTAINER=$1
+  shift
+  docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm ${CONTAINER} bin/phpstan analyse $@ --memory-limit=0 --level=max
 }
 
 # phpunit

@@ -38,6 +38,7 @@ class AjaxController extends AbstractController
     public function uploadUsersAjaxAction(Request $request)
     {
         $chunkId = 'chunk' . $request->get('chunk');
+        /** @var \Redis $redis */
         $redis = $this->get('snc_redis.default');
 
         try {
@@ -48,31 +49,6 @@ class AjaxController extends AbstractController
             } else {
                 $ret['added'] = 0;
             }
-
-            return new JsonResponse($ret);
-        } catch (\Throwable $e) {
-            return new JsonResponse($e->getMessage());
-        }
-    }
-
-    /**
-     * @Route("/org-chunk-add", name="org_add_ajax", methods={"POST"})
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     */
-    public function uploadPaAjaxAction(Request $request)
-    {
-        $chunkId = 'org_chunk' . $request->get('chunk');
-        $redis = $this->get('snc_redis.default');
-
-        try {
-            $compressedData = $redis->get($chunkId);
-            if (!$compressedData) {
-                new JsonResponse('Chunk not found', 500);
-            }
-
-            $ret = $this->get('org_service')->uploadAndSetFlashMessages($compressedData, $request->getSession()->getFlashBag());
-
-            $redis->del($chunkId);
 
             return new JsonResponse($ret);
         } catch (\Throwable $e) {

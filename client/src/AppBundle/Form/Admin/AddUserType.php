@@ -14,7 +14,15 @@ class AddUserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $deputyRoles = [User::ROLE_LAY_DEPUTY, User::ROLE_PA_NAMED, User::ROLE_PROF_NAMED];
+        $deputyRoles = [
+            User::ROLE_LAY_DEPUTY,
+            User::ROLE_PA_NAMED,
+            User::ROLE_PA_ADMIN,
+            User::ROLE_PA_TEAM_MEMBER,
+            User::ROLE_PROF_NAMED,
+            User::ROLE_PROF_ADMIN,
+            User::ROLE_PROF_TEAM_MEMBER,
+        ];
         $staffRoles = [User::ROLE_ADMIN, User::ROLE_CASE_MANAGER];
 
         $builder->add('email', FormTypes\TextType::class)

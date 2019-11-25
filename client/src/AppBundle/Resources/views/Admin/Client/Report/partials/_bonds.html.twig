@@ -1,22 +1,11 @@
+{% from 'AppBundle:Admin/Client/Report:macros.html.twig' import checklist_radios %}
+
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
 {% set page = 'checklistPage' %}
 
-<h3 class="heading-medium underline" id="bonds">{{ (page ~ '.heading.bonds') | trans }}</h3>
+<h3 class="govuk-heading-m" id="bonds">{{ (page ~ '.heading.lodging.bonds') | trans }}</h3>
 
-<div class="form-section push--bottom">
-    <div class="form-group-outer">
-        {{ form_checkbox_group(form.bondAdequate, (page ~ '.form.bondAdequate'), {
-            'fieldSetClass' : 'inline'
-        }) }}
-    </div>
-</div>
+{{ checklist_radios(form.bondAdequate, { margin: 6 }) }}
 
-<div class="form-section">
-    <div class="form-group-outer border-top soft--top">
-        {{ form_checkbox_group(form.bondOrderMatchCasrec, (page ~ '.form.bondOrderMatchCasrec'), {
-            'fieldSetClass' : 'inline',
-            'formGroupClass': 'push-half--bottom'
-        }) }}
-    </div>
-</div>
+{{ checklist_radios(form.bondOrderMatchCasrec, { margin: 6 }) }}

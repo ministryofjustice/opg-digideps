@@ -1,23 +1,3 @@
-# TODO: add name_prefix
-resource "aws_security_group" "front_cache" {
-  description = "front ec access"
-  vpc_id      = data.aws_vpc.vpc.id
-  tags        = local.default_tags
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_security_group_rule" "front_cache_task_in" {
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 6379
-  to_port                  = 6379
-  security_group_id        = aws_security_group.front_cache.id
-  source_security_group_id = aws_security_group.front.id
-}
-
 resource "aws_elasticache_cluster" "front" {
   cluster_id           = "front-${local.environment}"
   engine               = "redis"
@@ -27,7 +7,6 @@ resource "aws_elasticache_cluster" "front" {
   engine_version       = "5.0.0"
   port                 = 6379
   subnet_group_name    = local.account.ec_subnet_group
-  security_group_ids   = [aws_security_group.front_cache.id]
+  security_group_ids   = [module.front_cache_security_group.id]
   tags                 = local.default_tags
 }
-

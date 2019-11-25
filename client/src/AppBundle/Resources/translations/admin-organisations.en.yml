@@ -30,7 +30,8 @@ viewPage:
         caption: Users
         name: Name
         emailAddress: Email address
-        active: User account active
+        active: Active
+        admin: Admin
     clients:
         caption: Clients
         caseNumber: Case number

@@ -22,16 +22,20 @@
             'labelRaw': true,
             'labelText':'Search',
             'inputClass': 'govuk-!-width-full',
-            'formGroupClass': 'govuk-grid-column-one-third'}) }}
+            'formGroupClass': 'govuk-grid-column-one-quarter'}) }}
 
         {{ form_select(form.role_name, '', {
             'labelText': 'Role',
             'inputClass': 'govuk-!-width-full',
-            'formGroupClass': 'govuk-grid-column-one-third'}) }}
+            'formGroupClass': 'govuk-grid-column-one-quarter'}) }}
 
         {{ form_checkbox(form.ndr_enabled, '', {
             'labelText': 'NDR enabled',
-            'formGroupClass': 'govuk-grid-column-one-third govuk-!-margin-top-6'}) }}
+            'formGroupClass': 'govuk-grid-column-one-quarter govuk-!-margin-top-6'}) }}
+
+        {{ form_checkbox(form.include_clients, '', {
+            'labelText': 'Include clients',
+            'formGroupClass': 'govuk-grid-column-one-quarter govuk-!-margin-top-6'}) }}
     </div>
 
     <div class="form-group">

@@ -14,6 +14,7 @@ bin/
 lib/
 node_modules/
 var/
+vendor/
 !ecs_helper/cmd/vendor/
 
 # Repo-specific excludes
@@ -22,4 +23,5 @@ terraform/to_import\.sh
 
 .certs
 
-ecs_helper/terraform.output.json
+**/terraform.output.json
+

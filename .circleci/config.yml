@@ -18,20 +18,8 @@ workflows:
           filters: { branches: { ignore: [ master ] } }
 
       - run-task:
-          name: backup environment
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: backup
-
-      - run-task:
-          name: restore environment
-          requires: [ backup environment ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: restore
-
-      - run-task:
           name: reset environment
-          requires: [ restore environment ]
+          requires: [ apply environment ]
           filters: { branches: { ignore: [ master ] } }
           task_name: reset_database
           timeout: 180
@@ -45,21 +33,33 @@ workflows:
 
       - run-task:
           name: client unit test
-          requires: [ restore environment  ]
+          requires: [ apply environment  ]
           filters: { branches: { ignore: [ master ] } }
           task_name: client_unit_test
 
       - run-task:
           name: api unit test
-          requires: [ restore environment ]
+          requires: [ apply environment ]
           filters: { branches: { ignore: [ master ] } }
           task_name: api_unit_test
           timeout: 600
 
+      - run-task:
+          name: backup environment
+          requires: [ api unit test, client unit test, integration test ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: backup
+
+      - run-task:
+          name: restore environment
+          requires: [ backup environment ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: restore
+
       - cleanup:
           name: approve destroy environment
           type: approval
-          requires: [ api unit test, client unit test, integration test ]
+          requires: [ restore environment ]
           filters: { branches: { ignore: [ master ] } }
 
       - apply:
@@ -199,8 +199,8 @@ orbs:
         docker:
           - image: circleci/golang:1.12
         environment:
-          TF_VERSION: 0.12.12
-          TF_SHA256SUM: 67bc7a49c0946ad48b14cc6e95482fdd3e7e9f7dc6811f4ce6ff531fc565bd3a
+          TF_VERSION: 0.12.16
+          TF_SHA256SUM: fcc719314660adc66cbd688918d13baa1095301e2e507f9ac92c9e22acf4cc02
           TF_CLI_ARGS_plan: -input=false -lock=false
           TF_CLI_ARGS_apply: -input=false -auto-approve
           TF_CLI_ARGS_destroy: -input=false -auto-approve
@@ -317,6 +317,25 @@ jobs:
       - run:
           name: Build images
           command: docker-compose -f docker-compose.ci.yml build --parallel
+      - run:
+          name: List API packages
+          command: docker-compose -f docker-compose.ci.yml run --rm api apk list | sort
+      - run:
+          name: List client packages
+          command: docker-compose -f docker-compose.ci.yml run --rm client apk list | sort
+      - run:
+          name: Check updated PHP files for errors
+          command: |
+            API_CHANGED_FILES=$(git diff --relative=api --name-only --diff-filter=d origin/master | grep .php) || [[ $? == 1 ]]
+            CLIENT_CHANGED_FILES=$(git diff --relative=client --name-only --diff-filter=d origin/master | grep .php) || [[ $? == 1 ]]
+
+            if [ -n "$API_CHANGED_FILES" ]; then
+                docker-compose -f docker-compose.ci.yml run --rm api php bin/phpstan analyse $API_CHANGED_FILES --memory-limit=0 --level=max
+            fi
+
+            if [ -n "$CLIENT_CHANGED_FILES" ]; then
+                docker-compose -f docker-compose.ci.yml run --rm client php bin/phpstan analyse $CLIENT_CHANGED_FILES --memory-limit=0 --level=max
+            fi
       - run:
           name: Push images
           command: docker-compose -f docker-compose.ci.yml push

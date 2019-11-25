@@ -23,13 +23,13 @@ To run the entire test suite, reset the database and run the `test` image.
 
 ```sh
 docker-compose run --rm api sh scripts/resetdb.sh
-docker-compose run --rm test
+docker-compose -f docker-compose.dev.yml run --rm test
 ```
 
 You can supply additional commands to Behat to run individual suites or tags.
 
 ```sh
-docker-compose run --rm test --suite=admin
+docker-compose -f docker-compose.dev.yml run --rm test --suite=admin
 ```
 
 ## PHPUnit
@@ -59,13 +59,25 @@ Non-production environments don't send emails to avoid data leakage, confusion a
 
 Note that the public-facing frontend and the administration area have separate email stores (both accessible at `/behat/emails` of the relevant service URL).
 
-[mockery]: http://docs.mockery.io/en/latest/
-
 ## Database Sync
 
 The sync process between production and preproduction is handled as part of the pipeline using AWS tasks. To test locally run the sync service with the following commands:
 
-```
+```sh
 docker-compose run --rm sync ./backup.sh
 docker-compose run --rm sync ./restore.sh
 ```
+
+## PHPStan
+
+[PHPStan][phpstan] analyses and lints our PHP files to identify common issues which miight otherwise be missed, such as incorrect annotations or using undefined variables. It is run as part of CI against any files which were changed on the branch.
+
+You can also run PHPStan manually. Note that you need to run it against each container separately, and can specify which paths (in this example "src" and "tests" to analyse).
+
+```sh
+docker-compose run --rm api bin/phpstan analyse src tests --memory-limit=0 --level=max
+docker-compose run --rm frontend bin/phpstan analyse src tests --memory-limit=0 --level=max
+```
+
+[mockery]: http://docs.mockery.io/en/latest/
+[phpstan]: https://github.com/phpstan/phpstan

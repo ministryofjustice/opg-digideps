@@ -1,35 +1,3 @@
-#TODO: tidy this up
-resource "aws_security_group" "admin_elb" {
-  name        = "admin-elb-${local.environment}"
-  description = "admin elb access for ${local.environment}"
-  vpc_id      = data.aws_vpc.vpc.id
-
-  tags = merge(
-    local.default_tags,
-    {
-      "Name" = "admin-elb-${local.environment}"
-    },
-  )
-}
-
-resource "aws_security_group_rule" "admin_elb_in" {
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = 443
-  to_port           = 443
-  security_group_id = aws_security_group.admin_elb.id
-  cidr_blocks       = local.admin_whitelist
-}
-
-resource "aws_security_group_rule" "admin_elb_out" {
-  security_group_id        = aws_security_group.admin_elb.id
-  source_security_group_id = aws_security_group.admin.id
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = 443
-  to_port                  = 443
-}
-
 resource "aws_lb" "admin" {
   name               = "admin-${local.environment}"
   internal           = false
@@ -37,9 +5,7 @@ resource "aws_lb" "admin" {
   subnets            = data.aws_subnet.public.*.id
   idle_timeout       = 300
 
-  security_groups = [
-    aws_security_group.admin_elb.id,
-  ]
+  security_groups = [module.admin_elb_security_group.id]
 
   tags = merge(
     local.default_tags,

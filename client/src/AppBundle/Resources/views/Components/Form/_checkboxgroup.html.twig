@@ -40,7 +40,7 @@
 
                 {{ form_widget(choiceElement, {'attr': attr}) }}
                 <label class="govuk-label govuk-radios__label {{ labelClass }}" for="{{ choiceElement.vars.id }}">
-                    {{ choiceElement.vars.label | trans({}, translationDomain)}}
+                    {{ choiceElement.vars.label | trans({}, element.vars.choice_translation_domain ?: translationDomain)}}
                 </label>
 
                 {% if description is not null %}

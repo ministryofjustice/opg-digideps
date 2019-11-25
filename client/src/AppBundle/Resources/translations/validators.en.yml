@@ -706,7 +706,7 @@ checklist:
     notBlank: Please select 'Yes' or 'No'
   contactDetailsUptoDate:
     notBlank: Confirm that you've checked the contact details are correct
-  deputyFullNameAccurateinCasrec:
+  deputyFullNameAccurateInCasrec:
     notBlank: Confirm that you've checked the deputy's full name on CASREC is correct
   decisionsSatisfactory:
     notBlank: Please select 'Yes' or 'No'

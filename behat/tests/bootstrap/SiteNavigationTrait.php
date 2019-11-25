@@ -62,4 +62,15 @@ trait SiteNavigationTrait
             $this->getSession()->executeScript($javascript);
         }
     }
+
+    /**
+     * @When I open the :period checklist for client :caseNumber
+     */
+    public function iOpenChecklistForClient($period, $caseNumber)
+    {
+        $this->visitAdminPath('/');
+        $this->clickOnBehatLink('admin-client-search');
+        $this->clickOnBehatLink('client-detail-' . $caseNumber);
+        $this->clickLinkInsideElement('checklist', 'report-' . $period);
+    }
 }

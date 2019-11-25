@@ -10,7 +10,8 @@ Feature: Add PROF users and activate PROF user (journey)
     Then the form should be valid
     #Then I should see "Added 1 PROF users"
       # activate PROF user 1
-    When I click on "admin-homepage"
+    When I follow meta refresh
+    And I click on "admin-homepage"
     And I click on "send-activation-email" in the "user-behat-prof1publicguardiangovuk" region
     Then the response status code should be 200
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-prof1@publicguardian.gov.uk"

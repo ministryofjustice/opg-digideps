@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+    test:
+        build: ./behat
+        volumes:
+            - ./behat/tests:/var/www/tests
+            - ./behat/snapshots:/tmp/html
+        env_file: ./behat/test.env
+
+    npm:
+        image: node:8-alpine
+        working_dir: /app
+        volumes:
+            - ./client/:/app
+        entrypoint: npm
+        environment:
+            NODE_ENV: production
+
+    composerapi:
+        image: composer
+        volumes:
+            - ./api/:/app
+
+    composerfront:
+        image: composer
+        volumes:
+            - ./client/:/app

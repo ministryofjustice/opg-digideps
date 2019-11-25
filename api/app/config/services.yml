@@ -78,3 +78,6 @@ services:
 
     AppBundle\Service\DataNormaliser:
         class: AppBundle\Service\DataNormaliser
+
+    AppBundle\Service\Search\ClientSearchFilter:
+        class: AppBundle\Service\Search\ClientSearchFilter

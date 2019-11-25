@@ -526,13 +526,18 @@ class Report implements ReportInterface
     }
 
     /**
-     * set Due date to +8 weeks after end date
+     * set Due date to +21 days after end date (Lay reports) if end date before 13/11/19 otherwise +56 days
      */
     public function updateDueDateBasedOnEndDate()
     {
-        // due date set to 8 exactly weeks (56 days) after the start date
+        // due date set to 8 weeks (56 days) after the end date unless lay reports where end date is beyond
+        // 13/11/19. Then it is 21 days (DDPB-2996)
         $this->dueDate = clone $this->endDate;
-        $this->dueDate->add(new \DateInterval('P56D'));
+        if ($this->isLayReport() && $this->getEndDate()->format('Ymd') >= '20191113') {
+            $this->dueDate->add(new \DateInterval('P21D'));
+        } else {
+            $this->dueDate->add(new \DateInterval('P56D'));
+        }
     }
 
     /**
@@ -1294,5 +1299,13 @@ class Report implements ReportInterface
         ];
 
         return $titleTranslationKeys[$this->getType()];
+    }
+
+    /**
+     * @return bool true if report is lay type, otherwise false
+     */
+    public function isLayReport()
+    {
+        return in_array($this->getType(), [self::TYPE_102, self::TYPE_103, self::TYPE_104, self::TYPE_102_4, self::TYPE_103_4]);
     }
 }

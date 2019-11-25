@@ -3,10 +3,10 @@ require('../scss/application.scss')
 require('./modules/bind.js')
 
 var GOVUKFrontend = require('govuk-frontend')
+var Stickyfill = require('stickyfilljs')
 var limitChars = require('./modules/characterLimiter.js')
 var cookieBanner = require('./modules/cookieBanner.js')
 var detailsExpander = require('./modules/detailsExpander.js')
-var fixSidebar = require('./modules/fix-sidebar.js')
 var formatCurrency = require('./modules/formatcurrency.js')
 var Ga = require('./modules/ga.js')
 var moneyTransfer = require('./modules/moneyTransfer.js')
@@ -39,9 +39,6 @@ $(document).ready(function () {
   // Text area autoSize module
   textAreaAutoSize('form')
 
-  // Sidebar fixing to top module
-  fixSidebar()
-
   // Cookie banner
   cookieBanner()
 
@@ -61,7 +58,7 @@ $(document).ready(function () {
 
   // Check upload progress
   uploadProgress('.js-upload-progress')
-  uploadProgressPA('.js-upload-progress-pa')
+  uploadProgressPA('[data-module="csv-upload-progress"]')
 
   // Table Multi Select
   tableMultiSelect()
@@ -72,3 +69,7 @@ $(document).ready(function () {
 })
 
 GOVUKFrontend.initAll()
+
+// Polyfill elements with position:sticky
+var elements = document.querySelectorAll('.opg-sticky-menu')
+Stickyfill.add(elements)

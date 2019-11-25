@@ -53,7 +53,11 @@ addUserForm:
       ROLE_CASE_MANAGER: Case manager
       ROLE_LAY_DEPUTY: Lay Deputy
       ROLE_PA_NAMED: Public Authority (named)
+      ROLE_PA_ADMIN: Public Authority (admin)
+      ROLE_PA_TEAM_MEMBER: Public Authority (team member)
       ROLE_PROF_NAMED: Professional Deputy (named)
+      ROLE_PROF_ADMIN: Professional Deputy (admin)
+      ROLE_PROF_TEAM_MEMBER: Professional Deputy (team member)
   roleNameDeputy:
     label: Role
   roleNameStaff:
@@ -116,7 +120,14 @@ uploadPA:
   pageTitle: Admin
   supportTitle: PA/Prof user management
   heading: Upload PA/Prof users along with clients and reports
-  uploading: Uploading... please wait.<br/>Do not refresh this page
+  uploading: |
+    Uploading... please wait.
+    Do not refresh this page
+  uploadError: An error occured whilst uploading. Some records may not have been updated. Please try again.
+  upload:
+    label: Select CSV file
+  submit:
+    label: Upload PA/Prof users
 
 uploadUsers:
   htmlTitle: Administration - Upload users
@@ -125,6 +136,8 @@ uploadUsers:
   heading: Upload users
   usersInTheDB: users in the database
   uploading: Uploading... please wait.<br/>Do not refresh this page
+  incidentsOccurred: "%count% %type% occurred"
+  moreDetails: More details
 
 cancel:
     label: Cancel

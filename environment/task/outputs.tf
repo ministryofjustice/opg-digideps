@@ -4,7 +4,7 @@ output "render" {
     LaunchType = "FARGATE"
     NetworkConfiguration = {
       AwsvpcConfiguration = {
-        SecurityGroups = [aws_security_group.task.id]
+        SecurityGroups = [var.security_group_id]
         Subnets        = var.subnet_ids
       }
     }
@@ -13,6 +13,9 @@ output "render" {
 }
 
 output "security_group_id" {
-  value = aws_security_group.task.id
+  value = var.security_group_id
 }
 
+output "name" {
+  value = var.name
+}

@@ -10,7 +10,7 @@ class CsvToArray
     const CHAR_LIMIT_PER_ROW = 2000; // current average is around the 300-400 chars
 
     /**
-     * @var resource
+     * @var resource|false
      */
     private $handle;
 
@@ -18,7 +18,6 @@ class CsvToArray
      * @var array
      */
     private $expectedColumns = [];
-
 
     /**
      * Columns that we definitely dont expect.
@@ -43,8 +42,8 @@ class CsvToArray
     /**
      * CsvToArray constructor.
      *
-     * @param $file
-     * @param $normaliseNewLines
+     * @param string $file
+     * @param bool $normaliseNewLines
      * @param bool $autoDetectLineEndings - setup to maintain compatibility with other code that uses this class
      *
      * @throws \RuntimeException
@@ -57,9 +56,11 @@ class CsvToArray
             throw new \RuntimeException("file $file not found");
         }
 
+        $fileContent = (string) file_get_contents($file);
+
         // if line endings need to be normalised, the stream is replaced with a string stream with the content replaced
         if ($this->normaliseNewLines) {
-            $content = str_replace(["\r\n", "\r"], ["\n", "\n"], file_get_contents($file));
+            $content = str_replace(["\r\n", "\r"], ["\n", "\n"], $fileContent);
             $this->handle = fopen('data://text/plain,' . $content, 'r');
         } else {
             ini_set('auto_detect_line_endings', true);
@@ -90,11 +91,14 @@ class CsvToArray
     }
 
     /**
-     * @return array or false when EOF
+     * @return array|false|null returns false when EOF
      */
     private function getRow()
     {
-        return fgetcsv($this->handle, self::CHAR_LIMIT_PER_ROW, self::DELIMITER, self::ENCLOSURE, self::ESCAPE);
+        if (!empty($this->handle)) {
+            return fgetcsv($this->handle, self::CHAR_LIMIT_PER_ROW, self::DELIMITER, self::ENCLOSURE, self::ESCAPE);
+        }
+        throw new \RuntimeException('Resourcce handle empty');
     }
 
     /**
@@ -139,8 +143,11 @@ class CsvToArray
             $rowNumber++;
             $rowArray = [];
             foreach ($this->expectedColumns as $expectedColumn) {
+                if (empty($header)) {
+                    throw new \RuntimeException('Empty header in CSV file');
+                }
                 $index = array_search($expectedColumn, $header);
-                if ($index !== false) {
+                if ($index !== false && !empty($row)) {
                     if (!array_key_exists($index, $row)) {
                         throw new \RuntimeException("Can't find $expectedColumn column in line $rowNumber");
                     }
@@ -166,7 +173,9 @@ class CsvToArray
 
     public function __destruct()
     {
-        fclose($this->handle);
+        if (false !== $this->handle) {
+            fclose($this->handle);
+        }
 
         if ($this->normaliseNewLines) {
             ini_set('auto_detect_line_endings', false);

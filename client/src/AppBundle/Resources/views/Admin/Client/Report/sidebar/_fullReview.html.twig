@@ -1,0 +1,21 @@
+{% extends 'AppBundle:Admin/Client/Report/sidebar:_sidebar.html.twig' %}
+
+{% trans_default_domain "admin-checklist" %}
+
+{% set checklistDomain = 'fullReview' %}
+
+{% set questions = [
+    'bankStatements',
+    'lodgingConcerns',
+    'spendingAndDebt',
+    'referral',
+    'finalDecision'
+] %}
+
+{% block links %}
+    {% for question in questions %}
+        <li><a href="#anchor-full-review-{{ question }}" class="govuk-link govuk-!-font-size-16">
+            {{ (page ~ '.heading.fullReview.' ~ question) | trans }}
+        </a></li>
+    {% endfor %}
+{% endblock %}

@@ -60,7 +60,7 @@ class Fee
     private $feeTypeId;
 
     /**
-     * @var float
+     * @var string|null
      *
      * @JMS\Type("string")
      * @JMS\Groups({"fee"})
@@ -81,10 +81,9 @@ class Fee
     /**
      * @param Report $report
      * @param string $feeTypeId
-     * @param bool   $hasMoreDetails
-     * @param float  $amount
+     * @param string|null  $amount
      */
-    public function __construct(ReportInterface $report, $feeTypeId, $amount)
+    public function __construct(Report $report, $feeTypeId, $amount = null)
     {
         $this->report = $report;
         $report->addFee($this);
@@ -142,7 +141,7 @@ class Fee
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getAmount()
     {
@@ -151,6 +150,7 @@ class Fee
 
     /**
      * @param string $amount
+     * @return Fee
      */
     public function setAmount($amount)
     {
