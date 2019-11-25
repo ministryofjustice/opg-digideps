@@ -8,33 +8,33 @@ Feature: PROF cannot access other's PROF's reports and clients
   Scenario: Assert team1 can only access its reports
     # Named PROF
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "pa-report-open" in the "client-01000010" region
+    When I click on "pa-report-open" in the "client-31000010" region
     Then the response status code should be 200
     And the URL should match "report/\d+/overview"
-    And I save the current URL as "report-for-client-01000010.url"
+    And I save the current URL as "report-for-client-31000010.url"
     But I should not see the "client-02000003" region
     # Admin
     Given I am logged in as "behat-prof1-admin@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "pa-report-open" in the "client-01000010" region
+    When I click on "pa-report-open" in the "client-31000010" region
     Then the response status code should be 200
-    And the current URL should match with the URL previously saved as "report-for-client-01000010.url"
+    And the current URL should match with the URL previously saved as "report-for-client-31000010.url"
     But I should not see the "client-02000003" region
     # team member
     Given I am logged in as "behat-prof1-team-member@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "pa-report-open" in the "client-01000010" region
+    When I click on "pa-report-open" in the "client-31000010" region
     Then the response status code should be 200
-    And the current URL should match with the URL previously saved as "report-for-client-01000010.url"
+    And the current URL should match with the URL previously saved as "report-for-client-31000010.url"
     But I should not see the "client-02000003" region
 
   Scenario: team2 can access its client but not team1's data
     # can access team2 reports
     Given I am logged in as "behat-prof2@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "pa-report-open" in the "client-02000001" region
+    When I click on "pa-report-open" in the "client-32000001" region
     Then the response status code should be 200
     And the URL should match "report/\d+/overview"
     # cannot access team1 reports
-    But I should not see the "client-01000010" region
-    When I go to the URL previously saved as "report-for-client-01000010.url"
+    But I should not see the "client-31000010" region
+    When I go to the URL previously saved as "report-for-client-31000010.url"
     Then the response status code should be 500
 
   Scenario: PROF user cannot edit client

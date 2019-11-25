@@ -68,6 +68,7 @@ class ReportController extends AbstractController
         'moneyTransactionsShortOut',
         'status',
         'report-submitted-by',
+        'client-named-deputy',
         'wish-to-provide-documentation',
         'report-documents',
         'balance-state',

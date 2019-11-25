@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Factory\NamedDeputyFactory;
 use AppBundle\Factory\OrganisationFactory;
 use AppBundle\Service\OrgService;
 use Doctrine\ORM\EntityManager;
@@ -124,9 +125,30 @@ class OrgServiceTest extends WebTestCase
     public function setUp(): void
     {
         $logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();
-        $this->pa = new OrgService(self::$em, $logger, new OrganisationFactory([]));
+        $this->pa = new OrgService(
+            self::$em,
+            $logger,
+            new OrganisationFactory([]),
+            new NamedDeputyFactory()
+        );
         Fixtures::deleteReportsData(['dd_user', 'client']);
         self::$em->clear();
+    }
+
+    /**
+     * @param EntityDir\Client[] $clients
+     * @param string $caseNumber
+     * @return EntityDir\Client
+     */
+    public function getClientByCaseNumber(iterable $clients, string $caseNumber)
+    {
+        foreach ($clients as $client) {
+            if ($client->getCaseNumber() === $caseNumber) {
+                return $client;
+            }
+        }
+
+        throw new \RuntimeException("Couldn't find client with case number $caseNumber");
     }
 
     public function testPAAddFromCasrecRows()
@@ -149,32 +171,30 @@ class OrgServiceTest extends WebTestCase
         $ret1 = $this->pa->addFromCasrecRows($data);
         $this->assertEmpty($ret1['errors'], implode(',', $ret1['errors']));
         $this->assertEquals([
-            'pa_users'   => ['dep1@provider.com', 'dep2@provider.com'],
-            'prof_users'   => ['dep3@provider.com'],
+            'named_deputies' => ['00000001', '00000002', '00000003'],
             'clients' => ['00001111', '1000000t', '1000004t', '10002222'],
             'reports' => ['00001111-2014-12-16', '1000000t-2015-02-05', '1000004t-2015-02-06', '10002222-2015-02-04']
         ], $ret1['added']);
         // add again and check no override
         $ret2 = $this->pa->addFromCasrecRows($data);
         $this->assertEquals([
-            'pa_users'   => [],
-            'prof_users'   => [],
+            'named_deputies' => [],
             'clients' => [],
             'reports' => [],
         ], $ret2['added']);
         self::$em->clear();
 
         //assert 1st deputy
-        $user1 = self::$fixtures->findUserByEmail('dep1@provider.com');
-        $this->assertInstanceof(EntityDir\User::class, $user1, 'deputy not added');
-        $this->assertEquals($user1->getRoleName(), EntityDir\User::ROLE_PA_NAMED);
-        $clients = $user1->getClients();
+        $nd1 = self::$fixtures->findNamedDeputyByNumber('00000001');
+        $this->assertInstanceof(EntityDir\NamedDeputy::class, $nd1);
+        $this->assertEquals('Dep1', $nd1->getFirstname());
+        $this->assertEquals('Uty2', $nd1->getLastname());
+
+        $clients = $nd1->getClients();
         $this->assertCount(2, $clients);
-        $this->assertCount(1, $user1->getTeams());
-        $this->assertSame('00000001', $user1->getDeputyNo());
 
         // assert 1st client and report
-        $client1 = $user1->getClientByCaseNumber('00001111');
+        $client1 = $this->getClientByCaseNumber($clients, '00001111');
         $this->assertSame('00001111', $client1->getCaseNumber());
         $this->assertEquals('Cly1', $client1->getFirstname());
         $this->assertEquals('Hent1', $client1->getLastname());
@@ -192,7 +212,7 @@ class OrgServiceTest extends WebTestCase
         $this->assertEquals(EntityDir\Report\Report::TYPE_102_6, $client1Report1->getType());
 
         // assert 2nd client and report
-        $client2 = $user1->getClientByCaseNumber('10002222');
+        $client2 = $this->getClientByCaseNumber($clients, '10002222');
         $this->assertEquals('Cly2', $client2->getFirstname());
         $this->assertEquals('Hent2', $client2->getLastname());
         $this->assertCount(1, $client2->getReports());
@@ -202,38 +222,38 @@ class OrgServiceTest extends WebTestCase
         $this->assertEquals(EntityDir\Report\Report::TYPE_103_6, $client2Report1->getType());
 
         // assert 2nd deputy
-        $user2 = self::$fixtures->findUserByEmail('dep2@provider.com');
-        $this->assertEquals($user2->getRoleName(), EntityDir\User::ROLE_PA_NAMED);
-        $clients = $user2->getClients();
+        $nd2 = self::$fixtures->findNamedDeputyByNumber('00000002');
+        $this->assertInstanceof(EntityDir\NamedDeputy::class, $nd2);
+
+        $clients = $nd2->getClients();
         $this->assertCount(1, $clients);
-        $this->assertCount(1, $user2->getTeams());
 
         // assert 3rd deputy
-        $user3 = self::$fixtures->findUserByEmail('dep3@provider.com');
-        $this->assertEquals($user3->getRoleName(), EntityDir\User::ROLE_PROF_NAMED);
-        $clients = $user3->getClients();
+        $nd3 = self::$fixtures->findNamedDeputyByNumber('00000003');
+        $this->assertInstanceof(EntityDir\NamedDeputy::class, $nd3);
+
+        $clients = $nd3->getClients();
         $this->assertCount(1, $clients);
-        $this->assertCount(1, $user3->getTeams());
 
         // assert 1st client and report
-        $client1 = $user2->getClientByCaseNumber('1000000t');
+        $client1 = $this->getClientByCaseNumber($nd2->getClients(), '1000000t');
         $this->assertEquals('Cly3', $client1->getFirstname());
         $this->assertEquals('Hent3', $client1->getLastname());
         $this->assertCount(1, $client1->getReports());
         $this->assertEquals(EntityDir\Report\Report::TYPE_103_6, $client1->getReports()->first()->getType());
 
         // check client 3 is associated with deputy2
-        $this->assertCount(2, self::$fixtures->findUserByEmail('dep1@provider.com')->getClients());
-        $this->assertCount(1, self::$fixtures->findUserByEmail('dep2@provider.com')->getClients());
+        $this->assertCount(2, self::$fixtures->findNamedDeputyByNumber('00000001')->getClients());
+        $this->assertCount(1, self::$fixtures->findNamedDeputyByNumber('00000002')->getClients());
 
         // assert prof client and report
-        $client4 = $user3->getClientByCaseNumber('1000004t');
+        $client4 = $this->getClientByCaseNumber($nd3->getClients(), '1000004t');
         $this->assertEquals('Cly4', $client4->getFirstname());
         $this->assertEquals('Hent4', $client4->getLastname());
         $this->assertCount(1, $client4->getReports());
         $this->assertEquals(EntityDir\Report\Report::TYPE_103_5, $client4->getReports()->first()->getType());
 
-        $client3 = $user1->getClientByCaseNumber('10002222');
+        $client3 = $this->getClientByCaseNumber($nd1->getClients(), '10002222');
         $this->assertEquals('Cly2', $client2->getFirstname());
         $this->assertEquals('Hent2', $client2->getLastname());
         $this->assertCount(1, $client2->getReports());
@@ -247,27 +267,28 @@ class OrgServiceTest extends WebTestCase
         self::$em->clear();
 
         // check client 3 is now associated with deputy1
-        $this->assertCount(1, self::$fixtures->findUserByEmail('dep1@provider.com')->getClients());
-        $this->assertCount(2, self::$fixtures->findUserByEmail('dep2@provider.com')->getClients());
-        $this->assertCount(1, self::$fixtures->findUserByEmail('dep3@provider.com')->getClients());
+        $this->assertCount(1, self::$fixtures->findNamedDeputyByNumber('00000001')->getClients());
+        $this->assertCount(2, self::$fixtures->findNamedDeputyByNumber('00000002')->getClients());
+        $this->assertCount(1, self::$fixtures->findNamedDeputyByNumber('00000003')->getClients());
 
         // check that report type changes are applied
         $data[0]['Corref'] = 'L3G';
         $data[0]['Typeofrep'] = 'OPG103';
         $this->pa->addFromCasrecRows($data);
         $this->assertEquals([
-            'pa_users'   => [],
-            'prof_users' => [],
+            'named_deputies' => [],
             'clients' => [],
             'reports' => [],
         ], $ret2['added']);
         self::$em->clear();
         self::$em->clear();
 
-        $user1 = self::$fixtures->findUserByEmail('dep1@provider.com');
-        $this->assertInstanceof(EntityDir\User::class, $user1, 'deputy not added');
-        $client1 = $user1->getClientByCaseNumber('00001111');
+        $nd1 = self::$fixtures->findNamedDeputyByNumber('00000001');
+        $this->assertInstanceof(EntityDir\NamedDeputy::class, $nd1, 'deputy not added');
+
+        $client1 = $nd1->getClients()[0];
         $this->assertCount(1, $client1->getReports());
+
         $report = $client1->getReports()->first();
         $this->assertEquals(EntityDir\Report\Report::TYPE_103_6, $report->getType());
     }
@@ -289,32 +310,30 @@ class OrgServiceTest extends WebTestCase
         $ret1 = $this->pa->addFromCasrecRows($data);
         $this->assertEmpty($ret1['errors'], implode(',', $ret1['errors']));
         $this->assertEquals([
-            'pa_users'   => [],
-            'prof_users' => ['dep1@provider.com', 'dep2@provider.com'],
+            'named_deputies' => [],
             'clients' => ['00001111', '1000000t', '10002222'],
             'reports' => ['00001111-2014-12-16',  '1000000t-2015-02-05', '10002222-2015-02-04'],
         ], $ret1['added']);
         // add again and check no override
         $ret2 = $this->pa->addFromCasrecRows($data);
         $this->assertEquals([
-            'pa_users'   => [],
-            'prof_users' => [],
+            'named_deputies' => [],
             'clients' => [],
             'reports' => [],
         ], $ret2['added']);
         self::$em->clear();
 
         //assert 1st deputy
-        $user1 = self::$fixtures->findUserByEmail('dep1@provider.com');
-        $this->assertInstanceof(EntityDir\User::class, $user1, 'deputy not added');
-        $this->assertEquals($user1->getRoleName(), EntityDir\User::ROLE_PROF_NAMED);
-        $clients = $user1->getClients();
+        $nd1 = self::$fixtures->findNamedDeputyByNumber('00000001');
+        $this->assertInstanceof(EntityDir\NamedDeputy::class, $nd1);
+        $this->assertEquals('Dep1', $nd1->getFirstname());
+        $this->assertEquals('Uty2', $nd1->getLastname());
+
+        $clients = $nd1->getClients();
         $this->assertCount(2, $clients);
-        $this->assertCount(1, $user1->getTeams());
-        $this->assertSame('00000001', $user1->getDeputyNo());
 
         // assert 1st client and report
-        $client1 = $user1->getClientByCaseNumber('00001111');
+        $client1 = $this->getClientByCaseNumber($clients, '00001111');
         $this->assertSame('00001111', $client1->getCaseNumber());
         $this->assertEquals('Cly1', $client1->getFirstname());
         $this->assertEquals('Hent1', $client1->getLastname());
@@ -332,7 +351,7 @@ class OrgServiceTest extends WebTestCase
         $this->assertEquals(EntityDir\Report\Report::TYPE_102_5, $client1Report1->getType());
 
         // assert 2nd client and report
-        $client2 = $user1->getClientByCaseNumber('10002222');
+        $client2 = $this->getClientByCaseNumber($clients, '10002222');
         $this->assertEquals('Cly2', $client2->getFirstname());
         $this->assertEquals('Hent2', $client2->getLastname());
         $this->assertCount(1, $client2->getReports());
@@ -341,14 +360,14 @@ class OrgServiceTest extends WebTestCase
         $this->assertEquals(EntityDir\Report\Report::TYPE_103_5, $client2Report1->getType());
 
         // assert 2nd deputy
-        $user2 = self::$fixtures->findUserByEmail('dep2@provider.com');
-        $this->assertEquals($user2->getRoleName(), EntityDir\User::ROLE_PROF_NAMED);
-        $clients = $user2->getClients();
+        $nd2 = self::$fixtures->findNamedDeputyByNumber('00000002');
+        $this->assertInstanceof(EntityDir\NamedDeputy::class, $nd2);
+
+        $clients = $nd2->getClients();
         $this->assertCount(1, $clients);
-        $this->assertCount(1, $user2->getTeams());
 
         // assert 1st client and report
-        $client1 = $user2->getClientByCaseNumber('1000000t');
+        $client1 = $this->getClientByCaseNumber($clients, '1000000t');
         $this->assertEquals('Cly3', $client1->getFirstname());
         $this->assertEquals('Hent3', $client1->getLastname());
         $this->assertCount(1, $client1->getReports());
@@ -356,8 +375,8 @@ class OrgServiceTest extends WebTestCase
 
 
         // check client 3 is associated with deputy2
-        $this->assertCount(2, self::$fixtures->findUserByEmail('dep1@provider.com')->getClients());
-        $this->assertCount(1, self::$fixtures->findUserByEmail('dep2@provider.com')->getClients());
+        $this->assertCount(2, self::$fixtures->findNamedDeputyByNumber('00000001')->getClients());
+        $this->assertCount(1, self::$fixtures->findNamedDeputyByNumber('00000002')->getClients());
 
         // move client2 from deputy1 -> deputy2
         $dataMove = [
@@ -367,25 +386,24 @@ class OrgServiceTest extends WebTestCase
         self::$em->clear();
 
         // check client 3 is now associated with deputy1
-        $this->assertCount(1, self::$fixtures->findUserByEmail('dep1@provider.com')->getClients());
-        $this->assertCount(2, self::$fixtures->findUserByEmail('dep2@provider.com')->getClients());
+        $this->assertCount(1, self::$fixtures->findNamedDeputyByNumber('00000001')->getClients());
+        $this->assertCount(2, self::$fixtures->findNamedDeputyByNumber('00000002')->getClients());
 
         // check that report type changes are applied
         $data[0]['Corref'] = 'L3G';
         $data[0]['Typeofrep'] = 'OPG103';
         $this->pa->addFromCasrecRows($data);
         $this->assertEquals([
-            'pa_users'   => [],
-            'prof_users'   => [],
+            'named_deputies' => [],
             'clients' => [],
             'reports' => [],
         ], $ret2['added']);
         self::$em->clear();
         self::$em->clear();
 
-        $user1 = self::$fixtures->findUserByEmail('dep1@provider.com');
-        $this->assertInstanceof(EntityDir\User::class, $user1, 'deputy not added');
-        $client1 = $user1->getClientByCaseNumber('00001111');
+        $nd1 = self::$fixtures->findNamedDeputyByNumber('00000001');
+
+        $client1 = $this->getClientByCaseNumber($nd1->getClients(), '00001111');
         $this->assertCount(1, $client1->getReports());
         $report = $client1->getReports()->first();
         $this->assertEquals(EntityDir\Report\Report::TYPE_103_5, $report->getType());

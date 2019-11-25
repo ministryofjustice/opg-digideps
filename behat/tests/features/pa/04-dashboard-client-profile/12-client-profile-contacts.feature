@@ -3,14 +3,14 @@ Feature: PA client profile contacts
   Scenario: PA view client contacts
     Given I load the application status from "pa-report-completed"
     And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
+    And I click on "pa-report-open" in the "client-02100010" region
     Then each text should be present in the corresponding region:
       | No contacts    | client-profile-contacts |
 
   Scenario: PA adds client contact
     Given I load the application status from "pa-report-completed"
     And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
+    And I click on "pa-report-open" in the "client-02100010" region
     And I save the current URL as "report-overview"
     And I click on "add-contact-button" in the "client-profile-contacts" region
     # empty form
@@ -82,7 +82,7 @@ Then I fill in the following:
 
   Scenario: PA edits client contact
   Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-  And I click on "pa-report-open" in the "client-01000010" region
+  And I click on "pa-report-open" in the "client-02100010" region
   And I save the current URL as "report-overview"
   And I click on "edit-contact-button" in the "client-profile-contacts-display-actions" region
   Then I fill in the following:
@@ -110,7 +110,7 @@ Then I fill in the following:
 
 Scenario: PA delete client contacts
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
+    And I click on "pa-report-open" in the "client-02100010" region
     And I save the current URL as "report-overview"
     And I click on "delete-contact-button" in the "client-profile-contacts" region
     Then the URL should match "/contact/\d+/delete"

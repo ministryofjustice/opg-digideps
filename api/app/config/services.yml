@@ -24,7 +24,7 @@ services:
 
     org_service:
         class: AppBundle\Service\OrgService
-        arguments: [ "@em", "@logger", '@AppBundle\Factory\OrganisationFactory' ]
+        arguments: [ "@em", "@logger", '@AppBundle\Factory\OrganisationFactory', '@AppBundle\Factory\NamedDeputyFactory' ]
 
     user_service:
         class: AppBundle\Service\UserService
@@ -71,7 +71,7 @@ services:
     AppBundle\DataFixtures\:
         resource: '../../src/AppBundle/DataFixtures'
         tags: ['doctrine.fixture.orm']
-        arguments: ['@security.password_encoder']
+        arguments: ['@security.password_encoder', '@org_service']
 
     AppBundle\Service\DataCompression:
         class: AppBundle\Service\DataCompression

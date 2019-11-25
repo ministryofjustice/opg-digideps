@@ -3,6 +3,7 @@ namespace AppBundle\DataFixtures;
 
 use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
+use AppBundle\Entity\NamedDeputy;
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
@@ -130,21 +131,21 @@ class UserFixtures extends AbstractDataFixture
             'reportVariation' => 'HW',
         ],
         [
-            'id' => 'abc-example1',
+            'id' => 'abc-ex1',
             'email' => 'john.smith@abc-solicitors.example.com',
             'deputyType' => 'PROF',
             'reportType' => 'OPG102',
             'reportVariation' => 'HW',
         ],
         [
-            'id' => 'abc-example2',
+            'id' => 'abc-ex2',
             'email' => 'kieth.willis@abc-solicitors.example.com',
             'deputyType' => 'PROF',
             'reportType' => 'OPG102',
             'reportVariation' => 'HW',
         ],
         [
-            'id' => 'abcd-example3',
+            'id' => 'abcd-ex3',
             'email' => 'marjorie.watkins@abcd-solicitors.example.com',
             'deputyType' => 'PROF',
             'reportType' => 'OPG102',
@@ -215,7 +216,20 @@ class UserFixtures extends AbstractDataFixture
             ->setCourtDate(\DateTime::createFromFormat('d/m/Y', '01/11/2017'));
 
         if ($data['deputyType'] === 'PROF' || $data['deputyType'] === 'PA') {
-            $client->setNamedDeputy($user);
+            $namedDeputy = new NamedDeputy();
+            $namedDeputy
+                ->setFirstname('Named')
+                ->setLastname('Deputy ' . $data['id'])
+                ->setDeputyNo('nd-' . $data['id'])
+                ->setEmail1('behat-nd-' . $data['id'] . '@publicguardian.gov.uk')
+                ->setPhoneMain('07911111111111')
+                ->setAddress1('Victoria Road')
+                ->setAddressPostcode('SW1')
+                ->setAddressCountry('GB');
+
+            $manager->persist($namedDeputy);
+
+            $client->setNamedDeputy($namedDeputy);
         }
 
         $manager->persist($client);

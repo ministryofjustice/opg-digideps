@@ -56,7 +56,7 @@ Feature: PA team setup
     Then the form should be valid
     # check I'm in the dashboard and I see the same clients
     And the URL should match "/org"
-    And I should see the "client-01000010" region
+    And I should see the "client-02100010" region
     # check I see all the users
     When I click on "org-settings, user-accounts"
     Then I should see the "team-user-behat-pa1publicguardiangovuk" region
@@ -107,7 +107,7 @@ Feature: PA team setup
     And I press "user_details_save"
     Then the form should be valid
     # check I'm in the dashboard and I see the same clients
-    And I should see the "client-01000010" region
+    And I should see the "client-02100010" region
     # check I see all the users
     When I click on "org-settings, user-accounts"
     Then I should see the "team-user-behat-pa1publicguardiangovuk" region
@@ -235,7 +235,7 @@ Feature: PA team setup
       | user_details_phoneMain | 20000000002         |
     And I press "user_details_save"
     Then the form should be valid
-    And I should see the "client-03000001" region
+    And I should see the "client-02300001" region
 
   Scenario: PA_ADMIN3 logs in, adds and activates PA_TEAM_MEMBER
     Given I am logged in as "behat-pa3-admin@publicguardian.gov.uk" with password "Abcd1234"
@@ -255,7 +255,7 @@ Feature: PA team setup
     And I press "user_details_save"
     Then the form should be valid
     And I save the application status into "team-users-complete"
-    And I should see the "client-03000001" region
+    And I should see the "client-02300001" region
 
   Scenario: PA_ADMIN3 logs in and edits PA_TEAM_MEMBER using existing email address
     Given I am logged in as "behat-pa3@publicguardian.gov.uk" with password "Abcd1234"

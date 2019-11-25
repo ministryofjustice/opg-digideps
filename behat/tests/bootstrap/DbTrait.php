@@ -14,7 +14,7 @@ trait DbTrait
     {
         $sqlFile = self::getSnapshotPath($status);
         // truncate cascade + insert. faster than drop + table recreate
-        exec('echo "SET client_min_messages TO WARNING; truncate dd_user, satisfaction, dd_team, organisation, casrec, setting, user_team, client cascade;" > ' . $sqlFile);
+        exec('echo "SET client_min_messages TO WARNING; truncate dd_user, satisfaction, dd_team, named_deputy, organisation, casrec, setting, user_team, client cascade;" > ' . $sqlFile);
         exec('pg_dump ' . self::$dbName . "  --data-only  --inserts --exclude-table='migrations' | sed '/EXTENSION/d' >> {$sqlFile}", $output, $return);
         if (!file_exists($sqlFile) || filesize($sqlFile) < 100) {
             throw new \RuntimeException("SQL snapshot $sqlFile not created or not valid");
@@ -126,6 +126,19 @@ trait DbTrait
     public function iRemoveAllTheOldTeamDatabaseEntries()
     {
         $query = "DELETE FROM user_team";
+        $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
+        exec($command);
+    }
+
+    /**
+     * @Given I add the client with case number :caseNumber to be deputised by email :deputyEmail
+     */
+    public function iAddTheClientWithCaseNumberToBeDeputisedByEmail($caseNumber, $deputyEmail)
+    {
+        $query = "INSERT INTO deputy_case (client_id, user_id) VALUES (
+                    (SELECT id from client where case_number = '" . $caseNumber . "'),
+                    (SELECT id from dd_user where email = '" . $deputyEmail . "')
+                  )";
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
         exec($command);
     }
