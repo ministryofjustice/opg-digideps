@@ -3,18 +3,18 @@
 namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
-
+use AppBundle\Service\CsvGeneratorService;
+use AppBundle\Service\Redirector;
 use AppBundle\Service\ReportSubmissionService;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -91,8 +91,12 @@ class ReportController extends AbstractController
         // due to the way
         $user = $this->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
 
+        /** @var Redirector */
+        $redirector = $this->get('redirector_service');
+
         // redirect if user has missing details or is on wrong page
-        if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'lay_home')) {
+        $route = $redirector->getCorrectRouteIfDifferent($user, 'lay_home');
+        if (is_string($route)) {
             return $this->redirectToRoute($route);
         }
 
@@ -109,7 +113,6 @@ class ReportController extends AbstractController
         return [
             'client' => $client,
             'coDeputies' => $coDeputies,
-            'lastSignedIn' => $request->getSession()->get('lastLoggedIn')
         ];
     }
 
@@ -124,8 +127,14 @@ class ReportController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId);
         $client = $report->getClient();
 
-        $editReportDatesForm = $this->get('form.factory')->createNamed('report_edit', FormDir\Report\ReportType::class, $report, [ 'translation_domain' => 'report']);
-        $returnLink = $this->getUser()->isDeputyOrg()
+        /** @var FormFactory */
+        $formFactory = $this->get('form.factory');
+
+        /** @var User */
+        $user = $this->getUser();
+
+        $editReportDatesForm = $formFactory->createNamed('report_edit', FormDir\Report\ReportType::class, $report, [ 'translation_domain' => 'report']);
+        $returnLink = $user->isDeputyOrg()
             ? $this->generateClientProfileLink($report->getClient())
             : $this->generateUrl('lay_home');
 
@@ -162,14 +171,19 @@ class ReportController extends AbstractController
 
         $existingReports = $this->getReportsIndexedById($client);
 
-        if ($action == 'create' && ($firstReport = array_shift($existingReports)) && $firstReport instanceof EntityDir\Report\Report) {
+        if ($action == 'create' && ($firstReport = array_shift($existingReports)) && $firstReport instanceof Report) {
             $report = $firstReport;
         } else {
             // new report
-            $report = new EntityDir\Report\Report();
+            $report = new Report();
         }
+
         $report->setClient($client);
-        $form = $this->get('form.factory')->createNamed(
+
+        /** @var FormFactory */
+        $formFactory = $this->get('form.factory');
+
+        $form = $formFactory->createNamed(
             'report',
             FormDir\Report\ReportType::class, $report, [
                 'translation_domain' => 'registration',
@@ -196,25 +210,31 @@ class ReportController extends AbstractController
         $reportJmsGroup = ['status', 'balance', 'user', 'client', 'client-reports', 'balance-state'];
         // redirect if user has missing details or is on wrong page
         $user = $this->getUserWithData();
-        if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'report_overview')) {
+
+        /** @var Redirector */
+        $redirector = $this->get('redirector_service');
+
+        $route = $redirector->getCorrectRouteIfDifferent($user, 'report_overview');
+        if (is_string($route)) {
             return $this->redirectToRoute($route);
         }
 
         // get all the groups (needed by EntityDir\Report\Status
-        /** @var EntityDir\Report\Report $report */
         $clientId = $this->getReportIfNotSubmitted($reportId, $reportJmsGroup)->getClient()->getId();
 
-        /** @var $client EntityDir\Client */
+        /** @var Client */
         $client = $this->generateClient($user, $clientId);
 
         $activeReportId = null;
-        if ($this->getUser()->isDeputyOrg()) {
+        if ($user->isDeputyOrg()) {
             // PR and PROF: unsubmitted at the top (if exists), active below (
             $template = 'AppBundle:Org/ClientProfile:overview.html.twig';
+
             // if there is an unsubmitted report, swap them, so linkswill both show the unsubmitted first
-            if ($client->getUnsubmittedReport()) {
+            $unsubmittedReport = $client->getUnsubmittedReport();
+            if ($unsubmittedReport instanceof Report) {
                 //alternative: redirect (but more API calls overall)
-                $reportId = $client->getUnsubmittedReport()->getId();
+                $reportId = $unsubmittedReport->getId();
                 $activeReportId = $client->getActiveReport()->getId();
             }
         } else { // Lay. keep the report Id
@@ -236,11 +256,11 @@ class ReportController extends AbstractController
      * Due to some profs having many dozens of deputies attached to clients, we need to be conservative about generating
      * the list. Its needed for a permissions check on add client contact (logged in user has to be associated)
      *
-     * @param EntityDir\User $user
-     * @param $clientId
-     * @return mixed
+     * @param User $user
+     * @param int $clientId
+     * @return Client
      */
-    private function generateClient(EntityDir\User $user, $clientId)
+    private function generateClient(User $user, int $clientId)
     {
         $jms = $this->determineJmsGroups($user);
 
@@ -262,10 +282,10 @@ class ReportController extends AbstractController
     /**
      * Method to return JMS groups required for overview page.
      *
-     * @param EntityDir\User $user
+     * @param User $user
      * @return array
      */
-    private function determineJmsGroups(EntityDir\User $user)
+    private function determineJmsGroups(User $user)
     {
         $jms = [
             'client',
@@ -291,7 +311,8 @@ class ReportController extends AbstractController
      */
     public function declarationAction(Request $request, $reportId)
     {
-        $reportSubmissionService = $this->get('AppBundle\Service\ReportSubmissionService'); /* @var $reportSubmissionService ReportSubmissionService */
+        /** @var ReportSubmissionService $reportSubmissionService */
+        $reportSubmissionService = $this->get('AppBundle\Service\ReportSubmissionService');
 
         $report = $this->getReportIfNotSubmitted($reportId, self::$reportGroupsAll);
 
@@ -301,7 +322,7 @@ class ReportController extends AbstractController
         // check status
         $status = $report->getStatus();
         if (!$report->isDue() || !$status->getIsReadyToSubmit()) {
-            throw new \RuntimeException($translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators'));
+            throw $this->createNotFoundException($translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators'));
         }
 
         $user = $this->getUserWithData();
@@ -309,9 +330,12 @@ class ReportController extends AbstractController
         $form = $this->createForm(FormDir\Report\ReportDeclarationType::class, $report);
         $form->handleRequest($request);
         if ($form->isValid()) {
+            /** @var User $currentUser */
+            $currentUser = $this->getUser();
+
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
             $reportSubmissionService->generateReportDocuments($report);
-            $reportSubmissionService->submit($report, $this->getUser());
+            $reportSubmissionService->submit($report, $currentUser);
 
             return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId' => $report->getId()]));
         }
@@ -337,9 +361,12 @@ class ReportController extends AbstractController
         /** @var TranslatorInterface $translator */
         $translator = $this->get('translator');
 
+        /** @var User $user */
+        $user = $this->getUser();
+
         // check status
         if (!$report->getSubmitted()) {
-            throw new \RuntimeException($translator->trans('report.submissionExceptions.submitted', [], 'validators'));
+            throw $this->createNotFoundException($translator->trans('report.submissionExceptions.submitted', [], 'validators'));
         }
 
         $form = $this->createForm(FormDir\FeedbackReportType::class, new ModelDir\FeedbackReport());
@@ -355,7 +382,7 @@ class ReportController extends AbstractController
             ]);
 
             // Send notification email
-            $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData(), $this->getUser());
+            $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData(), $user);
             $this->getMailSender()->send($feedbackEmail, ['html']);
 
             return $this->redirect($this->generateUrl('report_submit_feedback', ['reportId' => $reportId]));
@@ -380,7 +407,7 @@ class ReportController extends AbstractController
 
         // check status
         if (!$report->getSubmitted()) {
-            throw new \RuntimeException($translator->trans('report.submissionExceptions.submitted', [], 'validators'));
+            throw $this->createNotFoundException($translator->trans('report.submissionExceptions.submitted', [], 'validators'));
         }
 
         return [
@@ -396,13 +423,16 @@ class ReportController extends AbstractController
      */
     public function reviewAction($reportId)
     {
-        /** @var EntityDir\Report\Report $report */
+        /** @var Report $report */
         $report = $this->getReport($reportId, self::$reportGroupsAll);
 
         // check status
         $status = $report->getStatus();
 
-        if ($this->getUser()->isDeputyOrg()) {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if ($user->isDeputyOrg()) {
             $backLink = $this->generateClientProfileLink($report->getClient());
         } else {
             $backLink = $this->generateUrl('lay_home');
@@ -427,7 +457,7 @@ class ReportController extends AbstractController
         if (!$this->getParameter('kernel.debug')) {
             throw new DisplayableException('Route only visite in debug mode');
         }
-        /** @var EntityDir\Report\Report $report */
+        /** @var Report $report */
         $report = $this->getReport($reportId, self::$reportGroupsAll);
 
         return $this->render('AppBundle:Report/Formatted:formatted_standalone.html.twig', [
@@ -441,15 +471,20 @@ class ReportController extends AbstractController
      */
     public function pdfViewAction($reportId)
     {
+        /** @var ReportSubmissionService $reportSubmissionService */
+        $reportSubmissionService = $this->get('AppBundle\Service\ReportSubmissionService');
+
         $report = $this->getReport($reportId, self::$reportGroupsAll);
-        $pdfBinary = $this->get('AppBundle\Service\ReportSubmissionService')->getPdfBinaryContent($report);
+        $pdfBinary = $reportSubmissionService->getPdfBinaryContent($report);
 
         $response = new Response($pdfBinary);
         $response->headers->set('Content-Type', 'application/pdf');
 
+        $submitDate = $report->getSubmitDate();
+
         $attachmentName = sprintf('DigiRep-%s_%s_%s.pdf',
             $report->getEndDate()->format('Y'),
-            $report->getSubmitDate() ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
+            $submitDate instanceof \DateTime ? $submitDate->format('Y-m-d') : 'n-a-', //some old reports have no submission date
             $report->getClient()->getCaseNumber()
         );
 
@@ -476,14 +511,18 @@ class ReportController extends AbstractController
             throw $this->createAccessDeniedException('Access denied');
         }
 
-        $csvContent = $this->get('csv_generator_service')->generateTransactionsCsv($report);
+        /** @var CsvGeneratorService */
+        $csvGenerator = $this->get('csv_generator_service');
+        $csvContent = $csvGenerator->generateTransactionsCsv($report);
 
         $response = new Response($csvContent);
         $response->headers->set('Content-Type', 'text/csv');
 
+        $submitDate = $report->getSubmitDate();
+
         $attachmentName = sprintf('DigiRepTransactions-%s_%s_%s.csv',
             $report->getEndDate()->format('Y'),
-            $report->getSubmitDate() ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
+            $submitDate instanceof \DateTime ? $submitDate->format('Y-m-d') : 'n-a-', //some old reports have no submission date
             $report->getClient()->getCaseNumber()
         );
 
