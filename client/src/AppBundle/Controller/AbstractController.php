@@ -95,7 +95,18 @@ abstract class AbstractController extends Controller
         $groups[] = 'client';
         $groups = array_unique($groups);
         sort($groups); // helps HTTP caching
-        return $this->getRestClient()->get("report/{$reportId}", 'Report\\Report', $groups);
+
+        try {
+            $report = $this->getRestClient()->get("report/{$reportId}", 'Report\\Report', $groups);
+        } catch (RestClientException $e) {
+            if ($e->getCode() === 403 || $e->getCode() === 404) {
+                throw $this->createNotFoundException($e->getData()['message']);
+            } else {
+                throw $e;
+            }
+        }
+
+        return $report;
     }
 
     /**
@@ -109,15 +120,7 @@ abstract class AbstractController extends Controller
      */
     protected function getReportIfNotSubmitted($reportId, array $groups = [])
     {
-        try {
-            $report = $this->getReport($reportId, $groups);
-        } catch (RestClientException $e) {
-            if ($e->getCode() === 403) {
-                throw $this->createNotFoundException($e->getData()['message']);
-            } else {
-                throw $e;
-            }
-        }
+        $report = $this->getReport($reportId, $groups);
 
         $sectionId = $this->getSectionId();
         if ($sectionId && !$report->hasSection($sectionId)) {
