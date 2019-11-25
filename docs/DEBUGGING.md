@@ -24,7 +24,7 @@ To install Xdebug on the API, set the flag to true in the `.env` file (see above
 To enable step through xdebug in PHPStorm/IntelliJ you'll need to ensure the setup for PHP and PHPUnit are pointing to the relevant Docker PHP install.
 
 ### Create a Docker PHP CLI Interpreter
-The steps below are for setting this up for the API container. This will need to be followed again for setting up Client/Admin.
+The steps below are for setting this up for the API container. This will need to be followed again for setting up Client/Admin with any api specific namings or file locations updated to match the client directory.
 
 Go to Settings > Languages & Frameworks > PHP > Click `...` next to CLI Interpreter.
 
