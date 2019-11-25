@@ -74,27 +74,6 @@ _See [deployment documentation](docs/DEPLOYMENT.md)_
 - PHPUnit 4
 - [GOV.UK Design System](https://design-system.service.gov.uk/)
 
-## Xdebug
-
-To use Xdebug in the `frontend` and/or `admin` app, it must be installed on the client image. To install, you will need to create a `.env` file in the top-level of this repo, and add the following:
-
-```
-REQUIRE_XDEBUG_API=false
-REQUIRE_XDEBUG_FRONTEND=true
-```
-Then add the following to `client/docker/env/admin.env` and `client/docker/env/frontend.env`:
-```
-OPG_PHP_XDEBUG_ENABLED=true
-OPG_PHP_XDEBUG_REMOTE_HOST=docker.for.mac.localhost
-OPG_PHP_XDEBUG_REMOTE_PORT=9001
-OPG_PHP_XDEBUG_IDEKEY=PHPSTORM
-```
-**Note** the above is an example for PHP Storm using a Mac. You will need to configure your IDE, ensuring that the same port is used in the IDE as that set above.
-
-Now build the image and run the container. You can confirm installation by running `php -v` in the container and seeing that it reports the Xdebug version.
-
-To install Xdebug on the API, set the flag to true in the `.env` file (see above), and add the same config as above to `api/docker/env/api.env`. **Note** that this impacts local performance dramatically and often times out when hitting the application through the frontend, so API debugging is best done in isolation by hitting endpoints via Postman, and uninstalling Xdebug when finished by setting the flag in `.env` to false.
-
 ## License
 
 The OPG Digideps Client is released under the MIT license, a copy of which can be found in [LICENSE](LICENSE).

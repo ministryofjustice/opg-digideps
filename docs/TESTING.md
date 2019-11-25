@@ -1,4 +1,4 @@
-# Testing
+# Testing & Debug
 
 This application uses two main testing technologies:
 
