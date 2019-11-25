@@ -172,16 +172,10 @@ Feature: PA cannot access other's PA's reports and clients
     Then I go to the URL previously saved as "client-40000042-edit"
     And the response status code should be 500
 
-  Scenario: PA org 1 is activated
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I go to admin page "/admin/organisations"
-    When I click on "edit" in the "org-behat-pa-org1pa-org1govuk" region
-    And I fill in "organisation_isActivated_0" with "1"
-    And I press "Save organisation"
-
-  Scenario: PA org 1 deputy logs in and should now only see the clients in their organisation
-    # log in shown in PA dashboard
-    Given I am logged in as "behat-pa-org1@pa-org1.gov.uk" with password "Abcd1234"
+  Scenario: User in an active organisation attempting to access clients inside and outside of the organisation
+    Given the organisation "pa-org1.gov.uk" is active
+    And "behat-pa-org1@pa-org1.gov.uk" has been added to the "pa-org1.gov.uk" organisation
+    When I am logged in as "behat-pa-org1@pa-org1.gov.uk" with password "Abcd1234"
     Then I should see the "client-40000041" region
     And I should not see the "client-40000042" region
     Then I go to the report URL "overview" for "40000041-report"
@@ -189,11 +183,16 @@ Feature: PA cannot access other's PA's reports and clients
     Then I go to the report URL "overview" for "40000042-report"
     And the response status code should be 500
 
-  # Activate Org 2 should not change anything
-  Scenario: PA org 2 is activated
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I go to admin page "/admin/organisations"
-    When I click on "edit" in the "org-behat-pa-org2pa-org2govuk" region
-    And I fill in "organisation_isActivated_0" with "1"
-    And I press "Save organisation"
+  Scenario: User not in an organisation attempting to access their client who is in an active organisation
+    Given the organisation "pa-org1.gov.uk" is active
+    And "behat-pa-org1@pa-org1.gov.uk" has been removed from their organisation
+    When I am logged in as "behat-pa-org1@pa-org1.gov.uk" with password "Abcd1234"
+    And I go to the report URL "overview" for "40000041-report"
+    And the response status code should be 500
 
+  Scenario: User not in an organisation attempting to access their client who is in an inactive organisation
+    Given the organisation "pa-org1.gov.uk" is inactive
+    And "behat-pa-org1@pa-org1.gov.uk" has been removed from their organisation
+    When I am logged in as "behat-pa-org1@pa-org1.gov.uk" with password "Abcd1234"
+    And I go to the report URL "overview" for "40000041-report"
+    And the response status code should be 200
