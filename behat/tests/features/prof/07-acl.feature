@@ -35,7 +35,7 @@ Feature: PROF cannot access other's PROF's reports and clients
     # cannot access team1 reports
     But I should not see the "client-01000010" region
     When I go to the URL previously saved as "report-for-client-01000010.url"
-    Then the response status code should be 500
+    Then the response status code should be 404
 
   Scenario: PROF user cannot edit client
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"

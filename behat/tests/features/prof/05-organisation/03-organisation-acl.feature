@@ -27,14 +27,14 @@ Feature: Users can access the correct clients
     And I save the report as "03000026-report"
     When I am logged in as "behat-prof-org-1@org-1.co.uk" with password "Abcd1234"
     And I go to the report URL "overview" for "03000026-report"
-    Then the response status code should be 500
+    Then the response status code should be 404
 
   Scenario: User not in an organisation attempting to access their client who is in an active organisation
     Given the organisation "org-1.co.uk" is active
     And "behat-prof-org-1@org-1.co.uk" has been removed from their organisation
     When I am logged in as "behat-prof-org-1@org-1.co.uk" with password "Abcd1234"
     And I go to the report URL "overview" for "03000025-report"
-    And the response status code should be 500
+    And the response status code should be 404
 
   Scenario: User in an active organisation attempting to access clients inside and outside of the organisation
     Given the organisation "org-1.co.uk" is active
