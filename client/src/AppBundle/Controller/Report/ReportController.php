@@ -233,9 +233,12 @@ class ReportController extends AbstractController
             // if there is an unsubmitted report, swap them, so linkswill both show the unsubmitted first
             $unsubmittedReport = $client->getUnsubmittedReport();
             if ($unsubmittedReport instanceof Report) {
-                //alternative: redirect (but more API calls overall)
                 $reportId = $unsubmittedReport->getId();
-                $activeReportId = $client->getActiveReport()->getId();
+            }
+
+            $activeReport = $client->getActiveReport();
+            if ($activeReport instanceof Report) {
+                $activeReportId = $activeReport->getId();
             }
         } else { // Lay. keep the report Id
             $template = 'AppBundle:Report/Report:overview.html.twig';
@@ -481,9 +484,11 @@ class ReportController extends AbstractController
         $response->headers->set('Content-Type', 'application/pdf');
 
         $submitDate = $report->getSubmitDate();
+        /** @var \DateTime $endDate */
+        $endDate = $report->getEndDate();
 
         $attachmentName = sprintf('DigiRep-%s_%s_%s.pdf',
-            $report->getEndDate()->format('Y'),
+            $endDate->format('Y'),
             $submitDate instanceof \DateTime ? $submitDate->format('Y-m-d') : 'n-a-', //some old reports have no submission date
             $report->getClient()->getCaseNumber()
         );
@@ -519,9 +524,11 @@ class ReportController extends AbstractController
         $response->headers->set('Content-Type', 'text/csv');
 
         $submitDate = $report->getSubmitDate();
+        /** @var \DateTime $endDate */
+        $endDate = $report->getEndDate();
 
         $attachmentName = sprintf('DigiRepTransactions-%s_%s_%s.csv',
-            $report->getEndDate()->format('Y'),
+            $endDate->format('Y'),
             $submitDate instanceof \DateTime ? $submitDate->format('Y-m-d') : 'n-a-', //some old reports have no submission date
             $report->getClient()->getCaseNumber()
         );
