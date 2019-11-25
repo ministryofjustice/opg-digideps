@@ -42,28 +42,6 @@ trait AuthenticationTrait
     }
 
     /**
-     * @Then the URL :url should not be accessible
-     */
-    public function theUrlShouldNotBeAccessible($url)
-    {
-        $previousUrl = $this->getSession()->getCurrentUrl();
-        $this->visit($url);
-        $this->assertResponseStatus(500);
-        $this->visit($previousUrl);
-    }
-
-    /**
-     * @Then the admin URL :url should not be accessible
-     */
-    public function theAdminUrlShouldNotBeAccessible($url)
-    {
-        $previousUrl = $this->getSession()->getCurrentUrl();
-        $this->visitAdminPath($url);
-        $this->assertResponseStatus(500);
-        $this->visit($previousUrl);
-    }
-
-    /**
      * @Then the URL :url should be forbidden
      */
     public function theUrlShouldBeForbidden($url)

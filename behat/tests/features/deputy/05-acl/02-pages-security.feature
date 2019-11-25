@@ -55,17 +55,15 @@ Feature: deputy / acl / security on pages
     Given I am logged in as "behat-malicious@publicguardian.gov.uk" with password "Abcd1234"
     # reload the status (as some URLs calls might have deleted data)
     Then the following "102 report" report pages should return the following status:
-      | overview                | 500 |
-      | decisions               | 500 |
-      | contacts                | 500 |
-      | assets                  | 500 |
-      | bank-accounts           | 500 |
-      | declaration             | 500 |
-      | submitted               | 500 |
+      | overview                | 404 |
+      | decisions               | 404 |
+      | contacts                | 404 |
+      | assets                  | 404 |
+      | bank-accounts           | 404 |
+      | declaration             | 404 |
+      | submitted               | 404 |
     And the following "malicious user report" report pages should return the following status:
       | overview                | 200 |
       | decisions               | 200 |
       | contacts                | 200 |
       | assets                  | 200 |
-
-
