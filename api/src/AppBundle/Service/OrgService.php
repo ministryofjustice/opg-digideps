@@ -122,7 +122,7 @@ class OrgService
     {
         $this->log('Received ' . count($data) . ' records');
 
-        $this->added = ['prof_users' => [],'pa_users' => [], 'clients' => [], 'discharged_clients' => [], 'named_deputies' => [], 'reports' => []];
+        $this->added = ['clients' => [], 'discharged_clients' => [], 'named_deputies' => [], 'reports' => []];
 
         $errors = [];
         foreach ($data as $index => $row) {
