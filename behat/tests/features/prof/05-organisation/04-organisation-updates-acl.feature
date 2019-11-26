@@ -62,8 +62,18 @@ Feature: Organisation deputyship updates
     And I should see the "client-11498120" region
     # Assert client associated with new org
     Then I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search, client-detail-11498120"
-    # Assert new organisation
+    And I click on "admin-client-search"
+    # Assert old client has been discharged
+    And I should see the "discharged-client-11498120" region
+    And I should see the "client-11498120" region
+    And I should see the "discharged-client-11498120-discharged-on" region
+    # Assert discharged client still remains with old org
+    Then I click on "discharged-client-detail-11498120"
+    And I should see "behat-prof1@publicguardian.gov.uk" in the "assigned-organisation" region
+    # Assert new named deputy within same organisation
+    And I should see "behat-prof1@publicguardian.gov.uk" in the "deputy-details" region
+    # Assert new organisation for new client
+    Then I click on "admin-client-search, client-detail-11498120"
     And I should see "behat-prof1@example.com2" in the "assigned-organisation" region
     # Assert new named deputy within same organisation
     And I should see "behat-prof1@example.com2" in the "deputy-details" region
