@@ -46,3 +46,30 @@ services:
       - '@AppBundle\v2\Assembler\OrganisationAssembler'
       - '@AppBundle\v2\Transformer\OrganisationTransformer'
     public: true
+
+  AppBundle\Controller\OrgController:
+      class: AppBundle\Controller\OrgController
+      arguments:
+          - '@AppBundle\Service\OrgService'
+      public: true
+
+  AppBundle\Controller\UserController:
+      class: AppBundle\Controller\UserController
+      arguments:
+          - '@AppBundle\Service\UserService'
+          - '@security.encoder_factory'
+          - '@AppBundle\Entity\Repository\UserRepository'
+          - '@AppBundle\Entity\Repository\ClientRepository'
+      public: true
+
+  AppBundle\Controller\CoDeputyController:
+      class: AppBundle\Controller\CoDeputyController
+      arguments:
+          - '@AppBundle\Service\UserService'
+      public: true
+
+  AppBundle\Controller\Admin\IndexController:
+      class: AppBundle\Controller\Admin\IndexController
+      arguments:
+          - '@AppBundle\Service\OrgService'
+      public: true

@@ -87,9 +87,7 @@ class IndexController extends AbstractController
             $clientUpdated->setId($client->getId());
             $this->getRestClient()->put('client/upsert', $clientUpdated, ['pa-edit']);
 
-            /** @var Session $session */
-            $session = $request->getSession();
-            $session->getFlashBag()->add('notice', 'The client details have been edited');
+            $this->addFlash('notice', 'The client details have been edited');
 
             return $this->redirect($returnLink);
         }
@@ -122,9 +120,7 @@ class IndexController extends AbstractController
             if (true === $form->get('confirmArchive')->getData()) {
                 $this->getRestClient()->apiCall('put', 'client/' . $client->getId() . '/archive', null, 'array');
 
-                /** @var Session $session */
-                $session = $request->getSession();
-                $session->getFlashBag()->add('notice', 'The client has been archived');
+                $this->addFlash('notice', 'The client has been archived');
 
                 return $this->redirectToRoute('org_dashboard');
             } else {

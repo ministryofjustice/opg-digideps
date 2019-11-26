@@ -569,7 +569,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return Team[]
+     * @return ArrayCollection
      */
     public function getTeams()
     {
