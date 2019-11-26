@@ -71,7 +71,7 @@ class MoneyOutController extends AbstractController
             });
             $transaction = array_shift($transaction);
         } else {
-            $transaction = new MoneyTransaction()();
+            $transaction = new MoneyTransaction();
         }
 
         if (is_null($transaction)) {
