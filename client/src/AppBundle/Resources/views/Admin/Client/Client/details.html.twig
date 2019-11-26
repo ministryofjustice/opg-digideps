@@ -46,7 +46,7 @@
         <dt class="govuk-summary-list__key">
             {{ (page ~ '.organisation') | trans }}
         </dt>
-        <dd class="govuk-summary-list__value">
+        <dd class="govuk-summary-list__value behat-region-assigned-organisation">
             <a href="{{ path('admin_organisation_view', {id: client.organisation.id}) }}">{{ client.organisation.name }}</a>
 
             {% if not client.organisation.isActivated %}

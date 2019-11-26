@@ -1,13 +1,13 @@
 Feature: Organisation deputyship updates
 
-  @discharge
+  @discharged
   Scenario: Apply deputyship updates via CSV
     Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I create a new "NDR-disabled" "prof named" user "New Dep1" "Surname1" with email "new-behat-prof1@publicguardian.gov.uk" and postcode "SW1"
     And I activate the named deputy with password "Abcd1234"
     Then I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I create a new "NDR-disabled" "prof named" user "New Dep2" "Surname2" with email "behat-prof1@example.com" and postcode "SW2"
+    And I create a new "NDR-disabled" "prof named" user "New Dep2" "Surname2" with email "behat-prof1@example.com1" and postcode "SW2"
     And I activate the named deputy with password "Abcd1234"
     Then I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I create a new "NDR-disabled" "prof named" user "New Dep3" "Surname3" with email "behat-prof1@example.com2" and postcode "SW3"
@@ -19,44 +19,57 @@ Feature: Organisation deputyship updates
     And I press "admin_upload_upload"
     And the organisation "publicguardian.gov.uk" is active
     And "new-behat-prof1@publicguardian.gov.uk" has been added to the "publicguardian.gov.uk" organisation
-    And the organisation "example.com" is active
-    And "behat-prof1@example.com" has been added to the "behat-prof1@example.com" organisation
+    And the organisation "example.com1" is active
+    And "behat-prof1@example.com1" has been added to the "example.com1" organisation
     And the organisation "example.com2" is active
     And "behat-prof1@example.com2" has been added to the "example.com2" organisation
 
   @discharge
-  Scenario: Clients appointed to a new organisation
-    #  (deputy number changes, org email changes)
-    Given I am logged in as "behat-PROF1@example.com2" with password "Abcd1234"
-    And I should see the "client-11498120" region
-    # assert client has a single accessible report
+  Scenario: Professional deputy leaves organisation, clients appointed a new deputy within the same organisation
+    #  (deputy number changes, org identifier stays the same, different deputy email of same org)
+    Given "behat-prof1@publicguardian.gov.uk" has been removed from the "publicguardian.gov.uk" organisation
+    # Assert new deputy can see client
+    And I am logged in as "new-behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Then I should see the "client-01000010" region
+    # Assert client still associated with same org
+    Then I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    And I click on "admin-client-search, client-detail-01000010"
+    # Assert same organisation
+    And I should see "behat-prof1@publicguardian.gov.uk" in the "assigned-organisation" region
+    # Assert new named deputy within same organisation
+    And I should see "new-behat-prof1@publicguardian.gov.uk" in the "deputy-details" region
 
-    Then I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I should not see the "client-11498120" region
 
   @discharge
   Scenario: Professional deputy leaves organisation, and retains their clients
-    #  (deputy number stays the same, org identifier changes)
-    Given I am logged in as "behat-PROF1@example.com" with password "Abcd1234"
+    #  (deputy number stays the same, org identifier changes - example.com1)
+    Given "behat-prof1@publicguardian.gov.uk" has been removed from the "publicguardian.gov.uk" organisation
+    # Assert new deputy has retained clients
+    And I am logged in as "behat-prof1@example.com1" with password "Abcd1234"
     Then I should see the "client-1138393T" region
-    # assert client has old reports accessible
-    Then I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I should not see the "client-1138393T" region
+    # Assert client associated with new org
+    Then I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    And I click on "admin-client-search, client-detail-1138393t"
+    # Assert new organisation
+    And I should see "behat-prof1@example.com1" in the "assigned-organisation" region
+    # Assert new named deputy within same organisation
+    And I should see "behat-prof1@example.com1" in the "deputy-details" region
+
+  @discharge
+  Scenario: Clients appointed to a new organisation
+    #  (deputy number changes, org identifier changes to deputy of new organisation - example.com2)
+    Given I am logged in as "behat-prof1@example.com2" with password "Abcd1234"
+    And I should see the "client-11498120" region
+    # Assert client associated with new org
+    Then I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    And I click on "admin-client-search, client-detail-11498120"
+    # Assert new organisation
+    And I should see "behat-prof1@example.com2" in the "assigned-organisation" region
+    # Assert new named deputy within same organisation
+    And I should see "behat-prof1@example.com2" in the "deputy-details" region
 
 
-  Scenario: Professional deputy leaves organisation, clients appointed a new deputy within the same organisation
-    #  (deputy number changes, org identifier stays the same, different deputy email)
-#    Given the organisation "publicguardian.gov.uk" is active
-#    And I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
-#    And I should see the "client-10000010" region
-#    And I remove "behat-prof1@publicguardian.gov.uk" from the organisation
-#    When I click on "org-dashboard" in the navbar region
-#    Then I should see the "client-10000010" region
-#    When I go to "logout"
-#    And I am logged in as "new-behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-#    Then I should see the "client-10000010" region
 
-  Scenario: Professional deputy leaves organisation, clients retained by deputy
-    #  (deputy number stays the same, org identifier changes)
+
 
 
