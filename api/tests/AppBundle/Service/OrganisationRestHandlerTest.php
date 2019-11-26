@@ -47,6 +47,11 @@ class OrganisationRestHandlerTest extends TestCase
      */
     private $sharedDomains;
 
+    /**
+     * @var OrganisationRestHandler
+     */
+    private $sut;
+
 
     public function setUp(): void
     {
@@ -56,6 +61,14 @@ class OrganisationRestHandlerTest extends TestCase
         $this->userRepository = self::prophesize(UserRepository::class);
         $this->orgFactory = self::prophesize(OrganisationFactory::class);
         $this->sharedDomains = ['gmail.com'];
+        $this->sut = new OrganisationRestHandler(
+        $this->em->reveal(),
+        $this->validator->reveal(),
+        $this->orgRepository->reveal(),
+        $this->userRepository->reveal(),
+        $this->orgFactory->reveal(),
+        $this->sharedDomains
+    );
     }
 
     /**
@@ -70,11 +83,10 @@ class OrganisationRestHandlerTest extends TestCase
         $this->em->persist(Argument::type(Organisation::class))->shouldBeCalled();
         $this->em->flush()->shouldBeCalled();
 
-        $sut = $this->generateSut();
 
         self::assertInstanceOf(
             Organisation::class,
-            $sut->create(['name' => 'ABC', 'email_identifier' => 'abc.com', 'is_activated' => true])
+            $this->sut->create(['name' => 'ABC', 'email_identifier' => 'abc.com', 'is_activated' => true])
         );
     }
 
@@ -85,11 +97,10 @@ class OrganisationRestHandlerTest extends TestCase
      */
     public function create_requiredDataMissing(array $data)
     {
-        $sut = $this->generateSut();
 
         self::expectException(OrganisationCreationException::class);
 
-        $sut->create($data);
+        $this->sut->create($data);
     }
 
     public function missingData()
@@ -113,11 +124,10 @@ class OrganisationRestHandlerTest extends TestCase
     {
         $this->orgRepository->findOneBy(Argument::any())->willReturn(new Organisation());
 
-        $sut = $this->generateSut();
 
         self::expectException(OrganisationCreationException::class);
 
-        $sut->create(['name' => 'ABC', 'email_identifier' => 'gmail.com', 'is_activated' => true]);
+        $this->sut->create(['name' => 'ABC', 'email_identifier' => 'gmail.com', 'is_activated' => true]);
     }
 
     /**
@@ -127,11 +137,10 @@ class OrganisationRestHandlerTest extends TestCase
     {
         $this->orgRepository->findOneBy(Argument::any())->willReturn(null);
 
-        $sut = $this->generateSut();
 
         self::expectException(OrganisationCreationException::class);
 
-        $sut->create(['name' => 'ABC', 'email_identifier' => 'gmail.com', 'is_activated' => true]);
+        $this->sut->create(['name' => 'ABC', 'email_identifier' => 'gmail.com', 'is_activated' => true]);
     }
 
     /**
@@ -143,11 +152,10 @@ class OrganisationRestHandlerTest extends TestCase
         $this->validator->validate(Argument::any())->willReturn(['an error']);
         $this->orgFactory->createFromEmailIdentifier(Argument::any(), Argument::any(), Argument::any())->willReturn(new Organisation());
 
-        $sut = $this->generateSut();
 
         self::expectException(OrganisationCreationException::class);
 
-        $sut->create(['name' => 'ABC', 'email_identifier' => 'abccom', 'is_activated' => true]);
+        $this->sut->create(['name' => 'ABC', 'email_identifier' => 'abccom', 'is_activated' => true]);
     }
 
     /**
@@ -166,8 +174,7 @@ class OrganisationRestHandlerTest extends TestCase
         $this->em->persist(Argument::type(Organisation::class))->shouldBeCalled();
         $this->em->flush()->shouldBeCalled();
 
-        $sut = $this->generateSut();
-        $updatedOrg = $sut->update(['name' => 'ABC', 'email_identifier' => 'abc.com', 'is_activated' => true], 1);
+        $updatedOrg = $this->sut->update(['name' => 'ABC', 'email_identifier' => 'abc.com', 'is_activated' => true], 1);
 
         self::assertEquals('abc.com', $updatedOrg->getEmailIdentifier());
         self::assertEquals('ABC', $updatedOrg->getName());
@@ -180,11 +187,10 @@ class OrganisationRestHandlerTest extends TestCase
      */
     public function update_missingData($data)
     {
-        $sut = $this->generateSut();
 
         self::expectException(OrganisationUpdateException::class);
 
-        $sut->update($data, 1);
+        $this->sut->update($data, 1);
     }
 
     /**
@@ -194,8 +200,7 @@ class OrganisationRestHandlerTest extends TestCase
     {
         $this->orgRepository->find(Argument::any())->willReturn(null);
 
-        $sut = $this->generateSut();
-        $updatedOrg = $sut->update(['name' => 'ABC', 'email_identifier' => 'abc.com', 'is_activated' => true], 1);
+        $updatedOrg = $this->sut->update(['name' => 'ABC', 'email_identifier' => 'abc.com', 'is_activated' => true], 1);
 
         self::assertNull($updatedOrg);
     }
@@ -214,8 +219,7 @@ class OrganisationRestHandlerTest extends TestCase
 
         self::expectException(OrganisationUpdateException::class);
 
-        $sut = $this->generateSut();
-        $sut->update(['name' => 'ABC', 'email_identifier' => 'abc.com', 'is_activated' => true], 1);
+        $this->sut->update(['name' => 'ABC', 'email_identifier' => 'abc.com', 'is_activated' => true], 1);
     }
 
     /**
@@ -233,19 +237,6 @@ class OrganisationRestHandlerTest extends TestCase
 
         self::expectException(OrganisationCreationException::class);
 
-        $sut = $this->generateSut();
-        $sut->update(['name' => 'ABC', 'email_identifier' => 'abc.com', 'is_activated' => true], 1);
-    }
-
-    private function generateSut()
-    {
-        return new OrganisationRestHandler(
-            $this->em->reveal(),
-            $this->validator->reveal(),
-            $this->orgRepository->reveal(),
-            $this->userRepository->reveal(),
-            $this->orgFactory->reveal(),
-            $this->sharedDomains
-        );
+        $this->sut->update(['name' => 'ABC', 'email_identifier' => 'abc.com', 'is_activated' => true], 1);
     }
 }

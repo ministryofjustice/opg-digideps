@@ -71,24 +71,26 @@ class OrganisationFactoryTest extends TestCase
     /**
      * @test
      * @dataProvider getInvalidEmailInputs
+     * @param $name
      * @param $emailIdentifier
      */
-    public function createFromFullEmail_throwsExceptionIfGivenBadData($emailIdentifier)
+    public function createFromFullEmail_throwsExceptionIfGivenBadData($name, $emailIdentifier)
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->factory->createFromFullEmail('Test Co.', $emailIdentifier);
+        $this->factory->createFromFullEmail($name, $emailIdentifier);
     }
 
 
     /**
      * @test
      * @dataProvider getInvalidEmailIdentifierInputs
+     * @param $name
      * @param $emailIdentifier
      */
-    public function createFromEmailIdentifier_throwsExceptionIfGivenBadData($emailIdentifier)
+    public function createFromEmailIdentifier_throwsExceptionIfGivenBadData($name, $emailIdentifier)
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->factory->createFromEmailIdentifier('Test Co.', $emailIdentifier);
+        $this->factory->createFromEmailIdentifier($name, $emailIdentifier);
     }
 
     /**
@@ -97,8 +99,9 @@ class OrganisationFactoryTest extends TestCase
     public function getInvalidEmailInputs(): array
     {
         return [
-            ['emailIdentifier' => ''],
-            ['emailIdentifier' => '@@private.com'],
+            ['name' => '', 'emailIdentifier' => 'test.com'],
+            ['name' => 'name', 'emailIdentifier' => ''],
+            ['name' => 'name', 'emailIdentifier' => '@@private.com'],
         ];
     }
 
@@ -109,8 +112,9 @@ class OrganisationFactoryTest extends TestCase
     public function getInvalidEmailIdentifierInputs(): array
     {
         return [
-            ['emailIdentifier' => ''],
-            ['emailIdentifier' => '@@private.com'],
+            ['name' => '', 'emailIdentifier' => 'f@test.com'],
+            ['name' => 'name', 'emailIdentifier' => ''],
+            ['name' => 'name', 'emailIdentifier' => '@@private.com'],
         ];
     }
 
