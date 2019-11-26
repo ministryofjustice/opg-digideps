@@ -10,7 +10,7 @@ Feature: Admin unsubmit and client re-submit
     And I click on "search_clients_search"
     And I click on "client-details" in the "client-01000014" region
     And I save the current URL as "admin-client-01000014.url"
-    Then I should see the "report-2016-to-2017" region in the "report-group-done" region
+    Then I should see the "report-2016-to-2017" region in the "report-group-submitted" region
     And I click on "manage" in the "report-2016-to-2017" region
     # unsubmit decisions, PA deputy expenses
     When I fill in the following:
@@ -44,7 +44,5 @@ Feature: Admin unsubmit and client re-submit
   Scenario: Admin checks report was re-submitted
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I go to the URL previously saved as "admin-client-01000014.url"
-    Then I should see the "report-2016-to-2017" region in the "report-group-done" region
+    Then I should see the "report-2016-to-2017" region in the "report-group-submitted" region
     # restore previous status
-
-
