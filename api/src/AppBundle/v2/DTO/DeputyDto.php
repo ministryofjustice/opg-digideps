@@ -37,6 +37,9 @@ class DeputyDto
     /** @var array */
     private $clients;
 
+    /** @var OrganisationDto|null */
+    private $organisation;
+
     /**
      * @return int
      */
@@ -123,6 +126,14 @@ class DeputyDto
     public function getClients(): ?array
     {
         return $this->clients;
+    }
+
+    /**
+     * @return OrganisationDto|null
+     */
+    public function getOrganisation(): ?OrganisationDto
+    {
+        return $this->organisation;
     }
 
     /**
@@ -232,6 +243,17 @@ class DeputyDto
     public function setClients(array $clients): DeputyDto
     {
         $this->clients = $clients;
+        return $this;
+    }
+
+    /**
+     * @param OrganisationDto $organisationDto
+     * @return DeputyDto
+     */
+    public function setOrganisation(OrganisationDto $organisationDto): DeputyDto
+    {
+        $this->organisation = $organisationDto;
+
         return $this;
     }
 }

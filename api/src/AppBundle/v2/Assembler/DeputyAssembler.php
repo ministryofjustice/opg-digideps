@@ -10,17 +10,6 @@ class DeputyAssembler
 {
     use DtoPropertySetterTrait;
 
-    /** @var ClientAssembler  */
-    private $clientDtoAssembler;
-
-    /**
-     * @param ClientAssembler $clientDtoAssembler
-     */
-    public function __construct(ClientAssembler $clientDtoAssembler = null)
-    {
-        $this->clientDtoAssembler = $clientDtoAssembler;
-    }
-
     /**
      * @param array $data
      * @return DeputyDto
@@ -30,10 +19,6 @@ class DeputyAssembler
         $dto = new DeputyDto();
 
         $this->setPropertiesFromData($dto, $data);
-
-        if ($this->clientDtoAssembler && isset($data['clients']) && is_array($data['clients'])) {
-            $dto->setClients($this->assembleDeputyClients($data['clients']));
-        }
 
         return $dto;
     }
@@ -58,20 +43,5 @@ class DeputyAssembler
         $dto->setPhoneMain($deputy->getPhoneMain());
 
         return $dto;
-    }
-
-    /**
-     * @param array $clients
-     * @return array
-     */
-    private function assembleDeputyClients(array $clients)
-    {
-        $dtos = [];
-
-        foreach ($clients as $client) {
-            $dtos[] = $this->clientDtoAssembler->assembleFromArray($client);
-        }
-
-        return $dtos;
     }
 }

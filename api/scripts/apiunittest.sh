@@ -13,13 +13,14 @@ export PGUSER=${DATABASE_USERNAME:=api}
 
 # Run each folder of unit tests individually. If we were to run them all
 # individually it would cause a memory leak.
-php bin/phpunit -c tests tests/AppBundle/Controller/
-php bin/phpunit -c tests tests/AppBundle/ControllerReport/
-php bin/phpunit -c tests tests/AppBundle/Controller-Ndr/
-php bin/phpunit -c tests tests/AppBundle/Entity/
-php bin/phpunit -c tests tests/AppBundle/Factory/
-php bin/phpunit -c tests tests/AppBundle/Security/
-php bin/phpunit -c tests tests/AppBundle/Service/
-php bin/phpunit -c tests tests/AppBundle/Stats/
-php bin/phpunit -c tests tests/AppBundle/Transformer/
-php bin/phpunit -c tests tests/AppBundle/v2/
+#php bin/phpunit -c tests tests/AppBundle/Controller/
+#php bin/phpunit -c tests tests/AppBundle/ControllerReport/
+#php bin/phpunit -c tests tests/AppBundle/Controller-Ndr/
+#php bin/phpunit -c tests tests/AppBundle/Entity/
+#php bin/phpunit -c tests tests/AppBundle/Factory/
+#php bin/phpunit -c tests tests/AppBundle/Security/
+#php bin/phpunit -c tests tests/AppBundle/Service/
+#php bin/phpunit -c tests tests/AppBundle/Stats/
+#php bin/phpunit -c tests tests/AppBundle/Transformer/
+#php bin/phpunit -c tests tests/AppBundle/v2/
+php bin/phpunit -c tests tests/AppBundle/v2/Controller/DeputyControllerTest.php

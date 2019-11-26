@@ -63,7 +63,7 @@ class OrganisationTransformer
 
         foreach ($users as $user) {
             if ($user instanceof DeputyDto) {
-                $transformed[] = $this->deputyTransformer->transform($user, ['clients']);
+                $transformed[] = $this->deputyTransformer->transform($user);
             }
         }
 

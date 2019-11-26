@@ -4,28 +4,17 @@ namespace AppBundle\v2\Transformer;
 
 use AppBundle\v2\DTO\ClientDto;
 use AppBundle\v2\DTO\DeputyDto;
+use AppBundle\v2\DTO\OrganisationDto;
 
 class DeputyTransformer
 {
-    /** @var ClientTransformer */
-    private $clientTransformer;
-
-    /**
-     * @param ClientTransformer $clientTransformer
-     */
-    public function __construct(ClientTransformer $clientTransformer = null)
-    {
-        $this->clientTransformer = $clientTransformer;
-    }
-
     /**
      * @param DeputyDto $dto
-     * @param array $exclude
      * @return array
      */
-    public function transform(DeputyDto $dto, array $exclude = [])
+    public function transform(DeputyDto $dto)
     {
-        $data = [
+        return [
             'id' => $dto->getId(),
             'firstname' => $dto->getFirstName(),
             'lastname' => $dto->getLastName(),
@@ -37,32 +26,5 @@ class DeputyTransformer
             'job_title' => $dto->getJobTitle(),
             'phone_main' => $dto->getPhoneMain()
         ];
-
-        if (!in_array('clients', $exclude) && $dto->getClients()) {
-            $data['clients'] = $this->transformClients($dto->getClients());
-        }
-
-        return $data;
-    }
-
-    /**
-     * @param array $clients
-     * @return array
-     */
-    private function transformClients(array $clients)
-    {
-        if (empty($clients)) {
-            return [];
-        }
-
-        $transformed = [];
-
-        foreach ($clients as $client) {
-            if ($client instanceof ClientDto) {
-                $transformed[] = $this->clientTransformer->transform($client, ['reports', 'ndr']);
-            }
-        }
-
-        return $transformed;
     }
 }

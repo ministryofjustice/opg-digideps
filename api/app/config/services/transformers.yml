@@ -16,14 +16,21 @@ services:
       - '@AppBundle\v2\Transformer\ReportTransformer'
       - '@AppBundle\v2\Transformer\NdrTransformer'
       - '@PlainOrganisationTransformer'
-      - '@PlainDeputyTransformer'
+      - '@AppBundle\v2\Transformer\DeputyTransformer'
 
-  AppBundle\v2\Transformer\DeputyTransformer:
-    class: AppBundle\v2\Transformer\DeputyTransformer
+  AppBundle\v2\Transformer\LayDeputyTransformerDecorator:
+    class: AppBundle\v2\Transformer\LayDeputyTransformerDecorator
     arguments:
+      - '@AppBundle\v2\Transformer\DeputyTransformer'
       - '@AppBundle\v2\Transformer\ClientTransformer'
 
-  PlainDeputyTransformer:
+  AppBundle\v2\Transformer\OrgDeputyTransformerDecorator:
+    class: AppBundle\v2\Transformer\OrgDeputyTransformerDecorator
+    arguments:
+      - '@AppBundle\v2\Transformer\DeputyTransformer'
+      - '@AppBundle\v2\Transformer\OrganisationTransformer'
+
+  AppBundle\v2\Transformer\DeputyTransformer:
     class: AppBundle\v2\Transformer\DeputyTransformer
 
   AppBundle\v2\Transformer\OrganisationTransformer:

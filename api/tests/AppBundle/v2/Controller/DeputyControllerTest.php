@@ -26,7 +26,7 @@ class DeputyControllerTest extends AbstractTestController
     {
         parent::setUpBeforeClass();
 
-        $layUser = static::ensureUserExistsWithEmail('lay-user@dep-controller.test');
+        $layUser = static::ensureUserExistsWithEmailAndRole('lay-user@dep-controller.test', 'ROLE_LAY_DEPUTY');
         $layClient = static::ensureUserHasClientWithEmail($layUser, 'lay-client-1@dep-controller.test');
         static::ensureClientHasReport($layClient);
 
@@ -35,11 +35,12 @@ class DeputyControllerTest extends AbstractTestController
 
     /**
      * @param string $email
+     * @param string $role
      * @return \AppBundle\Entity\User
      */
-    private static function ensureUserExistsWithEmail(string $email)
+    private static function ensureUserExistsWithEmailAndRole(string $email, string $role)
     {
-        return self::fixtures()->createUser(['setEmail' => $email]);
+        return self::fixtures()->createUser(['setEmail' => $email, 'setRoleName' => $role]);
     }
 
     /**

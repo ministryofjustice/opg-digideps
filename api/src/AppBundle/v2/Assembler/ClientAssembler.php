@@ -127,6 +127,6 @@ class ClientAssembler
      */
     private function assembleClientDeputy(array $deputy)
     {
-        return $this->deputyDtoAssembler->assembleFromArray($deputy);
+        return $this->deputyDtoAssembler->assembleFromArray($deputy, ['clients', 'organisation']);
     }
 }
