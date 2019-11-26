@@ -3,14 +3,16 @@
 namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Report\BankAccount;
+use AppBundle\Entity\Report\MoneyTransaction;
+use AppBundle\Entity\Report\Status;
 use AppBundle\Form as FormDir;
-
-use AppBundle\Service\StepRedirector;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class MoneyOutController extends AbstractController
 {
@@ -27,7 +29,7 @@ class MoneyOutController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatus()->getMoneyOutState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
+        if ($report->getStatus()->getMoneyOutState()['state'] != Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('money_out_summary', ['reportId' => $reportId]);
         }
 
@@ -62,14 +64,18 @@ class MoneyOutController extends AbstractController
         // create (add mode) or load transaction (edit mode)
         if ($transactionId) {
             $transaction = array_filter($report->getMoneyTransactionsOut(), function ($t) use ($transactionId) {
-                if ($t->getBankAccount() instanceof EntityDir\Report\BankAccount) {
+                if ($t->getBankAccount() instanceof BankAccount) {
                     $t->setBankAccountId($t->getBankAccount()->getId());
                 }
                 return $t->getId() == $transactionId;
             });
             $transaction = array_shift($transaction);
         } else {
-            $transaction = new EntityDir\Report\MoneyTransaction();
+            $transaction = new MoneyTransaction()();
+        }
+
+        if (is_null($transaction)) {
+            throw $this->createNotFoundException();
         }
 
         // add URL-data into model
@@ -83,14 +89,15 @@ class MoneyOutController extends AbstractController
             'step' => $step,
             'type'             => 'out',
             'selectedCategory' => $transaction->getCategory(),
-//            'userRole' => $this->getUser()->getRoleName(),
             'authChecker' => $this->get('security.authorization_checker'),
             'report' => $report
             ]
         );
         $form->handleRequest($request);
 
-        if ($form->get('save')->isClicked() && $form->isValid()) {
+        /** @var SubmitButton $saveBtn */
+        $saveBtn = $form->get('save');
+        if ($saveBtn->isClicked() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
             if ($step == 1) {
                 // unset from page to prevent step redirector skipping step 2
@@ -99,7 +106,7 @@ class MoneyOutController extends AbstractController
                 $stepUrlData['category'] = $transaction->getCategory();
             } elseif ($step == $totalSteps) {
                 if ($transactionId) { // edit
-                    $request->getSession()->getFlashBag()->add(
+                    $this->addFlash(
                         'notice',
                         'Entry edited'
                     );
@@ -126,7 +133,7 @@ class MoneyOutController extends AbstractController
             'form' => $form->createView(),
             'backLink' => $stepRedirector->getBackLink(),
             'skipLink' => null,
-            'categoriesGrouped' => EntityDir\Report\MoneyTransaction::getCategoriesGrouped('out')
+            'categoriesGrouped' => MoneyTransaction::getCategoriesGrouped('out')
         ];
     }
 
@@ -162,12 +169,12 @@ class MoneyOutController extends AbstractController
      * @param int $reportId
      * @Template("AppBundle:Report/MoneyOut:summary.html.twig")
      *
-     * @return array
+     * @return array|RedirectResponse
      */
     public function summaryAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatus()->getMoneyOutState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
+        if ($report->getStatus()->getMoneyOutState()['state'] == Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('money_out', ['reportId' => $reportId]);
         }
 
@@ -183,7 +190,7 @@ class MoneyOutController extends AbstractController
      * @param int $reportId
      * @param int $transactionId
      *
-     * @return RedirectResponse
+     * @return array|RedirectResponse
      */
     public function deleteAction(Request $request, $reportId, $transactionId)
     {
@@ -197,7 +204,7 @@ class MoneyOutController extends AbstractController
         }
 
         if (!isset($transaction)) {
-            throw new \RuntimeException('Transaction not found');
+            throw $this->createNotFoundException('Transaction not found');
         }
 
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
@@ -206,7 +213,7 @@ class MoneyOutController extends AbstractController
         if ($form->isValid()) {
             $this->getRestClient()->delete('/report/' . $reportId . '/money-transaction/' . $transactionId);
 
-            $request->getSession()->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'Entry deleted'
             );
@@ -214,6 +221,7 @@ class MoneyOutController extends AbstractController
             return $this->redirect($this->generateUrl('money_out_summary', ['reportId' => $reportId]));
         }
 
+        /** @var TranslatorInterface $translator */
         $translator = $this->get('translator');
         $categoryKey = 'form.category.entries.' . $transaction->getCategory() . '.label';
         $summary = [
