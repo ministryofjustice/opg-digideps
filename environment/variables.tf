@@ -20,6 +20,7 @@ variable "accounts" {
       secrets_prefix       = string
       task_count           = number
       mock_emails          = bool
+      symfony_env          = string
       db_subnet_group      = string
       ec_subnet_group      = string
     })
