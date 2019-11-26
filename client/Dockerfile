@@ -75,6 +75,7 @@ RUN mkdir -p var/cache \
   && chown -R www-data var
 
 CMD confd -onetime -backend env \
+  && su-exec www-data php app/console cache:warmup -e prod \
   && waitforit -address=$API_URL/manage/availability -timeout=$TIMEOUT -insecure \
   && php-fpm -D \
   && nginx
