@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report\Traits;
 
+use AppBundle\Entity\Report\MoneyTransaction;
 use AppBundle\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
@@ -11,7 +12,7 @@ trait ReportMoneyTransactionTrait
      * @JMS\Type("array<AppBundle\Entity\Report\MoneyTransaction>")
      * @JMS\Groups({"transactionsIn"})
      *
-     * @var Transaction[]
+     * @var MoneyTransaction[]
      */
     private $moneyTransactionsIn = [];
 
@@ -19,7 +20,7 @@ trait ReportMoneyTransactionTrait
      * @JMS\Type("array<AppBundle\Entity\Report\MoneyTransaction>")
      * @JMS\Groups({"transactionsOut"})
      *
-     * @var Transaction[]
+     * @var MoneyTransaction[]
      */
     private $moneyTransactionsOut = [];
 
@@ -37,32 +38,8 @@ trait ReportMoneyTransactionTrait
      */
     private $moneyOutTotal;
 
-
     /**
-     * //TODO improve this
-     *
-     * @return Transaction[]
-     */
-//    public function getValidTransactions($moneyTransactions)
-//    {
-//        return array_filter($moneyTransactions, function($t){
-//            return $t->getAmounts()[0] > 0;
-//        });
-//    }
-//
-//    /**
-//     * //TODO improve this
-//     * @return Transaction[]
-//     */
-//    public function getMoneyTransactionsInWithId($id)
-//    {
-//        return array_filter($this->moneyTra, function($t) use ($id) {
-//            return $t->getId() == $id;
-//        });
-//    }
-
-    /**
-     * @param  Transaction[] $moneyTransactionsIn
+     * @param  MoneyTransaction[] $moneyTransactionsIn
      * @return Report
      */
     public function setMoneyTransactionsIn($moneyTransactionsIn)
@@ -73,7 +50,7 @@ trait ReportMoneyTransactionTrait
     }
 
     /**
-     * @return Transaction[]
+     * @return MoneyTransaction[]
      */
     public function getMoneyTransactionsIn()
     {
@@ -81,7 +58,7 @@ trait ReportMoneyTransactionTrait
     }
 
     /**
-     * @param  Transaction[] $moneyTransactionsOut
+     * @param  MoneyTransaction[] $moneyTransactionsOut
      * @return Report
      */
     public function setMoneyTransactionsOut($moneyTransactionsOut)
@@ -92,7 +69,7 @@ trait ReportMoneyTransactionTrait
     }
 
     /**
-     * @return Transaction[]
+     * @return MoneyTransaction[]
      */
     public function getMoneyTransactionsOut()
     {
@@ -102,7 +79,7 @@ trait ReportMoneyTransactionTrait
     /**
      * Group money transactions by Group
      *
-     * @param Transaction[] $moneyTransactions
+     * @param MoneyTransaction[] $moneyTransactions
      *
      * @return array array of [category=>[entries=>[[id=>,type=>]], amountTotal[]]]
      */
