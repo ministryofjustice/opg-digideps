@@ -91,13 +91,15 @@ class ComponentsExtension extends \Twig_Extension
                         return 'opg-tag--not-started';
 
                     case 'notFinished':
-                    case 'incomplete':
+                    case 'active':
+                    case 'unsubmitted':
                         return 'opg-tag--notice';
 
                     case 'needs-attention':
                         return 'opg-tag--warning';
 
                     case 'done':
+                    case 'submitted':
                     case 'readyToSubmit':
                         return 'opg-tag--success';
 

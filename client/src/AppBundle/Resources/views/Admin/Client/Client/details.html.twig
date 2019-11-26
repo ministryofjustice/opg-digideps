@@ -114,7 +114,7 @@
     <table class="govuk-table behat-region-report-group-{{ type }}">
         <caption class="govuk-table__caption">
             <span class="govuk-tag {{ type | status_to_tag_css }}">
-                {{ type | trans({}, 'common') }}
+                {{ type | trans({}, 'admin.label') }}
             </span>
         </caption>
 
@@ -123,7 +123,7 @@
                 <th scope="col" class="govuk-table__header">{{ 'period' | trans({}, 'common') }}</th>
                 <th scope="col" class="govuk-table__header">{{ 'type' | trans({}, 'common') }}</th>
                 <th scope="col" class="govuk-table__header">{{ 'dueDate' | trans({}, 'common') }}</th>
-                {% if type == 'done' %}
+                {% if type == 'submitted' %}
                     <th scope="col" class="govuk-table__header">{{ 'submitted' | trans({}, 'common') }}</th>
                 {% endif %}
                 <th scope="col" class="govuk-table__header">
@@ -162,7 +162,7 @@
                     <td class="govuk-table__cell {{ behatRegionPrefix }}-due-date">
                         {{ report.dueDate | date("j F Y") }}
                     </td>
-                    {% if type == 'done' %}
+                    {% if type == 'submitted' %}
                         <td class="govuk-table__cell">
                             {{ report.submitDate | date("j F Y") }}
                         </td>
