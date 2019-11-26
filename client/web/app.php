@@ -15,7 +15,7 @@ $loader = require __DIR__ . '/../vendor/autoload.php';
 
 require_once __DIR__ . '/../app/AppKernel.php';
 
-$kernel = new AppKernel(strtolower(getenv('MOCK_EMAILS')) === 'true' ? 'test' : 'prod', false);
+$kernel = new AppKernel(getenv('SYMFONY_ENV'), false);
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();
