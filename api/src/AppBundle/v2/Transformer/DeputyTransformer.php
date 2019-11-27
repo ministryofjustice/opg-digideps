@@ -43,8 +43,8 @@ class DeputyTransformer
             'phone_main' => $dto->getPhoneMain()
         ];
 
-        $data['clients'] = (null === $dto->getClients()) ? [] : $this->transformClients($dto->getClients());
         $data['organisations'] = (null === $dto->getOrganisation()) ? [] : $this->transformOrganisation($dto->getOrganisation());
+        $data['clients'] = (null === $dto->getClients()) ? [] : $this->transformClients($dto->getClients());
 
         return $data;
     }

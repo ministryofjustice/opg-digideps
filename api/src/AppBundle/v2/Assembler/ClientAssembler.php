@@ -31,10 +31,10 @@ class ClientAssembler
      * @param DeputyAssembler $deputyDtoAssembler
      */
     public function __construct(
-        ReportAssemblerInterface $reportDtoAssembler,
-        NdrAssembler $ndrDtoAssembler,
-        OrganisationAssembler $organisationDtoAssembler,
-        DeputyAssembler $deputyDtoAssembler
+        ReportAssemblerInterface $reportDtoAssembler = null,
+        NdrAssembler $ndrDtoAssembler = null,
+        OrganisationAssembler $organisationDtoAssembler = null,
+        DeputyAssembler $deputyDtoAssembler = null
     )
     {
         $this->reportDtoAssembler = $reportDtoAssembler;
@@ -58,7 +58,7 @@ class ClientAssembler
             $dto->setNdr($this->assembleClientNdr($data['ndr']));
         }
 
-        if (isset($data['reports'])  && is_array($data['reports'])) {
+        if ($this->reportDtoAssembler && isset($data['reports'])  && is_array($data['reports'])) {
             $dto->setReports($this->assembleClientReports($data['reports']));
             $dto->setReportCount(count($data['reports']));
         }

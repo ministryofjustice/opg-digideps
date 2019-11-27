@@ -5,10 +5,26 @@ namespace AppBundle\v2\Assembler;
 use AppBundle\v2\DTO\DeputyDto;
 use AppBundle\v2\DTO\DtoPropertySetterTrait;
 use AppBundle\Entity\User;
+use AppBundle\v2\DTO\OrganisationDto;
 
 class DeputyAssembler
 {
     use DtoPropertySetterTrait;
+
+    /** @var DeputyAssembler  */
+    private $parentAssembler;
+
+    /** @var ClientAssembler */
+    private $clientAssembler;
+
+    /** @var OrganisationAssembler */
+    private $organisationAssembler;
+
+    public function __construct(ClientAssembler $clientAssembler, OrganisationAssembler $organisationAssembler)
+    {
+        $this->clientAssembler = $clientAssembler;
+        $this->organisationAssembler = $organisationAssembler;
+    }
 
     /**
      * @param array $data
@@ -20,7 +36,39 @@ class DeputyAssembler
 
         $this->setPropertiesFromData($dto, $data);
 
+        if (isset($data['clients']) && is_array($data['clients']) && isset($data['clients'][0])) {
+            $dto->setClients($this->assembleDeputyClients($data['clients']));
+        }
+
+        if (isset($data['organisations']) && is_array($data['organisations']) && isset($data['organisations'][0])) {
+            $dto->setOrganisation($this->assembleDeputyOrganisation($data['organisations'][0]));
+        }
+
         return $dto;
+    }
+
+    /**
+     * @param array $clients
+     * @return array
+     */
+    private function assembleDeputyClients(array $clients)
+    {
+        $dtos = [];
+
+        foreach ($clients as $client) {
+            $dtos[] = $this->clientAssembler->assembleFromArray($client);
+        }
+
+        return $dtos;
+    }
+
+    /**
+     * @param array $organisation
+     * @return OrganisationDto
+     */
+    private function assembleDeputyOrganisation(array $organisation)
+    {
+        return $this->organisationAssembler->assembleFromArray($organisation);
     }
 
     /**

@@ -26,8 +26,7 @@ services:
     class: AppBundle\v2\Controller\DeputyController
     arguments:
       - '@AppBundle\Entity\Repository\UserRepository'
-      - '@AppBundle\v2\Assembler\LayDeputyAssemblerDecorator'
-      - '@AppBundle\v2\Assembler\OrgDeputyAssemblerDecorator'
+      - '@AppBundle\v2\Assembler\DeputyAssembler'
       - '@AppBundle\v2\Transformer\DeputyTransformer'
     public: true
 

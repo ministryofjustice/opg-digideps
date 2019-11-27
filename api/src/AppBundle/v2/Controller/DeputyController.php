@@ -3,15 +3,8 @@
 namespace AppBundle\v2\Controller;
 
 use AppBundle\Entity\Repository\UserRepository;
-use AppBundle\Entity\User;
 use AppBundle\v2\Assembler\DeputyAssembler;
-use AppBundle\v2\Assembler\LayDeputyAssemblerDecorator;
-use AppBundle\v2\Assembler\OrgDeputyAssemblerDecorator;
-use AppBundle\v2\DTO\DeputyDto;
 use AppBundle\v2\Transformer\DeputyTransformer;
-use AppBundle\v2\Transformer\LayDeputyTransformerDecorator;
-use AppBundle\v2\Transformer\OrgDeputyTransformerDecorator;
-use Doctrine\ORM\Query;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,61 +20,39 @@ class DeputyController
     /** @var UserRepository  */
     private $repository;
 
-    /** @var LayDeputyAssemblerDecorator */
-    private $layAssembler;
+    /** @var DeputyAssembler */
+    private $assembler;
 
-    /** @var OrgDeputyAssemblerDecorator */
-    private $orgAssembler;
-
-    /** @var LayDeputyTransformerDecorator */
+    /** @var DeputyTransformer */
     private $transformer;
 
     /**
      * @param UserRepository $repository
-     * @param LayDeputyAssemblerDecorator $layAssembler
-     * @param OrgDeputyAssemblerDecorator $orgAssembler
+     * @param DeputyAssembler $assembler
      * @param DeputyTransformer $transformer
      */
-    public function __construct(
-        UserRepository $repository,
-        LayDeputyAssemblerDecorator $layAssembler,
-        OrgDeputyAssemblerDecorator $orgAssembler,
-        DeputyTransformer $transformer
-    ) {
+    public function __construct(UserRepository $repository, DeputyAssembler $assembler, DeputyTransformer $transformer)
+    {
         $this->repository = $repository;
-        $this->layAssembler = $layAssembler;
-        $this->orgAssembler = $orgAssembler;
+        $this->assembler = $assembler;
         $this->transformer = $transformer;
     }
 
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
      *
-     * @param int $id
+     * @param $id
      * @return JsonResponse
      */
-    public function getByIdAction(int $id): JsonResponse
+    public function getByIdAction($id)
     {
-        /** @var array $user */
-        if (null === ($user = $this->repository->findUserArrayById($id))) {
+        if (null === ($data = $this->repository->findUserArrayById($id))) {
             throw new NotFoundHttpException(sprintf('Deputy id %s not found', $id));
         }
 
-        /** @var DeputyDto $dto */
-        $dto = $this->determineAssembler($user)->assembleFromArray($user);
-
-        /** @var array $transformedDto */
+        $dto = $this->assembler->assembleFromArray($data);
         $transformedDto = $this->transformer->transform($dto);
 
         return $this->buildSuccessResponse($transformedDto);
-    }
-
-    /**
-     * @param array $user
-     * @return LayDeputyAssemblerDecorator|OrgDeputyAssemblerDecorator
-     */
-    private function determineAssembler(array $user)
-    {
-        return ($user['roleName'] === User::ROLE_LAY_DEPUTY) ? $this->layAssembler : $this->orgAssembler;
     }
 }
