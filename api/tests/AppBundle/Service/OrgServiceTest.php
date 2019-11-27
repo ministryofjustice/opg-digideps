@@ -131,6 +131,7 @@ class OrgServiceTest extends WebTestCase
         $clientRepository =self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\ClientRepository');
         $organisationRepository = self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\OrganisationRepository');
         $teamRepository = self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\TeamRepository');
+        $namedDeputyRepository = self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\NamedDeputyRepository');
 
         $this->pa = new OrgService(self::$em,
             $logger,
@@ -138,8 +139,9 @@ class OrgServiceTest extends WebTestCase
             $reportRepository,
             $clientRepository,
             $organisationRepository,
-            new OrganisationFactory([]),
             $teamRepository,
+            $namedDeputyRepository,
+            new OrganisationFactory([]),
             new NamedDeputyFactory()
         );
         Fixtures::deleteReportsData(['dd_user', 'client']);
@@ -184,7 +186,8 @@ class OrgServiceTest extends WebTestCase
         $this->assertEquals([
             'named_deputies' => ['00000001', '00000002', '00000003'],
             'clients' => ['00001111', '1000000t', '1000004t', '10002222'],
-            'reports' => ['00001111-2014-12-16', '1000000t-2015-02-05', '1000004t-2015-02-06', '10002222-2015-02-04']
+            'reports' => ['00001111-2014-12-16', '1000000t-2015-02-05', '1000004t-2015-02-06', '10002222-2015-02-04'],
+            'discharged_clients' => [],
         ], $ret1['added']);
         // add again and check no override
         $ret2 = $this->pa->addFromCasrecRows($data);
@@ -192,6 +195,7 @@ class OrgServiceTest extends WebTestCase
             'named_deputies' => [],
             'clients' => [],
             'reports' => [],
+            'discharged_clients' => [],
         ], $ret2['added']);
         self::$em->clear();
 
@@ -290,6 +294,7 @@ class OrgServiceTest extends WebTestCase
             'named_deputies' => [],
             'clients' => [],
             'reports' => [],
+            'discharged_clients' => [],
         ], $ret2['added']);
         self::$em->clear();
         self::$em->clear();
@@ -324,6 +329,7 @@ class OrgServiceTest extends WebTestCase
             'named_deputies' => [],
             'clients' => ['00001111', '1000000t', '10002222'],
             'reports' => ['00001111-2014-12-16',  '1000000t-2015-02-05', '10002222-2015-02-04'],
+            'discharged_clients' => [],
         ], $ret1['added']);
         // add again and check no override
         $ret2 = $this->pa->addFromCasrecRows($data);
@@ -331,6 +337,7 @@ class OrgServiceTest extends WebTestCase
             'named_deputies' => [],
             'clients' => [],
             'reports' => [],
+            'discharged_clients' => [],
         ], $ret2['added']);
         self::$em->clear();
 
@@ -408,6 +415,7 @@ class OrgServiceTest extends WebTestCase
             'named_deputies' => [],
             'clients' => [],
             'reports' => [],
+            'discharged_clients' => [],
         ], $ret2['added']);
         self::$em->clear();
         self::$em->clear();
