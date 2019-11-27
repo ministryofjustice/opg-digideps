@@ -462,13 +462,12 @@ class OrgService
     /**
      * @param array            $csvRow keys: Last Report Day, Typeofrep, }
      * @param Client $client the client the report should belong to
-     * @param User   $user   the user (needed for determine the report type, dependendent on user role)
      *
      * @throws OptimisticLockException
      *
      * @return EntityDir\Report\Report
      */
-    private function upsertReportFromCsv(array $csvRow, Client $client, User $user)
+    private function upsertReportFromCsv(array $csvRow, Client $client)
     {
         // find or create reports
         $reportEndDate = ReportUtils::parseCsvDate($csvRow['Last Report Day'], '20');
