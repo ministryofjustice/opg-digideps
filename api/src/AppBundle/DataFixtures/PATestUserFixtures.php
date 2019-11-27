@@ -152,7 +152,7 @@ class PATestUserFixtures extends AbstractDataFixture
 
     public function doLoad(ObjectManager $manager)
     {
-        $this->orgService = $this->container->get('org_service');
+        $this->orgService = $this->container->get('AppBundle\Service\OrgService');
 
         $this->namedDeputyRepository = $manager->getRepository(NamedDeputy::class);
 

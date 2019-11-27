@@ -493,7 +493,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
      */
     public function doLoad(ObjectManager $manager)
     {
-        $this->orgService = $this->container->get('org_service');
+        $this->orgService = $this->container->get('AppBundle\Service\OrgService');
         $this->orgRepository = $this->container->get('AppBundle\Entity\Repository\OrganisationRepository');
         $this->orgFactory = $this->container->get('AppBundle\Factory\OrganisationFactory');
         $this->namedDeputyRepository = $manager->getRepository(NamedDeputy::class);

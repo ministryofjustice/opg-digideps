@@ -80,7 +80,7 @@ services:
     AppBundle\DataFixtures\:
         resource: '../../src/AppBundle/DataFixtures'
         tags: ['doctrine.fixture.orm']
-        arguments: ['@security.password_encoder', '@org_service']
+        arguments: ['@security.password_encoder', '@AppBundle\Service\OrgService']
 
     AppBundle\Service\DataCompression:
         class: AppBundle\Service\DataCompression
