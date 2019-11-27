@@ -78,8 +78,10 @@
                 </tr>
             {% endfor %}
         </table>
-    {% else %}
-        <p class="text push--top">To view the clients that this deputy can report on, visit their <a href="{{ path('admin_organisation_view', { id: 244 }) }}">organisation page</a></p>
+    {% elseif organisationId is defined %}
+        <p class="text push--top">{{ (page ~ '.linkToOrganisation') | trans({
+                '%organisationLinkUrl%': path('admin_organisation_view', { id: organisationId }),
+            }) | raw }}</p>
     {% endif %}
 
 

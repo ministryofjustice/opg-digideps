@@ -185,7 +185,9 @@ class IndexController extends AbstractController
         ];
 
         if ($user->isDeputyOrg()) {
-            $view['organisationId'] = $user->getOrganisations()[0]->getId();
+            if ($user->getOrganisations() && $user->getOrganisations()[0] instanceof EntityDir\Organisation) {
+                $view['organisationId'] = $user->getOrganisations()[0]->getId();
+            }
         } else {
             $view['clientsCount'] = count($user->getClients());
         }

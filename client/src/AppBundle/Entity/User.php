@@ -308,7 +308,7 @@ class User implements AdvancedUserInterface
      * @JMS\Type("array<AppBundle\Entity\Team>")
      * @JMS\Groups({"user_teams"})
      *
-     * @var array
+     * @var ArrayCollection
      */
     private $teams = [];
 
@@ -337,7 +337,7 @@ class User implements AdvancedUserInterface
      * @JMS\Type("array<AppBundle\Entity\Organisation>")
      * @JMS\Groups({"user_organisations"})
      *
-     * @var array
+     * @var ArrayCollection
      */
     private $organisations = [];
 
@@ -488,12 +488,6 @@ class User implements AdvancedUserInterface
 
     public function getClients()
     {
-        if (!empty($this->getOrganisations()) && $this->getOrganisations()[0]->isActivated()) {
-            /** @var Organisation $organisation */
-            $organisation = $this->getOrganisations()[0];
-            return $organisation->getClients();
-        }
-
         return $this->clients;
     }
 
@@ -797,10 +791,10 @@ class User implements AdvancedUserInterface
     public function hasAddressDetails()
     {
         return  !empty($this->getAddress1())
-              && !empty($this->getAddressCountry())
-              && !empty($this->getAddressPostcode())
-              && !empty($this->getPhoneMain())
-        ;
+            && !empty($this->getAddressCountry())
+            && !empty($this->getAddressPostcode())
+            && !empty($this->getPhoneMain())
+            ;
     }
 
     /**
@@ -916,7 +910,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
     public function getTeams()
     {
@@ -924,7 +918,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @param array $teams
+     * @param ArrayCollection $teams
      */
     public function setTeams($teams)
     {
@@ -1166,7 +1160,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
     public function getOrganisations()
     {
@@ -1174,7 +1168,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @param array $organisations
+     * @param ArrayCollection $organisations
      */
     public function setOrganisations($organisations)
     {
