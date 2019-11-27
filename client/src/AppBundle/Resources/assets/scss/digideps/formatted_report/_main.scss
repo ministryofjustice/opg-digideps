@@ -1,3 +1,7 @@
+// Colour variables
+$grey-review: mix($white, $black, 75%);
+$print-text: #454572;
+
 .formatted-report {
 
     @extend %contain-floats;
