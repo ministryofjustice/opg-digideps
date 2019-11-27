@@ -4,7 +4,7 @@ $print-text: #454572;
 
 .formatted-report {
 
-    @extend %contain-floats;
+    @include govuk-clearfix;
     @include govuk-font(14);
     color: $black;
     overflow: hidden;
@@ -96,12 +96,12 @@ $print-text: #454572;
     }
 
     .section {
-        @extend %contain-floats;
+        @include govuk-clearfix;
         margin-bottom: 40px;
     }
 
     .subsection {
-        @extend %contain-floats;
+        @include govuk-clearfix;
         margin-bottom: 20px;
     }
 
@@ -131,7 +131,7 @@ $print-text: #454572;
     // BOX
 
     .box {
-        @extend %contain-floats;
+        @include govuk-clearfix;
         margin: 20px 0;
         padding: 15px;
         clear: both;
@@ -156,7 +156,7 @@ $print-text: #454572;
     }
 
     .box-contain {
-        @extend %contain-floats;
+        @include govuk-clearfix;
     }
 
 
@@ -169,7 +169,7 @@ $print-text: #454572;
         padding: 0;
 
         &.inline {
-            @extend %contain-floats;
+            @include govuk-clearfix;
 
             .label,
             .value {
