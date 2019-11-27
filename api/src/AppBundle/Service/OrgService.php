@@ -10,6 +10,7 @@ use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\Entity\Repository\TeamRepository;
 use AppBundle\Entity\Repository\UserRepository;
+use AppBundle\Entity\Repository\NamedDeputyRepository;
 use AppBundle\Entity\User;
 use AppBundle\Factory\NamedDeputyFactory;
 use AppBundle\Factory\OrganisationFactory;
@@ -98,7 +99,7 @@ class OrgService
      * @var array
      */
     private $log;
-    
+
     /**
      * OrgService constructor.
      * @param EntityManager $em
@@ -108,6 +109,7 @@ class OrgService
      * @param ClientRepository $clientRepository
      * @param OrganisationRepository $orgRepository
      * @param TeamRepository $teamRepository
+     * @param NamedDeputyRepository $namedDeputyRepository
      * @param OrganisationFactory $orgFactory
      * @param NamedDeputyFactory $namedDeputyFactory
      */
@@ -119,6 +121,7 @@ class OrgService
         ClientRepository $clientRepository,
         OrganisationRepository $orgRepository,
         TeamRepository $teamRepository,
+        NamedDeputyRepository $namedDeputyRepository,
         OrganisationFactory $orgFactory,
         NamedDeputyFactory $namedDeputyFactory
     ) {
@@ -129,6 +132,7 @@ class OrgService
         $this->clientRepository = $clientRepository;
         $this->orgRepository = $orgRepository;
         $this->teamRepository = $teamRepository;
+        $this->namedDeputyRepository = $namedDeputyRepository;
         $this->orgFactory = $orgFactory;
         $this->namedDeputyFactory = $namedDeputyFactory;
         $this->log = [];

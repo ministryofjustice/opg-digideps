@@ -32,6 +32,7 @@ services:
             $clientRepository: '@AppBundle\Entity\Repository\ClientRepository'
             $orgRepository: '@AppBundle\Entity\Repository\OrganisationRepository'
             $teamRepository: '@AppBundle\Entity\Repository\TeamRepository'
+            $namedDeputyRepository: '@AppBundle\Entity\Repository\NamedDeputyRepository'
             $orgFactory: '@AppBundle\Factory\OrganisationFactory'
             $namedDeputyFactory: '@AppBundle\Factory\NamedDeputyFactory'
 
