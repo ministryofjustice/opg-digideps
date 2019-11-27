@@ -51,7 +51,7 @@ class UserRepository extends AbstractEntityRepository
     {
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT u, o FROM AppBundle\Entity\User u LEFT JOIN u.organisations o WHERE u.id = ?1')
+            ->createQuery('SELECT u, o, c FROM AppBundle\Entity\User u LEFT JOIN u.organisations o LEFT JOIN o.clients c WHERE u.id = ?1')
             ->setParameter(1, $id);
 
         $result = $query->getArrayResult();

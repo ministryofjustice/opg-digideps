@@ -32,7 +32,7 @@ class OrgDeputyTransformerDecorator
     {
         $data = $this->baseTransformer->transform($dto);
 
-        $data['organisation'] = (null === $dto->getOrganisation()) ? null : $this->transformOrganisation($dto->getOrganisation());
+        $data['organisations'] = (null === $dto->getOrganisation()) ? [] : $this->transformOrganisation($dto->getOrganisation());
 
         return $data;
     }
@@ -43,6 +43,6 @@ class OrgDeputyTransformerDecorator
      */
     private function transformOrganisation(OrganisationDto $organisationDto): array
     {
-        return $this->organisationTransformer->transform($organisationDto);
+        return [$this->organisationTransformer->transform($organisationDto)];
     }
 }

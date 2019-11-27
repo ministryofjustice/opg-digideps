@@ -148,27 +148,6 @@ class IndexController extends AbstractController
 
         $form = $this->createForm(FormDir\Admin\AddUserType::class, $user);
 
-        // the only reason we need to return clients is for this check, which is never used in the template
-        // so we could just stop returning clients, but we need a way for the endpoint to return clients at some point
-        // currently that endpoint needs to support an org based one, and a lay based one (the current one),
-        // and we need to ensure that for org users, user->getClients is a wrapper on $user->organisation->getClients()
-        // so acceptance testing here is probably simply that the current behat still works, as there will be no real difference
-        // in the template, just the api method that is called, which we can't assert for.
-        // We should hit this page as a lay and a non lay, and assert 200 on both
-        // We should also remove this unnecessary u.clients stuff - but after all has been tested as we can use it to verify
-        // the wrapper
-        $clients = $user->getClients();
-        $ndr = null;
-        $ndrForm = null;
-        if (count($clients)) {
-            $ndr = $clients[0]->getNdr();
-            if ($ndr) {
-                $ndrForm = $this->createForm(FormDir\NdrType::class, $ndr, [
-                    'action' => $this->generateUrl('admin_editNdr', ['id' => $ndr->getId()]),
-                ]);
-            }
-        }
-
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -198,20 +177,14 @@ class IndexController extends AbstractController
             }
         }
 
-        $view = [
+        return [
             'form'          => $form->createView(),
             'action'        => 'edit',
             'id'            => $user->getId(),
             'user'          => $user,
-            'clientsCount'  => count($clients),
+            'clientsCount'  => count($user->getClients()),
             'deputyBaseUrl' => $this->container->getParameter('non_admin_host'),
         ];
-
-        if ($ndr && $ndrForm) {
-            $view['ndrForm'] = $ndrForm->createView();
-        }
-
-        return $view;
     }
 
     /**

@@ -33,13 +33,13 @@ services:
       - '@PlainOrganisationAssembler'
       - '@AppBundle\v2\Assembler\DeputyAssembler'
 
-  AppBundle\v2\Assembler\DeputyAssembler\LayDeputyAssemblerDecorator:
+  AppBundle\v2\Assembler\LayDeputyAssemblerDecorator:
     class: AppBundle\v2\Assembler\LayDeputyAssemblerDecorator
     arguments:
       - '@AppBundle\v2\Assembler\DeputyAssembler'
       - '@AppBundle\v2\Assembler\ClientAssembler'
 
-  AppBundle\v2\Assembler\DeputyAssembler\OrgDeputyAssemblerDecorator:
+  AppBundle\v2\Assembler\OrgDeputyAssemblerDecorator:
     class: AppBundle\v2\Assembler\OrgDeputyAssemblerDecorator
     arguments:
       - '@AppBundle\v2\Assembler\DeputyAssembler'

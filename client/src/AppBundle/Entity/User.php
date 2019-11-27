@@ -308,7 +308,7 @@ class User implements AdvancedUserInterface
      * @JMS\Type("array<AppBundle\Entity\Team>")
      * @JMS\Groups({"user_teams"})
      *
-     * @var ArrayCollection
+     * @var array
      */
     private $teams = [];
 
@@ -337,7 +337,7 @@ class User implements AdvancedUserInterface
      * @JMS\Type("array<AppBundle\Entity\Organisation>")
      * @JMS\Groups({"user_organisations"})
      *
-     * @var ArrayCollection
+     * @var array
      */
     private $organisations = [];
 
@@ -488,6 +488,12 @@ class User implements AdvancedUserInterface
 
     public function getClients()
     {
+        if (!empty($this->getOrganisations()) && $this->getOrganisations()[0]->isActivated()) {
+            /** @var Organisation $organisation */
+            $organisation = $this->getOrganisations()[0];
+            return $organisation->getClients();
+        }
+
         return $this->clients;
     }
 
@@ -910,7 +916,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @return ArrayCollection
+     * @return array
      */
     public function getTeams()
     {
@@ -918,7 +924,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @param ArrayCollection $teams
+     * @param array $teams
      */
     public function setTeams($teams)
     {
@@ -1160,7 +1166,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @return ArrayCollection
+     * @return array
      */
     public function getOrganisations()
     {
@@ -1168,7 +1174,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @param ArrayCollection $organisations
+     * @param array $organisations
      */
     public function setOrganisations($organisations)
     {
