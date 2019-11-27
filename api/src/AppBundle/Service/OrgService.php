@@ -98,19 +98,18 @@ class OrgService
      * @var array
      */
     private $log;
-
+    
     /**
      * OrgService constructor.
      * @param EntityManager $em
      * @param LoggerInterface $logger
-     * @param OrganisationFactory $orgFactory
      * @param UserRepository $userRepository
      * @param ReportRepository $reportRepository
      * @param ClientRepository $clientRepository
      * @param OrganisationRepository $orgRepository
-     * @param OrganisationFactory $orgFactory
      * @param TeamRepository $teamRepository
      * @param OrganisationFactory $orgFactory
+     * @param NamedDeputyFactory $namedDeputyFactory
      */
     public function __construct(
         EntityManager $em,
@@ -119,8 +118,8 @@ class OrgService
         ReportRepository $reportRepository,
         ClientRepository $clientRepository,
         OrganisationRepository $orgRepository,
-        OrganisationFactory $orgFactory,
         TeamRepository $teamRepository,
+        OrganisationFactory $orgFactory,
         NamedDeputyFactory $namedDeputyFactory
     ) {
         $this->em = $em;
@@ -129,8 +128,8 @@ class OrgService
         $this->reportRepository = $reportRepository;
         $this->clientRepository = $clientRepository;
         $this->orgRepository = $orgRepository;
-        $this->orgFactory = $orgFactory;
         $this->teamRepository = $teamRepository;
+        $this->orgFactory = $orgFactory;
         $this->namedDeputyFactory = $namedDeputyFactory;
         $this->log = [];
     }
