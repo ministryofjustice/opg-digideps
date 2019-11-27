@@ -28,6 +28,12 @@ services:
     arguments:
       - AppBundle\Entity\Organisation
 
+  AppBundle\Entity\Repository\TeamRepository:
+      class: AppBundle\Entity\Team
+      factory: ["@doctrine.orm.entity_manager", getRepository]
+      arguments:
+          - AppBundle\Entity\Team
+
   AppBundle\Entity\Repository\NamedDeputyRepository:
     class: AppBundle\Entity\NamedDeputy
     factory: ["@doctrine.orm.entity_manager", getRepository]

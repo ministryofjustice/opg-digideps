@@ -25,6 +25,16 @@ use Symfony\Component\HttpFoundation\Response;
 class IndexController extends AbstractController
 {
     /**
+     * @var OrgService
+     */
+    private $orgService;
+
+    public function __construct(OrgService $orgService)
+    {
+        $this->orgService = $orgService;
+    }
+
+    /**
      * @Route("/", name="admin_homepage")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("AppBundle:Admin/Index:index.html.twig")
@@ -469,14 +479,11 @@ class IndexController extends AbstractController
                     ])
                     ->getData();
 
-                /** @var OrgService $orgService */
-                $orgService = $this->get('org_service');
-
-                $orgService->setLogging($outputStreamResponse);
+                $this->orgService->setLogging($outputStreamResponse);
 
                 $redirectUrl = $this->generateUrl('admin_org_upload');
 
-                return $orgService->process($data, $redirectUrl);
+                return $this->orgService->process($data, $redirectUrl);
             } catch (\Throwable $e) {
                 $message = $e->getMessage();
 

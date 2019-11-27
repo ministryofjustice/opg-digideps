@@ -3,10 +3,19 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Client;
+use AppBundle\Entity\Organisation;
+use AppBundle\Entity\Repository\ClientRepository;
+use AppBundle\Entity\Repository\OrganisationRepository;
+use AppBundle\Entity\Repository\ReportRepository;
+use AppBundle\Entity\Repository\TeamRepository;
+use AppBundle\Entity\Repository\UserRepository;
+use AppBundle\Entity\User;
 use AppBundle\Factory\NamedDeputyFactory;
 use AppBundle\Factory\OrganisationFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
@@ -19,9 +28,29 @@ class OrgService
     protected $em;
 
     /**
-     * @var EntityDir\Repository\OrganisationRepository
+     * @var OrganisationRepository
      */
     private $orgRepository;
+
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
+     * @var ReportRepository
+     */
+    private $reportRepository;
+
+    /**
+     * @var ClientRepository
+     */
+    private $clientRepository;
+
+    /**
+     * @var TeamRepository
+     */
+    private $teamRepository;
 
     /**
      * @var LoggerInterface
@@ -54,7 +83,7 @@ class OrgService
     protected $warnings = [];
 
     /**
-     * @var EntityDir\Organisation
+     * @var Organisation|null
      */
     private $currentOrganisation;
 
@@ -66,27 +95,44 @@ class OrgService
     private $namedDeputyRepository;
 
     /**
+     * @var array
+     */
+    private $log;
+
+    /**
      * OrgService constructor.
      * @param EntityManager $em
      * @param LoggerInterface $logger
+     * @param OrganisationFactory $orgFactory
+     * @param UserRepository $userRepository
+     * @param ReportRepository $reportRepository
+     * @param ClientRepository $clientRepository
+     * @param OrganisationRepository $orgRepository
+     * @param OrganisationFactory $orgFactory
+     * @param TeamRepository $teamRepository
      * @param OrganisationFactory $orgFactory
      */
     public function __construct(
         EntityManager $em,
         LoggerInterface $logger,
+        UserRepository $userRepository,
+        ReportRepository $reportRepository,
+        ClientRepository $clientRepository,
+        OrganisationRepository $orgRepository,
         OrganisationFactory $orgFactory,
+        TeamRepository $teamRepository,
         NamedDeputyFactory $namedDeputyFactory
     ) {
         $this->em = $em;
         $this->logger = $logger;
-        $this->userRepository = $em->getRepository(EntityDir\User::class);
-        $this->reportRepository = $em->getRepository(EntityDir\Report\Report::class);
-        $this->clientRepository = $em->getRepository(EntityDir\Client::class);
-        $this->namedDeputyRepository = $em->getRepository(EntityDir\NamedDeputy::class);
-        $this->orgRepository = $em->getRepository(EntityDir\Organisation::class);
-        $this->log = [];
+        $this->userRepository = $userRepository;
+        $this->reportRepository = $reportRepository;
+        $this->clientRepository = $clientRepository;
+        $this->orgRepository = $orgRepository;
         $this->orgFactory = $orgFactory;
+        $this->teamRepository = $teamRepository;
         $this->namedDeputyFactory = $namedDeputyFactory;
+        $this->log = [];
     }
 
     /**
@@ -114,7 +160,7 @@ class OrgService
      *     'Report Due' => '05-Feb-15',
      * ]
      *
-     * @param array $rows
+     * @param array $data
      *
      * @return array
      */
@@ -128,7 +174,6 @@ class OrgService
         foreach ($data as $index => $row) {
             $row = array_map('trim', $row);
             try {
-
                 $this->currentOrganisation = $this->orgRepository->findByEmailIdentifier($row['Email']);
                 if (null === $this->currentOrganisation) {
                     $this->currentOrganisation = $this->createOrganisationFromEmail($row['Email']);
@@ -144,7 +189,6 @@ class OrgService
                 } else {
                     throw new \RuntimeException('Client could not be identified or created');
                 }
-
             } catch (\Throwable $e) {
                 $message = 'Error for Case: ' . $row['Case'] . ' for Deputy No: ' . $row['Deputy No'] . ': ' . $e->getMessage();
                 $errors[] = $message;
@@ -166,20 +210,21 @@ class OrgService
     /**
      * @param array $csvRow
      *
-     * @return EntityDir\User
+     * @return User|null
      */
     private function upsertOrgNamedUserFromCsv(array $csvRow)
     {
         $depType = $csvRow['Dep Type'];
 
         $csvEmail = strtolower($csvRow['Email']);
-        $deputyNo = EntityDir\User::padDeputyNumber($csvRow['Deputy No']);
+        $deputyNo = User::padDeputyNumber($csvRow['Deputy No']);
         $this->log('Processing row:  deputy := deputy no: ' . $deputyNo . ', dep type: ' . $depType . ' with email ' . $csvEmail);
-        if (!isset(EntityDir\User::$depTypeIdToUserRole[$depType])) {
+        if (!isset(User::$depTypeIdToUserRole[$depType])) {
             throw new \RuntimeException('Dep Type not recognised');
         }
-        $roleName = EntityDir\User::$depTypeIdToUserRole[$depType];
+        $roleName = User::$depTypeIdToUserRole[$depType];
 
+        /** @var User|null $user */
         $user = $this->userRepository->findOneBy([
             'deputyNo' => $deputyNo,
             'roleName' => $roleName
@@ -196,6 +241,7 @@ class OrgService
         if (!$user) {
             // check for duplicate email address
 
+            /** @var User|null $userWithSameEmail */
             $userWithSameEmail = $this->userRepository->findOneBy(['email' => $csvEmail]);
             if ($userWithSameEmail) {
                 $this->log('Deputy email address already exists ');
@@ -205,7 +251,7 @@ class OrgService
             } else {
                 $this->log('Creating new deputy ' . $deputyNo);
 
-                $user = new EntityDir\User();
+                $user = new User();
                 $user
                     ->setRegistrationDate(new \DateTime())
                     ->setDeputyNo($deputyNo)
@@ -229,7 +275,7 @@ class OrgService
 
         // update user address, if not set
         // the following could be moved to line 154 if no update is needed (DDPB-2262)
-        if ($user instanceof EntityDir\User && (!empty($csvRow['Dep Adrs1']) && !$user->getAddress1())) {
+        if ($user instanceof User && (!empty($csvRow['Dep Adrs1']) && !$user->getAddress1())) {
             $user
                 ->setAddress1($csvRow['Dep Adrs1'])
                 ->setAddress2($csvRow['Dep Adrs2'])
@@ -242,7 +288,7 @@ class OrgService
         // update team name, if not set
         // can be removed if there is not need to update PA names after DDPB-1718
         // is released and one PA CSV upload is done
-        if ($user instanceof EntityDir\User && $user->getTeams()->count()
+        if ($user instanceof User && $user->getTeams()->count()
             && ($team = $user->getTeams()->first())
             && $team->getTeamName() != $csvRow['Dep Surname']
         ) {
@@ -251,7 +297,7 @@ class OrgService
             $this->em->flush($team);
         }
 
-        if ($user instanceof EntityDir\User) {
+        if ($user instanceof User) {
             $this->em->persist($user);
             $this->em->flush($user);
         }
@@ -270,7 +316,9 @@ class OrgService
 
     /**
      * @param string $email
-     * @return EntityDir\Organisation
+     * @return Organisation
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     private function createOrganisationFromEmail(string $email)
     {
@@ -282,10 +330,10 @@ class OrgService
     }
 
     /**
-     * @param EntityDir\Client $client
+     * @param Client $client
      * @return bool
      */
-    private function clientHasLayDeputy(EntityDir\Client $client)
+    private function clientHasLayDeputy(Client $client)
     {
         if (!$client->hasDeputies()) return false;
 
@@ -299,17 +347,19 @@ class OrgService
     }
 
     /**
-     * @param array          $row          keys: Case, caseNumber, Forename, Surname, Client Adrs1...
-     * @param EntityDir\User $userOrgNamed the user the client should belong to
+     * @param array $row keys: Case, caseNumber, Forename, Surname, Client Adrs1...
+     * @param User $userOrgNamed the user the client should belong to
      *
-     * @return EntityDir\Client
+     * @return Client
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     private function upsertClientFromCsv(array $row, EntityDir\NamedDeputy $namedDeputy)
     {
         // find or create client
-        $caseNumber = EntityDir\Client::padCaseNumber(strtolower($row['Case']));
+        $caseNumber = Client::padCaseNumber(strtolower($row['Case']));
 
-        /** @var EntityDir\Client $client */
+        /** @var Client|null $client */
         $client = $this->clientRepository->findOneBy(['caseNumber' => $caseNumber]);
 
         if ($client && $this->clientHasLayDeputy($client)) {
@@ -411,13 +461,14 @@ class OrgService
 
     /**
      * @param array            $csvRow keys: Last Report Day, Typeofrep, }
-     * @param EntityDir\Client $client the client the report should belong to
+     * @param Client $client the client the report should belong to
+     * @param User   $user   the user (needed for determine the report type, dependendent on user role)
      *
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws OptimisticLockException
      *
      * @return EntityDir\Report\Report
      */
-    private function upsertReportFromCsv(array $csvRow, EntityDir\Client $client)
+    private function upsertReportFromCsv(array $csvRow, Client $client, User $user)
     {
         // find or create reports
         $reportEndDate = ReportUtils::parseCsvDate($csvRow['Last Report Day'], '20');
@@ -458,17 +509,17 @@ class OrgService
     }
 
     /**
-     * @param EntityDir\User $userCreator
-     * @param $id
+     * @param User $userCreator
+     * @param string $id
      *
      * @throws AccessDeniedException if user not part of the team the creator user belongs to
      *
-     * @return EntityDir\User|null|object
+     * @return User|null|object
      *
      */
-    public function getMemberById(EntityDir\User $userCreator, $id)
+    public function getMemberById(User $userCreator, string $id)
     {
-        $user = $this->em->getRepository(EntityDir\User::class)->find($id);
+        $user = $this->userRepository->find($id);
         if (!array_key_exists($id, $userCreator->getMembersInAllTeams())) {
             throw new AccessDeniedException('User not part of the same team');
         }
@@ -477,34 +528,28 @@ class OrgService
     }
 
     /**
-     * @param EntityDir\User $userWithTeams
-     * @param EntityDir\User $userBeingAdded
+     * @param User $userWithTeams
+     * @param User $userBeingAdded
      */
-    public function addUserToUsersTeams(EntityDir\User $userWithTeams, EntityDir\User $userBeingAdded)
+    public function addUserToUsersTeams(User $userWithTeams, User $userBeingAdded)
     {
-        $teamIds = $this->em->getRepository('AppBundle\Entity\Team')->findAllTeamIdsByUser($userWithTeams);
+        $teamIds = $this->teamRepository->findAllTeamIdsByUser($userWithTeams);
 
         foreach ($teamIds as $teamId) {
-            $this
-                ->em
-                ->getRepository('AppBundle\Entity\Client')
-                ->saveUserToTeam($userBeingAdded, $teamId);
+            $this->clientRepository->saveUserToTeam($userBeingAdded, $teamId);
         }
     }
 
     /**
-     * @param EntityDir\User $userWithClients
-     * @param EntityDir\User $userBeingAdded
+     * @param User $userWithClients
+     * @param User $userBeingAdded
      */
-    public function addUserToUsersClients(EntityDir\User $userWithClients, EntityDir\User $userBeingAdded)
+    public function addUserToUsersClients(User $userWithClients, User $userBeingAdded)
     {
-        $clientIds = $this->em->getRepository('AppBundle\Entity\Client')->findAllClientIdsByUser($userWithClients);
+        $clientIds = $this->clientRepository->findAllClientIdsByUser($userWithClients);
 
         foreach ($clientIds as $clientId) {
-            $this
-                ->em
-                ->getRepository('AppBundle\Entity\Client')
-                ->saveUserToClient($userBeingAdded, $clientId);
+            $this->clientRepository->saveUserToClient($userBeingAdded, $clientId);
         }
     }
 
@@ -512,12 +557,12 @@ class OrgService
      * Delete $user from all the teams $loggedInUser belongs to
      * Also removes the user, if doesn't belong to any team any longer
      *
-     * @param EntityDir\User $loggedInUser
-     * @param EntityDir\User $user
+     * @param User $loggedInUser
+     * @param User $user
      *
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws OptimisticLockException
      */
-    public function removeUserFromTeamsOf(EntityDir\User $loggedInUser, EntityDir\User $user)
+    public function removeUserFromTeamsOf(User $loggedInUser, User $user)
     {
         // remove user from teams the logged-user (operation performer) belongs to
         foreach ($loggedInUser->getTeams() as $team) {
@@ -539,9 +584,9 @@ class OrgService
     }
 
     /**
-     * @param $message
+     * @param string $message
      */
-    private function log($message)
+    private function log(string $message)
     {
         if ($this->debug) {
             $this->logger->warning(__CLASS__ . ':' . $message);
@@ -584,12 +629,14 @@ class OrgService
     }
 
     /**
-     * @param EntityDir\Client $client
+     * @param Client $client
      */
-    private function attachClientToOrganisation(EntityDir\Client $client): void
+    private function attachClientToOrganisation(Client $client): void
     {
-        $this->currentOrganisation->addClient($client);
-        $client->setOrganisation($this->currentOrganisation);
+        if ($this->currentOrganisation !== null) {
+            $this->currentOrganisation->addClient($client);
+            $client->setOrganisation($this->currentOrganisation);
+        }
     }
 
     /**
