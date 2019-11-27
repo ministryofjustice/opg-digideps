@@ -1,7 +1,7 @@
 .formatted-report {
 
     @extend %contain-floats;
-    @include core-14();
+    @include govuk-font(14);
     color: $black;
     overflow: hidden;
     box-sizing: border-box;
@@ -42,7 +42,7 @@
     // BASE ELEMENTS
 
     h1 {
-        @include bold-48();
+        @include govuk-font(48, $weight: bold);
         width: 600px;
     }
 
@@ -53,8 +53,8 @@
 
 
     h2 {
+        @include govuk-font(24);
         clear: both;
-        @include core-24();
 
         &.section-heading {
             padding-bottom: 10px;
@@ -63,7 +63,7 @@
     }
 
     h3 {
-        @include bold-19();
+        @include govuk-font(19, $weight: bold);
     }
 
     // Utility
@@ -111,13 +111,13 @@
     .balance {
 
         .message {
+            @include govuk-font(19);
             height: 35px;
-            @include core-19();
             text-align: center;
         }
 
         .total {
-            @include bold-19();
+            @include govuk-font(19, $weight: bold);
             text-align: center;
         }
     }
@@ -194,10 +194,10 @@
     }
 
     .label {
-        @include core-16();
+        @include govuk-font(16);
 
         &.bigger {
-            @include core-19();
+            @include govuk-font(19);
         }
 
         &.bold {
@@ -206,7 +206,7 @@
     }
 
     .value {
-        @include core-16();
+        @include govuk-font(16);
 
         min-height: 34px;
         margin: 2px 0 15px 0;
@@ -232,7 +232,7 @@
         }
 
         &.total {
-            @include bold-16();
+            @include govuk-font(16, $weight: bold);
 
             border-width: 2px;
             text-align: right;
@@ -244,9 +244,9 @@
     }
 
     .checkbox {
+        @include govuk-font(14, $weight: bold);
         display: -moz-inline-stack;
         display: inline-block;
-        @include bold-14();
         width: .75em;
         margin: 10px 5px 10px 0;
         padding: 4px 10px 2px 10px;
@@ -356,7 +356,7 @@
         border-spacing: 0;
 
         td {
-            @include core-16();
+            @include govuk-font(16);
             padding: em(6, 12) em(20, 12) em(6, 12) 0;
             border-bottom: 1px solid $border-colour;
             color: $black;
@@ -364,7 +364,7 @@
         }
 
         th {
-            @include core-16();
+            @include govuk-font(16);
             padding: em(12, 12) 0 em(9, 12) 0;
             border-bottom: 1px solid $border-colour;
             color: $black;
@@ -378,12 +378,12 @@
 
         // Use tabular numbers for numeric table cells
         td.numeric {
-            @include core-16();
+            @include govuk-font(16);
             text-align: right;
         }
 
         tr.totals td {
-            @include core-16();
+            @include govuk-font(16);
             padding: em(6, 18) 20px em(9, 18) 0;
             border-bottom: 0;
         }
@@ -425,12 +425,12 @@
         }
 
         th {
-            @include bold-16();
+            @include govuk-font(16, $weight: bold);
             border-bottom: 1px solid $black !important;
         }
 
         td {
-            @include core-16();
+            @include govuk-font(16);
             color: $print-text;
         }
     }
