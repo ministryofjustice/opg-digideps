@@ -59,19 +59,19 @@ class ClientTransformer
             'total_report_count' => $dto->getReportCount()
         ];
 
-        if (!in_array('reports', $exclude)) {
+        if ($this->reportTransformer && !in_array('reports', $exclude)) {
             $transformed['reports'] = $this->transformReports($dto->getReports());
         }
 
-        if (!in_array('ndr', $exclude) && $dto->getNdr() instanceof NdrDto) {
+        if ($this->ndrTransformer && !in_array('ndr', $exclude) && $dto->getNdr() instanceof NdrDto) {
             $transformed['ndr'] = $this->transformNdr($dto->getNdr());
         }
 
-        if (!in_array('organisation', $exclude) && $dto->getOrganisation() !== null) {
+        if ($this->organisationTransformer && !in_array('organisation', $exclude) && $dto->getOrganisation() !== null) {
             $transformed['organisation'] = $this->transformOrganisation($dto->getOrganisation());
         }
 
-        if (!in_array('namedDeputy', $exclude) && $dto->getNamedDeputy() instanceof DeputyDto) {
+        if ($this->deputyTransformer && !in_array('namedDeputy', $exclude) && $dto->getNamedDeputy() instanceof DeputyDto) {
             $transformed['named_deputy'] = $this->transformDeputy($dto->getNamedDeputy());
         }
 

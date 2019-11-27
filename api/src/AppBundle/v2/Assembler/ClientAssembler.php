@@ -54,7 +54,7 @@ class ClientAssembler
         $exclude = ['ndr', 'reports', 'namedDeputy'];
         $this->setPropertiesFromData($dto, $data, $exclude);
 
-        if (isset($data['ndr']) && is_array($data['ndr'])) {
+        if ($this->ndrDtoAssembler && isset($data['ndr']) && is_array($data['ndr'])) {
             $dto->setNdr($this->assembleClientNdr($data['ndr']));
         }
 
@@ -63,11 +63,11 @@ class ClientAssembler
             $dto->setReportCount(count($data['reports']));
         }
 
-        if (isset($data['organisation']) && is_array($data['organisation'])) {
+        if ($this->organisationDtoAssembler && ($data['organisation']) && is_array($data['organisation'])) {
             $dto->setOrganisation($this->assembleClientOrganisation($data['organisation']));
         }
 
-        if (isset($data['namedDeputy']) && is_array($data['namedDeputy'])) {
+        if ($this->deputyDtoAssembler && isset($data['namedDeputy']) && is_array($data['namedDeputy'])) {
             $dto->setNamedDeputy($this->assembleClientDeputy($data['namedDeputy']));
         }
 
