@@ -7,6 +7,8 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Exception\DisplayableException;
+use AppBundle\Exception\ReportNotSubmittableException;
+use AppBundle\Exception\ReportNotSubmittedException;
 use AppBundle\Form\FeedbackReportType;
 use AppBundle\Form\Report\ReportDeclarationType;
 use AppBundle\Form\Report\ReportType;
@@ -328,7 +330,8 @@ class ReportController extends AbstractController
         // check status
         $status = $report->getStatus();
         if (!$report->isDue() || !$status->getIsReadyToSubmit()) {
-            throw $this->createNotFoundException($translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators'));
+            $message = $translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators');
+            throw new ReportNotSubmittableException($message);
         }
 
         $user = $this->getUserWithData();
@@ -372,7 +375,8 @@ class ReportController extends AbstractController
 
         // check status
         if (!$report->getSubmitted()) {
-            throw $this->createNotFoundException($translator->trans('report.submissionExceptions.submitted', [], 'validators'));
+            $message = $translator->trans('report.submissionExceptions.submitted', [], 'validators');
+            throw new ReportNotSubmittedException($message);
         }
 
         $form = $this->createForm(FeedbackReportType::class, new FeedbackReport());
@@ -413,7 +417,8 @@ class ReportController extends AbstractController
 
         // check status
         if (!$report->getSubmitted()) {
-            throw $this->createNotFoundException($translator->trans('report.submissionExceptions.submitted', [], 'validators'));
+            $message = $translator->trans('report.submissionExceptions.submitted', [], 'validators');
+            throw new ReportNotSubmittedException($message);
         }
 
         return [
