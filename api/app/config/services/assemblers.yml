@@ -23,7 +23,7 @@ services:
       - '@AppBundle\v2\Assembler\Report\ReportSummaryAssembler'
       - '@AppBundle\v2\Assembler\NdrAssembler'
       - '@PlainOrganisationAssembler'
-      - '@AppBundle\v2\Assembler\DeputyAssembler'
+      - '@AppBundle\v2\Assembler\BaseDeputyAssembler'
 
   ClientAssemblerFromReportEntity:
     class: AppBundle\v2\Assembler\ClientAssembler
@@ -31,27 +31,27 @@ services:
       - '@AppBundle\v2\Assembler\Report\FullReportAssembler'
       - '@AppBundle\v2\Assembler\NdrAssembler'
       - '@PlainOrganisationAssembler'
-      - '@AppBundle\v2\Assembler\DeputyAssembler'
+      - '@AppBundle\v2\Assembler\BaseDeputyAssembler'
 
   AppBundle\v2\Assembler\LayDeputyAssemblerDecorator:
     class: AppBundle\v2\Assembler\LayDeputyAssemblerDecorator
     arguments:
-      - '@AppBundle\v2\Assembler\DeputyAssembler'
+      - '@AppBundle\v2\Assembler\BaseDeputyAssembler'
       - '@AppBundle\v2\Assembler\ClientAssembler'
 
   AppBundle\v2\Assembler\OrgDeputyAssemblerDecorator:
     class: AppBundle\v2\Assembler\OrgDeputyAssemblerDecorator
     arguments:
-      - '@AppBundle\v2\Assembler\DeputyAssembler'
-      - '@AppBundle\v2\Assembler\OrganisationAssembler'
+      - '@AppBundle\v2\Assembler\BaseDeputyAssembler'
+      - '@PlainOrganisationAssembler'
 
-  AppBundle\v2\Assembler\DeputyAssembler:
+  AppBundle\v2\Assembler\BaseDeputyAssembler:
     class: AppBundle\v2\Assembler\DeputyAssembler
 
   AppBundle\v2\Assembler\OrganisationAssembler:
     class: AppBundle\v2\Assembler\OrganisationAssembler
     arguments:
-      - '@AppBundle\v2\Assembler\DeputyAssembler'
+      - '@AppBundle\v2\Assembler\BaseDeputyAssembler'
       - '@AppBundle\v2\Assembler\ClientAssembler'
 
   PlainOrganisationAssembler:

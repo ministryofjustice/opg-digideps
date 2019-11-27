@@ -28,8 +28,7 @@ services:
       - '@AppBundle\Entity\Repository\UserRepository'
       - '@AppBundle\v2\Assembler\LayDeputyAssemblerDecorator'
       - '@AppBundle\v2\Assembler\OrgDeputyAssemblerDecorator'
-      - '@AppBundle\v2\Transformer\LayDeputyTransformerDecorator'
-      - '@AppBundle\v2\Transformer\OrgDeputyTransformerDecorator'
+      - '@AppBundle\v2\Transformer\DeputyTransformer'
     public: true
 
   AppBundle\v2\Controller\ClientController:

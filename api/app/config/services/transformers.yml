@@ -15,23 +15,17 @@ services:
     arguments:
       - '@AppBundle\v2\Transformer\ReportTransformer'
       - '@AppBundle\v2\Transformer\NdrTransformer'
-      - '@PlainOrganisationTransformer'
+      - '@AppBundle\v2\Transformer\BaseOrganisationTransformer'
       - '@AppBundle\v2\Transformer\DeputyTransformer'
 
-  AppBundle\v2\Transformer\LayDeputyTransformerDecorator:
-    class: AppBundle\v2\Transformer\LayDeputyTransformerDecorator
-    arguments:
-      - '@AppBundle\v2\Transformer\DeputyTransformer'
-      - '@AppBundle\v2\Transformer\ClientTransformer'
-
-  AppBundle\v2\Transformer\OrgDeputyTransformerDecorator:
-    class: AppBundle\v2\Transformer\OrgDeputyTransformerDecorator
-    arguments:
-      - '@AppBundle\v2\Transformer\DeputyTransformer'
-      - '@AppBundle\v2\Transformer\OrganisationTransformer'
+  AppBundle\v2\Transformer\BaseClientTransformer:
+    class: AppBundle\v2\Transformer\ClientTransformer
 
   AppBundle\v2\Transformer\DeputyTransformer:
     class: AppBundle\v2\Transformer\DeputyTransformer
+    arguments:
+      - '@AppBundle\v2\Transformer\BaseClientTransformer'
+      - '@AppBundle\v2\Transformer\BaseOrganisationTransformer'
 
   AppBundle\v2\Transformer\OrganisationTransformer:
     class: AppBundle\v2\Transformer\OrganisationTransformer
@@ -39,6 +33,6 @@ services:
       - '@AppBundle\v2\Transformer\DeputyTransformer'
       - '@AppBundle\v2\Transformer\ClientTransformer'
 
-  PlainOrganisationTransformer:
+  AppBundle\v2\Transformer\BaseOrganisationTransformer:
     class: AppBundle\v2\Transformer\OrganisationTransformer
 

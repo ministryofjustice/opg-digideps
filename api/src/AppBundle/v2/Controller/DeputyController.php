@@ -34,30 +34,24 @@ class DeputyController
     private $orgAssembler;
 
     /** @var LayDeputyTransformerDecorator */
-    private $layTransformer;
-
-    /** @var OrgDeputyTransformerDecorator */
-    private $orgTransformer;
+    private $transformer;
 
     /**
      * @param UserRepository $repository
      * @param LayDeputyAssemblerDecorator $layAssembler
      * @param OrgDeputyAssemblerDecorator $orgAssembler
-     * @param LayDeputyTransformerDecorator $layTransformer
-     * @param OrgDeputyTransformerDecorator $orgTransformer
+     * @param DeputyTransformer $transformer
      */
     public function __construct(
         UserRepository $repository,
         LayDeputyAssemblerDecorator $layAssembler,
         OrgDeputyAssemblerDecorator $orgAssembler,
-        LayDeputyTransformerDecorator $layTransformer,
-        OrgDeputyTransformerDecorator $orgTransformer
+        DeputyTransformer $transformer
     ) {
         $this->repository = $repository;
         $this->layAssembler = $layAssembler;
         $this->orgAssembler = $orgAssembler;
-        $this->layTransformer = $layTransformer;
-        $this->orgTransformer = $orgTransformer;
+        $this->transformer = $transformer;
     }
 
     /**
@@ -68,38 +62,26 @@ class DeputyController
      */
     public function getByIdAction(int $id): JsonResponse
     {
-        if (null === ($roleOfRequestedUser = $this->repository->getColumnById('roleName', $id))) {
+        /** @var array $user */
+        if (null === ($user = $this->repository->findUserArrayById($id))) {
             throw new NotFoundHttpException(sprintf('Deputy id %s not found', $id));
         }
 
-        $transformedDto = User::ROLE_LAY_DEPUTY === $roleOfRequestedUser
-            ? $this->buildTransformedLayUserData($id)
-            : $this->buildTransformedOrgUserData($id);
+        /** @var DeputyDto $dto */
+        $dto = $this->determineAssembler($user)->assembleFromArray($user);
+
+        /** @var array $transformedDto */
+        $transformedDto = $this->transformer->transform($dto);
 
         return $this->buildSuccessResponse($transformedDto);
     }
 
     /**
-     * @param int $id
-     * @return array
+     * @param array $user
+     * @return LayDeputyAssemblerDecorator|OrgDeputyAssemblerDecorator
      */
-    private function buildTransformedLayUserData(int $id): array
+    private function determineAssembler(array $user)
     {
-        $data = $this->repository->findLayUserArrayById($id);
-        $dto = $this->layAssembler->assembleFromArray($data);
-
-        return $this->layTransformer->transform($dto);
-    }
-
-    /**
-     * @param int $id
-     * @return array
-     */
-    private function buildTransformedOrgUserData(int $id): array
-    {
-        $data = $this->repository->findOrgUserArrayById($id);
-        $dto = $this->orgAssembler->assembleFromArray($data);
-
-        return $this->orgTransformer->transform($dto);
+        return ($user['roleName'] === User::ROLE_LAY_DEPUTY) ? $this->layAssembler : $this->orgAssembler;
     }
 }

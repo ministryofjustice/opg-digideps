@@ -9,9 +9,11 @@
 
 {% block pageContent %}
 
-    {% set numberOfClients = user.clients | length %}
-    {% set firstClient = numberOfClients > 0 ? (user.clients | first) : null %}
-    {% set reportsCount = firstClient ? firstClient.totalReportCount : 0 %}
+    {% if 'ROLE_LAY_DEPUTY' == user.roleName %}
+        {% set numberOfClients = user.clients | length %}
+        {% set firstClient = numberOfClients > 0 ? (user.clients | first) : null %}
+        {% set reportsCount = firstClient ? firstClient.totalReportCount : 0 %}
+    {% endif %}
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
@@ -38,7 +40,7 @@
         ]
     }) }}
 
-    {% if reportsCount > 0 %}
+    {% if 'ROLE_LAY_DEPUTY' == user.roleName and reportsCount > 0 %}
         <p class="text">{{ 'editUserForm.reportsExist' | trans }}</p>
     {% endif %}
 
@@ -54,8 +56,9 @@
             } %}
         {% endif %}
     {% endif %}
+    {{ form_end(form) }}
 
-    {% if numberOfClients > 0 %}
+    {% if 'ROLE_LAY_DEPUTY' == user.roleName and numberOfClients > 0 %}
         <h2 class="heading-medium">{{ (page ~ '.clientTable.heading') | trans }}</h2>
         <table class="width-two-thirds">
             <thead>
@@ -75,9 +78,10 @@
                 </tr>
             {% endfor %}
         </table>
+    {% else %}
+        <p class="text push--top">To view the clients that this deputy can report on, visit their <a href="{{ path('admin_organisation_view', { id: 244 }) }}">organisation page</a></p>
     {% endif %}
 
-    {{ form_end(form) }}
 
     {% if action is defined %}
         {% if action == 'edit' %}

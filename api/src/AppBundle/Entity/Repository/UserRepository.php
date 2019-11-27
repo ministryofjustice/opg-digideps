@@ -12,46 +12,14 @@ class UserRepository extends AbstractEntityRepository
     private $qb;
 
     /**
-     * @param string $column
-     * @param int $id
-     * @return string
-     */
-    public function getColumnById(string $column, int $id): ?string
-    {
-        $result = $this
-            ->getEntityManager()
-            ->createQuery("SELECT u." .$column." FROM AppBundle\Entity\User u WHERE u.id = ?1")
-            ->setParameter(1, $id)
-            ->getScalarResult();
-
-        return array_column($result, "roleName")[0];
-    }
-
-    /**
      * @param int $id
      * @return null|array
      */
-    public function findLayUserArrayById($id)
+    public function findUserArrayById($id)
     {
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT u, c, r FROM AppBundle\Entity\User u LEFT JOIN u.clients c LEFT JOIN c.reports r WHERE u.id = ?1 ORDER BY c.id')
-            ->setParameter(1, $id);
-
-        $result = $query->getArrayResult();
-
-        return count($result) === 0 ? null : $result[0];
-    }
-
-    /**
-     * @param int $id
-     * @return null|array
-     */
-    public function findOrgUserArrayById($id)
-    {
-        $query = $this
-            ->getEntityManager()
-            ->createQuery('SELECT u, o, c FROM AppBundle\Entity\User u LEFT JOIN u.organisations o LEFT JOIN o.clients c WHERE u.id = ?1')
+            ->createQuery('SELECT u, c, r, o FROM AppBundle\Entity\User u LEFT JOIN u.clients c LEFT JOIN c.reports r LEFT JOIN u.organisations o WHERE u.id = ?1 ORDER BY c.id')
             ->setParameter(1, $id);
 
         $result = $query->getArrayResult();

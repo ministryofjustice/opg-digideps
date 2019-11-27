@@ -147,7 +147,6 @@ class IndexController extends AbstractController
         }
 
         $form = $this->createForm(FormDir\Admin\AddUserType::class, $user);
-
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -177,14 +176,21 @@ class IndexController extends AbstractController
             }
         }
 
-        return [
+        $view = [
             'form'          => $form->createView(),
             'action'        => 'edit',
             'id'            => $user->getId(),
             'user'          => $user,
-            'clientsCount'  => count($user->getClients()),
             'deputyBaseUrl' => $this->container->getParameter('non_admin_host'),
         ];
+
+        if ($user->isDeputyOrg()) {
+            $view['organisationId'] = $user->getOrganisations()[0]->getId();
+        } else {
+            $view['clientsCount'] = count($user->getClients());
+        }
+
+        return $view;
     }
 
     /**

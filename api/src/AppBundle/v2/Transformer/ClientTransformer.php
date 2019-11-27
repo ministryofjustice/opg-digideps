@@ -30,10 +30,10 @@ class ClientTransformer
      * @param DeputyTransformer $deputyTransformer
      */
     public function __construct(
-        ReportTransformer $reportTransformer,
-        NdrTransformer $ndrTransformer,
-        OrganisationTransformer $organisationTransformer,
-        DeputyTransformer $deputyTransformer
+        ReportTransformer $reportTransformer = null,
+        NdrTransformer $ndrTransformer = null,
+        OrganisationTransformer $organisationTransformer = null,
+        DeputyTransformer $deputyTransformer = null
     ) {
         $this->reportTransformer = $reportTransformer;
         $this->ndrTransformer = $ndrTransformer;
