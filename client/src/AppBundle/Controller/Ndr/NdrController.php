@@ -3,8 +3,10 @@
 namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
+use AppBundle\Exception\ReportNotSubmittableException;
+use AppBundle\Exception\ReportNotSubmittedException;
+use AppBundle\Exception\ReportSubmittedException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
 use AppBundle\Service\File\FileUploader;
@@ -99,7 +101,7 @@ class NdrController extends AbstractController
 
         $ndr = $client->getNdr();
         if ($ndr->getSubmitted()) {
-            throw $this->createNotFoundException('Report already submitted and not editable.');
+            throw new ReportSubmittedException();
         }
         $ndrStatus = new NdrStatusService($ndr);
 
@@ -201,10 +203,10 @@ class NdrController extends AbstractController
         // check status
         $ndrStatus = new NdrStatusService($ndr);
         if (!$ndrStatus->isReadyToSubmit()) {
-            throw $this->createNotFoundException('Report not ready for submission');
+            throw new ReportNotSubmittableException();
         }
         if ($ndr->getSubmitted()) {
-            throw $this->createNotFoundException('Report already submitted and not editable.');
+            throw new ReportSubmittedException();
         }
 
         $user = $this->getUserWithData(['user-clients', 'client']);
@@ -275,7 +277,7 @@ class NdrController extends AbstractController
         $ndr->setClient($client);
 
         if (!$ndr->getSubmitted()) {
-            throw $this->createNotFoundException('Report not submitted');
+            throw new ReportNotSubmittedException();
         }
 
         $ndrStatus = new NdrStatusService($ndr);
@@ -328,7 +330,7 @@ class NdrController extends AbstractController
         $ndr->setClient($client);
 
         if (!$ndr->getSubmitted()) {
-            throw $this->createNotFoundException('Report not submitted');
+            throw new ReportNotSubmittedException();
         }
 
         $ndrStatus = new NdrStatusService($ndr);

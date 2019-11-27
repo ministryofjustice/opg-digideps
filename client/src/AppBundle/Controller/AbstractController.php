@@ -7,6 +7,7 @@ use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Exception\DisplayableException;
+use AppBundle\Exception\ReportSubmittedException;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Mailer\MailFactory;
@@ -128,7 +129,7 @@ abstract class AbstractController extends Controller
         }
 
         if ($report->getSubmitted()) {
-            throw $this->createNotFoundException('Report already submitted and not editable.');
+            throw new ReportSubmittedException();
         }
 
         return $report;
@@ -162,7 +163,7 @@ abstract class AbstractController extends Controller
     {
         $report = $this->getNdr($reportId, $groups);
         if ($report->getSubmitted()) {
-            throw $this->createNotFoundException('New deputy report already submitted and not editable.');
+            throw new ReportSubmittedException();
         }
 
         return $report;
