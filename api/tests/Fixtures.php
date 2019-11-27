@@ -3,6 +3,7 @@
 namespace Tests;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
@@ -102,12 +103,13 @@ class Fixtures
     }
 
     /**
-     * @param EntityDir\ReportInterface $report
+     * @param mixed $report
      * @param string $filename
      *
      * @return EntityDir\Report\Document
+     * @throws \Doctrine\ORM\ORMException
      */
-    public function createDocument(EntityDir\ReportInterface $report, string $filename)
+    public function createDocument($report, string $filename)
     {
         $doc = new EntityDir\Report\Document($report);
         $doc->setFileName($filename);
@@ -325,18 +327,36 @@ class Fixtures
 
     /**
      * @param int $amount
+     * @return array
      * @throws \Doctrine\ORM\ORMException
      */
-    public function createOrganisations(int $amount)
+    public function createOrganisations(int $amount): array
     {
+        $orgs = [];
         for ($i = 1; $i <= $amount; $i++) {
-            $org = new EntityDir\Organisation();
-            $org->setName(sprintf('Org %d', $i));
-            $org->setEmailIdentifier(sprintf('org_email_%d', $i));
-            $org->setIsActivated(true);
-
-            $this->em->persist($org);
+            $orgs[] = $this->createOrganisation(sprintf('Org %d', $i), sprintf('org_email_%d', $i), true);
         }
+
+        return $orgs;
+    }
+
+    /**
+     * @param string $name
+     * @param string $identifier
+     * @param bool $isActive
+     * @return Organisation
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function createOrganisation(string $name, string $identifier, bool $isActive): Organisation
+    {
+        $org = new EntityDir\Organisation();
+        $org->setName($name);
+        $org->setEmailIdentifier($identifier);
+        $org->setIsActivated($isActive);
+
+        $this->em->persist($org);
+
+        return $org;
     }
 
     /**
@@ -353,7 +373,22 @@ class Fixtures
         $user = $this->em->getRepository(User::class)->find($userId);
 
         $org->addUser($user);
-        $this->em->persist($org);
+    }
+
+    /**
+     * @param int $clientId
+     * @param int $orgId
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function addClientToOrganisation(int $clientId, int $orgId): void
+    {
+        /** @var Organisation $org */
+        $org = $this->em->getRepository(Organisation::class)->find($orgId);
+
+        /** @var Client $client */
+        $client = $this->em->getRepository(Client::class)->find($clientId);
+
+        $client->setOrganisation($org);
     }
 
     public function flush()
@@ -416,11 +451,11 @@ class Fixtures
     }
 
     /**
-     * @param Report $report
+     * @param EntityDir\Report\Report $report
      * @param string $section
      * @return array
      */
-    public function getReportFreshSectionStatus(Report $report, string $section)
+    public function getReportFreshSectionStatus(EntityDir\Report\Report $report, string $section)
     {
         return $this->getReportById($report->getId())->getStatus()->getSectionStateNotCached($section);
     }

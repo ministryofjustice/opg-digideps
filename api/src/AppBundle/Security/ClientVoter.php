@@ -74,14 +74,28 @@ class ClientVoter extends Voter
             return true;
         }
 
+        if ($user->isLayDeputy()) {
+            return in_array($user->getId(), $client->getUserIds());
+        }
+
         if ($client->userBelongsToClientsOrganisation($user)) {
             return true;
         }
 
-        if (in_array($user->getId(), $client->getUserIds())) {
+        // todo-aie remove post DDPB-3050, when all access should be denied if ! userBelongsToClientsOrganisation
+        if (!$this->clientsOrganisationActive($client) && in_array($user->getId(), $client->getUserIds())) {
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * @param Client $client
+     * @return bool
+     */
+    private function clientsOrganisationActive(Client $client): bool
+    {
+        return $client->getOrganisation()->isActivated();
     }
 }

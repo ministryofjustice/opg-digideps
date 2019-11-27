@@ -48,6 +48,12 @@ class NoteControllerTest extends AbstractTestController
         self::$pa3 = self::fixtures()->getRepo('User')->findOneByEmail('pa_team_member@example.org');
         self::$pa3Client1 = self::fixtures()->createClient(self::$pa3, ['setFirstname' => 'pa2Client1']);
 
+        $org = self::fixtures()->createOrganisation('Example', 'example4324.org', true);
+        self::fixtures()->flush();
+        self::fixtures()->addClientToOrganisation(self::$pa1Client1->getId(), $org->getId());
+        self::fixtures()->addUserToOrganisation(self::$pa1->getId(), $org->getId());
+        self::fixtures()->addUserToOrganisation(self::$pa2->getId(), $org->getId());
+
         self::fixtures()->flush()->clear();
     }
 

@@ -73,6 +73,11 @@ class ClientControllerTest extends AbstractTestController
         // prof
         self::$prof1 = self::fixtures()->getRepo('User')->findOneByEmail('prof@example.org');
 
+        $org = self::fixtures()->createOrganisation('Example', 'example9543.org', true);
+        self::fixtures()->flush();
+        self::fixtures()->addClientToOrganisation(self::$pa1Client1->getId(), $org->getId());
+        self::fixtures()->addUserToOrganisation(self::$pa1->getId(), $org->getId());
+
         self::fixtures()->flush()->clear();
     }
 
