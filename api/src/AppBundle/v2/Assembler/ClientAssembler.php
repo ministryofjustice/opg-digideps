@@ -63,7 +63,7 @@ class ClientAssembler
             $dto->setReportCount(count($data['reports']));
         }
 
-        if ($this->organisationDtoAssembler && ($data['organisation']) && is_array($data['organisation'])) {
+        if ($this->organisationDtoAssembler && isset($data['organisation']) && is_array($data['organisation'])) {
             $dto->setOrganisation($this->assembleClientOrganisation($data['organisation']));
         }
 

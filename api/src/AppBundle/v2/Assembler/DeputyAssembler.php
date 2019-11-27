@@ -5,25 +5,25 @@ namespace AppBundle\v2\Assembler;
 use AppBundle\v2\DTO\DeputyDto;
 use AppBundle\v2\DTO\DtoPropertySetterTrait;
 use AppBundle\Entity\User;
-use AppBundle\v2\DTO\OrganisationDto;
 
 class DeputyAssembler
 {
     use DtoPropertySetterTrait;
 
-    /** @var DeputyAssembler  */
-    private $parentAssembler;
-
-    /** @var ClientAssembler */
-    private $clientAssembler;
+    /** @var ClientAssembler  */
+    private $clientDtoAssembler;
 
     /** @var OrganisationAssembler */
-    private $organisationAssembler;
+    private $organisationDtoAssembler;
 
-    public function __construct(ClientAssembler $clientAssembler, OrganisationAssembler $organisationAssembler)
+    /**
+     * @param ClientAssembler $clientDtoAssembler
+     * @param OrganisationAssembler $organisationDtoAssembler
+     */
+    public function __construct(ClientAssembler $clientDtoAssembler, OrganisationAssembler $organisationDtoAssembler)
     {
-        $this->clientAssembler = $clientAssembler;
-        $this->organisationAssembler = $organisationAssembler;
+        $this->clientDtoAssembler = $clientDtoAssembler;
+        $this->organisationDtoAssembler = $organisationDtoAssembler;
     }
 
     /**
@@ -48,30 +48,6 @@ class DeputyAssembler
     }
 
     /**
-     * @param array $clients
-     * @return array
-     */
-    private function assembleDeputyClients(array $clients)
-    {
-        $dtos = [];
-
-        foreach ($clients as $client) {
-            $dtos[] = $this->clientAssembler->assembleFromArray($client);
-        }
-
-        return $dtos;
-    }
-
-    /**
-     * @param array $organisation
-     * @return OrganisationDto
-     */
-    private function assembleDeputyOrganisation(array $organisation)
-    {
-        return $this->organisationAssembler->assembleFromArray($organisation);
-    }
-
-    /**
      * @param User $deputy
      * @return DeputyDto
      */
@@ -91,5 +67,29 @@ class DeputyAssembler
         $dto->setPhoneMain($deputy->getPhoneMain());
 
         return $dto;
+    }
+
+    /**
+     * @param array $clients
+     * @return array
+     */
+    private function assembleDeputyClients(array $clients)
+    {
+        $dtos = [];
+
+        foreach ($clients as $client) {
+            $dtos[] = $this->clientDtoAssembler->assembleFromArray($client);
+        }
+
+        return $dtos;
+    }
+
+    /**
+     * @param array $organisation
+     * @return OrganisationDto
+     */
+    private function assembleDeputyOrganisation(array $organisation)
+    {
+        return $this->organisationDtoAssembler->assembleFromArray($organisation);
     }
 }
