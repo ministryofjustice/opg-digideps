@@ -90,6 +90,17 @@ class ReportControllerTest extends AbstractTestController
         self::$pa3Client1 = self::fixtures()->createClient(self::$pa3TeamMember, ['setFirstname' => 'pa3Client1']);
         self::$pa3Client1Report1 = self::fixtures()->createReport(self::$pa3Client1);
 
+        $pa1Org = self::fixtures()->createOrganisation('Example', 'example3941.org', true);
+        $pa2Org = self::fixtures()->createOrganisation('Example', 'example4032.org', true);
+        $pa3Org = self::fixtures()->createOrganisation('Example', 'example1194.org', true);
+        self::fixtures()->flush();
+        self::fixtures()->addClientToOrganisation(self::$pa1Client1->getId(), $pa1Org->getId());
+        self::fixtures()->addUserToOrganisation(self::$pa1->getId(), $pa1Org->getId());
+        self::fixtures()->addClientToOrganisation(self::$pa2Client1->getId(), $pa2Org->getId());
+        self::fixtures()->addUserToOrganisation(self::$pa2Admin->getId(), $pa2Org->getId());
+        self::fixtures()->addClientToOrganisation(self::$pa3Client1->getId(), $pa3Org->getId());
+        self::fixtures()->addUserToOrganisation(self::$pa3TeamMember->getId(), $pa3Org->getId());
+
         self::fixtures()->flush()->clear();
     }
 
