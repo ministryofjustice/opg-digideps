@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Service\RestHandler;
 
@@ -116,7 +116,7 @@ class OrganisationRestHandler
         }
 
         if ($data['email_identifier'] !== $organisation->getEmailIdentifier() && $this->orgWithEmailIdExists($data['email_identifier'])) {
-            throw new OrganisationCreationException('Email identifer already in use');
+            throw new OrganisationUpdateException('Email identifer already in use');
         }
 
         $this->populateOrganisation($data, $organisation);

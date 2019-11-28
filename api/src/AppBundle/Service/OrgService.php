@@ -21,6 +21,8 @@ use Symfony\Component\Finder\Exception\AccessDeniedException;
 
 class OrgService
 {
+    public const DEFAULT_ORG_NAME = 'Your Organisation';
+
     /**
      * @var EntityManager
      */
@@ -159,8 +161,8 @@ class OrgService
             $row = array_map('trim', $row);
             try {
                 $userOrgNamed = $this->upsertOrgNamedUserFromCsv($row);
-
                 if ($userOrgNamed instanceof User) {
+
                     $client = $this->upsertClientFromCsv($row, $userOrgNamed);
                     if ($client instanceof Client) {
                         $this->upsertReportFromCsv($row, $client, $userOrgNamed);
@@ -293,7 +295,10 @@ class OrgService
         $this->currentOrganisation = $this->orgRepository->findByEmailIdentifier($csvRow['Email']);
         if (null === $this->currentOrganisation) {
             try {
-                $this->currentOrganisation = $this->createOrganisationFromEmail($csvRow['Email']);
+                $this->currentOrganisation = $this->createOrganisationFromEmail(
+                    self::DEFAULT_ORG_NAME,
+                    $csvRow['Email']
+                );
             } catch (\InvalidArgumentException $e) {
                 $this->warnings[] = $e->getMessage();
             }
@@ -309,9 +314,9 @@ class OrgService
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    private function createOrganisationFromEmail(string $email)
+    private function createOrganisationFromEmail(string $name, string $email)
     {
-        $organisation = $this->orgFactory->createFromFullEmail($email, $email);
+        $organisation = $this->orgFactory->createFromFullEmail($name, $email);
         $this->em->persist($organisation);
         $this->em->flush($organisation);
 

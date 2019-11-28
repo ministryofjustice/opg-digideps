@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Factory;
 
@@ -38,8 +38,7 @@ class OrganisationFactory
         }
 
         throw new \InvalidArgumentException(sprintf(
-            "Unable to create organisation from 'name': '%s', 'emailIdentifier': '%s'",
-            $name, $email
+            "Unable to create organisation from 'emailIdentifier': '%s'", $email
         ));
     }
 
@@ -58,8 +57,7 @@ class OrganisationFactory
             return $this->create($name, strtolower($emailIdentifier), $isActivated);
         }
         throw new \InvalidArgumentException(sprintf(
-            "Unable to create organisation from 'name': '%s', 'emailIdentifier': '%s'",
-            $name, $emailIdentifier
+            "Unable to create organisation from 'emailIdentifier': '%s'", $emailIdentifier
         ));
 
     }
@@ -74,8 +72,7 @@ class OrganisationFactory
     {
         if (empty($name) || empty($emailIdentifier)) {
             throw new \InvalidArgumentException(sprintf(
-                "Unable to create organisation from 'name': '%s', 'emailIdentifier': '%s'",
-                $name, $emailIdentifier
+                "Unable to create organisation with name '%s' from 'emailIdentifier': '%s'", $name,  $emailIdentifier
             ));
         }
 

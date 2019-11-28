@@ -252,10 +252,7 @@ class OrganisationControllerTest extends AbstractTestController
         return [
             ['data' => '{"name": "Org Name", "email_identifier": "unique_id"}'],
             ['data' => '{"name": "Org Name", "is_activated": true}'],
-            ['data' => '{"email_identifier": "unique_id", "is_activated": true}'],
-            ['data' => '{"name": "", "email_identifier": "unique_id", "is_activated": "true"}'],
             ['data' => '{"name": "Org Name", "email_identifier": "", "is_activated": true}'],
-            ['data' => '{"name": null, "email_identifier": "unique_id", "is_activated": true}'],
             ['data' => '{"name": "Org Name", "email_identifier": null, "is_activated": true}']
         ];
     }
