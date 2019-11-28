@@ -85,6 +85,7 @@ editUser:
       caseNumber: Case number
       reports: Number of reports
   deleteDisabled: Delete user is disabled for non lay deputies, deputies with multiple clients or clients with reports
+  linkToOrganisation: To view the clients that this deputy can report on, visit their <a href="%organisationLinkUrl%">organisation page</a>
 
 editUserForm:
   heading: Edit user
