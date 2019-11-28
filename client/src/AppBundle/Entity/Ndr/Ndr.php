@@ -60,14 +60,14 @@ class Ndr implements ReportInterface
     /**
      * @JMS\Type("AppBundle\Entity\Ndr\VisitsCare")
      *
-     * @var VisitsCare
+     * @var VisitsCare|null
      */
     private $visitsCare;
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Ndr\BankAccount>")
      *
-     * @var BankAccount
+     * @var BankAccount[]
      */
     private $bankAccounts = [];
 
@@ -102,7 +102,7 @@ class Ndr implements ReportInterface
      * @JMS\Type("string")
      * @JMS\Groups({"debt"})
      *
-     * @var decimal
+     * @var float
      */
     private $debtsTotalAmount;
 
@@ -122,6 +122,13 @@ class Ndr implements ReportInterface
     private $noAssetToAdd;
 
     /**
+     * @JMS\Type("string")
+     *
+     * @var string
+     */
+    private $reportTitle;
+
+    /**
      * Currently used only for bottom navigator
      *
      * @return string
@@ -132,7 +139,7 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @return decimal
+     * @return float
      */
     public function getBankAccountsBalanceTotal()
     {
@@ -177,7 +184,7 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getSubmitDate()
     {
@@ -237,7 +244,7 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @param BankAccount[] $bankAccount
+     * @param BankAccount[] $bankAccounts
      */
     public function setBankAccounts($bankAccounts)
     {
@@ -272,13 +279,14 @@ class Ndr implements ReportInterface
     /**
      * Return the due date (calculated as court order date + 40 days).
      *
-     * @return \DateTime $dueDate
+     * @return \DateTime|null $dueDate
      */
     public function getDueDate()
     {
         if (!$this->getStartDate() instanceof \DateTime) {
             return null;
         }
+
         $dueDate = clone $this->getStartDate();
         $dueDate->modify('+40 days');
 
@@ -302,7 +310,7 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @return decimal
+     * @return float
      */
     public function getBalanceOnCourtOrderDateTotal()
     {
@@ -338,7 +346,7 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @param $debtId
+     * @param string $debtId
      *
      * @return Debt|null
      */
@@ -376,7 +384,7 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @return decimal
+     * @return float
      */
     public function getDebtsTotalAmount()
     {
@@ -384,7 +392,7 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @param decimal $debtsTotalAmount
+     * @param float $debtsTotalAmount
      */
     public function setDebtsTotalAmount($debtsTotalAmount)
     {
@@ -481,6 +489,8 @@ class Ndr implements ReportInterface
             } elseif ($asset instanceof AssetOther) {
                 $title = isset($titleToGroupOverride[$asset->getTitle()]) ?
                     $titleToGroupOverride[$asset->getTitle()] : $asset->getTitle();
+            } else {
+                throw new \RuntimeException('Couldn\'t identify assset type');
             }
 
             // add asset into "items" and sum total
@@ -552,13 +562,13 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @param $format string where %s are submitDate Y-m-d, case number
+     * @param string $format string where %s are submitDate Y-m-d, case number
      * @return string
      */
     public function createAttachmentName($format)
     {
         $attachmentName = sprintf($format,
-            $this->getSubmitDate() ? $this->getSubmitDate()->format('Y-m-d') : 'n-a-',
+            is_null($this->getSubmitDate()) ? 'n-a-' : $this->getSubmitDate()->format('Y-m-d'),
             $this->getClient()->getCaseNumber()
         );
 

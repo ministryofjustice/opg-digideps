@@ -96,6 +96,7 @@ class ClientVoter extends Voter
      */
     private function clientsOrganisationActive(Client $client): bool
     {
-        return $client->getOrganisation()->isActivated();
+        $organisation = $client->getOrganisation();
+        return $organisation instanceof Organisation && $organisation->isActivated();
     }
 }

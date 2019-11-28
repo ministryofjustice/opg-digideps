@@ -395,6 +395,18 @@ trait ReportTrait
     }
 
     /**
+     * Check the response status was one of the provided codes
+     */
+    private function assertResponseStatusIn($codes)
+    {
+        $actualCode = $this->getSession()->getStatusCode();
+
+        if (!in_array($actualCode, $codes)) {
+            throw new \RuntimeException("Invalid status code: $actualCode");
+        }
+    }
+
+    /**
      * @Then the report URL ":url" for ":reportId" should not be accessible
      */
     public function theReportUrlForShouldNotBeAccessible($url, $reportId)
@@ -404,7 +416,7 @@ trait ReportTrait
 
         $previousUrl = $this->getSession()->getCurrentUrl();
         $this->visit($fullUrl);
-        $this->assertResponseStatus(500);
+        $this->assertResponseStatusIn([403, 404, 500]);
         $this->visit($previousUrl);
     }
 
