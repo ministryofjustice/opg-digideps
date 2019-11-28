@@ -38,7 +38,9 @@ services:
 
     AppBundle\Service\UserService:
         class: AppBundle\Service\UserService
-        arguments: [ "@em", '@AppBundle\Service\OrgService' ]
+        arguments:
+            $em: '@em'
+            $orgService: '@AppBundle\Service\OrgService'
 
     monolog.processor.add_request_id:
         class: AppBundle\Service\RequestIdLoggerProcessor
