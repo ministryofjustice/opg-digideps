@@ -20,4 +20,6 @@ Each entry contains the following:
 - Configure your MFA device using the MFA token
 - Follow the amazon documentation using the credentials & MFA device:
 https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_change-root.html
-- Ensure any aged access keys are deleted: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_delete-key
+    - NOTE: Ensure any generated password is a minimum of 32 characters
+- Ensure any access keys are deleted: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_delete-key
+- Update lastpass with the updated password
