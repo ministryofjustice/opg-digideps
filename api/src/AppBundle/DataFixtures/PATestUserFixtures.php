@@ -153,7 +153,8 @@ class PATestUserFixtures extends AbstractDataFixture
     public function doLoad(ObjectManager $manager)
     {
         $this->orgService = $this->container->get('AppBundle\Service\OrgService');
-
+        $this->orgRepository = $this->container->get('AppBundle\Entity\Repository\OrganisationRepository');
+        $this->orgFactory = $this->container->get('AppBundle\Factory\OrganisationFactory');
         $this->namedDeputyRepository = $manager->getRepository(NamedDeputy::class);
 
         // Add users from array
@@ -190,6 +191,13 @@ class PATestUserFixtures extends AbstractDataFixture
         $user->addTeam($team);
         $manager->persist($user);
 
+        $organisation = $this->orgRepository->findByEmailIdentifier($data['Email']);
+        if (null === $organisation) {
+            $organisation = $this->orgFactory->createFromFullEmail($data['Email'], $data['Email']);
+            $manager->persist($organisation);
+            $manager->flush($organisation);
+        }
+
         if (isset($data['clients'])) {
             foreach ($data['clients'] as $clientData) {
 
@@ -202,6 +210,8 @@ class PATestUserFixtures extends AbstractDataFixture
                 for($i=1; $i<=$data['additionalClients']; $i++) {
                     $client = $this->createClient($this->generateTestClientData($i), $data, $user, $manager);
                     $user->addClient($client);
+                    $organisation->addClient($client);
+                    $client->setOrganisation($organisation);
                 }
             }
 
