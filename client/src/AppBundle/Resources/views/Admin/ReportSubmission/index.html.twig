@@ -172,7 +172,12 @@
                                 <div class="opg-indented-block">
                                     <ul class="list list-group" id="docs">
                                         {% for document in reportSubmission.documents %}
-                                            <li>{{ document.fileName }}</li>
+                                            <li>
+                                                {{ document.fileName }}
+                                                (<a href="{{ path('admin_document_download', {submissionId: reportSubmission.id, documentId: document.id}) }}">
+                                                    {{- 'page.postactions.download' | trans -}}
+                                                </a>)
+                                            </li>
                                         {% endfor %}
                                     </ul>
                                 </div>
