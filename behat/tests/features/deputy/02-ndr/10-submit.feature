@@ -75,7 +75,7 @@ Feature: ndr / report submit
         Then I click on "download"
         # only checks one level deep. In this case, we check for a single report zip file
         And the page content should be a zip file containing files with the following files:
-            | NdrRep.*.zip | regexpName+sizeAtLeast | 38000 |
+            | NdrRep.*.zip | regexpName+sizeAtLeast | 35000 |
         # test archive
         When I go to the URL previously saved as "ndr-admin-documents-list-new"
         Then I check "Select ndr"
@@ -128,4 +128,3 @@ Feature: ndr / report submit
             | report_edit_endDate_day     | 31   |
             | report_edit_endDate_month   | 10   |
             | report_edit_endDate_year    | 2019 |
-
