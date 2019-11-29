@@ -99,7 +99,7 @@ Feature: deputy / user / add client and report
     And I fill in "search_clients_q" with "33333333"
     And I follow "Cly3 Hent3"
     Then the URL should match "/admin/client/\d+/details"
-    And I should see the "report-ndr" region in the "report-group-incomplete" region
+    And I should see the "report-ndr" region in the "report-group-active" region
 
   @deputy
   Scenario: create report

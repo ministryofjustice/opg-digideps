@@ -77,6 +77,7 @@ locals {
       { "name": "SMTP_DEFAULT_PASSWORD", "value": "${aws_iam_access_key.ses.ses_smtp_password}" },
       { "name": "SMTP_DEFAULT_USER", "value": "${aws_iam_access_key.ses.id}" },
       { "name": "MOCK_EMAILS", "value": "${local.account.mock_emails ? "true" : "false"}" },
+      { "name": "SYMFONY_ENV", "value": "${local.account.symfony_env}" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
       { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" }
     ]

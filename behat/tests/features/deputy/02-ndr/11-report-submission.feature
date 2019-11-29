@@ -33,5 +33,5 @@ Feature: Admin NDR submitted
     And I fill in "search_clients_q" with "ndr"
     And I follow "John ndr-client"
     Then the URL should match "/admin/client/\d+/details"
-    And I should see the "report-ndr" region in the "report-group-done" region
+    And I should see the "report-ndr" region in the "report-group-submitted" region
     And I should see "NDR" in the "report-ndr" region

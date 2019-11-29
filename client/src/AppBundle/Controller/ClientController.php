@@ -2,12 +2,17 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity as EntityDir;
-use AppBundle\Form as FormDir;
+use AppBundle\Entity\Client;
+use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\User;
+use AppBundle\Form\ClientType;
+use AppBundle\Service\Redirector;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ClientController extends AbstractController
 {
@@ -19,7 +24,12 @@ class ClientController extends AbstractController
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->getUserWithData();
-        if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'client_show')) {
+
+        /** @var Redirector $redirector */
+        $redirector = $this->get('redirector_service');
+        $route = $redirector->getCorrectRouteIfDifferent($user, 'client_show');
+
+        if (is_string($route)) {
             return $this->redirectToRoute($route);
         }
 
@@ -27,7 +37,6 @@ class ClientController extends AbstractController
 
         return [
             'client' => $client,
-            'lastSignedIn' => $request->getSession()->get('lastLoggedIn'),
         ];
     }
 
@@ -40,7 +49,14 @@ class ClientController extends AbstractController
         $from = $request->get('from');
         $client = $this->getFirstClient();
 
-        $form = $this->createForm(FormDir\ClientType::class, $client, [
+        if (is_null($client)) {
+            /** @var User $user */
+            $user = $this->getUser();
+            $userId = $user->getId();
+            throw new \RuntimeException("User $userId does not have a client");
+        }
+
+        $form = $this->createForm(ClientType::class, $client, [
             'action' => $this->generateUrl('client_edit', ['action' => 'edit', 'from' => $from]),
             'validation_groups' => ['lay-deputy-client-edit']
         ]);
@@ -52,7 +68,7 @@ class ClientController extends AbstractController
             $clientUpdated = $form->getData();
             $clientUpdated->setId($client->getId());
             $this->getRestClient()->put('client/upsert', $clientUpdated, ['edit']);
-            $request->getSession()->getFlashBag()->add('notice', htmlentities($client->getFirstname()) . "'s data edited");
+            $this->addFlash('notice', htmlentities($client->getFirstname()) . "'s data edited");
 
             $user = $this->getUserWithData(['user-clients', 'client']);
 
@@ -61,8 +77,10 @@ class ClientController extends AbstractController
                 $this->getMailSender()->send($addressUpdateEmail, ['html']);
             }
 
-            if ($from === 'declaration') {
-                return $this->redirect($this->generateUrl('report_declaration', ['reportId' => $client->getActiveReport()->getId()]));
+            $activeReport = $client->getActiveReport();
+
+            if ($from === 'declaration' && $activeReport instanceof Report) {
+                return $this->redirect($this->generateUrl('report_declaration', ['reportId' => $activeReport->getId()]));
             }
 
             return $this->redirect($this->generateUrl('client_show'));
@@ -71,7 +89,6 @@ class ClientController extends AbstractController
         return [
             'client' => $client,
             'form' => $form->createView(),
-            'lastSignedIn' => $request->getSession()->get('lastLoggedIn'),
         ];
     }
 
@@ -83,7 +100,12 @@ class ClientController extends AbstractController
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->getUserWithData();
-        if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'client_add')) {
+
+        /** @var Redirector $redirector */
+        $redirector = $this->get('redirector_service');
+        $route = $redirector->getCorrectRouteIfDifferent($user, 'client_add');
+
+        if (is_string($route)) {
             return $this->redirectToRoute($route);
         }
 
@@ -95,12 +117,12 @@ class ClientController extends AbstractController
             $client_validated = true;
         } else {
             // new client
-            $client = new EntityDir\Client();
+            $client = new Client();
             $method = 'post';
             $client_validated = false;
         }
 
-        $form = $this->createForm(FormDir\ClientType::class, $client);
+        $form = $this->createForm(ClientType::class, $client);
 
         $form->handleRequest($request);
         if ($form->isValid()) {
@@ -111,12 +133,20 @@ class ClientController extends AbstractController
                 // $method is set above to either post or put
                 $response =  $this->getRestClient()->$method('client/upsert', $form->getData());
 
-                $url = $this->getUser()->isNdrEnabled()
+                /** @var User $currentUser */
+                $currentUser = $this->getUser();
+
+                $url = $currentUser->isNdrEnabled()
                     ? $this->generateUrl('ndr_index')
                     : $this->generateUrl('report_create', ['clientId' => $response['id']]);
                 return $this->redirect($url);
             } catch (\Throwable $e) {
+                /** @var TranslatorInterface $translator */
                 $translator = $this->get('translator');
+
+                /** @var LoggerInterface $logger */
+                $logger = $this->get('logger');
+
                 switch ((int) $e->getCode()) {
                     case 400:
                         $form->addError(new FormError($translator->trans('formErrors.matching', [], 'register')));
@@ -125,7 +155,8 @@ class ClientController extends AbstractController
                     default:
                         $form->addError(new FormError($translator->trans('formErrors.generic', [], 'register')));
                 }
-                $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+
+                $logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
             }
         }
 

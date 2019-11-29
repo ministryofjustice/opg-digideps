@@ -1,6 +1,6 @@
 resource "aws_cloudwatch_log_metric_filter" "php_errors" {
   name           = "CriticalPHPErrorFilter.${local.environment}"
-  pattern        = "app.CRITICAL"
+  pattern        = "CRITICAL"
   log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
 
   metric_transformation {

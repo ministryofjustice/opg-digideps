@@ -4,14 +4,22 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Report\Document;
+use AppBundle\Entity\User;
 use AppBundle\Form as FormDir;
 use AppBundle\Security\DocumentVoter;
 use AppBundle\Service\DocumentService;
+use AppBundle\Service\File\FileUploader;
+use AppBundle\Service\File\Verifier\MultiFileFormUploadVerifier;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\SubmitButton;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class DocumentController extends AbstractController
 {
@@ -32,10 +40,12 @@ class DocumentController extends AbstractController
 
         if ($report->getStatus()->getDocumentsState()['state'] !== EntityDir\Report\Status::STATE_NOT_STARTED) {
             $referer = $request->headers->get('referer');
-            $redirectResponse = false !== strpos($referer, '/step/1')
-                ? $this->redirectToRoute('report_overview', ['reportId' => $reportId])
-                : $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId, 'step' => 1]);
-            return $redirectResponse;
+
+            if (is_string($referer) && false !== strpos($referer, '/step/1')) {
+                return $this->redirectToRoute('report_overview', ['reportId' => $reportId]);
+            } else {
+                return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId, 'step' => 1]);
+            }
         }
 
         return [
@@ -67,15 +77,20 @@ class DocumentController extends AbstractController
         $form = $this->createForm(FormDir\Report\DocumentType::class, $report);
         $form->handleRequest($request);
 
-        if ($form->get('save')->isClicked() && $form->isValid()) {
+        /** @var SubmitButton $submitBtn */
+        $submitBtn = $form->get('save');
+
+        if ($submitBtn->isClicked() && $form->isValid()) {
             /* @var $data EntityDir\Report\Report */
             $data = $form->getData();
 
             if ('no' === $data->getWishToProvideDocumentation()) {
                 if (count($data->getDeputyDocuments()) > 0) {
+                    /** @var TranslatorInterface $translator */
                     $translator = $this->get('translator');
                     $translatedMessage = $translator->trans('summaryPage.setNoAttemptWithDocuments', [], 'report-documents');
-                    $request->getSession()->getFlashBag()->add('error', $translatedMessage);
+
+                    $this->addFlash('error', $translatedMessage);
                 } else {
                     $this->getRestClient()->put('report/' . $reportId, $data, ['report','wish-to-provide-documentation']);
                 }
@@ -108,23 +123,31 @@ class DocumentController extends AbstractController
         $form = $this->createForm(FormDir\Report\UploadType::class, null, ['action' =>  $formAction]);
 
         if ($request->get('error') == 'tooBig') {
-            $message = $this->get('translator')->trans('document.file.errors.maxSizeMessage', [], 'validators');
-            $form->get('file')->addError(new FormError($message));
+            /** @var TranslatorInterface $translator */
+            $translator = $this->get('translator');
+
+            $message = $translator->trans('document.file.errors.maxSizeMessage', [], 'validators');
+            $form->get('files')->addError(new FormError($message));
         }
 
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $files = $request->files->get('report_document_upload')['files'];
-            $verified = $this->container->get('multi_file_form_upload_verifier')->verify($files, $form, $report);
 
-            if ($verified) {
-                try {
-                    $this->uploadFiles($files, $report);
-                    $request->getSession()->getFlashBag()->add('notice', 'Files uploaded');
-                    return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
-                } catch (\Throwable $e) {
-                    $form->get('files')->addError(new FormError('Cannot upload file, please try again later'));
+            if (is_array($files)) {
+                /** @var MultiFileFormUploadVerifier */
+                $multiFileVerifier = $this->container->get('AppBundle\Service\File\Verifier\MultiFileFormUploadVerifier');
+                $verified = $multiFileVerifier->verify($files, $form, $report);
+
+                if ($verified) {
+                    try {
+                        $this->uploadFiles($files, $report);
+                        $this->addFlash('notice', 'Files uploaded');
+                        return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
+                    } catch (\Throwable $e) {
+                        $form->get('files')->addError(new FormError('Cannot upload file, please try again later'));
+                    }
                 }
             }
         }
@@ -150,7 +173,11 @@ class DocumentController extends AbstractController
             $backLink = $this->generateUrl('documents_step', ['reportId' => $report->getId(), 'step' => 1]);
         } else {
             $nextLink = $this->generateUrl('report_documents_submit_more', ['reportId' => $report->getId(), 'from' => 'report_documents']);
-            if ($this->getUser()->isDeputyOrg()) {
+
+            /** @var User $user */
+            $user = $this->getUser();
+
+            if ($user->isDeputyOrg()) {
                 $backLink = $this->generateClientProfileLink($report->getClient());
             } else {
                 $backLink = $this->generateUrl('homepage');
@@ -177,9 +204,16 @@ class DocumentController extends AbstractController
      */
     private function uploadFile(UploadedFile $file, EntityDir\Report\Report $report): void
     {
-        $this
-            ->get('file_uploader')
-            ->uploadFile($report, file_get_contents($file->getPathName()), $file->getClientOriginalName(), false);
+        /** @var FileUploader $fileUploader */
+        $fileUploader = $this->get('file_uploader');
+
+        /** @var string $body */
+        $body = file_get_contents($file->getPathname());
+
+        /** @var string $fileName */
+        $fileName = $file->getClientOriginalName();
+
+        $fileUploader->uploadFile($report, $body, $fileName, false);
     }
 
     /**
@@ -211,7 +245,6 @@ class DocumentController extends AbstractController
      */
     public function deleteConfirmAction(Request $request, $documentId)
     {
-        /** @var EntityDir\Document $document */
         $document = $this->getDocument($documentId);
 
         if ($document->getReportSubmission() instanceof EntityDir\Report\ReportSubmission) {
@@ -253,7 +286,6 @@ class DocumentController extends AbstractController
      */
     public function deleteDocument(Request $request, $documentId)
     {
-        /** @var EntityDir\Report\Document $document */
         $document = $this->getDocument($documentId);
 
         $report = $document->getReport();
@@ -265,12 +297,14 @@ class DocumentController extends AbstractController
             $result = $documentService->removeDocumentFromS3($document); // rethrows any exception
 
             if ($result) {
-                $request->getSession()->getFlashBag()->add('notice', 'Document has been removed');
+                $this->addFlash('notice', 'Document has been removed');
             }
         } catch (\Throwable $e) {
-            $this->get('logger')->error($e->getMessage());
+            /** @var LoggerInterface $logger */
+            $logger = $this->get('logger');
+            $logger->error($e->getMessage());
 
-            $request->getSession()->getFlashBag()->add(
+            $this->addFlash(
                 'error',
                 'Document could not be removed. Details: ' . $e->getMessage()
             );
@@ -330,9 +364,12 @@ class DocumentController extends AbstractController
         // submit the report to generate the submission entry only
         $this->getRestClient()->put('report/' . $report->getId() . '/submit-documents', $report, ['submit']);
 
-        $request->getSession()->getFlashBag()->add('notice', 'The documents attached for your ' . $report->getPeriod() . ' report have been sent to OPG');
+        $this->addFlash('notice', 'The documents attached for your ' . $report->getPeriod() . ' report have been sent to OPG');
 
-        if ($this->getUser()->isDeputyOrg()) {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if ($user->isDeputyOrg()) {
             return $this->redirect($this->generateClientProfileLink($report->getClient()));
         } else {
             return $this->redirectToRoute('homepage');
@@ -342,10 +379,10 @@ class DocumentController extends AbstractController
     /**
      * Retrieves the document object with required associated entities to populate the table and back links
      *
-     * @param $documentId
-     * @return mixed
+     * @param string $documentId
+     * @return Document
      */
-    private function getDocument($documentId)
+    private function getDocument(string $documentId)
     {
         return $this->getRestClient()->get(
             'document/' . $documentId,
