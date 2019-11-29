@@ -23,12 +23,6 @@ services:
         class: AppBundle\Service\UserRegistrationService
         arguments: [ "@em", "@opg_digideps.casrec_verification_service" ]
 
-    AppBundle\Service\OrgService:
-        class: AppBundle\Service\OrgService
-        arguments:
-            $em: '@em'
-            $logger: '@logger'
-
     AppBundle\Service\UserService:
         class: AppBundle\Service\UserService
         arguments: [ '@em', '@AppBundle\Service\OrgService' ]

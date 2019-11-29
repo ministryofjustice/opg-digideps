@@ -13,7 +13,7 @@ use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
 use AppBundle\Factory\OrganisationFactory;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Psr\Log\LoggerInterface;
@@ -24,7 +24,7 @@ class OrgService
     public const DEFAULT_ORG_NAME = 'Your Organisation';
 
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     protected $em;
 
@@ -91,7 +91,7 @@ class OrgService
     private $log;
 
     /**
-     * @param EntityManager $em
+     * @param EntityManagerInterface $em
      * @param LoggerInterface $logger
      * @param UserRepository $userRepository
      * @param ReportRepository $reportRepository
@@ -101,7 +101,7 @@ class OrgService
      * @param TeamRepository $teamRepository
      */
     public function __construct(
-        EntityManager $em,
+        EntityManagerInterface $em,
         LoggerInterface $logger,
         UserRepository $userRepository,
         ReportRepository $reportRepository,
