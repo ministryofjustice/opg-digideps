@@ -6,7 +6,6 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\ReportInterface;
-use AppBundle\Exception\DisplayableException;
 use AppBundle\Exception\ReportNotSubmittedException;
 use AppBundle\Form\Admin\ReviewChecklistType;
 use AppBundle\Form\Admin\ReportChecklistType;
@@ -22,7 +21,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * @Route("/admin/report/{id}/", requirements={"id":"\d+"})
@@ -101,7 +99,7 @@ class ReportController extends AbstractController
         $reportDueDate = $report->getDueDate();
 
         if (!$report->getSubmitted()) {
-            throw new DisplayableException('Only submitted report can be managed');
+            throw new ReportNotSubmittedException('Only submitted report can be managed');
         }
 
         $form = $this->createForm(UnsubmitReportType::class, $report);
