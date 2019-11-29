@@ -36,11 +36,17 @@ class IndexController extends AbstractController
      */
     private $tokenStorage;
 
-    public function __construct(DeputyProvider $deputyProvider, EventDispatcherInterface $eventDispatcher, TokenStorageInterface $tokenStorage)
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(DeputyProvider $deputyProvider, EventDispatcherInterface $eventDispatcher, TokenStorageInterface $tokenStorage, TranslatorInterface $translator)
     {
         $this->deputyProvider = $deputyProvider;
         $this->eventDispatcher = $eventDispatcher;
         $this->tokenStorage = $tokenStorage;
+        $this->translator = $translator;
     }
 
     /**
@@ -60,7 +66,7 @@ class IndexController extends AbstractController
      * @Route("login", name="login")
      * @Template("AppBundle:Index:login.html.twig")
      */
-    public function loginAction(Request $request, TranslatorInterface $translator)
+    public function loginAction(Request $request)
     {
         $form = $this->createForm(FormDir\LoginType::class, null, [
             'action' => $this->generateUrl('login'),
@@ -83,7 +89,7 @@ class IndexController extends AbstractController
 
                 if ($e->getCode() == 423 && method_exists($e, 'getData')) {
                     $lockedFor = ceil(($e->getData()['data'] - time()) / 60);
-                    $error = $translator->trans('bruteForceLocked', ['%minutes%' => $lockedFor], 'signin');
+                    $error = $this->translator->trans('bruteForceLocked', ['%minutes%' => $lockedFor], 'signin');
                 }
 
                 if ($e->getCode() == 499) {
@@ -109,7 +115,7 @@ class IndexController extends AbstractController
                 ] + $vars);
         } elseif ($session->get('loggedOutFrom') === 'timeout' || $request->query->get('from') === 'api') {
             $session->set('loggedOutFrom', null); //avoid display the message at next page reload
-            $vars['error'] = $translator->trans('sessionTimeoutOutWarning', [
+            $vars['error'] = $this->translator->trans('sessionTimeoutOutWarning', [
                 '%time%' => StringUtils::secondsToHoursMinutes($this->container->getParameter('session_expire_seconds')),
             ], 'signin');
         }
