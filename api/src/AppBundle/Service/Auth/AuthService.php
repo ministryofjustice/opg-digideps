@@ -4,8 +4,6 @@ namespace AppBundle\Service\Auth;
 
 use AppBundle\Entity\User;
 use Psr\Log\LoggerInterface;
-use Symfony\Bridge\Monolog\Logger;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
@@ -15,14 +13,14 @@ class AuthService
     const HEADER_CLIENT_SECRET = 'ClientSecret';
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
     /**
      * @param EncoderFactoryInterface $encoderFactory
      * @param LoggerInterface $logger
-     * @param Container $container
+     * @param ContainerInterface $container
      * @throws \Exception
      */
     public function __construct(EncoderFactoryInterface $encoderFactory, LoggerInterface $logger, ContainerInterface $container)
