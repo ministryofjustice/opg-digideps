@@ -10,6 +10,11 @@ imports:
     - { resource: services/transformers.yml }
 
 services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: true
+
     em:
         alias: doctrine.orm.entity_manager
         public: true
@@ -27,12 +32,6 @@ services:
         arguments:
             $em: '@em'
             $logger: '@logger'
-            $userRepository: '@AppBundle\Entity\Repository\UserRepository'
-            $reportRepository: '@AppBundle\Entity\Repository\ReportRepository'
-            $clientRepository: '@AppBundle\Entity\Repository\ClientRepository'
-            $orgRepository: '@AppBundle\Entity\Repository\OrganisationRepository'
-            $teamRepository: '@AppBundle\Entity\Repository\TeamRepository'
-            $orgFactory: '@AppBundle\Factory\OrganisationFactory'
 
     AppBundle\Service\UserService:
         class: AppBundle\Service\UserService
