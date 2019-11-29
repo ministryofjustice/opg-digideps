@@ -3,21 +3,26 @@
 namespace AppBundle\Controller\Admin\Client;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Exception\DisplayableException;
+use AppBundle\Exception\ReportNotSubmittedException;
 use AppBundle\Form\Admin\ReviewChecklistType;
 use AppBundle\Form\Admin\ReportChecklistType;
 use AppBundle\Form\Admin\UnsubmitReportType;
 use AppBundle\Form\Admin\UnsubmitReportConfirmType;
+use AppBundle\Service\ReportSubmissionService;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\SubmitButton;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * @Route("/admin/report/{id}/", requirements={"id":"\d+"})
@@ -84,15 +89,15 @@ class ReportController extends AbstractController
      * //TODO define Security group (AD to remove?)
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_CASE_MANAGER')")
      * @param Request $request
-     * @param $id
+     * @param string $id
      *
      * @Template("AppBundle:Admin/Client/Report:manage.html.twig")
      *
-     * @return array
+     * @return array|Response|RedirectResponse
      */
     public function manageAction(Request $request, $id)
     {
-        $report = $this->getReport($id, ['report-checklist', 'action']);
+        $report = $this->getReport(intval($id), ['report-checklist', 'action']);
         $reportDueDate = $report->getDueDate();
 
         if (!$report->getSubmitted()) {
@@ -108,13 +113,20 @@ class ReportController extends AbstractController
         // edit client form
         if ($confirmForm->isValid()) {
             if ($confirmForm['confirm']->getData() === 'yes') {
+                /** @var \DateTime $startDate */
+                $startDate = \DateTime::createFromFormat(\DateTime::ISO8601, $confirmForm['startDate']->getData());
+                /** @var \DateTime $endDate */
+                $endDate = \DateTime::createFromFormat(\DateTime::ISO8601, $confirmForm['endDate']->getData());
+                /** @var \DateTime $dueDate */
+                $dueDate = \DateTime::createFromFormat(\DateTime::ISO8601, $confirmForm['dueDate']->getData());
+
                 // User confirmed, complete unsubmission
                 $report
                     ->setUnSubmitDate(new \DateTime())
                     ->setUnsubmittedSectionsList($confirmForm['unsubmittedSection']->getData())
-                    ->setStartDate(\DateTime::createFromFormat(\DateTime::ISO8601, $confirmForm['startDate']->getData()))
-                    ->setEndDate(\DateTime::createFromFormat(\DateTime::ISO8601, $confirmForm['endDate']->getData()))
-                    ->setDueDate(\DateTime::createFromFormat(\DateTime::ISO8601, $confirmForm['dueDate']->getData()))
+                    ->setStartDate($startDate)
+                    ->setEndDate($endDate)
+                    ->setDueDate($dueDate)
                 ;
 
                 $this->getRestClient()->put('report/' . $report->getId() . '/unsubmit', $report, [
@@ -122,7 +134,7 @@ class ReportController extends AbstractController
                     'startEndDates'
                 ]);
 
-                $request->getSession()->getFlashBag()->add('notice', 'Report marked as incomplete');
+                $this->addFlash('notice', 'Report marked as incomplete');
 
                 $unsubmitContent = $this->generateChecklistUnsubmitInformationContent($report);
 
@@ -209,25 +221,28 @@ class ReportController extends AbstractController
      */
     private function generateChecklistUnsubmitInformationContent(ReportInterface $report)
     {
-        return $this->render('AppBundle:Admin/Client/Report/Formatted:unsubmit_information.html.twig', [
+        /** @var string $content */
+        $content = $this->render('AppBundle:Admin/Client/Report/Formatted:unsubmit_information.html.twig', [
             'report' => $report
         ])->getContent();
+
+        return $content;
     }
 
     /**
      * @Route("checklist", name="admin_report_checklist")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_CASE_MANAGER')")
      * @param Request $request
-     * @param $id
+     * @param string $id
      *
      * @Template("AppBundle:Admin/Client/Report:checklist.html.twig")
      *
-     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return array|RedirectResponse|Response
      */
     public function checklistAction(Request $request, $id)
     {
         $report = $this->getReport(
-            $id,
+            intval($id),
             array_merge(
                 self::$reportGroupsAll,
                 [
@@ -242,16 +257,23 @@ class ReportController extends AbstractController
 
         $checklist = $report->getChecklist();
         $checklist = empty($checklist) ? new Checklist($report) : $checklist;
+
+        /** @var Form $form */
         $form = $this->createForm(ReportChecklistType::class, $checklist, ['report' => $report]);
         $form->handleRequest($request);
+
+        /** @var SubmitButton $buttonClicked */
         $buttonClicked = $form->getClickedButton();
 
         $reviewChecklist = $this->getRestClient()->get('report/' . $report->getId() . '/checklist', 'Report\\ReviewChecklist');
+        /** @var Form $reviewForm */
         $reviewForm = $this->createForm(ReviewChecklistType::class, $reviewChecklist);
         $reviewForm->handleRequest($request);
 
         if ($reviewForm->isValid()) {
-            if ($reviewForm->getClickedButton()->getName() === ReviewChecklistType::SUBMIT_ACTION) {
+            /** @var SubmitButton $button */
+            $button = $reviewForm->getClickedButton();
+            if ($button->getName() === ReviewChecklistType::SUBMIT_ACTION) {
                 $reviewChecklist->setIsSubmitted(true);
             }
 
@@ -261,7 +283,7 @@ class ReportController extends AbstractController
                 $this->getRestClient()->post('report/' . $report->getId() . '/checklist', $reviewChecklist);
             }
 
-            $request->getSession()->getFlashBag()->add('notice', 'Review checklist saved');
+            $this->addFlash('notice', 'Review checklist saved');
 
             return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#anchor-fullReview-checklist');
         }
@@ -269,8 +291,8 @@ class ReportController extends AbstractController
         if ($buttonClicked instanceof SubmitButton) {
             $checklist->setButtonClicked($buttonClicked->getName());
         }
-        if ($form->isValid($buttonClicked)) {
 
+        if ($form->isValid()) {
             if (!empty($checklist->getId())) {
                 $this->getRestClient()->put('report/' . $report->getId() . '/checked', $checklist, [
                     'report-checklist', 'checklist-information'
@@ -280,10 +302,14 @@ class ReportController extends AbstractController
                     'report-checklist', 'checklist-information'
                 ]);
             }
-            if (!$request->getSession()->getFlashBag()->has('notice')) {
+
+            /** @var Session $session */
+            $session = $request->getSession();
+
+            if (!$session->getFlashBag()->has('notice')) {
                 // the duplicate notice is because the PDF view action doesn't actually refresh the page and therefore the original
                 // 'saved' notice never gets rendered
-                $request->getSession()->getFlashBag()->add('notice', 'Lodging checklist saved');
+                $this->addFlash('notice', 'Lodging checklist saved');
             }
 
             if ($buttonClicked->getName() == 'saveFurtherInformation') {
@@ -319,7 +345,7 @@ class ReportController extends AbstractController
     /**
      * @Route("checklist-submitted", name="admin_report_checklist_submitted")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_CASE_MANAGER')")
-     * @param $id
+     * @param string $id
      *
      * @Template("AppBundle:Admin/Client/Report:checklistSubmitted.html.twig")
      *
@@ -327,7 +353,7 @@ class ReportController extends AbstractController
      */
     public function checklistSubmittedAction($id)
     {
-        return ['report' => $this->getReport($id)];
+        return ['report' => $this->getReport(intval($id))];
     }
 
     /**
@@ -336,20 +362,27 @@ class ReportController extends AbstractController
      * @Route("checklist.pdf", name="admin_checklist_pdf")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_CASE_MANAGER')")
      *
-     * @param $id
+     * @param string $id
      * @return Response
      */
     public function checklistPDFViewAction($id)
     {
-        $report = $this->getReport($id, array_merge(self::$reportGroupsAll, ['report-checklist', 'checklist-information', 'user']));
-        $pdfBinary = $this->get('AppBundle\Service\ReportSubmissionService')->getChecklistPdfBinaryContent($report);
+        $report = $this->getReport(intval($id), array_merge(self::$reportGroupsAll, ['report-checklist', 'checklist-information', 'user']));
+
+        /** @var ReportSubmissionService $reportSubmissionService */
+        $reportSubmissionService = $this->get('AppBundle\Service\ReportSubmissionService');
+        $pdfBinary = $reportSubmissionService->getChecklistPdfBinaryContent($report);
 
         $response = new Response($pdfBinary);
         $response->headers->set('Content-Type', 'application/pdf');
 
+        if (is_null($report->getEndDate())) {
+            throw $this->createNotFoundException();
+        }
+
         $attachmentName = sprintf('DigiChecklist-%s_%s_%s.pdf',
             $report->getEndDate()->format('Y'),
-            $report->getSubmitDate() ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
+            $report->getSubmitDate() instanceof \DateTime ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
             $report->getClient()->getCaseNumber()
         );
 
