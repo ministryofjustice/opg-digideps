@@ -181,7 +181,7 @@ class OrgService
             try {
                 $this->currentOrganisation = $this->orgRepository->findByEmailIdentifier($row['Email']);
                 if (null === $this->currentOrganisation) {
-                    $this->currentOrganisation = $this->createOrganisationFromEmail($row['Email']);
+                    $this->currentOrganisation = $this->createOrganisationFromEmail(self::DEFAULT_ORG_NAME, $row['Email']);
                 }
 
                 if (null === ($namedDeputy = $this->identifyNamedDeputy($row))) {
