@@ -4,7 +4,9 @@ namespace AppBundle\Service\Auth;
 
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
-use Predis\Client as PredisClient;
+use Doctrine\ORM\EntityManagerInterface;
+use Predis\Client;
+use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
@@ -15,7 +17,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class UserProvider implements UserProviderInterface
 {
     /**
-     * @var PredisClient
+     * @var Client
      */
     private $redis;
 
@@ -34,7 +36,7 @@ class UserProvider implements UserProviderInterface
      */
     private $timeoutSeconds;
 
-    public function __construct(EntityManager $em, PredisClient $redis, Logger $logger, array $options)
+    public function __construct(EntityManagerInterface $em, Client $redis, LoggerInterface $logger, array $options)
     {
         $this->em = $em;
         $this->redis = $redis;
