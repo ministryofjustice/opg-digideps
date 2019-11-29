@@ -22,7 +22,7 @@ use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
 class ReportService
@@ -31,7 +31,7 @@ class ReportService
     protected $reportRepository;
 
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     protected $_em;
 
@@ -51,7 +51,7 @@ class ReportService
     private $bankAccountRepository;
 
     public function __construct(
-        EntityManager $em
+        EntityManagerInterface $em
     )
     {
         $this->reportRepository = $em->getRepository(Report::class);

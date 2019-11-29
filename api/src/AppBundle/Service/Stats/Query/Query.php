@@ -2,13 +2,13 @@
 
 namespace AppBundle\Service\Stats\Query;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\ResultSetMapping;
 use AppBundle\Service\Stats\StatsQueryParameters;
+use Doctrine\ORM\EntityManagerInterface;
 
 abstract class Query
 {
-    /** @var EntityManager */
+    /** @var EntityManagerInterface */
     private $em;
 
     abstract protected function getAggregation(): string;
@@ -16,9 +16,9 @@ abstract class Query
     abstract protected function getSubquery(): string;
 
     /**
-     * @param EntityManager $em
+     * @param EntityManagerInterface $em
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
     }

@@ -3,11 +3,11 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\CasRec;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 class CasrecVerificationService
 {
-    /** @var EntityManager */
+    /** @var EntityManagerInterface */
     private $em;
 
     /** @var \Doctrine\ORM\EntityRepository */
@@ -18,7 +18,7 @@ class CasrecVerificationService
      */
     private $lastMatchedCasrecUsers;
 
-    public function __construct($em)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
         $this->casRecRepo = $this->em->getRepository('AppBundle\Entity\CasRec');
