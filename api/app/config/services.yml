@@ -35,9 +35,7 @@ services:
 
     AppBundle\Service\UserService:
         class: AppBundle\Service\UserService
-        arguments:
-            $em: '@em'
-            $orgService: '@AppBundle\Service\OrgService'
+        arguments: [ '@em', '@AppBundle\Service\OrgService' ]
 
     monolog.processor.add_request_id:
         class: AppBundle\Service\RequestIdLoggerProcessor
@@ -48,7 +46,7 @@ services:
     opg_digideps.report_service:
         class: AppBundle\Service\ReportService
         arguments:
-          - "@em"
+          - '@em'
         public: true
 
     gedmo.listener.softdeleteable:
