@@ -57,7 +57,7 @@ abstract class MoneyTransactionShort implements MoneyTransactionInterface
     private $description;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"moneyTransactionsShortIn", "moneyTransactionsShortOut"})
@@ -75,12 +75,12 @@ abstract class MoneyTransactionShort implements MoneyTransactionInterface
     private $type;
 
     /**
-     * @param $type in|out
+     * @param string $type
      * @param Report $report
      *
      * @return MoneyTransactionShort
      */
-    public static function factory($type, Report $report)
+    public static function factory(string $type, Report $report)
     {
         switch ($type) {
             case 'in':
@@ -182,7 +182,7 @@ abstract class MoneyTransactionShort implements MoneyTransactionInterface
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getDate()
     {
@@ -190,7 +190,7 @@ abstract class MoneyTransactionShort implements MoneyTransactionInterface
     }
 
     /**
-     * @param DateTime $date
+     * @param \DateTime $date
      *
      * @return MoneyTransactionShort
      */

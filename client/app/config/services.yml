@@ -69,3 +69,9 @@ services:
 
     AppBundle\Service\File\DocumentsZipFileCreator:
         class: AppBundle\Service\File\DocumentsZipFileCreator
+
+    AppBundle\Controller\Admin\IndexController:
+        class: AppBundle\Controller\Admin\IndexController
+        arguments:
+            - '@AppBundle\Service\OrgService'
+        public: true

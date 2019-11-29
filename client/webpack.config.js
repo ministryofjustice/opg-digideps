@@ -9,7 +9,8 @@ const tag = (new Date()).getTime()
 module.exports = {
   entry: {
     application: './src/AppBundle/Resources/assets/javascripts/main.js',
-    'formatted-report': './src/AppBundle/Resources/assets/scss/formatted-report.scss'
+    'formatted-report': './src/AppBundle/Resources/assets/scss/formatted-report.scss',
+    fonts: './src/AppBundle/Resources/assets/scss/fonts.scss'
   },
   mode: 'production',
   devtool: 'source-map',
@@ -24,7 +25,7 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              url: false
+              url: (url) => url.includes('?inline')
             }
           },
           {
@@ -40,6 +41,10 @@ module.exports = {
             }
           }
         ]
+      },
+      {
+        test: /\.woff2?/i,
+        use: 'url-loader'
       }
     ]
   },

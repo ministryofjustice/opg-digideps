@@ -22,5 +22,5 @@ data "aws_ecr_repository" "images" {
   for_each = toset(local.repositories)
 
   name     = "digideps/${each.key}"
-  provider = "aws.management"
+  provider = aws.management
 }

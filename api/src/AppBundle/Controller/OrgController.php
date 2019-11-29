@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Service\CsvUploader;
+use AppBundle\Service\OrgService;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,6 +13,16 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class OrgController extends RestController
 {
+    /**
+     * @var OrgService
+     */
+    private $orgService;
+
+    public function __construct(OrgService $orgService)
+    {
+        $this->orgService = $orgService;
+    }
+
     /**
      * Bulk insert
      * Max 10k otherwise failing (memory reach 128M).
@@ -35,10 +46,8 @@ class OrgController extends RestController
             throw new \RuntimeException("Max $maxRecords records allowed in a single bulk insert");
         }
 
-        $pa = $this->get('org_service');
-
         try {
-            $ret = $pa->addFromCasrecRows($data);
+            $ret = $this->orgService->addFromCasrecRows($data);
             return $ret;
         } catch (\Throwable $e) {
             $added = ['prof_users' => [], 'pa_users' => [], 'clients' => [], 'reports' => []];

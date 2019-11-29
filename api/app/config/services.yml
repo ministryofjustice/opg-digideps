@@ -22,13 +22,23 @@ services:
         class: AppBundle\Service\UserRegistrationService
         arguments: [ "@em", "@opg_digideps.casrec_verification_service" ]
 
-    org_service:
+    AppBundle\Service\OrgService:
         class: AppBundle\Service\OrgService
-        arguments: [ "@em", "@logger", '@AppBundle\Factory\OrganisationFactory' ]
+        arguments:
+            $em: '@em'
+            $logger: '@logger'
+            $userRepository: '@AppBundle\Entity\Repository\UserRepository'
+            $reportRepository: '@AppBundle\Entity\Repository\ReportRepository'
+            $clientRepository: '@AppBundle\Entity\Repository\ClientRepository'
+            $orgRepository: '@AppBundle\Entity\Repository\OrganisationRepository'
+            $teamRepository: '@AppBundle\Entity\Repository\TeamRepository'
+            $orgFactory: '@AppBundle\Factory\OrganisationFactory'
 
-    user_service:
+    AppBundle\Service\UserService:
         class: AppBundle\Service\UserService
-        arguments: [ "@em", "@org_service"]
+        arguments:
+            $em: '@em'
+            $orgService: '@AppBundle\Service\OrgService'
 
     monolog.processor.add_request_id:
         class: AppBundle\Service\RequestIdLoggerProcessor
@@ -78,3 +88,6 @@ services:
 
     AppBundle\Service\DataNormaliser:
         class: AppBundle\Service\DataNormaliser
+
+    AppBundle\Service\Search\ClientSearchFilter:
+        class: AppBundle\Service\Search\ClientSearchFilter

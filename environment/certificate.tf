@@ -14,7 +14,7 @@ resource "aws_route53_record" "wildcard_validation" {
   zone_id  = data.aws_route53_zone.public.id
   records  = [aws_acm_certificate.wildcard.domain_validation_options.0.resource_record_value]
   ttl      = 60
-  provider = "aws.dns"
+  provider = aws.dns
 }
 
 resource "aws_acm_certificate_validation" "wildcard" {
