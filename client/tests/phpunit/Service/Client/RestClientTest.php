@@ -1,14 +1,17 @@
 <?php
 
-namespace AppBundle\Service\Client;
+namespace DigidepsTests\Service\Client;
 
-use AppBundle\Entity\User;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\TokenStorage\TokenStorageInterface;
 use GuzzleHttp\ClientInterface;
 use JMS\Serializer\SerializerInterface;
-use MockeryStub as m;
+use Mockery as m;
+use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
 use Symfony\Bridge\Monolog\Logger;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class RestClientTest extends TestCase
@@ -19,24 +22,44 @@ class RestClientTest extends TestCase
     private $object;
 
     /**
-     * @var ClientInterface
+     * @var ClientInterface|MockInterface
      */
     private $client;
 
     /**
-     * @var SerializerInterface
+     * @var SerializerInterface|MockInterface
      */
     private $serialiser;
 
     /**
-     * @var TokenStorageInterface
+     * @var TokenStorageInterface|MockInterface
      */
     private $tokenStorage;
 
     /**
-     * @var Logger
+     * @var Logger|MockInterface
      */
     private $logger;
+
+    /**
+     * @var ContainerInterface|MockInterface
+     */
+    private $container;
+
+    /**
+     * @var string
+     */
+    private $clientSecret;
+
+    /**
+     * @var string
+     */
+    private $sessionToken;
+
+    /**
+     * @var ResponseInterface|MockInterface
+     */
+    private $endpointResponse;
 
     public function setUp(): void
     {
@@ -46,11 +69,10 @@ class RestClientTest extends TestCase
         $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
         $this->clientSecret = 'secret-123';
         $this->sessionToken = 'sessionToken347349r783';
-        $this->container = m::mock('Symfony\Component\DependencyInjection\ContainerInterface')
-            ->shouldReceive('get')->with('jms_serializer')->andReturn($this->serialiser)
-            ->shouldReceive('get')->with('logger')->andReturn($this->logger)
-            ->shouldReceive('getParameter')->with('kernel.debug')->andReturn(false)
-            ->getMock();
+        $this->container = m::mock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $this->container->shouldReceive('get')->with('jms_serializer')->andReturn($this->serialiser);
+        $this->container->shouldReceive('get')->with('logger')->andReturn($this->logger);
+        $this->container->shouldReceive('getParameter')->with('kernel.debug')->andReturn(false);
         $this->container->shouldIgnoreMissing();
 
         $this->endpointResponse = m::mock('Psr\Http\Message\ResponseInterface');
@@ -59,6 +81,8 @@ class RestClientTest extends TestCase
             $this->container,
             $this->client,
             $this->tokenStorage,
+            $this->serialiser,
+            $this->logger,
             $this->clientSecret
         );
 
@@ -75,16 +99,12 @@ class RestClientTest extends TestCase
         $userArray = ['id' => 1, 'firstname' => 'Peter'];
         $userJson = json_encode($userArray);
 
-        $this->serialiser
-            ->shouldReceive('serialize')->with($credentialsArray, 'json')->andReturn($credentialsJson)
-            ->shouldReceive('deserialize')->with($userJson, 'array', 'json')->andReturn(['success' => true, 'data' => $userArray])
-            ->shouldReceive('deserialize')->with($userJson, 'AppBundle\Entity\User', 'json')->andReturn($loggedUser)
-        ;
+        $this->serialiser->shouldReceive('serialize')->with($credentialsArray, 'json')->andReturn($credentialsJson);
+        $this->serialiser->shouldReceive('deserialize')->with($userJson, 'array', 'json')->andReturn(['success' => true, 'data' => $userArray]);
+        $this->serialiser->shouldReceive('deserialize')->with($userJson, 'AppBundle\Entity\User', 'json')->andReturn($loggedUser);
 
-        $this->endpointResponse
-            ->shouldReceive('getHeader')->with('AuthToken')->andReturn([$this->sessionToken])
-            ->shouldReceive('getBody')->andReturn($userJson)
-        ;
+        $this->endpointResponse->shouldReceive('getHeader')->with('AuthToken')->andReturn([$this->sessionToken]);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn($userJson);
 
         $this->client
             ->shouldReceive('post')->with('/auth/login', [
@@ -107,13 +127,11 @@ class RestClientTest extends TestCase
         $responseArray = ['success' => true, 'data' => $responseData];
         $responseJson = json_encode($responseArray);
 
-        $this->endpointResponse
-            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK)
-            ->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
-        $this->tokenStorage
-            ->shouldReceive('get')->once()->andReturn($this->sessionToken)
-            ->shouldReceive('remove')->once()->with(1);
+        $this->tokenStorage->shouldReceive('get')->once()->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('remove')->once()->with(1);
 
         $this->serialiser
             ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
@@ -135,14 +153,11 @@ class RestClientTest extends TestCase
         $responseJson = json_encode($responseArray);
         $loggedUser = m::mock('AppBundle\Entity\User');
 
-        $this->serialiser
-            ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray)
-            ->shouldReceive('deserialize')->with($userJson, 'AppBundle\Entity\User', 'json')->andReturn($loggedUser)
-        ;
+        $this->serialiser->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
+        $this->serialiser->shouldReceive('deserialize')->with($userJson, 'AppBundle\Entity\User', 'json')->andReturn($loggedUser);
 
-        $this->endpointResponse
-            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK)
-            ->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->client->shouldReceive('get')->with("user/get-by-token/{$token}", [
             'headers' => ['ClientSecret' => $this->clientSecret],
@@ -161,23 +176,21 @@ class RestClientTest extends TestCase
         $data = ['id' => 1];
         $responseArray = ['success' => true, 'data' => $data];
         $responseJson = json_encode($responseArray);
+        /** @var \AppBundle\Model\SelfRegisterData $selfRegData */
         $selfRegData = m::mock('AppBundle\Model\SelfRegisterData');
         $selfRegDataJson = 'selfRegData.json';
 
-        $this->serialiser
-            ->shouldReceive('serialize')->with($selfRegData, 'json', m::any())->andReturn($selfRegDataJson)
-            ->shouldReceive('deserialize')->with(json_encode($data), 'AppBundle\Entity\User', 'json')->andReturn($user)
-            ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray)
-        ;
+        $this->serialiser->shouldReceive('serialize')->with($selfRegData, 'json', m::any())->andReturn($selfRegDataJson);
+        $this->serialiser->shouldReceive('deserialize')->with(json_encode($data), 'AppBundle\Entity\User', 'json')->andReturn($user);
+        $this->serialiser->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
 
-        $this->endpointResponse
-            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_CREATED)
-            ->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_CREATED);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->client->shouldReceive('post')->with('selfregister', [
-                'headers' => ['ClientSecret' => $this->clientSecret],
-                'body' => $selfRegDataJson,
-            ])->andReturn($this->endpointResponse);
+            'headers' => ['ClientSecret' => $this->clientSecret],
+            'body' => $selfRegDataJson,
+        ])->andReturn($this->endpointResponse);
 
         $this->assertEquals($user, $this->object->registerUser($selfRegData));
     }
@@ -192,22 +205,19 @@ class RestClientTest extends TestCase
         $responseJson = json_encode($responseArray);
         $endpointUrl = '/path/to/endpoint';
 
-        $this->serialiser
-            ->shouldReceive('serialize')->with($putData, 'json')->andReturn($putDataSerialised)
-            ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray)
-        ;
+        $this->serialiser->shouldReceive('serialize')->with($putData, 'json')->andReturn($putDataSerialised);
+        $this->serialiser->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
 
-        $this->endpointResponse
-            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK)
-            ->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->tokenStorage
             ->shouldReceive('get')->once()->andReturn($this->sessionToken);
 
         $this->client->shouldReceive('put')->with($endpointUrl, [
-                'headers' => ['AuthToken' => $this->sessionToken],
-                'body' => $putDataSerialised,
-            ])->andReturn($this->endpointResponse);
+            'headers' => ['AuthToken' => $this->sessionToken],
+            'body' => $putDataSerialised,
+        ])->andReturn($this->endpointResponse);
 
         $this->assertEquals($responseData, $this->object->put($endpointUrl, $putData, []));
     }
@@ -222,22 +232,19 @@ class RestClientTest extends TestCase
         $responseJson = json_encode($responseArray);
         $endpointUrl = '/path/to/endpoint';
 
-        $this->serialiser
-            ->shouldReceive('serialize')->with($postData, 'json')->andReturn($postDataSerialised)
-            ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray)
-        ;
+        $this->serialiser->shouldReceive('serialize')->with($postData, 'json')->andReturn($postDataSerialised);
+        $this->serialiser->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
 
-        $this->endpointResponse
-            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_CREATED)
-            ->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_CREATED);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->tokenStorage
             ->shouldReceive('get')->once()->andReturn($this->sessionToken);
 
         $this->client->shouldReceive('post')->with($endpointUrl, [
-                'headers' => ['AuthToken' => $this->sessionToken],
-                'body' => $postDataSerialised,
-            ])->andReturn($this->endpointResponse);
+            'headers' => ['AuthToken' => $this->sessionToken],
+            'body' => $postDataSerialised,
+        ])->andReturn($this->endpointResponse);
 
         $this->assertEquals($responseData, $this->object->post($endpointUrl, $postData, []));
     }
@@ -258,14 +265,13 @@ class RestClientTest extends TestCase
         $this->tokenStorage
             ->shouldReceive('get')->once()->andReturn($this->sessionToken);
 
-        $this->endpointResponse
-            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK)
-            ->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->client->shouldReceive('get')->with($endpointUrl, [
-                'headers' => ['AuthToken' => $this->sessionToken],
-                'query' => ['groups' => $jmsGroups],
-            ])->andReturn($this->endpointResponse);
+            'headers' => ['AuthToken' => $this->sessionToken],
+            'query' => ['groups' => $jmsGroups],
+        ])->andReturn($this->endpointResponse);
 
         $this->assertEquals($responseData, $this->object->get($endpointUrl, $responseType, $jmsGroups));
     }
@@ -280,21 +286,18 @@ class RestClientTest extends TestCase
         $responseJson = json_encode($responseArray);
         $user = m::mock('AppBundle\Entity\User');
 
-        $this->serialiser
-            ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray) //extractDataArray()
-            ->shouldReceive('deserialize')->with($responseDataJson, 'AppBundle\Entity\User', 'json')->andReturn($user)
-        ;
+        $this->serialiser->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
+        $this->serialiser->shouldReceive('deserialize')->with($responseDataJson, 'AppBundle\Entity\User', 'json')->andReturn($user);
 
         $this->tokenStorage
             ->shouldReceive('get')->once()->andReturn($this->sessionToken);
 
-        $this->endpointResponse
-            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK)
-            ->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->client->shouldReceive('get')->with($endpointUrl, [
-                'headers' => ['AuthToken' => $this->sessionToken],
-            ])->andReturn($this->endpointResponse);
+            'headers' => ['AuthToken' => $this->sessionToken],
+        ])->andReturn($this->endpointResponse);
 
         $this->assertEquals($user, $this->object->get($endpointUrl, $expectedResponseType));
     }
@@ -310,25 +313,26 @@ class RestClientTest extends TestCase
         $responseData = [$user1Array, $user2Array];
         $responseArray = ['success' => true, 'data' => $responseData];
         $responseJson = json_encode($responseArray);
-        $user1 = m::stub('AppBundle\Entity\User', ['getId' => 1]);
-        $user2 = m::stub('AppBundle\Entity\User', ['getId' => 2]);
+        $user1 = m::mock('AppBundle\Entity\User');
+        $user2 = m::mock('AppBundle\Entity\User');
 
-        $this->serialiser
-            ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray) //extractDataArray()
-            ->shouldReceive('deserialize')->with($user1Json, 'AppBundle\Entity\User', 'json')->andReturn($user1)
-            ->shouldReceive('deserialize')->with($user2Json, 'AppBundle\Entity\User', 'json')->andReturn($user2)
-        ;
+        $user1->shouldReceive('getId')->andReturn(1);
+        $user2->shouldReceive('getId')->andReturn(2);
+
+
+        $this->serialiser->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray); //extractDataArray()
+        $this->serialiser->shouldReceive('deserialize')->with($user1Json, 'AppBundle\Entity\User', 'json')->andReturn($user1);
+        $this->serialiser->shouldReceive('deserialize')->with($user2Json, 'AppBundle\Entity\User', 'json')->andReturn($user2);
 
         $this->tokenStorage
             ->shouldReceive('get')->once()->andReturn($this->sessionToken);
 
-        $this->endpointResponse
-            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK)
-            ->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->client->shouldReceive('get')->with($endpointUrl, [
-                'headers' => ['AuthToken' => $this->sessionToken],
-            ])->andReturn($this->endpointResponse);
+            'headers' => ['AuthToken' => $this->sessionToken],
+        ])->andReturn($this->endpointResponse);
 
         $actual = $this->object->get($endpointUrl, $expectedResponseType);
 
@@ -352,13 +356,12 @@ class RestClientTest extends TestCase
         $this->tokenStorage
             ->shouldReceive('get')->once()->andReturn($this->sessionToken);
 
-        $this->endpointResponse
-            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK)
-            ->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->client->shouldReceive('get')->with($endpointUrl, [
-                'headers' => ['AuthToken' => $this->sessionToken],
-            ])->andReturn($this->endpointResponse);
+            'headers' => ['AuthToken' => $this->sessionToken],
+        ])->andReturn($this->endpointResponse);
 
         $this->object->get($endpointUrl, $expectedResponseType);
     }
@@ -371,8 +374,11 @@ class RestClientTest extends TestCase
         $responseData = [];
         $responseArray = ['success' => true, 'data' => $responseData];
         $responseJson = json_encode($responseArray);
-        $user1 = m::stub('AppBundle\Entity\User', ['getId' => 1]);
-        $user2 = m::stub('AppBundle\Entity\User', ['getId' => 2]);
+        $user1 = m::mock('AppBundle\Entity\User');
+        $user2 = m::mock('AppBundle\Entity\User');
+
+        $user1->shouldReceive('getId')->andReturn(1);
+        $user2->shouldReceive('getId')->andReturn(2);
 
         $this->serialiser
             ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
@@ -380,13 +386,12 @@ class RestClientTest extends TestCase
         $this->tokenStorage
             ->shouldReceive('get')->once()->andReturn($this->sessionToken);
 
-        $this->endpointResponse
-            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK)
-            ->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->client->shouldReceive('get')->with($endpointUrl, [
-                'headers' => ['AuthToken' => $this->sessionToken],
-            ])->andReturn($this->endpointResponse);
+            'headers' => ['AuthToken' => $this->sessionToken],
+        ])->andReturn($this->endpointResponse);
 
         $actual = $this->object->get($endpointUrl, $expectedResponseType);
 
@@ -410,8 +415,8 @@ class RestClientTest extends TestCase
             ->shouldReceive('warning')->once();
 
         $this->client->shouldReceive('get')->with($endpointUrl, [
-                'headers' => ['AuthToken' => $this->sessionToken],
-            ])->andThrow(new \GuzzleHttp\Exception\TransferException('network failure'));
+            'headers' => ['AuthToken' => $this->sessionToken],
+        ])->andThrow(new \GuzzleHttp\Exception\TransferException('network failure'));
 
         $this->object->get($endpointUrl, 'array');
     }
@@ -429,13 +434,12 @@ class RestClientTest extends TestCase
         $this->tokenStorage
             ->shouldReceive('get')->once()->andReturn($this->sessionToken);
 
-        $this->endpointResponse
-            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK)
-            ->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->client->shouldReceive('delete')->with($endpointUrl, [
-                'headers' => ['AuthToken' => $this->sessionToken],
-            ])->andReturn($this->endpointResponse);
+            'headers' => ['AuthToken' => $this->sessionToken],
+        ])->andReturn($this->endpointResponse);
 
         $this->assertEquals($responseData, $this->object->delete($endpointUrl));
     }
@@ -448,17 +452,19 @@ class RestClientTest extends TestCase
         $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
         $this->clientSecret = 'secret-123';
         $this->sessionToken = 'sessionToken347349r783';
-        $this->container = m::mock('Symfony\Component\DependencyInjection\ContainerInterface')
-            ->shouldReceive('get')->with('jms_serializer')->andReturn($this->serialiser)
-            ->shouldReceive('get')->with('logger')->andReturn($this->logger)
-            ->shouldReceive('get')->with('request_stack')->andReturn(null)
-            ->shouldReceive('getParameter')->with('kernel.debug')->andReturn(true)
-            ->getMock();
+        $this->container = m::mock('Symfony\Component\DependencyInjection\ContainerInterface');
+
+        $this->container->shouldReceive('get')->with('jms_serializer')->andReturn($this->serialiser);
+        $this->container->shouldReceive('get')->with('logger')->andReturn($this->logger);
+        $this->container->shouldReceive('get')->with('request_stack')->andReturn(null);
+        $this->container->shouldReceive('getParameter')->with('kernel.debug')->andReturn(true);
 
         $object = new RestClient(
             $this->container,
             $this->client,
             $this->tokenStorage,
+            $this->serialiser,
+            $this->logger,
             $this->clientSecret
         );
         $object->setLoggedUserId(1);
@@ -474,13 +480,12 @@ class RestClientTest extends TestCase
         $this->tokenStorage
             ->shouldReceive('get')->andReturn($this->sessionToken);
 
-        $this->endpointResponse
-            ->shouldReceive('getBody')->andReturn($responseJson)
-            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
 
         $this->client->shouldReceive('delete')->with($endpointUrl, [
-                'headers' => ['AuthToken' => $this->sessionToken],
-            ])->andReturn($this->endpointResponse);
+            'headers' => ['AuthToken' => $this->sessionToken],
+        ])->andReturn($this->endpointResponse);
 
         $object->delete($endpointUrl);
 

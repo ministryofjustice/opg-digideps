@@ -21,7 +21,7 @@ class CsvUploader
     /**
      * @param mixed $data
      *
-     * @return string
+     * @return string|array
      * @deprecated Use AppBundle\Service\DataCompression
      */
     public static function decompressData($data)

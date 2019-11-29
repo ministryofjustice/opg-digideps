@@ -20,6 +20,7 @@
     "sass-loader": "^8.0.0",
     "standard": "^14.3.1",
     "stickyfilljs": "^2.1.0",
+    "url-loader": "^3.0.0",
     "webpack": "^4.40.2",
     "webpack-cli": "^3.3.9"
   },

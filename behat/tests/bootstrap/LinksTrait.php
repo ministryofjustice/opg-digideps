@@ -230,8 +230,39 @@ trait LinksTrait
         while ($refresh = $this->getSession()->getPage()->find('css', 'meta[http-equiv="refresh"]')) {
             $content = $refresh->getAttribute('content');
             $url = preg_replace('/^\d+;\s*URL=/i', '', $content);
-            echo $url;
+
             $this->getSession()->visit($url);
         }
+    }
+
+    /**
+     * Click on a specific link in a row that contains a specified string
+     *
+     * @When I click on :linkText in the :rowText row
+     */
+    public function clickLinkInsideATableRow(string $linkText, string $rowText)
+    {
+        $row = $this->findRowByText($rowText);
+        $link = $row->findLink($linkText);
+
+        if (null === $link) {
+            throw new \Exception('Cannot find link in row with text: '.$linkText);
+        }
+
+        $link->click();
+    }
+
+    /**
+     * @param $rowText
+     */
+    private function findRowByText($rowText)
+    {
+        $row = $this->getSession()->getPage()->find('css', sprintf('table tr:contains("%s")', $rowText));
+
+        if (null === $row) {
+            throw new \Exception('Cannot find a table row with text: ' . $rowText);
+        }
+
+        return $row;
     }
 }

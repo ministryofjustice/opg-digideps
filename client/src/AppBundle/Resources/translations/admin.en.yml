@@ -156,3 +156,8 @@ yes:
 
 action:
     message: Your changes were saved
+
+labels:
+    active: ACTIVE
+    submitted: SUBMITTED
+    incomplete: INCOMPLETE

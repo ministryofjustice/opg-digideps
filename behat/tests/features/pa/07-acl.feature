@@ -35,7 +35,7 @@ Feature: PA cannot access other's PA's reports and clients
     # cannot access team1 reports
     But I should not see the "client-01000010" region
     When I go to the URL previously saved as "report-for-client-01000010.url"
-    Then the response status code should be 500
+    Then the response status code should be 404
 
   Scenario: PA user cannot edit client
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
@@ -58,9 +58,9 @@ Feature: PA cannot access other's PA's reports and clients
     And I save the current URL as "client-01000014-report-completed"
     When I load the application status from "pa-report-submitted"
     When I go to the URL previously saved as "client-01000014-report-overview"
-    Then the response status code should be 500
+    Then the response status code should be 404
     When I go to the URL previously saved as "client-01000014-report-completed"
-    Then the response status code should be 500
+    Then the response status code should be 404
 
   Scenario: PA_ADMIN logs in, edits own account and removes admin privilege should be logged out
     Given I load the application status from "team-users-complete"
@@ -168,9 +168,9 @@ Feature: PA cannot access other's PA's reports and clients
     And I should see the "client-40000041" region
     And I should not see the "client-40000042" region
     Then I go to the report URL "overview" for "40000042-report"
-    And the response status code should be 500
+    And the response status code should be 404
     Then I go to the URL previously saved as "client-40000042-edit"
-    And the response status code should be 500
+    And the response status code should be 404
 
   Scenario: User in an active organisation attempting to access clients inside and outside of the organisation
     Given the organisation "pa-org1.gov.uk" is active
@@ -181,14 +181,14 @@ Feature: PA cannot access other's PA's reports and clients
     Then I go to the report URL "overview" for "40000041-report"
     And the response status code should be 200
     Then I go to the report URL "overview" for "40000042-report"
-    And the response status code should be 500
+    And the response status code should be 404
 
   Scenario: User not in an organisation attempting to access their client who is in an active organisation
     Given the organisation "pa-org1.gov.uk" is active
     And "behat-pa-org1@pa-org1.gov.uk" has been removed from their organisation
     When I am logged in as "behat-pa-org1@pa-org1.gov.uk" with password "Abcd1234"
     And I go to the report URL "overview" for "40000041-report"
-    And the response status code should be 500
+    And the response status code should be 404
 
   Scenario: User not in an organisation attempting to access their client who is in an inactive organisation
     Given the organisation "pa-org1.gov.uk" is inactive
