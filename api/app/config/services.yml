@@ -1,4 +1,6 @@
 imports:
+    - { resource: services/defaults.yml }
+    - { resource: services/assemblers.yml }
     - { resource: services/assemblers.yml }
     - { resource: services/controllers.yml }
     - { resource: services/event_listeners.yml }
@@ -10,11 +12,6 @@ imports:
     - { resource: services/transformers.yml }
 
 services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
-        public: true
-
     em:
         alias: doctrine.orm.entity_manager
         public: true

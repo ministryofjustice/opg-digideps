@@ -7,10 +7,12 @@ services:
     authenticator.token_header:
         class: AppBundle\Service\Auth\HeaderTokenAuthenticator
         public: false
-    user_provider:
+    AppBundle\Service\Auth\UserProvider:
         class: AppBundle\Service\Auth\UserProvider
         arguments: [ '@em', "@snc_redis.default", "@logger", { "timeout_seconds": "%user_provider_timeout_seconds%" } ]
         public: true
+    user_provider:
+        alias: AppBundle\Service\Auth\UserProvider
     authService:
         class: AppBundle\Service\Auth\AuthService
         public: true
