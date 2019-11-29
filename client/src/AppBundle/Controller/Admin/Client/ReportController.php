@@ -252,7 +252,7 @@ class ReportController extends AbstractController
         );
 
         if (!$report->getSubmitted() && empty($report->getUnSubmitDate())) {
-            throw new DisplayableException('Cannot lodge a checklist for an incomplete report');
+            throw new ReportNotSubmittedException('Cannot lodge a checklist for an incomplete report');
         }
 
         $checklist = $report->getChecklist();
