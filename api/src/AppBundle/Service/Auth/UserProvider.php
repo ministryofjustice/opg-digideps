@@ -3,11 +3,9 @@
 namespace AppBundle\Service\Auth;
 
 use AppBundle\Entity\User;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Predis\Client;
 use Psr\Log\LoggerInterface;
-use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
@@ -22,12 +20,12 @@ class UserProvider implements UserProviderInterface
     private $redis;
 
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     private $em;
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
