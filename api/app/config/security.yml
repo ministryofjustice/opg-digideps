@@ -9,7 +9,7 @@ services:
         public: false
     user_provider:
         class: AppBundle\Service\Auth\UserProvider
-        arguments: [ "@em", "@snc_redis.default", "@logger", { "timeout_seconds": "%user_provider_timeout_seconds%" } ]
+        arguments: [ '@em', "@snc_redis.default", "@logger", { "timeout_seconds": "%user_provider_timeout_seconds%" } ]
         public: true
     authService:
         class: AppBundle\Service\Auth\AuthService
@@ -126,5 +126,3 @@ security:
         ROLE_PROF_NAMED:        [ ROLE_PROF, ROLE_ORG_NAMED ]
         ROLE_PROF_ADMIN:        [ ROLE_PROF, ROLE_ORG_ADMIN ]
         ROLE_PROF_TEAM_MEMBER:  [ ROLE_PROF, ROLE_ORG_TEAM_MEMBER ]
-
-
