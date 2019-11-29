@@ -85,3 +85,7 @@ services:
 
     AppBundle\Service\Search\ClientSearchFilter:
         class: AppBundle\Service\Search\ClientSearchFilter
+
+    # Disable autowiring for these helper classes
+    AppBundle\Service\ReportStatusService: ~
+    AppBundle\Service\Stats\StatsQueryParameters: ~
