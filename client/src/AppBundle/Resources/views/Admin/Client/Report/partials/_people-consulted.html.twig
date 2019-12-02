@@ -9,13 +9,7 @@
 
 {{ checklist_radios(form.consultationsSatisfactory) }}
 
-{% set contents %}
-    {% include 'AppBundle:Report/Contact:_list.html.twig' with {
-        hideEditLink: true
-    } %}
-{% endset %}
-
 {{ details({
     summaryText: (page ~ '.revealTitle.contactsSummary') | trans,
-    text: contents,
+    html: include('AppBundle:Report/Contact:_list.html.twig', { hideEditLink: true })
 }) }}

@@ -1,6 +1,16 @@
 Feature: Full review checklist
 
   @deputy
+  Scenario: Full review checklist contains logic summary
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    When I open the "2016" checklist for client "102"
+    Then I should see the "lodging-summary" region
+    And I should see "I am not satisfied" in the "lodging-summary" region
+    And I should see "I am referring the case for a staff review" in the "lodging-summary" region
+    And I should see "Some more info 1" in the "lodging-summary" region
+    And I should see "Some more info 2" in the "lodging-summary" region
+
+  @deputy
   Scenario: Full review checklist requires validation on submission
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     When I open the "2016" checklist for client "102"

@@ -9,13 +9,7 @@
 
 {{ checklist_radios(form.decisionsSatisfactory) }}
 
-{% set contents %}
-    {% include 'AppBundle:Report/Decision:_list.html.twig' with {
-        hideEditLink: true
-    } %}
-{% endset %}
-
 {{ details({
     summaryText: (page ~ '.revealTitle.decisionsSummary') | trans,
-    text: contents,
+    html: include('AppBundle:Report/Decision:_list.html.twig', { hideEditLink: true })
 }) }}
