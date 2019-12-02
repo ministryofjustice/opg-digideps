@@ -42,7 +42,6 @@ class ReportChecklistType extends AbstractType
 
         // HW & PFA
         $builder
-            ->add('id', FormTypes\HiddenType::class)
             ->add('reportingPeriodAccurate', FormTypes\ChoiceType::class, $yesNoOptions)
             ->add('contactDetailsUptoDate', FormTypes\CheckboxType::class);
 
