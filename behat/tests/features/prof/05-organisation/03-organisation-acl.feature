@@ -28,7 +28,7 @@ Feature: Users can access the correct clients
   Scenario: Organisation activated should not permit visibility of new clients belonging to org
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I go to admin page "/admin/organisations"
-    When I click on "edit" in the "org-existing-deputy1abc-solicitorsuk" region
+    When I click on "edit" in the "org-abc-solicitors" region
     And I fill in "organisation_isActivated_0" with "1"
     And I press "Save organisation"
     And I am logged in as "existing-deputy1@abc-solicitors.uk" with password "Abcd1234"
@@ -38,7 +38,7 @@ Feature: Users can access the correct clients
   Scenario: Team user added to existing org should enable visibility of new client
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     When I go to admin page "/admin/organisations"
-    And I follow "abc-solicitors.uk"
+    And I follow "ABC Solicitors"
     #And I create a new "NDR-disabled" "Prof Named" user "ABC org" "Administrator" with email "behat-pa-org1@pa-org1.gov.uk" and postcode "SW1"
     And I follow "Add someone to this organisation"
     And I fill in "organisation_add_user_email" with "existing-deputy1@abc-solicitors.uk"

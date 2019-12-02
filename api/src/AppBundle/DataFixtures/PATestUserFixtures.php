@@ -36,7 +36,7 @@ class PATestUserFixtures extends AbstractDataFixture
             'Deputy No' => '1000001',
             'Dep Type' => 23,
             'roleName' => 'ROLE_PA_NAMED',
-            'Dep Adrs1' => 'ADD1',
+            'Dep Adrs1' => 'PA OPG',
             'Dep Adrs2' => 'ADD2',
             'Dep Adrs3' => 'ADD3',
             'Dep Postcode' => 'SW1',
@@ -86,7 +86,7 @@ class PATestUserFixtures extends AbstractDataFixture
             'Deputy No' => '9000002',
             'Dep Type' => 23,
             'roleName' => 'ROLE_PA_NAMED',
-            'Dep Adrs1' => 'ADD1',
+            'Dep Adrs1' => 'PA OPG',
             'Dep Adrs2' => 'ADD2',
             'Dep Adrs3' => 'ADD3',
             'Dep Postcode' => 'SW1',
@@ -121,7 +121,7 @@ class PATestUserFixtures extends AbstractDataFixture
             'Deputy No' => '9000003',
             'Dep Type' => 23,
             'roleName' => 'ROLE_PA_NAMED',
-            'Dep Adrs1' => 'ADD1',
+            'Dep Adrs1' => 'PA OPG',
             'Dep Adrs2' => 'ADD2',
             'Dep Adrs3' => 'ADD3',
             'Dep Postcode' => 'SW1',
@@ -193,7 +193,7 @@ class PATestUserFixtures extends AbstractDataFixture
 
         $organisation = $this->orgRepository->findByEmailIdentifier($data['Email']);
         if (null === $organisation) {
-            $organisation = $this->orgFactory->createFromFullEmail($data['Email'], $data['Email']);
+            $organisation = $this->orgFactory->createFromFullEmail($data['Dep Adrs1'], $data['Email']);
             $manager->persist($organisation);
             $manager->flush($organisation);
         }

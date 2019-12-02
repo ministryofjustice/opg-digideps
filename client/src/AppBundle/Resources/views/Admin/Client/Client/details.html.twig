@@ -47,7 +47,7 @@
             {{ (page ~ '.organisation') | trans }}
         </dt>
         <dd class="govuk-summary-list__value behat-region-assigned-organisation">
-            <a href="{{ path('admin_organisation_view', {id: client.organisation.id}) }}">{{ client.organisation.name }}</a>
+            <a href="{{ path('admin_organisation_view', {id: client.organisation.id}) }}">{{ client.organisation.name }}</a> ({{ client.organisation.emailIdentifier }})
 
             {% if not client.organisation.isActivated %}
                 {{ (page ~ '.organisationInactive') | trans }}
@@ -61,7 +61,7 @@
         <dt class="govuk-summary-list__key">
             {{ 'namedDeputy' | trans({}, 'common') }}
         </dt>
-        <dd class="govuk-summary-list__value">
+        <dd class="govuk-summary-list__value behat-region-named-deputy-fullname  ">
             {{ namedDeputy.fullName }}
         </dd>
     </div>

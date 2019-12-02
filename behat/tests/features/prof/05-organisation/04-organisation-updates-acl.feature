@@ -35,7 +35,7 @@ Feature: Organisation deputyship updates
     Then I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search, client-detail-01000010"
     # Assert same organisation
-    And I should see "behat-prof1@publicguardian.gov.uk" in the "assigned-organisation" region
+    And I should see "PA OPG" in the "assigned-organisation" region
     # Assert new named deputy within same organisation
     And I should see "new-behat-prof1@publicguardian.gov.uk" in the "deputy-details" region
 
@@ -50,10 +50,18 @@ Feature: Organisation deputyship updates
     # Assert client associated with new org
     Then I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search, client-detail-1138393t"
-    # Assert new organisation
-    And I should see "behat-prof1@example.com1" in the "assigned-organisation" region
-    # Assert new named deputy within same organisation
-    And I should see "behat-prof1@example.com1" in the "deputy-details" region
+    # Assert same named deputy within new organisation
+    Then each text should be present in the corresponding region:
+      | Your Organisation (example.com1)                        | assigned-organisation |
+      | NEW DEP2 NEW SURNAME2                 | named-deputy-fullname |
+      | Prof Example 1                        | deputy-details |
+      | ADD2                                  | deputy-details |
+      | ADD3                                  | deputy-details |
+      | ADD4                                  | deputy-details |
+      | ADD5                                  | deputy-details |
+      | SW2                                   | deputy-details |
+      | GB                                    | deputy-details |
+      | behat-prof1@example.com1              | deputy-details |
 
   @discharge
   Scenario: Clients appointed to a new organisation
@@ -69,14 +77,32 @@ Feature: Organisation deputyship updates
     And I should see the "discharged-client-11498120-discharged-on" region
     # Assert discharged client still remains with old org
     Then I click on "discharged-client-detail-11498120"
-    And I should see "behat-prof1@publicguardian.gov.uk" in the "assigned-organisation" region
-    # Assert new named deputy within same organisation
-    And I should see "behat-prof1@publicguardian.gov.uk" in the "deputy-details" region
+    Then each text should be present in the corresponding region:
+      | PA OPG (publicguardian.gov.uk)                        | assigned-organisation |
+      | DEP1 SURNAME1              | named-deputy-fullname |
+      | Prof OPG                                   | deputy-details |
+      | ADD2                                  | deputy-details |
+      | ADD3                                  | deputy-details |
+      | ADD4                                  | deputy-details |
+      | ADD5                                  | deputy-details |
+      | SW1                                   | deputy-details |
+      | GB                                    | deputy-details |
+      | 10000000001                           | deputy-details |
+      | behat-prof1@publicguardian.gov.uk     | deputy-details |
+
     # Assert new organisation for new client
     Then I click on "admin-client-search, client-detail-11498120"
-    And I should see "behat-prof1@example.com2" in the "assigned-organisation" region
-    # Assert new named deputy within same organisation
-    And I should see "behat-prof1@example.com2" in the "deputy-details" region
+    Then each text should be present in the corresponding region:
+      | Your Organisation (example.com2)      | assigned-organisation |
+      | NEW DEP3 NEW SURNAME3                 | named-deputy-fullname |
+      | Prof Example 2                        | deputy-details |
+      | ADD2                                  | deputy-details |
+      | ADD3                                  | deputy-details |
+      | ADD4                                  | deputy-details |
+      | ADD5                                  | deputy-details |
+      | SW3                                   | deputy-details |
+      | GB                                    | deputy-details |
+      | behat-prof1@example.com2              | deputy-details |
 
 
 

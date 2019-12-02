@@ -39,7 +39,7 @@ Feature: Report submit (client 31000010)
         Then each text should be present in the corresponding region:
             | DEP1                            | deputy-firstname |
             | SURNAME1                                 | deputy-lastname |
-            | ADD1                                  | deputy-address |
+            | Prof OPG                                  | deputy-address |
             | 10000000001                           | deputy-phone |
             | behat-prof1@publicguardian.gov.uk   | deputy-email |
         And I click on "declaration-page"
