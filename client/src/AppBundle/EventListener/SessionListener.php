@@ -2,12 +2,11 @@
 
 namespace AppBundle\EventListener;
 
-use Symfony\Bridge\Monolog\Logger;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Redirect to login page when session is Idle for more than `idleTimeout` amount in seconds.
@@ -22,12 +21,12 @@ class SessionListener
     private $idleTimeout;
 
     /**
-     * @var Router
+     * @var RouterInterface
      */
     private $router;
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -36,7 +35,7 @@ class SessionListener
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(Router $router, Logger $logger, array $options)
+    public function __construct(RouterInterface $router, LoggerInterface $logger, array $options)
     {
         $this->router = $router;
         $this->logger = $logger;
