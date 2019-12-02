@@ -119,9 +119,23 @@ dd-behat-run()
 }
 
 dd-phpstan() {
-  CONTAINER=$1
-  shift
-  docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm ${CONTAINER} bin/phpstan analyse $@ --memory-limit=0 --level=max
+  if [ "$1" = "" ]; then
+    MERGE_BASE_COMMIT=( $(git merge-base master HEAD) )
+    API_CHANGED_FILES=( $(git diff --relative=api --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) ) || [[ $? == 1 ]]
+    CLIENT_CHANGED_FILES=( $(git diff --relative=client --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) ) || [[ $? == 1 ]]
+
+    if [ -n "$API_CHANGED_FILES" ]; then
+      dd-phpstan api $API_CHANGED_FILES
+    fi
+
+    if [ -n "$CLIENT_CHANGED_FILES" ]; then
+      dd-phpstan frontend $CLIENT_CHANGED_FILES
+    fi
+  else
+    CONTAINER=$1
+    shift
+    docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm ${CONTAINER} bin/phpstan analyse $@ --memory-limit=0 --level=max
+  fi
 }
 
 # phpunit
