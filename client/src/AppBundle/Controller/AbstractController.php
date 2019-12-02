@@ -101,7 +101,7 @@ abstract class AbstractController extends Controller
         try {
             $report = $this->getRestClient()->get("report/{$reportId}", 'Report\\Report', $groups);
         } catch (RestClientException $e) {
-            if ($e->getCode() === 403 || $e->getCode() === 404) {
+            if ($e->getStatusCode() === 403 || $e->getStatusCode() === 404) {
                 throw $this->createNotFoundException($e->getData()['message']);
             } else {
                 throw $e;
