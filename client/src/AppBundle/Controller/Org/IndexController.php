@@ -71,12 +71,8 @@ class IndexController extends AbstractController
      */
     public function clientEditAction(Request $request, $clientId)
     {
-        try {
-            /** @var Client $client */
-            $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report']);
-        } catch (RestClientException $e) {
-            throw $this->createNotFoundException();
-        }
+        /** @var Client $client */
+        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report']);
 
         // PA client profile is ATM relying on report ID, this is a working until next refactor
         $returnLink = ($request->get('from') === 'declaration') ?
