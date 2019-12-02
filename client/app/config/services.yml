@@ -1,4 +1,5 @@
 imports:
+    - { resource: services/defaults.yml }
     - { resource: services/file_uploads.yml }
     - { resource: services/mappers.yml }
     - { resource: services/resolvers.yml }
@@ -12,16 +13,6 @@ imports:
     - { resource: services_pa.yml }
 
 services:
-
-    _defaults:
-        autowire: true
-        autoconfigure: true
-        public: true
-
-    AppBundle\Controller\:
-        resource: "@AppBundle/Controller/"
-        tags: [controller.service_arguments]
-
     AppBundle\Service\Redirector:
         class: AppBundle\Service\Redirector
         arguments: [ "@security.token_storage", "@security.authorization_checker", "@router", "@session", "%env%" ]
