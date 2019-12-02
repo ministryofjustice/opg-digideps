@@ -36,6 +36,11 @@ module "backup_security_group" {
   vpc_id = data.aws_vpc.vpc.id
 }
 
+data "aws_kms_alias" "backup" {
+  name     = "alias/backup"
+  provider = aws.management
+}
+
 locals {
   backup_container = <<EOF
 {
@@ -58,6 +63,10 @@ locals {
 			"name": "S3_BUCKET",
 			"value": "${data.aws_s3_bucket.backup.bucket}"
 		},
+        {
+            "name": "S3_KMS_KEY_ID",
+            "value": "${data.aws_kms_alias.backup.target_key_id}"
+        },
 		{
 			"name": "S3_PREFIX",
 			"value": "${local.environment}"
