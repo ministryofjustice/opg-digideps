@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Service;
 
 use AppBundle\Service\CasrecVerificationService;
+use Doctrine\ORM\EntityManager;
 use Mockery as m;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -94,7 +95,7 @@ class CasrecVerificationServiceTest extends WebTestCase
             ->shouldReceive('findBy')->with([ 'caseNumber'=>'44444444', 'clientLastname' => 'csurn', 'deputySurname' => 'sibling'])->andReturn([$casrecMLD2A, $casrecMLD2B])
             ->getMock();
 
-        $em = m::mock('\Doctrine\Common\Persistence\ObjectManager')
+        $em = m::mock(EntityManager::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getRepository')->with('AppBundle\Entity\CasRec')->andReturn($mockCasrecRepo)
             ->getMock();
