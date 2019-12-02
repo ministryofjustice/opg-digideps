@@ -4,13 +4,11 @@ namespace AppBundle\Form\Admin;
 
 use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
-use Doctrine\Common\Util\Debug;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ReportChecklistType extends AbstractType
@@ -124,9 +122,13 @@ class ReportChecklistType extends AbstractType
             'translation_domain' => 'admin-checklist',
             'data-class' => Checklist::class,
             'name'               => 'checklist',
-            'validation_groups'  => function (FormInterface $form) {
+            'validation_groups'  => function (Form $form) {
                 $ret = [];
-                if (self::SUBMIT_AND_CONTINUE_ACTION == $form->getClickedButton()->getName()) {
+
+                /** @var SubmitButton $button */
+                $button = $form->getClickedButton();
+
+                if (self::SUBMIT_AND_CONTINUE_ACTION == $button->getName()) {
                     $ret[] = 'submit-common-checklist';
 
                     $sectionsToValidate = $this->report->getAvailableSections();
