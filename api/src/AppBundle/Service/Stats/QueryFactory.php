@@ -2,18 +2,18 @@
 
 namespace AppBundle\Service\Stats;
 
-use Doctrine\ORM\EntityManager;
 use AppBundle\Service\Stats\Query\Query;
+use Doctrine\ORM\EntityManagerInterface;
 
 class QueryFactory
 {
-    /** @var EntityManager */
+    /** @var EntityManagerInterface */
     private $em;
 
     /**
-     * @param EntityManager $em
+     * @param EntityManagerInterface $em
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
     }

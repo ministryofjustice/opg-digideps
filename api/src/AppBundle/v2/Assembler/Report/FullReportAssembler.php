@@ -9,7 +9,7 @@ use AppBundle\v2\DTO\StatusDto;
 
 class FullReportAssembler implements ReportAssemblerInterface
 {
-    /** @var ReportAssemblerInterface  */
+    /** @var ReportSummaryAssembler  */
     private $reportSummaryAssembler;
 
     /** @var StatusAssembler  */
@@ -19,12 +19,12 @@ class FullReportAssembler implements ReportAssemblerInterface
     private $reportRepository;
 
     /**
-     * @param ReportAssemblerInterface $reportSummaryAssembler
+     * @param ReportSummaryAssembler $reportSummaryAssembler
      * @param StatusAssembler $statusDtoAssembler
      * @param ReportRepository $reportRepository
      */
     public function __construct(
-        ReportAssemblerInterface $reportSummaryAssembler,
+        ReportSummaryAssembler $reportSummaryAssembler,
         StatusAssembler $statusDtoAssembler,
         ReportRepository $reportRepository
     ) {
