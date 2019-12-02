@@ -1,4 +1,12 @@
 services:
+  AppBundle\v2\Transformer\ClientTransformer:
+    class: AppBundle\v2\Transformer\ClientTransformer
+    arguments:
+      - '@AppBundle\v2\Transformer\ReportTransformer'
+      - '@AppBundle\v2\Transformer\NdrTransformer'
+      - '@PlainOrganisationTransformer'
+      - '@PlainDeputyTransformer'
+
   PlainDeputyTransformer:
     class: AppBundle\v2\Transformer\DeputyTransformer
 
