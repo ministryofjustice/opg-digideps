@@ -530,9 +530,12 @@ class OrgServiceTest extends WebTestCase
             ->shouldBeCalled()
             ->willReturn(new Organisation());
 
+        $namedDeputyFactory = self::prophesize(NamedDeputyFactory::class);
+
         /** @var OrganisationRepository|ObjectProphecy $orgRespository */
         $orgRespository = self::prophesize(OrganisationRepository::class);
         $orgRespository->findByEmailIdentifier(Argument::any())->willReturn(null);
+        $namedDeputyRepository = self::prophesize(NamedDeputyRepository::class);
 
         $sut = new OrgService(self::$em,
             $this->logger,
@@ -540,8 +543,10 @@ class OrgServiceTest extends WebTestCase
             $this->reportRepository,
             $this->clientRepository,
             $orgRespository->reveal(),
+            $this->teamRepository,
+            $namedDeputyRepository->reveal(),
             $orgFactory->reveal(),
-            $this->teamRepository
+            $namedDeputyFactory->reveal()
         );
 
         $sut->addFromCasrecRows([$row]);
