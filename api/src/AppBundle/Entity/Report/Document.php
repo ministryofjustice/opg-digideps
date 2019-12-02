@@ -201,7 +201,7 @@ class Document
     }
 
     /**
-     * @return ReportSubmission
+     * @return ReportSubmission|null
      */
     public function getReportSubmission()
     {

@@ -6,6 +6,7 @@ use AppBundle\Entity\AssetInterface;
 use AppBundle\Entity\BankAccountInterface;
 use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Ndr\AssetOther;
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Asset;
 use AppBundle\Entity\Ndr\Asset as NdrAsset;
@@ -28,6 +29,7 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Exception;
+use RuntimeException;
 
 class ReportService
 {
@@ -184,13 +186,7 @@ class ReportService
 
         foreach ($toAssets as $toAsset) {
             if ($toAsset->getType() === $asset->getType()) {
-                if (($asset->getType() === 'property'
-                        && $toAsset->getAddress() === $asset->getAddress()
-                        && $toAsset->getAddress2() === $asset->getAddress2()
-                        && $toAsset->getPostcode() === $asset->getPostcode()
-                    ) || ($asset->getType() === 'other' &&
-                        $toAsset->getDescription() === $asset->getDescription())
-                ) {
+                if ($asset->isEqual($toAsset)) {
                     return true;
                 }
             }
@@ -245,11 +241,13 @@ class ReportService
             $newAsset->setRentAgreementEndDate($asset->getRentAgreementEndDate());
             $newAsset->setRentIncomeMonth($asset->getRentIncomeMonth());
 
-        } else {
+        } elseif ($asset instanceof NdrAssetOther || $asset instanceof ReportAssetOther) {
             $newAsset = new ReportAssetOther();
             $newAsset->setTitle($asset->getTitle());
             $newAsset->setDescription($asset->getDescription());
             $newAsset->setValuationDate($asset->getValuationDate());
+        } else {
+            throw new RuntimeException('Unrecognised AssetType');
         }
 
         $newAsset->setValue($asset->getValue());
@@ -284,7 +282,7 @@ class ReportService
      * @param ReportInterface $currentReport
      * @param User $user
      * @param DateTime $submitDate
-     * @param null $ndrDocumentId
+     * @param string|null $ndrDocumentId
      * @return Report
      *
      */
@@ -295,17 +293,19 @@ class ReportService
         }
 
         // update report submit flag, who submitted and date
-        $currentReport
-            ->setSubmitted(true)
-            ->setSubmittedBy($user)
-            ->setSubmitDate($submitDate);
+        $currentReport->setSubmitted(true);
+        $currentReport->setSubmittedBy($user);
+        $currentReport->setSubmitDate($submitDate);
 
         // create submission record with NEW documents (= documents not yet attached to a submission)
         $submission = new ReportSubmission($currentReport, $user);
-        if ($currentReport instanceof Ndr && (null !== $ndrDocumentId)) {
+        if ($currentReport instanceof Ndr && ($ndrDocumentId !== null)) {
             $document = $this->_em->getRepository(Document::class)->find($ndrDocumentId);
-            $document->setReportSubmission($submission);
-        } else {
+
+            if ($document instanceof Document) {
+                $document->setReportSubmission($submission);
+            }
+        } elseif ($currentReport instanceof Report) {
             foreach ($currentReport->getDocuments() as $document) {
                 if (!$document->getReportSubmission()) {
                     $document->setReportSubmission($submission);
@@ -327,6 +327,9 @@ class ReportService
 
             if ($newYearReport) {
                 $this->clonePersistentResources($newYearReport, $currentReport);
+            } else {
+                $currentReportId = $currentReport->getId();
+                throw new RuntimeException("Can't find next years report for Report with ID: ${$currentReportId}");
             }
         } else {
             // first-time submission
@@ -342,7 +345,7 @@ class ReportService
      * @param Report $report
      * @param DateTime $unsubmitDate
      * @param DateTime $dueDate
-     * @param $sectionList
+     * @param mixed $sectionList
      */
     public function unSubmit(Report $report, DateTime $unsubmitDate, DateTime $dueDate, DateTime $startDate, DateTime $endDate, $sectionList)
     {
@@ -432,7 +435,7 @@ class ReportService
      * If the report is ready to submit, but is not yet due, return notFinished instead
      * In all the the cases, return original $status
      *
-     * @param $status
+     * @param string $status
      * @param DateTime $endDate
      *
      * @return string

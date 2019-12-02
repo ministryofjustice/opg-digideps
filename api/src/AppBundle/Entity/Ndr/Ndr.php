@@ -6,6 +6,7 @@ use AppBundle\Entity\AssetInterface;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Ndr\Traits as NdrTraits;
 use AppBundle\Entity\ReportInterface;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -60,7 +61,7 @@ class Ndr implements ReportInterface
     private $visitsCare;
 
     /**
-     * @var Account[]
+     * @var BankAccount[]
      *
      * @JMS\Groups({"ndr-account"})
      * @JMS\Type("array<AppBundle\Entity\Ndr\BankAccount>")
@@ -125,7 +126,7 @@ class Ndr implements ReportInterface
     private $submitted;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Groups({"ndr"})
      * @JMS\Accessor(getter="getStartDate")
@@ -135,7 +136,7 @@ class Ndr implements ReportInterface
     private $startDate;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Groups({"ndr"})
      * @JMS\Accessor(getter="getSubmitDate")
@@ -181,7 +182,7 @@ class Ndr implements ReportInterface
     public function __construct(Client $client)
     {
         $this->client = $client;
-        $this->startDate = new \DateTime();
+        $this->startDate = new DateTime();
         $this->bankAccounts = new ArrayCollection();
         $this->debts = new ArrayCollection();
         $this->assets = new ArrayCollection();
@@ -259,7 +260,7 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getStartDate()
     {
@@ -267,7 +268,7 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @param \DateTime $startDate
+     * @param DateTime $startDate
      */
     public function setStartDate($startDate)
     {
@@ -281,9 +282,9 @@ class Ndr implements ReportInterface
 
     /**
      * @param $startDate
-     * @return \DateTime
+     * @return DateTime
      */
-    public static function getDueDateBasedOnStartDate(\DateTime $startDate = null)
+    public static function getDueDateBasedOnStartDate(DateTime $startDate = null)
     {
         if ($startDate) {
             $dueDate = clone $startDate;
@@ -294,7 +295,7 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getSubmitDate()
     {
@@ -302,15 +303,15 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @param \DateTime $submitDate
+     * @param DateTime|null $submitDate
      */
-    public function setSubmitDate($submitDate)
+    public function setSubmitDate(?DateTime $submitDate = null)
     {
         $this->submitDate = $submitDate;
     }
 
     /**
-     * @return mixed
+     * @return BankAccount[]
      */
     public function getBankAccounts()
     {

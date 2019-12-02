@@ -18,4 +18,18 @@ interface BankAccountInterface
 
     public function getIsJointAccount();
 
+    /**
+     * @return string
+     */
+    public function getAccountType();
+
+    /**
+     * @return string
+     */
+    public function getAccountNumber();
+
+    /**
+     * @return string
+     */
+    public function getSortCode();
 }
