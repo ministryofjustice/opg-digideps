@@ -8,7 +8,7 @@ services:
         class: AppBundle\Service\Auth\HeaderTokenAuthenticator
         public: false
     AppBundle\Service\Auth\UserProvider:
-        arguments: [ '@em', "@snc_redis.default", "@logger", { "timeout_seconds": "%user_provider_timeout_seconds%" } ]
+        arguments: [ '@em', "@snc_redis.default", "@logger", { "timeout_seconds": "%user_provider_timeout_seconds%" }, '@AppBundle\Entity\Repository\UserRepository' ]
         public: true
     user_provider:
         alias: AppBundle\Service\Auth\UserProvider
