@@ -100,11 +100,7 @@ class RestInputOuputFormatter
     {
         $format = $request->getContentType();
 
-        if (!$format) {
-            throw new BadRequestHttpException('Content-Type is required to be set for this request');
-        }
-
-        if (!in_array($format, $this->supportedFormats)) {
+        if (!$format || !in_array($format, $this->supportedFormats)) {
             if ($this->defaultFormat) {
                 $format = $this->defaultFormat;
             } else {
