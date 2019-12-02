@@ -33,8 +33,8 @@ Feature: PA cannot access other's PA's reports and clients
     Then the response status code should be 200
     And the URL should match "report/\d+/overview"
     # cannot access team1 reports
-    But I should not see the "client-01000010" region
-    When I go to the URL previously saved as "report-for-client-01000010.url"
+    But I should not see the "client-02100010" region
+    When I go to the URL previously saved as "report-for-client-02100010.url"
     Then the response status code should be 404
 
   Scenario: PA user cannot edit client
@@ -57,9 +57,9 @@ Feature: PA cannot access other's PA's reports and clients
     # load "after submission" status and re-check the same links
     And I save the current URL as "client-02100014-report-completed"
     When I load the application status from "pa-report-submitted"
-    When I go to the URL previously saved as "client-01000014-report-overview"
+    When I go to the URL previously saved as "client-02100014-report-overview"
     Then the response status code should be 404
-    When I go to the URL previously saved as "client-01000014-report-completed"
+    When I go to the URL previously saved as "client-02100014-report-completed"
     Then the response status code should be 404
 
   Scenario: PA_ADMIN logs in, edits own account and removes admin privilege should be logged out
