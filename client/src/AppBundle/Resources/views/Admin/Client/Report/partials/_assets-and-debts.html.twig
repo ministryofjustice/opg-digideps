@@ -9,26 +9,11 @@
 
 {{ checklist_radios(form.assetsDeclaredAndManaged) }}
 
-{% set contents %}
-    {% include 'AppBundle:Report/Asset:_list.html.twig' with {
-        hideEditLink: true
-    } %}
-{% endset %}
-
 {{ details({
     summaryText: (page ~ '.revealTitle.assetsSummary') | trans,
-    text: contents,
+    html: include('AppBundle:Report/Asset:_list.html.twig', { hideEditLink: true })
 }) }}
 
 {{ checklist_radios(form.debtsManaged) }}
 
-{% set contents %}
-    {% include 'AppBundle:Report/Debt:_answers.html.twig' with {
-        hideEditLink: true
-    } %}
-{% endset %}
-
-{{ details({
-    summaryText: (page ~ '.revealTitle.debtsSummary') | trans,
-    text: contents,
-}) }}
+{{ include('AppBundle:Admin/Client/Report/partials:_debts-summary.html.twig') }}

@@ -1,0 +1,8 @@
+{% from 'AppBundle:Macros:macros.html.twig' import details %}
+{% trans_default_domain 'admin-checklist' %}
+
+{{ details({
+    summaryText: (page ~ '.revealTitle.giftsSummary') | trans,
+    html: include('AppBundle:Report/Gift:_list.html.twig', { hideEditLink: true }),
+    classes: (collapseMargin is defined and collapseMargin) ? 'govuk-!-margin-bottom-0' : '',
+}) }}
