@@ -1,5 +1,5 @@
 services:
-    kernel.listener.responseConverter:
+    AppBundle\EventListener\RestInputOuputFormatter:
         class: AppBundle\EventListener\RestInputOuputFormatter
         arguments: [ "@jms_serializer", "@logger", ["json"], "json", "%kernel.debug%" ]
         public: true
@@ -7,6 +7,9 @@ services:
             - { name: kernel.event_listener, event: kernel.view, method: onKernelView }
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    kernel.listener.responseConverter:
+        alias: AppBundle\EventListener\RestInputOuputFormatter
 
     doctrine.listener:
         class: AppBundle\EventListener\DoctrineListener

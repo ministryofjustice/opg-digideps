@@ -5,8 +5,7 @@ namespace AppBundle\EventListener;
 use AppBundle\Exception\BusinessRulesException;
 use AppBundle\Exception\HasDataInterface;
 use JMS\Serializer\SerializationContext;
-use JMS\Serializer\Serializer;
-use JMS\Serializer\SerializerBuilder;
+use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +18,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class RestInputOuputFormatter
 {
     /**
-     * @var Serializer
+     * @var SerializerInterface
      */
     private $serializer;
 
@@ -53,7 +52,7 @@ class RestInputOuputFormatter
      */
     private $contextModifiers = [];
 
-    public function __construct(Serializer $serializer, LoggerInterface $logger, array $supportedFormats, $defaultFormat, $debug)
+    public function __construct(SerializerInterface $serializer, LoggerInterface $logger, array $supportedFormats, $defaultFormat, $debug)
     {
         $this->serializer = $serializer;
         $this->logger = $logger;
