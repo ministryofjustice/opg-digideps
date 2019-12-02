@@ -2,7 +2,9 @@
 
 namespace AppBundle\Service\Auth;
 
+use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
+use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,29 +20,61 @@ class AuthService
     private $logger;
 
     /**
+     * @var array
+     */
+    private $clientSecrets;
+
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
+     * @var EncoderFactoryInterface
+     */
+    private $securityEncoderFactory;
+
+    /**
      * @param EncoderFactoryInterface $encoderFactory
      * @param LoggerInterface $logger
      * @param ContainerInterface $container
-     * @throws \Exception
+     * @param UserRepository $userRepository
      */
-    public function __construct(EncoderFactoryInterface $encoderFactory, LoggerInterface $logger, ContainerInterface $container)
+    public function __construct(
+        EncoderFactoryInterface $encoderFactory,
+        LoggerInterface $logger,
+        ContainerInterface $container,
+        UserRepository $userRepository
+    )
     {
         $this->clientSecrets = $container->getParameter('client_secrets');
+
         if (!is_array($this->clientSecrets) || empty($this->clientSecrets)) {
             throw new \InvalidArgumentException('client_secrets not defined in config.');
         }
+
         $this->container = $container;
-        $this->userRepo = $container->get('em')->getRepository('AppBundle\Entity\User');
+        $this->userRepository = $userRepository;
         $this->logger = $logger;
         $this->securityEncoderFactory = $encoderFactory;
     }
 
     /**
-     * @return array
+     * @param Request $request
+     * @return bool
      */
     public function isSecretValid(Request $request)
     {
         $clientSecretFromRequest = $request->headers->get(self::HEADER_CLIENT_SECRET);
+
+        if (!is_string($clientSecretFromRequest)) {
+            return false;
+        }
 
         return isset($this->clientSecrets[$clientSecretFromRequest]);
     }
@@ -49,15 +83,15 @@ class AuthService
      * @param string $email
      * @param string $pass
      *
-     * @return User or null if the user it not found or password is wrong
+     * @return User|bool|null or null if the user it not found or password is wrong
      */
     public function getUserByEmailAndPassword($email, $pass)
     {
         if (!$email || !$pass) {
-            return;
+            return null;
         }
          // get user by email
-        $user = $this->userRepo->findOneBy([
+        $user = $this->userRepository->findOneBy([
             'email' => $email,
         ]);
         if (!$user instanceof User) {
@@ -76,7 +110,7 @@ class AuthService
 
         $this->logger->info('Login: password mismatch');
 
-        return;
+        return null;
     }
 
     /**
@@ -86,9 +120,12 @@ class AuthService
      */
     public function getUserByToken($token)
     {
-        return $this->userRepo->findOneBy([
+        /** @var User|null $user */
+        $user = $this->userRepository->findOneBy([
             'registrationToken' => $token,
-        ]) ?: null;
+        ]);
+
+        return $user ?: null;
     }
 
     /**
@@ -100,6 +137,11 @@ class AuthService
     public function isSecretValidForRole($roleName, Request $request)
     {
         $clientSecretFromRequest = $request->headers->get(self::HEADER_CLIENT_SECRET);
+
+        if (!is_string($clientSecretFromRequest)) {
+            return false;
+        }
+
         $allowedRoles = isset($this->clientSecrets[$clientSecretFromRequest]['permissions']) ?
             $this->clientSecrets[$clientSecretFromRequest]['permissions'] : [];
 

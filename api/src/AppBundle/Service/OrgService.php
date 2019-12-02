@@ -162,13 +162,8 @@ class OrgService
             try {
                 $userOrgNamed = $this->upsertOrgNamedUserFromCsv($row);
                 if ($userOrgNamed instanceof User) {
-
                     $client = $this->upsertClientFromCsv($row, $userOrgNamed);
-                    if ($client instanceof Client) {
-                        $this->upsertReportFromCsv($row, $client, $userOrgNamed);
-                    } else {
-                        throw new \RuntimeException('Client could not be identified or created');
-                    }
+                    $this->upsertReportFromCsv($row, $client, $userOrgNamed);
                 } else {
                     throw new \RuntimeException('Named deputy could not be identified or created');
                 }
@@ -251,7 +246,7 @@ class OrgService
                     $team = new EntityDir\Team($csvRow['Dep Surname']);
                     $user->addTeam($team);
                     $this->em->persist($team);
-                    $this->em->flush($team);
+                    $this->em->flush();
                 }
 
                 if ($user->isProfDeputy()) {
@@ -284,12 +279,13 @@ class OrgService
         ) {
             $team->setTeamName($csvRow['Dep Surname']);
             $this->warnings[] = 'Organisation/Team ' . $team->getId() . ' updated to ' . $csvRow['Dep Surname'];
-            $this->em->flush($team);
+            $this->em->persist($team);
+            $this->em->flush();
         }
 
         if ($user instanceof User) {
             $this->em->persist($user);
-            $this->em->flush($user);
+            $this->em->flush();
         }
 
         $this->currentOrganisation = $this->orgRepository->findByEmailIdentifier($csvRow['Email']);
@@ -318,7 +314,7 @@ class OrgService
     {
         $organisation = $this->orgFactory->createFromFullEmail($name, $email);
         $this->em->persist($organisation);
-        $this->em->flush($organisation);
+        $this->em->flush();
 
         return $organisation;
     }

@@ -2,10 +2,12 @@
 
 namespace AppBundle\Service\Auth;
 
+use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Predis\Client;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
@@ -34,12 +36,24 @@ class UserProvider implements UserProviderInterface
      */
     private $timeoutSeconds;
 
-    public function __construct(EntityManagerInterface $em, Client $redis, LoggerInterface $logger, array $options)
+    /**
+     * @var array
+     */
+    private $options;
+
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    public function __construct(EntityManagerInterface $em, Client $redis, LoggerInterface $logger, array $options, UserRepository $userRepository)
     {
         $this->em = $em;
         $this->redis = $redis;
         $this->logger = $logger;
         $this->timeoutSeconds = $options['timeout_seconds'];
+        $this->options = $options;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -61,7 +75,9 @@ class UserProvider implements UserProviderInterface
             throw new \RuntimeException("Token $username expired", 419);
         }
 
-        $user = $this->em->getRepository('AppBundle\Entity\User')->find($userId);
+        /** @var User|null $user */
+        $user = $this->userRepository->find($userId);
+
         if (!$user) {
             $this->logger->warning("user $userId not found");
             throw new \RuntimeException('User associated to token not found', 419);
@@ -86,7 +102,6 @@ class UserProvider implements UserProviderInterface
     }
 
     /**
-     * @param string $token
      * @param User   $user
      *
      * @return string

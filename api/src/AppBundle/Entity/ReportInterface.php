@@ -12,4 +12,8 @@ interface ReportInterface
     public function getFinancialSummary();
 
     public function updateSectionsStatusCache(array $sectionIds);
+
+    public function getSubmitted();
+
+    public function getAssets();
 }

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Ndr;
 
+use AppBundle\Entity\AssetInterface;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Ndr\Traits as NdrTraits;
 use AppBundle\Entity\ReportInterface;
@@ -98,7 +99,7 @@ class Ndr implements ReportInterface
     private $hasDebts;
 
     /**
-     * @var Asset[]
+     * @var AssetInterface[]
      *
      * @JMS\Groups({"ndr-asset"})
      * @JMS\Type("array<AppBundle\Entity\Ndr\Asset>")
@@ -206,7 +207,7 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @return int
+     * @return Client
      */
     public function getClient()
     {
@@ -443,7 +444,7 @@ class Ndr implements ReportInterface
     /**
      * Get assets.
      *
-     * @return Asset[]
+     * @return AssetInterface[]
      */
     public function getAssets()
     {
