@@ -1,6 +1,5 @@
 services:
-    kernel.listener.session_listener:
-        class: AppBundle\EventListener\SessionListener
+    AppBundle\EventListener\SessionListener:
         arguments: [ "@router" , "@logger", {idleTimeout: "%session_expire_seconds%"}]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
