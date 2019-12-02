@@ -13,6 +13,11 @@ if [ "${S3_S3V4}" = "**None**" ]; then
   exit 1
 fi
 
+if [ "${S3_KMS_KEY_ID}" = "**None**" ]; then
+  echo "You need to set the S3_KMS_KEY_ID environment variable."
+  exit 1
+fi
+
 if [ "${POSTGRES_DATABASE}" = "**None**" ]; then
   echo "You need to set the POSTGRES_DATABASE environment variable."
   exit 1
