@@ -4,6 +4,8 @@ namespace AppBundle\EventListener;
 
 use AppBundle\Exception\BusinessRulesException;
 use AppBundle\Exception\HasDataInterface;
+use Closure;
+use http\Exception\BadConversionException;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
@@ -13,6 +15,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class RestInputOuputFormatter
@@ -43,12 +46,12 @@ class RestInputOuputFormatter
     private $debug;
 
     /**
-     * @var Closure
+     * @var Closure[]
      */
     private $responseModifiers = [];
 
     /**
-     * @var Closure
+     * @var Closure[]
      */
     private $contextModifiers = [];
 
@@ -64,18 +67,20 @@ class RestInputOuputFormatter
     /**
      * @param Request $request
      *
-     * @return array
+     * @return array|bool|float|int|object|string
      */
     public function requestContentToArray(Request $request)
     {
         $format = $request->getContentType();
 
-        $content = $request->getContent();
-        if (!$content) {
+        /** @var string $content */
+        $content = $request->getContent(false );
+
+        if (!$content || !$format) {
             return [];
         }
 
-        return $this->serializer->deserialize($request->getContent(), 'array', $format);
+        return $this->serializer->deserialize($content, 'array', $format);
     }
 
     /**
@@ -85,7 +90,7 @@ class RestInputOuputFormatter
      *
      *
      *
-     * @param $data
+     * @param array $data
      * @param Request $request
      * @param bool    $groupsCheck
      *
@@ -94,6 +99,10 @@ class RestInputOuputFormatter
     private function arrayToResponse(array $data, Request $request, $groupsCheck = true)
     {
         $format = $request->getContentType();
+
+        if (!$format) {
+            throw new BadRequestHttpException('Content-Type is required to be set for this request');
+        }
 
         if (!in_array($format, $this->supportedFormats)) {
             if ($this->defaultFormat) {
@@ -210,9 +219,11 @@ class RestInputOuputFormatter
 
     public static function onKernelRequest(GetResponseEvent $event)
     {
-        function_exists('xdebug_disable') && xdebug_disable();
+        if (function_exists('xdebug_disable')) {
+            xdebug_disable();
+        }
 
-        register_shutdown_function(function () use ($event) {
+        register_shutdown_function(function() {
             $lastError = error_get_last();
             if (!$lastError) {
                 return;
@@ -228,17 +239,17 @@ class RestInputOuputFormatter
     }
 
     /**
-     * @param \Closure $f
+     * @param Closure $f
      */
-    public function addResponseModifier(\Closure $f)
+    public function addResponseModifier(Closure $f)
     {
         $this->responseModifiers[] = $f;
     }
 
     /**
-     * @param \Closure $f
+     * @param Closure $f
      */
-    public function addContextModifier(\Closure $f)
+    public function addContextModifier(Closure $f)
     {
         $this->contextModifiers[] = $f;
     }
