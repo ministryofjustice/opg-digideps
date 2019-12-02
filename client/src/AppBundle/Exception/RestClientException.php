@@ -2,13 +2,15 @@
 
 namespace AppBundle\Exception;
 
-class RestClientException extends DisplayableException
+use Symfony\Component\HttpKernel\Exception\HttpException;
+
+class RestClientException extends HttpException
 {
     protected $data;
 
     public function __construct($message, $code, array $data = [])
     {
-        parent::__construct($message, $code);
+        parent::__construct($code, $message);
 
         $this->data = $data;
     }
