@@ -12,6 +12,7 @@ class RestClientException extends HttpException
     {
         parent::__construct($code, $message);
 
+        $this->code = $code;
         $this->data = $data;
     }
 
