@@ -4,7 +4,6 @@ imports:
     - { resource: services/controllers.yml }
     - { resource: services/event_listeners.yml }
     - { resource: services/factories.yml }
-    - { resource: services/registration.yml }
     - { resource: services/rest_handlers.yml }
     - { resource: services/repositories.yml }
     - { resource: services/security.yml }
@@ -22,10 +21,6 @@ services:
     user_registration_service:
         class: AppBundle\Service\UserRegistrationService
         arguments: [ "@em", "@opg_digideps.casrec_verification_service" ]
-
-    AppBundle\Service\UserService:
-        class: AppBundle\Service\UserService
-        arguments: [ '@em', '@AppBundle\Service\OrgService' ]
 
     monolog.processor.add_request_id:
         class: AppBundle\Service\RequestIdLoggerProcessor
@@ -62,22 +57,10 @@ services:
         class: AppBundle\Service\DateTimeProvider
         public: true
 
-    AppBundle\Service\ReportStatusServiceFactory:
-        class: AppBundle\Service\ReportStatusServiceFactory
-
     AppBundle\DataFixtures\:
         resource: '../../src/AppBundle/DataFixtures'
         tags: ['doctrine.fixture.orm']
         arguments: ['@security.password_encoder']
-
-    AppBundle\Service\DataCompression:
-        class: AppBundle\Service\DataCompression
-
-    AppBundle\Service\DataNormaliser:
-        class: AppBundle\Service\DataNormaliser
-
-    AppBundle\Service\Search\ClientSearchFilter:
-        class: AppBundle\Service\Search\ClientSearchFilter
 
     # Disable autowiring for these helper classes
     AppBundle\Service\ReportStatusService: ~

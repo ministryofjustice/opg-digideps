@@ -14,9 +14,4 @@ services:
   AppBundle\Service\RestHandler\OrganisationRestHandler:
     class: AppBundle\Service\RestHandler\OrganisationRestHandler
     arguments:
-      - '@em'
-      - '@validator'
-      - '@AppBundle\Entity\Repository\OrganisationRepository'
-      - '@AppBundle\Entity\Repository\UserRepository'
-      - '@AppBundle\Factory\OrganisationFactory'
-      - '%shared_email_domains%'
+      $sharedEmailDomains: '%shared_email_domains%'
