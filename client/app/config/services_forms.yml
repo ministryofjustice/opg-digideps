@@ -1,25 +1,21 @@
 services:
     AppBundle\Form\Report\Asset\AssetTypeTitle:
-        class: AppBundle\Form\Report\Asset\AssetTypeTitle
-        arguments: ["%asset_dropdown%", "@translator", "report-assets", "other_assets"]
+        arguments: ["%asset_dropdown%", "@translator", "report-assets"]
         tags:
             - { name: form.type }
 
     AppBundle\Form\Ndr\Asset\AssetTypeTitle:
-            class: AppBundle\Form\Ndr\Asset\AssetTypeTitle
-            arguments: ["%asset_dropdown%", "@translator", "ndr-assets", "other_assets"]
-            tags:
-                - { name: form.type}
+        arguments: ["%asset_dropdown%", "@translator", "ndr-assets"]
+        tags:
+            - { name: form.type }
 
-    app.form.type.feedback_report:
-        class: AppBundle\Form\FeedbackReportType
+    AppBundle\Form\FeedbackReportType:
         calls:
             - [ setTranslator, ["@translator"] ]
         tags:
             - { name: form.type }
 
-    app.form.type.feedback:
-        class: AppBundle\Form\FeedbackType
+    AppBundle\Form\FeedbackType:
         calls:
             - [ setTranslator, ["@translator"] ]
         tags:
