@@ -8,7 +8,7 @@ class RestClientException extends HttpException
 {
     protected $data;
 
-    public function __construct($message, $code, array $data = [])
+    public function __construct($message = 'API error occurred', $code = 404, array $data = [])
     {
         parent::__construct($code, $message);
 
