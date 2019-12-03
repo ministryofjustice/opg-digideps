@@ -86,7 +86,7 @@ class ReportServiceTest extends TestCase
             }
         });
 
-        $this->sut = new ReportService($this->em);
+        $this->sut = new ReportService($this->em, $this->reportRepo);
     }
 
     public function testSubmitInvalid()

@@ -35,10 +35,9 @@ class AuthServiceTest extends TestCase
         $this->container = m::stub('Symfony\Component\DependencyInjection\Container', [
                 'getParameter(client_secrets)' => $this->clientSecrets,
                 'getParameter(security.role_hierarchy.roles)' => ['ROLE_LAY_DEPUTY_INHERITED'=>['ROLE_LAY_DEPUTY']],
-                'get(em)->getRepository(AppBundle\Entity\User)' => $this->userRepo,
         ]);
 
-        $this->authService = new AuthService($this->encoderFactory, $this->logger, $this->container);
+        $this->authService = new AuthService($this->encoderFactory, $this->logger, $this->container, $this->userRepo);
     }
 
     public function testMissingSecrets()
@@ -48,7 +47,7 @@ class AuthServiceTest extends TestCase
                 'getParameter(client_secrets)' => [],
         ]);
 
-        $this->authService = new AuthService($this->encoderFactory, $this->logger, $container);
+        $this->authService = new AuthService($this->encoderFactory, $this->logger, $container, $this->userRepo);
     }
 
     public function isSecretValidProvider()
