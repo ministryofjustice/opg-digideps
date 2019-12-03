@@ -8,9 +8,5 @@ services:
     AppBundle\Service\Client\TokenStorage\RedisStorage:
         arguments: ["@snc_redis.default", "redis_token_storage_dd"]
 
-    AppBundle\Service\DeputyProvider:
-        class: AppBundle\Service\DeputyProvider
-        arguments: [ "@rest_client", "@logger" ]
-
     deputy_provider:
         alias: AppBundle\Service\DeputyProvider

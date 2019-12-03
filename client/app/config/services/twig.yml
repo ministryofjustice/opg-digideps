@@ -1,18 +1,6 @@
 services:
-    AppBundle\Twig\FormFieldsExtension:
-        public: false
-        arguments: [ "@translator" ]
-        tags:
-            - { name: twig.extension }
-
-    AppBundle\Twig\ComponentsExtension:
-        public: false
-        arguments: [  "@translator", "@report_section_link_service" ]
-        tags:
-            - { name: twig.extension }
-
     AppBundle\Twig\AssetsExtension:
         public: false
-        arguments: [  "%kernel.root_dir%" ]
+        arguments: [ "%kernel.root_dir%" ]
         tags:
             - { name: twig.extension }
