@@ -5,7 +5,7 @@ namespace AppBundle\Service\File\Verifier;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Service\File\Scanner\ClamFileScanner;
 use AppBundle\Service\File\Scanner\Exception\VirusFoundException;
-use Symfony\Bridge\Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ScannerVerifier implements VerifierInterface
@@ -16,15 +16,15 @@ class ScannerVerifier implements VerifierInterface
     /** @var TranslatorInterface */
     private $translator;
 
-    /** @var Logger */
+    /** @var LoggerInterface */
     private $logger;
 
     /**
      * @param ClamFileScanner $scanner
      * @param TranslatorInterface $translator
-     * @param Logger $logger
+     * @param LoggerInterface $logger
      */
-    public function __construct(ClamFileScanner $scanner, TranslatorInterface $translator, Logger $logger)
+    public function __construct(ClamFileScanner $scanner, TranslatorInterface $translator, LoggerInterface $logger)
     {
         $this->scanner = $scanner;
         $this->translator = $translator;

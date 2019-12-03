@@ -5,7 +5,6 @@ namespace AppBundle\Service\File\Storage;
 use Aws\ResultInterface;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
-use Aws\S3\S3ClientInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -46,7 +45,7 @@ class S3Storage implements StorageInterface
      * @param $bucketName S3 bucket name
      * @param LoggerInterface $logger
      */
-    public function __construct(S3ClientInterface $s3Client, $bucketName, LoggerInterface $logger)
+    public function __construct(S3Client $s3Client, $bucketName, LoggerInterface $logger)
     {
         $this->s3Client = $s3Client;
         $this->bucketName = $bucketName;
@@ -202,7 +201,7 @@ class S3Storage implements StorageInterface
     {
         if (array_key_exists('Errors', $s3Result) && count($s3Result['Errors']) > 0) {
             foreach ($s3Result['Errors'] as $s3Error) {
-                $this->log('error', 'Unable to remove file from S3 - 
+                $this->log('error', 'Unable to remove file from S3 -
                             Key: ' . $s3Error['Key'] . ', VersionId: ' .
                     $s3Error['VersionId'] . ', Code: ' . $s3Error['Code'] . ', Message: ' . $s3Error['Message']);
             }
