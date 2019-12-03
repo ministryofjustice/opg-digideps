@@ -1,11 +1,11 @@
 services:
-    app.form.type.report.asset_title:
+    AppBundle\Form\Report\Asset\AssetTypeTitle:
         class: AppBundle\Form\Report\Asset\AssetTypeTitle
         arguments: ["%asset_dropdown%", "@translator", "report-assets", "other_assets"]
         tags:
             - { name: form.type }
 
-    app.form.type.ndr.asset_title:
+    AppBundle\Form\Ndr\Asset\AssetTypeTitle:
             class: AppBundle\Form\Ndr\Asset\AssetTypeTitle
             arguments: ["%asset_dropdown%", "@translator", "ndr-assets", "other_assets"]
             tags:
@@ -25,8 +25,7 @@ services:
         tags:
             - { name: form.type }
 
-    app.form.validator.email_same_domain:
-        class: AppBundle\Validator\Constraints\EmailSameDomainValidator
+    AppBundle\Validator\Constraints\EmailSameDomainValidator:
         calls:
             - [ setTokenStorage, ["@security.token_storage"] ]
         tags:
