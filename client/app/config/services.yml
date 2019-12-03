@@ -20,9 +20,11 @@ services:
     redirector_service:
         alias: AppBundle\Service\Redirector
 
-    wkhtmltopdf:
-        class: AppBundle\Service\WkHtmlToPdfGenerator
+    AppBundle\Service\WkHtmlToPdfGenerator:
         arguments: [ "%wkhtmltopdf_address%", 30]
+
+    wkhtmltopdf:
+        alias: AppBundle\Service\WkHtmlToPdfGenerator
 
     step_redirector:
       class: AppBundle\Service\StepRedirector
@@ -65,3 +67,8 @@ services:
 
     AppBundle\Service\File\DocumentsZipFileCreator:
         class: AppBundle\Service\File\DocumentsZipFileCreator
+
+    # Disable autowiring
+    AppBundle\Model\EmailAttachment: ~
+    AppBundle\Service\DataImporter\CsvToArray: ~
+    AppBundle\Service\NdrStatusService: ~
