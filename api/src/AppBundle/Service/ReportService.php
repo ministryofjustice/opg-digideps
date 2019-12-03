@@ -6,15 +6,12 @@ use AppBundle\Entity\AssetInterface;
 use AppBundle\Entity\BankAccountInterface;
 use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
-use AppBundle\Entity\Ndr\AssetOther;
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Asset;
-use AppBundle\Entity\Ndr\Asset as NdrAsset;
 use AppBundle\Entity\Report\AssetProperty as ReportAssetProperty;
 use AppBundle\Entity\Report\AssetOther as ReportAssetOther;
 use AppBundle\Entity\Ndr\AssetProperty as NdrAssetProperty;
 use AppBundle\Entity\Ndr\AssetOther as NdrAssetOther;
-use AppBundle\Entity\Report\AssetProperty;
 use AppBundle\Entity\Report\BankAccount as BankAccountEntity;
 use AppBundle\Entity\Report\BankAccount as ReportBankAccount;
 use AppBundle\Entity\Report\Document;
@@ -27,7 +24,6 @@ use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use Exception;
 use RuntimeException;
 
@@ -61,9 +57,9 @@ class ReportService
         ReportRepository $reportRepository
     )
     {
+        $this->_em = $em;
         $this->reportRepository = $reportRepository;
         $this->casRecRepository = $em->getRepository(CasRec::class);
-        $this->_em = $em;
         $this->assetRepository = $em->getRepository(Asset::class);
         $this->bankAccountRepository = $em->getRepository(BankAccountEntity::class);
     }

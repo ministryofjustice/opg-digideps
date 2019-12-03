@@ -15,7 +15,11 @@ services:
     authService:
         class: AppBundle\Service\Auth\AuthService
         public: true
-        arguments: [ "@security.encoder_factory", "@logger", "@service_container" ]
+        arguments:
+            $encoderFactory: '@security.encoder_factory'
+            $logger: '@logger'
+            $container: '@service_container'
+            $userRepository: '@AppBundle\Entity\Repository\UserRepository'
     AppBundle\Service\BruteForce\AttemptsInTimeChecker:
         arguments: [ "@snc_redis.default" ]
         public: true
