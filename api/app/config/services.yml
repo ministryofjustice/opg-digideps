@@ -62,6 +62,12 @@ services:
         tags: ['doctrine.fixture.orm']
         arguments: ['@security.password_encoder']
 
+    AppBundle\Service\ReportService:
+        class: AppBundle\Service\ReportService
+        arguments:
+            $em: '@em'
+            $reportRepository: '@AppBundle\Entity\Repository\ReportRepository'
+
     # Disable autowiring for these helper classes
     AppBundle\Service\ReportStatusService: ~
     AppBundle\Service\Stats\StatsQueryParameters: ~
