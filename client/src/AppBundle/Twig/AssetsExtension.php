@@ -2,12 +2,14 @@
 
 namespace AppBundle\Twig;
 
+use Twig\Extension\AbstractExtension;
+
 // todo remove assetic from config and use it's
 
 /**
  * Class AssetsExtension.
  */
-class AssetsExtension extends \Twig_Extension
+class AssetsExtension extends AbstractExtension
 {
     /** @var string $tag */
     private $tag;
