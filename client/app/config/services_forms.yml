@@ -9,18 +9,6 @@ services:
         tags:
             - { name: form.type }
 
-    AppBundle\Form\FeedbackReportType:
-        calls:
-            - [ setTranslator, ["@translator"] ]
-        tags:
-            - { name: form.type }
-
-    AppBundle\Form\FeedbackType:
-        calls:
-            - [ setTranslator, ["@translator"] ]
-        tags:
-            - { name: form.type }
-
     AppBundle\Validator\Constraints\EmailSameDomainValidator:
         calls:
             - [ setTokenStorage, ["@security.token_storage"] ]
