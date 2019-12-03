@@ -4,7 +4,7 @@ namespace AppBundle\Service\File\Storage;
 
 use Aws\ResultInterface;
 use Aws\S3\Exception\S3Exception;
-use Aws\S3\S3Client;
+use Aws\S3\S3ClientInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -16,7 +16,7 @@ use Psr\Log\LoggerInterface;
 class S3Storage implements StorageInterface
 {
     /**
-     * @var S3Client
+     * @var S3ClientInterface
      *
      * https://github.com/aws/aws-sdk-php
      * http://docs.aws.amazon.com/aws-sdk-php/v2/api/class-Aws.S3.S3Client.html
@@ -41,11 +41,11 @@ class S3Storage implements StorageInterface
     /**
      * S3Storage constructor.
      *
-     * @param S3Client $s3Client (Aws library)
+     * @param S3ClientInterface $s3Client (Aws library)
      * @param $bucketName S3 bucket name
      * @param LoggerInterface $logger
      */
-    public function __construct(S3Client $s3Client, $bucketName, LoggerInterface $logger)
+    public function __construct(S3ClientInterface $s3Client, $bucketName, LoggerInterface $logger)
     {
         $this->s3Client = $s3Client;
         $this->bucketName = $bucketName;
