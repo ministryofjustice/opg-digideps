@@ -1,6 +1,5 @@
 services:
-    twig.form_fields_extension:
-        class: AppBundle\Twig\FormFieldsExtension
+    AppBundle\Twig\FormFieldsExtension:
         public: false
         arguments: [ "@translator" ]
         tags:
