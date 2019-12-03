@@ -21,7 +21,7 @@ class DUserPasswordValidator extends UserPasswordValidator
      */
     private $tokenStorage;
 
-    public function __construct(TokenStorageInterface $tokenStorage, $restClient)
+    public function __construct(TokenStorageInterface $tokenStorage, RestClient $restClient)
     {
         $this->restClient = $restClient;
         $this->tokenStorage = $tokenStorage;

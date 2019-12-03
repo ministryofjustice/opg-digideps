@@ -5,8 +5,8 @@ namespace AppBundle\Service\Mailer;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\User;
 use AppBundle\Model as ModelDir;
+use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Intl\Intl;
 use Symfony\Component\Routing\Router;
 
@@ -21,7 +21,7 @@ class MailFactory
     protected $translator;
 
     /**
-     * @var Container
+     * @var ContainerInterface
      */
     protected $container;
 
@@ -30,7 +30,7 @@ class MailFactory
      */
     protected $router;
 
-    public function __construct(Container $container)
+    public function __construct(ContainerInterface $container)
     {
         // validate args
         $this->container = $container;
