@@ -53,11 +53,6 @@ services:
       class: AppBundle\Service\ReportSectionsLinkService
       arguments: [ "@router" ]
 
-    AppBundle\Controller\Admin\ReportSubmissionController:
-        class: AppBundle\Controller\Admin\ReportSubmissionController
-        arguments:
-            $documentDownloader: "@AppBundle\\Service\\DocumentDownloader"
-
     AppBundle\Service\DocumentDownloader:
         class: AppBundle\Service\DocumentDownloader
         arguments:
