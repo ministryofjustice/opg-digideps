@@ -37,8 +37,7 @@ module "backup_security_group" {
 }
 
 data "aws_kms_alias" "backup" {
-  name     = "alias/backup"
-  provider = aws.management
+  name = "alias/backup"
 }
 
 locals {
