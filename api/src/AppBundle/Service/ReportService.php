@@ -323,9 +323,6 @@ class ReportService
 
             if ($newYearReport) {
                 $this->clonePersistentResources($newYearReport, $currentReport);
-            } else {
-                $currentReportId = $currentReport->getId();
-                throw new RuntimeException("Can't find next years report for Report with ID: ${$currentReportId}");
             }
         } else {
             // first-time submission
