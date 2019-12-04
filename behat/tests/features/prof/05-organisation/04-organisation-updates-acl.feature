@@ -1,6 +1,5 @@
 Feature: Organisation deputyship updates
 
-  @discharged
   Scenario: Apply deputyship updates via CSV
     Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
@@ -24,7 +23,6 @@ Feature: Organisation deputyship updates
     And the organisation "example.com2" is active
     And "behat-prof1@example.com2" has been added to the "example.com2" organisation
 
-  @discharge
   Scenario: Professional deputy leaves organisation, clients appointed a new deputy within the same organisation
     #  (deputy number changes, org identifier stays the same, different deputy email of same org)
     Given "behat-prof1@publicguardian.gov.uk" has been removed from the "publicguardian.gov.uk" organisation
@@ -39,8 +37,6 @@ Feature: Organisation deputyship updates
     # Assert new named deputy within same organisation
     And I should see "new-behat-prof1@publicguardian.gov.uk" in the "deputy-details" region
 
-
-  @discharge
   Scenario: Professional deputy leaves organisation, and retains their clients
     #  (deputy number stays the same, org identifier changes - example.com1)
     Given "behat-prof1@publicguardian.gov.uk" has been removed from the "publicguardian.gov.uk" organisation
@@ -63,7 +59,6 @@ Feature: Organisation deputyship updates
       | GB                                    | deputy-details |
       | behat-prof1@example.com1              | deputy-details |
 
-  @discharge
   Scenario: Clients appointed to a new organisation
     #  (deputy number changes, org identifier changes to deputy of new organisation - example.com2)
     Given I am logged in as "behat-prof1@example.com2" with password "Abcd1234"
