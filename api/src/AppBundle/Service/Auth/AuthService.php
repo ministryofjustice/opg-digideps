@@ -6,7 +6,6 @@ use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
@@ -45,10 +44,6 @@ class AuthService
      */
 
     private $roleHierarchy;
-    /**
-     * @var ParameterBagInterface
-     */
-    private $params;
 
     /**
      * @param EncoderFactoryInterface $encoderFactory
@@ -56,7 +51,7 @@ class AuthService
      * @param ContainerInterface $container
      * @param UserRepository $userRepository
      * @param RoleHierarchyInterface $roleHierarchy
-     * @param ParameterBagInterface $params
+     * @param array $clientSecrets
      */
     public function __construct(
         EncoderFactoryInterface $encoderFactory,
@@ -64,10 +59,10 @@ class AuthService
         ContainerInterface $container,
         UserRepository $userRepository,
         RoleHierarchyInterface $roleHierarchy,
-        ParameterBagInterface $params
+        array $clientSecrets
     )
     {
-        $this->clientSecrets = $params->get('client_secrets');
+        $this->clientSecrets = $clientSecrets;
 
         if (!is_array($this->clientSecrets) || empty($this->clientSecrets)) {
             throw new \InvalidArgumentException('client_secrets not defined in config.');
@@ -78,7 +73,7 @@ class AuthService
         $this->logger = $logger;
         $this->securityEncoderFactory = $encoderFactory;
         $this->roleHierarchy = $roleHierarchy;
-        $this->params = $params;
+        $this->clientSecrets = $clientSecrets;
     }
 
     /**
@@ -171,7 +166,6 @@ class AuthService
                 }
             }
         }
-
 
         return in_array($roleName, $allowedRoles);
     }

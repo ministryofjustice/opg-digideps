@@ -12,7 +12,8 @@ services:
         public: true
     user_provider:
         alias: AppBundle\Service\Auth\UserProvider
-    authService:
+
+    AppBundle\Service\Auth\AuthService:
         class: AppBundle\Service\Auth\AuthService
         public: true
         arguments:
@@ -21,7 +22,11 @@ services:
             $container: '@service_container'
             $userRepository: '@AppBundle\Entity\Repository\UserRepository'
             $roleHierarchy: '@security.role_hierarchy'
-            $params: '@Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface'
+            $clientSecrets: '%client_secrets%'
+
+    authService:
+        alias: AppBundle\Service\Auth\AuthService
+
     AppBundle\Service\BruteForce\AttemptsInTimeChecker:
         arguments: [ "@snc_redis.default" ]
         public: true
