@@ -385,7 +385,7 @@ class OrgService
                 $this->added['discharged_clients'][] = $clientCaseNo;
 
             } else {
-                //$client->setOrganisation(null);
+                $client->setOrganisation(null);
             }
         }
 

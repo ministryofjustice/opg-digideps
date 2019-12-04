@@ -1075,7 +1075,7 @@ class Client implements ClientInterface
      * @param Organisation $organisation
      * @return $this
      */
-    public function setOrganisation(Organisation $organisation)
+    public function setOrganisation(? Organisation $organisation)
     {
         $this->organisation = $organisation;
 
