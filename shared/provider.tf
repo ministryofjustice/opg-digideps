@@ -27,3 +27,33 @@ provider "aws" {
     session_name = "terraform-session"
   }
 }
+
+provider "aws" {
+  region = "eu-west-1"
+  alias  = "development"
+
+  assume_role {
+    role_arn     = "arn:aws:iam::248804316466:role/${var.DEFAULT_ROLE}"
+    session_name = "terraform-session"
+  }
+}
+
+provider "aws" {
+  region = "eu-west-1"
+  alias  = "preproduction"
+
+  assume_role {
+    role_arn     = "arn:aws:iam::454262938596:role/${var.DEFAULT_ROLE}"
+    session_name = "terraform-session"
+  }
+}
+
+provider "aws" {
+  region = "eu-west-1"
+  alias  = "production"
+
+  assume_role {
+    role_arn     = "arn:aws:iam::515688267891:role/${var.DEFAULT_ROLE}"
+    session_name = "terraform-session"
+  }
+}
