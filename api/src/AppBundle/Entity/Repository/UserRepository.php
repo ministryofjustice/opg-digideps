@@ -160,10 +160,8 @@ class UserRepository extends AbstractEntityRepository
             $nameBasedQuery .= ' OR (lower(c.firstname) = :firstname AND lower(c.lastname) = :lastname)';
         }
 
-        $this->qb->setParameters([
-            'firstname' => strtolower($firstName),
-            'lastname' => strtolower($lastname),
-        ]);
+        $this->qb->setParameter('firstname', strtolower($firstName));
+        $this->qb->setParameter('lastname', strtolower($lastname));
 
         $this->qb->andWhere($nameBasedQuery);
     }
