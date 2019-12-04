@@ -39,7 +39,10 @@ final class Version226 extends AbstractMigration implements ContainerAwareInterf
                 continue;
             }
 
-            $organisation->addUser($user);
+            if (count($user->getOrganisations()) === 0) {
+                $organisation->addUser($user);
+            }
+
             $this->attachUsersTeamMembersToOrganisation($organisation, $user->getTeams());
 
             $em->flush();
