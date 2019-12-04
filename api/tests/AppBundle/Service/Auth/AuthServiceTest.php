@@ -7,6 +7,7 @@ use AppBundle\Service\Auth\AuthService;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Role\Role;
 
 class AuthServiceTest extends TestCase
 {
@@ -32,23 +33,17 @@ class AuthServiceTest extends TestCase
         $this->userRepo = m::stub(UserRepository::class);
         $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
         $this->encoderFactory = m::stub('Symfony\Component\Security\Core\Encoder\EncoderFactory');
+        $this->roleHierarchy = m::stub('Symfony\Component\Security\Core\Role\RoleHierarchyInterface');
+        $this->roleHierarchy->shouldReceive('getReachableRoles')->with(Mockery::any())->andReturn([new Role('ROLE_LAY_DEPUTY')]);
 
-        $this->container = m::stub('Symfony\Component\DependencyInjection\Container', [
-                'getParameter(client_secrets)' => $this->clientSecrets,
-                'getParameter(security.role_hierarchy.roles)' => ['ROLE_LAY_DEPUTY_INHERITED'=>['ROLE_LAY_DEPUTY']],
-        ]);
-
-        $this->authService = new AuthService($this->encoderFactory, $this->logger, $this->container, $this->userRepo);
+        $this->authService = new AuthService($this->encoderFactory, $this->logger, $this->userRepo, $this->roleHierarchy, $this->clientSecrets);
     }
 
     public function testMissingSecrets()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $container = m::stub('Symfony\Component\DependencyInjection\Container', [
-                'getParameter(client_secrets)' => [],
-        ]);
 
-        $this->authService = new AuthService($this->encoderFactory, $this->logger, $container, $this->userRepo);
+        $this->authService = new AuthService($this->encoderFactory, $this->logger, $this->userRepo, $this->roleHierarchy, []);
     }
 
     public function isSecretValidProvider()

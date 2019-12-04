@@ -19,7 +19,6 @@ services:
         arguments:
             $encoderFactory: '@security.encoder_factory'
             $logger: '@logger'
-            $container: '@service_container'
             $userRepository: '@AppBundle\Entity\Repository\UserRepository'
             $roleHierarchy: '@security.role_hierarchy'
             $clientSecrets: '%client_secrets%'

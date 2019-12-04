@@ -4,10 +4,11 @@ namespace AppBundle\Service\Auth;
 
 use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 class AuthService
@@ -25,11 +26,6 @@ class AuthService
     private $clientSecrets;
 
     /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
      * @var UserRepository
      */
     private $userRepository;
@@ -42,13 +38,11 @@ class AuthService
     /**
      * @var RoleHierarchyInterface
      */
-
     private $roleHierarchy;
 
     /**
      * @param EncoderFactoryInterface $encoderFactory
      * @param LoggerInterface $logger
-     * @param ContainerInterface $container
      * @param UserRepository $userRepository
      * @param RoleHierarchyInterface $roleHierarchy
      * @param array $clientSecrets
@@ -56,7 +50,6 @@ class AuthService
     public function __construct(
         EncoderFactoryInterface $encoderFactory,
         LoggerInterface $logger,
-        ContainerInterface $container,
         UserRepository $userRepository,
         RoleHierarchyInterface $roleHierarchy,
         array $clientSecrets
@@ -68,12 +61,10 @@ class AuthService
             throw new \InvalidArgumentException('client_secrets not defined in config.');
         }
 
-        $this->container = $container;
         $this->userRepository = $userRepository;
         $this->logger = $logger;
         $this->securityEncoderFactory = $encoderFactory;
         $this->roleHierarchy = $roleHierarchy;
-        $this->clientSecrets = $clientSecrets;
     }
 
     /**
@@ -154,8 +145,14 @@ class AuthService
             return false;
         }
 
-        $allowedRoles = isset($this->clientSecrets[$clientSecretFromRequest]['permissions']) ?
+        $roles = isset($this->clientSecrets[$clientSecretFromRequest]['permissions']) ?
             $this->clientSecrets[$clientSecretFromRequest]['permissions'] : [];
+
+        $allowedRoles = [];
+
+        foreach ($roles as $role) {
+            $allowedRoles[] = new Role($role);
+        }
 
         // also allow inherited roles
         $hierarchy = $this->roleHierarchy->getReachableRoles($allowedRoles);
@@ -167,6 +164,6 @@ class AuthService
             }
         }
 
-        return in_array($roleName, $allowedRoles);
+        return in_array(new Role($roleName), $allowedRoles);
     }
 }
