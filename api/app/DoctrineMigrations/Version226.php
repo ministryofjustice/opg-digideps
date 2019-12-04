@@ -5,7 +5,6 @@ namespace Application\Migrations;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\Entity\User;
-use AppBundle\Factory\OrganisationFactory;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
@@ -30,22 +29,14 @@ final class Version226 extends AbstractMigration implements ContainerAwareInterf
             User::ROLE_PA_NAMED
         ]]);
 
-        /** @var OrganisationFactory $orgFactory */
-        $orgFactory = $this->container->get('AppBundle\Factory\OrganisationFactory');
-
         /** @var OrganisationRepository $orgRepo */
         $orgRepo = $em->getRepository(Organisation::class);
 
         foreach ($namedUsers as $user) {
+            $organisation = $orgRepo->findByEmailIdentifier($user->getEmail());
 
-            // Create a new Organisation if first occurrence of email domain.
-            if (null === ($organisation = $orgRepo->findByEmailIdentifier($user->getEmail()))) {
-                try {
-                    $organisation = $orgFactory->createFromFullEmail($user->getEmail(), $user->getEmail());
-                    $em->persist($organisation);
-                } catch (\InvalidArgumentException $e) {
-                    continue;
-                }
+            if (null === $organisation) {
+                continue;
             }
 
             $organisation->addUser($user);
@@ -63,7 +54,9 @@ final class Version226 extends AbstractMigration implements ContainerAwareInterf
     {
         foreach ($teams as $team) {
             foreach ($team->getMembers() as $user) {
-                $organisation->addUser($user);
+                if (count($user->getOrganisations()) === 0) {
+                    $organisation->addUser($user);
+                }
             }
         }
     }
