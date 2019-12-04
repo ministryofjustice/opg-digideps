@@ -2,6 +2,7 @@
 
 namespace Tests\AppBundle\Service\Auth;
 
+use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Service\Auth\AuthService;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
@@ -28,7 +29,7 @@ class AuthServiceTest extends TestCase
 
     public function setUp(): void
     {
-        $this->userRepo = m::stub('Doctrine\ORM\EntityRepository');
+        $this->userRepo = m::stub(UserRepository::class);
         $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
         $this->encoderFactory = m::stub('Symfony\Component\Security\Core\Encoder\EncoderFactory');
 

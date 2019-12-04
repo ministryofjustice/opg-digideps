@@ -101,7 +101,7 @@ class ReportServiceTest extends TestCase
         $report = $this->report;
 
         // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em])->makePartial();
+        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo])->makePartial();
 
         // mocks
         $this->em->shouldReceive('detach');
@@ -147,7 +147,7 @@ class ReportServiceTest extends TestCase
         $client->addReport($nextReport);
 
         // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em])->makePartial();
+        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo])->makePartial();
 
         // mocks
         $this->em->shouldReceive('detach');
@@ -224,7 +224,7 @@ class ReportServiceTest extends TestCase
         $this->em->shouldReceive('flush')->with()->once(); //last in createNextYearReport
 
         // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em])->makePartial();
+        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo])->makePartial();
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');
         $this->em->shouldReceive('flush');
@@ -262,7 +262,7 @@ class ReportServiceTest extends TestCase
         $report->setAgreedBehalfDeputy(true);
 
         // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em])->makePartial();
+        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo])->makePartial();
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');
         $this->em->shouldReceive('flush');
