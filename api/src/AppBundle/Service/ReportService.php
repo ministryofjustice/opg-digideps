@@ -146,7 +146,7 @@ class ReportService
             // Check that the target report doesn't already have a matching asset
             $assetExists = $this->checkAssetExists($toReport, $asset);
 
-            if (!$assetExists && $asset instanceof Asset) {
+            if (!$assetExists) {
                 /** @var Asset $newAsset */
                 $newAsset = $this->cloneAsset($asset);
                 $newAsset->setReport($toReport);
