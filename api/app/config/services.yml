@@ -66,3 +66,8 @@ services:
     # Disable autowiring for these helper classes
     AppBundle\Service\ReportStatusService: ~
     AppBundle\Service\Stats\StatsQueryParameters: ~
+
+    Symfony\Component\Security\Core\Role\RoleHierarchyInterface: '@security.role_hierarchy'
+
+    Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface:
+        public: true

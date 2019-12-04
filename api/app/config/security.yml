@@ -20,6 +20,8 @@ services:
             $logger: '@logger'
             $container: '@service_container'
             $userRepository: '@AppBundle\Entity\Repository\UserRepository'
+            $roleHierarchy: '@security.role_hierarchy'
+            $params: '@Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface'
     AppBundle\Service\BruteForce\AttemptsInTimeChecker:
         arguments: [ "@snc_redis.default" ]
         public: true

@@ -4,11 +4,12 @@ namespace AppBundle\Service\Auth;
 
 use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
-use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 class AuthService
 {
@@ -40,19 +41,33 @@ class AuthService
     private $securityEncoderFactory;
 
     /**
+     * @var RoleHierarchyInterface
+     */
+
+    private $roleHierarchy;
+    /**
+     * @var ParameterBagInterface
+     */
+    private $params;
+
+    /**
      * @param EncoderFactoryInterface $encoderFactory
      * @param LoggerInterface $logger
      * @param ContainerInterface $container
      * @param UserRepository $userRepository
+     * @param RoleHierarchyInterface $roleHierarchy
+     * @param ParameterBagInterface $params
      */
     public function __construct(
         EncoderFactoryInterface $encoderFactory,
         LoggerInterface $logger,
         ContainerInterface $container,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        RoleHierarchyInterface $roleHierarchy,
+        ParameterBagInterface $params
     )
     {
-        $this->clientSecrets = $container->getParameter('client_secrets');
+        $this->clientSecrets = $params->get('client_secrets');
 
         if (!is_array($this->clientSecrets) || empty($this->clientSecrets)) {
             throw new \InvalidArgumentException('client_secrets not defined in config.');
@@ -62,6 +77,8 @@ class AuthService
         $this->userRepository = $userRepository;
         $this->logger = $logger;
         $this->securityEncoderFactory = $encoderFactory;
+        $this->roleHierarchy = $roleHierarchy;
+        $this->params = $params;
     }
 
     /**
@@ -125,7 +142,7 @@ class AuthService
             'registrationToken' => $token,
         ]);
 
-        return $user ?: null;
+        return $user;
     }
 
     /**
@@ -146,7 +163,7 @@ class AuthService
             $this->clientSecrets[$clientSecretFromRequest]['permissions'] : [];
 
         // also allow inherited roles
-        $hierarchy = $this->container->getParameter('security.role_hierarchy.roles');
+        $hierarchy = $this->roleHierarchy->getReachableRoles($allowedRoles);
         foreach ($hierarchy as $cr => $parents) { // ROLE_PA_NAMED => [ROLE_PA]
             foreach ($parents as $parent) {
                 if (in_array($parent, $allowedRoles)) {

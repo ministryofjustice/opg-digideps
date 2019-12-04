@@ -67,7 +67,7 @@ class RestInputOuputFormatter
     /**
      * @param Request $request
      *
-     * @return array|bool|float|int|object|string
+     * @return array
      */
     public function requestContentToArray(Request $request)
     {
@@ -80,7 +80,9 @@ class RestInputOuputFormatter
             return [];
         }
 
-        return $this->serializer->deserialize($content, 'array', $format);
+        /** @var array $array */
+        $array = $this->serializer->deserialize($content, 'array', $format);
+        return $array;
     }
 
     /**
