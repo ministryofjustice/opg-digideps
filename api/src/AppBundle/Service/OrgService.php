@@ -658,8 +658,7 @@ class OrgService
 
     private function dischargeClient(EntityDir\Client $client)
     {
-        $clientCaseNo = $client->getCaseNumber();
+        $this->added['discharged_clients'][] = $client->getCaseNumber();
         $client->setDeletedAt(new\DateTime());
-        $this->added['discharged_clients'][] = $clientCaseNo;
     }
 }
