@@ -36,7 +36,7 @@
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
         transDomain: translationDomain,
         linkButtonLabel: 'cancel' | trans({}, 'common'),
-        linkHref: path('org_team')
+        linkHref: path('org_organisation_view', {id: organisation.id})
     } %}
 
     {{ form_end(form) }}
