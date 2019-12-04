@@ -248,7 +248,7 @@ class DocumentController extends AbstractController
         $document = $this->getDocument($documentId);
 
         if ($document->getReportSubmission() instanceof EntityDir\Report\ReportSubmission) {
-            throw new \RuntimeException('Document already submitted and cannot be removed.');
+            return $this->renderError('Document already submitted and cannot be removed.', 404);
         }
 
         $this->denyAccessUnlessGranted(DocumentVoter::DELETE_DOCUMENT, $document, 'Access denied');
