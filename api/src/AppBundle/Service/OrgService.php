@@ -378,12 +378,8 @@ class OrgService
             $csvDeputyNo = EntityDir\User::padDeputyNumber($row['Deputy No']);
             if ($client->getNamedDeputy()->getDeputyNo() !== $csvDeputyNo) {
                 // discharge client and recreate new one
-
-                $clientCaseNo = $client->getCaseNumber();
                 $this->dischargeClient($client);
                 unset($client);
-                $this->added['discharged_clients'][] = $clientCaseNo;
-
             } else {
                 $client->setOrganisation(null);
             }
@@ -662,6 +658,8 @@ class OrgService
 
     private function dischargeClient(EntityDir\Client $client)
     {
+        $clientCaseNo = $client->getCaseNumber();
         $client->setDeletedAt(new\DateTime());
+        $this->added['discharged_clients'][] = $clientCaseNo;
     }
 }
