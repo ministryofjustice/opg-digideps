@@ -13,12 +13,12 @@ services:
 
     AppBundle\Service\Client\RestClient:
         arguments:
-            - "@service_container"
-            - "@GuzzleHttp\\Client"
-            - "@AppBundle\\Service\\Client\\TokenStorage\\RedisStorage"
-            - "@jms_serializer"
-            - "@logger"
-            - "%api_client_secret%"
+            - '@service_container'
+            - '@GuzzleHttp\Client'
+            - '@AppBundle\Service\Client\TokenStorage\RedisStorage'
+            - '@jms_serializer'
+            - '@logger'
+            - '%api_client_secret%'
 
     rest_client:
         alias: AppBundle\Service\Client\RestClient
