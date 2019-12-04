@@ -8,13 +8,13 @@ if [ "${S3_BUCKET}" = "**None**" ]; then
   exit 1
 fi
 
-if [ "${S3_S3V4}" = "**None**" ]; then
-  echo "You need to set the S3_S3V4 environment variable."
+if [ "${S3_KMS_KEY_ID}" = "**None**" ]; then
+  echo "You need to set the S3_KMS_KEY_ID environment variable."
   exit 1
 fi
 
-if [ "${S3_KMS_KEY_ID}" = "**None**" ]; then
-  echo "You need to set the S3_KMS_KEY_ID environment variable."
+if [ "${S3_S3V4}" = "**None**" ]; then
+  echo "You need to set the S3_S3V4 environment variable."
   exit 1
 fi
 
