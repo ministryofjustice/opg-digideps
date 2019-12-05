@@ -7,7 +7,10 @@ Feature: Users can edit members of their organisation
     When I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
     And I go to "/org/settings/organisation"
     And I follow "Add user"
-    When I fill in the following:
+    When I follow "Cancel"
+    Then the URL should match "/org/settings/organisation/\d+"
+    When I follow "Add user"
+    And I fill in the following:
       | organisation_member_firstname  | Yvonne                                       |
       | organisation_member_lastname   | Lacasse                                      |
       | organisation_member_email      | behat-prof-team-member@publicguardian.gov.uk |
@@ -72,7 +75,10 @@ Feature: Users can edit members of their organisation
     Then the "organisation_member_firstname" field should contain "Yvonne"
     And the "organisation_member_lastname" field should contain "Lacasse"
     And the "organisation_member_email" field should contain "y.lacasse@publicguardian.gov.uk"
-    When  I fill in "organisation_member_email" with "yvonne.lacasse@publicguardian.gov.uk"
+    When I follow "Cancel"
+    Then the URL should match "/org/settings/organisation/\d+"
+    When I click on "edit" in the "team-user-ylacassepublicguardiangovuk" region
+    And  I fill in "organisation_member_email" with "yvonne.lacasse@publicguardian.gov.uk"
     And I press "Save"
     Then the URL should match "/org/settings/organisation/\d+"
     And I should see "Yvonne Lacasse"
