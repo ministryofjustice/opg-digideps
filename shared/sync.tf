@@ -44,35 +44,14 @@ data "aws_iam_policy_document" "sync" {
   }
 
   statement {
-    sid    = "AllowSyncTaskKMS"
-    effect = "Allow"
-    actions = [
-      "kms:*"
-    ]
-    resources = [
-      data.aws_kms_alias.backup_development.target_key_arn,
-      data.aws_kms_alias.backup_preproduction.target_key_arn,
-      data.aws_kms_alias.backup_production.target_key_arn,
-    ]
+    sid       = "AllowSyncTaskKMS"
+    effect    = "Allow"
+    actions   = ["kms:*"]
+    resources = ["*"]
   }
 }
 
 data "aws_s3_bucket" "sync" {
   bucket   = "backup.complete-deputy-report.service.gov.uk"
   provider = aws.management
-}
-
-data "aws_kms_alias" "backup_development" {
-  name     = "alias/backup"
-  provider = aws.development
-}
-
-data "aws_kms_alias" "backup_preproduction" {
-  name     = "alias/backup"
-  provider = aws.preproduction
-}
-
-data "aws_kms_alias" "backup_production" {
-  name     = "alias/backup"
-  provider = aws.production
 }
