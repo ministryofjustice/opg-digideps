@@ -155,7 +155,13 @@ class AuthService
         }
 
         // also allow inherited roles
-        $hierarchyRoles = $this->roleHierarchy->getReachableRoles($allowedRoles);
+        $hierarchyRoles = $this->roleHierarchy->getReachableRoles([new Role($roleName)]);
+
+
+         //TODO as role_hierarchy no longer returns keys, we need to re-add the requested role here due to
+         //the way we have set up our role structure. This should be refactored to something sensible.
+
+        $hierarchyRoles[] = new Role($roleName);
 
         foreach ($hierarchyRoles as $hierarchyRole) {
             if (in_array($hierarchyRole, $allowedRoles)) {
