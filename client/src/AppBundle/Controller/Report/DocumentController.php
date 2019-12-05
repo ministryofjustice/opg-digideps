@@ -19,6 +19,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class DocumentController extends AbstractController
@@ -248,7 +249,7 @@ class DocumentController extends AbstractController
         $document = $this->getDocument($documentId);
 
         if ($document->getReportSubmission() instanceof EntityDir\Report\ReportSubmission) {
-            return $this->renderError('Document already submitted and cannot be removed.', 404);
+            return $this->renderError('Document already submitted and cannot be removed.', Response::HTTP_BAD_REQUEST);
         }
 
         $this->denyAccessUnlessGranted(DocumentVoter::DELETE_DOCUMENT, $document, 'Access denied');
