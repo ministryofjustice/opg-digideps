@@ -36,10 +36,6 @@ module "backup_security_group" {
   vpc_id = data.aws_vpc.vpc.id
 }
 
-data "aws_kms_alias" "backup" {
-  name = "alias/backup"
-}
-
 data "aws_canonical_user_id" "development" {
   provider = aws.development
 }

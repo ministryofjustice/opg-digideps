@@ -143,7 +143,7 @@ workflows:
           name: apply preproduction
           requires: [ apply shared-production ]
           filters: { branches: { only: [ master ] } }
-          tf_workspace: preprod
+          tf_workspace: preproduction
 
       - slack/approval-notification:
           name: approve release to production notification
@@ -176,7 +176,7 @@ workflows:
           requires: [ backup production ]
           filters: { branches: { only: [ master ] } }
           task_name: restore_from_production
-          tf_workspace: preprod
+          tf_workspace: preproduction
           timeout: 600
 
 orbs:
