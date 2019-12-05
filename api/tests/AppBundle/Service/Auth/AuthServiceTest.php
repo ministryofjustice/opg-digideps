@@ -4,6 +4,7 @@ namespace Tests\AppBundle\Service\Auth;
 
 use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Service\Auth\AuthService;
+use Mockery;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,7 +74,7 @@ class AuthServiceTest extends TestCase
     public function testgetUserByEmailAndPasswordUserNotFound()
     {
         $this->userRepo->shouldReceive('findOneBy')->with(['email' => 'email@example.org'])->andReturn(null);
-        $this->logger->shouldReceive('info')->with(\Mockery::pattern('/not found/'))->once();
+        $this->logger->shouldReceive('info')->with(Mockery::pattern('/not found/'))->once();
 
         $this->assertEquals(false, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }
@@ -91,7 +92,7 @@ class AuthServiceTest extends TestCase
         ]);
         $this->encoderFactory->shouldReceive('getEncoder')->with($user)->andReturn($encoder);
 
-        $this->logger->shouldReceive('info')->with(\Mockery::pattern('/password mismatch/'))->once();
+        $this->logger->shouldReceive('info')->with(Mockery::pattern('/password mismatch/'))->once();
 
         $this->assertEquals(null, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }
