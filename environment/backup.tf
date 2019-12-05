@@ -36,6 +36,22 @@ module "backup_security_group" {
   vpc_id = data.aws_vpc.vpc.id
 }
 
+data "aws_kms_alias" "backup" {
+  name = "alias/backup"
+}
+
+data "aws_canonical_user_id" "development" {
+  provider = aws.development
+}
+
+data "aws_canonical_user_id" "preproduction" {
+  provider = aws.preproduction
+}
+
+data "aws_canonical_user_id" "production" {
+  provider = aws.production
+}
+
 locals {
   backup_container = <<EOF
 {
@@ -58,6 +74,10 @@ locals {
 			"name": "S3_BUCKET",
 			"value": "${data.aws_s3_bucket.backup.bucket}"
 		},
+        {
+            "name": "S3_OPTS",
+            "value": "--grants read=id=${data.aws_canonical_user_id.development.id},id=${data.aws_canonical_user_id.preproduction.id},id=${data.aws_canonical_user_id.production.id}"
+        },
 		{
 			"name": "S3_PREFIX",
 			"value": "${local.environment}"
