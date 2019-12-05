@@ -155,15 +155,14 @@ class AuthService
         }
 
         // also allow inherited roles
-        $hierarchy = $this->roleHierarchy->getReachableRoles($allowedRoles);
-        foreach ($hierarchy as $cr => $parents) { // ROLE_PA_NAMED => [ROLE_PA]
-            foreach ($parents as $parent) {
-                if (in_array($parent, $allowedRoles)) {
-                    $allowedRoles[] = $cr; //ROLE_PA_NAMED
-                }
+        $hierarchyRoles = $this->roleHierarchy->getReachableRoles($allowedRoles);
+
+        foreach ($hierarchyRoles as $hierarchyRole) {
+            if (in_array($hierarchyRole, $allowedRoles)) {
+                return true;
             }
         }
 
-        return in_array(new Role($roleName), $allowedRoles);
+        return false;
     }
 }
