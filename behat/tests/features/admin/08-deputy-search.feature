@@ -48,3 +48,12 @@ Feature: Deputy search
     When I search in admin for a deputy with the term "john 104-client" and include clients
     Then I should see "Found 1 users"
     And I should see "Lay Deputy 104 User"
+
+  @admin @admin-search @deputy-search
+  Scenario: Search exact name match across a specific deputy role
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    When I search in admin for a deputy with the term "Admin User" and filter role by "ROLE_PA_NAMED"
+    Then I should see "Found 0 users"
+    When I search in admin for a deputy with the term "Admin User" and filter role by "ROLE_ADMIN"
+    Then I should see "Found 1 users"
+    And I should see "Admin User"

@@ -107,9 +107,9 @@
 
 {% set allReports = client.reports|merge([client.ndr])|filter(r => (r is not null)) %}
 {% set reportsByGroup = {
-    active: allReports | filter(r => not r.submitted and not r.unSubmitDate),
+    active: allReports | filter(r => not r.submitted and (r.unSubmitDate is not defined or not r.unSubmitDate)),
     submitted: allReports | filter(r => r.submitted),
-    incomplete: allReports | filter(r => r.unSubmitDate and not r.submitted),
+    incomplete: allReports | filter(r => (r.unSubmitDate is defined and r.unSubmitDate) and not r.submitted),
 } %}
 
 <h2 class="govuk-heading-l">

@@ -176,13 +176,11 @@ class ReportController extends AbstractController
 
         $existingReports = $this->getReportsIndexedById($client);
 
-        if ($action == 'create' && ($firstReport = array_shift($existingReports)) && $firstReport instanceof Report) {
-            $report = $firstReport;
-        } else {
-            // new report
-            $report = new Report();
+        if (count($existingReports)) {
+            throw $this->createAccessDeniedException('Client already has a report');
         }
 
+        $report = new Report();
         $report->setClient($client);
 
         /** @var FormFactory */
