@@ -1,6 +1,11 @@
 parameters:
     # set this param to a higher value than session_expire_seconds on the client
     user_provider_timeout_seconds: 3901
+    client_secrets:
+        api-admin-key:
+            permissions: [ROLE_AD, ROLE_ADMIN, ROLE_CASE_MANAGER]
+        api-frontend-key:
+            permissions: [ROLE_LAY_DEPUTY, ROLE_PA, ROLE_PROF, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER]
 
 services:
     # authenticator
