@@ -8,7 +8,7 @@ use Mockery;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Role\Role;
+use Symfony\Component\Security\Core\Role\RoleHierarchy;
 
 class AuthServiceTest extends TestCase
 {
@@ -29,14 +29,38 @@ class AuthServiceTest extends TestCase
         'layDeputySecretWrongFormat' => 'IShouldBeAnArray',
     ];
 
+    /**
+     * @var RoleHierarchy
+     */
+    private $roleHierarchy;
+
+    /**
+     * @var Mockery\MockInterface
+     */
+    private $userRepo;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Symfony\Bridge\Monolog\Logger
+     */
+    private $logger;
+
+    /**
+     * @var Mockery\MockInterface
+     */
+    private $encoderFactory;
+
     public function setUp(): void
     {
         $this->userRepo = m::stub(UserRepository::class);
         $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
         $this->encoderFactory = m::stub('Symfony\Component\Security\Core\Encoder\EncoderFactory');
-        $this->roleHierarchy = m::stub('Symfony\Component\Security\Core\Role\RoleHierarchyInterface');
-        $this->roleHierarchy->shouldReceive('getReachableRoles')->with(Mockery::any())->andReturn([new Role('ROLE_LAY_DEPUTY')]);
 
+        $hierarchy = [
+            'ROLE_ADMIN' => [ 'ROLE_DOCUMENT_MANAGE', 'ROLE_CASE_MANAGER' ],
+            'ROLE_LAY_DEPUTY' => [ 'ROLE_DEPUTY' ],
+        ];
+
+        $this->roleHierarchy = new RoleHierarchy($hierarchy);
         $this->authService = new AuthService($this->encoderFactory, $this->logger, $this->userRepo, $this->roleHierarchy, $this->clientSecrets);
     }
 
@@ -128,7 +152,6 @@ class AuthServiceTest extends TestCase
     {
         return [
             ['layDeputySecret', 'ROLE_LAY_DEPUTY', true],
-            ['layDeputySecret', 'ROLE_LAY_DEPUTY_INHERITED', true],
             ['layDeputySecret', 'ROLE_ADMIN', false],
             ['layDeputySecret', 'OTHER_ROLE', false],
             ['layDeputySecret', null, false],
