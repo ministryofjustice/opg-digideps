@@ -133,15 +133,8 @@ workflows:
           tf_workspace: training
 
       - apply:
-          name: apply shared-production
-          requires: [ api unit test, client unit test, integration test ]
-          filters: { branches: { only: [ master ] } }
-          tf_tier: shared
-          tf_workspace: production
-
-      - apply:
           name: apply preproduction
-          requires: [ apply shared-production ]
+          requires: [ api unit test, client unit test, integration test ]
           filters: { branches: { only: [ master ] } }
           tf_workspace: preproduction
 
@@ -158,8 +151,15 @@ workflows:
           filters: { branches: { only: [ master ] } }
 
       - apply:
-          name: apply production
+          name: apply shared-production
           requires: [ approve release to production ]
+          filters: { branches: { only: [ master ] } }
+          tf_tier: shared
+          tf_workspace: production
+
+      - apply:
+          name: apply production
+          requires: [ apply shared-production ]
           filters: { branches: { only: [ master ] } }
           tf_workspace: production02
 
