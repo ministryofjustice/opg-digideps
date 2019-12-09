@@ -3,6 +3,9 @@
 namespace AppBundle\Command;
 
 use Doctrine\Bundle\MigrationsBundle\Command\MigrationsMigrateDoctrineCommand;
+use Predis\Client;
+use Psr\Container\ContainerInterface;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,11 +29,16 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
         $this
             ->setName('doctrine:migrations:migrate-lock')
             ->setDescription('Same as doctrine:migrations:migrate, but locking the database.')
-            ->setHelp(null)
+            ->setHelp('')
             ->addOption('release-lock', null, InputOption::VALUE_NONE, 'Release lock and exit.')
         ;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     */
     public function execute(InputInterface $input, OutputInterface $output): ?int
     {
         // release lock and exit
@@ -62,6 +70,7 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
     }
 
     /**
+     * @param OutputInterface $output
      * @return bool true if lock if acquired, false if not (already acquired)
      */
     private function acquireLock($output)
@@ -77,6 +86,7 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
      * release lock.
      *
      * @param OutputInterface $output
+     * @return int
      */
     private function releaseLock($output)
     {
@@ -86,15 +96,25 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
     }
 
     /**
-     * @return \Predis\Client
+     * @return Client
      */
     private function getRedis()
     {
         return $this->getService('snc_redis.default');
     }
 
+    /**
+     * @param string $id
+     * @return mixed
+     */
     private function getService($id)
     {
-        return $this->getApplication()->getKernel()->getContainer()->get($id);
+        /** @var Application $application */
+        $application = $this->getApplication();
+
+        /** @var ContainerInterface $container */
+        $container = $application->getKernel()->getContainer();
+
+        return $container->get($id);
     }
 }
