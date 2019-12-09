@@ -5,16 +5,16 @@ Feature: PROF cross team members
     And I am logged in as "behat-prof1-team-member@publicguardian.gov.uk" with password "Abcd1234"
     When I go to "/org/?limit=50"
     Then I should see the "client" region exactly 18 times
-    And I should see the "client-01000010" region
+    And I should see the "client-31000010" region
 
   Scenario: TEAM3 named deputy adds used "behat-prof1-team-member" (TEAM1)
     Given I am logged in as "behat-prof3@publicguardian.gov.uk" with password "Abcd1234"
     # assert I see 3 clients from team3
     When I go to "/org/?limit=50"
     Then I should see the "client" region exactly 3 times
-    Then I should see the "client-03000001" region
-    Then I should see the "client-03000002" region
-    Then I should see the "client-03000003" region
+    Then I should see the "client-33000001" region
+    Then I should see the "client-33000002" region
+    Then I should see the "client-33000003" region
     # members page
     And I click on "org-settings, user-accounts"
     Then I should see the "team-user-behat-prof3-team-memberpublicguardiangovuk" region
@@ -42,8 +42,8 @@ Feature: PROF cross team members
      # assert I now see 18+3 clients
     When I go to "/org/?limit=50"
     Then I should see the "client" region exactly 21 times
-    And I should see the "client-01000010" region
-    And I should see the "client-03000001" region
+    And I should see the "client-31000010" region
+    And I should see the "client-33000001" region
 
   Scenario: "behat-prof1-team-member" removed from the team
     Given I am logged in as "behat-prof3@publicguardian.gov.uk" with password "Abcd1234"

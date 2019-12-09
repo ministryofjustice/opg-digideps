@@ -9,7 +9,7 @@ user:
     notBlank: Enter an email address
     maxLength: The email can't be longer than {{ limit }} characters
     doesNotMatch: Email does not match
-    invalidDomain: "Email doesn't match the organisation   domain: @creatorDomain"
+    invalidDomain: "Email doesn't match the organisation domain: @creatorDomain"
     alreadyUsed: Email address already in use in the system
   firstname:
     notBlank: Enter your first name

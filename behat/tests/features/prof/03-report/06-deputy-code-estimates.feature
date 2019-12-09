@@ -4,13 +4,13 @@ Feature: Prof deputy costs estimate
   # Happy paths and Overview status checks
   Scenario: Status of section is reported on Report overview when section is not started
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
+    And I click on "pa-report-open" in the "client-31000010" region
     Then I should see a "#edit-prof_deputy_costs_estimate" element
     And I should see the "prof_deputy_costs_estimate-state-not-started" region
 
   Scenario: Completing the Fixed Costs route and viewing the status overview
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
+    And I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-prof_deputy_costs_estimate"
     Then the URL should match "/report/\d+/prof-deputy-costs-estimate"
     When I click on "start"
@@ -39,7 +39,7 @@ Feature: Prof deputy costs estimate
 
   Scenario: Partially completed Assessed Costs route
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000011" region
+    And I click on "pa-report-open" in the "client-31000011" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
     And the step with the following values CAN be submitted:
@@ -49,7 +49,7 @@ Feature: Prof deputy costs estimate
 
   Scenario: Partially completed Both Costs route
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000012" region
+    And I click on "pa-report-open" in the "client-31000012" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
     And the step with the following values CAN be submitted:
@@ -59,7 +59,7 @@ Feature: Prof deputy costs estimate
 
   Scenario: Completing the Assessed Costs route with only management cost and viewing the status overview
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000013" region
+    And I click on "pa-report-open" in the "client-31000013" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
     And the step with the following values CAN be submitted:
@@ -88,7 +88,7 @@ Feature: Prof deputy costs estimate
 
   Scenario: Completing the Assessed Costs route with costs and more info and viewing the status overview
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000014" region
+    And I click on "pa-report-open" in the "client-31000014" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
     And the step with the following values CAN be submitted:
@@ -122,7 +122,7 @@ Feature: Prof deputy costs estimate
 
   Scenario: Selecting the Both Costs route directs towards Assessed Costs route
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000015" region
+    And I click on "pa-report-open" in the "client-31000015" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
     And the step with the following values CAN be submitted:
@@ -132,7 +132,7 @@ Feature: Prof deputy costs estimate
   # Editing non Fixed Costs route answers
   Scenario: Editing the answers for the Assessed Cost route
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000016" region
+    And I click on "pa-report-open" in the "client-31000016" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
     And the step with the following values CAN be submitted:
@@ -164,7 +164,7 @@ Feature: Prof deputy costs estimate
   # Switching between Fixed Costs and non Fixed Costs
   Scenario: Switching from Fixed Costs selection to non Fixed Costs selection
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000017" region
+    And I click on "pa-report-open" in the "client-31000017" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
     And the step with the following values CAN be submitted:
@@ -195,7 +195,7 @@ Feature: Prof deputy costs estimate
 
   Scenario: Switching from non Fixed Costs selection to Fixed Costs selection
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000018" region
+    And I click on "pa-report-open" in the "client-31000018" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
     And the step with the following values CAN be submitted:
@@ -225,7 +225,7 @@ Feature: Prof deputy costs estimate
   # Entering a completed section
   Scenario: Entering a completed Fixed Cost route takes me to summary
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000019" region
+    And I click on "pa-report-open" in the "client-31000019" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
     And the step with the following values CAN be submitted:
@@ -236,7 +236,7 @@ Feature: Prof deputy costs estimate
 
   Scenario: Entering a completed Assessed Cost route takes me to summary
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000020" region
+    And I click on "pa-report-open" in the "client-31000020" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
     And the step with the following values CAN be submitted:
@@ -252,7 +252,7 @@ Feature: Prof deputy costs estimate
   # Entering a partially completed section
   Scenario: Entering a partially completed non Fixed Costs route up to breakdown takes me to breakdown page
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000021" region
+    And I click on "pa-report-open" in the "client-31000021" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
     And the step with the following values CAN be submitted:
@@ -263,7 +263,7 @@ Feature: Prof deputy costs estimate
 
   Scenario: Entering a partially completed non Fixed Costs route up to more info takes me to more info page
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000022" region
+    And I click on "pa-report-open" in the "client-31000022" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
     And the step with the following values CAN be submitted:
@@ -277,7 +277,7 @@ Feature: Prof deputy costs estimate
   # Form validation
   Scenario: Submitting form with missing data
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000023" region
+    And I click on "pa-report-open" in the "client-31000023" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
     Then the step cannot be submitted without making a selection

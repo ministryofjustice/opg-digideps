@@ -14,7 +14,7 @@ trait DbTrait
     {
         $sqlFile = self::getSnapshotPath($status);
         // truncate cascade + insert. faster than drop + table recreate
-        exec('echo "SET client_min_messages TO WARNING; truncate dd_user, satisfaction, dd_team, organisation, casrec, setting, user_team, client cascade;" > ' . $sqlFile);
+        exec('echo "SET client_min_messages TO WARNING; truncate dd_user, satisfaction, dd_team, named_deputy, organisation, casrec, setting, user_team, client cascade;" > ' . $sqlFile);
         exec('pg_dump ' . self::$dbName . "  --data-only  --inserts --exclude-table='migrations' | sed '/EXTENSION/d' >> {$sqlFile}", $output, $return);
         if (!file_exists($sqlFile) || filesize($sqlFile) < 100) {
             throw new \RuntimeException("SQL snapshot $sqlFile not created or not valid");
@@ -131,6 +131,19 @@ trait DbTrait
     }
 
     /**
+     * @Given I add the client with case number :caseNumber to be deputised by email :deputyEmail
+     */
+    public function iAddTheClientWithCaseNumberToBeDeputisedByEmail($caseNumber, $deputyEmail)
+    {
+        $query = "INSERT INTO deputy_case (client_id, user_id) VALUES (
+                    (SELECT id from client where case_number = '" . $caseNumber . "'),
+                    (SELECT id from dd_user where email = '" . $deputyEmail . "')
+                  )";
+        $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
+        exec($command);
+    }
+
+    /**
      * @Given the organisation :organisationEmailIdentifier is active
      */
     public function theOrganisationIsActive($organisationEmailIdentifier)
@@ -163,6 +176,17 @@ trait DbTrait
         exec($command);
     }
 
+    /**
+     * @Given :userEmail has been removed from the :organisationEmailIdentifier organisation
+     */
+    public function hasBeenRemovedFromTheOrganisation($userEmail, $organisationEmailIdentifier)
+    {
+        $query = "DELETE FROM organisation_user WHERE organisation_id = 
+                    (SELECT id FROM organisation WHERE email_identifier = '{$organisationEmailIdentifier}')
+                    AND user_id = (SELECT id FROM dd_user WHERE email = '{$userEmail}')";
+        $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
+        exec($command);
+    }
 
     /**
      * @Given :userEmail has been removed from their organisation

@@ -46,8 +46,8 @@
         <dt class="govuk-summary-list__key">
             {{ (page ~ '.organisation') | trans }}
         </dt>
-        <dd class="govuk-summary-list__value">
-            <a href="{{ path('admin_organisation_view', {id: client.organisation.id}) }}">{{ client.organisation.name }}</a>
+        <dd class="govuk-summary-list__value behat-region-assigned-organisation">
+            <a href="{{ path('admin_organisation_view', {id: client.organisation.id}) }}">{{ client.organisation.name }}</a> ({{ client.organisation.emailIdentifier }})
 
             {% if not client.organisation.isActivated %}
                 {{ (page ~ '.organisationInactive') | trans }}
@@ -61,7 +61,7 @@
         <dt class="govuk-summary-list__key">
             {{ 'namedDeputy' | trans({}, 'common') }}
         </dt>
-        <dd class="govuk-summary-list__value">
+        <dd class="govuk-summary-list__value behat-region-named-deputy-fullname  ">
             {{ namedDeputy.fullName }}
         </dd>
     </div>
@@ -93,6 +93,12 @@
             {% endif %}
             {% if namedDeputy.email %}
                 {{ 'email' | trans({}, 'common') }}: {{ namedDeputy.email }}<br>
+            {% endif %}
+            {% if namedDeputy.email2 is defined and namedDeputy.email2 %}
+                {{ 'alternativeEmail' | trans({}, 'common') }}: {{ namedDeputy.email2 }}<br>
+            {% endif %}
+            {% if namedDeputy.email3 is defined and namedDeputy.email3 %}
+                {{ 'alternativeEmail' | trans({}, 'common') }}: {{ namedDeputy.email3 }}<br>
             {% endif %}
         </p>
     </div>
