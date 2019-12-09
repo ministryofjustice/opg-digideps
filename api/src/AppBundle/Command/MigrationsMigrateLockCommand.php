@@ -20,7 +20,7 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
 {
     const LOCK_KEY = 'migration_status';
     const LOCK_VALUE = 'locked';
-    const LOCK_EXPIRES_SECONDS = 120;
+    const LOCK_EXPIRES_SECONDS = 300;
 
     protected function configure(): void
     {
