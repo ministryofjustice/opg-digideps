@@ -36,15 +36,31 @@ data "aws_iam_policy_document" "sync" {
     sid    = "AllowSyncTaskObjects"
     effect = "Allow"
     actions = [
-      "s3:*Object"
+      "s3:*Object*"
     ]
     resources = [
       "${data.aws_s3_bucket.sync.arn}/*",
+    ]
+  }
+
+  statement {
+    sid    = "AllowSyncTaskKMS"
+    effect = "Allow"
+    actions = [
+      "kms:*"
+    ]
+    resources = [
+      data.aws_kms_alias.backup.target_key_arn,
     ]
   }
 }
 
 data "aws_s3_bucket" "sync" {
   bucket   = "backup.complete-deputy-report.service.gov.uk"
+  provider = aws.management
+}
+
+data "aws_kms_alias" "backup" {
+  name     = "alias/backup"
   provider = aws.management
 }
