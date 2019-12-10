@@ -144,6 +144,18 @@ class ReportSubmissionService
         return $this->wkhtmltopdf->getPdfFromHtml($html);
     }
 
+    public function getReviewChecklistPdfBinaryContent(ReportInterface $report)
+    {
+        $reviewChecklist = $this->restClient->get('report/' . $report->getId() . '/checklist', 'Report\\ReviewChecklist');
+        $html = $this->templating->render('AppBundle:Admin/Client/Report/Formatted:review_checklist_formatted_standalone.html.twig', [
+            'report' => $report,
+            'checklist' => $reviewChecklist,
+            'lodgingChecklist' => $report->getChecklist()
+        ]);
+
+        return $this->wkhtmltopdf->getPdfFromHtml($html);
+    }
+
     /**
      * @param Report $report
      * @param User   $user

@@ -281,9 +281,15 @@ class ReportController extends AbstractController
                 $this->getRestClient()->post('report/' . $report->getId() . '/checklist', $reviewChecklist);
             }
 
-            $this->addFlash('notice', 'Review checklist saved');
-
-            return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#anchor-fullReview-checklist');
+            if ($button->getName() === ReviewChecklistType::SUBMIT_ACTION) {
+                return $this->redirect($this->generateUrl('admin_report_checklist_submitted', [
+                    'id'=>$report->getId(),
+                    'type' => 'review'
+                ]));
+            } else {
+                $this->addFlash('notice', 'Review checklist saved');
+                return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#anchor-fullReview-checklist');
+            }
         }
 
         if ($buttonClicked instanceof SubmitButton) {
@@ -316,7 +322,10 @@ class ReportController extends AbstractController
                 );
             } else {
                 if ($buttonClicked->getName() == 'submitAndContinue') {
-                    return $this->redirect($this->generateUrl('admin_report_checklist_submitted', ['id'=>$report->getId()]));
+                    return $this->redirect($this->generateUrl('admin_report_checklist_submitted', [
+                        'id'=>$report->getId(),
+                        'type' => 'lodging'
+                    ]));
                 } else {
                     return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#');
                 }
@@ -343,15 +352,19 @@ class ReportController extends AbstractController
     /**
      * @Route("checklist-submitted", name="admin_report_checklist_submitted")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_CASE_MANAGER')")
+     * @param Request $request
      * @param string $id
      *
+     * @return array
      * @Template("AppBundle:Admin/Client/Report:checklistSubmitted.html.twig")
      *
-     * @return array
      */
-    public function checklistSubmittedAction($id)
+    public function checklistSubmittedAction(Request $request, $id)
     {
-        return ['report' => $this->getReport(intval($id))];
+        return [
+            'report' => $this->getReport(intval($id)),
+            'checklistType' => $request->get('type', 'lodging')
+        ];
     }
 
     /**
@@ -363,13 +376,22 @@ class ReportController extends AbstractController
      * @param string $id
      * @return Response
      */
-    public function checklistPDFViewAction($id)
+    public function checklistPDFViewAction(Request $request, $id)
     {
         $report = $this->getReport(intval($id), array_merge(self::$reportGroupsAll, ['report-checklist', 'checklist-information', 'user']));
 
         /** @var ReportSubmissionService $reportSubmissionService */
         $reportSubmissionService = $this->get('AppBundle\Service\ReportSubmissionService');
-        $pdfBinary = $reportSubmissionService->getChecklistPdfBinaryContent($report);
+
+        $checklistType = $request->get('type', 'lodging');
+
+        if ($checklistType === 'review') {
+            $pdfBinary = $reportSubmissionService->getReviewChecklistPdfBinaryContent($report);
+            $attachmentNameFormat = 'DigiReviewChecklist-%s_%s_%s.pdf';
+        } else {
+            $pdfBinary = $reportSubmissionService->getChecklistPdfBinaryContent($report);
+            $attachmentNameFormat = 'DigiChecklist-%s_%s_%s.pdf';
+        }
 
         $response = new Response($pdfBinary);
         $response->headers->set('Content-Type', 'application/pdf');
@@ -378,7 +400,7 @@ class ReportController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $attachmentName = sprintf('DigiChecklist-%s_%s_%s.pdf',
+        $attachmentName = sprintf($attachmentNameFormat,
             $report->getEndDate()->format('Y'),
             $report->getSubmitDate() instanceof \DateTime ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
             $report->getClient()->getCaseNumber()

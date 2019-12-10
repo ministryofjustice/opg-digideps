@@ -1,0 +1,208 @@
+{% set page = 'checklistPage' %}
+{% set answers = checklist.answers %}
+
+<div id="wrapper">
+    <div class="formatted-report">
+
+        <div id="report-header">Office of the Public Guardian</div>
+        <h1>{{ (page ~ '.heading.fullReview.title') | trans({}, 'admin-checklist') }}</h1>
+
+        <p class="push--bottom left width-half">
+            <strong>{{ 'client' | trans({}, 'common' ) }}:</strong> {{ report.client.fullName }}<br/>
+            <strong>{{ 'caseNumber' | trans({}, 'common' ) }}:</strong> {{ report.client.caseNumber }}<br/>
+            <strong>{{ 'reportingPeriod' | trans({}, 'common' ) }}:</strong> {{ report.startDate | date("j F Y") }} - {{ report.endDate | date("j F Y") }}<br/>
+        </p>
+
+        <p class="push--bottom right half-width">
+            <strong>{{ (page ~ '.heading.fullReview.version') | trans({}, 'admin-checklist') }}:</strong>TODO<br/>
+            <strong>{{ (page ~ '.heading.fullReview.date') | trans({}, 'admin-checklist') }}:</strong> {{ checklist.submittedOn | date("j F Y") }}<br/>
+            <strong>{{ (page ~ '.heading.fullReview.reviewedBy') | trans({}, 'admin-checklist') }}:</strong> {{ checklist.submittedBy.fullName }}<br/>
+        </p>
+
+        <div class="section">
+            <h2 class="section-heading">{{ (page ~ '.heading.fullReview.bankStatements') | trans({}, 'admin-checklist') }}</h2>
+            <h3 class="label question bold">{{ (page ~ '.form.fullBankStatementsExist.label') | trans({}, 'admin-checklist') }}</h3>
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                <tr>
+                    <td class="checkbox value">{% if answers.fullBankStatementsExist == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                    <td class="checkbox value">{% if answers.fullBankStatementsExist == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                    <td class="checkbox value">{% if answers.fullBankStatementsExist == 'na' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="section">
+            <h2 class="section-heading">{{ (page ~ '.heading.fullReview.lodgingConcerns') | trans({}, 'admin-checklist') }}</h2>
+            <h3 class="label question bold">{{ (page ~ '.form.anyLodgingConcerns.label') | trans({}, 'admin-checklist') }}</h3>
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                <tr>
+                    <td class="checkbox value">{% if answers.anyLodgingConcerns == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                    <td class="checkbox value">{% if answers.anyLodgingConcerns == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                    <td class="checkbox value">{% if answers.anyLodgingConcerns == 'na' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <h2 class="section-heading">{{ (page ~ '.heading.fullReview.spendingAndDebt') | trans({}, 'admin-checklist') }}</h2>
+            <h3 class="label question bold">{{ (page ~ '.form.spendingAcceptable.label') | trans({}, 'admin-checklist') }}</h3>
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                <tr>
+                    <td class="checkbox value">{% if answers.spendingAcceptable == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                    <td class="checkbox value">{% if answers.spendingAcceptable == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                    <td class="checkbox value">{% if answers.spendingAcceptable == 'na' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <h3 class="label question bold">{{ (page ~ '.form.expensesReasonable.label') | trans({}, 'admin-checklist') }}</h3>
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                <tr>
+                    <td class="checkbox value">{% if answers.expensesReasonable == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                    <td class="checkbox value">{% if answers.expensesReasonable == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                    <td class="checkbox value">{% if answers.expensesReasonable == 'na' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <h3 class="label question bold">{{ (page ~ '.form.giftingReasonable.label') | trans({}, 'admin-checklist') }}</h3>
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                <tr>
+                    <td class="checkbox value">{% if answers.giftingReasonable == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                    <td class="checkbox value">{% if answers.giftingReasonable == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                    <td class="checkbox value">{% if answers.giftingReasonable == 'na' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <h3 class="label question bold">{{ (page ~ '.form.debtManageable.label') | trans({}, 'admin-checklist') }}</h3>
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                <tr>
+                    <td class="checkbox value">{% if answers.debtManageable == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                    <td class="checkbox value">{% if answers.debtManageable == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                    <td class="checkbox value">{% if answers.debtManageable == 'na' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <h3 class="label question bold">{{ (page ~ '.form.anySpendingConcerns.label') | trans({}, 'admin-checklist') }}</h3>
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                <tr>
+                    <td class="checkbox value">{% if answers.anySpendingConcerns == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                    <td class="checkbox value">{% if answers.anySpendingConcerns == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                    <td class="checkbox value">{% if answers.anySpendingConcerns == 'na' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="section">
+            <h2 class="section-heading">{{ (page ~ '.heading.fullReview.referral') | trans({}, 'admin-checklist') }}</h2>
+            <h3 class="label question bold">{{ (page ~ '.form.needReferral.label') | trans({}, 'admin-checklist') }}</h3>
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                <tr>
+                    <td class="checkbox value">{% if answers.needReferral == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                    <td class="checkbox value">{% if answers.needReferral == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="section">
+            <div class="labelvalue push-half--top">
+                <h2 class="section-heading">{{ (page ~ '.heading.fullReview.finalDecision') | trans({}, 'admin-checklist') }}</h2>
+                <table class="checkboxes labelvalue">
+                    <tr>
+                        <td class="clean-cell">
+                            <span class="checkbox value">
+                                {% if checklist.decision == 'satisfied' %}X{% else %}&nbsp;{% endif %}
+                            </span>
+                        </td>
+                        <td class="label soft-half--bottom">{{ (page ~ '.form.finalDecision.fullReviewOptions.satisfied') | trans({}, 'admin-checklist') }}</td>
+                    </tr>
+                    <tr>
+                        <td class="clean-cell">
+                            <span class="checkbox value">
+                                {% if checklist.decision == 'further-casework-required' %}X{% else %}&nbsp;{% endif %}
+                            </span>
+                        </td>
+                        <td class="label soft-half--bottom">{{ (page ~ '.form.finalDecision.fullReviewOptions.furtherCaseworkRequired') | trans({}, 'admin-checklist') }}</td>
+                    </tr>
+                    <tr>
+                        <td class="clean-cell">
+                            <span class="checkbox value">
+                                {% if checklist.decision == 'escalate' %}X{% else %}&nbsp;{% endif %}
+                            </span>
+                        </td>
+                        <td class="label soft-half--bottom">{{ (page ~ '.form.finalDecision.fullReviewOptions.escalate') | trans({}, 'admin-checklist') }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="labelvalue push-half--top">
+                <div class="value">{{ answers.decisionExplanation | nl2br }}</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-heading">{{ (page ~ '.heading.lodging.furtherInfo') | trans({}, 'admin-checklist') }}</h2>
+
+            <table class="flush--top">
+                <thead>
+                <tr>
+                    <th class="text--left">Information provided</th>
+                    <th class="text--left">Saved by</th>
+                    <th class="text--left">Date saved</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if lodgingChecklist.checklistInformation is not empty %}
+                    {% set counter = 1 %}
+                    {% for info in lodgingChecklist.checklistInformation %}
+                        <tr>
+                            <td class="value">{{ info.information | nl2br }}</td>
+                            <td class="value align--top">{{ info.createdBy.fullname }}, {{ info.createdBy.roleFullName }}</td>
+                            <td class="value no-wrap align--top">{{ info.createdOn | date("j F Y") }}</td>
+                        </tr>
+                        {% set counter = counter + 1 %}
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td class="value width-two-thirds">No information received.</td>
+                        <td class="value width-sixth"></td>
+                        <td class="value width-sixth"></td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

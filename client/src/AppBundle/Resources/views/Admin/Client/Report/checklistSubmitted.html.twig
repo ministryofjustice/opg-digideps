@@ -8,6 +8,8 @@
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{% endblock %}
 
+{% set checklistType = checklistType is defined and checklistType is same as('review') ? 'review' : 'lodging' %}
+
 {% block pageContent %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
@@ -19,7 +21,7 @@
             </div>
             <p class="govuk-body govuk-!-padding-top-6 govuk-!-padding-bottom-6">
                 {{ (page ~ '.downloadText') | trans({
-                    '%downloadLinkUrl%': path('admin_checklist_pdf', {'id': report.id}),
+                    '%downloadLinkUrl%': path('admin_checklist_pdf', {'id': report.id, 'type': checklistType}),
                     '%downloadLinkClassList%': "behat-link-download-checklist-pdf"
                 }) | raw }}
             </p>
@@ -36,7 +38,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-      window.location.href = "{{ path('admin_checklist_pdf', {'id': report.id}) }}";
+      window.location.href = "{{ path('admin_checklist_pdf', {'id': report.id, 'type': checklistType}) }}";
     </script>
 {% endblock %}
 
