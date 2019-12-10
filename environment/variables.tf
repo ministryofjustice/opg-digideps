@@ -53,6 +53,10 @@ locals {
     "94.30.9.148/32",
   ], formatlist("%s/32", data.aws_nat_gateway.nat[*].public_ip))
 
+  route53_healthchecker_ips = [
+    "15.177.0.0/16",
+  ]
+
   environment     = lower(terraform.workspace)
   account         = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
   subdomain       = local.account["subdomain_enabled"] ? local.environment : ""

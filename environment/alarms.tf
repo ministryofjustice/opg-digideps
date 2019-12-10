@@ -54,7 +54,7 @@ resource "aws_cloudwatch_metric_alarm" "nginx_errors" {
 }
 
 resource "aws_sns_topic" "acs-test" {
-  provider     = aws.production-us-east-1
+  provider     = aws.us-east-1
   name         = "${local.environment}-${terraform.workspace}-alert"
   display_name = "${local.default_tags["application"]} ${local.environment} Alert"
 }
@@ -67,12 +67,18 @@ resource "aws_route53_health_check" "availability" {
   failure_threshold     = 1
   request_interval      = 30
   measure_latency       = true
-  tags                  = local.default_tags
-  cloudwatch_alarm_name = ""
+  cloudwatch_alarm_name = "availability-healthcheck"
+  tags = merge(
+    local.default_tags,
+    {
+      Name = "availability"
+    },
+  )
+
 }
 
 resource "aws_cloudwatch_metric_alarm" "availability" {
-  provider            = aws.production-us-east-1
+  provider            = aws.us-east-1
   alarm_name          = "availability"
   statistic           = "Minimum"
   metric_name         = "HealthCheckStatus"
