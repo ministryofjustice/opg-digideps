@@ -58,4 +58,9 @@ locals {
   subdomain       = local.account["subdomain_enabled"] ? local.environment : ""
   front_whitelist = length(local.account["front_whitelist"]) > 0 ? local.account["front_whitelist"] : local.default_whitelist
   admin_whitelist = length(local.account["admin_whitelist"]) > 0 ? local.account["admin_whitelist"] : local.default_whitelist
+
+  verified_emails = [
+    "greg.tyler+digideps.admin@digital.justice.gov.uk",
+    "greg.tyler+digideps.lay@digital.justice.gov.uk"
+  ]
 }
