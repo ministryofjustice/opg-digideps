@@ -60,7 +60,11 @@ locals {
   admin_whitelist = length(local.account["admin_whitelist"]) > 0 ? local.account["admin_whitelist"] : local.default_whitelist
 
   verified_emails = [
-    "greg.tyler+digideps.admin@digital.justice.gov.uk",
-    "greg.tyler+digideps.lay@digital.justice.gov.uk"
+    "alex.eves@digital.justice.gov.uk",
+    "alex.saunders@digital.justice.gov.uk",
+    "greg.tyler@digital.justice.gov.uk",
+    "elizabeth.feenan@digital.justice.gov.uk",
+    "elizabeth.feenan@publicguardian.gov.uk",
+    "stacey.cook@digital.justice.gov.uk"
   ]
 }
