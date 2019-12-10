@@ -52,3 +52,39 @@ resource "aws_cloudwatch_metric_alarm" "nginx_errors" {
   namespace           = aws_cloudwatch_log_metric_filter.nginx_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
 }
+
+resource "aws_sns_topic" "acs-test" {
+  provider     = aws.production-us-east-1
+  name         = "${local.environment}-${terraform.workspace}-alert"
+  display_name = "${local.default_tags["application"]} ${local.environment} Alert"
+}
+
+resource "aws_route53_health_check" "availability" {
+  fqdn                  = aws_route53_record.front.fqdn
+  resource_path         = "/manage/availability"
+  port                  = 443
+  type                  = "HTTPS"
+  failure_threshold     = 1
+  request_interval      = 30
+  measure_latency       = true
+  tags                  = local.default_tags
+  cloudwatch_alarm_name = ""
+}
+
+resource "aws_cloudwatch_metric_alarm" "availability" {
+  provider            = aws.production-us-east-1
+  alarm_name          = "availability"
+  statistic           = "Minimum"
+  metric_name         = "HealthCheckStatus"
+  comparison_operator = "LessThanThreshold"
+  threshold           = 1
+  period              = 300
+  datapoints_to_alarm = 1
+  evaluation_periods  = 288
+  namespace           = "AWS/Route53"
+  alarm_actions       = [aws_sns_topic.acs-test.arn]
+
+  dimensions = {
+    HealthCheckId = aws_route53_health_check.availability.id
+  }
+}
