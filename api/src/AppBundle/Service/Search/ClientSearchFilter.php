@@ -48,6 +48,7 @@ class ClientSearchFilter
     private function addFullNameExactMatchFilter(string $firstName, string $lastname, QueryBuilder $qb, string $alias): void
     {
         $qb->andWhere('(lower('.$alias.'.firstname) = :firstname AND lower('.$alias.'.lastname) = :lastname)');
-        $qb->setParameters(['firstname' => strtolower($firstName), 'lastname' => strtolower($lastname),]);
+        $qb->setParameter('firstname', strtolower($firstName));
+        $qb->setParameter('lastname', strtolower($lastname));
     }
 }

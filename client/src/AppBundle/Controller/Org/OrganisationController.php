@@ -137,7 +137,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{orgId}/edit/{userId}", name="org_organisation_edit_member")
-     * @Template("AppBundle:Org/Team:edit.html.twig")
+     * @Template("AppBundle:Org/Organisation:edit.html.twig")
      */
     public function editAction(Request $request, int $orgId, int $userId)
     {

@@ -222,11 +222,10 @@ class Client implements ClientInterface
      *
      * @var User
      *
-     * @JMS\Groups({"client-named-deputy"})
-     * @JMS\Type("AppBundle\Entity\User")
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", fetch="EAGER")
-     * @ORM\JoinColumn(name="named_deputy", referencedColumnName="id", onDelete="SET NULL")
+     * @JMS\Groups({"report-submitted-by", "client-named-deputy"})
+     * @JMS\Type("AppBundle\Entity\NamedDeputy")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\NamedDeputy", inversedBy="clients", fetch="EAGER")
+     * @ORM\JoinColumn(name="named_deputy_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $namedDeputy;
 
@@ -847,7 +846,7 @@ class Client implements ClientInterface
     }
 
     /**
-     * @return User
+     * @return NamedDeputy
      */
     public function getNamedDeputy()
     {
@@ -855,10 +854,10 @@ class Client implements ClientInterface
     }
 
     /**
-     * @param User $namedDeputy
+     * @param NamedDeputy $namedDeputy
      * @return Client
      */
-    public function setNamedDeputy($namedDeputy)
+    public function setNamedDeputy(NamedDeputy $namedDeputy)
     {
         $this->namedDeputy = $namedDeputy;
         return $this;
@@ -1076,7 +1075,7 @@ class Client implements ClientInterface
      * @param Organisation $organisation
      * @return $this
      */
-    public function setOrganisation(Organisation $organisation)
+    public function setOrganisation(? Organisation $organisation)
     {
         $this->organisation = $organisation;
 

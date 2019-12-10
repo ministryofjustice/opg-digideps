@@ -61,7 +61,7 @@ services:
     AppBundle\DataFixtures\:
         resource: '../../src/AppBundle/DataFixtures'
         tags: ['doctrine.fixture.orm']
-        arguments: ['@security.password_encoder']
+        arguments: ['@security.password_encoder', '@AppBundle\Service\OrgService']
 
     # Disable autowiring for these helper classes
     AppBundle\Service\ReportStatusService: ~

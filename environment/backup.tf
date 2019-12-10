@@ -36,49 +36,70 @@ module "backup_security_group" {
   vpc_id = data.aws_vpc.vpc.id
 }
 
+data "aws_canonical_user_id" "development" {
+  provider = aws.development
+}
+
+data "aws_canonical_user_id" "preproduction" {
+  provider = aws.preproduction
+}
+
+data "aws_canonical_user_id" "production" {
+  provider = aws.production
+}
+
+data "aws_kms_alias" "backup" {
+  name     = "alias/backup"
+  provider = aws.management
+}
+
 locals {
   backup_container = <<EOF
 {
-	"name": "backup",
-	"image": "${local.images.sync}",
+    "name": "backup",
+    "image": "${local.images.sync}",
     "command": ["./backup.sh"],
-	"logConfiguration": {
-		"logDriver": "awslogs",
-		"options": {
-			"awslogs-group": "${aws_cloudwatch_log_group.opg_digi_deps.name}",
-			"awslogs-region": "eu-west-1",
-			"awslogs-stream-prefix": "backup"
-		}
-	},
-	"secrets": [{
-		"name": "POSTGRES_PASSWORD",
-		"valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}"
-	}],
-	"environment": [{
-			"name": "S3_BUCKET",
-			"value": "${data.aws_s3_bucket.backup.bucket}"
-		},
-		{
-			"name": "S3_PREFIX",
-			"value": "${local.environment}"
-		},
-		{
-			"name": "POSTGRES_DATABASE",
-			"value": "${aws_db_instance.api.name}"
-		},
-		{
-			"name": "POSTGRES_HOST",
-			"value": "${aws_db_instance.api.address}"
-		},
-		{
-			"name": "POSTGRES_PORT",
-			"value": "${aws_db_instance.api.port}"
-		},
-		{
-			"name": "POSTGRES_USER",
-			"value": "${aws_db_instance.api.username}"
-		}
-	]
+    "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+            "awslogs-group": "${aws_cloudwatch_log_group.opg_digi_deps.name}",
+            "awslogs-region": "eu-west-1",
+            "awslogs-stream-prefix": "backup"
+        }
+    },
+    "secrets": [{
+        "name": "POSTGRES_PASSWORD",
+        "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}"
+    }],
+    "environment": [{
+            "name": "S3_BUCKET",
+            "value": "${data.aws_s3_bucket.backup.bucket}"
+        },
+        {
+            "name": "S3_OPTS",
+            "value": "--sse=aws:kms --sse-kms-key-id=${data.aws_kms_alias.backup.target_key_arn} --grants=read=id=${data.aws_canonical_user_id.preproduction.id},id=${data.aws_canonical_user_id.production.id}"
+        },
+        {
+            "name": "S3_PREFIX",
+            "value": "${local.environment}"
+        },
+        {
+            "name": "POSTGRES_DATABASE",
+            "value": "${aws_db_instance.api.name}"
+        },
+        {
+            "name": "POSTGRES_HOST",
+            "value": "${aws_db_instance.api.address}"
+        },
+        {
+            "name": "POSTGRES_PORT",
+            "value": "${aws_db_instance.api.port}"
+        },
+        {
+            "name": "POSTGRES_USER",
+            "value": "${aws_db_instance.api.username}"
+        }
+    ]
 }
 
 EOF

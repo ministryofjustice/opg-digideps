@@ -39,7 +39,7 @@ class ClientDto
     /** @var Organisation */
     private $organisation;
 
-    /** @var DeputyDto */
+    /** @var NamedDeputyDto */
     private $namedDeputy;
 
     /**
@@ -131,7 +131,7 @@ class ClientDto
     }
 
     /**
-     * @return DeputyDto
+     * @return NamedDeputyDto
      */
     public function getNamedDeputy()
     {
@@ -249,10 +249,10 @@ class ClientDto
     }
 
     /**
-     * @param DeputyDto $namedDeputy
+     * @param NamedDeputyDto $namedDeputy
      * @return $this
      */
-    public function setNamedDeputy(DeputyDto $namedDeputy)
+    public function setNamedDeputy(NamedDeputyDto $namedDeputy)
     {
         $this->namedDeputy = $namedDeputy;
         return $this;
