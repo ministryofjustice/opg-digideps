@@ -4,13 +4,18 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-use AppBundle\Model\Email;
 use AppBundle\Model\SelfRegisterData;
+use AppBundle\Service\DeputyProvider;
+use AppBundle\Service\Redirector;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class UserController extends AbstractController
 {
@@ -25,6 +30,7 @@ class UserController extends AbstractController
      */
     public function activateUserAction(Request $request, $action, $token)
     {
+        /** @var TranslatorInterface */
         $translator = $this->get('translator');
         $isActivatePage = 'activate' === $action;
 
@@ -33,7 +39,7 @@ class UserController extends AbstractController
             $user = $this->getRestClient()->loadUserByToken($token);
             /* @var $user EntityDir\User */
         } catch (\Throwable $e) {
-            throw new \AppBundle\Exception\DisplayableException('This link is not working or has already been used');
+            return $this->renderError('This link is not working or has already been used');
         }
 
         // token expired
@@ -69,20 +75,29 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isValid()) {
+            /** @var DeputyProvider */
+            $deputyProvider = $this->get('deputy_provider');
 
             // login user into API
-            $this->get('deputy_provider')->login(['token' => $token]);
+            $deputyProvider->login(['token' => $token]);
 
-            // set password for user
-            $this->getRestClient()->put('user/' . $user->getId() . '/set-password', json_encode([
+            /** @var string */
+            $data = json_encode([
                 'password_plain' => $user->getPassword(),
                 'set_active'     => true,
-            ]));
+            ]);
+
+            // set password for user
+            $this->getRestClient()->put('user/' . $user->getId() . '/set-password', $data);
 
             // log in
             $clientToken = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
-            $this->get('security.token_storage')->setToken($clientToken); //now the user is logged in
 
+            /** @var TokenStorageInterface */
+            $tokenStorage = $this->get('security.token_storage');
+            $tokenStorage->setToken($clientToken); //now the user is logged in
+
+            /** @var SessionInterface */
             $session = $this->get('session');
             $session->set('_security_secured_area', serialize($clientToken));
 
@@ -90,7 +105,10 @@ class UserController extends AbstractController
                 $route = $user->getIsCoDeputy() ? 'codep_verification' : 'user_details';
                 return $this->redirectToRoute($route);
             } else {
-                return $this->redirect($this->get('redirector_service')->getFirstPageAfterLogin());
+                /** @var Redirector */
+                $redirector = $this->get('redirector_service');
+
+                return $this->redirect($redirector->getFirstPageAfterLogin());
             }
         }
 
@@ -162,8 +180,11 @@ class UserController extends AbstractController
                 return $this->redirectToRoute('client_add');
             }
 
+            /** @var Redirector */
+            $redirector = $this->get('redirector_service');
+
             // all other users go to their homepage (dashboard for PROF/PA), or /admin for Admins
-            return $this->redirect($this->get('redirector_service')->getHomepageRedirect());
+            return $this->redirect($redirector->getHomepageRedirect());
         }
 
         return [
@@ -179,6 +200,7 @@ class UserController extends AbstractController
      **/
     public function passwordForgottenAction(Request $request)
     {
+        /** @var LoggerInterface */
         $logger = $this->get('logger');
 
         $user = new EntityDir\User();
@@ -233,6 +255,8 @@ class UserController extends AbstractController
     {
         $selfRegisterData = new SelfRegisterData();
         $form = $this->createForm(FormDir\SelfRegisterDataType::class, $selfRegisterData);
+
+        /** @var TranslatorInterface */
         $translator = $this->get('translator');
         $vars = [];
 
@@ -285,7 +309,9 @@ class UserController extends AbstractController
                         $form->addError(new FormError($translator->trans('formErrors.generic', [], 'register')));
                 }
 
-                $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+                /** @var LoggerInterface */
+                $logger = $this->get('logger');
+                $logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
             }
         }
 

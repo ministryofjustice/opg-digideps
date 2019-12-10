@@ -11,27 +11,4 @@
 
 {{ checklist_radios(form.satisfiedWithPaExpenses) }}
 
-{% set contents %}
-    {% include 'AppBundle:Report/PaFeeExpense:_yn_questions.html.twig' with {
-        'report': report,
-        'transDomain': translationDomain,
-        'hideEditLink' : true
-    } %}
-
-    {% include 'AppBundle:Report/PaFeeExpense:_fee_list.html.twig' with {
-        'report': report,
-        'transDomain': translationDomain,
-        'hideEditLink': true
-    } %}
-
-    {% include 'AppBundle:Report/PaFeeExpense:_other_list.html.twig' with {
-        'report': report,
-        'transDomain': translationDomain,
-        'hideEditLink': true
-    } %}
-{% endset %}
-
-{{ details({
-    summaryText: (page ~ '.revealTitle.paDeputyExpenses') | trans,
-    text: contents,
-}) }}
+{% include 'AppBundle:Admin/Client/Report/partials:_expenses-summary.html.twig' %}

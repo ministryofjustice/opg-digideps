@@ -171,93 +171,16 @@
 
 {{ checklist_radios(form.moneyMovementsAcceptable) }}
 
-{# Don't show money transfers for short finance reports #}
-{% if report.hasSection('moneyTransfers') %}
-    {% if report.enoughBankAccountForTransfers %}
-        {% set contents %}
-            {% include 'AppBundle:Report/MoneyTransfer:_list.html.twig' with {
-                hideEditLink: true
-            } %}
-        {% endset %}
-
-        {{ macros.details({
-            summaryText: (page ~ '.revealTitle.moneyTransfersSummary') | trans,
-            text: contents,
-            classes: 'govuk-!-margin-bottom-0',
-        }) }}
-    {% else %}
-        <p class="govuk-body">
-            {{ (page ~ '.noTransferToShow') | trans }}
-        </p>
-    {% endif %}
-{% endif %}
-
-{% set contents %}
-    {% if report.hasSection('moneyIn') %}
-        {% include 'AppBundle:Report/MoneyIn:_list.html.twig' with {
-            hideEditLink: true
-        } %}
-    {% elseif report.hasSection('moneyInShort') %}
-        {% include 'AppBundle:Report/MoneyInShort:_answers.html.twig' with {
-            hideEditLink: true
-        } %}
-    {% endif %}
-{% endset %}
-
-{{ macros.details({
-    summaryText: (page ~ '.revealTitle.moneyInSummary') | trans,
-    text: contents,
-    classes: 'govuk-!-margin-bottom-0',
-}) }}
-
-{% set contents %}
-    {% if report.hasSection('moneyOut') %}
-        {% include 'AppBundle:Report/MoneyOut:_list.html.twig' with {
-            hideEditLink: true
-        } %}
-    {% elseif report.hasSection('moneyOutShort') %}
-        {% include 'AppBundle:Report/MoneyOutShort:_answers.html.twig' with {
-            hideEditLink: true
-        } %}
-    {% endif %}
-{% endset %}
-
-{{ macros.details({
-    summaryText: (page ~ '.revealTitle.moneyOutSummary') | trans,
-    text: contents,
-    classes: 'govuk-!-margin-bottom-0',
-}) }}
+{{ include('AppBundle:Admin/Client/Report/partials:_money-summaries.html.twig', { collapseMargin: true }) }}
 
 {% if report.hasSection('gifts') %}
-    {% set contents %}
-        {% include 'AppBundle:Report/Gift:_list.html.twig' with {
-            hideEditLink: true
-        } %}
-    {% endset %}
-
-    {{ macros.details({
-        summaryText: (page ~ '.revealTitle.giftsSummary') | trans,
-        text: contents,
-        classes: 'govuk-!-margin-bottom-0',
-    }) }}
+    {{ include('AppBundle:Admin/Client/Report/partials:_gifting-summary.html.twig', { collapseMargin: true }) }}
 {% endif %}
 
 {% if report.hasSection('deputyExpenses') %}
-    {% set contents %}
-        {% include 'AppBundle:Report/DeputyExpense:_list.html.twig' with {
-            hideEditLink: true
-        } %}
-    {% endset %}
-
-    {{ macros.details({
-        summaryText: (page ~ '.revealTitle.deputyExpensesSummary') | trans,
-        text: contents,
-        classes: 'govuk-!-margin-bottom-0',
-    }) }}
+    {{ include('AppBundle:Admin/Client/Report/partials:_expenses-summary.html.twig') }}
 {% endif %}
 
 <div class="govuk-!-margin-top-6 govuk-!-margin-bottom-6">
     <a href="#moneyInOut" class="behat-link-back-to-money-in-out">{{ (page ~ '.backToQuestion') | trans }}</a>
 </div>
-
-

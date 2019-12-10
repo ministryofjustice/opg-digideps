@@ -33,7 +33,7 @@ COPY src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
-FROM php:7-fpm-alpine
+FROM php:7.3-fpm-alpine
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
@@ -75,6 +75,7 @@ RUN mkdir -p var/cache \
   && chown -R www-data var
 
 CMD confd -onetime -backend env \
+  && su-exec www-data php -d memory_limit=-1 app/console cache:warmup \
   && waitforit -address=$API_URL/manage/availability -timeout=$TIMEOUT -insecure \
   && php-fpm -D \
   && nginx
@@ -90,6 +91,7 @@ COPY tests tests
 COPY web web
 COPY --from=webpack /app/web/assets web/assets
 COPY --from=webpack /app/web/images web/images
+COPY phpstan.neon .
 COPY docker/confd /etc/confd
 
 # Check for security issues

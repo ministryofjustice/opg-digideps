@@ -2,13 +2,13 @@ Feature: Admin report checklist
 
   Scenario: Case manager submits empty Prof checklist for the report
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    When I open the "2016-to-2017" checklist for client "01000010"
+    When I open the "2016-to-2017" checklist for client "31000010"
     Then the URL should match "/admin/report/\d+/checklist"
     And I should see the "court-date" region
     And I should see the "expected-date" region
     And each text should be present in the corresponding region:
       | CLY1 HENT1        | fullName                         |
-      | 01000010          | case-number                      |
+      | 31000010          | case-number                      |
       | Property and affairs: general | report-type-title    |
       | Not saved yet     | lodging-last-saved-by            |
       | 20 Mar 2016       | court-date                       |
@@ -18,8 +18,8 @@ Feature: Admin report checklist
       | HENT1             | checklist-client-lastname        |
       | B301QL            | checklist-client-address         |
       | 078912345678      | checklist-client-phone           |
-      | John Named        | checklist-deputy-firstname       |
-      | Green             | checklist-deputy-lastname        |
+      | DEP1              | checklist-deputy-firstname       |
+      | SURNAME1          | checklist-deputy-lastname        |
       | 10000000001       | checklist-deputy-phone           |
       | behat-prof1@publicguardian.gov.uk | checklist-deputy-email |
       | rfnd              | reason-no-decisions              |
@@ -86,7 +86,7 @@ Feature: Admin report checklist
 
   Scenario: Case manager saves further information on Prof checklist
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    When I open the "2016-to-2017" checklist for client "01000010"
+    When I open the "2016-to-2017" checklist for client "31000010"
     Then each text should be present in the corresponding region:
       | Not saved yet | lodging-last-saved-by |
     # Begin scenario
@@ -118,7 +118,7 @@ Feature: Admin report checklist
 
   Scenario: Admin completes Prof checklist
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    When I open the "2016-to-2017" checklist for client "01000010"
+    When I open the "2016-to-2017" checklist for client "31000010"
     Then each text should be present in the corresponding region:
       | Case Manager1, Case Manager | lodging-last-saved-by |
     # Begin scenario
@@ -177,6 +177,6 @@ Feature: Admin report checklist
 
   Scenario: Admin marked as submitted
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    When I open the "2016-to-2017" checklist for client "01000010"
+    When I open the "2016-to-2017" checklist for client "31000010"
     Then each text should be present in the corresponding region:
       | Case Manager1, Case Manager | lodging-last-saved-by     |

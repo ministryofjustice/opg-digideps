@@ -18,7 +18,7 @@ class Client
     /**
      * @JMS\Type("integer")
      * @JMS\Groups({"edit", "pa-edit"})
-
+     *
      * @var int
      */
     private $id;
@@ -52,9 +52,8 @@ class Client
     private $users = [];
 
     /**
-     * @JMS\Type("AppBundle\Entity\User")
-     *
-     * @var User
+     * @JMS\Type("AppBundle\Entity\NamedDeputy")
+     * @var NamedDeputy
      */
     private $namedDeputy;
 
@@ -107,7 +106,7 @@ class Client
      * @Assert\Date( message="client.courtDate.message", groups={"lay-deputy-client", "lay-deputy-client-edit"})
      * @Assert\LessThan("today", groups={"pa-client"}, message="client.courtDate.lessThan", groups={"lay-deputy-client", "lay-deputy-client-edit"})
      *
-     * @var DateTime
+     * @var DateTime|null
      */
     private $courtDate;
 
@@ -188,7 +187,7 @@ class Client
      *
      * @Assert\LessThan("today", groups={"pa-client"}, message="client.dateOfBirth.lessThan")
      *
-     * @var DateTime
+     * @var DateTime|null
      */
     private $dateOfBirth;
 
@@ -276,7 +275,7 @@ class Client
     }
 
     /**
-     * @return User
+     * @return NamedDeputy
      */
     public function getNamedDeputy()
     {
@@ -284,9 +283,9 @@ class Client
     }
 
     /**
-     * @param User $namedDeputy
+     * @param NamedDeputy $namedDeputy
      */
-    public function setNamedDeputy($namedDeputy)
+    public function setNamedDeputy(NamedDeputy $namedDeputy)
     {
         $this->namedDeputy = $namedDeputy;
     }
@@ -296,8 +295,6 @@ class Client
      * Return false if any of the user is not an instance of the User class or the ID is not present
      *
      * Mainly used from voters
-     *
-     * @param $id
      *
      * @return bool
      */
@@ -359,11 +356,11 @@ class Client
             }
         }
 
-        return;
+        return null;
     }
 
     /**
-     * @param  $report
+     * @param Report $report
      *
      * @return \AppBundle\Entity\Client
      */
@@ -548,7 +545,7 @@ class Client
     }
 
     /**
-     * @return array
+     * @return \DateTime|null
      */
     public function getCourtDate()
     {
@@ -556,7 +553,7 @@ class Client
     }
 
     /**
-     * @param array $courtDate
+     * @param \DateTime|null $courtDate
      *
      * @return Client
      */
@@ -721,7 +718,7 @@ class Client
     }
 
     /**
-     * @return DateTime $dateOfBirth
+     * @return DateTime|null $dateOfBirth
      */
     public function getDateOfBirth()
     {
@@ -731,7 +728,7 @@ class Client
     /**
      * @param DateTime $dateOfBirth
      *
-     * @return \AppBundle\Entity\User
+     * @return \AppBundle\Entity\Client
      */
     public function setDateOfBirth(DateTime $dateOfBirth = null)
     {
@@ -822,11 +819,10 @@ class Client
     }
 
     /**
-     * @return Report
+     * @return Report|null
      */
     public function getActiveReport()
     {
-        $activeReport = null;
         foreach ($this->getReports() as $report) {
             if (!$report->isSubmitted() && !$report->getUnSubmitDate()) {
                 return $report;
@@ -837,11 +833,10 @@ class Client
     }
 
     /**
-     * @return Report
+     * @return Report|null
      */
     public function getUnsubmittedReport()
     {
-        $activeReport = null;
         foreach ($this->getReports() as $report) {
             if (!$report->isSubmitted() && $report->getUnSubmitDate()) {
                 return $report;
@@ -911,7 +906,7 @@ class Client
     }
 
     /**
-     * @param $expectedReportEndDate
+     * @param \DateTime $expectedReportEndDate
      * @return $this
      */
     public function setExpectedReportEndDate($expectedReportEndDate)
@@ -929,7 +924,7 @@ class Client
     }
 
     /**
-     * @param $calculatedCourtDate
+     * @param \DateTime $calculatedCourtDate
      * @return $this
      */
     public function setCalculatedCourtDate($calculatedCourtDate)

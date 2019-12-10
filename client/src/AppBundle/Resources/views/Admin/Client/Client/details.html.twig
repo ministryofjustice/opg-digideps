@@ -46,8 +46,8 @@
         <dt class="govuk-summary-list__key">
             {{ (page ~ '.organisation') | trans }}
         </dt>
-        <dd class="govuk-summary-list__value">
-            <a href="{{ path('admin_organisation_view', {id: client.organisation.id}) }}">{{ client.organisation.name }}</a>
+        <dd class="govuk-summary-list__value behat-region-assigned-organisation">
+            <a href="{{ path('admin_organisation_view', {id: client.organisation.id}) }}">{{ client.organisation.name }}</a> ({{ client.organisation.emailIdentifier }})
 
             {% if not client.organisation.isActivated %}
                 {{ (page ~ '.organisationInactive') | trans }}
@@ -61,7 +61,7 @@
         <dt class="govuk-summary-list__key">
             {{ 'namedDeputy' | trans({}, 'common') }}
         </dt>
-        <dd class="govuk-summary-list__value">
+        <dd class="govuk-summary-list__value behat-region-named-deputy-fullname  ">
             {{ namedDeputy.fullName }}
         </dd>
     </div>
@@ -94,6 +94,12 @@
             {% if namedDeputy.email %}
                 {{ 'email' | trans({}, 'common') }}: {{ namedDeputy.email }}<br>
             {% endif %}
+            {% if namedDeputy.email2 is defined and namedDeputy.email2 %}
+                {{ 'alternativeEmail' | trans({}, 'common') }}: {{ namedDeputy.email2 }}<br>
+            {% endif %}
+            {% if namedDeputy.email3 is defined and namedDeputy.email3 %}
+                {{ 'alternativeEmail' | trans({}, 'common') }}: {{ namedDeputy.email3 }}<br>
+            {% endif %}
         </p>
     </div>
 </details>
@@ -101,8 +107,9 @@
 
 {% set allReports = client.reports|merge([client.ndr])|filter(r => (r is not null)) %}
 {% set reportsByGroup = {
-    incomplete: allReports | filter(r => not r.submitted),
-    done: allReports | filter(r => r.submitted),
+    active: allReports | filter(r => not r.submitted and (r.unSubmitDate is not defined or not r.unSubmitDate)),
+    submitted: allReports | filter(r => r.submitted),
+    incomplete: allReports | filter(r => (r.unSubmitDate is defined and r.unSubmitDate) and not r.submitted),
 } %}
 
 <h2 class="govuk-heading-l">
@@ -113,7 +120,7 @@
     <table class="govuk-table behat-region-report-group-{{ type }}">
         <caption class="govuk-table__caption">
             <span class="govuk-tag {{ type | status_to_tag_css }}">
-                {{ type | trans({}, 'common') }}
+                {{ type | trans({}, 'admin.label') }}
             </span>
         </caption>
 
@@ -122,7 +129,7 @@
                 <th scope="col" class="govuk-table__header">{{ 'period' | trans({}, 'common') }}</th>
                 <th scope="col" class="govuk-table__header">{{ 'type' | trans({}, 'common') }}</th>
                 <th scope="col" class="govuk-table__header">{{ 'dueDate' | trans({}, 'common') }}</th>
-                {% if type == 'done' %}
+                {% if type == 'submitted' %}
                     <th scope="col" class="govuk-table__header">{{ 'submitted' | trans({}, 'common') }}</th>
                 {% endif %}
                 <th scope="col" class="govuk-table__header">
@@ -161,7 +168,7 @@
                     <td class="govuk-table__cell {{ behatRegionPrefix }}-due-date">
                         {{ report.dueDate | date("j F Y") }}
                     </td>
-                    {% if type == 'done' %}
+                    {% if type == 'submitted' %}
                         <td class="govuk-table__cell">
                             {{ report.submitDate | date("j F Y") }}
                         </td>

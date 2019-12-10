@@ -16,18 +16,32 @@
 
         <h3 class="govuk-heading-m" id="anchor-full-review-bankStatements">{{ (page ~ '.heading.fullReview.bankStatements') | trans }}</h3>
 
-        {{ checklist_radios(form.answers.fullBankStatementsExist, { margin: 6 }) }}
+        {{ checklist_radios(form.answers.fullBankStatementsExist) }}
+        {% if report.deputyDocuments is defined and (report.deputyDocuments is not empty) %}
+            {% include 'AppBundle:Admin/Client/Report/partials:_document-summary.html.twig' %}
+        {% else %}
+            <p>{{ (page ~ '.noDocuments') | trans }}</p>
+        {% endif %}
 
         <h3 class="govuk-heading-m" id="anchor-full-review-lodgingConcerns">{{ (page ~ '.heading.fullReview.lodgingConcerns') | trans }}</h3>
 
-        {{ checklist_radios(form.answers.anyLodgingConcerns, { margin: 6 }) }}
+        {{ checklist_radios(form.answers.anyLodgingConcerns) }}
+        {% include 'AppBundle:Admin/Client/Report/partials:_lodging-summary.html.twig' %}
 
         <h3 class="govuk-heading-m" id="anchor-full-review-spendingAndDebt">{{ (page ~ '.heading.fullReview.spendingAndDebt') | trans }}</h3>
 
-        {{ checklist_radios(form.answers.spendingAcceptable, { margin: 6 }) }}
-        {{ checklist_radios(form.answers.expensesReasonable, { margin: 6 }) }}
-        {{ checklist_radios(form.answers.giftingReasonable, { margin: 6 }) }}
-        {{ checklist_radios(form.answers.debtManageable, { margin: 6 }) }}
+        {{ checklist_radios(form.answers.spendingAcceptable) }}
+        {% include 'AppBundle:Admin/Client/Report/partials:_money-summaries.html.twig' %}
+
+        {{ checklist_radios(form.answers.expensesReasonable) }}
+        {% include 'AppBundle:Admin/Client/Report/partials:_expenses-summary.html.twig' %}
+
+        {{ checklist_radios(form.answers.giftingReasonable) }}
+        {% include 'AppBundle:Admin/Client/Report/partials:_gifting-summary.html.twig' %}
+
+        {{ checklist_radios(form.answers.debtManageable) }}
+        {{ include('AppBundle:Admin/Client/Report/partials:_debts-summary.html.twig') }}
+
         {{ checklist_radios(form.answers.anySpendingConcerns, { margin: 6 }) }}
 
         <h3 class="govuk-heading-m" id="anchor-full-review-referral">{{ (page ~ '.heading.fullReview.referral') | trans }}</h3>

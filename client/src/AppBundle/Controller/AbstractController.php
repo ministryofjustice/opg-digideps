@@ -7,11 +7,18 @@ use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Exception\DisplayableException;
+use AppBundle\Exception\ReportSubmittedException;
+use AppBundle\Exception\RestClientException;
 use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\Mailer\MailFactory;
+use AppBundle\Service\Mailer\MailSender;
 use AppBundle\Service\StepRedirector;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Router;
 
 abstract class AbstractController extends Controller
 {
@@ -20,7 +27,9 @@ abstract class AbstractController extends Controller
      */
     protected function getRestClient()
     {
-        return $this->get('rest_client');
+        /** @var RestClient */
+        $restClient = $this->get('rest_client');
+        return $restClient;
     }
 
     /**
@@ -34,7 +43,10 @@ abstract class AbstractController extends Controller
         $jmsGroups = array_unique($jmsGroups);
         sort($jmsGroups);
 
-        return $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User', $jmsGroups);
+        /** @var User */
+        $user = $this->getUser();
+
+        return $this->getRestClient()->get('user/' . $user->getId(), 'User', $jmsGroups);
     }
 
     /**
@@ -44,7 +56,6 @@ abstract class AbstractController extends Controller
     {
         $user = $this->getUserWithData($groups);
 
-        /* @var $user User */
         $clients = $user->getClients();
 
         return (is_array($clients) && !empty($clients[0]) && $clients[0] instanceof Client) ? $clients[0] : null;
@@ -58,14 +69,15 @@ abstract class AbstractController extends Controller
      */
     public function getReportsIndexedById(Client $client, $groups = [])
     {
-        $reportIds = $client->getReports();
+        $reports = $client->getReports();
 
-        if (empty($reportIds)) {
+        if (empty($reports)) {
             return [];
         }
 
         $ret = [];
-        foreach ($reportIds as $id) {
+        foreach ($reports as $report) {
+            $id = $report->getId();
             $ret[$id] = $this->getReport($id, $groups);
         }
 
@@ -85,17 +97,28 @@ abstract class AbstractController extends Controller
         $groups[] = 'client';
         $groups = array_unique($groups);
         sort($groups); // helps HTTP caching
-        return $this->getRestClient()->get("report/{$reportId}", 'Report\\Report', $groups);
+
+        try {
+            $report = $this->getRestClient()->get("report/{$reportId}", 'Report\\Report', $groups);
+        } catch (RestClientException $e) {
+            if ($e->getStatusCode() === 403 || $e->getStatusCode() === 404) {
+                throw $this->createNotFoundException($e->getData()['message']);
+            } else {
+                throw $e;
+            }
+        }
+
+        return $report;
     }
 
     /**
      * @param int   $reportId
      * @param array $groups
      *
-     * @throws \RuntimeException if report is submitted
+     * @throws DisplayableException if report doesn't have specified section
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException if report is submitted
      *
      * @return Report
-     *
      */
     protected function getReportIfNotSubmitted($reportId, array $groups = [])
     {
@@ -107,7 +130,7 @@ abstract class AbstractController extends Controller
         }
 
         if ($report->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
+            throw new ReportSubmittedException();
         }
 
         return $report;
@@ -132,7 +155,7 @@ abstract class AbstractController extends Controller
     /**
      * @param int $reportId
      *
-     * @throws \RuntimeException if report is submitted
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException if report is submitted
      *
      * @return Ndr
      *
@@ -141,36 +164,50 @@ abstract class AbstractController extends Controller
     {
         $report = $this->getNdr($reportId, $groups);
         if ($report->getSubmitted()) {
-            throw new \RuntimeException('New deputy report already submitted and not editable.');
+            throw new ReportSubmittedException();
         }
 
         return $report;
     }
 
     /**
-     * @return \AppBundle\Service\Mailer\MailFactory
+     * @return MailFactory
      */
     protected function getMailFactory()
     {
-        return $this->get('mail_factory');
+        /** @var MailFactory */
+        $mailFactory = $this->get('mail_factory');
+        return $mailFactory;
     }
 
     /**
-     * @return \AppBundle\Service\Mailer\MailSender
+     * @return MailSender
      */
     protected function getMailSender()
     {
-        return $this->get('mail_sender');
+        /** @var MailSender */
+        $mailSender = $this->get('mail_sender');
+        return $mailSender;
     }
 
     /**
-     * @param $route
+     * @return Router
+     */
+    private function getRouter()
+    {
+        /** @var Router */
+        $router = $this->get('router');
+        return $router;
+    }
+
+    /**
+     * @param string $route
      *
      * @return bool
      */
-    protected function routeExists($route)
+    protected function routeExists(string $route)
     {
-        return $this->get('router')->getRouteCollection()->get($route) ? true : false;
+        return $this->getRouter()->getRouteCollection()->get($route) ? true : false;
     }
 
     /**
@@ -178,7 +215,9 @@ abstract class AbstractController extends Controller
      */
     protected function stepRedirector()
     {
-        return $this->get('step_redirector');
+        /** @var StepRedirector */
+        $stepDirector = $this->get('step_redirector');
+        return $stepDirector;
     }
 
     /**
@@ -186,14 +225,20 @@ abstract class AbstractController extends Controller
      *
      * @param  Request $request
      * @param  array   $excludedRoutes
-     * @return string  referer URL, null if not existing or inside the $excludedRoutes
+     * @return string|null  referer URL, null if not existing or inside the $excludedRoutes
      */
     protected function getRefererUrlSafe(Request $request, array $excludedRoutes = [])
     {
-        $refererUrlPath = str_replace('app_dev.php/', '', parse_url($request->headers->get('referer'), \PHP_URL_PATH));
+        $referer = $request->headers->get('referer');
+
+        if (!is_string($referer)) return null;
+
+        $refererUrlPath = parse_url($referer, \PHP_URL_PATH);
+
+        if (!$refererUrlPath) return null;
 
         try {
-            $routeParams = $this->get('router')->match($refererUrlPath);
+            $routeParams = $this->getRouter()->match($refererUrlPath);
         } catch (ResourceNotFoundException $e) {
             return null;
         }
@@ -203,7 +248,7 @@ abstract class AbstractController extends Controller
         }
         unset($routeParams['_route']);
 
-        return $this->get('router')->generate($routeName, $routeParams);
+        return $this->getRouter()->generate($routeName, $routeParams);
     }
 
     /**
@@ -217,7 +262,6 @@ abstract class AbstractController extends Controller
      */
     protected function generateClientProfileLink(Client $client)
     {
-        /** @var $client Client */
         $client = $this->getRestClient()->get('client/' . $client->getId(), 'Client', ['client', 'report-id', 'current-report']);
 
         $report = $client->getCurrentReport();
@@ -227,7 +271,10 @@ abstract class AbstractController extends Controller
             return $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
         }
 
-        $this->get('logger')->log(
+        /** @var LoggerInterface */
+        $logger = $this->get('logger');
+
+        $logger->log(
             'warning',
             'Client entity missing current report when trying to generate client profile link'
         );
@@ -238,5 +285,20 @@ abstract class AbstractController extends Controller
     protected function getSectionId()
     {
         return null;
+    }
+
+    /**
+     * @param string $description
+     * @param int $statusCode
+     * @return Response
+     */
+    protected function renderError(string $description, $statusCode = 500)
+    {
+        $text = $this->renderView('TwigBundle:Exception:template.html.twig', [
+            'message' => 'Application error',
+            'description' => $description
+        ]);
+
+        return new Response($text, $statusCode);
     }
 }

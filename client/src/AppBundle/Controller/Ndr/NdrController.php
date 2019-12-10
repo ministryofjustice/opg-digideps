@@ -4,9 +4,15 @@ namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\User;
+use AppBundle\Exception\ReportNotSubmittableException;
+use AppBundle\Exception\ReportNotSubmittedException;
+use AppBundle\Exception\ReportSubmittedException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
+use AppBundle\Service\File\FileUploader;
 use AppBundle\Service\NdrStatusService;
+use AppBundle\Service\Redirector;
+use AppBundle\Service\WkHtmlToPdfGenerator;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,7 +54,12 @@ class NdrController extends AbstractController
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->getUserWithData(array_merge(self::$ndrGroupsForValidation, ['status']));
-        if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'ndr_index')) {
+
+        /** @var Redirector */
+        $redirector = $this->get('redirector_service');
+        $route = $redirector->getCorrectRouteIfDifferent($user, 'ndr_index');
+
+        if (is_string($route)) {
             return $this->redirectToRoute($route);
         }
 
@@ -74,14 +85,23 @@ class NdrController extends AbstractController
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->getUserWithData();
-        if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'ndr_overview')) {
+        /** @var Redirector */
+        $redirector = $this->get('redirector_service');
+        $route = $redirector->getCorrectRouteIfDifferent($user, 'ndr_overview');
+
+        if (is_string($route)) {
             return $this->redirectToRoute($route);
         }
 
         $client = $this->getFirstClient(self::$ndrGroupsForValidation);
+
+        if (is_null($client)) {
+            throw $this->createNotFoundException();
+        }
+
         $ndr = $client->getNdr();
         if ($ndr->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
+            throw new ReportSubmittedException();
         }
         $ndrStatus = new NdrStatusService($ndr);
 
@@ -101,6 +121,11 @@ class NdrController extends AbstractController
     public function reviewAction($ndrId)
     {
         $client = $this->getFirstClient(self::$ndrGroupsForValidation);
+
+        if (is_null($client)) {
+            throw $this->createNotFoundException();
+        }
+
         $ndr = $client->getNdr();
         $ndr->setClient($client);
 
@@ -120,6 +145,11 @@ class NdrController extends AbstractController
     public function pdfViewAction($ndrId)
     {
         $client = $this->getFirstClient(self::$ndrGroupsForValidation);
+
+        if (is_null($client)) {
+            throw $this->createNotFoundException();
+        }
+
         $ndr = $client->getNdr();
         $ndr->setClient($client);
 
@@ -129,7 +159,7 @@ class NdrController extends AbstractController
         $response->headers->set('Content-Type', 'application/pdf');
 
         $attachmentName = sprintf('DigiNdr-%s_%s.pdf',
-            $ndr->getSubmitDate() ? $ndr->getSubmitDate()->format('Y-m-d') : 'n-a-',
+            $ndr->getSubmitDate() instanceof \DateTime ? $ndr->getSubmitDate()->format('Y-m-d') : 'n-a-',
             $ndr->getClient()->getCaseNumber()
         );
 
@@ -143,11 +173,16 @@ class NdrController extends AbstractController
 
     private function getPdfBinaryContent($ndr)
     {
+        /** @var string */
         $html = $this->render('AppBundle:Ndr/Formatted:formatted_standalone.html.twig', [
             'ndr' => $ndr, 'adLoggedAsDeputy' => $this->isGranted(User::ROLE_AD)
         ])->getContent();
 
-        return $this->get('wkhtmltopdf')->getPdfFromHtml($html);
+
+        /** @var WkHtmlToPdfGenerator */
+        $htmlToPdf = $this->get('wkhtmltopdf');
+
+        return $htmlToPdf->getPdfFromHtml($html);
     }
 
     /**
@@ -157,16 +192,21 @@ class NdrController extends AbstractController
     public function declarationAction(Request $request, $ndrId)
     {
         $client = $this->getFirstClient(self::$ndrGroupsForValidation);
+
+        if (is_null($client)) {
+            throw $this->createNotFoundException();
+        }
+
         $ndr = $client->getNdr();
         $ndr->setClient($client);
 
         // check status
         $ndrStatus = new NdrStatusService($ndr);
         if (!$ndrStatus->isReadyToSubmit()) {
-            throw new \RuntimeException('Report not ready for submission');
+            throw new ReportNotSubmittableException();
         }
         if ($ndr->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
+            throw new ReportSubmittedException();
         }
 
         $user = $this->getUserWithData(['user-clients', 'client']);
@@ -182,6 +222,8 @@ class NdrController extends AbstractController
 
             // store PDF as a document
             $pdfBinaryContent = $this->getPdfBinaryContent($ndr);
+
+            /** @var FileUploader */
             $fileUploader = $this->get('file_uploader');
 
             $document = $fileUploader->uploadFile(
@@ -193,12 +235,15 @@ class NdrController extends AbstractController
 
             $this->getRestClient()->put('ndr/' . $ndr->getId() . '/submit?documentId=' . $document->getId(), $ndr, ['submit']);
 
+            /** @var User */
+            $user = $this->getUser();
+
             $pdfBinaryContent = $this->getPdfBinaryContent($ndr);
-            $reportEmail = $this->getMailFactory()->createNdrEmail($this->getUser(), $ndr, $pdfBinaryContent);
+            $reportEmail = $this->getMailFactory()->createNdrEmail($user, $ndr, $pdfBinaryContent);
             $this->getMailSender()->send($reportEmail, ['html']);
 
             //send confirmation email
-            $reportConfirmEmail = $this->getMailFactory()->createNdrSubmissionConfirmationEmail($this->getUser(), $ndr);
+            $reportConfirmEmail = $this->getMailFactory()->createNdrSubmissionConfirmationEmail($user, $ndr);
             $this->getMailSender()->send($reportConfirmEmail, ['text', 'html']);
 
             return $this->redirect($this->generateUrl('ndr_submit_confirmation', ['ndrId'=>$ndr->getId()]));
@@ -220,14 +265,19 @@ class NdrController extends AbstractController
     public function submitConfirmationAction(Request $request, $ndrId)
     {
         $client = $this->getFirstClient(self::$ndrGroupsForValidation);
+
+        if (is_null($client)) {
+            throw $this->createNotFoundException();
+        }
+
         $ndr = $client->getNdr();
         if ($ndr->getId() != $ndrId) {
-            throw new \RuntimeException('Not authorised to access this Report');
+            throw $this->createAccessDeniedException('Not authorised to access this Report');
         }
         $ndr->setClient($client);
 
         if (!$ndr->getSubmitted()) {
-            throw new \RuntimeException('Report not submitted');
+            throw new ReportNotSubmittedException();
         }
 
         $ndrStatus = new NdrStatusService($ndr);
@@ -244,8 +294,11 @@ class NdrController extends AbstractController
                 'reportType' => $ndr->getType(),
             ]);
 
+            /** @var User */
+            $user = $this->getUser();
+
             // Send notification email
-            $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData(), $this->getUser());
+            $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData(), $user);
             $this->getMailSender()->send($feedbackEmail, ['html']);
 
             return $this->redirect($this->generateUrl('ndr_submit_feedback', ['ndrId' => $ndrId]));
@@ -265,14 +318,19 @@ class NdrController extends AbstractController
     public function submitFeedbackAction($ndrId)
     {
         $client = $this->getFirstClient(self::$ndrGroupsForValidation);
+
+        if (is_null($client)) {
+            throw $this->createNotFoundException();
+        }
+
         $ndr = $client->getNdr();
         if ($ndr->getId() != $ndrId) {
-            throw new \RuntimeException('Not authorised to access this Report');
+            throw $this->createAccessDeniedException('Not authorised to access this Report');
         }
         $ndr->setClient($client);
 
         if (!$ndr->getSubmitted()) {
-            throw new \RuntimeException('Report not submitted');
+            throw new ReportNotSubmittedException();
         }
 
         $ndrStatus = new NdrStatusService($ndr);

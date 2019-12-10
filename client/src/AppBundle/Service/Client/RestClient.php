@@ -12,10 +12,10 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
 use JMS\Serializer\SerializerInterface;
 use Psr\Http\Message\ResponseInterface;
-use Symfony\Bridge\Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface as SecurityTokenStorage;
 
 /**
  * Connects to RESTful Server (API)
@@ -52,7 +52,7 @@ class RestClient
     private $tokenStorage;
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -72,7 +72,7 @@ class RestClient
     private $saveHistory;
 
     /**
-     * @var SecurityContext
+     * @var ContainerInterface
      */
     private $container;
 
@@ -82,9 +82,9 @@ class RestClient
     private $userId;
 
     /**
-     * @var set at the class level for the next request
+     * @var int set at the class level for the next request
      */
-    private $timeout = null;
+    private $timeout = 0;
 
     /**
      * Header name holding auth token, returned at login time and re-sent at each requests.
@@ -99,7 +99,7 @@ class RestClient
     /**
      * Error Messages.
      */
-    const ERROR_CONNECT = 'API returned an exception.';
+    const ERROR_CONNECT = 'API returned an exception';
     const ERROR_NO_SUCCESS = 'Endpoint failed with message %s';
     const ERROR_FORMAT = 'Cannot decode endpoint response';
 
@@ -107,14 +107,17 @@ class RestClient
         ContainerInterface $container,
         ClientInterface $client,
         TokenStorageInterface $tokenStorage,
-        $clientSecret
+        SerializerInterface $serializer,
+        LoggerInterface $logger,
+        string $clientSecret
     ) {
         $this->client = $client;
         $this->container = $container;
-        $this->serialiser = $container->get('jms_serializer');
         $this->tokenStorage = $tokenStorage;
-        $this->logger = $container->get('logger');
+        $this->serialiser = $serializer;
+        $this->logger = $logger;
         $this->clientSecret = $clientSecret;
+
         $this->saveHistory = $container->getParameter('kernel.debug');
         $this->history = [];
     }
@@ -131,9 +134,11 @@ class RestClient
     public function login(array $credentials)
     {
         $response = $this->apiCall('post', '/auth/login', $credentials, 'response', [], false);
-        $user = $this->arrayToEntity('User', $this->extractDataArray($response));
-        //        // store auth token
 
+        /** @var User */
+        $user = $this->arrayToEntity('User', $this->extractDataArray($response));
+
+        // store auth token
         $tokenVal =  $response->getHeader(self::HEADER_AUTH_TOKEN);
         $tokenVal = is_array($tokenVal) && !empty($tokenVal[0]) ? $tokenVal[0] : null;
         $this->tokenStorage->set($user->getId(), $tokenVal);
@@ -158,11 +163,7 @@ class RestClient
      * Finds user by email.
      * @TODO consider replace this call with ->get() using the new last param
      * @param string $token
-     *
-     * @throws UsernameNotFoundException
-     *
      * @return \AppBundle\Entity\User $user
-     *
      */
     public function loadUserByToken($token)
     {
@@ -170,13 +171,7 @@ class RestClient
     }
 
     /**
-     *
      * @param string $token
-     *
-     * @throws UsernameNotFoundException
-     *
-     * @return id $user ID
-     *
      */
     public function agreeTermsUse($token)
     {
@@ -213,15 +208,19 @@ class RestClient
 
         // guzzle 6 does not append query groups and params in the string.
         //TODO add $queryParams as a method param (Replace last if not used) and avoid using endpoing with query string
-        if (!empty(parse_url($endpoint)['query'])) {
-            parse_str(parse_url($endpoint)['query'], $additionalQs);
+
+        /** @var array */
+        $url = parse_url($endpoint);
+
+        if (!empty($url['query'])) {
+            parse_str($url['query'], $additionalQs);
             $options['query'] = isset($options['query']) ? $options['query'] : [];
             $options['query'] += $additionalQs;
         }
 
         return $this->apiCall('get', $endpoint, null, $expectedResponseType, $optionsOverride + [
-                'addAuthToken' => true,
-            ] + $options);
+            'addAuthToken' => true,
+        ] + $options);
     }
 
     /**
@@ -242,9 +241,9 @@ class RestClient
     }
 
     /**
-     * @param string        $endpoint  e.g. /user
-     * @param string|object $mixed     HTTP body. json_encoded string or entity (that will JMS-serialised)
-     * @param array         $jmsGroups deserialise_groups
+     * @param string              $endpoint  e.g. /user
+     * @param string|object|array $mixed     HTTP body. json_encoded string or entity (that will JMS-serialised)
+     * @param array               $jmsGroups deserialise_groups
      *
      * @return string response body
      */
@@ -291,7 +290,7 @@ class RestClient
      *
      * @throws \InvalidArgumentException
      *
-     * @return array|GuzzleHttp\Psr7\Response
+     * @return mixed
      */
     public function apiCall($method, $endpoint, $data, $expectedResponseType, $options = [], $authenticated = true)
     {
@@ -376,21 +375,26 @@ class RestClient
             // request exception contains a body, that gets decoded and passed to RestClientException
             $this->logger->warning('RestClient | RequestException | ' . $url . ' | ' . $e->getMessage());
 
-            $this->logRequest($url, $method, $start, $options, $e->getResponse());
+            $response = $e->getResponse();
+
+            $this->logRequest($url, $method, $start, $options, $response);
 
             $data = [];
 
             try {
-                $data = $e->getResponse() ? $this->serialiser->deserialize($e->getResponse()->getBody(), 'array', 'json') : [];
+                if ($response instanceof ResponseInterface) {
+                    $body = strval($response->getBody());
+                    $data = $this->serialiser->deserialize($body, 'array', 'json');
+                }
             } catch (\Throwable $e) {
                 $this->logger->warning('RestClient |  ' . $url . ' | ' . $e->getMessage());
             }
 
-            throw new AppException\RestClientException(self::ERROR_CONNECT, $e->getCode(), $data);
+            throw new AppException\RestClientException($e->getMessage(), $e->getCode(), $data);
         } catch (TransferException $e) {
             $this->logger->warning('RestClient | ' . $url . ' | ' . $e->getMessage());
 
-            throw new AppException\RestClientException(self::ERROR_CONNECT, $e->getCode());
+            throw new AppException\RestClientException($e->getMessage(), $e->getCode());
         }
     }
 
@@ -406,7 +410,7 @@ class RestClient
         //TODO validate $response->getStatusCode()
 
         try {
-            $data = $this->serialiser->deserialize($response->getBody(), 'array', 'json');
+            $data = $this->serialiser->deserialize(strval($response->getBody()), 'array', 'json');
         } catch (\Throwable $e) {
             $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . '. Api responded with invalid JSON. [BODY START]: ' . $response->getBody() . '[END BODY]');
             throw new Exception\JsonDecodeException(self::ERROR_FORMAT . ':' . $response->getBody());
@@ -427,9 +431,11 @@ class RestClient
      */
     private function arrayToEntity($class, array $data)
     {
-        $fullClassName = (strpos($class, 'AppBundle') !== false)
-                 ? $class : 'AppBundle\\Entity\\' . $class;
-        return $this->serialiser->deserialize(json_encode($data), $fullClassName, 'json');
+        $fullClassName = (strpos($class, 'AppBundle') !== false) ? $class : 'AppBundle\\Entity\\' . $class;
+
+        /** @var string */
+        $data = json_encode($data);
+        return $this->serialiser->deserialize($data, $fullClassName, 'json');
     }
 
     /**
@@ -444,6 +450,11 @@ class RestClient
         $ret = [];
         foreach ($data as $row) {
             $entity = $this->arrayToEntity($expectedResponseType, $row);
+
+            if (!method_exists($entity, 'getId')) {
+                throw new \RuntimeException('Cannot deserialise entities without an ID');
+            }
+
             $ret[$entity->getId()] = $entity;
         }
 
@@ -453,10 +464,10 @@ class RestClient
     /**
      * //TODO use for other calls ?
      *
-     * @param string $mixed   json_encoded string or Doctrine Entity (it will be serialised before posting)
-     * @param array  $options
+     * @param mixed $mixed   json_encoded string or Doctrine Entity (it will be serialised before posting)
+     * @param array $options
      *
-     * @return type
+     * @return string
      */
     private function toJson($mixed, array $options = [])
     {
@@ -484,7 +495,7 @@ class RestClient
     /**
      * @param string            $url
      * @param string            $method
-     * @param string            $start
+     * @param float             $start
      * @param array             $options
      * @param ResponseInterface $response
      */
@@ -534,17 +545,24 @@ class RestClient
     }
 
     /**
-     * @return int
+     * @return int|bool
      */
     private function getLoggedUserId()
     {
         if ($this->userId) {
             return $this->userId;
-        } elseif (
-            ($token = $this->container->get('security.token_storage')->getToken())
-            && ($token->getUser() instanceof User)
-        ) {
-            return $token->getUser()->getId();
+        } else {
+            /** @var SecurityTokenStorage */
+            $tokenStorage = $this->container->get('security.token_storage');
+            $token = $tokenStorage->getToken();
+
+            if (!is_null($token)) {
+                $user = $token->getUser();
+
+                if ($user instanceof User) {
+                    return $user->getId();
+                }
+            }
         }
 
         return false;

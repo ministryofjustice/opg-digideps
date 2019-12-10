@@ -14,7 +14,7 @@ COPY src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
-FROM php:7-fpm-alpine
+FROM php:7.3-fpm-alpine
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
@@ -56,7 +56,8 @@ RUN mkdir -p var/cache \
 
 CMD confd -onetime -backend env \
   && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
-  && su-exec www-data php app/console doctrine:migrations:migrate --no-interaction \
+  && su-exec www-data php app/console doctrine:migrations:migrate-lock --no-interaction \
+  && su-exec www-data php app/console doctrine:migrations:up-to-date \
   && php-fpm -D \
   && nginx
 

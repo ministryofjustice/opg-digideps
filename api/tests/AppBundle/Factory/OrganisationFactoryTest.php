@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Tests\AppBundle\Factory;
 
@@ -28,14 +28,14 @@ class OrganisationFactoryTest extends TestCase
      * @param $expectedEmailIdentifier
      */
     public function createFromFullEmail_determinesEmailIdentiferFromTheFullGivenEmail(
-        $fullEmail,
-        $expectedEmailIdentifier
+        string $fullEmail,
+        string $expectedEmailIdentifier
     )
     {
-        $organisation = $this->factory->createFromFullEmail('Org Name', $fullEmail, true);
+        $organisation = $this->factory->createFromFullEmail('Foo Inc.', $fullEmail, true);
 
         $this->assertInstanceOf(Organisation::class, $organisation);
-        $this->assertEquals('Org Name', $organisation->getName());
+        $this->assertEquals('Foo Inc.', $organisation->getName());
         $this->assertEquals($expectedEmailIdentifier, $organisation->getEmailIdentifier());
         $this->assertTrue($organisation->isActivated());
     }
@@ -50,8 +50,8 @@ class OrganisationFactoryTest extends TestCase
             ['fullEmail' => 'name@Bar.co.uk', 'expectedEmailIdentifier' => 'name@bar.co.uk'],
             ['fullEmail' => 'name@private.com', 'expectedEmailIdentifier' => 'private.com'],
             ['fullEmail' => 'main-contact@private.com', 'expectedEmailIdentifier' => 'private.com'],
-            ['fullEmail' => 'private.com', 'expectedEmailIdentifier' => 'private.com']
-
+            ['fullEmail' => 'private.com', 'expectedEmailIdentifier' => 'private.com'],
+            ['fullEmail' => 'jbloggs@private.com', 'expectedEmailIdentifier' => 'private.com']
         ];
     }
 
@@ -60,10 +60,10 @@ class OrganisationFactoryTest extends TestCase
      */
     public function createFromEmailIdentifier_createsOrganisationUsingGivenArgAsEmailIdentifier()
     {
-        $organisation = $this->factory->createFromEmailIdentifier('Org Name', 'Foo.Com', false);
+        $organisation = $this->factory->createFromEmailIdentifier('Foo Corp', 'Foo.Com', false);
 
         $this->assertInstanceOf(Organisation::class, $organisation);
-        $this->assertEquals('Org Name', $organisation->getName());
+        $this->assertEquals('Foo Corp', $organisation->getName());
         $this->assertEquals('foo.com', $organisation->getEmailIdentifier());
         $this->assertFalse($organisation->isActivated());
     }

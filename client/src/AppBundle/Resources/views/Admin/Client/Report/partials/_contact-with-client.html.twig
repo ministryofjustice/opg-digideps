@@ -9,13 +9,7 @@
 
 {{ checklist_radios(form.careArrangements) }}
 
-{% set contents %}
-    {% include 'AppBundle:Report/VisitsCare:_answers.html.twig' with {
-        hideEditLink: true
-    } %}
-{% endset %}
-
 {{ details({
     summaryText: (page ~ '.revealTitle.deputysResponses') | trans,
-    text: contents,
+    html: include('AppBundle:Report/VisitsCare:_answers.html.twig', { hideEditLink: true }),
 }) }}

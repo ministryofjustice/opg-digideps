@@ -9,13 +9,7 @@
 
 {{ checklist_radios(form.satisfiedWithHealthAndLifestyle) }}
 
-{% set contents %}
-    {% include 'AppBundle:Report/Lifestyle:_answers.html.twig' with {
-        hideEditLink: true
-    } %}
-{% endset %}
-
 {{ details({
     summaryText: (page ~ '.revealTitle.lifestyleResponses') | trans,
-    text: contents,
+    html: include('AppBundle:Report/Lifestyle:_answers.html.twig', { hideEditLink: true })
 }) }}

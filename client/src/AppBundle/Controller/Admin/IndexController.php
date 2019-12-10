@@ -76,6 +76,8 @@ class IndexController extends AbstractController
     {
         $availableRoles = [
             EntityDir\User::ROLE_LAY_DEPUTY => 'Lay Deputy',
+            EntityDir\User::ROLE_PA_NAMED => 'Public Authority Named Deputy',
+            EntityDir\User::ROLE_PROF_NAMED => 'Professional Named Deputy',
             EntityDir\User::ROLE_AD         => 'Assisted Digital',
             EntityDir\User::ROLE_PROF_NAMED => 'Professional (Named)',
             EntityDir\User::ROLE_PA_NAMED => 'PA (Named)',
@@ -444,8 +446,12 @@ class IndexController extends AbstractController
                         'Dep Adrs1',
                         'Dep Adrs2',
                         'Dep Adrs3',
+                        'Dep Adrs4',
+                        'Dep Adrs5',
                         'Dep Postcode',
                         'Email', //mandatory, used as user ID whem uploading
+                        'Email2',
+                        'Email3',
                         'Case', //case number, used as ID when uploading
                         'Forename', 'Surname', //client forename and surname
                         'Corref',
@@ -460,6 +466,10 @@ class IndexController extends AbstractController
                         'Client Phone',
                         'Client Email',
                         'Client Date of Birth',
+                        'Phone Main',
+                        'Phone Alternative',
+                        'Fee Payer',
+                        'Corres'
                     ])
                     ->setUnexpectedColumns([
                         'NDR'
