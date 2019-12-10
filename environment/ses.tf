@@ -18,3 +18,8 @@ data "aws_iam_policy_document" "ses" {
     resources = ["*"]
   }
 }
+
+resource "aws_ses_email_identity" "verified_emails" {
+  for_each = toset(local.verified_emails)
+  email    = each.key
+}
