@@ -45,6 +45,171 @@ locals {
       target_type = "cidr_block"
       target      = "0.0.0.0/0"
     }
+    route53_healthcheck_us_west_1_a = {
+      port        = 443
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "54.183.255.128/26"
+    }
+    route53_healthcheck_us_west_1_b = {
+      port        = 443
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "54.241.32.64/26"
+    }
+    route53_healthcheck_us_west_2_a = {
+      port        = 443
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "54.245.168.0/26"
+    }
+    route53_healthcheck_us_west_2_b = {
+      port        = 443
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "54.244.52.192/26"
+    }
+    route53_healthcheck_us_east_1_a = {
+      port        = 443
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "54.243.31.192/26"
+    }
+    route53_healthcheck_us_east_1_b = {
+      port        = 443
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "107.23.255.0/26"
+    }
+    route53_healthcheck_sa_east_1_a = {
+      port        = 443
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "177.71.207.128/26"
+    }
+    route53_healthcheck_sa_east_1_b = {
+      port        = 443
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "54.232.40.64/26"
+    }
+    route53_healthcheck_ap_southeast_1_a = {
+      port        = 443
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "54.255.254.192/26"
+    }
+    route53_healthcheck_ap_southeast_1_b = {
+      port        = 443
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "54.251.31.128/26"
+    }
+    route53_healthcheck_eu_west_1_a = {
+      port        = 443
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "176.34.159.192/26"
+    }
+    route53_healthcheck_eu_west_1_b = {
+      port        = 443
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "54.228.16.0/26"
+    }
+    route53_healthcheck_ap_northeast_1_a = {
+      port        = 443
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "54.250.253.192/26"
+    }
+    route53_healthcheck_ap_southeast_2_a = {
+      port        = 443
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "54.252.254.192/26"
+    }
+    route53_healthcheck_ap_southeast_2_b = {
+      port        = 443
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "54.252.79.128/26"
+    }
+    //    {
+    //    "ip_prefix": "54.245.168.0/26",
+    //    "region": "us-west-2",
+    //    },
+    //    {
+    //    "ip_prefix": "54.243.31.192/26",
+    //    "region": "us-east-1",
+    //    },
+    //    {
+    //    "ip_prefix": "177.71.207.128/26",
+    //    "region": "sa-east-1",
+    //    },
+    //    {
+    //    "ip_prefix": "54.255.254.192/26",
+    //    "region": "ap-southeast-1",
+    //    },
+    //    {
+    //    "ip_prefix": "54.244.52.192/26",
+    //    "region": "us-west-2",
+    //    },
+    //    {
+    //    "ip_prefix": "176.34.159.192/26",
+    //    "region": "eu-west-1",
+    //    },
+    //    {
+    //    "ip_prefix": "54.251.31.128/26",
+    //    "region": "ap-southeast-1",
+    //    },
+    //    {
+    //    "ip_prefix": "54.183.255.128/26",
+    //    "region": "us-west-1",
+    //    },
+    //    {
+    //    "ip_prefix": "54.241.32.64/26",
+    //    "region": "us-west-1",
+    //    },
+    //    {
+    //    "ip_prefix": "54.252.254.192/26",
+    //    "region": "ap-southeast-2",
+    //    },
+    //    {
+    //    "ip_prefix": "107.23.255.0/26",
+    //    "region": "us-east-1",
+    //    },
+    //    {
+    //    "ip_prefix": "54.228.16.0/26",
+    //    "region": "eu-west-1",
+    //    },
+    //    {
+    //    "ip_prefix": "54.250.253.192/26",
+    //    "region": "ap-northeast-1",
+    //    },
+    //    {
+    //    "ip_prefix": "54.232.40.64/26",
+    //    "region": "sa-east-1",
+    //    },
+    //    {
+    //    "ip_prefix": "54.252.79.128/26",
+    //    "region": "ap-southeast-2",
+    //    },
   }
 }
 
