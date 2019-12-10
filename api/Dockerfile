@@ -57,6 +57,7 @@ RUN mkdir -p var/cache \
 CMD confd -onetime -backend env \
   && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
   && su-exec www-data php app/console doctrine:migrations:migrate-lock --no-interaction \
+  && su-exec www-data php app/console doctrine:migrations:up-to-date \
   && php-fpm -D \
   && nginx
 
