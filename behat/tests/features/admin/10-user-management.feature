@@ -6,7 +6,7 @@ Feature: User management
     And I click on "user-behat-lay-deputy-102publicguardiangovuk"
     Then the response status code should be 200
     And I should see "Clients and reports"
-    And I should not see "organisation"
+    And I should not see "organisation page"
 
   @admin @user-management
   Scenario: Admin user views the edit page of a PA Deputy
@@ -16,7 +16,7 @@ Feature: User management
     And I click on "user-behat-pa-deputy-103-4-6publicguardiangovuk"
     Then the response status code should be 200
     And I should not see "Clients and reports"
-    And I should see "organisation"
+    And I should see "organisation page"
 
   @admin @user-management
   Scenario: Admin user views the edit page of a Prof Deputy
@@ -26,4 +26,4 @@ Feature: User management
     And I click on "user-behat-prof-deputy-102-4-5publicguardiangovuk"
     Then the response status code should be 200
     And I should not see "Clients and reports"
-    And I should see "organisation"
+    And I should see "organisation page"
