@@ -1,3 +1,8 @@
+resource "aws_sns_topic" "alert" {
+  name         = "${local.environment}-${terraform.workspace}-alert"
+  display_name = "${local.default_tags["application"]} ${local.environment} Alert"
+}
+
 resource "aws_cloudwatch_log_metric_filter" "php_errors" {
   name           = "CriticalPHPErrorFilter.${local.environment}"
   pattern        = "CRITICAL"
