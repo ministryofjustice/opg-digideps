@@ -22,7 +22,7 @@ class EmailSameDomain extends Constraint
      *
      * @param mixed|null $options
      */
-    public function __construct($options)
+    public function __construct($options = [])
     {
         $requiredOptions = ['message', 'groups'];
 

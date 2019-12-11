@@ -3,8 +3,10 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\AssetInterface;
+use AppBundle\Entity\Ndr\AssetOther as NdrAssetOther;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+
 
 /**
  * @ORM\Entity
@@ -123,5 +125,18 @@ class AssetOther extends Asset implements AssetInterface
     public function getType()
     {
         return 'other';
+    }
+
+    /**
+     * @param AssetInterface $asset
+     * @return bool
+     */
+    public function isEqual(AssetInterface $asset)
+    {
+        if (!($asset instanceof self) && !($asset instanceof NdrAssetOther)) {
+            return false;
+        }
+
+        return $asset->getDescription() === $this->getDescription();
     }
 }

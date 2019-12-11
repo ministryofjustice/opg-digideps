@@ -2,8 +2,7 @@
 
 namespace AppBundle\Service;
 
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * RequestIdLoggerProcessor.
@@ -20,16 +19,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class RequestIdLoggerProcessor
 {
     /**
-     * @var Container
+     * @var ContainerInterface
      */
     protected $container;
 
     /**
      * RequestIdLoggerProcessor constructor.
      *
-     * @param Container $container
+     * @param ContainerInterface $container
      */
-    public function __construct(Container $container)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }

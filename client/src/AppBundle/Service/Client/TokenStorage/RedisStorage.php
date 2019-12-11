@@ -2,12 +2,12 @@
 
 namespace AppBundle\Service\Client\TokenStorage;
 
-use Predis\Client as PredisClient;
+use Predis\ClientInterface as PredisClientInterface;
 
 class RedisStorage implements TokenStorageInterface
 {
     /**
-     * @var PredisClient
+     * @var PredisClientInterface
      */
     private $redis;
 
@@ -16,7 +16,7 @@ class RedisStorage implements TokenStorageInterface
      */
     private $prefix;
 
-    public function __construct(PredisClient $redis, string $prefix)
+    public function __construct(PredisClientInterface $redis, string $prefix)
     {
         $this->redis = $redis;
         $this->prefix = $prefix;

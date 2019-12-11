@@ -8,7 +8,7 @@ class SmtpAvailability extends ServiceAvailabilityAbstract
 {
     private $transportKey;
 
-    public function __construct(ContainerInterface $container, $transportKey)
+    public function __construct(ContainerInterface $container, $transportKey = '')
     {
         $this->transportKey = $transportKey;
         $transport = $container->get($this->transportKey); /* @var $transport \Swift_SmtpTransport */

@@ -1,30 +1,46 @@
 parameters:
     # set this param to a higher value than session_expire_seconds on the client
     user_provider_timeout_seconds: 3901
+    client_secrets:
+        api-admin-key:
+            permissions: [ROLE_AD, ROLE_ADMIN, ROLE_CASE_MANAGER]
+        api-frontend-key:
+            permissions: [ROLE_LAY_DEPUTY, ROLE_PA, ROLE_PROF, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER]
 
 services:
     # authenticator
     authenticator.token_header:
         class: AppBundle\Service\Auth\HeaderTokenAuthenticator
         public: false
-    user_provider:
-        class: AppBundle\Service\Auth\UserProvider
-        arguments: [ "@em", "@snc_redis.default", "@logger", { "timeout_seconds": "%user_provider_timeout_seconds%" } ]
+    AppBundle\Service\Auth\UserProvider:
+        arguments: [ '@em', "@snc_redis.default", "@logger", { "timeout_seconds": "%user_provider_timeout_seconds%" }, '@AppBundle\Entity\Repository\UserRepository' ]
         public: true
-    authService:
+    user_provider:
+        alias: AppBundle\Service\Auth\UserProvider
+
+    AppBundle\Service\Auth\AuthService:
         class: AppBundle\Service\Auth\AuthService
         public: true
-        arguments: [ "@security.encoder_factory", "@logger", "@service_container" ]
-    attemptsInTimeChecker:
-        class:  AppBundle\Service\BruteForce\AttemptsInTimeChecker
+        arguments:
+            $encoderFactory: '@security.encoder_factory'
+            $logger: '@logger'
+            $userRepository: '@AppBundle\Entity\Repository\UserRepository'
+            $roleHierarchy: '@security.role_hierarchy'
+            $clientSecrets: '%client_secrets%'
+
+    authService:
+        alias: AppBundle\Service\Auth\AuthService
+
+    AppBundle\Service\BruteForce\AttemptsInTimeChecker:
         arguments: [ "@snc_redis.default" ]
         public: true
         calls:
             - [ setRedisPrefix, ["ac_ret_code"] ]
             # after 5 attempts in the last 10 minutes, return a different return code (activate captcha)
             - [ addTrigger, [  5, 600 ] ]
-    attemptsIncrementalWaitingChecker:
-        class:  AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker
+    attemptsInTimeChecker:
+        alias: AppBundle\Service\BruteForce\AttemptsInTimeChecker
+    AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker:
         arguments: [ "@snc_redis.default" ]
         public: true
         calls:
@@ -35,6 +51,8 @@ services:
             - [ addFreezingRule, [  20, 3600 ] ]
             # after further 10 attempts. freeze for 2h
             - [ addFreezingRule, [  30, 7200 ] ]
+    attemptsIncrementalWaitingChecker:
+        alias: AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker
 
 
 security:
@@ -126,5 +144,3 @@ security:
         ROLE_PROF_NAMED:        [ ROLE_PROF, ROLE_ORG_NAMED ]
         ROLE_PROF_ADMIN:        [ ROLE_PROF, ROLE_ORG_ADMIN ]
         ROLE_PROF_TEAM_MEMBER:  [ ROLE_PROF, ROLE_ORG_TEAM_MEMBER ]
-
-

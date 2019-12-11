@@ -8,18 +8,18 @@ use AppBundle\Entity\Repository\TeamRepository;
 use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\Team;
 use AppBundle\Entity\User;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
 class UserService
 {
-    /** @var EntityRepository */
+    /** @var UserRepository */
     private $userRepository;
 
-    /** @var EntityRepository */
+    /** @var TeamRepository */
     private $teamRepository;
 
-    /** @var EntityManager */
+    /** @var EntityManagerInterface */
     private $em;
 
     /**
@@ -28,7 +28,7 @@ class UserService
     private $orgService;
 
     public function __construct(
-        EntityManager $em,
+        EntityManagerInterface $em,
         OrgService $orgService
     ) {
         $this->userRepository = $em->getRepository(User::class);

@@ -2,6 +2,7 @@
 
 namespace Tests\AppBundle\Service\Auth;
 
+use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Service\Auth\UserProvider;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
@@ -15,7 +16,7 @@ class UserProviderTest extends TestCase
 
     public function setUp(): void
     {
-        $this->repo = m::stub('Doctrine\ORM\EntityRepository');
+        $this->repo = m::stub(UserRepository::class);
         $this->em = m::stub('Doctrine\ORM\EntityManager', [
                 'getRepository(AppBundle\Entity\User)' => $this->repo,
         ]);
@@ -23,7 +24,7 @@ class UserProviderTest extends TestCase
         $this->logger = m::stub('Symfony\Bridge\Monolog\Logger');
         $options = ['timeout_seconds' => 7];
 
-        $this->userProvider = new UserProvider($this->em, $this->redis, $this->logger, $options);
+        $this->userProvider = new UserProvider($this->em, $this->redis, $this->logger, $options, $this->repo);
     }
 
     public function testloadUserByUsernameRedisNotFound()

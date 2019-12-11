@@ -86,10 +86,8 @@ locals {
       { "name": "REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" },
       { "name": "DATABASE_PORT", "value": "${aws_db_instance.api.port}" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
-      { "name": "SECRETS_ADMIN_PERMISSIONS", "value": "[ROLE_ADMIN, ROLE_AD, ROLE_CASE_MANAGER]" },
       { "name": "DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
       { "name": "DATABASE_NAME", "value": "${aws_db_instance.api.name}" },
-      { "name": "SECRETS_FRONT_PERMISSIONS", "value": "[ROLE_LAY_DEPUTY, ROLE_PA, ROLE_PROF, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER]" },
       { "name": "DATABASE_USERNAME", "value": "digidepsmaster" }
     ]
   }

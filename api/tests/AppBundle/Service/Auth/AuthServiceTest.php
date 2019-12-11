@@ -2,10 +2,13 @@
 
 namespace Tests\AppBundle\Service\Auth;
 
+use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Service\Auth\AuthService;
+use Mockery;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Role\RoleHierarchy;
 
 class AuthServiceTest extends TestCase
 {
@@ -26,29 +29,46 @@ class AuthServiceTest extends TestCase
         'layDeputySecretWrongFormat' => 'IShouldBeAnArray',
     ];
 
+    /**
+     * @var RoleHierarchy
+     */
+    private $roleHierarchy;
+
+    /**
+     * @var Mockery\MockInterface
+     */
+    private $userRepo;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Symfony\Bridge\Monolog\Logger
+     */
+    private $logger;
+
+    /**
+     * @var Mockery\MockInterface
+     */
+    private $encoderFactory;
+
     public function setUp(): void
     {
-        $this->userRepo = m::stub('Doctrine\ORM\EntityRepository');
+        $this->userRepo = m::stub(UserRepository::class);
         $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
         $this->encoderFactory = m::stub('Symfony\Component\Security\Core\Encoder\EncoderFactory');
 
-        $this->container = m::stub('Symfony\Component\DependencyInjection\Container', [
-                'getParameter(client_secrets)' => $this->clientSecrets,
-                'getParameter(security.role_hierarchy.roles)' => ['ROLE_LAY_DEPUTY_INHERITED'=>['ROLE_LAY_DEPUTY']],
-                'get(em)->getRepository(AppBundle\Entity\User)' => $this->userRepo,
-        ]);
+        $hierarchy = [
+            'ROLE_ADMIN' => [ 'ROLE_DOCUMENT_MANAGE', 'ROLE_CASE_MANAGER' ],
+            'ROLE_LAY_DEPUTY' => [ 'ROLE_DEPUTY' ],
+        ];
 
-        $this->authService = new AuthService($this->encoderFactory, $this->logger, $this->container);
+        $this->roleHierarchy = new RoleHierarchy($hierarchy);
+        $this->authService = new AuthService($this->encoderFactory, $this->logger, $this->userRepo, $this->roleHierarchy, $this->clientSecrets);
     }
 
     public function testMissingSecrets()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $container = m::stub('Symfony\Component\DependencyInjection\Container', [
-                'getParameter(client_secrets)' => [],
-        ]);
 
-        $this->authService = new AuthService($this->encoderFactory, $this->logger, $container);
+        $this->authService = new AuthService($this->encoderFactory, $this->logger, $this->userRepo, $this->roleHierarchy, []);
     }
 
     public function isSecretValidProvider()
@@ -78,7 +98,7 @@ class AuthServiceTest extends TestCase
     public function testgetUserByEmailAndPasswordUserNotFound()
     {
         $this->userRepo->shouldReceive('findOneBy')->with(['email' => 'email@example.org'])->andReturn(null);
-        $this->logger->shouldReceive('info')->with(\Mockery::pattern('/not found/'))->once();
+        $this->logger->shouldReceive('info')->with(Mockery::pattern('/not found/'))->once();
 
         $this->assertEquals(false, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }
@@ -96,7 +116,7 @@ class AuthServiceTest extends TestCase
         ]);
         $this->encoderFactory->shouldReceive('getEncoder')->with($user)->andReturn($encoder);
 
-        $this->logger->shouldReceive('info')->with(\Mockery::pattern('/password mismatch/'))->once();
+        $this->logger->shouldReceive('info')->with(Mockery::pattern('/password mismatch/'))->once();
 
         $this->assertEquals(null, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }
@@ -132,7 +152,6 @@ class AuthServiceTest extends TestCase
     {
         return [
             ['layDeputySecret', 'ROLE_LAY_DEPUTY', true],
-            ['layDeputySecret', 'ROLE_LAY_DEPUTY_INHERITED', true],
             ['layDeputySecret', 'ROLE_ADMIN', false],
             ['layDeputySecret', 'OTHER_ROLE', false],
             ['layDeputySecret', null, false],
