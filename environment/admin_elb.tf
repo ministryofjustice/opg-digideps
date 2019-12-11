@@ -7,12 +7,7 @@ resource "aws_lb" "admin" {
 
   security_groups = [module.admin_elb_security_group.id]
 
-  tags = merge(
-    local.default_tags,
-    {
-      "Name" = "admin-${local.environment}"
-    },
-  )
+  tags = merge(local.default_tags, { "Name" = "admin-${local.environment}" }, )
 }
 
 resource "aws_lb_listener" "admin" {

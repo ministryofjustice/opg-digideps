@@ -53,13 +53,13 @@ resource "aws_cloudwatch_metric_alarm" "nginx_errors" {
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
 }
 
-resource "aws_sns_topic" "acs-test" {
+resource "aws_sns_topic" "availability-alert" {
   provider     = aws.us-east-1
   name         = "${local.environment}-${terraform.workspace}-alert"
   display_name = "${local.default_tags["application"]} ${local.environment} Alert"
 }
 
-resource "aws_route53_health_check" "availability" {
+resource "aws_route53_health_check" "availability-front" {
   fqdn                  = aws_route53_record.front.fqdn
   resource_path         = "/manage/availability"
   port                  = 443
@@ -67,19 +67,13 @@ resource "aws_route53_health_check" "availability" {
   failure_threshold     = 1
   request_interval      = 30
   measure_latency       = true
-  cloudwatch_alarm_name = "availability-healthcheck"
-  tags = merge(
-    local.default_tags,
-    {
-      Name = "availability"
-    },
-  )
-
+  cloudwatch_alarm_name = "availability-front-healthcheck"
+  tags                  = merge(local.default_tags, { Name = "availability-front" }, )
 }
 
-resource "aws_cloudwatch_metric_alarm" "availability" {
+resource "aws_cloudwatch_metric_alarm" "availability-front" {
   provider            = aws.us-east-1
-  alarm_name          = "availability"
+  alarm_name          = "availability-front"
   statistic           = "Minimum"
   metric_name         = "HealthCheckStatus"
   comparison_operator = "LessThanThreshold"
@@ -88,9 +82,39 @@ resource "aws_cloudwatch_metric_alarm" "availability" {
   datapoints_to_alarm = 1
   evaluation_periods  = 288
   namespace           = "AWS/Route53"
-  alarm_actions       = [aws_sns_topic.acs-test.arn]
+  alarm_actions       = [aws_sns_topic.availability-alert.arn]
 
   dimensions = {
-    HealthCheckId = aws_route53_health_check.availability.id
+    HealthCheckId = aws_route53_health_check.availability-front.id
+  }
+}
+
+resource "aws_route53_health_check" "availability-admin" {
+  fqdn                  = aws_route53_record.admin.fqdn
+  resource_path         = "/manage/availability"
+  port                  = 443
+  type                  = "HTTPS"
+  failure_threshold     = 1
+  request_interval      = 30
+  measure_latency       = true
+  cloudwatch_alarm_name = "availability-admin-healthcheck"
+  tags                  = merge(local.default_tags, { Name = "availability-admin" }, )
+}
+
+resource "aws_cloudwatch_metric_alarm" "availability-admin" {
+  provider            = aws.us-east-1
+  alarm_name          = "availability-admin"
+  statistic           = "Minimum"
+  metric_name         = "HealthCheckStatus"
+  comparison_operator = "LessThanThreshold"
+  threshold           = 1
+  period              = 300
+  datapoints_to_alarm = 1
+  evaluation_periods  = 288
+  namespace           = "AWS/Route53"
+  alarm_actions       = [aws_sns_topic.availability-alert.arn]
+
+  dimensions = {
+    HealthCheckId = aws_route53_health_check.availability-admin.id
   }
 }

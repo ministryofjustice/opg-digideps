@@ -96,5 +96,5 @@ resource "aws_security_group_rule" "admin_whitelist" {
   from_port         = 443
   to_port           = 443
   security_group_id = module.admin_elb_security_group.id
-  cidr_blocks       = local.admin_whitelist
+  cidr_blocks       = concat(local.admin_whitelist, local.route53_healthchecker_ips)
 }

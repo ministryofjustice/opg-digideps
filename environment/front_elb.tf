@@ -6,12 +6,7 @@ resource "aws_lb" "front" {
 
   security_groups = [module.front_elb_security_group.id]
 
-  tags = merge(
-    local.default_tags,
-    {
-      "Name" = "front-${local.environment}"
-    },
-  )
+  tags = merge(local.default_tags, { "Name" = "front-${local.environment}" }, )
 }
 
 resource "aws_lb_listener" "front_https" {
