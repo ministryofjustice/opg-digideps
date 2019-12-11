@@ -1,9 +1,9 @@
 imports:
+    - { resource: services/defaults.yml }
     - { resource: services/assemblers.yml }
     - { resource: services/controllers.yml }
     - { resource: services/event_listeners.yml }
     - { resource: services/factories.yml }
-    - { resource: services/registration.yml }
     - { resource: services/rest_handlers.yml }
     - { resource: services/repositories.yml }
     - { resource: services/security.yml }
@@ -22,26 +22,6 @@ services:
         class: AppBundle\Service\UserRegistrationService
         arguments: [ "@em", "@opg_digideps.casrec_verification_service" ]
 
-    AppBundle\Service\OrgService:
-        class: AppBundle\Service\OrgService
-        arguments:
-            $em: '@em'
-            $logger: '@logger'
-            $userRepository: '@AppBundle\Entity\Repository\UserRepository'
-            $reportRepository: '@AppBundle\Entity\Repository\ReportRepository'
-            $clientRepository: '@AppBundle\Entity\Repository\ClientRepository'
-            $orgRepository: '@AppBundle\Entity\Repository\OrganisationRepository'
-            $teamRepository: '@AppBundle\Entity\Repository\TeamRepository'
-            $namedDeputyRepository: '@AppBundle\Entity\Repository\NamedDeputyRepository'
-            $orgFactory: '@AppBundle\Factory\OrganisationFactory'
-            $namedDeputyFactory: '@AppBundle\Factory\NamedDeputyFactory'
-
-    AppBundle\Service\UserService:
-        class: AppBundle\Service\UserService
-        arguments:
-            $em: '@em'
-            $orgService: '@AppBundle\Service\OrgService'
-
     monolog.processor.add_request_id:
         class: AppBundle\Service\RequestIdLoggerProcessor
         arguments:  [ "@service_container" ]
@@ -51,7 +31,8 @@ services:
     opg_digideps.report_service:
         class: AppBundle\Service\ReportService
         arguments:
-          - "@em"
+          - '@em'
+          - '@AppBundle\Entity\Repository\ReportRepository'
         public: true
 
     gedmo.listener.softdeleteable:
@@ -77,19 +58,13 @@ services:
         class: AppBundle\Service\DateTimeProvider
         public: true
 
-    AppBundle\Service\ReportStatusServiceFactory:
-        class: AppBundle\Service\ReportStatusServiceFactory
-
     AppBundle\DataFixtures\:
         resource: '../../src/AppBundle/DataFixtures'
         tags: ['doctrine.fixture.orm']
         arguments: ['@security.password_encoder', '@AppBundle\Service\OrgService']
 
-    AppBundle\Service\DataCompression:
-        class: AppBundle\Service\DataCompression
+    # Disable autowiring for these helper classes
+    AppBundle\Service\ReportStatusService: ~
+    AppBundle\Service\Stats\StatsQueryParameters: ~
 
-    AppBundle\Service\DataNormaliser:
-        class: AppBundle\Service\DataNormaliser
-
-    AppBundle\Service\Search\ClientSearchFilter:
-        class: AppBundle\Service\Search\ClientSearchFilter
+    Symfony\Component\Security\Core\Role\RoleHierarchyInterface: '@security.role_hierarchy'

@@ -8,70 +8,68 @@ use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Asset;
-use AppBundle\Entity\Ndr\Asset as NdrAsset;
 use AppBundle\Entity\Report\AssetProperty as ReportAssetProperty;
 use AppBundle\Entity\Report\AssetOther as ReportAssetOther;
 use AppBundle\Entity\Ndr\AssetProperty as NdrAssetProperty;
 use AppBundle\Entity\Ndr\AssetOther as NdrAssetOther;
-use AppBundle\Entity\Report\AssetProperty;
 use AppBundle\Entity\Report\BankAccount as BankAccountEntity;
 use AppBundle\Entity\Report\BankAccount as ReportBankAccount;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\ReportInterface;
+use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\Entity\User;
+use DateTime;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use RuntimeException;
 
 class ReportService
 {
-    /** @var EntityRepository */
+    /** @var ReportRepository */
     protected $reportRepository;
 
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     protected $_em;
 
     /**
-     * @var EntityRepository
+     * @var ObjectRepository
      */
     private $casRecRepository;
 
     /**
-     * @var EntityRepository
+     * @var ObjectRepository
      */
     private $assetRepository;
 
     /**
-     * @var EntityRepository
+     * @var ObjectRepository
      */
     private $bankAccountRepository;
 
     public function __construct(
-        EntityManager $em
+        EntityManagerInterface $em,
+        ReportRepository $reportRepository
     )
     {
-        $this->reportRepository = $em->getRepository(Report::class);
-        $this->casRecRepository = $em->getRepository(CasRec::class);
         $this->_em = $em;
+        $this->reportRepository = $reportRepository;
+        $this->casRecRepository = $em->getRepository(CasRec::class);
         $this->assetRepository = $em->getRepository(Asset::class);
         $this->bankAccountRepository = $em->getRepository(BankAccountEntity::class);
-    }
-
-    public function findById($id)
-    {
-        return $this->reportRepository->findOneBy(['id' => $id]);
     }
 
     /**
      * Set report type based on CasRec record (if existing)
      *
-     * @param Client $report
-     *
+     * @param Client $client
      * @return string|null type
+     * @throws Exception
      */
     public function getReportTypeBasedOnCasrec(Client $client)
     {
@@ -86,9 +84,10 @@ class ReportService
     /**
      * Create new year's report copying data over (and set start/endDate accordingly).
      *
-     * @param Report $oldReport
+     * @param ReportInterface $oldReport
      *
      * @return Report
+     * @throws Exception
      */
     private function createNextYearReport(ReportInterface $oldReport)
     {
@@ -102,11 +101,14 @@ class ReportService
             $startDate = clone $oldReport->getEndDate();
             $newReportType = $this->getReportTypeBasedOnCasrec($client) ?: $oldReport->getType();
             $startDate->modify('+1 day');
-        } else {
+        } elseif ($oldReport instanceof Ndr) {
             // when the previous report is NDR we need to work out the new reporting period
+            /** @var DateTime $startDate */
             $startDate = $oldReport->getClient()->getExpectedReportStartDate();
             // set default type as oldReport is ndr
             $newReportType = $this->getReportTypeBasedOnCasrec($client) ?: Report::TYPE_102;
+        } else {
+            throw new \RuntimeException('createNextYearReport() only supports Report and Ndr');
         }
 
         $endDate = clone $startDate;
@@ -134,7 +136,7 @@ class ReportService
      * @param Report $toReport
      * @param Ndr|Report $fromReport
      */
-    public function clonePersistentResources($toReport, $fromReport)
+    public function clonePersistentResources(Report $toReport, $fromReport)
     {
         // copy assets
         $toReport->setNoAssetToAdd($fromReport->getNoAssetToAdd());
@@ -145,8 +147,10 @@ class ReportService
             $assetExists = $this->checkAssetExists($toReport, $asset);
 
             if (!$assetExists) {
+                /** @var Asset $newAsset */
                 $newAsset = $this->cloneAsset($asset);
                 $newAsset->setReport($toReport);
+
                 $toReport->addAsset($newAsset);
                 $this->_em->detach($newAsset);
                 $this->_em->persist($newAsset);
@@ -169,7 +173,7 @@ class ReportService
 
     /**
      * @param ReportInterface $toReport
-     * @param $asset
+     * @param AssetInterface $asset
      * @return bool
      */
     private function checkAssetExists(ReportInterface $toReport, AssetInterface $asset)
@@ -178,13 +182,7 @@ class ReportService
 
         foreach ($toAssets as $toAsset) {
             if ($toAsset->getType() === $asset->getType()) {
-                if (($asset->getType() === 'property'
-                        && $toAsset->getAddress() === $asset->getAddress()
-                        && $toAsset->getAddress2() === $asset->getAddress2()
-                        && $toAsset->getPostcode() === $asset->getPostcode()
-                    ) || ($asset->getType() === 'other' &&
-                        $toAsset->getDescription() === $asset->getDescription())
-                ) {
+                if ($asset->isEqual($toAsset)) {
                     return true;
                 }
             }
@@ -239,11 +237,13 @@ class ReportService
             $newAsset->setRentAgreementEndDate($asset->getRentAgreementEndDate());
             $newAsset->setRentIncomeMonth($asset->getRentIncomeMonth());
 
-        } else {
+        } elseif ($asset instanceof NdrAssetOther || $asset instanceof ReportAssetOther) {
             $newAsset = new ReportAssetOther();
             $newAsset->setTitle($asset->getTitle());
             $newAsset->setDescription($asset->getDescription());
             $newAsset->setValuationDate($asset->getValuationDate());
+        } else {
+            throw new RuntimeException('Unrecognised AssetType');
         }
 
         $newAsset->setValue($asset->getValue());
@@ -267,7 +267,7 @@ class ReportService
         $newAccount->setAccountNumber($account->getAccountNumber());
         $newAccount->setOpeningBalance($account->getClosingBalance());
         $newAccount->setIsJointAccount($account->getIsJointAccount());
-        $newAccount->setCreatedAt(new \DateTime());
+        $newAccount->setCreatedAt(new DateTime());
 
         return $newAccount;
     }
@@ -277,29 +277,31 @@ class ReportService
      *
      * @param ReportInterface $currentReport
      * @param User $user
-     * @param \DateTime $submitDate
-     * @param null $ndrDocumentId
+     * @param DateTime $submitDate
+     * @param string|null $ndrDocumentId
      * @return Report
      *
      */
-    public function submit(ReportInterface $currentReport, User $user, \DateTime $submitDate, $ndrDocumentId = null)
+    public function submit(ReportInterface $currentReport, User $user, DateTime $submitDate, $ndrDocumentId = null)
     {
         if (!$currentReport->getAgreedBehalfDeputy()) {
             throw new \RuntimeException('Report must be agreed for submission');
         }
 
         // update report submit flag, who submitted and date
-        $currentReport
-            ->setSubmitted(true)
-            ->setSubmittedBy($user)
-            ->setSubmitDate($submitDate);
+        $currentReport->setSubmitted(true);
+        $currentReport->setSubmittedBy($user);
+        $currentReport->setSubmitDate($submitDate);
 
         // create submission record with NEW documents (= documents not yet attached to a submission)
         $submission = new ReportSubmission($currentReport, $user);
-        if ($currentReport instanceof Ndr && (null !== $ndrDocumentId)) {
+        if ($currentReport instanceof Ndr && ($ndrDocumentId !== null)) {
             $document = $this->_em->getRepository(Document::class)->find($ndrDocumentId);
-            $document->setReportSubmission($submission);
-        } else {
+
+            if ($document instanceof Document) {
+                $document->setReportSubmission($submission);
+            }
+        } elseif ($currentReport instanceof Report) {
             foreach ($currentReport->getDocuments() as $document) {
                 if (!$document->getReportSubmission()) {
                     $document->setReportSubmission($submission);
@@ -334,11 +336,11 @@ class ReportService
 
     /**
      * @param Report $report
-     * @param \DateTime $unsubmitDate
-     * @param \DateTime $dueDate
-     * @param $sectionList
+     * @param DateTime $unsubmitDate
+     * @param DateTime $dueDate
+     * @param mixed $sectionList
      */
-    public function unSubmit(Report $report, \DateTime $unsubmitDate, \DateTime $dueDate, \DateTime $startDate, \DateTime $endDate, $sectionList)
+    public function unSubmit(Report $report, DateTime $unsubmitDate, DateTime $dueDate, DateTime $startDate, DateTime $endDate, $sectionList)
     {
         // reset report.submitted so that the deputy will set the report back into the dashboard
         $report->setSubmitted(false);
@@ -358,11 +360,11 @@ class ReportService
      *
      * @param Report $currentReport
      * @param User $user
-     * @param \DateTime $submitDate
+     * @param DateTime $submitDate
      *
      * @return Report new year's report
      */
-    public function submitAdditionalDocuments(Report $currentReport, User $user, \DateTime $submitDate)
+    public function submitAdditionalDocuments(Report $currentReport, User $user, DateTime $submitDate)
     {
         // create submission record with NEW documents (= documents not yet attached to a submission)
         $submission = new ReportSubmission($currentReport, $user);
@@ -426,12 +428,12 @@ class ReportService
      * If the report is ready to submit, but is not yet due, return notFinished instead
      * In all the the cases, return original $status
      *
-     * @param $status
-     * @param \DateTime $endDate
+     * @param string $status
+     * @param DateTime $endDate
      *
      * @return string
      */
-    public function adjustReportStatus($status, \DateTime $endDate)
+    public function adjustReportStatus($status, DateTime $endDate)
     {
         if ($status == Report::STATUS_READY_TO_SUBMIT && !self::isDue($endDate)) {
             return Report::STATUS_NOT_FINISHED;
@@ -442,16 +444,16 @@ class ReportService
 
 
     /**
-     * @param \DateTime|null $endDate
+     * @param DateTime|null $endDate
      * @return bool
      */
-    public static function isDue(\DateTime $endDate = null)
+    public static function isDue(DateTime $endDate = null)
     {
         if (!$endDate) {
             return false;
         }
 
-        $endOfToday = new \DateTime('today midnight');
+        $endOfToday = new DateTime('today midnight');
 
         return $endDate <= $endOfToday;
     }

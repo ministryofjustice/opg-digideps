@@ -8,4 +8,9 @@ interface AssetInterface
 
     public function getValue();
 
+    /**
+     * @param AssetInterface $asset
+     * @return bool
+     */
+    public function isEqual(AssetInterface $asset);
 }

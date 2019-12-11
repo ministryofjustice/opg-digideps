@@ -15,7 +15,7 @@ use AppBundle\Entity\User;
 use AppBundle\Factory\NamedDeputyFactory;
 use AppBundle\Factory\OrganisationFactory;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Psr\Log\LoggerInterface;
@@ -26,7 +26,7 @@ class OrgService
     public const DEFAULT_ORG_NAME = 'Your Organisation';
 
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     protected $em;
 
@@ -103,8 +103,7 @@ class OrgService
     private $log;
 
     /**
-     * OrgService constructor.
-     * @param EntityManager $em
+     * @param EntityManagerInterface $em
      * @param LoggerInterface $logger
      * @param UserRepository $userRepository
      * @param ReportRepository $reportRepository
@@ -116,7 +115,7 @@ class OrgService
      * @param NamedDeputyFactory $namedDeputyFactory
      */
     public function __construct(
-        EntityManager $em,
+        EntityManagerInterface $em,
         LoggerInterface $logger,
         UserRepository $userRepository,
         ReportRepository $reportRepository,
@@ -222,7 +221,7 @@ class OrgService
     {
         $organisation = $this->orgFactory->createFromFullEmail($name, $email);
         $this->em->persist($organisation);
-        $this->em->flush($organisation);
+        $this->em->flush();
 
         return $organisation;
     }
@@ -288,7 +287,7 @@ class OrgService
 
         // Upsert Client information
         $client = $this->upsertClientDetailsFromCsv($client, $namedDeputy, $row);
-        
+
         $this->em->persist($client);
 
         $this->em->flush();

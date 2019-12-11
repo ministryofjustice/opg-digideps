@@ -6,11 +6,11 @@ use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
 use AppBundle\Model\SelfRegisterData;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 class UserRegistrationService
 {
-    /** @var EntityManager */
+    /** @var EntityManagerInterface */
     private $em;
 
     /**
@@ -18,7 +18,7 @@ class UserRegistrationService
      */
     private $casrecVerificationService;
 
-    public function __construct(EntityManager $em, CasrecVerificationService $casrecVerificationService)
+    public function __construct(EntityManagerInterface $em, CasrecVerificationService $casrecVerificationService)
     {
         $this->em = $em;
         $this->casrecVerificationService = $casrecVerificationService;

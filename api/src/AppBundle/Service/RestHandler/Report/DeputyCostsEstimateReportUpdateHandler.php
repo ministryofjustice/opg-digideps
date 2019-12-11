@@ -4,19 +4,18 @@ namespace AppBundle\Service\RestHandler\Report;
 
 use AppBundle\Entity\Report\ProfDeputyEstimateCost;
 use AppBundle\Entity\Report\Report;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInterface
 {
 
-    /** @var EntityManager */
+    /** @var EntityManagerInterface */
     private $em;
 
     /**
-     * @param EntityManager $em
+     * @param EntityManagerInterface $em
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
     }

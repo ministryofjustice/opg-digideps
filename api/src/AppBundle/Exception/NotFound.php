@@ -4,7 +4,7 @@ namespace AppBundle\Exception;
 
 class NotFound extends \RuntimeException
 {
-    public function __construct($message)
+    public function __construct(string $message='No further details')
     {
         parent::__construct('Record not found. Details:' . $message, 404);
     }

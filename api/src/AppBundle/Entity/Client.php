@@ -602,7 +602,7 @@ class Client implements ClientInterface
      *
      * @param \DateTime $endDate
      *
-     * @return Report
+     * @return Report|null
      */
     public function getReportByEndDate(\DateTime $endDate)
     {

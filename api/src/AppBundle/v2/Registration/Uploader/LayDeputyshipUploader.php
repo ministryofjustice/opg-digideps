@@ -9,11 +9,11 @@ use AppBundle\v2\Registration\DTO\LayDeputyshipDto;
 use AppBundle\v2\Registration\DTO\LayDeputyshipDtoCollection;
 use AppBundle\v2\Registration\SelfRegistration\Factory\CasRecCreationException;
 use AppBundle\v2\Registration\SelfRegistration\Factory\CasRecFactory;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 class LayDeputyshipUploader
 {
-    /** @var EntityManager */
+    /** @var EntityManagerInterface */
     protected $em;
 
     /** @var ReportRepository */
@@ -35,12 +35,12 @@ class LayDeputyshipUploader
     const FLUSH_EVERY = 5000;
 
     /**
-     * @param EntityManager $em
+     * @param EntityManagerInterface $em
      * @param ReportRepository $reportRepository
      * @param CasRecFactory $casRecFactory
      */
     public function __construct(
-        EntityManager $em,
+        EntityManagerInterface $em,
         ReportRepository $reportRepository,
         CasRecFactory $casRecFactory
     ) {
