@@ -17,7 +17,8 @@ Clone [opg-file-scanner-service](https://github.com/ministryofjustice/opg-file-s
 ### Reset the database
 
 ```sh
-docker-compose run --rm api sh scripts/resetdb.sh
+docker-compose run --rm api sh scripts/reset_db_structure.sh
+docker-compose run --rm api sh scripts/reset_db_fixtures.sh
 ```
 
 ## Traffic Flow Diagram
