@@ -73,7 +73,7 @@ resource "aws_route53_health_check" "availability-front" {
 
 resource "aws_cloudwatch_metric_alarm" "availability-front" {
   provider            = aws.us-east-1
-  alarm_name          = "availability-front"
+  alarm_name          = "${local.default_tags["application"]}-availability-front"
   statistic           = "Minimum"
   metric_name         = "HealthCheckStatus"
   comparison_operator = "LessThanThreshold"
@@ -103,7 +103,7 @@ resource "aws_route53_health_check" "availability-admin" {
 
 resource "aws_cloudwatch_metric_alarm" "availability-admin" {
   provider            = aws.us-east-1
-  alarm_name          = "availability-admin"
+  alarm_name          = "${local.default_tags["application"]}-availability-admin"
   statistic           = "Minimum"
   metric_name         = "HealthCheckStatus"
   comparison_operator = "LessThanThreshold"
