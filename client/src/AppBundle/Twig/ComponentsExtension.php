@@ -5,9 +5,10 @@ namespace AppBundle\Twig;
 use AppBundle\Entity\User;
 use AppBundle\Service\ReportSectionsLinkService;
 use Symfony\Component\Translation\TranslatorInterface;
+use Twig\Extension\AbstractExtension;
 use Twig_Environment;
 
-class ComponentsExtension extends \Twig_Extension
+class ComponentsExtension extends AbstractExtension
 {
     /**
      * @var TranslatorInterface

@@ -3,7 +3,7 @@
 namespace AppBundle\Service\Mailer;
 
 use AppBundle\Model\Email;
-use Predis\Client as PredisClient;
+use Predis\ClientInterface as PredisClientInterface;
 use Swift_Attachment;
 use Swift_Mailer;
 use Swift_Message;
@@ -22,7 +22,7 @@ class MailSenderMock implements MailSenderInterface
     private $mailers = [];
 
     /**
-     * @var PredisClient
+     * @var PredisClientInterface
      */
     private $redis;
 
@@ -33,9 +33,9 @@ class MailSenderMock implements MailSenderInterface
 
     /**
      * @param ValidatorInterface $validator
-     * @param \AppBundle\Mailer\MailerService $apiClient
+     * @param PredisClientInterface $redis
      */
-    public function __construct(ValidatorInterface $validator, PredisClient $redis)
+    public function __construct(ValidatorInterface $validator, PredisClientInterface $redis)
     {
         $this->mailers = [];
         $this->validator = $validator;

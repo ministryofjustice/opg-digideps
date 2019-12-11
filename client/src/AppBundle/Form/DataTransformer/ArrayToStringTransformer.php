@@ -8,7 +8,7 @@ class ArrayToStringTransformer implements DataTransformerInterface
 {
     private $keys;
 
-    public function __construct(array $keys)
+    public function __construct(array $keys = [])
     {
         $this->keys = $keys;
     }

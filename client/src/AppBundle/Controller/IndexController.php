@@ -3,24 +3,58 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Form as FormDir;
+use AppBundle\Service\DeputyProvider;
+use AppBundle\Service\Redirector;
 use AppBundle\Service\StringUtils;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class IndexController extends AbstractController
 {
     /**
+     * @var DeputyProvider
+     */
+    private $deputyProvider;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(DeputyProvider $deputyProvider, EventDispatcherInterface $eventDispatcher, TokenStorageInterface $tokenStorage, TranslatorInterface $translator)
+    {
+        $this->deputyProvider = $deputyProvider;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->tokenStorage = $tokenStorage;
+        $this->translator = $translator;
+    }
+
+    /**
      * @Route("/", name="homepage")
      */
-    public function indexAction()
+    public function indexAction(Redirector $redirector)
     {
-        if ($url = $this->get('redirector_service')->getHomepageRedirect()) {
+        if ($url = $redirector->getHomepageRedirect()) {
             return $this->redirect($url);
         }
 
@@ -53,9 +87,9 @@ class IndexController extends AbstractController
             } catch (\Throwable $e) {
                 $error = $e->getMessage();
 
-                if ($e->getCode() == 423) {
+                if ($e->getCode() == 423 && method_exists($e, 'getData')) {
                     $lockedFor = ceil(($e->getData()['data'] - time()) / 60);
-                    $error = $this->get('translator')->trans('bruteForceLocked', ['%minutes%' => $lockedFor], 'signin');
+                    $error = $this->translator->trans('bruteForceLocked', ['%minutes%' => $lockedFor], 'signin');
                 }
 
                 if ($e->getCode() == 499) {
@@ -71,6 +105,7 @@ class IndexController extends AbstractController
         }
 
         // different page version for timeout and manual logout
+        /** @var SessionInterface */
         $session = $request->getSession();
 
         if ($session->get('loggedOutFrom') === 'logoutPage') {
@@ -80,7 +115,7 @@ class IndexController extends AbstractController
                 ] + $vars);
         } elseif ($session->get('loggedOutFrom') === 'timeout' || $request->query->get('from') === 'api') {
             $session->set('loggedOutFrom', null); //avoid display the message at next page reload
-            $vars['error'] = $this->get('translator')->trans('sessionTimeoutOutWarning', [
+            $vars['error'] = $this->translator->trans('sessionTimeoutOutWarning', [
                 '%time%' => StringUtils::secondsToHoursMinutes($this->container->getParameter('session_expire_seconds')),
             ], 'signin');
         }
@@ -125,11 +160,12 @@ class IndexController extends AbstractController
      */
     private function logUserIn($credentials, Request $request, array $sessionVars)
     {
-        $user = $this->get('deputy_provider')->login($credentials);
+        $user = $this->deputyProvider->login($credentials);
         // manually set session token into security context (manual login)
         $token = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
-        $this->get('security.token_storage')->setToken($token);
+        $this->tokenStorage->setToken($token);
 
+        /** @var SessionInterface */
         $session = $request->getSession();
         $session->set('_security_secured_area', serialize($token));
         foreach ($sessionVars as $k=>$v) {
@@ -140,7 +176,7 @@ class IndexController extends AbstractController
         $session->migrate();
 
         $event = new InteractiveLoginEvent($request, $token);
-        $this->get('event_dispatcher')->dispatch('security.interactive_login', $event);
+        $this->eventDispatcher->dispatch('security.interactive_login', $event);
 
         $session->set('lastLoggedIn', $user->getLastLoggedIn());
     }
@@ -170,7 +206,9 @@ class IndexController extends AbstractController
      */
     public function sessionKeepAliveAction(Request $request)
     {
-        $request->getSession()->set('refreshedAt', time());
+        /** @var SessionInterface */
+        $session = $request->getSession();
+        $session->set('refreshedAt', time());
 
         return new Response('session refreshed successfully');
     }
@@ -208,8 +246,12 @@ class IndexController extends AbstractController
      */
     public function logoutAction(Request $request)
     {
-        $this->get('security.token_storage')->setToken(null);
-        $request->getSession()->invalidate();
+        $this->tokenStorage->setToken(null);
+
+        /** @var SessionInterface */
+        $session = $request->getSession();
+        $session->invalidate();
+
         return $this->redirect(
             $this->generateUrl('homepage')
         );
@@ -238,7 +280,7 @@ class IndexController extends AbstractController
             ];
             setcookie(
                 'cookie_policy',
-                json_encode($settings),
+                strval(json_encode($settings)),
                 time() + (60 * 60 * 24 * 365),
                 '',
                 '',

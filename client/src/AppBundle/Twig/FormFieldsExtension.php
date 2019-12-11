@@ -2,12 +2,12 @@
 
 namespace AppBundle\Twig;
 
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Translation\TranslatorInterface;
+use Twig\Extension\AbstractExtension;
 use Twig_Environment;
 
-class FormFieldsExtension extends \Twig_Extension
+class FormFieldsExtension extends AbstractExtension
 {
     /**
      * @var TranslatorInterface
