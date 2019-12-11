@@ -1,8 +1,3 @@
-resource "aws_sns_topic" "alert" {
-  name         = "${local.environment}-${terraform.workspace}-alert"
-  display_name = "${local.default_tags["application"]} ${local.environment} Alert"
-}
-
 resource "aws_cloudwatch_log_metric_filter" "php_errors" {
   name           = "CriticalPHPErrorFilter.${local.environment}"
   pattern        = "CRITICAL"
@@ -53,27 +48,25 @@ resource "aws_cloudwatch_metric_alarm" "nginx_errors" {
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
 }
 
-resource "aws_sns_topic" "availability-alert" {
-  provider     = aws.us-east-1
-  name         = "${local.environment}-${terraform.workspace}-alert"
-  display_name = "${local.default_tags["application"]} ${local.environment} Alert"
+data "aws_sns_topic" "availability-alert" {
+  provider = aws.us-east-1
+  name     = "availability-alert"
 }
 
 resource "aws_route53_health_check" "availability-front" {
-  fqdn                  = aws_route53_record.front.fqdn
-  resource_path         = "/manage/availability"
-  port                  = 443
-  type                  = "HTTPS"
-  failure_threshold     = 1
-  request_interval      = 30
-  measure_latency       = true
-  cloudwatch_alarm_name = "availability-front-healthcheck"
-  tags                  = merge(local.default_tags, { Name = "availability-front" }, )
+  fqdn              = aws_route53_record.front.fqdn
+  resource_path     = "/manage/availability"
+  port              = 443
+  type              = "HTTPS"
+  failure_threshold = 1
+  request_interval  = 30
+  measure_latency   = true
+  tags              = merge(local.default_tags, { Name = "availability-front" }, )
 }
 
 resource "aws_cloudwatch_metric_alarm" "availability-front" {
   provider            = aws.us-east-1
-  alarm_name          = "${local.default_tags["application"]}-availability-front"
+  alarm_name          = "${local.environment}-availability-front"
   statistic           = "Minimum"
   metric_name         = "HealthCheckStatus"
   comparison_operator = "LessThanThreshold"
@@ -82,7 +75,7 @@ resource "aws_cloudwatch_metric_alarm" "availability-front" {
   period              = 3600
   evaluation_periods  = 1
   namespace           = "AWS/Route53"
-  alarm_actions       = [aws_sns_topic.availability-alert.arn]
+  alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
 
   dimensions = {
     HealthCheckId = aws_route53_health_check.availability-front.id
@@ -90,20 +83,19 @@ resource "aws_cloudwatch_metric_alarm" "availability-front" {
 }
 
 resource "aws_route53_health_check" "availability-admin" {
-  fqdn                  = aws_route53_record.admin.fqdn
-  resource_path         = "/manage/availability"
-  port                  = 443
-  type                  = "HTTPS"
-  failure_threshold     = 1
-  request_interval      = 30
-  measure_latency       = true
-  cloudwatch_alarm_name = "availability-admin-healthcheck"
-  tags                  = merge(local.default_tags, { Name = "availability-admin" }, )
+  fqdn              = aws_route53_record.admin.fqdn
+  resource_path     = "/manage/availability"
+  port              = 443
+  type              = "HTTPS"
+  failure_threshold = 1
+  request_interval  = 30
+  measure_latency   = true
+  tags              = merge(local.default_tags, { Name = "availability-admin" }, )
 }
 
 resource "aws_cloudwatch_metric_alarm" "availability-admin" {
   provider            = aws.us-east-1
-  alarm_name          = "${local.default_tags["application"]}-availability-admin"
+  alarm_name          = "${local.environment}-availability-admin"
   statistic           = "Minimum"
   metric_name         = "HealthCheckStatus"
   comparison_operator = "LessThanThreshold"
@@ -112,7 +104,7 @@ resource "aws_cloudwatch_metric_alarm" "availability-admin" {
   period              = 3600
   evaluation_periods  = 1
   namespace           = "AWS/Route53"
-  alarm_actions       = [aws_sns_topic.availability-alert.arn]
+  alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
 
   dimensions = {
     HealthCheckId = aws_route53_health_check.availability-admin.id
