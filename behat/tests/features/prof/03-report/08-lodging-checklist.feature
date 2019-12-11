@@ -34,7 +34,7 @@ Feature: Admin report checklist
     And the following fields should have the corresponding values:
       | report_checklist_futureSignificantDecisions_0 | yes     |
       | report_checklist_hasDeputyRaisedConcerns_0             | yes     |
-    When I click on "submit-and-continue"
+    When I click on "submit-and-continue" in the "lodging-checklist" region
     Then the following fields should have an error:
       | report_checklist_deputyFullNameAccurateInCasrec        |
       | report_checklist_reportingPeriodAccurate_0             |
@@ -171,7 +171,7 @@ Feature: Admin report checklist
       | report_checklist_caseWorkerSatisified_0                | yes                |
       | report_checklist_finalDecision_0                       | for-review         |
       | report_checklist_lodgingSummary                        | I am not satisfied |
-    Then I click on "submit-and-continue"
+    Then I click on "submit-and-continue" in the "lodging-checklist" region
     And the form should be valid
 
 

@@ -1,6 +1,14 @@
-{% extends 'AppBundle:Admin/Client/Report/Formatted:base_formatted_standalone.html.twig' %}
-
-{% block formatted_body %}
-    {% include 'AppBundle:Admin/Client/Report/Formatted:checklist_formatted_body.html.twig' %}
-{% endblock %}
-
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <title>OPG Report</title>
+        <style media="screen, print">
+            {{ 'stylesheets/formatted-report.css' | assetSource | raw }}
+            {{ 'stylesheets/fonts.css' | assetSource | raw }}
+        </style>
+    </head>
+    <body>
+        {% include 'AppBundle:Admin/Client/Report/Formatted:checklist_formatted_body.html.twig' %}
+    </body>
+</html>

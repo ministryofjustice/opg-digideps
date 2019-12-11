@@ -27,8 +27,8 @@ checklistPage:
         spendingAndDebt: R3. Review spending and debt
         referral: R4. Onward referral
         finalDecision: Final decision
-        version: Version
-        date: Date saved
+        dateFirstSubmitted: Date of first submission
+        dateLastModified: Date last modified
         reviewedBy: Reviewed by
   furtherInfo:
     infoProvided: Information provided
@@ -74,8 +74,6 @@ checklistPage:
   form:
     save:
       label: Save progress
-    submit:
-      label: Submit checklist
     submitAndContinue:
       label: Submit checklist and continue
     saveFurtherInformation:

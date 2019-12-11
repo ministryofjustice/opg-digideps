@@ -282,10 +282,7 @@ class ReportController extends AbstractController
             }
 
             if ($button->getName() === ReviewChecklistType::SUBMIT_ACTION) {
-                return $this->redirect($this->generateUrl('admin_report_checklist_submitted', [
-                    'id'=>$report->getId(),
-                    'type' => 'review'
-                ]));
+                return $this->redirect($this->generateUrl('admin_report_checklist_submitted', ['id'=>$report->getId()]));
             } else {
                 $this->addFlash('notice', 'Review checklist saved');
                 return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#anchor-fullReview-checklist');
@@ -322,10 +319,7 @@ class ReportController extends AbstractController
                 );
             } else {
                 if ($buttonClicked->getName() == 'submitAndContinue') {
-                    return $this->redirect($this->generateUrl('admin_report_checklist_submitted', [
-                        'id'=>$report->getId(),
-                        'type' => 'lodging'
-                    ]));
+                    return $this->redirect($this->generateUrl('admin_report_checklist_submitted', ['id'=>$report->getId()]));
                 } else {
                     return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#');
                 }
@@ -352,19 +346,15 @@ class ReportController extends AbstractController
     /**
      * @Route("checklist-submitted", name="admin_report_checklist_submitted")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_CASE_MANAGER')")
-     * @param Request $request
-     * @param string $id
+     * @param int $id
      *
      * @return array
      * @Template("AppBundle:Admin/Client/Report:checklistSubmitted.html.twig")
      *
      */
-    public function checklistSubmittedAction(Request $request, $id)
+    public function checklistSubmittedAction(int $id)
     {
-        return [
-            'report' => $this->getReport(intval($id)),
-            'checklistType' => $request->get('type', 'lodging')
-        ];
+        return ['report' => $this->getReport(intval($id))];
     }
 
     /**
@@ -373,26 +363,16 @@ class ReportController extends AbstractController
      * @Route("checklist.pdf", name="admin_checklist_pdf")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_CASE_MANAGER')")
      *
-     * @param string $id
+     * @param int $id
      * @return Response
      */
-    public function checklistPDFViewAction(Request $request, $id)
+    public function checklistPDFViewAction(int $id)
     {
         $report = $this->getReport(intval($id), array_merge(self::$reportGroupsAll, ['report-checklist', 'checklist-information', 'user']));
 
         /** @var ReportSubmissionService $reportSubmissionService */
         $reportSubmissionService = $this->get('AppBundle\Service\ReportSubmissionService');
-
-        $checklistType = $request->get('type', 'lodging');
-
-        if ($checklistType === 'review') {
-            $pdfBinary = $reportSubmissionService->getReviewChecklistPdfBinaryContent($report);
-            $attachmentNameFormat = 'DigiReviewChecklist-%s_%s_%s.pdf';
-        } else {
-            $pdfBinary = $reportSubmissionService->getChecklistPdfBinaryContent($report);
-            $attachmentNameFormat = 'DigiChecklist-%s_%s_%s.pdf';
-        }
-
+        $pdfBinary = $reportSubmissionService->getChecklistPdfBinaryContent($report);
         $response = new Response($pdfBinary);
         $response->headers->set('Content-Type', 'application/pdf');
 
@@ -400,7 +380,7 @@ class ReportController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $attachmentName = sprintf($attachmentNameFormat,
+        $attachmentName = sprintf('DigiChecklist-%s_%s_%s.pdf',
             $report->getEndDate()->format('Y'),
             $report->getSubmitDate() instanceof \DateTime ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
             $report->getClient()->getCaseNumber()
