@@ -76,6 +76,8 @@ class IndexController extends AbstractController
     {
         $availableRoles = [
             EntityDir\User::ROLE_LAY_DEPUTY => 'Lay Deputy',
+            EntityDir\User::ROLE_PA_NAMED => 'Public Authority Named Deputy',
+            EntityDir\User::ROLE_PROF_NAMED => 'Professional Named Deputy',
             EntityDir\User::ROLE_AD         => 'Assisted Digital',
             EntityDir\User::ROLE_PROF_NAMED => 'Professional (Named)',
             EntityDir\User::ROLE_PA_NAMED => 'PA (Named)',
@@ -132,8 +134,15 @@ class IndexController extends AbstractController
         $filter = $request->get('filter');
 
         try {
-            /* @var $user EntityDir\User */
-            $user = $this->getRestClient()->get("v2/deputy/{$filter}", 'User');
+            /* @var EntityDir\User $user */
+            $user = $this->getRestClient()->get("user/{$filter}", "User", ["user-rolename"]);
+
+            /** @var array $groups */
+            $groups = ($user->isDeputyOrg()) ? ["user", "user-organisations"] : ["user", "user-clients", "client", "client-reports"];
+
+            /* @var EntityDir\User $user */
+            $user = $this->getRestClient()->get("user/{$filter}", "User", $groups);
+
         } catch (\Throwable $e) {
             return $this->render('AppBundle:Admin/Index:error.html.twig', [
                 'error' => 'User not found',
@@ -147,19 +156,6 @@ class IndexController extends AbstractController
         }
 
         $form = $this->createForm(FormDir\Admin\AddUserType::class, $user);
-
-        $clients = $user->getClients();
-        $ndr = null;
-        $ndrForm = null;
-        if (count($clients)) {
-            $ndr = $clients[0]->getNdr();
-            if ($ndr) {
-                $ndrForm = $this->createForm(FormDir\NdrType::class, $ndr, [
-                    'action' => $this->generateUrl('admin_editNdr', ['id' => $ndr->getId()]),
-                ]);
-            }
-        }
-
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -194,12 +190,15 @@ class IndexController extends AbstractController
             'action'        => 'edit',
             'id'            => $user->getId(),
             'user'          => $user,
-            'clientsCount'  => count($clients),
             'deputyBaseUrl' => $this->container->getParameter('non_admin_host'),
         ];
 
-        if ($ndr && $ndrForm) {
-            $view['ndrForm'] = $ndrForm->createView();
+        if ($user->isDeputyOrg()) {
+            if ($user->getOrganisations() && $user->getOrganisations()[0] instanceof EntityDir\Organisation) {
+                $view['organisationId'] = $user->getOrganisations()[0]->getId();
+            }
+        } else {
+            $view['clientsCount'] = count($user->getClients());
         }
 
         return $view;
@@ -447,8 +446,12 @@ class IndexController extends AbstractController
                         'Dep Adrs1',
                         'Dep Adrs2',
                         'Dep Adrs3',
+                        'Dep Adrs4',
+                        'Dep Adrs5',
                         'Dep Postcode',
                         'Email', //mandatory, used as user ID whem uploading
+                        'Email2',
+                        'Email3',
                         'Case', //case number, used as ID when uploading
                         'Forename', 'Surname', //client forename and surname
                         'Corref',
@@ -463,6 +466,10 @@ class IndexController extends AbstractController
                         'Client Phone',
                         'Client Email',
                         'Client Date of Birth',
+                        'Phone Main',
+                        'Phone Alternative',
+                        'Fee Payer',
+                        'Corres'
                     ])
                     ->setUnexpectedColumns([
                         'NDR'

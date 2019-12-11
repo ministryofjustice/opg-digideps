@@ -8,9 +8,9 @@ Feature: PA dashboard
     When I click on "paginator-page-2"
     Then I should see the "client" region exactly 3 times
     # check search
-    When I fill in "search" with "01000010"
+    When I fill in "search" with "02100010"
     And I press "search_submit"
-    Then I should see the "client-01000010" region
+    Then I should see the "client-02100010" region
     And I should see the "client" region exactly 1 times
     # check tabs
     When I click on "tab-ready"

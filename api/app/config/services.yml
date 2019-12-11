@@ -32,7 +32,9 @@ services:
             $clientRepository: '@AppBundle\Entity\Repository\ClientRepository'
             $orgRepository: '@AppBundle\Entity\Repository\OrganisationRepository'
             $teamRepository: '@AppBundle\Entity\Repository\TeamRepository'
+            $namedDeputyRepository: '@AppBundle\Entity\Repository\NamedDeputyRepository'
             $orgFactory: '@AppBundle\Factory\OrganisationFactory'
+            $namedDeputyFactory: '@AppBundle\Factory\NamedDeputyFactory'
 
     AppBundle\Service\UserService:
         class: AppBundle\Service\UserService
@@ -81,7 +83,7 @@ services:
     AppBundle\DataFixtures\:
         resource: '../../src/AppBundle/DataFixtures'
         tags: ['doctrine.fixture.orm']
-        arguments: ['@security.password_encoder']
+        arguments: ['@security.password_encoder', '@AppBundle\Service\OrgService']
 
     AppBundle\Service\DataCompression:
         class: AppBundle\Service\DataCompression

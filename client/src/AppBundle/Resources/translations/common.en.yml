@@ -49,6 +49,7 @@ address: Address
 phone: Phone
 alternativePhone: Alternative phone
 email: Email
+alternativeEmail: Alternative email
 dueDate: Due
 section: Section
 in: In
@@ -81,6 +82,8 @@ date: Date
 lastSaved: Last saved
 lastSubmitted: Last submitted
 dischargedOn: Discharged on
+namedDeputy: Named deputy
+mainPhone: Main phone
 amount: Amount
 totalAmount: Total amount
 firstNames: First names

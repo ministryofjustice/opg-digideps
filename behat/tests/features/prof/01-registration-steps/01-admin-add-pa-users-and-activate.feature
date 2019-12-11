@@ -1,10 +1,9 @@
 Feature: Add PROF users and activate PROF user (journey)
 
-  @prof
-  Scenario: add PROF users
+  Scenario: Activate Prof user
     Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-      # upload PROF users
+       # upload PROF users
     When I click on "admin-upload-pa"
     When I attach the file "behat-prof.csv" to "admin_upload_file"
     And I press "admin_upload_upload"
@@ -47,7 +46,7 @@ Feature: Add PROF users and activate PROF user (journey)
     Then the form should be valid
     And the URL should match "/org"
     # check I'm in the dashboard
-    And I should see the "client-01000010" region
+    And I should see the "client-31000010" region
 
   Scenario: Activation link is removed
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
@@ -77,7 +76,7 @@ Feature: Add PROF users and activate PROF user (journey)
     And I press "user_details_save"
     Then the form should be valid
     # check I'm in the dashboard
-    And I should see the "client-02000001" region
+    And I should see the "client-32000001" region
 
   Scenario: Register PROF3 user
     Given emails are sent from "admin" area
@@ -103,12 +102,14 @@ Feature: Add PROF users and activate PROF user (journey)
     And I press "user_details_save"
     Then the form should be valid
     # check I'm in the dashboard
-    And I should see the "client-03000001" region
+    And I should see the "client-33000001" region
 
   Scenario: Register PROF4 user
     Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "send-activation-email" in the "user-behat-prof-org-1org-1couk" region
+    And I create a new "NDR-disabled" "Prof Named" user "ABC org" "Administrator" with email "behat-prof-org-1@org-1.co.uk" and postcode "SW1"
+    And "behat-prof-org-1@org-1.co.uk" has been added to the "org-1.co.uk" organisation
+    And I add the client with case number "03000025" to be deputised by email "behat-prof-org-1@org-1.co.uk"
     And I go to "/logout"
     And I open the "/user/activate/" link from the email
     When I check "agree_terms_agreeTermsUse"
@@ -129,6 +130,8 @@ Feature: Add PROF users and activate PROF user (journey)
   Scenario: Register PROF5 user
     Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I create a new "NDR-disabled" "Prof Named" user "ABC org" "Administrator" with email "behat-prof-org-2@org-1.co.uk" and postcode "SW1"
+    And I add the client with case number "03000026" to be deputised by email "behat-prof-org-2@org-1.co.uk"
     And I click on "send-activation-email" in the "user-behat-prof-org-2org-1couk" region
     And I go to "/logout"
     And I open the "/user/activate/" link from the email
@@ -150,6 +153,9 @@ Feature: Add PROF users and activate PROF user (journey)
   Scenario: Register PROF6 user
     Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I create a new "NDR-disabled" "Prof Named" user "ABC org" "Administrator" with email "behat-prof-org-3@org-2.co.uk" and postcode "SW1"
+    And I add the client with case number "03000027" to be deputised by email "behat-prof-org-3@org-2.co.uk"
+    And I add the client with case number "03000028" to be deputised by email "behat-prof-org-3@org-2.co.uk"
     And I click on "send-activation-email" in the "user-behat-prof-org-3org-2couk" region
     And I go to "/logout"
     And I open the "/user/activate/" link from the email
@@ -190,7 +196,7 @@ Feature: Add PROF users and activate PROF user (journey)
     When I go to "/logout"
     # try logging in with the new email
     And I am logged in as "behat-prof2-edited@publicguardian.gov.uk" with password "Abcd1234"
-    Then I should see the "client-02000001" region
+    Then I should see the "client-32000001" region
 
   Scenario: Edit PROF2 user email to an existing email
     Given I load the application status from "prof-users-uploaded"
