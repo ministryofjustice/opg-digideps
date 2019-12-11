@@ -65,7 +65,7 @@ resource "aws_route53_health_check" "availability-front" {
   port                  = 443
   type                  = "HTTPS"
   failure_threshold     = 1
-  request_interval      = 30
+  request_interval      = 20
   measure_latency       = true
   cloudwatch_alarm_name = "availability-front-healthcheck"
   tags                  = merge(local.default_tags, { Name = "availability-front" }, )
@@ -77,10 +77,10 @@ resource "aws_cloudwatch_metric_alarm" "availability-front" {
   statistic           = "Minimum"
   metric_name         = "HealthCheckStatus"
   comparison_operator = "LessThanThreshold"
-  threshold           = 1
-  period              = 300
   datapoints_to_alarm = 1
-  evaluation_periods  = 288
+  threshold           = 1
+  period              = 3600
+  evaluation_periods  = 1
   namespace           = "AWS/Route53"
   alarm_actions       = [aws_sns_topic.availability-alert.arn]
 
@@ -95,7 +95,7 @@ resource "aws_route53_health_check" "availability-admin" {
   port                  = 443
   type                  = "HTTPS"
   failure_threshold     = 1
-  request_interval      = 30
+  request_interval      = 20
   measure_latency       = true
   cloudwatch_alarm_name = "availability-admin-healthcheck"
   tags                  = merge(local.default_tags, { Name = "availability-admin" }, )
@@ -107,10 +107,10 @@ resource "aws_cloudwatch_metric_alarm" "availability-admin" {
   statistic           = "Minimum"
   metric_name         = "HealthCheckStatus"
   comparison_operator = "LessThanThreshold"
-  threshold           = 1
-  period              = 300
   datapoints_to_alarm = 1
-  evaluation_periods  = 288
+  threshold           = 1
+  period              = 3600
+  evaluation_periods  = 1
   namespace           = "AWS/Route53"
   alarm_actions       = [aws_sns_topic.availability-alert.arn]
 
