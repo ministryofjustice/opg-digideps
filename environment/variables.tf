@@ -54,7 +54,7 @@ locals {
   ], formatlist("%s/32", data.aws_nat_gateway.nat[*].public_ip))
 
   route53_healthchecker_ips = [
-    "15.177.0.0/16",
+    "15.177.0.0/18",
   ]
 
   environment     = lower(terraform.workspace)
