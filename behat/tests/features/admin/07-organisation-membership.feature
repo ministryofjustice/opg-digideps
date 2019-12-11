@@ -57,6 +57,9 @@ Feature: Organisation membership
     When I fill in "organisation_add_user_email" with "main.contact@erz.example"
     And I press "Find user"
     Then I should see "User is already in this organisation"
+    When I fill in "organisation_add_user_email" with "Main.Contact@erz.example"
+    And I press "Find user"
+    Then I should see "User is already in this organisation"
 
   @admin
   Scenario: Public domains: Admin cannot add users from different domains
