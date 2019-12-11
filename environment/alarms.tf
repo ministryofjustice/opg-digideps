@@ -65,7 +65,7 @@ resource "aws_route53_health_check" "availability-front" {
   port                  = 443
   type                  = "HTTPS"
   failure_threshold     = 1
-  request_interval      = 20
+  request_interval      = 30
   measure_latency       = true
   cloudwatch_alarm_name = "availability-front-healthcheck"
   tags                  = merge(local.default_tags, { Name = "availability-front" }, )
@@ -95,7 +95,7 @@ resource "aws_route53_health_check" "availability-admin" {
   port                  = 443
   type                  = "HTTPS"
   failure_threshold     = 1
-  request_interval      = 20
+  request_interval      = 30
   measure_latency       = true
   cloudwatch_alarm_name = "availability-admin-healthcheck"
   tags                  = merge(local.default_tags, { Name = "availability-admin" }, )
