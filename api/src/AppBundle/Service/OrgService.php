@@ -263,9 +263,9 @@ class OrgService
             throw new \RuntimeException('Case number already used');
         }
 
-        if ($client && $this->clientHasNewOrganisation($client)) {
+        if ($client && $this->clientHasSwitchedOrganisation($client)) {
             $csvDeputyNo = EntityDir\User::padDeputyNumber($row['Deputy No']);
-            if ($client->getNamedDeputy()->getDeputyNo() !== $csvDeputyNo) {
+            if ($client->getNamedDeputy() instanceof EntityDir\NamedDeputy && $client->getNamedDeputy()->getDeputyNo() !== $csvDeputyNo) {
                 // discharge client and recreate new one
                 $this->dischargeClient($client);
                 unset($client);
@@ -537,11 +537,15 @@ class OrgService
      * @param EntityDir\Client $client
      * @return bool
      */
-    private function clientHasNewOrganisation(EntityDir\Client $client)
+    private function clientHasSwitchedOrganisation(EntityDir\Client $client)
     {
-        if ($client->getOrganisation()->getId() !== $this->currentOrganisation->getId()) {
+        if (
+            $client->getOrganisation() instanceof Organisation
+            && $client->getOrganisation()->getId() !== $this->currentOrganisation->getId()
+        ) {
             return true;
         }
+
         return false;
     }
 
