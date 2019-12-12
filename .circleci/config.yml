@@ -13,15 +13,8 @@ workflows:
           filters: { branches: { ignore: [ master ] } }
 
       - apply:
-          name: apply shared-development
-          requires: [ build pr, lint terraform ]
-          filters: { branches: { only: [ master ] } }
-          tf_tier: shared
-          tf_workspace: development
-
-      - apply:
           name: apply environment
-          requires: [ apply shared-development ]
+          requires: [ build pr, lint terraform ]
           filters: { branches: { ignore: [ master ] } }
 
       - run-task:
@@ -81,6 +74,13 @@ workflows:
       - build:
           name: build master
           filters: { branches: { only: [ master ] } }
+
+      - apply:
+          name: apply shared-development
+          requires: [ build master ]
+          filters: { branches: { only: [ master ] } }
+          tf_tier: shared
+          tf_workspace: development
 
       - apply:
           name: apply shared-preproduction
