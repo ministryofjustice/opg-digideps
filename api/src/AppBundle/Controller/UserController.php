@@ -187,7 +187,7 @@ class UserController extends RestController
     {
         if ($what == 'email') {
             /** @var User|null $user */
-            $user = $this->userRepository->findOneBy(['email' => $filter]);
+            $user = $this->userRepository->findOneBy(['email' => strtolower($filter)]);
             if (!$user) {
                 throw new \RuntimeException('User not found', 404);
             }
