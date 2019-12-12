@@ -96,5 +96,23 @@ resource "aws_security_group_rule" "admin_whitelist" {
   from_port         = 443
   to_port           = 443
   security_group_id = module.admin_elb_security_group.id
-  cidr_blocks       = concat(local.admin_whitelist, local.route53_healthchecker_ips)
+  cidr_blocks       = local.admin_whitelist
+}
+
+//No room for rules left in admin_elb_security_group
+module "admin_elb_security_group_route53_hc" {
+  source = "./security_group"
+  rules  = local.admin_elb_sg_rules
+  name   = "admin-alb-route53-hc"
+  tags   = local.default_tags
+  vpc_id = data.aws_vpc.vpc.id
+}
+
+resource "aws_security_group_rule" "admin_elb_route53_hc_in" {
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 443
+  to_port           = 443
+  security_group_id = module.admin_elb_security_group_route53_hc.id
+  cidr_blocks       = local.route53_healthchecker_ips
 }

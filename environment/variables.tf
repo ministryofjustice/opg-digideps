@@ -27,6 +27,10 @@ variable "accounts" {
   )
 }
 
+data "aws_ip_ranges" "route53_healthchecks_ips" {
+  services = ["route53_healthchecks"]
+}
+
 locals {
   default_whitelist = concat([
     "157.203.176.138/32",
@@ -53,9 +57,7 @@ locals {
     "94.30.9.148/32",
   ], formatlist("%s/32", data.aws_nat_gateway.nat[*].public_ip))
 
-  route53_healthchecker_ips = [
-    "15.177.0.0/18",
-  ]
+  route53_healthchecker_ips = data.aws_ip_ranges.route53_healthchecks_ips.cidr_blocks
 
   environment     = lower(terraform.workspace)
   account         = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]

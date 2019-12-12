@@ -4,7 +4,7 @@ resource "aws_lb" "front" {
   load_balancer_type = "application"
   subnets            = data.aws_subnet.public.*.id
 
-  security_groups = [module.front_elb_security_group.id]
+  security_groups = [module.front_elb_security_group.id, module.front_elb_security_group_route53_hc.id]
 
   tags = merge(local.default_tags, { "Name" = "front-${local.environment}" }, )
 }
