@@ -84,7 +84,8 @@ dd-redis-reset()
 # reset db
 dd-db-reset()
 {
-    dd-exec api sh scripts/resetdb.sh
+    dd-exec api sh scripts/reset_db_structure.sh
+    dd-exec api sh scripts/reset_db_fixtures.sh
     echo "Db completely recreated with default users"
 }
 
