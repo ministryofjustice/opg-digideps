@@ -115,3 +115,21 @@ resource "aws_security_group_rule" "front_elb_https_in" {
   security_group_id = module.front_elb_security_group.id
   cidr_blocks       = local.front_whitelist
 }
+
+//No room for rules left in front_elb_security_group
+module "front_elb_security_group_route53_hc" {
+  source = "./security_group"
+  rules  = local.front_elb_sg_rules
+  name   = "front-alb"
+  tags   = local.default_tags
+  vpc_id = data.aws_vpc.vpc.id
+}
+
+resource "aws_security_group_rule" "front_elb_route53_hc_in" {
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 443
+  to_port           = 443
+  security_group_id = module.front_elb_security_group_route53_hc.id
+  cidr_blocks       = local.route53_healthchecker_ips
+}

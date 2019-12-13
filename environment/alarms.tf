@@ -47,3 +47,66 @@ resource "aws_cloudwatch_metric_alarm" "nginx_errors" {
   namespace           = aws_cloudwatch_log_metric_filter.nginx_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
 }
+
+data "aws_sns_topic" "availability-alert" {
+  provider = aws.us-east-1
+  name     = "availability-alert"
+}
+
+resource "aws_route53_health_check" "availability-front" {
+  fqdn              = aws_route53_record.front.fqdn
+  resource_path     = "/manage/availability"
+  port              = 443
+  type              = "HTTPS"
+  failure_threshold = 1
+  request_interval  = 30
+  measure_latency   = true
+  tags              = merge(local.default_tags, { Name = "availability-front" }, )
+}
+
+resource "aws_cloudwatch_metric_alarm" "availability-front" {
+  provider            = aws.us-east-1
+  alarm_name          = "${local.environment}-availability-front"
+  statistic           = "Minimum"
+  metric_name         = "HealthCheckStatus"
+  comparison_operator = "LessThanThreshold"
+  datapoints_to_alarm = 1
+  threshold           = 1
+  period              = 3600
+  evaluation_periods  = 1
+  namespace           = "AWS/Route53"
+  alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
+
+  dimensions = {
+    HealthCheckId = aws_route53_health_check.availability-front.id
+  }
+}
+
+resource "aws_route53_health_check" "availability-admin" {
+  fqdn              = aws_route53_record.admin.fqdn
+  resource_path     = "/manage/availability"
+  port              = 443
+  type              = "HTTPS"
+  failure_threshold = 1
+  request_interval  = 30
+  measure_latency   = true
+  tags              = merge(local.default_tags, { Name = "availability-admin" }, )
+}
+
+resource "aws_cloudwatch_metric_alarm" "availability-admin" {
+  provider            = aws.us-east-1
+  alarm_name          = "${local.environment}-availability-admin"
+  statistic           = "Minimum"
+  metric_name         = "HealthCheckStatus"
+  comparison_operator = "LessThanThreshold"
+  datapoints_to_alarm = 1
+  threshold           = 1
+  period              = 3600
+  evaluation_periods  = 1
+  namespace           = "AWS/Route53"
+  alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
+
+  dimensions = {
+    HealthCheckId = aws_route53_health_check.availability-admin.id
+  }
+}
