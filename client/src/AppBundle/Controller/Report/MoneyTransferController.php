@@ -242,6 +242,10 @@ class MoneyTransferController extends AbstractController
 
         $transfer = $report->getMoneyTransferWithId($transferId);
 
+        if (is_null($transfer)) {
+            throw $this->createNotFoundException('Transfer not found');
+        }
+
         return [
             'translationDomain' => 'report-money-transfer',
             'report' => $report,
