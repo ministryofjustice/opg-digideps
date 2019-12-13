@@ -5,10 +5,12 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\SubmitButton;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class MoneyTransferController extends AbstractController
 {
@@ -24,7 +26,7 @@ class MoneyTransferController extends AbstractController
      *
      * @param int $reportId
      *
-     * @return array
+     * @return array|Response|RedirectResponse
      */
     public function startAction($reportId)
     {
@@ -130,14 +132,16 @@ class MoneyTransferController extends AbstractController
         $form = $this->createForm(FormDir\Report\MoneyTransferType::class, $transfer, ['step' => $step, 'banks' => $report->getBankAccounts()]);
         $form->handleRequest($request);
 
-        if ($form->get('save')->isClicked() && $form->isValid()) {
+        /** @var SubmitButton $submitBtn */
+        $submitBtn = $form->get('save');
+        if ($submitBtn->isClicked() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
             if ($step == 1) {
                 $stepUrlData['from-id'] = $transfer->getAccountFromId();
                 $stepUrlData['to-id'] = $transfer->getAccountToId();
             } elseif ($step == $totalSteps) {
                 if ($transferId) { // edit
-                    $request->getSession()->getFlashBag()->add(
+                    $this->addFlash(
                         'notice',
                         'Entry edited'
                     );
@@ -200,7 +204,7 @@ class MoneyTransferController extends AbstractController
      *
      * @param int $reportId
      *
-     * @return array
+     * @return array|RedirectResponse
      */
     public function summaryAction($reportId)
     {
@@ -218,9 +222,10 @@ class MoneyTransferController extends AbstractController
      * @Route("/report/{reportId}/money-transfers/{transferId}/delete", name="money_transfers_delete")
      * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
-     * @param int $id
+     * @param int $reportId
+     * @param int $transferId
      *
-     * @return RedirectResponse
+     * @return array|RedirectResponse
      */
     public function deleteAction(Request $request, $reportId, $transferId)
     {
@@ -232,7 +237,7 @@ class MoneyTransferController extends AbstractController
         if ($form->isValid()) {
             $this->getRestClient()->delete("/report/{$reportId}/money-transfers/{$transferId}");
 
-            $request->getSession()->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'Money transfer deleted'
             );
