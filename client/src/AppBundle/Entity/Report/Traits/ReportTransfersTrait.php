@@ -33,7 +33,7 @@ trait ReportTransfersTrait
     }
 
     /**
-     * @return MoneyTransfer
+     * @return MoneyTransfer|null
      */
     public function getMoneyTransferWithId($id)
     {
@@ -43,7 +43,7 @@ trait ReportTransfersTrait
             }
         }
 
-        return;
+        return null;
     }
 
 

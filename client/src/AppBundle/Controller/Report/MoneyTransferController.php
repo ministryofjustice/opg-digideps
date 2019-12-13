@@ -111,6 +111,11 @@ class MoneyTransferController extends AbstractController
         // create (add mode) or load transaction (edit mode)
         if ($transferId) {
             $transfer = $report->getMoneyTransferWithId($transferId);
+
+            if (is_null($transfer)) {
+                throw $this->createNotFoundException('Transfer not found');
+            }
+
             $transfer->setAccountFromId($transfer->getAccountFrom()->getId());
             $transfer->setAccountToId($transfer->getAccountTo()->getId());
         } else {
