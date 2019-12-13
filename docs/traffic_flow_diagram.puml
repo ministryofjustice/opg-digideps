@@ -78,6 +78,7 @@
 
             rectangle {
                 InternetAlt1(internet, "Internet",)
+                InternetAlt1(r53_healthcheck, "Route53 Healthchecks",)
                 InternetAlt2(db_local_clamav_net, "db.local.clamav.net",)
                 InternetAlt2(registry_docker_io, "registry-1.docker.io",)
                 SimpleEmailServiceSES(ses, "email-smtp.eu-west-1.amazonaws.com",)
@@ -124,6 +125,7 @@
     }
 
     internet -[#orange]-|> igw
+    r53_healthcheck -[#blue]-|> igw
     igw -[#blue]down-|> admin_lb
     igw -[#orange]down-|> front_lb
     igw -[#red]up-|> db_local_clamav_net

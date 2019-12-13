@@ -68,3 +68,13 @@ provider "aws" {
     session_name = "terraform-session"
   }
 }
+
+provider "aws" {
+  region = "us-east-1"
+  alias  = "us-east-1"
+
+  assume_role {
+    role_arn     = "arn:aws:iam::${local.account["account_id"]}:role/${var.DEFAULT_ROLE}"
+    session_name = "terraform-session"
+  }
+}
