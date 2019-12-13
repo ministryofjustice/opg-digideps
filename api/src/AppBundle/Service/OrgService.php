@@ -265,7 +265,10 @@ class OrgService
 
         if ($client && $this->clientHasSwitchedOrganisation($client)) {
             // todo this is a temporary exception for debugging.
-            throw new \RuntimeException(sprintf('Case %s has switched organisation', $client->getCaseNumber()));
+//            if (null === $client->getNamedDeputy()) {
+//                throw new \RuntimeException(sprintf('Case %s has switched organisation', $client->getCaseNumber()));
+//            }
+
             $csvDeputyNo = EntityDir\User::padDeputyNumber($row['Deputy No']);
             if ($client->getNamedDeputy() instanceof EntityDir\NamedDeputy && $client->getNamedDeputy()->getDeputyNo() !== $csvDeputyNo) {
                 // discharge client and recreate new one
