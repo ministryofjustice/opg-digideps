@@ -265,12 +265,15 @@ class OrgService
 
         if ($client && $this->clientHasSwitchedOrganisation($client)) {
             $csvDeputyNo = EntityDir\User::padDeputyNumber($row['Deputy No']);
-            if ($client->getNamedDeputy() instanceof EntityDir\NamedDeputy && $client->getNamedDeputy()->getDeputyNo() !== $csvDeputyNo) {
+
+            if (is_null($client->getNamedDeputy())) {
+                throw new \RuntimeException('Can\'t determine if deputy has moved with client to new org');
+            } else if ($client->getNamedDeputy()->getDeputyNo() === $csvDeputyNo) {
+                $client->setOrganisation(null);
+            } else {
                 // discharge client and recreate new one
                 $this->dischargeClient($client);
                 unset($client);
-            } else {
-                $client->setOrganisation(null);
             }
         }
 
