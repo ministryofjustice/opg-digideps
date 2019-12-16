@@ -58,15 +58,13 @@ class S3Storage implements StorageInterface
      * header('Content-Disposition: attachment; filename="' . $_GET['filename'] .'"');
      * readfile(<this method>);
      *
-     *
-     * @param $bucketName
      * @param $key
      *
      * @throws FileNotFoundException is the file is not found
      *
      * @return string file content
      */
-    public function retrieve($key)
+    public function retrieve(string $key)
     {
         // If a file is deleted in S3 it will return an AccessDenied error until its permanently deleted
         $missingFileAWSErrorCodes = ['NoSuchKey', 'AccessDenied'];

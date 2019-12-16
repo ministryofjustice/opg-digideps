@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
+use Throwable;
 
 /**
  * @Route("/admin")
@@ -102,7 +103,7 @@ class ReportSubmissionController extends AbstractController
             try {
                 [$retrievedDocuments, $missingDocuments] = $this->documentDownloader->retrieveDocumentsFromS3ByReportSubmissionIds($request, $reportSubmissionIds);
                 $downloadLocation = $this->documentDownloader->zipDownloadedDocuments($retrievedDocuments);
-            } catch(\Throwable $e) {
+            } catch(Throwable $e) {
                 $this->addFlash('error', 'There was an error downloading the requested documents: ' . $e->getMessage());
                 return $this->redirectToRoute('admin_documents_download_ready');
             }
@@ -135,7 +136,12 @@ class ReportSubmissionController extends AbstractController
         /** @var EntityDir\Report\Document $document */
         $document = $documents[0];
 
-        $contents = $this->s3Storage->retrieve($document->getStorageReference());
+        try {
+            $contents = $this->s3Storage->retrieve($document->getStorageReference());
+        } catch (Throwable $e) {
+            $filename = $document->getFileName();
+            throw $this->createNotFoundException("Document '${$filename}' could not be retrieved");
+        }
 
         $response = new Response($contents);
         $response->headers->set('Content-Type', 'application/octet-stream');
@@ -198,7 +204,7 @@ class ReportSubmissionController extends AbstractController
 
                         $fileName = $this->documentDownloader->zipDownloadedDocuments($retrievedDocuments);
                         return $this->documentDownloader->generateDownloadResponse($fileName);
-                    } catch (\Throwable $e) {
+                    } catch (Throwable $e) {
                         $this->addFlash('error', 'There was an error downloading the requested documents: ' . $e->getMessage());
                         return $this->redirectToRoute('admin_documents');
                     }
