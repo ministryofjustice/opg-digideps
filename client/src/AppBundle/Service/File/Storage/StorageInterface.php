@@ -4,7 +4,7 @@ namespace AppBundle\Service\File\Storage;
 
 interface StorageInterface
 {
-    public function retrieve($key);
+    public function retrieve(string $key);
 
     public function delete($key);
 
