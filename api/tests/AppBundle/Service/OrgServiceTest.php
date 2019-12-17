@@ -557,6 +557,7 @@ class OrgServiceTest extends WebTestCase
         $namedDeputy = $this->prophesize(EntityDir\NamedDeputy::class)->reveal();
 
         $namedDeputyRepository = $this->prophesize(NamedDeputyRepository::class);
+
         $namedDeputyRepository->findOneBy([
             'deputyNo' => '00000001',
             'email1' => 'dep1@provider.com',
@@ -565,8 +566,14 @@ class OrgServiceTest extends WebTestCase
             'address1' => 'ADD1',
             'addressPostcode' => 'N1 ABC',
         ])->shouldBeCalled()->willReturn($namedDeputy);
-
-        $row = self::$deputy1 + self::$client1;
+        $namedDeputyRepository->findOneBy([
+            'deputyNo' => '00000002',
+            'email1' => 'dep2@provider.com',
+            'firstname' => 'Dep2',
+            'lastname' => 'Uty2',
+            'address1' => null,
+            'addressPostcode' => null,
+        ])->shouldBeCalled()->willReturn(null);
 
         $sut = new OrgService(
             self::$em,
@@ -581,7 +588,8 @@ class OrgServiceTest extends WebTestCase
             new NamedDeputyFactory()
         );
 
-        $this->assertEquals($namedDeputy, $sut->identifyNamedDeputy($row));
+        $this->assertEquals($namedDeputy, $sut->identifyNamedDeputy(self::$deputy1 + self::$client1));
+        $this->assertEquals(null, $sut->identifyNamedDeputy(self::$deputy2 + self::$client2));
     }
 
     public function tearDown(): void
