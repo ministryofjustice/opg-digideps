@@ -552,6 +552,38 @@ class OrgServiceTest extends WebTestCase
         $sut->addFromCasrecRows([$row]);
     }
 
+    public function testIdentifiesDeputiesByNameEmailAddress()
+    {
+        $namedDeputy = $this->prophesize(EntityDir\NamedDeputy::class)->reveal();
+
+        $namedDeputyRepository = $this->prophesize(NamedDeputyRepository::class);
+        $namedDeputyRepository->findOneBy([
+            'deputyNo' => '00000001',
+            'email1' => 'dep1@provider.com',
+            'firstname' => 'Dep1',
+            'lastname' => 'Uty2',
+            'address1' => 'ADD1',
+            'addressPostcode' => 'N1 ABC',
+        ])->shouldBeCalled()->willReturn($namedDeputy);
+
+        $row = self::$deputy1 + self::$client1;
+
+        $sut = new OrgService(
+            self::$em,
+            $this->logger,
+            $this->userRepository,
+            $this->reportRepository,
+            $this->clientRepository,
+            $this->organisationRepository,
+            $this->teamRepository,
+            $namedDeputyRepository->reveal(),
+            new OrganisationFactory([]),
+            new NamedDeputyFactory()
+        );
+
+        $this->assertEquals($namedDeputy, $sut->identifyNamedDeputy($row));
+    }
+
     public function tearDown(): void
     {
         m::close();
