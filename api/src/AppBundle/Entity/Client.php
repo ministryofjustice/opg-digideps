@@ -846,7 +846,7 @@ class Client implements ClientInterface
     }
 
     /**
-     * @return NamedDeputy
+     * @return NamedDeputy|null
      */
     public function getNamedDeputy()
     {
