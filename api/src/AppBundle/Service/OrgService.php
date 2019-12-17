@@ -501,6 +501,8 @@ class OrgService
             'email1' => strtolower($csvRow['Email']),
             'firstname' => $csvRow['Dep Forename'],
             'lastname' => $csvRow['Dep Surname'],
+            'address1' => $csvRow['Dep Adrs1'],
+            'addressPostcode' => $csvRow['Dep Postcode'],
         ]);
 
         return $namedDeputy;
