@@ -10,12 +10,32 @@ Feature: Report submit
         Then the URL should match "/report/\d+/review"
         And I click on "declaration-page"
         Then the URL should match "/report/\d+/declaration"
+        And I save the application status into "report-submit-pre"
+
+    @deputy
+    Scenario: Can see and edit deputy information
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
+        And I click on "report-start, report-submit, declaration-page"
+        Then the URL should match "/report/\d+/declaration"
+        And each text should be present in the corresponding region:
+            | John 102-Client                            | client-contact |
+            | Victoria Road                              | client-contact |
+            | 022222222222222                            | client-contact |
+            | LAY Deputy 102 User                        | deputy-contact |
+            | 07911111111111                             | deputy-contact |
+            | behat-lay-deputy-102@publicguardian.gov.uk | deputy-contact |
+            | Victoria Road                              | deputy-contact |
+            | SW1                                        | deputy-contact |
+        When I click on "edit-deputy-contact"
+        And I fill in "profile_address3" with "SW5 8DO"
+        And I press "Save"
+        Then the URL should match "/report/\d+/declaration"
+        And I should see "SW5 8DO" in the "deputy-contact" region
 
     @deputy
     Scenario: report submission
         Given emails are sent from "deputy" area
         And I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
-        And I save the application status into "report-submit-pre"
         And I click on "report-start"
         And I save the report as "102 report"
         # assert I cannot access the submitted page directly
