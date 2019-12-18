@@ -165,9 +165,16 @@
 
             {{ form_end(form) }}
         </div>
-        <div class="govuk-grid-column-one-third opg-sticky-menu">
-            {% include 'AppBundle:Admin/Client/Report/sidebar:_lodging.html.twig' %}
-        </div>
+        {% if checklist.submittedOn and checklist.finalDecision == 'for-review' %}
+            <div class="govuk-grid-column-one-third opg-sticky-menu">
+                {% include 'AppBundle:Admin/Client/Report/sidebar:_fullReview.html.twig' %}
+            </div>
+        {% else %}
+            <div class="govuk-grid-column-one-third opg-sticky-menu">
+                {% include 'AppBundle:Admin/Client/Report/sidebar:_lodging.html.twig' %}
+            </div>
+        {% endif %}
+
     </div>
 
     {% if checklist.submittedOn and checklist.finalDecision == 'for-review' %}
