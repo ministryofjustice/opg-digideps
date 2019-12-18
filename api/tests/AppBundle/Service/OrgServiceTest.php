@@ -62,8 +62,9 @@ class OrgServiceTest extends WebTestCase
         'Dep Surname'  => 'Uty2',
         'Dep Type'     => 'SETME',
         'Email'        => 'dep2@provider.com',
+        'Dep Adrs1'    => '',
+        'Dep Postcode' => '',
     ];
-
 
     public static $deputy3 = [
         'Deputy No'    => '00000003',
@@ -71,6 +72,8 @@ class OrgServiceTest extends WebTestCase
         'Dep Surname'  => 'Uty3',
         'Dep Type'     => 'SETME',
         'Email'        => 'dep3@provider.com',
+        'Dep Adrs1'    => '',
+        'Dep Postcode' => '',
     ];
 
     public static $client1 = [
