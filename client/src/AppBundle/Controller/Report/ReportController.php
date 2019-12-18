@@ -561,8 +561,8 @@ class ReportController extends AbstractController
     private function getAssociatedContactDetails(DeputyInterface $deputy, Report $report)
     {
         return [
-            $this->getClientContactDetails($deputy, $report),
-            $this->getDeputyContactDetails($deputy, $report)
+            'client' => $this->getClientContactDetails($deputy, $report),
+            'deputy' => $this->getDeputyContactDetails($deputy, $report),
         ];
     }
 

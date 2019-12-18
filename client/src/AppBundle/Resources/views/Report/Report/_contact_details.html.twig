@@ -18,8 +18,8 @@
             </tr>
         </thead>
         <tbody class="govuk-table__body">
-            {% for detail in contactDetails %}
-                <tr class="govuk-table__row">
+            {% for type, detail in contactDetails %}
+                <tr class="govuk-table__row behat-region-{{ type }}-contact">
                     <td class="govuk-table__cell">
                         {{ detail.name }}
                     </td>
@@ -36,7 +36,7 @@
                     {% if not hideEditLink %}
                         <td class="govuk-table__cell">
                             {% if detail.editUrl %}
-                                <a href="{{ detail.editUrl }}" class="govuk-link behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
+                                <a href="{{ detail.editUrl }}" class="govuk-link behat-link-edit-{{ type }}-contact">{{ 'edit' | trans({}, 'common') }}</a>
                             {% endif %}
                         </td>
                     {% endif %}
