@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation as JMS;
  * Named Deputy.
  *
  */
-class NamedDeputy
+class NamedDeputy implements DeputyInterface
 {
 
     /**

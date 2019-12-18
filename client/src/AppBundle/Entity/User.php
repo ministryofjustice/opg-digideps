@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @codeCoverageIgnore
  */
-class User implements AdvancedUserInterface
+class User implements AdvancedUserInterface, DeputyInterface
 {
     use LoginInfoTrait;
 
