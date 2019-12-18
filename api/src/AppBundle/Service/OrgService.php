@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Client;
+use AppBundle\Entity\NamedDeputy;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Repository\ClientRepository;
 use AppBundle\Entity\Repository\OrganisationRepository;
@@ -14,7 +15,6 @@ use AppBundle\Entity\Repository\NamedDeputyRepository;
 use AppBundle\Entity\User;
 use AppBundle\Factory\NamedDeputyFactory;
 use AppBundle\Factory\OrganisationFactory;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -245,13 +245,13 @@ class OrgService
 
     /**
      * @param array $row keys: Case, caseNumber, Forename, Surname, Client Adrs1...
-     * @param User $userOrgNamed the user the client should belong to
+     * @param NamedDeputy $namedDeputy the named deputy the client is assigned to
      *
-     * @return Client
+     * @return Client|null
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    private function upsertClientFromCsv(array $row, EntityDir\NamedDeputy $namedDeputy)
+    private function upsertClientFromCsv(array $row, NamedDeputy $namedDeputy)
     {
         // find or create client
         $caseNumber = Client::padCaseNumber(strtolower($row['Case']));
@@ -277,7 +277,7 @@ class OrgService
             }
         }
 
-        if ($client) {
+        if (isset($client)) {
             $this->log('FOUND client in database with id: ' . $client->getId());
             //$client->setUsers(new ArrayCollection());
         } else {
@@ -302,7 +302,7 @@ class OrgService
      * Applies any updated information in the csv to new and existing clients
      *
      * @param EntityDir\Client $client
-     * @param $row
+     * @param array $row
      * @return EntityDir\Client
      */
     private function upsertClientDetailsFromCsv(EntityDir\Client $client, EntityDir\NamedDeputy $namedDeputy, $row)
@@ -489,25 +489,28 @@ class OrgService
     }
 
     /**
-     * @param $csvRow
-     * @return EntityDir\NamedDeputy|null|object
+     * @param array $csvRow
+     * @return NamedDeputy|null
      */
     public function identifyNamedDeputy($csvRow)
     {
         $deputyNo = EntityDir\User::padDeputyNumber($csvRow['Deputy No']);
 
+        /** @var NamedDeputy|null $namedDeputy */
         $namedDeputy = $this->namedDeputyRepository->findOneBy([
             'deputyNo' => $deputyNo,
             'email1' => strtolower($csvRow['Email']),
             'firstname' => $csvRow['Dep Forename'],
             'lastname' => $csvRow['Dep Surname'],
+            'address1' => $csvRow['Dep Adrs1'],
+            'addressPostcode' => $csvRow['Dep Postcode'],
         ]);
 
         return $namedDeputy;
     }
 
     /**
-     * @param $csvRow
+     * @param array $csvRow
      * @return EntityDir\NamedDeputy
      */
     public function createNamedDeputy($csvRow)
@@ -516,7 +519,7 @@ class OrgService
 
         $namedDeputy = $this->namedDeputyFactory->createFromOrgCsv($csvRow);
         $this->em->persist($namedDeputy);
-        $this->em->flush($namedDeputy);
+        $this->em->flush();
 
         $this->added['named_deputies'][] = $deputyNo;
 
@@ -544,6 +547,7 @@ class OrgService
     {
         if (
             $client->getOrganisation() instanceof Organisation
+            && $this->currentOrganisation instanceof Organisation
             && $client->getOrganisation()->getId() !== $this->currentOrganisation->getId()
         ) {
             return true;

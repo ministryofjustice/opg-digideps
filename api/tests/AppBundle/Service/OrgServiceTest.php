@@ -13,10 +13,12 @@ use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\Repository\NamedDeputyRepository;
 use AppBundle\Factory\OrganisationFactory;
 use AppBundle\Service\OrgService;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Mockery as m;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -62,8 +64,9 @@ class OrgServiceTest extends WebTestCase
         'Dep Surname'  => 'Uty2',
         'Dep Type'     => 'SETME',
         'Email'        => 'dep2@provider.com',
+        'Dep Adrs1'    => '',
+        'Dep Postcode' => '',
     ];
-
 
     public static $deputy3 = [
         'Deputy No'    => '00000003',
@@ -71,6 +74,8 @@ class OrgServiceTest extends WebTestCase
         'Dep Surname'  => 'Uty3',
         'Dep Type'     => 'SETME',
         'Email'        => 'dep3@provider.com',
+        'Dep Adrs1'    => '',
+        'Dep Postcode' => '',
     ];
 
     public static $client1 = [
@@ -123,7 +128,7 @@ class OrgServiceTest extends WebTestCase
     private $pa = null;
 
     /**
-     * @var m\Mock
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -161,19 +166,25 @@ class OrgServiceTest extends WebTestCase
         self::$frameworkBundleClient = static::createClient(['environment' => 'test',
                                                              'debug'       => false,]);
 
-        self::$em = self::$frameworkBundleClient->getContainer()->get('em');
+        /** @var ContainerInterface $container */
+        $container = self::$frameworkBundleClient->getContainer();
+        self::$em = $container->get('em');
         self::$fixtures = new Fixtures(self::$em);
     }
 
     public function setUp(): void
     {
-        $this->logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();
-        $this->userRepository = self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\UserRepository');
-        $this->reportRepository = self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\ReportRepository');
-        $this->clientRepository =self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\ClientRepository');
-        $this->organisationRepository = self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\OrganisationRepository');
-        $this->teamRepository = self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\TeamRepository');
-        $this->namedDeputyRepository = self::$frameworkBundleClient->getContainer()->get('AppBundle\Entity\Repository\NamedDeputyRepository');
+        /** @var ContainerInterface $container */
+        $container = self::$frameworkBundleClient->getContainer();
+
+        $this->logger = m::mock(LoggerInterface::class);
+        $this->logger->shouldIgnoreMissing();
+        $this->userRepository = $container->get('AppBundle\Entity\Repository\UserRepository');
+        $this->reportRepository = $container->get('AppBundle\Entity\Repository\ReportRepository');
+        $this->clientRepository = $container->get('AppBundle\Entity\Repository\ClientRepository');
+        $this->organisationRepository = $container->get('AppBundle\Entity\Repository\OrganisationRepository');
+        $this->teamRepository = $container->get('AppBundle\Entity\Repository\TeamRepository');
+        $this->namedDeputyRepository = $container->get('AppBundle\Entity\Repository\NamedDeputyRepository');
 
         $this->pa = new OrgService(self::$em,
             $this->logger,
@@ -261,6 +272,7 @@ class OrgServiceTest extends WebTestCase
         $this->assertEquals('a3', $client1->getCounty());
         $this->assertEquals('ap', $client1->getPostcode());
         $this->assertEquals('client@provider.com', $client1->getEmail());
+        $this->assertInstanceOf(DateTime::class, $client1->getDateOfBirth());
         $this->assertEquals('1947-01-05', $client1->getDateOfBirth()->format('Y-m-d'));
         $this->assertCount(1, $client1->getReports());
         $client1Report1 = $client1->getReports()->first();
@@ -403,6 +415,7 @@ class OrgServiceTest extends WebTestCase
         $this->assertEquals('a3', $client1->getCounty());
         $this->assertEquals('ap', $client1->getPostcode());
         $this->assertEquals('client@provider.com', $client1->getEmail());
+        $this->assertInstanceOf(DateTime::class, $client1->getDateOfBirth());
         $this->assertEquals('1947-01-05', $client1->getDateOfBirth()->format('Y-m-d'));
         $this->assertCount(1, $client1->getReports());
         $client1Report1 = $client1->getReports()->first();
@@ -524,17 +537,20 @@ class OrgServiceTest extends WebTestCase
             'Name' => 'Test Org'
         ];
 
-        /** @var OrganisationFactory|ObjectProphecy $orgFactory */
+        /** @var OrganisationFactory&ObjectProphecy $orgFactory */
         $orgFactory = self::prophesize(OrganisationFactory::class);
         $orgFactory->createFromFullEmail('Your Organisation', Argument::any())
             ->shouldBeCalled()
             ->willReturn(new Organisation());
 
+        /** @var NamedDeputyFactory&ObjectProphecy $namedDeputyFactory */
         $namedDeputyFactory = self::prophesize(NamedDeputyFactory::class);
 
-        /** @var OrganisationRepository|ObjectProphecy $orgRespository */
+        /** @var OrganisationRepository&ObjectProphecy $orgRespository */
         $orgRespository = self::prophesize(OrganisationRepository::class);
         $orgRespository->findByEmailIdentifier(Argument::any())->willReturn(null);
+
+        /** @var NamedDeputyRepository&ObjectProphecy $namedDeputyRepository */
         $namedDeputyRepository = self::prophesize(NamedDeputyRepository::class);
 
         $sut = new OrgService(self::$em,
@@ -550,6 +566,47 @@ class OrgServiceTest extends WebTestCase
         );
 
         $sut->addFromCasrecRows([$row]);
+    }
+
+    public function testIdentifiesDeputiesByNameEmailAddress()
+    {
+        $namedDeputy = new EntityDir\NamedDeputy();
+
+        /** @var NamedDeputyRepository&ObjectProphecy $namedDeputyRepository */
+        $namedDeputyRepository = $this->prophesize(NamedDeputyRepository::class);
+
+        $namedDeputyRepository->findOneBy([
+            'deputyNo' => '00000001',
+            'email1' => 'dep1@provider.com',
+            'firstname' => 'Dep1',
+            'lastname' => 'Uty2',
+            'address1' => 'ADD1',
+            'addressPostcode' => 'N1 ABC',
+        ])->shouldBeCalled()->willReturn($namedDeputy);
+        $namedDeputyRepository->findOneBy([
+            'deputyNo' => '00000002',
+            'email1' => 'dep2@provider.com',
+            'firstname' => 'Dep2',
+            'lastname' => 'Uty2',
+            'address1' => null,
+            'addressPostcode' => null,
+        ])->shouldBeCalled()->willReturn(null);
+
+        $sut = new OrgService(
+            self::$em,
+            $this->logger,
+            $this->userRepository,
+            $this->reportRepository,
+            $this->clientRepository,
+            $this->organisationRepository,
+            $this->teamRepository,
+            $namedDeputyRepository->reveal(),
+            new OrganisationFactory([]),
+            new NamedDeputyFactory()
+        );
+
+        $this->assertEquals($namedDeputy, $sut->identifyNamedDeputy(self::$deputy1 + self::$client1));
+        $this->assertEquals(null, $sut->identifyNamedDeputy(self::$deputy2 + self::$client2));
     }
 
     public function tearDown(): void
