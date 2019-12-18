@@ -196,5 +196,5 @@ Feature: Admin report checklist
     When I open the "2016" checklist for client "102"
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
-      | Admin User, OPG Admin | lodging-last-saved-by     |
-      | Admin User, OPG Admin | lodging-last-submitted-by |
+      | Admin User, OPG Admin | fullReview-last-saved-by     |
+      | Admin User, OPG Admin | fullReview-last-submitted-by |
