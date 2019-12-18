@@ -181,7 +181,7 @@ class OrgServiceTest extends WebTestCase
         $this->logger->shouldIgnoreMissing();
         $this->userRepository = $container->get('AppBundle\Entity\Repository\UserRepository');
         $this->reportRepository = $container->get('AppBundle\Entity\Repository\ReportRepository');
-        $this->clientRepository =$container->get('AppBundle\Entity\Repository\ClientRepository');
+        $this->clientRepository = $container->get('AppBundle\Entity\Repository\ClientRepository');
         $this->organisationRepository = $container->get('AppBundle\Entity\Repository\OrganisationRepository');
         $this->teamRepository = $container->get('AppBundle\Entity\Repository\TeamRepository');
         $this->namedDeputyRepository = $container->get('AppBundle\Entity\Repository\NamedDeputyRepository');
