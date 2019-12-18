@@ -35,7 +35,9 @@
                     </td>
                     {% if not hideEditLink %}
                         <td class="govuk-table__cell">
-                            <a href="{{ detail.editUrl }}" class="govuk-link behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
+                            {% if detail.editUrl %}
+                                <a href="{{ detail.editUrl }}" class="govuk-link behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
+                            {% endif %}
                         </td>
                     {% endif %}
                 </tr>
