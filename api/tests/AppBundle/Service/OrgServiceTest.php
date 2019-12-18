@@ -570,8 +570,7 @@ class OrgServiceTest extends WebTestCase
 
     public function testIdentifiesDeputiesByNameEmailAddress()
     {
-        /** @var EntityDir\NamedDeputy&ObjectProphecy $namedDeputy */
-        $namedDeputy = $this->prophesize(EntityDir\NamedDeputy::class)->reveal();
+        $namedDeputy = new EntityDir\NamedDeputy();
 
         /** @var NamedDeputyRepository&ObjectProphecy $namedDeputyRepository */
         $namedDeputyRepository = $this->prophesize(NamedDeputyRepository::class);
