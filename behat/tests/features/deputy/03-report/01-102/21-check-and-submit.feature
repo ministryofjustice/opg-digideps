@@ -16,8 +16,7 @@ Feature: Report submit
     Scenario: Can see and edit deputy information
         Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-start, report-submit, declaration-page"
-        Then the URL should match "/report/\d+/declaration"
-        And each text should be present in the corresponding region:
+        Then each text should be present in the corresponding region:
             | John 102-Client                            | client-contact |
             | Victoria Road                              | client-contact |
             | 022222222222222                            | client-contact |
