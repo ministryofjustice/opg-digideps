@@ -283,13 +283,18 @@ class OrgService
         } else {
             $this->log('Creating client');
             $client = new EntityDir\Client();
+            $client = $this->upsertClientDetailsFromCsv($client, $namedDeputy, $row);
+
             $caseNumber = EntityDir\Client::padCaseNumber(strtolower($row['Case']));
             $this->added['clients'][] = $caseNumber;
-
         }
 
-        // Upsert Client information
-        $client = $this->upsertClientDetailsFromCsv($client, $namedDeputy, $row);
+        $this->log('Setting named deputy on client to deputy id:' . $namedDeputy->getId());
+        $client->setNamedDeputy($namedDeputy);
+
+        if (null !== $this->currentOrganisation) {
+            $this->attachClientToOrganisation($client);
+        }
 
         $this->em->persist($client);
 
@@ -343,13 +348,6 @@ class OrgService
 
         if (!empty($row['Client Date of Birth'])) {
             $client->setDateOfBirth(ReportUtils::parseCsvDate($row['Client Date of Birth'], '19') ?: null);
-        }
-
-        $this->log('Setting named deputy on client to deputy id:' . $namedDeputy->getId());
-        $client->setNamedDeputy($namedDeputy);
-
-        if (null !== $this->currentOrganisation) {
-            $this->attachClientToOrganisation($client);
         }
 
         return $client;
