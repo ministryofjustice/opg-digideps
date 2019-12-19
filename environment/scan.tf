@@ -105,7 +105,11 @@ EOF
           "awslogs-region": "eu-west-1",
           "awslogs-stream-prefix": "${aws_iam_role.scan.name}"
         }
-      }
+      },
+      "environment": [
+        { "name": "CLAMD_CONF_SelfCheck", "value": "1800" },
+        { "name": "FRESHCLAM_CONF_NotifyClamd", "value": "no" }
+      ]
   }
 
 EOF
