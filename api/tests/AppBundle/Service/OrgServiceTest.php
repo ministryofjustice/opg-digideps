@@ -590,7 +590,7 @@ class OrgServiceTest extends WebTestCase
         $em->persist(Argument::any())->shouldBeCalled();
         $em->flush()->shouldBeCalled();
 
-        /** @var EntityDir\Report&ObjectProphecy $report */
+        /** @var EntityDir\Report\Report&ObjectProphecy $report */
         $report = $this->prophesize(EntityDir\Report\Report::class);
         $report->getType()->shouldBeCalled()->willReturn('102-5');
 
@@ -612,7 +612,7 @@ class OrgServiceTest extends WebTestCase
         $client->setPhone(Argument::any())->shouldNotBeCalled();
         $client->setEmail(Argument::any())->shouldNotBeCalled();
 
-        /** @var ClientRepository&ObjectProphecy $orgRespository */
+        /** @var ClientRepository&ObjectProphecy $clientRepository */
         $clientRepository = self::prophesize(ClientRepository::class);
         $clientRepository->findOneBy(['caseNumber' => '38973539'])->willReturn($client->reveal());
 
