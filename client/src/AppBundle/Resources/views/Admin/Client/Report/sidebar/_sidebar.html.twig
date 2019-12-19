@@ -5,24 +5,6 @@
 
 {% set page = 'checklistPage' %}
 
-<p class="govuk-body-s behat-region-{{ checklistDomain }}-last-saved-by">
-    {{ 'lastSaved' | trans({}, 'common') }}:
-    {{ (checklist.lastModifiedOn) ? (checklist.lastModifiedOn | date("j F Y H:i")) : 'Not saved yet' }}
-    <br>
-    {% if (checklist.lastModifiedBy is defined) and (checklist.lastModifiedBy is not empty) %}
-        {{ checklist.lastModifiedBy.fullName}}, {{ checklist.lastModifiedBy.roleFullName }}
-    {% endif %}
-</p>
-
-{% if checklist.submittedOn %}
-    <p class="govuk-body-s behat-region-{{ checklistDomain }}-last-submitted-by">
-        {{ 'lastSubmitted' | trans({}, 'common') }}:
-        {{ checklist.submittedOn | date("j F Y H:i") }}
-        <br>
-        {{ checklist.submittedBy.fullName}}, {{ checklist.submittedBy.roleFullName }}
-    </p>
-{% endif %}
-
 <div class="opg-related-items">
     <span class="govuk-caption-m">{{ (page ~ '.jumpTo') | trans }}:</span>
     <h3 class="govuk-heading-s">{{ (page ~ '.heading.' ~ checklistDomain ~ '.title') | trans }}</h3>
@@ -30,8 +12,6 @@
         {% block links %}{% endblock %}
     </ul>
 </div>
-
-<hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
 <ul class="govuk-list">
     <li>

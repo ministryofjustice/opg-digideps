@@ -179,4 +179,4 @@ Feature: Admin report checklist
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
     When I open the "2016-to-2017" checklist for client "31000010"
     Then each text should be present in the corresponding region:
-      | Case Manager1, Case Manager | fullReview-last-saved-by     |
+      | Case Manager1, Case Manager | lodging-last-saved-by     |
