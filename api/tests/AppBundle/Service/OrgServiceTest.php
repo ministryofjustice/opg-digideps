@@ -568,6 +568,72 @@ class OrgServiceTest extends WebTestCase
         $sut->addFromCasrecRows([$row]);
     }
 
+    public function testDontUpdateExistingClients()
+    {
+        $row = [
+            'Deputy No'       => '01234567',
+            'Dep Forename'    => 'Dep2',
+            'Dep Surname'     => 'Uty2',
+            'Dep Type'        => '21',
+            'Email'           => 'dep2@testing.com',
+            'Case'            => '38973539',
+            'Forename'        => 'Cly2',
+            'Surname'         => 'Hent2',
+            'Client Adrs1'    => 'Address 1',
+            'Client Phone'    => '07123456789',
+            'Client Email'    => 'client@example.com',
+            'Last Report Day' => '23-JUN-2016'
+        ];
+
+        /** @var EntityManager&ObjectProphecy $em */
+        $em = $this->prophesize(EntityManager::class);
+        $em->persist(Argument::any())->shouldBeCalled();
+        $em->flush()->shouldBeCalled();
+
+        /** @var EntityDir\Report&ObjectProphecy $report */
+        $report = $this->prophesize(EntityDir\Report\Report::class);
+        $report->getType()->shouldBeCalled()->willReturn('102-5');
+
+        /** @var EntityDir\Client&ObjectProphecy $client */
+        $client = $this->prophesize(EntityDir\Client::class);
+        $client->hasDeputies()->shouldBeCalled()->willReturn(false);
+        $client->getId()->shouldBeCalled()->willReturn(525);
+        $client->getOrganisation()->shouldBeCalled()->willReturn(null);
+        $client->getCurrentReport()->shouldBeCalled()->willReturn($report->reveal());
+        $client->setNamedDeputy(Argument::any())->shouldBeCalled();
+        $client->setOrganisation(Argument::any())->shouldBeCalled();
+
+        // Ensure no client data is updated
+        $client->setCaseNumber(Argument::any())->shouldNotBeCalled();
+        $client->setFirstname(Argument::any())->shouldNotBeCalled();
+        $client->setLastname(Argument::any())->shouldNotBeCalled();
+        $client->setCourtDate(Argument::any())->shouldNotBeCalled();
+        $client->setAddress(Argument::any())->shouldNotBeCalled();
+        $client->setPhone(Argument::any())->shouldNotBeCalled();
+        $client->setEmail(Argument::any())->shouldNotBeCalled();
+
+        /** @var ClientRepository&ObjectProphecy $orgRespository */
+        $clientRepository = self::prophesize(ClientRepository::class);
+        $clientRepository->findOneBy(['caseNumber' => '38973539'])->willReturn($client->reveal());
+
+        $sut = new OrgService(
+            $em->reveal(),
+            $this->logger,
+            $this->userRepository,
+            $this->reportRepository,
+            $clientRepository->reveal(),
+            $this->organisationRepository,
+            $this->teamRepository,
+            $this->namedDeputyRepository,
+            new OrganisationFactory([]),
+            new NamedDeputyFactory()
+        );
+
+        $output = $sut->addFromCasrecRows([ $row ]);
+
+        $this->assertEmpty($output['errors']);
+    }
+
     public function testIdentifiesDeputiesByNameEmailAddress()
     {
         $namedDeputy = new EntityDir\NamedDeputy();
