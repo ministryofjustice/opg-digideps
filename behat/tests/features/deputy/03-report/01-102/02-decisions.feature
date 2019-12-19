@@ -56,12 +56,12 @@ Feature: Report decisions
         And I choose "no" when asked for adding another record
         # check record in summary page
         And each text should be present in the corresponding region:
-            | dd1   | decision-1 |
-            | Yes | decision-1 |
-            | dcid1 | decision-1 |
-            | dd2   | decision-2 |
-            | Yes | decision-2 |
-            | dcid2 | decision-2 |
+            | dd1   | decisions |
+            | Yes   | decisions |
+            | dcid1 | decisions |
+            | dd2   | decisions |
+            | Yes   | decisions |
+            | dcid2 | decisions |
         # remove decision n.2
         When I click on "delete" in the "decision-2" region
         And I click on "confirm"
@@ -72,15 +72,11 @@ Feature: Report decisions
         When I go back from the step
         # edit decision n.1
         When I click on "edit" in the "decision-1" region
-        Then the following fields should have the corresponding values:
-            | decision_description | dd1 |
-            | decision_clientInvolvedBoolean_0 | 1 |
-            | decision_clientInvolvedDetails | dcid1 |
-        And the step with the following values CAN be submitted:
+        Then the step with the following values CAN be submitted:
             | decision_description | dd1-changed |
             | decision_clientInvolvedBoolean_1 | 0 |
             | decision_clientInvolvedDetails | dcid1-changed |
         And each text should be present in the corresponding region:
-            | dd1-changed   | decision-1 |
-            | No | decision-1 |
-            | dcid1-changed | decision-1 |
+            | dd1-changed   | decisions |
+            | No            | decisions |
+            | dcid1-changed | decisions |

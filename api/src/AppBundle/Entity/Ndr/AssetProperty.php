@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Ndr;
 
 use AppBundle\Entity\AssetInterface;
+use AppBundle\Entity\Report\AssetProperty as ReportAssetProperty;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -376,5 +377,20 @@ class AssetProperty extends Asset implements AssetInterface
     public function getType()
     {
         return 'property';
+    }
+
+    /**
+     * @param AssetInterface $asset
+     * @return bool
+     */
+    public function isEqual(AssetInterface $asset)
+    {
+        if (!($asset instanceof self) && !($asset instanceof ReportAssetProperty)) {
+            return false;
+        }
+
+        return $asset->getAddress() === $this->getAddress() &&
+            $asset->getAddress2() === $this->getAddress2() &&
+            $asset->getPostcode() === $this->getPostcode();
     }
 }

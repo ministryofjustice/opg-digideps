@@ -71,9 +71,7 @@ locals {
       { "name": "DATABASE_PORT", "value": "${aws_db_instance.api.port}" },
       { "name": "DATABASE_USERNAME", "value": "digidepsmaster" },
       { "name": "FIXTURES_ACCOUNTPASSWORD", "value": "Abcd1234" },
-      { "name": "REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" },
-      { "name": "SECRETS_ADMIN_PERMISSIONS", "value": "[ROLE_ADMIN, ROLE_AD, ROLE_CASE_MANAGER]" },
-      { "name": "SECRETS_FRONT_PERMISSIONS", "value": "[ROLE_LAY_DEPUTY, ROLE_PA, ROLE_PROF, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER]" }
+      { "name": "REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" }
     ]
   }
 EOF

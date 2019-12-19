@@ -4,7 +4,6 @@ namespace AppBundle\Service\File\Storage;
 
 use Aws\ResultInterface;
 use Aws\S3\Exception\S3Exception;
-use Aws\S3\S3Client;
 use Aws\S3\S3ClientInterface;
 use Psr\Log\LoggerInterface;
 
@@ -17,7 +16,7 @@ use Psr\Log\LoggerInterface;
 class S3Storage implements StorageInterface
 {
     /**
-     * @var S3Client
+     * @var S3ClientInterface
      *
      * https://github.com/aws/aws-sdk-php
      * http://docs.aws.amazon.com/aws-sdk-php/v2/api/class-Aws.S3.S3Client.html
@@ -42,7 +41,7 @@ class S3Storage implements StorageInterface
     /**
      * S3Storage constructor.
      *
-     * @param S3Client $s3Client (Aws library)
+     * @param S3ClientInterface $s3Client (Aws library)
      * @param $bucketName S3 bucket name
      * @param LoggerInterface $logger
      */
@@ -59,15 +58,13 @@ class S3Storage implements StorageInterface
      * header('Content-Disposition: attachment; filename="' . $_GET['filename'] .'"');
      * readfile(<this method>);
      *
-     *
-     * @param $bucketName
      * @param $key
      *
      * @throws FileNotFoundException is the file is not found
      *
      * @return string file content
      */
-    public function retrieve($key)
+    public function retrieve(string $key)
     {
         // If a file is deleted in S3 it will return an AccessDenied error until its permanently deleted
         $missingFileAWSErrorCodes = ['NoSuchKey', 'AccessDenied'];
@@ -202,7 +199,7 @@ class S3Storage implements StorageInterface
     {
         if (array_key_exists('Errors', $s3Result) && count($s3Result['Errors']) > 0) {
             foreach ($s3Result['Errors'] as $s3Error) {
-                $this->log('error', 'Unable to remove file from S3 - 
+                $this->log('error', 'Unable to remove file from S3 -
                             Key: ' . $s3Error['Key'] . ', VersionId: ' .
                     $s3Error['VersionId'] . ', Code: ' . $s3Error['Code'] . ', Message: ' . $s3Error['Message']);
             }

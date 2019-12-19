@@ -4,7 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\CsvUploader;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Twig\Environment;
 
@@ -21,7 +21,7 @@ class OrgService
     private $twig;
 
     /**
-     * @var Session
+     * @var SessionInterface
      */
     private $session;
 
@@ -46,7 +46,7 @@ class OrgService
     /**
      * @param RestClient $restClient
      */
-    public function __construct(RestClient $restClient, Environment $twig, Session $session)
+    public function __construct(RestClient $restClient, Environment $twig, SessionInterface $session)
     {
         $this->restClient = $restClient;
         $this->twig = $twig;

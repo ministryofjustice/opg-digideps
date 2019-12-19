@@ -17,14 +17,15 @@ Clone [opg-file-scanner-service](https://github.com/ministryofjustice/opg-file-s
 ### Reset the database
 
 ```sh
-docker-compose run --rm api sh scripts/resetdb.sh
+docker-compose run --rm api sh scripts/reset_db_structure.sh
+docker-compose run --rm api sh scripts/reset_db_fixtures.sh
 ```
 
 ## Traffic Flow Diagram
 
 ![Digideps traffic flow diagram](./docs/traffic_flow_diagram.png)
 
-This diagram can be updated in `traffic_flow_diagram.puml` and then rendered to PNG using `plantuml ./docs/traffic_flow_diagram.puml -o ./docs`.
+This diagram can be updated in `traffic_flow_diagram.puml` and then rendered to PNG using `plantuml ./docs/traffic_flow_diagram.puml -o .`.
 
 ## Terraform installation
 

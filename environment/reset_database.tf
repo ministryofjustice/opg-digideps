@@ -41,7 +41,7 @@ locals {
   {
     "name": "reset-database",
     "image": "${local.images.api}",
-    "command": [ "sh", "scripts/resetdb.sh" ],
+    "command": [ "sh", "scripts/reset_db_fixtures.sh" ],
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {

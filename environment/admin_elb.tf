@@ -5,14 +5,9 @@ resource "aws_lb" "admin" {
   subnets            = data.aws_subnet.public.*.id
   idle_timeout       = 300
 
-  security_groups = [module.admin_elb_security_group.id]
+  security_groups = [module.admin_elb_security_group.id, module.admin_elb_security_group_route53_hc.id]
 
-  tags = merge(
-    local.default_tags,
-    {
-      "Name" = "admin-${local.environment}"
-    },
-  )
+  tags = merge(local.default_tags, { "Name" = "admin-${local.environment}" }, )
 }
 
 resource "aws_lb_listener" "admin" {

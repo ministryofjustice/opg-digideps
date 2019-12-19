@@ -471,9 +471,9 @@ class Fixtures
     }
 
     /**
-     * @param $email
+     * @param string $deputyNo
      *
-     * @return EntityDir\User
+     * @return EntityDir\NamedDeputy
      */
     public function findNamedDeputyByNumber($deputyNo)
     {

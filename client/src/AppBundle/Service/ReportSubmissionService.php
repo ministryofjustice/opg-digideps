@@ -11,8 +11,8 @@ use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\FileUploader;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\Container;
 
 class ReportSubmissionService
 {
@@ -61,10 +61,10 @@ class ReportSubmissionService
 
     /**
      * ReportSubmissionService constructor.
-     * @param  Container  $container
+     * @param  ContainerInterface  $container
      * @throws \Exception
      */
-    public function __construct(Container $container)
+    public function __construct(ContainerInterface $container)
     {
         $this->fileUploader = $container->get('file_uploader');
         $this->restClient = $container->get('rest_client');

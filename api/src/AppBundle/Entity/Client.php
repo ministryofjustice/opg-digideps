@@ -4,9 +4,9 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\Status;
 use AppBundle\Entity\Traits\IsSoftDeleteableEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -171,7 +171,7 @@ class Client implements ClientInterface
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"client", "client-court-date", "checklist-information"})
      *
-     * @var \Date
+     * @var \DateTime|null
      *
      * @ORM\Column(name="court_date", type="date", nullable=true)
      */
@@ -180,7 +180,7 @@ class Client implements ClientInterface
     /**
      * @JMS\Exclude
      *
-     * @var \DateTime
+     * @var \DateTime|null
      *
      * @ORM\Column(name="last_edit", type="datetime", nullable=true)
      */
@@ -190,7 +190,7 @@ class Client implements ClientInterface
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"client"})
      *
-     * @var \Date
+     * @var \DateTime|null
      *
      * @ORM\Column(name="date_of_birth", type="date", nullable=true)
      */
@@ -220,7 +220,7 @@ class Client implements ClientInterface
      * Holds the named deputy the client belongs to
      * Loaded from the CSV upload
      *
-     * @var User
+     * @var NamedDeputy|null
      *
      * @JMS\Groups({"report-submitted-by", "client-named-deputy"})
      * @JMS\Type("AppBundle\Entity\NamedDeputy")
@@ -230,7 +230,7 @@ class Client implements ClientInterface
     private $namedDeputy;
 
     /**
-     * @var \DateTime
+     * @var \DateTime|null
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"client"})
      *
@@ -239,7 +239,7 @@ class Client implements ClientInterface
     private $archivedAt;
 
     /**
-     * @var Organisation
+     * @var Organisation|null
      *
      * @JMS\Groups({"client-organisations"})
      *
@@ -297,7 +297,7 @@ class Client implements ClientInterface
      * convert 7 into 00000007
      * One Lay deputy has a case number starting with zeros
      *
-     * @param $caseNumber
+     * @param string $caseNumber
      *
      * @return string
      */
@@ -453,7 +453,7 @@ class Client implements ClientInterface
     /**
      * Set courtDate.
      *
-     * @param \DateTime $courtDate
+     * @param \DateTime|null $courtDate
      *
      * @return Client
      */
@@ -467,7 +467,7 @@ class Client implements ClientInterface
     /**
      * Get courtDate.
      *
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getCourtDate()
     {
@@ -491,7 +491,7 @@ class Client implements ClientInterface
     /**
      * Get lastedit.
      *
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getLastedit()
     {
@@ -535,7 +535,7 @@ class Client implements ClientInterface
     }
 
     /**
-     * @param $users
+     * @param array $users
      * @return $this
      */
     public function setUsers($users)
@@ -563,7 +563,7 @@ class Client implements ClientInterface
     /**
      * Add reports.
      *
-     * @param Report $reports
+     * @param Report $report
      *
      * @return Client
      */
@@ -590,7 +590,7 @@ class Client implements ClientInterface
     /**
      * Get reports.
      *
-     * @return Report[]
+     * @return ArrayCollection<Report>
      */
     public function getReports()
     {
@@ -602,7 +602,7 @@ class Client implements ClientInterface
      *
      * @param \DateTime $endDate
      *
-     * @return Report
+     * @return Report|null
      */
     public function getReportByEndDate(\DateTime $endDate)
     {
@@ -679,7 +679,7 @@ class Client implements ClientInterface
     }
 
     /**
-     * @param mixed $ndr
+     * @param Ndr|null $ndr
      */
     public function setNdr(Ndr $ndr = null)
     {
@@ -775,7 +775,7 @@ class Client implements ClientInterface
     }
 
     /**
-     * @return \DateTime $dateOfBirth
+     * @return \DateTime|null $dateOfBirth
      */
     public function getDateOfBirth()
     {
@@ -783,9 +783,9 @@ class Client implements ClientInterface
     }
 
     /**
-     * @param \DateTime $dateOfBirth
+     * @param \DateTime|null $dateOfBirth
      *
-     * @return \AppBundle\Entity\User
+     * @return $this
      */
     public function setDateOfBirth(\DateTime $dateOfBirth = null)
     {
@@ -803,7 +803,7 @@ class Client implements ClientInterface
     }
 
     /**
-     * @param $notes
+     * @param ArrayCollection $notes
      *
      * @return $this
      */
@@ -823,7 +823,7 @@ class Client implements ClientInterface
     }
 
     /**
-     * @param $clientContacts
+     * @param ArrayCollection $clientContacts
      *
      * @return $this
      */
@@ -836,7 +836,7 @@ class Client implements ClientInterface
     /**
      * Regular expression to match a case number
      *
-     * @param $query
+     * @param string $query
      *
      * @return bool
      */
@@ -846,7 +846,7 @@ class Client implements ClientInterface
     }
 
     /**
-     * @return NamedDeputy
+     * @return NamedDeputy|null
      */
     public function getNamedDeputy()
     {
@@ -891,7 +891,7 @@ class Client implements ClientInterface
     /**
      * @JMS\Exclude()
      *
-     * @return Report[]
+     * @return Collection<Report>
      */
     public function getUnsubmittedReports()
     {
@@ -937,7 +937,7 @@ class Client implements ClientInterface
         }
 
         // else make it last year
-        $expectedReportStartDate->setDate($year-1, $expectedReportStartDate->format('m'), $expectedReportStartDate->format('d'));
+        $expectedReportStartDate->setDate($year-1, intval($expectedReportStartDate->format('m')), intval($expectedReportStartDate->format('d')));
 
         return $expectedReportStartDate;
     }
@@ -1064,7 +1064,7 @@ class Client implements ClientInterface
 
 
     /**
-     * @return Organisation
+     * @return Organisation|null
      */
     public function getOrganisation()
     {

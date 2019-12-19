@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 //TODO
 //http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
@@ -27,7 +27,7 @@ class UserController extends RestController
     private $userService;
 
     /**
-     * @var EncoderFactory
+     * @var EncoderFactoryInterface
      */
     private $encoderFactory;
 
@@ -43,7 +43,7 @@ class UserController extends RestController
 
     public function __construct(
         UserService $userService,
-        EncoderFactory $encoderFactory,
+        EncoderFactoryInterface $encoderFactory,
         UserRepository $userRepository,
         ClientRepository $clientRepository
     )
@@ -187,7 +187,7 @@ class UserController extends RestController
     {
         if ($what == 'email') {
             /** @var User|null $user */
-            $user = $this->userRepository->findOneBy(['email' => $filter]);
+            $user = $this->userRepository->findOneBy(['email' => strtolower($filter)]);
             if (!$user) {
                 throw new \RuntimeException('User not found', 404);
             }

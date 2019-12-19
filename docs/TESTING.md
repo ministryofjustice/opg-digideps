@@ -22,7 +22,7 @@ docker-compose run --rm frontend bin/phpunit -c tests/phpunit
 To run the entire test suite, reset the database and run the `test` image.
 
 ```sh
-docker-compose run --rm api sh scripts/resetdb.sh
+docker-compose run --rm api sh scripts/reset_db_fixtures.sh
 docker-compose -f docker-compose.dev.yml run --rm test
 ```
 

@@ -32,15 +32,21 @@ class ReportController extends RestController
     private $reportService;
 
     /**
+     * @var EntityManager
+     */
+    private $em;
+
+    /**
      * @param array $updateHandlers
      * @param EntityDir\Repository\ReportRepository $repository
      * @param ReportService $reportService
      */
-    public function __construct(array $updateHandlers, EntityDir\Repository\ReportRepository $repository, ReportService $reportService)
+    public function __construct(array $updateHandlers, EntityDir\Repository\ReportRepository $repository, ReportService $reportService, EntityManager $em)
     {
         $this->updateHandlers = $updateHandlers;
         $this->repository = $repository;
         $this->reportService = $reportService;
+        $this->em = $em;
     }
 
     /**
@@ -530,11 +536,8 @@ class ReportController extends RestController
      */
     private function updateReportStatusCache($userId)
     {
-        /** @var EntityManager $em */
-        $em = $this->get('em');
-
         /** @var ReportRepository $repo */
-        $repo = $em->getRepository(Report::class);
+        $repo = $this->em->getRepository(Report::class);
 
         while (($reports = $repo
                 ->createQueryBuilder('r')
@@ -552,7 +555,7 @@ class ReportController extends RestController
                 /* @var $report Report */
                 $report->updateSectionsStatusCache($report->getAvailableSections());
             }
-            $em->flush();
+            $this->em->flush();
         }
     }
 

@@ -9,6 +9,7 @@ use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
 use AppBundle\Service\ReportService;
 use AppBundle\Service\ReportStatusService;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -252,7 +253,7 @@ class Report implements ReportInterface
     private $mentalCapacity;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Groups({"report", "report-period"})
      * @JMS\Type("DateTime<'Y-m-d'>")
@@ -261,7 +262,7 @@ class Report implements ReportInterface
     private $startDate;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Groups({"report", "report-period"})
      * @JMS\Type("DateTime<'Y-m-d'>")
@@ -270,7 +271,7 @@ class Report implements ReportInterface
     private $dueDate;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Groups({"report", "report-period"})
      * @JMS\Accessor(getter="getEndDate")
@@ -280,7 +281,7 @@ class Report implements ReportInterface
     private $endDate;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Groups({"report"})
      * @JMS\Accessor(getter="getSubmitDate")
@@ -290,7 +291,7 @@ class Report implements ReportInterface
     private $submitDate;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @JMS\Accessor(getter="getUnSubmitDate")
      * @JMS\Groups({"report"})
      * @JMS\Type("DateTime<'Y-m-d'>")
@@ -299,7 +300,7 @@ class Report implements ReportInterface
     private $unSubmitDate;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @JMS\Accessor(getter="getLastedit")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="last_edit", type="datetime", nullable=true)
@@ -431,19 +432,19 @@ class Report implements ReportInterface
      *
      * @param Client $client
      * @param $type
-     * @param \DateTime $startDate
-     * @param \DateTime $endDate
+     * @param DateTime $startDate
+     * @param DateTime $endDate
      * @param bool      $dateChecks if true, perform checks around multiple reports and dates. Useful for PA upload
      */
-    public function __construct(Client $client, $type, \DateTime $startDate, \DateTime $endDate, $dateChecks = true)
+    public function __construct(Client $client, $type, DateTime $startDate, DateTime $endDate, $dateChecks = true)
     {
         if (!in_array($type, self::$reportTypes)) {
             throw new \InvalidArgumentException("$type not a valid report type");
         }
         $this->type = $type;
         $this->client = $client;
-        $this->startDate = new \DateTime($startDate->format('Y-m-d'), new \DateTimeZone('Europe/London'));
-        $this->endDate = new \DateTime($endDate->format('Y-m-d'), new \DateTimeZone('Europe/London'));
+        $this->startDate = new DateTime($startDate->format('Y-m-d'), new \DateTimeZone('Europe/London'));
+        $this->endDate = new DateTime($endDate->format('Y-m-d'), new \DateTimeZone('Europe/London'));
         $this->updateDueDateBasedOnEndDate();
 
         if ($dateChecks && count($client->getUnsubmittedReports()) > 0) {
@@ -582,11 +583,11 @@ class Report implements ReportInterface
     /**
      * Set startDate.
      *
-     * @param \DateTime $startDate
+     * @param DateTime $startDate
      *
      * @return Report
      */
-    public function setStartDate(\DateTime $startDate)
+    public function setStartDate(DateTime $startDate)
     {
         $this->startDate = $startDate;
 
@@ -596,7 +597,7 @@ class Report implements ReportInterface
     /**
      * Get startDate.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getStartDate()
     {
@@ -606,11 +607,11 @@ class Report implements ReportInterface
     /**
      * Set endDate.
      *
-     * @param \DateTime $endDate
+     * @param DateTime $endDate
      *
      * @return Report
      */
-    public function setEndDate(\DateTime $endDate)
+    public function setEndDate(DateTime $endDate)
     {
         $this->endDate = $endDate;
 
@@ -620,7 +621,7 @@ class Report implements ReportInterface
     /**
      * Get endDate.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getEndDate()
     {
@@ -641,11 +642,11 @@ class Report implements ReportInterface
     /**
      * Set submitDate.
      *
-     * @param string $submitDate
+     * @param DateTime $submitDate
      *
      * @return Report
      */
-    public function setSubmitDate(\DateTime $submitDate = null)
+    public function setSubmitDate(DateTime $submitDate = null)
     {
         $this->submitDate = $submitDate;
 
@@ -655,7 +656,7 @@ class Report implements ReportInterface
     /**
      * Get submitDate.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getSubmitDate()
     {
@@ -663,7 +664,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime|null
      */
     public function getUnSubmitDate()
     {
@@ -671,7 +672,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param \DateTime $unSubmitDate
+     * @param DateTime|null $unSubmitDate
      *
      * @return Report
      */
@@ -685,13 +686,13 @@ class Report implements ReportInterface
     /**
      * Set lastedit.
      *
-     * @param \DateTime $lastedit
+     * @param DateTime $lastedit
      *
      * @return Report
      */
-    public function setLastedit(\DateTime $lastedit)
+    public function setLastedit(DateTime $lastedit)
     {
-        $this->lastedit = new \DateTime($lastedit->format('Y-m-d'));
+        $this->lastedit = new DateTime($lastedit->format('Y-m-d'));
 
         return $this;
     }
@@ -699,7 +700,7 @@ class Report implements ReportInterface
     /**
      * Get lastedit.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getLastedit()
     {
@@ -928,11 +929,11 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param \DateTime $dueDate
+     * @param DateTime $dueDate
      *
      * @return Report
      */
-    public function setDueDate(\DateTime $dueDate)
+    public function setDueDate(DateTime $dueDate)
     {
         $this->dueDate = $dueDate;
 
@@ -940,7 +941,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDueDate()
     {
@@ -1132,7 +1133,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param array $unsubmittedSectionsList
+     * @param array|null $unsubmittedSectionsList
      */
     public function setUnsubmittedSectionsList($unsubmittedSectionsList)
     {

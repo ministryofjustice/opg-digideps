@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report\Traits;
 
+use AppBundle\Entity\AssetInterface;
 use AppBundle\Entity\Report\Asset;
 use AppBundle\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,7 +13,7 @@ trait AssetTrait
 
 
     /**
-     * @var Asset[]
+     * @var AssetInterface[]
      *
      * @JMS\Groups({"asset"})
      * @JMS\Type("array<AppBundle\Entity\Report\Asset>")
@@ -58,7 +59,7 @@ trait AssetTrait
     /**
      * Get assets.
      *
-     * @return Asset[]
+     * @return AssetInterface[]
      */
     public function getAssets()
     {
