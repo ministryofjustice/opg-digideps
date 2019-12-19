@@ -12,18 +12,3 @@
         {% block links %}{% endblock %}
     </ul>
 </div>
-
-<ul class="govuk-list">
-    <li>
-        <a class="govuk-link govuk-body-s govuk-link--no-visited-state" href="#anchor-{{ checklistDomain }}-checklist">
-            {{- macros.icon('arrow-up', 'govuk-!-margin-right-2') | spaceless -}}
-            {{ (page ~ '.backToTop') | trans }}: {{ (page ~ '.heading.' ~ checklistDomain ~ '.title') | trans }}
-        </a>
-    </li>
-    <li>
-        <a class="govuk-link govuk-body-s govuk-link--no-visited-state" href="#">
-            {{- macros.icon('arrow-up', 'govuk-!-margin-right-2') | spaceless -}}
-            {{ (page ~ '.backToTop') | trans }}
-        </a>
-    </li>
-</ul>
