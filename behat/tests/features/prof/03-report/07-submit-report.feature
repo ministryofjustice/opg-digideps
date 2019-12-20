@@ -28,8 +28,19 @@ Feature: Report submit (client 31000010)
         # if not found, it means that the report is not submittable
         And I click on "edit-report_submit"
         Then the URL should match "/report/\d+/review"
-        And I click on "declaration-page"
+        When I click on "declaration-page"
         Then the URL should match "/report/\d+/declaration"
+        And each text should be present in the corresponding region:
+            | CLY1 hent1                        | client-contact |
+            | 078912345678                      | client-contact |
+            | cly1@hent.com                     | client-contact |
+            | B301QL                            | client-contact |
+            | DEP1 SURNAME1                     | deputy-contact |
+            | 10000000001                       | deputy-contact |
+            | behat-prof1@publicguardian.gov.uk | deputy-contact |
+            | Prof OPG                          | deputy-contact |
+            | SW1                               | deputy-contact |
+        And I should not see the link "edit-deputy-contact"
 
     Scenario: 102-5 report submission
         Given emails are sent from "deputy" area

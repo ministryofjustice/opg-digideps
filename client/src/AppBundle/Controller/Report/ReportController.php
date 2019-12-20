@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Client;
+use AppBundle\Entity\DeputyInterface;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Exception\DisplayableException;
@@ -333,7 +334,11 @@ class ReportController extends AbstractController
             throw new ReportNotSubmittableException($message);
         }
 
-        $user = $this->getUserWithData();
+        $deputy = $report->getClient()->getNamedDeputy();
+
+        if (is_null($deputy)) {
+            $deputy = $this->getUserWithData();
+        }
 
         $form = $this->createForm(ReportDeclarationType::class, $report);
         $form->handleRequest($request);
@@ -351,7 +356,7 @@ class ReportController extends AbstractController
         return [
             'report' => $report,
             'client' => $report->getClient(),
-            'contactDetails' => $this->getAssociatedContactDetails($user, $report),
+            'contactDetails' => $this->getAssociatedContactDetails($deputy, $report),
             'form' => $form->createView(),
         ];
     }
@@ -549,56 +554,66 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @param User $user
+     * @param DeputyInterface $deputy
      * @param Report $report
      * @return array
      */
-    private function getAssociatedContactDetails(User $user, Report $report)
+    private function getAssociatedContactDetails(DeputyInterface $deputy, Report $report)
     {
         return [
-            $this->getClientContactDetails($user, $report),
-            $this->getDeputyContactDetails($user, $report)
+            'client' => $this->getClientContactDetails($report),
+            'deputy' => $this->getDeputyContactDetails($deputy, $report),
         ];
     }
 
     /**
-     * @param User $user
      * @param Report $report
      * @return array
      */
-    private function getClientContactDetails(User $user, Report $report)
+    private function getClientContactDetails(Report $report)
     {
         $client = $report->getClient();
+
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
 
         return [
             'name' => $client->getFullName() . ' (client)',
             'address' => $client->getAddressNotEmptyParts(),
             'phone' => ['main' => $client->getPhone()],
             'email' => $client->getEmail(),
-            'editUrl' => $user->isLayDeputy() ?
+            'editUrl' => $currentUser->isLayDeputy() ?
                 $this->generateUrl('client_edit', ['from' => 'declaration']) :
                 $this->generateUrl('org_client_edit', ['clientId' => $client->getId(), 'from' => 'declaration'])
         ];
     }
 
     /**
-     * @param User $user
+     * @param DeputyInterface $deputy
      * @param Report $report
      * @return array
      */
-    private function getDeputyContactDetails(User $user, Report $report)
+    private function getDeputyContactDetails(DeputyInterface $deputy, Report $report)
     {
+        if ($deputy instanceof User) {
+            if ($deputy->isLayDeputy()) {
+                $editUrl = $this->generateUrl('user_edit', ['from' => 'declaration', 'rid' => $report->getId()]);
+            } else {
+                $editUrl = $this->generateUrl('org_profile_edit', ['from' => 'declaration', 'rid' => $report->getId()]);
+            }
+        } else {
+            $editUrl = '';
+        }
+
         return [
-            'name' => $user->getFullName() . ' (deputy)',
-            'address' => $user->getAddressNotEmptyParts(),
+            'name' => $deputy->getFullName() . ' (deputy)',
+            'address' => $deputy->getAddressNotEmptyParts(),
             'phone' => [
-                'main' => $user->getPhoneMain(),
-                'alternative' => $user->getPhoneAlternative()
+                'main' => $deputy->getPhoneMain(),
+                'alternative' => $deputy->getPhoneAlternative()
             ],
-            'email' => $user->getEmail(),
-            'editUrl' => $user->isLayDeputy() ?
-                $this->generateUrl('user_edit', ['from' => 'declaration', 'rid' => $report->getId()]) :
-                $this->generateUrl('org_profile_edit', ['from' => 'declaration', 'rid' => $report->getId()])
+            'email' => $deputy->getEmail(),
+            'editUrl' => $editUrl
         ];
     }
 }

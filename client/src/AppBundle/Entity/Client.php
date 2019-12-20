@@ -53,7 +53,7 @@ class Client
 
     /**
      * @JMS\Type("AppBundle\Entity\NamedDeputy")
-     * @var NamedDeputy
+     * @var NamedDeputy|null
      */
     private $namedDeputy;
 
@@ -275,7 +275,7 @@ class Client
     }
 
     /**
-     * @return NamedDeputy
+     * @return NamedDeputy|null
      */
     public function getNamedDeputy()
     {

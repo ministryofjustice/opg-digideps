@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation as JMS;
  * Named Deputy.
  *
  */
-class NamedDeputy
+class NamedDeputy implements DeputyInterface
 {
 
     /**
@@ -320,7 +320,7 @@ class NamedDeputy
      */
     public function setDepAddrNo($depAddrNo)
     {
-        $this->depAddrNo = User::padDeputyNumber($depAddrNo);
+        $this->depAddrNo = $depAddrNo;
         return $this;
     }
 
@@ -441,7 +441,7 @@ class NamedDeputy
     }
 
     /**
-     * @param $addressCountry
+     * @param string $addressCountry
      * @return $this
      */
     public function setAddressCountry($addressCountry)
