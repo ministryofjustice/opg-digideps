@@ -14,7 +14,7 @@ Feature: Full review checklist
   Scenario: Full review checklist requires validation on submission
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     When I open the "2016" checklist for client "102"
-    And I click on "submit" in the "full-review-checklist" region
+    And I click on "submit-and-continue" in the "full-review-checklist" region
     Then the following fields should have an error:
         | full-review_answers_fullBankStatementsExist_0 |
         | full-review_answers_fullBankStatementsExist_1 |
@@ -79,8 +79,5 @@ Feature: Full review checklist
   Scenario: Can submit full review checklist
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     When I open the "2016" checklist for client "102"
-    And I click on "submit" in the "full-review-checklist" region
+    And I click on "submit-and-continue" in the "full-review-checklist" region
     Then the form should be valid
-    And each text should be present in the corresponding region:
-      | Admin User, OPG Admin | fullReview-last-saved-by     |
-      | Admin User, OPG Admin | fullReview-last-submitted-by |

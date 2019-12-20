@@ -19,7 +19,7 @@ Feature: Admin report checklist
       | User             | checklist-deputy-lastname |
       | Victoria road    | checklist-deputy-address   |
       | 07911111111111   | checklist-deputy-phone     |
-    When I click on "submit-and-continue"
+    When I click on "submit-and-continue" in the "lodging-checklist" region
     Then the following fields should have an error:
       | report_checklist_reportingPeriodAccurate_0        |
       | report_checklist_reportingPeriodAccurate_1        |
@@ -115,7 +115,7 @@ Feature: Admin report checklist
       | report_checklist_caseWorkerSatisified_0    | yes |
       | report_checklist_finalDecision_0    | for-review |
       | report_checklist_lodgingSummary    | I am not satisfied |
-    Then I click on "submit-and-continue"
+    Then I click on "submit-and-continue" in the "lodging-checklist" region
     And the form should be valid
     And the URL should match "/admin/report/\d+/checklist-submitted"
     When I click on "download-checklist-pdf"

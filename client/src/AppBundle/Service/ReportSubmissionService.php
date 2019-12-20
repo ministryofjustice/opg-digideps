@@ -136,9 +136,17 @@ class ReportSubmissionService
      */
     public function getChecklistPdfBinaryContent(ReportInterface $report)
     {
+        $reviewChecklist = $this->restClient->get('report/' . $report->getId() . '/checklist', 'Report\\ReviewChecklist');
+
+        // A null id indicates a reviewChecklist has not yet been submitted.
+        if (null === $reviewChecklist->getId()) {
+            $reviewChecklist = null;
+        }
+
         $html = $this->templating->render('AppBundle:Admin/Client/Report/Formatted:checklist_formatted_standalone.html.twig', [
             'report' => $report,
-            'checklist' => $report->getChecklist()
+            'lodgingChecklist' => $report->getChecklist(),
+            'reviewChecklist' => $reviewChecklist
         ]);
 
         return $this->wkhtmltopdf->getPdfFromHtml($html);

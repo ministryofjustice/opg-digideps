@@ -281,9 +281,12 @@ class ReportController extends AbstractController
                 $this->getRestClient()->post('report/' . $report->getId() . '/checklist', $reviewChecklist);
             }
 
-            $this->addFlash('notice', 'Review checklist saved');
-
-            return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#anchor-fullReview-checklist');
+            if ($button->getName() === ReviewChecklistType::SUBMIT_ACTION) {
+                return $this->redirect($this->generateUrl('admin_report_checklist_submitted', ['id'=>$report->getId()]));
+            } else {
+                $this->addFlash('notice', 'Review checklist saved');
+                return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#anchor-fullReview-checklist');
+            }
         }
 
         if ($buttonClicked instanceof SubmitButton) {
@@ -343,13 +346,13 @@ class ReportController extends AbstractController
     /**
      * @Route("checklist-submitted", name="admin_report_checklist_submitted")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_CASE_MANAGER')")
-     * @param string $id
-     *
-     * @Template("AppBundle:Admin/Client/Report:checklistSubmitted.html.twig")
+     * @param int $id
      *
      * @return array
+     * @Template("AppBundle:Admin/Client/Report:checklistSubmitted.html.twig")
+     *
      */
-    public function checklistSubmittedAction($id)
+    public function checklistSubmittedAction(int $id)
     {
         return ['report' => $this->getReport(intval($id))];
     }
@@ -360,17 +363,16 @@ class ReportController extends AbstractController
      * @Route("checklist.pdf", name="admin_checklist_pdf")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_CASE_MANAGER')")
      *
-     * @param string $id
+     * @param int $id
      * @return Response
      */
-    public function checklistPDFViewAction($id)
+    public function checklistPDFViewAction(int $id)
     {
         $report = $this->getReport(intval($id), array_merge(self::$reportGroupsAll, ['report-checklist', 'checklist-information', 'user']));
 
         /** @var ReportSubmissionService $reportSubmissionService */
         $reportSubmissionService = $this->get('AppBundle\Service\ReportSubmissionService');
         $pdfBinary = $reportSubmissionService->getChecklistPdfBinaryContent($report);
-
         $response = new Response($pdfBinary);
         $response->headers->set('Content-Type', 'application/pdf');
 
