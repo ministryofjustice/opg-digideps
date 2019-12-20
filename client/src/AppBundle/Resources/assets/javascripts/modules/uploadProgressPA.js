@@ -6,7 +6,7 @@ var uploadProgressPA = function (element) {
   var $uploadExplanation = $form.find('[data-js="upload-explanation"]')
   var $uploadError = $form.find('[data-js="upload-error"]')
 
-  $button.on('click', function (event) {
+  $button.on('click', (event) => {
     event.preventDefault()
 
     var redirectUrl = window.location.href
@@ -25,11 +25,11 @@ var uploadProgressPA = function (element) {
       contentType: false,
       xhrFields: {
         onprogress: function (e) {
-          var lines = e.currentTarget.response.split('\n')
+          const lines = e.currentTarget.response.split('\n')
 
-          lines.forEach(function (line) {
-            var log = line.split(' ')
-            var command = log.shift()
+          lines.forEach(line => {
+            const log = line.split(' ')
+            const command = log.shift()
 
             if (command === 'PROG') {
               $progress.val(parseInt(log[0]) / parseInt(log[1]))
