@@ -107,8 +107,8 @@ EOF
         }
       },
       "environment": [
-        { "name": "CLAMD_CONF_SelfCheck", "value": "1800" },
-        { "name": "FRESHCLAM_CONF_NotifyClamd", "value": "no" }
+        { "name": "CLAMD_CONF_SelfCheck", "value": "0" },
+        { "name": "FRESHCLAM_CONF_NotifyClamd", "value": "/etc/clamav/clamd.conf" }
       ]
   }
 
