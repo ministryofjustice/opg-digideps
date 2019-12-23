@@ -25,7 +25,7 @@ services:
       public: false
     mail_sender:
         class: AppBundle\Service\Mailer\MailSenderMock
-        arguments: [ "@validator", "@snc_redis.default" ]
+        arguments: [ "@validator", "@snc_redis.default", "@logger" ]
         calls:
             - [ addSwiftMailer, [ "default", "@mailer.swift_mailers.default"] ]
     mailer.transport.smtp.default:
