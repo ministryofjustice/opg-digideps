@@ -384,7 +384,9 @@ jobs:
           name: Run task
           command: runner -task << parameters.task_name >> -timeout << parameters.timeout >>
       - persist_to_workspace:
-          root: ~/project
+          root: ~/project/.
+          paths:
+            - .
 
   phpunit-coverage:
     docker:
@@ -392,10 +394,10 @@ jobs:
     parallelism: 2
     steps:
       - attach_workspace:
-          at: ~/project
+          at: ~/project/.
       - merge-code-coverage-reports:
-          dir:  ./api/tests/coverage
-          out:  ./api/tests/coverage/merged.xml
+          dir: ./api/tests/coverage
+          out: ./api/tests/coverage/merged.xml
       - codecov/upload:
           file: ./api/tests/coverage/merged.xml
           flags: phpunit
