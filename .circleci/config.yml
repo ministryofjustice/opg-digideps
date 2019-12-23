@@ -232,7 +232,7 @@ orbs:
           - run:
               name: Install Terraform
               command: sudo unzip terraform_${TF_VERSION}_linux_amd64.zip -d /bin
-  codecov: codecov/codecov@1
+  codecov: codecov/codecov@1.0.2
 jobs:
   lint:
     executor: terraform/terraform
