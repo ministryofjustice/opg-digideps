@@ -46,10 +46,14 @@ workflows:
           timeout: 600
 
       - merge-code-coverage-reports:
+          requires: [ api unit test ]
+          filters: { branches: { ignore: [ master ] } }
           dir:  ~/project/tests/coverage
           out:  ~/project/tests/coverage/merged.xml
 
       - codecov/upload:
+          requires: [ merge-code-coverage-reports ]
+          filters: { branches: { ignore: [ master ] } }
           file: ~/project/tests/coverage/merged.xml
 
       - run-task:
@@ -384,6 +388,7 @@ jobs:
       - run:
           name: Run task
           command: runner -task << parameters.task_name >> -timeout << parameters.timeout >>
+commands:
   merge-code-coverage-reports:
     parameters:
       dir:
