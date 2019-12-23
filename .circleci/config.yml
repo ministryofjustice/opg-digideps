@@ -45,14 +45,14 @@ workflows:
           task_name: api_unit_test
           timeout: 600
 
-      - merge-code-coverage-reports:
+      - phpunit-coverage:
+          name: phpunit coverage
           requires: [ api unit test ]
           filters: { branches: { ignore: [ master ] } }
-          dir:  ~/project/tests/coverage
-          out:  ~/project/tests/coverage/merged.xml
 
       - codecov/upload:
-          requires: [ merge-code-coverage-reports ]
+          name: upload codecov
+          requires: [ phpunit coverage ]
           filters: { branches: { ignore: [ master ] } }
           file: ~/project/tests/coverage/merged.xml
 
@@ -388,6 +388,19 @@ jobs:
       - run:
           name: Run task
           command: runner -task << parameters.task_name >> -timeout << parameters.timeout >>
+
+  phpunit-coverage:
+    executor: php
+    parallelism: 2
+    working_directory: ~/project
+    steps:
+      - merge-code-coverage-reports:
+          dir:  ~/project/tests/coverage
+          out:  ~/project/tests/coverage/merged.xml
+      - codecov/upload:
+          file: ~/project/tests/coverage/merged.xml
+          flags: phpunit
+
 commands:
   merge-code-coverage-reports:
     parameters:
