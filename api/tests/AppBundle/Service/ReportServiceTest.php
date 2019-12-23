@@ -391,17 +391,18 @@ class ReportServiceTest extends TestCase
     {
         $namedDeputy = null;
         if ($namedDeputyType) {
+            /** @var NamedDeputy&ObjectProphecy $namedDeputyMock */
             $namedDeputyMock = $this->prophesize(NamedDeputy::class);
             $namedDeputyMock->getDeputyType()->shouldBeCalled()->willReturn($namedDeputyType);
             $namedDeputy = $namedDeputyMock->reveal();
         }
 
-        /** @var Client&ObjectProphecy $casRec */
+        /** @var Client&ObjectProphecy $client */
         $client = $this->prophesize(Client::class);
         $client->getNamedDeputy()->shouldBeCalled()->willReturn($namedDeputy);
         $client->getCaseNumber()->shouldBeCalled()->willReturn(4148);
 
-        /** @var User&ObjectProphecy $casRec */
+        /** @var User&ObjectProphecy $user */
         $user = $this->prophesize(User::class);
         $user->isLayDeputy()->willReturn($isLay);
         $user->isProfDeputy()->willReturn($isProf);
@@ -417,7 +418,7 @@ class ReportServiceTest extends TestCase
         $casRec->getTypeOfReport()->willReturn(null);
         $casRec->getCorref()->willReturn(null);
 
-        /** @var ObjectRepository&ObjectProphecy */
+        /** @var ObjectRepository&ObjectProphecy $casRecRepository */
         $casRecRepository = $this->prophesize(ObjectRepository::class);
         $casRecRepository->findOneBy(['caseNumber' => 4148])->shouldBeCalled()->willReturn($casRec->reveal());
 
