@@ -50,7 +50,7 @@ locals {
   {
     "name": "api-unit-test",
     "image": "${local.images.api}",
-    "command": [ "sh", "scripts/apiunittest.sh" ],
+    "command": [ "sh", "scripts/apiunittest.sh"; "docker", "cp", "/api/tests/coverage", "api-unit-test:~/project/api/tests/coverage" ],
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
