@@ -79,11 +79,18 @@ class ReportService
 
             if (!is_null($namedDeputy)) {
                 $realm = User::$depTypeIdToRealm[$namedDeputy->getDeputyType()];
+
+                if (!isset($realm)) {
+                    throw new \RuntimeException("Named deputy has invalid type {$namedDeputy->getDeputyType()}");
+                } else {
+                    return CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref(), $realm);
+                }
             }
 
-            if (!isset($realm) && count($client->getUsers())) {
+            if (count($client->getUsers())) {
                 /** @var User $user */
                 $user = $client->getUsers()->first();
+
                 if ($user->isLayDeputy()) {
                     $realm = CasRec::REALM_LAY;
                 } else if ($user->isProfDeputy()) {
@@ -91,13 +98,11 @@ class ReportService
                 } else if ($user->isPaDeputy()) {
                     $realm = CasRec::REALM_PA;
                 }
-            }
 
-            if (!isset($realm)) {
+                return CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref(), $realm);
+            } else {
                 throw new \RuntimeException('Can\'t determine report realm');
             }
-
-            return CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref(), $realm);
         }
 
         return null;

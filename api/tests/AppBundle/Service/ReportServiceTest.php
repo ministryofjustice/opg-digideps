@@ -402,16 +402,18 @@ class ReportServiceTest extends TestCase
         $client->getNamedDeputy()->shouldBeCalled()->willReturn($namedDeputy);
         $client->getCaseNumber()->shouldBeCalled()->willReturn(4148);
 
-        /** @var User&ObjectProphecy $user */
-        $user = $this->prophesize(User::class);
-        $user->isLayDeputy()->willReturn($isLay);
-        $user->isProfDeputy()->willReturn($isProf);
-        $user->isPaDeputy()->willReturn($isPa);
-
         $users = new ArrayCollection();
-        $users->add($user->reveal());
-
         $client->getUsers()->willReturn($users);
+
+        if ($isLay || $isProf || $isPa) {
+            /** @var User&ObjectProphecy $user */
+            $user = $this->prophesize(User::class);
+            $user->isLayDeputy()->willReturn($isLay);
+            $user->isProfDeputy()->willReturn($isProf);
+            $user->isPaDeputy()->willReturn($isPa);
+
+            $users->add($user->reveal());
+        }
 
         /** @var CasRec&ObjectProphecy $casRec */
         $casRec = $this->prophesize(CasRec::class);
@@ -448,7 +450,7 @@ class ReportServiceTest extends TestCase
             'multipleUsersAttached' => [null, true, true, true, Report::TYPE_102],
             'noNamedDeputyNoUser' => [null, false, false, false, RuntimeException::class],
             'invalidNamedDeputyNoUser' => [400, false, false, false, RuntimeException::class],
-            'invalidNamedDeputyLayUser' => [400, true, false, false, Report::TYPE_102],
+            'invalidNamedDeputyLayUser' => [400, true, false, false, RuntimeException::class],
             'paNamedDeputy' => [23, false, false, false, Report::TYPE_102_6],
             'profNamedDeputy' => [21, false, false, false, Report::TYPE_102_5],
             'otherProfNamedDeputy' => [26, false, false, false, Report::TYPE_102_5],
