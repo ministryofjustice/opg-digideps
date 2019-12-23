@@ -81,7 +81,7 @@ class ReportService
                 $realm = User::$depTypeIdToRealm[$namedDeputy->getDeputyType()];
             }
 
-            if (is_null($realm) && count($client->getUsers())) {
+            if (!isset($realm) && count($client->getUsers())) {
                 /** @var User $user */
                 $user = $client->getUsers()->first();
                 if ($user->isLayDeputy()) {
