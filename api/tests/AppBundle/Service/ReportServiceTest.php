@@ -441,17 +441,17 @@ class ReportServiceTest extends TestCase
     public function getReportTypeOptions()
     {
         return [
-            [null, true, false, false, Report::TYPE_102],
-            [null, false, true, false, Report::TYPE_102_5],
-            [null, false, false, true, Report::TYPE_102_6],
-            [null, true, true, true, Report::TYPE_102],
-            [null, false, false, false, RuntimeException::class],
-            [400, false, false, false, RuntimeException::class],
-            [400, true, false, false, Report::TYPE_102],
-            [23, false, false, false, Report::TYPE_102_6],
-            [21, false, false, false, Report::TYPE_102_5],
-            [26, false, false, false, Report::TYPE_102_5],
-            [26, true, false, false, Report::TYPE_102_5],
+            'layUserAttached' => [null, true, false, false, Report::TYPE_102],
+            'profUserAttached' => [null, false, true, false, Report::TYPE_102_5],
+            'paUserAttached' => [null, false, false, true, Report::TYPE_102_6],
+            'multipleUsersAttached' => [null, true, true, true, Report::TYPE_102],
+            'noNamedDeputyNoUser' => [null, false, false, false, RuntimeException::class],
+            'invalidNamedDeputyNoUser' => [400, false, false, false, RuntimeException::class],
+            'invalidNamedDeputyLayUser' => [400, true, false, false, Report::TYPE_102],
+            'paNamedDeputy' => [23, false, false, false, Report::TYPE_102_6],
+            'profNamedDeputy' => [21, false, false, false, Report::TYPE_102_5],
+            'otherProfNamedDeputy' => [26, false, false, false, Report::TYPE_102_5],
+            'profNamedDeputyAndLayUser' => [26, true, false, false, Report::TYPE_102_5],
         ];
     }
 
