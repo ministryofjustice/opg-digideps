@@ -399,7 +399,7 @@ jobs:
     parallelism: 2
     steps:
       - attach_at_workspace:
-          - ~/project
+          at: ~/project
       - merge-code-coverage-reports:
           dir:  ./api/tests/coverage
           out:  ./api/tests/coverage/merged.xml
