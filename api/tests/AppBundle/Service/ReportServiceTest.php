@@ -445,8 +445,8 @@ class ReportServiceTest extends TestCase
     {
         return [
             'layUserAttached' => [null, true, false, false, Report::TYPE_102],
-            'profUserAttached' => [null, false, true, false, Report::TYPE_102_5],
-            'paUserAttached' => [null, false, false, true, Report::TYPE_102_6],
+            'profUserAttached' => [null, false, true, false, RuntimeException::class],
+            'paUserAttached' => [null, false, false, true, RuntimeException::class],
             'multipleUsersAttached' => [null, true, true, true, Report::TYPE_102],
             'noNamedDeputyNoUser' => [null, false, false, false, RuntimeException::class],
             'invalidNamedDeputyNoUser' => [400, false, false, false, RuntimeException::class],

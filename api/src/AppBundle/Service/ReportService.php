@@ -88,21 +88,12 @@ class ReportService
             }
 
             if (count($client->getUsers())) {
-                /** @var User $user */
-                $user = $client->getUsers()->first();
-
-                if ($user->isLayDeputy()) {
-                    $realm = CasRec::REALM_LAY;
-                } else if ($user->isProfDeputy()) {
-                    $realm = CasRec::REALM_PROF;
-                } else if ($user->isPaDeputy()) {
-                    $realm = CasRec::REALM_PA;
+                if ($client->getUsers()->first()->isLayDeputy()) {
+                    return CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref(), CasRec::REALM_LAY);
                 }
-
-                return CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref(), $realm);
-            } else {
-                throw new \RuntimeException('Can\'t determine report realm');
             }
+
+            throw new \RuntimeException('Can\'t determine report realm');
         }
 
         return null;
