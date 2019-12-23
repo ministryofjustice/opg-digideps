@@ -75,7 +75,29 @@ class ReportService
     {
         $casRec = $this->casRecRepository->findOneBy(['caseNumber' => $client->getCaseNumber()]);
         if ($casRec instanceof CasRec) {
-            return CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref(), $client->getUsers()->first()->getRoleName());
+            $namedDeputy = $client->getNamedDeputy();
+
+            if (!is_null($namedDeputy)) {
+                $realm = User::$depTypeIdToRealm[$namedDeputy->getDeputyType()];
+            }
+
+            if (is_null($realm) && count($client->getUsers())) {
+                /** @var User $user */
+                $user = $client->getUsers()->first();
+                if ($user->isLayDeputy()) {
+                    $realm = CasRec::REALM_LAY;
+                } else if ($user->isProfDeputy()) {
+                    $realm = CasRec::REALM_PROF;
+                } else if ($user->isPaDeputy()) {
+                    $realm = CasRec::REALM_PA;
+                }
+            }
+
+            if (!isset($realm)) {
+                throw new \RuntimeException('Can\'t determine report realm');
+            }
+
+            return CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref(), $realm);
         }
 
         return null;
