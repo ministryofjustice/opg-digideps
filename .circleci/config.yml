@@ -44,6 +44,13 @@ workflows:
           filters: { branches: { ignore: [ master ] } }
           task_name: api_unit_test
           timeout: 600
+#            - persist_to_workspace:
+#            # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is
+#            # taken to be the root directory of the workspace.
+#               root: workspace
+#            # Must be relative path from root
+#               paths:
+#                 - echo-output
 
       - phpunit-coverage:
           name: phpunit coverage
@@ -227,6 +234,7 @@ orbs:
               name: Install Terraform
               command: sudo unzip terraform_${TF_VERSION}_linux_amd64.zip -d /bin
   codecov: codecov/codecov@1.0.2
+
 jobs:
   lint:
     executor: terraform/terraform
@@ -382,18 +390,21 @@ jobs:
       - run:
           name: Run task
           command: runner -task << parameters.task_name >> -timeout << parameters.timeout >>
+      - persist_to_workspace:
+          root: ~/project
 
   phpunit-coverage:
     docker:
       - image: circleci/php:7.3-node
     parallelism: 2
-    working_directory: ~/project
     steps:
+      - attach_at_workspace:
+          - ~/project
       - merge-code-coverage-reports:
-          dir:  ~/project/tests/coverage
-          out:  ~/project/tests/coverage/merged.xml
+          dir:  ./api/tests/coverage
+          out:  ./api/tests/coverage/merged.xml
       - codecov/upload:
-          file: ~/project/tests/coverage/merged.xml
+          file: ./api/tests/coverage/merged.xml
           flags: phpunit
 
 commands:
