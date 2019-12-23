@@ -390,7 +390,8 @@ jobs:
           command: runner -task << parameters.task_name >> -timeout << parameters.timeout >>
 
   phpunit-coverage:
-    executor: php
+    docker:
+      - image: circleci/php:7.3-node
     parallelism: 2
     working_directory: ~/project
     steps:
