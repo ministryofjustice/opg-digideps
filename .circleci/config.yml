@@ -50,12 +50,6 @@ workflows:
           requires: [ api unit test ]
           filters: { branches: { ignore: [ master ] } }
 
-      - codecov/upload:
-          name: upload codecov
-          requires: [ phpunit coverage ]
-          filters: { branches: { ignore: [ master ] } }
-          file: ~/project/tests/coverage/merged.xml
-
       - run-task:
           name: backup environment
           requires: [ api unit test, client unit test, integration test ]
