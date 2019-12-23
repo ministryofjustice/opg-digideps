@@ -20,6 +20,8 @@ parameters:
         gds: {{ getv "/ga/gds" }}
     opg_docker_tag: {{ getv "/opg/docker/tag" }}
     mock_emails: {{ if eq (getv "/mock/emails") "true" }}true{{ else }}false{{ end }}
+    email_templates:
+        reset_password: <<key>>
     email_send:
         from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
         to_email: -
