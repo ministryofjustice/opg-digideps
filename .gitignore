@@ -25,3 +25,4 @@ terraform/to_import\.sh
 
 **/terraform.output.json
 
+**/tests/coverage/

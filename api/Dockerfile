@@ -32,6 +32,9 @@ RUN if [[ $REQUIRE_XDEBUG = "true" ]] ; then \
         docker-php-ext-enable $PHP_EXT_DIR/xdebug.so; \
     fi ;
 
+RUN apk add --no-cache autoconf build-base
+RUN pecl install pcov && docker-php-ext-enable pcov
+
 # Route NGINX logs to stdout/stderr
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
   && ln -sf /dev/stderr /var/log/nginx/error.log
