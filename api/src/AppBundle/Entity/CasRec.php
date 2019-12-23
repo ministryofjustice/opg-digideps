@@ -13,6 +13,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class CasRec
 {
+    const REALM_PA = 'REALM_PA';
+    const REALM_PROF = 'REALM_PROF';
+    const REALM_LAY = 'REALM_LAY';
+
     /**
      * Holds the mapping rules to define the report type based on the CSV file (CASREC)
      * Used by both PA and Lay
@@ -21,35 +25,35 @@ class CasRec
      */
     private static $csvToReportTypeMap = [
         // Lay
-        [true, User::ROLE_LAY_DEPUTY, ['p3', 'p3g', 'l3', 'l3g'], 'opg103', Report::TYPE_103],
+        [true, self::REALM_LAY, ['p3', 'p3g', 'l3', 'l3g'], 'opg103', Report::TYPE_103],
         // @deprecated (DDPB-2044)
-        [true, User::ROLE_LAY_DEPUTY, ['l3', 'l3g', 'a3'], 'opg103', Report::TYPE_103],
-        [true, User::ROLE_LAY_DEPUTY, ['p2', 'p2a', 'l2a', 'l2'], 'opg102', Report::TYPE_102],
+        [true, self::REALM_LAY, ['l3', 'l3g', 'a3'], 'opg103', Report::TYPE_103],
+        [true, self::REALM_LAY, ['p2', 'p2a', 'l2a', 'l2'], 'opg102', Report::TYPE_102],
         // @deprecated (DDPB-2044)
-        [true, User::ROLE_LAY_DEPUTY, ['l3', 'l3g', 'a3'], 'opg102', Report::TYPE_102],
-        [true, User::ROLE_LAY_DEPUTY, ['hw'], '', Report::TYPE_104],
-        [true, User::ROLE_LAY_DEPUTY, ['hw'], 'opg103', Report::TYPE_103_4],
-        [true, User::ROLE_LAY_DEPUTY, ['hw'], 'opg102', Report::TYPE_102_4],
+        [true, self::REALM_LAY, ['l3', 'l3g', 'a3'], 'opg102', Report::TYPE_102],
+        [true, self::REALM_LAY, ['hw'], '', Report::TYPE_104],
+        [true, self::REALM_LAY, ['hw'], 'opg103', Report::TYPE_103_4],
+        [true, self::REALM_LAY, ['hw'], 'opg102', Report::TYPE_102_4],
         // PA
-        [true, User::ROLE_PA_NAMED, ['a3'], 'opg103', Report::TYPE_103_6],
+        [true, self::REALM_PA, ['a3'], 'opg103', Report::TYPE_103_6],
         // @deprecated (DDPB-2044)
-        [true, User::ROLE_PA_NAMED, ['l3', 'l3g', 'a3'], 'opg103', Report::TYPE_103_6],
-        [true, User::ROLE_PA_NAMED, ['a2', 'a2a'], 'opg102', Report::TYPE_102_6],
+        [true, self::REALM_PA, ['l3', 'l3g', 'a3'], 'opg103', Report::TYPE_103_6],
+        [true, self::REALM_PA, ['a2', 'a2a'], 'opg102', Report::TYPE_102_6],
         // @deprecated (DDPB-2044)
-        [true, User::ROLE_PA_NAMED, ['l3', 'l3g', 'a3'], 'opg102', Report::TYPE_102_6],
-        [true, User::ROLE_PA_NAMED, ['hw'], '', Report::TYPE_104_6],
-        [true, User::ROLE_PA_NAMED, ['hw'], 'opg103', Report::TYPE_103_4_6],
-        [true, User::ROLE_PA_NAMED, ['hw'], 'opg102', Report::TYPE_102_4_6],
+        [true, self::REALM_PA, ['l3', 'l3g', 'a3'], 'opg102', Report::TYPE_102_6],
+        [true, self::REALM_PA, ['hw'], '', Report::TYPE_104_6],
+        [true, self::REALM_PA, ['hw'], 'opg103', Report::TYPE_103_4_6],
+        [true, self::REALM_PA, ['hw'], 'opg102', Report::TYPE_102_4_6],
         // Prof
-        [true, User::ROLE_PROF_NAMED, ['p3', 'p3g'], 'opg103', Report::TYPE_103_5],
+        [true, self::REALM_PROF, ['p3', 'p3g'], 'opg103', Report::TYPE_103_5],
         // @deprecated (DDPB-2044)
-        [true, User::ROLE_PROF_NAMED, ['l3', 'l3g', 'a3'], 'opg103', Report::TYPE_103_5],
-        [true, User::ROLE_PROF_NAMED, ['p2', 'p2a'], 'opg102', Report::TYPE_102_5],
+        [true, self::REALM_PROF, ['l3', 'l3g', 'a3'], 'opg103', Report::TYPE_103_5],
+        [true, self::REALM_PROF, ['p2', 'p2a'], 'opg102', Report::TYPE_102_5],
         // @deprecated (DDPB-2044)
-        [true, User::ROLE_PROF_NAMED, ['l3', 'l3g', 'a3'], 'opg102', Report::TYPE_102_5],
-        [true, User::ROLE_PROF_NAMED, ['hw'], '', Report::TYPE_104_5],
-        [true, User::ROLE_PROF_NAMED, ['hw'], 'opg103', Report::TYPE_103_4_5],
-        [true, User::ROLE_PROF_NAMED, ['hw'], 'opg102', Report::TYPE_102_4_5],
+        [true, self::REALM_PROF, ['l3', 'l3g', 'a3'], 'opg102', Report::TYPE_102_5],
+        [true, self::REALM_PROF, ['hw'], '', Report::TYPE_104_5],
+        [true, self::REALM_PROF, ['hw'], 'opg103', Report::TYPE_103_4_5],
+        [true, self::REALM_PROF, ['hw'], 'opg102', Report::TYPE_102_4_5],
     ];
 
     /**
@@ -292,11 +296,11 @@ class CasRec
      *
      * @param string $typeOfRep    e.g. opg103
      * @param string $corref       e.g. l3, l3g
-     * @param string $userRoleName e.g. ROLE_PA_NAMED
+     * @param string $type         e.g. TYPE_PROF
      *
      * @return string Report::TYPE_*
      */
-    public static function getTypeBasedOnTypeofRepAndCorref($typeOfRep, $corref, $userRoleName)
+    public static function getTypeBasedOnTypeofRepAndCorref($typeOfRep, $corref, $realm)
     {
         $typeOfRep = trim(strtolower($typeOfRep));
         $corref = trim(strtolower($corref));
@@ -305,18 +309,18 @@ class CasRec
         $reportType = null;
         foreach (self::$csvToReportTypeMap as $row) {
             list($enabled, $currentUserRole, $currentCorrefs, $currentTypeOfRep, $outputType) = $row;
-            if ($enabled && $userRoleName === $currentUserRole && in_array($corref, $currentCorrefs) && $typeOfRep === $currentTypeOfRep) {
+            if ($enabled && $realm === $currentUserRole && in_array($corref, $currentCorrefs) && $typeOfRep === $currentTypeOfRep) {
                 return $outputType;
             }
         }
 
         // default report type if no entry mached above
-        switch ($userRoleName) {
-            case User::ROLE_LAY_DEPUTY:
+        switch ($realm) {
+            case self::REALM_LAY:
                 return Report::TYPE_102;
-            case User::ROLE_PA_NAMED:
+            case self::REALM_PA:
                 return Report::TYPE_102_6;
-            case User::ROLE_PROF_NAMED:
+            case self::REALM_PROF:
                 return Report::TYPE_102_5;
         }
 
