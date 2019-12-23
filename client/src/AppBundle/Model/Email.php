@@ -35,17 +35,14 @@ class Email
      */
     private $subject;
 
-    /**
-     * @Assert\NotBlank(message="sendEmail.bodyText.notBlank", groups={"text"})
-     */
     private $bodyText;
 
-    /**
-     * @Assert\NotBlank(message="sendEmail.bodyHtml.notBlank", groups={"html"})
-     */
     private $bodyHtml;
 
     private $attachments = [];
+
+    private $template;
+    private $parameters;
 
     /**
      * @return string $email
@@ -200,5 +197,27 @@ class Email
     public function getAttachments()
     {
         return $this->attachments;
+    }
+
+    public function getTemplate(): ?string
+    {
+        return $this->template;
+    }
+
+    public function setTemplate(string $template): self
+    {
+        $this->template = $template;
+        return $this;
+    }
+
+    public function getParameters(): ?array
+    {
+        return $this->parameters;
+    }
+
+    public function setParameters(array $parameters): self
+    {
+        $this->parameters = $parameters;
+        return $this;
     }
 }

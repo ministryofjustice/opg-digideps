@@ -128,14 +128,10 @@ class MailFactory
         $area = $this->getUserArea($user);
 
         $viewParams = [
-            'name'        => $user->getFullName(),
-            'link'        => $this->generateAbsoluteLink($area, 'user_activate', [
+            'resetLink' => $this->generateAbsoluteLink($area, 'user_activate', [
                 'action' => 'password-reset',
                 'token'  => $user->getRegistrationToken(),
             ]),
-            'domain'      => $this->generateAbsoluteLink($area, 'homepage'),
-            'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
-            'recipientRole' => self::getRecipientRole($user)
         ];
 
         $email = new ModelDir\Email();
@@ -146,8 +142,8 @@ class MailFactory
             ->setToEmail($user->getEmail())
             ->setToName($user->getFullName())
             ->setSubject($this->translate('resetPassword.subject'))
-            ->setBodyHtml($this->templating->render('AppBundle:Email:password-forgotten.html.twig', $viewParams))
-            ->setBodyText($this->templating->render('AppBundle:Email:password-forgotten.text.twig', $viewParams));
+            ->setTemplate($this->container->getParameter('email_templates')['reset_password'])
+            ->setParameters($viewParams);
 
         return $email;
     }
