@@ -444,6 +444,7 @@ class ReportServiceTest extends TestCase
             [null, true, false, false, Report::TYPE_102],
             [null, false, true, false, Report::TYPE_102_5],
             [null, false, false, true, Report::TYPE_102_6],
+            [null, true, true, true, Report::TYPE_102],
             [null, false, false, false, RuntimeException::class],
             [400, false, false, false, RuntimeException::class],
             [400, true, false, false, Report::TYPE_102],
