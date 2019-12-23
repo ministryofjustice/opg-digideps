@@ -398,7 +398,7 @@ jobs:
       - image: circleci/php:7.3-node
     parallelism: 2
     steps:
-      - attach_at_workspace:
+      - attach_workspace:
           at: ~/project
       - merge-code-coverage-reports:
           dir:  ./api/tests/coverage
