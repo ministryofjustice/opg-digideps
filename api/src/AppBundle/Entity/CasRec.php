@@ -324,7 +324,7 @@ class CasRec
                 return Report::TYPE_102_5;
         }
 
-        throw new \Exception(__METHOD__ . ': user role not recognised to determine report type');
+        throw new \Exception(__METHOD__ . ': realm not recognised to determine report type');
     }
 
     /**
