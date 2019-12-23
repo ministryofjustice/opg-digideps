@@ -296,7 +296,7 @@ class CasRec
      *
      * @param string $typeOfRep    e.g. opg103
      * @param string $corref       e.g. l3, l3g
-     * @param string $type         e.g. TYPE_PROF
+     * @param string $realm        e.g. REALM_PROF
      *
      * @return string Report::TYPE_*
      */
