@@ -373,11 +373,9 @@ class RestClient
             return $response;
         } catch (RequestException $e) {
             // request exception contains a body, that gets decoded and passed to RestClientException
-            $this->logger->warning('gterror | ' . get_class($e) . ' | ' . $e->getMessage());
-            throw $e;
-            $this->logger->warning('RestClient | RequestException | ' . $url . ' | ' . $e->getMessage());
-
             $response = $e->getResponse();
+            $this->logger->warning('RestClient | RequestException | ' . $response->getStatusCode() . ' | ' . $url . ' | ' . $e->getMessage());
+
 
             $this->logRequest($url, $method, $start, $options, $response);
 
