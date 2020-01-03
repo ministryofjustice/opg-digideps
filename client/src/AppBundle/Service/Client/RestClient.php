@@ -376,6 +376,7 @@ class RestClient
             $response = $e->getResponse();
             $this->logger->warning('RestClient | RequestException | ' . $response->getStatusCode() . ' | ' . $url . ' | ' . $e->getMessage());
             $this->logger->warning('gterror | ' . json_encode($e->getHandlerContext()));
+            $this->logger->warning('gterror | ' . json_encode($response->getHeaders()));
 
             $this->logRequest($url, $method, $start, $options, $response);
 
