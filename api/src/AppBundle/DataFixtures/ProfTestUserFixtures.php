@@ -615,7 +615,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             $ndr = new Ndr($client);
             $manager->persist($ndr);
         } else {
-            $type = CasRec::getTypeBasedOnTypeofRepAndCorref($clientData['reportType'], $clientData['reportVariation'], CasRec::REALM_PROF);
+            $type = CasRec::getTypeBasedOnTypeofRepAndCorref($clientData['reportType'], $clientData['reportVariation'], $user->getRoleName());
             $endDate = \DateTime::createFromFormat('d/m/Y', $clientData['lastReportDate']);
             $startDate = ReportUtils::generateReportStartDateFromEndDate($endDate);
             $report = new Report($client, $type, $startDate, $endDate);

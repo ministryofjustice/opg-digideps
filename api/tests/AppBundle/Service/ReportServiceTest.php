@@ -5,24 +5,14 @@ namespace Tests\AppBundle\Service;
 use AppBundle\Entity as EntityDir;
 
 use AppBundle\Entity\CasRec;
-use AppBundle\Entity\Client;
-use AppBundle\Entity\NamedDeputy;
 use AppBundle\Entity\Report\Asset;
 use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\User;
 use AppBundle\Service\ReportService;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Exception;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\Prophecy\ObjectProphecy;
-use RuntimeException;
-use Throwable;
 
 class ReportServiceTest extends TestCase
 {
@@ -382,80 +372,6 @@ class ReportServiceTest extends TestCase
         // otherwise not due
         $this->assertEquals(false, ReportService::isDue($oneMinuteAfterLastMidnight));
         $this->assertEquals(false, ReportService::isDue(new \DateTime('next week')));
-    }
-
-    /**
-     * @dataProvider getReportTypeOptions
-     */
-    public function testReportTypeCalculation($namedDeputyType, $isLay, $isProf, $isPa, $expectedType)
-    {
-        $namedDeputy = null;
-        if ($namedDeputyType) {
-            /** @var NamedDeputy&ObjectProphecy $namedDeputyMock */
-            $namedDeputyMock = $this->prophesize(NamedDeputy::class);
-            $namedDeputyMock->getDeputyType()->shouldBeCalled()->willReturn($namedDeputyType);
-            $namedDeputy = $namedDeputyMock->reveal();
-        }
-
-        /** @var Client&ObjectProphecy $client */
-        $client = $this->prophesize(Client::class);
-        $client->getNamedDeputy()->shouldBeCalled()->willReturn($namedDeputy);
-        $client->getCaseNumber()->shouldBeCalled()->willReturn(4148);
-
-        $users = new ArrayCollection();
-        $client->getUsers()->willReturn($users);
-
-        if ($isLay || $isProf || $isPa) {
-            /** @var User&ObjectProphecy $user */
-            $user = $this->prophesize(User::class);
-            $user->isLayDeputy()->willReturn($isLay);
-            $user->isProfDeputy()->willReturn($isProf);
-            $user->isPaDeputy()->willReturn($isPa);
-
-            $users->add($user->reveal());
-        }
-
-        /** @var CasRec&ObjectProphecy $casRec */
-        $casRec = $this->prophesize(CasRec::class);
-        $casRec->getTypeOfReport()->willReturn(null);
-        $casRec->getCorref()->willReturn(null);
-
-        /** @var ObjectRepository&ObjectProphecy $casRecRepository */
-        $casRecRepository = $this->prophesize(ObjectRepository::class);
-        $casRecRepository->findOneBy(['caseNumber' => 4148])->shouldBeCalled()->willReturn($casRec->reveal());
-
-        /** @var EntityManager&ObjectProphecy $em */
-        $em = $this->prophesize(EntityManager::class);
-        $em->getRepository(CasRec::class)->shouldBeCalled()->willReturn($casRecRepository);
-        $em->getRepository(Argument::any())->shouldBeCalled()->willReturn(null);
-
-        if ($expectedType === RuntimeException::class) {
-            $this->expectException($expectedType);
-        }
-
-        $sut = new ReportService($em->reveal(), $this->reportRepo);
-        $type = $sut->getReportTypeBasedOnCasrec($client->reveal());
-
-        if (!($expectedType instanceof Throwable)) {
-            $this->assertEquals($expectedType, $type);
-        }
-    }
-
-    public function getReportTypeOptions()
-    {
-        return [
-            'layUserAttached' => [null, true, false, false, Report::TYPE_102],
-            'profUserAttached' => [null, false, true, false, RuntimeException::class],
-            'paUserAttached' => [null, false, false, true, RuntimeException::class],
-            'multipleUsersAttached' => [null, true, true, true, Report::TYPE_102],
-            'noNamedDeputyNoUser' => [null, false, false, false, RuntimeException::class],
-            'invalidNamedDeputyNoUser' => [400, false, false, false, RuntimeException::class],
-            'invalidNamedDeputyLayUser' => [400, true, false, false, RuntimeException::class],
-            'paNamedDeputy' => [23, false, false, false, Report::TYPE_102_6],
-            'profNamedDeputy' => [21, false, false, false, Report::TYPE_102_5],
-            'otherProfNamedDeputy' => [26, false, false, false, Report::TYPE_102_5],
-            'profNamedDeputyAndLayUser' => [26, true, false, false, Report::TYPE_102_5],
-        ];
     }
 
     public function tearDown(): void

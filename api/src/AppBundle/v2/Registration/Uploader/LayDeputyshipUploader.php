@@ -130,7 +130,7 @@ class LayDeputyshipUploader
         foreach ($reports as $currentActiveReport) {
             $reportCaseNumber = $currentActiveReport->getClient()->getCaseNumber();
             $casRec = $this->casRecEntriesByCaseNumber[$reportCaseNumber];
-            $determinedReportType = CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref(), CasRec::REALM_LAY);
+            $determinedReportType = CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref(), User::ROLE_LAY_DEPUTY);
 
             if ($currentActiveReport->getType() != $determinedReportType) {
                 $currentActiveReport->setType($determinedReportType);
