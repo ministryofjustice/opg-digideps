@@ -10,7 +10,7 @@ Feature: Admin report checklist
       | Not saved yet | lodging-last-saved-by |
       | 1 Nov 2017 | court-date |
       | Health and welfare | report-type-title |
-      | 1 Nov 2018 to 31 Oct 2019 | expected-date |
+      | 1 Nov 2019 to 31 Oct 2020 | expected-date |
       | John          | checklist-client-firstname |
       | 104-client    | checklist-client-lastname |
       | Victoria road    | checklist-client-address   |
