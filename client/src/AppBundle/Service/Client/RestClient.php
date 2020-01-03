@@ -375,7 +375,7 @@ class RestClient
             // request exception contains a body, that gets decoded and passed to RestClientException
             $response = $e->getResponse();
             $this->logger->warning('RestClient | RequestException | ' . $response->getStatusCode() . ' | ' . $url . ' | ' . $e->getMessage());
-
+            $this->logger->warning('gterror | ' . json_encode($e->getHandlerContext()));
 
             $this->logRequest($url, $method, $start, $options, $response);
 
