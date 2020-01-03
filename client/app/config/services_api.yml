@@ -10,7 +10,6 @@ services:
                 Content-Type: application/json
             timeout: 20
             allow_redirects: false
-            debug: true
 
     AppBundle\Service\Client\RestClient:
         arguments:
