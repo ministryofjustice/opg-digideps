@@ -7,7 +7,6 @@ Feature: Admin report checklist
     When I open the "2016-to-2017" checklist for client "02100014"
     Then the URL should match "/admin/report/\d+/checklist"
     And I should see the "court-date" region
-    And I should see the "expected-date" region
     And each text should be present in the corresponding region:
       | Not saved yet     | lodging-last-saved-by                    |
     #failing on master
