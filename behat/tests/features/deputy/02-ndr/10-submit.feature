@@ -124,7 +124,7 @@ Feature: ndr / report submit
         Then the following fields should have the corresponding values:
             | report_edit_startDate_day   | 01   |
             | report_edit_startDate_month | 11   |
-            | report_edit_startDate_year  | 2019 |
             | report_edit_endDate_day     | 31   |
             | report_edit_endDate_month   | 10   |
-            | report_edit_endDate_year    | 2020 |
+        And the "report_edit_startDate_year" field should contain the previous year
+        And the "report_edit_endDate_year" field should contain the current year
