@@ -118,7 +118,6 @@ Feature: Admin report checklist
     And each text should be present in the corresponding region:
       | Case Manager1, Case Manager | information |
       | Some more info 1            | information |
-      | Case Manager1, Case Manager | information |
     Then the URL should match "/admin/report/\d+/checklist"
     And I fill in "report_checklist_furtherInformationReceived" with "Some more info 2"
     When I click on "save-further-information"

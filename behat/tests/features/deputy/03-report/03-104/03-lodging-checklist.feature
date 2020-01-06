@@ -67,12 +67,10 @@ Feature: Admin report checklist
     When I click on "save-further-information"
     Then the form should be valid
     Then the URL should match "/admin/report/\d+/checklist#furtherInformation"
-    # Assert furtherInfo table is updated NOTE reverse order as most recent first.
     And each text should be present in the corresponding region:
       | Some more info 2              | information |
       | Case Manager1, Case Manager   | information |
       | Some more info 1              | information |
-      | Case Manager1, Case Manager   | information |
     Then the URL should match "/admin/report/\d+/checklist"
 
 
