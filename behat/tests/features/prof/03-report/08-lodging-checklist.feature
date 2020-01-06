@@ -12,7 +12,7 @@ Feature: Admin report checklist
       | Property and affairs: general | report-type-title    |
       | Not saved yet     | lodging-last-saved-by            |
       | 20 Mar 2016       | court-date                       |
-      | 20 Mar 2018 to 19 Mar 2019 | expected-date           |
+      | 20 Mar 2019 to 19 Mar 2020 | expected-date           |
       | 20 Mar 2016 - 19 Mar 2017  | submitted-date          |
       | CLY1              | checklist-client-firstname       |
       | HENT1             | checklist-client-lastname        |

@@ -22,7 +22,7 @@ Feature: Admin report checklist
       | Admin User, OPG Admin | lodging-last-saved-by |
       | 1 Nov 2017 | court-date |
       | Property and affairs: general | report-type-title |
-      | 1 Nov 2018 to 31 Oct 2019 | expected-date |
+      | 1 Nov 2019 to 31 Oct 2020 | expected-date |
       | John | checklist-client-firstname |
       | 102-client | checklist-client-lastname |
       | 022222222222222 | checklist-client-phone        |
