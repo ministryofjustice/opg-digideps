@@ -4,8 +4,6 @@ services:
           $config:
             base_uri: "%api_base_url%"
             verify: false
-            # force HTTP 1.0 in order to disable HTTP1.1-chunking corrupting JSON decoding
-            version: "1.0"
             headers:
                 Content-Type: application/json
             timeout: 20

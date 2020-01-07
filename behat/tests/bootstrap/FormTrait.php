@@ -122,6 +122,26 @@ trait FormTrait
     }
 
     /**
+     * @Then the :test field should contain the :yearType year
+     */
+    public function fieldShouldContainYear($field, $yearType)
+    {
+        $currentYear = intval(date('Y'));
+
+        if ($yearType === 'current') {
+            $year = $currentYear;
+        } else if ($yearType === 'previous') {
+            $year = $currentYear - 1;
+        } else if ($yearType === 'next') {
+            $year = $currentYear + 1;
+        } else {
+            throw new \RuntimeException("Invalid year type \"$yearType\"");
+        }
+
+        $this->assertFieldContains($field, $year);
+    }
+
+    /**
      * Fills in form field with specified id|name|label|value.
      *
      * @When /^(?:|I )fill in "(?P<field>(?:[^"]|\\")*)" with "(?P<value>(?:[^"]|\\")*)"$/
