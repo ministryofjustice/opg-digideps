@@ -123,8 +123,6 @@ services:
 
     wkhtmltopdf:
         build: ./wkhtmltopdf
-        ports:
-            - 8091:80
         volumes:
             - ./wkhtmltopdf/app.py:/app.py
         restart: always
