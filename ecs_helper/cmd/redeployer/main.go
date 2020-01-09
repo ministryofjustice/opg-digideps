@@ -2,18 +2,18 @@ package main
 
 import (
 	"fmt"
-    "github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ecs"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-type MyEvent struct {
+type RedeployEvent struct {
 	Cluster string `json:"cluster"`
 	Service string `json:"service"`
 }
 
-func HandleRequest(event MyEvent) (string, error) {
+func HandleRequest(event RedeployEvent) (string, error) {
 	sess, sessionErr := session.NewSession(&aws.Config{
 		Region: aws.String("eu-west-1")},
 	)
