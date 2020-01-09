@@ -194,6 +194,10 @@ orbs:
               name: Install stabilizer
               working_directory: ~/project/ecs_helper
               command: go install -mod vendor ./cmd/stabilizer
+          - run:
+              name: Build redeployer
+              working_directory: ~/project/ecs_helper
+              command: go build ./cmd/redeployer
   terraform:
     executors:
       terraform:
