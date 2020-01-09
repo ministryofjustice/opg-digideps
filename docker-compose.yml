@@ -154,7 +154,7 @@ services:
         image: mkodockx/docker-clamav
         environment:
             CLAMD_CONF_SelfCheck: 0
-            FRESHCLAM_CONF_NotifyClamd: 'nos'
+            FRESHCLAM_CONF_NotifyClamd: 'no'
 
     file-scanner-rest:
         image: lokori/clamav-rest
