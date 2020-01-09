@@ -34,6 +34,7 @@ status: Status
 declaration: Declaration
 declarationTime: Declaration time
 deputyName: Deputy name
+submittedBy: Submitted by
 deputyAgreed: Deputy agreed
 partlyAgreed: Not agreed by all deputies
 partAgreedReason: Reason

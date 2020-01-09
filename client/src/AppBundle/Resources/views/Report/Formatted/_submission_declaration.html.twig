@@ -21,17 +21,17 @@
         <p class="label">{{ 'page.declarationTerms04' | trans }}</p>
 
         <dl class="labelvalue">
-            <dt class="label">Declaration</dt>
+            <dt class="label">{{ 'declaration' | trans }}</dt>
             <dd class="value" id="declarationString">
                 {{ ('agreedBehalfDeputy.' ~ report.agreedBehalfDeputy) | trans() }}
             </dd>
             {% if (report.agreedBehalfDeputy == 'more_deputies_not_behalf') %}
-                <dt class="label">Reason</dt>
+                <dt class="label">{{ 'partAgreedReason' | trans }}</dt>
                 <dd class="value">{{ report.agreedBehalfDeputyExplanation | nl2br }}</dd>
             {% endif %}
-            <dt class="label">Declaration time</dt>
+            <dt class="label">{{ 'declarationTime' | trans }}</dt>
             <dd class="value">{{report.submitDate | date("H:i") }}&nbsp;&nbsp;&nbsp;{{report.submitDate | date("d/m/Y") }}</dd>
-            <dt class="label">Deputy name</dt>
+            <dt class="label">{{ 'submittedBy' | trans }}</dt>
             <dd class="value" id="statusDeputyName">{{ submittedBy.fullname }}</dd>
         </dl>
     </div>

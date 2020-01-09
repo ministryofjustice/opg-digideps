@@ -12,17 +12,17 @@
         <p class="label">{{ 'page.descriptionPara04' | trans }}</p>
 
         <dl class="labelvalue">
-            <dt class="label">Declaration</dt>
+            <dt class="label">{{ 'declaration' | trans }}</dt>
             <dd class="value" id="declarationString">
                 {{ ('agreedBehalfDeputy.' ~ ndr.agreedBehalfDeputy) | trans() }}
             </dd>
             {% if (ndr.agreedBehalfDeputy == 'more_deputies_not_behalf') %}
-                <dt class="label">Reason</dt>
+                <dt class="label">{{ 'partAgreedReason' | trans }}</dt>
                 <dd class="value">{{ ndr.agreedBehalfDeputyExplanation | nl2br }}</dd>
             {% endif %}
-            <dt class="label">Declaration time</dt>
+            <dt class="label">{{ 'declarationTime' | trans }}</dt>
             <dd class="value">{{ndr.submitDate | date("H:i") }}&nbsp;&nbsp;&nbsp;{{ndr.submitDate | date("d/m/Y") }}</dd>
-            <dt class="label">Deputy name</dt>
+            <dt class="label">{{ 'submittedBy' | trans }}</dt>
             <dd class="value" id="statusDeputyName">{{ app.user.fullname }}</dd>
         </dl>
     </div>
