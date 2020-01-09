@@ -5,7 +5,6 @@ This app is the [Complete the deputy report][service] service. It provides an on
 ## Requirements
 
 You must have Docker installed.
-Clone [opg-file-scanner-service](https://github.com/ministryofjustice/opg-file-scanner-service) into `../opg-file-scanner-service`
 
 ## Installation
 
@@ -72,7 +71,7 @@ _See [deployment documentation](docs/DEPLOYMENT.md)_
 - Doctrine 2.0
 - Twig
 - Behat 3
-- PHPUnit 4
+- PHPUnit 8
 - [GOV.UK Design System](https://design-system.service.gov.uk/)
 
 ## License
