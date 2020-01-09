@@ -76,7 +76,8 @@ locals {
       "mountPoints": [],
       "volumesFrom": [],
       "healthCheck": {
-        "Test": ["CMD", "curl", "-L", "--silent", "--output", "/dev/null", "--write-out", "\"%%{http_code}\"", "127.0.0.1:8080"]
+        "command": ["CMD-SHELL", "curl -L --silent --output /dev/null --write-out \"%%{http_code}\" 127.0.0.1:8080"],
+        "timeout": 10
       },
       "logConfiguration": {
         "logDriver": "awslogs",
