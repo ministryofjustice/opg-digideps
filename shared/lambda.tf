@@ -37,15 +37,15 @@ data "aws_iam_policy_document" "lambda_redeployer" {
 
 data "archive_file" "redeployer_zip" {
   type        = "zip"
-  source_file = "${path.module}/../ecs_helper/redeployer"
-  output_path = "${path.module}/../ecs_helper/redeployer.zip"
+  source_file = "${path.module}/go_redeployer/main"
+  output_path = "${path.module}/go_redeployer/function.zip"
 }
 
 resource "aws_lambda_function" "redeployer_lambda" {
   filename      = data.archive_file.redeployer_zip.output_path
-  function_name = "redeployer"
+  function_name = "main"
   role          = aws_iam_role.lambda_redeployer.arn
-  handler       = "redeployer"
+  handler       = "main"
   runtime       = "go1.x"
 
   source_code_hash = filebase64sha256(data.archive_file.redeployer_zip.output_path)
