@@ -43,7 +43,7 @@ data "archive_file" "redeployer_zip" {
 
 resource "aws_lambda_function" "redeployer_lambda" {
   filename      = data.archive_file.redeployer_zip.output_path
-  function_name = "main"
+  function_name = "redeployer"
   role          = aws_iam_role.lambda_redeployer.arn
   handler       = "main"
   runtime       = "go1.x"
