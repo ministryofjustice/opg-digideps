@@ -37,7 +37,7 @@ data "aws_iam_policy_document" "lambda_redeployer" {
 
 data "archive_file" "redeployer_zip" {
   type        = "zip"
-  source_file = "${path.module}/../ecs_helper/main"
+  source_file = "${path.module}/../ecs_helper/redeployer"
   output_path = "${path.module}/../ecs_helper/redeployer.zip"
 }
 
