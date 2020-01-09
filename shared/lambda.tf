@@ -45,7 +45,7 @@ resource "aws_lambda_function" "redeployer_lambda" {
   filename      = data.archive_file.redeployer_zip.output_path
   function_name = "redeployer"
   role          = aws_iam_role.lambda_redeployer.arn
-  handler       = "main"
+  handler       = "redeployer"
   runtime       = "go1.x"
 
   source_code_hash = filebase64sha256(data.archive_file.redeployer_zip.output_path)
