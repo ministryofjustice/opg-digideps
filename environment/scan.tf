@@ -75,10 +75,6 @@ locals {
       "image": "lokori/clamav-rest",
       "mountPoints": [],
       "volumesFrom": [],
-      "healthCheck": {
-        "command": ["CMD-SHELL", "curl --silent --fail 127.0.0.1:8080"],
-        "timeout": 10
-      },
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
