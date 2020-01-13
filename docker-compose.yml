@@ -121,6 +121,12 @@ services:
             - ./api/docker/env/api.env
         restart: always
 
+    wkhtmltopdf:
+        build: ./wkhtmltopdf
+        volumes:
+            - ./wkhtmltopdf/app.py:/app.py
+        restart: always
+
     postgres:
         image: postgres:9.6
         ports:
@@ -142,10 +148,6 @@ services:
 
     redisapi:
         image: redis:2.8.21
-        restart: always
-
-    wkhtmltopdf:
-        image: registry.service.opg.digital/opguk/wkhtmlpdf:0.1.209
         restart: always
 
     file-scanner-server:
