@@ -197,7 +197,7 @@ orbs:
           - run:
               name: Build redeployer
               working_directory: ~/project/shared/go_redeployer
-              command: go build -o main ./main.go
+              command: GOARCH=amd64 GOOS=linux go build -o main ./main.go
   terraform:
     executors:
       terraform:
