@@ -33,6 +33,19 @@ data "aws_iam_policy_document" "lambda_redeployer" {
       "*",
     ]
   }
+
+  statement {
+    sid    = "WriteLogs"
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+    ]
+    resources = [
+      "*",
+    ]
+  }
 }
 
 data "archive_file" "redeployer_zip" {
