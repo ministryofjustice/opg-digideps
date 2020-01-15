@@ -75,6 +75,12 @@ locals {
       "image": "lokori/clamav-rest",
       "mountPoints": [],
       "volumesFrom": [],
+      "dependsOn": [
+        {
+          "containerName": "server",
+          "condition": "HEALTHY"
+        }
+      ],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
@@ -98,6 +104,14 @@ EOF
       "image": "mkodockx/docker-clamav",
       "mountPoints": [],
       "volumesFrom": [],
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "wget --quiet --tries=1 --spider http://localhost:3310/"
+        ],
+        "interval": 30,
+        "retries": 5
+      },
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
@@ -105,7 +119,11 @@ EOF
           "awslogs-region": "eu-west-1",
           "awslogs-stream-prefix": "${aws_iam_role.scan.name}"
         }
-      }
+      },
+      "environment": [
+        { "name": "CLAMD_CONF_SelfCheck", "value": "0" },
+        { "name": "FRESHCLAM_CONF_NotifyClamd", "value": "no" }
+      ]
   }
 
 EOF
