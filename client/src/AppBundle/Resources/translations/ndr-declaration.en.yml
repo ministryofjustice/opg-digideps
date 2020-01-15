@@ -19,6 +19,7 @@ agreedBehalfDeputyExplanation:
 save:
   label: "Submit report"
 status: Status
+declaration: Declaration
 declarationTime: Declaration time
 deputyName: Deputy name
 submittedBy: Submitted by
