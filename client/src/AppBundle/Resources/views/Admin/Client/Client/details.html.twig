@@ -142,6 +142,7 @@
                 {% if report.type == 'ndr' %}
                     {% set enableManageLink = false %}
                     {% set enableChecklistLink = false %}
+                    {% set enableDownloadLink = false %}
                     {% set behatRegionPrefix = 'behat-region-report-ndr' %}
                 {% else %}
                     {% set isProfReport = report.hasSection('profCurrentFees')  %}
