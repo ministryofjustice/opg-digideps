@@ -19,3 +19,11 @@ resource "aws_cloudwatch_event_target" "redeploy_file_scanner" {
     }
   EOF
 }
+
+resource "aws_lambda_permission" "allow_cloudwatch_call_lambda" {
+  statement_id  = "AllowExecutionFromCloudWatch"
+  action        = "lambda:InvokeFunction"
+  function_name = data.aws_lambda_function.redeployer_lambda.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.redeploy_file_scanner.arn
+}
