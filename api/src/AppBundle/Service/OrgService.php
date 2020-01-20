@@ -318,8 +318,7 @@ class OrgService
         $client->setLastname(trim($row['Surname']));
 
         // set court date from Last report day
-        $courtDate = new \DateTime($row['Last Report Day']);
-        $client->setCourtDate($courtDate->modify('-1year +1day'));
+        $client->setCourtDate(new DateTime($row['Last Report Day']));
 
         if (!empty($row['Client Adrs1'])) {
             $client->setAddress($row['Client Adrs1']);
