@@ -4,12 +4,6 @@ default:
     autoload:
         '': "%paths.base%/bootstrap"
     suites:
-        report-management:
-            description: Coverage of report management features
-            paths: [ "%paths.base%/features/reportManagement" ]
-            contexts:
-                - DigidepsBehat\ReportManagement\ReportManagementFeatureContext
-
         infra:
             description: Minimal test suite to check infrastructure
             paths: [ "%paths.base%/features" ]
@@ -60,6 +54,12 @@ default:
             contexts:
                 - behatch:context:rest
                 - DigidepsBehat\FeatureContext
+
+        report-management:
+            description: Coverage of report management features
+            paths: [ "%paths.base%/features/reportManagement" ]
+            contexts:
+                - DigidepsBehat\ReportManagement\ReportManagementFeatureContext
 
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:

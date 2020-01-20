@@ -16,7 +16,7 @@ class CourtOrderFixtureType extends AbstractType
     {
         $builder
             ->add('deputyType', ChoiceType::class, [
-                'choices' => ['Lay' => User::TYPE_LAY, 'PA' => User::TYPE_PA, 'Prof' => User::TYPE_PROF],
+                'choices' => ['Lay' => User::TYPE_LAY, 'Public Authority' => User::TYPE_PA, 'Professional' => User::TYPE_PROF],
                 'data' => $options['deputyType']
             ])
             ->add('reportType', ChoiceType::class, [
