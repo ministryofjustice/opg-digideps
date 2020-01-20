@@ -15,6 +15,7 @@ use AppBundle\Entity\Repository\NamedDeputyRepository;
 use AppBundle\Entity\User;
 use AppBundle\Factory\NamedDeputyFactory;
 use AppBundle\Factory\OrganisationFactory;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -188,7 +189,7 @@ class OrgService
                 }
 
                 $client = $this->upsertClientFromCsv($row, $namedDeputy);
-                if ($client instanceof EntityDir\Client) {
+                if ($client instanceof Client) {
                     $this->upsertReportFromCsv($row, $client);
                 } else {
                     throw new \RuntimeException('Client could not be identified or created');
@@ -282,10 +283,10 @@ class OrgService
             //$client->setUsers(new ArrayCollection());
         } else {
             $this->log('Creating client');
-            $client = new EntityDir\Client();
-            $client = $this->upsertClientDetailsFromCsv($client, $namedDeputy, $row);
+            $client = new Client();
+            $client = $this->upsertClientDetailsFromCsv($client, $row);
 
-            $caseNumber = EntityDir\Client::padCaseNumber(strtolower($row['Case']));
+            $caseNumber = Client::padCaseNumber(strtolower($row['Case']));
             $this->added['clients'][] = $caseNumber;
         }
 
@@ -306,13 +307,13 @@ class OrgService
     /**
      * Applies any updated information in the csv to new and existing clients
      *
-     * @param EntityDir\Client $client
+     * @param Client $client
      * @param array $row
-     * @return EntityDir\Client
+     * @return Client
      */
-    private function upsertClientDetailsFromCsv(EntityDir\Client $client, EntityDir\NamedDeputy $namedDeputy, $row)
+    private function upsertClientDetailsFromCsv(Client $client, $row)
     {
-        $caseNumber = EntityDir\Client::padCaseNumber(strtolower($row['Case']));
+        $caseNumber = Client::padCaseNumber(strtolower($row['Case']));
         $client->setCaseNumber($caseNumber);
         $client->setFirstname(trim($row['Forename']));
         $client->setLastname(trim($row['Surname']));
@@ -537,10 +538,10 @@ class OrgService
     /**
      * Returns true if clients organisation has changed
      *
-     * @param EntityDir\Client $client
+     * @param Client $client
      * @return bool
      */
-    private function clientHasSwitchedOrganisation(EntityDir\Client $client)
+    private function clientHasSwitchedOrganisation(Client $client)
     {
         if (
             $client->getOrganisation() instanceof Organisation
@@ -553,9 +554,9 @@ class OrgService
         return false;
     }
 
-    private function dischargeClient(EntityDir\Client $client)
+    private function dischargeClient(Client $client)
     {
         $this->added['discharged_clients'][] = $client->getCaseNumber();
-        $client->setDeletedAt(new\DateTime());
+        $client->setDeletedAt(newDateTime());
     }
 }
