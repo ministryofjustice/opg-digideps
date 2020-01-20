@@ -1182,33 +1182,18 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         );
     }
 
-    public function isLayReport()
+    public function isLayReport(): bool
     {
-        return
-            $this->getType() === self::TYPE_102
-            || $this->getType() === self::TYPE_103
-            || $this->getType() === self::TYPE_104
-            || $this->getType() === self::TYPE_102_4
-            || $this->getType() === self::TYPE_103_4;
+        return in_array($this->getType(), [self::TYPE_102, self::TYPE_103, self::TYPE_104, self::TYPE_102_4, self::TYPE_103_4]);
     }
 
-    public function isPAreport()
+    public function isPAreport(): bool
     {
-        return
-            $this->getType() === self::TYPE_102_6
-            || $this->getType() === self::TYPE_103_6
-            || $this->getType() === self::TYPE_104_6
-            || $this->getType() === self::TYPE_102_4_6
-            || $this->getType() === self::TYPE_103_4_6;
+        return in_array($this->getType(), [self::TYPE_102_6, self::TYPE_103_6, self::TYPE_104_6, self::TYPE_102_4_6, self::TYPE_103_4_6]);
     }
 
-    public function isProfReport()
+    public function isProfReport(): bool
     {
-        return
-            $this->getType() === self::TYPE_102_5
-            || $this->getType() === self::TYPE_103_5
-            || $this->getType() === self::TYPE_104_5
-            || $this->getType() === self::TYPE_102_4_5
-            || $this->getType() === self::TYPE_103_4_5;
+        return in_array($this->getType(), [self::TYPE_102_5, self::TYPE_103_5, self::TYPE_104_5, self::TYPE_102_4_5, self::TYPE_103_4_5]);
     }
 }

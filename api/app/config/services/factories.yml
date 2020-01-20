@@ -27,9 +27,3 @@ services:
   AppBundle\Factory\OrganisationFactory:
     class: AppBundle\Factory\OrganisationFactory
     arguments: ['%shared_email_domains%']
-
-  AppBundle\FixtureFactory\UserFactory:
-    class: AppBundle\FixtureFactory\UserFactory
-    arguments:
-      - '@Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface'
-      - '%fixtures%'

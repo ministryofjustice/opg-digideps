@@ -109,13 +109,10 @@ class Lifestyle
 
     /**
      * @param string $doesClientUndertakeSocialActivities
-     * @return Lifestyle
      */
     public function setDoesClientUndertakeSocialActivities($doesClientUndertakeSocialActivities)
     {
         $this->doesClientUndertakeSocialActivities = $doesClientUndertakeSocialActivities;
-
-        return $this;
     }
 
     /**
@@ -128,13 +125,10 @@ class Lifestyle
 
     /**
      * @param string $careAppointments
-     * @return Lifestyle
      */
     public function setCareAppointments($careAppointments)
     {
         $this->careAppointments = $careAppointments;
-
-        return $this;
     }
 
     /**

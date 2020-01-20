@@ -8,7 +8,7 @@ default:
             description: Coverage of report management features
             paths: [ "%paths.base%/features/reportManagement" ]
             contexts:
-                - DigidepsBehat\ReportManagement\FeatureContext
+                - DigidepsBehat\ReportManagement\ReportManagementFeatureContext
 
         infra:
             description: Minimal test suite to check infrastructure

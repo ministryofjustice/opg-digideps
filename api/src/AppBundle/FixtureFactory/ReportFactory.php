@@ -16,6 +16,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class ReportFactory
 {
+    /**
+     * @param array $data
+     * @param Client $client
+     * @return Report
+     * @throws \Exception
+     */
     public function create(array $data, Client $client): Report
     {
         if ($data['deputyType'] === User::TYPE_LAY) {
@@ -52,28 +58,6 @@ class ReportFactory
         }
 
         return $report;
-    }
-
-    private function completeExpenses(Report $report)
-    {
-        if ($report->isLayReport()) {
-            $report->setPaidForAnything('no');
-        } else if ($report->isPAreport()) {
-            $report
-                ->setReasonForNoFees('No reason for no fees')
-                ->setPaidForAnything('no');
-        } else {
-            $report->setCurrentProfPaymentsReceived('no');
-            $report
-                ->setProfDeputyCostsHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_FIXED)
-                ->setProfDeputyCostsHasPrevious('no')
-                ->setProfDeputyFixedCost(1000)
-                ->setProfDeputyOtherCosts(new ArrayCollection())
-                ->addProfDeputyOtherCost(new ProfDeputyOtherCost($report, 1, false, 500));
-
-            $report->setProfDeputyCostsEstimateHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_FIXED);
-        }
-
     }
 
     /**
@@ -133,9 +117,9 @@ class ReportFactory
     private function completeLifestyle(Report $report): void
     {
         $ls = (new Lifestyle())
-            ->setReport($report)
-            ->setCareAppointments('no')
-            ->setDoesClientUndertakeSocialActivities('no');
+            ->setReport($report);
+        $ls->setCareAppointments('no');
+        $ls->setDoesClientUndertakeSocialActivities('no');
         $report->setLifestyle($ls);
     }
 
@@ -213,5 +197,28 @@ class ReportFactory
     private function completeMoneyOutShort(Report $report): void
     {
         $report->setMoneyTransactionsShortOutExist('no');
+    }
+
+    /**
+     * @param Report $report
+     */
+    private function completeExpenses(Report $report): void
+    {
+        if ($report->isLayReport()) {
+            $report->setPaidForAnything('no');
+        } else if ($report->isPAreport()) {
+            $report->setReasonForNoFees('No reason for no fees');
+            $report->setPaidForAnything('no');
+        } else {
+            $report->setCurrentProfPaymentsReceived('no');
+            $report
+                ->setProfDeputyCostsHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_FIXED)
+                ->setProfDeputyCostsHasPrevious('no')
+                ->setProfDeputyFixedCost(1000)
+                ->setProfDeputyOtherCosts(new ArrayCollection())
+                ->addProfDeputyOtherCost(new ProfDeputyOtherCost($report, 1, false, 500));
+
+            $report->setProfDeputyCostsEstimateHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_FIXED);
+        }
     }
 }

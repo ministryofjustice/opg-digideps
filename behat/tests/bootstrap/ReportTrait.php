@@ -631,7 +631,7 @@ trait ReportTrait
     /**
      * @Then the :section section for the :startDate to :endDate report between :deputy and :client should be completed
      */
-    public function theSectionForTheToReportBetweenAndShouldBeCompleted($section, $startDate, $endDate, $deputy, $client)
+    public function theSectionForTheReportBetweenDeputyAndClientShouldBeCompleted($section, $startDate, $endDate, $deputy, $client)
     {
         $this->iAmLoggedInAsWithPassword($deputy.'@behat-test.com', 'Abcd1234');
         $this->enterReport($client, $startDate, $endDate);

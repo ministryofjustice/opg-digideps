@@ -2,8 +2,7 @@
 
 namespace AppBundle\v2\Fixture\Controller;
 
-use AppBundle\Entity\Report\MentalCapacity;
-use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
 use AppBundle\Factory\OrganisationFactory;
 use AppBundle\FixtureFactory\ClientFactory;
@@ -49,17 +48,48 @@ class FixtureController
      *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @throws \Exception
      */
     public function createCourtOrder(Request $request)
     {
         $fromRequest = json_decode($request->getContent(), true);
 
+        $client = $this->createClient($fromRequest);
+        $deputy = $this->createDeputy($fromRequest);
+        $this->createReport($fromRequest, $client);
+
+        if ($fromRequest['deputyType'] === User::TYPE_LAY) {
+            $deputy->addClient($client);
+        } else {
+            $this->createOrgAndAttachParticipants($fromRequest, $deputy, $client);
+        }
+
+        $this->em->flush();
+
+        return $this->buildSuccessResponse(['deputyEmail' => $deputy->getEmail()], 'Court order created', Response::HTTP_CREATED);
+    }
+
+    /**
+     * @param $fromRequest
+     * @return Client
+     */
+    private function createClient($fromRequest): Client
+    {
         $client = $this->clientFactory->create([
             'id' => $fromRequest['caseNumber'],
             'courtDate' => $fromRequest['courtDate']
         ]);
         $this->em->persist($client);
+        return $client;
+    }
 
+    /**
+     * @param $fromRequest
+     * @return User
+     * @throws \Exception
+     */
+    private function createDeputy($fromRequest): User
+    {
         $deputy = $this->userFactory->create([
             'id' => $fromRequest['deputyEmail'],
             'deputyType' => $fromRequest['deputyType'],
@@ -67,16 +97,16 @@ class FixtureController
         ]);
 
         $this->em->persist($deputy);
+        return $deputy;
+    }
 
-        if ($fromRequest['deputyType'] === User::TYPE_LAY) {
-            $deputy->addClient($client);
-        } else {
-            $organisation = $this->organisationFactory->createFromEmailIdentifier('Behat Org', $fromRequest['deputyEmail'], true);
-            $organisation->addUser($deputy);
-            $client->setOrganisation($organisation);
-            $this->em->persist($organisation);
-        }
-
+    /**
+     * @param $fromRequest
+     * @param Client $client
+     * @throws \Exception
+     */
+    private function createReport($fromRequest, Client $client): void
+    {
         $report = $this->reportFactory->create([
             'deputyType' => $fromRequest['deputyType'],
             'reportType' => $fromRequest['reportType'],
@@ -84,8 +114,18 @@ class FixtureController
         ], $client);
 
         $this->em->persist($report);
-        $this->em->flush();
+    }
 
-        return $this->buildSuccessResponse(['deputyEmail' => $deputy->getEmail()], 'Court order created', Response::HTTP_CREATED);
+    /**
+     * @param $fromRequest
+     * @param User $deputy
+     * @param Client $client
+     */
+    private function createOrgAndAttachParticipants($fromRequest, User $deputy, Client $client): void
+    {
+        $organisation = $this->organisationFactory->createFromEmailIdentifier('Behat Org', $fromRequest['deputyEmail'], true);
+        $organisation->addUser($deputy);
+        $client->setOrganisation($organisation);
+        $this->em->persist($organisation);
     }
 }

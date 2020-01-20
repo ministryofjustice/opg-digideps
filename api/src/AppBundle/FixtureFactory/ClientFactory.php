@@ -6,6 +6,10 @@ use AppBundle\Entity\Client;
 
 class ClientFactory
 {
+    /**
+     * @param array $data
+     * @return Client
+     */
     public function create(array $data): Client
     {
         $client = new Client();

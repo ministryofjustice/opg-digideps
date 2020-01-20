@@ -7,15 +7,22 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserFactory
 {
+    /** @var UserPasswordEncoderInterface  */
     private $encoder;
-    private $fixtureParams;
 
-    public function __construct(UserPasswordEncoderInterface $encoder, array $fixtureParams)
+    /**
+     * @param UserPasswordEncoderInterface $encoder
+     */
+    public function __construct(UserPasswordEncoderInterface $encoder)
     {
         $this->encoder = $encoder;
-        $this->fixtureParams = $fixtureParams;
     }
 
+    /**
+     * @param array $data
+     * @return User
+     * @throws \Exception
+     */
     public function create(array $data): User
     {
         $user = (new User())
@@ -32,7 +39,7 @@ class UserFactory
             ->setAddressCountry('GB')
             ->setRoleName($data['deputyType'] === 'LAY' ? 'ROLE_LAY_DEPUTY' : 'ROLE_' . $data['deputyType'] . '_NAMED');
 
-        $user->setPassword($this->encoder->encodePassword($user, $this->fixtureParams['account_password']));
+        $user->setPassword($this->encoder->encodePassword($user, 'Abcd1234'));
 
         return $user;
     }

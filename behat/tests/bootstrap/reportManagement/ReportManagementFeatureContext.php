@@ -11,7 +11,7 @@ use DigidepsBehat\RegionTrait;
 use DigidepsBehat\ReportTrait;
 use DigidepsBehat\SiteNavigationTrait;
 
-class FeatureContext extends BaseFeatureContext
+class ReportManagementFeatureContext extends BaseFeatureContext
 {
     use AuthenticationTrait;
     use CourtOrderTrait;

@@ -95,13 +95,10 @@ trait FeeExpensesTrait
 
     /**
      * @param mixed $reasonForNoFees
-     * @return FeeExpensesTrait
      */
     public function setReasonForNoFees($reasonForNoFees)
     {
         $this->reasonForNoFees = $reasonForNoFees;
-
-        return $this;
     }
 
     /**
