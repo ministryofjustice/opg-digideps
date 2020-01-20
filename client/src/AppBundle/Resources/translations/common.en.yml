@@ -26,6 +26,7 @@ previous: Previous
 first: First
 last: Last
 manage: Manage
+manageType: Manage report type
 checklist: Checklist
 warning: Warning
 
@@ -175,3 +176,10 @@ canYouAnswerNDR: |
   it's complete.
 returnToReport: Return to report overview
 returnToClientProfile: Return to client profile
+
+# Full report names
+propertyAffairsGeneral: "Property and affairs: general (OPG102)"
+propertyAffairsMinimal: "Property and affairs: minimal (OPG103)"
+healthWelfare: Health and welfare (OPG104)
+propertyAffairsGeneralHealthWelfare: "Property and affairs with health and welfare: general (OPG102 and OPG104)"
+propertyAffairsMinimalHealthWelfare: "Property and affairs with health and welfare: minimal (OPG103 and OPG104)"

@@ -500,7 +500,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
 
         // Add users from array
         foreach ($this->userData as $data) {
-            $this->addUser($data, $manager);
+            //$this->addUser($data, $manager);
         }
 
         $manager->flush();

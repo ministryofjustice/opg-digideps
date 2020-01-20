@@ -43,6 +43,17 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     const PROF_DEPUTY_COSTS_TYPE_ASSESSED = 'assessed';
     const PROF_DEPUTY_COSTS_TYPE_BOTH = 'both';
 
+    const STATUS_NOT_STARTED = 'notStarted';
+    const STATUS_READY_TO_SUBMIT = 'readyToSubmit';
+    const STATUS_NOT_FINISHED = 'notFinished';
+    const STATUS_SUBMITTED = 'submitted';
+
+    const TYPE_HEALTH_WELFARE = '104';
+    const TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS = '102';
+    const TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS = '103';
+    const TYPE_COMBINED_HIGH_ASSETS = '102-4';
+    const TYPE_COMBINED_LOW_ASSETS = '103-4';
+
     /**
      * @JMS\Type("integer")
      * @JMS\Groups({"visits-care", "report-id"})
@@ -1169,5 +1180,35 @@ class Report implements ReportInterface, StartEndDateComparableInterface
                 Report::TYPE_102_4_6
             ]
         );
+    }
+
+    public function isLayReport()
+    {
+        return
+            $this->getType() === self::TYPE_102
+            || $this->getType() === self::TYPE_103
+            || $this->getType() === self::TYPE_104
+            || $this->getType() === self::TYPE_102_4
+            || $this->getType() === self::TYPE_103_4;
+    }
+
+    public function isPAreport()
+    {
+        return
+            $this->getType() === self::TYPE_102_6
+            || $this->getType() === self::TYPE_103_6
+            || $this->getType() === self::TYPE_104_6
+            || $this->getType() === self::TYPE_102_4_6
+            || $this->getType() === self::TYPE_103_4_6;
+    }
+
+    public function isProfReport()
+    {
+        return
+            $this->getType() === self::TYPE_102_5
+            || $this->getType() === self::TYPE_103_5
+            || $this->getType() === self::TYPE_104_5
+            || $this->getType() === self::TYPE_102_4_5
+            || $this->getType() === self::TYPE_103_4_5;
     }
 }

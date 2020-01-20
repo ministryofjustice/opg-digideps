@@ -2,7 +2,7 @@ Feature: As an admin user, in order to ensure correct report PDFs can always be 
 
   @deputy @download-reports
   Scenario: Case manager user downloads a report that has been submitted
-    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234lkjlk"
     When I click on "client-detail-102"
     Then I should not see "Download"
 #    And I follow "Download"

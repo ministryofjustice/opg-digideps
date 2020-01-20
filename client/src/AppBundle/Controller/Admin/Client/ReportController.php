@@ -7,6 +7,7 @@ use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Exception\ReportNotSubmittedException;
+use AppBundle\Form\Admin\ManageReportTypeType;
 use AppBundle\Form\Admin\ReviewChecklistType;
 use AppBundle\Form\Admin\ReportChecklistType;
 use AppBundle\Form\Admin\UnsubmitReportType;
@@ -208,6 +209,56 @@ class ReportController extends AbstractController
             'report'   => $report,
             'reportDueDate'   => $reportDueDate,
             'form'     => $form->createView()
+        ];
+    }
+
+    /**
+     * @Route("manage-type", name="admin_report_manage_type")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_CASE_MANAGER')")
+     * @param Request $request
+     * @param string $id
+     *
+     * @Template("AppBundle:Admin/Client/Report:manageType.html.twig")
+     *
+     * @return array|Response|RedirectResponse
+     */
+    public function manageTypeAction(Request $request, $id)
+    {
+        $report = $this->getReport(intval($id));
+
+        $form = $this->createForm(ManageReportTypeType::class, $report, ['report' => $report]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $dueDateChoice =  $form['dueDateChoice']->getData();
+            if ($dueDateChoice == UnsubmitReportType::DUE_DATE_OPTION_CUSTOM) {
+                $newDueDate = $form['dueDateCustom']->getData();
+            } elseif (preg_match('/^\d+$/', $dueDateChoice)) {
+                $newDueDate = new \DateTime();
+                $newDueDate->modify("+{$dueDateChoice} weeks");
+            } else {
+                $newDueDate = $report->getDueDate();
+            }
+
+            $report->setDueDate($newDueDate);
+            $this->getRestClient()->put('report/' . $report->getId(), $report);
+
+            if ($report->isSubmitted()) {
+                $report->setUnSubmitDate(new \DateTime());
+                $report->setUnsubmittedSectionsList('none');
+                $this->getRestClient()->put('report/' . $report->getId() . '/unsubmit', $report, [
+                    'unsubmit_date',
+                    'report_due_date',
+                    'startEndDates',
+                    'report_unsubmitted_sections_list'
+                ]);
+            }
+
+            return $this->redirect($this->generateUrl('admin_client_details', ['id'=>$report->getClient()->getId()]));
+        }
+
+        return [
+            'form' => $form->createView(),
+            'report' => $report
         ];
     }
 

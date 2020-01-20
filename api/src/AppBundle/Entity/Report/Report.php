@@ -57,6 +57,7 @@ class Report implements ReportInterface
     const STATUS_NOT_STARTED = 'notStarted';
     const STATUS_READY_TO_SUBMIT = 'readyToSubmit';
     const STATUS_NOT_FINISHED = 'notFinished';
+    const STATUS_SUBMITTED = 'submitted';
 
     // https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
     const TYPE_103 = '103';
@@ -78,6 +79,12 @@ class Report implements ReportInterface
     const TYPE_104_5 = '104-5';
     const TYPE_103_4_5 = '103-4-5';
     const TYPE_102_4_5 = '102-4-5';
+
+    const TYPE_HEALTH_WELFARE = '104';
+    const TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS = '102';
+    const TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS = '103';
+    const TYPE_COMBINED_HIGH_ASSETS = '102-4';
+    const TYPE_COMBINED_LOW_ASSETS = '103-4';
 
     const ENABLE_FEE_SECTIONS = false;
 
@@ -1308,5 +1315,15 @@ class Report implements ReportInterface
     public function isLayReport()
     {
         return in_array($this->getType(), [self::TYPE_102, self::TYPE_103, self::TYPE_104, self::TYPE_102_4, self::TYPE_103_4]);
+    }
+
+    public function isPAreport()
+    {
+        return in_array($this->getType(), [self::TYPE_102_6, self::TYPE_103_6, self::TYPE_104_6, self::TYPE_102_4_6, self::TYPE_103_4_6]);
+    }
+
+    public function isProfReport()
+    {
+        return in_array($this->getType(), [self::TYPE_102_5, self::TYPE_103_5, self::TYPE_104_5, self::TYPE_102_4_5, self::TYPE_103_4_5]);
     }
 }

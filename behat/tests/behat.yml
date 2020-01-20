@@ -4,6 +4,12 @@ default:
     autoload:
         '': "%paths.base%/bootstrap"
     suites:
+        report-management:
+            description: Coverage of report management features
+            paths: [ "%paths.base%/features/reportManagement" ]
+            contexts:
+                - DigidepsBehat\ReportManagement\FeatureContext
+
         infra:
             description: Minimal test suite to check infrastructure
             paths: [ "%paths.base%/features" ]
