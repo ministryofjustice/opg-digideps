@@ -16,7 +16,7 @@ trait ReportManagementTrait
 
         $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
         $this->clickOnBehatLink('client-detail-'.$client);
-        $this->clickOnLinkWithTextInRegion('Edit report type', 'report-'.$startDate.'-to-'.$endDate);
+        $this->clickOnBehatLink('report-'.$startDate.'-to-'.$endDate.'-manage-type');
         $this->selectOption('manage_report_type[type]', $type);
         $this->selectOption('manage_report_type[dueDateChoice]', 'keep');
         $this->pressButton('manage_report_type[save]');

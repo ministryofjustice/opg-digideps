@@ -164,7 +164,11 @@
                         {% if report.type == 'ndr' %}
                             NDR
                         {% else %}
-                            OPG{{ report.type | upper }}
+                            <a href="{{ path('admin_report_manage_type', {'id': report.id}) }}"
+                               class="{{ 'behat-link-report-' ~ report.getPeriod() | replace({' ': '-'}) ~ '-manage-type' }}"
+                            >
+                                OPG{{ report.type | upper }}
+                            </a>
                         {% endif %}
                     </td>
                     <td class="govuk-table__cell {{ behatRegionPrefix }}-due-date">
@@ -176,10 +180,6 @@
                         </td>
                     {% endif %}
                     <td class="govuk-table__cell text--right">
-                        <a id="{{ 'behat-link-report-' ~ report.getPeriod() | replace({' ': '-'}) ~ '-manage-type' }}"
-                           href="{{ path('admin_report_manage_type', {'id': report.id}) }}"
-                           class="behat-link-manage-type">{{ 'manageType' | trans({}, 'common') }}</a>
-                        <br />
                         {% if enableChecklistLink %}
                             <a href="{{ path('admin_report_checklist', {'id': report.id}) }}"
                                class="behat-link-checklist">{{ 'checklist' | trans({}, 'common') }}</a>
