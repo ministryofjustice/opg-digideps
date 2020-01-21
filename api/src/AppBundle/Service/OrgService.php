@@ -318,7 +318,6 @@ class OrgService
         $client->setFirstname(trim($row['Forename']));
         $client->setLastname(trim($row['Surname']));
 
-        // set court date from Last report day
         $client->setCourtDate(new DateTime($row['Made Date']));
 
         if (!empty($row['Client Adrs1'])) {

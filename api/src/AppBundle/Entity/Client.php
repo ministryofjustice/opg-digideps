@@ -918,18 +918,7 @@ class Client implements ClientInterface
             $year = date('Y');
         }
 
-        // clone datetime object. Do not alter object courtDate property.
-        /** @var \DateTime $expectedReportStartDate */
-        if (!($this->getCourtDate() instanceof \DateTime)) {
-            if ($this->getCalculatedCourtDate() instanceof \DateTime) {
-                $expectedReportStartDate = clone $this->getCalculatedCourtDate();
-            } else {
-                // nothing to use for expected start date
-                return null;
-            }
-        } else {
-            $expectedReportStartDate = clone $this->getCourtDate();
-        }
+        $expectedReportStartDate = clone $this->getCourtDate();
 
         // if court Date is this year, just return it as the start date
         if ($expectedReportStartDate->format('Y') == $year) {
@@ -960,43 +949,6 @@ class Client implements ClientInterface
         }
         $expectedReportEndDate = clone $this->getExpectedReportStartDate($year);
         return $expectedReportEndDate->modify('+1year -1day');
-    }
-
-    /**
-     * Generates the Report Court date based on the first report made by client
-     *
-     * @JMS\VirtualProperty
-     * @var DateTime
-     *
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\SerializedName("calculated_court_date")
-     * @JMS\Groups({"checklist-information"})
-     *
-     * @return \DateTime|null
-     */
-    public function getCalculatedCourtDate()
-    {
-        if ($this->getCourtDate() instanceof \DateTime) {
-            return $this->getCourtDate();
-        }
-
-        $arrayIterator = $this->reports->filter(function ($report) {
-            return $report->getEndDate();
-        })->getIterator();
-
-        # Sort by end date so the oldest first
-        $arrayIterator->uasort(function ($first, $second) {
-            return $first->getEndDate() > $second->getEndDate() ? 1 : -1;
-        });
-
-        $orderedReports = iterator_to_array($arrayIterator);
-
-        if (isset($orderedReports[0]) && $orderedReports[0] instanceof Report && $orderedReports[0]->getEndDate() instanceof \DateTime) {
-            $calculatedCourtDate = clone $orderedReports[0]->getEndDate();
-            return $calculatedCourtDate->modify('-1 year +1 day');
-        }
-
-        return null;
     }
 
     /**
