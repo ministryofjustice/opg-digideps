@@ -57,7 +57,6 @@ class Report implements ReportInterface
     const STATUS_NOT_STARTED = 'notStarted';
     const STATUS_READY_TO_SUBMIT = 'readyToSubmit';
     const STATUS_NOT_FINISHED = 'notFinished';
-    const STATUS_SUBMITTED = 'submitted';
 
     // https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
     const TYPE_103 = '103';

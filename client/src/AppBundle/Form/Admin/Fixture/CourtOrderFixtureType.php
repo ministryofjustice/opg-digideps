@@ -30,7 +30,7 @@ class CourtOrderFixtureType extends AbstractType
                 'data' => $options['reportType']
             ])
             ->add('reportStatus', ChoiceType::class, [
-                'choices' => ['Not started' => Report::STATUS_NOT_STARTED, 'Submitted' => Report::STATUS_SUBMITTED],
+                'choices' => ['Not started' => Report::STATUS_NOT_STARTED, 'Submittable' => Report::STATUS_READY_TO_SUBMIT],
                 'data' => $options['reportStatus']
             ])
             ->add('submit', SubmitType::class);

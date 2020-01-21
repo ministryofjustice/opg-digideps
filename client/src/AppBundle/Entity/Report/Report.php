@@ -46,7 +46,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     const STATUS_NOT_STARTED = 'notStarted';
     const STATUS_READY_TO_SUBMIT = 'readyToSubmit';
     const STATUS_NOT_FINISHED = 'notFinished';
-    const STATUS_SUBMITTED = 'submitted';
 
     const TYPE_HEALTH_WELFARE = '104';
     const TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS = '102';

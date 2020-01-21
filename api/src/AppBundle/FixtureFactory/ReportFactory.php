@@ -37,7 +37,7 @@ class ReportFactory
 
         $report = new Report($client, $type, $startDate, $endDate);
 
-        if (isset($data['reportStatus']) && $data['reportStatus'] === Report::STATUS_SUBMITTED) {
+        if (isset($data['reportStatus']) && $data['reportStatus'] === Report::STATUS_READY_TO_SUBMIT) {
             $this->completeDecisions($report);
             $this->completeContacts($report);
             $this->completeVistsAndCare($report);
