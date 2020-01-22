@@ -329,7 +329,18 @@ class ReportService
 
         $this->_em->persist($submission);
 
-        if ($currentReport instanceof Report && $currentReport->getUnSubmitDate()) {
+        if ($currentReport instanceof Ndr) {
+            // Find the first report and clone assets/accounts across
+            $reports = $currentReport->getClient()->getReports();
+
+            if (count($reports) === 1) {
+                $newYearReport = $reports[0];
+
+                $this->clonePersistentResources($newYearReport, $currentReport);
+            } else if (count($reports) === 0) {
+                $newYearReport = $this->createNextYearReport($currentReport);
+            }
+        } elseif ($currentReport instanceof Report && $currentReport->getUnSubmitDate()) {
             //unsubmitted report
             $currentReport->setUnSubmitDate(null);
             $currentReport->setUnsubmittedSectionsList(null);
