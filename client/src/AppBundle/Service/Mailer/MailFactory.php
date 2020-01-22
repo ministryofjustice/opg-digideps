@@ -38,18 +38,12 @@ class MailFactory
      */
     private $baseURLs;
 
-    /**
-     * @var array
-     */
-    private $emailParams;
-
-    public function __construct(Translator $translator, Router $router, TwigEngine $templating, array $baseURLs, array $emailParams)
+    public function __construct(Translator $translator, Router $router, TwigEngine $templating, array $baseURLs)
     {
         $this->translator = $translator;
         $this->router = $router;
         $this->templating = $templating;
         $this->baseURLs = $baseURLs;
-        $this->emailParams = $emailParams;
     }
 
     /**
@@ -65,7 +59,7 @@ class MailFactory
             case self::AREA_DEPUTY:
                 return $this->baseURLs['front'] . $this->router->generate($routeName, $params);
             case self::AREA_ADMIN:
-                return $this->container->getParameter('admin_host') . $this->router->generate($routeName, $params);
+                return $this->baseURLs['admin'] . $this->router->generate($routeName, $params);
             default:
                 throw new \Exception("area $area not found");
         }
@@ -133,10 +127,12 @@ class MailFactory
 
     /**
      * @param EntityDir\User $user
+     * @param array $emailSendParams
      *
      * @return ModelDir\Email
+     * @throws \Exception
      */
-    public function createResetPasswordEmail(User $user)
+    public function createResetPasswordEmail(User $user, array $emailSendParams)
     {
         $area = $this->getUserArea($user);
 
@@ -150,7 +146,7 @@ class MailFactory
         $email = new ModelDir\Email();
 
         $email
-            ->setFromEmail($this->emailParams['fromEmail'])
+            ->setFromEmail($emailSendParams['from_email'])
             ->setFromName($this->translate('resetPassword.fromName'))
             ->setToEmail($user->getEmail())
             ->setToName($user->getFullName())

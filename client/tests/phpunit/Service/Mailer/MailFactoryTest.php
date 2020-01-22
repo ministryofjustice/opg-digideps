@@ -30,7 +30,7 @@ class MailFactoryTest extends TestCase
     /**
      * @var array
      */
-    private $emailParams;
+    private $emailSendParams;
 
     /**
      * @var ObjectProphecy&Translator
@@ -99,9 +99,8 @@ class MailFactoryTest extends TestCase
             'admin' => 'https://admin.base.url'
         ];
 
-        $this->emailParams = [
-            'fromEmail' => 'from@digital.justice.gov.uk',
-            'toEmail' => 'to@digital.justice.gov.uk'
+        $this->emailSendParams = [
+            'from_email' => 'from@digital.justice.gov.uk'
         ];
 
         $this->translator = self::prophesize('Symfony\Bundle\FrameworkBundle\Translation\Translator');
@@ -168,7 +167,6 @@ class MailFactoryTest extends TestCase
 //        non_admin_host
 //        admin_host
 //        ('email_send')['from_email']
-//        ('email_send')['to_email']
 
         $this->router->generate('user_activate', [
             'action' => 'password-reset',
@@ -182,11 +180,10 @@ class MailFactoryTest extends TestCase
             $this->translator->reveal(),
             $this->router->reveal(),
             $this->templating->reveal(),
-            $this->baseURLs,
-            $this->emailParams
+            $this->baseURLs
         );
 
-        $email = $sut->createResetPasswordEmail($this->layDeputy);
+        $email = $sut->createResetPasswordEmail($this->layDeputy, $this->emailSendParams);
 
         self::assertStringContainsString('from@digital.justice.gov.uk', $email->getFromEmail());
         self::assertStringContainsString('OPG', $email->getFromName());
