@@ -248,14 +248,6 @@ class Client
 
     /**
      * @var \DateTime
-     *
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"checklist-information", "edit", "client-court-date"})
-     */
-    private $calculatedCourtDate;
-
-    /**
-     * @var \DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      */
     private $archivedAt;
@@ -912,24 +904,6 @@ class Client
     public function setExpectedReportEndDate($expectedReportEndDate)
     {
         $this->expectedReportEndDate = $expectedReportEndDate;
-        return $this;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getCalculatedCourtDate()
-    {
-        return $this->calculatedCourtDate;
-    }
-
-    /**
-     * @param \DateTime $calculatedCourtDate
-     * @return $this
-     */
-    public function setCalculatedCourtDate($calculatedCourtDate)
-    {
-        $this->calculatedCourtDate = $calculatedCourtDate;
         return $this;
     }
 
