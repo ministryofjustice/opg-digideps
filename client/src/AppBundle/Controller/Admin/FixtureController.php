@@ -38,11 +38,12 @@ class FixtureController extends AbstractController
             $submitted = $form->getData();
             $courtDate = $request->get('court-date') ? new \DateTime($request->get('court-date')) : new \DateTime('2017-02-01');
             $deputyEmail = $request->query->get('deputy-email', sprintf('%s-deputy-%s@fixture.com', strtolower($submitted['deputyType']), mt_rand(1000, 9999)));
+            $randomCaseNumber = str_pad(rand(00000001,99999999), 8, "0", STR_PAD_LEFT);
 
             $this->getRestClient()->post('v2/fixture/court-order', json_encode([
                 'deputyType' => $submitted['deputyType'],
                 'deputyEmail' => $deputyEmail,
-                'caseNumber' =>  $request->get('case-number', rand(00000001,99999999)),
+                'caseNumber' =>  $request->get('case-number', $randomCaseNumber),
                 'reportType' => $submitted['reportType'],
                 'reportStatus' => $submitted['reportStatus'],
                 'courtDate' => $courtDate->format('Y-m-d')

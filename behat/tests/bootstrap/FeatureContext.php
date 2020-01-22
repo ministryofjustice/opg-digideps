@@ -4,8 +4,6 @@ namespace DigidepsBehat;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\MinkExtension\Context\MinkContext;
-use DigidepsBehat\Common\CourtOrderTrait;
-use DigidepsBehat\ReportManagement\ReportManagementTrait;
 
 /**
  * Behat context class.
@@ -16,7 +14,6 @@ use DigidepsBehat\ReportManagement\ReportManagementTrait;
 class FeatureContext extends MinkContext implements SnippetAcceptingContext
 {
     use AuthenticationTrait,
-        CourtOrderTrait,
         DebugTrait,
         DbTrait,
         CookieTrait,
@@ -27,7 +24,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         FormTrait,
         LinksTrait,
         LinksPreviouslySavedTrait,
-        ReportManagementTrait,
         RegionTrait,
         ReportTrait,
         SiteNavigationTrait,

@@ -63,6 +63,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"report_type"})
      *
      * see TYPE_* constant
      *

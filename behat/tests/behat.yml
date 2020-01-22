@@ -59,7 +59,7 @@ default:
             description: Coverage of report management features
             paths: [ "%paths.base%/features/ReportManagement" ]
             contexts:
-                - DigidepsBehat\FeatureContext
+                - DigidepsBehat\ReportManagement\ReportManagementFeatureContext
 
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:

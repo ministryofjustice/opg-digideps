@@ -176,7 +176,7 @@ class ReportController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-        if (!empty($data['type'])) {
+        if (isset($data['type'])) {
             $report->setType($data['type']);
             $report->updateSectionsStatusCache($report->getAvailableSections());
         }
@@ -306,6 +306,10 @@ class ReportController extends RestController
             $report->updateSectionsStatusCache([
                 Report::SECTION_GIFTS,
             ]);
+        }
+
+        if (array_key_exists('due_date', $data)) {
+            $report->setDueDate(new \DateTime($data['due_date']));
         }
 
         if (array_key_exists('start_date', $data)) {

@@ -146,7 +146,7 @@
                     {% set behatRegionPrefix = 'behat-region-report-ndr' %}
                 {% else %}
                     {% set isProfReport = report.hasSection('profCurrentFees')  %}
-                    {% set enableManageLink = (report.submitted or report.submitDate) %}
+                    {% set enableManageLink = true %}
                     {% set enableChecklistLink = (report.submitted or report.submitDate) and not isProfReport %}
                     {% set enableDownloadLink = (report.submitted or report.submitDate) %}
                     {% set behatRegionPrefix = 'behat-region-report-' ~ report.getPeriod() | replace({' ': '-'}) %}
@@ -164,11 +164,7 @@
                         {% if report.type == 'ndr' %}
                             NDR
                         {% else %}
-                            <a href="{{ path('admin_report_manage_type', {'id': report.id}) }}"
-                               class="{{ 'behat-link-report-' ~ report.getPeriod() | replace({' ': '-'}) ~ '-manage-type' }}"
-                            >
-                                OPG{{ report.type | upper }}
-                            </a>
+                            OPG{{ report.type | upper }}
                         {% endif %}
                     </td>
                     <td class="govuk-table__cell {{ behatRegionPrefix }}-due-date">
