@@ -242,11 +242,12 @@ class UserFixtures extends AbstractDataFixture
 
         // Create report for PROF/PA user 2 years ago
         if ($data['deputyType'] === 'PROF' || $data['deputyType'] === 'PA') {
-            $type = CasRec::getTypeBasedOnTypeofRepAndCorref($data['reportType'], $data['reportVariation'], $user->getRoleName());
+            $realm = $data['deputyType'] === 'PROF' ? CasRec::REALM_PROF : CasRec::REALM_PA;
+            $type = CasRec::getTypeBasedOnTypeofRepAndCorref($data['reportType'], $data['reportVariation'], $realm);
             $startDate = $client->getExpectedReportStartDate();
-            $startDate->sub(new \DateInterval('P2Y'));
+            $startDate->setDate('2016', intval($startDate->format('m')), intval($startDate->format('d')));
             $endDate = $client->getExpectedReportEndDate();
-            $endDate->sub(new \DateInterval('P2Y'));
+            $endDate->setDate('2017', intval($endDate->format('m')), intval($endDate->format('d')));
 
             $report = new Report($client, $type, $startDate, $endDate);
 

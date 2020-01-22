@@ -121,6 +121,12 @@ services:
             - ./api/docker/env/api.env
         restart: always
 
+    wkhtmltopdf:
+        build: ./wkhtmltopdf
+        volumes:
+            - ./wkhtmltopdf/app.py:/app.py
+        restart: always
+
     postgres:
         image: postgres:9.6
         ports:
@@ -144,12 +150,11 @@ services:
         image: redis:2.8.21
         restart: always
 
-    wkhtmltopdf:
-        image: registry.service.opg.digital/opguk/wkhtmlpdf:0.1.209
-        restart: always
-
     file-scanner-server:
         image: mkodockx/docker-clamav
+        environment:
+            CLAMD_CONF_SelfCheck: 0
+            FRESHCLAM_CONF_NotifyClamd: 'no'
 
     file-scanner-rest:
         image: lokori/clamav-rest

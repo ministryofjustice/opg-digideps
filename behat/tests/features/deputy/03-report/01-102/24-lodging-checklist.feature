@@ -22,7 +22,6 @@ Feature: Admin report checklist
       | Admin User, OPG Admin | lodging-last-saved-by |
       | 1 Nov 2017 | court-date |
       | Property and affairs: general | report-type-title |
-      | 1 Nov 2018 to 31 Oct 2019 | expected-date |
       | John | checklist-client-firstname |
       | 102-client | checklist-client-lastname |
       | 022222222222222 | checklist-client-phone        |
@@ -49,11 +48,11 @@ Feature: Admin report checklist
       | behat-lay-deputy-102@publicguardian.gov.uk | checklist-deputy-email |
     # Assert furtherInfo table is populated with unsubmit information
     And each text should be present in the corresponding region:
-      | Incomplete submitted              | information-1            |
-      | Decisions                         | information-1            |
-      | Deputy expenses                   | information-1            |
-      | Due date set to: 30 April 2022    | information-1            |
-      | Admin User, OPG Admin           | information-created-by-1   |
+      | Incomplete submitted              | information |
+      | Decisions                         | information |
+      | Deputy expenses                   | information |
+      | Due date set to: 30 April 2022    | information |
+      | Admin User, OPG Admin             | information |
     # check auto-filled answers
     And the following fields should have the corresponding values:
       | report_checklist_futureSignificantDecisions_0 | yes     |
@@ -116,9 +115,8 @@ Feature: Admin report checklist
       | report_checklist_furtherInformationReceived |  |
     # Assert furtherInfo table is populated
     And each text should be present in the corresponding region:
-      | Case Manager1, Case Manager | information-created-by-1 |
-      | Some more info 1            | information-1            |
-      | Case Manager1, Case Manager | information-created-by-1 |
+      | Case Manager1, Case Manager | information |
+      | Some more info 1            | information |
     Then the URL should match "/admin/report/\d+/checklist"
     And I fill in "report_checklist_furtherInformationReceived" with "Some more info 2"
     When I click on "save-further-information"
@@ -126,9 +124,9 @@ Feature: Admin report checklist
     Then the URL should match "/admin/report/\d+/checklist#furtherInformation"
     # Assert furtherInfo table is updated NOTE reverse order as most recent first.
     And each text should be present in the corresponding region:
-      | Some more info 2            | information-1            |
-      | Case Manager1, Case Manager | information-created-by-1 |
-      | Some more info 1            | information-2            |
+      | Some more info 2            | information |
+      | Case Manager1, Case Manager | information |
+      | Some more info 1            | information |
     Then the URL should match "/admin/report/\d+/checklist"
 
 

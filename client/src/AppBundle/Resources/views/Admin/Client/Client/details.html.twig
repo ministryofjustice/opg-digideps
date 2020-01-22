@@ -142,11 +142,13 @@
                 {% if report.type == 'ndr' %}
                     {% set enableManageLink = false %}
                     {% set enableChecklistLink = false %}
+                    {% set enableDownloadLink = false %}
                     {% set behatRegionPrefix = 'behat-region-report-ndr' %}
                 {% else %}
                     {% set isProfReport = report.hasSection('profCurrentFees')  %}
                     {% set enableManageLink = (report.submitted or report.submitDate) %}
                     {% set enableChecklistLink = (report.submitted or report.submitDate) and not isProfReport %}
+                    {% set enableDownloadLink = (report.submitted or report.submitDate) %}
                     {% set behatRegionPrefix = 'behat-region-report-' ~ report.getPeriod() | replace({' ': '-'}) %}
                 {% endif %}
 
@@ -182,6 +184,11 @@
                         {% if enableManageLink %}
                             <a href="{{ path('admin_report_manage', {'id': report.id}) }}"
                                class="behat-link-manage">{{ 'manage' | trans({}, 'common') }}</a>
+                            <br />
+                        {% endif %}
+                        {% if enableDownloadLink %}
+{#                            <a href="{{ path('report_pdf', {'reportId': report.id}) }}"#}
+{#                               class="behat-link-download">{{ 'download' | trans({}, 'common') }}</a>#}
                         {% endif %}
                     </td>
                 </tr>

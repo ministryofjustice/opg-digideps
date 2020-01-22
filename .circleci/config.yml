@@ -194,6 +194,10 @@ orbs:
               name: Install stabilizer
               working_directory: ~/project/ecs_helper
               command: go install -mod vendor ./cmd/stabilizer
+          - run:
+              name: Build redeployer
+              working_directory: ~/project/shared/go_redeployer
+              command: GOARCH=amd64 GOOS=linux go build -o main ./main.go
   terraform:
     executors:
       terraform:

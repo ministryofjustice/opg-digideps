@@ -372,7 +372,7 @@ class OrgService
         $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref(
             $csvRow['Typeofrep'],
             $csvRow['Corref'],
-            EntityDir\User::$depTypeIdToUserRole[$csvRow['Dep Type']]
+            EntityDir\User::$depTypeIdToRealm[$csvRow['Dep Type']]
         );
 
         $report = $client->getCurrentReport();

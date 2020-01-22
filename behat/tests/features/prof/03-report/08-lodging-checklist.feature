@@ -5,14 +5,12 @@ Feature: Admin report checklist
     When I open the "2016-to-2017" checklist for client "31000010"
     Then the URL should match "/admin/report/\d+/checklist"
     And I should see the "court-date" region
-    And I should see the "expected-date" region
     And each text should be present in the corresponding region:
       | CLY1 HENT1        | fullName                         |
       | 31000010          | case-number                      |
       | Property and affairs: general | report-type-title    |
       | Not saved yet     | lodging-last-saved-by            |
       | 20 Mar 2016       | court-date                       |
-      | 20 Mar 2018 to 19 Mar 2019 | expected-date           |
       | 20 Mar 2016 - 19 Mar 2017  | submitted-date          |
       | CLY1              | checklist-client-firstname       |
       | HENT1             | checklist-client-lastname        |
@@ -100,8 +98,8 @@ Feature: Admin report checklist
     # Assert furtherInfo table is populated
     And each text should be present in the corresponding region:
       | Case Manager1, Case Manager | lodging-last-saved-by    |
-      | Some more info 1            | information-1            |
-      | Case Manager1, Case Manager | information-created-by-1 |
+      | Some more info 1            | information              |
+      | Case Manager1, Case Manager | information              |
     Then the URL should match "/admin/report/\d+/checklist"
     And I fill in "report_checklist_furtherInformationReceived" with "Some more info 2"
     When I click on "save-further-information"
@@ -109,10 +107,10 @@ Feature: Admin report checklist
     Then the URL should match "/admin/report/\d+/checklist#furtherInformation"
     # Assert furtherInfo table is updated NOTE reverse order as most recent first.
     And each text should be present in the corresponding region:
-      | Some more info 2            | information-1            |
-      | Case Manager1, Case Manager | information-created-by-1 |
-      | Some more info 1            | information-2            |
-      | Case Manager1, Case Manager | information-created-by-2 |
+      | Some more info 2            | information |
+      | Case Manager1, Case Manager | information |
+      | Some more info 1            | information |
+      | Case Manager1, Case Manager | information |
     Then the URL should match "/admin/report/\d+/checklist"
 
 

@@ -20,12 +20,6 @@
             Not known
         {% endif %}
     </div>
-    <div class="behat-region-expected-date hidden">
-        <strong>{{ (page ~ '.expected') | trans }}:</strong>
-        {% if report.client.expectedReportEndDate is defined %}
-            {{ report.client.expectedReportStartDate | date("j M Y") }} to {{ report.client.expectedReportEndDate | date("j M Y") }}
-        {% endif %}
-    </div>
     <div class="behat-region-submitted-date">
         <strong>{{ (page ~ '.submitted') | trans }}:</strong> {{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}
     </div>
