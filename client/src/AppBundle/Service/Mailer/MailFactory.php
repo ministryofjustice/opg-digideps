@@ -5,15 +5,18 @@ namespace AppBundle\Service\Mailer;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\User;
 use AppBundle\Model as ModelDir;
-use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Intl\Intl;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Translation\DataCollectorTranslator;
 
 class MailFactory
 {
     const AREA_DEPUTY = 'deputy';
     const AREA_ADMIN = 'admin';
+
+    const RESET_PASSWORD_TEMPLATE = 'e7312e62-2602-4903-89e6-93ad943bacb1';
 
     /**
      * @var Translator
@@ -21,22 +24,32 @@ class MailFactory
     protected $translator;
 
     /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    /**
      * @var Router
      */
     protected $router;
 
-    public function __construct(ContainerInterface $container)
+    /**
+     * @var TwigEngine
+     */
+    private $templating;
+
+    /**
+     * @var array
+     */
+    private $baseURLs;
+
+    /**
+     * @var array
+     */
+    private $emailParams;
+
+    public function __construct(Translator $translator, Router $router, TwigEngine $templating, array $baseURLs, array $emailParams)
     {
-        // validate args
-        $this->container = $container;
-        $this->translator = $container->get('translator');
-        $this->templating = $container->get('templating');
-        $this->router = $container->get('router');
+        $this->translator = $translator;
+        $this->router = $router;
+        $this->templating = $templating;
+        $this->baseURLs = $baseURLs;
+        $this->emailParams = $emailParams;
     }
 
     /**
@@ -50,7 +63,7 @@ class MailFactory
     {
         switch ($area) {
             case self::AREA_DEPUTY:
-                return $this->container->getParameter('non_admin_host') . $this->router->generate($routeName, $params);
+                return $this->baseURLs['front'] . $this->router->generate($routeName, $params);
             case self::AREA_ADMIN:
                 return $this->container->getParameter('admin_host') . $this->router->generate($routeName, $params);
             default:
@@ -137,12 +150,12 @@ class MailFactory
         $email = new ModelDir\Email();
 
         $email
-            ->setFromEmail($this->container->getParameter('email_send')['from_email'])
+            ->setFromEmail($this->emailParams['fromEmail'])
             ->setFromName($this->translate('resetPassword.fromName'))
             ->setToEmail($user->getEmail())
             ->setToName($user->getFullName())
             ->setSubject($this->translate('resetPassword.subject'))
-            ->setTemplate($this->container->getParameter('email_templates')['reset_password'])
+            ->setTemplate(self::RESET_PASSWORD_TEMPLATE)
             ->setParameters($viewParams);
 
         return $email;

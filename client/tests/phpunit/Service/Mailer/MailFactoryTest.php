@@ -5,6 +5,10 @@ namespace AppBundle\Service\Mailer;
 use AppBundle\Entity\User;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 
 class MailFactoryTest extends TestCase
 {
@@ -13,45 +17,96 @@ class MailFactoryTest extends TestCase
      */
     private $object;
 
+    /**
+     * @var User
+     */
+    private $layDeputy;
+
+    /**
+     * @var array
+     */
+    private $baseURLs;
+
+    /**
+     * @var array
+     */
+    private $emailParams;
+
+    /**
+     * @var ObjectProphecy&Translator
+     */
+    private $translator;
+
+    /**
+     * @var ObjectProphecy&Router
+     */
+    private $router;
+
+    /**
+     * @var ObjectProphecy&TwigEngine
+     */
+    private $templating;
+
     public function setUp(): void
     {
-        $this->router = m::mock('Symfony\Component\Routing\Router');
-        $this->translator = m::mock('Symfony\Component\Translation\DataCollectorTranslator');
-        $this->templating = m::mock('Symfony\Bundle\TwigBundle\TwigEngine')->makePartial();
-        $this->translator->shouldReceive('trans')->andReturnUsing(function ($input) {
-            return $input . ' translated';
-        });
+//        $this->router = m::mock('Symfony\Component\Routing\Router');
+//        $this->translator = m::mock('Symfony\Component\Translation\DataCollectorTranslator');
+//        $this->templating = m::mock('Symfony\Bundle\TwigBundle\TwigEngine')->makePartial();
+//        $this->translator->shouldReceive('trans')->andReturnUsing(function ($input) {
+//            return $input . ' translated';
+//        });
+//
+//        $this->container = m::mock('Symfony\Component\DependencyInjection\Container');
+//        $this->container->shouldReceive('get')->with('translator')->andReturn($this->translator);
+//        $this->container->shouldReceive('get')->with('templating')->andReturn($this->templating);
+//        $this->container->shouldReceive('get')->with('router')->andReturn($this->router);
+//        $this->container->shouldReceive('getParameter')->with('non_admin_host')->andReturn('http://deputy/');
+//        $this->container->shouldReceive('getParameter')->with('admin_host')->andReturn('http://admin/');
+//        $this->container->shouldReceive('getParameter')->with('email_send')->andReturn([
+//            'from_email' => 'from@email',
+//        ]);
+//        $this->container->shouldReceive('getParameter')->with('email_report_submit')->andReturn([
+//            'from_email' => 'ers_from@email',
+//            'to_email' => 'ers_to@email',
+//        ]);
+//
+//        $this->user = m::mock('AppBundle\Entity\User', [
+//            'isDeputy' => true,
+//            'getFullName' => 'FN',
+//            'getRegistrationToken' => 'RT',
+//            'getEmail' => 'user@email',
+//        ])->makePartial();
+//
+//        $this->paUser = m::mock('AppBundle\Entity\User', [
+//            'isDeputyPa' => true,
+//            'isDeputyOrg' => true,
+//            'getFullName' => 'FN',
+//            'getRegistrationToken' => 'RT',
+//            'getEmail' => 'pauser@email',
+//        ])->makePartial();
+//
+//        $this->object = new MailFactory($this->container);
 
-        $this->container = m::mock('Symfony\Component\DependencyInjection\Container');
-        $this->container->shouldReceive('get')->with('translator')->andReturn($this->translator);
-        $this->container->shouldReceive('get')->with('templating')->andReturn($this->templating);
-        $this->container->shouldReceive('get')->with('router')->andReturn($this->router);
-        $this->container->shouldReceive('getParameter')->with('non_admin_host')->andReturn('http://deputy/');
-        $this->container->shouldReceive('getParameter')->with('admin_host')->andReturn('http://admin/');
-        $this->container->shouldReceive('getParameter')->with('email_send')->andReturn([
-            'from_email' => 'from@email',
-        ]);
-        $this->container->shouldReceive('getParameter')->with('email_report_submit')->andReturn([
-            'from_email' => 'ers_from@email',
-            'to_email' => 'ers_to@email',
-        ]);
+        $this->layDeputy = (new User())
+            ->setRegistrationToken('regToken')
+            ->setEmail('user@digital.justice.gov.uk')
+            ->setFirstname('Joe')
+            ->setLastname('Bloggs')
+            ->setRoleName(User::ROLE_LAY_DEPUTY);
 
-        $this->user = m::mock('AppBundle\Entity\User', [
-            'isDeputy' => true,
-            'getFullName' => 'FN',
-            'getRegistrationToken' => 'RT',
-            'getEmail' => 'user@email',
-        ])->makePartial();
+        $this->baseURLs = [
+            'front' => 'https://front.base.url',
+            'admin' => 'https://admin.base.url'
+        ];
 
-        $this->paUser = m::mock('AppBundle\Entity\User', [
-            'isDeputyPa' => true,
-            'isDeputyOrg' => true,
-            'getFullName' => 'FN',
-            'getRegistrationToken' => 'RT',
-            'getEmail' => 'pauser@email',
-        ])->makePartial();
+        $this->emailParams = [
+            'fromEmail' => 'from@digital.justice.gov.uk',
+            'toEmail' => 'to@digital.justice.gov.uk'
+        ];
 
-        $this->object = new MailFactory($this->container);
+        $this->translator = self::prophesize('Symfony\Bundle\FrameworkBundle\Translation\Translator');
+        $this->router = self::prophesize('Symfony\Bundle\FrameworkBundle\Routing\Router');
+        $this->templating = self::prophesize('Symfony\Bundle\TwigBundle\TwigEngine');
     }
 
     public function testcreateActivationEmail()
@@ -103,5 +158,45 @@ class MailFactoryTest extends TestCase
         $this->assertEquals('[TEMPLATE]', $email->getBodyHtml());
         $this->assertEquals('pauser@email', $email->getToEmail());
         $this->assertEmpty($email->getAttachments());
+    }
+
+    /**
+     * @test
+     */
+    public function createResetPasswordEmail()
+    {
+//        non_admin_host
+//        admin_host
+//        ('email_send')['from_email']
+//        ('email_send')['to_email']
+
+        $this->router->generate('user_activate', [
+            'action' => 'password-reset',
+            'token'  => 'regToken'
+        ])->shouldBeCalled()->willReturn('/reset-password/regToken');
+
+        $this->translator->trans('resetPassword.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+        $this->translator->trans('resetPassword.subject', [], 'email')->shouldBeCalled()->willReturn('Reset Password Subject');
+
+        $sut = new MailFactory(
+            $this->translator->reveal(),
+            $this->router->reveal(),
+            $this->templating->reveal(),
+            $this->baseURLs,
+            $this->emailParams
+        );
+
+        $email = $sut->createResetPasswordEmail($this->layDeputy);
+
+        self::assertStringContainsString('from@digital.justice.gov.uk', $email->getFromEmail());
+        self::assertStringContainsString('OPG', $email->getFromName());
+        self::assertStringContainsString('user@digital.justice.gov.uk', $email->getToEmail());
+        self::assertStringContainsString('Joe Bloggs', $email->getToName());
+        self::assertStringContainsString('Reset Password Subject', $email->getSubject());
+        self::assertStringContainsString(MailFactory::RESET_PASSWORD_TEMPLATE, $email->getTemplate());
+
+        $expectedTemplateParams = ['resetLink' => 'https://front.base.url/reset-password/regToken'];
+        self::assertEquals($expectedTemplateParams, $email->getParameters());
+
     }
 }
