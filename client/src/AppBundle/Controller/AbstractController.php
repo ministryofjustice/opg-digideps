@@ -176,7 +176,7 @@ abstract class AbstractController extends Controller
     protected function getMailFactory()
     {
         /** @var MailFactory */
-        $mailFactory = $this->get('mail_factory');
+        $mailFactory = $this->get('AppBundle\Service\Mailer\MailFactory');
         return $mailFactory;
     }
 

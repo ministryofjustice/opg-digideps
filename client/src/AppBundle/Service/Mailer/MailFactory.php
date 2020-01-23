@@ -1,48 +1,61 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Service\Mailer;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\User;
 use AppBundle\Model as ModelDir;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Intl\Intl;
-use Symfony\Component\Routing\Router;
-use Symfony\Component\Translation\DataCollectorTranslator;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 
 class MailFactory
 {
     const AREA_DEPUTY = 'deputy';
     const AREA_ADMIN = 'admin';
 
+    // Maintained in GOVUK Notify
     const RESET_PASSWORD_TEMPLATE = 'e7312e62-2602-4903-89e6-93ad943bacb1';
 
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     protected $translator;
 
     /**
-     * @var Router
+     * @var RouterInterface
      */
     protected $router;
 
     /**
-     * @var TwigEngine
+     * @var EngineInterface
      */
     private $templating;
 
     /**
      * @var array
      */
+    private $emailParams;
+
+    /**
+     * @var array
+     */
     private $baseURLs;
 
-    public function __construct(Translator $translator, Router $router, TwigEngine $templating, array $baseURLs)
+    public function __construct(
+        TranslatorInterface $translator,
+        RouterInterface $router,
+        EngineInterface $templating,
+        array $emailParams,
+        array $baseURLs
+    )
     {
         $this->translator = $translator;
         $this->router = $router;
         $this->templating = $templating;
+        $this->emailParams = $emailParams;
         $this->baseURLs = $baseURLs;
     }
 
@@ -89,7 +102,7 @@ class MailFactory
         $email = new ModelDir\Email();
 
         $email
-            ->setFromEmail($this->container->getParameter('email_send')['from_email'])
+            ->setFromEmail($this->emailParams['from_email'])
             ->setFromName($this->translate('activation.fromName'))
             ->setToEmail($user->getEmail())
             ->setToName($user->getFullName())
@@ -132,7 +145,7 @@ class MailFactory
      * @return ModelDir\Email
      * @throws \Exception
      */
-    public function createResetPasswordEmail(User $user, array $emailSendParams)
+    public function createResetPasswordEmail(User $user)
     {
         $area = $this->getUserArea($user);
 
@@ -146,7 +159,7 @@ class MailFactory
         $email = new ModelDir\Email();
 
         $email
-            ->setFromEmail($emailSendParams['from_email'])
+            ->setFromEmail($this->emailParams['from_email'])
             ->setFromName($this->translate('resetPassword.fromName'))
             ->setToEmail($user->getEmail())
             ->setToName($user->getFullName())
@@ -173,7 +186,7 @@ class MailFactory
         ];
 
         $email
-            ->setFromEmail($this->container->getParameter('email_send')['from_email'])
+            ->setFromEmail($this->emailParams['from_email'])
             ->setFromName($this->translate('changePassword.fromName'))
             ->setToEmail($user->getEmail())
             ->setToName($user->getFirstname())
@@ -216,9 +229,9 @@ class MailFactory
         );
 
         $email
-            ->setFromEmail($this->container->getParameter('email_report_submit')['from_email'])
+            ->setFromEmail($this->emailParams['from_email'])
             ->setFromName($this->translate('ndrSubmission.fromName'))
-            ->setToEmail($this->container->getParameter('email_report_submit')['to_email'])
+            ->setToEmail($this->emailParams['email_report_submit_to_email'])
             ->setToName($this->translate('ndrSubmission.toName'))
             ->setSubject($this->translate('ndrSubmission.subject'))
             ->setBodyHtml($this->templating->render('AppBundle:Email:ndr-submission.html.twig', $viewParams))
@@ -244,9 +257,9 @@ class MailFactory
 
         $email = new ModelDir\Email();
         $email
-            ->setFromEmail($this->container->getParameter('email_feedback_send')['from_email'])
+            ->setFromEmail($this->emailParams['from_email'])
             ->setFromName($this->translate('feedbackForm.fromName'))
-            ->setToEmail($this->container->getParameter('email_feedback_send')['to_email'])
+            ->setToEmail($this->emailParams['email_feedback_send_to_email'])
             ->setToName($this->translate('feedbackForm.toName'))
             ->setSubject($this->translate('feedbackForm.subject'))
             ->setBodyHtml($this->templating->render('AppBundle:Email:feedback.html.twig', $viewParams));
@@ -281,9 +294,9 @@ class MailFactory
 
         $email = new ModelDir\Email();
         $email
-            ->setFromEmail($this->container->getParameter('email_update_send')['from_email'])
+            ->setFromEmail($this->emailParams['from_email'])
             ->setFromName($this->translate('addressUpdateForm.' . $type . '.fromName'))
-            ->setToEmail($this->container->getParameter('email_update_send')['to_email'])
+            ->setToEmail($this->emailParams['email_update_send_to_email'])
             ->setToName($this->translate('addressUpdateForm.' . $type . '.toName'))
             ->setSubject($this->translate('addressUpdateForm.' . $type . '.subject'))
             ->setBodyHtml($this->templating->render($template, $viewParams));
@@ -313,7 +326,7 @@ class MailFactory
         ];
 
         $email
-            ->setFromEmail($this->container->getParameter('email_send')['from_email'])
+            ->setFromEmail($this->emailParams['from_email'])
             ->setFromName($this->translate('reportSubmissionConfirmation.fromName'))
             ->setToEmail($user->getEmail())
             ->setToName($user->getFirstname())
@@ -357,7 +370,7 @@ class MailFactory
         ];
 
         $email
-            ->setFromEmail($this->container->getParameter('email_send')['from_email'])
+            ->setFromEmail($this->emailParams['from_email'])
             ->setFromName($this->translate('ndrSubmissionConfirmation.fromName'))
             ->setToEmail($user->getEmail())
             ->setToName($user->getFirstname())
@@ -418,7 +431,7 @@ class MailFactory
         $email = new ModelDir\Email();
 
         $email
-            ->setFromEmail($this->container->getParameter('email_send')['from_email'])
+            ->setFromEmail($this->emailParams['from_email'])
             ->setFromName($this->translate('codeputyInvitation.fromName'))
             ->setToEmail($invitedUser->getEmail())
             ->setToName($invitedUser->getFullName())

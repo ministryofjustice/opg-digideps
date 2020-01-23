@@ -1,8 +1,4 @@
 services:
-    _defaults:
-        bind:
-            $emailSendParams: '%email_send%'
-
     mailer.transport.smtp.default:
         class: Swift_SmtpTransport
         arguments: [ "%smtp_default_hostname%", "%smtp_default_port%" ]
@@ -22,7 +18,8 @@ services:
         calls:
             - [ addSwiftMailer, [ "default", "@mailer.swift_mailers.default"] ]
 
-    mail_factory:
-        class: AppBundle\Service\Mailer\MailFactory
+    AppBundle\Service\Mailer\MailFactory:
+        autowire: true
         arguments:
-            $baseURLs: "%client_base_urls%"
+            $emailParams: %email_params%
+            $baseURLs: %client_base_urls%

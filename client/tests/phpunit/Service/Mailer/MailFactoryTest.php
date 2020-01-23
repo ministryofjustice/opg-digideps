@@ -25,7 +25,7 @@ class MailFactoryTest extends TestCase
     /**
      * @var array
      */
-    private $baseURLs;
+    private $appBaseURLs;
 
     /**
      * @var array
@@ -94,13 +94,16 @@ class MailFactoryTest extends TestCase
             ->setLastname('Bloggs')
             ->setRoleName(User::ROLE_LAY_DEPUTY);
 
-        $this->baseURLs = [
+        $this->appBaseURLs = [
             'front' => 'https://front.base.url',
             'admin' => 'https://admin.base.url'
         ];
 
         $this->emailSendParams = [
-            'from_email' => 'from@digital.justice.gov.uk'
+            'from_email' => 'from@digital.justice.gov.uk',
+            'email_report_submit_to_email' => 'digideps+noop@digital.justice.gov.uk',
+            'email_feedback_send_to_email' => 'digideps+noop@digital.justice.gov.uk',
+            'email_update_send_to_email' => 'digideps+noop@digital.justice.gov.uk'
         ];
 
         $this->translator = self::prophesize('Symfony\Bundle\FrameworkBundle\Translation\Translator');
@@ -164,10 +167,6 @@ class MailFactoryTest extends TestCase
      */
     public function createResetPasswordEmail()
     {
-//        non_admin_host
-//        admin_host
-//        ('email_send')['from_email']
-
         $this->router->generate('user_activate', [
             'action' => 'password-reset',
             'token'  => 'regToken'
@@ -180,10 +179,11 @@ class MailFactoryTest extends TestCase
             $this->translator->reveal(),
             $this->router->reveal(),
             $this->templating->reveal(),
-            $this->baseURLs
+            $this->emailSendParams,
+            $this->appBaseURLs
         );
 
-        $email = $sut->createResetPasswordEmail($this->layDeputy, $this->emailSendParams);
+        $email = $sut->createResetPasswordEmail($this->layDeputy);
 
         self::assertStringContainsString('from@digital.justice.gov.uk', $email->getFromEmail());
         self::assertStringContainsString('OPG', $email->getFromName());
