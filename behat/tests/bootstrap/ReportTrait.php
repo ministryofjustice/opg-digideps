@@ -597,7 +597,7 @@ trait ReportTrait
     public function theSectionOnTheReportHasBeenCompleted($section)
     {
         $this->logInAndEnterReport();
-        $this->completeSection($section);
+        $this->completeSections($section);
     }
 
     /**
@@ -663,12 +663,20 @@ trait ReportTrait
         $this->logInAndEnterReport();
 
         $sections = $this->getSession()->getPage()->findAll('xpath', "//a[contains(@id, 'edit-')]");
-
+        $sectionNames = [];
         foreach ($sections as $section) {
             $sectionId = $section->getAttribute('id');
-            $sectionName = substr($sectionId, strpos($sectionId, "-") + 1);
-            $this->completeSection($sectionName);
+            $sectionNames[] = substr($sectionId, strpos($sectionId, "-") + 1);
         }
+
+        if ($index = array_search('report-preview', $sectionNames)) {
+            unset($sectionNames[$index]);
+        }
+
+        $this->completeSections(implode(',', $sectionNames));
+
+        $reportId = self::$currentReportCache['reportId'];
+        $this->visit("report/$reportId/overview");
 
         try {
             $this->clickOnBehatLink('edit-report-review');
@@ -682,138 +690,13 @@ trait ReportTrait
         $this->pressButton('report_declaration[save]');
     }
 
-    private function completeSection(string $section)
+    private function completeSections(string $sections)
     {
-        switch (strtolower($section)) {
-            case 'decisions':
-                $this->completeDecisions();
-                break;
-            case 'contacts':
-                $this->completeContacts();
-                break;
-            case 'visits_care':
-                $this->completeVistsAndCare();
-                break;
-            case 'lifestyle':
-                $this->completeLifestyle();
-                break;
-            case 'actions':
-                $this->completeActions();
-                break;
-            case 'other_info':
-                $this->completeOtherInfo();
-                break;
-            case 'debts':
-                $this->completeDebts();
-                break;
-            case 'documents':
-                $this->completeDocuments();
-                break;
-        }
-    }
+        $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'Abcd1234');
 
-    private function completeDecisions(): void
-    {
-        $this->clickLink('edit-decisions');
-        $this->clickLink('Start decisions');
-        $this->selectOption('mental_capacity[hasCapacityChanged]', 'stayedSame');
-        $this->pressButton('Save and continue');
-        $this->fillField('mental_assessment_mentalAssessmentDate_month', '12');
-        $this->fillField('mental_assessment_mentalAssessmentDate_year', '2017');
-        $this->pressButton('Save and continue');
-        $this->selectOption('decision_exist[hasDecisions]', 'no');
-        $this->fillField('decision_exist_reasonForNoDecisions', 'No need');
-        $this->pressButton('Save and continue');
-        $this->goToReportOverview();
-        $this->iShouldSeeTheBehatElement('decisions-state-done', 'region');
-    }
-
-    private function completeVistsAndCare(): void
-    {
-        $this->clickLink('edit-visits_care');
-        $this->clickLink('Start visits and care');
-        $this->selectOption('visits_care[doYouLiveWithClient]', 'yes');
-        $this->pressButton('Save and continue');
-        $this->selectOption('visits_care[doesClientReceivePaidCare]', 'no');
-        $this->pressButton('Save and continue');
-        $this->fillField('visits_care_whoIsDoingTheCaring', 'Myself');
-        $this->pressButton('Save and continue');
-        $this->selectOption('visits_care[doesClientHaveACarePlan]', 'no');
-        $this->pressButton('Save and continue');
-        $this->goToReportOverview();
-        $this->iShouldSeeTheBehatElement('visits_care-state-done', 'region');
-    }
-
-    private function completeLifestyle(): void
-    {
-        $this->clickLink('edit-lifestyle');
-        $this->clickLink('Start health and lifestyle');
-        $this->fillField('lifestyle_careAppointments', 'No appointments');
-        $this->pressButton('Save and continue');
-        $this->selectOption('lifestyle[doesClientUndertakeSocialActivities]', 'no');
-        $this->fillField('lifestyle_activityDetailsNo', 'Does not wish to');
-        $this->pressButton('Save and continue');
-        $this->goToReportOverview();
-        $this->iShouldSeeTheBehatElement('lifestyle-state-done', 'region');
-    }
-
-    private function completeActions(): void
-    {
-        $this->clickLink('edit-actions');
-        $this->clickLink('Start actions');
-        $this->selectOption('action[doYouExpectFinancialDecisions]', 'no');
-        $this->pressButton('Save and continue');
-        $this->selectOption('action[doYouHaveConcerns]', 'no');
-        $this->pressButton('Save and continue');
-        $this->goToReportOverview();
-        $this->iShouldSeeTheBehatElement('actions-state-done', 'region');
-    }
-
-    private function completeOtherInfo(): void
-    {
-        $this->clickLink('edit-other_info');
-        $this->clickLink('Start any other information');
-        $this->selectOption('more_info[actionMoreInfo]', 'no');
-        $this->pressButton('Save and continue');
-        $this->goToReportOverview();
-        $this->iShouldSeeTheBehatElement('other_info-state-done', 'region');
-    }
-
-    private function completeContacts(): void
-    {
-        $this->clickLink('edit-contacts');
-        $this->clickLink('Start contacts');
-        $this->selectOption('contact_exist[hasContacts]', 'no');
-        $this->fillField('contact_exist_reasonForNoContacts', 'No need');
-        $this->pressButton('Save and continue');
-        $this->goToReportOverview();
-        $this->iShouldSeeTheBehatElement('decisions-state-done', 'region');
-    }
-
-    private function completeDebts(): void
-    {
-        $this->clickLink('edit-debts');
-        $this->clickLink('Start debts');
-        $this->selectOption('yes_no[hasDebts]', 'no');
-        $this->pressButton('Save and continue');
-        $this->goToReportOverview();
-        $this->iShouldSeeTheBehatElement('debts-state-done', 'region');
-    }
-
-    private function completeDocuments(): void
-    {
-        $this->clickLink('edit-documents');
-        $this->clickLink('Start');
-        $this->selectOption('document[wishToProvideDocumentation]', 'no');
-        $this->pressButton('Save and continue');
-        $this->goToReportOverview();
-        $this->iShouldSeeTheBehatElement('documents-state-done', 'region');
-    }
-
-    private function goToReportOverview()
-    {
-        $linkToOverview = $this->getSession()->getPage()->find('xpath', "//a[contains(@href, 'overview')]");
-        $linkToOverview->click();
+        $reportId = self::$currentReportCache['reportId'];
+        $url = sprintf('/admin/fixtures/complete-sections/%s?sections=%s', $reportId, $sections);
+        $this->visitAdminPath($url);
     }
 
     private function enterReport($client, $startDate, $endDate): void

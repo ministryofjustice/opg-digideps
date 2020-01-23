@@ -6,7 +6,9 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Form\Admin\Fixture\CourtOrderFixtureType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -16,6 +18,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  */
 class FixtureController extends AbstractController
 {
+    /** @var KernelInterface */
+    private $kernel;
+
+    /**
+     * @param KernelInterface $kernel
+     */
+    public function __construct(KernelInterface $kernel)
+    {
+        $this->kernel = $kernel;
+    }
+
     /**
      * @Route("/court-orders", name="admin_fixtures_court_orders")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
@@ -23,7 +36,7 @@ class FixtureController extends AbstractController
      */
     public function courtOrdersAction(Request $request)
     {
-        if ($this->get('kernel')->getEnvironment() === 'prod') {
+        if ($this->kernel->getEnvironment() === 'prod') {
             throw $this->createNotFoundException();
         }
 
@@ -38,7 +51,7 @@ class FixtureController extends AbstractController
             $submitted = $form->getData();
             $courtDate = $request->get('court-date') ? new \DateTime($request->get('court-date')) : new \DateTime('2017-02-01');
             $deputyEmail = $request->query->get('deputy-email', sprintf('%s-deputy-%s@fixture.com', strtolower($submitted['deputyType']), mt_rand(1000, 9999)));
-            $randomCaseNumber = str_pad(rand(00000001,99999999), 8, "0", STR_PAD_LEFT);
+            $randomCaseNumber = str_pad(rand(1,99999999), 8, "0", STR_PAD_LEFT);
 
             $this->getRestClient()->post('v2/fixture/court-order', json_encode([
                 'deputyType' => $submitted['deputyType'],
@@ -53,5 +66,27 @@ class FixtureController extends AbstractController
         }
 
         return ['form' => $form->createView()];
+    }
+
+    /**
+     * @Route("/complete-sections/{reportId}", requirements={"id":"\d+"}, methods={"GET"})
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @param Request $request
+     * @param $reportId
+     * @return JsonResponse
+     */
+    public function completeReportSectionsAction(Request $request, $reportId): JsonResponse
+    {
+        if ($this->kernel->getEnvironment() === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
+        $sections = $request->get('sections');
+
+        $this
+            ->getRestClient()
+            ->put("v2/fixture/complete-sections/$reportId?sections=$sections", []);
+
+        return new JsonResponse(['Report updated']);
     }
 }
