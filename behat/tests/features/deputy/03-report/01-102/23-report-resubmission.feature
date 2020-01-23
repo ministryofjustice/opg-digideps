@@ -30,53 +30,53 @@ Feature: Admin unsubmit report (from client page)
     When I click on "manage" in the "report-2016" region
     # unsubmit with custom due date
     And I fill in the following:
-      | unsubmit_report_unsubmittedSection_0_present  | 1      |
-      | unsubmit_report_unsubmittedSection_13_present | 1      |
-      | unsubmit_report_dueDateChoice_4               | custom |
-      | unsubmit_report_dueDateCustom_day             |        |
-      | unsubmit_report_dueDateCustom_month           |        |
-      | unsubmit_report_dueDateCustom_year            |        |
-      | unsubmit_report_startDate_day                 |        |
-      | unsubmit_report_startDate_month               |        |
-      | unsubmit_report_startDate_year                |        |
-      | unsubmit_report_endDate_day                 |        |
-      | unsubmit_report_endDate_month               |        |
-      | unsubmit_report_endDate_year                |        |
-    And I press "unsubmit_report_save"
+      | manage_report_unsubmittedSection_0_present  | 1      |
+      | manage_report_unsubmittedSection_13_present | 1      |
+      | manage_report_dueDateChoice_4               | custom |
+      | manage_report_dueDateCustom_day             |        |
+      | manage_report_dueDateCustom_month           |        |
+      | manage_report_dueDateCustom_year            |        |
+      | manage_report_startDate_day                 |        |
+      | manage_report_startDate_month               |        |
+      | manage_report_startDate_year                |        |
+      | manage_report_endDate_day                 |        |
+      | manage_report_endDate_month               |        |
+      | manage_report_endDate_year                |        |
+    And I press "manage_report_save"
     Then the following fields should have an error:
-      | unsubmit_report_dueDateCustom_day   |
-      | unsubmit_report_dueDateCustom_month |
-      | unsubmit_report_dueDateCustom_year  |
-      | unsubmit_report_startDate_day       |
-      | unsubmit_report_startDate_month     |
-      | unsubmit_report_startDate_year      |
-      | unsubmit_report_endDate_day       |
-      | unsubmit_report_endDate_month     |
-      | unsubmit_report_endDate_year      |
+      | manage_report_dueDateCustom_day   |
+      | manage_report_dueDateCustom_month |
+      | manage_report_dueDateCustom_year  |
+      | manage_report_startDate_day       |
+      | manage_report_startDate_month     |
+      | manage_report_startDate_year      |
+      | manage_report_endDate_day       |
+      | manage_report_endDate_month     |
+      | manage_report_endDate_year      |
     # custom date: set to 30th of April 2022 (has to be in the future to skip the constraint)
     When I fill in the following:
-      | unsubmit_report_unsubmittedSection_0_present  | 1      |
-      | unsubmit_report_unsubmittedSection_13_present | 1      |
-      | unsubmit_report_dueDateChoice_4               | custom |
-      | unsubmit_report_dueDateCustom_day                   | 30     |
-      | unsubmit_report_dueDateCustom_month                 | 04     |
-      | unsubmit_report_dueDateCustom_year                  | 2022   |
-      | unsubmit_report_startDate_day                 |  02      |
-      | unsubmit_report_startDate_month               |  03      |
-      | unsubmit_report_startDate_year                |  2016    |
-      | unsubmit_report_endDate_day                 |  30      |
-      | unsubmit_report_endDate_month               |  11      |
-      | unsubmit_report_endDate_year                |  2016    |
-    And I press "unsubmit_report_save"
+      | manage_report_unsubmittedSection_0_present  | 1      |
+      | manage_report_unsubmittedSection_13_present | 1      |
+      | manage_report_dueDateChoice_4               | custom |
+      | manage_report_dueDateCustom_day                   | 30     |
+      | manage_report_dueDateCustom_month                 | 04     |
+      | manage_report_dueDateCustom_year                  | 2022   |
+      | manage_report_startDate_day                 |  02      |
+      | manage_report_startDate_month               |  03      |
+      | manage_report_startDate_year                |  2016    |
+      | manage_report_endDate_day                 |  30      |
+      | manage_report_endDate_month               |  11      |
+      | manage_report_endDate_year                |  2016    |
+    And I press "manage_report_save"
     Then I should see "2 March 2016" in the "report-review" region
     And I should see "Decisions, Deputy expenses" in the "report-review" region
     And I should see "30 April 2022" in the "report-review" region
-    When I press "unsubmit_report_confirm_save"
+    When I press "manage_report_confirm_save"
     Then the following fields should have an error:
-      | unsubmit_report_confirm_confirm_0   |
-      | unsubmit_report_confirm_confirm_1   |
-    When I fill in "unsubmit_report_confirm_confirm_0" with "yes"
-    And I press "unsubmit_report_confirm_save"
+      | manage_report_confirm_confirm_0   |
+      | manage_report_confirm_confirm_1   |
+    When I fill in "manage_report_confirm_confirm_0" with "yes"
+    And I press "manage_report_confirm_save"
     Then I should see the "report-2016" region in the "report-group-incomplete" region
     And I should see "30 April 2022" in the "report-2016-due-date" region
     When I open the "2016" checklist for client "102"

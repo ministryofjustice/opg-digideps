@@ -261,15 +261,16 @@ class ReportController extends AbstractController
      * @return array|Response|RedirectResponse
      * @throws \Exception
      */
-    public function manageReportAction(Request $request, $id)
+    public function manageAction(Request $request, $id)
     {
         $report = $this->getReport(intval($id), ['report-checklist', 'action']);
-        $dataFromUrl = $request->get('data') ?: [];
 
         $formClass = ($report->isSubmitted()) ?  ManageSubmittedReportType::class : ManageActiveReportType::class;
         $form = $this->createForm($formClass, $report);
 
-        $this->prepopulateWithPreviousChoices($dataFromUrl, $form);
+        if (is_array($request->get('data'))) {
+            $this->prepopulateWithPreviousChoices($request->get('data'), $form);
+        }
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -290,25 +291,23 @@ class ReportController extends AbstractController
      */
     private function prepopulateWithPreviousChoices(array $dataFromUrl, FormInterface $form): void
     {
-        foreach ($dataFromUrl as $key => $value) {
-            if ($form->has($key)) {
-                if (substr($key, -4) === 'Date') {
-                    $value = new \DateTime($value);
-                } else if ($key === 'unsubmittedSectionsList') {
-                    // Prepopulate the section list with the previously chosen ones.
-                    foreach ($form['unsubmittedSection']->getData() as $index => $section) {
-                        $unsubmitted = explode(',', $dataFromUrl[$key]);
-                        if (in_array($section->getId(), $unsubmitted)) {
-                            $form['unsubmittedSection']->getData()[$index]->setPresent(true);
-                        }
-                    }
+        foreach (['type', 'dueDateChoice'] as $field) {
+            $form->has($field) && $form[$field]->setData($dataFromUrl[$field]);
+        }
 
-                    $key = 'unsubmittedSection';
-                    $value = $form['unsubmittedSection']->getData();
+        foreach (['dueDateCustom', 'startDate', 'endDate'] as $field) {
+            $form->has($field) && $form[$field]->setData(new \DateTime($dataFromUrl[$field]));
+        }
+
+        if ($form->has('unsubmittedSection') && isset($dataFromUrl['unsubmittedSectionsList'])) {
+            foreach ($form['unsubmittedSection']->getData() as $index => $section) {
+                $unsubmitted = explode(',', $dataFromUrl['unsubmittedSectionsList']);
+                if (in_array($section->getId(), $unsubmitted)) {
+                    $form['unsubmittedSection']->getData()[$index]->setPresent(true);
                 }
-
-                $form[$key]->setData($value);
             }
+
+            $form['unsubmittedSectionsList']->setData($form['unsubmittedSection']->getData());
         }
     }
 
@@ -320,7 +319,7 @@ class ReportController extends AbstractController
      */
     private function setChoicesInSession(Request $request, FormInterface $form, Report $report): void
     {
-        $customDueDate = $form['dueDateCustom'] instanceof \DateTime ? $form['dueDateCustom']->getData()->format('Y-m-d') : null;
+        $customDueDate = $form['dueDateCustom']->getData();
         $startDate = isset($form['startDate'])  ? $form['startDate']->getData()->format('Y-m-d') : null;
         $endDate = isset($form['endDate']) ? $form['endDate']->getData()->format('Y-m-d') : null;
 
@@ -328,7 +327,7 @@ class ReportController extends AbstractController
             'type' => $form['type']->getData(),
             'dueDate' => $this->determineNewDueDateFromForm($report, $form)->format('Y-m-d'),
             'dueDateChoice' => $form['dueDateChoice']->getData(),
-            'dueDateCustom' => $customDueDate,
+            'dueDateCustom' => $customDueDate instanceof \DateTime ? $customDueDate->format('Y-m-d') : null,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'unsubmittedSectionsList' => implode(',', $report->getUnsubmittedSectionsIds())
@@ -348,7 +347,7 @@ class ReportController extends AbstractController
         if (preg_match('/^\d+$/', $form['dueDateChoice']->getData())) {
             $newDueDate = new \DateTime();
             $newDueDate->modify("+{$form['dueDateChoice']->getData()} weeks");
-        } else if ($form['dueDateChoice']->getData() == 'custom' && $form['dueDateCustom'] instanceof \DateTime) {
+        } else if ($form['dueDateChoice']->getData() == 'custom' && $form['dueDateCustom']->getData() instanceof \DateTime) {
             $newDueDate = $form['dueDateCustom']->getData();
         }
 

@@ -51,28 +51,18 @@ class ReportTypeChoicesSubscriber implements EventSubscriberInterface
      */
     private function resolveReportTypeOptions(Report $report): array
     {
-        $keys = [
-            $this->translator->trans('propertyAffairsGeneral', [], 'common'),
-            $this->translator->trans('propertyAffairsMinimal', [], 'common'),
-            $this->translator->trans('healthWelfare', [], 'common'),
-            $this->translator->trans('propertyAffairsGeneralHealthWelfare', [], 'common'),
-            $this->translator->trans('propertyAffairsMinimalHealthWelfare', [], 'common')
-        ];
-
         $options = [
-            $keys[0] => Report::TYPE_102,
-            $keys[1] => Report::TYPE_103,
-            $keys[2] => Report::TYPE_104,
-            $keys[3] => Report::TYPE_102_4,
-            $keys[4] => Report::TYPE_103_4,
+            $this->translator->trans('propertyAffairsGeneral', [], 'common') => Report::TYPE_102,
+            $this->translator->trans('propertyAffairsMinimal', [], 'common') => Report::TYPE_103,
+            $this->translator->trans('healthWelfare', [], 'common') => Report::TYPE_104,
+            $this->translator->trans('propertyAffairsGeneralHealthWelfare', [], 'common') => Report::TYPE_102_4,
+            $this->translator->trans('propertyAffairsMinimalHealthWelfare', [], 'common') => Report::TYPE_103_4,
         ];
 
         if (!$report->isLayReport()) {
-            $options[$keys[0]] = ($report->isPAreport()) ? Report::TYPE_102_6 : Report::TYPE_102_5;
-            $options[$keys[1]] = ($report->isPAreport()) ? Report::TYPE_103_6 : Report::TYPE_103_5;
-            $options[$keys[2]] = ($report->isPAreport()) ? Report::TYPE_104_6 : Report::TYPE_104_5;
-            $options[$keys[3]] = ($report->isPAreport()) ? Report::TYPE_102_4_6 : Report::TYPE_102_4_5;
-            $options[$keys[4]] = ($report->isPAreport()) ? Report::TYPE_103_4_6 : Report::TYPE_103_4_5;
+            foreach ($options as $key => &$value) {
+                $value = ($report->isPAreport()) ? "$value-6" : "$value-5";
+            }
         }
 
         return $options;

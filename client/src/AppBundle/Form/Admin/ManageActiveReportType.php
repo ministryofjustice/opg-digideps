@@ -15,7 +15,11 @@ class ManageActiveReportType extends AbstractType
 {
     use HasTranslatorTrait;
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('dueDateChoice', ReportDueDateType::class)
@@ -32,11 +36,22 @@ class ManageActiveReportType extends AbstractType
             ->add('save', SubmitType::class);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'translation_domain' => 'admin-clients',
             'compound' => true
         ]);
+    }
+
+    /**
+     * @return string
+     */
+    public function getBlockPrefix(): string
+    {
+        return 'manage_report';
     }
 }

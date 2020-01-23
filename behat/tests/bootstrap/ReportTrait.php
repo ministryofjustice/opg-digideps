@@ -7,6 +7,7 @@ use Behat\Gherkin\Node\TableNode;
 trait ReportTrait
 {
     private static $reportsCache = [];
+    private static $currentReportCache = [];
     protected $sections103 = ['Deputy expenses', 'Decisions', 'Contacts', 'Visits and care', 'Accounts', 'Gifts', 'Money in', 'Money out', 'Assets', 'Debts', 'Actions', 'Other information', 'Documents'];
 
     /**
@@ -574,35 +575,37 @@ trait ReportTrait
     }
 
     /**
-     * @Given the :section section for the :startDate to :endDate report between :deputy and :client has been completed
+     * @Given I have the :startDate to :endDate report between :deputy and :client
      */
-    public function theSectionForTheReportBetweenDeputyAndClientHasBeenCompleted($section, $startDate, $endDate, $deputy, $client)
+    public function iHaveTheReportBetweenDeputyAndClient($startDate, $endDate, $deputy, $client)
     {
         $this->iAmLoggedInAsWithPassword($deputy.'@behat-test.com', 'Abcd1234');
         $this->enterReport($client, $startDate, $endDate);
+        preg_match('/\/(\d+)\//', $this->getSession()->getCurrentUrl(), $match);
+        self::$currentReportCache = [
+            'deputy' => $deputy,
+            'client' => $client,
+            'reportId' => $match[1],
+            'startDate' => $startDate,
+            'endDate' => $endDate
+        ];
+    }
+
+    /**
+     * @Given the :section section on the report has been completed
+     */
+    public function theSectionOnTheReportHasBeenCompleted($section)
+    {
+        $this->logInAndEnterReport();
         $this->completeSection($section);
     }
 
     /**
-     * @Given the following sections for the :startDate to :endDate report on the court order between :deputy and :client have been completed:
+     * @Then the report should have the :type sections
      */
-    public function theseSectionsForTheReportBetweenDeputyAndClientHaveBeenCompleted($startDate, $endDate, $deputy, $client, TableNode $table)
+    public function theReportShouldHaveTheSections($type)
     {
-        $this->iAmLoggedInAsWithPassword($deputy.'@behat-test.com', 'Abcd1234');
-        $this->enterReport($client, $startDate, $endDate);
-
-        foreach ($table as $row) {
-            $this->completeSection($row['section']);
-        }
-    }
-
-    /**
-     * @Then the :startDate to :endDate report between :deputy and :client should have the :type sections
-     */
-    public function theReportBetweenDeputyAndClientShouldHaveTheSections($startDate, $endDate, $deputy, $client, $type)
-    {
-        $this->iAmLoggedInAsWithPassword($deputy.'@behat-test.com', 'Abcd1234');
-        $this->enterReport($client, $startDate, $endDate);
+        $this->logInAndEnterReport();
 
         foreach ($this->getSectionsByType($type) as $section) {
             $this->assertPageContainsText($section);
@@ -629,22 +632,35 @@ trait ReportTrait
     }
 
     /**
-     * @Then the :section section for the :startDate to :endDate report between :deputy and :client should be completed
+     * @Then the :section section on the report should be completed
      */
-    public function theSectionForTheReportBetweenDeputyAndClientShouldBeCompleted($section, $startDate, $endDate, $deputy, $client)
+    public function theSectionOnTheReportShouldBeCompleted($section)
     {
-        $this->iAmLoggedInAsWithPassword($deputy.'@behat-test.com', 'Abcd1234');
-        $this->enterReport($client, $startDate, $endDate);
+        $this->logInAndEnterReport();
         $this->iShouldSeeTheBehatElement($section.'-state-done', 'region');
     }
 
     /**
-     * @Given the :startDate to :endDate report between :deputy and :client has been submitted:
+     * @Then the report should be unsubmitted
      */
-    public function theReportBetweenDeputyAndClientHasBeenSubmitted($startDate, $endDate, $deputy, $client)
+    public function theReportShouldBeUnsubmitted()
     {
-        $this->iAmLoggedInAsWithPassword($deputy.'@behat-test.com', 'Abcd1234');
-        $this->enterReport($client, $startDate, $endDate);
+        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
+
+        $client = self::$currentReportCache['client'];
+        $startDate = self::$currentReportCache['startDate'];
+        $endDate = self::$currentReportCache['endDate'];
+
+        $this->clickOnBehatLink("client-detail-$client");
+        $this->iShouldSeeTheRegionInTheRegion("report-$startDate-to-$endDate", 'report-group-incomplete');
+    }
+
+    /**
+     * @Given the report has been submitted
+     */
+    public function theReportHasBeenSubmitted()
+    {
+        $this->logInAndEnterReport();
 
         $sections = $this->getSession()->getPage()->findAll('xpath', "//a[contains(@id, 'edit-')]");
 
@@ -809,5 +825,12 @@ trait ReportTrait
         } else {
             $this->clickLink($client.'-Client, John');
         }
+    }
+
+    private function logInAndEnterReport(): void
+    {
+        $this->iAmLoggedInAsWithPassword(self::$currentReportCache['deputy'] . '@behat-test.com', 'Abcd1234');
+        $reportId = self::$currentReportCache['reportId'];
+        $this->visit("report/$reportId/overview");
     }
 }

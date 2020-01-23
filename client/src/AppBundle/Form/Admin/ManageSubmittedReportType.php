@@ -4,6 +4,7 @@ namespace AppBundle\Form\Admin;
 
 use AppBundle\Form\DateType;
 use AppBundle\Form\Subscriber\ReportTypeChoicesSubscriber;
+use AppBundle\Form\Traits\HasTranslatorTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,6 +14,8 @@ use Symfony\Component\Validator\Constraints as Constraints;
 
 class ManageSubmittedReportType extends AbstractType
 {
+    use HasTranslatorTrait;
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -52,7 +55,10 @@ class ManageSubmittedReportType extends AbstractType
             ->add('save', FormTypes\SubmitType::class);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'translation_domain' => 'admin-clients',
@@ -68,5 +74,13 @@ class ManageSubmittedReportType extends AbstractType
                 return $ret;
             },
         ]);
+    }
+
+    /**
+     * @return string
+     */
+    public function getBlockPrefix(): string
+    {
+        return 'manage_report';
     }
 }

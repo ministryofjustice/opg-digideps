@@ -14,12 +14,12 @@ Feature: Admin unsubmit and client re-submit
     And I click on "manage" in the "report-2016-to-2017" region
     # unsubmit decisions, PA deputy expenses
     When I fill in the following:
-      | unsubmit_report_unsubmittedSection_0_present  | 1    |
-      | unsubmit_report_unsubmittedSection_13_present | 1    |
-      | unsubmit_report_dueDateChoice_0               | keep |
-    And I press "unsubmit_report_save"
-    And I fill in "unsubmit_report_confirm_confirm_0" with "yes"
-    And I press "unsubmit_report_confirm_save"
+      | manage_report_unsubmittedSection_0_present  | 1    |
+      | manage_report_unsubmittedSection_13_present | 1    |
+      | manage_report_dueDateChoice_0               | keep |
+    And I press "manage_report_save"
+    And I fill in "manage_report_confirm_confirm_0" with "yes"
+    And I press "manage_report_confirm_save"
     Then I should see the "report-2016-to-2017" region in the "report-group-incomplete" region
 
   @deputy
