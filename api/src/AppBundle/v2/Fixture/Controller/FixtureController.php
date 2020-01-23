@@ -160,7 +160,7 @@ class FixtureController
         foreach (explode(',', $sections) as $section) {
             $this->reportSection->completeSection($report, $section);
         }
-
+        
         $report->updateSectionsStatusCache($report->getAvailableSections());
         $this->em->flush();
 

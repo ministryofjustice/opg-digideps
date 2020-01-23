@@ -18,25 +18,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  */
 class FixtureController extends AbstractController
 {
-    /** @var KernelInterface */
-    private $kernel;
-
-    /**
-     * @param KernelInterface $kernel
-     */
-    public function __construct(KernelInterface $kernel)
-    {
-        $this->kernel = $kernel;
-    }
-
     /**
      * @Route("/court-orders", name="admin_fixtures_court_orders")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("AppBundle:Admin/Fixtures:courtOrders.html.twig")
      */
-    public function courtOrdersAction(Request $request)
+    public function courtOrdersAction(Request $request, KernelInterface $kernel)
     {
-        if ($this->kernel->getEnvironment() === 'prod') {
+        if ($kernel->getEnvironment() === 'prod') {
             throw $this->createNotFoundException();
         }
 
@@ -62,7 +51,7 @@ class FixtureController extends AbstractController
                 'courtDate' => $courtDate->format('Y-m-d')
             ]));
 
-            $request->getSession()->getFlashBag()->add('notice', "Created deputy with email: $deputyEmail");
+            $this->addFlash('notice', "Created deputy with email: $deputyEmail");
         }
 
         return ['form' => $form->createView()];
@@ -75,9 +64,9 @@ class FixtureController extends AbstractController
      * @param $reportId
      * @return JsonResponse
      */
-    public function completeReportSectionsAction(Request $request, $reportId): JsonResponse
+    public function completeReportSectionsAction(Request $request, $reportId, KernelInterface $kernel): JsonResponse
     {
-        if ($this->kernel->getEnvironment() === 'prod') {
+        if ($kernel->getEnvironment() === 'prod') {
             throw $this->createNotFoundException();
         }
 
