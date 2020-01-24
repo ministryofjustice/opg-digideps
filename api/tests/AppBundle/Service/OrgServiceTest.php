@@ -92,6 +92,7 @@ class OrgServiceTest extends WebTestCase
         'Client Phone' => 'caphone',
         'Client Email' => 'client@provider.com',
         'Client Date of Birth' => '05-Jan-47',
+        'Made Date' => '01-Jan-2015'
     ];
 
 
@@ -272,6 +273,7 @@ class OrgServiceTest extends WebTestCase
         $this->assertEquals('a3', $client1->getCounty());
         $this->assertEquals('ap', $client1->getPostcode());
         $this->assertEquals('client@provider.com', $client1->getEmail());
+        $this->assertEquals(new DateTime('01-Jan-2015'), $client1->getCourtDate());
         $this->assertInstanceOf(DateTime::class, $client1->getDateOfBirth());
         $this->assertEquals('1947-01-05', $client1->getDateOfBirth()->format('Y-m-d'));
         $this->assertCount(1, $client1->getReports());
@@ -286,6 +288,7 @@ class OrgServiceTest extends WebTestCase
         $this->assertEquals('Cly2', $client2->getFirstname());
         $this->assertEquals('Hent2', $client2->getLastname());
         $this->assertCount(1, $client2->getReports());
+
         $client2Report1 = $client2->getReports()->first();
 
         /* @var $client2Report1 EntityDir\Report\Report */

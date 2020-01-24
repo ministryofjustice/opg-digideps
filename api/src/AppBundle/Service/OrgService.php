@@ -293,6 +293,9 @@ class OrgService
         $this->log('Setting named deputy on client to deputy id:' . $namedDeputy->getId());
         $client->setNamedDeputy($namedDeputy);
 
+        // Updating court date to account for updates in casrec
+        $client->setCourtDate(new DateTime($row['Made Date']));
+
         if (null !== $this->currentOrganisation) {
             $this->attachClientToOrganisation($client);
         }
@@ -317,8 +320,6 @@ class OrgService
         $client->setCaseNumber($caseNumber);
         $client->setFirstname(trim($row['Forename']));
         $client->setLastname(trim($row['Surname']));
-
-        $client->setCourtDate(new DateTime($row['Made Date']));
 
         if (!empty($row['Client Adrs1'])) {
             $client->setAddress($row['Client Adrs1']);
