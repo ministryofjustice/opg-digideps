@@ -17,7 +17,7 @@ docker-compose run --rm api sh scripts/apiunittest.sh
 docker-compose run --rm frontend bin/phpunit -c tests/phpunit
 ```
 
-### Integration tests
+### Integration tests
 
 To run the entire test suite, reset the database and run the `test` image.
 
