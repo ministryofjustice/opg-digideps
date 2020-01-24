@@ -87,16 +87,17 @@ class MailFactory
     public function createActivationEmail(User $user)
     {
         $area = $this->getUserArea($user);
+        $homepageURL = $this->generateAbsoluteLink($area, 'homepage');
 
         $viewParams = [
             'name'             => $user->getFullName(),
-            'domain'           => $this->generateAbsoluteLink($area, 'homepage', []),
+            'domain'           => $homepageURL,
             'link'             => $this->generateAbsoluteLink($area, 'user_activate', [
                 'action' => 'activate',
                 'token'  => $user->getRegistrationToken(),
             ]),
             'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
-            'homepageUrl'      => $this->generateAbsoluteLink($area, 'homepage'),
+            'homepageUrl'      => $homepageURL,
             'recipientRole' => self::getRecipientRole($user)
         ];
 
