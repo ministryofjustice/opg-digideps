@@ -23,7 +23,7 @@ class AuthService
     /**
      * @var array
      */
-    private $clientSecrets;
+    private $clientPermissions;
 
     /**
      * @var UserRepository
@@ -45,26 +45,30 @@ class AuthService
      * @param LoggerInterface $logger
      * @param UserRepository $userRepository
      * @param RoleHierarchyInterface $roleHierarchy
-     * @param array $clientSecrets
+     * @param array $clientPermissions
      */
     public function __construct(
         EncoderFactoryInterface $encoderFactory,
         LoggerInterface $logger,
         UserRepository $userRepository,
         RoleHierarchyInterface $roleHierarchy,
-        array $clientSecrets
+        array $clientPermissions
     )
     {
-        $this->clientSecrets = $clientSecrets;
-
-        if (!is_array($this->clientSecrets) || empty($this->clientSecrets)) {
-            throw new \InvalidArgumentException('client_secrets not defined in config.');
-        }
-
         $this->userRepository = $userRepository;
         $this->logger = $logger;
         $this->securityEncoderFactory = $encoderFactory;
         $this->roleHierarchy = $roleHierarchy;
+        $this->clientPermissions = $clientPermissions;
+
+        if (!is_array($this->clientPermissions) || empty($this->clientPermissions)) {
+            throw new \InvalidArgumentException('client_permissions not defined in config.');
+        }
+
+        $this->clientSecrets = [
+            'admin' => getenv('SECRETS_ADMIN_KEY'),
+            'frontend' => getenv('SECRETS_FRONT_KEY'),
+        ];
     }
 
     /**
@@ -79,7 +83,7 @@ class AuthService
             return false;
         }
 
-        return isset($this->clientSecrets[$clientSecretFromRequest]);
+        return in_array($clientSecretFromRequest, $this->clientSecrets, true);
     }
 
     /**
@@ -145,8 +149,10 @@ class AuthService
             return false;
         }
 
-        $roles = isset($this->clientSecrets[$clientSecretFromRequest]['permissions']) ?
-            $this->clientSecrets[$clientSecretFromRequest]['permissions'] : [];
+        $clientSource = array_search($clientSecretFromRequest, $this->clientSecrets);
+
+        $roles = isset($this->clientPermissions[$clientSource]) ?
+            $this->clientPermissions[$clientSource] : [];
 
         $allowedRoles = [];
 
