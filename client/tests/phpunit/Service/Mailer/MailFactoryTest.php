@@ -185,15 +185,59 @@ class MailFactoryTest extends TestCase
 
         $email = $sut->createResetPasswordEmail($this->layDeputy);
 
-        self::assertStringContainsString('from@digital.justice.gov.uk', $email->getFromEmail());
-        self::assertStringContainsString('OPG', $email->getFromName());
-        self::assertStringContainsString('user@digital.justice.gov.uk', $email->getToEmail());
-        self::assertStringContainsString('Joe Bloggs', $email->getToName());
-        self::assertStringContainsString('Reset Password Subject', $email->getSubject());
-        self::assertStringContainsString(MailFactory::RESET_PASSWORD_TEMPLATE, $email->getTemplate());
+        self::assertEquals('from@digital.justice.gov.uk', $email->getFromEmail());
+        self::assertEquals('OPG', $email->getFromName());
+        self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
+        self::assertEquals('Joe Bloggs', $email->getToName());
+        self::assertEquals('Reset Password Subject', $email->getSubject());
+        self::assertEquals(MailFactory::RESET_PASSWORD_TEMPLATE, $email->getTemplate());
 
         $expectedTemplateParams = ['resetLink' => 'https://front.base.url/reset-password/regToken'];
         self::assertEquals($expectedTemplateParams, $email->getParameters());
+    }
 
+    /**
+     * @test
+     */
+    public function createFeedbackEmail()
+    {
+        $this->translator->trans('feedbackForm.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+        $this->translator->trans('feedbackForm.toName', [], 'email')->shouldBeCalled()->willReturn('To Name');
+        $this->translator->trans('feedbackForm.subject', [], 'email')->shouldBeCalled()->willReturn('A subject');
+
+        $response = [
+                'specificPage' => 'A specific page',
+                'page' => 'A page',
+                'comments' => 'It was great!',
+                'name' => 'Joe Bloggs',
+                'email' => 'joe.bloggs@xyz.com',
+                'phone' => '07535999222',
+                'satisfactionLevel' => '4',
+        ];
+
+        $exepctedResponse['response'] = $response;
+        $exepctedResponse['userRole'] = 'Lay Deputy';
+
+        $this->templating->render('AppBundle:Email:feedback.html.twig', $exepctedResponse)->shouldBeCalled()->willReturn('A rendered template');
+
+        $sut = new MailFactory(
+            $this->translator->reveal(),
+            $this->router->reveal(),
+            $this->templating->reveal(),
+            $this->emailSendParams,
+            $this->appBaseURLs
+        );
+
+        $email = $sut->createFeedbackEmail($response, $this->layDeputy);
+
+        self::assertEquals('from@digital.justice.gov.uk', $email->getFromEmail());
+        self::assertEquals('OPG', $email->getFromName());
+        self::assertEquals('digideps+noop@digital.justice.gov.uk', $email->getToEmail());
+        self::assertEquals('To Name', $email->getToName());
+        self::assertEquals(MailFactory::FEEDBACK_TEMPLATE, $email->getTemplate());
+
+        $expectedTemplateParams = ['subject' => 'A subject', 'body' => 'A rendered template'];
+
+        self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 }

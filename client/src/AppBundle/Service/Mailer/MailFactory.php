@@ -18,6 +18,7 @@ class MailFactory
 
     // Maintained in GOVUK Notify
     const RESET_PASSWORD_TEMPLATE = 'e7312e62-2602-4903-89e6-93ad943bacb1';
+    const FEEDBACK_TEMPLATE = '862f1ce7-bde5-4397-be68-bd9e4537cff0';
 
     /**
      * @var TranslatorInterface
@@ -149,7 +150,7 @@ class MailFactory
     {
         $area = $this->getUserArea($user);
 
-        $viewParams = [
+        $notifyParameters = [
             'resetLink' => $this->generateAbsoluteLink($area, 'user_activate', [
                 'action' => 'password-reset',
                 'token'  => $user->getRegistrationToken(),
@@ -165,7 +166,7 @@ class MailFactory
             ->setToName($user->getFullName())
             ->setSubject($this->translate('resetPassword.subject'))
             ->setTemplate(self::RESET_PASSWORD_TEMPLATE)
-            ->setParameters($viewParams);
+            ->setParameters($notifyParameters);
 
         return $email;
     }
@@ -241,7 +242,7 @@ class MailFactory
     }
 
     /**
-     * @param string $response
+     * @param array $response
      *
      * @return ModelDir\Email
      */
@@ -255,14 +256,16 @@ class MailFactory
             $viewParams['userRole'] = $user->getRoleFullName();
         }
 
+        $renderedTemplate = $this->templating->render('AppBundle:Email:feedback.html.twig', $viewParams);
+
         $email = new ModelDir\Email();
         $email
             ->setFromEmail($this->emailParams['from_email'])
             ->setFromName($this->translate('feedbackForm.fromName'))
             ->setToEmail($this->emailParams['email_feedback_send_to_email'])
             ->setToName($this->translate('feedbackForm.toName'))
-            ->setSubject($this->translate('feedbackForm.subject'))
-            ->setBodyHtml($this->templating->render('AppBundle:Email:feedback.html.twig', $viewParams));
+            ->setTemplate(self::FEEDBACK_TEMPLATE)
+            ->setParameters(['subject' => $this->translate('feedbackForm.subject'), 'body' => $renderedTemplate]);
 
         return $email;
     }
