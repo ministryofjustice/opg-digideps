@@ -585,7 +585,8 @@ class OrgServiceTest extends WebTestCase
             'Client Adrs1'    => 'Address 1',
             'Client Phone'    => '07123456789',
             'Client Email'    => 'client@example.com',
-            'Last Report Day' => '23-JUN-2016'
+            'Last Report Day' => '23-JUN-2016',
+            'Made Date'       => '01-JAN-2016'
         ];
 
         /** @var EntityManager&ObjectProphecy $em */
@@ -605,12 +606,13 @@ class OrgServiceTest extends WebTestCase
         $client->getCurrentReport()->shouldBeCalled()->willReturn($report->reveal());
         $client->setNamedDeputy(Argument::any())->shouldBeCalled();
         $client->setOrganisation(Argument::any())->shouldBeCalled();
+        $client->setCourtDate(Argument::any())->shouldBeCalled();
+
 
         // Ensure no client data is updated
         $client->setCaseNumber(Argument::any())->shouldNotBeCalled();
         $client->setFirstname(Argument::any())->shouldNotBeCalled();
         $client->setLastname(Argument::any())->shouldNotBeCalled();
-        $client->setCourtDate(Argument::any())->shouldNotBeCalled();
         $client->setAddress(Argument::any())->shouldNotBeCalled();
         $client->setPhone(Argument::any())->shouldNotBeCalled();
         $client->setEmail(Argument::any())->shouldNotBeCalled();
