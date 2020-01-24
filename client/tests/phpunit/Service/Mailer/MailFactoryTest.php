@@ -126,15 +126,7 @@ class MailFactoryTest extends TestCase
         $this->templating->render('AppBundle:Email:user-activate.html.twig', $expectedViewParams)->shouldBeCalled()->willReturn('<html>Rendered body</html>');
         $this->templating->render('AppBundle:Email:user-activate.text.twig', $expectedViewParams)->shouldBeCalled()->willReturn('Rendered body');
 
-        $sut = new MailFactory(
-            $this->translator->reveal(),
-            $this->router->reveal(),
-            $this->templating->reveal(),
-            $this->emailSendParams,
-            $this->appBaseURLs
-        );
-
-        $email = $sut->createActivationEmail($this->layDeputy);
+        $email = ($this->generateSUT())->createActivationEmail($this->layDeputy);
 
         self::assertEquals('from@digital.justice.gov.uk', $email->getFromEmail());
         self::assertEquals('OPG', $email->getFromName());
@@ -168,15 +160,7 @@ class MailFactoryTest extends TestCase
         $this->templating->render('AppBundle:Email:report-submission-confirm.html.twig', $expectedViewParams)->shouldBeCalled()->willReturn('<html>Rendered body</html>');
         $this->templating->render('AppBundle:Email:report-submission-confirm.text.twig', $expectedViewParams)->shouldBeCalled()->willReturn('Rendered body');
 
-        $sut = new MailFactory(
-            $this->translator->reveal(),
-            $this->router->reveal(),
-            $this->templating->reveal(),
-            $this->emailSendParams,
-            $this->appBaseURLs
-        );
-
-        $email = $sut->createOrgReportSubmissionConfirmationEmail($this->layDeputy, $this->submittedReport, $this->newReport);
+        $email = ($this->generateSUT())->createOrgReportSubmissionConfirmationEmail($this->layDeputy, $this->submittedReport, $this->newReport);
 
         self::assertEquals('from@digital.justice.gov.uk', $email->getFromEmail());
         self::assertEquals('OPG', $email->getFromName());
@@ -200,15 +184,7 @@ class MailFactoryTest extends TestCase
         $this->translator->trans('resetPassword.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
         $this->translator->trans('resetPassword.subject', [], 'email')->shouldBeCalled()->willReturn('Reset Password Subject');
 
-        $sut = new MailFactory(
-            $this->translator->reveal(),
-            $this->router->reveal(),
-            $this->templating->reveal(),
-            $this->emailSendParams,
-            $this->appBaseURLs
-        );
-
-        $email = $sut->createResetPasswordEmail($this->layDeputy);
+        $email = ($this->generateSUT())->createResetPasswordEmail($this->layDeputy);
 
         self::assertEquals('from@digital.justice.gov.uk', $email->getFromEmail());
         self::assertEquals('OPG', $email->getFromName());
@@ -245,15 +221,7 @@ class MailFactoryTest extends TestCase
 
         $this->templating->render('AppBundle:Email:feedback.html.twig', $exepctedResponse)->shouldBeCalled()->willReturn('A rendered template');
 
-        $sut = new MailFactory(
-            $this->translator->reveal(),
-            $this->router->reveal(),
-            $this->templating->reveal(),
-            $this->emailSendParams,
-            $this->appBaseURLs
-        );
-
-        $email = $sut->createFeedbackEmail($response, $this->layDeputy);
+        $email = ($this->generateSUT())->createFeedbackEmail($response, $this->layDeputy);
 
         self::assertEquals('from@digital.justice.gov.uk', $email->getFromEmail());
         self::assertEquals('OPG', $email->getFromName());
@@ -264,5 +232,16 @@ class MailFactoryTest extends TestCase
         $expectedTemplateParams = ['subject' => 'A subject', 'body' => 'A rendered template'];
 
         self::assertEquals($expectedTemplateParams, $email->getParameters());
+    }
+
+    private function generateSUT()
+    {
+        return new MailFactory(
+            $this->translator->reveal(),
+            $this->router->reveal(),
+            $this->templating->reveal(),
+            $this->emailSendParams,
+            $this->appBaseURLs
+        );
     }
 }
