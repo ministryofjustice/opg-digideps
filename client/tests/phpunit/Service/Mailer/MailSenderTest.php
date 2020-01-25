@@ -1,8 +1,15 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Service\Mailer;
 
+use Alphagov\Notifications\Client as NotifyClient;
+use Alphagov\Notifications\Exception\NotifyException;
+use AppBundle\Model\Email;
 use MockeryStub as m;
+use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 //class MailSenderTest extends \PHPUnit_Framework_TestCase
 class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
@@ -17,9 +24,9 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         $this->validator = m::mock('Symfony\Component\Validator\Validator\ValidatorInterface');
         $this->logger = m::mock('Psr\Log\LoggerInterface');
         $this->email = m::mock('AppBundle\Model\Email');
-        $this->redis = m::mock('Predis\Client');
+        $this->notifyClient = m::mock('Alphagov\Notifications\Client');
 
-        $this->mailSender = new MailSender($this->validator, $this->logger, $this->redis);
+        $this->mailSender = new MailSender($this->validator, $this->logger, $this->notifyClient);
     }
 
     public function tearDown(): void
@@ -97,5 +104,49 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         $this->assertEquals('c', $message->getChildren()[1]->getBody());
         $this->assertEquals('f', $message->getChildren()[1]->getFilename());
         $this->assertEquals('application/octect', $message->getChildren()[1]->getContentType());
+    }
+
+    /**
+     * @test
+     * @group acs
+     */
+    public function sendNotify()
+    {
+        $email = (new Email())
+            ->setToEmail('to@email.address')
+            ->setTemplate('123-template-id')
+            ->setParameters(['param' => 'param value']);
+
+        $validator = self::prophesize(ValidatorInterface::class);
+        $logger = self::prophesize(LoggerInterface::class);
+        /** @var ObjectProphecy&NotifyClient $notifyClient */
+        $notifyClient = self::prophesize(NotifyClient::class);
+        $notifyClient->sendEmail('to@email.address', '123-template-id', ['param' => 'param value'])->shouldBeCalled();
+
+        $sut = new MailSender($validator->reveal(), $logger->reveal(), $notifyClient->reveal());
+        self::assertTrue($sut->sendNotify($email));
+    }
+
+    /**
+     * @test
+     * @group acs
+     */
+    public function sendNotify_exception()
+    {
+        $email = (new Email())
+            ->setToEmail('to@email.address')
+            ->setTemplate('123-template-id')
+            ->setParameters(['param' => 'param value']);
+
+        $validator = self::prophesize(ValidatorInterface::class);
+        $logger = self::prophesize(LoggerInterface::class);
+        $logger->error('Error message')->shouldBeCalled();
+
+        /** @var ObjectProphecy|NotifyClient $notifyClient */
+        $notifyClient = self::prophesize(NotifyClient::class);
+        $notifyClient->sendEmail(Argument::any(), Argument::any(), Argument::any())->willThrow(new NotifyException('Error message'));
+
+        $sut = new MailSender($validator->reveal(), $logger->reveal(), $notifyClient->reveal());
+        self::assertFalse($sut->sendNotify($email));
     }
 }

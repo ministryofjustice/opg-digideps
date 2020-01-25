@@ -23,3 +23,13 @@ services:
         arguments:
             $emailParams: %email_params%
             $baseURLs: %client_base_urls%
+
+    Alphagov\Notifications\Client:
+        class: Alphagov\Notifications\Client
+        arguments:
+            $config:
+                httpClient: '@Http\Adapter\Guzzle6\Client'
+                apiKey: '%env(NOTIFY_API_KEY)%'
+
+    Http\Adapter\Guzzle6\Client:
+        class: Http\Adapter\Guzzle6\Client
