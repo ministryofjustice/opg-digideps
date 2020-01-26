@@ -19,14 +19,56 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
      */
     private $mailSender;
 
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ValidatorInterface
+     */
+    private $mockeryValidator;
+
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|LoggerInterface
+     */
+    private $mockeryLogger;
+
+    /**
+     * @var Email|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     */
+    private $mockeryEmail;
+
+    /**
+     * @var NotifyClient|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     */
+    private $mockeryNotifyClient;
+
+    /**
+     * @var ObjectProphecy&ValidatorInterface
+     */
+    private $validator;
+
+    /**
+     * @var ObjectProphecy&LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @var ObjectProphecy&NotifyClient
+     */
+    private $notifyClient;
+
     public function setup(): void
     {
-        $this->validator = m::mock('Symfony\Component\Validator\Validator\ValidatorInterface');
-        $this->logger = m::mock('Psr\Log\LoggerInterface');
-        $this->email = m::mock('AppBundle\Model\Email');
-        $this->notifyClient = m::mock('Alphagov\Notifications\Client');
+        // TODO remove and switch to Prophecy when re-writing existing tests
+        $this->mockeryValidator = m::mock('Symfony\Component\Validator\Validator\ValidatorInterface');
+        $this->mockeryLogger = m::mock('Psr\Log\LoggerInterface');
+        $this->mockeryEmail = m::mock('AppBundle\Model\Email');
+        $this->mockeryNotifyClient = m::mock('Alphagov\Notifications\Client');
 
-        $this->mailSender = new MailSender($this->validator, $this->logger, $this->notifyClient);
+        $this->mailSender = new MailSender($this->mockeryValidator, $this->mockeryLogger, $this->mockeryNotifyClient);
+
+        $this->validator = self::prophesize(ValidatorInterface::class);
+        $this->logger = self::prophesize(LoggerInterface::class);
+        $this->notifyClient = self::prophesize(NotifyClient::class);
+
+        $this->sut = new MailSender($this->validator->reveal(), $this->logger->reveal(), $this->notifyClient->reveal());
     }
 
     public function tearDown(): void
@@ -40,10 +82,10 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
                 'count' => 1,
                 '__toString' => 'violationsAsString',
         ]);
-        $this->validator->shouldReceive('validate')->once()->with($this->email, null, ['text'])->andReturn($violations);
+        $this->mockeryValidator->shouldReceive('validate')->once()->with($this->mockeryEmail, null, ['text'])->andReturn($violations);
 
         try {
-            $this->mailSender->send($this->email, ['text']);
+            $this->mailSender->send($this->mockeryEmail, ['text']);
             $this->fail('exception not thrown as expected');
         } catch (\RuntimeException $e) {
             $this->assertEquals('violationsAsString', $e->getMessage());
@@ -54,9 +96,9 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        $this->validator->shouldReceive('validate')->andReturn([]);
+        $this->mockeryValidator->shouldReceive('validate')->andReturn([]);
 
-        $this->mailSender->send($this->email, ['text']);
+        $this->mailSender->send($this->mockeryEmail, ['text']);
     }
 
     public function testSendOk()
@@ -65,7 +107,7 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         $mockMailer = new \Swift_Mailer($transportMock);
         $this->mailSender->addSwiftMailer('default', $mockMailer);
 
-        $this->email = m::stub('AppBundle\Model\Email', [
+        $this->mockeryEmail = m::stub('AppBundle\Model\Email', [
             'getToEmail' => 't@example.org',
             'getToName' => 'tn',
             'getFromEmail' => 'f@example.org',
@@ -82,10 +124,10 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
             ],
         ]);
 
-        $this->validator->shouldReceive('validate')->andReturn([]);
-        $this->logger->shouldReceive('log')->with('info', m::any(), m::any());
+        $this->mockeryValidator->shouldReceive('validate')->andReturn([]);
+        $this->mockeryLogger->shouldReceive('log')->with('info', m::any(), m::any());
 
-        $ret = $this->mailSender->send($this->email, ['text']);
+        $ret = $this->mailSender->send($this->mockeryEmail, ['text']);
         $this->assertEquals(['result' => 'sent'], $ret);
 
         // assert sent message
@@ -112,41 +154,30 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
      */
     public function sendNotify()
     {
-        $email = (new Email())
-            ->setToEmail('to@email.address')
-            ->setTemplate('123-template-id')
-            ->setParameters(['param' => 'param value']);
-
-        $validator = self::prophesize(ValidatorInterface::class);
-        $logger = self::prophesize(LoggerInterface::class);
-        /** @var ObjectProphecy&NotifyClient $notifyClient */
-        $notifyClient = self::prophesize(NotifyClient::class);
-        $notifyClient->sendEmail('to@email.address', '123-template-id', ['param' => 'param value'])->shouldBeCalled();
-
-        $sut = new MailSender($validator->reveal(), $logger->reveal(), $notifyClient->reveal());
-        self::assertTrue($sut->sendNotify($email));
+        $this->notifyClient->sendEmail('to@email.address', '123-template-id', ['param' => 'param value'])->shouldBeCalled();
+        self::assertTrue($this->sut->sendNotify($this->generateEmail()));
     }
 
     /**
      * @test
      * @group acs
      */
-    public function sendNotify_exception()
+    public function sendNotify_exceptions_are_logged()
     {
-        $email = (new Email())
+        $this->logger->error('Error message')->shouldBeCalled();
+        $this->notifyClient->sendEmail(Argument::any(), Argument::any(), Argument::any())->willThrow(new NotifyException('Error message'));
+
+        self::assertFalse($this->sut->sendNotify($this->generateEmail()));
+    }
+
+    /**
+     * @return Email
+     */
+    private function generateEmail()
+    {
+        return (new Email())
             ->setToEmail('to@email.address')
             ->setTemplate('123-template-id')
             ->setParameters(['param' => 'param value']);
-
-        $validator = self::prophesize(ValidatorInterface::class);
-        $logger = self::prophesize(LoggerInterface::class);
-        $logger->error('Error message')->shouldBeCalled();
-
-        /** @var ObjectProphecy|NotifyClient $notifyClient */
-        $notifyClient = self::prophesize(NotifyClient::class);
-        $notifyClient->sendEmail(Argument::any(), Argument::any(), Argument::any())->willThrow(new NotifyException('Error message'));
-
-        $sut = new MailSender($validator->reveal(), $logger->reveal(), $notifyClient->reveal());
-        self::assertFalse($sut->sendNotify($email));
     }
 }
