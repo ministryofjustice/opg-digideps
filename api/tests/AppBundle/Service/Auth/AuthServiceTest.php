@@ -19,7 +19,7 @@ class AuthServiceTest extends TestCase
 
     private $clientPermissions = [
         'frontend' => [
-            'ROLE_LAY_DEPUTY',
+            'ROLE_DEPUTY',
         ],
         'admin' => [
             'ROLE_ADMIN',
@@ -54,7 +54,8 @@ class AuthServiceTest extends TestCase
 
         $hierarchy = [
             'ROLE_ADMIN' => [ 'ROLE_DOCUMENT_MANAGE', 'ROLE_CASE_MANAGER' ],
-            'ROLE_LAY_DEPUTY' => [ 'ROLE_DEPUTY' ],
+            'ROLE_LAY_DEPUTY' => ['ROLE_DEPUTY'],
+            'ROLE_PROF_DEPUTY' => ['ROLE_DEPUTY'],
         ];
 
         $this->roleHierarchy = new RoleHierarchy($hierarchy);
@@ -151,9 +152,11 @@ class AuthServiceTest extends TestCase
             ['layDeputySecret', 'ROLE_LAY_DEPUTY', true],
             ['layDeputySecret', 'ROLE_ADMIN', false],
             ['layDeputySecret', 'OTHER_ROLE', false],
+            ['layDeputySecret', 'ROLE_PROF_DEPUTY', true],
             ['layDeputySecret', null, false],
             ['adminSecret', 'ROLE_LAY_DEPUTY', false],
             ['adminSecret', 'ROLE_ADMIN', true],
+            ['adminSecret', 'ROLE_CASE_MANAGER', false],
             ['adminSecret', 'OTHER_ROLE', false],
             ['adminSecret', null, false],
             ['layDeputySecretNoPermissions', '', false],
