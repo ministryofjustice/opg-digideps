@@ -92,6 +92,7 @@ class OrgServiceTest extends WebTestCase
         'Client Phone' => 'caphone',
         'Client Email' => 'client@provider.com',
         'Client Date of Birth' => '05-Jan-47',
+        'Made Date' => '01-Jan-2015'
     ];
 
 
@@ -272,6 +273,7 @@ class OrgServiceTest extends WebTestCase
         $this->assertEquals('a3', $client1->getCounty());
         $this->assertEquals('ap', $client1->getPostcode());
         $this->assertEquals('client@provider.com', $client1->getEmail());
+        $this->assertEquals(new DateTime('01-Jan-2015'), $client1->getCourtDate());
         $this->assertInstanceOf(DateTime::class, $client1->getDateOfBirth());
         $this->assertEquals('1947-01-05', $client1->getDateOfBirth()->format('Y-m-d'));
         $this->assertCount(1, $client1->getReports());
@@ -286,6 +288,7 @@ class OrgServiceTest extends WebTestCase
         $this->assertEquals('Cly2', $client2->getFirstname());
         $this->assertEquals('Hent2', $client2->getLastname());
         $this->assertCount(1, $client2->getReports());
+
         $client2Report1 = $client2->getReports()->first();
 
         /* @var $client2Report1 EntityDir\Report\Report */
@@ -582,7 +585,8 @@ class OrgServiceTest extends WebTestCase
             'Client Adrs1'    => 'Address 1',
             'Client Phone'    => '07123456789',
             'Client Email'    => 'client@example.com',
-            'Last Report Day' => '23-JUN-2016'
+            'Last Report Day' => '23-JUN-2016',
+            'Made Date'       => '01-JAN-2016'
         ];
 
         /** @var EntityManager&ObjectProphecy $em */
@@ -602,12 +606,13 @@ class OrgServiceTest extends WebTestCase
         $client->getCurrentReport()->shouldBeCalled()->willReturn($report->reveal());
         $client->setNamedDeputy(Argument::any())->shouldBeCalled();
         $client->setOrganisation(Argument::any())->shouldBeCalled();
+        $client->setCourtDate(Argument::any())->shouldBeCalled();
+
 
         // Ensure no client data is updated
         $client->setCaseNumber(Argument::any())->shouldNotBeCalled();
         $client->setFirstname(Argument::any())->shouldNotBeCalled();
         $client->setLastname(Argument::any())->shouldNotBeCalled();
-        $client->setCourtDate(Argument::any())->shouldNotBeCalled();
         $client->setAddress(Argument::any())->shouldNotBeCalled();
         $client->setPhone(Argument::any())->shouldNotBeCalled();
         $client->setEmail(Argument::any())->shouldNotBeCalled();
