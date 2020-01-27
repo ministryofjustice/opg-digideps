@@ -59,15 +59,15 @@ class AuthService
         array $clientPermissions
     )
     {
+        if (!is_array($clientPermissions) || empty($clientPermissions)) {
+            throw new \InvalidArgumentException('client_permissions not defined in config.');
+        }
+
         $this->userRepository = $userRepository;
         $this->logger = $logger;
         $this->securityEncoderFactory = $encoderFactory;
         $this->roleHierarchy = $roleHierarchy;
         $this->clientPermissions = $clientPermissions;
-
-        if (!is_array($this->clientPermissions) || empty($this->clientPermissions)) {
-            throw new \InvalidArgumentException('client_permissions not defined in config.');
-        }
 
         $this->clientSecrets = [
             'admin' => getenv('SECRETS_ADMIN_KEY'),
