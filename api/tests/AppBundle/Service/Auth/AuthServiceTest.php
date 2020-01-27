@@ -17,16 +17,13 @@ class AuthServiceTest extends TestCase
      */
     private $authService;
 
-    private $clientSecrets = [
-        'layDeputySecret' => [
-            'permissions' => ['ROLE_LAY_DEPUTY'],
+    private $clientPermissions = [
+        'frontend' => [
+            'ROLE_LAY_DEPUTY',
         ],
-        'adminSecret' => [
-            'permissions' => ['ROLE_ADMIN'],
+        'admin' => [
+            'ROLE_ADMIN',
         ],
-        'layDeputySecretNoPermissions' => [
-        ],
-        'layDeputySecretWrongFormat' => 'IShouldBeAnArray',
     ];
 
     /**
@@ -61,7 +58,7 @@ class AuthServiceTest extends TestCase
         ];
 
         $this->roleHierarchy = new RoleHierarchy($hierarchy);
-        $this->authService = new AuthService($this->encoderFactory, $this->logger, $this->userRepo, $this->roleHierarchy, $this->clientSecrets);
+        $this->authService = new AuthService($this->encoderFactory, $this->logger, $this->userRepo, $this->roleHierarchy, $this->clientPermissions);
     }
 
     public function testMissingSecrets()
@@ -164,6 +161,7 @@ class AuthServiceTest extends TestCase
             ['layDeputySecretNoPermissions', false, false],
             ['layDeputySecretWrongFormat', '', false],
             [null, null, false],
+            [null, 'ROLE_LAY_DEPUTY', false],
         ];
     }
 
