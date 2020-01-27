@@ -186,7 +186,7 @@ abstract class AbstractController extends Controller
     protected function getMailSender()
     {
         /** @var MailSender */
-        $mailSender = $this->get('mail_sender');
+        $mailSender = $this->get('AppBundle\Service\Mailer\MailSender');
         return $mailSender;
     }
 

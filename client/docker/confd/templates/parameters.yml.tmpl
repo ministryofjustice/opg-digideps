@@ -23,17 +23,6 @@ parameters:
         gds: {{ getv "/ga/gds" }}
     opg_docker_tag: {{ getv "/opg/docker/tag" }}
     mock_emails: {{ if eq (getv "/mock/emails") "true" }}true{{ else }}false{{ end }}
-    email_params:
-        from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
-        {{ if eq (getv "/email/send/internal") "true" }}
-        email_report_submit_to_email: deputyshipservice@publicguardian.gov.uk
-        email_feedback_send_to_email: digideps+feedback@digital.justice.gov.uk
-        email_update_send_to_email: laydeputysupport@publicguardian.gov.uk
-        {{ else }}
-        email_report_submit_to_email: digideps+noop@digital.justice.gov.uk
-        email_feedback_send_to_email: digideps+noop@digital.justice.gov.uk
-        email_update_send_to_email: digideps+noop@digital.justice.gov.uk
-        {{ end }}
     email_send:
         from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
         to_email: -

@@ -30,6 +30,8 @@ class Email
      */
     private $fromName;
 
+    private $fromEmailNotifyID;
+
     /**
      * @Assert\NotBlank(message="sendEmail.subject.notBlank", groups={"html","text"})
      */
@@ -218,6 +220,24 @@ class Email
     public function setParameters(array $parameters): self
     {
         $this->parameters = $parameters;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFromEmailNotifyID(): ?string
+    {
+        return $this->fromEmailNotifyID;
+    }
+
+    /**
+     * @param mixed $fromEmailNotifyID
+     * @return Email
+     */
+    public function setFromEmailNotifyID($fromEmailNotifyID): self
+    {
+        $this->fromEmailNotifyID = $fromEmailNotifyID;
         return $this;
     }
 }

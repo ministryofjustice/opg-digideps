@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service\Mailer;
 
+use Alphagov\Notifications\Client as NotifyClient;
 use Alphagov\Notifications\Exception\NotifyException;
 use AppBundle\Model\Email;
 use Predis\ClientInterface as PredisClientInterface;
@@ -33,21 +34,34 @@ class MailSenderMock implements MailSenderInterface
      */
     protected $validator;
 
-
     /**
      * @var LoggerInterface
      */
-    protected $logger;
+    private $logger;
+
+    /**
+     * @var NotifyClient
+     */
+    private $notifyClient;
 
     /**
      * @param ValidatorInterface $validator
      * @param PredisClientInterface $redis
+     * @param LoggerInterface $logger
+     * @param NotifyClient $notifyClient
      */
-    public function __construct(ValidatorInterface $validator, PredisClientInterface $redis, LoggerInterface $logger)
+    public function __construct(
+        ValidatorInterface $validator,
+        PredisClientInterface $redis,
+        LoggerInterface $logger,
+        NotifyClient $notifyClient
+    )
     {
         $this->mailers = [];
         $this->validator = $validator;
         $this->redis = $redis;
+        $this->logger = $logger;
+        $this->notifyClient = $notifyClient;
     }
 
     /**
@@ -88,16 +102,56 @@ class MailSenderMock implements MailSenderInterface
      */
     public function send(Email $email, array $groups = ['text'], $transport = 'default')
     {
-        $notifyClient = new \Alphagov\Notifications\Client([
-            'apiKey' => getenv('NOTIFY_API_KEY'),
-            'httpClient' => new \Http\Adapter\Guzzle6\Client
-        ]);
+        //validate change password object
+        $errors = $this->validator->validate($email, null, $groups);
 
+        if (count($errors) > 0) {
+            $errorsString = (string) $errors;
+            throw new \Exception($errorsString);
+        }
+
+        if (!isset($this->mailers[$transport])) {
+            throw new \InvalidArgumentException("Email tranport $transport not found.");
+        }
+
+        $mailerService = $this->mailers[$transport];
+
+        // convert Email->Swift_Message
+        $swiftMessage = $mailerService->createMessage();
+        /* @var $swiftMessage Swift_Message */
+        $this->fillSwiftMessageWithEmailData($swiftMessage, $email);
+
+        // read existing emails
+        $emails = json_decode($this->getMockedEmailsRaw(), true) ?: [];
+
+        // prepend email into the file
+        $messageArray = MessageUtils::messageToArray($swiftMessage);
+        $messageArray['time'] = (new \DateTime())->format(\DateTime::ISO8601);
+        array_unshift($emails, $messageArray);
+
+        $this->redis->set(self::REDIS_EMAIL_KEY, json_encode($emails));
+
+        return ['result' => true];
+    }
+
+    /**
+     * @param Email $email
+     * @param array $groups
+     *
+     * @throws \Exception
+     *
+     * @return type
+     *
+     */
+    public function sendNotify(Email $email)
+    {
         try {
-            $notifyClient->sendEmail(
+            $this->notifyClient->sendEmail(
                 $email->getToEmail(),
                 $email->getTemplate(),
-                $email->getParameters()
+                $email->getParameters(),
+                '',
+                $email->getFromEmailNotifyID()
             );
         } catch (NotifyException $exception) {
             $this->logger->error($exception->getMessage());

@@ -68,7 +68,7 @@ class ReportSubmissionService
     {
         $this->fileUploader = $container->get('file_uploader');
         $this->restClient = $container->get('rest_client');
-        $this->mailSender = $container->get('mail_sender');
+        $this->mailSender = $container->get('AppBundle\Service\Mailer\MailSender');
         $this->mailFactory =$container->get('AppBundle\Service\Mailer\MailFactory');
         $this->templating = $container->get('templating');
         $this->wkhtmltopdf = $container->get('wkhtmltopdf');

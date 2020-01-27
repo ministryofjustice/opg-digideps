@@ -154,8 +154,9 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
      */
     public function sendNotify()
     {
-        $this->notifyClient->sendEmail('to@email.address', '123-template-id', ['param' => 'param value'])->shouldBeCalled();
-        self::assertTrue($this->sut->sendNotify($this->generateEmail()));
+        $email = $this->generateEmail();
+        $this->notifyClient->sendEmail('to@email.address', '123-template-id', ['param' => 'param value'], '', 'fake-id')->shouldBeCalled();
+        self::assertTrue($this->sut->sendNotify($email));
     }
 
     /**
@@ -164,20 +165,29 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
      */
     public function sendNotify_exceptions_are_logged()
     {
+        $email = $this->generateEmail();
         $this->logger->error('Error message')->shouldBeCalled();
-        $this->notifyClient->sendEmail(Argument::any(), Argument::any(), Argument::any())->willThrow(new NotifyException('Error message'));
+        $this->notifyClient->sendEmail(Argument::any(), Argument::any(), Argument::any(), Argument::any(), Argument::any())->willThrow(new NotifyException('Error message'));
 
-        self::assertFalse($this->sut->sendNotify($this->generateEmail()));
+        self::assertFalse($this->sut->sendNotify($email));
     }
 
     /**
      * @return Email
      */
-    private function generateEmail()
+    private function generateEmail(
+        string $toEmail='to@email.address',
+        string $templateID='123-template-id',
+        array $parameters=['param' => 'param value'],
+        string $fromEmailNotifyID='fake-id'
+    )
     {
         return (new Email())
-            ->setToEmail('to@email.address')
-            ->setTemplate('123-template-id')
-            ->setParameters(['param' => 'param value']);
+            ->setToEmail($toEmail)
+            ->setTemplate($templateID)
+            ->setParameters($parameters)
+            ->setFromEmailNotifyID($fromEmailNotifyID);
     }
+
+    // Look at removing mailSenderMock and instead change API key per env
 }

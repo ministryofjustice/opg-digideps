@@ -396,7 +396,7 @@ class ReportController extends AbstractController
             ]);
 
             // Send notification email
-            $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData(), $user);
+            $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData(), true, $user);
             $this->getMailSender()->send($feedbackEmail, ['html']);
 
             return $this->redirect($this->generateUrl('report_submit_feedback', ['reportId' => $reportId]));

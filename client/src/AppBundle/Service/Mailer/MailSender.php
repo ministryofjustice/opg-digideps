@@ -40,7 +40,11 @@ class MailSender implements MailSenderInterface
      * @param LoggerInterface $logger
      * @param NotifyClient $notifyClient
      */
-    public function __construct(ValidatorInterface $validator, LoggerInterface $logger, NotifyClient $notifyClient)
+    public function __construct(
+        ValidatorInterface $validator,
+        LoggerInterface $logger,
+        NotifyClient $notifyClient
+    )
     {
         $this->mailers = [];
         $this->validator = $validator;
@@ -116,7 +120,9 @@ class MailSender implements MailSenderInterface
             $this->notifyClient->sendEmail(
                 $email->getToEmail(),
                 $email->getTemplate(),
-                $email->getParameters()
+                $email->getParameters(),
+                '',
+                $email->getFromEmailNotifyID()
             );
         } catch (NotifyException $exception) {
             $this->logger->error($exception->getMessage());

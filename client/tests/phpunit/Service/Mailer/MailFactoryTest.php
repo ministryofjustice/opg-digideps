@@ -66,12 +66,7 @@ class MailFactoryTest extends TestCase
 
     public function setUp(): void
     {
-        $this->layDeputy = (new User())
-            ->setRegistrationToken('regToken')
-            ->setEmail('user@digital.justice.gov.uk')
-            ->setFirstname('Joe')
-            ->setLastname('Bloggs')
-            ->setRoleName(User::ROLE_LAY_DEPUTY);
+        $this->layDeputy = $this->generateUser();
 
         $this->client = (new Client())
             ->setFirstname('Joanne')
@@ -89,7 +84,7 @@ class MailFactoryTest extends TestCase
         ];
 
         $this->emailSendParams = [
-            'from_email' => 'from@digital.justice.gov.uk',
+            'from_email_notify_id' => 'a-fake-id',
             'email_report_submit_to_email' => 'digideps+noop@digital.justice.gov.uk',
             'email_feedback_send_to_email' => 'digideps+noop@digital.justice.gov.uk',
             'email_update_send_to_email' => 'digideps+noop@digital.justice.gov.uk'
@@ -172,9 +167,10 @@ class MailFactoryTest extends TestCase
     }
 
     /**
+     * @todo rename once we drop Notify from the end of the function
      * @test
      */
-    public function createResetPasswordEmail()
+    public function createResetPasswordEmailNotify()
     {
         $this->router->generate('user_activate', [
             'action' => 'password-reset',
@@ -184,14 +180,14 @@ class MailFactoryTest extends TestCase
         $this->translator->trans('resetPassword.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
         $this->translator->trans('resetPassword.subject', [], 'email')->shouldBeCalled()->willReturn('Reset Password Subject');
 
-        $email = ($this->generateSUT())->createResetPasswordEmail($this->layDeputy);
+        $email = ($this->generateSUT())->createResetPasswordEmailNotify($this->layDeputy);
 
-        self::assertEquals('from@digital.justice.gov.uk', $email->getFromEmail());
+        self::assertEquals('a-fake-id', $email->getFromEmailNotifyID());
         self::assertEquals('OPG', $email->getFromName());
         self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
         self::assertEquals('Joe Bloggs', $email->getToName());
         self::assertEquals('Reset Password Subject', $email->getSubject());
-        self::assertEquals(MailFactory::RESET_PASSWORD_TEMPLATE, $email->getTemplate());
+        self::assertEquals(MailFactory::RESET_PASSWORD_TEMPLATE_ID, $email->getTemplate());
 
         $expectedTemplateParams = ['resetLink' => 'https://front.base.url/reset-password/regToken'];
         self::assertEquals($expectedTemplateParams, $email->getParameters());
@@ -199,8 +195,9 @@ class MailFactoryTest extends TestCase
 
     /**
      * @test
+     * @dataProvider feedbackEmailDataProvider
      */
-    public function createFeedbackEmail()
+    public function createFeedbackEmail(bool $isPostSubmission, ?User $user, string $expectedTemplateID, ?string $expectedRoleName)
     {
         $this->translator->trans('feedbackForm.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
         $this->translator->trans('feedbackForm.toName', [], 'email')->shouldBeCalled()->willReturn('To Name');
@@ -216,22 +213,34 @@ class MailFactoryTest extends TestCase
                 'satisfactionLevel' => '4',
         ];
 
-        $exepctedResponse['response'] = $response;
-        $exepctedResponse['userRole'] = 'Lay Deputy';
+        $email = ($this->generateSUT())->createFeedbackEmail($response, $isPostSubmission, $user);
 
-        $this->templating->render('AppBundle:Email:feedback.html.twig', $exepctedResponse)->shouldBeCalled()->willReturn('A rendered template');
-
-        $email = ($this->generateSUT())->createFeedbackEmail($response, $this->layDeputy);
-
-        self::assertEquals('from@digital.justice.gov.uk', $email->getFromEmail());
+        self::assertEquals('a-fake-id', $email->getFromEmailNotifyID());
         self::assertEquals('OPG', $email->getFromName());
         self::assertEquals('digideps+noop@digital.justice.gov.uk', $email->getToEmail());
         self::assertEquals('To Name', $email->getToName());
-        self::assertEquals(MailFactory::FEEDBACK_TEMPLATE, $email->getTemplate());
+        self::assertEquals($expectedTemplateID, $email->getTemplate());
 
-        $expectedTemplateParams = ['subject' => 'A subject', 'body' => 'A rendered template'];
+        $expectedTemplateParams = [
+            'comments' => 'It was great!',
+            'satisfactionLevel' => '4',
+            'name' => 'Joe Bloggs',
+            'phone' => '07535999222',
+            'page' => 'A page',
+            'userRole' => $expectedRoleName,
+            'email' => 'joe.bloggs@xyz.com',
+            'subject' => 'A subject'
+        ];
 
         self::assertEquals($expectedTemplateParams, $email->getParameters());
+    }
+
+    public function feedbackEmailDataProvider()
+    {
+        return [
+            'postSubmission' => [true, $this->generateUser(), MailFactory::POST_SUBMISSION_FEEDBACK_TEMPLATE_ID, 'Lay Deputy'],
+            'general' => [false, null, MailFactory::GENERAL_FEEDBACK_TEMPLATE_ID, 'Not provided'],
+        ];
     }
 
     private function generateSUT()
@@ -243,5 +252,16 @@ class MailFactoryTest extends TestCase
             $this->emailSendParams,
             $this->appBaseURLs
         );
+    }
+
+    // Using helper function to make user available in dataProvider
+    private function generateUser()
+    {
+        return (new User())
+            ->setRegistrationToken('regToken')
+            ->setEmail('user@digital.justice.gov.uk')
+            ->setFirstname('Joe')
+            ->setLastname('Bloggs')
+            ->setRoleName(User::ROLE_LAY_DEPUTY);
     }
 }

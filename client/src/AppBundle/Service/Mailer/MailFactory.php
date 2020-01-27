@@ -17,8 +17,9 @@ class MailFactory
     const AREA_ADMIN = 'admin';
 
     // Maintained in GOVUK Notify
-    const RESET_PASSWORD_TEMPLATE = 'e7312e62-2602-4903-89e6-93ad943bacb1';
-    const FEEDBACK_TEMPLATE = '862f1ce7-bde5-4397-be68-bd9e4537cff0';
+    const RESET_PASSWORD_TEMPLATE_ID = 'e7312e62-2602-4903-89e6-93ad943bacb1';
+    const POST_SUBMISSION_FEEDBACK_TEMPLATE_ID = '862f1ce7-bde5-4397-be68-bd9e4537cff0';
+    const GENERAL_FEEDBACK_TEMPLATE_ID = '63a25dfa-116f-4991-b7c4-35a79ac5061e';
 
     /**
      * @var TranslatorInterface
@@ -80,7 +81,7 @@ class MailFactory
     }
 
     /**
-     * @param \AppBundle\Entity\User $user
+     * @param User $user
      *
      * @return \AppBundle\Model\Email
      */
@@ -96,7 +97,7 @@ class MailFactory
                 'action' => 'activate',
                 'token'  => $user->getRegistrationToken(),
             ]),
-            'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
+            'tokenExpireHours' => User::TOKEN_EXPIRE_HOURS,
             'homepageUrl'      => $homepageURL,
             'recipientRole' => self::getRecipientRole($user)
         ];
@@ -140,14 +141,50 @@ class MailFactory
         }
     }
 
+
     /**
      * @param EntityDir\User $user
+     *
+     * @return ModelDir\Email
+     */
+    public function createResetPasswordEmail(User $user)
+    {
+        $area = $this->getUserArea($user);
+
+        $viewParams = [
+            'name'        => $user->getFullName(),
+            'link'        => $this->generateAbsoluteLink($area, 'user_activate', [
+                'action' => 'password-reset',
+                'token'  => $user->getRegistrationToken(),
+            ]),
+            'domain'      => $this->generateAbsoluteLink($area, 'homepage'),
+            'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
+            'recipientRole' => self::getRecipientRole($user)
+        ];
+
+        $email = new ModelDir\Email();
+
+        $email
+            ->setFromEmail($this->container->getParameter('email_send')['from_email'])
+            ->setFromName($this->translate('resetPassword.fromName'))
+            ->setToEmail($user->getEmail())
+            ->setToName($user->getFullName())
+            ->setSubject($this->translate('resetPassword.subject'))
+            ->setBodyHtml($this->templating->render('AppBundle:Email:password-forgotten.html.twig', $viewParams))
+            ->setBodyText($this->templating->render('AppBundle:Email:password-forgotten.text.twig', $viewParams));
+
+        return $email;
+    }
+
+    /**
+     * @todo Remove createResetPasswordEmail in favour of this once we're happy with Notify
+     * @param User $user
      * @param array $emailSendParams
      *
      * @return ModelDir\Email
      * @throws \Exception
      */
-    public function createResetPasswordEmail(User $user)
+    public function createResetPasswordEmailNotify(User $user)
     {
         $area = $this->getUserArea($user);
 
@@ -158,22 +195,18 @@ class MailFactory
             ]),
         ];
 
-        $email = new ModelDir\Email();
-
-        $email
-            ->setFromEmail($this->emailParams['from_email'])
+        return (new ModelDir\Email())
+            ->setFromEmailNotifyID($this->emailParams['from_email_notify_id'])
             ->setFromName($this->translate('resetPassword.fromName'))
             ->setToEmail($user->getEmail())
             ->setToName($user->getFullName())
             ->setSubject($this->translate('resetPassword.subject'))
-            ->setTemplate(self::RESET_PASSWORD_TEMPLATE)
+            ->setTemplate(self::RESET_PASSWORD_TEMPLATE_ID)
             ->setParameters($notifyParameters);
-
-        return $email;
     }
 
     /**
-     * @param EntityDir\User $user
+     * @param User $user
      *
      * @return ModelDir\Email
      */
@@ -201,22 +234,22 @@ class MailFactory
     /**
      * Get user area depending on the role
      *
-     * @param  EntityDir\User $user
+     * @param User $user
      * @return string
      */
-    private function getUserArea(EntityDir\User $user)
+    private function getUserArea(User $user)
     {
         return $user->isDeputy() ? self::AREA_DEPUTY : self::AREA_ADMIN;
     }
 
     /**
-     * @param EntityDir\User          $user
+     * @param User $user
      * @param EntityDir\Report\Report $ndr
      * @param $pdfBinaryContent
      *
      * @return ModelDir\Email
      */
-    public function createNdrEmail(EntityDir\User $user, EntityDir\Ndr\Ndr $ndr, $pdfBinaryContent)
+    public function createNdrEmail(User $user, EntityDir\Ndr\Ndr $ndr, $pdfBinaryContent)
     {
         $email = new ModelDir\Email();
 
@@ -244,31 +277,32 @@ class MailFactory
 
     /**
      * @param array $response
-     *
+     * @param bool $isPostSubmission
+     * @param User|null $user
      * @return ModelDir\Email
      */
-    public function createFeedbackEmail($response, EntityDir\User $user = null)
+    public function createFeedbackEmail($response, bool $isPostSubmission, User $user = null)
     {
-        $viewParams = [
-            'response' => $response
+        $notifyParams = [
+            'comments' => !empty($response['comments']) ? $response['comments'] : 'Not provided',
+            'name' => !empty($response['name']) ? $response['name'] : 'Not provided',
+            'phone' => !empty($response['phone']) ? $response['phone'] : 'Not provided',
+            'page' => !empty($response['page']) ? $response['page'] : 'Not provided',
+            'email' => !empty($response['email']) ? $response['email'] : 'Not provided',
+            'satisfactionLevel' => !empty($response['satisfactionLevel']) ? $response['satisfactionLevel'] : 'Not provided',
+            'userRole' => $user ? $user->getRoleFullName() : 'Not provided',
+            'subject' => $this->translate('feedbackForm.subject'),
         ];
 
-        if ($user) {
-            $viewParams['userRole'] = $user->getRoleFullName();
-        }
+        $templateID = $isPostSubmission ? self::POST_SUBMISSION_FEEDBACK_TEMPLATE_ID : self::GENERAL_FEEDBACK_TEMPLATE_ID;
 
-        $renderedTemplate = $this->templating->render('AppBundle:Email:feedback.html.twig', $viewParams);
-
-        $email = new ModelDir\Email();
-        $email
-            ->setFromEmail($this->emailParams['from_email'])
+        return (new ModelDir\Email())
+            ->setFromEmailNotifyID($this->emailParams['from_email_notify_id'])
             ->setFromName($this->translate('feedbackForm.fromName'))
             ->setToEmail($this->emailParams['email_feedback_send_to_email'])
             ->setToName($this->translate('feedbackForm.toName'))
-            ->setTemplate(self::FEEDBACK_TEMPLATE)
-            ->setParameters(['subject' => $this->translate('feedbackForm.subject'), 'body' => $renderedTemplate]);
-
-        return $email;
+            ->setTemplate($templateID)
+            ->setParameters($notifyParams);
     }
 
 
@@ -277,7 +311,7 @@ class MailFactory
      *
      * @return ModelDir\Email
      */
-    public function createAddressUpdateEmail($response, EntityDir\User $user, $type)
+    public function createAddressUpdateEmail($response, User $user, $type)
     {
         if ($type === 'deputy') {
             $countryCode = $response->getAddressCountry();
@@ -309,13 +343,13 @@ class MailFactory
     }
 
     /**
-     * @param EntityDir\User          $user
+     * @param User $user
      * @param EntityDir\Report\Report $submittedReport
      * @param EntityDir\Report        $newReport
      *
      * @return ModelDir\Email
      */
-    public function createReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\ReportInterface $submittedReport, EntityDir\Report\Report $newReport)
+    public function createReportSubmissionConfirmationEmail(User $user, EntityDir\ReportInterface $submittedReport, EntityDir\Report\Report $newReport)
     {
         $email = new ModelDir\Email();
 
@@ -342,14 +376,14 @@ class MailFactory
     }
 
     /**
-     * @param EntityDir\User          $user
+     * @param User $user
      * @param EntityDir\Report\Report $submittedReport
      * @param EntityDir\Report        $newReport
      * @param $pdfBinaryContent
      *
      * @return ModelDir\Email
      */
-    public function createOrgReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\ReportInterface $submittedReport, EntityDir\ReportInterface $newReport)
+    public function createOrgReportSubmissionConfirmationEmail(User $user, EntityDir\ReportInterface $submittedReport, EntityDir\ReportInterface $newReport)
     {
         $email = $this->createReportSubmissionConfirmationEmail($user, $submittedReport, $newReport);
 
@@ -357,13 +391,13 @@ class MailFactory
     }
 
     /**
-     * @param EntityDir\User    $user
+     * @param User $user
      * @param EntityDir\Ndr\Ndr $ndr
      * @param EntityDir\Report  $newReport
      *
      * @return ModelDir\Email
      */
-    public function createNdrSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Ndr\Ndr $ndr)
+    public function createNdrSubmissionConfirmationEmail(User $user, EntityDir\Ndr\Ndr $ndr)
     {
         $email = new ModelDir\Email();
 
@@ -374,7 +408,6 @@ class MailFactory
         ];
 
         $email
-            ->setFromEmail($this->emailParams['from_email'])
             ->setFromName($this->translate('ndrSubmissionConfirmation.fromName'))
             ->setToEmail($user->getEmail())
             ->setToName($user->getFirstname())
@@ -412,7 +445,7 @@ class MailFactory
     }
 
     /**
-     * @param \AppBundle\Entity\User $user
+     * @param User $user
      *
      * @return \AppBundle\Model\Email
      */
@@ -427,7 +460,7 @@ class MailFactory
                 'action' => 'activate',
                 'token'  => $invitedUser->getRegistrationToken(),
             ]),
-            'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
+            'tokenExpireHours' => User::TOKEN_EXPIRE_HOURS,
             'homepageUrl'      => $this->generateAbsoluteLink($area, 'homepage'),
             'recipientRole' => self::getRecipientRole($loggedInUser)
         ];
@@ -444,5 +477,24 @@ class MailFactory
             ->setBodyText($this->templating->render('AppBundle:Email:coDeputy-invitation.text.twig', $viewParams));
 
         return $email;
+    }
+
+    /**
+     * @param array $response
+     * @param User $user
+     * @return array
+     */
+    private function buildNotifyParams(array $response, User $user)
+    {
+        return [
+            'comments' => !empty($response['comments']) ? $response['comments'] : 'Not set',
+            'name' => !empty($response['name']) ? $response['name'] : 'Not set',
+            'phone' => !empty($response['phone']) ? $response['phone'] : 'Not set',
+            'page' => !empty($response['page']) ? $response['page'] : 'Not set',
+            'email' => !empty($response['email']) ? $response['email'] : 'Not set',
+            'satisfaction' => !empty($response['satisfactionLevel']) ? $response['satisfactionLevel'] : 'Not set',
+            'userRole' => $user ? $user->getRoleFullName() : 'Not set',
+            'subject' => $this->translate('feedbackForm.subject'),
+        ];
     }
 }

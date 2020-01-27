@@ -34,7 +34,7 @@ class BehatController extends AbstractController
     {
         $this->securityChecks($request);
 
-        echo $this->get('mail_sender')->getMockedEmailsRaw();
+        echo $this->get('AppBundle\Service\Mailer\MailSender')->getMockedEmailsRaw();
         die; //TODO check if works with response
     }
 
@@ -45,7 +45,7 @@ class BehatController extends AbstractController
     {
         $this->securityChecks($request);
 
-        $this->get('mail_sender')->resetMockedEmails();
+        $this->get('AppBundle\Service\Mailer\MailSender')->resetMockedEmails();
         return new Response('Email reset successfully');
     }
 
@@ -59,7 +59,7 @@ class BehatController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $emails = json_decode($this->get('mail_sender')->getMockedEmailsRaw(), true);
+        $emails = json_decode($this->get('AppBundle\Service\Mailer\MailSender')->getMockedEmailsRaw(), true);
 
         return [
             'emails' => $emails,
