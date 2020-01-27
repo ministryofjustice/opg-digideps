@@ -299,7 +299,7 @@ class NdrController extends AbstractController
 
             // Send notification email
             $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData(), true, $user);
-            $this->getMailSender()->send($feedbackEmail, ['html']);
+            $this->getMailSender()->sendNotify($feedbackEmail, ['html']);
 
             return $this->redirect($this->generateUrl('ndr_submit_feedback', ['ndrId' => $ndrId]));
         }
