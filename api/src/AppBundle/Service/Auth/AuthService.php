@@ -25,6 +25,11 @@ class AuthService
     private $clientPermissions;
 
     /**
+     * @var array
+     */
+    private $clientSecrets;
+
+    /**
      * @var UserRepository
      */
     private $userRepository;
