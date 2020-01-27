@@ -34,7 +34,6 @@ class OrganisationMemberType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new Email(),
-                    new EmailSameDomain(['message' => '', 'groups' => ['email_same_domain']]),
                 ]
             ])
             ->add('jobTitle', FormTypes\TextType::class, ['required' => !empty($targetUser)])
@@ -60,7 +59,7 @@ class OrganisationMemberType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'org-organisation',
             'data_class'         => User::class,
-            'validation_groups'  => ['org_team_add', 'email_same_domain', 'org_team_role_name'],
+            'validation_groups'  => ['org_team_add', 'org_team_role_name'],
             'targetUser'         => null
         ])
         ->setRequired(['role_admin', 'role_member']);
