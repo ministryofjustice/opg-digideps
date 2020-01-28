@@ -576,49 +576,46 @@ class ReportController extends RestController
     }
 
     /**
-     * @Route("/get-all-by-org", methods={"GET"})
+     * @Route("/get-all-by-orgs", methods={"GET"})
      * @Security("has_role('ROLE_ORG')")
      *
      * @param Request $request
      * @return array
      * @throws \Exception
      */
-    public function getAllByOrg(Request $request)
+    public function getAllByOrgs(Request $request)
     {
         /** @var User $user */
         $user = $this->getUser();
 
-        /** @var ArrayCollection $organisations */
-        $organisations = $user->getOrganisations();
+        /** @var array $organisationIds */
+        $organisationIds = $user->getOrganisationIds();
 
-        if ($organisations->isEmpty()) {
-            throw new NotFoundHttpException('Organisation not found');
+        if (empty($organisationIds)) {
+            throw new NotFoundHttpException('No organisations found for user');
         }
 
-        /** @var Organisation $organisation */
-        $organisation = $organisations->first();
-
-        return $this->getReponseByDeterminant($request, $organisation->getId(), ReportRepository::ORG_DETERMINANT);
+        return $this->getReponseByDeterminant($request, $organisationIds, ReportRepository::ORG_DETERMINANT);
     }
 
     /**
      * @param Request $request
-     * @param int $id
+     * @param mixed $id
      * @param int $determinant
      * @return array
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    private function getReponseByDeterminant(Request $request, int $id, int $determinant): array
+    private function getReponseByDeterminant(Request $request, $orgIdsOrUserId, int $determinant): array
     {
         /** @var User $user */
         $user = $this->getUser();
 
-        $data = $this->repository->getAllByDeterminant($id, $determinant, $request->query, 'reports', $request->query->get('status'));
+        $data = $this->repository->getAllByDeterminant($orgIdsOrUserId, $determinant, $request->query, 'reports', $request->query->get('status'));
         $this->updateReportStatusCache($user->getId());
 
         $result = [];
         $result['reports'] = (null === $data) ? [] : $this->transformReports($data);
-        $result['counts'] = $this->getReportCountsByStatus($request, $id, $determinant);
+        $result['counts'] = $this->getReportCountsByStatus($request, $orgIdsOrUserId, $determinant);
 
         return $result;
     }
@@ -655,17 +652,17 @@ class ReportController extends RestController
 
     /**
      * @param Request $request
-     * @param int $id
+     * @param mixed $orgIdsOrUserId
      * @param int $determinant
      * @return array
      * @throws \Exception
      */
-    private function getReportCountsByStatus(Request $request, int $id, int $determinant): array
+    private function getReportCountsByStatus(Request $request, $orgIdsOrUserId, int $determinant): array
     {
         $counts = [
-            Report::STATUS_NOT_STARTED => $this->getCountOfReportsByStatus(Report::STATUS_NOT_STARTED, $id, $determinant, $request),
-            Report::STATUS_NOT_FINISHED => $this->getCountOfReportsByStatus(Report::STATUS_NOT_FINISHED, $id, $determinant, $request),
-            Report::STATUS_READY_TO_SUBMIT => $this->getCountOfReportsByStatus(Report::STATUS_READY_TO_SUBMIT, $id, $determinant, $request)
+            Report::STATUS_NOT_STARTED => $this->getCountOfReportsByStatus(Report::STATUS_NOT_STARTED, $orgIdsOrUserId, $determinant, $request),
+            Report::STATUS_NOT_FINISHED => $this->getCountOfReportsByStatus(Report::STATUS_NOT_FINISHED, $orgIdsOrUserId, $determinant, $request),
+            Report::STATUS_READY_TO_SUBMIT => $this->getCountOfReportsByStatus(Report::STATUS_READY_TO_SUBMIT, $orgIdsOrUserId, $determinant, $request)
         ];
 
         $counts['total'] = array_sum($counts);
@@ -681,7 +678,7 @@ class ReportController extends RestController
      * @return array|mixed|null
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    private function getCountOfReportsByStatus(string $status, int $id, int $determinant, Request $request)
+    private function getCountOfReportsByStatus(string $status, $id, int $determinant, Request $request)
     {
         return $this
             ->repository

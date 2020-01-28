@@ -126,7 +126,7 @@ class ReportRepository extends EntityRepository
     }
 
     /**
-     * @param int $id
+     * @param mixed $orgIdsOrUserId
      * @param int $determinant
      * @param ParameterBag $query
      * @param string $select
@@ -134,7 +134,7 @@ class ReportRepository extends EntityRepository
      * @return array|mixed|null
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getAllByDeterminant($id, $determinant, ParameterBag $query, $select, $status)
+    public function getAllByDeterminant($orgIdsOrUserId, $determinant, ParameterBag $query, $select, $status)
     {
         $qb = $this->createQueryBuilder('r');
         $qb
@@ -142,9 +142,11 @@ class ReportRepository extends EntityRepository
             ->leftJoin('r.client', 'c');
 
         if ($determinant === self::USER_DETERMINANT) {
-            $qb->leftJoin('c.users', 'u')->where('u.id = ' . $id);
+            $qb->leftJoin('c.users', 'u')->where('u.id = ' . $orgIdsOrUserId);
         } else {
-            $qb->leftJoin('c.organisation', 'o')->where('o.isActivated = true AND o.id = ' . $id);
+            $qb
+                ->leftJoin('c.organisation', 'o')
+                ->where('o.isActivated = true AND o.id in (' . implode(',',$orgIdsOrUserId) .')');
         }
 
         $qb
