@@ -1,0 +1,16 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin-fixtures" %}
+
+{% block htmlTitle %}Data Fixtures - Court Orders{% endblock %}
+{% block pageTitle %}Court Orders{% endblock %}
+{% block supportTitleTop %}Date Fixtures{% endblock %}
+
+{% block pageContent %}
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+    {{ form_select(form.deputyType, 'courtOrders.deputyType') }}
+    {{ form_select(form.reportType, 'courtOrders.reportType') }}
+    {{ form_select(form.reportStatus, 'courtOrders.reportStatus') }}
+    {{ form_submit(form.submit, 'courtOrders.submit') }}
+    {{ form_end(form) }}
+{% endblock %}

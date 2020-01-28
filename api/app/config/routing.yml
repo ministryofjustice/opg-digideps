@@ -12,3 +12,8 @@ app_v2_registration:
     resource: "@AppBundle/v2/Registration/Controller/"
     type:     annotation
     prefix:   /v2
+
+app_v2_fixture:
+    resource: "@AppBundle/v2/Fixture/Controller/"
+    type:     annotation
+    prefix:   /v2

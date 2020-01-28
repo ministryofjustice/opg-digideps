@@ -5,13 +5,14 @@ namespace AppBundle\Controller\Admin\Client;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\ReportInterface;
 use AppBundle\Exception\ReportNotSubmittedException;
+use AppBundle\Form\Admin\ManageActiveReportType;
 use AppBundle\Form\Admin\ReviewChecklistType;
 use AppBundle\Form\Admin\ReportChecklistType;
-use AppBundle\Form\Admin\UnsubmitReportType;
-use AppBundle\Form\Admin\UnsubmitReportConfirmType;
+use AppBundle\Form\Admin\ManageSubmittedReportType;
+use AppBundle\Form\Admin\ManageReportConfirmType;
 use AppBundle\Service\ReportSubmissionService;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -81,151 +82,6 @@ class ReportController extends AbstractController
         'prof-service-fees',
         'client-named-deputy'
     ];
-
-    /**
-     * @Route("manage", name="admin_report_manage")
-     * //TODO define Security group (AD to remove?)
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_CASE_MANAGER')")
-     * @param Request $request
-     * @param string $id
-     *
-     * @Template("AppBundle:Admin/Client/Report:manage.html.twig")
-     *
-     * @return array|Response|RedirectResponse
-     */
-    public function manageAction(Request $request, $id)
-    {
-        $report = $this->getReport(intval($id), ['report-checklist', 'action']);
-        $reportDueDate = $report->getDueDate();
-
-        if (!$report->getSubmitted()) {
-            throw new ReportNotSubmittedException('Only submitted report can be managed');
-        }
-
-        $form = $this->createForm(UnsubmitReportType::class, $report);
-        $form->handleRequest($request);
-
-        $confirmForm = $this->createForm(UnsubmitReportConfirmType::class);
-        $confirmForm->handleRequest($request);
-
-        // edit client form
-        if ($confirmForm->isValid()) {
-            if ($confirmForm['confirm']->getData() === 'yes') {
-                /** @var \DateTime $startDate */
-                $startDate = \DateTime::createFromFormat(\DateTime::ISO8601, $confirmForm['startDate']->getData());
-                /** @var \DateTime $endDate */
-                $endDate = \DateTime::createFromFormat(\DateTime::ISO8601, $confirmForm['endDate']->getData());
-                /** @var \DateTime $dueDate */
-                $dueDate = \DateTime::createFromFormat(\DateTime::ISO8601, $confirmForm['dueDate']->getData());
-
-                // User confirmed, complete unsubmission
-                $report
-                    ->setUnSubmitDate(new \DateTime())
-                    ->setUnsubmittedSectionsList($confirmForm['unsubmittedSection']->getData())
-                    ->setStartDate($startDate)
-                    ->setEndDate($endDate)
-                    ->setDueDate($dueDate)
-                ;
-
-                $this->getRestClient()->put('report/' . $report->getId() . '/unsubmit', $report, [
-                    'submitted', 'unsubmit_date', 'report_unsubmitted_sections_list', 'report_due_date',
-                    'startEndDates'
-                ]);
-
-                $this->addFlash('notice', 'Report marked as incomplete');
-
-                $unsubmitContent = $this->generateChecklistUnsubmitInformationContent($report);
-
-                // Create Checklist and ChecklistInformation content
-                $checklist = $report->getChecklist();
-                $checklist = empty($checklist) ? new Checklist($report) : $checklist;
-                $checklist->setFurtherInformationReceived($unsubmitContent);
-
-                if (!empty($checklist->getId())) {
-                    $this->getRestClient()->put('report/' . $report->getId() . '/checked', $checklist, [
-                        'report-checklist', 'checklist-information'
-                    ]);
-                } else {
-                    $this->getRestClient()->post('report/' . $report->getId() . '/checked', $checklist, [
-                        'report-checklist', 'checklist-information'
-                    ]);
-                }
-                return $this->redirect($this->generateUrl('admin_client_details', ['id'=>$report->getClient()->getId()]));
-            } else {
-                // User cancelled
-                return $this->redirect($this->generateUrl('admin_report_manage', ['id'=>$id]));
-            }
-        } else if ($form->isValid() || $confirmForm->isSubmitted()) {
-            if (!$confirmForm->isSubmitted()) {
-                // Populate confirmation form for the first time
-                $dueDateChoice = $form['dueDateChoice']->getData();
-                if ($dueDateChoice == UnsubmitReportType::DUE_DATE_OPTION_CUSTOM) {
-                    $newDueDate = $form['dueDateCustom']->getData();
-                } elseif (preg_match('/^\d+$/', $dueDateChoice)) {
-                    $newDueDate = new \DateTime();
-                    $newDueDate->modify("+{$dueDateChoice} weeks");
-                } else {
-                    $newDueDate = $report->getDueDate();
-                }
-
-                $confirmForm['startDate']->setData($form->getData()->getStartDate()->format(\DateTime::ISO8601));
-                $confirmForm['endDate']->setData($form->getData()->getEndDate()->format(\DateTime::ISO8601));
-                $confirmForm['dueDate']->setData($newDueDate->format(\DateTime::ISO8601));
-                $confirmForm['unsubmittedSection']->setData(implode(',', $report->getUnsubmittedSectionsIds()));
-            }
-
-            // Render confirmation form view
-            return $this->render('AppBundle:Admin/Client/Report:manageConfirm.html.twig', [
-                'report' => $report,
-                'form' => $confirmForm->createView(),
-                'urlData' => [
-                    'startDate' => $form['startDate']->getData()->format('Y-m-d'),
-                    'endDate' => $form['endDate']->getData()->format('Y-m-d'),
-                    'dueDateChoice' => $form['dueDateChoice']->getData(),
-                    'dueDateCustom' => $form['dueDateCustom']->getData() !== null ? $form['dueDateCustom']->getData()->format('Y-m-d') : null,
-                    'unsubmittedSection' => $report->getUnsubmittedSectionsIds(),
-                ],
-            ]);
-        }
-
-        // Use URL data
-        $dataFromUrl = $request->get('data') ?: [];
-        isset($dataFromUrl['startDate']) && $form['startDate']->setData(new \DateTime($dataFromUrl['startDate']));
-        isset($dataFromUrl['endDate']) && $form['endDate']->setData(new \DateTime($dataFromUrl['endDate']));
-        isset($dataFromUrl['dueDateChoice']) && $form['dueDateChoice']->setData($dataFromUrl['dueDateChoice']);
-        isset($dataFromUrl['dueDateCustom']) && $form['dueDateCustom']->setData(new \DateTime($dataFromUrl['dueDateCustom']));
-        if (isset($dataFromUrl['unsubmittedSection'])) {
-            $unsubmittedSections = $form['unsubmittedSection']->getData();
-            foreach ($unsubmittedSections as $section) {
-                if (in_array($section->getId(), $dataFromUrl['unsubmittedSection'])) {
-                    $section->setPresent(true);
-                }
-            }
-            $form['unsubmittedSection']->setData($unsubmittedSections);
-        }
-
-        return [
-            'report'   => $report,
-            'reportDueDate'   => $reportDueDate,
-            'form'     => $form->createView()
-        ];
-    }
-
-    /**
-     * Renders the unsubmit information template and returns the content
-     *
-     * @param ReportInterface $report
-     * @return string
-     */
-    private function generateChecklistUnsubmitInformationContent(ReportInterface $report)
-    {
-        /** @var string $content */
-        $content = $this->render('AppBundle:Admin/Client/Report/Formatted:unsubmit_information.html.twig', [
-            'report' => $report
-        ])->getContent();
-
-        return $content;
-    }
 
     /**
      * @Route("checklist", name="admin_report_checklist")
@@ -392,5 +248,227 @@ class ReportController extends AbstractController
         $response->sendHeaders();
 
         return $response;
+    }
+
+    /**
+     * @Route("manage", name="admin_report_manage")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_CASE_MANAGER')")
+     * @param Request $request
+     * @param string $id
+     *
+     * @Template("AppBundle:Admin/Client/Report:manage.html.twig")
+     *
+     * @return array|Response|RedirectResponse
+     * @throws \Exception
+     */
+    public function manageAction(Request $request, $id)
+    {
+        $report = $this->getReport(intval($id), ['report-checklist', 'action']);
+
+        $formClass = ($report->isSubmitted()) ?  ManageSubmittedReportType::class : ManageActiveReportType::class;
+        $form = $this->createForm($formClass, $report);
+
+        if (is_array($request->get('data'))) {
+            $this->prepopulateWithPreviousChoices($request->get('data'), $form);
+        }
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->setChoicesInSession($request, $form, $report);
+            return $this->redirect($this->generateUrl('admin_report_manage_confirm', ['id'=>$report->getId()]));
+        }
+
+        return [
+            'report'   => $report,
+            'form'     => $form->createView()
+        ];
+    }
+
+    /**
+     * @param array $dataFromUrl
+     * @param FormInterface $form
+     * @throws \Exception
+     */
+    private function prepopulateWithPreviousChoices(array $dataFromUrl, FormInterface $form): void
+    {
+        foreach (['type', 'dueDateChoice'] as $field) {
+            $form->has($field) && $form[$field]->setData($dataFromUrl[$field]);
+        }
+
+        foreach (['dueDateCustom', 'startDate', 'endDate'] as $field) {
+            $form->has($field) && $form[$field]->setData(new \DateTime($dataFromUrl[$field]));
+        }
+
+        if ($form->has('unsubmittedSection') && isset($dataFromUrl['unsubmittedSectionsList'])) {
+            foreach ($form['unsubmittedSection']->getData() as $index => $section) {
+                $unsubmitted = explode(',', $dataFromUrl['unsubmittedSectionsList']);
+                if (in_array($section->getId(), $unsubmitted)) {
+                    $form['unsubmittedSection']->getData()[$index]->setPresent(true);
+                }
+            }
+
+            $form['unsubmittedSectionsList']->setData($form['unsubmittedSection']->getData());
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @param FormInterface $form
+     * @param Report $report
+     * @throws \Exception
+     */
+    private function setChoicesInSession(Request $request, FormInterface $form, Report $report): void
+    {
+        $customDueDate = $form['dueDateCustom']->getData();
+        $startDate = isset($form['startDate'])  ? $form['startDate']->getData()->format('Y-m-d') : null;
+        $endDate = isset($form['endDate']) ? $form['endDate']->getData()->format('Y-m-d') : null;
+
+        $request->getSession()->set('report-management-changes', [
+            'type' => $form['type']->getData(),
+            'dueDate' => $this->determineNewDueDateFromForm($report, $form)->format('Y-m-d'),
+            'dueDateChoice' => $form['dueDateChoice']->getData(),
+            'dueDateCustom' => $customDueDate instanceof \DateTime ? $customDueDate->format('Y-m-d') : null,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'unsubmittedSectionsList' => implode(',', $report->getUnsubmittedSectionsIds())
+        ]);
+    }
+
+    /**
+     * @param Report $report
+     * @param array $data
+     * @return \DateTime|null
+     * @throws \Exception
+     */
+    private function determineNewDueDateFromForm(Report $report, FormInterface $form)
+    {
+        $newDueDate = $report->getDueDate();
+
+        if (preg_match('/^\d+$/', $form['dueDateChoice']->getData())) {
+            $newDueDate = new \DateTime();
+            $newDueDate->modify("+{$form['dueDateChoice']->getData()} weeks");
+        } else if ($form['dueDateChoice']->getData() == 'custom' && $form['dueDateCustom']->getData() instanceof \DateTime) {
+            $newDueDate = $form['dueDateCustom']->getData();
+        }
+
+        return $newDueDate;
+    }
+
+    /**
+     * @Route("manage-confirm", name="admin_report_manage_confirm")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_CASE_MANAGER')")
+     * @param Request $request
+     *
+     * @param $id
+     * @return array|Response|RedirectResponse
+     * @Template("AppBundle:Admin/Client/Report:manageConfirm.html.twig")
+     *
+     * @throws \Exception
+     */
+    public function manageConfirmAction(Request $request, $id)
+    {
+        $report = $this->getReport(intval($id), ['report-checklist', 'action']);
+
+        $sessionData = $request->getSession()->get('report-management-changes');
+        if (null === $sessionData || $this->insufficientDataInSession($sessionData)) {
+            $this->redirect($this->generateUrl('admin_report_manage', ['id'=>$report->getId()]));
+        }
+
+        $form = $this->createForm(ManageReportConfirmType::class, $report);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            if ($form->has('confirm') && $form['confirm']->getData() === 'no') {
+                // User decided not to update.
+                return $this->redirect($this->generateUrl('admin_client_details', ['id'=>$report->getClient()->getId()]));
+            }
+
+            $this->populateReportFromSession($report, $sessionData);
+            $this->getRestClient()->put('report/' . $report->getId(), $report, ['report_type', 'report_due_date']);
+
+            if ($form->has('confirm') && $form['confirm']->getData() === 'yes' && $report->isSubmitted()) {
+                $this->unsubmitReport($report);
+                $this->upsertChecklistInformation($report);
+                $this->addFlash('notice', 'Report marked as incomplete');
+            }
+
+            $request->getSession()->remove('report-management-changes');
+            return $this->redirect($this->generateUrl('admin_client_details', ['id'=>$report->getClient()->getId()]));
+        }
+
+        return [
+            'report' => $report,
+            'form' => $form->createView(),
+            'submitted' => $sessionData
+        ];
+    }
+
+    /**
+     * @param array $sessionData
+     * @return bool
+     */
+    private function insufficientDataInSession(array $sessionData): bool
+    {
+        return
+            array_key_exists('type', $sessionData) &&
+            array_key_exists('dueDateChoice', $sessionData) &&
+            array_key_exists('dueDateCustom', $sessionData) &&
+            array_key_exists('startDate', $sessionData) &&
+            array_key_exists('endDate', $sessionData) &&
+            array_key_exists('unsubmittedSectionsList', $sessionData);
+    }
+
+    /**
+     * @param Report $report
+     * @param array $sessionData
+     * @throws \Exception
+     */
+    private function populateReportFromSession(Report $report, array $sessionData): void
+    {
+        foreach (['type', 'unsubmittedSectionsList'] as $field) {
+            if (isset($sessionData[$field])) {
+                $setter = sprintf('set%s', ucfirst($field));
+                $report->{$setter}($sessionData[$field]);
+            }
+        }
+
+        foreach (['dueDate', 'startDate', 'endDate'] as $field) {
+            if (isset($sessionData[$field])) {
+                $setter = sprintf('set%s', ucfirst($field));
+                $report->{$setter}(new \DateTime($sessionData[$field]));
+            }
+        }
+    }
+
+    /**
+     * @param Report $report
+     * @throws \Exception
+     */
+    private function unsubmitReport(Report $report): void
+    {
+        $report->setUnSubmitDate(new \DateTime());
+
+        $this->getRestClient()->put('report/' . $report->getId() . '/unsubmit', $report, [
+            'submitted', 'unsubmit_date', 'report_unsubmitted_sections_list', 'startEndDates', 'report_due_date'
+        ]);
+    }
+
+    /**
+     * @param Report $report
+     */
+    private function upsertChecklistInformation(Report $report): void
+    {
+        $content = $this
+            ->render('AppBundle:Admin/Client/Report/Formatted:unsubmit_information.html.twig', ['report' => $report])
+            ->getContent();
+
+        $checklist = $report->getChecklist();
+        $checklist = empty($checklist) ? new Checklist($report) : $checklist;
+        $checklist->setFurtherInformationReceived($content);
+
+        $httpMethod = empty($checklist->getId()) ? 'post' : 'put';
+        $this->getRestClient()->{$httpMethod}('report/' . $report->getId() . '/checked', $checklist, [
+            'report-checklist', 'checklist-information'
+        ]);
     }
 }

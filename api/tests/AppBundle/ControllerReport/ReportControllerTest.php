@@ -383,7 +383,6 @@ class ReportControllerTest extends AbstractTestController
         $url = '/report/' . self::$report1->getId();
 
         $this->assertEndpointNeedsAuth('PUT', $url);
-        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
     }
 
     public function testUpdateAcl()
