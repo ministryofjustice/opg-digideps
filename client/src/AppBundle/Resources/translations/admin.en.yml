@@ -140,6 +140,15 @@ uploadUsers:
   incidentsOccurred: "%count% %type% occurred"
   moreDetails: More details
 
+inactiveUsers:
+  htmlTitle: Administration - Inactive users
+  pageTitle: Inactive users
+  empty: There are no inactive users
+  messages:
+    success: Inactive users deleted
+  form:
+    confirm.label: Delete inactive users
+
 cancel:
     label: Cancel
 

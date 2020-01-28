@@ -1,0 +1,46 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin" %}
+{% set page = 'inactiveUsers' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+
+{% block pageContent %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {% if users %}
+                <table class="govuk-list govuk-list--bullet">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header">Name</th>
+                            <th scope="col" class="govuk-table__header">Email</th>
+                            <th scope="col" class="govuk-table__header">Registration date</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        {% for user in users %}
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__cell">
+                                    <a href="{{ path('admin_editUser', { filter: user.id }) }}">
+                                        {{ user.fullName }}
+                                    </a>
+                                </th>
+                                <td class="govuk-table__cell">{{ user.email }}</td>
+                                <td class="govuk-table__cell">{{ user.registrationDate | date('j F Y') }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                {{ form_start(form) }}
+                    {{ form_submit(form.confirm, (page ~ '.form.confirm'), {
+                        labelTranslationDomain: 'admin'
+                    }) }}
+                {{ form_end(form) }}
+            {% else %}
+                <p>{{ (page ~ '.empty') | trans }}</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

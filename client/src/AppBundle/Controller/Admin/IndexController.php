@@ -7,6 +7,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\CsvUploader;
 use AppBundle\Service\DataImporter\CsvToArray;
 use AppBundle\Service\OrgService;
@@ -15,9 +16,11 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/admin")
@@ -522,5 +525,32 @@ class IndexController extends AbstractController
         }
 
         return new Response('[Link sent]');
+    }
+
+    /**
+     * @Route("/users/inactive", name="admin_inactive_users")
+     * @Security("has_role('ROLE_ADMIN')")
+     * @Template("@AppBundle/Resources/views/Admin/User/inactive.html.twig")
+     */
+    public function inactiveUsersAction(Request $request, RestClient $restClient, TranslatorInterface $translator)
+    {
+        $users = $restClient->get('/user/inactive', 'User[]');
+
+        $form = $this->createFormBuilder()
+            ->add('confirm', SubmitType::class)
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $restClient->delete('/user/inactive');
+            $this->addFlash('notice', $translator->trans('inactiveUsers.messages.success', [], 'admin'));
+            return $this->redirectToRoute('admin_inactive_users');
+        }
+
+        return [
+            'form' => $form->createView(),
+            'users' => $users
+        ];
     }
 }
