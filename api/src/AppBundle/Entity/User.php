@@ -157,7 +157,7 @@ class User implements UserInterface
     /**
      * @var \DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     * @JMS\Groups({"user"})
+     * @JMS\Groups({"user", "user-registration-date"})
      *
      * @ORM\Column(name="registration_date", type="datetime", nullable=true)
      */

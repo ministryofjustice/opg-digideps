@@ -8,6 +8,7 @@ use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
 use AppBundle\Service\UserService;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -250,7 +251,7 @@ class UserController extends RestController
      * Delete user with clients.
      * //TODO move to UserService
      *
-     * @Route("/{id}", methods={"DELETE"})
+     * @Route("/{id}", requirements={"id":"\d+"}, methods={"DELETE"})
      * @Security("has_role('ROLE_ADMIN')")
      *
      * @param int $id
@@ -455,5 +456,34 @@ class UserController extends RestController
         $this->setJmsSerialiserGroups($groups);
 
         return $requestedUserTeams->first();
+    }
+
+    /**
+     * @Route("/inactive", methods={"GET"})
+     * @Security("has_role('ROLE_ADMIN')")
+     * @return User[]
+     */
+    public function getInactive()
+    {
+        $this->setJmsSerialiserGroups(['user-id', 'user-name', 'user-email', 'user-registration-date']);
+
+        return $this->userRepository->findInactive();
+    }
+
+    /**
+     * @Route("/inactive", methods={"DELETE"})
+     * @Security("has_role('ROLE_ADMIN')")
+     * @return User[]
+     */
+    public function deleteInactive(EntityManagerInterface $em)
+    {
+        $users = $this->userRepository->findInactive();
+        foreach ($users as $user)  {
+            $em->remove($user);
+        }
+
+        $em->flush();
+
+        return [];
     }
 }
