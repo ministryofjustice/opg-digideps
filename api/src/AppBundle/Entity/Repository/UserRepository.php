@@ -3,6 +3,9 @@
 namespace AppBundle\Entity\Repository;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\User;
+use DateInterval;
+use DateTime;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -164,5 +167,36 @@ class UserRepository extends AbstractEntityRepository
         $this->qb->setParameter('lastname', strtolower($lastname));
 
         $this->qb->andWhere($nameBasedQuery);
+    }
+
+    /**
+     * @return User[]
+     */
+    public function findInactive()
+    {
+        $thirtyDaysAgo = new DateTime();
+        $thirtyDaysAgo->sub(new DateInterval('P30D'));
+
+        $reportSubquery = $this->_em->createQueryBuilder()
+            ->select('1')
+            ->from('AppBundle\Entity\Report\Report', 'r')
+            ->andWhere('r.client = c');
+
+        $ndrSubquery = $this->_em->createQueryBuilder()
+            ->select('1')
+            ->from('AppBundle\Entity\Ndr\Ndr', 'n')
+            ->andWhere('n.client = c');
+
+        $qb = $this->createQueryBuilder('u');
+        $qb
+            ->leftJoin('u.clients', 'c')
+            ->andWhere('u.registrationDate < :reg_cutoff')
+            ->andWhere('u.roleName = :lay_deputy_role')
+            ->andWhere($qb->expr()->not($qb->expr()->exists($reportSubquery->getDQL())))
+            ->andWhere($qb->expr()->not($qb->expr()->exists($ndrSubquery->getDQL())))
+            ->setParameter('reg_cutoff', $thirtyDaysAgo)
+            ->setParameter('lay_deputy_role', User::ROLE_LAY_DEPUTY);
+
+        return $qb->getQuery()->getResult();
     }
 }
