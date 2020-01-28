@@ -2,6 +2,13 @@ data "aws_lambda_function" "redeployer_lambda" {
   function_name = "redeployer"
 }
 
+resource "aws_cloudwatch_event_rule" "nightly" {
+  name                = "cleanup-${local.environment}"
+  description         = "Nightly scheduled tasks"
+  schedule_expression = "cron(0 3 * * ? *)"
+  tags                = local.default_tags
+}
+
 resource "aws_cloudwatch_event_rule" "redeploy_file_scanner" {
   name                = "redeploy-file-scanner-${local.environment}"
   description         = "Redeploy the file scanner to use latest virus definitions"
