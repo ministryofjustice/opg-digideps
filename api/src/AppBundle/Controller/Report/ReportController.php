@@ -161,7 +161,7 @@ class ReportController extends RestController
 
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"PUT"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("has_role('ROLE_DEPUTY') or has_role('ROLE_CASE_MANAGER')")
      */
     public function update(Request $request, $id)
     {
@@ -170,14 +170,15 @@ class ReportController extends RestController
 
 
         // deputies can only edit their own reports
-        if (!$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
+        if (!$this->isGranted(EntityDir\User::ROLE_CASE_MANAGER)) {
             $this->denyAccessIfReportDoesNotBelongToUser($report);
         }
 
         $data = $this->deserializeBodyContent($request);
 
-        if (!empty($data['type'])) {
+        if (isset($data['type'])) {
             $report->setType($data['type']);
+            $report->updateSectionsStatusCache($report->getAvailableSections());
         }
 
         if (array_key_exists('has_debts', $data) && in_array($data['has_debts'], ['yes', 'no'])) {
@@ -305,6 +306,10 @@ class ReportController extends RestController
             $report->updateSectionsStatusCache([
                 Report::SECTION_GIFTS,
             ]);
+        }
+
+        if (array_key_exists('due_date', $data)) {
+            $report->setDueDate(new \DateTime($data['due_date']));
         }
 
         if (array_key_exists('start_date', $data)) {

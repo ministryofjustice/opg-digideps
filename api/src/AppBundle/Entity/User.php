@@ -41,6 +41,11 @@ class User implements UserInterface
     const ROLE_PROF_ADMIN = 'ROLE_PROF_ADMIN';
     const ROLE_PROF_TEAM_MEMBER = 'ROLE_PROF_TEAM_MEMBER';
 
+    const TYPE_LAY = 'LAY';
+    const TYPE_PA = 'PA';
+    const TYPE_PROF = 'PROF';
+
+
     public static $adminRoles = [
         self::ROLE_ADMIN,
         self::ROLE_CASE_MANAGER

@@ -30,6 +30,8 @@ reportManage:
   currentDueDate: "Current due date:"
   overdueBy: Overdue by %overdueDays% days
   form:
+    type:
+      label: Report type
     dueDateChoice:
      label: New due date
      choices:
@@ -43,8 +45,10 @@ reportManage:
     markSections:
       legend: Mark sections as incomplete
       label: Sections marked incomplete
-    unsubmit:
+    save:
       label: Continue
+    confirm:
+      label: Confirm
     startDate:
       label: Reporting start
     endDate:
@@ -53,9 +57,11 @@ reportManage:
       option: Option
       selection: Selection
       edit: Edit
-      guidance: |
+      submittedGuidance: |
         Please read through and confirm the options you have selected
         before marking this report as incomplete.
+      activeGuidance: |
+        Please read through and confirm the options you have selected
+        before making changes to this report.
       label: Are you sure you want to mark this report as incomplete?
       warning: Once you have made the report incomplete you will not be able to undo this action.
-

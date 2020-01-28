@@ -7,6 +7,8 @@ use Behat\Gherkin\Node\TableNode;
 trait ReportTrait
 {
     private static $reportsCache = [];
+    private static $currentReportCache = [];
+    protected $sections103 = ['Deputy expenses', 'Decisions', 'Contacts', 'Visits and care', 'Accounts', 'Gifts', 'Money in', 'Money out', 'Assets', 'Debts', 'Actions', 'Other information', 'Documents'];
 
     /**
      * @Then the :arg1 asset group should be :arg2
@@ -570,5 +572,148 @@ trait ReportTrait
         } else {
             throw new \RuntimeException('usertype not specified. Usage: the PA|Lay report should be submittable');
         }
+    }
+
+    /**
+     * @Given I have the :startDate to :endDate report between :deputy and :client
+     */
+    public function iHaveTheReportBetweenDeputyAndClient($startDate, $endDate, $deputy, $client)
+    {
+        $this->iAmLoggedInAsWithPassword($deputy.'@behat-test.com', 'Abcd1234');
+        $this->enterReport($client, $startDate, $endDate);
+        preg_match('/\/(\d+)\//', $this->getSession()->getCurrentUrl(), $match);
+        self::$currentReportCache = [
+            'deputy' => $deputy,
+            'client' => $client,
+            'reportId' => $match[1],
+            'startDate' => $startDate,
+            'endDate' => $endDate
+        ];
+    }
+
+    /**
+     * @Given the :section section on the report has been completed
+     */
+    public function theSectionOnTheReportHasBeenCompleted($section)
+    {
+        $this->logInAndEnterReport();
+        $this->completeSections($section);
+    }
+
+    /**
+     * @Then the report should have the :type sections
+     */
+    public function theReportShouldHaveTheSections($type)
+    {
+        $this->logInAndEnterReport();
+
+        foreach ($this->getSectionsByType($type) as $section) {
+            $this->assertPageContainsText($section);
+        }
+    }
+
+    private function getSectionsByType($type)
+    {
+        switch ($type) {
+            case '103':
+                return $this->sections103;
+            case '103-5':
+                $sections = $this->sections103;
+                $sections[] = 'Deputy costs';
+                $sections[] = 'Deputy costs estimate';
+                unset($sections[0]); // 'Deputy expenses'
+                return $sections;
+            case '103-6':
+                $sections = $this->sections103;
+                $sections[] = 'Deputy fees and expenses';
+                unset($sections[0]); // 'Deputy expenses'
+                return $sections;
+        }
+    }
+
+    /**
+     * @Then the :section section on the report should be completed
+     */
+    public function theSectionOnTheReportShouldBeCompleted($section)
+    {
+        $this->logInAndEnterReport();
+        $this->iShouldSeeTheBehatElement($section.'-state-done', 'region');
+    }
+
+    /**
+     * @Then the report should be unsubmitted
+     */
+    public function theReportShouldBeUnsubmitted()
+    {
+        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
+
+        $client = self::$currentReportCache['client'];
+        $startDate = self::$currentReportCache['startDate'];
+        $endDate = self::$currentReportCache['endDate'];
+
+        $this->clickOnBehatLink("client-detail-$client");
+        $this->iShouldSeeTheRegionInTheRegion("report-$startDate-to-$endDate", 'report-group-incomplete');
+    }
+
+    /**
+     * @Given the report has been submitted
+     */
+    public function theReportHasBeenSubmitted()
+    {
+        $this->logInAndEnterReport();
+
+        $sections = $this->getSession()->getPage()->findAll('xpath', "//a[contains(@id, 'edit-')]");
+        $sectionNames = [];
+        foreach ($sections as $section) {
+            $sectionId = $section->getAttribute('id');
+            $sectionNames[] = substr($sectionId, strpos($sectionId, "-") + 1);
+        }
+
+        if ($index = array_search('report-preview', $sectionNames)) {
+            unset($sectionNames[$index]);
+        }
+
+        $this->completeSections(implode(',', $sectionNames));
+
+        $reportId = self::$currentReportCache['reportId'];
+        $this->visit("report/$reportId/overview");
+
+        try {
+            $this->clickOnBehatLink('edit-report-review');
+        } catch (\Exception $e) {
+            $this->clickOnBehatLink('edit-report_submit');
+        }
+
+        $this->clickOnBehatLink('declaration-page');
+        $this->checkOption('report_declaration[agree]');
+        $this->selectOption('report_declaration[agreedBehalfDeputy]', 'only_deputy');
+        $this->pressButton('report_declaration[save]');
+    }
+
+    private function completeSections(string $sections)
+    {
+        $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'Abcd1234');
+
+        $reportId = self::$currentReportCache['reportId'];
+        $url = sprintf('/admin/fixtures/complete-sections/%s?sections=%s', $reportId, $sections);
+        $this->visitAdminPath($url);
+    }
+
+    private function enterReport($client, $startDate, $endDate): void
+    {
+        if ($this->getSession()->getPage()->hasContent('Start now')) {
+            $this->clickLink('Start now');
+        } else if ($this->getSession()->getPage()->hasContent($startDate . ' to ' . $endDate . ' report')) {
+            $this->clickLink($startDate . ' to ' . $endDate . ' report');
+        } else {
+            $this->clickLink($client.'-Client, John');
+        }
+    }
+
+    private function logInAndEnterReport(): void
+    {
+        $this->iAmLoggedInAsWithPassword(self::$currentReportCache['deputy'] . '@behat-test.com', 'Abcd1234');
+        $reportId = self::$currentReportCache['reportId'];
+        $this->visit("report/$reportId/overview");
     }
 }

@@ -457,6 +457,7 @@ class IndexController extends AbstractController
                         'Corref',
                         'Typeofrep',
                         'Last Report Day',
+                        'Made Date'
                     ])
                     ->setOptionalColumns([
                         'Client Adrs1',
