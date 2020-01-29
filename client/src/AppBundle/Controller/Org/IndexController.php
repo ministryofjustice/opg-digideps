@@ -41,7 +41,7 @@ class IndexController extends AbstractController
 
         $endpoint = sprintf(
             '%s?%s',
-            $user->belongsToAnActiveOrganisation() ?'/report/get-all-by-orgs' : 'report/get-all-by-user',
+            $user->belongsToActiveOrganisation() ?'/report/get-all-by-orgs' : 'report/get-all-by-user',
             http_build_query($currentFilters)
         );
 

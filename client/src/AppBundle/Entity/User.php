@@ -1189,7 +1189,7 @@ class User implements AdvancedUserInterface, DeputyInterface
     /**
      * @return bool
      */
-    public function belongsToAnActiveOrganisation(): bool
+    public function belongsToActiveOrganisation(): bool
     {
         foreach ($this->getOrganisations() as $organisation) {
             if ($organisation->isActivated()) {
