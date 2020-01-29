@@ -31,7 +31,7 @@ class FeedbackController extends AbstractController
 
             // Send notification email
             $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData(), false);
-            $this->getMailSender()->sendNotify($feedbackEmail);
+            $this->getMailSender()->send($feedbackEmail);
 
             $confirmation = $this->get('translator')->trans('collectionPage.confirmation', [], 'feedback');
             $request->getSession()->getFlashBag()->add('notice', $confirmation);

@@ -73,7 +73,7 @@ class MailSender implements MailSenderInterface
     public function send(Email $email, array $groups = ['text'], $transport = 'default')
     {
         if ($email->getParameters()) {
-            return $this->sendNotify($email);
+            return $this->send($email);
         }
 
         $errors = $this->validator->validate($email, null, $groups);
