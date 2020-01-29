@@ -2,6 +2,8 @@
 
 namespace DigidepsBehat\ReportManagement;
 
+use Behat\Gherkin\Node\TableNode;
+
 trait ReportManagementTrait
 {
     /**
@@ -47,6 +49,50 @@ trait ReportManagementTrait
         $this->pressButton('manage_report_confirm[save]');
 
         $this->assertPageContainsText('OPG'.$type);
+    }
+
+    /**
+     * @When a case manager proposes to make the following changes to the report:
+     */
+    public function aCaseManagerProposesToMakeTheFollowingChangesToTheReport(TableNode $table)
+    {
+        $reportId = self::$currentReportCache['reportId'];
+        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
+        $this->visitAdminPath("/admin/report/$reportId/manage");
+
+        foreach ($table as $inputs) {
+
+            if (isset($inputs['type'])) {
+                $this->selectOption('manage_report[type]', $inputs['type']);
+            }
+
+            if (isset($inputs['dueDateChoice'])) {
+                $value = (intval($inputs['dueDateChoice'])) ?: $inputs['dueDateChoice'];
+                $this->selectOption('manage_report[dueDateChoice]', $value);
+            }
+
+            if (isset($inputs['incompleteSection'])) {
+                $this->checkOption($inputs['incompleteSection']);
+            }
+
+            if (isset($inputs['startDate'])) {
+                $date = new \DateTime($inputs['startDate']);
+                $this->fillField('manage_report_startDate_day', $date->format('d'));
+                $this->fillField('manage_report_startDate_month', $date->format('m'));
+                $this->fillField('manage_report_startDate_year', $date->format('Y'));
+            }
+
+            if (isset($inputs['endDate'])) {
+                $date = new \DateTime($inputs['endDate']);
+                $this->fillField('manage_report_endDate_day', $date->format('d'));
+                $this->fillField('manage_report_endDate_month', $date->format('m'));
+                $this->fillField('manage_report_endDate_year', $date->format('Y'));
+            }
+
+            break; // Only expect one row in this table.
+        }
+
+        $this->pressButton('manage_report[save]');
     }
 
     /**

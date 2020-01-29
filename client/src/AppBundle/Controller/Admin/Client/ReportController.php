@@ -307,7 +307,7 @@ class ReportController extends AbstractController
                 }
             }
 
-            $form['unsubmittedSectionsList']->setData($form['unsubmittedSection']->getData());
+            $form['unsubmittedSection']->setData($form['unsubmittedSection']->getData());
         }
     }
 
