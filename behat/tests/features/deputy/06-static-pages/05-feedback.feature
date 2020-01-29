@@ -14,7 +14,7 @@ Feature: Generic feedback page
         And I press "Send feedback"
         Then the response should contain "Thank you for your feedback"
         And the last email should have been sent to "digideps+noop@digital.justice.gov.uk"
-        And the last email should contain "Test comment"
+        And the last email sent should have used the general feedback email template
 
     @deputy
     Scenario: Extra details are included in the email
@@ -29,10 +29,11 @@ Feature: Generic feedback page
         And I fill in "feedback_satisfactionLevel_4" with "1"
         And I press "Send feedback"
         Then the response should contain "Thank you for your feedback"
-        And the last email should have been sent to "digideps+noop@digital.justice.gov.uk"
-        And the last email should contain "Very dissatisfied"
-        And the last email should contain "A longer comment"
-        And the last email should contain "My name"
-        And the last email should contain "Title of page"
-        And the last email should contain "054863476384"
-        And the last email should contain "myemail@emailhost.com"
+        And the parameters in the last email sent should include:
+            | parameter         | value                 |
+            | satisfactionLevel | 1                     |
+            | comments          | A longer comment      |
+            | name              | My name               |
+            | page              | Title of page         |
+            | phone             | 054863476384          |
+            | email             | myemail@emailhost.com |

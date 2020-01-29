@@ -2,10 +2,14 @@
 
 namespace DigidepsBehat;
 
+use Behat\Gherkin\Node\TableNode;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 
 trait EmailTrait
 {
+    private static $postSubmissionFeedbackTemplateID = '862f1ce7-bde5-4397-be68-bd9e4537cff0';
+    private static $generalFeedbackTemplateID = '63a25dfa-116f-4991-b7c4-35a79ac5061e';
+
     private static $mailSentFrom = 'deputy';
 
     /**
@@ -139,7 +143,7 @@ trait EmailTrait
         $this->getFirstLinkInEmailMatching($partialLink);
 
         $mail = $this->getLastEmail();
-        $mailTo = key($mail['to']);
+        $mailTo = !empty($mail['notifyParams']) ? $mail['to'] : key($mail['to']);
 
         if ($mailTo !== 'the specified email address' && $mailTo != $to) {
             throw new \RuntimeException("Addressee '" . $mailTo . "' does not match the expected '" . $to . "'");
@@ -152,7 +156,7 @@ trait EmailTrait
     public function theLastEmailShouldHaveBeenSentTo($to)
     {
         $mail = $this->getLastEmail();
-        $mailTo = key($mail['to']);
+        $mailTo = !empty($mail['notifyParams']) ? $mail['to'] : key($mail['to']);
 
         if ($mailTo !== 'the specified email address' && $mailTo != $to) {
             throw new \RuntimeException("Addressee '" . $mailTo . "' does not match the expected '" . $to . "'");
@@ -165,7 +169,7 @@ trait EmailTrait
     public function theLastEmailShouldNotHaveBeenSentTo($area, $to)
     {
         $mail = $this->getLastEmail($area);
-        $mailTo = key($mail['to']);
+        $mailTo = !empty($mail['notifyParams']) ? $mail['to'] : key($mail['to']);
 
         if ($mailTo === $to) {
             throw new \RuntimeException("Last email unexpectedly sent to $to");
@@ -205,12 +209,66 @@ trait EmailTrait
 
         if ($mails && count($mails)) {
             foreach ($mails as $mail) {
-                $mailTo = key($mail['to']);
+                $mailTo = !empty($mail['notifyParams']) ? $mail['to'] : key($mail['to']);
 
                 if ($mailTo === $to) {
                     throw new \RuntimeException("Unexpected email sent to $to");
                 }
             }
+        }
+    }
+
+    /**
+     * @Then the last email sent should have used the post-submission feedback email template
+     */
+    public function theLastEmailSentShouldHaveUsedThePostSubmissionFeedbackEmailTemplate()
+    {
+        $this->assertCorrectTemplateIDUsed(self::$postSubmissionFeedbackTemplateID);
+    }
+
+    /**
+     * @Then the last email sent should have used the general feedback email template
+     */
+    public function theLastEmailSentShouldHaveUsedTheGeneralFeedbackEmailTemplate()
+    {
+        $this->assertCorrectTemplateIDUsed(self::$generalFeedbackTemplateID);
+    }
+
+    /**
+     * @Then the parameters in the last email sent should include:
+     * @param TableNode $expectedParams
+     */
+    public function theParametersInTheLastEmailSentShouldIncludeParameterWithAValue(TableNode $expectedParams)
+    {
+        $mail = $this->getLastEmail();
+        $notifyParams = $mail['notifyParams'];
+
+        foreach ($expectedParams as $expectedParam) {
+            $this->assertNotifyParamExistsWithCorrectValue($notifyParams, $expectedParam['parameter'], $expectedParam['value']);
+        }
+    }
+
+    private function assertNotifyParamExistsWithCorrectValue($notifyParams, $paramKey, $expectedValue)
+    {
+        if (!array_key_exists($paramKey, $notifyParams)) {
+            throw new \RuntimeException("Last email sent did not contain the expected parameter ${paramKey}");
+        }
+
+        $actualValue = $notifyParams[$paramKey];
+
+        if ($actualValue != $expectedValue) {
+            throw new \RuntimeException("Last email sent contained the expected parameter '${paramKey}', but the expected value, '${expectedValue}', was '${actualValue}')");
+        }
+    }
+
+    private function assertCorrectTemplateIDUsed($expectedID)
+    {
+        $mail = $this->getLastEmail();
+
+        $actualID = $mail['templateID'];
+
+        if ($actualID !== $expectedID) {
+            throw new \RuntimeException("Last email sent using template ID '${actualID}' but should have used '${expectedID}''");
         }
     }
 }

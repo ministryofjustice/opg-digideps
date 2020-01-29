@@ -190,7 +190,7 @@ class MailFactory
     {
         $area = $this->getUserArea($user);
 
-        $notifyParameters = [
+        $notifyParams = [
             'resetLink' => $this->generateAbsoluteLink($area, 'user_activate', [
                 'action' => 'password-reset',
                 'token'  => $user->getRegistrationToken(),
@@ -204,7 +204,7 @@ class MailFactory
             ->setToName($user->getFullName())
             ->setSubject($this->translate('resetPassword.subject'))
             ->setTemplate(self::RESET_PASSWORD_TEMPLATE_ID)
-            ->setParameters($notifyParameters);
+            ->setParameters($notifyParams);
     }
 
     /**

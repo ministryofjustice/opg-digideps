@@ -102,6 +102,10 @@ class MailSenderMock implements MailSenderInterface
      */
     public function send(Email $email, array $groups = ['text'], $transport = 'default')
     {
+        if ($email->getParameters()) {
+            return $this->sendNotify($email);
+        }
+
         //validate change password object
         $errors = $this->validator->validate($email, null, $groups);
 
@@ -143,8 +147,29 @@ class MailSenderMock implements MailSenderInterface
      * @return type
      *
      */
-    public function sendNotify(Email $email)
+    private function sendNotify(Email $email)
     {
+        $messageArray = [
+            'to' => $email->getToEmail(),
+            'from' => $email->getFromEmail(),
+            'bcc' => null,
+            'cc' => null,
+            'replyTo' => $email->getFromEmail(),
+            'returnPath' => null,
+            'subject' => $email->getSubject(),
+            'body' => $email->getBodyText(),
+            'sender' => $email->getFromName(),
+            'templateID' => $email->getTemplate(),
+            'notifyParams' => $email->getParameters()
+        ];
+
+        $emails = json_decode($this->getMockedEmailsRaw(), true) ?: [];
+
+        $messageArray['time'] = (new \DateTime())->format(\DateTime::ISO8601);
+        array_unshift($emails, $messageArray);
+//        $this->redis->set(self::REDIS_EMAIL_KEY, json_encode($emails));
+
+
         try {
             $this->notifyClient->sendEmail(
                 $email->getToEmail(),
@@ -153,12 +178,36 @@ class MailSenderMock implements MailSenderInterface
                 '',
                 $email->getFromEmailNotifyID()
             );
+
+            $this->redis->set(self::REDIS_EMAIL_KEY, json_encode($emails));
         } catch (NotifyException $exception) {
+            if (strpos($exception->getMessage() , 'AuthError') !== false) {
+                $this->redis->set(self::REDIS_EMAIL_KEY, json_encode($emails));
+            }
+
             $this->logger->error($exception->getMessage());
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * @param Swift_Message $swiftMessage
+     * @param Email         $email
+     */
+    private function fillNotifyMessageWithEmailData(Email $email)
+    {
+        $swiftMessage->setTo($email->getToEmail(), $email->getToName())
+            ->setFrom($email->getFromEmail(), $email->getFromName())
+            ->setSubject($email->getSubject())
+            ->setBody($email->getBodyText());
+
+        $swiftMessage->addPart($email->getBodyHtml(), 'text/html');
+
+        foreach ($email->getAttachments() as $attachment) {
+            $swiftMessage->attach(new Swift_Attachment($attachment->getContent(), $attachment->getFilename(), $attachment->getContentType()));
+        }
     }
 
     /**
