@@ -177,3 +177,19 @@ Feature: PROF settings
     Then the form should be valid
     And I should see "Password edited"
     And I should be on "/org/settings"
+
+  Scenario: Prof in two organisations can access the settings page of each organisation
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given the organisation "org-1.co.uk" is active
+    And the organisation "abc-solicitors.uk" is active
+    And "behat-prof-org-1@org-1.co.uk" has been added to the "org-1.co.uk" organisation
+    And "behat-prof-org-1@org-1.co.uk" has been added to the "abc-solicitors.uk" organisation
+    When I am logged in as "behat-prof-org-1@org-1.co.uk" with password "Abcd1234"
+    And I click on "org-settings, org-accounts"
+    And I follow "Your Organisation"
+    Then I should see "Your Organisation"
+    And the URL should match "/org/settings/organisation/\d+"
+    When I move backward one page
+    And I follow "ABC Solicitors"
+    Then I should see "ABC Solicitors"
+    And the URL should match "/org/settings/organisation/\d+"

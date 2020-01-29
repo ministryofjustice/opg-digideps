@@ -132,7 +132,8 @@ class FixtureController
      */
     private function createOrgAndAttachParticipants($fromRequest, User $deputy, Client $client): void
     {
-        $organisation = $this->organisationFactory->createFromEmailIdentifier('Behat Org', $fromRequest['deputyEmail'], true);
+        $orgName = sprintf('Org %d Ltd', rand(1, 9999));
+        $organisation = $this->organisationFactory->createFromEmailIdentifier($orgName, $fromRequest['deputyEmail'], true);
         $organisation->addUser($deputy);
         $client->setOrganisation($organisation);
         $this->em->persist($organisation);
