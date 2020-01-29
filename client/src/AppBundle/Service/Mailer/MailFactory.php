@@ -5,6 +5,7 @@ namespace AppBundle\Service\Mailer;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\User;
 use AppBundle\Model as ModelDir;
+use AppBundle\Model\FeedbackReport;
 use Symfony\Component\Intl\Intl;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -283,7 +284,7 @@ class MailFactory
      * @param User|null $user
      * @return ModelDir\Email
      */
-    public function createFeedbackEmail($response, bool $isPostSubmission, User $user = null)
+    public function createGeneralFeedbackEmail($response)
     {
         $notifyParams = [
             'comments' => !empty($response['comments']) ? $response['comments'] : 'Not provided',
@@ -292,18 +293,36 @@ class MailFactory
             'page' => !empty($response['page']) ? $response['page'] : 'Not provided',
             'email' => !empty($response['email']) ? $response['email'] : 'Not provided',
             'satisfactionLevel' => !empty($response['satisfactionLevel']) ? $response['satisfactionLevel'] : 'Not provided',
-            'userRole' => $user ? $user->getRoleFullName() : 'Not provided',
             'subject' => $this->translate('feedbackForm.subject'),
         ];
-
-        $templateID = $isPostSubmission ? self::POST_SUBMISSION_FEEDBACK_TEMPLATE_ID : self::GENERAL_FEEDBACK_TEMPLATE_ID;
 
         return (new ModelDir\Email())
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('feedbackForm.fromName'))
             ->setToEmail($this->emailParams['feedback_send_to_address'])
             ->setToName($this->translate('feedbackForm.toName'))
-            ->setTemplate($templateID)
+            ->setTemplate(self::GENERAL_FEEDBACK_TEMPLATE_ID)
+            ->setParameters($notifyParams);
+    }
+
+    public function createPostSubmissionFeedbackEmail(FeedbackReport $response, User $user)
+    {
+        $notifyParams = [
+            'comments' => $response->getComments() ? $response->getComments() : 'Not provided',
+            'name' => $user->getFullName(),
+            'phone' => $user->getPhoneMain(),
+            'email' => $user->getEmail(),
+            'satisfactionLevel' => $response->getSatisfactionLevel() ? $response->getSatisfactionLevel() : 'Not provided',
+            'userRole' => $user->getRoleFullName(),
+            'subject' => $this->translate('feedbackForm.subject'),
+        ];
+
+        return (new ModelDir\Email())
+            ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
+            ->setFromName($this->translate('feedbackForm.fromName'))
+            ->setToEmail($this->emailParams['feedback_send_to_address'])
+            ->setToName($this->translate('feedbackForm.toName'))
+            ->setTemplate(self::POST_SUBMISSION_FEEDBACK_TEMPLATE_ID)
             ->setParameters($notifyParams);
     }
 

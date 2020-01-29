@@ -751,6 +751,8 @@ class User implements AdvancedUserInterface, DeputyInterface
     public function setPhoneMain($phoneMain)
     {
         $this->phoneMain = $phoneMain;
+
+        return $this;
     }
 
     public function setPhoneAlternative($phoneAlternative)

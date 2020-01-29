@@ -1,6 +1,6 @@
-A user has left post-submission feedback about the service.
+A ((userRole)) has left post-submission feedback about the service.
 
-(( userRole )): (( satisfactionLevel ))
+Satisfaction Level: (( satisfactionLevel ))
 
 Comments:
 (( comments ))
@@ -8,4 +8,3 @@ Comments:
 Name: (( name ))
 Email: (( email ))
 Phone: (( phone ))
-Page: (( page ))

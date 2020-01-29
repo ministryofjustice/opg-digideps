@@ -5,6 +5,7 @@ namespace AppBundle\Service\Mailer;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
+use AppBundle\Model\FeedbackReport;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -195,9 +196,8 @@ class MailFactoryTest extends TestCase
 
     /**
      * @test
-     * @dataProvider feedbackEmailDataProvider
      */
-    public function createFeedbackEmail(bool $isPostSubmission, ?User $user, string $expectedTemplateID, ?string $expectedRoleName)
+    public function createGeneralFeedbackEmail()
     {
         $this->translator->trans('feedbackForm.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
         $this->translator->trans('feedbackForm.toName', [], 'email')->shouldBeCalled()->willReturn('To Name');
@@ -213,13 +213,13 @@ class MailFactoryTest extends TestCase
                 'satisfactionLevel' => '4',
         ];
 
-        $email = ($this->generateSUT())->createFeedbackEmail($response, $isPostSubmission, $user);
+        $email = ($this->generateSUT())->createGeneralFeedbackEmail($response);
 
         self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
         self::assertEquals('OPG', $email->getFromName());
         self::assertEquals('digideps+noop@digital.justice.gov.uk', $email->getToEmail());
         self::assertEquals('To Name', $email->getToName());
-        self::assertEquals($expectedTemplateID, $email->getTemplate());
+        self::assertEquals(MailFactory::GENERAL_FEEDBACK_TEMPLATE_ID, $email->getTemplate());
 
         $expectedTemplateParams = [
             'comments' => 'It was great!',
@@ -227,7 +227,6 @@ class MailFactoryTest extends TestCase
             'name' => 'Joe Bloggs',
             'phone' => '07535999222',
             'page' => 'A page',
-            'userRole' => $expectedRoleName,
             'email' => 'joe.bloggs@xyz.com',
             'subject' => 'A subject'
         ];
@@ -235,12 +234,40 @@ class MailFactoryTest extends TestCase
         self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 
-    public function feedbackEmailDataProvider()
+    /**
+     * @test
+     */
+    public function createPostSubmissionFeedbackEmail()
     {
-        return [
-            'postSubmission' => [true, $this->generateUser(), MailFactory::POST_SUBMISSION_FEEDBACK_TEMPLATE_ID, 'Lay Deputy'],
-            'general' => [false, null, MailFactory::GENERAL_FEEDBACK_TEMPLATE_ID, 'Not provided'],
+        $this->translator->trans('feedbackForm.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+        $this->translator->trans('feedbackForm.toName', [], 'email')->shouldBeCalled()->willReturn('To Name');
+        $this->translator->trans('feedbackForm.subject', [], 'email')->shouldBeCalled()->willReturn('A subject');
+
+        $response = (new FeedbackReport())
+            ->setComments('Amazing service!')
+            ->setSatisfactionLevel('4');
+
+        $user = $this->generateUser();
+
+        $email = ($this->generateSUT())->createPostSubmissionFeedbackEmail($response, $this->generateUser());
+
+        self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
+        self::assertEquals('OPG', $email->getFromName());
+        self::assertEquals('digideps+noop@digital.justice.gov.uk', $email->getToEmail());
+        self::assertEquals('To Name', $email->getToName());
+        self::assertEquals(MailFactory::POST_SUBMISSION_FEEDBACK_TEMPLATE_ID, $email->getTemplate());
+
+        $expectedTemplateParams = [
+            'comments' => 'Amazing service!',
+            'satisfactionLevel' => '4',
+            'name' => 'Joe Bloggs',
+            'phone' => '01211234567',
+            'email' => 'user@digital.justice.gov.uk',
+            'subject' => 'A subject',
+            'userRole' => 'Lay Deputy'
         ];
+
+        self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 
     private function generateSUT()
@@ -255,13 +282,14 @@ class MailFactoryTest extends TestCase
     }
 
     // Using helper function to make user available in dataProvider
-    private function generateUser()
+    private function generateUser() : User
     {
         return (new User())
             ->setRegistrationToken('regToken')
             ->setEmail('user@digital.justice.gov.uk')
             ->setFirstname('Joe')
             ->setLastname('Bloggs')
+            ->setPhoneMain('01211234567')
             ->setRoleName(User::ROLE_LAY_DEPUTY);
     }
 }
