@@ -10,11 +10,20 @@ Feature: Managing client and report access for deputies within active organisati
       | 94235342 | Deputy5492 | PROF        | Property and Financial Affairs High Assets | 2018-01-30 |
       | 54234341 | Deputy8543 | PROF        | Property and Financial Affairs High Assets | 2018-01-30 |
 
-  Scenario: A deputy can only view clients that belong to the deputy's organisations
+  Scenario: A deputy can only view clients that belong to their sole organisation
+    Given I am logged in as "deputy8543@behat-test.com" with password "Abcd1234"
+    Then I should see "54234341"
+    And I should not see "Org 8543 Ltd"
+    And I should not see "95432265"
+    And I should not see "94235342"
+
+  Scenario: A deputy can only view clients that belong to their multiple organisations
     Given "deputy1943@behat-test.com" has been added to the "deputy5492@behat-test.com" organisation
     When I am logged in as "deputy1943@behat-test.com" with password "Abcd1234"
     Then I should see "95432265"
+    And I should see "Org 1943 Ltd"
     And I should see "94235342"
+    And I should see "Org 5492 Ltd"
     And I should not see "54234341"
 
   Scenario: A deputy can only access reports that belong to clients within the deputy's organisations
