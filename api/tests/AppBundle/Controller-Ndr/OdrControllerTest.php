@@ -112,7 +112,7 @@ class NdrControllerTest extends AbstractTestController
         $this->assertEquals('2015-12-30', $ndr->getSubmitDate()->format('Y-m-d'));
 
         /* @var $reportSubmission ReportSubmission */
-        $reportSubmission = self::fixtures()->clear()->getRepo(ReportSubmission::class)->find($ret['id']);
+        $reportSubmission = self::fixtures()->clear()->getRepo(ReportSubmission::class)->findOneBy(['ndr' => $ndr], ['id' => 'DESC']);
         $this->assertCount(1, $reportSubmission->getDocuments());
     }
 }

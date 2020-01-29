@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Organisation;
 use AppBundle\Entity\User;
 use AppBundle\Model\SelfRegisterData;
 use Doctrine\ORM\EntityManagerInterface;
@@ -58,7 +59,7 @@ class UserRegistrationService
 
         // Check the client is unique and has no deputies attached
         if ($existingClient instanceof Client) {
-            if ($existingClient->hasDeputies()) {
+            if ($existingClient->hasDeputies() || $existingClient->getOrganisation() instanceof Organisation) {
                 throw new \RuntimeException('User registration: Case number already used', 425);
             } else {
                 // soft delete client

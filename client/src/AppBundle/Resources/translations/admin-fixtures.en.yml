@@ -1,0 +1,9 @@
+courtOrders:
+  deputyType:
+    label: Deputy role
+  reportType:
+    label: Report type
+  reportStatus:
+    label: Report status
+  submit:
+    label: Create

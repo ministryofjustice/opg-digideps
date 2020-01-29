@@ -55,6 +55,12 @@ default:
                 - behatch:context:rest
                 - DigidepsBehat\FeatureContext
 
+        report-management:
+            description: Coverage of report management features
+            paths: [ "%paths.base%/features/ReportManagement" ]
+            contexts:
+                - DigidepsBehat\ReportManagement\ReportManagementFeatureContext
+
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
               goutte:

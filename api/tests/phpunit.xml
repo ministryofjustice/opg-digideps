@@ -21,6 +21,8 @@
     <php>
         <server name="KERNEL_DIR" value="../app" />
         <ini name="memory_limit" value="1024M" />
+        <env name="SECRETS_FRONT_KEY" value="layDeputySecret" force="true" />
+        <env name="SECRETS_ADMIN_KEY" value="adminSecret" force="true" />
     </php>
 
     <filter>

@@ -200,7 +200,7 @@ class ReportServiceTest extends TestCase
 
     }
 
-    public function testSubmitValidNdr()
+    private function getFilledInNdr()
     {
         $client = new EntityDir\Client();
         $client->addUser($this->user);
@@ -222,6 +222,15 @@ class ReportServiceTest extends TestCase
         $ndr->addAsset($ndrAsset);
         $ndr->setBankAccounts([$ndrBank]);
         $ndr->setAgreedBehalfDeputy(true);
+        $ndr->setClient($client);
+
+        return $ndr;
+    }
+
+    public function testSubmitValidNdr()
+    {
+        $ndr = $this->getFilledInNdr();
+
         $submitDate = new \DateTime('2018-04-05');
 
         // assert persists on report and submission record
@@ -258,8 +267,47 @@ class ReportServiceTest extends TestCase
         $this->assertInstanceOf(BankAccount::class, $newAccount);
         $this->assertEquals("SW1", $newAsset->getAddress());
         $this->assertEquals("4321", $newAccount->getAccountNumber());
-        $this->assertEquals(Report::TYPE_102, $newYearReport->getType());
+    }
 
+    public function testSubmitNdrWithExistingReport()
+    {
+        $ndr = $this->getFilledInNdr();
+
+        $report = new Report($ndr->getClient(), Report::TYPE_102, new \DateTime('2018-06-06'), new \DateTime('2019-06-05'));
+        $ndr->getClient()->addReport($report);
+
+        $submitDate = new \DateTime('2018-04-05');
+
+        // assert persists on report and submission record
+        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($ndr) {
+            return $ndr instanceof EntityDir\Report\ReportSubmission;
+        }));
+        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($report) {
+            return $report instanceof EntityDir\Report\Report;
+        }));
+        $this->em->shouldReceive('flush')->with()->once(); //last in createNextYearReport
+
+        // Create partial mock of ReportService
+        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo])->makePartial();
+        $this->em->shouldReceive('detach');
+        $this->em->shouldReceive('persist');
+        $this->em->shouldReceive('flush');
+
+        /** @var Report $newYearReport */
+        $newYearReport = $reportService->submit($ndr, $this->user, $submitDate, 999);
+
+        // assert existing report carries over
+        $this->assertEquals($report->getId(), $newYearReport->getId());
+        $this->assertCount(1, $ndr->getClient()->getReports());
+
+        // assert assets/accounts added
+        $newAsset = $report->getAssets()->first();
+        $newAccount = $report->getBankAccounts()->first();
+
+        $this->assertInstanceOf(Asset::class, $newAsset);
+        $this->assertInstanceOf(BankAccount::class, $newAccount);
+        $this->assertEquals("SW1", $newAsset->getAddress());
+        $this->assertEquals("4321", $newAccount->getAccountNumber());
     }
 
     /**

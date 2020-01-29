@@ -36,6 +36,10 @@ class User implements AdvancedUserInterface, DeputyInterface
 
     const ROLE_ORG = 'ROLE_ORG';
 
+    const TYPE_LAY = 'LAY';
+    const TYPE_PA = 'PA';
+    const TYPE_PROF = 'PROF';
+
     /**
      * @JMS\Exclude
      */

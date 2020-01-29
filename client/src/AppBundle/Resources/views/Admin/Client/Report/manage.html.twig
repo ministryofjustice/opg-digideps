@@ -20,26 +20,30 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-form' }}) }}
 
-    {{ (page ~ '.form.startDate.label') | trans }}
-    {{ form_known_date(form.startDate, 'startDate') }}
+    {{ form_select(form.type, 'reportManage.form.type') }}
 
-    {{ (page ~ '.form.endDate.label') | trans }}
-    {{ form_known_date(form.endDate, 'endDate') }}
+    {% if report.isSubmitted %}
+        {{ (page ~ '.form.startDate.label') | trans }}
+        {{ form_known_date(form.startDate, 'startDate') }}
 
-    <fieldset class="form-group {% if not form.unsubmittedSection.vars.valid %}form-group-error{% endif %}">
-        <legend>
-            <h2 class="heading-small flush--top">{{ (page ~ '.form.markSections.legend') | trans }}</h2>
-        </legend>
-        <div class="govuk-checkboxes govuk-checkboxes--small">
-            {% for section in form.unsubmittedSection  %}
-                {{ form_row(section.id) }}
-                {{ form_checkbox(section.present, '', {
-                    'labelText': ('prevNextLinks.sections.' ~ section.id.vars.value) | trans({}, 'report-common'),
-                    'useFormGroup': false
-                }) }}
-            {% endfor %}
-        </div>
-    </fieldset>
+        {{ (page ~ '.form.endDate.label') | trans }}
+        {{ form_known_date(form.endDate, 'endDate') }}
+
+        <fieldset class="form-group {% if not form.unsubmittedSection.vars.valid %}form-group-error{% endif %}">
+            <legend>
+                <h2 class="heading-small flush--top">{{ (page ~ '.form.markSections.legend') | trans }}</h2>
+            </legend>
+            <div class="govuk-checkboxes govuk-checkboxes--small">
+                {% for section in form.unsubmittedSection  %}
+                    {{ form_row(section.id) }}
+                    {{ form_checkbox(section.present, '', {
+                        'labelText': ('prevNextLinks.sections.' ~ section.id.vars.value) | trans({}, 'report-common'),
+                        'useFormGroup': false
+                    }) }}
+                {% endfor %}
+            </div>
+        </fieldset>
+    {% endif %}
 
     <p class="heading-small flush--ends">{{  'reportManage.currentDueDate' | trans }}</p>
     <p>
@@ -71,7 +75,7 @@
         </div>
     </div>
 
-    {{ form_submit(form.save, 'reportManage.form.unsubmit') }}
+    {{ form_submit(form.save, 'reportManage.form.save') }}
 
     <a href="{{ path('admin_client_details', {'id': report.client.id}) }}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
 

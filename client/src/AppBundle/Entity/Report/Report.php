@@ -43,6 +43,16 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     const PROF_DEPUTY_COSTS_TYPE_ASSESSED = 'assessed';
     const PROF_DEPUTY_COSTS_TYPE_BOTH = 'both';
 
+    const STATUS_NOT_STARTED = 'notStarted';
+    const STATUS_READY_TO_SUBMIT = 'readyToSubmit';
+    const STATUS_NOT_FINISHED = 'notFinished';
+
+    const TYPE_HEALTH_WELFARE = '104';
+    const TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS = '102';
+    const TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS = '103';
+    const TYPE_COMBINED_HIGH_ASSETS = '102-4';
+    const TYPE_COMBINED_LOW_ASSETS = '103-4';
+
     /**
      * @JMS\Type("integer")
      * @JMS\Groups({"visits-care", "report-id"})
@@ -53,6 +63,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"report_type"})
      *
      * see TYPE_* constant
      *
@@ -1169,5 +1180,20 @@ class Report implements ReportInterface, StartEndDateComparableInterface
                 Report::TYPE_102_4_6
             ]
         );
+    }
+
+    public function isLayReport(): bool
+    {
+        return in_array($this->getType(), [self::TYPE_102, self::TYPE_103, self::TYPE_104, self::TYPE_102_4, self::TYPE_103_4]);
+    }
+
+    public function isPAreport(): bool
+    {
+        return in_array($this->getType(), [self::TYPE_102_6, self::TYPE_103_6, self::TYPE_104_6, self::TYPE_102_4_6, self::TYPE_103_4_6]);
+    }
+
+    public function isProfReport(): bool
+    {
+        return in_array($this->getType(), [self::TYPE_102_5, self::TYPE_103_5, self::TYPE_104_5, self::TYPE_102_4_5, self::TYPE_103_4_5]);
     }
 }

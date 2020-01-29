@@ -3,6 +3,9 @@
 namespace Tests\AppBundle\Service;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Organisation;
+use AppBundle\Entity\Repository\ClientRepository;
+use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
 use AppBundle\Model\SelfRegisterData;
 use AppBundle\Service\CasrecVerificationService;
@@ -11,6 +14,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
 class UserRegistrationServiceTest extends TestCase
 {
@@ -268,6 +272,82 @@ class UserRegistrationServiceTest extends TestCase
             ->getMock();
 
         $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
+        $this->userRegistrationService->selfRegisterUser($data);
+    }
+
+    public function testUserCannotRegisterIfDeputyExists()
+    {
+        $data = new SelfRegisterData();
+        $data->setFirstname('Zac');
+        $data->setLastname('Tolley');
+        $data->setEmail('zac@thetolleys.com');
+        $data->setClientLastname('Cross-Tolley');
+        $data->setCaseNumber('12341234');
+
+        $client = m::mock(Client::class)
+            ->shouldReceive('hasDeputies')->andReturn(true)
+            ->shouldReceive('getOrganisation')->andReturn(null)
+            ->getMock();
+
+        $clientRepo = m::mock(ClientRepository::class)
+            ->shouldReceive('findOneByCaseNumber')->andReturn($client)
+            ->getMock();
+
+        $userRepo = m::mock(UserRepository::class)
+            ->shouldReceive('findOneByEmail')->andReturn(null)
+            ->getMock();
+
+        $em = m::mock(EntityManager::class)
+            ->shouldReceive('getRepository')->with('AppBundle\Entity\Client')->andReturn($clientRepo)
+            ->shouldReceive('getRepository')->with('AppBundle\Entity\User')->andReturn($userRepo)
+            ->getMock();
+
+        $casrecVerificationService = m::mock(CasrecVerificationService::class)
+            ->shouldReceive('isMultiDeputyCase')->andReturn(false)
+            ->getMock();
+
+        self::expectException(RuntimeException::class);
+        self::expectExceptionMessage('User registration: Case number already used');
+
+        $this->userRegistrationService = new UserRegistrationService($em, $casrecVerificationService);
+        $this->userRegistrationService->selfRegisterUser($data);
+    }
+
+    public function testUserCannotRegisterIfOrganisationExists()
+    {
+        $data = new SelfRegisterData();
+        $data->setFirstname('Zac');
+        $data->setLastname('Tolley');
+        $data->setEmail('zac@thetolleys.com');
+        $data->setClientLastname('Cross-Tolley');
+        $data->setCaseNumber('12341234');
+
+        $client = m::mock(Client::class)
+            ->shouldReceive('hasDeputies')->andReturn(false)
+            ->shouldReceive('getOrganisation')->andReturn(new Organisation())
+            ->getMock();
+
+        $clientRepo = m::mock(ClientRepository::class)
+            ->shouldReceive('findOneByCaseNumber')->andReturn($client)
+            ->getMock();
+
+        $userRepo = m::mock(UserRepository::class)
+            ->shouldReceive('findOneByEmail')->andReturn(null)
+            ->getMock();
+
+        $em = m::mock(EntityManager::class)
+            ->shouldReceive('getRepository')->with('AppBundle\Entity\Client')->andReturn($clientRepo)
+            ->shouldReceive('getRepository')->with('AppBundle\Entity\User')->andReturn($userRepo)
+            ->getMock();
+
+        $casrecVerificationService = m::mock(CasrecVerificationService::class)
+            ->shouldReceive('isMultiDeputyCase')->andReturn(false)
+            ->getMock();
+
+        self::expectException(RuntimeException::class);
+        self::expectExceptionMessage('User registration: Case number already used');
+
+        $this->userRegistrationService = new UserRegistrationService($em, $casrecVerificationService);
         $this->userRegistrationService->selfRegisterUser($data);
     }
 
