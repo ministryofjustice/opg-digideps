@@ -21,6 +21,8 @@ class MailFactory
     const POST_SUBMISSION_FEEDBACK_TEMPLATE_ID = '862f1ce7-bde5-4397-be68-bd9e4537cff0';
     const GENERAL_FEEDBACK_TEMPLATE_ID = '63a25dfa-116f-4991-b7c4-35a79ac5061e';
 
+    const NOTIFY_FROM_EMAIL_ID = 'db930cb2-2153-4e2a-b3d0-06f7c7f92f37';
+
     /**
      * @var TranslatorInterface
      */
@@ -165,7 +167,7 @@ class MailFactory
         $email = new ModelDir\Email();
 
         $email
-            ->setFromEmail($this->container->getParameter('email_send')['from_email'])
+            ->setFromEmail($this->emailParams['from_email'])
             ->setFromName($this->translate('resetPassword.fromName'))
             ->setToEmail($user->getEmail())
             ->setToName($user->getFullName())
@@ -196,7 +198,7 @@ class MailFactory
         ];
 
         return (new ModelDir\Email())
-            ->setFromEmailNotifyID($this->emailParams['from_email_notify_id'])
+            ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('resetPassword.fromName'))
             ->setToEmail($user->getEmail())
             ->setToName($user->getFullName())
@@ -263,10 +265,11 @@ class MailFactory
             $client->getCaseNumber()
         );
 
+
         $email
             ->setFromEmail($this->emailParams['from_email'])
             ->setFromName($this->translate('ndrSubmission.fromName'))
-            ->setToEmail($this->emailParams['email_report_submit_to_email'])
+            ->setToEmail($this->emailParams['report_submit_to_address'])
             ->setToName($this->translate('ndrSubmission.toName'))
             ->setSubject($this->translate('ndrSubmission.subject'))
             ->setBodyHtml($this->templating->render('AppBundle:Email:ndr-submission.html.twig', $viewParams))
@@ -297,9 +300,9 @@ class MailFactory
         $templateID = $isPostSubmission ? self::POST_SUBMISSION_FEEDBACK_TEMPLATE_ID : self::GENERAL_FEEDBACK_TEMPLATE_ID;
 
         return (new ModelDir\Email())
-            ->setFromEmailNotifyID($this->emailParams['from_email_notify_id'])
+            ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('feedbackForm.fromName'))
-            ->setToEmail($this->emailParams['email_feedback_send_to_email'])
+            ->setToEmail($this->emailParams['feedback_send_to_address'])
             ->setToName($this->translate('feedbackForm.toName'))
             ->setTemplate($templateID)
             ->setParameters($notifyParams);
@@ -334,7 +337,7 @@ class MailFactory
         $email
             ->setFromEmail($this->emailParams['from_email'])
             ->setFromName($this->translate('addressUpdateForm.' . $type . '.fromName'))
-            ->setToEmail($this->emailParams['email_update_send_to_email'])
+            ->setToEmail($this->emailParams['update_send_to_address'])
             ->setToName($this->translate('addressUpdateForm.' . $type . '.toName'))
             ->setSubject($this->translate('addressUpdateForm.' . $type . '.subject'))
             ->setBodyHtml($this->templating->render($template, $viewParams));

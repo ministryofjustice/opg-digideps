@@ -72,6 +72,10 @@ class MailSender implements MailSenderInterface
      */
     public function send(Email $email, array $groups = ['text'], $transport = 'default')
     {
+        if ($email->getParameters()) {
+            return $this->sendNotify($email);
+        }
+
         $errors = $this->validator->validate($email, null, $groups);
         if (count($errors) > 0) {
             $errorsString = (string) $errors;
@@ -114,7 +118,7 @@ class MailSender implements MailSenderInterface
      * @return type
      *
      */
-    public function sendNotify(Email $email)
+    private function sendNotify(Email $email)
     {
         try {
             $this->notifyClient->sendEmail(

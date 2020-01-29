@@ -24,18 +24,6 @@ services:
         - { name: data_collector, template: 'AppBundle:Manage:css-class-collector', id: 'css-class-collector' }
       public: false
 
-    AppBundle\Service\Mailer\MailFactory:
-        autowire: true
-        arguments:
-            $emailParams:
-                from_email_notify_id: '%env(NOTIFY_FROM_EMAIL_ID)%'
-                email_report_submit_to_email: '%env(NOTIFY_TO_EMAIL_TEST_DEV)%'
-                email_feedback_send_to_email: '%env(NOTIFY_TO_EMAIL_TEST_DEV)%'
-                email_update_send_to_email: '%env(NOTIFY_TO_EMAIL_TEST_DEV)%'
-            $baseURLs:
-                front: '%env(NONADMIN_HOST)%'
-                admin: '%env(ADMIN_HOST)%'
-
     AppBundle\Service\Mailer\MailSender:
         class: AppBundle\Service\Mailer\MailSenderMock
         autowire: true
@@ -43,16 +31,6 @@ services:
             $redis: '@snc_redis.default'
         calls:
             - [ addSwiftMailer, [ "default", "@mailer.swift_mailers.default"] ]
-
-    Alphagov\Notifications\Client:
-        class: Alphagov\Notifications\Client
-        arguments:
-            $config:
-                httpClient: '@Http\Adapter\Guzzle6\Client'
-                apiKey: '%env(NOTIFY_API_KEY_TEST_DEV)%'
-
-    Http\Adapter\Guzzle6\Client:
-        class: Http\Adapter\Guzzle6\Client
 
     mailer.transport.smtp.default:
         class: AppBundle\Service\Mailer\Transport\TransportMock

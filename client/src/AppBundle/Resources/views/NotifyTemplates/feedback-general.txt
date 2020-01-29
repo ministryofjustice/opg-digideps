@@ -1,0 +1,9 @@
+A user has left general feedback about the service.
+
+Comments:
+(( comments ))
+
+Name: (( name ))
+Email: (( email ))
+Phone: (( phone ))
+Page: (( page ))

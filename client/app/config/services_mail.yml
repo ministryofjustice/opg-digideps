@@ -15,10 +15,10 @@ services:
         autowire: true
         arguments:
             $emailParams:
-                from_email_notify_id: '%env(NOTIFY_FROM_EMAIL_ID)%'
-                email_report_submit_to_email: '%env(NOTIFY_REPORT_SUBMIT_TO_EMAIL)%'
-                email_feedback_send_to_email: '%env(NOTIFY_FEEDBACK_SEND_TO_EMAIL)%'
-                email_update_send_to_email: '%env(NOTIFY_UPDATE_SEND_TO_EMAIL)%'
+                from_email: '%from_email%'
+                report_submit_to_address: '%report_submit_to_address%'
+                feedback_send_to_address: '%feedback_send_to_address%'
+                update_send_to_address: '%update_send_to_address%'
             $baseURLs:
                 front: '%env(NONADMIN_HOST)%'
                 admin: '%env(ADMIN_HOST)%'
@@ -34,7 +34,7 @@ services:
         arguments:
             $config:
                 httpClient: '@Http\Adapter\Guzzle6\Client'
-                apiKey: '%env(NOTIFY_API_KEY_PROD)%'
+                apiKey: '%env(NOTIFY_API_KEY)%'
 
     Http\Adapter\Guzzle6\Client:
         class: Http\Adapter\Guzzle6\Client

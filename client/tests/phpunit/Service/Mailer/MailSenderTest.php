@@ -78,6 +78,10 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
 
     public function testSendValidateErrors()
     {
+        $this->mockeryEmail = m::stub('AppBundle\Model\Email', [
+            'getParameters' => null
+        ]);
+
         $violations = m::mock('Symfony\Component\Validator\ConstraintViolationList', [
                 'count' => 1,
                 '__toString' => 'violationsAsString',
@@ -97,6 +101,9 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         $this->expectException(\InvalidArgumentException::class);
 
         $this->mockeryValidator->shouldReceive('validate')->andReturn([]);
+        $this->mockeryEmail = m::stub('AppBundle\Model\Email', [
+            'getParameters' => null
+        ]);
 
         $this->mailSender->send($this->mockeryEmail, ['text']);
     }
@@ -122,6 +129,7 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
                     'getContentType' => 'application/octect',
                 ]),
             ],
+            'getParameters' => null
         ]);
 
         $this->mockeryValidator->shouldReceive('validate')->andReturn([]);
@@ -152,24 +160,24 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
      * @test
      * @group acs
      */
-    public function sendNotify()
+    public function send_notify()
     {
         $email = $this->generateEmail();
         $this->notifyClient->sendEmail('to@email.address', '123-template-id', ['param' => 'param value'], '', 'fake-id')->shouldBeCalled();
-        self::assertTrue($this->sut->sendNotify($email));
+        self::assertTrue($this->sut->send($email));
     }
 
     /**
      * @test
      * @group acs
      */
-    public function sendNotify_exceptions_are_logged()
+    public function send_notify_exceptions_are_logged()
     {
         $email = $this->generateEmail();
         $this->logger->error('Error message')->shouldBeCalled();
-        $this->notifyClient->sendEmail(Argument::any(), Argument::any(), Argument::any(), Argument::any(), Argument::any())->willThrow(new NotifyException('Error message'));
+        $this->notifyClient->sendEmail(Argument::cetera())->willThrow(new NotifyException('Error message'));
 
-        self::assertFalse($this->sut->sendNotify($email));
+        self::assertFalse($this->sut->send($email));
     }
 
     /**
@@ -188,6 +196,4 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
             ->setParameters($parameters)
             ->setFromEmailNotifyID($fromEmailNotifyID);
     }
-
-    // Look at removing mailSenderMock and instead change API key per env
 }

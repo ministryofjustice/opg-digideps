@@ -84,10 +84,10 @@ class MailFactoryTest extends TestCase
         ];
 
         $this->emailSendParams = [
-            'from_email_notify_id' => 'a-fake-id',
-            'email_report_submit_to_email' => 'digideps+noop@digital.justice.gov.uk',
-            'email_feedback_send_to_email' => 'digideps+noop@digital.justice.gov.uk',
-            'email_update_send_to_email' => 'digideps+noop@digital.justice.gov.uk'
+            'from_email' => 'digideps+from@digital.justice.gov.uk',
+            'report_submit_to_address' => 'digideps+noop@digital.justice.gov.uk',
+            'feedback_send_to_address' => 'digideps+noop@digital.justice.gov.uk',
+            'update_send_to_address' => 'digideps+noop@digital.justice.gov.uk'
         ];
 
         $this->translator = self::prophesize('Symfony\Bundle\FrameworkBundle\Translation\Translator');
@@ -123,7 +123,7 @@ class MailFactoryTest extends TestCase
 
         $email = ($this->generateSUT())->createActivationEmail($this->layDeputy);
 
-        self::assertEquals('from@digital.justice.gov.uk', $email->getFromEmail());
+        self::assertEquals('digideps+from@digital.justice.gov.uk', $email->getFromEmail());
         self::assertEquals('OPG', $email->getFromName());
         self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
         self::assertEquals('Joe Bloggs', $email->getToName());
@@ -157,7 +157,7 @@ class MailFactoryTest extends TestCase
 
         $email = ($this->generateSUT())->createOrgReportSubmissionConfirmationEmail($this->layDeputy, $this->submittedReport, $this->newReport);
 
-        self::assertEquals('from@digital.justice.gov.uk', $email->getFromEmail());
+        self::assertEquals('digideps+from@digital.justice.gov.uk', $email->getFromEmail());
         self::assertEquals('OPG', $email->getFromName());
         self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
         self::assertEquals('Joe', $email->getToName());
@@ -182,7 +182,7 @@ class MailFactoryTest extends TestCase
 
         $email = ($this->generateSUT())->createResetPasswordEmailNotify($this->layDeputy);
 
-        self::assertEquals('a-fake-id', $email->getFromEmailNotifyID());
+        self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
         self::assertEquals('OPG', $email->getFromName());
         self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
         self::assertEquals('Joe Bloggs', $email->getToName());
@@ -215,7 +215,7 @@ class MailFactoryTest extends TestCase
 
         $email = ($this->generateSUT())->createFeedbackEmail($response, $isPostSubmission, $user);
 
-        self::assertEquals('a-fake-id', $email->getFromEmailNotifyID());
+        self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
         self::assertEquals('OPG', $email->getFromName());
         self::assertEquals('digideps+noop@digital.justice.gov.uk', $email->getToEmail());
         self::assertEquals('To Name', $email->getToName());
