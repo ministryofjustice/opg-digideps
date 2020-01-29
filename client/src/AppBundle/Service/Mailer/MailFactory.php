@@ -5,7 +5,6 @@ namespace AppBundle\Service\Mailer;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\User;
 use AppBundle\Model as ModelDir;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Intl\Intl;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -480,24 +479,5 @@ class MailFactory
             ->setBodyText($this->templating->render('AppBundle:Email:coDeputy-invitation.text.twig', $viewParams));
 
         return $email;
-    }
-
-    /**
-     * @param array $response
-     * @param User $user
-     * @return array
-     */
-    private function buildNotifyParams(array $response, User $user)
-    {
-        return [
-            'comments' => !empty($response['comments']) ? $response['comments'] : 'Not set',
-            'name' => !empty($response['name']) ? $response['name'] : 'Not set',
-            'phone' => !empty($response['phone']) ? $response['phone'] : 'Not set',
-            'page' => !empty($response['page']) ? $response['page'] : 'Not set',
-            'email' => !empty($response['email']) ? $response['email'] : 'Not set',
-            'satisfaction' => !empty($response['satisfactionLevel']) ? $response['satisfactionLevel'] : 'Not set',
-            'userRole' => $user ? $user->getRoleFullName() : 'Not set',
-            'subject' => $this->translate('feedbackForm.subject'),
-        ];
     }
 }
