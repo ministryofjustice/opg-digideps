@@ -6,6 +6,13 @@ resource "aws_cloudwatch_event_target" "cleanup" {
   ecs_target {
     task_count          = 1
     task_definition_arn = aws_ecs_task_definition.api.arn
+    launch_type         = "FARGATE"
+
+    network_configuration {
+      security_groups  = [module.api_service_security_group.id]
+      subnets          = data.aws_subnet.private.*.id
+      assign_public_ip = false
+    }
   }
 
   input = <<DOC
