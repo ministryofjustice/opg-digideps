@@ -172,7 +172,7 @@ class UserRepository extends AbstractEntityRepository
     /**
      * @return User[]
      */
-    public function findInactive()
+    public function findInactive($select = null)
     {
         $thirtyDaysAgo = new DateTime();
         $thirtyDaysAgo->sub(new DateInterval('P30D'));
@@ -189,6 +189,7 @@ class UserRepository extends AbstractEntityRepository
 
         $qb = $this->createQueryBuilder('u');
         $qb
+            ->select($select)
             ->leftJoin('u.clients', 'c')
             ->andWhere('u.registrationDate < :reg_cutoff')
             ->andWhere('u.roleName = :lay_deputy_role')
