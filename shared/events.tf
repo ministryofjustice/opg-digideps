@@ -47,10 +47,3 @@ resource "aws_cloudwatch_event_rule" "nightly" {
   schedule_expression = "cron(0 3 * * ? *)"
   tags                = local.default_tags
 }
-
-resource "aws_cloudwatch_event_rule" "twice_a_day" {
-  name                = "twice-a-day"
-  description         = "Events run twice a day"
-  schedule_expression = "rate(12 hours)"
-  tags                = local.default_tags
-}
