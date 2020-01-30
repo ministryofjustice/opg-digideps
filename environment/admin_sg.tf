@@ -38,6 +38,13 @@ locals {
       target_type = "cidr_block"
       target      = "0.0.0.0/0"
     }
+    notify = {
+      port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "0.0.0.0/0"
+    }
   }
 }
 
