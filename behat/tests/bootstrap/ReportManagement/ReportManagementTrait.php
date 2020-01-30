@@ -57,8 +57,13 @@ trait ReportManagementTrait
     public function aCaseManagerProposesToMakeTheFollowingChangesToTheReport(TableNode $table)
     {
         $reportId = self::$currentReportCache['reportId'];
-        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
-        $this->visitAdminPath("/admin/report/$reportId/manage");
+
+        // Only log in and reload the session if we're not already on the management page.
+        $currentUrl = $this->getSession()->getCurrentUrl();
+        if (strpos($currentUrl, "/admin/report/$reportId/manage") === false) {
+            $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
+            $this->visitAdminPath("/admin/report/$reportId/manage");
+        }
 
         foreach ($table as $inputs) {
 
