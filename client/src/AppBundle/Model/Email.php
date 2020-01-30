@@ -44,6 +44,7 @@ class Email
     private $attachments = [];
 
     private $template;
+
     private $parameters;
 
     /**

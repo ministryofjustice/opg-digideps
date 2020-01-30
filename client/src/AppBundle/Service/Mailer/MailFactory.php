@@ -430,6 +430,7 @@ class MailFactory
 
         $email
             ->setFromName($this->translate('ndrSubmissionConfirmation.fromName'))
+            ->setFromEmail($this->emailParams['from_email'])
             ->setToEmail($user->getEmail())
             ->setToName($user->getFirstname())
             ->setSubject($this->translate('ndrSubmissionConfirmation.subject'))
