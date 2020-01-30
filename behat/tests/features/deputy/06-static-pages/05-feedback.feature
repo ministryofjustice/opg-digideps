@@ -13,8 +13,7 @@ Feature: Generic feedback page
         When I fill in "feedback_comments" with "Test comment"
         And I press "Send feedback"
         Then the response should contain "Thank you for your feedback"
-        And the last email should have been sent to "digideps+noop@digital.justice.gov.uk"
-        And the last email sent should have used the general feedback email template
+        And the response status code should be 302
 
     @deputy
     Scenario: Extra details are included in the email
@@ -29,11 +28,4 @@ Feature: Generic feedback page
         And I fill in "feedback_satisfactionLevel_4" with "1"
         And I press "Send feedback"
         Then the response should contain "Thank you for your feedback"
-        And the parameters in the last email sent should include:
-            | parameter         | value                 |
-            | satisfactionLevel | 1                     |
-            | comments          | A longer comment      |
-            | name              | My name               |
-            | page              | Title of page         |
-            | phone             | 054863476384          |
-            | email             | myemail@emailhost.com |
+        And the response status code should be 302

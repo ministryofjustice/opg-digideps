@@ -59,6 +59,7 @@ locals {
     },
     "secrets": [
       { "name": "API_CLIENT_SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_api_client_secret.name}" },
+      { "name": "NOTIFY_API_KEY", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_notify_api_key.name}" },
       { "name": "SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_frontend_secret.name}" }
     ],
     "environment": [
@@ -79,7 +80,7 @@ locals {
       { "name": "MOCK_EMAILS", "value": "${local.account.mock_emails ? "true" : "false"}" },
       { "name": "SYMFONY_ENV", "value": "${local.account.symfony_env}" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
-      { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" }
+      { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" },
     ]
   }
 

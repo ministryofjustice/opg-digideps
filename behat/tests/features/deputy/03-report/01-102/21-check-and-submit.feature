@@ -126,11 +126,6 @@ Feature: Report submit
         When I click on "return-to-reports-page"
         Then the URL should match "/lay"
         And the response status code should be 200
-        And the parameters in the last email sent should include:
-            | parameter         | value                                                                                                                       |
-            | satisfactionLevel | 5                                                                                                                           |
-            | comments          | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. |
-        And the last email sent should have used the post-submission feedback email template
 
     @deputy
     Scenario: admin area check filters, submission and ZIP file content
