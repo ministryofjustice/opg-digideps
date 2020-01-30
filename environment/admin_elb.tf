@@ -37,7 +37,8 @@ resource "aws_lb_listener_rule" "admin_maintenance" {
   }
 
   condition {
-    field  = "path-pattern"
-    values = ["/dd-maintenance"]
+    path_pattern {
+      values = ["/dd-maintenance"]
+    }
   }
 }
