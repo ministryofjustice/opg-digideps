@@ -42,7 +42,7 @@
         |<size:50><color:#orange><&arrow-right></size>||<size:20>HTTP & HTTPS</size>|
         |<size:50><color:#purple><&arrow-right></size>||<size:20>Postgres</size>|
         |<size:50><color:#green><&arrow-right></size>||<size:20>Redis</size>|
-        |<size:50><color:#lime><&arrow-right></size>||<size:20>Mail:587</size>|
+        |<size:50><color:#lime><&arrow-right></size>||<size:20>Mail:587 & HTTPS</size>|
         |<size:50><color:#saddlebrown><&arrow-right></size>||<size:20>HTTP, HTTPS & 587</size>|
     end legend
 
