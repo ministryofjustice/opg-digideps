@@ -27,7 +27,7 @@
 
     <table class="govuk-table">
         <caption class="govuk-table__caption">
-            {{ (page ~ '.users.caption') | trans }}
+            {{ (page ~ '.users.caption') | trans }} ({{ organisation.users | length }} in total)
         </caption>
 
         <thead class="govuk-table__head">
@@ -77,7 +77,7 @@
 
     <table class="govuk-table">
         <caption class="govuk-table__caption">
-            {{ (page ~ '.clients.caption') | trans }}
+            {{ (page ~ '.clients.caption') | trans }} ({{ organisation.clients | length }} in total)
         </caption>
 
         <thead class="govuk-table__head">
