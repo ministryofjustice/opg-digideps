@@ -24,7 +24,7 @@ resource "aws_cloudwatch_event_target" "cleanup" {
   "containerOverrides": [
     {
       "name": "api_app",
-      "command": [ "sh", "cleanup.sh" ]
+      "command": [ "sh", "scripts/cleanup.sh" ]
     }
   ]
 }
