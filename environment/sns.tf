@@ -18,17 +18,3 @@ module "notify_slack" {
 
   tags = local.default_tags
 }
-
-resource "aws_sns_topic_subscription" "availability_sns_alert_slack" {
-  topic_arn = data.aws_sns_topic.availability-alert.arn
-  protocol  = "lambda"
-  endpoint  = module.notify_slack.notify_slack_lambda_function_arn
-}
-
-resource "aws_lambda_permission" "availability_sns_alert_slack" {
-  statement_id  = "AllowAvailabilityAlertExecutionFromSNS"
-  action        = "lambda:InvokeFunction"
-  function_name = module.notify_slack.notify_slack_lambda_function_arn
-  principal     = "sns.amazonaws.com"
-  source_arn    = data.aws_sns_topic.availability-alert.arn
-}
