@@ -121,6 +121,7 @@ module "notify_slack_availability" {
 
   sns_topic_name   = data.aws_sns_topic.availability-alert.name
   create_sns_topic = false
+  create           = ! (local.account.dynamic)
 
   lambda_function_name = "notify-slack-${local.environment}"
 
