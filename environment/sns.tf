@@ -12,7 +12,7 @@ module "notify_slack" {
   lambda_function_name = "notify-slack-${local.environment}"
 
   slack_webhook_url = data.aws_secretsmanager_secret_version.slack_webhook_url.secret_string
-  slack_channel     = local.account.is_production == 1 ? "opg-digideps-team" : "opg-digideps-devs"
+  slack_channel     = local.account.is_production == 1 ? "#opg-digideps-team" : "#opg-digideps-devs"
   slack_username    = "aws"
   slack_emoji       = ":warning:"
 
