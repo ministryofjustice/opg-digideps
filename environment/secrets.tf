@@ -29,11 +29,3 @@ data "aws_secretsmanager_secret" "admin_api_client_secret" {
 data "aws_secretsmanager_secret" "front_api_client_secret" {
   name = join("/", compact([local.account.secrets_prefix, "front-api-client-secret"]))
 }
-
-data "aws_secretsmanager_secret" "slack_webhook_url" {
-  name = join("/", compact([local.account.secrets_prefix, "slack-webhook-url"]))
-}
-
-data "aws_secretsmanager_secret_version" "slack_webhook_url" {
-  secret_id = data.aws_secretsmanager_secret.slack_webhook_url.id
-}
