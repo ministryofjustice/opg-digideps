@@ -5,6 +5,9 @@ parameters:
     api_client_secret: {{ getv "/api/client/secret" }}
     non_admin_host: {{ getv "/nonadmin/host" }}
     admin_host: {{ getv "/admin/host" }}
+    client_base_urls:
+        front: {{ getv "/nonadmin/host" }}
+        admin: {{ getv "/admin/host" }}
     env:  {{ getv "/role" }}
     session_expire_seconds: 3900
     session_popup_show_after: 3600
@@ -20,30 +23,18 @@ parameters:
         gds: {{ getv "/ga/gds" }}
     opg_docker_tag: {{ getv "/opg/docker/tag" }}
     mock_emails: {{ if eq (getv "/mock/emails") "true" }}true{{ else }}false{{ end }}
-    email_send:
+    email_params:
+        {{ if eq (getv "/email/send/internal") "true" }}
         from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
-        to_email: -
-    {{ if eq (getv "/email/send/internal") "true" }}
-    email_report_submit:
-        from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
-        to_email: deputyshipservice@publicguardian.gov.uk
-    email_feedback_send:
-        from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
-        to_email: digideps+feedback@digital.justice.gov.uk
-    email_update_send:
-        from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
-        to_email: laydeputysupport@publicguardian.gov.uk
-    {{ else }}
-    email_report_submit:
+        report_submit_to_address: deputyshipservice@publicguardian.gov.uk
+        feedback_send_to_address: digideps+feedback@digital.justice.gov.uk
+        update_send_to_address: laydeputysupport@publicguardian.gov.uk
+        {{ else }}
         from_email: noreply-opgdeputyservice@digital.justice.gov.uk
-        to_email: digideps+noop@digital.justice.gov.uk
-    email_feedback_send:
-        from_email: noreply-opgdeputyservice@digital.justice.gov.uk
-        to_email: digideps+noop@digital.justice.gov.uk
-    email_update_send:
-        from_email: noreply-opgdeputyservice@digital.justice.gov.uk
-        to_email: digideps+noop@digital.justice.gov.uk
-    {{ end }}
+        report_submit_to_address: digideps+noop@digital.justice.gov.uk
+        feedback_send_to_address: digideps+noop@digital.justice.gov.uk
+        update_send_to_address: digideps+noop@digital.justice.gov.uk
+        {{ end }}
   {{ if lsdir "/smtp" }}
     smtp_default_hostname: {{ getv "/smtp/default/hostname" "email-smtp.eu-west-1.amazonaws.com" }}
     smtp_default_port: {{ getv "/smtp/default/port" "587" }}

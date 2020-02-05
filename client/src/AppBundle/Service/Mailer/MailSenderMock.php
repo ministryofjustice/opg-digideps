@@ -2,8 +2,11 @@
 
 namespace AppBundle\Service\Mailer;
 
+use Alphagov\Notifications\Client as NotifyClient;
+use Alphagov\Notifications\Exception\NotifyException;
 use AppBundle\Model\Email;
 use Predis\ClientInterface as PredisClientInterface;
+use Psr\Log\LoggerInterface;
 use Swift_Attachment;
 use Swift_Mailer;
 use Swift_Message;
@@ -32,14 +35,33 @@ class MailSenderMock implements MailSenderInterface
     protected $validator;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @var NotifyClient
+     */
+    private $notifyClient;
+
+    /**
      * @param ValidatorInterface $validator
      * @param PredisClientInterface $redis
+     * @param LoggerInterface $logger
+     * @param NotifyClient $notifyClient
      */
-    public function __construct(ValidatorInterface $validator, PredisClientInterface $redis)
+    public function __construct(
+        ValidatorInterface $validator,
+        PredisClientInterface $redis,
+        LoggerInterface $logger,
+        NotifyClient $notifyClient
+    )
     {
         $this->mailers = [];
         $this->validator = $validator;
         $this->redis = $redis;
+        $this->logger = $logger;
+        $this->notifyClient = $notifyClient;
     }
 
     /**
@@ -72,14 +94,16 @@ class MailSenderMock implements MailSenderInterface
     /**
      * @param Email $email
      * @param array $groups
-     *
+     * @param string $transport
+     * @return array|bool
      * @throws \Exception
-     *
-     * @return type
-     *
      */
     public function send(Email $email, array $groups = ['text'], $transport = 'default')
     {
+        if ($email->getParameters()) {
+            return $this->sendNotify($email);
+        }
+
         //validate change password object
         $errors = $this->validator->validate($email, null, $groups);
 
@@ -110,6 +134,29 @@ class MailSenderMock implements MailSenderInterface
         $this->redis->set(self::REDIS_EMAIL_KEY, json_encode($emails));
 
         return ['result' => true];
+    }
+
+    /**
+     * @param Email $email
+     *
+     * @return bool
+     */
+    private function sendNotify(Email $email)
+    {
+        try {
+            $this->notifyClient->sendEmail(
+                $email->getToEmail(),
+                $email->getTemplate(),
+                $email->getParameters(),
+                '',
+                $email->getFromEmailNotifyID()
+            );
+        } catch (NotifyException $exception) {
+            $this->logger->error($exception->getMessage());
+            throw $exception;
+        }
+
+        return true;
     }
 
     /**

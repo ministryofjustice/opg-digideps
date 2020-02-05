@@ -24,7 +24,9 @@
         "predis/predis": "^1.1.1",
         "egulias/email-validator": "^2.0.0",
         "aws/aws-sdk-php": "^3.100.9",
-        "monolog/monolog": "^1.25.1"
+        "monolog/monolog": "^1.25.1",
+        "alphagov/notifications-php-client": "^2.1",
+        "php-http/guzzle6-adapter": "^2.0"
     },
     "scripts": {
         "post-install-cmd": [

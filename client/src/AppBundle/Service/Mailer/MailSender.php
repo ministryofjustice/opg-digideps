@@ -2,6 +2,8 @@
 
 namespace AppBundle\Service\Mailer;
 
+use Alphagov\Notifications\Client as NotifyClient;
+use Alphagov\Notifications\Exception\NotifyException;
 use AppBundle\Model\Email;
 use Psr\Log\LoggerInterface;
 use Swift_Attachment;
@@ -27,16 +29,27 @@ class MailSender implements MailSenderInterface
     private $logger;
 
     /**
+     * @var NotifyClient
+     */
+    private $notifyClient;
+
+    /**
      * MailSender constructor.
      *
      * @param ValidatorInterface $validator
-     * @param LoggerInterface    $logger
+     * @param LoggerInterface $logger
+     * @param NotifyClient $notifyClient
      */
-    public function __construct(ValidatorInterface $validator, LoggerInterface $logger)
+    public function __construct(
+        ValidatorInterface $validator,
+        LoggerInterface $logger,
+        NotifyClient $notifyClient
+    )
     {
         $this->mailers = [];
         $this->validator = $validator;
         $this->logger = $logger;
+        $this->notifyClient = $notifyClient;
     }
 
     /**
@@ -59,6 +72,10 @@ class MailSender implements MailSenderInterface
      */
     public function send(Email $email, array $groups = ['text'], $transport = 'default')
     {
+        if ($email->getParameters()) {
+            return $this->sendNotify($email);
+        }
+
         $errors = $this->validator->validate($email, null, $groups);
         if (count($errors) > 0) {
             $errorsString = (string) $errors;
@@ -90,6 +107,33 @@ class MailSender implements MailSenderInterface
 
 
         return ['result' => $result];
+    }
+
+    /**
+     * @param Email $email
+     * @param array $groups
+     *
+     * @throws \Exception
+     *
+     * @return type
+     *
+     */
+    private function sendNotify(Email $email)
+    {
+        try {
+            $this->notifyClient->sendEmail(
+                $email->getToEmail(),
+                $email->getTemplate(),
+                $email->getParameters(),
+                '',
+                $email->getFromEmailNotifyID()
+            );
+        } catch (NotifyException $exception) {
+            $this->logger->error($exception->getMessage());
+            return false;
+        }
+
+        return true;
     }
 
     /**

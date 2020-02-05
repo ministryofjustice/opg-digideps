@@ -12,6 +12,9 @@ parameters:
     # END
     non_admin_host: https://digideps.local
     admin_host: https://admin.digideps.local
+    client_base_urls:
+        front: https://digideps.local
+        admin: https://admin.digideps.local
     # for the following two settings, use a multiple of 60
     session_expire_seconds: 3900
     session_popup_show_after: 3600
@@ -26,6 +29,11 @@ parameters:
     log_level: warning
     log_path: /var/log/app/application.log
     # the following two paramters can be set to null on production
+    email_params:
+        from_email: noreply-opgdeputyservice@digideps.dsd.io
+        report_submit_to_address: digideps+noop@digital.justice.gov.uk
+        feedback_send_to_address: digideps+noop@digital.justice.gov.uk
+        update_send_to_address: digideps+noop@digital.justice.gov.uk
     email_send:
       from_email: no-reply@digideps.dsd.io
       # the following two params are only for avoid misbehaving after the config is applied but the branch is not yet released

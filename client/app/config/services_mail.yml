@@ -1,4 +1,8 @@
 services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
     mailer.transport.smtp.default:
         class: Swift_SmtpTransport
         arguments: [ "%smtp_default_hostname%", "%smtp_default_port%" ]
@@ -11,13 +15,24 @@ services:
         class: Swift_Mailer
         arguments: [ "@mailer.transport.smtp.default" ]
 
-    # mail sender accepting those the above-created swift mailer
-    mail_sender:
-        class: AppBundle\Service\Mailer\MailSender
-        arguments: [ "@validator", "@logger" ]
-        calls:
-            - [ addSwiftMailer, [ "default", "@mailer.swift_mailers.default"] ]
+    AppBundle\Service\Mailer\MailFactory:
+        arguments:
+            $emailParams: %email_params%
+            $baseURLs:
+                front: '%env(NONADMIN_HOST)%'
+                admin: '%env(ADMIN_HOST)%'
 
-    mail_factory:
-        class: AppBundle\Service\Mailer\MailFactory
-        arguments: [ "@service_container" ]
+    # mail sender accepting those the above-created swift mailer
+    AppBundle\Service\Mailer\MailSender:
+        calls:
+            - [ addSwiftMailer, [ 'default', '@mailer.swift_mailers.default'] ]
+
+    Alphagov\Notifications\Client:
+        class: Alphagov\Notifications\Client
+        arguments:
+            $config:
+                httpClient: '@Http\Adapter\Guzzle6\Client'
+                apiKey: '%env(NOTIFY_API_KEY)%'
+
+    Http\Adapter\Guzzle6\Client:
+        class: Http\Adapter\Guzzle6\Client

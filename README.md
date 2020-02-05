@@ -73,6 +73,7 @@ _See [deployment documentation](docs/DEPLOYMENT.md)_
 - Behat 3
 - PHPUnit 8
 - [GOV.UK Design System](https://design-system.service.gov.uk/)
+- [GOV.UK Notify](https://notifications.service.gov.uk/)
 
 ## License
 

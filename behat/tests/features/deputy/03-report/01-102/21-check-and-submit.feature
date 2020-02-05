@@ -126,8 +126,6 @@ Feature: Report submit
         When I click on "return-to-reports-page"
         Then the URL should match "/lay"
         And the response status code should be 200
-        And the last email should contain "Very satisfied"
-        And the last email should contain "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
 
     @deputy
     Scenario: admin area check filters, submission and ZIP file content

@@ -67,8 +67,8 @@ class ReportSubmissionServiceTest extends TestCase
 
         $mockContainer->shouldReceive('get')->with('file_uploader')->andReturn($this->mockFileUploader);
         $mockContainer->shouldReceive('get')->with('rest_client')->andReturn($this->mockRestClient);
-        $mockContainer->shouldReceive('get')->with('mail_sender')->andReturn($this->mockMailSender);
-        $mockContainer->shouldReceive('get')->with('mail_factory')->andReturn($this->mockMailFactory);
+        $mockContainer->shouldReceive('get')->with('AppBundle\Service\Mailer\MailSender')->andReturn($this->mockMailSender);
+        $mockContainer->shouldReceive('get')->with('AppBundle\Service\Mailer\MailFactory')->andReturn($this->mockMailFactory);
         $mockContainer->shouldReceive('get')->with('templating')->andReturn($this->mockTemplatingEngine);
         $mockContainer->shouldReceive('get')->with('wkhtmltopdf')->andReturn($this->mockPdfGenerator);
         $mockContainer->shouldReceive('get')->with('logger')->andReturn($this->mockLogger);

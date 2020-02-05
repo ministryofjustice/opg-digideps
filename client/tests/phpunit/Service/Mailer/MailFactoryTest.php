@@ -2,9 +2,16 @@
 
 namespace AppBundle\Service\Mailer;
 
+use AppBundle\Entity\Client;
+use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
+use AppBundle\Model\FeedbackReport;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 
 class MailFactoryTest extends TestCase
 {
@@ -13,95 +20,276 @@ class MailFactoryTest extends TestCase
      */
     private $object;
 
+    /**
+     * @var User
+     */
+    private $layDeputy;
+
+    /**
+     * @var array
+     */
+    private $appBaseURLs;
+
+    /**
+     * @var array
+     */
+    private $emailSendParams;
+
+    /**
+     * @var ObjectProphecy&Translator
+     */
+    private $translator;
+
+    /**
+     * @var ObjectProphecy&Router
+     */
+    private $router;
+
+    /**
+     * @var ObjectProphecy&TwigEngine
+     */
+    private $templating;
+
+    /**
+     * @var Client
+     */
+    private $client;
+
+    /**
+     * @var Report
+     */
+    private $submittedReport;
+
+    /**
+     * @var Report
+     */
+    private $newReport;
+
     public function setUp(): void
     {
-        $this->router = m::mock('Symfony\Component\Routing\Router');
-        $this->translator = m::mock('Symfony\Component\Translation\DataCollectorTranslator');
-        $this->templating = m::mock('Symfony\Bundle\TwigBundle\TwigEngine')->makePartial();
-        $this->translator->shouldReceive('trans')->andReturnUsing(function ($input) {
-            return $input . ' translated';
-        });
+        $this->layDeputy = $this->generateUser();
 
-        $this->container = m::mock('Symfony\Component\DependencyInjection\Container');
-        $this->container->shouldReceive('get')->with('translator')->andReturn($this->translator);
-        $this->container->shouldReceive('get')->with('templating')->andReturn($this->templating);
-        $this->container->shouldReceive('get')->with('router')->andReturn($this->router);
-        $this->container->shouldReceive('getParameter')->with('non_admin_host')->andReturn('http://deputy/');
-        $this->container->shouldReceive('getParameter')->with('admin_host')->andReturn('http://admin/');
-        $this->container->shouldReceive('getParameter')->with('email_send')->andReturn([
-            'from_email' => 'from@email',
-        ]);
-        $this->container->shouldReceive('getParameter')->with('email_report_submit')->andReturn([
-            'from_email' => 'ers_from@email',
-            'to_email' => 'ers_to@email',
-        ]);
+        $this->client = (new Client())
+            ->setFirstname('Joanne')
+            ->setLastname('Bloggs')
+            ->setCaseNumber('12345678');
 
-        $this->user = m::mock('AppBundle\Entity\User', [
-            'isDeputy' => true,
-            'getFullName' => 'FN',
-            'getRegistrationToken' => 'RT',
-            'getEmail' => 'user@email',
-        ])->makePartial();
+        $this->submittedReport = (new Report())
+            ->setClient($this->client);
 
-        $this->paUser = m::mock('AppBundle\Entity\User', [
-            'isDeputyPa' => true,
-            'isDeputyOrg' => true,
-            'getFullName' => 'FN',
-            'getRegistrationToken' => 'RT',
-            'getEmail' => 'pauser@email',
-        ])->makePartial();
+        $this->newReport = new Report();
 
-        $this->object = new MailFactory($this->container);
+        $this->appBaseURLs = [
+            'front' => 'https://front.base.url',
+            'admin' => 'https://admin.base.url'
+        ];
+
+        $this->emailSendParams = [
+            'from_email' => 'digideps+from@digital.justice.gov.uk',
+            'report_submit_to_address' => 'digideps+noop@digital.justice.gov.uk',
+            'feedback_send_to_address' => 'digideps+noop@digital.justice.gov.uk',
+            'update_send_to_address' => 'digideps+noop@digital.justice.gov.uk'
+        ];
+
+        $this->translator = self::prophesize('Symfony\Bundle\FrameworkBundle\Translation\Translator');
+        $this->router = self::prophesize('Symfony\Bundle\FrameworkBundle\Routing\Router');
+        $this->templating = self::prophesize('Symfony\Bundle\TwigBundle\TwigEngine');
     }
 
-    public function testcreateActivationEmail()
+    /**
+     * @test
+     */
+    public function createActivationEmail()
     {
-        $this->router->shouldReceive('generate')->with('homepage', [])->andReturn('homepage');
-        $this->router->shouldReceive('generate')->with('user_activate', ['action' => 'activate', 'token' => 'RT'])->andReturn('ua');
+        $this->router->generate('homepage', [])->shouldBeCalled()->willReturn('/homepage');
+        $this->router->generate('user_activate', [
+            'action' => 'activate',
+            'token'  => 'regToken'
+        ])->shouldBeCalled()->willReturn('/user-activate/regToken');
 
-        $this->templating->shouldReceive('render')->with(
-            'AppBundle:Email:user-activate.html.twig',
-            m::any()
-        )->andReturn('template.html');
+        $this->translator->trans('activation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+        $this->translator->trans('activation.subject', [], 'email')->shouldBeCalled()->willReturn('Activation Subject');
 
-        $this->templating->shouldReceive('render')->with(
-            'AppBundle:Email:user-activate.text.twig',
-            m::any()
-        )->andReturn('template.text');
+        $expectedViewParams = [
+            'name'             => 'Joe Bloggs',
+            'domain'           => 'https://front.base.url/homepage',
+            'link'             => 'https://front.base.url/user-activate/regToken',
+            'tokenExpireHours' => 48,
+            'homepageUrl'      => 'https://front.base.url/homepage',
+            'recipientRole'    => 'default'
+        ];
 
-        $email = $this->object->createActivationEmail($this->user);
+        $this->templating->render('AppBundle:Email:user-activate.html.twig', $expectedViewParams)->shouldBeCalled()->willReturn('<html>Rendered body</html>');
+        $this->templating->render('AppBundle:Email:user-activate.text.twig', $expectedViewParams)->shouldBeCalled()->willReturn('Rendered body');
 
-        $this->assertEquals('template.html', $email->getBodyHtml());
-        $this->assertEquals('template.text', $email->getBodyText());
-        $this->assertEquals('user@email', $email->getToEmail());
-        $this->assertEquals('from@email', $email->getFromEmail());
+        $email = ($this->generateSUT())->createActivationEmail($this->layDeputy);
+
+        self::assertEquals('digideps+from@digital.justice.gov.uk', $email->getFromEmail());
+        self::assertEquals('OPG', $email->getFromName());
+        self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
+        self::assertEquals('Joe Bloggs', $email->getToName());
+        self::assertEquals('Activation Subject', $email->getSubject());
+        self::assertStringContainsString('<html>Rendered body</html>', $email->getBodyHtml());
+        self::assertStringContainsString('Rendered body', $email->getBodyText());
     }
 
-    public function testcreateOrgReportSubmissionConfirmationEmail()
+    /**
+     * @test
+     */
+    public function createOrgReportSubmissionConfirmationEmail()
     {
-        $this->router->shouldReceive('generate')->withAnyArgs()->andReturn('https://mock.com');
+        $this->router->generate('homepage', [])->shouldBeCalled()->willReturn('/homepage');
 
-        $this->templating->shouldReceive('render')->withAnyArgs()->andReturn('[TEMPLATE]');
+        $this->translator->trans('reportSubmissionConfirmation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+        $this->translator->trans('reportSubmissionConfirmation.subject', ['%clientFullname%' => 'Joanne Bloggs'], 'email')->shouldBeCalled()->willReturn('Submission Confirmation Subject');
 
-        $client = m::mock('AppBundle\Entity\Client', [
-            'getCaseNumber' => '1234567t',
-            'getFullname' => 'FN'
-        ]);
-        $report = m::mock('AppBundle\Entity\Report\Report', [
-            'getClient' => $client,
-            'getEndDate' => new \DateTime('2016-12-31'),
-            'getSubmitDate' => new \DateTime('2017-01-01'),
-        ]);
-        $newReport = m::mock('AppBundle\Entity\Report\Report', [
-            'getClient' => $client,
-            'getType' => '102',
-            'getEndDate' => new \DateTime('2017-12-31'),
-            'getSubmitDate' => new \DateTime('2018-01-01'),
-        ]);
-        $email = $this->object->createOrgReportSubmissionConfirmationEmail($this->paUser, $report, $newReport);
+        $expectedViewParams = [
+            'submittedReport' => $this->submittedReport,
+            'newReport'       => $this->newReport,
+            'fullDeputyName'  => 'Joe Bloggs',
+            'fullClientName'  => 'Joanne Bloggs',
+            'caseNumber'      => '12345678',
+            'homepageUrl'     => 'https://front.base.url/homepage',
+            'recipientRole'   => 'default'
+        ];
 
-        $this->assertEquals('[TEMPLATE]', $email->getBodyHtml());
-        $this->assertEquals('pauser@email', $email->getToEmail());
-        $this->assertEmpty($email->getAttachments());
+        $this->templating->render('AppBundle:Email:report-submission-confirm.html.twig', $expectedViewParams)->shouldBeCalled()->willReturn('<html>Rendered body</html>');
+        $this->templating->render('AppBundle:Email:report-submission-confirm.text.twig', $expectedViewParams)->shouldBeCalled()->willReturn('Rendered body');
+
+        $email = ($this->generateSUT())->createOrgReportSubmissionConfirmationEmail($this->layDeputy, $this->submittedReport, $this->newReport);
+
+        self::assertEquals('digideps+from@digital.justice.gov.uk', $email->getFromEmail());
+        self::assertEquals('OPG', $email->getFromName());
+        self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
+        self::assertEquals('Joe', $email->getToName());
+        self::assertEquals('Submission Confirmation Subject', $email->getSubject());
+        self::assertStringContainsString('<html>Rendered body</html>', $email->getBodyHtml());
+        self::assertStringContainsString('Rendered body', $email->getBodyText());
+    }
+
+    /**
+     * @todo rename once we drop Notify from the end of the function
+     * @test
+     */
+    public function createResetPasswordEmailNotify()
+    {
+        $this->router->generate('user_activate', [
+            'action' => 'password-reset',
+            'token'  => 'regToken'
+        ])->shouldBeCalled()->willReturn('/reset-password/regToken');
+
+        $this->translator->trans('resetPassword.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+        $this->translator->trans('resetPassword.subject', [], 'email')->shouldBeCalled()->willReturn('Reset Password Subject');
+
+        $email = ($this->generateSUT())->createResetPasswordEmailNotify($this->layDeputy);
+
+        self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
+        self::assertEquals('OPG', $email->getFromName());
+        self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
+        self::assertEquals('Joe Bloggs', $email->getToName());
+        self::assertEquals('Reset Password Subject', $email->getSubject());
+        self::assertEquals(MailFactory::RESET_PASSWORD_TEMPLATE_ID, $email->getTemplate());
+
+        $expectedTemplateParams = ['resetLink' => 'https://front.base.url/reset-password/regToken'];
+        self::assertEquals($expectedTemplateParams, $email->getParameters());
+    }
+
+    /**
+     * @test
+     */
+    public function createGeneralFeedbackEmail()
+    {
+        $this->translator->trans('feedbackForm.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+        $this->translator->trans('feedbackForm.toName', [], 'email')->shouldBeCalled()->willReturn('To Name');
+        $this->translator->trans('feedbackForm.subject', [], 'email')->shouldBeCalled()->willReturn('A subject');
+
+        $response = [
+                'specificPage' => 'A specific page',
+                'page' => 'A page',
+                'comments' => 'It was great!',
+                'name' => 'Joe Bloggs',
+                'email' => 'joe.bloggs@xyz.com',
+                'phone' => '07535999222',
+                'satisfactionLevel' => '4',
+        ];
+
+        $email = ($this->generateSUT())->createGeneralFeedbackEmail($response);
+
+        self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
+        self::assertEquals('OPG', $email->getFromName());
+        self::assertEquals('digideps+noop@digital.justice.gov.uk', $email->getToEmail());
+        self::assertEquals('To Name', $email->getToName());
+        self::assertEquals(MailFactory::GENERAL_FEEDBACK_TEMPLATE_ID, $email->getTemplate());
+
+        $expectedTemplateParams = [
+            'comments' => 'It was great!',
+            'satisfactionLevel' => '4',
+            'name' => 'Joe Bloggs',
+            'phone' => '07535999222',
+            'page' => 'A page',
+            'email' => 'joe.bloggs@xyz.com',
+            'subject' => 'A subject'
+        ];
+
+        self::assertEquals($expectedTemplateParams, $email->getParameters());
+    }
+
+    /**
+     * @test
+     */
+    public function createPostSubmissionFeedbackEmail()
+    {
+        $this->translator->trans('feedbackForm.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+        $this->translator->trans('feedbackForm.toName', [], 'email')->shouldBeCalled()->willReturn('To Name');
+        $this->translator->trans('feedbackForm.subject', [], 'email')->shouldBeCalled()->willReturn('A subject');
+
+        $response = (new FeedbackReport())
+            ->setComments('Amazing service!')
+            ->setSatisfactionLevel('4');
+
+        $user = $this->generateUser();
+
+        $email = ($this->generateSUT())->createPostSubmissionFeedbackEmail($response, $this->generateUser());
+
+        self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
+        self::assertEquals('OPG', $email->getFromName());
+        self::assertEquals('digideps+noop@digital.justice.gov.uk', $email->getToEmail());
+        self::assertEquals('To Name', $email->getToName());
+        self::assertEquals(MailFactory::POST_SUBMISSION_FEEDBACK_TEMPLATE_ID, $email->getTemplate());
+
+        $expectedTemplateParams = [
+            'comments' => 'Amazing service!',
+            'satisfactionLevel' => '4',
+            'name' => 'Joe Bloggs',
+            'phone' => '01211234567',
+            'email' => 'user@digital.justice.gov.uk',
+            'subject' => 'A subject',
+            'userRole' => 'Lay Deputy'
+        ];
+
+        self::assertEquals($expectedTemplateParams, $email->getParameters());
+    }
+
+    private function generateSUT()
+    {
+        return new MailFactory(
+            $this->translator->reveal(),
+            $this->router->reveal(),
+            $this->templating->reveal(),
+            $this->emailSendParams,
+            $this->appBaseURLs
+        );
+    }
+
+    // Using helper function to make user available in dataProvider
+    private function generateUser() : User
+    {
+        return (new User())
+            ->setRegistrationToken('regToken')
+            ->setEmail('user@digital.justice.gov.uk')
+            ->setFirstname('Joe')
+            ->setLastname('Bloggs')
+            ->setPhoneMain('01211234567')
+            ->setRoleName(User::ROLE_LAY_DEPUTY);
     }
 }

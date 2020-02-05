@@ -29,3 +29,7 @@ data "aws_secretsmanager_secret" "admin_api_client_secret" {
 data "aws_secretsmanager_secret" "front_api_client_secret" {
   name = join("/", compact([local.account.secrets_prefix, "front-api-client-secret"]))
 }
+
+data "aws_secretsmanager_secret" "front_notify_api_key" {
+  name = join("/", compact([local.account.secrets_prefix, "front-notify-api-key"]))
+}
