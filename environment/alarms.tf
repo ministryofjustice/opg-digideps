@@ -110,25 +110,3 @@ resource "aws_cloudwatch_metric_alarm" "availability-admin" {
     HealthCheckId = aws_route53_health_check.availability-admin.id
   }
 }
-
-module "notify_slack_availability" {
-  source  = "terraform-aws-modules/notify-slack/aws"
-  version = "~> 2.0"
-
-  providers = {
-    aws = aws.us-east-1
-  }
-
-  sns_topic_name   = data.aws_sns_topic.availability-alert.name
-  create_sns_topic = false
-  create           = ! (local.account.ephemeral)
-
-  lambda_function_name = "notify-slack-${local.environment}"
-
-  slack_webhook_url = data.aws_secretsmanager_secret_version.slack_webhook_url.secret_string
-  slack_channel     = local.account.is_production == 1 ? "#opg-digideps-team" : "#opg-digideps-devs"
-  slack_username    = "aws"
-  slack_emoji       = ":warning:"
-
-  tags = local.default_tags
-}
