@@ -79,10 +79,23 @@
                 </tr>
             {% endfor %}
         </table>
-    {% elseif organisationId is defined %}
-        <p class="text push--top">{{ (page ~ '.linkToOrganisation') | trans({
-                '%organisationLinkUrl%': path('admin_organisation_view', { id: organisationId }),
-            }) | raw }}</p>
+    {% elseif user.organisations is not empty %}
+        <table class="push--bottom">
+            <thead>
+                <tr>
+                    <th scope="col">{{ 'organisations' | trans({}, 'common') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for organisation in user.organisations %}
+                    <tr>
+                        <td>
+                            <a class="govuk-link" href="{{ path('admin_organisation_view', { id: organisation.id }) }}">{{ organisation.name }}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     {% endif %}
 
 

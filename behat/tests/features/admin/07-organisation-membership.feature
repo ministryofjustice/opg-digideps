@@ -62,17 +62,20 @@ Feature: Organisation membership
     Then I should see "User is already in this organisation"
 
   @admin
-  Scenario: Public domains: Admin cannot add users from different domains
+  Scenario: Public domains: Admin can add users from different domains
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I create a new "NDR-disabled" "prof named" user "Rana" "Kossak" with email "rana.kossak@example.com" and postcode "HA4"
     And I am on admin page "/admin/organisations"
     And I follow "john.smith@abc-solicitors.example.com"
     And I follow "Add someone to this organisation"
-    When I fill in "organisation_add_user_email" with "jo.brown@example.com"
+    When I fill in "organisation_add_user_email" with "rana.kossak@example.com"
     And I press "Find user"
-    Then I should see "User does not have an email address from this organisation"
+    When I press "Add user to organisation"
+    Then the URL should match "admin/organisations/\d+"
+    And I should see "Rana Kossak"
 
   @admin
-  Scenario: Public domains: Admin can only add initial user to a public domain organisation
+  Scenario: Public domains: Admin can add initial user to a public domain organisation
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I am on admin page "/admin/organisations"
     And I follow "jo.brown@example.com"
@@ -87,14 +90,16 @@ Feature: Organisation membership
     And I should see "PROF Deputy Example"
 
   @admin
-  Scenario: Public domains: Admin cannot add additional users to a public domain organisation
+  Scenario: Public domains: Admin can add additional users to a public domain organisation
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I am on admin page "/admin/organisations"
     And I follow "jo.brown@example.com"
     And I follow "Add someone to this organisation"
     When I fill in "organisation_add_user_email" with "bobby.blue@example.com"
     And I press "Find user"
-    Then I should see "You cannot add a user to an organisation with a public domain"
+    When I press "Add user to organisation"
+    Then the URL should match "admin/organisations/\d+"
+    And I should see "bobby.blue@example.com"
 
   @admin
   Scenario: Admin can remove users from an organisation

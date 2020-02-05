@@ -704,6 +704,19 @@ class User implements UserInterface
     }
 
     /**
+     * @return array
+     */
+    public function getOrganisationIds(): array
+    {
+        $organisationIds = [];
+        foreach ($this->getOrganisations() as $organisation) {
+            $organisationIds[] = $organisation->getId();
+        }
+
+        return $organisationIds;
+    }
+
+    /**
      * @param Organisation $organisation
      * @return User
      */

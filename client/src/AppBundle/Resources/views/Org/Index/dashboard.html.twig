@@ -69,6 +69,9 @@
         <thead>
             <tr>
                 <th scope="col">{{ 'client' | trans({}, 'common') }}</th>
+                {% if app.user.organisations | length > 1 %}
+                    <th scope="col">{{ 'organisation' | trans({}, 'common') }}</th>
+                {% endif %}
                 <th scope="col">{{ 'courtOrderNo' | trans({}, 'common') }}</th>
                 <th scope="col">{{ 'reportDueDate' | trans({}, 'common') }}</th>
                 <th scope="col" class="numeric">{{ 'reportStatus' | trans({}, 'common') }}</th>
@@ -92,6 +95,11 @@
                 <td>
                     <a href="{{ linkToReportOverviewPage }}" class="behat-link-pa-report-open behat-link-pa-report-{{ report.getPeriod() | behat_namify }}-open">{{ report.client.lastName | title | e }}, {{ report.client.firstName | title | e }}</a>
                 </td>
+                {% if app.user.organisations | length > 1 %}
+                    <td>
+                        {{ report.client.organisation.name }}
+                    </td>
+                {% endif %}
                 <td>
                     {{ report.client.caseNumber|upper }}
                 </td>

@@ -193,11 +193,7 @@ class IndexController extends AbstractController
             'deputyBaseUrl' => $this->container->getParameter('non_admin_host'),
         ];
 
-        if ($user->isDeputyOrg()) {
-            if ($user->getOrganisations() && $user->getOrganisations()[0] instanceof EntityDir\Organisation) {
-                $view['organisationId'] = $user->getOrganisations()[0]->getId();
-            }
-        } else {
+        if ($user->isLayDeputy()) {
             $view['clientsCount'] = count($user->getClients());
         }
 

@@ -13,12 +13,9 @@ use DigidepsBehat\SiteNavigationTrait;
 
 class ReportManagementFeatureContext extends BaseFeatureContext
 {
-    use AuthenticationTrait;
     use CourtOrderTrait;
-    use FormTrait;
     use LinksTrait;
     use RegionTrait;
     use ReportManagementTrait;
     use ReportTrait;
-    use SiteNavigationTrait;
 }
