@@ -93,7 +93,7 @@ class ClamFileScannerTest extends TestCase
 
         $this
             ->ensureServiceIsForeverUnavailable()
-            ->ensureCriticalWillBeLogged()
+            ->ensureErrorWillBeLogged()
             ->invokeTest('file.pdf');
     }
 
@@ -186,12 +186,12 @@ class ClamFileScannerTest extends TestCase
     /**
      * @return ClamFileScannerTest
      */
-    private function ensureCriticalWillBeLogged(): ClamFileScannerTest
+    private function ensureErrorWillBeLogged(): ClamFileScannerTest
     {
         $this
             ->logger
             ->expects($this->once())
-            ->method('critical')
+            ->method('error')
             ->with('Scanner service down: unavailable');
 
         return $this;
