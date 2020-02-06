@@ -165,6 +165,13 @@ class CasRec
     private $updatedAt;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="source", type="string", nullable=false)
+     */
+    private $source;
+
+    /**
      * Filled from cron
      *
      * @var array
@@ -365,5 +372,23 @@ class CasRec
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSource()
+    {
+        return $this->source;
+    }
+
+    /**
+     * @param mixed $source
+     * @return CasRec
+     */
+    public function setSource($source)
+    {
+        $this->source = $source;
+        return $this;
     }
 }
