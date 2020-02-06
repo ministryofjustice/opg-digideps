@@ -4,6 +4,7 @@ services:
         autoconfigure: true
 
     mailer.transport.smtp.default:
+        autowire: false
         class: Swift_SmtpTransport
         arguments: [ "%smtp_default_hostname%", "%smtp_default_port%" ]
         calls:
