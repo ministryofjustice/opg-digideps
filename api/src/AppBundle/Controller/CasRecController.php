@@ -3,7 +3,10 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\CasRec;
 use AppBundle\Service\CsvUploader;
+use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -24,6 +27,32 @@ class CasRecController extends RestController
         $em->getConnection()->query('TRUNCATE TABLE casrec');
 
         return ['truncated'=>true];
+    }
+
+    /**
+     * @Route("/delete-by-source/{source}", methods={"DELETE"})
+     * @Security("has_role('ROLE_ADMIN')")
+     *
+     * @param $source
+     * @return array|JsonResponse
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function deleteBySource($source)
+    {
+        if (!in_array($source, CasRec::validSources())) {
+            return new JsonResponse('Invalid source', 400);
+        }
+
+        /** @var QueryBuilder $qb */
+        $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
+        $qb
+            ->delete('AppBundle\Entity\CasRec', 'cr')
+            ->where('cr.source = :source')
+            ->setParameter('source', $source);
+
+        $result = $qb->getQuery()->getOneOrNullResult();
+
+        return ['deletion-count' => $result === null ? 0 : $result];
     }
 
     /**

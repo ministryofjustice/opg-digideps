@@ -17,6 +17,9 @@ class CasRec
     const REALM_PROF = 'REALM_PROF';
     const REALM_LAY = 'REALM_LAY';
 
+    const CASREC_SOURCE = 'casrec';
+    const SIRIUS_SOURCE = 'sirius';
+
     /**
      * Holds the mapping rules to define the report type based on the CSV file (CASREC)
      * Used by both PA and Lay
@@ -167,7 +170,7 @@ class CasRec
     /**
      * @var string
      *
-     * @ORM\Column(name="source", type="string", nullable=false)
+     * @ORM\Column(name="source", type="string", nullable=true, options={"default" : "casrec"})
      */
     private $source;
 
@@ -197,6 +200,7 @@ class CasRec
         $this->deputyPostCode = self::normaliseSurname($row['Dep Postcode']);
         $this->typeOfReport = self::normaliseCorrefAndTypeOfRep($row['Typeofrep']);
         $this->corref = self::normaliseCorrefAndTypeOfRep($row['Corref']);
+        $this->source = self::CASREC_SOURCE;
 
         $this->otherColumns = serialize($row);
         $this->createdAt = new \DateTime();
@@ -390,5 +394,16 @@ class CasRec
     {
         $this->source = $source;
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public static function validSources()
+    {
+        return [
+            self::CASREC_SOURCE,
+            self::SIRIUS_SOURCE
+        ];
     }
 }
