@@ -7,3 +7,39 @@ courtOrders:
     label: Report status
   submit:
     label: Create
+
+completeSections:
+    decisions:
+        label: Decisions
+    contacts:
+        label: Contacts
+    visitsCare:
+        label: Visits & Care
+    actions:
+        label: Actions
+    otherInfo:
+        label: Other Info
+    documents:
+        label: Documents
+    expenses:
+        label: Expenses
+    gifts:
+        label: Gifts
+    bankAccounts:
+        label: Bank Accounts
+    moneyIn:
+        label: Money In
+    moneyOut:
+        label: Money Out
+    moneyInShort:
+        label: Money In Short
+    moneyOutShort:
+        label: Money Out Short
+    assets:
+        label: Assets
+    debts:
+        label: Debts
+    lifestyle:
+        label: Lifestyle
+    submit:
+        label: Submit

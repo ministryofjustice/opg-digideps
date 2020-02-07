@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Admin;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
+use AppBundle\Form\Admin\Fixture\CompleteSectionsFixtureType;
 use AppBundle\Form\Admin\Fixture\CourtOrderFixtureType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,6 +53,45 @@ class FixtureController extends AbstractController
             ]));
 
             $this->addFlash('notice', "Created deputy with email: $deputyEmail");
+        }
+
+        return ['form' => $form->createView()];
+    }
+
+    /**
+     * @Route("/complete-sections/{reportId}/form", requirements={"id":"\d+"})
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Template("AppBundle:Admin/Fixtures:completeSections.html.twig")
+     * @param Request $request
+     * @param $reportId
+     * @param KernelInterface $kernel
+     * @return array
+     */
+    public function completeReportSectionsFormAction(Request $request, $reportId, KernelInterface $kernel)
+    {
+        if ($kernel->getEnvironment() === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
+        $form = $this->createForm(CompleteSectionsFixtureType::class);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $submitted = $form->getData();
+            $sectionNames = [];
+
+            foreach($submitted as $sectionName => $shouldComplete) {
+                if ($shouldComplete) {
+                    $sectionNames[] = $sectionName;
+                }
+            }
+
+            $sections = implode(',', $sectionNames);
+
+            $this
+                ->getRestClient()
+                ->put("v2/fixture/complete-sections/$reportId?sections=$sections", []);
         }
 
         return ['form' => $form->createView()];

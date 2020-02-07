@@ -1,0 +1,29 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin-fixtures" %}
+
+{% block htmlTitle %}Data Fixtures - Complete Report Sections{% endblock %}
+{% block pageTitle %}Complete Report Sections{% endblock %}
+{% block supportTitleTop %}Complete Report Sections{% endblock %}
+
+{% block pageContent %}
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+    {{ form_checkbox(form.decisions, 'completeSections.decisions') }}
+    {{ form_checkbox(form.contacts, 'completeSections.contacts') }}
+    {{ form_checkbox(form.visitsCare, 'completeSections.visitsCare') }}
+    {{ form_checkbox(form.actions, 'completeSections.actions') }}
+    {{ form_checkbox(form.otherInfo, 'completeSections.otherInfo') }}
+    {{ form_checkbox(form.documents, 'completeSections.documents') }}
+    {{ form_checkbox(form.expenses, 'completeSections.expenses') }}
+    {{ form_checkbox(form.gifts, 'completeSections.gifts') }}
+    {{ form_checkbox(form.bankAccounts, 'completeSections.bankAccounts') }}
+    {{ form_checkbox(form.moneyIn, 'completeSections.moneyIn') }}
+    {{ form_checkbox(form.moneyOut, 'completeSections.moneyOut') }}
+    {{ form_checkbox(form.moneyInShort, 'completeSections.moneyInShort') }}
+    {{ form_checkbox(form.moneyOutShort, 'completeSections.moneyOutShort') }}
+    {{ form_checkbox(form.assets, 'completeSections.assets') }}
+    {{ form_checkbox(form.debts, 'completeSections.debts') }}
+    {{ form_checkbox(form.lifestyle, 'completeSections.lifestyle') }}
+    {{ form_submit(form.submit, 'completeSections.submit') }}
+    {{ form_end(form) }}
+{% endblock %}
