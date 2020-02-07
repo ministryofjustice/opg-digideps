@@ -40,7 +40,7 @@ class CasRecController extends RestController
     public function deleteBySource($source)
     {
         if (!in_array($source, CasRec::validSources())) {
-            return new JsonResponse('Invalid source', 400);
+            return new JsonResponse(['Invalid source'], 400);
         }
 
         /** @var QueryBuilder $qb */
