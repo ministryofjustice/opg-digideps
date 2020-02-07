@@ -30,7 +30,7 @@ parameters:
         feedback_send_to_address: digideps+feedback@digital.justice.gov.uk
         update_send_to_address: laydeputysupport@publicguardian.gov.uk
         {{ else }}
-        from_email: noreply-opgdeputyservice@digital.justice.gov.uk
+        from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
         report_submit_to_address: digideps+noop@digital.justice.gov.uk
         feedback_send_to_address: digideps+noop@digital.justice.gov.uk
         update_send_to_address: digideps+noop@digital.justice.gov.uk

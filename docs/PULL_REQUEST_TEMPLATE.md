@@ -1,7 +1,7 @@
 ## Purpose
 _Briefly describe the purpose of the change, and/or link to the JIRA ticket for context_
 
-Fixes [DDPB-####](https://opgtransform.atlassian.net/browse/DDPB-####)
+Fixes DDPB-####
 
 ## Approach
 _Explain how your code addresses the purpose of the change_
@@ -11,9 +11,9 @@ _Any tips and tricks, blog posts or tools which helped you. Plus anything notabl
 
 ## Checklist
 - [ ] I have performed a self-review of my own code
-- [ ] I have updated documentation (Confluence/GitHub wiki/tech debt doc) where relevant
-- [ ] I have added tests to prove my work, and they follow our [best practices](https://github.com/ministryofjustice/opg-digi-deps-client/wiki/Testing-best-practices)
-- [ ] The product team have tested these changes
+- [ ] I have updated documentation (Confluence/ADR/tech debt doc) where relevant
+- [ ] I have added tests to prove my work
+- [ ] The product team have approved these changes
 
 ### Frontend
 - [ ] I have run an in-browser accessibility test (e.g. WAVE, Lighthouse)
