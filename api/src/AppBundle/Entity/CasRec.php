@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="casrec", indexes={@ORM\Index(name="updated_at_idx", columns={"updated_at"})})
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\CasRecRepository")
  */
 class CasRec
 {
@@ -200,7 +200,7 @@ class CasRec
         $this->deputyPostCode = self::normaliseSurname($row['Dep Postcode']);
         $this->typeOfReport = self::normaliseCorrefAndTypeOfRep($row['Typeofrep']);
         $this->corref = self::normaliseCorrefAndTypeOfRep($row['Corref']);
-        $this->source = self::CASREC_SOURCE;
+        $this->source = isset($row['source']) ? strtolower($row['source']) : self::CASREC_SOURCE;
 
         $this->otherColumns = serialize($row);
         $this->createdAt = new \DateTime();

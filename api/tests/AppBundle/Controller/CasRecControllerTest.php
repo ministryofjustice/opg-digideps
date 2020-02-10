@@ -54,24 +54,6 @@ class CasRecControllerTest extends AbstractTestController
         ]);
     }
 
-    public function testTruncate()
-    {
-        // just to check it gets truncated
-        $casRec = $this->buildAndPersistCasRecEntity('CaseNumber');
-        $this->fixtures()->flush($casRec);
-        $this->fixtures()->clear();
-
-        $url = '/casrec/truncate';
-        $this->assertEndpointNeedsAuth('DELETE', $url);
-        $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenDeputy);
-
-        $this->assertJsonRequest('DELETE', $url, [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenAdmin,
-        ]);
-        $this->assertCount(0, $this->fixtures()->clear()->getRepo('CasRec')->findAll());
-    }
-
     public function testDeleteBySourceVerifiesSourceInput()
     {
         $this->buildAndPersistCasRecEntity('12345678', CasRec::CASREC_SOURCE);

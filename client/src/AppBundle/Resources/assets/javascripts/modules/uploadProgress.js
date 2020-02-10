@@ -3,10 +3,10 @@ var uploadProgress = function (element) {
   // check if exists
   if ($(element).length === 1) {
     var nOfChunks = $(element).attr('max') - 1
-    var casrecTruncateAjaxUrl = $(element).data('path-casrec-truncate-ajax')
+    var casrecDeleteBySourceUrl = $(element).data('path-casrec-delete-by-source-ajax')
 
     $.ajax({
-      url: casrecTruncateAjaxUrl,
+      url: casrecDeleteBySourceUrl,
       dataType: 'json'
     }).done(function (data) {
       $(element).val(1)

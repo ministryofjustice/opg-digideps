@@ -2,11 +2,10 @@
 
 namespace AppBundle\v2\Registration\Assembler;
 
-use AppBundle\Entity\CasRec;
-use AppBundle\Service\DataNormaliser;
+    use AppBundle\Service\DataNormaliser;
 use AppBundle\v2\Registration\DTO\LayDeputyshipDto;
 
-class CasRecToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInterface
+class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInterface
 {
     /** @var DataNormaliser */
     private $normaliser;
@@ -31,15 +30,15 @@ class CasRecToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
 
         return
             (new LayDeputyshipDto())
-            ->setCaseNumber($this->normaliser->normaliseCaseNumber($data['Case']))
-            ->setClientSurname($this->normaliser->normaliseSurname($data['Surname']))
-            ->setDeputyNumber($this->normaliser->normaliseDeputyNo($data['Deputy No']))
-            ->setDeputySurname($this->normaliser->normaliseSurname($data['Dep Surname']))
-            ->setDeputyPostcode($this->normaliser->normalisePostCode($data['Dep Postcode']))
-            ->setTypeOfReport($data['Typeofrep'])
-            ->setCorref($data['Corref'])
-            ->setIsNdrEnabled($this->determineNdrStatus($data['NDR']))
-            ->setSource(CasRec::CASREC_SOURCE);
+                ->setCaseNumber($this->normaliser->normaliseCaseNumber($data['Case']))
+                ->setClientSurname($this->normaliser->normaliseSurname($data['Surname']))
+                ->setDeputyNumber($this->normaliser->normaliseDeputyNo($data['Deputy No']))
+                ->setDeputySurname($this->normaliser->normaliseSurname($data['Dep Surname']))
+                ->setDeputyPostcode($this->normaliser->normalisePostCode($data['Dep Postcode']))
+                ->setTypeOfReport($data['Typeofrep'])
+                ->setCorref($data['Corref'])
+                ->setIsNdrEnabled($this->determineNdrStatus($data['NDR']))
+                ->setSource($data['source']);
     }
 
     /**
@@ -56,7 +55,8 @@ class CasRecToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
             array_key_exists('Dep Postcode', $data) &&
             array_key_exists('Typeofrep', $data) &&
             array_key_exists('Corref', $data) &&
-            array_key_exists('NDR', $data);
+            array_key_exists('NDR', $data) &&
+            array_key_exists('source', $data);
     }
 
     /**

@@ -53,7 +53,8 @@ class CasRecFactory
             'Dep Postcode' => $dto->getDeputyPostcode(),
             'Typeofrep' => $dto->getTypeOfReport(),
             'Corref' => $dto->getCorref(),
-            'NDR' => $dto->isNdrEnabled()
+            'NDR' => $dto->isNdrEnabled(),
+            'source' => $dto->getSource()
         ];
     }
 
