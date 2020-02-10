@@ -4,6 +4,12 @@ namespace DigidepsBehat;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\MinkExtension\Context\MinkContext;
+use DigidepsBehat\Common\AuthenticationTrait;
+use DigidepsBehat\Common\FormTrait;
+use DigidepsBehat\Common\LinksTrait;
+use DigidepsBehat\Common\RegionTrait;
+use DigidepsBehat\Common\ReportTrait;
+use DigidepsBehat\Common\SiteNavigationTrait;
 
 /**
  * Behat context class.

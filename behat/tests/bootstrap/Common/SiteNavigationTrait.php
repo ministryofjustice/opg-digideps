@@ -1,6 +1,6 @@
 <?php
 
-namespace DigidepsBehat;
+namespace DigidepsBehat\Common;
 
 trait SiteNavigationTrait
 {
