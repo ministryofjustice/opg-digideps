@@ -31,6 +31,15 @@ data "aws_ip_ranges" "route53_healthchecks_ips" {
   services = ["route53_healthchecks"]
 }
 
+data "terraform_remote_state" "shared" {
+  backend = "s3"
+  config = {
+    bucket = "opg.terraform.state"
+    key    = "digideps-infrastructure-shared/terraform.tfstate"
+    region = "eu-west-1"
+  }
+}
+
 locals {
   default_whitelist = concat([
     "157.203.176.138/32",
