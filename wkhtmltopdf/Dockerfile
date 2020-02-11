@@ -11,11 +11,11 @@ RUN pip install werkzeug executor gunicorn
 
 ADD docker-entrypoint.sh /docker-entrypoint.sh
 ADD app.py /app.py
-# ADD clean-tmp /etc/cron.hourly/clean-tmp
+ADD clean-tmp /etc/cron.hourly/clean-tmp
 EXPOSE 80
 
 # Make commands executable
-# RUN ["chmod", "+x", "/etc/cron.hourly/clean-tmp"]
+RUN ["chmod", "+x", "/etc/cron.hourly/clean-tmp"]
 RUN ["chmod", "+x", "/docker-entrypoint.sh"]
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
