@@ -1,6 +1,6 @@
-Case,Surname,Dep Type,Email,Email2,Email3,Deputy No,Dep Forename,Dep Surname,Dep Adrs1,Dep Adrs2,Dep Adrs3,Dep Adrs4,Dep Adrs5,Dep Postcode,Tele1,Tele2,Tele3,Mobile1,Mobile2,AddrTele,Made Date,Dig,Digdate,Foreign,Corref,Due Date,Typeofrep,Typeofrep2,Team,Fee Payer,Corres,Sett Comp,NDR,source
-T1001021,S1020,,,,,test0001,NAME,SURNAME,,,,,,SW1,,,,,,,14-Jun-11,,,,L2,19-May-17,OPG102,,Team 1,Y,Y,,Yes,sirius
-T2001021,S1020,,,,,test0002,NAME,SURNAME,,,,,,SW1,,,,,,,15-Jun-11,,,,L2,03-Jul-17,OPG102,,Team 1,Y,Y,,Yes,sirius
-T3001021,S1020,,,,,test0003,NAME,SURNAME,,,,,,SW1,,,,,,,16-Jun-11,,,,L2,17-Aug-17,OPG102,,Team 1,Y,Y,,Y,sirius
-T4001021,S1020,,,,,test0004,NAME,SURNAME,,,,,,SW1,,,,,,,17-Jun-11,,,,L2,01-Oct-17,OPG102,,Team 1,Y,Y,,,sirius
-T5001021,S1020,,,,,test0005,NAME,SURNAME,,,,,,SW1,,,,,,,18-Jun-11,,,,L2,15-Nov-17,OPG102,,Team 1,Y,Y,,,sirius
+Case,Surname,Deputy No,Dep Surname,Dep Postcode,Made Date,Corref,Typeofrep,source
+T1001021,S1020,test0001,SURNAME,SW1,14-Jun-11,L2,OPG102,sirius
+T2001021,S1020,test0002,SURNAME,SW1,15-Jun-11,L2,OPG102,sirius
+T3001021,S1020,test0003,SURNAME,SW1,16-Jun-11,L2,OPG102,sirius
+T4001021,S1020,test0004,SURNAME,SW1,17-Jun-11,L2,OPG102,sirius
+T5001021,S1020,test0005,SURNAME,SW1,18-Jun-11,L2,OPG102,sirius

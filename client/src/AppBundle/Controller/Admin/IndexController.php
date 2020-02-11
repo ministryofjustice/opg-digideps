@@ -295,7 +295,7 @@ class IndexController extends AbstractController
                     ->setUnexpectedColumns(['Last Report Day'])
                     ->getData();
 
-                $source = isset($data[0]['source']) ? $data[0]['source'] : 'casrec';
+                $source = isset($data[0]['source']) ? strtolower($data[0]['source']) : 'casrec';
 
                 // small amount of data -> immediate posting and redirect (needed for behat)
                 if (count($data) < $chunkSize) {

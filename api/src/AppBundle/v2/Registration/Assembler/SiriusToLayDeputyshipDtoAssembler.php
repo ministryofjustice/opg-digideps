@@ -2,6 +2,7 @@
 
 namespace AppBundle\v2\Registration\Assembler;
 
+    use AppBundle\Entity\CasRec;
     use AppBundle\Service\DataNormaliser;
 use AppBundle\v2\Registration\DTO\LayDeputyshipDto;
 
@@ -37,8 +38,8 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
                 ->setDeputyPostcode($this->normaliser->normalisePostCode($data['Dep Postcode']))
                 ->setTypeOfReport($data['Typeofrep'])
                 ->setCorref($data['Corref'])
-                ->setIsNdrEnabled($this->determineNdrStatus($data['NDR']))
-                ->setSource($data['source']);
+                ->setIsNdrEnabled(false)
+                ->setSource(CasRec::SIRIUS_SOURCE);
     }
 
     /**
@@ -54,9 +55,7 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
             array_key_exists('Dep Surname', $data) &&
             array_key_exists('Dep Postcode', $data) &&
             array_key_exists('Typeofrep', $data) &&
-            array_key_exists('Corref', $data) &&
-            array_key_exists('NDR', $data) &&
-            array_key_exists('source', $data);
+            array_key_exists('Corref', $data);
     }
 
     /**
