@@ -29,7 +29,7 @@ class CasRecController extends RestController
     public function deleteBySource(CasRecRepository $casRecRepository, $source)
     {
         if (!in_array($source, CasRec::validSources())) {
-            return new JsonResponse(['Invalid source'], 400);
+            throw new \InvalidArgumentException(sprintf('Invalid source: %s', $source));
         }
 
         $result = $casRecRepository->deleteAllBySource($source);
