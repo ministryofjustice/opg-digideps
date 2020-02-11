@@ -63,7 +63,7 @@ class CasRecControllerTest extends AbstractTestController
         $url = '/casrec/delete-by-source/unknownsource';
 
         $this->assertJsonRequest('DELETE', $url, [
-            'mustSucceed' => false,
+            'mustFail' => true,
             'AuthToken' => self::$tokenAdmin,
             'assertResponseCode' => 400,
         ]);
