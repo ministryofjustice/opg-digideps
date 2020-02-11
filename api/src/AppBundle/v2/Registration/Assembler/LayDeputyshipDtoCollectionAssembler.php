@@ -6,7 +6,7 @@ use AppBundle\v2\Registration\DTO\LayDeputyshipDtoCollection;
 
 class LayDeputyshipDtoCollectionAssembler
 {
-    /** @var CasRecToLayDeputyshipDtoAssembler */
+    /** @var LayDeputyshipDtoAssemblerInterface */
     private $layDeputyshipDtoAssembler;
 
     /**
@@ -21,7 +21,7 @@ class LayDeputyshipDtoCollectionAssembler
      * @param array $data
      * @return LayDeputyshipDtoCollection
      */
-    public function assembleFromArray(array $data)
+    public function assembleFromArray(array $data): LayDeputyshipDtoCollection
     {
         $collection = new LayDeputyshipDtoCollection();
 
@@ -31,5 +31,10 @@ class LayDeputyshipDtoCollectionAssembler
         }
 
         return $collection;
+    }
+
+    public function getLayDeputyshipDtoAssembler(): LayDeputyshipDtoAssemblerInterface
+    {
+        return $this->layDeputyshipDtoAssembler;
     }
 }

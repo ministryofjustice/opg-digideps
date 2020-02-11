@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AppBundle\v2\Registration\SelfRegistration;
+namespace Tests\AppBundle\v2\Registration\SelfRegistration\Factory;
 
 use AppBundle\Entity\CasRec;
 use AppBundle\Service\DateTimeProvider;

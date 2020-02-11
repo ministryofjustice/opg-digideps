@@ -57,13 +57,4 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
             array_key_exists('Typeofrep', $data) &&
             array_key_exists('Corref', $data);
     }
-
-    /**
-     * @param $value
-     * @return bool
-     */
-    private function determineNdrStatus($value): bool
-    {
-        return ($value === 1 || $value === 'Y') ? true : false;
-    }
 }
