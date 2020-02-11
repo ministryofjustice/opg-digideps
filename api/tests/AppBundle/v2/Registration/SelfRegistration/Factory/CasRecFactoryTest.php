@@ -79,7 +79,7 @@ class CasRecFactoryTest extends TestCase
         $this->assertEquals('corref', $result->getCorref());
         $this->assertEquals(true, $result->getColumn('NDR'));
         $this->assertEquals('2010-01-03 12:03:23', $result->getUpdatedAt()->format('Y-m-d H:i:s'));
-        $this->assertEquals('some-source', $result->getSource());
+        $this->assertEquals(CasRec::SIRIUS_SOURCE, $result->getSource());
     }
 
     /**
@@ -96,6 +96,6 @@ class CasRecFactoryTest extends TestCase
             ->setTypeOfReport('type')
             ->setIsNdrEnabled(true)
             ->setCorref('corref')
-            ->setSource('some-source');
+            ->setSource(CasRec::SIRIUS_SOURCE);
     }
 }

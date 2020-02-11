@@ -54,7 +54,7 @@ class CasRecFactory
             'Typeofrep' => $dto->getTypeOfReport(),
             'Corref' => $dto->getCorref(),
             'NDR' => $dto->isNdrEnabled(),
-            'source' => $dto->getSource()
+            'Source' => $dto->getSource()
         ];
     }
 

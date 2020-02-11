@@ -200,7 +200,9 @@ class CasRec
         $this->deputyPostCode = self::normaliseSurname($row['Dep Postcode']);
         $this->typeOfReport = self::normaliseCorrefAndTypeOfRep($row['Typeofrep']);
         $this->corref = self::normaliseCorrefAndTypeOfRep($row['Corref']);
-        $this->source = isset($row['source']) ? strtolower($row['source']) : self::CASREC_SOURCE;
+
+        $source = isset($row['Source']) ? $row['Source'] : self::CASREC_SOURCE;
+        $this->setSource($source);
 
         $this->otherColumns = serialize($row);
         $this->createdAt = new \DateTime();
@@ -392,6 +394,11 @@ class CasRec
      */
     public function setSource($source)
     {
+        $source = strtolower($source);
+        if (!in_array($source, self::validSources())) {
+            throw new \InvalidArgumentException(sprintf('Attempting to set invalid source: %s given', $source));
+        }
+
         $this->source = $source;
         return $this;
     }

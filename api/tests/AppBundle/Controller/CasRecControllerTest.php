@@ -126,10 +126,10 @@ class CasRecControllerTest extends AbstractTestController
             'Dep Surname' => 'Dep Surname',
             'Dep Postcode' => 'SW1',
             'Typeofrep' => 'OPG102',
-            'Corref' => 'L2'
+            'Corref' => 'L2',
+            'Source' => $source
         ]);
 
-        $casRec->setSource($source);
         $this->fixtures()->persist($casRec);
 
         return $casRec;
