@@ -23,21 +23,13 @@ variable "accounts" {
       symfony_env          = string
       db_subnet_group      = string
       ec_subnet_group      = string
+      state_source         = string
     })
   )
 }
 
 data "aws_ip_ranges" "route53_healthchecks_ips" {
   services = ["route53_healthchecks"]
-}
-
-data "terraform_remote_state" "shared" {
-  backend = "s3"
-  config = {
-    bucket = "opg.terraform.state"
-    key    = "digideps-infrastructure-shared/terraform.tfstate"
-    region = "eu-west-1"
-  }
 }
 
 locals {
@@ -73,4 +65,15 @@ locals {
   subdomain       = local.account["subdomain_enabled"] ? local.environment : ""
   front_whitelist = length(local.account["front_whitelist"]) > 0 ? local.account["front_whitelist"] : local.default_whitelist
   admin_whitelist = length(local.account["admin_whitelist"]) > 0 ? local.account["admin_whitelist"] : local.default_whitelist
+}
+
+data "terraform_remote_state" "shared" {
+  backend   = "s3"
+  workspace = local.account.state_source
+  config = {
+    bucket   = "opg.terraform.state"
+    key      = "digideps-infrastructure-shared/terraform.tfstate"
+    region   = "eu-west-1"
+    role_arn = "arn:aws:iam::311462405659:role/${var.DEFAULT_ROLE}"
+  }
 }

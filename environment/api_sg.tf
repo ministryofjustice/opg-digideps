@@ -135,6 +135,6 @@ module "api_rds_security_group" {
 data "aws_security_group" "cloud9" {
   filter {
     name   = "tag:aws:cloud9:environment"
-    values = data.terraform_remote_state.shared.outputs.cloud9_env_id
+    values = [data.terraform_remote_state.shared.outputs.cloud9_env_id]
   }
 }
