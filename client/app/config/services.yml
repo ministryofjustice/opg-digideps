@@ -1,6 +1,7 @@
 imports:
     - { resource: services/defaults.yml }
     - { resource: services/file_uploads.yml }
+    - { resource: services/guzzle.yml }
     - { resource: services/mappers.yml }
     - { resource: services/resolvers.yml }
     - { resource: services/transformers.yml }

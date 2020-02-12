@@ -1,0 +1,23 @@
+services:
+  guzzle_file_scanner_client:
+    class: GuzzleHttp\Client
+    arguments:
+      $config:
+        base_uri: "%file_scanner_url%"
+        verify: "%file_scanner_sslverify%"
+        proxy: ""
+        debug: false
+        headers:
+          Content-Type: multipart-form-data
+        version: "1.1"
+
+        timeout: 10
+        allow_redirects: false
+
+  guzzle_api_gateway_client:
+    class: GuzzleHttp\Client
+    arguments:
+      $config:
+        base_uri: '%env(SIRIUS_API_BASE_URI)%'
+        timeout: 10
+        allow_redirects: false

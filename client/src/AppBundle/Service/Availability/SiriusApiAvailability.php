@@ -11,10 +11,11 @@ class SiriusApiAvailability extends ServiceAvailabilityAbstract
         $this->isHealthy = true;
 
         try {
-            $success = false;
-            if (!$success) {
-                throw new \RuntimeException(sprintf('Returned HTTP code %s', 500));
+            $response = $container->get('guzzle_api_gateway_client')->get('/v1/healthcheck');
+            if (200 !== $response->getStatusCode()) {
+                throw new \RuntimeException('returned HTTP code ' . $response->getStatusCode());
             }
+
         } catch (\Throwable $e) {
             $this->customMessage = $e->getMessage();
         }
