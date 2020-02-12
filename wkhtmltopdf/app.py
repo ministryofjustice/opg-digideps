@@ -42,6 +42,9 @@ def application(request):
 
         source_file.flush()
 
+        # Cleanup old files
+        execute(' '.join(['find', '/tmp', '-mmin', '+5', '-type', 'f', '-delete']))
+
         # Evaluate argument to run with subprocess
         args = ['wkhtmltopdf']
 
