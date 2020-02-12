@@ -37,16 +37,7 @@ module "whitelist" {
 }
 
 locals {
-  default_whitelist = concat([
-    # Amazon
-    "34.249.23.21/32",
-    "52.210.230.211/32",
-    # Something in Sutton Coldfield?
-    "62.25.109.201/32",
-    "62.25.109.203/32",
-    # Daisy Communications
-    "94.30.9.148/32",
-  ], module.whitelist.moj_sites, formatlist("%s/32", data.aws_nat_gateway.nat[*].public_ip))
+  default_whitelist = concat(module.whitelist.moj_sites, formatlist("%s/32", data.aws_nat_gateway.nat[*].public_ip))
 
   route53_healthchecker_ips = data.aws_ip_ranges.route53_healthchecks_ips.cidr_blocks
 
