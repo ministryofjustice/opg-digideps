@@ -1,5 +1,6 @@
 resource "aws_elasticache_replication_group" "admin" {
-  count                         = local.account.is_production == 0 ? 1 : 0
+  // Include this once first two subtasks of DDBP-3192 are done
+  //  count                         = local.account.is_production == 1 ? 1 : 0
   automatic_failover_enabled    = true
   engine                        = "redis"
   engine_version                = "5.0.0"
@@ -17,7 +18,8 @@ resource "aws_elasticache_replication_group" "admin" {
 }
 
 resource "aws_elasticache_cluster" "admin" {
-  count                = local.account.is_production == 0 ? 0 : 1
+  // Include this once first two subtasks of DDBP-3192 are done
+  //  count                = local.account.is_production == 1 ? 0 : 1
   cluster_id           = "admin-${local.environment}"
   engine               = "redis"
   node_type            = "cache.t2.small"
