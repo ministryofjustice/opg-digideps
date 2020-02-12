@@ -83,8 +83,8 @@ locals {
       port        = 5432
       protocol    = "tcp"
       type        = "ingress"
-      target_type = "cidr_block"
-      target      = data.aws_vpc.vpc.cidr_block
+      target_type = "security_group_id"
+      target      = data.aws_security_group.cloud9.id
     }
     backup = {
       port        = 5432
@@ -130,4 +130,11 @@ module "api_rds_security_group" {
   name   = "api-rds"
   tags   = local.default_tags
   vpc_id = data.aws_vpc.vpc.id
+}
+
+data "aws_security_group" "cloud9" {
+  filter {
+    name   = "tag:aws:cloud9:environment"
+    values = [data.terraform_remote_state.shared.outputs.cloud9_env_id]
+  }
 }
