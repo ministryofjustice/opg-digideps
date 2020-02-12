@@ -20,6 +20,11 @@ abstract class ServiceAvailabilityAbstract
     protected $errors;
 
     /**
+     * @var
+     */
+    protected $customMessage;
+
+    /**
      * @return bool
      */
     public function isHealthy()
@@ -33,6 +38,11 @@ abstract class ServiceAvailabilityAbstract
     public function getErrors()
     {
         return $this->errors;
+    }
+
+    public function getCustomMessage()
+    {
+        return $this->customMessage;
     }
 
     /**

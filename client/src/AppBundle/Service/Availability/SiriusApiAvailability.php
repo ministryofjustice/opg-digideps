@@ -8,14 +8,15 @@ class SiriusApiAvailability extends ServiceAvailabilityAbstract
 {
     public function __construct(ContainerInterface $container)
     {
-        $this->isHealthy = false;
+        $this->isHealthy = true;
 
         try {
-            if (!$this->isHealthy) {
+            $success = false;
+            if (!$success) {
                 throw new \RuntimeException(sprintf('Returned HTTP code %s', 500));
             }
         } catch (\Throwable $e) {
-            $this->errors = $e->getMessage();
+            $this->customMessage = $e->getMessage();
         }
     }
 
