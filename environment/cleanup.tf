@@ -10,7 +10,7 @@ resource "aws_cloudwatch_event_rule" "nightly" {
 }
 
 resource "aws_cloudwatch_event_target" "cleanup" {
-  rule     = aws_cloudwatch_event_rule.nightly
+  rule     = aws_cloudwatch_event_rule.nightly.name
   arn      = aws_ecs_cluster.main.arn
   role_arn = data.aws_iam_role.events_task_runner.arn
 
