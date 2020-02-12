@@ -65,7 +65,9 @@ class ManageController extends AbstractController
         $services = [
             new ServiceAvailability\RedisAvailability($this->container),
             new ServiceAvailability\ApiAvailability($this->container),
+            new ServiceAvailability\SiriusApiAvailability($this->container)
         ];
+
         if (!$this->getParameter('kernel.debug')) {
             $services[] = new ServiceAvailability\SmtpAvailability($this->container, 'mailer.transport.smtp.default');
         }
