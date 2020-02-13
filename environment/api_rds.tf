@@ -40,11 +40,14 @@ resource "aws_db_instance" "api" {
   }
 }
 
+locals {
+  db_instance = local.db_instance
+}
 
 resource "aws_route53_record" "api_postgres" {
   name    = "postgres"
   type    = "CNAME"
   zone_id = aws_route53_zone.internal.id
-  records = [aws_db_instance.api.address]
+  records = [local.db_instance.address]
   ttl     = 300
 }

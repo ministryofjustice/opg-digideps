@@ -64,19 +64,19 @@ locals {
 		},
 		{
 			"name": "POSTGRES_DATABASE",
-			"value": "${aws_db_instance.api.name}"
+			"value": "${local.db_instance.name}"
 		},
 		{
 			"name": "POSTGRES_HOST",
-			"value": "${aws_db_instance.api.address}"
+			"value": "${local.db_instance.address}"
 		},
 		{
 			"name": "POSTGRES_PORT",
-			"value": "${aws_db_instance.api.port}"
+			"value": "${local.db_instance.port}"
 		},
 		{
 			"name": "POSTGRES_USER",
-			"value": "${aws_db_instance.api.username}"
+			"value": "${local.db_instance.username}"
 		},
 		{
 			"name": "DROP_PUBLIC",
