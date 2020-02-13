@@ -84,10 +84,10 @@ locals {
     ],
     "environment": [
       { "name": "REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" },
-      { "name": "DATABASE_PORT", "value": "${aws_db_instance.api.port}" },
+      { "name": "DATABASE_PORT", "value": "${local.db_instance.port}" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
-      { "name": "DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
-      { "name": "DATABASE_NAME", "value": "${aws_db_instance.api.name}" },
+      { "name": "DATABASE_HOSTNAME", "value": "${local.db_instance.address}" },
+      { "name": "DATABASE_NAME", "value": "${local.db_instance.name}" },
       { "name": "DATABASE_USERNAME", "value": "digidepsmaster" }
     ]
   }

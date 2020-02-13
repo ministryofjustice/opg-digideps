@@ -61,8 +61,8 @@ locals {
       { "name": "SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_frontend_secret.arn}" }
     ],
     "environment": [
-      { "name": "PGHOST", "value": "${aws_db_instance.api.address}" },
-      { "name": "PGDATABASE", "value": "${aws_db_instance.api.name}" },
+      { "name": "PGHOST", "value": "${local.db_instance.address}" },
+      { "name": "PGDATABASE", "value": "${local.db_instance.name}" },
       { "name": "PGUSER", "value": "digidepsmaster" },
       { "name": "ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
       { "name": "NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" }
