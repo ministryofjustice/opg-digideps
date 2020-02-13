@@ -2,6 +2,10 @@ data "aws_kms_key" "rds" {
   key_id = "alias/aws/rds"
 }
 
+locals {
+  db_serverless = local.account.state_source == "development"
+}
+
 resource "aws_db_instance" "api" {
   name                    = "api"
   identifier              = "api-${local.environment}"
@@ -43,7 +47,7 @@ resource "aws_db_instance" "api" {
 resource "aws_rds_cluster" "api" {
   cluster_identifier      = "api-${local.environment}"
   engine                  = "aurora-postgresql"
-  engine_mode             = local.account.state_source == "development" ? "serverless" : "provisioned"
+  engine_mode             = local.db_serverless ? "serverless" : "provisioned"
   availability_zones      = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
   database_name           = "api"
   master_username         = "digidepsmaster"
@@ -54,8 +58,8 @@ resource "aws_rds_cluster" "api" {
   kms_key_id              = data.aws_kms_key.rds.arn
   storage_encrypted       = true
   vpc_security_group_ids  = [module.api_rds_security_group.id]
-  deletion_protection     = local.account.state_source == "development" ? false : true
-  enable_http_endpoint    = local.account.state_source == "development" ? true : false
+  deletion_protection     = local.db_serverless ? false : true
+  enable_http_endpoint    = local.db_serverless ? true : false
 
   tags = merge(
     local.default_tags,
@@ -66,6 +70,44 @@ resource "aws_rds_cluster" "api" {
 
   lifecycle {
     ignore_changes = [engine_version, master_password]
+  }
+}
+
+resource "aws_rds_cluster_instance" "api" {
+  count                        = local.db_serverless ? 0 : 2
+  identifier_prefix            = "api-${local.environment}-"
+  cluster_identifier           = aws_rds_cluster.api.id
+  instance_class               = "db.t3.medium"
+  performance_insights_enabled = true
+  monitoring_role_arn          = aws_iam_role.enhanced_monitoring.arn
+  monitoring_interval          = 60
+  apply_immediately            = true
+  tags                         = local.default_tags
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_iam_role" "enhanced_monitoring" {
+  name               = "rds-enhanced-monitoring"
+  assume_role_policy = data.aws_iam_policy_document.enhanced_monitoring.json
+}
+
+resource "aws_iam_role_policy_attachment" "enhanced_monitoring" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
+  role       = aws_iam_role.enhanced_monitoring.name
+}
+
+data "aws_iam_policy_document" "enhanced_monitoring" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      identifiers = ["monitoring.rds.amazonaws.com"]
+      type        = "Service"
+    }
   }
 }
 
