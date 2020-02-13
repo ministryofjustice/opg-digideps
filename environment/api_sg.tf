@@ -100,6 +100,13 @@ locals {
       target_type = "security_group_id"
       target      = module.restore.security_group_id
     }
+    restore_from_production = {
+      port        = 5432
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.restore_from_production.security_group_id
+    }
     api_unit_test = {
       port        = 5432
       type        = "ingress"
