@@ -73,6 +73,6 @@ resource "aws_route53_record" "api_postgres" {
   name    = "postgres"
   type    = "CNAME"
   zone_id = aws_route53_zone.internal.id
-  records = [aws_db_instance.api.address]
+  records = [aws_rds_cluster.api.endpoint]
   ttl     = 300
 }
