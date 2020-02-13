@@ -40,6 +40,7 @@ resource "aws_db_instance" "api" {
   }
 }
 
+
 resource "aws_route53_record" "api_postgres" {
   name    = "postgres"
   type    = "CNAME"
