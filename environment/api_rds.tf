@@ -3,7 +3,7 @@ data "aws_kms_key" "rds" {
 }
 
 locals {
-  db_serverless = local.account.state_source == "development"
+  db_serverless = local.account.state_source != "development"
 }
 
 resource "aws_db_instance" "api" {
