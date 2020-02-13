@@ -78,6 +78,8 @@ resource "aws_rds_cluster_instance" "api" {
   identifier_prefix            = "api-${local.environment}-"
   cluster_identifier           = aws_rds_cluster.api.id
   instance_class               = "db.t3.medium"
+  engine                       = aws_rds_cluster.api.engine
+  engine_version               = aws_rds_cluster.api.engine_version
   performance_insights_enabled = true
   monitoring_role_arn          = aws_iam_role.enhanced_monitoring.arn
   monitoring_interval          = 60
