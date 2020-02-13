@@ -67,9 +67,9 @@ locals {
     ],
     "environment": [
       { "name": "DATABASE_HOSTNAME", "value": "${aws_rds_cluster.api.endpoint}" },
-      { "name": "DATABASE_NAME", "value": "${aws_rds_cluster.api.master_username}" },
+      { "name": "DATABASE_NAME", "value": "${aws_rds_cluster.api.database_name}" },
       { "name": "DATABASE_PORT", "value": "${aws_rds_cluster.api.port}" },
-      { "name": "DATABASE_USERNAME", "value": "${aws_rds_cluster.api.database_name}" },
+      { "name": "DATABASE_USERNAME", "value": "${aws_rds_cluster.api.master_username}" },
       { "name": "FIXTURES_ACCOUNTPASSWORD", "value": "Abcd1234" },
       { "name": "REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" }
     ]
