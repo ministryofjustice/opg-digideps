@@ -32,31 +32,12 @@ data "aws_ip_ranges" "route53_healthchecks_ips" {
   services = ["route53_healthchecks"]
 }
 
+module "whitelist" {
+  source = "git@github.com:ministryofjustice/terraform-aws-moj-ip-whitelist.git"
+}
+
 locals {
-  default_whitelist = concat([
-    "157.203.176.138/32",
-    "157.203.176.139/32",
-    "157.203.176.140/32",
-    "157.203.177.190/32",
-    "157.203.177.191/32",
-    "157.203.177.192/32",
-    "194.33.192.0/25",
-    "194.33.193.0/25",
-    "194.33.196.0/25",
-    "194.33.197.0/25",
-    "195.59.75.0/24",
-    "195.99.201.194/32",
-    "213.121.161.124/32",
-    "213.121.252.154/32",
-    "34.249.23.21/32",
-    "52.210.230.211/32",
-    "52.215.20.165/32",
-    "52.30.28.165/32",
-    "62.25.109.201/32",
-    "62.25.109.203/32",
-    "81.134.202.29/32",
-    "94.30.9.148/32",
-  ], formatlist("%s/32", data.aws_nat_gateway.nat[*].public_ip))
+  default_whitelist = concat(module.whitelist.moj_sites, formatlist("%s/32", data.aws_nat_gateway.nat[*].public_ip))
 
   route53_healthchecker_ips = data.aws_ip_ranges.route53_healthchecks_ips.cidr_blocks
 
