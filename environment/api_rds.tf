@@ -40,8 +40,33 @@ resource "aws_db_instance" "api" {
   }
 }
 
-locals {
-  db_instance = local.db_instance
+resource "aws_rds_cluster" "api" {
+  cluster_identifier      = "api-${local.environment}"
+  engine                  = "aurora-postgresql"
+  engine_mode             = local.account.state_source == "development" ? "serverless" : "provisioned"
+  availability_zones      = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+  database_name           = "api"
+  master_username         = "digidepsmaster"
+  master_password         = data.aws_secretsmanager_secret_version.database_password.secret_string
+  backup_retention_period = 14
+  preferred_backup_window = "07:00-09:00"
+  db_subnet_group_name    = local.account.db_subnet_group
+  kms_key_id              = data.aws_kms_key.rds.arn
+  storage_encrypted       = true
+  vpc_security_group_ids  = [module.api_rds_security_group.id]
+  deletion_protection     = local.account.state_source == "development" ? false : true
+  enable_http_endpoint    = local.account.state_source == "development" ? true : false
+
+  tags = merge(
+    local.default_tags,
+    {
+      "Name" = "api.${local.environment}.${local.account.account_id}.${data.aws_route53_zone.public.name}"
+    },
+  )
+
+  lifecycle {
+    ignore_changes = [engine_version, master_password]
+  }
 }
 
 resource "aws_route53_record" "api_postgres" {
