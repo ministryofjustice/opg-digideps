@@ -57,6 +57,7 @@ resource "aws_rds_cluster" "api" {
   deletion_protection     = local.account.db_serverless ? false : true
   enable_http_endpoint    = local.account.db_serverless ? true : false
 
+  replication_source_identifier = aws_db_instance.api.arn
 
   tags = merge(
     local.default_tags,
@@ -114,6 +115,6 @@ resource "aws_route53_record" "api_postgres" {
   name    = "postgres"
   type    = "CNAME"
   zone_id = aws_route53_zone.internal.id
-  records = [aws_rds_cluster.api.endpoint]
+  records = [aws_db_instance.api.address]
   ttl     = 300
 }
