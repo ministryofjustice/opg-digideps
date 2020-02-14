@@ -18,33 +18,6 @@ trait DebugTrait
     }
 
     /**
-     * @Then I save the page as :name
-     */
-    public function debug($name)
-    {
-        for ($i = 1; $i < 100; ++$i) {
-            $iPadded = str_pad($i, 2, '0', STR_PAD_LEFT);
-            $filename = self::$DEBUG_SNAPSHOT_DIR . '/behat-response-' . $name . '-' . $iPadded . '.html';
-            if (!file_exists($filename)) {
-                break;
-            }
-        }
-
-        $session = $this->getSession();
-
-        $pageContent = $session->getPage()->getContent();
-        $data = str_replace('"/assets', '"https://digideps.local/assets', $pageContent);
-
-        $bytes = file_put_contents($filename, $data);
-        $file = basename($filename);
-
-        echo "** Test failed **\n";
-        echo 'Url: ' . $session->getCurrentUrl() . "\n";
-        echo "Response saved ({$bytes} bytes):\n";
-        echo "$file";
-    }
-
-    /**
      * Clean the snapshot folder before running a suite
      *
      * @BeforeSuite
@@ -75,22 +48,5 @@ trait DebugTrait
             $feature = basename($scope->getFeature()->getFile());
             $this->debug($feature);
         }
-    }
-
-    /**
-     * @Then die :code
-     * @Then exit :code
-     */
-    public function interrupt($code)
-    {
-        die($code);
-    }
-
-    /**
-     * @Then fail
-     */
-    public function fail()
-    {
-        throw new \RuntimeException('manual fail');
     }
 }
