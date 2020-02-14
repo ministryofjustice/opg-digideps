@@ -24,6 +24,7 @@ variable "accounts" {
       db_subnet_group      = string
       ec_subnet_group      = string
       state_source         = string
+      db_serverless        = bool
     })
   )
 }
