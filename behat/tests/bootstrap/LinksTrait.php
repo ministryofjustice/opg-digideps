@@ -4,29 +4,6 @@ namespace DigidepsBehat;
 
 trait LinksTrait
 {
-    /**
-     * @Then the :text link url should contain ":expectedLink"
-     */
-    public function linkWithTextContains($text, $expectedLink)
-    {
-        $linksElementsFound = $this->getSession()->getPage()->findAll('xpath', '//a[text()="' . $text . '"]');
-        $count = count($linksElementsFound);
-
-        if (count($linksElementsFound) === 0) {
-            throw new \RuntimeException('Element not found');
-        }
-
-        if (count($linksElementsFound) > 1) {
-            throw new \RuntimeException('Returned multiple elements');
-        }
-
-        $href = $linksElementsFound[0]->getAttribute('href');
-
-        if (strpos($href, $expectedLink) === false) {
-            throw new \Exception("Link: $href does not contain $expectedLink");
-        }
-    }
-
     public function visitBehatLink($link)
     {
         $secret = md5('behat-dd-' . getenv('SECRET'));
@@ -89,28 +66,6 @@ trait LinksTrait
 
         // click on the found link
         $this->scrollTo('#' . $link);
-        $linksElementsFound[0]->click();
-    }
-
-    /**
-     * Click on element with attribute [behat-link=:link].
-     *
-     * @When I click on link with text :text
-     */
-    public function clickOnLinkWithText($text)
-    {
-        $linksElementsFound = $this->getSession()->getPage()->find('xpath', '//*[text()="' . $text . '"]');
-        $count = count($linksElementsFound);
-
-        if ($count === 0) {
-            throw new \RuntimeException('Element not found');
-        }
-
-        if ($count > 1) {
-            throw new \RuntimeException('Returned multiple elements');
-        }
-
-        // click on the found link
         $linksElementsFound[0]->click();
     }
 
@@ -183,47 +138,6 @@ trait LinksTrait
     }
 
     /**
-     * @Then the :text link, in the :region region, url should contain ":expectedLink"
-     * @Then the :text link, in the :region, url should contain ":expectedLink"
-     */
-    public function linkWithTextInRegionContains($text, $expectedLink, $region)
-    {
-        $region = $this->findRegion($region);
-
-        $linksElementsFound = $region->findAll('xpath', '//a[normalize-space(text())="' . $text . '"]');
-        $count = count($linksElementsFound);
-
-        if ($count === 0) {
-            throw new \RuntimeException('Element not found');
-        }
-
-        if ($count > 1) {
-            throw new \RuntimeException('Returned multiple elements');
-        }
-
-        $href = $linksElementsFound[0]->getAttribute('href');
-
-        if (strpos($href, $expectedLink) === false) {
-            throw new \Exception("Link: $href does not contain $expectedLink");
-        }
-    }
-
-    /**
-     * @Given I click the :arg1 element
-     */
-    public function iClickTheElement($selector)
-    {
-        $page = $this->getSession()->getPage();
-        $element = $page->find('css', $selector);
-
-        if (empty($element)) {
-            throw new \Exception("No html element found for the selector ('$selector')");
-        }
-
-        $element->click();
-    }
-
-    /**
      * @Given /^I follow meta refresh$/
      */
     public function iFollowMetaRefresh() {
@@ -233,23 +147,6 @@ trait LinksTrait
 
             $this->getSession()->visit($url);
         }
-    }
-
-    /**
-     * Click on a specific link in a row that contains a specified string
-     *
-     * @When I click on :linkText in the :rowText row
-     */
-    public function clickLinkInsideATableRow(string $linkText, string $rowText)
-    {
-        $row = $this->findRowByText($rowText);
-        $link = $row->findLink($linkText);
-
-        if (null === $link) {
-            throw new \Exception('Cannot find link in row with text: '.$linkText);
-        }
-
-        $link->click();
     }
 
     /**

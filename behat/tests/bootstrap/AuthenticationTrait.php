@@ -53,14 +53,6 @@ trait AuthenticationTrait
     }
 
     /**
-     * @Then I expire the session
-     */
-    public function iExpireTheSession()
-    {
-        $this->getSession()->setCookie($this->sessionName, null);
-    }
-
-    /**
      * @Then the following :area pages should return the following status:
      */
     public function theFollowingPagesShouldReturnTheFollowingStatus($area, TableNode $table)

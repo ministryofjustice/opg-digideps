@@ -106,22 +106,6 @@ trait UserTrait
     }
 
     /**
-     * @TODO to use in places where needed
-     * @When I activate the user with password :password - no T&C expected
-     */
-    public function iActivateTheUserAndSetThePasswordToNoTcExpected($password)
-    {
-        $this->visit('/logout');
-        $this->iOpenTheSpecificLinkOnTheEmail('/user/activate/');
-        $this->assertResponseStatus(200);
-        $this->fillField('set_password_password_first', $password);
-        $this->fillField('set_password_password_second', $password);
-        $this->pressButton('set_password_save');
-        $this->theFormShouldBeValid();
-        $this->assertResponseStatus(200);
-    }
-
-    /**
      * @When I fill in the password fields with :password
      */
     public function iFillThePasswordFieldsWith($password)
@@ -230,17 +214,6 @@ trait UserTrait
         }
         $this->fillField('client_country', $rows['address'][4]);
         $this->fillField('client_phone', $rows['phone'][0]);
-    }
-
-    /**
-     * @Then There should be a lay deputy account with id :userid awaiting activation
-     */
-    public function thereShouldBeAwaitingActivation($userid)
-    {
-        throw new PendingException();
-        // Login to admin
-        // The Find the line that has this user
-        // confirm the type is lay deputy
     }
 
     /**

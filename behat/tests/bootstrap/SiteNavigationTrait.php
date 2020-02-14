@@ -15,27 +15,6 @@ trait SiteNavigationTrait
     }
 
     /**
-     * @Given /^I tab to the next field$/
-     */
-    public function iTabToTheNextField()
-    {
-        $driver = $this->getSession()->getDriver();
-        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
-            $javascript =
-                "var currentField = $(':focus');"
-                . "var fields = currentField.closest('form').find('input:visible');"
-                . 'fields.each(function (index,item) {'
-                . "  if (item.id === currentField.attr('id')) {"
-                . '    $(fields[index+1]).focus();'
-                . "    currentField.trigger('blur');"
-                . '  }'
-                . '});';
-
-            $this->getSession()->executeScript($javascript);
-        }
-    }
-
-    /**
      * @Given /^I scroll to "add\-account"$/
      */
     public function scrollTo($element)
