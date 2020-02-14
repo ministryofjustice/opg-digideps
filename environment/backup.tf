@@ -93,7 +93,7 @@ locals {
         },
         {
             "name": "POSTGRES_PORT",
-            "value": "${aws_rds_cluster.api.port}"
+            "value": "${aws_db_instance.api.port}"
         },
         {
             "name": "POSTGRES_USER",
