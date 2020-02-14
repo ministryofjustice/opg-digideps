@@ -2,10 +2,6 @@ data "aws_kms_key" "rds" {
   key_id = "alias/aws/rds"
 }
 
-locals {
-  db_serverless = local.account.state_source != "development"
-}
-
 resource "aws_db_instance" "api" {
   name                    = "api"
   identifier              = "api-${local.environment}"
@@ -47,7 +43,7 @@ resource "aws_db_instance" "api" {
 resource "aws_rds_cluster" "api" {
   cluster_identifier      = "api-${local.environment}"
   engine                  = "aurora-postgresql"
-  engine_mode             = local.db_serverless ? "serverless" : "provisioned"
+  engine_mode             = local.account.db_serverless ? "serverless" : "provisioned"
   availability_zones      = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
   database_name           = "api"
   master_username         = "digidepsmaster"
@@ -58,8 +54,9 @@ resource "aws_rds_cluster" "api" {
   kms_key_id              = data.aws_kms_key.rds.arn
   storage_encrypted       = true
   vpc_security_group_ids  = [module.api_rds_security_group.id]
-  deletion_protection     = local.db_serverless ? false : true
-  enable_http_endpoint    = local.db_serverless ? true : false
+  deletion_protection     = local.account.db_serverless ? false : true
+  enable_http_endpoint    = local.account.db_serverless ? true : false
+
 
   tags = merge(
     local.default_tags,
@@ -74,7 +71,7 @@ resource "aws_rds_cluster" "api" {
 }
 
 resource "aws_rds_cluster_instance" "api" {
-  count                        = local.db_serverless ? 0 : 2
+  count                        = local.account.db_serverless ? 0 : 2
   identifier_prefix            = "api-${local.environment}-"
   cluster_identifier           = aws_rds_cluster.api.id
   instance_class               = "db.t3.medium"
