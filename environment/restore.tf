@@ -64,11 +64,11 @@ locals {
 		},
 		{
 			"name": "POSTGRES_DATABASE",
-			"value": "${aws_rds_cluster.api.database_name}"
+			"value": "${aws_db_instance.api.name}"
 		},
 		{
 			"name": "POSTGRES_HOST",
-			"value": "${aws_rds_cluster.api.endpoint}"
+			"value": "${aws_db_instance.api.address}"
 		},
 		{
 			"name": "POSTGRES_PORT",
@@ -76,7 +76,7 @@ locals {
 		},
 		{
 			"name": "POSTGRES_USER",
-			"value": "${aws_rds_cluster.api.master_username}"
+			"value": "${aws_db_instance.api.username}"
 		},
 		{
 			"name": "DROP_PUBLIC",
