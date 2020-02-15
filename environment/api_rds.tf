@@ -41,21 +41,24 @@ resource "aws_db_instance" "api" {
 }
 
 resource "aws_rds_cluster" "api" {
-  cluster_identifier      = "api-${local.environment}"
-  engine                  = "aurora-postgresql"
-  engine_mode             = local.account.db_serverless ? "serverless" : "provisioned"
-  availability_zones      = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
-  database_name           = "api"
-  master_username         = "digidepsmaster"
-  master_password         = data.aws_secretsmanager_secret_version.database_password.secret_string
-  backup_retention_period = 14
-  preferred_backup_window = "07:00-09:00"
-  db_subnet_group_name    = local.account.db_subnet_group
-  kms_key_id              = data.aws_kms_key.rds.arn
-  storage_encrypted       = true
-  vpc_security_group_ids  = [module.api_rds_security_group.id]
-  deletion_protection     = local.account.db_serverless ? false : true
-  enable_http_endpoint    = local.account.db_serverless ? true : false
+  cluster_identifier           = "api-${local.environment}"
+  engine                       = "aurora-postgresql"
+  engine_mode                  = local.account.db_serverless ? "serverless" : "provisioned"
+  engine_version               = "9.6.16"
+  availability_zones           = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+  database_name                = "api"
+  master_username              = "digidepsmaster"
+  master_password              = data.aws_secretsmanager_secret_version.database_password.secret_string
+  skip_final_snapshot          = true
+  backup_retention_period      = 14
+  preferred_backup_window      = "07:00-09:00"
+  db_subnet_group_name         = local.account.db_subnet_group
+  kms_key_id                   = data.aws_kms_key.rds.arn
+  storage_encrypted            = true
+  vpc_security_group_ids       = [module.api_rds_security_group.id]
+  deletion_protection          = local.account.db_serverless ? false : true
+  enable_http_endpoint         = local.account.db_serverless ? true : false
+  preferred_maintenance_window = "sun:01:00-sun:01:30"
 
   replication_source_identifier = aws_db_instance.api.arn
 
@@ -75,7 +78,7 @@ resource "aws_rds_cluster_instance" "api" {
   count                        = local.account.db_serverless ? 0 : 2
   identifier_prefix            = "api-${local.environment}-"
   cluster_identifier           = aws_rds_cluster.api.id
-  instance_class               = "db.t3.medium"
+  instance_class               = "db.r4.large"
   engine                       = aws_rds_cluster.api.engine
   engine_version               = aws_rds_cluster.api.engine_version
   performance_insights_enabled = true
