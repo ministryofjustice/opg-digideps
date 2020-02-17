@@ -24,6 +24,7 @@ variable "accounts" {
       db_subnet_group      = string
       ec_subnet_group      = string
       state_source         = string
+      elasticache_count    = number
     })
   )
 }
@@ -46,6 +47,20 @@ locals {
   subdomain       = local.account["subdomain_enabled"] ? local.environment : ""
   front_whitelist = length(local.account["front_whitelist"]) > 0 ? local.account["front_whitelist"] : local.default_whitelist
   admin_whitelist = length(local.account["admin_whitelist"]) > 0 ? local.account["admin_whitelist"] : local.default_whitelist
+
+  elasticache_az = [
+    "eu-west-1a",
+    "eu-west-1b",
+    "eu-west-1c"
+  ]
+}
+
+resource "null_resource" "elasticache_az_list" {
+  count = local.account.elasticache_count
+
+  triggers = {
+    az = element(local.elasticache_az, count.index)
+  }
 }
 
 data "terraform_remote_state" "shared" {
