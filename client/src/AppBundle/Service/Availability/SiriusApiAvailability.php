@@ -15,19 +15,11 @@ class SiriusApiAvailability extends ServiceAvailabilityAbstract
         $this->isHealthy = true;
 
         try {
-            $url = new Uri('/v1/healthcheck');
-            $request = new Request('GET', $url, $headers = [
-                'Accept'        => 'application/json',
-                'Content-type'  => 'application/json',
-                'Host' => 'dev.deputy-reporting.api.opg.service.justice.gov.uk'
-            ]);
+            $response = $container->get('AppBundle\Service\Client\Sirius\SiriusApiGatewayClient')->get('v1/healthcheck');
 
-            $provider = CredentialProvider::defaultProvider();
-            $signer = new SignatureV4('execute-api', 'eu-west-1');
 
-            // Sign the request with an AWS Authorization header.
-            $signedRequest = $signer->signRequest($request, $provider()->wait());
-            $response = $container->get('guzzle_api_gateway_client')->send($signedRequest);
+
+
 
             if (200 !== $response->getStatusCode()) {
                 throw new \RuntimeException('returned HTTP code ' . $response->getStatusCode());

@@ -19,6 +19,21 @@ services:
   s3_storage:
     alias: AppBundle\Service\File\Storage\S3Storage
 
+  guzzle_file_scanner_client:
+    class: GuzzleHttp\Client
+    arguments:
+      $config:
+        base_uri: "%file_scanner_url%"
+        verify: "%file_scanner_sslverify%"
+        proxy: ""
+        debug: false
+        headers:
+          Content-Type: multipart-form-data
+        version: "1.1"
+
+        timeout: 10
+        allow_redirects: false
+
   AppBundle\Service\File\Verifier\MultiFileFormUploadVerifier:
     calls:
       - [ addVerifier, ['@AppBundle\Service\File\Verifier\ConstraintVerifier'] ]

@@ -1,7 +1,6 @@
 imports:
     - { resource: services/defaults.yml }
     - { resource: services/file_uploads.yml }
-    - { resource: services/guzzle.yml }
     - { resource: services/mappers.yml }
     - { resource: services/resolvers.yml }
     - { resource: services/transformers.yml }
@@ -36,3 +35,14 @@ services:
     AppBundle\Model\EmailAttachment: ~
     AppBundle\Service\DataImporter\CsvToArray: ~
     AppBundle\Service\NdrStatusService: ~
+
+    guzzle_api_gateway_client:
+        class: GuzzleHttp\Client
+        arguments:
+            $config:
+                timeout: 10
+                allow_redirects: false
+
+    AppBundle\Service\Client\Sirius\SiriusApiGatewayClient:
+        class: AppBundle\Service\Client\Sirius\SiriusApiGatewayClient
+        arguments: ['@guzzle_api_gateway_client', '%env(SIRIUS_API_BASE_URI)%']
