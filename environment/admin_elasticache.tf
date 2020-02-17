@@ -2,7 +2,6 @@ resource "aws_elasticache_replication_group" "admin" {
   automatic_failover_enabled    = local.account.elasticache_count == 1 ? false : true
   engine                        = "redis"
   engine_version                = "5.0.0"
-  availability_zones            = null_resource.elasticache_az_list.*.triggers.az
   replication_group_id          = "admin-rep-group-${local.environment}"
   replication_group_description = "Replication Group for Admin"
   node_type                     = "cache.t2.small"
