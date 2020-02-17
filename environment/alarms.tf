@@ -80,7 +80,7 @@ resource "aws_cloudwatch_metric_alarm" "availability-front" {
   alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
 
   dimensions = {
-    HealthCheckId = aws_route53_health_check.availability-front.id
+    HealthCheckId = aws_route53_health_check.availability-front[0].id
   }
 }
 
@@ -111,6 +111,6 @@ resource "aws_cloudwatch_metric_alarm" "availability-admin" {
   alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
 
   dimensions = {
-    HealthCheckId = aws_route53_health_check.availability-admin.id
+    HealthCheckId = aws_route53_health_check.availability-admin[0].id
   }
 }
