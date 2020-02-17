@@ -46,7 +46,7 @@ resource "aws_rds_cluster" "api" {
   cluster_identifier           = "api-${local.environment}"
   engine                       = "aurora-postgresql"
   engine_mode                  = local.account.always_on ? "provisioned" : "serverless"
-  engine_version               = "9.6.16"
+  engine_version               = "10.7"
   availability_zones           = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
   database_name                = "api"
   master_username              = "digidepsmaster"
