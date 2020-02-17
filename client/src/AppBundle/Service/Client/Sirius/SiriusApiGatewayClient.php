@@ -39,7 +39,7 @@ class SiriusApiGatewayClient
             'Content-type' => 'application/json'
         ]);
 
-        $provider = CredentialProvider::env();
+        $provider = CredentialProvider::defaultProvider();
         $signer = new SignatureV4('execute-api', 'eu-west-1');
 
         // Sign the request with an AWS Authorization header.
