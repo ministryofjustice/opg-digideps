@@ -22,7 +22,8 @@ class SiriusApiAvailability extends ServiceAvailabilityAbstract
             $url = new Uri('/v1/healthcheck');
             $request = new Request('GET', $url, $headers = [
                 'Accept'        => 'application/json',
-                'Content-type'  => 'application/json'
+                'Content-type'  => 'application/json',
+                'Host' => 'foo.bar:8000'
             ]);
 
             $provider = CredentialProvider::defaultProvider();
