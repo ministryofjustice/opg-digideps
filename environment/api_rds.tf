@@ -3,6 +3,7 @@ data "aws_kms_key" "rds" {
 }
 
 resource "aws_db_instance" "api" {
+  count                   = local.account.always_on ? 1 : 0
   name                    = "api"
   identifier              = "api-${local.environment}"
   instance_class          = "db.m3.medium"
@@ -41,6 +42,7 @@ resource "aws_db_instance" "api" {
 }
 
 resource "aws_rds_cluster" "api" {
+  count                        = local.account.always_on ? 0 : 1
   cluster_identifier           = "api-${local.environment}"
   engine                       = "aurora-postgresql"
   engine_mode                  = local.account.always_on ? "provisioned" : "serverless"
@@ -60,8 +62,6 @@ resource "aws_rds_cluster" "api" {
   enable_http_endpoint         = local.account.always_on ? false : true
   preferred_maintenance_window = "sun:01:00-sun:01:30"
 
-  replication_source_identifier = aws_db_instance.api.arn
-
   tags = merge(
     local.default_tags,
     {
@@ -74,23 +74,23 @@ resource "aws_rds_cluster" "api" {
   }
 }
 
-resource "aws_rds_cluster_instance" "api" {
-  count                        = local.account.always_on ? 1 : 0
-  identifier_prefix            = "api-${local.environment}-"
-  cluster_identifier           = aws_rds_cluster.api.id
-  instance_class               = "db.r4.large"
-  engine                       = aws_rds_cluster.api.engine
-  engine_version               = aws_rds_cluster.api.engine_version
-  performance_insights_enabled = true
-  monitoring_role_arn          = aws_iam_role.enhanced_monitoring.arn
-  monitoring_interval          = 60
-  apply_immediately            = true
-  tags                         = local.default_tags
+# resource "aws_rds_cluster_instance" "api" {
+#   count                        = local.account.always_on ? 1 : 0
+#   identifier_prefix            = "api-${local.environment}-"
+#   cluster_identifier           = aws_rds_cluster.api.id
+#   instance_class               = "db.r4.large"
+#   engine                       = aws_rds_cluster.api.engine
+#   engine_version               = aws_rds_cluster.api.engine_version
+#   performance_insights_enabled = true
+#   monitoring_role_arn          = aws_iam_role.enhanced_monitoring.arn
+#   monitoring_interval          = 60
+#   apply_immediately            = true
+#   tags                         = local.default_tags
 
-  lifecycle {
-    create_before_destroy = true
-  }
-}
+#   lifecycle {
+#     create_before_destroy = true
+#   }
+# }
 
 resource "aws_iam_role" "enhanced_monitoring" {
   name               = "rds-enhanced-monitoring"
@@ -114,10 +114,19 @@ data "aws_iam_policy_document" "enhanced_monitoring" {
   }
 }
 
+locals {
+  db = {
+    endpoint = local.account.always_on ? aws_db_instance.api[0].address : aws_rds_cluster.api[0].endpoint
+    port     = local.account.always_on ? aws_db_instance.api[0].port : aws_rds_cluster.api[0].port
+    name     = local.account.always_on ? aws_db_instance.api[0].name : aws_rds_cluster.api[0].database_name
+    username = local.account.always_on ? aws_db_instance.api[0].username : aws_rds_cluster.api[0].master_username
+  }
+}
+
 resource "aws_route53_record" "api_postgres" {
   name    = "postgres"
   type    = "CNAME"
   zone_id = aws_route53_zone.internal.id
-  records = [aws_db_instance.api.address]
+  records = [local.db.endpoint]
   ttl     = 300
 }
