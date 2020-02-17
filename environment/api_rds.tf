@@ -43,7 +43,7 @@ resource "aws_db_instance" "api" {
 resource "aws_rds_cluster" "api" {
   cluster_identifier           = "api-${local.environment}"
   engine                       = "aurora-postgresql"
-  engine_mode                  = local.account.db_serverless ? "serverless" : "provisioned"
+  engine_mode                  = local.account.always_on ? "provisioned" : "serverless"
   engine_version               = "9.6.16"
   availability_zones           = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
   database_name                = "api"
@@ -56,8 +56,8 @@ resource "aws_rds_cluster" "api" {
   kms_key_id                   = data.aws_kms_key.rds.arn
   storage_encrypted            = true
   vpc_security_group_ids       = [module.api_rds_security_group.id]
-  deletion_protection          = local.account.db_serverless ? false : true
-  enable_http_endpoint         = local.account.db_serverless ? true : false
+  deletion_protection          = local.account.always_on ? true : false
+  enable_http_endpoint         = local.account.always_on ? false : true
   preferred_maintenance_window = "sun:01:00-sun:01:30"
 
   replication_source_identifier = aws_db_instance.api.arn
@@ -75,7 +75,7 @@ resource "aws_rds_cluster" "api" {
 }
 
 resource "aws_rds_cluster_instance" "api" {
-  count                        = local.account.db_serverless ? 0 : 1
+  count                        = local.account.always_on ? 1 : 0
   identifier_prefix            = "api-${local.environment}-"
   cluster_identifier           = aws_rds_cluster.api.id
   instance_class               = "db.r4.large"
