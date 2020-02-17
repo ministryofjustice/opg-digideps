@@ -75,7 +75,7 @@ resource "aws_rds_cluster" "api" {
 }
 
 resource "aws_rds_cluster_instance" "api" {
-  count                        = local.account.db_serverless ? 0 : 2
+  count                        = local.account.db_serverless ? 0 : 1
   identifier_prefix            = "api-${local.environment}-"
   cluster_identifier           = aws_rds_cluster.api.id
   instance_class               = "db.r4.large"
