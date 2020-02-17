@@ -16,6 +16,7 @@ class SiriusApiAvailability extends ServiceAvailabilityAbstract
 
         try {
             $url = new Uri(getenv('SIRIUS_API_BASE_URI').'/v1/healthcheck');
+            print $url; exit;
             $request = new Request('GET', $url, $headers = [
                 'Accept'        => 'application/json',
                 'Content-type'  => 'application/json'
@@ -27,7 +28,7 @@ class SiriusApiAvailability extends ServiceAvailabilityAbstract
             // Sign the request with an AWS Authorization header.
             $signedRequest = $signer->signRequest($request, $provider()->wait());
             $response = $container->get('guzzle_api_gateway_client')->sendRequest($signedRequest);
-            
+
             if (200 !== $response->getStatusCode()) {
                 throw new \RuntimeException('returned HTTP code ' . $response->getStatusCode());
             }
