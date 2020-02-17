@@ -12,9 +12,7 @@ resource "aws_route53_record" "front_redis" {
   type    = "CNAME"
   zone_id = aws_route53_zone.internal.id
   records = [aws_elasticache_replication_group.front.primary_endpoint_address]
-  // Include this once first two subtasks of DDBP-3192 are done
-  //  records = local.account.is_production == 1 ? [aws_elasticache_replication_group.front[0].primary_endpoint_address] : [aws_elasticache_cluster.front[0].cache_nodes[0].address]
-  ttl = 300
+  ttl     = 300
 }
 
 resource "aws_route53_record" "admin_redis" {
@@ -22,9 +20,7 @@ resource "aws_route53_record" "admin_redis" {
   type    = "CNAME"
   zone_id = aws_route53_zone.internal.id
   records = [aws_elasticache_replication_group.admin.primary_endpoint_address]
-  // Include this once first two subtasks of DDBP-3192 are done
-  //  records = local.account.is_production == 1 ? [aws_elasticache_replication_group.admin[0].primary_endpoint_address] : [aws_elasticache_cluster.admin[0].cache_nodes[0].address]
-  ttl = 300
+  ttl     = 300
 }
 
 resource "aws_route53_record" "api_redis" {
@@ -32,7 +28,5 @@ resource "aws_route53_record" "api_redis" {
   type    = "CNAME"
   zone_id = aws_route53_zone.internal.id
   records = [aws_elasticache_replication_group.api.primary_endpoint_address]
-  // Include this once first two subtasks of DDBP-3192 are done
-  //  records = local.account.is_production == 1 ? [aws_elasticache_replication_group.api[0].primary_endpoint_address] : [aws_elasticache_cluster.api[0].cache_nodes[0].address]
-  ttl = 300
+  ttl     = 300
 }
