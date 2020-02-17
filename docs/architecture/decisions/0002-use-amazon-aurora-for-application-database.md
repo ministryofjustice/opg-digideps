@@ -20,6 +20,8 @@ We will use Amazon Aurora Serverless for environments which do not need to alway
 
 We will need to stop running regular healthchecks in these environments, since this prevents the database from pausing.
 
-Our database infrastructure will vary between accounts, meaning we cannot be certain that code which worked in development will work in production. However, we will mitigate this by keeping our database technology (Postgres) and version (currently 9.6) aligned. Smoke tests in preproduction will indicate any infrastructure failures before release to production. We may consider moving our production database to Provisioned Aurora to further align in the future.
+Our database infrastructure will vary between accounts, meaning we cannot be certain that code which worked in development will work in production. Smoke tests in preproduction will indicate any infrastructure failures before release to production.
+
+We will consider upgrading our production database to a matching Postgres version (10.7) and/or hosting it with Provisioned Aurora to further align in the future.
 
 As Aurora identifies itself as Postgres, no application changes are needed to support this.
