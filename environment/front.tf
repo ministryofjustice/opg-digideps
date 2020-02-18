@@ -30,3 +30,21 @@ data "aws_iam_policy_document" "front_s3" {
     ]
   }
 }
+
+resource "aws_iam_role_policy" "invoke_dep_rep_api" {
+  name   = "front-dep-rep-api.${local.environment}"
+  policy = data.aws_iam_policy_document.invoke_dep_rep_api.json
+  role   = aws_iam_role.front.id
+}
+
+data "aws_iam_policy_document" "invoke_dep_rep_api" {
+  statement {
+    sid    = "AllowInvokeOnDeputyReportingGateway"
+    effect = "Allow"
+    action = [
+      "execute-api:Invoke",
+      "execute-api:ManageConnections"
+    ]
+    resource = "arn:aws:execute-api:eu-west-1:${local.account.sirius_api_account}:*"
+  }
+}
