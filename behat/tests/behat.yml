@@ -67,6 +67,12 @@ default:
             contexts:
                 - DigidepsBehat\ACL\ACLfeatureContext
 
+        registration:
+            description: Coverage of the self and auto registration processes
+            paths: [ "%paths.base%/features/registration" ]
+            contexts:
+                - DigidepsBehat\Registration\RegistrationFeatureContext
+
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
               goutte:

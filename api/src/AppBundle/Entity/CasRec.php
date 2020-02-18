@@ -9,13 +9,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="casrec", indexes={@ORM\Index(name="updated_at_idx", columns={"updated_at"})})
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\CasRecRepository")
  */
 class CasRec
 {
     const REALM_PA = 'REALM_PA';
     const REALM_PROF = 'REALM_PROF';
     const REALM_LAY = 'REALM_LAY';
+
+    const CASREC_SOURCE = 'casrec';
+    const SIRIUS_SOURCE = 'sirius';
 
     /**
      * Holds the mapping rules to define the report type based on the CSV file (CASREC)
@@ -165,6 +168,13 @@ class CasRec
     private $updatedAt;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="source", type="string", nullable=true, options={"default" : "casrec"})
+     */
+    private $source;
+
+    /**
      * Filled from cron
      *
      * @var array
@@ -190,6 +200,9 @@ class CasRec
         $this->deputyPostCode = self::normaliseSurname($row['Dep Postcode']);
         $this->typeOfReport = self::normaliseCorrefAndTypeOfRep($row['Typeofrep']);
         $this->corref = self::normaliseCorrefAndTypeOfRep($row['Corref']);
+
+        $source = isset($row['Source']) ? $row['Source'] : self::CASREC_SOURCE;
+        $this->setSource($source);
 
         $this->otherColumns = serialize($row);
         $this->createdAt = new \DateTime();
@@ -365,5 +378,39 @@ class CasRec
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSource()
+    {
+        return $this->source;
+    }
+
+    /**
+     * @param mixed $source
+     * @return CasRec
+     */
+    public function setSource($source)
+    {
+        $source = strtolower($source);
+        if (!in_array($source, self::validSources())) {
+            throw new \InvalidArgumentException(sprintf('Attempting to set invalid source: %s given', $source));
+        }
+
+        $this->source = $source;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public static function validSources()
+    {
+        return [
+            self::CASREC_SOURCE,
+            self::SIRIUS_SOURCE
+        ];
     }
 }

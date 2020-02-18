@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AppBundle\v2\Registration\SelfRegistration;
+namespace Tests\AppBundle\v2\Registration\SelfRegistration\Factory;
 
 use AppBundle\Entity\CasRec;
 use AppBundle\Service\DateTimeProvider;
@@ -66,6 +66,7 @@ class CasRecFactoryTest extends TestCase
             ->method('getDateTime')
             ->willReturn(new \DateTime('2010-01-03 12:03:23'));
 
+        /** @var CasRec $result */
         $result = $this->factory->createFromDto($this->buildLayDeputyshipDto());
 
         $this->assertInstanceOf(CasRec::class, $result);
@@ -78,6 +79,7 @@ class CasRecFactoryTest extends TestCase
         $this->assertEquals('corref', $result->getCorref());
         $this->assertEquals(true, $result->getColumn('NDR'));
         $this->assertEquals('2010-01-03 12:03:23', $result->getUpdatedAt()->format('Y-m-d H:i:s'));
+        $this->assertEquals(CasRec::SIRIUS_SOURCE, $result->getSource());
     }
 
     /**
@@ -93,6 +95,7 @@ class CasRecFactoryTest extends TestCase
             ->setDeputyPostcode('postcode')
             ->setTypeOfReport('type')
             ->setIsNdrEnabled(true)
-            ->setCorref('corref');
+            ->setCorref('corref')
+            ->setSource(CasRec::SIRIUS_SOURCE);
     }
 }
