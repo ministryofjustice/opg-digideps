@@ -41,10 +41,10 @@ data "aws_iam_policy_document" "invoke_dep_rep_api" {
   statement {
     sid    = "AllowInvokeOnDeputyReportingGateway"
     effect = "Allow"
-    action = [
+    actions = [
       "execute-api:Invoke",
       "execute-api:ManageConnections"
     ]
-    resource = "arn:aws:execute-api:eu-west-1:${local.account.sirius_api_account}:*"
+    resources = ["arn:aws:execute-api:eu-west-1:${local.account.sirius_api_account}:*"]
   }
 }
