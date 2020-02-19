@@ -19,7 +19,7 @@ Feature: Admin report checklist
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
-      | Admin User, OPG Admin | lodging-last-saved-by |
+      | Admin User, Admin | lodging-last-saved-by |
       | 1 Nov 2017 | court-date |
       | Property and affairs: general | report-type-title |
       | John | checklist-client-firstname |
@@ -52,7 +52,7 @@ Feature: Admin report checklist
       | Decisions                         | information |
       | Deputy expenses                   | information |
       | Due date set to: 30 April 2022    | information |
-      | Admin User, OPG Admin             | information |
+      | Admin User, Admin                 | information |
     # check auto-filled answers
     And the following fields should have the corresponding values:
       | report_checklist_futureSignificantDecisions_0 | yes     |
@@ -104,7 +104,7 @@ Feature: Admin report checklist
     When I open the "2016" checklist for client "102"
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
-      | Admin User, OPG Admin | lodging-last-saved-by |
+      | Admin User, Admin | lodging-last-saved-by |
     # Begin scenario
     When I fill in "report_checklist_furtherInformationReceived" with "Some more info 1"
     When I click on "save-further-information"
@@ -115,8 +115,8 @@ Feature: Admin report checklist
       | report_checklist_furtherInformationReceived |  |
     # Assert furtherInfo table is populated
     And each text should be present in the corresponding region:
-      | Case Manager1, Case Manager | information |
-      | Some more info 1            | information |
+      | Case Manager1, Admin | information |
+      | Some more info 1     | information |
     Then the URL should match "/admin/report/\d+/checklist"
     And I fill in "report_checklist_furtherInformationReceived" with "Some more info 2"
     When I click on "save-further-information"
@@ -124,9 +124,9 @@ Feature: Admin report checklist
     Then the URL should match "/admin/report/\d+/checklist#furtherInformation"
     # Assert furtherInfo table is updated NOTE reverse order as most recent first.
     And each text should be present in the corresponding region:
-      | Some more info 2            | information |
-      | Case Manager1, Case Manager | information |
-      | Some more info 1            | information |
+      | Some more info 2     | information |
+      | Case Manager1, Admin | information |
+      | Some more info 1     | information |
     Then the URL should match "/admin/report/\d+/checklist"
 
 
@@ -137,7 +137,7 @@ Feature: Admin report checklist
     When I open the "2016" checklist for client "102"
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
-      | Case Manager1, Case Manager | lodging-last-saved-by |
+      | Case Manager1, Admin | lodging-last-saved-by |
     # Begin scenario
     When I fill in "report_checklist_reportingPeriodAccurate_0" with "yes"
     And I fill in "report_checklist_contactDetailsUptoDate" with "1"
@@ -163,7 +163,7 @@ Feature: Admin report checklist
     When I click on "back-to-money-in-out"
     Then the URL should match "/admin/report/\d+/checklist#moneyInOut"
     And each text should be present in the corresponding region:
-      | Admin User, OPG Admin | lodging-last-saved-by |
+      | Admin User, Admin | lodging-last-saved-by |
     # Assert form reloads with fields saved
     Then the following fields should have the corresponding values:
       | report_checklist_reportingPeriodAccurate_0             | yes                |
@@ -194,5 +194,5 @@ Feature: Admin report checklist
     When I open the "2016" checklist for client "102"
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
-      | Admin User, OPG Admin | lodging-last-saved-by     |
-      | Admin User, OPG Admin | lodging-last-submitted-by |
+      | Admin User, Admin | lodging-last-saved-by     |
+      | Admin User, Admin | lodging-last-submitted-by |
