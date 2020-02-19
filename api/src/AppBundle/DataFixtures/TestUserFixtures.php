@@ -20,6 +20,10 @@ class TestUserFixtures extends AbstractDataFixture
             'roleName' => 'ROLE_ADMIN',
         ],
         [
+            'id' => 'super_admin',
+            'roleName' => 'ROLE_SUPER_ADMIN',
+        ],
+        [
             'id' => 'pa',
             'roleName' => 'ROLE_PA_NAMED',
         ],
