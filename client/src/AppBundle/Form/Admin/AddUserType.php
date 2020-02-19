@@ -9,9 +9,20 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class AddUserType extends AbstractType
 {
+    /**
+     * @var TokenStorageInterface
+     */
+    protected $tokenStorage;
+
+    public function __construct(TokenStorageInterface $tokenStorage)
+    {
+        $this->tokenStorage = $tokenStorage;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $deputyRoles = [
@@ -23,7 +34,13 @@ class AddUserType extends AbstractType
             User::ROLE_PROF_ADMIN,
             User::ROLE_PROF_TEAM_MEMBER,
         ];
-        $staffRoles = [User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN];
+
+        $staffRoles = [User::ROLE_ADMIN];
+
+        $loggedInUser = $this->tokenStorage->getToken()->getUser();
+        if ($loggedInUser->getRoleName() === User::ROLE_SUPER_ADMIN) {
+            $staffRoles[] = User::ROLE_SUPER_ADMIN;
+        }
 
         $builder->add('email', FormTypes\TextType::class)
             ->add('firstname', FormTypes\TextType::class)
