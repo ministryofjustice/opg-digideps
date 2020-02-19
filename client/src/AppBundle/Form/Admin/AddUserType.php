@@ -23,7 +23,7 @@ class AddUserType extends AbstractType
             User::ROLE_PROF_ADMIN,
             User::ROLE_PROF_TEAM_MEMBER,
         ];
-        $staffRoles = [User::ROLE_ADMIN, User::ROLE_CASE_MANAGER];
+        $staffRoles = [User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN];
 
         $builder->add('email', FormTypes\TextType::class)
             ->add('firstname', FormTypes\TextType::class)

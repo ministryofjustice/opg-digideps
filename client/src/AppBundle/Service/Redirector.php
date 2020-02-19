@@ -94,9 +94,6 @@ class Redirector
 
         if ($this->authChecker->isGranted(EntityDir\User::ROLE_ADMIN)) {
             return $this->router->generate('admin_homepage');
-        }
-        if ($this->authChecker->isGranted(EntityDir\User::ROLE_CASE_MANAGER)) {
-            return $this->router->generate('admin_client_search');
         } elseif ($this->authChecker->isGranted(EntityDir\User::ROLE_AD)) {
             return $this->router->generate('ad_homepage');
         } elseif ($user->isDeputyOrg()) {
@@ -122,7 +119,7 @@ class Redirector
         }
 
         //none of these corrections apply to admin
-        if (!in_array($user->getRoleName(), [EntityDir\User::ROLE_ADMIN, EntityDir\User::ROLE_CASE_MANAGER])) {
+        if (!in_array($user->getRoleName(), [EntityDir\User::ROLE_ADMIN, EntityDir\User::ROLE_SUPER_ADMIN])) {
             if ($user->getIsCoDeputy()) {
                 // already verified - shouldn't be on verification page
                 if ('codep_verification' == $currentRoute && $user->getCoDeputyClientConfirmed()) {
@@ -216,9 +213,6 @@ class Redirector
             // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
             if ($this->authChecker->isGranted(EntityDir\User::ROLE_ADMIN)) {
                 return $this->router->generate('admin_homepage');
-            }
-            if ($this->authChecker->isGranted(EntityDir\User::ROLE_CASE_MANAGER)) {
-                return $this->router->generate('admin_client_search');
             }
             if ($this->authChecker->isGranted(EntityDir\User::ROLE_AD)) {
                 return $this->router->generate('ad_homepage');
