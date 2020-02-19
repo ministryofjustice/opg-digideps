@@ -21,7 +21,6 @@ class User implements AdvancedUserInterface, DeputyInterface
 
     const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
     const ROLE_AD = 'ROLE_AD';
-    const ROLE_CASE_MANAGER = 'ROLE_CASE_MANAGER';
 
     const ROLE_PA = 'ROLE_PA';
     const ROLE_PA_NAMED = 'ROLE_PA_NAMED';
@@ -50,7 +49,6 @@ class User implements AdvancedUserInterface, DeputyInterface
         self::ROLE_SUPER_ADMIN    => 'OPG Admin',
         self::ROLE_LAY_DEPUTY     => 'Lay Deputy',
         self::ROLE_AD             => 'Assisted Digital',
-        self::ROLE_CASE_MANAGER   => 'Case Manager',
         // pa
         self::ROLE_PA_NAMED       => 'Public Authority (named)',
         self::ROLE_PA_ADMIN       => 'Public Authority admin',

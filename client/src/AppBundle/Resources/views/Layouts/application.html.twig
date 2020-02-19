@@ -33,15 +33,11 @@
                             {{ 'nav.adminArea' | trans }}
                         </a>
                     </li>
-                {% endif %}
-                {% if is_granted('ROLE_CASE_MANAGER') %}
                     <li class="govuk-header__navigation-item">
                         <a href="{{ path('admin_client_search') }}"  class="govuk-header__link behat-link-admin-client-search ">
                             {{ 'nav.adminClients' | trans }}
                         </a>
                     </li>
-                {% endif %}
-                {% if is_granted('ROLE_ADMIN') %}
                     <li class="govuk-header__navigation-item">
                         <a href="{{ path('admin_organisation_homepage') }}" class="govuk-header__link behat-link-admin-organisations">
                             {{ 'nav.adminOrganisations' | trans }}
@@ -62,15 +58,11 @@
                             {{ 'nav.adminStats' | trans }}
                         </a>
                     </li>
-                {% endif %}
-                {% if is_granted('ROLE_CASE_MANAGER') %}
                     <li class="govuk-header__navigation-item">
                         <a href="{{path('account_settings')}}" class="govuk-header__link behat-link-user-account">
                             {{ 'nav.userAccount' | trans }}
                         </a>
                     </li>
-                {% endif %}
-                {% if is_granted('ROLE_ADMIN') %}
                     <li class="govuk-header__navigation-item">
                         <a href="{{ path('admin_documents') }}" class="govuk-header__link behat-link-admin-documents">
                             {{ 'nav.adminDocuments' | trans }}
