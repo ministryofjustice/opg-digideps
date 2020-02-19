@@ -143,6 +143,7 @@ trait ReportManagementTrait
         $endDate = self::$currentReportCache['endDate'];
 
         $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
+        $this->clickOnBehatLink('admin-client-search');
         $this->clickOnBehatLink('client-detail-'.$client);
 
         $adjustment = intval($adjustment);
@@ -160,6 +161,7 @@ trait ReportManagementTrait
         $endDate = self::$currentReportCache['endDate'];
 
         $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
+        $this->clickOnBehatLink('admin-client-search');
         $this->clickOnBehatLink('client-detail-'.$client);
 
         $expectedDueDate = new \DateTime($adjustment);
