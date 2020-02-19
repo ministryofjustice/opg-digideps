@@ -54,29 +54,32 @@ class CasRecControllerTest extends AbstractTestController
         ]);
     }
 
-    private function compress($data)
+    public function testDeleteBySourceVerifiesSourceInput()
     {
-        return base64_encode(gzcompress(json_encode($data), 9));
-    }
-
-    public function testTruncate()
-    {
-        // just to check it gets truncated
-        $casRec = new CasRec([
-            'Case' => 'case',
-            'Surname' => 'I should get deleted',
-            'Deputy No' => 'Deputy No',
-            'Dep Surname' => 'Dep Surname',
-            'Dep Postcode' => 'SW1',
-            'Typeofrep'=>'OPG102',
-            'Corref'=>'L2'
-        ]);
-
-        $this->fixtures()->persist($casRec);
-        $this->fixtures()->flush($casRec);
+        $this->buildAndPersistCasRecEntity('12345678', CasRec::CASREC_SOURCE);
+        $this->fixtures()->flush();
         $this->fixtures()->clear();
 
-        $url = '/casrec/truncate';
+        $url = '/casrec/delete-by-source/unknownsource';
+
+        $this->assertJsonRequest('DELETE', $url, [
+            'mustFail' => true,
+            'AuthToken' => self::$tokenAdmin,
+            'assertResponseCode' => 400,
+        ]);
+
+        $entitiesRemaining = $this->fixtures()->clear()->getRepo('CasRec')->findAll();
+        $this->assertCount(1, $entitiesRemaining);
+    }
+
+    public function testDeleteBySourceDeletesBySource()
+    {
+        $this->buildAndPersistCasRecEntity('23410954', CasRec::CASREC_SOURCE);
+        $this->buildAndPersistCasRecEntity('95043859', CasRec::SIRIUS_SOURCE);
+        $this->fixtures()->flush();
+        $this->fixtures()->clear();
+
+        $url = '/casrec/delete-by-source/casrec';
         $this->assertEndpointNeedsAuth('DELETE', $url);
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenDeputy);
 
@@ -84,7 +87,10 @@ class CasRecControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenAdmin,
         ]);
-        $this->assertCount(0, $this->fixtures()->clear()->getRepo('CasRec')->findAll());
+
+        $entitiesRemaining = $this->fixtures()->clear()->getRepo('CasRec')->findAll();
+        $this->assertCount(1, $entitiesRemaining);
+        $this->assertEquals('95043859', $entitiesRemaining[0]->getCaseNumber());
     }
 
     public function testCount()
@@ -104,5 +110,28 @@ class CasRecControllerTest extends AbstractTestController
         ])['data'];
 
         $this->assertEquals(1, $data);
+    }
+
+    /**
+     * @param $case
+     * @param string $source
+     * @return CasRec
+     */
+    private function buildAndPersistCasRecEntity($case, $source = CasRec::CASREC_SOURCE): CasRec
+    {
+        $casRec = new CasRec([
+            'Case' => $case,
+            'Surname' => 'I should get deleted',
+            'Deputy No' => 'Deputy No',
+            'Dep Surname' => 'Dep Surname',
+            'Dep Postcode' => 'SW1',
+            'Typeofrep' => 'OPG102',
+            'Corref' => 'L2',
+            'Source' => $source
+        ]);
+
+        $this->fixtures()->persist($casRec);
+
+        return $casRec;
     }
 }
