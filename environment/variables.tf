@@ -23,6 +23,7 @@ variable "accounts" {
       symfony_env          = string
       db_subnet_group      = string
       ec_subnet_group      = string
+      sirius_api_account   = string
       state_source         = string
       elasticache_count    = number
     })
