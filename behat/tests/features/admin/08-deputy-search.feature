@@ -9,9 +9,9 @@ Feature: Deputy search
   @admin @admin-search @deputy-search
   Scenario: Search broadly across deputy by a role, excluding clients
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I search in admin for a deputy with the term "Manager1" and filter role by "ROLE_PA_NAMED"
+    And I search in admin for a deputy with the term "Manager1" and filter role by "Public Authority deputies (named)"
     Then I should see "Found 0 users"
-    When I search in admin for a deputy with the term "Manager1" and filter role by "ROLE_CASE_MANAGER"
+    When I search in admin for a deputy with the term "Manager1" and filter role by "Case manager"
     And I press "admin_search"
     Then I should see "Found 1 users"
 
@@ -30,7 +30,7 @@ Feature: Deputy search
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     When I search in admin for a deputy with the term "103-6-client" and include clients
     Then I should see "Found 3 users"
-    When I search in admin for a deputy with the term "103-6-client" and filter role by "ROLE_PA_NAMED" and include clients
+    When I search in admin for a deputy with the term "103-6-client" and filter role by "Public Authority deputies (named)" and include clients
     Then I should see "Found 1 users"
 
   @admin @admin-search @deputy-search
@@ -52,8 +52,8 @@ Feature: Deputy search
   @admin @admin-search @deputy-search
   Scenario: Search exact name match across a specific deputy role
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    When I search in admin for a deputy with the term "Admin User" and filter role by "ROLE_PA_NAMED"
+    When I search in admin for a deputy with the term "Admin User" and filter role by "Public Authority deputies (named)"
     Then I should see "Found 0 users"
-    When I search in admin for a deputy with the term "Admin User" and filter role by "ROLE_ADMIN"
+    When I search in admin for a deputy with the term "Admin User" and filter role by "OPG Admin"
     Then I should see "Found 1 users"
     And I should see "Admin User"
