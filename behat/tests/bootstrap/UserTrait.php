@@ -8,10 +8,10 @@ trait UserTrait
 {
     // added here for simplicity
     private static $roleStringToRoleName = [
+        'super admin' => 'ROLE_SUPER_ADMIN',
         'admin' => 'ROLE_ADMIN',
         'lay deputy' => 'ROLE_LAY_DEPUTY',
         'ad' => 'ROLE_AD',
-        'case manager' => 'ROLE_CASE_MANAGER',
         'pa named' => 'ROLE_PA_NAMED',
         'prof named' => 'ROLE_PROF_NAMED'
     ];
