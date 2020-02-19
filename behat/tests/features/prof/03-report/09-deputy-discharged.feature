@@ -199,7 +199,7 @@ Feature: Prof deputy is discharged
 
     Scenario: Admin can see both Clients one discharged and the new lay deputies client with same case number
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    Then I should be on "/admin/client/search"
+    And I click on "admin-client-search"
     When I fill in the following:
       | search_clients_q | 31000010 |
     And I click on "search_clients_search"
