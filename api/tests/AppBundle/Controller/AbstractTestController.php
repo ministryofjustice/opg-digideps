@@ -260,6 +260,14 @@ abstract class AbstractTestController extends WebTestCase
         return $this->login('admin@example.org', 'Abcd1234', self::$adminSecret);
     }
 
+    /**
+     * @return string token
+     */
+    protected function loginAsSuperAdmin()
+    {
+        return $this->login('super_admin@example.org', 'Abcd1234', self::$adminSecret);
+    }
+
     protected function tearDown(): void
     {
         parent::tearDown();
