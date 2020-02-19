@@ -1251,31 +1251,6 @@ class User implements UserInterface
     }
 
     /**
-     * @deprecated ID shouldn't be used anymore anywhere
-     *
-     * @param int $id
-     *
-     * @return string
-     */
-    public static function roleIdToName($id)
-    {
-        foreach ([
-                     self::ROLE_ADMIN              => ['OPG Admin', 1],
-                     self::ROLE_LAY_DEPUTY         => ['Lay Deputy', 2],
-                     'ROLE_PROFESSIONAL_DEPUTY'    => ['Professional Deputy', 3],
-                     'ROLE_LOCAL_AUTHORITY_DEPUTY' => ['Local Authority Deputy', 4],
-                     self::ROLE_AD                 => ['Assisted Digital', 5],
-                     self::ROLE_PA_NAMED                 => ['Pa', 6],
-                     self::ROLE_PA_ADMIN           => ['Pa Admin', 7],
-                     self::ROLE_PA_TEAM_MEMBER     => ['Pa Team member', 8],
-                 ] as $name => $row) {
-            if ($row[1] == $id) {
-                return $name;
-            }
-        }
-    }
-
-    /**
      * Set role to team member
      */
     public function setDefaultRoleIfEmpty()

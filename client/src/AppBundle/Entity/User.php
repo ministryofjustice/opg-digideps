@@ -45,8 +45,8 @@ class User implements AdvancedUserInterface, DeputyInterface
      * @JMS\Exclude
      */
     private static $allowedRoles = [
-        self::ROLE_ADMIN          => 'Case Manager',
-        self::ROLE_SUPER_ADMIN    => 'OPG Admin',
+        self::ROLE_ADMIN          => 'Admin',
+        self::ROLE_SUPER_ADMIN    => 'Super admin',
         self::ROLE_LAY_DEPUTY     => 'Lay Deputy',
         self::ROLE_AD             => 'Assisted Digital',
         // pa

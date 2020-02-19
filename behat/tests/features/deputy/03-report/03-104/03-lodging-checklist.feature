@@ -58,9 +58,9 @@ Feature: Admin report checklist
       | report_checklist_furtherInformationReceived | |
     # Assert furtherInfo table is populated
     And each text should be present in the corresponding region:
-      | Case Manager1, Case Manager | lodging-last-saved-by |
+      | Case Manager1, Admin | lodging-last-saved-by |
       | Some more info 1            | information           |
-      | Case Manager1, Case Manager | information           |
+      | Case Manager1, Admin | information           |
     Then the URL should match "/admin/report/\d+/checklist"
     And I fill in "report_checklist_furtherInformationReceived" with "Some more info 2"
     When I click on "save-further-information"
@@ -68,7 +68,7 @@ Feature: Admin report checklist
     Then the URL should match "/admin/report/\d+/checklist#furtherInformation"
     And each text should be present in the corresponding region:
       | Some more info 2              | information |
-      | Case Manager1, Case Manager   | information |
+      | Case Manager1, Admin   | information |
       | Some more info 1              | information |
     Then the URL should match "/admin/report/\d+/checklist"
 
@@ -79,7 +79,7 @@ Feature: Admin report checklist
     When I open the "2016" checklist for client "104"
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
-    | Case Manager1, Case Manager | lodging-last-saved-by |
+    | Case Manager1, Admin | lodging-last-saved-by |
     # Begin scenario
     When I fill in "report_checklist_reportingPeriodAccurate_0" with "yes"
     And I fill in "report_checklist_contactDetailsUptoDate" with "1"
@@ -97,7 +97,7 @@ Feature: Admin report checklist
     And the response status code should be 200
     And the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
-      | Admin User, OPG Admin | lodging-last-saved-by |
+      | Admin User, Admin | lodging-last-saved-by |
     # Assert form reloads with fields saved
     Then the following fields should have the corresponding values:
       | report_checklist_reportingPeriodAccurate_0   | yes   |
@@ -125,5 +125,5 @@ Feature: Admin report checklist
     When I open the "2016" checklist for client "104"
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
-      | Admin User, OPG Admin | lodging-last-saved-by     |
-      | Admin User, OPG Admin | lodging-last-submitted-by |
+      | Admin User, Admin | lodging-last-saved-by     |
+      | Admin User, Admin | lodging-last-submitted-by |
