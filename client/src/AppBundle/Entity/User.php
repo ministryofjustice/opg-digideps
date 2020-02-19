@@ -17,6 +17,8 @@ class User implements AdvancedUserInterface, DeputyInterface
     use LoginInfoTrait;
 
     const ROLE_ADMIN = 'ROLE_ADMIN';
+    const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
+
     const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
     const ROLE_AD = 'ROLE_AD';
     const ROLE_CASE_MANAGER = 'ROLE_CASE_MANAGER';
@@ -44,7 +46,8 @@ class User implements AdvancedUserInterface, DeputyInterface
      * @JMS\Exclude
      */
     private static $allowedRoles = [
-        self::ROLE_ADMIN          => 'OPG Admin',
+        self::ROLE_ADMIN          => 'Case Manager',
+        self::ROLE_SUPER_ADMIN    => 'OPG Admin',
         self::ROLE_LAY_DEPUTY     => 'Lay Deputy',
         self::ROLE_AD             => 'Assisted Digital',
         self::ROLE_CASE_MANAGER   => 'Case Manager',
