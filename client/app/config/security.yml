@@ -32,8 +32,8 @@ services:
 
 security:
     role_hierarchy:
-        ROLE_AD: [ ROLE_AD ]
-        ROLE_ADMIN: [ ROLE_ALLOWED_TO_SWITCH, ROLE_DEPUTY, ROLE_CASE_MANAGER ]
+        ROLE_ADMIN:           [ ROLE_CASE_MANAGER ]
+        ROLE_SUPER_ADMIN :    [ ROLE_ADMIN ]
 
         ROLE_LAY_DEPUTY:      ROLE_DEPUTY
         ROLE_ORG:             ROLE_DEPUTY
@@ -100,7 +100,7 @@ security:
 
     access_control:
         # /admin accessible only from ADMIN, super users and AD users
-        - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_AD, ROLE_CASE_MANAGER] }
+        - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_AD, ROLE_CASE_MANAGER, ROLE_SUPER_ADMIN] }
         # client settings not available to PA users
         - { path: ^/deputyship-details, roles: [ROLE_LAY_DEPUTY, ROLE_ADMIN, ROLE_AD, ROLE_CASE_MANAGER] }
         - { path: ^/user-account/, roles: [ROLE_DEPUTY, ROLE_ADMIN, ROLE_AD] }
@@ -125,4 +125,3 @@ security:
         - { path: ^/$ , roles: IS_AUTHENTICATED_ANONYMOUSLY }
         # all the rest needs authentication
         - { path: ^/ , roles: IS_AUTHENTICATED_FULLY }
-
