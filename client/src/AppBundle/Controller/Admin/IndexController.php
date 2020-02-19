@@ -81,12 +81,12 @@ class IndexController extends AbstractController
             EntityDir\User::ROLE_AD         => 'Assisted Digital',
             EntityDir\User::ROLE_PROF_NAMED => 'Professional (Named)',
             EntityDir\User::ROLE_PA_NAMED   => 'PA (Named)',
-            EntityDir\User::ROLE_ADMIN      => 'Case manager',
+            EntityDir\User::ROLE_ADMIN      => 'Admin',
         ];
 
         // only super admins can add other super admins
         if ($this->isGranted(EntityDir\User::ROLE_SUPER_ADMIN)) {
-            $availableRoles[EntityDir\User::ROLE_SUPER_ADMIN] = 'Case manager';
+            $availableRoles[EntityDir\User::ROLE_SUPER_ADMIN] = 'Super admin';
         }
 
         $form = $this->createForm(FormDir\Admin\AddUserType::class, new EntityDir\User());

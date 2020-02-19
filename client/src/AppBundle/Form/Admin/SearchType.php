@@ -16,8 +16,8 @@ class SearchType extends AbstractType
             ->add('role_name', FormTypes\ChoiceType::class, [
                 'choices' => array_flip([
                     ''                     => 'ALL ROLES',
-                    User::ROLE_SUPER_ADMIN => 'OPG Admin',
-                    User::ROLE_ADMIN       => 'Case manager',
+                    User::ROLE_SUPER_ADMIN => 'Super admin',
+                    User::ROLE_ADMIN       => 'Admin',
                     User::ROLE_LAY_DEPUTY  => 'Lay Deputy',
                     User::ROLE_AD          => 'Assisted Digital',
                     'ROLE_PA_%'            => 'All Public Authority deputies',

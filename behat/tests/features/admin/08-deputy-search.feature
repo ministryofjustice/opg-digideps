@@ -11,7 +11,7 @@ Feature: Deputy search
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I search in admin for a deputy with the term "Manager1" and filter role by "Public Authority deputies (named)"
     Then I should see "Found 0 users"
-    When I search in admin for a deputy with the term "Manager1" and filter role by "Case manager"
+    When I search in admin for a deputy with the term "Manager1" and filter role by "Admin"
     And I press "admin_search"
     Then I should see "Found 1 users"
 
@@ -54,6 +54,6 @@ Feature: Deputy search
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     When I search in admin for a deputy with the term "Admin User" and filter role by "Public Authority deputies (named)"
     Then I should see "Found 0 users"
-    When I search in admin for a deputy with the term "Admin User" and filter role by "OPG Admin"
+    When I search in admin for a deputy with the term "Admin User" and filter role by "Admin"
     Then I should see "Found 1 users"
     And I should see "Admin User"

@@ -14,7 +14,7 @@ Feature: admin / admin
     And I create a new "NDR-disabled" "Admin" user "John" "Doe" with email "behat-admin-user@publicguardian.gov.uk" and postcode "AB12CD"
     Then I should see "behat-admin-user@publicguardian.gov.uk" in the "users" region
     Then the response status code should be 200
-    And I should see "OPG Admin" in the "users" region
+    And I should see "Admin" in the "users" region
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-admin-user@publicguardian.gov.uk"
       #When I go to "/logout"
     Given I am on admin page "/logout"
@@ -183,4 +183,3 @@ Feature: admin / admin
     And the form should be valid
     And I go to "/login"
     Then I should not see the "service-notification-behat" region
-
