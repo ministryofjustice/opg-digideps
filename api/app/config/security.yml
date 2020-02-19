@@ -2,7 +2,7 @@ parameters:
     # set this param to a higher value than session_expire_seconds on the client
     user_provider_timeout_seconds: 3901
     client_permissions:
-        admin: [ROLE_AD, ROLE_ADMIN, ROLE_CASE_MANAGER, ROLE_SUPER_ADMIN]
+        admin: [ROLE_AD, ROLE_ADMIN, ROLE_SUPER_ADMIN]
         frontend: [ROLE_LAY_DEPUTY, ROLE_PA, ROLE_PROF, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER]
 
 services:
@@ -127,7 +127,6 @@ security:
 
     # https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/191299647/User+roles
     role_hierarchy:
-        ROLE_ADMIN:           [ ROLE_CASE_MANAGER ]
         ROLE_SUPER_ADMIN:     [ ROLE_ADMIN ]
 
         ROLE_LAY_DEPUTY:      ROLE_DEPUTY

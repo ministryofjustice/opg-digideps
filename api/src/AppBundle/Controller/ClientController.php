@@ -115,7 +115,7 @@ class ClientController extends RestController
 
     /**
      * @Route("/{id}/details", name="client_details", requirements={"id":"\d+"}, methods={"GET"})
-     * @Security("has_role('ROLE_CASE_MANAGER')")
+     * @Security("has_role('ROLE_ADMIN')")
      *
      * @param Request $request
      * @param int $id
@@ -157,7 +157,7 @@ class ClientController extends RestController
 
     /**
      * @Route("/get-all", defaults={"order_by" = "lastname", "sort_order" = "ASC"}, methods={"GET"})
-     * @Security("has_role('ROLE_CASE_MANAGER')")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function getAllAction(Request $request)
     {
