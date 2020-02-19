@@ -129,7 +129,7 @@ class OrganisationController
 
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"DELETE"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
      *
      * @param $int id
      * @return JsonResponse

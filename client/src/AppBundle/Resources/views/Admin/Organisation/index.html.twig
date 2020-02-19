@@ -56,9 +56,11 @@
                         <a class="govuk-link behat-link-edit" href="{{ url('admin_organisation_edit', { id: organisation.id }) }}">
                             {{ 'edit' | trans({}, 'common') }}
                         </a>
-                        <a class="govuk-link govuk-!-margin-left-1 behat-link-delete" href="{{ url('admin_organisation_delete', { id: organisation.id }) }}">
-                            {{ 'remove' | trans({}, 'common') }}
-                        </a>
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            <a class="govuk-link govuk-!-margin-left-1 behat-link-delete" href="{{ url('admin_organisation_delete', { id: organisation.id }) }}">
+                                {{ 'remove' | trans({}, 'common') }}
+                            </a>
+                        {% endif %}
                     </td>
                 </tr>
             {% else %}
