@@ -2,8 +2,8 @@ parameters:
     # set this param to a higher value than session_expire_seconds on the client
     user_provider_timeout_seconds: 3901
     client_permissions:
-        admin: [ROLE_AD, ROLE_ADMIN, ROLE_SUPER_ADMIN]
-        frontend: [ROLE_LAY_DEPUTY, ROLE_PA, ROLE_PROF, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER]
+        admin: [ROLE_AD, ROLE_ADMIN]
+        frontend: [ROLE_DEPUTY]
 
 services:
     # authenticator
