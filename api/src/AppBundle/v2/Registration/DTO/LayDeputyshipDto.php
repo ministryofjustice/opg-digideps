@@ -28,6 +28,9 @@ class LayDeputyshipDto
     /** @var bool */
     private $isNdrEnabled;
 
+    /** @var string */
+    private $source;
+
     /** @return string */
     public function getCaseNumber(): string
     {
@@ -153,6 +156,24 @@ class LayDeputyshipDto
     public function setIsNdrEnabled(bool $isNdrEnabled): LayDeputyshipDto
     {
         $this->isNdrEnabled = $isNdrEnabled;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSource(): string
+    {
+        return $this->source;
+    }
+
+    /**
+     * @param string $source
+     * @return LayDeputyshipDto
+     */
+    public function setSource(string $source): LayDeputyshipDto
+    {
+        $this->source = $source;
         return $this;
     }
 }

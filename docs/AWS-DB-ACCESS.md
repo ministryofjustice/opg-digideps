@@ -36,8 +36,6 @@ cd /tmp && curl -sS https://getcomposer.org/installer | php && sudo mv composer.
 git clone https://github.com/ministryofjustice/opg-digideps.git
 ```
 
-If you're getting invalid password or username here despite providing valid creds then its likely down to 2FA and SSO enforced on MOJ org. You can provide your personal access token instead of password - unfortunately unless you have this saved somewhere it will mean [generating a new token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token) in github. Follow any feedback provided in the response regarding SSO.
-
 ### Run composer
 
 ```bash

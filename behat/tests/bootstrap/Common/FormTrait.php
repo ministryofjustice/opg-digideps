@@ -1,6 +1,6 @@
 <?php
 
-namespace DigidepsBehat;
+namespace DigidepsBehat\Common;
 
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Element\NodeElement;

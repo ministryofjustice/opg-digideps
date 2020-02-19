@@ -290,32 +290,18 @@ class IndexController extends AbstractController
             try {
                 $csvToArray = new CsvToArray($fileName, false, true);
 
-                $data = $csvToArray->setExpectedColumns([
-                        'Case',
-                        'Surname',
-                        'Deputy No',
-                        'Dep Surname',
-                        'Dep Postcode',
-                        'Typeofrep',
-                        'Corref',
-                        'NDR', // if not present, would indicate a prof/PA CSV is being used incorrectly here
-                        'Dep Type',
-                        'Dep Adrs1',
-                        'Dep Adrs2',
-                        'Dep Adrs3'
-                    ])
+                $data = $csvToArray
                     ->setOptionalColumns($csvToArray->getFirstRow())
-                    ->setUnexpectedColumns([
-                        //'Pat Create', 'Dship Create', //should hold reg date / Cour order date, but no specs given yet
-                        'Last Report Day'
-                    ])
+                    ->setUnexpectedColumns(['Last Report Day'])
                     ->getData();
+
+                $source = isset($data[0]['source']) ? strtolower($data[0]['source']) : 'casrec';
 
                 // small amount of data -> immediate posting and redirect (needed for behat)
                 if (count($data) < $chunkSize) {
                     $compressedData = CsvUploader::compressData($data);
 
-                    $this->getRestClient()->delete('casrec/truncate');
+                    $this->getRestClient()->delete('casrec/delete-by-source/'.$source);
                     $ret = $this->getRestClient()->setTimeout(600)->post('v2/lay-deputyship/upload', $compressedData);
                     $this->addFlash(
                         'notice',
@@ -323,10 +309,7 @@ class IndexController extends AbstractController
                     );
 
                     foreach ($ret['errors'] as $err) {
-                        $this->addFlash(
-                            'error',
-                            $err
-                        );
+                        $this->addFlash('error', $err);
                     }
 
                     return $this->redirect($this->generateUrl('casrec_upload'));
@@ -343,7 +326,7 @@ class IndexController extends AbstractController
                 }
 
 
-                return $this->redirect($this->generateUrl('casrec_upload', ['nOfChunks' => count($chunks)]));
+                return $this->redirect($this->generateUrl('casrec_upload', ['nOfChunks' => count($chunks), 'source' => $source]));
             } catch (\Throwable $e) {
                 $message = $e->getMessage();
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
@@ -355,6 +338,7 @@ class IndexController extends AbstractController
 
         return [
             'nOfChunks'      => $request->get('nOfChunks'),
+            'source'         => $request->get('source'),
             'currentRecords' => $this->getRestClient()->get('casrec/count', 'array'),
             'form'           => $form->createView(),
             'maxUploadSize'  => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),

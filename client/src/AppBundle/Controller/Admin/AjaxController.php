@@ -15,14 +15,14 @@ use Symfony\Component\HttpFoundation\Request;
 class AjaxController extends AbstractController
 {
     /**
-     * @Route("/casrec-truncate", name="casrec_truncate_ajax")
+     * @Route("/casrec-delete-by-source/{source}", name="casrec_delete_by_source_ajax")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      */
-    public function truncateUsersAjaxAction(Request $request)
+    public function deleteUsersBySourceAjaxAction(Request $request, $source)
     {
         try {
             $before = $this->getRestClient()->get('casrec/count', 'array');
-            $this->getRestClient()->delete('casrec/truncate');
+            $this->getRestClient()->delete('casrec/delete-by-source/'.$source);
             $after = $this->getRestClient()->get('casrec/count', 'array');
 
             return new JsonResponse(['before'=>$before, 'after'=>$after]);

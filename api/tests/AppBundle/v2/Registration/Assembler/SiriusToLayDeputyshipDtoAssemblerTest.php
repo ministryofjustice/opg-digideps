@@ -2,20 +2,21 @@
 
 namespace Tests\AppBundle\v2\Registration\Assembler;
 
+use AppBundle\Entity\CasRec;
 use AppBundle\Service\DataNormaliser;
-use AppBundle\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler;
+use AppBundle\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
 use AppBundle\v2\Registration\DTO\LayDeputyshipDto;
 use PHPUnit\Framework\TestCase;
 
-class LayDeputyshipDtoAssemblerTest extends TestCase
+class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
 {
-    /** @var CasRecToLayDeputyshipDtoAssembler */
+    /** @var SiriusToLayDeputyshipDtoAssembler */
     private $sut;
 
     /** {@inheritDoc} */
     protected function setUp(): void
     {
-        $this->sut = new CasRecToLayDeputyshipDtoAssembler(new DataNormaliser());
+        $this->sut = new SiriusToLayDeputyshipDtoAssembler(new DataNormaliser());
     }
 
     /**
@@ -43,8 +44,7 @@ class LayDeputyshipDtoAssemblerTest extends TestCase
             ['Dep Surname'],
             ['Dep Postcode'],
             ['Typeofrep'],
-            ['Corref'],
-            ['NDR']
+            ['Corref']
         ];
     }
 
@@ -61,35 +61,8 @@ class LayDeputyshipDtoAssemblerTest extends TestCase
         $this->assertEquals('deputypostcode', $result->getDeputyPostcode());
         $this->assertEquals('type_of_rep', $result->getTypeOfReport());
         $this->assertEquals('corref', $result->getCorref());
-        $this->assertEquals(true, $result->isNdrEnabled());
-    }
-
-    /**
-     * @test
-     * @dataProvider getNdrVariations
-     * @param $ndrValue
-     * @param $expected
-     */
-    public function assembleFromArrayDeterminesIfNdrEnabled($ndrValue, $expected): void
-    {
-        $input = $this->getInput();
-        $input['NDR'] = $ndrValue;
-
-        $result = $this->sut->assembleFromArray($input);
-        $this->assertEquals($expected, $result->isNdrEnabled());
-    }
-
-    /** @return array */
-    public function getNdrVariations(): array
-    {
-        return [
-            ['ndrValue' => 'Y', 'expected' => true],
-            ['ndrValue' => 1, 'expected' => true],
-            ['ndrValue' => 'N', 'expected' => false],
-            ['ndrValue' => 0, 'expected' => false],
-            ['ndrValue' => null, 'expected' => false],
-            ['ndrValue' => '', 'expected' => false],
-        ];
+        $this->assertEquals(false, $result->isNdrEnabled());
+        $this->assertEquals(CasRec::SIRIUS_SOURCE, $result->getSource());
     }
 
     /** @return array */
@@ -103,7 +76,7 @@ class LayDeputyshipDtoAssemblerTest extends TestCase
             'Dep Postcode' => 'deputy_postcode',
             'Typeofrep' => 'type_of_rep',
             'Corref' => 'corref',
-            'NDR' => 'Y',
+            'Source' => 'will-use-constant-instead',
             'Not used' => 'not_used',
         ];
     }

@@ -39,3 +39,9 @@ services:
     factory: ["@doctrine.orm.entity_manager", getRepository]
     arguments:
       - AppBundle\Entity\NamedDeputy
+
+  AppBundle\Entity\Repository\CasRecRepository:
+    class: AppBundle\Entity\CasRec
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments:
+      - AppBundle\Entity\CasRec

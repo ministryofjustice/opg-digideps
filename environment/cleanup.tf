@@ -2,8 +2,15 @@ data "aws_iam_role" "events_task_runner" {
   name = "events_task_runner"
 }
 
+resource "aws_cloudwatch_event_rule" "nightly" {
+  name                = "nightly-${local.environment}"
+  description         = "Nightly scheduled tasks"
+  schedule_expression = "cron(0 3 * * ? *)"
+  tags                = local.default_tags
+}
+
 resource "aws_cloudwatch_event_target" "cleanup" {
-  rule     = "nightly" # There's no aws_cloudwatch_event_rule data source, so hard-code name
+  rule     = aws_cloudwatch_event_rule.nightly.name
   arn      = aws_ecs_cluster.main.arn
   role_arn = data.aws_iam_role.events_task_runner.arn
 
