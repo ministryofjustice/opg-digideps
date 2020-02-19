@@ -87,7 +87,7 @@ class ReportController extends RestController
 
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
-     * @Security("has_role('ROLE_DEPUTY') or has_role('ROLE_CASE_MANAGER')")
+     * @Security("has_role('ROLE_DEPUTY') or has_role('ROLE_ADMIN')")
      *
      * @param int $id
      *
@@ -101,7 +101,7 @@ class ReportController extends RestController
         $this->setJmsSerialiserGroups($groups);
 
         /* @var $report Report */
-        if ($this->isGranted(EntityDir\User::ROLE_CASE_MANAGER)) {
+        if ($this->isGranted(EntityDir\User::ROLE_ADMIN)) {
             /** @var SoftDeleteableFilter $filter */
             $filter = $this->getEntityManager()->getFilters()->getFilter('softdeleteable');
             $filter->disableForEntity(EntityDir\Client::class);
@@ -161,7 +161,7 @@ class ReportController extends RestController
 
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"PUT"})
-     * @Security("has_role('ROLE_DEPUTY') or has_role('ROLE_CASE_MANAGER')")
+     * @Security("has_role('ROLE_DEPUTY') or has_role('ROLE_ADMIN')")
      */
     public function update(Request $request, $id)
     {
@@ -170,7 +170,7 @@ class ReportController extends RestController
 
 
         // deputies can only edit their own reports
-        if (!$this->isGranted(EntityDir\User::ROLE_CASE_MANAGER)) {
+        if (!$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
             $this->denyAccessIfReportDoesNotBelongToUser($report);
         }
 
@@ -499,7 +499,7 @@ class ReportController extends RestController
 
     /**
      * @Route("/{id}/unsubmit", requirements={"id":"\d+"}, methods={"PUT"})
-     * @Security("has_role('ROLE_CASE_MANAGER')")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function unsubmit(Request $request, $id)
     {
@@ -718,7 +718,7 @@ class ReportController extends RestController
      * Add a checklist for the report
      *
      * @Route("/{report_id}/checked", requirements={"report_id":"\d+"}, methods={"POST"})
-     * @Security("has_role('ROLE_CASE_MANAGER')")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function insertChecklist(Request $request, $report_id)
     {
@@ -755,7 +755,7 @@ class ReportController extends RestController
      * Update a checklist for the report
      *
      * @Route("/{report_id}/checked", requirements={"report_id":"\d+"}, methods={"PUT"})
-     * @Security("has_role('ROLE_CASE_MANAGER')")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function updateChecklist(Request $request, $report_id)
     {
@@ -826,7 +826,7 @@ class ReportController extends RestController
     /**
      * Get a checklist for the report
      * @Route("/{report_id}/checklist", requirements={"report_id":"\d+"}, methods={"GET"})
-     * @Security("has_role('ROLE_CASE_MANAGER')")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function getChecklist(Request $request, $report_id)
     {
@@ -843,7 +843,7 @@ class ReportController extends RestController
      * Update a checklist for the report
      *
      * @Route("/{report_id}/checklist", requirements={"report_id":"\d+"}, methods={"POST", "PUT"})
-     * @Security("has_role('ROLE_CASE_MANAGER')")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function upsertChecklist(Request $request, $report_id)
     {

@@ -35,10 +35,6 @@ class TestUserFixtures extends AbstractDataFixture
             'id' => 'prof',
             'roleName' => 'ROLE_PROF_NAMED',
         ],
-        [
-            'id' => 'casemanager',
-            'roleName' => 'ROLE_CASE_MANAGER',
-        ],
     ];
 
     public function doLoad(ObjectManager $manager)

@@ -26,7 +26,6 @@ class User implements UserInterface
     const ROLE_DEPUTY = 'ROLE_DEPUTY';
     const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
     const ROLE_AD = 'ROLE_AD';
-    const ROLE_CASE_MANAGER = 'ROLE_CASE_MANAGER';
 
     const ROLE_ORG_NAMED = 'ROLE_ORG_NAMED';
     const ROLE_ORG_ADMIN = 'ROLE_ORG_ADMIN';
@@ -46,10 +45,9 @@ class User implements UserInterface
     const TYPE_PA = 'PA';
     const TYPE_PROF = 'PROF';
 
-
     public static $adminRoles = [
         self::ROLE_ADMIN,
-        self::ROLE_CASE_MANAGER
+        self::ROLE_SUPER_ADMIN,
     ];
 
     public static $depTypeIdToRealm = [

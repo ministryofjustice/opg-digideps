@@ -219,8 +219,8 @@ class UserController extends RestController
             $request->query->get('groups') : ['user'];
         $this->setJmsSerialiserGroups($groups);
 
-        // only allow admins and case managers to access any user, otherwise the user can only see himself
-        if (!$this->isGranted(User::ROLE_CASE_MANAGER)
+        // only allow admins to access any user, otherwise the user can only see himself
+        if (!$this->isGranted(User::ROLE_ADMIN)
             && !$this->isGranted(User::ROLE_AD)
             && !$requestedUserIsLogged) {
             throw $this->createAccessDeniedException("Not authorised to see other user's data");
