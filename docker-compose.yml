@@ -170,3 +170,20 @@ services:
           - postgres
         env_file:
           - sync/sync.env
+
+    pact-mock:
+        image: pactfoundation/pact-cli:latest
+        ports:
+            - 1234:80
+        command:
+            - mock-service
+            - -p
+            - "80"
+            - --host
+            - "0.0.0.0"
+            - --pact-dir
+            - /tmp/pacts
+            - --consumer
+            - Foo
+            - --provider
+            - Bar
