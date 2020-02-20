@@ -29,11 +29,21 @@
             <directory>Twig</directory>
             <directory>Validator</directory>
         </testsuite>
+        <testsuite name="Pact contract tests">
+            <directory>Pact</directory>
+        </testsuite>
     </testsuites>
 
     <php>
         <ini name="error_log" value="/dev/stdout"/>
         <ini name="memory_limit" value="512M" />
+
+        <env name="PACT_MOCK_SERVER_HOST" value="pact-mock"/>
+        <env name="PACT_MOCK_SERVER_PORT" value="80"/>
+        <env name="PACT_CONSUMER_NAME" value="someConsumer"/>
+        <env name="PACT_PROVIDER_NAME" value="someProvider"/>
+        <env name="PACT_CONSUMER_VERSION" value="1.0.0"/>
+        <env name="PACT_CONSUMER_TAG" value="master"/>
     </php>
 
     <filter>
@@ -42,4 +52,16 @@
             <file>../../src/AppBundle/Controller/AbstractController.php</file>
         </whitelist>
     </filter>
+
+    <listeners>
+        <listener class="AppBundle\Pact\Listener\PactTestListener" file="./Pact/Listener/PactTestListener.php">
+            <arguments>
+                <array>
+                     <element key="0">
+                        <string>Pact contract tests</string>
+                    </element>
+                </array>
+            </arguments>
+        </listener>
+    </listeners>
 </phpunit>
