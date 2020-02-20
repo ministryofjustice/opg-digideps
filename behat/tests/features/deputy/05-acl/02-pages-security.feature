@@ -12,8 +12,6 @@ Feature: deputy / acl / security on pages
     And the following users exist:
       | ndr | deputyType | firstName | lastName | email | postCode | activated |
       | disabled | LAY | Malicious | User | behat-malicious@publicguardian.gov.uk | SW1H 9AJ | true |
-#    When I create a new "NDR-disabled" "Lay Deputy" user "Malicious" "User" with email "behat-malicious@publicguardian.gov.uk" and postcode "SW1H 9AJ"
-#    And I activate the user with password "Abcd1234"
     Given I am logged in as "behat-malicious@publicguardian.gov.uk" with password "Abcd1234"
     And I set the user details to:
       | name    | Malicious        | User          |        |          |    |
