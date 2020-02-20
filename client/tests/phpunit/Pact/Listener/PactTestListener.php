@@ -2,7 +2,6 @@
 
 namespace AppBundle\Pact\Listener;
 
-use GuzzleHttp\Client;
 use PhpPact\Http\GuzzleClient;
 use PhpPact\Standalone\Exception\MissingEnvVariableException;
 use PhpPact\Standalone\MockService\MockServerConfigInterface;
@@ -55,13 +54,8 @@ class PactTestListener implements TestListener
      */
     public function startTestSuite(TestSuite $suite): void
     {
-        $client = new Client(['base_uri' => $this->mockServerConfig->getBaseUri()]);
-        $client->delete('/interactions', [
-            'headers' => [
-                'Content-Type'        => 'application/json',
-                'X-Pact-Mock-Service' => true,
-            ],
-        ]);
+        $httpService = new MockServerHttpService(new GuzzleClient(), $this->mockServerConfig);
+        $httpService->deleteAllInteractions();
     }
 
     public function addError(Test $test, \Throwable $t, float $time): void
@@ -82,14 +76,15 @@ class PactTestListener implements TestListener
     public function endTestSuite(TestSuite $suite): void
     {
         if (\in_array($suite->getName(), $this->testSuiteNames)) {
-            $httpService = new MockServerHttpService(new GuzzleClient(), $this->mockServerConfig);
-            $httpService->verifyInteractions();
-
-            $json = $httpService->getPactJson();
 
             if ($this->failed === true) {
                 echo 'A unit test has failed. Skipping PACT file upload.';
             } else {
+                $httpService = new MockServerHttpService(new GuzzleClient(), $this->mockServerConfig);
+                $httpService->verifyInteractions();
+
+                $json = $httpService->getPactJson();
+
                 echo "==== PACT FILE\n";
                 print_r($json);
                 echo "\n==============";
