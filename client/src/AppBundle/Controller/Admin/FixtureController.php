@@ -131,6 +131,6 @@ JSON;
                 "postCode" => $request->query->get('postCode')
             ]));
 
-        return new Response('Deputy type is: ' . $request->query->get('deputyType'));
+        return new Response();
     }
 }
