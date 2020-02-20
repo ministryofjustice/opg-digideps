@@ -57,17 +57,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      */
     public function iAmAuthenticatedAsEmailWithPassword(string $email, string $password)
     {
-//        $payload = <<<JSON
-//{
-//    "email": $email,
-//    "password": $password
-//}
-//JSON;
-
-//        $request = new Request('POST', '/fixture/authenticateUser', [], $payload);
-
         $this->getSession()->visit($this->getAdminUrl() . "/admin/fixtures/authenticateUser?email=$email&password=$password");
-//        $this->client->send($request);
     }
 
     /**
