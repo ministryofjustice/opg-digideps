@@ -1,4 +1,5 @@
-Feature:Client details
+@admin
+Feature: Client details
 
   Scenario: Client information contains report type
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
