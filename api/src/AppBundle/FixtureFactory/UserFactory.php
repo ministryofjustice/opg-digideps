@@ -41,8 +41,9 @@ class UserFactory
             ->setAddressCountry('GB')
             ->setRoleName($roleName);
 
-        if ($data['activated'] === 'true' || $data['activated'] === null) {
-            $user->setPassword($this->encoder->encodePassword($user, 'Abcd1234'));
+        if ($data['activated'] !== 'true') {
+            $user->setPassword($this->encoder->encodePassword($user, 'Abcd1234'))
+                ->setActive(false);
         }
 
         return $user;

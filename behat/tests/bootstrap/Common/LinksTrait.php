@@ -4,6 +4,29 @@ namespace DigidepsBehat\Common;
 
 trait LinksTrait
 {
+    /**
+     * @Then the :text link url should contain ":expectedLink"
+     */
+    public function linkWithTextContains($text, $expectedLink)
+    {
+        $linksElementsFound = $this->getSession()->getPage()->findAll('xpath', '//a[text()="' . $text . '"]');
+        $count = count($linksElementsFound);
+
+        if (count($linksElementsFound) === 0) {
+            throw new \RuntimeException('Element not found');
+        }
+
+        if (count($linksElementsFound) > 1) {
+            throw new \RuntimeException('Returned multiple elements');
+        }
+
+        $href = $linksElementsFound[0]->getAttribute('href');
+
+        if (strpos($href, $expectedLink) === false) {
+            throw new \Exception("Link: $href does not contain $expectedLink");
+        }
+    }
+
     public function visitBehatLink($link)
     {
         $secret = md5('behat-dd-' . getenv('SECRET'));
@@ -161,5 +184,31 @@ trait LinksTrait
         }
 
         return $row;
+    }
+
+    /**
+     * @Then the :text link, in the :region region, url should contain ":expectedLink"
+     * @Then the :text link, in the :region, url should contain ":expectedLink"
+     */
+    public function linkWithTextInRegionContains($text, $expectedLink, $region)
+    {
+        $region = $this->findRegion($region);
+
+        $linksElementsFound = $region->findAll('xpath', '//a[normalize-space(text())="' . $text . '"]');
+        $count = count($linksElementsFound);
+
+        if ($count === 0) {
+            throw new \RuntimeException('Element not found');
+        }
+
+        if ($count > 1) {
+            throw new \RuntimeException('Returned multiple elements');
+        }
+
+        $href = $linksElementsFound[0]->getAttribute('href');
+
+        if (strpos($href, $expectedLink) === false) {
+            throw new \Exception("Link: $href does not contain $expectedLink");
+        }
     }
 }
