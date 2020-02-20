@@ -54,8 +54,6 @@ class UserFactory
         switch ($roleName) {
             case 'LAY':
                 return 'ROLE_LAY_DEPUTY';
-            case 'CASE_MANAGER':
-                return 'ROLE_CASE_MANAGER';
             case 'AD':
                 return 'ROLE_AD';
             default:
