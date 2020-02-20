@@ -30,11 +30,17 @@ class SiriusDocumentsContractTest extends TestCase
         $reportEndDate = new DateTime('2019-05-13');
         $reportSubmittedDate = new DateTime('2019-06-20');
 
+        $exampleBody = "--5872fc54a8fa5f5be65ee0af590d1ae813a1b091\r\nContent-Disposition: form-data; name=\"report\"\r\nContent-Length: 185\r\n\r\n{\"data\":{\"type\":\"reports\",\"attributes\":{\"reporting_period_from\":\"2018-05-14\",\"reporting_period_to\":\"2019-05-13\",\"year\":\"2018\",\"date_submitted\":\"2019-06-20T00:00:00+00:00\",\"type\":\"PF\"}}}\r\n--5872fc54a8fa5f5be65ee0af590d1ae813a1b091\r\nContent-Disposition: form-data; name=\"report_file\"\r\nContent-Length: 13\r\n\r\nfake_contents\r\n--5872fc54a8fa5f5be65ee0af590d1ae813a1b091--\r\n";
+
         // Create your expected request from the consumer.
         $request = new ConsumerRequest();
         $request
             ->setMethod('POST')
-            ->setPath('/clients/27493727/reports');
+            ->setPath('/clients/27493727/reports')
+            ->setHeaders([
+                'Content-Type' => $matcher->regex('multipart/form-data; boundary=5872fc54a8fa5f5be65ee0af590d1ae813a1b091', 'multipart\/form-data; boundary=[0-9a-f]{32}')
+            ])
+            ->setBody($matcher->regex($exampleBody, 'fake_contents'));
 
         // Create your expected response from the provider.
         $response = new ProviderResponse();
