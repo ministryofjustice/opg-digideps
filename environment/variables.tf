@@ -26,6 +26,7 @@ variable "accounts" {
       sirius_api_account   = string
       state_source         = string
       elasticache_count    = number
+      always_on            = bool
     })
   )
 }

@@ -54,6 +54,7 @@ data "aws_sns_topic" "availability-alert" {
 }
 
 resource "aws_route53_health_check" "availability-front" {
+  count             = local.account.always_on ? 1 : 0
   fqdn              = aws_route53_record.front.fqdn
   resource_path     = "/manage/availability"
   port              = 443
@@ -65,6 +66,7 @@ resource "aws_route53_health_check" "availability-front" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "availability-front" {
+  count               = local.account.always_on ? 1 : 0
   provider            = aws.us-east-1
   alarm_name          = "${local.environment}-availability-front"
   statistic           = "Minimum"
@@ -78,11 +80,12 @@ resource "aws_cloudwatch_metric_alarm" "availability-front" {
   alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
 
   dimensions = {
-    HealthCheckId = aws_route53_health_check.availability-front.id
+    HealthCheckId = aws_route53_health_check.availability-front[0].id
   }
 }
 
 resource "aws_route53_health_check" "availability-admin" {
+  count             = local.account.always_on ? 1 : 0
   fqdn              = aws_route53_record.admin.fqdn
   resource_path     = "/manage/availability"
   port              = 443
@@ -94,6 +97,7 @@ resource "aws_route53_health_check" "availability-admin" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "availability-admin" {
+  count               = local.account.always_on ? 1 : 0
   provider            = aws.us-east-1
   alarm_name          = "${local.environment}-availability-admin"
   statistic           = "Minimum"
@@ -107,6 +111,6 @@ resource "aws_cloudwatch_metric_alarm" "availability-admin" {
   alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
 
   dimensions = {
-    HealthCheckId = aws_route53_health_check.availability-admin.id
+    HealthCheckId = aws_route53_health_check.availability-admin[0].id
   }
 }
