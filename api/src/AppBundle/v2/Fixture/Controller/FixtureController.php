@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * @Route("/fixture")
@@ -32,6 +34,7 @@ class FixtureController
     private $reportFactory;
     private $reportRepository;
     private $reportSection;
+    private $tokenStorage;
 
     public function __construct(
         EntityManagerInterface $em,
@@ -40,7 +43,8 @@ class FixtureController
         OrganisationFactory $organisationFactory,
         ReportFactory $reportFactory,
         ReportRepository $reportRepository,
-        ReportSection $reportSection
+        ReportSection $reportSection,
+        TokenStorageInterface $tokenStorage
     ) {
         $this->em = $em;
         $this->clientFactory = $clientFactory;
@@ -49,6 +53,7 @@ class FixtureController
         $this->reportFactory = $reportFactory;
         $this->reportRepository = $reportRepository;
         $this->reportSection = $reportSection;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -163,10 +168,51 @@ class FixtureController
         foreach (explode(',', $sections) as $section) {
             $this->reportSection->completeSection($report, $section);
         }
-        
+
         $report->updateSectionsStatusCache($report->getAvailableSections());
         $this->em->flush();
 
         return $this->buildSuccessResponse([], 'Report updated', Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/authenticateUser", methods={"POST"})
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function authenticateUserWithPassword(Request $request)
+    {
+        $userDetails = json_decode($request->getContent(), true);
+
+        $token = new UsernamePasswordToken($userDetails['email'], $userDetails['password'], 'default', ['ROLE_ADMIN']);
+
+        $this->tokenStorage->setToken($token);
+        return $this->buildSuccessResponse([], 'User Authenticated', Response::HTTP_OK);
+    }
+
+    /**
+     * Used for creating non-prof/pa users only as Org ID is required for those types
+     *
+     * @Route("/createUser", methods={"POST"})
+     * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
+     */
+    public function createUser(Request $request)
+    {
+        $fromRequest = json_decode($request->getContent(), true);
+
+        $deputy = $this->userFactory->create([
+            'id' => $fromRequest['deputyEmail'],
+            'deputyType' => $fromRequest['deputyType'],
+            'email' => $fromRequest['deputyEmail'],
+            'ndr' => $fromRequest['ndr'],
+            'firstName' => $fromRequest['firstName'],
+            'lastName' => $fromRequest['lastName'],
+            'postCode' => $fromRequest['postCode'],
+            'activated' => $fromRequest['activated']
+        ]);
+
+        $this->em->persist($deputy);
+        $this->em->flush();
+
+        return $this->buildSuccessResponse($fromRequest, 'User created', Response::HTTP_OK);
     }
 }

@@ -6,7 +6,6 @@ use Behat\Gherkin\Node\TableNode;
 
 /**
  * @method Behat\Mink\WebAssert assertSession
- * @method Behat\Mink\Session getSession
  */
 trait RegionTrait
 {

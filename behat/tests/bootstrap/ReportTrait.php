@@ -208,6 +208,31 @@ trait ReportTrait
     }
 
     /**
+     * @Then the report URL ":url" for ":reportId" should not be accessible
+     */
+    public function theReportUrlForShouldNotBeAccessible($url, $reportId)
+    {
+        $report = self::$reportsCache[$reportId];
+        $fullUrl = '/' . $report['type'] . '/' . $report['id'] . '/' . $url;
+
+        $previousUrl = $this->getSession()->getCurrentUrl();
+        $this->visit($fullUrl);
+        $this->assertResponseStatusIn([403, 404, 500]);
+        $this->visit($previousUrl);
+    }
+
+    /**
+     * Check the response status was one of the provided codes
+     */
+    private function assertResponseStatusIn($codes)
+    {
+        $actualCode = $this->getSession()->getStatusCode();
+
+        if (!in_array($actualCode, $codes)) {
+            throw new \RuntimeException("Invalid status code: $actualCode");
+        }
+    }
+    /**
      * @Given the report has been submitted
      */
     public function theReportHasBeenSubmitted()
