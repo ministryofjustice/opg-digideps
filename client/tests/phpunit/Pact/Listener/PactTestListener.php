@@ -25,9 +25,6 @@ class PactTestListener implements TestListener
 {
     use TestListenerDefaultImplementation;
 
-    /** @var MockServer */
-    private $server;
-
     /**
      * Name of the test suite configured in your phpunit config.
      *
@@ -94,38 +91,11 @@ class PactTestListener implements TestListener
             $json = $httpService->getPactJson();
 
             if ($this->failed === true) {
-                print 'A unit test has failed. Skipping PACT file upload.';
-            } elseif (!($pactBrokerUri = \getenv('PACT_BROKER_URI'))) {
-                print 'PACT_BROKER_URI environment variable was not set. Skipping PACT file upload.';
-            } elseif (!($consumerVersion = \getenv('PACT_CONSUMER_VERSION'))) {
-                print 'PACT_CONSUMER_VERSION environment variable was not set. Skipping PACT file upload.';
-            } elseif (!($tag = \getenv('PACT_CONSUMER_TAG'))) {
-                print 'PACT_CONSUMER_TAG environment variable was not set. Skipping PACT file upload.';
+                echo 'A unit test has failed. Skipping PACT file upload.';
             } else {
-                $clientConfig = [];
-                if (($user = \getenv('PACT_BROKER_HTTP_AUTH_USER')) &&
-                    ($pass = \getenv('PACT_BROKER_HTTP_AUTH_PASS'))
-                ) {
-                    $clientConfig = [
-                        'auth' => [$user, $pass],
-                    ];
-                }
-
-                if (($sslVerify = \getenv('PACT_BROKER_SSL_VERIFY'))) {
-                    $clientConfig['verify'] = $sslVerify !== 'no';
-                }
-
-                $headers = [];
-                if ($bearerToken = \getenv('PACT_BROKER_BEARER_TOKEN')) {
-                    $headers['Authorization'] = 'Bearer ' . $bearerToken;
-                }
-
-                $client = new GuzzleClient($clientConfig);
-
-                $brokerHttpService = new BrokerHttpClient($client, new Uri($pactBrokerUri), $headers);
-                $brokerHttpService->tag($this->mockServerConfig->getConsumer(), $consumerVersion, $tag);
-                $brokerHttpService->publishJson($json, $consumerVersion);
-                print 'Pact file has been uploaded to the Broker successfully.';
+                echo "==== PACT FILE\n";
+                print_r($json);
+                echo "\n==============";
             }
         }
     }
