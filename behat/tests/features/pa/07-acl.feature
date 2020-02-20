@@ -97,7 +97,10 @@ Feature: PA cannot access other's PA's reports and clients
   Scenario: Admin activates PA Org 1 deputy
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And emails are sent from "admin" area
-    And I create a new "NDR-disabled" "PA Named" user "Org1 Case" "Worker" with email "behat-pa-org1@pa-org1.gov.uk" and postcode "SW1"
+#    And I create a new "NDR-disabled" "PA Named" user "Org1 Case" "Worker" with email "behat-pa-org1@pa-org1.gov.uk" and postcode "SW1"
+    And the following users exist:
+      | ndr | deputyType | firstName | lastName | email | postCode | activated |
+      | disabled | PA | Org1 Case | Worker | behat-pa-org1@pa-org1.gov.uk | SW1 | false |
     # simulate existing deputies with clients by adding entry to deputy_case table
     And I add the client with case number "40000041" to be deputised by email "behat-pa-org1@pa-org1.gov.uk"
     # activate PA Org 1 user
@@ -124,7 +127,10 @@ Feature: PA cannot access other's PA's reports and clients
   Scenario: Admin activates PA Org 2 deputy
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And emails are sent from "admin" area
-    And I create a new "NDR-disabled" "PA Named" user "Org2 Case" "Worker" with email "behat-pa-org2@pa-org2.gov.uk" and postcode "SW1"
+    And the following users exist:
+      | ndr | deputyType | firstName | lastName | email | postCode | activated |
+      | disabled | PA | Org2 Case | Worker | behat-pa-org2@pa-org2.gov.uk | SW1 | false |
+#    And I create a new "NDR-disabled" "PA Named" user "Org2 Case" "Worker" with email "behat-pa-org2@pa-org2.gov.uk" and postcode "SW1"
     # simulate existing deputies with clients by adding entry to deputy_case table
     And I add the client with case number "40000042" to be deputised by email "behat-pa-org2@pa-org2.gov.uk"
    # activate PA Org 1 user

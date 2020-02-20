@@ -25,7 +25,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         DbTrait,
         CookieTrait,
         EmailTrait,
-        ExpressionTrait,
         FileTrait,
         FormStepTrait,
         FormTrait,
@@ -51,6 +50,24 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $this->sessionName = empty($options['sessionName']) ? 'digideps' : $options['sessionName'];
         self::$dbName = empty($options['dbName']) ? 'api' : $options['dbName'];
         // set this to true for temporary local debugging
+    }
+
+    /**
+     * @Given I am authenticated as :email with password :password
+     */
+    public function iAmAuthenticatedAsEmailWithPassword(string $email, string $password)
+    {
+//        $payload = <<<JSON
+//{
+//    "email": $email,
+//    "password": $password
+//}
+//JSON;
+
+//        $request = new Request('POST', '/fixture/authenticateUser', [], $payload);
+
+        $this->getSession()->visit($this->getAdminUrl() . "/admin/fixtures/authenticateUser?email=$email&password=$password");
+//        $this->client->send($request);
     }
 
     /**

@@ -7,7 +7,9 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Form\Admin\Fixture\CourtOrderFixtureType;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -77,5 +79,58 @@ class FixtureController extends AbstractController
             ->put("v2/fixture/complete-sections/$reportId?sections=$sections", []);
 
         return new JsonResponse(['Report updated']);
+    }
+
+    /**
+     * @Route("/authenticateUser", methods={"GET"})
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function authenticateUser(Request $request, KernelInterface $kernel)
+    {
+        if ($kernel->getEnvironment() === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
+        $email = $request->query->get('email');
+        $password = $request->query->get('password');
+
+        $payload = <<<JSON
+{
+    "email": $email,
+    "password": $password
+}
+JSON;
+
+        $this
+            ->getRestClient()
+            ->post("v2/fixture/authenticateUser", $payload);
+
+        return new RedirectResponse('/');
+    }
+
+    /**
+     * @Route("/createUser", methods={"GET"})
+     * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
+     */
+    public function createUser(Request $request, KernelInterface $kernel)
+    {
+        if ($kernel->getEnvironment() === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
+        var_dump($request->query->all());
+
+        $this
+            ->getRestClient()
+            ->post("v2/fixture/createUser", json_encode([
+                "ndr" => $request->query->get('ndr'),
+                "deputyType" => $request->query->get('deputyType'),
+                "deputyEmail" => $request->query->get('email'),
+                "firstName" => $request->query->get('firstName'),
+                "lastName" => $request->query->get('lastName'),
+                "postCode" => $request->query->get('postCode')
+            ]));
+
+        return new Response('Deputy type is: ' . $request->query->get('deputyType'));
     }
 }

@@ -19,6 +19,37 @@ trait UserTrait
     /**
      * it's assumed you are logged as an admin and you are on the admin homepage (with add user form).
      *
+     * @Given the following users exist:
+     */
+    public function usersExist(TableNode $table)
+    {
+        foreach ($table as $inputs) {
+            $this->assertValidRole($inputs['deputyType']);
+
+            $ndr = $inputs['ndr'];
+            $deputyType = $inputs['deputyType'];
+            $firstName = $inputs['firstName'];
+            $lastName = $inputs['lastName'];
+            $email = $inputs['email'];
+            $postCode = $inputs['postCode'];
+            $activated = $inputs['activated'];
+
+            $query = "ndr=$ndr&deputyType=$deputyType&firstName=$firstName&lastName=$lastName&email=$email&postCode=$postCode&activated=$activated";
+
+            $this->visitAdminPath("/admin/fixtures/createUser?$query");
+        }
+    }
+
+    private function assertValidRole(string $roleName): void
+    {
+        if (!in_array($roleName, ['ROLE_ADMIN', 'LAY', 'ROLE_AD', 'ROLE_CASE_MANAGER', 'PA', 'PROF'])) {
+            throw new \Exception("DeputyType should be one of 'ROLE_ADMIN', 'LAY', 'ROLE_AD', 'ROLE_CASE_MANAGER', 'PA', 'PROF'; '$roleName' provided");
+        }
+    }
+
+    /**
+     * it's assumed you are logged as an admin and you are on the admin homepage (with add user form).
+     *
      * @When I create a new :ndrType :role user :firstname :lastname with email :email and postcode :postcode
      */
     public function iCreateTheUserWithEmailAndPostcode($ndrType, $role, $firstname, $lastname, $email, $postcode = '')
@@ -78,6 +109,22 @@ trait UserTrait
         $this->fillField('set_password_password_first', $password);
         $this->fillField('set_password_password_second', $password);
         $this->checkOption('set_password_showTermsAndConditions');
+        $this->pressButton('set_password_save');
+        $this->theFormShouldBeValid();
+        $this->assertResponseStatus(200);
+    }
+
+    /**
+     * @TODO to use in places where needed
+     * @When I activate the user with password :password - no T&C expected
+     */
+    public function iActivateTheUserAndSetThePasswordToNoTcExpected($password)
+    {
+        $this->visit('/logout');
+        $this->iOpenTheSpecificLinkOnTheEmail('/user/activate/');
+        $this->assertResponseStatus(200);
+        $this->fillField('set_password_password_first', $password);
+        $this->fillField('set_password_password_second', $password);
         $this->pressButton('set_password_save');
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
