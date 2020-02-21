@@ -348,6 +348,8 @@ jobs:
       - image: cimg/base:2020.01
     working_directory: ~/project/client
     steps:
+      - checkout:
+          path: ~/project
       - run:
           name: Run tests
           command: |
