@@ -184,6 +184,6 @@ services:
             - --pact-dir
             - /tmp/pacts
             - --consumer
-            - Foo
+            - Complete the deputy report
             - --provider
-            - Bar
+            - OPG Data
