@@ -31,9 +31,8 @@ workflows:
       #     task_name: integration_test
       #     timeout: 2100
 
-      - unit-test:
+      - client-unit-test:
           name: client unit test
-          requires: [ apply environment  ]
           filters: { branches: { ignore: [ master ] } }
           task_name: client_unit_test
           timeout: 180
