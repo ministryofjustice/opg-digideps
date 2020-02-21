@@ -347,8 +347,8 @@ jobs:
     docker:
       - image: cimg/base:2020.01
     steps:
-      - checkout:
-          path: ~/project
+      - setup_remote_docker
+      - checkout
       - run:
           name: Run tests
           command: |
