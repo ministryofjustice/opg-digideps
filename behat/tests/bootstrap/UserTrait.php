@@ -17,6 +17,35 @@ trait UserTrait
     ];
 
     /**
+     * Requires an authenticated admin user to use in a scenario
+     *
+     * @Given the following admins exist:
+     */
+    public function adminsExist(TableNode $table)
+    {
+        foreach ($table as $inputs) {
+            $this->assertValidRole($inputs['adminType']);
+
+            $adminType = $inputs['adminType'];
+            $firstName = $inputs['firstName'];
+            $lastName = $inputs['lastName'];
+            $email = $inputs['email'];
+            $activated = $inputs['activated'];
+
+            $query = "adminType=$adminType&firstName=$firstName&lastName=$lastName&email=$email&activated=$activated";
+
+            $this->visitAdminPath("/admin/fixtures/createAdmin?$query");
+        }
+    }
+
+    private function assertValidAdminRole(string $roleName): void
+    {
+        if (!in_array($roleName, ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN'])) {
+            throw new \Exception("adminType should be 'ROLE_ADMIN' or 'ROLE_SUPER_ADMIN'; '$roleName' provided");
+        }
+    }
+
+    /**
      * it's assumed you are logged as an admin and you are on the admin homepage (with add user form).
      *
      * @When I create a new :ndrType :role user :firstname :lastname with email :email and postcode :postcode
