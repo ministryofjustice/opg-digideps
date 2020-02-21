@@ -345,7 +345,7 @@ jobs:
 
   client-unit-test:
     docker:
-      - image: cimg/base:2020.01
+      - image: docker:latest
     working_directory: ~/project/client
     steps:
       - checkout:
