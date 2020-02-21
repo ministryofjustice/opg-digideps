@@ -82,12 +82,7 @@ class PactTestListener implements TestListener
             } else {
                 $httpService = new MockServerHttpService(new GuzzleClient(), $this->mockServerConfig);
                 $httpService->verifyInteractions();
-
-                $json = $httpService->getPactJson();
-
-                echo "==== PACT FILE\n";
-                print_r($json);
-                echo "\n==============";
+                $httpService->getPactJson();
             }
         }
     }
