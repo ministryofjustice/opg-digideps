@@ -346,6 +346,7 @@ jobs:
   client-unit-test:
     docker:
       - image: cimg/base:2020.01
+    working_directory: ~/project/client
     steps:
       - run:
           name: Run tests
