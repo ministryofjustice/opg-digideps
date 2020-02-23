@@ -3,7 +3,9 @@
 namespace AppBundle\v2\Fixture\Controller;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\Entity\Repository\ReportRepository;
+use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
 use AppBundle\Factory\OrganisationFactory;
 use AppBundle\FixtureFactory\ClientFactory;
@@ -32,6 +34,8 @@ class FixtureController
     private $reportFactory;
     private $reportRepository;
     private $reportSection;
+    private $deputyRepository;
+    private $orgRepository;
 
     public function __construct(
         EntityManagerInterface $em,
@@ -40,7 +44,9 @@ class FixtureController
         OrganisationFactory $organisationFactory,
         ReportFactory $reportFactory,
         ReportRepository $reportRepository,
-        ReportSection $reportSection
+        ReportSection $reportSection,
+        UserRepository $deputyRepository,
+        OrganisationRepository $organisationRepository
     ) {
         $this->em = $em;
         $this->clientFactory = $clientFactory;
@@ -49,6 +55,8 @@ class FixtureController
         $this->reportFactory = $reportFactory;
         $this->reportRepository = $reportRepository;
         $this->reportSection = $reportSection;
+        $this->deputyRepository = $deputyRepository;
+        $this->orgRepository = $organisationRepository;
     }
 
     /**
@@ -62,9 +70,12 @@ class FixtureController
     public function createCourtOrderAction(Request $request)
     {
         $fromRequest = json_decode($request->getContent(), true);
-
         $client = $this->createClient($fromRequest);
-        $deputy = $this->createDeputy($fromRequest);
+
+        if (null === $deputy = $this->deputyRepository->findOneBy(['email' => strtolower($fromRequest['deputyEmail'])])) {
+            $deputy = $this->createDeputy($fromRequest);
+        }
+
         $this->createReport($fromRequest, $client);
 
         if ($fromRequest['deputyType'] === User::TYPE_LAY) {
@@ -135,7 +146,10 @@ class FixtureController
         $uniqueOrgNameSegment = (preg_match('/\d+/', $fromRequest['deputyEmail'], $matches)) ? $matches[0] : rand(0,9999);
         $orgName = sprintf('Org %s Ltd', $uniqueOrgNameSegment);
 
-        $organisation = $this->organisationFactory->createFromEmailIdentifier($orgName, $fromRequest['deputyEmail'], true);
+        if (null === ($organisation = $this->orgRepository->findOneBy(['name' => $orgName]))) {
+            $organisation = $this->organisationFactory->createFromEmailIdentifier($orgName, $fromRequest['deputyEmail'], true);
+        }
+
         $organisation->addUser($deputy);
         $client->setOrganisation($organisation);
         $this->em->persist($organisation);

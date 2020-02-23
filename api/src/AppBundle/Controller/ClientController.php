@@ -171,4 +171,19 @@ class ClientController extends RestController
             $request->get('offset')
         );
     }
+
+    /**
+     * @Route("/{id}/delete", name="client_delete", requirements={"id":"\d+"}, methods={"DELETE"})
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        /* @var $client EntityDir\Client */
+        $client = $this->findEntityBy(EntityDir\Client::class, $id);
+
+        $this->getEntityManager()->remove($client);
+        $this->getEntityManager()->flush($client);
+
+        return [];
+    }
 }

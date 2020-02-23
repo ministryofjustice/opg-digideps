@@ -3,6 +3,8 @@
 namespace AppBundle\Controller\Admin\Client;
 
 use AppBundle\Controller\AbstractController;
+use AppBundle\Entity\Client;
+use AppBundle\Entity\User;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -28,6 +30,53 @@ class ClientController extends AbstractController
     {
         $client = $this->getRestClient()->get('v2/client/' . $id, 'Client');
 
+        return [
+            'client'      => $client,
+            'namedDeputy' => $this->getNamedDeputy($id, $client)
+        ];
+    }
+
+    /**
+     * @Route("/{id}/discharge", name="admin_client_discharge", requirements={"id":"\d+"})
+     * @Security("has_role('ROLE_ADMIN')")
+     * @param Request $request
+     * @param $id
+     *
+     * @Template("AppBundle:Admin/Client/Client:discharge.html.twig")
+     *
+     * @return array
+     */
+    public function dischargeAction(Request $request, $id)
+    {
+        $client = $this->getRestClient()->get('v2/client/' . $id, 'Client');
+
+        return [
+            'client' => $client,
+            'namedDeputy' => $this->getNamedDeputy($id, $client)
+        ];
+    }
+
+    /**
+     * @Route("/{id}/discharge-confirm", name="admin_client_discharge_confirm", requirements={"id":"\d+"})
+     * @Security("has_role('ROLE_ADMIN')")
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function dischargeConfirmAction(Request $request, $id)
+    {
+        $this->getRestClient()->delete('client/' . $id . '/delete');
+
+        return $this->redirectToRoute('admin_client_search');
+    }
+
+    /**
+     * @param int $id
+     * @param Client $client
+     * @return User|null
+     */
+    private function getNamedDeputy(int $id, Client $client)
+    {
         $namedDeputy = null;
         if (!is_null($client->getNamedDeputy())) {
             $namedDeputy = $client->getNamedDeputy();
@@ -42,9 +91,6 @@ class ClientController extends AbstractController
             }
         }
 
-        return [
-            'client'      => $client,
-            'namedDeputy' => $namedDeputy,
-        ];
+        return $namedDeputy;
     }
 }

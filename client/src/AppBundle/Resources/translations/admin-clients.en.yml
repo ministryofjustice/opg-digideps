@@ -23,6 +23,12 @@ clientDetails:
     address: Named deputy address
     contact: Named deputy contact details
 
+clientDischarge:
+  htmlTitle: Administration - Clients
+  pageTitle: Discharge deputy from client
+  warning: %clientFirstName% %clientLastName% will be permanently detached from their named deputy.
+  confirm: Discharge deputy
+
 reportManage:
   htmlTitle: Administration - Manage report
   pageTitle: Admin
