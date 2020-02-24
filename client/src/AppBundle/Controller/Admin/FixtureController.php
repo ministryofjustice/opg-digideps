@@ -82,28 +82,6 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @Route("/authenticateUser", methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN')")
-     */
-    public function authenticateUser(Request $request, KernelInterface $kernel)
-    {
-        if ($kernel->getEnvironment() === 'prod') {
-            throw $this->createNotFoundException();
-        }
-
-        $payload = json_encode([
-            'email' => $request->query->get('email'),
-            'password' => $request->query->get('password')
-        ]);
-
-        $this
-            ->getRestClient()
-            ->post("v2/fixture/authenticateUser", $payload);
-
-        return new RedirectResponse('/');
-    }
-
-    /**
      * @Route("/createUser", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
      */
