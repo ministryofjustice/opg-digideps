@@ -7,7 +7,6 @@ Feature: Manually discharge deputies from a court order
   # Manual discharging:
   # We can not auto detect when a client has switched between lay deputy or between a lay and org deputyship, or vice versa
   # We have an admin option to "discharge" a deputy from a client, which effectively deletes the client, allowing for a new one to be created
-
   Scenario: Super admin user manually discharges a lay deputy from their only client
     Given the following court orders exist:
       | client   | deputy    | deputy_type | report_type                                | court_date |
@@ -26,23 +25,11 @@ Feature: Manually discharge deputies from a court order
     Then I should see "43853418"
     And I should not see "43853417"
 
-
-
-
-
-
-
-
-
-
-
-  ## For every row, determine $namedDeputy and $organisation.
-  ## Determine if a known client has a new org
-  ## If a client now has a new org, there are 2 paths:
-  ##   1) If the named deputy on that row is equal to their current named deputy, then the deputy has moved and taken the client with them
-  ##      - Don't delete the client, set their organisation as the deputy's new organisation.
-  ##   2) If the named deputy is different to their current named deputy, then the client has moved to a new org with a new named deputy
-  ##      - Delete the client. A new one will be created and attached to this new org
-  ## If a known deputy has a new named deputy but at same org:
-  ## It will just update the $namedDeputy field on the $client. The old named deputy will still be there, it's up to org to remove them from org.
-
+  @acl
+  Scenario: Non super admin user cannot discharge
+    Given the following court orders exist:
+      | client   | deputy    | deputy_type | report_type        | court_date |
+      | 84775409 | Deputy329 | PA          | Health and Welfare | 2017-03-30 |
+    When I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I click on "admin-client-search, client-detail-84775409"
+    Then I should not see "Discharge deputy"

@@ -9,7 +9,7 @@ trait CourtOrderManagementTrait
      */
     public function aSuperAdminDischargesDeputyFromClient($caseNumber)
     {
-        $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'Abcd1234');
+        $this->iAmLoggedInToAdminAsWithPassword('super-admin@publicguardian.gov.uk', 'Abcd1234');
         $this->clickLink('Clients');
         $this->clickLink('John ' . $caseNumber . '-client');
         $this->clickLink('Discharge deputy');
