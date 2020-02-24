@@ -331,9 +331,9 @@ jobs:
       - run:
           name: Check updated PHP files for errors
           command: |
-            MERGE_BASE_COMMIT=$(git merge-base master HEAD)
-            API_CHANGED_FILES=$(git diff --relative=api --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) || [[ $? == 1 ]]
-            CLIENT_CHANGED_FILES=$(git diff --relative=client --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) || [[ $? == 1 ]]
+            MERGE_BASE_COMMIT=( $(git merge-base master HEAD) )
+            API_CHANGED_FILES=( $(git diff --relative=api --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) ) || [[ $? == 1 ]]
+            CLIENT_CHANGED_FILES=( $(git diff --relative=client --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) ) || [[ $? == 1 ]]
 
             if [ -n "$API_CHANGED_FILES" ]; then
                 docker-compose -f docker-compose.ci.yml run --rm api php bin/phpstan analyse $API_CHANGED_FILES --memory-limit=0 --level=max
