@@ -176,20 +176,6 @@ class FixtureController
     }
 
     /**
-     * @Route("/authenticateUser", methods={"POST"})
-     * @Security("has_role('ROLE_ADMIN')")
-     */
-    public function authenticateUserWithPassword(Request $request)
-    {
-        $userDetails = json_decode($request->getContent(), true);
-
-        $token = new UsernamePasswordToken($userDetails['email'], $userDetails['password'], 'default', ['ROLE_ADMIN']);
-
-        $this->tokenStorage->setToken($token);
-        return $this->buildSuccessResponse([], 'User Authenticated', Response::HTTP_OK);
-    }
-
-    /**
      * Used for creating non-prof/pa users only as Org ID is required for those types
      *
      * @Route("/createUser", methods={"POST"})
