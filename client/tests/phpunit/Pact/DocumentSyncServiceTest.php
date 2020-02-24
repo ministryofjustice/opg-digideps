@@ -64,6 +64,7 @@ class SiriusDocumentsContractTest extends TestCase
             ->addHeader('Content-Type', 'application/json')
             ->setBody([
                 'data' => [
+                    'type' => 'reports',
                     'id' => $matcher->uuid('33ea0382-cfc9-4776-9036-667eeb68fa4b'),
                     'attributes' => [
                         'reporting_period_from' => $matcher->dateISO8601(),
