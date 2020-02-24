@@ -7,7 +7,6 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Form\Admin\Fixture\CourtOrderFixtureType;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
