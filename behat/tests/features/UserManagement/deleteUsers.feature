@@ -1,3 +1,4 @@
+@acs
 Feature: Deleting Users
   As a super Admin
   I want to be able to hard delete admin and super admin user accounts
@@ -5,4 +6,16 @@ Feature: Deleting Users
   And anyone who has left the OPG or otherwise should not have an account and can not access the system
 
   Scenario: Create users for scenarios
-    Given the following Users exist:
+    Given I am logged in to admin as 'admin@publicguardian.gov.uk' with password 'Abcd1234'
+    And the following admins exist:
+    | adminType        | firstName     | lastName | email                                 | activated |
+    | ROLE_ADMIN       | admin-1       | user     | adminUser1@publicguardian.gov.uk      | true      |
+    | ROLE_ADMIN       | admin-2       | user     | adminUser2@publicguardian.gov.uk      | true      |
+    | ROLE_SUPER_ADMIN | super-admin-1 | user     | superAdminUser1@publicguardian.gov.uk | true      |
+    | ROLE_SUPER_ADMIN | super-admin-2 | user     | superAdminUser2@publicguardian.gov.uk | true      |
+
+  Scenario: Super admin users can delete admin users
+    Given I am logged in to admin as 'superAdminUser1@publicguardian.gov.uk' with password 'Abcd1234'
+    And I am viewing the edit user page for 'adminuser1@publicguardian.gov.uk'
+    When I press "Delete User"
+    Then the user 'adminuser1@publicguardian.gov.uk' should be deleted
