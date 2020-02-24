@@ -4,8 +4,11 @@ namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\ReportInterface;
+use AppBundle\Entity\User;
 use AppBundle\Entity\Traits\CreationAudit;
+use DateTime;
 use JMS\Serializer\Annotation as JMS;
+use RuntimeException;
 
 class ReportSubmission
 {
@@ -26,7 +29,7 @@ class ReportSubmission
     private $report;
 
     /**
-     * @var Report
+     * @var Ndr|null
      *
      * @JMS\Type("AppBundle\Entity\Ndr\Ndr")
      */
@@ -77,7 +80,7 @@ class ReportSubmission
     }
 
     /**
-     * @return Report
+     * @return Report|null
      */
     public function getReport()
     {
@@ -96,7 +99,7 @@ class ReportSubmission
     }
 
     /**
-     * @return Report
+     * @return Ndr|null
      */
     public function getNdr()
     {
@@ -104,7 +107,7 @@ class ReportSubmission
     }
 
     /**
-     * @param  Report           $ndr
+     * @param  Ndr           $ndr
      * @return ReportSubmission
      */
     public function setNdr($ndr)
@@ -210,24 +213,32 @@ class ReportSubmission
      */
     public function getZipName()
     {
-        /* @var $report ReportInterface */
         $report = $this->getReport() ? $this->getReport() : $this->getNdr();
+
+        if (is_null($report)) {
+            throw new RuntimeException('Report submission has no associated report');
+        }
+
         $client = $report->getClient();
 
-        return ($report instanceof Ndr ? 'NdrReport-' : 'Report_')
-            . $client->getCaseNumber()
-            . '_' . $report->getStartDate()->format('Y')
-            . ($report instanceof Ndr ? '' : ('_' . $report->getEndDate()->format('Y')))
-            // DDPB-2049 add report submission id to avoid collision with multi downloads
-            . '_' . $this->getId()
-            . '.zip';
-    }
+        if ($report instanceof Ndr) {
+            return 'NdrReport-'
+                . $client->getCaseNumber()
+                . '_' . $report->getStartDate()->format('Y')
+                . '_' . $this->getId()
+                . '.zip';
+        } else {
+            /** @var DateTime $startDate */
+            $startDate = $report->getStartDate();
+            /** @var DateTime $endDate */
+            $endDate = $report->getEndDate();
 
-    /**
-     * @return string
-     */
-    public function getCaseNumber()
-    {
-        $this->getReport()->getClient()->getCaseNumber();
+            return 'Report_'
+                . $client->getCaseNumber()
+                . '_' . $startDate->format('Y')
+                . '_' . $endDate->format('Y')
+                . '_' . $this->getId()
+                . '.zip';
+        }
     }
 }
