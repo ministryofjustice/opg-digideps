@@ -2,6 +2,6 @@
 
 <ul>
     {% for missingDocument in missingDocuments %}
-        <li>{{ missingDocument.reportSubmission.caseNumber }} - {{ missingDocument.fileName }}</li>
+        <li>{{ missingDocument.reportSubmission.report.client.caseNumber }} - {{ missingDocument.fileName }}</li>
     {% endfor %}
 </ul>
