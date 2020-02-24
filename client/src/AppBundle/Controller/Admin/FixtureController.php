@@ -91,15 +91,10 @@ class FixtureController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $email = $request->query->get('email');
-        $password = $request->query->get('password');
-
-        $payload = <<<JSON
-{
-    "email": $email,
-    "password": $password
-}
-JSON;
+        $payload = json_encode([
+            'email' => $request->query->get('email'),
+            'password' => $request->query->get('password')
+        ]);
 
         $this
             ->getRestClient()
@@ -117,8 +112,6 @@ JSON;
         if ($kernel->getEnvironment() === 'prod') {
             throw $this->createNotFoundException();
         }
-
-        var_dump($request->query->all());
 
         $this
             ->getRestClient()
