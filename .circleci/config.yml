@@ -355,6 +355,7 @@ jobs:
           fingerprints:
             - 6f:4b:55:76:0e:cd:27:7d:ad:c3:28:38:53:69:5c:32
       - checkout
+      - attach_workspace: { at: ~/project }
       - run:
           name: Set environment
           command: ~/project/.circleci/set_env.sh >> $BASH_ENV
