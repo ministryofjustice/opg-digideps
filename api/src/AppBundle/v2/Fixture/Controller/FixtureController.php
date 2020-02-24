@@ -17,8 +17,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * @Route("/fixture")
@@ -34,7 +32,6 @@ class FixtureController
     private $reportFactory;
     private $reportRepository;
     private $reportSection;
-    private $tokenStorage;
 
     public function __construct(
         EntityManagerInterface $em,
@@ -43,8 +40,7 @@ class FixtureController
         OrganisationFactory $organisationFactory,
         ReportFactory $reportFactory,
         ReportRepository $reportRepository,
-        ReportSection $reportSection,
-        TokenStorageInterface $tokenStorage
+        ReportSection $reportSection
     ) {
         $this->em = $em;
         $this->clientFactory = $clientFactory;
