@@ -37,7 +37,7 @@ class ClientController extends AbstractController
 
     /**
      * @Route("/{id}/discharge", name="admin_client_discharge", requirements={"id":"\d+"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
      * @param Request $request
      * @param $id
      *
@@ -57,7 +57,7 @@ class ClientController extends AbstractController
 
     /**
      * @Route("/{id}/discharge-confirm", name="admin_client_discharge_confirm", requirements={"id":"\d+"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse

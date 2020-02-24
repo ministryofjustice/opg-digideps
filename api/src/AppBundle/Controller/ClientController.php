@@ -174,7 +174,7 @@ class ClientController extends RestController
 
     /**
      * @Route("/{id}/delete", name="client_delete", requirements={"id":"\d+"}, methods={"DELETE"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
      */
     public function deleteAction(Request $request, $id)
     {
