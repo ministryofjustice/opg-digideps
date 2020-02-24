@@ -353,7 +353,7 @@ jobs:
 
   client-unit-test:
     docker:
-      - image: circleci/python:2.7
+      - image: circleci/python:3
     steps:
       - setup_remote_docker
       - checkout
