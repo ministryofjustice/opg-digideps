@@ -3,6 +3,8 @@
 namespace DigidepsBehat;
 
 use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Session;
+use Symfony\Component\HttpFoundation\Response;
 
 trait UserTrait
 {
@@ -24,7 +26,7 @@ trait UserTrait
     public function adminsExist(TableNode $table)
     {
         foreach ($table as $inputs) {
-            $this->assertValidRole($inputs['adminType']);
+            $this->assertValidAdminRole($inputs['adminType']);
 
             $adminType = $inputs['adminType'];
             $firstName = $inputs['firstName'];
@@ -360,4 +362,45 @@ trait UserTrait
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
     }
+
+    /**
+     * Requires a logged in admin user to call
+     *
+     * @Given I am viewing the edit user page for :userEmail
+     */
+    public function viewEditUserPageFor($userEmail)
+    {
+       $this->visitAdminPath("/admin/fixtures/getUserIDByEmail/$userEmail");
+
+        /** @var Session $session */
+        $session = $this->getSession();
+
+        if ($session->getStatusCode() !== Response::HTTP_OK) {
+            throw new \Exception($session->getPage()->getContent());
+        }
+
+        $id = $session->getPage()->getContent();
+        $this->visitAdminPath("/edit-user?filter=$id");
+    }
+
+    /**
+     * Requires a logged in admin user to call
+     *
+     * @Then the user :userEmail should be deleted
+     */
+    public function userShouldBeDeleted($userEmail)
+    {
+        $this->visitAdminPath("/admin/fixtures/getUserIDByEmail/$userEmail");
+
+        /** @var Session $session */
+        $session = $this->getSession();
+
+        if ($session->getStatusCode() === Response::HTTP_OK) {
+            throw new \Exception("The user '$userEmail' should have been deleted but they still exist");
+        }
+
+        $this->assertResponseStatus(Response::HTTP_NOT_FOUND);
+    }
+
+
 }
