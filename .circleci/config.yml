@@ -354,13 +354,13 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - 6f:4b:55:76:0e:cd:27:7d:ad:c3:28:38:53:69:5c:32
+      - checkout
       - run:
           name: Set environment
           command: ~/project/.circleci/set_env.sh >> $BASH_ENV
       - run:
           name: Docker login
           command: eval $(aws ecr get-login --region $AWS_REGION --no-include-email --profile digideps-ci)
-      - checkout
       - run:
           name: Run tests
           command: |
