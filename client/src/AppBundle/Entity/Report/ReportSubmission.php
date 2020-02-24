@@ -52,6 +52,12 @@ class ReportSubmission
     private $downloadable;
 
     /**
+     * @var string|null
+     * @JMS\Type("string")
+     */
+    private $uuid;
+
+    /**
      * @return int
      */
     public function getId()
@@ -175,6 +181,26 @@ class ReportSubmission
     public function setDownloadable($downloadable)
     {
         $this->downloadable = $downloadable;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUuid(): ?string
+    {
+        return $this->uuid;
+    }
+
+    /**
+     * @param string|null $uuid
+     *
+     * @return $this
+     */
+    public function setUuid(?string $uuid)
+    {
+        $this->uuid = $uuid;
 
         return $this;
     }
