@@ -8,6 +8,8 @@ use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
 use AppBundle\Service\UserService;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +23,7 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
  */
 class UserController extends RestController
 {
+    const DELETABLE_ROLES = ['ROLE_LAY_DEPUTY', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'];
     /**
      * @var UserService
      */
@@ -251,17 +254,20 @@ class UserController extends RestController
      * //TODO move to UserService
      *
      * @Route("/{id}", methods={"DELETE"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_SUPER_ADMIN')")
      *
      * @param int $id
+     * @return array
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function delete($id)
     {
         /** @var User $user */
         $user = $this->userRepository->find($id);
 
-        if ($user->getRoleName() !== User::ROLE_LAY_DEPUTY) {
-            throw $this->createAccessDeniedException('Cannot delete users with role ' . $user->getRoleName());
+        if (!in_array($user->getRoleName(),self::DELETABLE_ROLES)) {
+            throw $this->createAccessDeniedException('Cannot delete ' . $user->getRoleName() . ' users');
         }
 
         $clients = $user->getClients();

@@ -1,4 +1,4 @@
-@acs
+@userManagement
 Feature: Deleting Users
   As a super Admin
   I want to be able to hard delete admin and super admin user accounts
@@ -17,5 +17,8 @@ Feature: Deleting Users
   Scenario: Super admin users can delete admin users
     Given I am logged in to admin as 'superAdminUser1@publicguardian.gov.uk' with password 'Abcd1234'
     And I am viewing the edit user page for 'adminuser1@publicguardian.gov.uk'
-    When I press "Delete User"
+    Then the url should match "/admin/edit-user"
+    When I follow "Delete user"
+    Then the url should match "/admin/delete-confirm"
+    When I follow "Yes, I'm sure"
     Then the user 'adminuser1@publicguardian.gov.uk' should be deleted

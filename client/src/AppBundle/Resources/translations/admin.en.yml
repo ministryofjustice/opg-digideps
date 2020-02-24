@@ -72,7 +72,7 @@ deleteConfirm:
   pageTitle: Admin
   supportTitle: User management
   heading: Delete user
-  question: Are you sure that you want to delete <strong class="bold">%fullName%</strong>?
+  question: Are you sure that you want to delete <strong class="bold">%fullName%</strong>? This action cannot be undone.
 
 editUser:
   htmlTitle: Administration - Users
