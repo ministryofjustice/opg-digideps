@@ -380,7 +380,7 @@ trait UserTrait
         }
 
         $id = $session->getPage()->getContent();
-        $this->visitAdminPath("/edit-user?filter=$id");
+        $this->visitAdminPath("/admin/edit-user?filter=$id");
     }
 
     /**
@@ -401,6 +401,4 @@ trait UserTrait
 
         $this->assertResponseStatus(Response::HTTP_NOT_FOUND);
     }
-
-
 }

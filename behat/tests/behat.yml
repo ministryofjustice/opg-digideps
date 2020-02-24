@@ -73,6 +73,12 @@ default:
             contexts:
                 - DigidepsBehat\Registration\RegistrationFeatureContext
 
+        userManagement:
+            description: Coverage of user management features
+            paths: [ "%paths.base%/features/userManagement" ]
+            contexts:
+                - DigidepsBehat\FeatureContext
+
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
               goutte:

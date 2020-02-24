@@ -225,10 +225,12 @@ class IndexController extends AbstractController
      */
     public function deleteConfirmAction($id)
     {
+        /** @var EntityDir\User $userToDelete */
         $userToDelete = $this->getRestClient()->get("user/{$id}", 'User');
 
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            throw new DisplayableException('Only Admin can delete users');
+        if (!$this->isGranted('ROLE_ADMIN') || !$this->isGranted('ROLE_SUPER_ADMIN')) {
+            $message = $userToDelete->isAdminOrSuperAdmin() ? 'Only Super Admins can delete Admins or Super Admins' : 'Only Admin can delete users';
+            throw new DisplayableException($message);
         }
 
         /** @var EntityDir\User $loggedInUser */
