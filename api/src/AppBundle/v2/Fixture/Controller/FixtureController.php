@@ -3,6 +3,7 @@
 namespace AppBundle\v2\Fixture\Controller;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\NamedDeputy;
 use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\Entity\Repository\UserRepository;
@@ -151,8 +152,26 @@ class FixtureController
         }
 
         $organisation->addUser($deputy);
+        $client->setNamedDeputy($this->buildNamedDeputy($deputy));
         $client->setOrganisation($organisation);
         $this->em->persist($organisation);
+    }
+
+    /**
+     * @param User $deputy
+     * @return NamedDeputy
+     */
+    private function buildNamedDeputy(User $deputy)
+    {
+        $namedDeputy = (new NamedDeputy())
+            ->setFirstname($deputy->getFirstname())
+            ->setLastname($deputy->getLastname())
+            ->setEmail1($deputy->getEmail())
+            ->setDeputyNo($deputy->getDeputyNo());
+
+        $this->em->persist($namedDeputy);
+
+        return $namedDeputy;
     }
 
     /**
