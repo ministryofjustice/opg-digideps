@@ -109,12 +109,10 @@ workflows:
           tf_workspace: master
           timeout: 1800
 
-      - run-task:
+      - client-unit-test:
           name: client unit test
-          requires: [ apply master  ]
+          requires: [ apply master ]
           filters: { branches: { only: [ master ] } }
-          task_name: client_unit_test
-          tf_workspace: master
 
       - run-task:
           name: api unit test
