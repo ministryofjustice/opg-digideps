@@ -52,8 +52,7 @@ RUN openssl req -newkey rsa:4096 -x509 -nodes -keyout /etc/nginx/certs/app.key -
 
 RUN mkdir -p var/cache \
   && mkdir -p var/logs \
-  && chown -R www-data var \
-  && chmod -R 777 var
+  && chown -R www-data var
 
 CMD confd -onetime -backend env \
   && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
