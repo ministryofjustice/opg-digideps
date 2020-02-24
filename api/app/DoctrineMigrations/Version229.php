@@ -14,7 +14,7 @@ final class Version229 extends AbstractMigration
 {
     public function getDescription() : string
     {
-        return '';
+        return 'Migrate ROLE_CASE_MANAGER users to ROLE_ADMIN';
     }
 
     public function up(Schema $schema) : void
@@ -22,14 +22,11 @@ final class Version229 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE client DROP deleted_at');
+        $this->addSql('UPDATE dd_user SET role_name = \'ROLE_ADMIN\' WHERE role_name = \'ROLE_CASE_MANAGER\'');
     }
 
     public function down(Schema $schema) : void
     {
-        // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE client ADD deleted_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
     }
 }

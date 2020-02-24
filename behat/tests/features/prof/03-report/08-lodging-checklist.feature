@@ -97,9 +97,9 @@ Feature: Admin report checklist
       | report_checklist_furtherInformationReceived |  |
     # Assert furtherInfo table is populated
     And each text should be present in the corresponding region:
-      | Case Manager1, Case Manager | lodging-last-saved-by    |
+      | Case Manager1, Admin | lodging-last-saved-by    |
       | Some more info 1            | information              |
-      | Case Manager1, Case Manager | information              |
+      | Case Manager1, Admin | information              |
     Then the URL should match "/admin/report/\d+/checklist"
     And I fill in "report_checklist_furtherInformationReceived" with "Some more info 2"
     When I click on "save-further-information"
@@ -108,9 +108,9 @@ Feature: Admin report checklist
     # Assert furtherInfo table is updated NOTE reverse order as most recent first.
     And each text should be present in the corresponding region:
       | Some more info 2            | information |
-      | Case Manager1, Case Manager | information |
+      | Case Manager1, Admin | information |
       | Some more info 1            | information |
-      | Case Manager1, Case Manager | information |
+      | Case Manager1, Admin | information |
     Then the URL should match "/admin/report/\d+/checklist"
 
 
@@ -118,7 +118,7 @@ Feature: Admin report checklist
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
     When I open the "2016-to-2017" checklist for client "31000010"
     Then each text should be present in the corresponding region:
-      | Case Manager1, Case Manager | lodging-last-saved-by |
+      | Case Manager1, Admin | lodging-last-saved-by |
     # Begin scenario
     And I fill in "report_checklist_deputyFullNameAccurateInCasrec" with "1"
     And I fill in "report_checklist_reportingPeriodAccurate_0" with "yes"
@@ -146,7 +146,7 @@ Feature: Admin report checklist
     And the response status code should be 200
     And the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
-      | Case Manager1, Case Manager | lodging-last-saved-by |
+      | Case Manager1, Admin | lodging-last-saved-by |
     # Assert form reloads with fields saved
     Then the following fields should have the corresponding values:
       | report_checklist_reportingPeriodAccurate_0             | yes                |
@@ -177,4 +177,4 @@ Feature: Admin report checklist
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
     When I open the "2016-to-2017" checklist for client "31000010"
     Then each text should be present in the corresponding region:
-      | Case Manager1, Case Manager | lodging-last-saved-by     |
+      | Case Manager1, Admin | lodging-last-saved-by     |

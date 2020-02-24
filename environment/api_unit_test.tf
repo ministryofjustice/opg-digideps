@@ -66,10 +66,10 @@ locals {
       { "name": "SECRETS_FRONT_KEY", "valueFrom": "${data.aws_secretsmanager_secret.front_api_client_secret.arn}" }
     ],
     "environment": [
-      { "name": "DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
-      { "name": "DATABASE_NAME", "value": "${aws_db_instance.api.name}" },
-      { "name": "DATABASE_PORT", "value": "${aws_db_instance.api.port}" },
-      { "name": "DATABASE_USERNAME", "value": "digidepsmaster" },
+      { "name": "DATABASE_HOSTNAME", "value": "${local.db.endpoint}" },
+      { "name": "DATABASE_NAME", "value": "${local.db.name}" },
+      { "name": "DATABASE_PORT", "value": "${local.db.port}" },
+      { "name": "DATABASE_USERNAME", "value": "${local.db.username}" },
       { "name": "FIXTURES_ACCOUNTPASSWORD", "value": "Abcd1234" },
       { "name": "REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" }
     ]

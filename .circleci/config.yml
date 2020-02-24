@@ -29,7 +29,7 @@ workflows:
           requires: [ reset environment ]
           filters: { branches: { ignore: [ master ] } }
           task_name: integration_test
-          timeout: 1800
+          timeout: 2100
 
       - run-task:
           name: client unit test

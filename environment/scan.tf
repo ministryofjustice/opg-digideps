@@ -110,7 +110,8 @@ EOF
           "wget --quiet --tries=1 --spider http://localhost:3310/"
         ],
         "interval": 30,
-        "retries": 5
+        "retries": 5,
+        "timeout": 5
       },
       "logConfiguration": {
         "logDriver": "awslogs",

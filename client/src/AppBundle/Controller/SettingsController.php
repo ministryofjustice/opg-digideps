@@ -107,7 +107,7 @@ class SettingsController extends AbstractController
     {
         $user = $this->getUserWithData();
 
-        if ($this->isGranted(EntityDir\User::ROLE_ADMIN) || $this->isGranted(EntityDir\User::ROLE_AD) || $this->isGranted(EntityDir\User::ROLE_CASE_MANAGER)) {
+        if ($this->isGranted(EntityDir\User::ROLE_ADMIN) || $this->isGranted(EntityDir\User::ROLE_AD)) {
             $form = $this->createForm(FormDir\User\UserDetailsBasicType::class, $user, []);
             $jmsPutGroups = ['user_details_basic'];
         } elseif ($this->isGranted(EntityDir\User::ROLE_LAY_DEPUTY)) {

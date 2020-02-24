@@ -501,7 +501,7 @@
         </div>
 
          <p>
-            <strong>{{ 'caseManager' | trans({}, 'common' ) }}:</strong> {{ lodgingChecklist.submittedBy.fullName}} {% if lodgingChecklist.submittedBy.roleFullName != 'Case Manager' %}({{ lodgingChecklist.submittedBy.roleFullName }}){% endif %}<br/>
+            <strong>{{ 'caseManager' | trans({}, 'common' ) }}:</strong> {{ lodgingChecklist.submittedBy.fullName}} {% if lodgingChecklist.submittedBy.roleFullName != 'Admin' %}({{ lodgingChecklist.submittedBy.roleFullName }}){% endif %}<br/>
             <strong>{{ 'submissionDate' | trans({}, 'common' ) }}:</strong> {{ lodgingChecklist.submittedOn | date("j F Y") }}<br/>
         </p>
 

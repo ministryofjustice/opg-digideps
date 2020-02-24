@@ -21,11 +21,11 @@ class User implements UserInterface
     const TOKEN_EXPIRE_HOURS = 48;
 
     const ROLE_ADMIN = 'ROLE_ADMIN';
-    const ROLE_DOCUMENT_MANAGE = 'ROLE_DOCUMENT_MANAGE';
+    const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
+
     const ROLE_DEPUTY = 'ROLE_DEPUTY';
     const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
     const ROLE_AD = 'ROLE_AD';
-    const ROLE_CASE_MANAGER = 'ROLE_CASE_MANAGER';
 
     const ROLE_ORG_NAMED = 'ROLE_ORG_NAMED';
     const ROLE_ORG_ADMIN = 'ROLE_ORG_ADMIN';
@@ -45,10 +45,9 @@ class User implements UserInterface
     const TYPE_PA = 'PA';
     const TYPE_PROF = 'PROF';
 
-
     public static $adminRoles = [
         self::ROLE_ADMIN,
-        self::ROLE_CASE_MANAGER
+        self::ROLE_SUPER_ADMIN,
     ];
 
     public static $depTypeIdToRealm = [
@@ -1249,31 +1248,6 @@ class User implements UserInterface
     public function isDeputyOrg()
     {
         return $this->isOrgNamedDeputy() || $this->isOrgAdministrator() || $this->isOrgTeamMember();
-    }
-
-    /**
-     * @deprecated ID shouldn't be used anymore anywhere
-     *
-     * @param int $id
-     *
-     * @return string
-     */
-    public static function roleIdToName($id)
-    {
-        foreach ([
-                     self::ROLE_ADMIN              => ['OPG Admin', 1],
-                     self::ROLE_LAY_DEPUTY         => ['Lay Deputy', 2],
-                     'ROLE_PROFESSIONAL_DEPUTY'    => ['Professional Deputy', 3],
-                     'ROLE_LOCAL_AUTHORITY_DEPUTY' => ['Local Authority Deputy', 4],
-                     self::ROLE_AD                 => ['Assisted Digital', 5],
-                     self::ROLE_PA_NAMED                 => ['Pa', 6],
-                     self::ROLE_PA_ADMIN           => ['Pa Admin', 7],
-                     self::ROLE_PA_TEAM_MEMBER     => ['Pa Team member', 8],
-                 ] as $name => $row) {
-            if ($row[1] == $id) {
-                return $name;
-            }
-        }
     }
 
     /**

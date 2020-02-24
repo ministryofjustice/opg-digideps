@@ -16,6 +16,13 @@ class AdminUserFixtures extends AbstractDataFixture
             ->setActive(true)
             ->setRoleName('ROLE_ADMIN');
 
+        $superAdminUser = (new User())
+            ->setFirstname('Super Admin')
+            ->setLastname('User')
+            ->setEmail('super-admin@publicguardian.gov.uk')
+            ->setActive(true)
+            ->setRoleName('ROLE_SUPER_ADMIN');
+
         $adUser = (new User())
             ->setFirstname('AD user')
             ->setLastname('ADsurname')
@@ -28,9 +35,10 @@ class AdminUserFixtures extends AbstractDataFixture
             ->setLastname('Manager1')
             ->setEmail('casemanager@publicguardian.gov.uk')
             ->setActive(true)
-            ->setRoleName('ROLE_CASE_MANAGER');
+            ->setRoleName('ROLE_ADMIN');
 
         $manager->persist($adminUser);
+        $manager->persist($superAdminUser);
         $manager->persist($adUser);
         $manager->persist($caseManager);
 
