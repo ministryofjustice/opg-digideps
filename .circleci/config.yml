@@ -351,7 +351,7 @@ jobs:
           name: Run tests
           command: |
             docker-compose up -d pact-mock
-            docker-compose run --no-deps --rm frontend bin/phpunit -c tests/phpunit
+            docker-compose -f docker-compose.ci.yml run --no-deps --rm frontend bin/phpunit -c tests/phpunit
             docker-compose exec pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
             docker-compose stop pact-mock
       - store_artifacts:
