@@ -365,7 +365,7 @@ jobs:
           name: Run tests
           command: |
             docker-compose up -d pact-mock
-            docker run --rm client:latest bin/phpunit -c tests/phpunit
+            docker run --rm --network=project_default client:latest bin/phpunit -c tests/phpunit
             docker-compose exec pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
             docker-compose stop pact-mock
       - store_artifacts:
