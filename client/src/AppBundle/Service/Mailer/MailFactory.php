@@ -342,7 +342,7 @@ class MailFactory
         return $email;
     }
 
-    public function createUpdateClientDetailsEmail(Client $client, User $userSubmittingForm): ModelDir\Email
+    public function createUpdateClientDetailsEmail(Client $client): ModelDir\Email
     {
         $email = (new ModelDir\Email())
           ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
@@ -361,6 +361,34 @@ class MailFactory
             'postcode' =>$client->getPostcode(),
             'countryName' => $this->intlService->getCountryNameByCountryCode($client->getCountry()),
             'phone' => $client->getPhone(),
+        ];
+
+        $email->setParameters($notifyParams);
+
+        return $email;
+    }
+
+    public function createUpdateDeputyDetailsEmail(User $deputy): ModelDir\Email
+    {
+        $email = (new ModelDir\Email())
+            ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
+            ->setFromName($this->translator->trans('client.fromName', [], 'email'))
+            ->setToName($this->translator->trans('client.toName', [], 'email'))
+            ->setSubject($this->translator->trans('client.subject', [], 'email'))
+            ->setToEmail($this->emailParams['update_send_to_address'])
+            ->setTemplate(self::DEPUTY_DETAILS_CHANGE_TEMPLATE_ID);
+
+        $notifyParams = [
+            'caseNumber' => $deputy->getFirstClient()->getCaseNumber(),
+            'fullName' => $deputy->getFullName(),
+            'address' => $deputy->getAddress1(),
+            'address2' => $deputy->getAddress2(),
+            'address3' => $deputy->getAddress3(),
+            'postcode' =>$deputy->getAddressPostcode(),
+            'countryName' => $this->intlService->getCountryNameByCountryCode($deputy->getAddressCountry()),
+            'phone' => $deputy->getPhoneMain(),
+            'altPhoneNumber' => $deputy->getPhoneAlternative(),
+            'email' => $deputy->getEmail(),
         ];
 
         $email->setParameters($notifyParams);
