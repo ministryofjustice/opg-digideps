@@ -126,4 +126,28 @@ class FixtureController extends AbstractController
     }
 
 
+
+    /**
+     * @Route("/createUser", methods={"GET"})
+     * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
+     */
+    public function createUser(Request $request, KernelInterface $kernel)
+    {
+        if ($kernel->getEnvironment() === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
+        $this
+            ->getRestClient()
+            ->post("v2/fixture/createUser", json_encode([
+                "ndr" => $request->query->get('ndr'),
+                "deputyType" => $request->query->get('deputyType'),
+                "deputyEmail" => $request->query->get('email'),
+                "firstName" => $request->query->get('firstName'),
+                "lastName" => $request->query->get('lastName'),
+                "postCode" => $request->query->get('postCode')
+            ]));
+
+        return new Response();
+    }
 }

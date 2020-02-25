@@ -36,4 +36,3 @@ Feature: Managing client and report access for deputies within active organisati
     When I follow "Dashboard"
     And I follow "94235342-Client, John"
     Then I should see "Client profile"
-
