@@ -39,8 +39,9 @@ resource "aws_iam_role_policy" "execution_role" {
 }
 
 resource "aws_cloudwatch_log_group" "opg_digi_deps" {
-  name = local.environment
-  tags = local.default_tags
+  name              = local.environment
+  retention_in_days = 180
+  tags              = local.default_tags
 }
 
 data "aws_iam_policy_document" "execution_role" {
@@ -77,4 +78,3 @@ resource "aws_service_discovery_private_dns_namespace" "private" {
   name = "${local.environment}.private"
   vpc  = data.aws_vpc.vpc.id
 }
-
