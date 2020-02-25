@@ -12,6 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -29,7 +30,7 @@ class UserController extends AbstractController
      *   "action" = "(activate|password-reset)"
      * })
      */
-    public function activateUserAction(Request $request, $action, $token)
+    public function activateUserAction(Request $request, string $action, string $token): Response
     {
         /** @var TranslatorInterface */
         $translator = $this->get('translator');
@@ -128,7 +129,7 @@ class UserController extends AbstractController
      * @Route("/user/activate/password/send/{token}", name="activation_link_send")
      * @Template("AppBundle:User:activateLinkSend.html.twig")
      */
-    public function activateLinkSendAction(Request $request, $token)
+    public function activateLinkSendAction(string $token): Response
     {
         // check $token is correct
         $user = $this->getRestClient()->loadUserByToken($token);
@@ -145,10 +146,11 @@ class UserController extends AbstractController
     }
 
     /**
+     * @return array<mixed>
      * @Route("/user/activate/password/sent/{token}", name="activation_link_sent")
      * @Template("AppBundle:User:activateLinkSent.html.twig")
      */
-    public function activateLinkSentAction(Request $request, $token)
+    public function activateLinkSentAction(string $token): array
     {
         return [
             'token'            => $token,
@@ -164,6 +166,7 @@ class UserController extends AbstractController
      * - Lay
      * - PA
      *
+     * @return array<mixed>|Response
      * @Route("/user/details", name="user_details")
      * @Template("AppBundle:User:details.html.twig")
      */
@@ -200,6 +203,7 @@ class UserController extends AbstractController
     }
 
     /**
+     * @return array<mixed>|Response
      * @Route("/password-managing/forgotten", name="password_forgotten")
      * @Template("AppBundle:User:passwordForgotten.html.twig")
      **/
@@ -244,15 +248,17 @@ class UserController extends AbstractController
     }
 
     /**
+     * @return array<mixed>
      * @Route("/password-managing/sent", name="password_sent")
      * @Template("AppBundle:User:passwordSent.html.twig")
-     **/
-    public function passwordSentAction()
+     */
+    public function passwordSentAction(): array
     {
         return [];
     }
 
     /**
+     * @return array<mixed>|Response
      * @Route("/register", name="register")
      * @Template("AppBundle:User:register.html.twig")
      */
@@ -333,7 +339,7 @@ class UserController extends AbstractController
     /**
      * @Route("/user/agree-terms-use/{token}", name="user_agree_terms_use")
      */
-    public function agreeTermsUseAction(Request $request, $token)
+    public function agreeTermsUseAction(Request $request, string $token): Response
     {
         $user = $this->getRestClient()->loadUserByToken($token);
 
@@ -361,31 +367,28 @@ class UserController extends AbstractController
 
     /**
      * @param EntityDir\User $user
-     *
-     * @return array [string FormType, array of JMS groups]
+     * @return array<mixed> [string FormType, array of JMS groups]
      */
-    private function getFormAndJmsGroupBasedOnUserRole(EntityDir\User $user)
+    private function getFormAndJmsGroupBasedOnUserRole(EntityDir\User $user): array
     {
         // define form, route, JMS groups
         switch ($user->getRoleName()) {
-            case EntityDir\User::ROLE_ADMIN:
-            case EntityDir\User::ROLE_AD:
-            case EntityDir\User::ROLE_SUPER_ADMIN:
-                return [FormDir\User\UserDetailsBasicType::class, ['user_details_basic']];
-
             case EntityDir\User::ROLE_LAY_DEPUTY:
                 return [FormDir\User\UserDetailsFullType::class, ['user_details_full']];
 
             case EntityDir\User::ROLE_PA_NAMED:
             case EntityDir\User::ROLE_PA_ADMIN:
             case EntityDir\User::ROLE_PA_TEAM_MEMBER:
-                return [FormDir\User\UserDetailsPaType::class, ['user_details_org']];
-
-            // prof reuses pa so far
             case EntityDir\User::ROLE_PROF_NAMED:
             case EntityDir\User::ROLE_PROF_ADMIN:
             case EntityDir\User::ROLE_PROF_TEAM_MEMBER:
                 return [FormDir\User\UserDetailsPaType::class, ['user_details_org']];
+
+            case EntityDir\User::ROLE_ADMIN:
+            case EntityDir\User::ROLE_AD:
+            case EntityDir\User::ROLE_SUPER_ADMIN:
+            default:
+                return [FormDir\User\UserDetailsBasicType::class, ['user_details_basic']];
         }
     }
 }
