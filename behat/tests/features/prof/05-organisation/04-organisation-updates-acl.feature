@@ -61,7 +61,7 @@ Feature: Organisation deputyship updates
       | GB                                    | deputy-details |
       | behat-prof1@example.com1              | deputy-details |
 
-  # Client has new deputy and new org - delete client and expect knew one created
+  # Client has new deputy and new org - delete client and expect new one created
   Scenario: Clients appointed to a new organisation
     #  (deputy number changes, org identifier changes to deputy of new organisation - example.com2)
     Given I am logged in as "behat-prof1@example.com2" with password "Abcd1234"

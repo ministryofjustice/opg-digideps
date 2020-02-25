@@ -26,7 +26,7 @@ clientDetails:
 clientDischarge:
   htmlTitle: Administration - Clients
   pageTitle: Discharge deputy from client
-  warning: %clientFirstName% %clientLastName% will be permanently detached from their named deputy.
+  warning: %clientFirstName% %clientLastName% will be permanently detached from their named deputy. Any data previously entered into an unsubmitted report will be deleted.
   confirm: Discharge deputy
 
 reportManage:

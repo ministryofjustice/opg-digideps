@@ -38,14 +38,13 @@ class ClientController extends AbstractController
     /**
      * @Route("/{id}/discharge", name="admin_client_discharge", requirements={"id":"\d+"})
      * @Security("has_role('ROLE_SUPER_ADMIN')")
-     * @param Request $request
      * @param $id
      *
      * @Template("AppBundle:Admin/Client/Client:discharge.html.twig")
      *
      * @return array
      */
-    public function dischargeAction(Request $request, $id)
+    public function dischargeAction($id)
     {
         $client = $this->getRestClient()->get('v2/client/' . $id, 'Client');
 
@@ -58,11 +57,10 @@ class ClientController extends AbstractController
     /**
      * @Route("/{id}/discharge-confirm", name="admin_client_discharge_confirm", requirements={"id":"\d+"})
      * @Security("has_role('ROLE_SUPER_ADMIN')")
-     * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function dischargeConfirmAction(Request $request, $id)
+    public function dischargeConfirmAction($id)
     {
         $this->getRestClient()->delete('client/' . $id . '/delete');
 
