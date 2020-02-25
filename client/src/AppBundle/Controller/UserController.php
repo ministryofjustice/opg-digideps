@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class UserController extends AbstractController
@@ -79,7 +80,11 @@ class UserController extends AbstractController
             $deputyProvider = $this->get('deputy_provider');
 
             // login user into API
-            $deputyProvider->login(['token' => $token]);
+            try {
+                $deputyProvider->login(['token' => $token]);
+            } catch (UsernameNotFoundException $e) {
+                return $this->renderError('This activation link is not working or has already been used');
+            }
 
             /** @var string */
             $data = json_encode([
