@@ -40,7 +40,7 @@ class DocumentDownloaderTest extends TestCase
         $this->zipFileCreator = self::prophesize(DocumentsZipFileCreator::class);
     }
 
-    private function generateReportSubmission($caseNumber)
+    private function generateReportSubmission(string $caseNumber): ReportSubmission
     {
         $client = new Client();
         $client->setCaseNumber($caseNumber);
@@ -54,7 +54,7 @@ class DocumentDownloaderTest extends TestCase
         return $reportSubmission;
     }
 
-    public function testGenerateDownloadResponse()
+    public function testGenerateDownloadResponse(): void
     {
         $sut = new DocumentDownloader($this->documentService->reveal(), $this->reportSubmissionService->reveal(), $this->zipFileCreator->reveal());
 
@@ -68,7 +68,7 @@ class DocumentDownloaderTest extends TestCase
         self::assertEquals('attachment; filename="test-file.zip";', $response->headers->get('Content-Disposition'));
     }
 
-    public function testRetrieveDocumentsFromS3ByReportSubmissionIds()
+    public function testRetrieveDocumentsFromS3ByReportSubmissionIds(): void
     {
         $request = new Request();
         $ids = [1, 2];
@@ -101,7 +101,7 @@ class DocumentDownloaderTest extends TestCase
         self::assertEmpty($missingDocuments);
     }
 
-    public function testProcessDownloadMissingDocument()
+    public function testProcessDownloadMissingDocument(): void
     {
         $request = new Request();
         $session = new Session(new MockArraySessionStorage());
@@ -138,7 +138,7 @@ class DocumentDownloaderTest extends TestCase
         self::assertEquals($missingDocument, $missingDocument);
     }
 
-    public function testSetMissingDocsFlashMessage()
+    public function testSetMissingDocsFlashMessage(): void
     {
         $this->documentService->createMissingDocumentsFlashMessage(Argument::type('Array'))->willReturn('flash message');
 
@@ -164,7 +164,7 @@ class DocumentDownloaderTest extends TestCase
         self::assertEquals('flash message', $actualFlash);
     }
 
-    public function testZipDownloadedDocuments()
+    public function testZipDownloadedDocuments(): void
     {
         $retrievedDocs = [new RetrievedDocument()];
         $this->zipFileCreator->createZipFilesFromRetrievedDocuments($retrievedDocs)->shouldBeCalled()->willReturn([new ZipArchive()]);
@@ -172,25 +172,5 @@ class DocumentDownloaderTest extends TestCase
         $sut = new DocumentDownloader($this->documentService->reveal(), $this->reportSubmissionService->reveal(), $this->zipFileCreator->reveal());
 
         $sut->zipDownloadedDocuments($retrievedDocs);
-    }
-
-    protected function generateTestZipFiles(ZipArchive $zip, array $zipFileContent)
-    {
-        $zipFiles = [];
-
-        foreach($zipFileContent as $fileName => $content) {
-            $zipFile = "/tmp/${fileName}";
-            file_put_contents($zipFile, $content);
-
-            $zip->open($zipFile, ZipArchive::CREATE | ZipArchive::OVERWRITE | ZipArchive::CHECKCONS);
-            $zip->addFile($zipFile, $zipFile);
-
-            $zipFiles[] = $zipFile;
-
-            $zip->close();
-            unset($zip);
-        }
-
-        return $zipFiles;
     }
 }
