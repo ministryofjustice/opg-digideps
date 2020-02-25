@@ -74,27 +74,13 @@ class IndexController extends AbstractController
      */
     public function addUserAction(Request $request)
     {
-        $availableRoles = [
-            EntityDir\User::ROLE_LAY_DEPUTY => 'Lay Deputy',
-            EntityDir\User::ROLE_PA_NAMED => 'Public Authority Named Deputy',
-            EntityDir\User::ROLE_PROF_NAMED => 'Professional Named Deputy',
-            EntityDir\User::ROLE_AD         => 'Assisted Digital',
-            EntityDir\User::ROLE_PROF_NAMED => 'Professional (Named)',
-            EntityDir\User::ROLE_PA_NAMED => 'PA (Named)',
-        ];
-        // only admins can add other admins
-        if ($this->isGranted(EntityDir\User::ROLE_ADMIN)) {
-            $availableRoles[EntityDir\User::ROLE_ADMIN] = 'OPG Admin';
-            $availableRoles[EntityDir\User::ROLE_CASE_MANAGER] = 'Case manager';
-        }
-
         $form = $this->createForm(FormDir\Admin\AddUserType::class, new EntityDir\User());
 
         $form->handleRequest($request);
         if ($form->isValid()) {
             // add user
             try {
-                if (!$this->isGranted(EntityDir\User::ROLE_ADMIN) && $form->getData()->getRoleName() == EntityDir\User::ROLE_ADMIN) {
+                if (!$this->isGranted(EntityDir\User::ROLE_SUPER_ADMIN) && $form->getData()->getRoleName() == EntityDir\User::ROLE_SUPER_ADMIN) {
                     throw new \RuntimeException('Cannot add admin from non-admin user');
                 }
 

@@ -126,7 +126,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{id}/delete", name="admin_organisation_delete", requirements={"id":"\d+"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
      * @Template("AppBundle:Common:confirmDelete.html.twig")
      */
     public function deleteAction(Request $request, $id)

@@ -44,7 +44,7 @@ Feature: Full review checklist
         | full-review_decision_2 |
     When I click on "save-progress" in the "full-review-checklist" region
     Then the form should be valid
-    And I should see "Admin User, OPG Admin" in the "fullReview-last-saved-by" region
+    And I should see "Admin User, Admin" in the "fullReview-last-saved-by" region
 
   @deputy
   Scenario: Can add details to the full review checklist

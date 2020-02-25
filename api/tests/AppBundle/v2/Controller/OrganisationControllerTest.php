@@ -12,11 +12,20 @@ class OrganisationControllerTest extends AbstractTestController
     /** @var array */
     private $headers = [];
 
+    /** @var array */
+    private $headersSuperAdmin = [];
+
+    /** @var array */
+    private $headersDeputy = [];
+
     /** @var EntityManager */
     private static $em;
 
     /** @var null|string */
     private static $tokenAdmin = null;
+
+    /** @var null|string */
+    private static $tokenSuperAdmin = null;
 
     /** @var null|string */
     private static $tokenDeputyInOrg = null;
@@ -46,11 +55,16 @@ class OrganisationControllerTest extends AbstractTestController
             self::$tokenAdmin = $this->loginAsAdmin();
         }
 
+        if (null === self::$tokenSuperAdmin) {
+            self::$tokenSuperAdmin = $this->loginAsSuperAdmin();
+        }
+
         if (null === self::$tokenDeputyInOrg) {
             self::$tokenDeputyInOrg = $this->loginAsProf();
         }
 
         $this->headers = ['CONTENT_TYPE' => 'application/json', 'HTTP_AuthToken' => self::$tokenAdmin];
+        $this->headersSuperAdmin = ['CONTENT_TYPE' => 'application/json', 'HTTP_AuthToken' => self::$tokenSuperAdmin];
         $this->headersDeputy = ['CONTENT_TYPE' => 'application/json', 'HTTP_AuthToken' => self::$tokenDeputyInOrg];
     }
 
@@ -285,7 +299,7 @@ class OrganisationControllerTest extends AbstractTestController
             '/v2/organisation/2',
             [],
             [],
-            $this->headers
+            $this->headersSuperAdmin
         );
 
         $response = self::$frameworkBundleClient->getResponse();
@@ -301,6 +315,24 @@ class OrganisationControllerTest extends AbstractTestController
             ->findOneBy(['id' => 2]);
 
         $this->assertNull($organisation);
+    }
+
+    /**
+     * @test
+     */
+    public function adminsCannotDeleteOrganisation()
+    {
+        self::$frameworkBundleClient->request(
+            'DELETE',
+            '/v2/organisation/1',
+            [],
+            [],
+            $this->headers
+        );
+
+        $response = self::$frameworkBundleClient->getResponse();
+
+        $this->assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
     }
 
     /**

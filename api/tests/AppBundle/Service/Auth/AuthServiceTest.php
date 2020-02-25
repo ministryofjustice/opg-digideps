@@ -53,7 +53,7 @@ class AuthServiceTest extends TestCase
         $this->encoderFactory = m::stub('Symfony\Component\Security\Core\Encoder\EncoderFactory');
 
         $hierarchy = [
-            'ROLE_ADMIN' => [ 'ROLE_DOCUMENT_MANAGE', 'ROLE_CASE_MANAGER' ],
+            'ROLE_SUPER_ADMIN' => ['ROLE_ADMIN'],
             'ROLE_LAY_DEPUTY' => ['ROLE_DEPUTY'],
             'ROLE_PROF_DEPUTY' => ['ROLE_DEPUTY'],
         ];
@@ -156,7 +156,7 @@ class AuthServiceTest extends TestCase
             ['layDeputySecret', null, false],
             ['adminSecret', 'ROLE_LAY_DEPUTY', false],
             ['adminSecret', 'ROLE_ADMIN', true],
-            ['adminSecret', 'ROLE_CASE_MANAGER', false],
+            ['adminSecret', 'ROLE_SUPER_ADMIN', true],
             ['adminSecret', 'OTHER_ROLE', false],
             ['adminSecret', null, false],
             ['layDeputySecretNoPermissions', '', false],

@@ -15,15 +15,15 @@ class SearchType extends AbstractType
         $builder->add('q', FormTypes\TextType::class)
             ->add('role_name', FormTypes\ChoiceType::class, [
                 'choices' => array_flip([
-                    ''                    => 'ALL ROLES',
-                    User::ROLE_ADMIN      => 'OPG Admin',
-                    User::ROLE_CASE_MANAGER => 'Case manager',
-                    User::ROLE_LAY_DEPUTY => 'Lay Deputy',
-                    User::ROLE_AD         => 'Assisted Digital',
-                    'ROLE_PA_%'   => 'All Public Authority deputies',
-                    User::ROLE_PA_NAMED   => 'Public Authority deputies (named) ',
-                    'ROLE_PROF_%' => 'All Professional Deputies',
-                    User::ROLE_PROF_NAMED => 'Professional Deputies (named)',
+                    ''                     => 'ALL ROLES',
+                    User::ROLE_SUPER_ADMIN => 'Super admin',
+                    User::ROLE_ADMIN       => 'Admin',
+                    User::ROLE_LAY_DEPUTY  => 'Lay Deputy',
+                    User::ROLE_AD          => 'Assisted Digital',
+                    'ROLE_PA_%'            => 'All Public Authority deputies',
+                    User::ROLE_PA_NAMED    => 'Public Authority deputies (named) ',
+                    'ROLE_PROF_%'          => 'All Professional Deputies',
+                    User::ROLE_PROF_NAMED  => 'Professional Deputies (named)',
                 ]),
             ])
             ->add('ndr_enabled', FormTypes\CheckboxType::class)

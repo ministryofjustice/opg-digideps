@@ -94,8 +94,14 @@ Feature: Administration of organisations
         | Active             | org-somesolicitorsorg |
 
   @admin
-  Scenario: Admin can delete an organisation
+  Scenario: Admin cannot delete an organisation
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I am on admin page "/admin/organisations"
+    Then I should not see "Remove" in the "org-somesolicitorsorg" region
+
+  @admin
+  Scenario: Super admin can delete an organisation
+    Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "Abcd1234"
     And I am on admin page "/admin/organisations"
     When I click on "delete" in the "org-somesolicitorsorg" region
     Then I should see "Are you sure you want to remove this organisation?"
