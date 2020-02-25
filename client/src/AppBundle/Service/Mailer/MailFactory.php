@@ -4,10 +4,11 @@ namespace AppBundle\Service\Mailer;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
 use AppBundle\Model as ModelDir;
 use AppBundle\Model\FeedbackReport;
-use Symfony\Component\Intl\Intl;
+use AppBundle\Service\IntlService;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -23,6 +24,8 @@ class MailFactory
     const GENERAL_FEEDBACK_TEMPLATE_ID = '63a25dfa-116f-4991-b7c4-35a79ac5061e';
     const REPORT_SUBMITTED_CONFIRMATION_TEMPLATE_ID = '2f8fff09-5a71-446a-a220-d8a3dc78fa42';
     const NDR_SUBMITTED_CONFIRMATION_TEMPLATE_ID = '96fcb7e1-d80f-4e0e-80c8-2c1237af8b10';
+    const CLIENT_DETAILS_CHANGE_TEMPLATE_ID = '258aaf2d-076b-4b5c-a386-f3551c5f3945';
+    const DEPUTY_DETAILS_CHANGE_TEMPLATE_ID = '6469b39b-6ace-4f93-9e80-6152627e0d36';
 
     const NOTIFY_FROM_EMAIL_ID = 'db930cb2-2153-4e2a-b3d0-06f7c7f92f37';
 
@@ -51,10 +54,16 @@ class MailFactory
      */
     private $baseURLs;
 
+    /**
+     * @var IntlService
+     */
+    private $intlService;
+
     public function __construct(
         TranslatorInterface $translator,
         RouterInterface $router,
         EngineInterface $templating,
+        IntlService $intlService,
         array $emailParams,
         array $baseURLs
     )
@@ -64,6 +73,7 @@ class MailFactory
         $this->templating = $templating;
         $this->emailParams = $emailParams;
         $this->baseURLs = $baseURLs;
+        $this->intlService = $intlService;
     }
 
     /**
@@ -309,7 +319,7 @@ class MailFactory
             $countryCode = $response->getCountry();
         }
 
-        $countryName = Intl::getRegionBundle()->getCountryName($countryCode);
+        $countryName = $this->intlService->getCountryNameByCountryCode($countryCode);
 
         $viewParams = [
             'response' => $response,
@@ -328,6 +338,32 @@ class MailFactory
             ->setToName($this->translate('addressUpdateForm.' . $type . '.toName'))
             ->setSubject($this->translate('addressUpdateForm.' . $type . '.subject'))
             ->setBodyHtml($this->templating->render($template, $viewParams));
+
+        return $email;
+    }
+
+    public function createUpdateClientDetailsEmail(Client $client, User $userSubmittingForm): ModelDir\Email
+    {
+        $email = (new ModelDir\Email())
+          ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
+          ->setFromName($this->translator->trans('client.fromName', [], 'email'))
+          ->setToName($this->translator->trans('client.toName', [], 'email'))
+          ->setSubject($this->translator->trans('client.subject', [], 'email'))
+          ->setToEmail($this->emailParams['update_send_to_address'])
+          ->setTemplate(self::CLIENT_DETAILS_CHANGE_TEMPLATE_ID);
+
+        $notifyParams = [
+            'caseNumber' => $client->getCaseNumber(),
+            'fullName' => $client->getFullName(),
+            'address' => $client->getAddress(),
+            'address2' => $client->getAddress2(),
+            'address3' => $client->getCounty(),
+            'postcode' =>$client->getPostcode(),
+            'countryName' => $this->intlService->getCountryNameByCountryCode($client->getCountry()),
+            'phone' => $client->getPhone(),
+        ];
+
+        $email->setParameters($notifyParams);
 
         return $email;
     }
