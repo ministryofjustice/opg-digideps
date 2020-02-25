@@ -9,8 +9,10 @@ Feature: deputy / acl / security on pages
       | Case     | Surname | Deputy No | Dep Surname | Dep Postcode | Typeofrep |
       | 12345ABC | Client  | D003      | User        | SW1H 9AJ     | OPG102    |
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    When I create a new "NDR-disabled" "Lay Deputy" user "Malicious" "User" with email "behat-malicious@publicguardian.gov.uk" and postcode "SW1H 9AJ"
-    And I activate the user with password "Abcd1234"
+    And the following users exist:
+      | ndr | deputyType | firstName | lastName | email | postCode | activated |
+      | disabled | LAY | Malicious | User | behat-malicious@publicguardian.gov.uk | SW1H 9AJ | true |
+    Given I am logged in as "behat-malicious@publicguardian.gov.uk" with password "Abcd1234"
     And I set the user details to:
       | name    | Malicious        | User          |        |          |    |
       | address | 102 Petty France | MOJ           | London | SW1H 9AJ | GB |

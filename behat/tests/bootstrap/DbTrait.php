@@ -121,16 +121,6 @@ trait DbTrait
     }
 
     /**
-     * @Given I remove all the old team database entries
-     */
-    public function iRemoveAllTheOldTeamDatabaseEntries()
-    {
-        $query = "DELETE FROM user_team";
-        $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
-        exec($command);
-    }
-
-    /**
      * @Given I add the client with case number :caseNumber to be deputised by email :deputyEmail
      */
     public function iAddTheClientWithCaseNumberToBeDeputisedByEmail($caseNumber, $deputyEmail)
@@ -181,7 +171,7 @@ trait DbTrait
      */
     public function hasBeenRemovedFromTheOrganisation($userEmail, $organisationEmailIdentifier)
     {
-        $query = "DELETE FROM organisation_user WHERE organisation_id = 
+        $query = "DELETE FROM organisation_user WHERE organisation_id =
                     (SELECT id FROM organisation WHERE email_identifier = '{$organisationEmailIdentifier}')
                     AND user_id = (SELECT id FROM dd_user WHERE email = '{$userEmail}')";
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
@@ -193,7 +183,7 @@ trait DbTrait
      */
     public function hasBeenRemovedFromTheirOrganisation($userEmail)
     {
-        $query = "DELETE FROM organisation_user WHERE user_id = 
+        $query = "DELETE FROM organisation_user WHERE user_id =
           (
             SELECT id FROM dd_user WHERE email = '{$userEmail}'
           )";

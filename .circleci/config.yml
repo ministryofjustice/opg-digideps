@@ -31,12 +31,10 @@ workflows:
           task_name: integration_test
           timeout: 2100
 
-      - run-task:
+      - client-unit-test:
           name: client unit test
-          requires: [ apply environment  ]
+          requires: [ apply environment ]
           filters: { branches: { ignore: [ master ] } }
-          task_name: client_unit_test
-          timeout: 180
 
       - run-task:
           name: api unit test
@@ -111,12 +109,10 @@ workflows:
           tf_workspace: master
           timeout: 1800
 
-      - run-task:
+      - client-unit-test:
           name: client unit test
-          requires: [ apply master  ]
+          requires: [ apply master ]
           filters: { branches: { only: [ master ] } }
-          task_name: client_unit_test
-          tf_workspace: master
 
       - run-task:
           name: api unit test
@@ -345,6 +341,37 @@ jobs:
       - run:
           name: Push images
           command: docker-compose -f docker-compose.ci.yml push
+      - run:
+          name: Archive docker images
+          command: |
+            docker tag ${AWS_REGISTRY}/digideps/client:${VERSION} client:latest
+            docker save -o docker-images.tar client:latest
+      - persist_to_workspace:
+          root: .
+          paths:
+          - ./docker-images.tar
+
+  client-unit-test:
+    docker:
+      - image: circleci/python:3
+    steps:
+      - setup_remote_docker
+      - checkout
+      - attach_workspace: { at: ~/project }
+      - run:
+          name: Load docker images
+          command: docker load -i ~/project/docker-images.tar
+      - run:
+          name: Run tests
+          command: |
+            docker-compose up -d pact-mock
+            sleep 1
+            docker run --rm --network=project_default client:latest bin/phpunit -c tests/phpunit
+            docker-compose exec pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
+            docker-compose stop pact-mock
+      - store_artifacts:
+          path: pact.json
+          destination: Pact file
 
   run-task:
     executor: terraform/terraform

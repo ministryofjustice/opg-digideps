@@ -18,6 +18,23 @@ trait DebugTrait
     }
 
     /**
+     * Clean the snapshot folder before running a suite
+     *
+     * @BeforeSuite
+     */
+    public static function cleanDebugSnapshots()
+    {
+        $handle = opendir(self::$DEBUG_SNAPSHOT_DIR);
+
+        while (false !== ($file = readdir($handle))) {
+            $path = self::$DEBUG_SNAPSHOT_DIR . '/' . $file;
+            if (is_file($path)) {
+                unlink($path);
+            }
+        }
+    }
+
+    /**
      * @Then I save the page as :name
      */
     public function debug($name)
@@ -45,23 +62,6 @@ trait DebugTrait
     }
 
     /**
-     * Clean the snapshot folder before running a suite
-     *
-     * @BeforeSuite
-     */
-    public static function cleanDebugSnapshots()
-    {
-        $handle = opendir(self::$DEBUG_SNAPSHOT_DIR);
-
-        while (false !== ($file = readdir($handle))) {
-            $path = self::$DEBUG_SNAPSHOT_DIR . '/' . $file;
-            if (is_file($path)) {
-                unlink($path);
-            }
-        }
-    }
-
-    /**
      * Call debug() when an exception is thrown after a step.
      *
      * @AfterStep
@@ -75,22 +75,5 @@ trait DebugTrait
             $feature = basename($scope->getFeature()->getFile());
             $this->debug($feature);
         }
-    }
-
-    /**
-     * @Then die :code
-     * @Then exit :code
-     */
-    public function interrupt($code)
-    {
-        die($code);
-    }
-
-    /**
-     * @Then fail
-     */
-    public function fail()
-    {
-        throw new \RuntimeException('manual fail');
     }
 }
