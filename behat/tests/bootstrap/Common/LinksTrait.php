@@ -95,28 +95,6 @@ trait LinksTrait
     /**
      * Click on element with attribute [behat-link=:link].
      *
-     * @When I click on link with text :text
-     */
-    public function clickOnLinkWithText($text)
-    {
-        $linksElementsFound = $this->getSession()->getPage()->find('xpath', '//*[text()="' . $text . '"]');
-        $count = count($linksElementsFound);
-
-        if ($count === 0) {
-            throw new \RuntimeException('Element not found');
-        }
-
-        if ($count > 1) {
-            throw new \RuntimeException('Returned multiple elements');
-        }
-
-        // click on the found link
-        $linksElementsFound[0]->click();
-    }
-
-    /**
-     * Click on element with attribute [behat-link=:link].
-     *
      * @When I press :text in the :region region
      */
     public function clickOnLinkWithTextInRegion($text, $region)
@@ -183,6 +161,32 @@ trait LinksTrait
     }
 
     /**
+     * @Given /^I follow meta refresh$/
+     */
+    public function iFollowMetaRefresh() {
+        while ($refresh = $this->getSession()->getPage()->find('css', 'meta[http-equiv="refresh"]')) {
+            $content = $refresh->getAttribute('content');
+            $url = preg_replace('/^\d+;\s*URL=/i', '', $content);
+
+            $this->getSession()->visit($url);
+        }
+    }
+
+    /**
+     * @param $rowText
+     */
+    private function findRowByText($rowText)
+    {
+        $row = $this->getSession()->getPage()->find('css', sprintf('table tr:contains("%s")', $rowText));
+
+        if (null === $row) {
+            throw new \Exception('Cannot find a table row with text: ' . $rowText);
+        }
+
+        return $row;
+    }
+
+    /**
      * @Then the :text link, in the :region region, url should contain ":expectedLink"
      * @Then the :text link, in the :region, url should contain ":expectedLink"
      */
@@ -206,63 +210,5 @@ trait LinksTrait
         if (strpos($href, $expectedLink) === false) {
             throw new \Exception("Link: $href does not contain $expectedLink");
         }
-    }
-
-    /**
-     * @Given I click the :arg1 element
-     */
-    public function iClickTheElement($selector)
-    {
-        $page = $this->getSession()->getPage();
-        $element = $page->find('css', $selector);
-
-        if (empty($element)) {
-            throw new \Exception("No html element found for the selector ('$selector')");
-        }
-
-        $element->click();
-    }
-
-    /**
-     * @Given /^I follow meta refresh$/
-     */
-    public function iFollowMetaRefresh() {
-        while ($refresh = $this->getSession()->getPage()->find('css', 'meta[http-equiv="refresh"]')) {
-            $content = $refresh->getAttribute('content');
-            $url = preg_replace('/^\d+;\s*URL=/i', '', $content);
-
-            $this->getSession()->visit($url);
-        }
-    }
-
-    /**
-     * Click on a specific link in a row that contains a specified string
-     *
-     * @When I click on :linkText in the :rowText row
-     */
-    public function clickLinkInsideATableRow(string $linkText, string $rowText)
-    {
-        $row = $this->findRowByText($rowText);
-        $link = $row->findLink($linkText);
-
-        if (null === $link) {
-            throw new \Exception('Cannot find link in row with text: '.$linkText);
-        }
-
-        $link->click();
-    }
-
-    /**
-     * @param $rowText
-     */
-    private function findRowByText($rowText)
-    {
-        $row = $this->getSession()->getPage()->find('css', sprintf('table tr:contains("%s")', $rowText));
-
-        if (null === $row) {
-            throw new \Exception('Cannot find a table row with text: ' . $rowText);
-        }
-
-        return $row;
     }
 }

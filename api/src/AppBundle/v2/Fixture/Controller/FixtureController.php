@@ -49,6 +49,7 @@ class FixtureController
         $this->reportFactory = $reportFactory;
         $this->reportRepository = $reportRepository;
         $this->reportSection = $reportSection;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -163,10 +164,37 @@ class FixtureController
         foreach (explode(',', $sections) as $section) {
             $this->reportSection->completeSection($report, $section);
         }
-        
+
         $report->updateSectionsStatusCache($report->getAvailableSections());
         $this->em->flush();
 
         return $this->buildSuccessResponse([], 'Report updated', Response::HTTP_OK);
+    }
+
+    /**
+     * Used for creating non-prof/pa users only as Org ID is required for those types
+     *
+     * @Route("/createUser", methods={"POST"})
+     * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
+     */
+    public function createUser(Request $request)
+    {
+        $fromRequest = json_decode($request->getContent(), true);
+
+        $deputy = $this->userFactory->create([
+            'id' => $fromRequest['deputyEmail'],
+            'deputyType' => $fromRequest['deputyType'],
+            'email' => $fromRequest['deputyEmail'],
+            'ndr' => $fromRequest['ndr'],
+            'firstName' => $fromRequest['firstName'],
+            'lastName' => $fromRequest['lastName'],
+            'postCode' => $fromRequest['postCode'],
+            'activated' => $fromRequest['activated']
+        ]);
+
+        $this->em->persist($deputy);
+        $this->em->flush();
+
+        return $this->buildSuccessResponse($fromRequest, 'User created', Response::HTTP_OK);
     }
 }
