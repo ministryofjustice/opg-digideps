@@ -47,12 +47,10 @@ class MailFactoryTest extends TestCase
 
     public function setUp(): void
     {
-        $this->layDeputy = $this->generateUser();
+        $this->client = $this->generateClient();
 
-        $this->client = (new Client())
-            ->setFirstname('Joanne')
-            ->setLastname('Bloggs')
-            ->setCaseNumber('12345678');
+        $this->layDeputy = $this->generateLayDeputy();
+        $this->layDeputy->setClients([$this->client]);
 
         $this->submittedReport = (new Report())
             ->setClient($this->client);
@@ -227,7 +225,7 @@ class MailFactoryTest extends TestCase
             ->setComments('Amazing service!')
             ->setSatisfactionLevel('4');
 
-        $email = ($this->generateSUT())->createPostSubmissionFeedbackEmail($response, $this->generateUser());
+        $email = ($this->generateSUT())->createPostSubmissionFeedbackEmail($response, $this->generateLayDeputy());
 
         $this->assertStaticEmailProperties($email);
 
@@ -259,9 +257,8 @@ class MailFactoryTest extends TestCase
         $this->intlService->getCountryNameByCountryCode('GB')->shouldBeCalled()->willReturn('United Kingdom');
 
         $client = $this->generateClient();
-        $userSubmittingForm = ($this->generateUser())->setClients([$client]);
 
-        $email = ($this->generateSUT())->createUpdateClientDetailsEmail($client, $userSubmittingForm);
+        $email = ($this->generateSUT())->createUpdateClientDetailsEmail($client);
 
         $this->assertStaticEmailProperties($email);
 
@@ -287,7 +284,33 @@ class MailFactoryTest extends TestCase
      */
     public function createUpdateDeputyDetailsEmail()
     {
+        $this->translator->trans('client.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+        $this->translator->trans('client.toName', [], 'email')->shouldBeCalled()->willReturn('To Name');
+        $this->translator->trans('client.subject', [], 'email')->shouldBeCalled()->willReturn('A subject');
 
+        $this->intlService->getCountryNameByCountryCode('GB')->shouldBeCalled()->willReturn('United Kingdom');
+
+        $email = ($this->generateSUT())->createUpdateDeputyDetailsEmail($this->layDeputy);
+
+        $this->assertStaticEmailProperties($email);
+
+        self::assertEquals('updateAddress@digital.justice.gov.uk', $email->getToEmail());
+        self::assertEquals(MailFactory::DEPUTY_DETAILS_CHANGE_TEMPLATE_ID, $email->getTemplate());
+
+        $expectedTemplateParams = [
+            'caseNumber' => '12345678',
+            'fullName' => 'Joe Bloggs',
+            'address' => '10 Fake Road',
+            'address2' => 'Pretendville',
+            'address3' => 'Notrealingham',
+            'postcode' => 'A12 3BC',
+            'countryName' => 'United Kingdom',
+            'phone' => '01211234567',
+            'altPhoneNumber' => '01217654321',
+            'email' => 'user@digital.justice.gov.uk'
+        ];
+
+        self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 
     private function assertStaticEmailProperties($email)
@@ -309,7 +332,7 @@ class MailFactoryTest extends TestCase
         );
     }
 
-    private function generateUser() : User
+    private function generateLayDeputy() : User
     {
         return (new User())
             ->setRegistrationToken('regToken')
@@ -317,6 +340,12 @@ class MailFactoryTest extends TestCase
             ->setFirstname('Joe')
             ->setLastname('Bloggs')
             ->setPhoneMain('01211234567')
+            ->setPhoneAlternative('01217654321')
+            ->setAddress1('10 Fake Road')
+            ->setAddress2('Pretendville')
+            ->setAddressPostcode('A12 3BC')
+            ->setAddress3('Notrealingham')
+            ->setAddressCountry('GB')
             ->setRoleName(User::ROLE_LAY_DEPUTY);
     }
 

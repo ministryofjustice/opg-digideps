@@ -733,26 +733,36 @@ class User implements AdvancedUserInterface, DeputyInterface
     public function setAddress1($address1)
     {
         $this->address1 = $address1;
+
+        return $this;
     }
 
     public function setAddress2($address2)
     {
         $this->address2 = $address2;
+
+        return $this;
     }
 
     public function setAddress3($address3)
     {
         $this->address3 = $address3;
+
+        return $this;
     }
 
     public function setAddressPostcode($addressPostcode)
     {
         $this->addressPostcode = $addressPostcode;
+
+        return $this;
     }
 
     public function setAddressCountry($addressCountry)
     {
         $this->addressCountry = $addressCountry;
+
+        return $this;
     }
 
     public function setPhoneMain($phoneMain)
@@ -765,6 +775,8 @@ class User implements AdvancedUserInterface, DeputyInterface
     public function setPhoneAlternative($phoneAlternative)
     {
         $this->phoneAlternative = $phoneAlternative;
+
+        return $this;
     }
 
     /**
@@ -1203,5 +1215,10 @@ class User implements AdvancedUserInterface, DeputyInterface
         }
 
         return false;
+    }
+
+    public function getFirstClient(): ?Client
+    {
+        return count($this->getClients()) > 0 ? $this->getClients()[0] : null;
     }
 }
