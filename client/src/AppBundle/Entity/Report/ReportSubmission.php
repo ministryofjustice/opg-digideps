@@ -3,7 +3,7 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Ndr\Ndr;
-use AppBundle\Entity\ReportInterface;
+use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Traits\CreationAudit;
 use DateTime;
@@ -36,6 +36,8 @@ class ReportSubmission
     private $ndr;
 
     /**
+     * @var Document[]
+     *
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
      */
     private $documents = [];
@@ -126,8 +128,8 @@ class ReportSubmission
     }
 
     /**
-     * @param  array            $documents
-     * @return ReportSubmission
+     * @param  Document[] $documents
+     * @return $this
      */
     public function setDocuments($documents)
     {

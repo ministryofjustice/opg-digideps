@@ -31,7 +31,7 @@ class Document implements DocumentInterface
     /**
      * @param ExecutionContextInterface $context
      */
-    public function isValidForReport(ExecutionContextInterface $context)
+    public function isValidForReport(ExecutionContextInterface $context): void
     {
         if (!($this->getFile() instanceof UploadedFile)) {
             return;
@@ -235,10 +235,12 @@ class Document implements DocumentInterface
 
     /**
      * @param bool $isReportPdf
+     * @return $this
      */
     public function setIsReportPdf($isReportPdf)
     {
         $this->isReportPdf = $isReportPdf;
+        return $this;
     }
 
     /**
