@@ -495,6 +495,8 @@ class User implements AdvancedUserInterface, DeputyInterface
     public function setClients(array $clients)
     {
         $this->clients = $clients;
+
+        return $this;
     }
 
     public function getClients()

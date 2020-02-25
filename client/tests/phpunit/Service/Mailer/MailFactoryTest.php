@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Service\Mailer;
 
@@ -6,7 +6,7 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Model\FeedbackReport;
-use MockeryStub as m;
+use AppBundle\Service\IntlService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
@@ -15,54 +15,34 @@ use Symfony\Bundle\TwigBundle\TwigEngine;
 
 class MailFactoryTest extends TestCase
 {
-    /**
-     * @var MailFactory
-     */
-    private $object;
-
-    /**
-     * @var User
-     */
-    private $layDeputy;
-
-    /**
-     * @var array
-     */
-    private $appBaseURLs;
-
-    /**
-     * @var array
-     */
-    private $emailSendParams;
-
-    /**
-     * @var ObjectProphecy&Translator
-     */
+    /** @var ObjectProphecy&Translator */
     private $translator;
 
-    /**
-     * @var ObjectProphecy&Router
-     */
+    /** @var ObjectProphecy&Router */
     private $router;
 
-    /**
-     * @var ObjectProphecy&TwigEngine
-     */
+    /** @var ObjectProphecy&TwigEngine */
     private $templating;
 
-    /**
-     * @var Client
-     */
+    /** @var ObjectProphecy&IntlService */
+    private $intlService;
+
+    /** @var User */
+    private $layDeputy;
+
+    /** @var array */
+    private $appBaseURLs;
+
+    /** @var array */
+    private $emailSendParams;
+
+    /** @var Client */
     private $client;
 
-    /**
-     * @var Report
-     */
+    /** @var Report */
     private $submittedReport;
 
-    /**
-     * @var Report
-     */
+    /** @var Report */
     private $newReport;
 
     public function setUp(): void
@@ -88,12 +68,13 @@ class MailFactoryTest extends TestCase
             'from_email' => 'digideps+from@digital.justice.gov.uk',
             'report_submit_to_address' => 'digideps+noop@digital.justice.gov.uk',
             'feedback_send_to_address' => 'digideps+noop@digital.justice.gov.uk',
-            'update_send_to_address' => 'digideps+noop@digital.justice.gov.uk'
+            'update_send_to_address' => 'updateAddress@digital.justice.gov.uk'
         ];
 
         $this->translator = self::prophesize('Symfony\Bundle\FrameworkBundle\Translation\Translator');
         $this->router = self::prophesize('Symfony\Bundle\FrameworkBundle\Routing\Router');
         $this->templating = self::prophesize('Symfony\Bundle\TwigBundle\TwigEngine');
+        $this->intlService = self::prophesize('AppBundle\Service\IntlService');
     }
 
     /**
@@ -215,10 +196,9 @@ class MailFactoryTest extends TestCase
 
         $email = ($this->generateSUT())->createGeneralFeedbackEmail($response);
 
-        self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
-        self::assertEquals('OPG', $email->getFromName());
+        $this->assertStaticEmailProperties($email);
+
         self::assertEquals('digideps+noop@digital.justice.gov.uk', $email->getToEmail());
-        self::assertEquals('To Name', $email->getToName());
         self::assertEquals(MailFactory::GENERAL_FEEDBACK_TEMPLATE_ID, $email->getTemplate());
 
         $expectedTemplateParams = [
@@ -247,14 +227,11 @@ class MailFactoryTest extends TestCase
             ->setComments('Amazing service!')
             ->setSatisfactionLevel('4');
 
-        $user = $this->generateUser();
-
         $email = ($this->generateSUT())->createPostSubmissionFeedbackEmail($response, $this->generateUser());
 
-        self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
-        self::assertEquals('OPG', $email->getFromName());
+        $this->assertStaticEmailProperties($email);
+
         self::assertEquals('digideps+noop@digital.justice.gov.uk', $email->getToEmail());
-        self::assertEquals('To Name', $email->getToName());
         self::assertEquals(MailFactory::POST_SUBMISSION_FEEDBACK_TEMPLATE_ID, $email->getTemplate());
 
         $expectedTemplateParams = [
@@ -270,18 +247,68 @@ class MailFactoryTest extends TestCase
         self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 
+    /**
+     * @test
+     */
+    public function createUpdateClientDetailsEmail()
+    {
+        $this->translator->trans('client.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+        $this->translator->trans('client.toName', [], 'email')->shouldBeCalled()->willReturn('To Name');
+        $this->translator->trans('client.subject', [], 'email')->shouldBeCalled()->willReturn('A subject');
+
+        $this->intlService->getCountryNameByCountryCode('GB')->shouldBeCalled()->willReturn('United Kingdom');
+
+        $client = $this->generateClient();
+        $userSubmittingForm = ($this->generateUser())->setClients([$client]);
+
+        $email = ($this->generateSUT())->createUpdateClientDetailsEmail($client, $userSubmittingForm);
+
+        $this->assertStaticEmailProperties($email);
+
+        self::assertEquals('updateAddress@digital.justice.gov.uk', $email->getToEmail());
+        self::assertEquals(MailFactory::CLIENT_DETAILS_CHANGE_TEMPLATE_ID, $email->getTemplate());
+
+        $expectedTemplateParams = [
+            'caseNumber' => '12345678',
+            'fullName' => 'Joanne Bloggs',
+            'address' => '10 Fake Road',
+            'address2' => 'Pretendville',
+            'address3' => 'Notrealingham',
+            'postcode' => 'A12 3BC',
+            'countryName' => 'United Kingdom',
+            'phone' => '01215553333',
+        ];
+
+        self::assertEquals($expectedTemplateParams, $email->getParameters());
+    }
+
+    /**
+     * @test
+     */
+    public function createUpdateDeputyDetailsEmail()
+    {
+
+    }
+
+    private function assertStaticEmailProperties($email)
+    {
+        self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
+        self::assertEquals('OPG', $email->getFromName());
+        self::assertEquals('To Name', $email->getToName());
+    }
+
     private function generateSUT()
     {
         return new MailFactory(
             $this->translator->reveal(),
             $this->router->reveal(),
             $this->templating->reveal(),
+            $this->intlService->reveal(),
             $this->emailSendParams,
             $this->appBaseURLs
         );
     }
 
-    // Using helper function to make user available in dataProvider
     private function generateUser() : User
     {
         return (new User())
@@ -291,5 +318,19 @@ class MailFactoryTest extends TestCase
             ->setLastname('Bloggs')
             ->setPhoneMain('01211234567')
             ->setRoleName(User::ROLE_LAY_DEPUTY);
+    }
+
+    private function generateClient() : Client
+    {
+        return (new Client())
+            ->setFirstname('Joanne')
+            ->setLastname('Bloggs')
+            ->setCaseNumber('12345678')
+            ->setAddress('10 Fake Road')
+            ->setAddress2('Pretendville')
+            ->setPostcode('A12 3BC')
+            ->setCounty('Notrealingham')
+            ->setCountry('GB')
+            ->setPhone('01215553333');
     }
 }
