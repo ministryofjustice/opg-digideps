@@ -61,7 +61,7 @@ class ReportSubmission
     private $ndr;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection<int, Document>
      *
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
      * @JMS\Groups({"report-submission", "report-submission-documents"})
@@ -85,6 +85,7 @@ class ReportSubmission
     private $archivedBy;
 
     /**
+     * @var bool
      * @JMS\Type("boolean")
      * @JMS\Groups({"report-submission"})
      * @ORM\Column(name="downloadable", type="boolean", options={ "default": true}, nullable=false)
@@ -168,7 +169,7 @@ class ReportSubmission
     }
 
     /**
-     * @return ArrayCollection|Document[]
+     * @return ArrayCollection<int, Document>
      */
     public function getDocuments()
     {
