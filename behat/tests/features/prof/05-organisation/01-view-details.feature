@@ -59,8 +59,8 @@ Feature: Users can view their organisations
     And I should see "Main org contact"
 
   @prof
-  Scenario: Admin can remove organisation
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+  Scenario: Super admin removes organisation
+    Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "Abcd1234"
     And I am on admin page "/admin/organisations"
     When I click on "delete" in the "org-leever-partners" region
     And I click on "confirm"

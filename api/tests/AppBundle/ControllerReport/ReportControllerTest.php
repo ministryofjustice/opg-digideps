@@ -23,7 +23,6 @@ class ReportControllerTest extends AbstractTestController
     private static $tokenPaAdmin = null;
     private static $tokenPaTeamMember = null;
     private static $casRec1;
-    private static $tokenCaseManager = null;
 
     // pa
     private static $pa1;
@@ -118,7 +117,6 @@ class ReportControllerTest extends AbstractTestController
     {
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenCaseManager = $this->loginAsCaseManager();
             self::$tokenDeputy = $this->loginAsDeputy();
             self::$tokenPa = $this->loginAsPa();
             self::$tokenPaAdmin = $this->loginAsPaAdmin();
@@ -670,7 +668,7 @@ class ReportControllerTest extends AbstractTestController
         // add new report checklist
         $checklistId = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
-            'AuthToken'   => self::$tokenCaseManager,
+            'AuthToken'   => self::$tokenAdmin,
             'data'        => [
                 'button_clicked' => 'save', // Save further information
                 'reporting_period_accurate' => 'yes',
@@ -725,7 +723,7 @@ class ReportControllerTest extends AbstractTestController
         // add new report checklist
         $checklistId = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
-            'AuthToken'   => self::$tokenCaseManager,
+            'AuthToken'   => self::$tokenAdmin,
             'data'        => [
                 'id'    => $report->getChecklist()->getId(),
                 'button_clicked' => 'saveFurtherInformation',
@@ -797,7 +795,7 @@ class ReportControllerTest extends AbstractTestController
         // assert submit fails due to missing fields
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => false,
-            'AuthToken'   => self::$tokenCaseManager,
+            'AuthToken'   => self::$tokenAdmin,
             'data'        => [
                 'id'    => $report->getChecklist()->getId(),
                 'button_clicked' => 'saveAndDownload',
@@ -810,7 +808,7 @@ class ReportControllerTest extends AbstractTestController
         // update report checklist with missing fields
         $checklistId = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
-            'AuthToken'   => self::$tokenCaseManager,
+            'AuthToken'   => self::$tokenAdmin,
             'data'        => [
                 'id'    => $report->getChecklist()->getId(),
                 'button_clicked' => 'saveAndDownload',
