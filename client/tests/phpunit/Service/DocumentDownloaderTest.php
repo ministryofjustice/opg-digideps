@@ -2,7 +2,8 @@
 
 namespace AppBundle\Service;
 
-
+use AppBundle\Entity\Client;
+use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Model\MissingDocument;
 use AppBundle\Model\RetrievedDocument;
@@ -37,6 +38,20 @@ class DocumentDownloaderTest extends TestCase
         $this->documentService = self::prophesize(DocumentService::class);
         $this->reportSubmissionService = self::prophesize(ReportSubmissionService::class);
         $this->zipFileCreator = self::prophesize(DocumentsZipFileCreator::class);
+    }
+
+    private function generateReportSubmission($caseNumber)
+    {
+        $client = new Client();
+        $client->setCaseNumber($caseNumber);
+
+        $report = new Report();
+        $report->setClient($client);
+
+        $reportSubmission = new ReportSubmission();
+        $reportSubmission->setReport($report);
+
+        return $reportSubmission;
     }
 
     public function testGenerateDownloadResponse()
@@ -94,11 +109,9 @@ class DocumentDownloaderTest extends TestCase
         $ids = [1, 2];
 
         $reportSubmission1 = new ReportSubmission();
-        /** @var ReportSubmission|ObjectProphecy $reportSubmission2 */
-        $reportSubmission2 = self::prophesize(ReportSubmission::class);
-        $reportSubmission2->getCaseNumber()->willReturn('CaseNumber2');
+        $reportSubmission2 = $this->generateReportSubmission('CaseNumber2');
 
-        $reportSubmissions = [$reportSubmission1, $reportSubmission2->reveal()];
+        $reportSubmissions = [$reportSubmission1, $reportSubmission2];
 
         $this->reportSubmissionService->getReportSubmissionsByIds($ids)->willReturn($reportSubmissions);
         $this->reportSubmissionService->assertReportSubmissionIsDownloadable($reportSubmission1)->willReturn(null);
@@ -109,7 +122,7 @@ class DocumentDownloaderTest extends TestCase
         $document1->setContent('content-1');
         $document1->setFileName('filename-1');
         $document2 = new MissingDocument();
-        $document2->setReportSubmission($reportSubmission2->reveal());
+        $document2->setReportSubmission($reportSubmission2);
         $document2->setFileName('filename-2');
 
         $expectedRetrievedDocuments = [$document1];
@@ -131,20 +144,15 @@ class DocumentDownloaderTest extends TestCase
 
         $sut = new DocumentDownloader($this->documentService->reveal(), $this->reportSubmissionService->reveal(), $this->zipFileCreator->reveal());
 
-        /** @var ReportSubmission|ObjectProphecy $reportSubmission2 */
-        $reportSubmission1 = self::prophesize(ReportSubmission::class);
-        $reportSubmission1->getCaseNumber()->willReturn('CaseNumber1');
-
-        /** @var ReportSubmission|ObjectProphecy $reportSubmission2 */
-        $reportSubmission2 = self::prophesize(ReportSubmission::class);
-        $reportSubmission2->getCaseNumber()->willReturn('CaseNumber2');
+        $reportSubmission1 = $this->generateReportSubmission('CaseNumber1');
+        $reportSubmission2 = $this->generateReportSubmission('CaseNumber2');
 
         $document1 = new MissingDocument();
-        $document1->setReportSubmission($reportSubmission1->reveal());
+        $document1->setReportSubmission($reportSubmission1);
         $document1->setFileName('filename-2');
 
         $document2 = new MissingDocument();
-        $document2->setReportSubmission($reportSubmission2->reveal());
+        $document2->setReportSubmission($reportSubmission2);
         $document2->setFileName('filename-2');
 
         $request = new Request();
