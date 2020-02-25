@@ -229,7 +229,7 @@ class IndexController extends AbstractController
         $userToDelete = $this->getRestClient()->get("user/{$id}", 'User');
 
         if (!$this->isGranted('ROLE_ADMIN') || !$this->isGranted('ROLE_SUPER_ADMIN')) {
-            $message = $userToDelete->isAdminOrSuperAdmin() ? 'Only Super Admins can delete Admins or Super Admins' : 'Only Admin can delete users';
+            $message = $userToDelete->isAdminOrSuperAdmin() ? 'Only Super Admins can delete Admins or Super Admins' : 'Only Admins or Super Admins can delete users';
             throw new DisplayableException($message);
         }
 
