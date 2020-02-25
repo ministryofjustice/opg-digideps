@@ -2,7 +2,9 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Document;
+use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Model\MissingDocument;
 use AppBundle\Model\RetrievedDocument;
@@ -341,29 +343,39 @@ class DocumentServiceTest extends TestCase
         self::assertEquals($expectedFlash, $actualFlash);
     }
 
+    private function generateReportSubmission($caseNumber)
+    {
+        $client = new Client();
+        $client->setCaseNumber($caseNumber);
+
+        $report = new Report();
+        $report->setClient($client);
+
+        $reportSubmission = new ReportSubmission();
+        $reportSubmission->setReport($report);
+
+        return $reportSubmission;
+    }
+
     public function testTwigTemplate()
     {
-        /** @var ObjectProphecy|ReportSubmission $reportSubmission */
-        $reportSubmission1 = self::prophesize(ReportSubmission::class);
-        $reportSubmission1->getCaseNumber()->shouldBeCalled()->willReturn('CaseNumber1');
-
-        /** @var ObjectProphecy|ReportSubmission $reportSubmission2 */
-        $reportSubmission2 = self::prophesize(ReportSubmission::class);
-        $reportSubmission2->getCaseNumber()->shouldBeCalled()->willReturn('CaseNumber2');
+        $reportSubmission1 = $this->generateReportSubmission('CaseNumber1');
+        $reportSubmission2 = $this->generateReportSubmission('CaseNumber2');
 
         $missingDoc1 = new MissingDocument();
         $missingDoc1->setFileName('file-name1.pdf');
-        $missingDoc1->setReportSubmission($reportSubmission1->reveal());
+        $missingDoc1->setReportSubmission($reportSubmission1);
 
         $missingDoc2 = new MissingDocument();
         $missingDoc2->setFileName('file-name2.pdf');
-        $missingDoc2->setReportSubmission($reportSubmission2->reveal());
+        $missingDoc2->setReportSubmission($reportSubmission2);
 
         $missingDoc3 = new MissingDocument();
         $missingDoc3->setFileName('file-name3.pdf');
-        $missingDoc3->setReportSubmission($reportSubmission1->reveal());
+        $missingDoc3->setReportSubmission($reportSubmission1);
 
         $missingDocuments = [$missingDoc1, $missingDoc2, $missingDoc3];
+        $missingDocumentCaseNumbers = ['CaseNumber1', 'CaseNumber2', 'CaseNumber1'];
 
         $loader = new FilesystemLoader([__DIR__ . '/../../../src/AppBundle/Resources/views/FlashMessages']);
 
@@ -373,8 +385,8 @@ class DocumentServiceTest extends TestCase
 
         self::assertStringContainsString('<p>The following documents could not be downloaded:</p>', $renderedTwig);
 
-        foreach($missingDocuments as $missingDocument) {
-            $caseNumber = $missingDocument->getReportSubmission()->getCaseNumber();
+        foreach($missingDocuments as $index => $missingDocument) {
+            $caseNumber = $missingDocumentCaseNumbers[$index];
             $fileName = $missingDocument->getFileName();
 
             $expectedListItem = "<li>${caseNumber} - ${fileName}</li>";
