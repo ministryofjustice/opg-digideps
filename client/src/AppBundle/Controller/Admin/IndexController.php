@@ -231,7 +231,7 @@ class IndexController extends AbstractController
         /** @var EntityDir\User $loggedInUser */
         $loggedInUser = $this->getUser();
 
-        if ($loggedInUser->isAdminOrSuperAdmin()) {
+        if (!$loggedInUser->isAdminOrSuperAdmin()) {
             $message = $userToDelete->isAdminOrSuperAdmin() ? 'Only Super Admins can delete Admins or Super Admins' : 'Only Admins or Super Admins can delete users';
             throw new DisplayableException($message);
         }

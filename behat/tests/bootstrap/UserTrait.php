@@ -390,7 +390,7 @@ trait UserTrait
      */
     public function viewEditUserPageFor($userEmail)
     {
-       $this->visitAdminPath("/admin/fixtures/getUserIDByEmail/$userEmail");
+       $this->visitAdminPath("/admin/fixtures/getUserIDByEmail/" . strtolower($userEmail));
 
         /** @var Session $session */
         $session = $this->getSession();
@@ -410,7 +410,7 @@ trait UserTrait
      */
     public function userShouldBeDeleted($userEmail)
     {
-        $this->visitAdminPath("/admin/fixtures/getUserIDByEmail/$userEmail");
+        $this->visitAdminPath("/admin/fixtures/getUserIDByEmail/" . strtolower($userEmail));
 
         /** @var Session $session */
         $session = $this->getSession();

@@ -104,7 +104,7 @@
             {% if app.user.canDeleteUser(user) %}
                 {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
                     transDomain: 'admin',
-                    linkButtonLabel: firstClient ? 'Delete User and Client' : 'Delete user',
+                    linkButtonLabel: user.getClients|length > 0 ? 'Delete User and Client' : 'Delete user',
                     linkClass: 'button-warning push--top',
                     linkHref: path('admin_delete_confirm', { id: id })
                 } %}
