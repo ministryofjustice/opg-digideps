@@ -168,10 +168,9 @@ class MailFactoryTest extends TestCase
     }
 
     /**
-     * @todo rename once we drop Notify from the end of the function
      * @test
      */
-    public function createResetPasswordEmailNotify()
+    public function createResetPasswordEmail()
     {
         $this->router->generate('user_activate', [
             'action' => 'password-reset',
@@ -179,15 +178,13 @@ class MailFactoryTest extends TestCase
         ])->shouldBeCalled()->willReturn('/reset-password/regToken');
 
         $this->translator->trans('resetPassword.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
-        $this->translator->trans('resetPassword.subject', [], 'email')->shouldBeCalled()->willReturn('Reset Password Subject');
 
-        $email = ($this->generateSUT())->createResetPasswordEmailNotify($this->layDeputy);
+        $email = ($this->generateSUT())->createResetPasswordEmail($this->layDeputy);
 
         self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
         self::assertEquals('OPG', $email->getFromName());
         self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
         self::assertEquals('Joe Bloggs', $email->getToName());
-        self::assertEquals('Reset Password Subject', $email->getSubject());
         self::assertEquals(MailFactory::RESET_PASSWORD_TEMPLATE_ID, $email->getTemplate());
 
         $expectedTemplateParams = ['resetLink' => 'https://front.base.url/reset-password/regToken'];
