@@ -123,7 +123,7 @@ class SettingsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $formData = $form->getData();
+            $deputy = $form->getData();
 
             if ($form->has('removeAdmin') && !empty($form->get('removeAdmin')->getData())) {
                 $newRole = $this->determineNoAdminRole();
@@ -143,12 +143,11 @@ class SettingsController extends AbstractController
             }
 
             try {
-                $this->getRestClient()->put('user/' . $user->getId(), $formData, $jmsPutGroups);
+                $this->getRestClient()->put('user/' . $user->getId(), $deputy, $jmsPutGroups);
 
                 if ($user->isLayDeputy()) {
-                    $groups = ['user-clients', 'client'];
-                    $addressUpdateEmail = $this->getMailFactory()->createAddressUpdateEmail($form->getData(), $this->getUserWithData($groups), 'deputy');
-                    $this->getMailSender()->send($addressUpdateEmail, ['html']);
+                    $updateDeputyDetailsEmail = $this->getMailFactory()->createUpdateDeputyDetailsEmail($deputy);
+                    $this->getMailSender()->send($updateDeputyDetailsEmail, ['html']);
                 }
 
                 return $this->redirect($redirectRoute);
