@@ -35,6 +35,9 @@ services:
     mailer.transport.smtp.default:
         class: AppBundle\Service\Mailer\Transport\TransportMock
 
+    Alphagov\Notifications\Client:
+        alias: AppBundle\Service\Mailer\NotifyClientMock
+
 monolog:
    handlers:
        main:
