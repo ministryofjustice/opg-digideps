@@ -148,7 +148,9 @@ class SettingsController extends AbstractController
                 $this->getRestClient()->put('user/' . $user->getId(), $deputy, $jmsPutGroups);
 
                 if ($user->isLayDeputy()) {
-                    $updateDeputyDetailsEmail = $this->getMailFactory()->createUpdateDeputyDetailsEmail($deputy);
+                    $hydratedDeputy = $this->getUserWithData(['user-clients', 'client']);
+
+                    $updateDeputyDetailsEmail = $this->getMailFactory()->createUpdateDeputyDetailsEmail($hydratedDeputy);
                     $this->getMailSender()->send($updateDeputyDetailsEmail, ['html']);
                 }
 
