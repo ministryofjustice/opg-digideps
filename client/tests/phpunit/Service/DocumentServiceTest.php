@@ -12,8 +12,7 @@ use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\Storage\FileNotFoundException;
 use AppBundle\Service\File\Storage\S3Storage;
 use Doctrine\Common\Collections\ArrayCollection;
-use Mockery\Exception;
-use Mockery as m;
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
@@ -28,22 +27,22 @@ class DocumentServiceTest extends TestCase
     protected $object;
 
     /**
-     * @var m\MockInterface|S3Storage
+     * @var ObjectProphecy|S3Storage
      */
     private $s3Storage;
 
     /**
-     * @var m\MockInterface|RestClient
+     * @var ObjectProphecy|RestClient
      */
     private $restClient;
 
     /**
-     * @var m\MockInterface|Environment
+     * @var ObjectProphecy|Environment
      */
     private $twig;
 
     /**
-     * @var LoggerInterface
+     * @var ObjectProphecy|LoggerInterface
      */
     private $logger;
 
@@ -70,13 +69,21 @@ class DocumentServiceTest extends TestCase
 
     public function setUp(): void
     {
-        $this->s3Storage = m::mock(S3Storage::class);
-        $this->restClient = m::mock(RestClient::class);
-        $this->logger = m::mock(LoggerInterface::class);
-        $this->logger->shouldIgnoreMissing();
-        $this->twig = m::mock(Environment::class);
+        /** @var ObjectProphecy|S3Storage $s3Storage */
+        $s3Storage = self::prophesize(S3Storage::class);
+        /** @var ObjectProphecy|RestClient $restClient */
+        $restClient = self::prophesize(RestClient::class);
+        /** @var ObjectProphecy|LoggerInterface $logger */
+        $logger = self::prophesize(LoggerInterface::class);
+        /** @var ObjectProphecy|Environment $twig */
+        $twig = self::prophesize(Environment::class);
 
-        $this->object = new DocumentService($this->s3Storage, $this->restClient, $this->logger, $this->twig);
+        $this->s3Storage = $s3Storage;
+        $this->restClient = $restClient;
+        $this->logger = $logger;
+        $this->twig = $twig;
+
+        $this->object = new DocumentService($this->s3Storage->reveal(), $this->restClient->reveal(), $this->logger->reveal(), $this->twig->reveal());
 
         $this->doc1 = self::prophesize(Document::class);
         $this->doc1->getStorageReference()->willReturn('ref-1');
@@ -99,9 +106,6 @@ class DocumentServiceTest extends TestCase
         $this->doc4->getFileName()->willReturn('file-name4.pdf');
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
     public function testRemoveDocumentFromS3(): void
     {
         $docId = 1;
@@ -110,12 +114,14 @@ class DocumentServiceTest extends TestCase
         $document->setStorageReference('r1');
 
         $this->s3Storage
-            ->shouldReceive('removeFromS3')->once()->with('r1')->andReturn([]);
+            ->removeFromS3('r1')
+            ->shouldBeCalled()
+            ->willReturn([]);
 
-        $this->restClient->shouldReceive('delete')
-            ->once()
-            ->with('document/' . $docId)
-            ->andReturn(true);
+        $this->restClient
+            ->delete('document/' . $docId)
+            ->shouldBeCalled()
+            ->willReturn(true);
 
         $this->object->removeDocumentFromS3($document);
 
@@ -130,11 +136,15 @@ class DocumentServiceTest extends TestCase
         $document->setStorageReference('r1');
 
         $this->s3Storage
-            ->shouldReceive('removeFromS3')->once()->with('r1')->andThrow(Exception::class);
+            ->removeFromS3('r1')
+            ->shouldBeCalled()
+            ->willThrow(Exception::class);
 
-        $this->restClient->shouldReceive('apiCall')->never()->with('DELETE', 'document/1', null, 'array', [], false);
+        $this->restClient
+            ->apiCall('DELETE', 'document/1', null, 'array', [], false)
+            ->shouldNotBeCalled();
 
-        $this->expectException('Exception');
+        $this->expectException(Exception::class);
 
         $this->object->removeDocumentFromS3($document);
 
@@ -403,10 +413,5 @@ class DocumentServiceTest extends TestCase
             $expectedListItem = "<li>${caseNumber} - ${fileName}</li>";
             self::assertStringContainsString($expectedListItem, $renderedTwig);
         }
-    }
-
-    public function tearDown(): void
-    {
-        m::close();
     }
 }
