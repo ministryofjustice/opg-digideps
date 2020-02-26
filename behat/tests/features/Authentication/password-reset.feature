@@ -20,19 +20,19 @@ Feature: Users can reset their password via self-service
         Then the form should be valid
 
     Scenario: Admin can reset password
-        Given I am on "/login"
+        Given I am on admin page "/login"
         When I follow "Forgotten your password?"
-        And I fill in "password_forgotten_email" with "case-manager@publicguardian.gov.uk"
+        And I fill in "password_forgotten_email" with "casemanager@publicguardian.gov.uk"
         And I press "Reset your password"
         Then the form should be valid
-        When I open the password reset page for "case-manager@publicguardian.gov.uk"
+        When I open the admin password reset page for "casemanager@publicguardian.gov.uk"
         And I fill in the following:
             | reset_password_password_first  | Abcd12345 |
             | reset_password_password_second | Abcd12345 |
         And I press "Save password"
-        And I go to "/login"
+        And I go to admin page "/login"
         And I fill in the following:
-            | login_email     | case-manager@publicguardian.gov.uk |
+            | login_email     | casemanager@publicguardian.gov.uk |
             | login_password  | Abcd12345                          |
         And I press "Sign in"
         Then the form should be valid
