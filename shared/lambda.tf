@@ -1,3 +1,7 @@
+locals {
+  redeployer_lambda_function_name = "redeployer"
+}
+
 resource "aws_iam_role" "lambda_redeployer" {
   assume_role_policy = data.aws_iam_policy_document.lambda_redeployer_policy.json
   name               = "lambda_redeployer"
@@ -38,7 +42,6 @@ data "aws_iam_policy_document" "lambda_redeployer" {
     sid    = "WriteLogs"
     effect = "Allow"
     actions = [
-      "logs:CreateLogGroup",
       "logs:CreateLogStream",
       "logs:PutLogEvents",
     ]
@@ -56,10 +59,16 @@ data "archive_file" "redeployer_zip" {
 
 resource "aws_lambda_function" "redeployer_lambda" {
   filename      = data.archive_file.redeployer_zip.output_path
-  function_name = "redeployer"
+  function_name = local.redeployer_lambda_function_name
   role          = aws_iam_role.lambda_redeployer.arn
   handler       = "main"
   runtime       = "go1.x"
+  depends_on    = [aws_cloudwatch_log_group.redeployer_lambda]
 
   source_code_hash = filebase64sha256(data.archive_file.redeployer_zip.output_path)
+}
+
+resource "aws_cloudwatch_log_group" "redeployer_lambda" {
+  name              = "/aws/lambda/${local.redeployer_lambda_function_name}"
+  retention_in_days = 14
 }
