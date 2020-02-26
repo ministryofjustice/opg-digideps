@@ -345,12 +345,12 @@ class MailFactory
             'caseNumber' => $deputy->getFirstClient()->getCaseNumber(),
             'fullName' => $deputy->getFullName(),
             'address' => $deputy->getAddress1(),
-            'address2' => $deputy->getAddress2(),
-            'address3' => $deputy->getAddress3(),
+            'address2' => $deputy->getAddress2() !== null ? $deputy->getAddress2() : 'Not provided',
+            'address3' => $deputy->getAddress3() !== null ? $deputy->getAddress3() : 'Not provided',
             'postcode' =>$deputy->getAddressPostcode(),
             'countryName' => $this->intlService->getCountryNameByCountryCode($deputy->getAddressCountry()),
             'phone' => $deputy->getPhoneMain(),
-            'altPhoneNumber' => $deputy->getPhoneAlternative(),
+            'altPhoneNumber' => $deputy->getPhoneAlternative() !== null ? $deputy->getPhoneAlternative() : 'Not provided',
             'email' => $deputy->getEmail(),
         ];
 
