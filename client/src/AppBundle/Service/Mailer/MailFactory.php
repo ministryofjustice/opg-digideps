@@ -336,43 +336,6 @@ class MailFactory
             ->setParameters($notifyParams);
     }
 
-
-    /**
-     * @param string $response
-     *
-     * @return ModelDir\Email
-     */
-    public function createAddressUpdateEmail($response, User $user, $type)
-    {
-        if ($type === 'deputy') {
-            $countryCode = $response->getAddressCountry();
-        } else {
-            $countryCode = $response->getCountry();
-        }
-
-        $countryName = $this->intlService->getCountryNameByCountryCode($countryCode);
-
-        $viewParams = [
-            'response' => $response,
-            'countryName' => $countryName,
-            'caseNumber' => $user->getClients()[0]->getCaseNumber(),
-            'userRole' => $user->getRoleFullName()
-        ];
-
-        $template = 'AppBundle:Email:address-update-' . $type . '.html.twig';
-
-        $email = new ModelDir\Email();
-        $email
-            ->setFromEmail($this->emailParams['from_email'])
-            ->setFromName($this->translate('addressUpdateForm.' . $type . '.fromName'))
-            ->setToEmail($this->emailParams['update_send_to_address'])
-            ->setToName($this->translate('addressUpdateForm.' . $type . '.toName'))
-            ->setSubject($this->translate('addressUpdateForm.' . $type . '.subject'))
-            ->setBodyHtml($this->templating->render($template, $viewParams));
-
-        return $email;
-    }
-
     public function createUpdateClientDetailsEmail(Client $client): ModelDir\Email
     {
         $email = (new ModelDir\Email())
