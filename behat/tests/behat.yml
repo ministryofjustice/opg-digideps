@@ -77,7 +77,7 @@ default:
             description: Coverage of user management features
             paths: [ "%paths.base%/features/userManagement" ]
             contexts:
-                - DigidepsBehat\UserManagement\UserManagementContext
+                - DigidepsBehat\UserManagement\UserManagementFeatureContext
 
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:

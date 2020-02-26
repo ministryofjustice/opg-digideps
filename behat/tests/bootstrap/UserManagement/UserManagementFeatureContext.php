@@ -5,7 +5,7 @@ namespace DigidepsBehat\UserManagement;
 use DigidepsBehat\Common\BaseFeatureContext;
 use DigidepsBehat\UserTrait;
 
-class UserManagementContext extends BaseFeatureContext
+class UserManagementFeatureContext extends BaseFeatureContext
 {
     use UserTrait;
     use UserManagementTrait;
