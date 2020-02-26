@@ -254,7 +254,7 @@ class UserController extends RestController
      * //TODO move to UserService
      *
      * @Route("/{id}", methods={"DELETE"})
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_SUPER_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN')")
      *
      * @param int $id
      * @return array
