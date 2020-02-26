@@ -5,6 +5,7 @@ namespace AppBundle\Service\Mailer;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\User;
 use AppBundle\Model as ModelDir;
+use AppBundle\Model\Email;
 use AppBundle\Model\FeedbackReport;
 use Symfony\Component\Intl\Intl;
 use Symfony\Component\Routing\RouterInterface;
@@ -17,7 +18,7 @@ class MailFactory
     const AREA_ADMIN = 'admin';
 
     // Maintained in GOVUK Notify
-    const RESET_PASSWORD_TEMPLATE_ID = 'e7312e62-2602-4903-89e6-93ad943bacb1';
+    const RESET_PASSWORD_TEMPLATE_ID = '827555cc-498a-43ef-957a-63fa387065e3';
     const POST_SUBMISSION_FEEDBACK_TEMPLATE_ID = '862f1ce7-bde5-4397-be68-bd9e4537cff0';
     const GENERAL_FEEDBACK_TEMPLATE_ID = '63a25dfa-116f-4991-b7c4-35a79ac5061e';
 
@@ -145,48 +146,10 @@ class MailFactory
 
 
     /**
-     * @param EntityDir\User $user
-     *
-     * @return ModelDir\Email
-     */
-    public function createResetPasswordEmail(User $user)
-    {
-        $area = $this->getUserArea($user);
-
-        $viewParams = [
-            'name'        => $user->getFullName(),
-            'link'        => $this->generateAbsoluteLink($area, 'user_activate', [
-                'action' => 'password-reset',
-                'token'  => $user->getRegistrationToken(),
-            ]),
-            'domain'      => $this->generateAbsoluteLink($area, 'homepage'),
-            'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
-            'recipientRole' => self::getRecipientRole($user)
-        ];
-
-        $email = new ModelDir\Email();
-
-        $email
-            ->setFromEmail($this->emailParams['from_email'])
-            ->setFromName($this->translate('resetPassword.fromName'))
-            ->setToEmail($user->getEmail())
-            ->setToName($user->getFullName())
-            ->setSubject($this->translate('resetPassword.subject'))
-            ->setBodyHtml($this->templating->render('AppBundle:Email:password-forgotten.html.twig', $viewParams))
-            ->setBodyText($this->templating->render('AppBundle:Email:password-forgotten.text.twig', $viewParams));
-
-        return $email;
-    }
-
-    /**
-     * @todo Remove createResetPasswordEmail in favour of this once we're happy with Notify
      * @param User $user
-     * @param array $emailSendParams
-     *
-     * @return ModelDir\Email
-     * @throws \Exception
+     * @return Email
      */
-    public function createResetPasswordEmailNotify(User $user)
+    public function createResetPasswordEmail(User $user): Email
     {
         $area = $this->getUserArea($user);
 
@@ -194,7 +157,7 @@ class MailFactory
             'resetLink' => $this->generateAbsoluteLink($area, 'user_activate', [
                 'action' => 'password-reset',
                 'token'  => $user->getRegistrationToken(),
-            ]),
+            ])
         ];
 
         return (new ModelDir\Email())
@@ -202,7 +165,6 @@ class MailFactory
             ->setFromName($this->translate('resetPassword.fromName'))
             ->setToEmail($user->getEmail())
             ->setToName($user->getFullName())
-            ->setSubject($this->translate('resetPassword.subject'))
             ->setTemplate(self::RESET_PASSWORD_TEMPLATE_ID)
             ->setParameters($notifyParams);
     }
