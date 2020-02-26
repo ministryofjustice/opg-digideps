@@ -128,10 +128,12 @@ class SettingsController extends AbstractController
             if ($form->has('removeAdmin') && !empty($form->get('removeAdmin')->getData())) {
                 $newRole = $this->determineNoAdminRole();
                 $user->setRoleName($newRole);
-                $request->getSession()->getFlashBag()->add('notice', 'For security reasons you have been logged out because you have changed your admin rights. Please log in again below');
+
+                $this->addFlash('notice', 'For security reasons you have been logged out because you have changed your admin rights. Please log in again below');
+
                 $redirectRoute = $this->generateUrl('logout');
             } else {
-                $request->getSession()->getFlashBag()->add('notice', 'Your account details have been updated');
+                $this->addFlash('notice', 'Your account details have been updated');
 
                 if ('declaration' === $request->get('from') && null !== $request->get('rid')) {
                     $redirectRoute = $this->generateUrl('report_declaration', ['reportId' => $request->get('rid')]);
