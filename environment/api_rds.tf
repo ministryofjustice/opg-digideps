@@ -62,6 +62,8 @@ resource "aws_rds_cluster" "api" {
   enable_http_endpoint         = local.account.always_on ? false : true
   preferred_maintenance_window = "sun:01:00-sun:01:30"
 
+  depends_on = [aws_cloudwatch_log_group.redeployer_lambda]
+
   tags = merge(
     local.default_tags,
     {
@@ -72,6 +74,11 @@ resource "aws_rds_cluster" "api" {
   lifecycle {
     ignore_changes = [engine_version, master_password]
   }
+}
+
+resource "aws_cloudwatch_log_group" "redeployer_lambda" {
+  name              = "/aws/rds/cluster/api-${local.environment}/postgresql"
+  retention_in_days = 180
 }
 
 # resource "aws_rds_cluster_instance" "api" {
