@@ -73,6 +73,12 @@ default:
             contexts:
                 - DigidepsBehat\ACL\ACLfeatureContext
 
+        authentication:
+            description: Coverage of authentication
+            paths: [ "%paths.base%/features/Authentication" ]
+            contexts:
+                - DigidepsBehat\Authentication\AuthenticationFeatureContext
+
         registration:
             description: Coverage of the self and auto registration processes
             paths: [ "%paths.base%/features/v2/registration" ]
