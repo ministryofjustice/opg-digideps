@@ -163,14 +163,7 @@ class DocumentServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(new ArrayCollection([$this->doc1->reveal(), $this->doc2->reveal()]));
 
-        /** @var ObjectProphecy|LoggerInterface $logger */
-        $logger = self::prophesize(LoggerInterface::class);
-        /** @var ObjectProphecy|RestClient $restClient */
-        $restClient = self::prophesize(RestClient::class);
-        /** @var ObjectProphecy|Environment $twig */
-        $twig = self::prophesize(Environment::class);
-
-        $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal(), $twig->reveal());
+        $sut = new DocumentService($storage->reveal(), $this->restClient->reveal(), $this->logger->reveal(), $this->twig->reveal());
         [$documents, $missing] = $sut->retrieveDocumentsFromS3ByReportSubmission($reportSubmission->reveal());
 
         $expectedRetrievedDoc1 = new RetrievedDocument();
@@ -201,14 +194,7 @@ class DocumentServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(new ArrayCollection([$this->doc1->reveal(), $this->doc2->reveal()]));
 
-        /** @var ObjectProphecy|LoggerInterface $logger */
-        $logger = self::prophesize(LoggerInterface::class);
-        /** @var ObjectProphecy|RestClient $restClient */
-        $restClient = self::prophesize(RestClient::class);
-        /** @var ObjectProphecy|Environment $twig */
-        $twig = self::prophesize(Environment::class);
-
-        $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal(), $twig->reveal());
+        $sut = new DocumentService($storage->reveal(), $this->restClient->reveal(), $this->logger->reveal(), $this->twig->reveal());
         [$documents, $missing] = $sut->retrieveDocumentsFromS3ByReportSubmission($reportSubmission->reveal());
 
         $expectedRetrievedDoc = new RetrievedDocument();
@@ -244,14 +230,7 @@ class DocumentServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(new ArrayCollection([$this->doc3->reveal()]));
 
-        /** @var ObjectProphecy|LoggerInterface $logger */
-        $logger = self::prophesize(LoggerInterface::class);
-        /** @var ObjectProphecy|RestClient $restClient */
-        $restClient = self::prophesize(RestClient::class);
-        /** @var ObjectProphecy|Environment $twig */
-        $twig = self::prophesize(Environment::class);
-
-        $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal(), $twig->reveal());
+        $sut = new DocumentService($storage->reveal(), $this->restClient->reveal(), $this->logger->reveal(), $this->twig->reveal());
 
         [$documents, $missing] = $sut->retrieveDocumentsFromS3ByReportSubmissions(
             [$reportSubmission->reveal(), $reportSubmission2->reveal()]
@@ -299,14 +278,7 @@ class DocumentServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(new ArrayCollection([$this->doc3->reveal(), $this->doc4->reveal()]));
 
-        /** @var ObjectProphecy|LoggerInterface $logger */
-        $logger = self::prophesize(LoggerInterface::class);
-        /** @var ObjectProphecy|RestClient $restClient */
-        $restClient = self::prophesize(RestClient::class);
-        /** @var ObjectProphecy|Environment $twig */
-        $twig = self::prophesize(Environment::class);
-
-        $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal(), $twig->reveal());
+        $sut = new DocumentService($storage->reveal(), $this->restClient->reveal(), $this->logger->reveal(), $this->twig->reveal());
 
         [$documents, $missing] = $sut->retrieveDocumentsFromS3ByReportSubmissions(
             [$reportSubmission->reveal(), $reportSubmission2->reveal()]
@@ -342,15 +314,6 @@ class DocumentServiceTest extends TestCase
 
         $expectedFlash = 'some flash message here';
 
-        /** @var ObjectProphecy|S3Storage $storage */
-        $storage = self::prophesize(S3Storage::class);
-
-        /** @var ObjectProphecy|LoggerInterface $logger */
-        $logger = self::prophesize(LoggerInterface::class);
-
-        /** @var ObjectProphecy|RestClient $restClient */
-        $restClient = self::prophesize(RestClient::class);
-
         /** @var ObjectProphecy|Environment $twig */
         $twig = self::prophesize(Environment::class);
 
@@ -358,7 +321,7 @@ class DocumentServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($expectedFlash);
 
-        $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal(), $twig->reveal());
+        $sut = new DocumentService($this->s3Storage->reveal(), $this->restClient->reveal(), $this->logger->reveal(), $twig->reveal());
         $actualFlash = $sut->createMissingDocumentsFlashMessage($missingDocuments);
 
         self::assertEquals($expectedFlash, $actualFlash);
