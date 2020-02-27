@@ -233,11 +233,11 @@ class IndexController extends AbstractController
 
         if (!$loggedInUser->isAdminOrSuperAdmin()) {
             $message = $userToDelete->isAdminOrSuperAdmin() ? 'Only Super Admins can delete Admins or Super Admins' : 'Only Admins or Super Admins can delete users';
-            throw new DisplayableException($message);
+            $this->renderError($message, Response::HTTP_FORBIDDEN);
         }
 
-        if ($loggedInUser->getId() == $userToDelete->getId()) {
-            throw new DisplayableException('Cannot delete logged user');
+        if ($loggedInUser->getId() === $userToDelete->getId()) {
+            $this->renderError('Cannot delete logged in user', Response::HTTP_BAD_REQUEST);
         }
         return ['user' => $userToDelete];
     }

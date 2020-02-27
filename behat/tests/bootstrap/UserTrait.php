@@ -26,24 +26,33 @@ trait UserTrait
     public function adminsExist(TableNode $table)
     {
         foreach ($table as $inputs) {
-            $this->assertValidAdminRole($inputs['adminType']);
+            $this->assertValidInputs($inputs);
 
-            $adminType = $inputs['adminType'];
-            $firstName = $inputs['firstName'];
-            $lastName = $inputs['lastName'];
-            $email = $inputs['email'];
-            $activated = $inputs['activated'];
-
-            $query = "adminType=$adminType&firstName=$firstName&lastName=$lastName&email=$email&activated=$activated";
+            $query = http_build_query($inputs);
 
             $this->visitAdminPath("/admin/fixtures/createAdmin?$query");
         }
     }
 
-    private function assertValidAdminRole(string $roleName): void
+    private function assertValidInputs(array $inputs): void
     {
-        if (!in_array($roleName, ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN'])) {
-            throw new \Exception("adminType should be 'ROLE_ADMIN' or 'ROLE_SUPER_ADMIN'; '$roleName' provided");
+        $adminType = $inputs['adminType'];
+
+        if (!in_array($adminType, ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN'])) {
+            throw new \Exception("adminType should be 'ROLE_ADMIN' or 'ROLE_SUPER_ADMIN'; '$adminType' provided");
+        }
+
+        foreach(['adminType', 'firstName', 'lastName', 'email', 'activated'] as $key) {
+            $missingKeys = [];
+
+            if (!array_key_exists($key, $inputs)) {
+                $missingKeys[] = $key;
+            }
+
+            if (count($missingKeys) > 0) {
+                $missingKeysString = implode($missingKeys, ', ');
+                throw new \Exception("Missing required parameter headings: $missingKeysString");
+            }
         }
     }
 

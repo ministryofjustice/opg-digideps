@@ -113,7 +113,7 @@ class FixtureController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        /** @var \GuzzleHttp\Psr7\Response $response */
+        /** @var array $response */
         $response = json_decode($this
             ->getRestClient()
             ->get("v2/fixture/getUserIDByEmail/$email", 'response')->getBody(), true);

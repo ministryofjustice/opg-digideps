@@ -1213,21 +1213,4 @@ class User implements AdvancedUserInterface, DeputyInterface
     {
         return $this->getRoleName() === 'ROLE_ADMIN' || $this->getRoleName() === 'ROLE_SUPER_ADMIN';
     }
-
-    public function canDeleteUser(User $userToBeDeleted): bool
-    {
-        if (!$this->isAdminOrSuperAdmin()) {
-            return false;
-        }
-
-        if ($userToBeDeleted->isAdminOrSuperAdmin()) {
-            return $this->getRoleName() === 'ROLE_SUPER_ADMIN' && $userToBeDeleted->getId() !== $this->getId() ? true : false;
-        }
-
-        if ($userToBeDeleted->getRoleName() === 'ROLE_LAY_DEPUTY' && count($userToBeDeleted->getClients()) <= 1 && $userToBeDeleted->hasReports() === false) {
-            return true;
-        }
-
-        return false;
-    }
 }
