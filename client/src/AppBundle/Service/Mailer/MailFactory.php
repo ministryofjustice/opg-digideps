@@ -157,7 +157,8 @@ class MailFactory
             'resetLink' => $this->generateAbsoluteLink($area, 'user_activate', [
                 'action' => 'password-reset',
                 'token'  => $user->getRegistrationToken(),
-            ])
+            ]),
+            'recreateLink' => $this->generateAbsoluteLink($area, 'password_forgotten'),
         ];
 
         return (new ModelDir\Email())
