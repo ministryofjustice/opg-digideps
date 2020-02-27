@@ -217,26 +217,21 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isValid()) {
-            try {
-                $emailAddress = $user->getEmail();
-                $disguisedEmail = '***' . substr($emailAddress, 3);
-                $logger->warning('Reset password request for : ' . $emailAddress);
-                /* @var $user EntityDir\User */
-                $user = $this->getRestClient()->userRecreateToken($user->getEmail(), 'pass-reset');
-                if (empty($user)) {
-                    $logger->warning('Email ' . $emailAddress . ' not found');
-                }
-
-                $logger->warning('Sending reset email to ' . $disguisedEmail);
-
-                $resetPasswordEmail = $this->getMailFactory()->createResetPasswordEmail($user);
-
-                $sendResult = $this->getMailSender()->send($resetPasswordEmail, ['text', 'html']);
-                $logger->warning('Email sent to ' . $disguisedEmail);
-
-            } catch (\Throwable $e) {
-                $logger->warning($e->getMessage());
+            $emailAddress = $user->getEmail();
+            $disguisedEmail = '***' . substr($emailAddress, 3);
+            $logger->warning('Reset password request for : ' . $emailAddress);
+            /* @var $user EntityDir\User */
+            $user = $this->getRestClient()->userRecreateToken($user->getEmail(), 'pass-reset');
+            if (empty($user)) {
+                $logger->warning('Email ' . $emailAddress . ' not found');
             }
+
+            $logger->warning('Sending reset email to ' . $disguisedEmail);
+
+            $resetPasswordEmail = $this->getMailFactory()->createResetPasswordEmail($user);
+
+            $this->getMailSender()->send($resetPasswordEmail, ['text', 'html']);
+            $logger->warning('Email sent to ' . $disguisedEmail);
 
             // after details are added, admin users to go their homepage, deputies go to next step
             return $this->redirect($this->generateUrl('password_sent'));
