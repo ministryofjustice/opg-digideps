@@ -116,7 +116,7 @@ class MailFactory
         ];
 
         $email = (new ModelDir\Email())
-        ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
+            ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('activation.fromName'))
             ->setToEmail($user->getEmail())
             ->setToName($user->getFullName())
@@ -145,7 +145,7 @@ class MailFactory
         ];
 
         $email = (new ModelDir\Email())
-        ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
+            ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('activation.fromName'))
             ->setToEmail($user->getEmail())
             ->setToName($user->getFullName())
