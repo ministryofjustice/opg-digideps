@@ -139,12 +139,12 @@ trait UserTrait
     }
 
     /**
-     * @When I activate the user with password :password
+     * @When I activate the user :email with password :password
      */
-    public function iActivateTheUserAndSetThePasswordTo($password)
+    public function iActivateTheUserAndSetThePasswordTo($email, $password)
     {
         $this->visit('/logout');
-        $this->iOpenTheSpecificLinkOnTheEmail('/user/activate/');
+        $this->openActivationOrPasswordResetPage(false, 'activation', $email);
         $this->assertResponseStatus(200);
         $this->fillField('set_password_password_first', $password);
         $this->fillField('set_password_password_second', $password);
@@ -155,28 +155,12 @@ trait UserTrait
     }
 
     /**
-     * @TODO to use in places where needed
-     * @When I activate the user with password :password - no T&C expected
+     * @When I activate the named deputy :email with password :password
      */
-    public function iActivateTheUserAndSetThePasswordToNoTcExpected($password)
+    public function iActivateTheNamedDeputyAndSetThePasswordTo($email, $password)
     {
         $this->visit('/logout');
-        $this->iOpenTheSpecificLinkOnTheEmail('/user/activate/');
-        $this->assertResponseStatus(200);
-        $this->fillField('set_password_password_first', $password);
-        $this->fillField('set_password_password_second', $password);
-        $this->pressButton('set_password_save');
-        $this->theFormShouldBeValid();
-        $this->assertResponseStatus(200);
-    }
-
-    /**
-     * @When I activate the named deputy with password :password
-     */
-    public function iActivateTheNamedDeputyAndSetThePasswordTo($password)
-    {
-        $this->visit('/logout');
-        $this->iOpenTheSpecificLinkOnTheEmail('/user/activate/');
+        $this->openActivationOrPasswordResetPage(false, 'activation', $email);
         $this->assertResponseStatus(200);
         $this->checkOption('agree_terms_agreeTermsUse');
         $this->pressButton('agree_terms_save');
