@@ -12,21 +12,6 @@ class UserVoter extends Voter
     const DELETE_USER = 'delete-user';
 
     /**
-     * @var AccessDecisionManagerInterface
-     */
-    private $decisionManager;
-
-    /**
-     * UserVoter constructor.
-     *
-     * @param AccessDecisionManagerInterface $decisionManager
-     */
-    public function __construct(AccessDecisionManagerInterface $decisionManager)
-    {
-        $this->decisionManager = $decisionManager;
-    }
-
-    /**
      * Does this voter support the attribute?
      *
      * @param  string $attribute

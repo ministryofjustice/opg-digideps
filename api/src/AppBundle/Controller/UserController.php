@@ -25,8 +25,6 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
  */
 class UserController extends RestController
 {
-    const DELETABLE_ROLES = ['ROLE_LAY_DEPUTY', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'];
-
     /**
      * @var UserService
      */
@@ -55,7 +53,7 @@ class UserController extends RestController
     /**
      * @var Security
      */
-    private $security;
+    private $securityHelper;
 
     public function __construct(
         UserService $userService,
@@ -71,7 +69,7 @@ class UserController extends RestController
         $this->userRepository = $userRepository;
         $this->clientRepository = $clientRepository;
         $this->userVoter = $userVoter;
-        $this->security = $security;
+        $this->securityHelper = $security;
     }
 
     /**
@@ -269,7 +267,7 @@ class UserController extends RestController
     /**
      * Delete user with clients.
      *
-     * @Route("/{id}/{deletorRole}", methods={"DELETE"})
+     * @Route("/{id}", methods={"DELETE"})
      * @Security("has_role('ROLE_ADMIN')")
      *
      * @param int $id
@@ -283,13 +281,13 @@ class UserController extends RestController
         $deletee = $this->userRepository->find($id);
 
         /** @var TokenInterface $user */
-        $token = $this->security->getToken();
+        $token = $this->securityHelper->getToken();
 
         $canDelete = $this->userVoter->vote($token, $deletee, [UserVoter::DELETE_USER]);
 
         $clients = $deletee->getClients();
 
-        if ($canDelete === -1) {
+        if ($canDelete === UserVoter::ACCESS_DENIED) {
             if (count($clients) > 1) {
                 $errMessage = 'Cannot delete a user with multiple clients';
             } elseif ($clients[0]->getReports() > 0) {
