@@ -6,5 +6,4 @@ use DigidepsBehat\Common\BaseFeatureContext;
 
 class AuthenticationFeatureContext extends BaseFeatureContext
 {
-    use AuthenticationTrait;
 }
