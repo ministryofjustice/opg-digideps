@@ -3,12 +3,14 @@
 namespace DigidepsBehat\Registration;
 
 use Behat\Gherkin\Node\TableNode;
+use DigidepsBehat\Authentication\AuthenticationTrait;
 use DigidepsBehat\Common\BaseFeatureContext;
 use DigidepsBehat\Common\EmailTrait;
 use DigidepsBehat\Common\LinksTrait;
 
 class RegistrationFeatureContext extends BaseFeatureContext
 {
+    use AuthenticationTrait;
     use EmailTrait;
     use LinksTrait;
 
@@ -50,7 +52,7 @@ class RegistrationFeatureContext extends BaseFeatureContext
             $this->fillField('self_registration_caseNumber', $courtOrder['caseNumber']);
             $this->pressButton('self_registration_save');
 
-            $this->iOpenTheSpecificLinkOnTheEmail('/user/activate/');
+            $this->openActivationOrPasswordResetPage('', 'activation', $courtOrder['deputyEmail']);
             $this->fillField('set_password_password_first', 'Abcd1234');
             $this->fillField('set_password_password_second', 'Abcd1234');
             $this->checkOption('set_password_showTermsAndConditions');
