@@ -12,11 +12,7 @@ Feature: Users can reset their password via self-service
             | reset_password_password_first  | Abcd12345 |
             | reset_password_password_second | Abcd12345 |
         And I press "Save password"
-        And I go to "/login"
-        And I fill in the following:
-            | login_email     | behat-lay-deputy-102-4@publicguardian.gov.uk |
-            | login_password  | Abcd12345                                    |
-        And I press "Sign in"
+        And I am logged in as "behat-lay-deputy-102-4@publicguardian.gov.uk" with password "Abcd12345"
         Then the form should be valid
 
     Scenario: Admin can reset password
@@ -30,11 +26,7 @@ Feature: Users can reset their password via self-service
             | reset_password_password_first  | Abcd12345 |
             | reset_password_password_second | Abcd12345 |
         And I press "Save password"
-        And I go to admin page "/login"
-        And I fill in the following:
-            | login_email     | casemanager@publicguardian.gov.uk |
-            | login_password  | Abcd12345                          |
-        And I press "Sign in"
+        And I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd12345"
         Then the form should be valid
 
     Scenario: Invalid emails are not accepted
