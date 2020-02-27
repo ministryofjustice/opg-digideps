@@ -258,6 +258,10 @@ class MailFactoryTest extends TestCase
             'token'  => 'regToken'
         ])->shouldBeCalled()->willReturn('/reset-password/regToken');
 
+        $this->router->generate('password_forgotten', [])
+            ->shouldBeCalled()
+            ->willReturn('/password-managing/forgotten');
+
         $this->translator->trans('resetPassword.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
 
         $email = ($this->generateSUT())->createResetPasswordEmail($this->layDeputy);
@@ -268,7 +272,11 @@ class MailFactoryTest extends TestCase
         self::assertEquals('Joe Bloggs', $email->getToName());
         self::assertEquals(MailFactory::RESET_PASSWORD_TEMPLATE_ID, $email->getTemplate());
 
-        $expectedTemplateParams = ['resetLink' => 'https://front.base.url/reset-password/regToken'];
+        $expectedTemplateParams = [
+            'resetLink' => 'https://front.base.url/reset-password/regToken',
+            'recreateLink' => 'https://front.base.url/password-managing/forgotten',
+        ];
+
         self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 
