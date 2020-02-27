@@ -46,7 +46,7 @@ Feature: Organisation admins can edit members of their organisation
     And I should see "Yvonne Lacasse"
     And I should see "yvonne.lacasse@malvern.example"
 
-  Scenario: Org admins add users to their organisation
+  Scenario: Admins of orgs with an email address identifier can add users to their organisation
     Given I am logged in as "guscioraonline@gmail.example" with password "Abcd1234"
     When I go to "/org/settings/organisation"
     And I follow "Add user"
