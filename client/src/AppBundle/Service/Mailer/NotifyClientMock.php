@@ -16,7 +16,7 @@ class NotifyClientMock extends Client
         if ($emailAddress === 'break@publicguardian.gov.uk') {
             throw new NotifyException('Intentional mock exception');
         } else {
-            return true;
+            return [];
         }
     }
 }
