@@ -7,6 +7,7 @@ use Behat\MinkExtension\Context\MinkContext;
 class BaseFeatureContext extends MinkContext
 {
     use AuthenticationTrait;
+    use DebugTrait;
     use FormTrait;
     use SiteNavigationTrait;
 
