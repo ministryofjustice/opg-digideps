@@ -1,4 +1,3 @@
-@gt
 Feature: Users can reset their password via self-service
 
     Scenario: Deputy can reset password
