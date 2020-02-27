@@ -69,9 +69,15 @@ default:
 
         authentication:
             description: Coverage of authentication
-            paths: [ "%paths.base%/features/Authentication" ]
+            paths: [ "%paths.base%/features/authentication" ]
             contexts:
                 - DigidepsBehat\Authentication\AuthenticationFeatureContext
+
+        organisationManagement:
+            description: Coverage of the organisation management features
+            paths: [ "%paths.base%/features/organisationManagement" ]
+            contexts:
+                - DigidepsBehat\OrganisationManagement\OrganisationManagementFeatureContext
 
         registration:
             description: Coverage of the self and auto registration processes
