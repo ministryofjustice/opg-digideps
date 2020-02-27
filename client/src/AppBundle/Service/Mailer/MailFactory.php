@@ -20,13 +20,14 @@ class MailFactory
     const AREA_ADMIN = 'admin';
 
     // Maintained in GOVUK Notify
-    const RESET_PASSWORD_TEMPLATE_ID = '827555cc-498a-43ef-957a-63fa387065e3';
-    const POST_SUBMISSION_FEEDBACK_TEMPLATE_ID = '862f1ce7-bde5-4397-be68-bd9e4537cff0';
+    const ACTIVATION_TEMPLATE_ID = '07e7fdb3-ad81-4105-b6b6-c3854e0c6caa';
     const GENERAL_FEEDBACK_TEMPLATE_ID = '63a25dfa-116f-4991-b7c4-35a79ac5061e';
     const REPORT_SUBMITTED_CONFIRMATION_TEMPLATE_ID = '2f8fff09-5a71-446a-a220-d8a3dc78fa42';
     const NDR_SUBMITTED_CONFIRMATION_TEMPLATE_ID = '96fcb7e1-d80f-4e0e-80c8-2c1237af8b10';
     const CLIENT_DETAILS_CHANGE_TEMPLATE_ID = '258aaf2d-076b-4b5c-a386-f3551c5f3945';
     const DEPUTY_DETAILS_CHANGE_TEMPLATE_ID = '6469b39b-6ace-4f93-9e80-6152627e0d36';
+    const POST_SUBMISSION_FEEDBACK_TEMPLATE_ID = '862f1ce7-bde5-4397-be68-bd9e4537cff0';
+    const RESET_PASSWORD_TEMPLATE_ID = '827555cc-498a-43ef-957a-63fa387065e3';
 
     const NOTIFY_FROM_EMAIL_ID = 'db930cb2-2153-4e2a-b3d0-06f7c7f92f37';
 
@@ -104,30 +105,22 @@ class MailFactory
     public function createActivationEmail(User $user)
     {
         $area = $this->getUserArea($user);
-        $homepageURL = $this->generateAbsoluteLink($area, 'homepage');
 
-        $viewParams = [
-            'name'             => $user->getFullName(),
-            'domain'           => $homepageURL,
-            'link'             => $this->generateAbsoluteLink($area, 'user_activate', [
+        $parameters = [
+            'activationLink' => $this->generateAbsoluteLink($area, 'user_activate', [
                 'action' => 'activate',
                 'token'  => $user->getRegistrationToken(),
             ]),
-            'tokenExpireHours' => User::TOKEN_EXPIRE_HOURS,
-            'homepageUrl'      => $homepageURL,
-            'recipientRole' => self::getRecipientRole($user)
+            'registerLink' => $this->generateAbsoluteLink($area, 'register'),
         ];
 
-        $email = new ModelDir\Email();
-
-        $email
-            ->setFromEmail($this->emailParams['from_email'])
+        $email = (new ModelDir\Email())
+        ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('activation.fromName'))
             ->setToEmail($user->getEmail())
             ->setToName($user->getFullName())
-            ->setSubject($this->translate('activation.subject'))
-            ->setBodyHtml($this->templating->render('AppBundle:Email:user-activate.html.twig', $viewParams))
-            ->setBodyText($this->templating->render('AppBundle:Email:user-activate.text.twig', $viewParams));
+            ->setTemplate(self::ACTIVATION_TEMPLATE_ID)
+            ->setParameters($parameters);
 
         return $email;
     }
