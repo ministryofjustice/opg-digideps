@@ -1,6 +1,6 @@
 Feature: Organisation admins can edit members of their organisation
 
-  Scenario: Set up organisation and admin
+  Scenario: Set up organisation and users
     Given the following organisations exist:
       | name               | emailIdentifier              | activated |
       | Malvern Solicitors | @malvern.example             | true      |
