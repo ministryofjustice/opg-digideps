@@ -1,17 +1,12 @@
 Feature: Organisation deputyship updates
 
   Scenario: Apply deputyship updates via CSV
-    Given emails are sent from "admin" area
+    Given the following users exist:
+      | ndr      | deputyType | firstName | lastName | email                                 | postCode | activated |
+      | disabled | PROF       | New Dep1  | Surname1 | new-behat-prof1@publicguardian.gov.uk | SW1      | true      |
+      | disabled | PROF       | New Dep2  | Surname1 | behat-prof1@example.com1              | SW2      | true      |
+      | disabled | PROF       | New Dep3  | Surname1 | behat-prof1@example.com2              | SW3      | true      |
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I create a new "NDR-disabled" "prof named" user "New Dep1" "Surname1" with email "new-behat-prof1@publicguardian.gov.uk" and postcode "SW1"
-    And I activate the named deputy with password "Abcd1234"
-    Then I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I create a new "NDR-disabled" "prof named" user "New Dep2" "Surname2" with email "behat-prof1@example.com1" and postcode "SW2"
-    And I activate the named deputy with password "Abcd1234"
-    Then I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I create a new "NDR-disabled" "prof named" user "New Dep3" "Surname3" with email "behat-prof1@example.com2" and postcode "SW3"
-    And I activate the named deputy with password "Abcd1234"
-    Then I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     # upload PROF updates
     When I click on "admin-upload-pa"
     When I attach the file "behat-prof-org-updates.csv" to "admin_upload_file"
@@ -98,9 +93,3 @@ Feature: Organisation deputyship updates
       | SW3                                   | deputy-details |
       | GB                                    | deputy-details |
       | behat-prof1@example.com2              | deputy-details |
-
-
-
-
-
-

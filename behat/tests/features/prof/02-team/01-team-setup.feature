@@ -42,7 +42,7 @@ Feature: PROF team setup
 
   Scenario: activate PROF_ADMIN user
     Given emails are sent from "deputy" area
-    And I activate the user with password "Abcd1234"
+    And I activate the user "behat-prof1-admin@publicguardian.gov.uk" with password "Abcd1234"
     # assert pre-fill
     Then the following fields should have the corresponding values:
       | user_details_firstname | Markk Admin |
@@ -93,7 +93,7 @@ Feature: PROF team setup
 
   Scenario: activate ROLE_PROF_TEAM_MEMBER user
     Given emails are sent from "deputy" area
-    And I activate the user with password "Abcd1234"
+    And I activate the user "behat-prof1-team-member@publicguardian.gov.uk" with password "Abcd1234"
     # assert pre-fill
     Then the following fields should have the corresponding values:
       | user_details_firstname | Robertt Team member |
@@ -229,7 +229,7 @@ Feature: PROF team setup
     Then the form should be valid
     Then I should see the "team-user-behat-prof3-adminpublicguardiangovuk" region
     When emails are sent from "deputy" area
-    And I activate the user with password "Abcd1234"
+    And I activate the user "behat-prof3-admin@publicguardian.gov.uk" with password "Abcd1234"
     When I fill in the following:
       | user_details_jobTitle  | Solicitor assistant |
       | user_details_phoneMain | 20000000002         |
@@ -248,7 +248,7 @@ Feature: PROF team setup
     And I press "team_member_account_save"
     Then the form should be valid
     When emails are sent from "deputy" area
-    And I activate the user with password "Abcd1234"
+    And I activate the user "behat-prof3-team-member@publicguardian.gov.uk" with password "Abcd1234"
     When I fill in the following:
       | user_details_jobTitle  | Solicitor helper   |
       | user_details_phoneMain | 30000000003        |

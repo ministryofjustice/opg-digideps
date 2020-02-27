@@ -40,8 +40,7 @@ Feature: PA team setup
     Then I should see the "team-user-behat-pa1-adminpublicguardiangovuk" region
 
   Scenario: activate PA_ADMIN user
-    Given emails are sent from "deputy" area
-    And I activate the user with password "Abcd1234"
+    When I activate the user "behat-pa1-admin@publicguardian.gov.uk" with password "Abcd1234"
     # assert pre-fill
     Then the following fields should have the corresponding values:
       | user_details_firstname | Markk Admin |
@@ -92,8 +91,7 @@ Feature: PA team setup
     Then I should see the "team-user-behat-pa1-team-memberpublicguardiangovuk" region
 
   Scenario: activate ROLE_PA_TEAM_MEMBER user
-    Given emails are sent from "deputy" area
-    And I activate the user with password "Abcd1234"
+    When I activate the user "behat-pa1-team-member@publicguardian.gov.uk" with password "Abcd1234"
     # assert pre-fill
     Then the following fields should have the corresponding values:
       | user_details_firstname | Robertt Team member |
@@ -228,8 +226,7 @@ Feature: PA team setup
     And I press "team_member_account_save"
     Then the form should be valid
     Then I should see the "team-user-behat-pa3-adminpublicguardiangovuk" region
-    When emails are sent from "deputy" area
-    And I activate the user with password "Abcd1234"
+    When I activate the user "behat-pa3-admin@publicguardian.gov.uk" with password "Abcd1234"
     When I fill in the following:
       | user_details_jobTitle  | Solicitor assistant |
       | user_details_phoneMain | 20000000002         |
@@ -247,8 +244,7 @@ Feature: PA team setup
       | team_member_account_roleName_1 | ROLE_PA_TEAM_MEMBER                             |
     And I press "team_member_account_save"
     Then the form should be valid
-    When emails are sent from "deputy" area
-    And I activate the user with password "Abcd1234"
+    When I activate the user "behat-pa3-team-member@publicguardian.gov.uk" with password "Abcd1234"
     When I fill in the following:
       | user_details_jobTitle  | Solicitor helper   |
       | user_details_phoneMain | 30000000003        |

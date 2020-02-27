@@ -26,8 +26,7 @@ Feature: Codeputy Self Registration
       | self_registration_clientLastname  | Jones                                             |
       | self_registration_caseNumber      | 00000000                                          |
     And I press "self_registration_save"
-    And the last email containing a link matching "/user/activate/" should have been sent to "behat-jack.goodby+noncodep@digital.justice.gov.uk"
-    When I activate the user with password "Abcd1234"
+    And I activate the "behat-jack.goodby+noncodep@digital.justice.gov.uk" user with password "Abcd1234"
     And I fill in the following:
       | user_details_address1       | Address1     |
       | user_details_addressCountry | GB           |
@@ -104,12 +103,9 @@ Feature: Codeputy Self Registration
     Then the form should be valid
     Then I should see "Please check your email"
     And I should see "We've sent you a link to behat-jack.goodby+mld1@digital.justice.gov.uk"
-    And the last email containing a link matching "/user/activate/" should have been sent to "behat-jack.goodby+mld1@digital.justice.gov.uk"
 
     # 1st codep registers fully
-    When I open the "/user/activate/" link from the email
-    Then the response status code should be 200
-    When I activate the user with password "Abcd1234"
+    When I activate the user "behat-jack.goodby+mld1@digital.justice.gov.uk" with password "Abcd1234"
     Then the URL should match "/user/details"
     When I fill in the following:
       | user_details_address1       | Address1     |
@@ -174,9 +170,8 @@ Feature: Codeputy Self Registration
       | self_registration_clientLastname  | JONES                                      |
       | self_registration_caseNumber      | 22222222                                   |
     And I press "self_registration_save"
-      # Activate the deputy
-    And I open the "/user/activate/" link from the email
-    And I activate the user with password "Abcd1234"
+    # Activate the deputy
+    And I activate the user "behat-user-ndr-codep@publicguardian.gov.uk" with password "Abcd1234"
     And I go to "/login"
     And I fill in the following:
       | login_email     | behat-user-ndr-codep@publicguardian.gov.uk |
