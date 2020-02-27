@@ -19,14 +19,14 @@ Feature: Codeputy Self Registration
     And I fill in the following:
       | self_registration_firstname       | Jack                                              |
       | self_registration_lastname        | Goodby                                            |
-      | self_registration_email_first     | behat-jack.goodby+noncodep@digital.justice.gov.uk |
-      | self_registration_email_second    | behat-jack.goodby+noncodep@digital.justice.gov.uk |
+      | self_registration_email_first     | behat-jack.goodby-noncodep@digital.justice.gov.uk |
+      | self_registration_email_second    | behat-jack.goodby-noncodep@digital.justice.gov.uk |
       | self_registration_postcode        | AA1 2BB                                           |
       | self_registration_clientFirstname | Jim                                               |
       | self_registration_clientLastname  | Jones                                             |
       | self_registration_caseNumber      | 00000000                                          |
     And I press "self_registration_save"
-    And I activate the "behat-jack.goodby+noncodep@digital.justice.gov.uk" user with password "Abcd1234"
+    And I activate the user "behat-jack.goodby-noncodep@digital.justice.gov.uk" with password "Abcd1234"
     And I fill in the following:
       | user_details_address1       | Address1     |
       | user_details_addressCountry | GB           |
@@ -45,7 +45,7 @@ Feature: Codeputy Self Registration
     And I set the report end date to "31/12/2016"
     Then the URL should match "/lay"
     Then I go to "/logout"
-    Given I am logged in as "behat-jack.goodby+noncodep@digital.justice.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-jack.goodby-noncodep@digital.justice.gov.uk" with password "Abcd1234"
     Then the URL should match "/lay"
     And I should not see the "codeputies" region
 
@@ -58,8 +58,8 @@ Feature: Codeputy Self Registration
     And I fill in the following:
       | self_registration_firstname       | Jack                                          |
       | self_registration_lastname        | Goodby                                        |
-      | self_registration_email_first     | behat-jack.goodby+mld1@digital.justice.gov.uk |
-      | self_registration_email_second    | behat-jack.goodby+mld1@digital.justice.gov.uk |
+      | self_registration_email_first     | behat-jack.goodby-mld1@digital.justice.gov.uk |
+      | self_registration_email_second    | behat-jack.goodby-mld1@digital.justice.gov.uk |
       | self_registration_postcode        | DY9 0RS                                       |
       | self_registration_clientFirstname | Patricia                                      |
       | self_registration_clientLastname  | Jarvis                                        |
@@ -102,10 +102,10 @@ Feature: Codeputy Self Registration
     When I press "self_registration_save"
     Then the form should be valid
     Then I should see "Please check your email"
-    And I should see "We've sent you a link to behat-jack.goodby+mld1@digital.justice.gov.uk"
+    And I should see "We've sent you a link to behat-jack.goodby-mld1@digital.justice.gov.uk"
 
     # 1st codep registers fully
-    When I activate the user "behat-jack.goodby+mld1@digital.justice.gov.uk" with password "Abcd1234"
+    When I activate the user "behat-jack.goodby-mld1@digital.justice.gov.uk" with password "Abcd1234"
     Then the URL should match "/user/details"
     When I fill in the following:
       | user_details_address1       | Address1     |
@@ -132,18 +132,17 @@ Feature: Codeputy Self Registration
   @deputy
   Scenario: The first co-deputy logs in and sees the deputy area and invites a codeputy
     Given emails are sent from "deputy" area
-    When I am logged in as "behat-jack.goodby+mld1@digital.justice.gov.uk" with password "Abcd1234"
+    When I am logged in as "behat-jack.goodby-mld1@digital.justice.gov.uk" with password "Abcd1234"
     Then the URL should match "/lay"
     And I should see the "codeputies" region
     And I click on "invite-codeputy-button"
     When I fill in the following:
-      | co_deputy_invite_email       | behat-jack.goodby+mld2@gmail.com |
+      | co_deputy_invite_email       | behat-jack.goodby-mld2@gmail.com |
     And I press "co_deputy_invite_submit"
     Then the URL should match "/lay"
-    And I should see "behat-jack.goodby+mld2@gmail.com" in the "codeputies" region
+    And I should see "behat-jack.goodby-mld2@gmail.com" in the "codeputies" region
     And I should see "Awaiting registration" in the "codeputies" region
     And I should see "Edit/Resend invite" in the "codeputies" region
-    And the last email containing a link matching "/user/activate/" should have been sent to "behat-jack.goodby+mld2@gmail.com"
 
   @deputy
   Scenario: Admin logs in and sees placeholder text for the nameless invited codeputy

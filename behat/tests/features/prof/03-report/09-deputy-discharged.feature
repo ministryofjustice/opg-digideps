@@ -96,13 +96,9 @@ Feature: Prof deputy is discharged
       | self_registration_caseNumber      | 31000010                             |
     And I press "self_registration_save"
     Then I should see "Please check your email"
-    And the last email containing a link matching "/user/activate/" should have been sent to "behat-user2@publicguardian.gov.uk"
 
   Scenario: login and add user (deputy)
-    Given emails are sent from "deputy" area
-    When I am on "/logout"
-  # follow link
-    When I open the "/user/activate/" link from the email
+    When I open the activation page for "behat-user2@publicguardian.gov.uk"
     Then the response status code should be 200
     When I fill in the password fields with "Abcd1234"
     And I check "set_password_showTermsAndConditions"

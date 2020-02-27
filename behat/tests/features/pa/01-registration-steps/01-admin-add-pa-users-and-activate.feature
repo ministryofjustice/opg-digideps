@@ -27,14 +27,11 @@ Feature: Add PA users and activate PA user (journey)
     And I click on "admin-homepage"
     And I click on "send-activation-email" in the "user-behat-pa1publicguardiangovuk" region
     Then the response status code should be 200
-    And the last email containing a link matching "/user/activate/" should have been sent to "behat-pa1@publicguardian.gov.uk"
 
   Scenario: PA user registration steps
-    Given emails are sent from "admin" area
-    And I go to "/logout"
-    And I open the "/user/activate/" link from the email
+    When I open the activation page for "behat-pa1@publicguardian.gov.uk"
     # terms
-    When I press "agree_terms_save"
+    And I press "agree_terms_save"
     Then the following fields should have an error:
       | agree_terms_agreeTermsUse |
     When I check "agree_terms_agreeTermsUse"
@@ -79,7 +76,7 @@ Feature: Add PA users and activate PA user (journey)
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "send-activation-email" in the "user-behat-pa2publicguardiangovuk" region
     And I go to "/logout"
-    And I open the "/user/activate/" link from the email
+    When I open the activation page for "behat-pa2@publicguardian.gov.uk"
     # terms
     When I check "agree_terms_agreeTermsUse"
     And I press "agree_terms_save"
@@ -105,7 +102,7 @@ Feature: Add PA users and activate PA user (journey)
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "send-activation-email" in the "user-behat-pa3publicguardiangovuk" region
     And I go to "/logout"
-    And I open the "/user/activate/" link from the email
+    When I open the activation page for "behat-pa3@publicguardian.gov.uk"
     # terms
     When I check "agree_terms_agreeTermsUse"
     And I press "agree_terms_save"

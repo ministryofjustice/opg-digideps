@@ -2,10 +2,7 @@ Feature: deputy / user / set password
 
     @deputy
     Scenario: login and add user (deputy)
-        Given emails are sent from "deputy" area
-        Given I am on "/logout"
-        # follow link
-        When I open the "/user/activate/" link from the email
+        When I open the activation page for "behat-user@publicguardian.gov.uk"
         Then the response status code should be 200
          # empty
         When I fill in the password fields with ""
@@ -56,14 +53,9 @@ Feature: deputy / user / set password
 
     @ndr
     Scenario: login and add user (deputy ndr)
-        Given emails are sent from "admin" area
-        Given I am on "/logout"
-       # follow link as it is
-        When I open the "/user/activate/" link from the email
-        Then the response status code should be 200
-        And I activate the user with password "Abcd1234"
-       # test login
-        When I go to "logout"
+        When I activate the user "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
+        # test login
+        And I go to "logout"
         And I go to "/login"
         And I fill in the following:
             | login_email     | behat-user-ndr@publicguardian.gov.uk |

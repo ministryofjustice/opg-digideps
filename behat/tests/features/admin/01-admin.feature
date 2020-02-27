@@ -17,7 +17,7 @@ Feature: admin / admin
 
 
   Scenario: login and add user (admin)
-    When I activate the user "behat-admin-user@publicguardian.gov.uk" with password "Abcd1234"
+    When I activate the admin user "behat-admin-user@publicguardian.gov.uk" with password "Abcd1234"
     Then I should not see an "#error-summary" element
     And I should be on "/user/details"
 

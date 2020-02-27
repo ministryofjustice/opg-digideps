@@ -115,6 +115,21 @@ trait UserTrait
     }
 
     /**
+     * @When I activate the admin user :email with password :password
+     */
+    public function iActivateTheAdminUserAndSetThePasswordTo($email, $password)
+    {
+        $this->visitAdminPath('/logout');
+        $this->openActivationOrPasswordResetPage(true, 'activation', $email);
+        $this->assertResponseStatus(200);
+        $this->fillField('set_password_password_first', $password);
+        $this->fillField('set_password_password_second', $password);
+        $this->pressButton('set_password_save');
+        $this->theFormShouldBeValid();
+        $this->assertResponseStatus(200);
+    }
+
+    /**
      * @When I activate the named deputy :email with password :password
      */
     public function iActivateTheNamedDeputyAndSetThePasswordTo($email, $password)
@@ -296,7 +311,7 @@ trait UserTrait
     {
         $ndrStatus = 'NDR-' . $ndrStatus;
         $this->iCreateTheUserWithEmailAndPostcode($ndrStatus, $depType, 'Lay', 'Dep', $email, 'SW11AA');
-        $this->iActivateTheUserAndSetThePasswordTo($password);
+        $this->iActivateTheUserAndSetThePasswordTo($email, $password);
 
         $this->iAddTheFollowingUsersToCASREC(new TableNode([
             ['Case', 'Surname', 'Deputy No', 'Dep Surname', 'Dep Postcode', 'Typeofrep'],
