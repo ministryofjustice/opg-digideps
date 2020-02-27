@@ -101,36 +101,31 @@ class MailFactoryTest extends TestCase
      */
     public function createActivationEmail()
     {
-        $this->router->generate('homepage', [])->shouldBeCalled()->willReturn('/homepage');
         $this->router->generate('user_activate', [
             'action' => 'activate',
             'token'  => 'regToken'
-        ])->shouldBeCalled()->willReturn('/user-activate/regToken');
+        ])->shouldBeCalled()->willReturn('/activate/regToken');
+
+        $this->router->generate('register', [])
+            ->shouldBeCalled()
+            ->willReturn('/register');
 
         $this->translator->trans('activation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
-        $this->translator->trans('activation.subject', [], 'email')->shouldBeCalled()->willReturn('Activation Subject');
-
-        $expectedViewParams = [
-            'name'             => 'Joe Bloggs',
-            'domain'           => 'https://front.base.url/homepage',
-            'link'             => 'https://front.base.url/user-activate/regToken',
-            'tokenExpireHours' => 48,
-            'homepageUrl'      => 'https://front.base.url/homepage',
-            'recipientRole'    => 'default'
-        ];
-
-        $this->templating->render('AppBundle:Email:user-activate.html.twig', $expectedViewParams)->shouldBeCalled()->willReturn('<html>Rendered body</html>');
-        $this->templating->render('AppBundle:Email:user-activate.text.twig', $expectedViewParams)->shouldBeCalled()->willReturn('Rendered body');
 
         $email = ($this->generateSUT())->createActivationEmail($this->layDeputy);
 
-        self::assertEquals('digideps+from@digital.justice.gov.uk', $email->getFromEmail());
+        self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
         self::assertEquals('OPG', $email->getFromName());
         self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
         self::assertEquals('Joe Bloggs', $email->getToName());
-        self::assertEquals('Activation Subject', $email->getSubject());
-        self::assertStringContainsString('<html>Rendered body</html>', $email->getBodyHtml());
-        self::assertStringContainsString('Rendered body', $email->getBodyText());
+        self::assertEquals(MailFactory::ACTIVATION_TEMPLATE_ID, $email->getTemplate());
+
+        $expectedTemplateParams = [
+            'activationLink' => 'https://front.base.url/activate/regToken',
+            'registerLink' => 'https://front.base.url/register',
+        ];
+
+        self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 
     /**
