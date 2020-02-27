@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model\SelfRegisterData;
 use AppBundle\Service\DeputyProvider;
@@ -220,18 +221,19 @@ class UserController extends AbstractController
             $emailAddress = $user->getEmail();
             $disguisedEmail = '***' . substr($emailAddress, 3);
             $logger->warning('Reset password request for : ' . $emailAddress);
-            /* @var $user EntityDir\User */
-            $user = $this->getRestClient()->userRecreateToken($user->getEmail(), 'pass-reset');
-            if (empty($user)) {
+
+            try {
+                $user = $this->getRestClient()->userRecreateToken($user->getEmail(), 'pass-reset');
+
+                $logger->warning('Sending reset email to ' . $disguisedEmail);
+
+                $resetPasswordEmail = $this->getMailFactory()->createResetPasswordEmail($user);
+
+                $this->getMailSender()->send($resetPasswordEmail, ['text', 'html']);
+                $logger->warning('Email sent to ' . $disguisedEmail);
+            } catch (RestClientException $e) {
                 $logger->warning('Email ' . $emailAddress . ' not found');
             }
-
-            $logger->warning('Sending reset email to ' . $disguisedEmail);
-
-            $resetPasswordEmail = $this->getMailFactory()->createResetPasswordEmail($user);
-
-            $this->getMailSender()->send($resetPasswordEmail, ['text', 'html']);
-            $logger->warning('Email sent to ' . $disguisedEmail);
 
             // after details are added, admin users to go their homepage, deputies go to next step
             return $this->redirect($this->generateUrl('password_sent'));
