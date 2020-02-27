@@ -14,14 +14,11 @@ Feature: Add PROF users and activate PROF user (journey)
     And I click on "admin-homepage"
     And I click on "send-activation-email" in the "user-behat-prof1publicguardiangovuk" region
     Then the response status code should be 200
-    And the last email containing a link matching "/user/activate/" should have been sent to "behat-prof1@publicguardian.gov.uk"
 
   Scenario: PROF user registration steps
-    Given emails are sent from "admin" area
-    And I go to "/logout"
-    And I open the "/user/activate/" link from the email
+    When I open the activation page for "behat-prof1@publicguardian.gov.uk"
     # terms
-    When I press "agree_terms_save"
+    And I press "agree_terms_save"
     Then the following fields should have an error:
       | agree_terms_agreeTermsUse |
     When I check "agree_terms_agreeTermsUse"
@@ -57,7 +54,7 @@ Feature: Add PROF users and activate PROF user (journey)
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "send-activation-email" in the "user-behat-prof2publicguardiangovuk" region
     And I go to "/logout"
-    And I open the "/user/activate/" link from the email
+    When I open the activation page for "behat-prof2@publicguardian.gov.uk"
     # terms
     When I check "agree_terms_agreeTermsUse"
     And I press "agree_terms_save"
@@ -83,7 +80,7 @@ Feature: Add PROF users and activate PROF user (journey)
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "send-activation-email" in the "user-behat-prof3publicguardiangovuk" region
     And I go to "/logout"
-    And I open the "/user/activate/" link from the email
+    When I open the activation page for "behat-prof3@publicguardian.gov.uk"
     # terms
     When I check "agree_terms_agreeTermsUse"
     And I press "agree_terms_save"
@@ -111,7 +108,7 @@ Feature: Add PROF users and activate PROF user (journey)
     And "behat-prof-org-1@org-1.co.uk" has been added to the "org-1.co.uk" organisation
     And I add the client with case number "03000025" to be deputised by email "behat-prof-org-1@org-1.co.uk"
     And I go to "/logout"
-    And I open the "/user/activate/" link from the email
+    When I open the activation page for "behat-prof-org-1@org-1.co.uk"
     When I check "agree_terms_agreeTermsUse"
     And I press "agree_terms_save"
     Then the form should be valid
@@ -134,8 +131,8 @@ Feature: Add PROF users and activate PROF user (journey)
     And I add the client with case number "03000026" to be deputised by email "behat-prof-org-2@org-1.co.uk"
     And I click on "send-activation-email" in the "user-behat-prof-org-2org-1couk" region
     And I go to "/logout"
-    And I open the "/user/activate/" link from the email
-    When I check "agree_terms_agreeTermsUse"
+    When I open the activation page for "behat-prof-org-2@org-1.co.uk"
+    And I check "agree_terms_agreeTermsUse"
     And I press "agree_terms_save"
     Then the form should be valid
     When I fill in the password fields with "Abcd1234"
@@ -158,8 +155,8 @@ Feature: Add PROF users and activate PROF user (journey)
     And I add the client with case number "03000028" to be deputised by email "behat-prof-org-3@org-2.co.uk"
     And I click on "send-activation-email" in the "user-behat-prof-org-3org-2couk" region
     And I go to "/logout"
-    And I open the "/user/activate/" link from the email
-    When I check "agree_terms_agreeTermsUse"
+    When I open the activation page for "behat-prof-org-3@org-2.co.uk"
+    And I check "agree_terms_agreeTermsUse"
     And I press "agree_terms_save"
     Then the form should be valid
     When I fill in the password fields with "Abcd1234"

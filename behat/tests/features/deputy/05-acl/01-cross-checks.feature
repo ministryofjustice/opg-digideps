@@ -25,4 +25,3 @@ Feature: deputy / acl / cross domain (admin and deputy) checks
         When I click on "forgotten-password"
         And I fill in "password_forgotten_email" with "behat-lay-deputy-102@publicguardian.gov.uk"
         And I press "password_forgotten_submit"
-        Then the last email should have been sent to "behat-lay-deputy-102@publicguardian.gov.uk"
