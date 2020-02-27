@@ -11,9 +11,10 @@ use AppBundle\Service\UserService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\Security as SecurityHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
@@ -51,7 +52,7 @@ class UserController extends RestController
     private $userVoter;
 
     /**
-     * @var Security
+     * @var SecurityHelper
      */
     private $securityHelper;
 
@@ -61,7 +62,7 @@ class UserController extends RestController
         UserRepository $userRepository,
         ClientRepository $clientRepository,
         UserVoter $userVoter,
-        Security $security
+        SecurityHelper $securityHelper
     )
     {
         $this->userService = $userService;
@@ -69,7 +70,7 @@ class UserController extends RestController
         $this->userRepository = $userRepository;
         $this->clientRepository = $clientRepository;
         $this->userVoter = $userVoter;
-        $this->securityHelper = $security;
+        $this->securityHelper = $securityHelper;
     }
 
     /**

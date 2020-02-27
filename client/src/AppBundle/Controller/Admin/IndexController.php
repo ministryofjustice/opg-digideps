@@ -4,7 +4,6 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Exception\DisplayableException;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use AppBundle\Security\UserVoter;
@@ -241,7 +240,7 @@ class IndexController extends AbstractController
         $token = new UsernamePasswordToken($loggedInUser, 'credentials', 'memory');
         $canDelete = $this->userVoter->vote($token, $userToDelete, [UserVoter::DELETE_USER]);
 
-        if ($canDelete === -1) {
+        if ($canDelete === UserVoter::ACCESS_DENIED) {
             $this->renderError('Unable to delete this user', Response::HTTP_FORBIDDEN);
         }
 
