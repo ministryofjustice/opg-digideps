@@ -1,15 +1,16 @@
 Feature: Organisation deputyship updates
 
   Scenario: Apply deputyship updates via CSV
-    Given the following users exist:
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And the following users exist:
       | ndr      | deputyType | firstName | lastName | email                                 | postCode | activated |
       | disabled | PROF       | New Dep1  | Surname1 | new-behat-prof1@publicguardian.gov.uk | SW1      | true      |
       | disabled | PROF       | New Dep2  | Surname1 | behat-prof1@example.com1              | SW2      | true      |
       | disabled | PROF       | New Dep3  | Surname1 | behat-prof1@example.com2              | SW3      | true      |
-    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     # upload PROF updates
-    When I click on "admin-upload-pa"
-    When I attach the file "behat-prof-org-updates.csv" to "admin_upload_file"
+    When I go to admin page "/"
+    And I click on "admin-upload-pa"
+    And I attach the file "behat-prof-org-updates.csv" to "admin_upload_file"
     And I press "admin_upload_upload"
     And the organisation "publicguardian.gov.uk" is active
     And "new-behat-prof1@publicguardian.gov.uk" has been added to the "publicguardian.gov.uk" organisation
