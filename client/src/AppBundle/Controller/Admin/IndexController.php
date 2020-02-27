@@ -7,6 +7,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
+use AppBundle\Security\UserVoter;
 use AppBundle\Service\CsvUploader;
 use AppBundle\Service\DataImporter\CsvToArray;
 use AppBundle\Service\OrgService;
@@ -29,9 +30,15 @@ class IndexController extends AbstractController
      */
     private $orgService;
 
-    public function __construct(OrgService $orgService)
+    /**
+     * @var UserVoter
+     */
+    private $userVoter;
+
+    public function __construct(OrgService $orgService, UserVoter $userVoter)
     {
         $this->orgService = $orgService;
+        $this->userVoter = $userVoter;
     }
 
     /**
@@ -231,14 +238,13 @@ class IndexController extends AbstractController
         /** @var EntityDir\User $loggedInUser */
         $loggedInUser = $this->getUser();
 
-        if (!$loggedInUser->isAdminOrSuperAdmin()) {
-            $message = $userToDelete->isAdminOrSuperAdmin() ? 'Only Super Admins can delete Admins or Super Admins' : 'Only Admins or Super Admins can delete users';
-            $this->renderError($message, Response::HTTP_FORBIDDEN);
+        $token = new UsernamePasswordToken($loggedInUser, 'credentials', 'memory');
+        $canDelete = $this->userVoter->vote($token, $userToDelete, [UserVoter::DELETE_USER]);
+
+        if ($canDelete === -1) {
+            $this->renderError('Unable to delete this user', Response::HTTP_FORBIDDEN);
         }
 
-        if ($loggedInUser->getId() === $userToDelete->getId()) {
-            $this->renderError('Cannot delete logged in user', Response::HTTP_BAD_REQUEST);
-        }
         return ['user' => $userToDelete];
     }
 

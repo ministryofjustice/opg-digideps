@@ -101,7 +101,7 @@
 
     {% if action is defined %}
         {% if action == 'edit' %}
-            {% if app.user.canDeleteUser(user) %}
+            {% if is_granted('delete-user', user) %}
                 {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
                     transDomain: 'admin',
                     linkButtonLabel: user.getClients|length > 0 ? 'Delete User and Client' : 'Delete user',

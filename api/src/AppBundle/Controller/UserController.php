@@ -6,12 +6,14 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\Repository\ClientRepository;
 use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
+use AppBundle\Security\UserVoter;
 use AppBundle\Service\UserService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
@@ -24,6 +26,7 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 class UserController extends RestController
 {
     const DELETABLE_ROLES = ['ROLE_LAY_DEPUTY', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'];
+
     /**
      * @var UserService
      */
@@ -44,17 +47,31 @@ class UserController extends RestController
      */
     private $clientRepository;
 
+    /**
+     * @var UserVoter
+     */
+    private $userVoter;
+
+    /**
+     * @var Security
+     */
+    private $security;
+
     public function __construct(
         UserService $userService,
         EncoderFactoryInterface $encoderFactory,
         UserRepository $userRepository,
-        ClientRepository $clientRepository
+        ClientRepository $clientRepository,
+        UserVoter $userVoter,
+        Security $security
     )
     {
         $this->userService = $userService;
         $this->encoderFactory = $encoderFactory;
         $this->userRepository = $userRepository;
         $this->clientRepository = $clientRepository;
+        $this->userVoter = $userVoter;
+        $this->security = $security;
     }
 
     /**
@@ -251,9 +268,8 @@ class UserController extends RestController
 
     /**
      * Delete user with clients.
-     * //TODO move to UserService
      *
-     * @Route("/{id}", methods={"DELETE"})
+     * @Route("/{id}/{deletorRole}", methods={"DELETE"})
      * @Security("has_role('ROLE_ADMIN')")
      *
      * @param int $id
@@ -264,27 +280,30 @@ class UserController extends RestController
     public function delete($id)
     {
         /** @var User $user */
-        $user = $this->userRepository->find($id);
+        $deletee = $this->userRepository->find($id);
 
-        if (!in_array($user->getRoleName(),self::DELETABLE_ROLES)) {
-            throw $this->createAccessDeniedException('Cannot delete ' . $user->getRoleName() . ' users');
-        }
+        /** @var TokenInterface $user */
+        $token = $this->security->getToken();
 
-        $clients = $user->getClients();
+        $canDelete = $this->userVoter->vote($token, $deletee, [UserVoter::DELETE_USER]);
 
-        if (count($clients) > 1) {
-            throw $this->createAccessDeniedException('Cannot delete user with multiple clients');
-        }
+        $clients = $deletee->getClients();
 
-        // delete clients (max 1)
-        foreach ($clients as $client) {
-            if (count($client->getReports()) > 0) {
-                throw $this->createAccessDeniedException('Cannot delete user with reports');
+        if ($canDelete === -1) {
+            if (count($clients) > 1) {
+                $errMessage = 'Cannot delete a user with multiple clients';
+            } elseif ($clients[0]->getReports() > 0) {
+                $errMessage = 'Cannot delete user with reports';
+            } else {
+                $errMessage = sprintf("A %s cannot delete a %s", $token->getUser()->getRoleName(), $deletee->getRoleName());
             }
-            $this->getEntityManager()->remove($client);
+
+            throw $this->createAccessDeniedException($errMessage);
         }
 
-        $this->getEntityManager()->remove($user);
+        $this->getEntityManager()->remove($clients[0]);
+        $this->getEntityManager()->remove($deletee);
+
         $this->getEntityManager()->flush();
 
         return [];

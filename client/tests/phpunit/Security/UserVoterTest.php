@@ -24,9 +24,7 @@ class UserVoterTest extends TestCase
         /** @var UserVoter $sut */
         $sut = new UserVoter($dm->reveal());
 
-        $token = new UsernamePasswordToken(
-            $deletor, 'credentials', 'memory'
-        );
+        $token = new UsernamePasswordToken($deletor, 'credentials', 'memory');
 
         self::assertEquals($expectedPermission, $sut->vote($token, $deletee, [UserVoter::DELETE_USER]));
     }
