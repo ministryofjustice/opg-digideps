@@ -194,32 +194,6 @@ class MailFactory
     }
 
     /**
-     * @param User $user
-     *
-     * @return ModelDir\Email
-     */
-    public function createChangePasswordEmail(User $user)
-    {
-        $email = new ModelDir\Email();
-
-        $area = $this->getUserArea($user);
-
-        $viewParams = [
-            'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
-        ];
-
-        $email
-            ->setFromEmail($this->emailParams['from_email'])
-            ->setFromName($this->translate('changePassword.fromName'))
-            ->setToEmail($user->getEmail())
-            ->setToName($user->getFirstname())
-            ->setSubject($this->translate('changePassword.subject'))
-            ->setBodyHtml($this->templating->render('AppBundle:Email:change-password.html.twig', $viewParams));
-
-        return $email;
-    }
-
-    /**
      * Get user area depending on the role
      *
      * @param User $user
