@@ -56,6 +56,8 @@ class UserFactory
                 return 'ROLE_LAY_DEPUTY';
             case 'AD':
                 return 'ROLE_AD';
+            case 'ADMIN':
+                return 'ROLE_ADMIN';
             default:
                 return 'ROLE_' . $roleName . '_NAMED';
         }
