@@ -48,12 +48,12 @@ trait UserTrait
     }
 
     /**
+     * it's assumed you are logged as an admin and you are on the admin homepage (with add user form).
+     *
      * @When I create a new :ndrType :role user :firstname :lastname with email :email and postcode :postcode
      */
     public function iCreateTheUserWithEmailAndPostcode($ndrType, $role, $firstname, $lastname, $email, $postcode = '')
     {
-        $this->iAmLoggedInAsWithPassword('admin@publicguardian.gov.uk', 'Abcd1234');
-
         $this->clickOnBehatLink('user-add-new');
         $this->fillField('admin_email', $email);
         $this->fillField('admin_firstname', $firstname);
