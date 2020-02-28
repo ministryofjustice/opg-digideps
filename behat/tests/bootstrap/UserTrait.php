@@ -63,8 +63,6 @@ trait UserTrait
      */
     public function usersExist(TableNode $table)
     {
-        $this->iAmLoggedInAsWithPassword('admin@publicguardian.gov.uk', 'Abcd1234');
-
         foreach ($table as $inputs) {
             $this->assertValidRole($inputs['deputyType']);
 

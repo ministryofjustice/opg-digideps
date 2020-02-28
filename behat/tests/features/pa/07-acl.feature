@@ -95,11 +95,11 @@ Feature: PA cannot access other's PA's reports and clients
     Then the form should be valid
 
   Scenario: Admin activates PA Org 1 deputy
-    Given emails are sent from "admin" area
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And emails are sent from "admin" area
     And the following users exist:
       | ndr | deputyType | firstName | lastName | email | postCode | activated |
       | disabled | PA | Org1 Case | Worker | behat-pa-org1@pa-org1.gov.uk | SW1 | false |
-    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     # simulate existing deputies with clients by adding entry to deputy_case table
     And I add the client with case number "40000041" to be deputised by email "behat-pa-org1@pa-org1.gov.uk"
     # activate PA Org 1 user
@@ -124,11 +124,11 @@ Feature: PA cannot access other's PA's reports and clients
     Then the form should be valid
 
   Scenario: Admin activates PA Org 2 deputy
-    Given emails are sent from "admin" area
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And emails are sent from "admin" area
     And the following users exist:
       | ndr | deputyType | firstName | lastName | email | postCode | activated |
       | disabled | PA | Org2 Case | Worker | behat-pa-org2@pa-org2.gov.uk | SW1 | false |
-    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     # simulate existing deputies with clients by adding entry to deputy_case table
     And I add the client with case number "40000042" to be deputised by email "behat-pa-org2@pa-org2.gov.uk"
    # activate PA Org 1 user

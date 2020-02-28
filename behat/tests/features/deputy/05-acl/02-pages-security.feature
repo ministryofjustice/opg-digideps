@@ -4,10 +4,11 @@ Feature: deputy / acl / security on pages
   Scenario: create another user with client and report with data
     # restore status of first report before submitting
     Given emails are sent from "admin" area
-    And I load the application status from "report-submit-pre"
+    Given I load the application status from "report-submit-pre"
     And I add the following users to CASREC:
       | Case     | Surname | Deputy No | Dep Surname | Dep Postcode | Typeofrep |
       | 12345ABC | Client  | D003      | User        | SW1H 9AJ     | OPG102    |
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And the following users exist:
       | ndr | deputyType | firstName | lastName | email | postCode | activated |
       | disabled | LAY | Malicious | User | behat-malicious@publicguardian.gov.uk | SW1H 9AJ | true |

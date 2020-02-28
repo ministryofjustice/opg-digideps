@@ -1,10 +1,10 @@
 Feature: Organisation membership
 
   Scenario: Set up organisation fixture
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And the following users exist:
       | ndr | deputyType | firstName | lastName | email | postCode |
       | disabled | PROF | Main | ERZ Contact | main.contact@erz.example | HA4 |
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I am on admin page "/admin/organisations"
     When I follow "Add a new organisation"
     And I fill in "organisation_name" with "ERZ Solicitors"
@@ -64,10 +64,10 @@ Feature: Organisation membership
 
   @admin
   Scenario: Public domains: Admin can add users from different domains
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And the following users exist:
       | ndr | deputyType | firstName | lastName | email | postCode |
       | disabled | PROF | Rana | Kossak | rana.kossak@example.com | HA4 |
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I am on admin page "/admin/organisations"
     And I follow "john.smith@abc-solicitors.example.com"
     And I follow "Add someone to this organisation"
