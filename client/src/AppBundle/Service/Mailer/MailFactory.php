@@ -119,7 +119,6 @@ class MailFactory
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('activation.fromName'))
             ->setToEmail($user->getEmail())
-            ->setToName($user->getFullName())
             ->setTemplate(self::ACTIVATION_TEMPLATE_ID)
             ->setParameters($parameters);
 
@@ -148,7 +147,6 @@ class MailFactory
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('activation.fromName'))
             ->setToEmail($user->getEmail())
-            ->setToName($user->getFullName())
             ->setTemplate(self::INVITATION_TEMPLATE_ID)
             ->setParameters($parameters);
 
@@ -201,7 +199,6 @@ class MailFactory
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('resetPassword.fromName'))
             ->setToEmail($user->getEmail())
-            ->setToName($user->getFullName())
             ->setTemplate(self::RESET_PASSWORD_TEMPLATE_ID)
             ->setParameters($notifyParams);
     }
