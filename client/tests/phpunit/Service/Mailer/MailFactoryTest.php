@@ -117,7 +117,6 @@ class MailFactoryTest extends TestCase
         self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
         self::assertEquals('OPG', $email->getFromName());
         self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
-        self::assertEquals('Joe Bloggs', $email->getToName());
         self::assertEquals(MailFactory::ACTIVATION_TEMPLATE_ID, $email->getTemplate());
 
         $expectedTemplateParams = [
@@ -134,8 +133,6 @@ class MailFactoryTest extends TestCase
     public function createInvitationEmail()
     {
         $profDeputy = $this->generateUser()
-            ->setFirstname('Leonie')
-            ->setLastname('Wolny')
             ->setEmail('l.wolny@somesolicitors.org')
             ->setRoleName('ROLE_PROF_TEAM_MEMBER');
 
@@ -151,7 +148,6 @@ class MailFactoryTest extends TestCase
         self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
         self::assertEquals('OPG', $email->getFromName());
         self::assertEquals('l.wolny@somesolicitors.org', $email->getToEmail());
-        self::assertEquals('Leonie Wolny', $email->getToName());
         self::assertEquals(MailFactory::INVITATION_TEMPLATE_ID, $email->getTemplate());
 
         $expectedTemplateParams = [
@@ -217,7 +213,6 @@ class MailFactoryTest extends TestCase
         self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
         self::assertEquals('OPG', $email->getFromName());
         self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
-        self::assertEquals('Joe Bloggs', $email->getToName());
         self::assertEquals(MailFactory::RESET_PASSWORD_TEMPLATE_ID, $email->getTemplate());
 
         $expectedTemplateParams = [
