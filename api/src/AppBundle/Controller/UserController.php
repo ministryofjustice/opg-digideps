@@ -291,7 +291,7 @@ class UserController extends RestController
         if ($canDelete === UserVoter::ACCESS_DENIED) {
             if (count($clients) > 1) {
                 $errMessage = 'Cannot delete a user with multiple clients';
-            } elseif ($clients[0]->getReports() > 0) {
+            } elseif (count($clients) === 1 && $clients[0]->getReports() > 0) {
                 $errMessage = 'Cannot delete user with reports';
             } else {
                 $errMessage = sprintf("A %s cannot delete a %s", $token->getUser()->getRoleName(), $deletee->getRoleName());
@@ -300,7 +300,10 @@ class UserController extends RestController
             throw $this->createAccessDeniedException($errMessage);
         }
 
-        $this->getEntityManager()->remove($clients[0]);
+        if ($deletee->getFirstClient()) {
+            $this->getEntityManager()->remove($clients[0]);
+        }
+
         $this->getEntityManager()->remove($deletee);
 
         $this->getEntityManager()->flush();

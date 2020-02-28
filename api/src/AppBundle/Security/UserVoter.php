@@ -103,7 +103,12 @@ class UserVoter extends Voter
             case User::ROLE_PROF_ADMIN:
                 return true;
             case User::ROLE_LAY_DEPUTY:
-                return count($deletee->getClients()) <= 1 && !$deletee->hasReports() ? true : false;
+                if (count($deletee->getClients()) <= 1) {
+                    if ($deletee->getFirstClient()) {
+                        $deletee->getFirstClient()->hasReport() ? false : true;
+                    }
+                    return true;
+                }
         }
 
         return $deletor->getRoleName() === User::ROLE_SUPER_ADMIN ? true : false;
