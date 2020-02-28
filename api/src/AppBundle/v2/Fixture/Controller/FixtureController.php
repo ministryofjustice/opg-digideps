@@ -295,4 +295,52 @@ class FixtureController
 
         return $this->buildSuccessResponse($fromRequest, 'User created', Response::HTTP_OK);
     }
+
+    /**
+     * @Route("/createClientAttachDeputy", methods={"POST"})
+     * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
+     */
+    public function createClientAndAttachToDeputy(Request $request)
+    {
+        $fromRequest = json_decode($request->getContent(), true);
+
+        $client = $this->clientFactory->create([
+            "firstName" => $fromRequest['firstName'],
+            "lastName" => $fromRequest['lastName'],
+            "phone" => $fromRequest['phone'],
+            "address" => $fromRequest['address'],
+            "address2" => $fromRequest['address2'],
+            "county" => $fromRequest['county'],
+            "postCode" => $fromRequest['postCode'],
+        ]);
+
+        /** @var User $deputy */
+        $deputy = $this->em->getRepository(User::class)->findOneBy(['email' => $fromRequest['deputyEmail']]);
+
+        if ($deputy === null) {
+            return $this->buildNotFoundResponse(sprintf("Could not find user with email address '%s'", $fromRequest['deputyEmail']));
+        }
+
+        $deputy->addClient($client);
+
+        $this->em->persist($deputy);
+        $this->em->flush();
+
+        return $this->buildSuccessResponse($fromRequest, 'User created', Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/getUserIDByEmail/{email}", methods={"GET"})
+     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     */
+    public function getUserIDByEmail(string $email)
+    {
+        $user = $this->userRepository->findOneBy(['email' => $email]);
+
+        if ($user !== null) {
+            return $this->buildSuccessResponse(['id' => $user->getId()], 'User found', Response::HTTP_OK);
+        } else {
+            return $this->buildNotFoundResponse("Could not find user with email address '$email'");
+        }
+    }
 }
