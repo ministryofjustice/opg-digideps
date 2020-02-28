@@ -42,8 +42,9 @@ class UserFactory
             ->setRoleName($roleName);
 
         if ($data['activated'] !== 'true') {
-            $user->setPassword($this->encoder->encodePassword($user, 'Abcd1234'))
-                ->setActive(false);
+            $user->setActive(false);
+        } else {
+            $user->setPassword($this->encoder->encodePassword($user, 'Abcd1234'));
         }
 
         return $user;

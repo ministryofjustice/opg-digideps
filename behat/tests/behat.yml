@@ -57,7 +57,7 @@ default:
 
         report-management:
             description: Coverage of report management features
-            paths: [ "%paths.base%/features/reportManagement" ]
+            paths: [ "%paths.base%/features/ReportManagement" ]
             contexts:
                 - DigidepsBehat\ReportManagement\ReportManagementFeatureContext
 
@@ -72,6 +72,14 @@ default:
             paths: [ "%paths.base%/features/registration" ]
             contexts:
                 - DigidepsBehat\Registration\RegistrationFeatureContext
+
+        user-management:
+            description: Coverage of user management features (deleteing, editing etc)
+            paths: [ "%paths.base%/features/UserManagement" ]
+            contexts:
+                - DigidepsBehat\UserManagement\UserManagementFeatureContext
+            filters:
+                tags: "@acs"
 
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:

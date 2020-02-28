@@ -98,9 +98,64 @@ class FixtureController extends AbstractController
                 "deputyEmail" => $request->query->get('email'),
                 "firstName" => $request->query->get('firstName'),
                 "lastName" => $request->query->get('lastName'),
-                "postCode" => $request->query->get('postCode')
+                "postCode" => $request->query->get('postCode'),
+                "activated" => $request->query->get('activated')
             ]));
 
         return new Response();
+    }
+
+    /**
+     * @Route("/createClientAttachDeputy", methods={"GET"})
+     * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
+     */
+    public function createClientAndAttachToDeputy(Request $request, KernelInterface $kernel)
+    {
+        if ($kernel->getEnvironment() === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
+        try {
+            $this
+                ->getRestClient()
+                ->post("v2/fixture/createClientAttachDeputy",
+                    json_encode([
+                        "firstName" => $request->query->get('firstName'),
+                        "lastName" => $request->query->get('lastName'),
+                        "phone" => $request->query->get('phone'),
+                        "address" => $request->query->get('address'),
+                        "address2" => $request->query->get('address2'),
+                        "county" => $request->query->get('county'),
+                        "postCode" => $request->query->get('postCode'),
+                        "deputyEmail" => $request->query->get('deputyEmail')]
+                    )
+                );
+        } catch(\Throwable $e) {
+            throw $e;
+        }
+
+        return new Response();
+    }
+
+    /**
+     * @Route("/getUserIDByEmail/{email}", methods={"GET"})
+     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     */
+    public function getUserIDByEmail(KernelInterface $kernel, string $email)
+    {
+        if ($kernel->getEnvironment() === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
+        /** @var array $response */
+        $response = json_decode($this
+            ->getRestClient()
+            ->get("v2/fixture/getUserIDByEmail/$email", 'response')->getBody(), true);
+
+        if ($response['success']) {
+            return new Response($response['data']['id']);
+        } else {
+            return new Response($response['message'], Response::HTTP_NOT_FOUND);
+        }
     }
 }
