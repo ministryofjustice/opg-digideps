@@ -17,12 +17,12 @@ trait UserTrait
     ];
 
     /**
+     * it's assumed you are logged as an admin and you are on the admin homepage (with add user form).
+     *
      * @Given the following users exist:
      */
     public function usersExist(TableNode $table)
     {
-        $this->iAmLoggedInAsWithPassword('admin@publicguardian.gov.uk', 'Abcd1234');
-
         foreach ($table as $inputs) {
             $this->assertValidRole($inputs['deputyType']);
 
