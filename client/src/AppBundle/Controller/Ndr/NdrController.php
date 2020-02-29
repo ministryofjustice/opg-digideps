@@ -236,14 +236,15 @@ class NdrController extends AbstractController
             $this->getRestClient()->put('ndr/' . $ndr->getId() . '/submit?documentId=' . $document->getId(), $ndr, ['submit']);
 
             /** @var User */
-            $user = $this->getUser();
+            $user = $this->getUserWithData(['user-clients', 'report', 'client-reports']);
+            $client = $user->getClients()[0];
 
             $pdfBinaryContent = $this->getPdfBinaryContent($ndr);
             $reportEmail = $this->getMailFactory()->createNdrEmail($user, $ndr, $pdfBinaryContent);
             $this->getMailSender()->send($reportEmail, ['html']);
 
             //send confirmation email
-            $reportConfirmEmail = $this->getMailFactory()->createNdrSubmissionConfirmationEmail($user, $ndr);
+            $reportConfirmEmail = $this->getMailFactory()->createNdrSubmissionConfirmationEmail($user, $ndr, $client->getActiveReport());
             $this->getMailSender()->send($reportConfirmEmail, ['text', 'html']);
 
             return $this->redirect($this->generateUrl('ndr_submit_confirmation', ['ndrId'=>$ndr->getId()]));

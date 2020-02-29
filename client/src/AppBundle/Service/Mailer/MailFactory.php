@@ -3,6 +3,7 @@
 namespace AppBundle\Service\Mailer;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Model as ModelDir;
 use AppBundle\Model\FeedbackReport;
@@ -20,6 +21,8 @@ class MailFactory
     const RESET_PASSWORD_TEMPLATE_ID = 'e7312e62-2602-4903-89e6-93ad943bacb1';
     const POST_SUBMISSION_FEEDBACK_TEMPLATE_ID = '862f1ce7-bde5-4397-be68-bd9e4537cff0';
     const GENERAL_FEEDBACK_TEMPLATE_ID = '63a25dfa-116f-4991-b7c4-35a79ac5061e';
+    const REPORT_SUBMITTED_CONFIRMATION_TEMPLATE_ID = '2f8fff09-5a71-446a-a220-d8a3dc78fa42';
+    const NDR_SUBMITTED_CONFIRMATION_TEMPLATE_ID = '96fcb7e1-d80f-4e0e-80c8-2c1237af8b10';
 
     const NOTIFY_FROM_EMAIL_ID = 'db930cb2-2153-4e2a-b3d0-06f7c7f92f37';
 
@@ -365,77 +368,91 @@ class MailFactory
 
     /**
      * @param User $user
-     * @param EntityDir\Report\Report $submittedReport
-     * @param EntityDir\Report        $newReport
+     * @param EntityDir\ReportInterface $submittedReport
+     * @param EntityDir\Report\Report $newReport
      *
      * @return ModelDir\Email
+     * @throws \Exception
      */
     public function createReportSubmissionConfirmationEmail(User $user, EntityDir\ReportInterface $submittedReport, EntityDir\Report\Report $newReport)
     {
-        $email = new ModelDir\Email();
+        /** @var ModelDir\Email $email */
+        $email = (new ModelDir\Email())
+            ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
+            ->setFromName($this->translator->trans('reportSubmissionConfirmation.fromName', [], 'email'))
+            ->setToEmail($user->getEmail())
+            ->setTemplate(self::REPORT_SUBMITTED_CONFIRMATION_TEMPLATE_ID);
 
-        $viewParams = [
-            'submittedReport' => $submittedReport,
-            'newReport'       => $newReport,
-            'fullDeputyName'  => $user->getFullName(),
-            'fullClientName'  => $submittedReport->getClient()->getFullname(),
-            'caseNumber'      => $submittedReport->getClient()->getCaseNumber(),
-            'homepageUrl'     => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
-            'recipientRole'   => self::getRecipientRole($user)
+        /** @var \DateTime $dateSubmittableFrom */
+        $dateSubmittableFrom = clone $submittedReport->getEndDate();
+        $dateSubmittableFrom->add(new \DateInterval('P1D'));
+
+        /** @var array $notifyParams */
+        $notifyParams = [
+            'clientFullname' => $submittedReport->getClient()->getFullname(),
+            'deputyFullname' => $user->getFullName(),
+            'orgIntro' => self::getRecipientRole($user) == 'default' ? '' : $this->buildOrgIntroText($submittedReport->getClient()),
+            'startDate' => $submittedReport->getStartDate()->format('d/m/Y'),
+            'endDate' => $submittedReport->getEndDate()->format('d/m/Y'),
+            'homepageURL' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
+            'newStartDate' => $newReport->getStartDate()->format('d/m/Y'),
+            'newEndDate' => $newReport->getEndDate()->format('d/m/Y'),
+            'EndDatePlus1' => $dateSubmittableFrom->format('d/m/Y'),
+            'PFA' => substr($submittedReport->getType(), 0, 3 ) === '104' ? 'no' : 'yes',
+            'lay' => $user->isLayDeputy() ? 'yes' : 'no'
         ];
 
-        $email
-            ->setFromEmail($this->emailParams['from_email'])
-            ->setFromName($this->translate('reportSubmissionConfirmation.fromName'))
-            ->setToEmail($user->getEmail())
-            ->setToName($user->getFirstname())
-            ->setSubject($this->translate('reportSubmissionConfirmation.subject', ['%clientFullname%' => $submittedReport->getClient()->getFullname()]))
-            ->setBodyHtml($this->templating->render('AppBundle:Email:report-submission-confirm.html.twig', $viewParams))
-            ->setBodyText($this->templating->render('AppBundle:Email:report-submission-confirm.text.twig', $viewParams));
+        $email->setParameters($notifyParams);
 
         return $email;
     }
 
     /**
-     * @param User $user
-     * @param EntityDir\Report\Report $submittedReport
-     * @param EntityDir\Report        $newReport
-     * @param $pdfBinaryContent
-     *
-     * @return ModelDir\Email
+     * @param EntityDir\Client $client
+     * @return string
      */
-    public function createOrgReportSubmissionConfirmationEmail(User $user, EntityDir\ReportInterface $submittedReport, EntityDir\ReportInterface $newReport)
+    private function buildOrgIntroText(EntityDir\Client $client): string
     {
-        $email = $this->createReportSubmissionConfirmationEmail($user, $submittedReport, $newReport);
-
-        return $email;
+        return $this->translator->trans(
+            'caseDetails',
+            ['%fullClientName%' => $client->getFullname(), '%caseNumber%' => $client->getCaseNumber()],
+            'email-report-submission-confirm'
+        );
     }
 
     /**
      * @param User $user
      * @param EntityDir\Ndr\Ndr $ndr
-     * @param EntityDir\Report  $newReport
-     *
+     * @param Report $report
      * @return ModelDir\Email
+     * @throws \Exception
      */
-    public function createNdrSubmissionConfirmationEmail(User $user, EntityDir\Ndr\Ndr $ndr)
+    public function createNdrSubmissionConfirmationEmail(User $user, EntityDir\Ndr\Ndr $ndr, Report $report)
     {
-        $email = new ModelDir\Email();
+        /** @var ModelDir\Email $email */
+        $email = (new ModelDir\Email())
+            ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
+            ->setFromName($this->translator->trans('ndrSubmissionConfirmation.fromName', [], 'email'))
+            ->setToEmail($user->getEmail())
+            ->setTemplate(self::NDR_SUBMITTED_CONFIRMATION_TEMPLATE_ID);
 
-        $viewParams = [
-            'homepageUrl'     => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
-            'deputyFirstName' => $user->getFirstname() . ' ' . $user->getLastname(),
-            'recipientRole'   => self::getRecipientRole($user)
+        /** @var \DateTime $dateSubmittableFrom */
+
+        $dateSubmittableFrom = clone $report->getEndDate();
+        $dateSubmittableFrom->add(new \DateInterval('P1D'));
+
+        /** @var array $notifyParams */
+        $notifyParams = [
+            'clientFullname' => $ndr->getClient()->getFullname(),
+            'deputyFullname' => $user->getFullName(),
+            'homepageURL' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
+            'startDate' => $report->getStartDate()->format('d/m/Y'),
+            'endDate' => $report->getEndDate()->format('d/m/Y'),
+            'EndDatePlus1' => $dateSubmittableFrom->format('d/m/Y'),
+            'PFA' => 'yes',
         ];
 
-        $email
-            ->setFromName($this->translate('ndrSubmissionConfirmation.fromName'))
-            ->setFromEmail($this->emailParams['from_email'])
-            ->setToEmail($user->getEmail())
-            ->setToName($user->getFirstname())
-            ->setSubject($this->translate('ndrSubmissionConfirmation.subject'))
-            ->setBodyHtml($this->templating->render('AppBundle:Email:ndr-submission-confirm.html.twig', $viewParams))
-            ->setBodyText($this->templating->render('AppBundle:Email:ndr-submission-confirm.text.twig', $viewParams));
+        $email->setParameters($notifyParams);
 
         return $email;
     }

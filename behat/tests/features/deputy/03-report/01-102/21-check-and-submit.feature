@@ -77,8 +77,6 @@ Feature: Report submit
         When I click on "return-to-reports-page"
         Then the URL should match "/lay"
         And the response status code should be 200
-        And the last email should contain "Thank you for submitting"
-        And the last email should contain "next annual deputy report (for 01/01/2017 to 31/12/2017)"
         And I save the application status into "report-submit-reports"
         And the report URL "overview" for "102 report" should not be accessible
         And the report URL "decisions/summary" for "102 report" should not be accessible

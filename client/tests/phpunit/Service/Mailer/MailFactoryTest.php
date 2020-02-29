@@ -3,11 +3,13 @@
 namespace AppBundle\Service\Mailer;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Model\FeedbackReport;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
@@ -75,9 +77,13 @@ class MailFactoryTest extends TestCase
             ->setCaseNumber('12345678');
 
         $this->submittedReport = (new Report())
-            ->setClient($this->client);
+            ->setClient($this->client)
+            ->setStartDate(new \DateTime('2017-03-24'))
+            ->setEndDate(new \DateTime('2018-03-23'));
 
-        $this->newReport = new Report();
+        $this->newReport = (new Report())
+            ->setStartDate(new \DateTime('2018-03-24'))
+            ->setEndDate(new \DateTime('2019-03-23'));
 
         $this->appBaseURLs = [
             'front' => 'https://front.base.url',
@@ -135,36 +141,132 @@ class MailFactoryTest extends TestCase
 
     /**
      * @test
+     * @dataProvider getLayReportTypes
      */
-    public function createOrgReportSubmissionConfirmationEmail()
+    public function createReportSubmissionConfirmationEmailForLayDeputy($reportType)
     {
-        $this->router->generate('homepage', [])->shouldBeCalled()->willReturn('/homepage');
-
         $this->translator->trans('reportSubmissionConfirmation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
-        $this->translator->trans('reportSubmissionConfirmation.subject', ['%clientFullname%' => 'Joanne Bloggs'], 'email')->shouldBeCalled()->willReturn('Submission Confirmation Subject');
+        $this->translator->trans(Argument::any())->shouldNotBeCalled();
 
-        $expectedViewParams = [
-            'submittedReport' => $this->submittedReport,
-            'newReport'       => $this->newReport,
-            'fullDeputyName'  => 'Joe Bloggs',
-            'fullClientName'  => 'Joanne Bloggs',
-            'caseNumber'      => '12345678',
-            'homepageUrl'     => 'https://front.base.url/homepage',
-            'recipientRole'   => 'default'
-        ];
+        $this->submittedReport->setType($reportType);
+        $email = ($this->generateSUT())->createReportSubmissionConfirmationEmail($this->layDeputy, $this->submittedReport, $this->newReport);
 
-        $this->templating->render('AppBundle:Email:report-submission-confirm.html.twig', $expectedViewParams)->shouldBeCalled()->willReturn('<html>Rendered body</html>');
-        $this->templating->render('AppBundle:Email:report-submission-confirm.text.twig', $expectedViewParams)->shouldBeCalled()->willReturn('Rendered body');
-
-        $email = ($this->generateSUT())->createOrgReportSubmissionConfirmationEmail($this->layDeputy, $this->submittedReport, $this->newReport);
-
-        self::assertEquals('digideps+from@digital.justice.gov.uk', $email->getFromEmail());
+        self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
+        self::assertEquals(MailFactory::REPORT_SUBMITTED_CONFIRMATION_TEMPLATE_ID, $email->getTemplate());
         self::assertEquals('OPG', $email->getFromName());
         self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
-        self::assertEquals('Joe', $email->getToName());
-        self::assertEquals('Submission Confirmation Subject', $email->getSubject());
-        self::assertStringContainsString('<html>Rendered body</html>', $email->getBodyHtml());
-        self::assertStringContainsString('Rendered body', $email->getBodyText());
+
+        $expectedTemplateParams = [
+            'clientFullname' => 'Joanne Bloggs',
+            'deputyFullname' => 'Joe Bloggs',
+            'orgIntro' => '',
+            'startDate' => '24/03/2017',
+            'endDate' => '23/03/2018',
+            'homepageURL' => 'https://front.base.url',
+            'newStartDate' => '24/03/2018',
+            'newEndDate' => '23/03/2019',
+            'EndDatePlus1' => '24/03/2018',
+            'PFA' => substr($reportType, 0, 3 ) === '104' ? 'no' : 'yes',
+            'lay' => 'yes'
+        ];
+
+        self::assertEquals($expectedTemplateParams, $email->getParameters());
+    }
+
+    public function getLayReportTypes(): array
+    {
+        return [
+            ['reportType' => '102'],
+            ['reportType' => '103'],
+            ['reportType' => '102-4'],
+            ['reportType' => '103-4'],
+            ['reportType' => '104'],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider getOrgReportTypes
+     */
+    public function createReportSubmissionConfirmationEmailForOrgDeputy($reportType, $role)
+    {
+        $this->translator->trans('reportSubmissionConfirmation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+
+        $clientFullName = $this->client->getFullname();
+        $caseNumber = $this->client->getCaseNumber();
+        $this->translator
+            ->trans('caseDetails', ['%fullClientName%' => $clientFullName, '%caseNumber%' => $caseNumber], 'email-report-submission-confirm')
+            ->shouldBeCalled()
+            ->willReturn('Client: Joanne Bloggs Case number: 12345678');
+
+        $this->submittedReport->setType($reportType);
+        $deputy = $this->generateUser($role);
+        $email = ($this->generateSUT())->createReportSubmissionConfirmationEmail($deputy, $this->submittedReport, $this->newReport);
+
+        self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
+        self::assertEquals(MailFactory::REPORT_SUBMITTED_CONFIRMATION_TEMPLATE_ID, $email->getTemplate());
+        self::assertEquals('OPG', $email->getFromName());
+        self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
+
+        $expectedTemplateParams = [
+            'clientFullname' => 'Joanne Bloggs',
+            'deputyFullname' => 'Joe Bloggs',
+            'orgIntro' => 'Client: Joanne Bloggs Case number: 12345678',
+            'startDate' => '24/03/2017',
+            'endDate' => '23/03/2018',
+            'homepageURL' => 'https://front.base.url',
+            'newStartDate' => '24/03/2018',
+            'newEndDate' => '23/03/2019',
+            'EndDatePlus1' => '24/03/2018',
+            'PFA' => substr($reportType, 0, 3 ) === '104' ? 'no' : 'yes',
+            'lay' => 'no'
+        ];
+
+        self::assertEquals($expectedTemplateParams, $email->getParameters());
+    }
+
+    public function getOrgReportTypes(): array
+    {
+        return [
+            ['reportType' => '102-5', 'role' => User::ROLE_PROF_NAMED],
+            ['reportType' => '103-5', 'role' => User::ROLE_PROF_NAMED],
+            ['reportType' => '102-5-4', 'role' => User::ROLE_PROF_NAMED],
+            ['reportType' => '103-5-4', 'role' => User::ROLE_PROF_NAMED],
+            ['reportType' => '104-5', 'role' => User::ROLE_PROF_NAMED],
+            ['reportType' => '102-6', 'role' => User::ROLE_PA_NAMED],
+            ['reportType' => '103-6', 'role' => User::ROLE_PA_NAMED],
+            ['reportType' => '102-6-4', 'role' => User::ROLE_PA_NAMED],
+            ['reportType' => '103-6-4', 'role' => User::ROLE_PA_NAMED],
+            ['reportType' => '104-6', 'role' => User::ROLE_PA_NAMED],
+        ];
+    }
+
+    /**
+     * @test
+     */
+    public function createNdrSubmissionConfirmationEmailTest()
+    {
+        $this->translator->trans('ndrSubmissionConfirmation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+
+        $ndr = (new Ndr())->setClient($this->client);
+        $email = ($this->generateSUT())->createNdrSubmissionConfirmationEmail($this->layDeputy, $ndr, $this->newReport);
+
+        self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
+        self::assertEquals(MailFactory::NDR_SUBMITTED_CONFIRMATION_TEMPLATE_ID, $email->getTemplate());
+        self::assertEquals('OPG', $email->getFromName());
+        self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
+
+        $expectedTemplateParams = [
+            'clientFullname' => 'Joanne Bloggs',
+            'deputyFullname' => 'Joe Bloggs',
+            'homepageURL' => 'https://front.base.url',
+            'startDate' => '24/03/2018',
+            'endDate' => '23/03/2019',
+            'EndDatePlus1' => '24/03/2019',
+            'PFA' => 'yes',
+        ];
+
+        self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 
     /**
@@ -282,7 +384,7 @@ class MailFactoryTest extends TestCase
     }
 
     // Using helper function to make user available in dataProvider
-    private function generateUser() : User
+    private function generateUser($role = User::ROLE_LAY_DEPUTY) : User
     {
         return (new User())
             ->setRegistrationToken('regToken')
@@ -290,6 +392,7 @@ class MailFactoryTest extends TestCase
             ->setFirstname('Joe')
             ->setLastname('Bloggs')
             ->setPhoneMain('01211234567')
-            ->setRoleName(User::ROLE_LAY_DEPUTY);
+            ->setPhoneAlternative('01217654321')
+            ->setRoleName($role);
     }
 }

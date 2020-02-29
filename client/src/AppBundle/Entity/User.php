@@ -763,6 +763,8 @@ class User implements AdvancedUserInterface, DeputyInterface
     public function setPhoneAlternative($phoneAlternative)
     {
         $this->phoneAlternative = $phoneAlternative;
+
+        return $this;
     }
 
     /**

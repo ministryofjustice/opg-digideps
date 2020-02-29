@@ -3,6 +3,8 @@
 namespace AppBundle\v2\Fixture\Controller;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Ndr\Ndr;
+use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\Entity\User;
 use AppBundle\Factory\OrganisationFactory;
@@ -66,7 +68,13 @@ class FixtureController
 
         $client = $this->createClient($fromRequest);
         $deputy = $this->createDeputy($fromRequest);
-        $this->createReport($fromRequest, $client);
+
+        if (strtolower($fromRequest['reportType']) == 'ndr') {
+            $this->createNdr($fromRequest, $client);
+            $deputy->setNdrEnabled(true);
+        } else {
+            $this->createReport($fromRequest, $client);
+        }
 
         if ($fromRequest['deputyType'] === User::TYPE_LAY) {
             $deputy->addClient($client);
@@ -124,6 +132,23 @@ class FixtureController
         ], $client);
 
         $this->em->persist($report);
+    }
+
+    /**
+     * @param array $fromRequest
+     * @param Client $client
+     */
+    private function createNdr(array $fromRequest, Client $client)
+    {
+        $ndr = new Ndr($client);
+
+        $this->em->persist($ndr);
+
+        if (isset($fromRequest['reportStatus']) && $fromRequest['reportStatus'] === Report::STATUS_READY_TO_SUBMIT) {
+            foreach (['visits_care', 'expenses', 'income_benefits', 'bank_accounts', 'assets', 'debts', 'actions', 'other_info'] as $section) {
+                $this->reportSection->completeSection($ndr, $section);
+            }
+        }
     }
 
     /**
