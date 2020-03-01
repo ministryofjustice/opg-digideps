@@ -78,8 +78,6 @@ default:
             paths: [ "%paths.base%/features/UserManagement" ]
             contexts:
                 - DigidepsBehat\UserManagement\UserManagementFeatureContext
-            filters:
-                tags: "@acs"
 
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:

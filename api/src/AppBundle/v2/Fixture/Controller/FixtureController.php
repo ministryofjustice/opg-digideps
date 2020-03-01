@@ -103,7 +103,8 @@ class FixtureController
         $deputy = $this->userFactory->create([
             'id' => $fromRequest['deputyEmail'],
             'deputyType' => $fromRequest['deputyType'],
-            'email' => $fromRequest['deputyEmail']
+            'email' => $fromRequest['deputyEmail'],
+            'activated'=> 'true',
         ]);
 
         $this->em->persist($deputy);
