@@ -234,15 +234,7 @@ class IndexController extends AbstractController
         /** @var EntityDir\User $userToDelete */
         $userToDelete = $this->getRestClient()->get("user/{$id}", 'User');
 
-        /** @var EntityDir\User $loggedInUser */
-        $loggedInUser = $this->getUser();
-
-        $token = new UsernamePasswordToken($loggedInUser, 'credentials', 'memory');
-        $canDelete = $this->userVoter->vote($token, $userToDelete, [UserVoter::DELETE_USER]);
-
-        if ($canDelete === UserVoter::ACCESS_DENIED) {
-            $this->renderError('Unable to delete this user', Response::HTTP_FORBIDDEN);
-        }
+        $this->denyAccessUnlessGranted(UserVoter::DELETE_USER, $userToDelete, 'Unable to delete this user');
 
         return ['user' => $userToDelete];
     }

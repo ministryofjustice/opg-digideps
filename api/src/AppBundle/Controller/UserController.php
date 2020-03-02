@@ -305,7 +305,6 @@ class UserController extends RestController
         }
 
         $this->getEntityManager()->remove($deletee);
-
         $this->getEntityManager()->flush();
 
         return [];
