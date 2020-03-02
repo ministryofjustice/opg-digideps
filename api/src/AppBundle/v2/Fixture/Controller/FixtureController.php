@@ -215,6 +215,7 @@ class FixtureController
             "address2" => $fromRequest['address2'],
             "county" => $fromRequest['county'],
             "postCode" => $fromRequest['postCode'],
+            "caseNumber" => $fromRequest['caseNumber'],
         ]);
 
         /** @var User $deputy */
