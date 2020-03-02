@@ -7,8 +7,11 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\CsvUploader;
 use AppBundle\Service\DataImporter\CsvToArray;
+use AppBundle\Service\Mailer\MailFactory;
+use AppBundle\Service\Mailer\MailSenderInterface;
 use AppBundle\Service\OrgService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
@@ -473,17 +476,20 @@ class IndexController extends AbstractController
      * @Route("/send-activation-link/{email}", name="admin_send_activation_link")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      **/
-    public function sendUserActivationLinkAction(Request $request, $email)
+    public function sendUserActivationLinkAction(
+        $email,
+        MailFactory $mailFactory,
+        MailSenderInterface $mailSender,
+        LoggerInterface $logger,
+        RestClient $restClient
+    )
     {
         try {
-            /* @var $user EntityDir\User */
-            $user = $this->getRestClient()->userRecreateToken($email, 'pass-reset');
-            $resetPasswordEmail = $this->getMailFactory()->createActivationEmail($user);
+            $user = $restClient->userRecreateToken($email, 'pass-reset');
+            $resetPasswordEmail = $mailFactory->createActivationEmail($user);
 
-            $this->getMailSender()->send($resetPasswordEmail, ['text', 'html']);
+            $mailSender->send($resetPasswordEmail, ['text', 'html']);
         } catch (\Throwable $e) {
-            /** @var LoggerInterface $logger */
-            $logger = $this->get('logger');
             $logger->debug($e->getMessage());
         }
 
