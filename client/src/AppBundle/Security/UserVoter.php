@@ -171,9 +171,11 @@ class UserVoter extends Voter
     {
         switch ($deletee->getRoleName()) {
             case User::ROLE_PA:
+            case User::ROLE_PA_TEAM_MEMBER:
             case User::ROLE_PA_NAMED:
             case User::ROLE_PA_ADMIN:
             case User::ROLE_PROF:
+            case User::ROLE_PROF_TEAM_MEMBER:
             case User::ROLE_PROF_NAMED:
             case User::ROLE_PROF_ADMIN:
                 return true;
