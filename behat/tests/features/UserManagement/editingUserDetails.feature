@@ -1,4 +1,3 @@
-@acs
 Feature: Editing Deputy and Client details
 
   Scenario: Creating users to edit
@@ -12,7 +11,6 @@ Feature: Editing Deputy and Client details
       | firstName | lastName | phone       | address     | address2  | county  | postCode | caseNumber | deputyEmail            |
       | Jory      | Dunkeld  | 01215552222 | 1 Fake Road | Fakeville | Faketon | B4 6HQ   | JD123456   |  hena.mercia@test.com  |
 
-  @deputy
   Scenario: Editing deputy details
     Given I am logged in as "hena.mercia@test.com" with password "Abcd1234"
     And I click on "user-account, profile-show, profile-edit"
@@ -61,7 +59,6 @@ Feature: Editing Deputy and Client details
     And I press "profile_save"
     Then the form should be valid
 
-  @deputy
   Scenario: edit client details
     And I am logged in as "hena.mercia@test.com" with password "Abcd1234"
     And I click on "user-account, client-show, client-edit"
