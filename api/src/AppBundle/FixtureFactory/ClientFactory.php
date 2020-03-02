@@ -17,7 +17,7 @@ class ClientFactory
         $courtDate = isset($data['courtDate']) ? $data['courtDate'] : '2017-11-01';
 
         $client
-            ->setCaseNumber($data['id'])
+            ->setCaseNumber(isset($data['firstName']) ? $data['firstName'] : $data['id'])
             ->setFirstname(isset($data['firstName']) ? $data['firstName'] : 'John')
             ->setLastname(isset($data['lastName']) ? $data['lastName'] : $data['id'] . '-client')
             ->setPhone(isset($data['phone']) ? $data['phone'] : '022222222222222')

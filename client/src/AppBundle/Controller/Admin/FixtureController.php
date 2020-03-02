@@ -174,6 +174,7 @@ class FixtureController extends AbstractController
                         "address2" => $request->query->get('address2'),
                         "county" => $request->query->get('county'),
                         "postCode" => $request->query->get('postCode'),
+                        "caseNumber" => $request->query->get('caseNumber'),
                         "deputyEmail" => $request->query->get('deputyEmail')]
                     )
                 );

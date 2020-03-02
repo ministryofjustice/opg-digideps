@@ -9,8 +9,8 @@ Feature: Editing Deputy and Client details
       | disabled | LAY        | Hena      | Mercia      | hena.mercia@test.com  | HA4      | true      |
 
     Given the following clients exist and are attached to deputies:
-      | firstName | lastName | phone       | address     | address2  | county  | postCode | deputyEmail          |
-      | Jory      | Dunkeld  | 01215552222 | 1 Fake Road | Fakeville | Faketon | B4 6HQ   | hena.mercia@test.com |
+      | firstName | lastName | phone       | address     | address2  | county  | postCode | caseNumber | deputyEmail            |
+      | Jory      | Dunkeld  | 01215552222 | 1 Fake Road | Fakeville | Faketon | B4 6HQ   | JD123456   |  hena.mercia@test.com  |
 
   @deputy
   Scenario: Editing deputy details
