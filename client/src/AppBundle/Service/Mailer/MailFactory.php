@@ -248,40 +248,6 @@ class MailFactory
     }
 
     /**
-     * @param User $user
-     * @param EntityDir\Report\Report $ndr
-     * @param $pdfBinaryContent
-     *
-     * @return ModelDir\Email
-     */
-    public function createNdrEmail(User $user, EntityDir\Ndr\Ndr $ndr, $pdfBinaryContent)
-    {
-        $email = new ModelDir\Email();
-
-        $viewParams = [
-            'homepageUrl' => $this->generateAbsoluteLink($this->getUserArea($user), 'homepage'),
-        ];
-
-        $client = $ndr->getClient();
-        $attachmentName = sprintf('DigiNdrRep-%s_%s.pdf',
-            $ndr->getSubmitDate() ? $ndr->getSubmitDate()->format('Y-m-d') : 'n-a-',
-            $client->getCaseNumber()
-        );
-
-
-        $email
-            ->setFromEmail($this->emailParams['from_email'])
-            ->setFromName($this->translate('ndrSubmission.fromName'))
-            ->setToEmail($this->emailParams['report_submit_to_address'])
-            ->setToName($this->translate('ndrSubmission.toName'))
-            ->setSubject($this->translate('ndrSubmission.subject'))
-            ->setBodyHtml($this->templating->render('AppBundle:Email:ndr-submission.html.twig', $viewParams))
-            ->setAttachments([new ModelDir\EmailAttachment($attachmentName, 'application/pdf', $pdfBinaryContent)]);
-
-        return $email;
-    }
-
-    /**
      * @param array $response
      * @param bool $isPostSubmission
      * @param User|null $user
@@ -466,21 +432,6 @@ class MailFactory
     private function translate($key, $params = [])
     {
         return $this->translator->trans($key, $params, 'email');
-    }
-
-    /**
-     * @param  EntityDir\Report\Report $report
-     * @return string
-     */
-    public function getReportAttachmentName(EntityDir\Report\Report $report)
-    {
-        $client = $report->getClient();
-        $attachmentName = sprintf('DigiRep-%s_%s_%s.pdf',
-            $report->getEndDate()->format('Y'),
-            $report->getSubmitDate() ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
-            $client->getCaseNumber()
-        );
-        return $attachmentName;
     }
 
     /**
