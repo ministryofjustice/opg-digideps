@@ -252,7 +252,7 @@ class FixtureController
         $this->em->persist($deputy);
         $this->em->flush();
 
-        return $this->buildSuccessResponse($fromRequest, 'User created', Response::HTTP_OK);
+        return $this->buildSuccessResponse($fromRequest, 'User created');
     }
 
     /**
