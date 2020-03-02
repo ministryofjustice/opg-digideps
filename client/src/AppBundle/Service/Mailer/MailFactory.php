@@ -310,7 +310,6 @@ class MailFactory
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('feedbackForm.fromName'))
             ->setToEmail($this->emailParams['feedback_send_to_address'])
-            ->setToName($this->translate('feedbackForm.toName'))
             ->setTemplate(self::GENERAL_FEEDBACK_TEMPLATE_ID)
             ->setParameters($notifyParams);
     }
@@ -331,7 +330,6 @@ class MailFactory
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('feedbackForm.fromName'))
             ->setToEmail($this->emailParams['feedback_send_to_address'])
-            ->setToName($this->translate('feedbackForm.toName'))
             ->setTemplate(self::POST_SUBMISSION_FEEDBACK_TEMPLATE_ID)
             ->setParameters($notifyParams);
     }
@@ -341,7 +339,6 @@ class MailFactory
         $email = (new ModelDir\Email())
           ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
           ->setFromName($this->translator->trans('client.fromName', [], 'email'))
-          ->setToName($this->translator->trans('client.toName', [], 'email'))
           ->setSubject($this->translator->trans('client.subject', [], 'email'))
           ->setToEmail($this->emailParams['update_send_to_address'])
           ->setTemplate(self::CLIENT_DETAILS_CHANGE_TEMPLATE_ID);
@@ -367,7 +364,6 @@ class MailFactory
         $email = (new ModelDir\Email())
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translator->trans('client.fromName', [], 'email'))
-            ->setToName($this->translator->trans('client.toName', [], 'email'))
             ->setSubject($this->translator->trans('client.subject', [], 'email'))
             ->setToEmail($this->emailParams['update_send_to_address'])
             ->setTemplate(self::DEPUTY_DETAILS_CHANGE_TEMPLATE_ID);
