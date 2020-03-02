@@ -179,7 +179,6 @@ class MailFactoryTest extends TestCase
     public function createGeneralFeedbackEmail()
     {
         $this->translator->trans('feedbackForm.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
-        $this->translator->trans('feedbackForm.toName', [], 'email')->shouldBeCalled()->willReturn('To Name');
         $this->translator->trans('feedbackForm.subject', [], 'email')->shouldBeCalled()->willReturn('A subject');
 
         $response = [
@@ -218,7 +217,6 @@ class MailFactoryTest extends TestCase
     public function createPostSubmissionFeedbackEmail()
     {
         $this->translator->trans('feedbackForm.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
-        $this->translator->trans('feedbackForm.toName', [], 'email')->shouldBeCalled()->willReturn('To Name');
         $this->translator->trans('feedbackForm.subject', [], 'email')->shouldBeCalled()->willReturn('A subject');
 
         $response = (new FeedbackReport())
@@ -251,7 +249,6 @@ class MailFactoryTest extends TestCase
     public function createUpdateClientDetailsEmail()
     {
         $this->translator->trans('client.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
-        $this->translator->trans('client.toName', [], 'email')->shouldBeCalled()->willReturn('To Name');
         $this->translator->trans('client.subject', [], 'email')->shouldBeCalled()->willReturn('A subject');
 
         $this->intlService->getCountryNameByCountryCode('GB')->shouldBeCalled()->willReturn('United Kingdom');
@@ -285,7 +282,6 @@ class MailFactoryTest extends TestCase
     public function createUpdateDeputyDetailsEmail()
     {
         $this->translator->trans('client.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
-        $this->translator->trans('client.toName', [], 'email')->shouldBeCalled()->willReturn('To Name');
         $this->translator->trans('client.subject', [], 'email')->shouldBeCalled()->willReturn('A subject');
 
         $this->intlService->getCountryNameByCountryCode('GB')->shouldBeCalled()->willReturn('United Kingdom');
@@ -317,7 +313,6 @@ class MailFactoryTest extends TestCase
     {
         self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
         self::assertEquals('OPG', $email->getFromName());
-        self::assertEquals('To Name', $email->getToName());
     }
 
     private function generateSUT()
