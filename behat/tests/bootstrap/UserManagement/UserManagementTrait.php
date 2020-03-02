@@ -3,6 +3,7 @@
 namespace DigidepsBehat\UserManagement;
 
 use Behat\Mink\Session;
+use Symfony\Component\HttpFoundation\Response;
 
 trait UserManagementTrait
 {
