@@ -2,12 +2,21 @@
 
 namespace AppBundle\Controller;
 
-use GuzzleHttp\Message\Response;
 use GuzzleHttp\Message\ResponseInterface;
 use Mockery as m;
 
 class ManageControllerTest extends AbstractControllerTestCase
 {
+    /** @var ManageController */
+    protected $sut;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->sut = new ManageController();
+    }
+
     public static function availabilityProvider()
     {
         return [
@@ -19,6 +28,14 @@ class ManageControllerTest extends AbstractControllerTestCase
         ];
     }
 
+    public function getRouteMap()
+    {
+        return [
+            ['/manage/availability', 'availabilityAction'],
+            ['/manage/elb', 'elbAction'],
+        ];
+    }
+
     /**
      * @dataProvider availabilityProvider
      */
@@ -26,8 +43,6 @@ class ManageControllerTest extends AbstractControllerTestCase
         $redisHealthy, $apiHealthy, $smtpDefault, $smtpSecure, $wkhtmltopdfError, $clamReturnCode,
         $statusCode, array $mustContain)
     {
-        $container = $this->frameworkBundleClient->getContainer();
-
         //redis mock
         $redisMock = m::mock('Predis\Client');
         if ($redisHealthy) {
@@ -36,13 +51,15 @@ class ManageControllerTest extends AbstractControllerTestCase
         } else {
             $redisMock->shouldReceive('set')->andThrow(new \RuntimeException('redis-error'));
         }
-        $container->set('snc_redis.default', $redisMock);
+        $this->container->set('snc_redis.default', $redisMock);
 
         // api mock
-        $this->restClient->shouldReceive('get')->with('manage/availability', 'array')->andReturn([
+        $restClient = m::mock('AppBundle\Service\Client\RestClient');
+        $restClient->shouldReceive('get')->with('manage/availability', 'array')->andReturn([
             'healthy' => $apiHealthy,
             'errors' => $apiHealthy ? '' : 'api_errors',
         ]);
+        $this->container->set('rest_client', $restClient);
 
         // smtp mock
         $smtpMock = m::mock('Swift_Transport');
@@ -51,7 +68,7 @@ class ManageControllerTest extends AbstractControllerTestCase
         } else {
             $smtpMock->shouldReceive('start')->andThrow(new \RuntimeException('sd-error'));
         }
-        $container->set('mailer.transport.smtp.default', $smtpMock);
+        $this->container->set('mailer.transport.smtp.default', $smtpMock);
 
         // smtp secure mock
         $secureSmtpMock = m::mock('Swift_Transport');
@@ -60,13 +77,13 @@ class ManageControllerTest extends AbstractControllerTestCase
         } else {
             $secureSmtpMock->shouldReceive('start')->andThrow(new \RuntimeException('ss-error'));
         }
-        $container->set('mailer.transport.smtp.default', $secureSmtpMock);
+        $this->container->set('mailer.transport.smtp.default', $secureSmtpMock);
 
         // pdf mock
         $wkhtmltopdfErrorMock = m::mock('AppBundle\Service\WkHtmlToPdfGenerator')
             ->shouldReceive('isAlive')->andReturn($wkhtmltopdfError)
         ->getMock();
-        $container->set('wkhtmltopdf', $wkhtmltopdfErrorMock);
+        $this->container->set('wkhtmltopdf', $wkhtmltopdfErrorMock);
 
         // clamAV mock
         $response = m::mock(ResponseInterface::class)
@@ -74,10 +91,13 @@ class ManageControllerTest extends AbstractControllerTestCase
         $guzzleMock = m::mock('GuzzleHttp\ClientInterface')
             ->shouldReceive('get')->andReturn($response)->getMock();
             //->getStatusCode')->andReturn(200);
-        $container->set('guzzle_file_scanner_client', $guzzleMock);
+        $this->container->set('guzzle_file_scanner_client', $guzzleMock);
+
+        $this->sut->setContainer($this->container);
 
         // dispatch /manage/availability and status code and check response
-        $response = $this->httpRequest('GET', '/manage/availability');
+        $response = $this->sut->availabilityAction();
+
         $this->assertEquals($statusCode, $response->getStatusCode(), $response->getContent());
         foreach ($mustContain as $m) {
             $this->assertStringContainsString($m, $response->getContent());
@@ -86,10 +106,10 @@ class ManageControllerTest extends AbstractControllerTestCase
 
     public function testElb()
     {
-        $response = $this->httpRequest('GET', '/manage/elb');
+        $response = $this->sut->elbAction();
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringContainsString('OK', $response->getContent());
+        $this->assertArrayHasKey('status', $response);
+        $this->assertEquals('OK', $response['status']);
     }
 
     public function tearDown(): void

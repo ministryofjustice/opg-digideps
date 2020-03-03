@@ -12,42 +12,29 @@ use AppBundle\Service\OrgService;
 use Exception;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\Role;
 
-class AdminIndexControllerTest extends WebTestCase
+class AdminIndexControllerTest extends AbstractControllerTestCase
 {
     /** @var IndexController */
-    private $sut;
-
-    /** @var Container */
-    private $container;
-
-    /** @var RouterInterface */
-    private static $router;
-
-    public static function setUpBeforeClass(): void
-    {
-        $client = self::createClient(['environment' => 'unittest']);
-        self::$router = $client->getContainer()->get('router');
-    }
+    protected $sut;
 
     public function setUp(): void
     {
+        parent::setUp();
+
         $token = self::prophesize(TokenInterface::class);
         $token->getUser()->willReturn(new User());
         $token->isAuthenticated()->willReturn(true);
         $token->getRoles()->willReturn([new Role('ROLE_ADMIN')]);
+
         $tokenStorage = self::prophesize(TokenStorage::class);
         $tokenStorage->getToken()->willReturn($token);
 
-        $this->container = self::$kernel->getContainer();
         $this->container->set('security.token_storage', $tokenStorage->reveal());
 
         $this->sut = new IndexController(self::prophesize(OrgService::class)->reveal());
@@ -63,20 +50,6 @@ class AdminIndexControllerTest extends WebTestCase
         ];
     }
 
-    /**
-     * @dataProvider getRouteMap
-     */
-    public function testRoutes(string $url, string $action, array $params = []): void
-    {
-        $match = self::$router->match($url);
-
-        self::assertEquals(get_class($this->sut) . '::' . $action, $match['_controller']);
-        foreach ($params as $key => $expectedValue) {
-            self::assertEquals($expectedValue, $match[$key]);
-        }
-    }
-
-    // Use a real container
     public function testAddUserSubmit(): void
     {
         $this->sut->setContainer($this->container);
