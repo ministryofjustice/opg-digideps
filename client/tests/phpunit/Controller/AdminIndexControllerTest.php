@@ -14,29 +14,42 @@ use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Role\Role;
 
 class AdminIndexControllerTest extends WebTestCase
 {
     /** @var IndexController */
     private $sut;
 
+    /** @var Container */
+    private $container;
+
     /** @var RouterInterface */
     private static $router;
 
     public static function setUpBeforeClass(): void
     {
-        $client = self::createClient();
+        $client = self::createClient(['environment' => 'unittest']);
         self::$router = $client->getContainer()->get('router');
     }
 
     public function setUp(): void
     {
+        $token = self::prophesize(TokenInterface::class);
+        $token->getUser()->willReturn(new User());
+        $token->isAuthenticated()->willReturn(true);
+        $token->getRoles()->willReturn([new Role('ROLE_ADMIN')]);
+        $tokenStorage = self::prophesize(TokenStorage::class);
+        $tokenStorage->getToken()->willReturn($token);
+
+        $this->container = self::$kernel->getContainer();
+        $this->container->set('security.token_storage', $tokenStorage->reveal());
+
         $this->sut = new IndexController(self::prophesize(OrgService::class)->reveal());
     }
 
@@ -63,90 +76,35 @@ class AdminIndexControllerTest extends WebTestCase
         }
     }
 
-    // Mock container and all of the dependent services
-    public function testAddUserWithHeavyMocking(): void
-    {
-        $orgService = self::prophesize(OrgService::class);
-        $sut = new IndexController($orgService->reveal());
-
-        $form = self::prophesize(Form::class);
-        $form->handleRequest(Argument::type(Request::class))->willReturn();
-        $form->createView()->willReturn('form-view');
-
-        $formFactory = self::prophesize(FormFactory::class);
-        $formFactory->create(Argument::cetera())->willReturn($form->reveal());
-
-        $container = new Container();
-        $container->set('form.factory', $formFactory->reveal());
-        $sut->setContainer($container);
-
-        $form->isValid()->willReturn(false);
-
-        // --------
-
-        $request = self::prophesize(Request::class);
-        $mailFactory = self::prophesize(MailFactory::class);
-        $mailSender = self::prophesize(MailSenderInterface::class);
-        $restClient = self::prophesize(RestClient::class);
-
-        $response = $sut->addUserAction($request->reveal(), $restClient->reveal(), $mailFactory->reveal(), $mailSender->reveal());
-
-        self::assertArrayHasKey('form', $response);
-    }
-
-    // Partial-mock IndexController and interrupt Controller functions
-    public function testAddUserWithMockery(): void
-    {
-        $form = self::prophesize(Form::class);
-        $form->handleRequest(Argument::type(Request::class))->willReturn();
-        $form->isValid()->willReturn(false);
-        $form->createView()->willReturn('form-view');
-
-        $sut = \Mockery::mock(IndexController::class);
-        $sut->shouldAllowMockingProtectedMethods();
-        $sut->shouldReceive('createForm')->andReturn($form->reveal());
-        $sut->makePartial();
-
-        // --------
-
-        $request = self::prophesize(Request::class);
-        $mailFactory = self::prophesize(MailFactory::class);
-        $mailSender = self::prophesize(MailSenderInterface::class);
-        $restClient = self::prophesize(RestClient::class);
-
-        $response = $sut->addUserAction($request->reveal(), $restClient->reveal(), $mailFactory->reveal(), $mailSender->reveal());
-
-        self::assertArrayHasKey('form', $response);
-    }
-
     // Use a real container
-    public function testAddUserWithKernel(): void
+    public function testAddUserSubmit(): void
     {
-        $kernel = static::bootKernel();
-        $container = $kernel->getContainer();
+        $this->sut->setContainer($this->container);
 
-        $user = new User();
-        $user->setRoleName('ROLE_ADMIN');
+        $request = new Request([], [
+            'admin' => [
+                'email' => 'teset@test.example',
+                'firstname' => 'Test',
+                'lastname' => 'User',
+                'roleName' => 'ROLE_ADMIN',
+            ],
+        ]);
 
-        $token = self::prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($user);
-        $tokenStorage = self::prophesize(TokenStorage::class);
-        $tokenStorage->getToken()->willReturn($token);
-        $container->set('security.token_storage', $tokenStorage->reveal());
+        $request->setMethod('POST');
 
-        $sut = new IndexController(self::prophesize(OrgService::class)->reveal());
-        $sut->setContainer($container);
-
-        // --------
-
-        $request = self::prophesize(Request::class);
         $mailFactory = self::prophesize(MailFactory::class);
+        $mailFactory->createActivationEmail(Argument::type(User::class))->willReturn(new Email());
+
         $mailSender = self::prophesize(MailSenderInterface::class);
+        $mailSender->send(Argument::type(Email::class), ['text', 'html'])->willReturn(true);
+
         $restClient = self::prophesize(RestClient::class);
+        $restClient->post('user', Argument::type(User::class), ['admin_add_user'], 'User')->willReturnArgument(1);
 
-        $response = $sut->addUserAction($request->reveal(), $restClient->reveal(), $mailFactory->reveal(), $mailSender->reveal());
+        $response = $this->sut->addUserAction($request, $restClient->reveal(), $mailFactory->reveal(), $mailSender->reveal());
 
-        self::assertArrayHasKey('form', $response);
+        self::assertInstanceOf(RedirectResponse::class, $response);
+        self::assertEquals('/admin/', $response->getTargetUrl());
     }
 
     public function testSendActivationLink(): void
