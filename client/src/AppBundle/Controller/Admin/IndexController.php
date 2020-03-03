@@ -75,7 +75,12 @@ class IndexController extends AbstractController
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("AppBundle:Admin/Index:addUser.html.twig")
      */
-    public function addUserAction(Request $request)
+    public function addUserAction(
+        Request $request,
+        RestClient $restClient,
+        MailFactory $mailFactory,
+        MailSenderInterface $mailSender
+    )
     {
         $form = $this->createForm(FormDir\Admin\AddUserType::class, new EntityDir\User());
 
@@ -88,10 +93,10 @@ class IndexController extends AbstractController
                 }
 
                 /** @var EntityDir\User $user */
-                $user = $this->getRestClient()->post('user', $form->getData(), ['admin_add_user'], 'User');
+                $user = $restClient->post('user', $form->getData(), ['admin_add_user'], 'User');
 
-                $activationEmail = $this->getMailFactory()->createActivationEmail($user);
-                $this->getMailSender()->send($activationEmail, ['text', 'html']);
+                $activationEmail = $mailFactory->createActivationEmail($user);
+                $mailSender->send($activationEmail, ['text', 'html']);
 
                 $this->addFlash(
                     'notice',
