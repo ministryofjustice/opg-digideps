@@ -11,16 +11,18 @@ use AppBundle\Service\Mailer\MailSenderInterface;
 use AppBundle\Service\OrgService;
 use Exception;
 use Prophecy\Argument;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class AdminIndexControllerTest extends WebTestCase
 {
-    /** @var OrgService&ObjectProphecy */
-    private $orgService;
-
     /** @var IndexController */
     private $sut;
 
@@ -35,8 +37,7 @@ class AdminIndexControllerTest extends WebTestCase
 
     public function setUp(): void
     {
-        $this->orgService = self::prophesize(OrgService::class);
-        $this->sut = new IndexController($this->orgService->reveal());
+        $this->sut = new IndexController(self::prophesize(OrgService::class)->reveal());
     }
 
     public function getRouteMap()
@@ -62,6 +63,87 @@ class AdminIndexControllerTest extends WebTestCase
         }
     }
 
+    // Mock container and all of the dependent services
+    public function testAddUserWithHeavyMocking(): void
+    {
+        $orgService = self::prophesize(OrgService::class);
+        $sut = new IndexController($orgService->reveal());
+
+        $form = self::prophesize(Form::class);
+        $form->handleRequest(Argument::type(Request::class))->willReturn();
+        $form->createView()->willReturn('form-view');
+
+        $formFactory = self::prophesize(FormFactory::class);
+        $formFactory->create(Argument::cetera())->willReturn($form->reveal());
+
+        $container = new Container();
+        $container->set('form.factory', $formFactory->reveal());
+        $sut->setContainer($container);
+
+        $form->isValid()->willReturn(false);
+
+        // --------
+
+        $request = self::prophesize(Request::class);
+        $mailFactory = self::prophesize(MailFactory::class);
+        $mailSender = self::prophesize(MailSenderInterface::class);
+        $restClient = self::prophesize(RestClient::class);
+
+        $response = $sut->addUserAction($request->reveal(), $restClient->reveal(), $mailFactory->reveal(), $mailSender->reveal());
+
+        self::assertArrayHasKey('form', $response);
+    }
+
+    // Partial-mock IndexController and interrupt Controller functions
+    public function testAddUserWithMockery(): void
+    {
+        $sut = \Mockery::mock(IndexController::class);
+        $sut->shouldAllowMockingProtectedMethods();
+        $sut->shouldReceive('createForm')->andReturn(self::prophesize(Form::class)->reveal());
+        $sut->makePartial();
+
+        // --------
+
+        $request = self::prophesize(Request::class);
+        $mailFactory = self::prophesize(MailFactory::class);
+        $mailSender = self::prophesize(MailSenderInterface::class);
+        $restClient = self::prophesize(RestClient::class);
+
+        $response = $sut->addUserAction($request->reveal(), $restClient->reveal(), $mailFactory->reveal(), $mailSender->reveal());
+
+        self::assertArrayHasKey('form', $response);
+    }
+
+    // Use a real container
+    public function testAddUserWithKernel(): void
+    {
+        $kernel = static::bootKernel();
+        $container = $kernel->getContainer();
+
+        $user = new User();
+        $user->setRoleName('ROLE_ADMIN');
+
+        $token = self::prophesize(TokenInterface::class);
+        $token->getUser()->willReturn($user);
+        $tokenStorage = self::prophesize(TokenStorage::class);
+        $tokenStorage->getToken()->willReturn($token);
+        $container->set('security.token_storage', $tokenStorage->reveal());
+
+        $sut = new IndexController(self::prophesize(OrgService::class)->reveal());
+        $sut->setContainer($container);
+
+        // --------
+
+        $request = self::prophesize(Request::class);
+        $mailFactory = self::prophesize(MailFactory::class);
+        $mailSender = self::prophesize(MailSenderInterface::class);
+        $restClient = self::prophesize(RestClient::class);
+
+        $response = $sut->addUserAction($request->reveal(), $restClient->reveal(), $mailFactory->reveal(), $mailSender->reveal());
+
+        self::assertArrayHasKey('form', $response);
+    }
+
     public function testSendActivationLink(): void
     {
         $emailAddress = 'test@gmail.example';
@@ -78,8 +160,8 @@ class AdminIndexControllerTest extends WebTestCase
 
         $response = $this->sut->sendUserActivationLinkAction($emailAddress, $mailFactory->reveal(), $mailSender->reveal(), $logger->reveal(), $restClient->reveal());
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringContainsString('[Link sent]', $response->getContent());
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertStringContainsString('[Link sent]', $response->getContent());
     }
 
     public function testSendActivationLinkSwallowsFailures(): void
@@ -100,7 +182,7 @@ class AdminIndexControllerTest extends WebTestCase
 
         $response = $this->sut->sendUserActivationLinkAction($emailAddress, $mailFactory->reveal(), $mailSender->reveal(), $logger->reveal(), $restClient->reveal());
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringContainsString('[Link sent]', $response->getContent());
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertStringContainsString('[Link sent]', $response->getContent());
     }
 }
