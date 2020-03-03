@@ -97,9 +97,14 @@ class AdminIndexControllerTest extends WebTestCase
     // Partial-mock IndexController and interrupt Controller functions
     public function testAddUserWithMockery(): void
     {
+        $form = self::prophesize(Form::class);
+        $form->handleRequest(Argument::type(Request::class))->willReturn();
+        $form->isValid()->willReturn(false);
+        $form->createView()->willReturn('form-view');
+
         $sut = \Mockery::mock(IndexController::class);
         $sut->shouldAllowMockingProtectedMethods();
-        $sut->shouldReceive('createForm')->andReturn(self::prophesize(Form::class)->reveal());
+        $sut->shouldReceive('createForm')->andReturn($form->reveal());
         $sut->makePartial();
 
         // --------
