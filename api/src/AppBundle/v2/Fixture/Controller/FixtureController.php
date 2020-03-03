@@ -69,7 +69,7 @@ class FixtureController
         $client = $this->createClient($fromRequest);
         $deputy = $this->createDeputy($fromRequest);
 
-        if (strtolower($fromRequest['reportType']) == 'ndr') {
+        if (strtolower($fromRequest['reportType']) === 'ndr') {
             $this->createNdr($fromRequest, $client);
             $deputy->setNdrEnabled(true);
         } else {
