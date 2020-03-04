@@ -8,6 +8,7 @@ use AppBundle\Model\SelfRegisterData;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use Prophecy\Argument;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserControllerTest extends AbstractControllerTestCase
 {
@@ -27,8 +28,8 @@ class UserControllerTest extends AbstractControllerTestCase
         $this->restClient->loadUserByToken($token)->shouldBeCalled()->willReturn($user);
         $this->restClient->userRecreateToken($emailAddress, 'activate')->shouldBeCalled()->willReturn($user);
 
-        $this->injectProphecyService(MailSender::class, function($mailSender) use ($emailAddress) {
-            $mailSender->send(Argument::that(function ($email) use ($emailAddress) {
+        $this->injectProphecyService(MailSender::class, function($mailSender) use ($emailAddress, $token) {
+            $mailSender->send(Argument::that(function ($email) use ($emailAddress, $token) {
                 return $email instanceof Email
                     && $email->getToEmail() === $emailAddress
                     && $email->getTemplate() === MailFactory::ACTIVATION_TEMPLATE_ID
@@ -38,9 +39,12 @@ class UserControllerTest extends AbstractControllerTestCase
 
         $this->client->request('GET', "/user/activate/password/send/$token");
         $this->client->followRedirect();
+
+        /** @var Response $response */
         $response = $this->client->getResponse();
 
         self::assertEquals(200, $response->getStatusCode());
+        self::assertIsString($response->getContent());
         self::assertStringContainsString('Check your email inbox, we&#039;ve sent you an email with a new link.', $response->getContent());
     }
 
@@ -84,9 +88,11 @@ class UserControllerTest extends AbstractControllerTestCase
             'self_registration[caseNumber]' => $data->getCaseNumber(),
         ]);
 
+        /** @var Response $response */
         $response = $this->client->getResponse();
 
         self::assertEquals(200, $response->getStatusCode());
+        self::assertIsString($response->getContent());
         self::assertStringContainsString('We\'ve sent you a link to <strong class="bold-small">d.brauchla@mailbox.example</strong>', $response->getContent());
     }
 
@@ -109,9 +115,6 @@ class UserControllerTest extends AbstractControllerTestCase
         });
 
         $crawler = $this->client->request('GET', "/password-managing/forgotten");
-        $response = $this->client->getResponse();
-
-        self::assertEquals(200, $response->getStatusCode());
 
         $button = $crawler->selectButton('Reset your password');
 
@@ -120,9 +123,12 @@ class UserControllerTest extends AbstractControllerTestCase
         ]);
 
         $this->client->followRedirect();
+
+        /** @var Response $response */
         $response = $this->client->getResponse();
 
         self::assertEquals(200, $response->getStatusCode());
+        self::assertIsString($response->getContent());
         self::assertStringContainsString('We have sent a new registration link to your email', $response->getContent());
     }
 }

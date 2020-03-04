@@ -5,10 +5,10 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\User;
 use AppBundle\Model\Email;
-use AppBundle\Model\SelfRegisterData;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use Prophecy\Argument;
+use Symfony\Component\HttpFoundation\Response;
 
 class OrganisationControllerTest extends AbstractControllerTestCase
 {
@@ -55,6 +55,7 @@ class OrganisationControllerTest extends AbstractControllerTestCase
             'organisation_member[roleName]' => 'ROLE_PROF_ADMIN',
         ]);
 
+        /** @var Response $response */
         $response = $this->client->getResponse();
 
         self::assertEquals(302, $response->getStatusCode());
@@ -91,6 +92,7 @@ class OrganisationControllerTest extends AbstractControllerTestCase
             'organisation_member[roleName]' => 'ROLE_PROF_ADMIN',
         ]);
 
+        /** @var Response $response */
         $response = $this->client->getResponse();
 
         self::assertEquals(302, $response->getStatusCode());
@@ -125,9 +127,12 @@ class OrganisationControllerTest extends AbstractControllerTestCase
 
         $this->client->request('GET', "/org/settings/organisation/14/send-activation-link/17");
         $this->client->followRedirect();
+
+        /** @var Response $response */
         $response = $this->client->getResponse();
 
         self::assertEquals(200, $response->getStatusCode());
+        self::assertIsString($response->getContent());
         self::assertStringContainsString('An activation email has been sent to the user', $response->getContent());
     }
 }

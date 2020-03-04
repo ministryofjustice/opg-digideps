@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Controller\Admin\IndexController;
 use AppBundle\Entity\User;
 use AppBundle\Model\Email;
 use AppBundle\Service\Mailer\MailFactory;
@@ -10,12 +9,10 @@ use AppBundle\Service\Mailer\MailSender;
 use Exception;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class AdminIndexControllerTest extends AbstractControllerTestCase
 {
-    /** @var IndexController */
-    protected $sut;
-
     public function setUp(): void
     {
         parent::setUp();
@@ -36,10 +33,6 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
         });
 
         $crawler = $this->client->request('GET', "/admin/user-add");
-        $response = $this->client->getResponse();
-
-        self::assertEquals(200, $response->getStatusCode());
-
         $button = $crawler->selectButton('Save user');
 
         $this->client->submit($button->form(), [
@@ -70,10 +63,12 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
         }, ['logger']);
 
         $this->client->request('GET', "/admin/send-activation-link/{$emailAddress}");
+
+        /** @var Response $response */
         $response = $this->client->getResponse();
 
         self::assertEquals(200, $response->getStatusCode());
-        self::assertStringContainsString('[Link sent]', $response->getContent());
+        self::assertEquals('[Link sent]', $response->getContent());
     }
 
     public function testSendActivationLinkSwallowsFailures(): void
@@ -90,9 +85,11 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
         }, ['logger']);
 
         $this->client->request('GET', "/admin/send-activation-link/{$emailAddress}");
+
+        /** @var Response $response */
         $response = $this->client->getResponse();
 
         self::assertEquals(200, $response->getStatusCode());
-        self::assertStringContainsString('[Link sent]', $response->getContent());
+        self::assertEquals('[Link sent]', $response->getContent());
     }
 }

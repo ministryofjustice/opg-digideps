@@ -8,6 +8,7 @@ use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Role\Role;
@@ -17,7 +18,7 @@ abstract class AbstractControllerTestCase extends WebTestCase
     /** @var Client */
     protected $client;
 
-    /** @var RestClient&ObjectProphecy */
+    /** @var RestClient|ObjectProphecy */
     protected $restClient;
 
     public function setUp(): void
@@ -33,6 +34,7 @@ abstract class AbstractControllerTestCase extends WebTestCase
      */
     protected function injectProphecyService(string $className, callable $callback, array $aliases = []): ObjectProphecy
     {
+        /** @var Container $container */
         $container = $this->client->getContainer();
 
         $prophet = self::prophesize($className);
