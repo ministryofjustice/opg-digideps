@@ -24,7 +24,7 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
     {
         parent::setUp();
 
-        $container = $this->frameworkBundleClient->getContainer();
+        $container = $this->client->getContainer();
 
         $token = self::prophesize(TokenInterface::class);
         $token->getUser()->willReturn(new User());
@@ -42,7 +42,7 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
     public function testSendActivationLink(): void
     {
         $emailAddress = 'test@gmail.example';
-        $container = $this->frameworkBundleClient->getContainer();
+        $container = $this->client->getContainer();
 
         $mailFactory = self::prophesize(MailFactory::class);
         $mailSender = self::prophesize(MailSender::class);
@@ -59,7 +59,8 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
         $container->set('logger', $logger->reveal());
         $container->set(RestClient::class, $restClient->reveal());
 
-        $response = $this->httpRequest('GET', "/admin/send-activation-link/{$emailAddress}");
+        $this->client->request('GET', "/admin/send-activation-link/{$emailAddress}");
+        $response = $this->client->getResponse();
 
         self::assertEquals(200, $response->getStatusCode());
         self::assertStringContainsString('[Link sent]', $response->getContent());
@@ -68,7 +69,7 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
     public function testSendActivationLinkSwallowsFailures(): void
     {
         $emailAddress = 'test@gmail.example';
-        $container = $this->frameworkBundleClient->getContainer();
+        $container = $this->client->getContainer();
 
         $mailFactory = self::prophesize(MailFactory::class);
         $mailSender = self::prophesize(MailSender::class);
@@ -87,7 +88,8 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
         $container->set('logger', $logger->reveal());
         $container->set(RestClient::class, $restClient->reveal());
 
-        $response = $this->httpRequest('GET', "/admin/send-activation-link/{$emailAddress}");
+        $this->client->request('GET', "/admin/send-activation-link/{$emailAddress}");
+        $response = $this->client->getResponse();
 
         self::assertEquals(200, $response->getStatusCode());
         self::assertStringContainsString('[Link sent]', $response->getContent());

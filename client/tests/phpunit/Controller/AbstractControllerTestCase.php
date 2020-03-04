@@ -10,27 +10,10 @@ use Symfony\Component\DependencyInjection\Container;
 abstract class AbstractControllerTestCase extends WebTestCase
 {
     /** @var Client */
-    protected $frameworkBundleClient;
+    protected $client;
 
     public function setUp(): void
     {
-        $this->frameworkBundleClient = static::createClient(['environment' => 'unittest', 'debug' => false]);
-    }
-
-   /**
-     * @param string $method
-     * @param string $uri
-     * @param array  $parameters
-     * @param array  $files
-     * @param array  $server
-     *
-     * @return Response
-     * @dataProvider getRouteMap
-    */
-    protected function httpRequest($method, $uri, array $parameters = [], array $files = [], array $server = [])
-    {
-        $this->frameworkBundleClient->request($method, $uri, $parameters, $files, $server);
-
-        return $this->frameworkBundleClient->getResponse();
+        $this->client = static::createClient(['environment' => 'unittest', 'debug' => false]);
     }
 }
