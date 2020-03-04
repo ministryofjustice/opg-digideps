@@ -22,7 +22,7 @@
             </a>
         </h2>
         <p class="text text-info">{{ 'settings-page.links.client.description' | trans(transOptions) }}</p>
-    {% elseif hasOrganisations %}
+    {% elseif hasOrganisations is defined and hasOrganisations %}
         <h2 class="govuk-heading-m">
             <a href="{{ path('org_organisation_list') }}" class="behat-link-org-accounts">
                 {{ 'settings-page.links.organisation.title' | trans }}
