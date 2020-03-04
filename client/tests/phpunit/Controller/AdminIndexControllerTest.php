@@ -26,22 +26,15 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
 
     public function testAddUserAction(): void
     {
-        $container = $this->client->getContainer();
+        $this->restClient->post('user', Argument::any(), ['admin_add_user'], 'User')->shouldBeCalled()->willReturn(new User());
 
-        $restClient = self::prophesize(RestClient::class);
-        $mailFactory = self::prophesize(MailFactory::class);
-        $mailSender = self::prophesize(MailSender::class);
+        $this->injectProphecyService(MailFactory::class, function($mailFactory) {
+            $mailFactory->createActivationEmail(new User())->shouldBeCalled()->willReturn(new Email());
+        });
 
-        $restClient->setLoggedUserId(1)->willReturn($restClient->reveal());
-        $restClient->get('user/1', Argument::cetera())->shouldBeCalled()->willReturn(new User());
-
-        $restClient->post('user', Argument::any(), ['admin_add_user'], 'User')->shouldBeCalled()->willReturn(new User());
-        $mailFactory->createActivationEmail(new User())->shouldBeCalled()->willReturn(new Email());
-        $mailSender->send(new Email(), Argument::cetera())->shouldBeCalled()->willReturn();
-        $container->set(RestClient::class, $restClient->reveal());
-        $container->set('rest_client', $restClient->reveal());
-        $container->set(MailFactory::class, $mailFactory->reveal());
-        $container->set(MailSender::class, $mailSender->reveal());
+        $this->injectProphecyService(MailSender::class, function($mailSender) {
+            $mailSender->send(new Email(), Argument::cetera())->shouldBeCalled()->willReturn();
+        });
 
         $crawler = $this->client->request('GET', "/admin/user-add");
         $response = $this->client->getResponse();
@@ -62,22 +55,20 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
     public function testSendActivationLink(): void
     {
         $emailAddress = 'test@gmail.example';
-        $container = $this->client->getContainer();
 
-        $mailFactory = self::prophesize(MailFactory::class);
-        $mailSender = self::prophesize(MailSender::class);
-        $logger = self::prophesize(LoggerInterface::class);
-        $restClient = self::prophesize(RestClient::class);
+        $this->restClient->userRecreateToken($emailAddress, 'pass-reset')->shouldBeCalled()->willReturn(new User());
 
-        $restClient->userRecreateToken($emailAddress, 'pass-reset')->shouldBeCalled()->willReturn(new User());
-        $mailFactory->createActivationEmail(new User())->shouldBeCalled()->willReturn(new Email());
-        $mailSender->send(new Email(), Argument::cetera())->shouldBeCalled()->willReturn();
-        $logger->log(Argument::cetera())->shouldNotBeCalled();
+        $this->injectProphecyService(MailFactory::class, function ($mailFactory) {
+            $mailFactory->createActivationEmail(new User())->shouldBeCalled()->willReturn(new Email());
+        });
 
-        $container->set(MailFactory::class, $mailFactory->reveal());
-        $container->set(MailSender::class, $mailSender->reveal());
-        $container->set('logger', $logger->reveal());
-        $container->set(RestClient::class, $restClient->reveal());
+        $this->injectProphecyService(MailSender::class, function ($mailSender) {
+            $mailSender->send(new Email(), Argument::cetera())->shouldBeCalled()->willReturn();
+        });
+
+        $this->injectProphecyService(LoggerInterface::class, function ($logger) {
+            $logger->log(Argument::cetera())->shouldNotBeCalled();
+        }, ['logger']);
 
         $this->client->request('GET', "/admin/send-activation-link/{$emailAddress}");
         $response = $this->client->getResponse();
@@ -89,24 +80,15 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
     public function testSendActivationLinkSwallowsFailures(): void
     {
         $emailAddress = 'test@gmail.example';
-        $container = $this->client->getContainer();
 
-        $mailFactory = self::prophesize(MailFactory::class);
-        $mailSender = self::prophesize(MailSender::class);
-        $logger = self::prophesize(LoggerInterface::class);
-        $restClient = self::prophesize(RestClient::class);
-
-        $restClient
+        $this->restClient
             ->userRecreateToken($emailAddress, 'pass-reset')
             ->shouldBeCalled()
             ->willThrow(new Exception('Intentional test exception'));
 
-        $logger->debug('Intentional test exception')->shouldBeCalled();
-
-        $container->set(MailFactory::class, $mailFactory->reveal());
-        $container->set(MailSender::class, $mailSender->reveal());
-        $container->set('logger', $logger->reveal());
-        $container->set(RestClient::class, $restClient->reveal());
+        $this->injectProphecyService(LoggerInterface::class, function ($logger) {
+            $logger->debug('Intentional test exception')->shouldBeCalled();
+        }, ['logger']);
 
         $this->client->request('GET', "/admin/send-activation-link/{$emailAddress}");
         $response = $this->client->getResponse();

@@ -3,8 +3,9 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
-use AppBundle\Service\DeputyProvider;
+use AppBundle\Service\Client\RestClient;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -16,16 +17,41 @@ abstract class AbstractControllerTestCase extends WebTestCase
     /** @var Client */
     protected $client;
 
+    /** @var RestClient&ObjectProphecy */
+    protected $restClient;
+
     public function setUp(): void
     {
         $this->client = static::createClient(['environment' => 'unittest', 'debug' => false]);
         $this->client->disableReboot();
+
+        $this->restClient = $this->injectProphecyService(RestClient::class, function() {}, ['rest_client']);
     }
 
-    protected function mockLoggedInUser(array $roleNames, User $user = null): void
+    /**
+     * Create a prophet for a Symfony service and overwrite it in the client container
+     */
+    protected function injectProphecyService(string $className, callable $callback, array $aliases = []): ObjectProphecy
     {
         $container = $this->client->getContainer();
 
+        $prophet = self::prophesize($className);
+        $container->set($className, $prophet->reveal());
+
+        foreach ($aliases as $alias) {
+            $container->set($alias, $prophet->reveal());
+        }
+
+        call_user_func($callback, $prophet);
+
+        return $prophet;
+    }
+
+    /**
+     * Provide the services necessary to mock the currently logged in user
+     */
+    protected function mockLoggedInUser(array $roleNames, User $user = null): void
+    {
         if (is_null($user)) {
             $user = new User();
         }
@@ -40,10 +66,14 @@ abstract class AbstractControllerTestCase extends WebTestCase
 
         $token = new UsernamePasswordToken($user, 'password', 'mock', $roles);
 
-        $tokenStorage = self::prophesize(TokenStorage::class);
-        $tokenStorage->getToken()->willReturn($token);
-        $tokenStorage->setToken(Argument::cetera())->willReturn();
+        // Mock token storage to return our fake token
+        $this->injectProphecyService(TokenStorage::class, function($tokenStorage) use ($token) {
+            $tokenStorage->getToken()->willReturn($token);
+            $tokenStorage->setToken(Argument::cetera())->willReturn();
+        }, ['security.token_storage']);
 
-        $container->set('security.token_storage', $tokenStorage->reveal());
+        // Respond to calls to hydrate user details from API
+        $this->restClient->setLoggedUserId(1)->willReturn($this->restClient->reveal());
+        $this->restClient->get('user/1', Argument::cetera())->willReturn($user);
     }
 }
