@@ -11,9 +11,6 @@ use AppBundle\Service\Mailer\MailSender;
 use Exception;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Role\Role;
 
 class AdminIndexControllerTest extends AbstractControllerTestCase
 {
@@ -24,19 +21,7 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
     {
         parent::setUp();
 
-        $container = $this->client->getContainer();
-
-        $token = self::prophesize(TokenInterface::class);
-        $token->getUser()->willReturn(new User());
-        $token->serialize()->willReturn('');
-        $token->isAuthenticated()->willReturn(true);
-        $token->getRoles()->willReturn([new Role('ROLE_ADMIN')]);
-
-        $tokenStorage = self::prophesize(TokenStorage::class);
-        $tokenStorage->getToken()->willReturn($token);
-        $tokenStorage->setToken(null)->willReturn();
-
-        $container->set('security.token_storage', $tokenStorage->reveal());
+        $this->mockLoggedInUser(['ROLE_ADMIN']);
     }
 
     public function testSendActivationLink(): void
