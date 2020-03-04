@@ -3,10 +3,12 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
+use AppBundle\Service\DeputyProvider;
+use Prophecy\Argument;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Role\Role;
 
 abstract class AbstractControllerTestCase extends WebTestCase
@@ -17,25 +19,30 @@ abstract class AbstractControllerTestCase extends WebTestCase
     public function setUp(): void
     {
         $this->client = static::createClient(['environment' => 'unittest', 'debug' => false]);
+        $this->client->disableReboot();
     }
 
     protected function mockLoggedInUser(array $roleNames, User $user = null): void
     {
         $container = $this->client->getContainer();
 
+        if (is_null($user)) {
+            $user = new User();
+        }
+
+        if (is_null($user->getId())) {
+            $user->setId(1);
+        }
+
         $roles = array_map(function () {
             return new Role('ROLE_ADMIN');
         }, $roleNames);
 
-        $token = self::prophesize(TokenInterface::class);
-        $token->getUser()->willReturn(is_null($user) ? new User() : $user);
-        $token->serialize()->willReturn('');
-        $token->isAuthenticated()->willReturn(true);
-        $token->getRoles()->willReturn($roles);
+        $token = new UsernamePasswordToken($user, 'password', 'mock', $roles);
 
         $tokenStorage = self::prophesize(TokenStorage::class);
         $tokenStorage->getToken()->willReturn($token);
-        $tokenStorage->setToken(null)->willReturn();
+        $tokenStorage->setToken(Argument::cetera())->willReturn();
 
         $container->set('security.token_storage', $tokenStorage->reveal());
     }

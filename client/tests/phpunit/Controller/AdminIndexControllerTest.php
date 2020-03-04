@@ -24,6 +24,41 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
         $this->mockLoggedInUser(['ROLE_ADMIN']);
     }
 
+    public function testAddUserAction(): void
+    {
+        $container = $this->client->getContainer();
+
+        $restClient = self::prophesize(RestClient::class);
+        $mailFactory = self::prophesize(MailFactory::class);
+        $mailSender = self::prophesize(MailSender::class);
+
+        $restClient->setLoggedUserId(1)->willReturn($restClient->reveal());
+        $restClient->get('user/1', Argument::cetera())->shouldBeCalled()->willReturn(new User());
+
+        $restClient->post('user', Argument::any(), ['admin_add_user'], 'User')->shouldBeCalled()->willReturn(new User());
+        $mailFactory->createActivationEmail(new User())->shouldBeCalled()->willReturn(new Email());
+        $mailSender->send(new Email(), Argument::cetera())->shouldBeCalled()->willReturn();
+        $container->set(RestClient::class, $restClient->reveal());
+        $container->set('rest_client', $restClient->reveal());
+        $container->set(MailFactory::class, $mailFactory->reveal());
+        $container->set(MailSender::class, $mailSender->reveal());
+
+        $crawler = $this->client->request('GET', "/admin/user-add");
+        $response = $this->client->getResponse();
+
+        self::assertEquals(200, $response->getStatusCode());
+
+        $button = $crawler->selectButton('Save user');
+
+        $this->client->submit($button->form(), [
+            'admin[email]' => 'test@mailbox.example',
+            'admin[firstname]' => 'Ross',
+            'admin[lastname]' => 'Niewieroski',
+            'admin[roleType]' => 'staff',
+            'admin[roleNameStaff]' => 'ROLE_ADMIN',
+        ]);
+    }
+
     public function testSendActivationLink(): void
     {
         $emailAddress = 'test@gmail.example';
