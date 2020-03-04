@@ -5,7 +5,6 @@ namespace AppBundle\Controller;
 use AppBundle\Controller\Admin\IndexController;
 use AppBundle\Entity\User;
 use AppBundle\Model\Email;
-use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use Exception;
