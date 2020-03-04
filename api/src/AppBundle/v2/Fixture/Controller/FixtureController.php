@@ -37,6 +37,7 @@ class FixtureController
     private $reportSection;
     private $deputyRepository;
     private $orgRepository;
+    private $userRepository;
 
     public function __construct(
         EntityManagerInterface $em,
@@ -47,7 +48,8 @@ class FixtureController
         ReportRepository $reportRepository,
         ReportSection $reportSection,
         UserRepository $deputyRepository,
-        OrganisationRepository $organisationRepository
+        OrganisationRepository $organisationRepository,
+        UserRepository $userRepository
     ) {
         $this->em = $em;
         $this->clientFactory = $clientFactory;
@@ -58,6 +60,7 @@ class FixtureController
         $this->reportSection = $reportSection;
         $this->deputyRepository = $deputyRepository;
         $this->orgRepository = $organisationRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -71,6 +74,7 @@ class FixtureController
     public function createCourtOrderAction(Request $request)
     {
         $fromRequest = json_decode($request->getContent(), true);
+
         $client = $this->createClient($fromRequest);
 
         if (null === $deputy = $this->deputyRepository->findOneBy(['email' => strtolower($fromRequest['deputyEmail'])])) {
@@ -201,6 +205,44 @@ class FixtureController
         $this->em->flush();
 
         return $this->buildSuccessResponse([], 'Report updated', Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/createAdmin", methods={"POST"})
+     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     */
+    public function createAdmin(Request $request)
+    {
+        $fromRequest = json_decode($request->getContent(), true);
+
+        $deputy = $this->userFactory->createAdmin([
+            'adminType' => $fromRequest['adminType'],
+            'email' => $fromRequest['email'],
+            'ndr' => $fromRequest['ndr'],
+            'firstName' => $fromRequest['firstName'],
+            'lastName' => $fromRequest['lastName'],
+            'activated' => $fromRequest['activated']
+        ]);
+
+        $this->em->persist($deputy);
+        $this->em->flush();
+
+        return $this->buildSuccessResponse($fromRequest, 'User created', Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/getUserIDByEmail/{email}", methods={"GET"})
+     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     */
+    public function getUserIDByEmail(string $email)
+    {
+        $user = $this->userRepository->findOneBy(['email' => $email]);
+
+        if ($user !== null) {
+            return $this->buildSuccessResponse(['id' => $user->getId()], 'User found', Response::HTTP_OK);
+        } else {
+            return $this->buildNotFoundResponse("Could not find user with email address '$email'");
+        }
     }
 
     /**

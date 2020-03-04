@@ -60,8 +60,8 @@ class ReportChecklistType extends AbstractType
                 ->add('debtsManaged', FormTypes\ChoiceType::class, $yesNoNaOptions)
                 ->add('openClosingBalancesMatch', FormTypes\ChoiceType::class, $yesNoNaOptions);
 
-            // Don't show balancing question for professional reports with short money sections
-            if (!in_array($this->report->getType(), ['103-5', '103-4-5'])) {
+            // Only show balancing question for reports which can be balanced
+            if ($this->report->hasSection('balance')) {
                 $builder->add('accountsBalance', FormTypes\ChoiceType::class, $yesNoNaOptions);
             }
 

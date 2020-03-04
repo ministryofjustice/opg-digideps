@@ -1263,4 +1263,19 @@ class User implements UserInterface
             }
         }
     }
+
+    public function hasReports()
+    {
+        if (count($this->clients) === 0) {
+            return false;
+        }
+
+        $reports = $this->clients[0]->getReports();
+
+        if (!empty($reports)) {
+            return true;
+        }
+
+        return false;
+    }
 }

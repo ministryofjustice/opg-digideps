@@ -9,24 +9,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class UserVoter extends Voter
 {
-    const ADD_USER = 'add-user';
-    const EDIT_USER = 'edit-user';
     const DELETE_USER = 'delete-user';
-
-    /**
-     * @var AccessDecisionManagerInterface
-     */
-    private $decisionManager;
-
-    /**
-     * UserVoter constructor.
-     *
-     * @param AccessDecisionManagerInterface $decisionManager
-     */
-    public function __construct(AccessDecisionManagerInterface $decisionManager)
-    {
-        $this->decisionManager = $decisionManager;
-    }
 
     /**
      * Does this voter support the attribute?
@@ -38,15 +21,8 @@ class UserVoter extends Voter
     protected function supports($attribute, $subject)
     {
         switch ($attribute) {
-            case self::ADD_USER:
             case self::DELETE_USER:
                 return true;
-            case self::EDIT_USER:
-                // only vote on User objects inside this voter
-                if ($attribute === self::EDIT_USER && $subject instanceof User) {
-                    return true;
-                }
-                break;
         }
 
         return false;
@@ -68,59 +44,8 @@ class UserVoter extends Voter
             return false;
         }
 
-        if ($attribute === self::ADD_USER) {
-            // only Named and Admin can add users
-            return $this->decisionManager->decide(
-                $token,
-                [
-                    User::ROLE_ORG_NAMED,
-                    User::ROLE_ORG_ADMIN
-                ]
-            );
-        }
-
         if ($attribute === self::DELETE_USER) {
             return $this->determineDeletePermission($loggedInUser, $subject);
-        }
-
-        if ($attribute === self::EDIT_USER) {
-            return $this->determineEditPermission($loggedInUser, $subject);
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine whether logged in user can edit a subject user
-     *
-     * @param  User $loggedInUser
-     * @param  User $subject
-     * @return bool
-     */
-    private function determineEditPermission(User $loggedInUser, User $subject)
-    {
-        if ($subject->getId() === $loggedInUser->getId() &&
-            ($loggedInUser->hasRoleOrgNamed() || $loggedInUser->hasRoleOrgAdmin())) {
-            // can always edit one's self except team members
-            return true;
-        }
-
-        switch ($loggedInUser->getRoleName()) {
-            case User::ROLE_PA_NAMED:
-            case User::ROLE_PROF_NAMED:
-            case User::ROLE_ADMIN:
-            case User::ROLE_AD:
-                // Admin, Assisted and Named Deputies can always edit everyone. Replicated from populate user.
-                return true;
-            case User::ROLE_PA_ADMIN:
-            case User::ROLE_PROF_ADMIN:
-                // Admin can edit everyone except Named
-                if ($subject->hasRoleOrgNamed()) {
-                    return false;
-                }
-                return true;
-            default:
-                return false;
         }
 
         return false;

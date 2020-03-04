@@ -3,6 +3,8 @@
 namespace DigidepsBehat;
 
 use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Session;
+use Symfony\Component\HttpFoundation\Response;
 
 trait UserTrait
 {
@@ -15,6 +17,44 @@ trait UserTrait
         'pa named' => 'ROLE_PA_NAMED',
         'prof named' => 'ROLE_PROF_NAMED'
     ];
+
+    /**
+     * Requires an authenticated admin user to use in a scenario
+     *
+     * @Given the following admins exist:
+     */
+    public function adminsExist(TableNode $table)
+    {
+        foreach ($table as $inputs) {
+            $this->assertValidInputs($inputs);
+
+            $query = http_build_query($inputs);
+
+            $this->visitAdminPath("/admin/fixtures/createAdmin?$query");
+        }
+    }
+
+    private function assertValidInputs(array $inputs): void
+    {
+        $adminType = $inputs['adminType'];
+
+        if (!in_array($adminType, ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN'])) {
+            throw new \Exception("adminType should be 'ROLE_ADMIN' or 'ROLE_SUPER_ADMIN'; '$adminType' provided");
+        }
+
+        foreach(['adminType', 'firstName', 'lastName', 'email', 'activated'] as $key) {
+            $missingKeys = [];
+
+            if (!array_key_exists($key, $inputs)) {
+                $missingKeys[] = $key;
+            }
+
+            if (count($missingKeys) > 0) {
+                $missingKeysString = implode($missingKeys, ', ');
+                throw new \Exception("Missing required parameter headings: $missingKeysString");
+            }
+        }
+    }
 
     /**
      * it's assumed you are logged as an admin and you are on the admin homepage (with add user form).

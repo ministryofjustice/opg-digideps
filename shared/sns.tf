@@ -10,6 +10,8 @@ module "notify_slack" {
 
   lambda_function_name = "notify-slack"
 
+  cloudwatch_log_group_retention_in_days = 14
+
   slack_webhook_url = data.aws_secretsmanager_secret_version.slack_webhook_url.secret_string
   slack_channel     = local.account.name == "production" ? "#opg-digideps-team" : "#opg-digideps-devs"
   slack_username    = "aws"
@@ -36,6 +38,8 @@ module "notify_slack_us-east-1" {
   create           = local.account.name != "development"
 
   lambda_function_name = "notify-slack"
+
+  cloudwatch_log_group_retention_in_days = 14
 
   slack_webhook_url = data.aws_secretsmanager_secret_version.slack_webhook_url.secret_string
   slack_channel     = local.account.name == "production" ? "#opg-digideps-team" : "#opg-digideps-devs"

@@ -10,3 +10,8 @@ services:
     arguments: [ "@security.helper" ]
     tags:
         - { name: security.voter }
+
+  AppBundle\Security\UserVoter:
+      class: AppBundle\Security\UserVoter
+      tags:
+          - { name: security.voter }
