@@ -7,13 +7,10 @@ use AppBundle\Entity\User;
 use AppBundle\Model\Email;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSenderInterface;
-use AppBundle\Service\OrgService;
+use AppBundle\Service\Mailer\MailSender;
 use Exception;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\Role;
@@ -27,65 +24,28 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
     {
         parent::setUp();
 
+        $container = $this->frameworkBundleClient->getContainer();
+
         $token = self::prophesize(TokenInterface::class);
         $token->getUser()->willReturn(new User());
+        $token->serialize()->willReturn('');
         $token->isAuthenticated()->willReturn(true);
         $token->getRoles()->willReturn([new Role('ROLE_ADMIN')]);
 
         $tokenStorage = self::prophesize(TokenStorage::class);
         $tokenStorage->getToken()->willReturn($token);
+        $tokenStorage->setToken(null)->willReturn();
 
-        $this->container->set('security.token_storage', $tokenStorage->reveal());
-
-        $this->sut = new IndexController(self::prophesize(OrgService::class)->reveal());
-    }
-
-    public function getRouteMap()
-    {
-        return [
-            ['/admin/', 'indexAction'],
-            ['/admin/user-add', 'addUserAction'],
-            ['/admin/edit-user', 'editUserAction'],
-            ['/admin/send-activation-link/test@email.com', 'sendUserActivationLinkAction', ['email' => 'test@email.com']],
-        ];
-    }
-
-    public function testAddUserSubmit(): void
-    {
-        $this->sut->setContainer($this->container);
-
-        $request = new Request([], [
-            'admin' => [
-                'email' => 'teset@test.example',
-                'firstname' => 'Test',
-                'lastname' => 'User',
-                'roleName' => 'ROLE_ADMIN',
-            ],
-        ]);
-
-        $request->setMethod('POST');
-
-        $mailFactory = self::prophesize(MailFactory::class);
-        $mailFactory->createActivationEmail(Argument::type(User::class))->willReturn(new Email());
-
-        $mailSender = self::prophesize(MailSenderInterface::class);
-        $mailSender->send(Argument::type(Email::class), ['text', 'html'])->willReturn(true);
-
-        $restClient = self::prophesize(RestClient::class);
-        $restClient->post('user', Argument::type(User::class), ['admin_add_user'], 'User')->willReturnArgument(1);
-
-        $response = $this->sut->addUserAction($request, $restClient->reveal(), $mailFactory->reveal(), $mailSender->reveal());
-
-        self::assertInstanceOf(RedirectResponse::class, $response);
-        self::assertEquals('/admin/', $response->getTargetUrl());
+        $container->set('security.token_storage', $tokenStorage->reveal());
     }
 
     public function testSendActivationLink(): void
     {
         $emailAddress = 'test@gmail.example';
+        $container = $this->frameworkBundleClient->getContainer();
 
         $mailFactory = self::prophesize(MailFactory::class);
-        $mailSender = self::prophesize(MailSenderInterface::class);
+        $mailSender = self::prophesize(MailSender::class);
         $logger = self::prophesize(LoggerInterface::class);
         $restClient = self::prophesize(RestClient::class);
 
@@ -94,7 +54,12 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
         $mailSender->send(new Email(), Argument::cetera())->shouldBeCalled()->willReturn();
         $logger->log(Argument::cetera())->shouldNotBeCalled();
 
-        $response = $this->sut->sendUserActivationLinkAction($emailAddress, $mailFactory->reveal(), $mailSender->reveal(), $logger->reveal(), $restClient->reveal());
+        $container->set(MailFactory::class, $mailFactory->reveal());
+        $container->set(MailSender::class, $mailSender->reveal());
+        $container->set('logger', $logger->reveal());
+        $container->set(RestClient::class, $restClient->reveal());
+
+        $response = $this->httpRequest('GET', "/admin/send-activation-link/{$emailAddress}");
 
         self::assertEquals(200, $response->getStatusCode());
         self::assertStringContainsString('[Link sent]', $response->getContent());
@@ -103,9 +68,10 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
     public function testSendActivationLinkSwallowsFailures(): void
     {
         $emailAddress = 'test@gmail.example';
+        $container = $this->frameworkBundleClient->getContainer();
 
         $mailFactory = self::prophesize(MailFactory::class);
-        $mailSender = self::prophesize(MailSenderInterface::class);
+        $mailSender = self::prophesize(MailSender::class);
         $logger = self::prophesize(LoggerInterface::class);
         $restClient = self::prophesize(RestClient::class);
 
@@ -116,7 +82,12 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
 
         $logger->debug('Intentional test exception')->shouldBeCalled();
 
-        $response = $this->sut->sendUserActivationLinkAction($emailAddress, $mailFactory->reveal(), $mailSender->reveal(), $logger->reveal(), $restClient->reveal());
+        $container->set(MailFactory::class, $mailFactory->reveal());
+        $container->set(MailSender::class, $mailSender->reveal());
+        $container->set('logger', $logger->reveal());
+        $container->set(RestClient::class, $restClient->reveal());
+
+        $response = $this->httpRequest('GET', "/admin/send-activation-link/{$emailAddress}");
 
         self::assertEquals(200, $response->getStatusCode());
         self::assertStringContainsString('[Link sent]', $response->getContent());

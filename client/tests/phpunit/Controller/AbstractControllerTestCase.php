@@ -2,56 +2,35 @@
 
 namespace AppBundle\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Container;
 
 abstract class AbstractControllerTestCase extends WebTestCase
 {
-    /** @var Container */
-    protected $container;
-
-    /** @var Controller */
-    protected $sut;
-
-    public static function setUpBeforeClass(): void
-    {
-        self::bootKernel(['environment' => 'unittest']);
-    }
+    /** @var Client */
+    protected $frameworkBundleClient;
 
     public function setUp(): void
     {
-        $this->container = self::$kernel->getContainer();
+        $this->frameworkBundleClient = static::createClient(['environment' => 'unittest', 'debug' => false]);
     }
 
-    public function tearDown(): void
-    {
-        // purposefully not calling parent class, which shuts down the kernel
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        self::ensureKernelShutdown();
-        self::$kernel = null;
-    }
-
-    public function getRouteMap()
-    {
-        return [];
-    }
-
-    /**
+   /**
+     * @param string $method
+     * @param string $uri
+     * @param array  $parameters
+     * @param array  $files
+     * @param array  $server
+     *
+     * @return Response
      * @dataProvider getRouteMap
-     */
-    public function testRoutes(string $url, string $action, array $params = []): void
+    */
+    protected function httpRequest($method, $uri, array $parameters = [], array $files = [], array $server = [])
     {
-        $client = self::createClient(['environment' => 'unittest']);
-        $router = $client->getContainer()->get('router');
-        $match = $router->match($url);
+        $this->frameworkBundleClient->request($method, $uri, $parameters, $files, $server);
 
-        self::assertEquals(get_class($this->sut) . '::' . $action, $match['_controller']);
-        foreach ($params as $key => $expectedValue) {
-            self::assertEquals($expectedValue, $match[$key]);
-        }
+        return $this->frameworkBundleClient->getResponse();
     }
 }

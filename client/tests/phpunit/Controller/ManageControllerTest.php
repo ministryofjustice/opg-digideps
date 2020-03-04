@@ -7,16 +7,6 @@ use Mockery as m;
 
 class ManageControllerTest extends AbstractControllerTestCase
 {
-    /** @var ManageController */
-    protected $sut;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->sut = new ManageController();
-    }
-
     public static function availabilityProvider()
     {
         return [
@@ -43,6 +33,8 @@ class ManageControllerTest extends AbstractControllerTestCase
         $redisHealthy, $apiHealthy, $smtpDefault, $smtpSecure, $wkhtmltopdfError, $clamReturnCode,
         $statusCode, array $mustContain)
     {
+        $container = $this->frameworkBundleClient->getContainer();
+
         //redis mock
         $redisMock = m::mock('Predis\Client');
         if ($redisHealthy) {
@@ -51,7 +43,7 @@ class ManageControllerTest extends AbstractControllerTestCase
         } else {
             $redisMock->shouldReceive('set')->andThrow(new \RuntimeException('redis-error'));
         }
-        $this->container->set('snc_redis.default', $redisMock);
+        $container->set('snc_redis.default', $redisMock);
 
         // api mock
         $restClient = m::mock('AppBundle\Service\Client\RestClient');
@@ -59,7 +51,7 @@ class ManageControllerTest extends AbstractControllerTestCase
             'healthy' => $apiHealthy,
             'errors' => $apiHealthy ? '' : 'api_errors',
         ]);
-        $this->container->set('rest_client', $restClient);
+        $container->set('rest_client', $restClient);
 
         // smtp mock
         $smtpMock = m::mock('Swift_Transport');
@@ -68,7 +60,7 @@ class ManageControllerTest extends AbstractControllerTestCase
         } else {
             $smtpMock->shouldReceive('start')->andThrow(new \RuntimeException('sd-error'));
         }
-        $this->container->set('mailer.transport.smtp.default', $smtpMock);
+        $container->set('mailer.transport.smtp.default', $smtpMock);
 
         // smtp secure mock
         $secureSmtpMock = m::mock('Swift_Transport');
@@ -77,13 +69,13 @@ class ManageControllerTest extends AbstractControllerTestCase
         } else {
             $secureSmtpMock->shouldReceive('start')->andThrow(new \RuntimeException('ss-error'));
         }
-        $this->container->set('mailer.transport.smtp.default', $secureSmtpMock);
+        $container->set('mailer.transport.smtp.default', $secureSmtpMock);
 
         // pdf mock
         $wkhtmltopdfErrorMock = m::mock('AppBundle\Service\WkHtmlToPdfGenerator')
             ->shouldReceive('isAlive')->andReturn($wkhtmltopdfError)
         ->getMock();
-        $this->container->set('wkhtmltopdf', $wkhtmltopdfErrorMock);
+        $container->set('wkhtmltopdf', $wkhtmltopdfErrorMock);
 
         // clamAV mock
         $response = m::mock(ResponseInterface::class)
@@ -91,12 +83,10 @@ class ManageControllerTest extends AbstractControllerTestCase
         $guzzleMock = m::mock('GuzzleHttp\ClientInterface')
             ->shouldReceive('get')->andReturn($response)->getMock();
             //->getStatusCode')->andReturn(200);
-        $this->container->set('guzzle_file_scanner_client', $guzzleMock);
-
-        $this->sut->setContainer($this->container);
+        $container->set('guzzle_file_scanner_client', $guzzleMock);
 
         // dispatch /manage/availability and status code and check response
-        $response = $this->sut->availabilityAction();
+        $response = $this->httpRequest('GET', '/manage/availability');
 
         $this->assertEquals($statusCode, $response->getStatusCode(), $response->getContent());
         foreach ($mustContain as $m) {
@@ -106,10 +96,10 @@ class ManageControllerTest extends AbstractControllerTestCase
 
     public function testElb()
     {
-        $response = $this->sut->elbAction();
+        $response = $this->httpRequest('GET', '/manage/elb');
 
-        $this->assertArrayHasKey('status', $response);
-        $this->assertEquals('OK', $response['status']);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertStringContainsString('OK', $response->getContent());
     }
 
     public function tearDown(): void
