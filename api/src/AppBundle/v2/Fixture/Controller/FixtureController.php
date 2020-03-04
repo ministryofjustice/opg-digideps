@@ -3,6 +3,8 @@
 namespace AppBundle\v2\Fixture\Controller;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\NamedDeputy;
+use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
@@ -33,6 +35,8 @@ class FixtureController
     private $reportFactory;
     private $reportRepository;
     private $reportSection;
+    private $deputyRepository;
+    private $orgRepository;
     private $userRepository;
 
     public function __construct(
@@ -43,6 +47,8 @@ class FixtureController
         ReportFactory $reportFactory,
         ReportRepository $reportRepository,
         ReportSection $reportSection,
+        UserRepository $deputyRepository,
+        OrganisationRepository $organisationRepository,
         UserRepository $userRepository
     ) {
         $this->em = $em;
@@ -52,6 +58,8 @@ class FixtureController
         $this->reportFactory = $reportFactory;
         $this->reportRepository = $reportRepository;
         $this->reportSection = $reportSection;
+        $this->deputyRepository = $deputyRepository;
+        $this->orgRepository = $organisationRepository;
         $this->userRepository = $userRepository;
     }
 
@@ -68,7 +76,11 @@ class FixtureController
         $fromRequest = json_decode($request->getContent(), true);
 
         $client = $this->createClient($fromRequest);
-        $deputy = $this->createDeputy($fromRequest);
+
+        if (null === $deputy = $this->deputyRepository->findOneBy(['email' => strtolower($fromRequest['deputyEmail'])])) {
+            $deputy = $this->createDeputy($fromRequest);
+        }
+
         $this->createReport($fromRequest, $client);
 
         if ($fromRequest['deputyType'] === User::TYPE_LAY) {
@@ -139,10 +151,31 @@ class FixtureController
         $uniqueOrgNameSegment = (preg_match('/\d+/', $fromRequest['deputyEmail'], $matches)) ? $matches[0] : rand(0,9999);
         $orgName = sprintf('Org %s Ltd', $uniqueOrgNameSegment);
 
-        $organisation = $this->organisationFactory->createFromEmailIdentifier($orgName, $fromRequest['deputyEmail'], true);
+        if (null === ($organisation = $this->orgRepository->findOneBy(['name' => $orgName]))) {
+            $organisation = $this->organisationFactory->createFromEmailIdentifier($orgName, $fromRequest['deputyEmail'], true);
+        }
+
         $organisation->addUser($deputy);
+        $client->setNamedDeputy($this->buildNamedDeputy($deputy));
         $client->setOrganisation($organisation);
         $this->em->persist($organisation);
+    }
+
+    /**
+     * @param User $deputy
+     * @return NamedDeputy
+     */
+    private function buildNamedDeputy(User $deputy)
+    {
+        $namedDeputy = (new NamedDeputy())
+            ->setFirstname($deputy->getFirstname())
+            ->setLastname($deputy->getLastname())
+            ->setEmail1($deputy->getEmail())
+            ->setDeputyNo($deputy->getDeputyNo());
+
+        $this->em->persist($namedDeputy);
+
+        return $namedDeputy;
     }
 
     /**
