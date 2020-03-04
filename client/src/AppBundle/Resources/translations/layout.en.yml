@@ -9,7 +9,7 @@ nav:
     adminOrganisations: Organisations
     adminUploadLay: Lay CSV
     adminUploadPAProf: PA/Prof CSV
-    adminStats: Stats
-    adminDocuments: Documents
-    serviceNotification: Service notifications
+    adminStats: Analytics
+    adminDocuments: Submissions
+    serviceNotification: Notifications
 emailSupport: Email support
