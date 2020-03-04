@@ -1,4 +1,4 @@
-{% extends 'AppBundle:Layouts:moj_template.html.twig' %}
+{% extends env == 'admin' ? 'AppBundle:Layouts:admin_moj_template.html.twig' : 'AppBundle:Layouts:moj_template.html.twig' %}
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
