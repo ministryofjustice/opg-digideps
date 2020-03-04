@@ -260,7 +260,7 @@ class OrganisationController extends AbstractController
     }
 
     /**
-     * @Route("{orgId}/send-activation-link/{userId}", name="org_organisation_send_activation_link")
+     * @Route("/{orgId}/send-activation-link/{userId}", name="org_organisation_send_activation_link")
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function resendActivationEmailAction(Request $request, int $orgId, int $userId)
@@ -290,6 +290,8 @@ class OrganisationController extends AbstractController
             /** @var LoggerInterface */
             $logger = $this->get('logger');
             $logger->debug($e->getMessage());
+
+            throw $e;
 
             $this->addFlash(
                 'error',
