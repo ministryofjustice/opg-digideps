@@ -61,7 +61,7 @@ class ReportSubmission
     private $ndr;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection<int, Document>
      *
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
      * @JMS\Groups({"report-submission", "report-submission-documents"})
@@ -74,7 +74,7 @@ class ReportSubmission
     private $documents;
 
     /**
-     * @var User
+     * @var User|null
      *
      * @JMS\Type("AppBundle\Entity\User")
      * @JMS\Groups({"report-submission"})
@@ -85,11 +85,20 @@ class ReportSubmission
     private $archivedBy;
 
     /**
+     * @var bool
      * @JMS\Type("boolean")
      * @JMS\Groups({"report-submission"})
      * @ORM\Column(name="downloadable", type="boolean", options={ "default": true}, nullable=false)
      */
     private $downloadable;
+
+    /**
+     * @var string|null
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-submission"})
+     * @ORM\Column(name="opg_uuid", type="string", length=36, nullable=true)
+     */
+    private $uuid;
 
     /**
      * ReportSubmission constructor.
@@ -160,7 +169,7 @@ class ReportSubmission
     }
 
     /**
-     * @return ArrayCollection|Document[]
+     * @return ArrayCollection<int, Document>
      */
     public function getDocuments()
     {
@@ -182,7 +191,7 @@ class ReportSubmission
     }
 
     /**
-     * @return User
+     * @return User|null
      */
     public function getArchivedBy()
     {
@@ -217,6 +226,26 @@ class ReportSubmission
     public function setDownloadable($downloadable)
     {
         $this->downloadable = $downloadable;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUuid(): ?string
+    {
+        return $this->uuid;
+    }
+
+    /**
+     * @param string|null $uuid
+     *
+     * @return $this
+     */
+    public function setUuid(?string $uuid)
+    {
+        $this->uuid = $uuid;
 
         return $this;
     }
