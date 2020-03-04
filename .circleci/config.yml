@@ -366,11 +366,11 @@ jobs:
           command: |
             docker-compose up -d pact-mock
             sleep 1
-            docker run
-                --rm
-                --network=project_default
-                --env-file=client/docker/env/frontend.env
-                client:latest
+            docker run \
+                --rm \
+                --network=project_default \
+                --env-file=client/docker/env/frontend.env \
+                client:latest \
                 bin/phpunit -c tests/phpunit --log-junit=tests/junit.xml
             docker-compose exec pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
             docker-compose exec pact-mock cat tests/junit.xml > junit.xml
