@@ -60,8 +60,8 @@ abstract class AbstractControllerTestCase extends WebTestCase
             $user->setId(1);
         }
 
-        $roles = array_map(function () {
-            return new Role('ROLE_ADMIN');
+        $roles = array_map(function ($roleName) {
+            return new Role($roleName);
         }, $roleNames);
 
         $token = new UsernamePasswordToken($user, 'password', 'mock', $roles);
