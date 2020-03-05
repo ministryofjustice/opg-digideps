@@ -28,14 +28,16 @@ class UserControllerTest extends AbstractControllerTestCase
         $this->restClient->loadUserByToken($token)->shouldBeCalled()->willReturn($user);
         $this->restClient->userRecreateToken($emailAddress, 'activate')->shouldBeCalled()->willReturn($user);
 
-        $this->injectProphecyService(MailSender::class, function($mailSender) use ($emailAddress, $token) {
-            $mailSender->send(Argument::that(function ($email) use ($emailAddress, $token) {
+        $mailSender = $this->injectProphecyService(MailSender::class);
+        $mailSender
+            ->send(Argument::that(function ($email) use ($emailAddress, $token) {
                 return $email instanceof Email
                     && $email->getToEmail() === $emailAddress
                     && $email->getTemplate() === MailFactory::ACTIVATION_TEMPLATE_ID
                     && strpos($email->getParameters()['activationLink'], "user/activate/$token") !== false;
-            }), Argument::cetera())->shouldBeCalled()->willReturn();
-        });
+            }))
+            ->shouldBeCalled()
+            ->willReturn();
 
         $this->client->request('GET', "/user/activate/password/send/$token");
         $this->client->followRedirect();
@@ -68,14 +70,16 @@ class UserControllerTest extends AbstractControllerTestCase
 
         $this->restClient->registerUser($data)->willReturn($user);
 
-        $this->injectProphecyService(MailSender::class, function($mailSender) {
-            $mailSender->send(Argument::that(function ($email) {
+        $mailSender = $this->injectProphecyService(MailSender::class);
+        $mailSender
+            ->send(Argument::that(function ($email) {
                 return $email instanceof Email
                     && $email->getToEmail() === 'd.brauchla@mailbox.example'
                     && $email->getTemplate() === MailFactory::ACTIVATION_TEMPLATE_ID
                     && strpos($email->getParameters()['activationLink'], 'user/activate/selfregister-token') !== false;
-            }), Argument::cetera())->shouldBeCalled()->willReturn();
-        });
+            }))
+            ->shouldBeCalled()
+            ->willReturn();
 
         $this->client->submit($button->form(), [
             'self_registration[firstname]' => $data->getFirstname(),
@@ -105,14 +109,16 @@ class UserControllerTest extends AbstractControllerTestCase
 
         $this->restClient->userRecreateToken($emailAddress, 'pass-reset')->shouldBeCalled()->willReturn($user);
 
-        $this->injectProphecyService(MailSender::class, function($mailSender) use ($emailAddress) {
-            $mailSender->send(Argument::that(function ($email) use ($emailAddress) {
+        $mailSender = $this->injectProphecyService(MailSender::class);
+        $mailSender
+            ->send(Argument::that(function ($email) use ($emailAddress) {
                 return $email instanceof Email
                     && $email->getToEmail() === $emailAddress
                     && $email->getTemplate() === MailFactory::RESET_PASSWORD_TEMPLATE_ID
                     && strpos($email->getParameters()['resetLink'], 'user/password-reset/test') !== false;
-            }), Argument::cetera())->shouldBeCalled()->willReturn();
-        });
+            }))
+            ->shouldBeCalled()
+            ->willReturn();
 
         $crawler = $this->client->request('GET', "/password-managing/forgotten");
 

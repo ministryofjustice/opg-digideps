@@ -36,14 +36,16 @@ class OrganisationControllerTest extends AbstractControllerTestCase
         $this->restClient->post('user', Argument::any(), ['org_team_add'], 'User')->shouldBeCalled()->willReturn($user);
         $this->restClient->put('v2/organisation/14/user/21', '')->shouldBeCalled()->willReturn($user);
 
-        $this->injectProphecyService(MailSender::class, function($mailSender) use ($emailAddress) {
-            $mailSender->send(Argument::that(function ($email) use ($emailAddress) {
+        $mailSender = $this->injectProphecyService(MailSender::class);
+        $mailSender
+            ->send(Argument::that(function ($email) use ($emailAddress) {
                 return $email instanceof Email
                     && $email->getToEmail() === $emailAddress
                     && $email->getTemplate() === MailFactory::INVITATION_TEMPLATE_ID
                     && strpos($email->getParameters()['link'], "user/activate/invitation-token") !== false;
-            }), Argument::cetera())->shouldBeCalled()->willReturn();
-        });
+            }))
+            ->shouldBeCalled()
+            ->willReturn();
 
         $crawler = $this->client->request('GET', "/org/settings/organisation/14/add-user");
         $button = $crawler->selectButton('Save');
@@ -116,14 +118,16 @@ class OrganisationControllerTest extends AbstractControllerTestCase
         $this->restClient->get('v2/organisation/14', 'Organisation')->shouldBeCalled()->willReturn($organisation);
         $this->restClient->userRecreateToken($emailAddress, 'pass-reset')->shouldBeCalled()->willReturn($invitedUser);
 
-        $this->injectProphecyService(MailSender::class, function($mailSender) use ($emailAddress) {
-            $mailSender->send(Argument::that(function ($email) use ($emailAddress) {
+        $mailSender = $this->injectProphecyService(MailSender::class);
+        $mailSender
+            ->send(Argument::that(function ($email) use ($emailAddress) {
                 return $email instanceof Email
                     && $email->getToEmail() === $emailAddress
                     && $email->getTemplate() === MailFactory::INVITATION_TEMPLATE_ID
                     && strpos($email->getParameters()['link'], "user/activate/invitation-token") !== false;
-            }), Argument::cetera())->shouldBeCalled()->willReturn();
-        });
+            }))
+            ->shouldBeCalled()
+            ->willReturn();
 
         $this->client->request('GET', "/org/settings/organisation/14/send-activation-link/17");
         $this->client->followRedirect();
