@@ -108,7 +108,7 @@ class OrganisationController extends AbstractController
                     $currentUser = $this->getUser();
 
                     $invitationEmail = $this->getMailFactory()->createInvitationEmail($user, $currentUser->getFullName());
-                    $this->getMailSender()->send($invitationEmail, ['text', 'html']);
+                    $this->getMailSender()->send($invitationEmail);
 
                     $this->getRestClient()->put('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId(), '');
                 }
@@ -280,7 +280,7 @@ class OrganisationController extends AbstractController
             $currentUser = $this->getUser();
 
             $invitationEmail = $this->getMailFactory()->createInvitationEmail($user, $currentUser->getFullName());
-            $this->getMailSender()->send($invitationEmail, ['text', 'html']);
+            $this->getMailSender()->send($invitationEmail);
 
             $this->addFlash(
                 'notice',

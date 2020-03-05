@@ -96,7 +96,7 @@ class IndexController extends AbstractController
                 $user = $restClient->post('user', $form->getData(), ['admin_add_user'], 'User');
 
                 $activationEmail = $mailFactory->createActivationEmail($user);
-                $mailSender->send($activationEmail, ['text', 'html']);
+                $mailSender->send($activationEmail);
 
                 $this->addFlash(
                     'notice',
@@ -493,7 +493,7 @@ class IndexController extends AbstractController
             $user = $restClient->userRecreateToken($email, 'pass-reset');
             $resetPasswordEmail = $mailFactory->createActivationEmail($user);
 
-            $mailSender->send($resetPasswordEmail, ['text', 'html']);
+            $mailSender->send($resetPasswordEmail);
         } catch (\Throwable $e) {
             $logger->debug($e->getMessage());
         }
