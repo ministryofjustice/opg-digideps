@@ -116,6 +116,18 @@ statsPage:
     submitAndDownload:
       label: Download
 
+upload:
+  htmlTitle: Administration - Upload users
+  pageTitle: Upload
+  supportTitle: Users
+  form:
+    type:
+      choices:
+        lay: Upload lay users
+        org: Upload PA/professional users
+    continue:
+        label: Continue
+
 uploadPA:
   htmlTitle: Administration - Upload PA/Prof users
   pageTitle: Admin
