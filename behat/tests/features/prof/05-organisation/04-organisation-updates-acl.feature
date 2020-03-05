@@ -13,7 +13,7 @@ Feature: Organisation deputyship updates
     And I activate the named deputy with password "Abcd1234"
     Then I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     # upload PROF updates
-    When I click on "admin-upload-pa"
+    When I go to admin page "/admin/org-csv-upload"
     When I attach the file "behat-prof-org-updates.csv" to "admin_upload_file"
     And I press "admin_upload_upload"
     And the organisation "publicguardian.gov.uk" is active
@@ -81,9 +81,3 @@ Feature: Organisation deputyship updates
       | SW3                                   | deputy-details |
       | GB                                    | deputy-details |
       | behat-prof1@example.com2              | deputy-details |
-
-
-
-
-
-
