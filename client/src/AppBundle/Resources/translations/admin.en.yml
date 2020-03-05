@@ -133,8 +133,8 @@ upload:
 
 uploadPA:
   htmlTitle: Administration - Upload PA/Prof users
-  pageTitle: Admin
-  supportTitle: PA/Prof user management
+  pageTitle: Upload PA/professional users
+  supportTitle: Users
   heading: Upload PA/Prof users along with clients and reports
   uploading: |
     Uploading... please wait.
@@ -147,8 +147,8 @@ uploadPA:
 
 uploadUsers:
   htmlTitle: Administration - Upload users
-  pageTitle: Admin
-  supportTitle: User management
+  pageTitle: Upload lay users
+  supportTitle: Users
   heading: Upload users
   usersInTheDB: users in the database
   uploading: Uploading... please wait.<br/>Do not refresh this page
