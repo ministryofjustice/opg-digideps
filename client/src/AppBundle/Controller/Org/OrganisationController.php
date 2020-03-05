@@ -291,8 +291,6 @@ class OrganisationController extends AbstractController
             $logger = $this->get('logger');
             $logger->debug($e->getMessage());
 
-            throw $e;
-
             $this->addFlash(
                 'error',
                 'An activation email could not be sent.'

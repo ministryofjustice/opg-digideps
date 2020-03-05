@@ -18,14 +18,6 @@ class ManageControllerTest extends AbstractControllerTestCase
         ];
     }
 
-    public function getRouteMap()
-    {
-        return [
-            ['/manage/availability', 'availabilityAction'],
-            ['/manage/elb', 'elbAction'],
-        ];
-    }
-
     /**
      * @dataProvider availabilityProvider
      */
@@ -46,12 +38,10 @@ class ManageControllerTest extends AbstractControllerTestCase
         $container->set('snc_redis.default', $redisMock);
 
         // api mock
-        $restClient = m::mock('AppBundle\Service\Client\RestClient');
-        $restClient->shouldReceive('get')->with('manage/availability', 'array')->andReturn([
+        $this->restClient->get('manage/availability', 'array')->shouldBeCalled()->willReturn([
             'healthy' => $apiHealthy,
             'errors' => $apiHealthy ? '' : 'api_errors',
         ]);
-        $container->set('rest_client', $restClient);
 
         // smtp mock
         $smtpMock = m::mock('Swift_Transport');
