@@ -32,7 +32,7 @@ abstract class AbstractControllerTestCase extends WebTestCase
     /**
      * Create a prophet for a Symfony service and overwrite it in the client container
      */
-    protected function injectProphecyService(string $className, callable $callback, array $aliases = []): ObjectProphecy
+    protected function injectProphecyService(string $className, callable $callback = null, array $aliases = []): ObjectProphecy
     {
         /** @var Container $container */
         $container = $this->client->getContainer();
@@ -44,7 +44,9 @@ abstract class AbstractControllerTestCase extends WebTestCase
             $container->set($alias, $prophet->reveal());
         }
 
-        call_user_func($callback, $prophet);
+        if (is_callable($callback)) {
+            call_user_func($callback, $prophet);
+        }
 
         return $prophet;
     }
