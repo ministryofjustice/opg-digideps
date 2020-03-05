@@ -7,6 +7,9 @@
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 
 {% block actions %}
+    <a href="{{ path('admin_add_user') }}" role="button" draggable="false" class="govuk-button govuk-button--secondary govuk-!-margin-right-2 govuk-!-margin-bottom-0" data-module="govuk-button">
+        {{ (page ~ '.actions.addUser') | trans }}
+    </a>
     <a href="{{ path('admin_upload') }}" role="button" draggable="false" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button">
         {{ (page ~ '.actions.upload') | trans }}
     </a>
@@ -61,12 +64,6 @@
                 {% else %}
                     <p>{{ (page ~ '.userTable.results') | trans({'%numberOfUsers%': users | length }) | raw }}</p>
                 {% endif %}
-            </div>
-            <div class="column-one-half text--right">
-                <a href="{{ path('admin_add_user') }}" class="bold-small move-quarter--up action-link behat-link-user-add-new">
-                    <span class="icon icon-plus"></span>
-                    {{ (page ~ '.addUserButton') | trans }}
-                </a>
             </div>
         </div>
 

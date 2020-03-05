@@ -5,7 +5,6 @@ home:
   actions:
     addUser: Add new user
     upload: Upload users
-  addUserButton: Add a new user
   userTable:
     heading: User list
     resultsLimited: Results limited to 100 users.<br>Use search to filter the wanted users.

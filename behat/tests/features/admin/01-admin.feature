@@ -38,14 +38,14 @@ Feature: admin / admin
 
   Scenario: Admins cannot add super admins
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    When I follow "Add a new user"
+    When I follow "Add new user"
     And I fill in "admin_roleType_1" with "staff"
     Then I should see "Admin"
     And I should not see "Super admin"
 
   Scenario: Super admins can add super admins
     Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "Abcd1234"
-    When I follow "Add a new user"
+    When I follow "Add new user"
     And I fill in "admin_roleType_1" with "staff"
     Then I should see "Admin"
     And I should see "Super admin"
