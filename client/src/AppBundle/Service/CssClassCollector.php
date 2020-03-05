@@ -9,9 +9,9 @@ class CssClassCollector extends DataCollector
 {
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
-        $content = $response->getContent();
         $appClasses = [];
         $govukClasses = [];
+        $mojClasses = [];
         $otherClasses = [];
 
         preg_match_all('/class=("|\')(.+?)\1/', $response->getContent(), $matches);
@@ -27,6 +27,8 @@ class CssClassCollector extends DataCollector
                     $counter = &$appClasses;
                 } else if (substr($className, 0, 6) === 'govuk-') {
                     $counter = &$govukClasses;
+                } else if (substr($className, 0, 4) === 'moj-') {
+                    $counter = &$mojClasses;
                 } else {
                     $counter = &$otherClasses;
                 }
@@ -41,11 +43,13 @@ class CssClassCollector extends DataCollector
 
         arsort($appClasses);
         arsort($govukClasses);
+        arsort($mojClasses);
         arsort($otherClasses);
 
         $this->data = [
             'app' => $appClasses,
             'govuk' => $govukClasses,
+            'moj' => $mojClasses,
             'other' => $otherClasses,
         ];
     }
