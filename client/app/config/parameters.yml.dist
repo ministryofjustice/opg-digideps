@@ -55,10 +55,6 @@ parameters:
           homepage: /
           report_overview: /report/{reportId|}/overview
           client_home: /client/show
-    smtp_default_hostname: localhost
-    smtp_default_port: 25
-    smtp_default_user: setme
-    smtp_default_password: setme
     s3_bucket_name: pa-uploads.local
     s3_client_params:
       version: 'latest'
