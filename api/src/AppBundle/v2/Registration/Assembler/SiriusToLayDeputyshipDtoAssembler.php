@@ -29,6 +29,19 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
             throw new \InvalidArgumentException('Cannot assemble LayDeputyshipDto: Missing expected data');
         }
 
+        try {
+            return $this->buildDto($data);
+        } catch (\InvalidArgumentException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @param array $data
+     * @return LayDeputyshipDto
+     */
+    private function buildDto(array $data): LayDeputyshipDto
+    {
         return
             (new LayDeputyshipDto())
                 ->setCaseNumber($this->normaliser->normaliseCaseNumber($data['Case']))
@@ -69,7 +82,7 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
             case 'OPG103':
                 return 'L3';
             default:
-                throw new \InvalidArgumentException('Cannot assemble LayDeputyshipDto: Unexptected report type');
+                throw new \InvalidArgumentException('Cannot assemble LayDeputyshipDto: Unexpected report type');
         }
     }
 }
