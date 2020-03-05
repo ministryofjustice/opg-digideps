@@ -1,10 +1,8 @@
 page:
-  htmlTitle: "Admin settings"
-  pageTitle: "Admin"
-  supportTitle: "Settings"
+  htmlTitle: Administration - Service notifications
+  pageTitle: Service notifications
 
 serviceNotifications:
-  title: Service notification
   description: Service notifications will be seen by all visitors to the service. They should be used to inform users of scheduled periods of maintenance or changes to the service.
   form:
     content:

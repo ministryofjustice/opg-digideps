@@ -1,7 +1,6 @@
 indexPage:
     htmlTitle: Administration - Organisations
-    pageTitle: Admin
-    supportTitle: Organisations
+    pageTitle: Organisations
     noOrganisations: No organisations have been added
     addOrganisation: Add a new organisation
     summary:

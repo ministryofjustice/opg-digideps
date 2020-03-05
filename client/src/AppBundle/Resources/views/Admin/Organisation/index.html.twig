@@ -7,10 +7,6 @@
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 
-{% block supportTitleBottom %}
-    <span class="govuk-caption-xl">{{ (page ~ '.supportTitle') | trans }}</span>
-{% endblock %}
-
 {% block breadcrumbs %}
     {{ macros.breadcrumbsArray([
         { href: url('admin_homepage'), text: 'Admin' },
