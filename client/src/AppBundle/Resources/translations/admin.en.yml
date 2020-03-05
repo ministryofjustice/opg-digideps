@@ -1,7 +1,10 @@
 home:
   htmlTitle: Administration - Users
-  pageTitle: Admin
+  pageTitle: Users
   supportTitle: User management
+  actions:
+    addUser: Add new user
+    upload: Upload users
   addUserButton: Add a new user
   userTable:
     heading: User list

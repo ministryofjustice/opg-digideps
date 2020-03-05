@@ -5,10 +5,11 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
 
-{% block supportTitleBottom %}
-    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% block actions %}
+    <a href="{{ path('admin_upload') }}" role="button" draggable="false" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button">
+        {{ (page ~ '.actions.upload') | trans }}
+    </a>
 {% endblock %}
 
 {% block helpline %}{% endblock %}
