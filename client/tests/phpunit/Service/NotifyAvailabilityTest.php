@@ -39,7 +39,7 @@ class NotifyAvailabilityTest extends TestCase
         $sut = new NotifyAvailability($notifyClient->reveal());
 
         self::assertEquals(false, $sut->isHealthy());
-        self::assertEquals('502: "Not available"', $sut->getErrors());
+        self::assertEquals('Notify - 502: "Not available"', $sut->getErrors());
     }
 
     private function generateNotfyAPIException()

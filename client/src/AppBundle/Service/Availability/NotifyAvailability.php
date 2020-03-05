@@ -16,17 +16,15 @@ class NotifyAvailability extends ServiceAvailabilityAbstract
     public function __construct(NotifyClient $notifyClient)
     {
         $this->notifyClient = $notifyClient;
-
         $this->isHealthy = true;
 
         try{
             $this->pingNotify();
         } catch (NotifyAPIException $e) {
             $this->isHealthy = false;
-            $this->errors = $e->getErrorMessage();
+            $this->errors = sprintf('Notify - %s', $e->getErrorMessage());
         }
     }
-
 
     /**
      * @return string
