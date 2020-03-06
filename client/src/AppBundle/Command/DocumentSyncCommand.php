@@ -3,12 +3,23 @@
 namespace AppBundle\Command;
 
 use AppBundle\Entity\Report\Document;
+use AppBundle\Service\DocumentSyncService;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class DocumentSyncCommand extends DaemonableCommand
 {
     protected static $defaultName = 'digideps:document-sync';
+
+    /** @var DocumentSyncService */
+    private $documentSyncService;
+
+    public function __construct(DocumentSyncService $documentSyncService)
+    {
+        $this->documentSyncService = $documentSyncService;
+
+        parent::__construct();
+    }
 
     protected function configure()
     {
@@ -23,7 +34,11 @@ class DocumentSyncCommand extends DaemonableCommand
     {
         $this->daemonize($input, $output, function() use ($output) {
             $documents = $this->getQueuedDocuments();
-            $output->writeln($documents[0]->getFileName());
+            $output->writeln(count($documents) . ' documents to upload');
+
+            foreach ($documents as $document) {
+                $this->documentSyncService->syncReportDocument($document);
+            }
         });
     }
 
@@ -31,6 +46,7 @@ class DocumentSyncCommand extends DaemonableCommand
     {
         $doc = new Document();
         $doc->setFileName(mt_rand() . 'example.pdf');
+        $doc->setStorageReference('example_ref');
         return [$doc];
     }
 }
