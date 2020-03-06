@@ -14,7 +14,7 @@ class DocumentSyncCommand extends Command
 {
     protected static $defaultName = 'digideps:document-sync';
 
-    private $shutdownRequested = true;
+    private $shutdownRequested = false;
 
     protected function configure()
     {
@@ -27,14 +27,24 @@ class DocumentSyncCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if ($input->getOption('daemon')) {
-            $this->shutdownRequested = false;
+            $stopCommand = function() use ($output) {
+                $output->writeln('Stopping...');
+                $this->shutdownRequested = true;
+            };
+
+            pcntl_signal(SIGTERM, $stopCommand);
+            pcntl_signal(SIGINT, $stopCommand);
+        } else {
+            $this->shutdownRequested = true;
         }
 
         do {
             $this->executeOnce($output);
 
+            pcntl_signal_dispatch();
+
             if (!$this->shutdownRequested) {
-                sleep(SECONDS_IN_A_MINUTE * 5);
+                sleep(SECONDS_IN_A_MINUTE * 10);
             }
 
         } while (!$this->shutdownRequested);
@@ -45,7 +55,7 @@ class DocumentSyncCommand extends Command
     private function getQueuedDocuments()
     {
         $doc = new Document();
-        $doc->setFileName('example.pdf');
+        $doc->setFileName(mt_rand() . 'example.pdf');
         return [$doc];
     }
 
