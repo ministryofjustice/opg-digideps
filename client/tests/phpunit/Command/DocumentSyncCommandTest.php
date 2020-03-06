@@ -2,6 +2,7 @@
 namespace App\Tests\Command;
 
 use AppBundle\Entity\Report\Document;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\DocumentSyncService;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -13,14 +14,25 @@ class DocumentSyncCommandTest extends KernelTestCase
 {
     public function testExecute()
     {
+        $doc = new Document();
+        $doc->setId(6789);
+
+        /** @var RestClient|ObjectProphecy $documentSyncService */
+        $restClient = self::prophesize(RestClient::class);
+        $restClient
+            ->apiCall('get', 'document/queued', [], 'Report\\Document[]', Argument::type('array'), false)
+            ->shouldBeCalled()
+            ->willReturn([ $doc ]);
+
         /** @var DocumentSyncService|ObjectProphecy $documentSyncService */
         $documentSyncService = self::prophesize(DocumentSyncService::class);
         $documentSyncService
-            ->syncReportDocument(Argument::type(Document::class))
+            ->syncReportDocument($doc)
             ->shouldBeCalled();
 
         $kernel = static::bootKernel();
         $kernel->getContainer()->set(DocumentSyncService::class, $documentSyncService->reveal());
+        $kernel->getContainer()->set(RestClient::class, $restClient->reveal());
         $application = new Application($kernel);
 
         $command = $application->find('digideps:document-sync');
