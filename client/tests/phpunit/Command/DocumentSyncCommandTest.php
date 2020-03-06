@@ -9,15 +9,16 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class DocumentSyncCommandTest extends KernelTestCase
 {
-    public function testExecute()
+    public function testExecute(): void
     {
         $doc = new Document();
         $doc->setId(6789);
 
-        /** @var RestClient|ObjectProphecy $documentSyncService */
+        /** @var RestClient|ObjectProphecy $restClient */
         $restClient = self::prophesize(RestClient::class);
         $restClient
             ->apiCall('get', 'document/queued', [], 'Report\\Document[]', Argument::type('array'), false)
@@ -31,9 +32,12 @@ class DocumentSyncCommandTest extends KernelTestCase
             ->shouldBeCalled();
 
         $kernel = static::bootKernel();
-        $kernel->getContainer()->set(DocumentSyncService::class, $documentSyncService->reveal());
-        $kernel->getContainer()->set(RestClient::class, $restClient->reveal());
         $application = new Application($kernel);
+
+        /** @var ContainerInterface */
+        $container = $kernel->getContainer();
+        $container->set(DocumentSyncService::class, $documentSyncService->reveal());
+        $container->set(RestClient::class, $restClient->reveal());
 
         $command = $application->find('digideps:document-sync');
         $commandTester = new CommandTester($command);
