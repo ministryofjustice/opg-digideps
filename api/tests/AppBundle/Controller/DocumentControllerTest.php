@@ -118,4 +118,38 @@ class DocumentControllerTest extends AbstractTestController
         self::fixtures()->remove($document)->flush();
 
     }
+
+    public function testGetQueuedDocumentsUsesSecretAuth()
+    {
+        $return = $this->assertJsonRequest('GET', '/document/queued', [
+            'mustFail' => true,
+            'ClientSecret' => 'WRONG CLIENT SECRET',
+            'assertCode' => 403,
+            'assertResponseCode' => 403,
+        ]);
+
+        $this->assertStringContainsString('client secret not accepted', $return['message']);
+
+        $return = $this->assertJsonRequest('GET', '/document/queued', [
+            'mustSucceed' => true,
+            'ClientSecret' => API_TOKEN_DEPUTY,
+        ]);
+
+        self::assertCount(0, $return['data']);
+    }
+
+    public function testGetQueuedDocuments()
+    {
+        // Queue a document
+        $document = $this->repo->find(1);
+        $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
+        self::fixtures()->flush();
+
+        $return = $this->assertJsonRequest('GET', '/document/queued', [
+            'mustSucceed' => true,
+            'ClientSecret' => API_TOKEN_DEPUTY,
+        ]);
+
+        self::assertCount(1, $return['data']);
+    }
 }
