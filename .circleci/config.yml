@@ -273,7 +273,7 @@ jobs:
           command: stabilizer
   build:
     docker:
-      - image: circleci/python:2.7
+      - image: circleci/python:3
     parameters:
       semver_stage:
         description: semver stage suffix
