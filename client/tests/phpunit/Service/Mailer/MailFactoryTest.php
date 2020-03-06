@@ -165,7 +165,7 @@ class MailFactoryTest extends TestCase
             'homepageURL' => 'https://front.base.url',
             'newStartDate' => '24/03/2018',
             'newEndDate' => '23/03/2019',
-            'EndDatePlus1' => '24/03/2018',
+            'EndDatePlus1' => '24/03/2019',
             'PFA' => substr($reportType, 0, 3 ) === '104' ? 'no' : 'yes',
             'lay' => 'yes'
         ];
@@ -217,7 +217,7 @@ class MailFactoryTest extends TestCase
             'homepageURL' => 'https://front.base.url',
             'newStartDate' => '24/03/2018',
             'newEndDate' => '23/03/2019',
-            'EndDatePlus1' => '24/03/2018',
+            'EndDatePlus1' => '24/03/2019',
             'PFA' => substr($reportType, 0, 3 ) === '104' ? 'no' : 'yes',
             'lay' => 'no'
         ];

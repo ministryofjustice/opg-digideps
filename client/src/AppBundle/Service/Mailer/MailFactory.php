@@ -350,7 +350,7 @@ class MailFactory
             ->setTemplate(self::REPORT_SUBMITTED_CONFIRMATION_TEMPLATE_ID);
 
         /** @var \DateTime $dateSubmittableFrom */
-        $dateSubmittableFrom = clone $submittedReport->getEndDate();
+        $dateSubmittableFrom = clone $newReport->getEndDate();
         $dateSubmittableFrom->add(new \DateInterval('P1D'));
 
         /** @var array $notifyParams */
