@@ -7,8 +7,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-const SECONDS_IN_A_MINUTE = 1;
-
 abstract class DaemonableCommand extends Command
 {
     private $shutdownRequested = false;
@@ -20,7 +18,7 @@ abstract class DaemonableCommand extends Command
         ;
     }
 
-    protected function daemonize(InputInterface $input, OutputInterface $output, callable $callback)
+    protected function daemonize(InputInterface $input, OutputInterface $output, callable $callback, int $interval)
     {
         if ($input->getOption('daemon')) {
             $stopCommand = function() use ($output) {
@@ -40,7 +38,7 @@ abstract class DaemonableCommand extends Command
             pcntl_signal_dispatch();
 
             if (!$this->shutdownRequested) {
-                sleep(SECONDS_IN_A_MINUTE * 10);
+                sleep($interval);
             }
 
         } while (!$this->shutdownRequested);
