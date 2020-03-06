@@ -44,7 +44,7 @@ class DocumentSyncCommand extends DaemonableCommand
             foreach ($documents as $document) {
                 $this->documentSyncService->syncReportDocument($document);
             }
-        });
+        }, 5 * 60);
     }
 
     private function getQueuedDocuments()
