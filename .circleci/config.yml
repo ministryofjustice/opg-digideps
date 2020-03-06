@@ -12,60 +12,60 @@ workflows:
           semver_stage: --stage dev
           filters: { branches: { ignore: [ master ] } }
 
-      - apply:
-          name: apply environment
-          requires: [ build pr, lint terraform ]
-          filters: { branches: { ignore: [ master ] } }
+    #   - apply:
+    #       name: apply environment
+    #       requires: [ build pr, lint terraform ]
+    #       filters: { branches: { ignore: [ master ] } }
 
-      - run-task:
-          name: reset environment
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: reset_database
-          timeout: 180
+    #   - run-task:
+    #       name: reset environment
+    #       requires: [ apply environment ]
+    #       filters: { branches: { ignore: [ master ] } }
+    #       task_name: reset_database
+    #       timeout: 180
 
-      - run-task:
-          name: integration test
-          requires: [ reset environment ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: integration_test
-          timeout: 2100
+    #   - run-task:
+    #       name: integration test
+    #       requires: [ reset environment ]
+    #       filters: { branches: { ignore: [ master ] } }
+    #       task_name: integration_test
+    #       timeout: 2100
 
-      - client-unit-test:
-          name: client unit test
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ master ] } }
+    #   - client-unit-test:
+    #       name: client unit test
+    #       requires: [ apply environment ]
+    #       filters: { branches: { ignore: [ master ] } }
 
-      - run-task:
-          name: api unit test
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: api_unit_test
-          timeout: 600
+    #   - run-task:
+    #       name: api unit test
+    #       requires: [ apply environment ]
+    #       filters: { branches: { ignore: [ master ] } }
+    #       task_name: api_unit_test
+    #       timeout: 600
 
-      - run-task:
-          name: backup environment
-          requires: [ api unit test, client unit test, integration test ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: backup
+    #   - run-task:
+    #       name: backup environment
+    #       requires: [ api unit test, client unit test, integration test ]
+    #       filters: { branches: { ignore: [ master ] } }
+    #       task_name: backup
 
-      - run-task:
-          name: restore environment
-          requires: [ backup environment ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: restore
+    #   - run-task:
+    #       name: restore environment
+    #       requires: [ backup environment ]
+    #       filters: { branches: { ignore: [ master ] } }
+    #       task_name: restore
 
-      - cleanup:
-          name: approve destroy environment
-          type: approval
-          requires: [ restore environment ]
-          filters: { branches: { ignore: [ master ] } }
+    #   - cleanup:
+    #       name: approve destroy environment
+    #       type: approval
+    #       requires: [ restore environment ]
+    #       filters: { branches: { ignore: [ master ] } }
 
-      - apply:
-          name: destroy environment
-          requires: [ approve destroy environment ]
-          filters: { branches: { ignore: [ master ] } }
-          tf_command: destroy
+    #   - apply:
+    #       name: destroy environment
+    #       requires: [ approve destroy environment ]
+    #       filters: { branches: { ignore: [ master ] } }
+    #       tf_command: destroy
 
   master:
     jobs:
@@ -306,50 +306,50 @@ jobs:
       - run:
           name: Show version
           command: echo ${VERSION}
-      - run:
-          name: Tag git
-          command: git tag ${VERSION}
-      - run:
-          name: Push git tags
-          command: git push --tags
-      - run:
-          name: Docker login
-          command: eval $(aws ecr get-login --region $AWS_REGION --no-include-email --profile digideps-ci)
-      - run:
-          name: Build images
-          command: docker-compose -f docker-compose.ci.yml build --parallel
-      - run:
-          name: List API packages
-          command: docker-compose -f docker-compose.ci.yml run --rm api apk list | sort
-      - run:
-          name: List client packages
-          command: docker-compose -f docker-compose.ci.yml run --rm client apk list | sort
-      - run:
-          name: Check updated PHP files for errors
-          command: |
-            MERGE_BASE_COMMIT=( $(git merge-base master HEAD) )
-            API_CHANGED_FILES=( $(git diff --relative=api --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) ) || [[ $? == 1 ]]
-            CLIENT_CHANGED_FILES=( $(git diff --relative=client --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) ) || [[ $? == 1 ]]
+    #   - run:
+    #       name: Tag git
+    #       command: git tag ${VERSION}
+    #   - run:
+    #       name: Push git tags
+    #       command: git push --tags
+    #   - run:
+    #       name: Docker login
+    #       command: eval $(aws ecr get-login --region $AWS_REGION --no-include-email --profile digideps-ci)
+    #   - run:
+    #       name: Build images
+    #       command: docker-compose -f docker-compose.ci.yml build --parallel
+    #   - run:
+    #       name: List API packages
+    #       command: docker-compose -f docker-compose.ci.yml run --rm api apk list | sort
+    #   - run:
+    #       name: List client packages
+    #       command: docker-compose -f docker-compose.ci.yml run --rm client apk list | sort
+    #   - run:
+    #       name: Check updated PHP files for errors
+    #       command: |
+    #         MERGE_BASE_COMMIT=( $(git merge-base master HEAD) )
+    #         API_CHANGED_FILES=( $(git diff --relative=api --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) ) || [[ $? == 1 ]]
+    #         CLIENT_CHANGED_FILES=( $(git diff --relative=client --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) ) || [[ $? == 1 ]]
 
-            if [ -n "$API_CHANGED_FILES" ]; then
-                docker-compose -f docker-compose.ci.yml run --rm api php bin/phpstan analyse $API_CHANGED_FILES --memory-limit=0 --level=max
-            fi
+    #         if [ -n "$API_CHANGED_FILES" ]; then
+    #             docker-compose -f docker-compose.ci.yml run --rm api php bin/phpstan analyse $API_CHANGED_FILES --memory-limit=0 --level=max
+    #         fi
 
-            if [ -n "$CLIENT_CHANGED_FILES" ]; then
-                docker-compose -f docker-compose.ci.yml run --rm client php bin/phpstan analyse $CLIENT_CHANGED_FILES --memory-limit=0 --level=max
-            fi
-      - run:
-          name: Push images
-          command: docker-compose -f docker-compose.ci.yml push
-      - run:
-          name: Archive docker images
-          command: |
-            docker tag ${AWS_REGISTRY}/digideps/client:${VERSION} client:latest
-            docker save -o docker-images.tar client:latest
-      - persist_to_workspace:
-          root: .
-          paths:
-          - ./docker-images.tar
+    #         if [ -n "$CLIENT_CHANGED_FILES" ]; then
+    #             docker-compose -f docker-compose.ci.yml run --rm client php bin/phpstan analyse $CLIENT_CHANGED_FILES --memory-limit=0 --level=max
+    #         fi
+    #   - run:
+    #       name: Push images
+    #       command: docker-compose -f docker-compose.ci.yml push
+    #   - run:
+    #       name: Archive docker images
+    #       command: |
+    #         docker tag ${AWS_REGISTRY}/digideps/client:${VERSION} client:latest
+    #         docker save -o docker-images.tar client:latest
+    #   - persist_to_workspace:
+    #       root: .
+    #       paths:
+    #       - ./docker-images.tar
 
   client-unit-test:
     docker:
