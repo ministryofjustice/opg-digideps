@@ -3,6 +3,7 @@
 namespace AppBundle\Command;
 
 use AppBundle\Entity\Report\Document;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\DocumentSyncService;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -14,9 +15,13 @@ class DocumentSyncCommand extends DaemonableCommand
     /** @var DocumentSyncService */
     private $documentSyncService;
 
-    public function __construct(DocumentSyncService $documentSyncService)
+    /** @var RestClient */
+    private $restClient;
+
+    public function __construct(DocumentSyncService $documentSyncService, RestClient $restClient)
     {
         $this->documentSyncService = $documentSyncService;
+        $this->restClient = $restClient;
 
         parent::__construct();
     }
@@ -44,9 +49,12 @@ class DocumentSyncCommand extends DaemonableCommand
 
     private function getQueuedDocuments()
     {
-        $doc = new Document();
-        $doc->setFileName(mt_rand() . 'example.pdf');
-        $doc->setStorageReference('example_ref');
-        return [$doc];
+        $options = [
+            'query' => [
+                'groups' => ['documents', 'document-synchronisation', 'document-storage-reference', 'document-report', 'report', 'report-client', 'client-case-number']
+            ]
+        ];
+
+        return $this->restClient->apiCall('get', 'document/queued', [], 'Report\\Document[]', $options, false);
     }
 }
