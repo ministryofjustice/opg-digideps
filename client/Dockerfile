@@ -86,6 +86,7 @@ COPY --from=composer /app/app app
 COPY --from=composer /app/bin bin
 COPY --from=composer /app/vendor vendor
 COPY --from=composer /app/composer.lock composer.lock
+COPY scripts scripts
 COPY src src
 COPY tests tests
 COPY web web
