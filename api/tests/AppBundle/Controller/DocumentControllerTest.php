@@ -119,7 +119,7 @@ class DocumentControllerTest extends AbstractTestController
 
     }
 
-    public function testGetQueuedDocumentsUsesSecretAuth()
+    public function testGetQueuedDocumentsUsesSecretAuth(): void
     {
         $return = $this->assertJsonRequest('GET', '/document/queued', [
             'mustFail' => true,
@@ -138,10 +138,12 @@ class DocumentControllerTest extends AbstractTestController
         self::assertCount(0, $return['data']);
     }
 
-    public function testGetQueuedDocuments()
+    public function testGetQueuedDocuments(): void
     {
         // Queue a document
         $document = $this->repo->find(1);
+        self::assertInstanceOf(Document::class, $document);
+
         $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
         self::fixtures()->flush();
 

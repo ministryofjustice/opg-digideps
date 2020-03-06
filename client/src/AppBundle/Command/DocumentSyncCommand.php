@@ -26,7 +26,7 @@ class DocumentSyncCommand extends DaemonableCommand
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -35,9 +35,9 @@ class DocumentSyncCommand extends DaemonableCommand
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->daemonize($input, $output, function() use ($output) {
+        return $this->daemonize($input, $output, function() use ($output) {
             $documents = $this->getQueuedDocuments();
             $output->writeln(count($documents) . ' documents to upload');
 
@@ -47,7 +47,10 @@ class DocumentSyncCommand extends DaemonableCommand
         }, 5 * 60);
     }
 
-    private function getQueuedDocuments()
+    /**
+     * @return Document[]
+     */
+    private function getQueuedDocuments(): array
     {
         $options = [
             'query' => [

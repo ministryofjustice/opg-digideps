@@ -9,16 +9,17 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class DaemonableCommand extends Command
 {
+    /** @var bool */
     private $shutdownRequested = false;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->addOption('daemon', 'd', InputOption::VALUE_NONE, 'Whether to run in daemon mode');
         ;
     }
 
-    protected function daemonize(InputInterface $input, OutputInterface $output, callable $callback, int $interval)
+    protected function daemonize(InputInterface $input, OutputInterface $output, callable $callback, int $interval): int
     {
         if ($input->getOption('daemon')) {
             $stopCommand = function() use ($output) {
