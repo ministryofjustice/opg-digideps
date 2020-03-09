@@ -12,7 +12,7 @@ RUN npm install
 
 # Check linting
 RUN npm run lint
-RUN npm audit
+# RUN npm audit
 
 # Build assets
 RUN NODE_ENV=production npm run build
