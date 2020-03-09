@@ -1,7 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Service\Client\Sirius;
 
+use AppBundle\Service\AWS\RequestSigner;
 use Aws\Credentials\CredentialProvider;
 use Aws\Signature\SignatureV4;
 use GuzzleHttp\Client;
@@ -16,13 +17,22 @@ class SiriusApiGatewayClient
     /** @var string */
     private $baseUrl;
 
+    /** @var RequestSigner */
+    private $requestSigner;
+
     /**
      * @param Client $httpClient
+     * @param RequestSigner $requestSigner
      * @param string $baseUrl
      */
-    public function __construct(Client $httpClient, string $baseUrl)
+    public function __construct(
+        Client $httpClient,
+        RequestSigner $requestSigner,
+        string $baseUrl
+    )
     {
         $this->httpClient = $httpClient;
+        $this->requestSigner = $requestSigner;
         $this->baseUrl = $baseUrl;
     }
 
@@ -33,17 +43,25 @@ class SiriusApiGatewayClient
      */
     public function get(string $endpoint)
     {
+        $signedRequest = $this->buildSignedRequest($endpoint, 'GET');
+        return $this->httpClient->send($signedRequest);
+    }
+
+    public function post(string $endpoint)
+    {
+        $signedRequest = $this->buildSignedRequest($endpoint, 'POST');
+        return $this->httpClient->send($signedRequest);
+    }
+
+    private function buildSignedRequest(string $endpoint, string $method)
+    {
         $url = new Uri(sprintf('%s/%s', $this->baseUrl, $endpoint));
-        $request = new Request('GET', $url, $headers = [
+        $request = new Request($method, $url, $headers = [
             'Accept' => 'application/json',
             'Content-type' => 'application/json'
         ]);
 
-        $provider = CredentialProvider::defaultProvider();
-        $signer = new SignatureV4('execute-api', 'eu-west-1');
-
         // Sign the request with an AWS Authorization header.
-        $signedRequest = $signer->signRequest($request, $provider()->wait());
-        return $this->httpClient->send($signedRequest);
+        return $this->requestSigner->signRequest($request, 'execute-api');
     }
 }
