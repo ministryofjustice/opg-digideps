@@ -78,7 +78,10 @@ class FixtureController
         $fromRequest = json_decode($request->getContent(), true);
 
         $client = $this->createClient($fromRequest);
-        $deputy = $this->createDeputy($fromRequest);
+
+        if (null === $deputy = $this->deputyRepository->findOneBy(['email' => strtolower($fromRequest['deputyEmail'])])) {
+            $deputy = $this->createDeputy($fromRequest);
+        }
 
         if (strtolower($fromRequest['reportType']) === 'ndr') {
             $this->createNdr($fromRequest, $client);
@@ -86,12 +89,6 @@ class FixtureController
         } else {
             $this->createReport($fromRequest, $client);
         }
-
-        if (null === $deputy = $this->deputyRepository->findOneBy(['email' => strtolower($fromRequest['deputyEmail'])])) {
-            $deputy = $this->createDeputy($fromRequest);
-        }
-
-        $this->createReport($fromRequest, $client);
 
         if ($fromRequest['deputyType'] === User::TYPE_LAY) {
             $deputy->addClient($client);
