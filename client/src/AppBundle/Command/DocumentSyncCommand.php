@@ -5,6 +5,7 @@ namespace AppBundle\Command;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\DocumentSyncService;
+use Aws\Ssm\SsmClient;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -18,10 +19,14 @@ class DocumentSyncCommand extends DaemonableCommand
     /** @var RestClient */
     private $restClient;
 
-    public function __construct(DocumentSyncService $documentSyncService, RestClient $restClient)
+    /** @var SsmClient */
+    private $ssmClient;
+
+    public function __construct(DocumentSyncService $documentSyncService, RestClient $restClient, SsmClient $ssmClient)
     {
         $this->documentSyncService = $documentSyncService;
         $this->restClient = $restClient;
+        $this->ssmClient = $ssmClient;
 
         parent::__construct();
     }
@@ -38,6 +43,11 @@ class DocumentSyncCommand extends DaemonableCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         return $this->daemonize($input, $output, function() use ($output) {
+            if (!$this->isFeatureEnabled()) {
+                $output->writeln('Feature disabled, sleeping');
+                return;
+            }
+
             $documents = $this->getQueuedDocuments();
             $output->writeln(count($documents) . ' documents to upload');
 
@@ -45,6 +55,14 @@ class DocumentSyncCommand extends DaemonableCommand
                 $this->documentSyncService->syncReportDocument($document);
             }
         }, 5 * 60);
+    }
+
+    private function isFeatureEnabled(): bool
+    {
+        $flagName = getenv('FLAG_NAME_DOCUMENT_SYNC');
+        $flag = $this->ssmClient->getParameter([ 'Name' => $flagName ]);
+
+        return $flag === "1";
     }
 
     /**
