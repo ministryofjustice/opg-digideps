@@ -24,7 +24,10 @@ class DocumentSyncCommandTest extends KernelTestCase
         $ssmClient
             ->getParameter([ 'Name' => '/default/flag/document-sync' ])
             ->shouldBeCalled()
-            ->willReturn('1');
+            ->willReturn(['Parameter' => [
+                'Name' => '/default/flag/document-sync',
+                'Value' => '1'
+            ]]);
 
         /** @var RestClient|ObjectProphecy $restClient */
         $restClient = self::prophesize(RestClient::class);
@@ -63,7 +66,10 @@ class DocumentSyncCommandTest extends KernelTestCase
         $ssmClient
             ->getParameter([ 'Name' => '/default/flag/document-sync' ])
             ->shouldBeCalled()
-            ->willReturn('0');
+            ->willReturn(['Parameter' => [
+                'Name' => '/default/flag/document-sync',
+                'Value' => '0'
+            ]]);
 
         /** @var RestClient|ObjectProphecy $restClient */
         $restClient = self::prophesize(RestClient::class);
