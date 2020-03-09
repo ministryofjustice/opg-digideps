@@ -8,7 +8,7 @@ parameters:
 
 services:
   Aws\S3\S3Client:
-    arguments: ["%aws_client_params%"]
+    arguments: ["%s3_client_params%"]
 
   Aws\Ssm\SsmClient:
     arguments: ["%ssm_client_params%"]
