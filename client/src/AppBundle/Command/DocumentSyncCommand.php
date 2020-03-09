@@ -62,7 +62,7 @@ class DocumentSyncCommand extends DaemonableCommand
         $flagName = getenv('FLAG_NAME_DOCUMENT_SYNC');
         $flag = $this->ssmClient->getParameter([ 'Name' => $flagName ]);
 
-        return $flag === "1";
+        return $flag['Parameter']['Value'] === "1";
     }
 
     /**
