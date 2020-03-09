@@ -76,4 +76,4 @@ COPY web web
 COPY phpstan.neon .
 
 # Check for security issues
-RUN su-exec www-data php app/console security:check
+#RUN su-exec www-data php app/console security:check
