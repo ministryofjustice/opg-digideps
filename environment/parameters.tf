@@ -7,6 +7,8 @@ resource "aws_ssm_parameter" "flag_document_sync" {
   type  = "String"
   value = "1"
 
+  tags = local.default_tags
+
   lifecycle {
     ignore_changes = [value]
   }
