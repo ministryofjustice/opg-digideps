@@ -4,6 +4,7 @@ namespace App\Tests\Command;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\DocumentSyncService;
+use Aws\Ssm\SsmClient;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -18,6 +19,13 @@ class DocumentSyncCommandTest extends KernelTestCase
         $doc = new Document();
         $doc->setId(6789);
 
+        /** @var SsmClient|ObjectProphecy $ssmClient */
+        $ssmClient = self::prophesize(SsmClient::class);
+        $ssmClient
+            ->getParameter([ 'Name' => '/default/flag/document-sync' ])
+            ->shouldBeCalled()
+            ->willReturn('1');
+
         /** @var RestClient|ObjectProphecy $restClient */
         $restClient = self::prophesize(RestClient::class);
         $restClient
@@ -31,13 +39,14 @@ class DocumentSyncCommandTest extends KernelTestCase
             ->syncReportDocument($doc)
             ->shouldBeCalled();
 
-        $kernel = static::bootKernel();
+        $kernel = static::bootKernel([ 'debug' => false ]);
         $application = new Application($kernel);
 
         /** @var ContainerInterface */
         $container = $kernel->getContainer();
         $container->set(DocumentSyncService::class, $documentSyncService->reveal());
         $container->set(RestClient::class, $restClient->reveal());
+        $container->set(SsmClient::class, $ssmClient->reveal());
 
         $command = $application->find('digideps:document-sync');
         $commandTester = new CommandTester($command);
@@ -45,5 +54,43 @@ class DocumentSyncCommandTest extends KernelTestCase
 
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('1 documents to upload', $output);
+    }
+
+    public function testSleepsWhenTurnedOff()
+    {
+        /** @var SsmClient|ObjectProphecy $ssmClient */
+        $ssmClient = self::prophesize(SsmClient::class);
+        $ssmClient
+            ->getParameter([ 'Name' => '/default/flag/document-sync' ])
+            ->shouldBeCalled()
+            ->willReturn('0');
+
+        /** @var RestClient|ObjectProphecy $restClient */
+        $restClient = self::prophesize(RestClient::class);
+        $restClient
+            ->apiCall(Argument::cetera())
+            ->shouldNotBeCalled();
+
+        /** @var DocumentSyncService|ObjectProphecy $documentSyncService */
+        $documentSyncService = self::prophesize(DocumentSyncService::class);
+        $documentSyncService
+            ->syncReportDocument(Argument::cetera())
+            ->shouldNotBeCalled();
+
+        $kernel = static::bootKernel([ 'debug' => false ]);
+        $application = new Application($kernel);
+
+        /** @var ContainerInterface */
+        $container = $kernel->getContainer();
+        $container->set(DocumentSyncService::class, $documentSyncService->reveal());
+        $container->set(RestClient::class, $restClient->reveal());
+        $container->set(SsmClient::class, $ssmClient->reveal());
+
+        $command = $application->find('digideps:document-sync');
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([]);
+
+        $output = $commandTester->getDisplay();
+        $this->assertStringContainsString('Feature disabled, sleeping', $output);
     }
 }
