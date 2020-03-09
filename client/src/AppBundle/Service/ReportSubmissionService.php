@@ -163,13 +163,8 @@ class ReportSubmissionService
         if ($newYearReportId) {
             $newReport = $this->restClient->get('report/' . $newYearReportId, 'Report\\Report');
 
-            //send confirmation email
-            if ($user->isDeputyOrg()) {
-                $reportConfirmEmail = $this->mailFactory->createOrgReportSubmissionConfirmationEmail($user, $report, $newReport);
-            } else {
-                $reportConfirmEmail = $this->mailFactory->createReportSubmissionConfirmationEmail($user, $report, $newReport);
-            }
-            $this->mailSender->send($reportConfirmEmail, ['text', 'html']);
+            $reportConfirmEmail = $this->mailFactory->createReportSubmissionConfirmationEmail($user, $report, $newReport);
+            $this->mailSender->send($reportConfirmEmail);
         }
     }
 

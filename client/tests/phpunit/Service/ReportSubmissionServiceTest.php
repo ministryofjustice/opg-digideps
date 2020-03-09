@@ -147,17 +147,16 @@ class ReportSubmissionServiceTest extends TestCase
         )->andReturn($newYearReport);
 
         $mockUser = m::mock(User::class);
-        $mockUser->shouldReceive('isDeputyOrg')->once()->andReturn(true);
 
         $mockEmail  = m::mock(Email::class);
-        $this->mockMailFactory->shouldReceive('createOrgReportSubmissionConfirmationEmail')
+        $this->mockMailFactory->shouldReceive('createReportSubmissionConfirmationEmail')
             ->once()
             ->with($mockUser, $this->mockReport, $newYearReport)
             ->andReturn($mockEmail);
 
         $this->mockMailSender->shouldReceive('send')
             ->once()
-            ->with($mockEmail, ['text', 'html']);
+            ->with($mockEmail);
 
         $this->sut = $this->generateSut();
 
@@ -208,7 +207,6 @@ class ReportSubmissionServiceTest extends TestCase
         )->andReturn($newYearReport);
 
         $mockUser = m::mock(User::class);
-        $mockUser->shouldReceive('isDeputyOrg')->once()->andReturn(false);
 
         $mockEmail  = m::mock(Email::class);
         $this->mockMailFactory->shouldReceive('createReportSubmissionConfirmationEmail')
@@ -218,7 +216,7 @@ class ReportSubmissionServiceTest extends TestCase
 
         $this->mockMailSender->shouldReceive('send')
             ->once()
-            ->with($mockEmail, ['text', 'html']);
+            ->with($mockEmail);
 
         $this->sut = $this->generateSut();
 
