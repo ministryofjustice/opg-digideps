@@ -30,12 +30,12 @@ services:
         ports:
             - 4572:4572
         environment:
-            - SERVICES=s3:4572
+            - SERVICES=s3:4572,ssm:4583
             - DATA_DIR=/tmp/localstack/data
             - DEFAULT_REGION=eu-west-1
             - DEBUG=1
         volumes:
-            - ./docker/localstack-s3-init.sh:/docker-entrypoint-initaws.d/s3-init.sh
+            - ./docker/localstack-init.sh:/docker-entrypoint-initaws.d/localstack-init.sh
 
     frontend:
         build:
