@@ -8,7 +8,10 @@ parameters:
 
 services:
   Aws\S3\S3Client:
-    arguments: ["%s3_client_params%"]
+    arguments: ["%aws_client_params%"]
+
+  Aws\Ssm\SsmClient:
+    arguments: ["%ssm_client_params%"]
 
   s3_client:
     alias: Aws\S3\S3Client
