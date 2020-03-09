@@ -140,7 +140,7 @@ dd-phpstan() {
 }
 
 # phpunit
-alias dd-phpunit-frontend="docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm frontend bin/phpunit -c tests/phpunit"
+alias dd-phpunit-frontend="docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm frontend bin/phpunit -c tests/phpunit $@"
 alias dd-phpunit-api="docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm api sh scripts/apiunittest.sh"
 alias dd-phpunit="dd-phpunit-frontend;dd-phpunit-api"
 

@@ -132,10 +132,13 @@ class VisitsCare
 
     /**
      * @param mixed $ndr
+     * @return VisitsCare
      */
     public function setNdr(Ndr $ndr)
     {
         $this->ndr = $ndr;
+
+        return $this;
     }
 
     /**
@@ -148,10 +151,13 @@ class VisitsCare
 
     /**
      * @param string $planMoveNewResidence
+     * @return VisitsCare
      */
     public function setPlanMoveNewResidence($planMoveNewResidence)
     {
         $this->planMoveNewResidence = $planMoveNewResidence;
+
+        return $this;
     }
 
     /**
@@ -180,10 +186,13 @@ class VisitsCare
 
     /**
      * @param string $doYouLiveWithClient
+     * @return VisitsCare
      */
     public function setDoYouLiveWithClient($doYouLiveWithClient)
     {
         $this->doYouLiveWithClient = $doYouLiveWithClient;
+
+        return $this;
     }
 
     /**
@@ -212,10 +221,13 @@ class VisitsCare
 
     /**
      * @param string $doesClientReceivePaidCare
+     * @return VisitsCare
      */
     public function setDoesClientReceivePaidCare($doesClientReceivePaidCare)
     {
         $this->doesClientReceivePaidCare = $doesClientReceivePaidCare;
+
+        return $this;
     }
 
     /**
@@ -244,10 +256,13 @@ class VisitsCare
 
     /**
      * @param string $whoIsDoingTheCaring
+     * @return VisitsCare
      */
     public function setWhoIsDoingTheCaring($whoIsDoingTheCaring)
     {
         $this->whoIsDoingTheCaring = $whoIsDoingTheCaring;
+
+        return $this;
     }
 
     /**
@@ -260,10 +275,13 @@ class VisitsCare
 
     /**
      * @param string $doesClientHaveACarePlan
+     * @return VisitsCare
      */
     public function setDoesClientHaveACarePlan($doesClientHaveACarePlan)
     {
         $this->doesClientHaveACarePlan = $doesClientHaveACarePlan;
+
+        return $this;
     }
 
     /**

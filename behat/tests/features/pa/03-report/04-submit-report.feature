@@ -49,8 +49,6 @@ Feature: Report submit (client 02100014)
         When I click on "return-to-org-dashboard"
         Then the URL should match "/org"
         And the response status code should be 200
-        And the last email should contain "Thank you for submitting"
-        And the last email should have been sent to "behat-pa1-team-member@publicguardian.gov.uk"
 
     Scenario: 102 assert submitted report displays correctly in client profile page
         Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"

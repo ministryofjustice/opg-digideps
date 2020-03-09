@@ -23,8 +23,8 @@ default:
         is the anniversary of your court order).
 
 caseDetails: |
-    <strong>Client</strong>: %fullClientName% <br>
-    <strong>Case number</strong>: %caseNumber%
+    Client: %fullClientName%
+    Case number: %caseNumber%
 
 thanksForSubmitting: &THANKS_FOR_SUBMITTING |
     Thank you for submitting your deputy report for %fullClientName% covering
