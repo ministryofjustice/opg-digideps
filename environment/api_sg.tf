@@ -31,7 +31,7 @@ locals {
       target_type = "security_group_id"
       target      = module.front_service_security_group.id
     }
-    front = {
+    document_sync = {
       port        = 443
       type        = "ingress"
       protocol    = "tcp"
