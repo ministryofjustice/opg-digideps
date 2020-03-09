@@ -496,6 +496,8 @@ class User implements AdvancedUserInterface, DeputyInterface
     public function setClients(array $clients)
     {
         $this->clients = $clients;
+
+        return $this;
     }
 
     public function getClients()
@@ -827,6 +829,10 @@ class User implements AdvancedUserInterface, DeputyInterface
 
     public function hasReports()
     {
+        if (count($this->clients) === 0) {
+            return false;
+        }
+
         $reports = $this->clients[0]->getReports();
 
         if (!empty($reports)) {
@@ -1203,5 +1209,10 @@ class User implements AdvancedUserInterface, DeputyInterface
         }
 
         return false;
+    }
+
+    public function isAdminOrSuperAdmin(): bool
+    {
+        return $this->getRoleName() === 'ROLE_ADMIN' || $this->getRoleName() === 'ROLE_SUPER_ADMIN';
     }
 }

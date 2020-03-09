@@ -48,7 +48,7 @@ default:
 
         security:
             description: Tests to assert on the apps security features
-            paths: [ "%paths.base%/features/security" ]
+            paths: [ "%paths.base%/features/v2/security" ]
             filters:
                 tags: "@security"
             contexts:
@@ -57,21 +57,33 @@ default:
 
         report-management:
             description: Coverage of report management features
-            paths: [ "%paths.base%/features/reportManagement" ]
+            paths: [ "%paths.base%/features/v2/reportManagement" ]
             contexts:
                 - DigidepsBehat\ReportManagement\ReportManagementFeatureContext
 
+        court-order-management:
+            description: Coverage of court order management features
+            paths: [ "%paths.base%/features/v2/courtOrderManagement" ]
+            contexts:
+                - DigidepsBehat\CourtOrderManagement\CourtOrderManagementFeatureContext
+
         acl:
             description: Coverage of Access Control
-            paths: [ "%paths.base%/features/acl" ]
+            paths: [ "%paths.base%/features/v2/acl" ]
             contexts:
                 - DigidepsBehat\ACL\ACLfeatureContext
 
         registration:
             description: Coverage of the self and auto registration processes
-            paths: [ "%paths.base%/features/registration" ]
+            paths: [ "%paths.base%/features/v2/registration" ]
             contexts:
                 - DigidepsBehat\Registration\RegistrationFeatureContext
+
+        user-management:
+            description: Coverage of user management features
+            paths: [ "%paths.base%/features/userManagement" ]
+            contexts:
+                - DigidepsBehat\UserManagement\UserManagementFeatureContext
 
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:

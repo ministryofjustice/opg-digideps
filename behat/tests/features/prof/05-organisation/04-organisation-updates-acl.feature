@@ -23,6 +23,7 @@ Feature: Organisation deputyship updates
     And the organisation "example.com2" is active
     And "behat-prof1@example.com2" has been added to the "example.com2" organisation
 
+  # Client has different deputy in the same org. Old deputy left org - dont delete client
   Scenario: Professional deputy leaves organisation, clients appointed a new deputy within the same organisation
     #  (deputy number changes, org identifier stays the same, different deputy email of same org)
     Given "behat-prof1@publicguardian.gov.uk" has been removed from the "publicguardian.gov.uk" organisation
@@ -37,6 +38,7 @@ Feature: Organisation deputyship updates
     # Assert new named deputy within same organisation
     And I should see "new-behat-prof1@publicguardian.gov.uk" in the "deputy-details" region
 
+  # Client has same deputy in a new org - don't delete client
   Scenario: Professional deputy leaves organisation, and retains their clients
     #  (deputy number stays the same, org identifier changes - example.com1)
     Given "behat-prof1@publicguardian.gov.uk" has been removed from the "publicguardian.gov.uk" organisation
@@ -59,32 +61,13 @@ Feature: Organisation deputyship updates
       | GB                                    | deputy-details |
       | behat-prof1@example.com1              | deputy-details |
 
+  # Client has new deputy and new org - delete client and expect new one created
   Scenario: Clients appointed to a new organisation
     #  (deputy number changes, org identifier changes to deputy of new organisation - example.com2)
     Given I am logged in as "behat-prof1@example.com2" with password "Abcd1234"
     And I should see the "client-11498120" region
     # Assert client associated with new org
     Then I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search"
-    # Assert old client has been discharged
-    And I should see the "discharged-client-11498120" region
-    And I should see the "client-11498120" region
-    And I should see the "discharged-client-11498120-discharged-on" region
-    # Assert discharged client still remains with old org
-    Then I click on "discharged-client-detail-11498120"
-    Then each text should be present in the corresponding region:
-      | PA OPG (publicguardian.gov.uk)                        | assigned-organisation |
-      | DEP1 SURNAME1              | named-deputy-fullname |
-      | Prof OPG                                   | deputy-details |
-      | ADD2                                  | deputy-details |
-      | ADD3                                  | deputy-details |
-      | ADD4                                  | deputy-details |
-      | ADD5                                  | deputy-details |
-      | SW1                                   | deputy-details |
-      | GB                                    | deputy-details |
-      | 10000000001                           | deputy-details |
-      | behat-prof1@publicguardian.gov.uk     | deputy-details |
-
     # Assert new organisation for new client
     Then I click on "admin-client-search, client-detail-11498120"
     Then each text should be present in the corresponding region:
