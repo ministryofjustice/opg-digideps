@@ -3,6 +3,13 @@ locals {
     ecr  = local.common_sg_rules.ecr
     logs = local.common_sg_rules.logs
     s3   = local.common_sg_rules.s3
+    ssm = {
+      port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = data.aws_security_group.ssm_endpoint.id
+    }
     api = {
       port        = 443
       type        = "egress"
