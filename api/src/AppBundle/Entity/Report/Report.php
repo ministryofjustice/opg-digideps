@@ -1036,6 +1036,8 @@ class Report implements ReportInterface
     }
 
     /**
+     * @JMS\SerializedName("report_submissions")
+     * @JMS\Groups({"documentSync"})
      * @return mixed
      */
     public function getReportSubmissions()
