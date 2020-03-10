@@ -5,6 +5,7 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use AppBundle\Service\Client\Sirius\SiriusDocumentFile;
@@ -21,9 +22,11 @@ use PhpPact\Consumer\Model\ProviderResponse;
 use PhpPact\Standalone\MockService\MockServerEnvConfig;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
-class SiriusDocumentsContractTest extends TestCase
+class SiriusDocumentsContractTest extends KernelTestCase
 {
     /**
      * Example PACT test.
@@ -136,53 +139,117 @@ class SiriusDocumentsContractTest extends TestCase
         $reportEndDate = new DateTime('2019-05-13');
         $reportSubmittedDate = new DateTime('2019-06-20');
 
-        $client = new Client();
-        $client->setCaseNumber('1234567T');
-
-        $report = new Report();
-        $report->setType(Report::TYPE_102);
-        $report->setClient($client);
-        $report->setStartDate($reportStartDate);
-        $report->setEndDate($reportEndDate);
-        $report->setSubmitDate($reportSubmittedDate);
-        $report->setId('9876');
-
-        $document = new Document();
-        $document->setReport($report);
-        $document->setStorageReference('test');
-        $document->setFileName('Report_1234567T_2018_2019_11111.pdf');
+        $submittedReportDocument = $this->generateSubmittedReportDocument(
+            '1234567T',
+            $reportStartDate,
+            $reportEndDate,
+            $reportSubmittedDate,
+        );
 
         $s3Storage->retrieve('test')->willReturn('fake_contents');
 
-        $siriusDocumentMetadata = (new SiriusDocumentMetadata())
-            ->setReportingPeriodFrom($reportStartDate)
-            ->setReportingPeriodTo($reportEndDate)
-            ->setYear('2019')
-            ->setDateSubmitted($reportSubmittedDate)
-            ->setOrderType('PF');
-
-        $siriusDocumentFile = (new SiriusDocumentFile())
-            ->setFileName('Report_1234567T_2018_2019_11111.pdf')
-            ->setMimeType('application/pdf')
-            ->setSource('JVBERi0xLjMKJcT...etc==');
-
-        $siriusDocumentUpload = (new SiriusDocumentUpload())
-            ->setCaseRef('1234567T')
-            ->setDocumentType('Report')
-            ->setDocumentSubType('Report')
-            ->setDirection('DIRECTION_INCOMING')
-            ->setMetadata($siriusDocumentMetadata)
-            ->setFile($siriusDocumentFile);
+        $siriusDocumentUpload = $this->generateSiriusDocumentUpload(
+            '1234567T',
+            $reportStartDate,
+            $reportEndDate,
+            $reportSubmittedDate,
+            'PF'
+        );
 
         $uuid = '5a8b1a26-8296-4373-ae61-f8d0b250e773';
         $successResponseBody = json_encode(['data' => ['uuid' => $uuid]]);
         $successResponse = new Response('200', [], $successResponseBody);
 
         $siriusApiGatewayClient->sendDocument($siriusDocumentUpload)->shouldBeCalled()->willReturn($successResponse);
+
         $restClient->put('report-submission/9876', json_encode(['uuid' => $uuid]))
           ->shouldBeCalled()
           ->willReturn(new SymfonyResponse('9876'));
 
         $sut = new DocumentSyncService($s3Storage->reveal(), $siriusApiGatewayClient->reveal(), $restClient->reveal());
+        $sut->syncReportDocument($submittedReportDocument);
+    }
+
+    private function generateSiriusDocumentUpload(
+        string $caseRef,
+        DateTime $startDate,
+        DateTime $endDate,
+        DateTime $submittedDate,
+        string $orderType,
+        string $mimeType = 'application/pdf',
+        string $fileName = 'test.pdf'
+    )
+    {
+        $siriusDocumentMetadata = (new SiriusDocumentMetadata())
+            ->setReportingPeriodFrom($startDate)
+            ->setReportingPeriodTo($endDate)
+            ->setYear('2018')
+            ->setDateSubmitted($submittedDate)
+            ->setOrderType($orderType);
+
+        $siriusDocumentFile = (new SiriusDocumentFile())
+            ->setFileName($fileName)
+            ->setMimeType($mimeType)
+            ->setSource(base64_encode('fake_contents'));
+
+        return (new SiriusDocumentUpload())
+            ->setCaseRef($caseRef)
+            ->setDocumentType('Report')
+            ->setDocumentSubType('Report')
+            ->setDirection('DIRECTION_INCOMING')
+            ->setMetadata($siriusDocumentMetadata)
+            ->setFile($siriusDocumentFile);
+    }
+
+    private function generateSubmittedReportDocument(
+        string $caseRef,
+        DateTime $startDate,
+        DateTime $endDate,
+        DateTime $submittedDate,
+        string $mimeType = 'application/pdf',
+        string $fileName = 'test.pdf',
+        string $storageReference = 'test'
+    )
+    {
+        $client = new Client();
+        $client->setCaseNumber($caseRef);
+
+        $reportSubmissions = [(new ReportSubmission())->setId(9876)];
+
+        $report = (new Report())
+          ->setType(Report::TYPE_102)
+          ->setClient($client)
+          ->setStartDate($startDate)
+          ->setEndDate($endDate)
+          ->setSubmitDate($submittedDate)
+          ->setReportSubmissions($reportSubmissions);
+
+        $uploadedFile = $this->generateUploadedFile(
+            'tests/phpunit/TestData/test.pdf',
+            $fileName,
+            $mimeType
+        );
+
+        return (new Document())
+            ->setReport($report)
+            ->setStorageReference($storageReference)
+            ->setFileName($fileName)
+            ->setFile($uploadedFile);
+    }
+
+    /**
+     * Creates an UploadedFile object based on an existing file in the project.
+     *
+     * @param string $fileLocation
+     * @param string $originalName
+     * @param string $mimeType
+     * @return UploadedFile
+     */
+    private function generateUploadedFile(string $fileLocation, string $originalName, string $mimeType)
+    {
+        $projectDir = (self::bootKernel(['debug' => false]))->getProjectDir();
+        $location = sprintf('%s/../%s', $projectDir, $fileLocation);
+
+        return new UploadedFile($location, $originalName, $mimeType, null);
     }
 }

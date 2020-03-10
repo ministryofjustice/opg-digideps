@@ -140,6 +140,13 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     private $submittedBy;
 
     /**
+     * @JMS\Type("array<AppBundle\Entity\Report\ReportSubmission>")
+     *
+     * @var ReportSubmission[]
+     */
+    private $reportSubmissions;
+
+    /**
      * @JMS\Type("AppBundle\Entity\Client")
      *
      * @var Client
@@ -1196,4 +1203,24 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     {
         return in_array($this->getType(), [self::TYPE_102_5, self::TYPE_103_5, self::TYPE_104_5, self::TYPE_102_4_5, self::TYPE_103_4_5]);
     }
+
+    /**
+     * @return ReportSubmission[]
+     */
+    public function getReportSubmissions(): array
+    {
+        return $this->reportSubmissions;
+    }
+
+    /**
+     * @param ReportSubmission[] $reportSubmissions
+     */
+    public function setReportSubmissions(array $reportSubmissions): self
+    {
+        $this->reportSubmissions = $reportSubmissions;
+
+        return $this;
+    }
+
+
 }
