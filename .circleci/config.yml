@@ -3,177 +3,177 @@ version: 2.1
 workflows:
   pull_request:
     jobs:
-      - lint:
-          name: lint terraform
-          filters: { branches: { ignore: [ master ] } }
+      # - lint:
+      #     name: lint terraform
+      #     filters: { branches: { ignore: [ master ] } }
 
       - build:
           name: build pr
           semver_stage: --stage dev
           filters: { branches: { ignore: [ master ] } }
 
-      - apply:
-          name: apply environment
-          requires: [ build pr, lint terraform ]
-          filters: { branches: { ignore: [ master ] } }
+      # - apply:
+      #     name: apply environment
+      #     requires: [ build pr, lint terraform ]
+      #     filters: { branches: { ignore: [ master ] } }
 
-      - run-task:
-          name: reset environment
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: reset_database
-          timeout: 180
+      # - run-task:
+      #     name: reset environment
+      #     requires: [ apply environment ]
+      #     filters: { branches: { ignore: [ master ] } }
+      #     task_name: reset_database
+      #     timeout: 180
 
-      - run-task:
-          name: integration test
-          requires: [ reset environment ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: integration_test
-          timeout: 2100
-
-      - client-unit-test:
-          name: client unit test
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ master ] } }
-
-      - run-task:
-          name: api unit test
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: api_unit_test
-          timeout: 600
-
-      - run-task:
-          name: backup environment
-          requires: [ api unit test, client unit test, integration test ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: backup
-
-      - run-task:
-          name: restore environment
-          requires: [ backup environment ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: restore
-
-      - cleanup:
-          name: approve destroy environment
-          type: approval
-          requires: [ restore environment ]
-          filters: { branches: { ignore: [ master ] } }
-
-      - apply:
-          name: destroy environment
-          requires: [ approve destroy environment ]
-          filters: { branches: { ignore: [ master ] } }
-          tf_command: destroy
-
-  master:
-    jobs:
-      - build:
-          name: build master
-          filters: { branches: { only: [ master ] } }
-
-      - apply:
-          name: apply shared-development
-          requires: [ build master ]
-          filters: { branches: { only: [ master ] } }
-          tf_tier: shared
-          tf_workspace: development
-
-      - apply:
-          name: apply shared-preproduction
-          requires: [ build master ]
-          filters: { branches: { only: [ master ] } }
-          tf_tier: shared
-          tf_workspace: preproduction
-
-      - apply:
-          name: apply master
-          requires: [ apply shared-preproduction ]
-          filters: { branches: { only: [ master ] } }
-          tf_workspace: master
-
-      - run-task:
-          name: reset master
-          requires: [ apply master ]
-          filters: { branches: { only: [ master ] } }
-          task_name: reset_database
-          tf_workspace: master
-          timeout: 180
-
-      - run-task:
-          name: integration test
-          requires: [ reset master ]
-          filters: { branches: { only: [ master ] } }
-          task_name: integration_test
-          tf_workspace: master
-          timeout: 1800
+      # - run-task:
+      #     name: integration test
+      #     requires: [ reset environment ]
+      #     filters: { branches: { ignore: [ master ] } }
+      #     task_name: integration_test
+      #     timeout: 2100
 
       - client-unit-test:
           name: client unit test
-          requires: [ apply master ]
-          filters: { branches: { only: [ master ] } }
+          requires: [ build pr ]
+          filters: { branches: { ignore: [ master ] } }
 
-      - run-task:
-          name: api unit test
-          requires: [ apply master ]
-          filters: { branches: { only: [ master ] } }
-          task_name: api_unit_test
-          tf_workspace: master
-          timeout: 600
+      # - run-task:
+      #     name: api unit test
+      #     requires: [ apply environment ]
+      #     filters: { branches: { ignore: [ master ] } }
+      #     task_name: api_unit_test
+      #     timeout: 600
 
-      - apply:
-          name: apply training
-          requires: [ apply shared-production ]
-          filters: { branches: { only: [ master ] } }
-          tf_workspace: training
+      # - run-task:
+      #     name: backup environment
+      #     requires: [ api unit test, client unit test, integration test ]
+      #     filters: { branches: { ignore: [ master ] } }
+      #     task_name: backup
 
-      - apply:
-          name: apply preproduction
-          requires: [ api unit test, client unit test, integration test ]
-          filters: { branches: { only: [ master ] } }
-          tf_workspace: preproduction
+      # - run-task:
+      #     name: restore environment
+      #     requires: [ backup environment ]
+      #     filters: { branches: { ignore: [ master ] } }
+      #     task_name: restore
 
-      - slack/approval-notification:
-          name: approve release to production notification
-          message: "Production is ready for release and pending approval"
-          requires: [ apply preproduction ]
-          filters: { branches: { only: [ master ] } }
+      # - cleanup:
+      #     name: approve destroy environment
+      #     type: approval
+      #     requires: [ restore environment ]
+      #     filters: { branches: { ignore: [ master ] } }
 
-      - approve:
-          name: approve release to production
-          type: approval
-          requires: [ apply preproduction ]
-          filters: { branches: { only: [ master ] } }
+      # - apply:
+      #     name: destroy environment
+      #     requires: [ approve destroy environment ]
+      #     filters: { branches: { ignore: [ master ] } }
+      #     tf_command: destroy
 
-      - apply:
-          name: apply shared-production
-          requires: [ approve release to production ]
-          filters: { branches: { only: [ master ] } }
-          tf_tier: shared
-          tf_workspace: production
+  # master:
+  #   jobs:
+      # - build:
+      #     name: build master
+      #     filters: { branches: { only: [ master ] } }
 
-      - apply:
-          name: apply production
-          requires: [ apply shared-production ]
-          filters: { branches: { only: [ master ] } }
-          tf_workspace: production02
+      # - apply:
+      #     name: apply shared-development
+      #     requires: [ build master ]
+      #     filters: { branches: { only: [ master ] } }
+      #     tf_tier: shared
+      #     tf_workspace: development
 
-      - run-task:
-          name: backup production
-          requires: [ apply production ]
-          filters: { branches: { only: [ master ] } }
-          task_name: backup
-          tf_workspace: production02
-          timeout: 600
+      # - apply:
+      #     name: apply shared-preproduction
+      #     requires: [ build master ]
+      #     filters: { branches: { only: [ master ] } }
+      #     tf_tier: shared
+      #     tf_workspace: preproduction
 
-      - run-task:
-          name: restore production to preproduction
-          requires: [ backup production ]
-          filters: { branches: { only: [ master ] } }
-          task_name: restore_from_production
-          tf_workspace: preproduction
-          timeout: 600
+      # - apply:
+      #     name: apply master
+      #     requires: [ apply shared-preproduction ]
+      #     filters: { branches: { only: [ master ] } }
+      #     tf_workspace: master
+
+      # - run-task:
+      #     name: reset master
+      #     requires: [ apply master ]
+      #     filters: { branches: { only: [ master ] } }
+      #     task_name: reset_database
+      #     tf_workspace: master
+      #     timeout: 180
+
+      # - run-task:
+      #     name: integration test
+      #     requires: [ reset master ]
+      #     filters: { branches: { only: [ master ] } }
+      #     task_name: integration_test
+      #     tf_workspace: master
+      #     timeout: 1800
+
+      # - client-unit-test:
+      #     name: client unit test
+      #     requires: [ apply master ]
+      #     filters: { branches: { only: [ master ] } }
+
+      # - run-task:
+      #     name: api unit test
+      #     requires: [ apply master ]
+      #     filters: { branches: { only: [ master ] } }
+      #     task_name: api_unit_test
+      #     tf_workspace: master
+      #     timeout: 600
+
+      # - apply:
+      #     name: apply training
+      #     requires: [ apply shared-production ]
+      #     filters: { branches: { only: [ master ] } }
+      #     tf_workspace: training
+
+      # - apply:
+      #     name: apply preproduction
+      #     requires: [ api unit test, client unit test, integration test ]
+      #     filters: { branches: { only: [ master ] } }
+      #     tf_workspace: preproduction
+
+      # - slack/approval-notification:
+      #     name: approve release to production notification
+      #     message: "Production is ready for release and pending approval"
+      #     requires: [ apply preproduction ]
+      #     filters: { branches: { only: [ master ] } }
+
+      # - approve:
+      #     name: approve release to production
+      #     type: approval
+      #     requires: [ apply preproduction ]
+      #     filters: { branches: { only: [ master ] } }
+
+      # - apply:
+      #     name: apply shared-production
+      #     requires: [ approve release to production ]
+      #     filters: { branches: { only: [ master ] } }
+      #     tf_tier: shared
+      #     tf_workspace: production
+
+      # - apply:
+      #     name: apply production
+      #     requires: [ apply shared-production ]
+      #     filters: { branches: { only: [ master ] } }
+      #     tf_workspace: production02
+
+      # - run-task:
+      #     name: backup production
+      #     requires: [ apply production ]
+      #     filters: { branches: { only: [ master ] } }
+      #     task_name: backup
+      #     tf_workspace: production02
+      #     timeout: 600
+
+      # - run-task:
+      #     name: restore production to preproduction
+      #     requires: [ backup production ]
+      #     filters: { branches: { only: [ master ] } }
+      #     task_name: restore_from_production
+      #     tf_workspace: preproduction
+      #     timeout: 600
 
 orbs:
   aws-cli: circleci/aws-cli@0.1.13
@@ -338,9 +338,9 @@ jobs:
             if [ -n "$CLIENT_CHANGED_FILES" ]; then
                 docker-compose -f docker-compose.ci.yml run --rm client php bin/phpstan analyse $CLIENT_CHANGED_FILES --memory-limit=0 --level=max
             fi
-      - run:
-          name: Push images
-          command: docker-compose -f docker-compose.ci.yml push
+      # - run:
+      #     name: Push images
+      #     command: docker-compose -f docker-compose.ci.yml push
       - run:
           name: Archive docker images
           command: |
@@ -362,8 +362,27 @@ jobs:
           name: Load docker images
           command: docker load -i ~/project/docker-images.tar
       - run:
+          name: install aws cli
+          command: |
+            pip3 install awscli --upgrade --user
+            aws --version
+      - run:
           name: Run tests
           command: |
+            export secretsstring=`aws sts assume-role --role-arn "arn:aws:iam::248804316466:role/digideps-ci" \
+            --role-session-name AWSCLI-Session | jq -r '.Credentials.SessionToken + " " + .Credentials.SecretAccessKey + \
+            " " + .Credentials.AccessKeyId'`
+            export AWS_ACCESS_KEY_ID=`echo $secretsstring | awk -F' ' '{print $3}'`
+            export AWS_SECRET_ACCESS_KEY=`echo $secretsstring | awk -F' ' '{print $2}'`
+            export AWS_SESSION_TOKEN=`echo $secretsstring | awk -F' ' '{print $1}'`
+            aws sts get-caller-identity | grep "arn:aws:sts"
+            BROKER_HTTP_AUTH_PASS=`aws secretsmanager get-secret-value \
+            --secret-id pactbroker_admin --region eu-west-1 | jq -r '.SecretString'`
+            BROKER_HTTP_AUTH_USER="admin"
+            echo $BROKER_HTTP_AUTH_USER
+            echo "export PACT_BROKER_HTTP_AUTH_USER=${BROKER_HTTP_AUTH_USER}" >> $BASH_ENV
+            echo "export PACT_BROKER_HTTP_AUTH_PASS=${BROKER_HTTP_AUTH_PASS}" >> $BASH_ENV
+            echo $PACT_BROKER_HTTP_AUTH_USER
             docker-compose up -d pact-mock
             sleep 1
             docker run --rm --network=project_default client:latest bin/phpunit -c tests/phpunit

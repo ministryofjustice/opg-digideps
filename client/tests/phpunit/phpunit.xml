@@ -15,20 +15,20 @@
         stopOnWarning="true"
 >
     <testsuites>
-        <testsuite name="Client unit tests">
-            <directory>Command</directory>
-            <directory>Controller</directory>
-            <directory>Entity</directory>
-            <directory>EventListener</directory>
-            <directory>Form</directory>
-            <directory>Mapper</directory>
-            <directory>Resources</directory>
-            <directory>Resolver</directory>
-            <directory>Service</directory>
-            <directory>Transformer</directory>
-            <directory>Twig</directory>
-            <directory>Validator</directory>
-        </testsuite>
+<!--        <testsuite name="Client unit tests">-->
+<!--            <directory>Command</directory>-->
+<!--            <directory>Controller</directory>-->
+<!--            <directory>Entity</directory>-->
+<!--            <directory>EventListener</directory>-->
+<!--            <directory>Form</directory>-->
+<!--            <directory>Mapper</directory>-->
+<!--            <directory>Resources</directory>-->
+<!--            <directory>Resolver</directory>-->
+<!--            <directory>Service</directory>-->
+<!--            <directory>Transformer</directory>-->
+<!--            <directory>Twig</directory>-->
+<!--            <directory>Validator</directory>-->
+<!--        </testsuite>-->
         <testsuite name="Pact contract tests">
             <directory>Pact</directory>
         </testsuite>
@@ -42,6 +42,10 @@
         <env name="PACT_MOCK_SERVER_PORT" value="80"/>
         <env name="PACT_CONSUMER_NAME" value="Complete the deputy report"/>
         <env name="PACT_PROVIDER_NAME" value="OPG Data"/>
+        <env name="PACT_CONSUMER_VERSION" value="1.0.0"/>
+        <env name="PACT_BROKER_HTTP_AUTH_USER" value="admin"/>
+        <env name="PACT_BROKER_HTTP_AUTH_PASS" value="8bFNvnuXrEcLg4wqs7gLFAwH"/>
+        <env name="PACT_BROKER_URI" value="http://localhost:9292"/>
     </php>
 
     <filter>
