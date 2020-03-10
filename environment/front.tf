@@ -48,3 +48,20 @@ data "aws_iam_policy_document" "invoke_dep_rep_api" {
     resources = ["arn:aws:execute-api:eu-west-1:${local.account.sirius_api_account}:*"]
   }
 }
+
+resource "aws_iam_role_policy" "query_ssm" {
+  name   = "front-query-ssm.${local.environment}"
+  policy = data.aws_iam_policy_document.query_ssm.json
+  role   = aws_iam_role.front.id
+}
+
+data "aws_iam_policy_document" "query_ssm" {
+  statement {
+    sid    = "AllowQuerySSMParameters"
+    effect = "Allow"
+    actions = [
+      "ssm:GetParameter"
+    ]
+    resources = [aws_ssm_parameter.flag_document_sync.arn]
+  }
+}

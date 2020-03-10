@@ -3,6 +3,13 @@ locals {
     ecr  = local.common_sg_rules.ecr
     logs = local.common_sg_rules.logs
     s3   = local.common_sg_rules.s3
+    ssm = {
+      port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = data.aws_security_group.ssm_endpoint.id
+    }
     api = {
       port        = 443
       type        = "egress"
@@ -81,8 +88,11 @@ locals {
       { "name": "MOCK_EMAILS", "value": "${local.account.mock_emails ? "true" : "false"}" },
       { "name": "EMAIL_DOMAIN", "value": "${local.domain}" },
       { "name": "EMAIL_SEND_INTERNAL", "value": "${local.account.is_production == 1 ? "true" : "false"}" },
+      { "name": "SMTP_DEFAULT_PASSWORD", "value": "${aws_iam_access_key.ses.ses_smtp_password}" },
+      { "name": "SMTP_DEFAULT_USER", "value": "${aws_iam_access_key.ses.id}" },
       { "name": "GA_DEFAULT", "value": "${local.account.ga_default}" },
-      { "name": "GA_GDS", "value": "${local.account.ga_gds}" }
+      { "name": "GA_GDS", "value": "${local.account.ga_gds}" },
+      { "name": "FEATURE_FLAG_PREFIX", "value": "${local.feature_flag_prefix}" }
     ]
   }
 

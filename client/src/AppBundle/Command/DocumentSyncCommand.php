@@ -5,6 +5,7 @@ namespace AppBundle\Command;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\DocumentSyncService;
+use AppBundle\Service\FeatureFlagService;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -18,10 +19,14 @@ class DocumentSyncCommand extends DaemonableCommand
     /** @var RestClient */
     private $restClient;
 
-    public function __construct(DocumentSyncService $documentSyncService, RestClient $restClient)
+    /** @var FeatureFlagService */
+    private $featureFlags;
+
+    public function __construct(DocumentSyncService $documentSyncService, RestClient $restClient, FeatureFlagService $featureFlags)
     {
         $this->documentSyncService = $documentSyncService;
         $this->restClient = $restClient;
+        $this->featureFlags = $featureFlags;
 
         parent::__construct();
     }
@@ -38,6 +43,11 @@ class DocumentSyncCommand extends DaemonableCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         return $this->daemonize($input, $output, function() use ($output) {
+            if (!$this->isFeatureEnabled()) {
+                $output->writeln('Feature disabled, sleeping');
+                return;
+            }
+
             $documents = $this->getQueuedDocuments();
             $output->writeln(count($documents) . ' documents to upload');
 
@@ -45,6 +55,11 @@ class DocumentSyncCommand extends DaemonableCommand
                 $this->documentSyncService->syncReportDocument($document);
             }
         }, 5 * 60);
+    }
+
+    private function isFeatureEnabled(): bool
+    {
+        return $this->featureFlags->get(FeatureFlagService::FLAG_DOCUMENT_SYNC) === '1';
     }
 
     /**

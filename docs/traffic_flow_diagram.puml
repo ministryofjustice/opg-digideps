@@ -59,8 +59,10 @@
                     SimpleStorageServiceS3(s3,"S3",)
                     ElasticContainerService(ecr,"ECR",)
                     CloudWatch(cw,"Cloudwatch",)
+                    SystemsManagerParameterStore(parameter_store,"Parameter Store",)
                 }
                 rectangle {
+                    VPCEndpoints(ssm_endpoint, "ssm-endpoint",)
                     VPCEndpoints(ecr_endpoint, "ecr-endpoint",)
                     VPCEndpoints(s3_endpoint, "S3-endpoint",)
                     VPCEndpoints(logs_endpoint, "logs-endpoint",)
@@ -180,6 +182,9 @@
 
     private_subnet -[#blue]--|> logs_endpoint
     logs_endpoint -[#blue]up-|> cw
+
+    private_subnet -[#blue]up--|> ssm_endpoint
+    ssm_endpoint -[#blue]up-|> parameter_store
 
     private_subnet -[#blue]up--|> ecr_endpoint
     ecr_endpoint -[#blue]up-|> ecr
