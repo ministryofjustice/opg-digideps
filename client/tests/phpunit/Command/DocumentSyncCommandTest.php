@@ -4,7 +4,7 @@ namespace App\Tests\Command;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\DocumentSyncService;
-use Aws\Ssm\SsmClient;
+use AppBundle\Service\FeatureFlagService;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -19,15 +19,12 @@ class DocumentSyncCommandTest extends KernelTestCase
         $doc = new Document();
         $doc->setId(6789);
 
-        /** @var SsmClient|ObjectProphecy $ssmClient */
-        $ssmClient = self::prophesize(SsmClient::class);
-        $ssmClient
-            ->getParameter([ 'Name' => '/default/flag/document-sync' ])
+        /** @var FeatureFlagService|ObjectProphecy $featureFlags */
+        $featureFlags = self::prophesize(FeatureFlagService::class);
+        $featureFlags
+            ->get(FeatureFlagService::FLAG_DOCUMENT_SYNC)
             ->shouldBeCalled()
-            ->willReturn(['Parameter' => [
-                'Name' => '/default/flag/document-sync',
-                'Value' => '1'
-            ]]);
+            ->willReturn('1');
 
         /** @var RestClient|ObjectProphecy $restClient */
         $restClient = self::prophesize(RestClient::class);
@@ -49,7 +46,7 @@ class DocumentSyncCommandTest extends KernelTestCase
         $container = $kernel->getContainer();
         $container->set(DocumentSyncService::class, $documentSyncService->reveal());
         $container->set(RestClient::class, $restClient->reveal());
-        $container->set(SsmClient::class, $ssmClient->reveal());
+        $container->set(FeatureFlagService::class, $featureFlags->reveal());
 
         $command = $application->find('digideps:document-sync');
         $commandTester = new CommandTester($command);
@@ -61,15 +58,12 @@ class DocumentSyncCommandTest extends KernelTestCase
 
     public function testSleepsWhenTurnedOff()
     {
-        /** @var SsmClient|ObjectProphecy $ssmClient */
-        $ssmClient = self::prophesize(SsmClient::class);
-        $ssmClient
-            ->getParameter([ 'Name' => '/default/flag/document-sync' ])
+        /** @var FeatureFlagService|ObjectProphecy $featureFlags */
+        $featureFlags = self::prophesize(FeatureFlagService::class);
+        $featureFlags
+            ->get(FeatureFlagService::FLAG_DOCUMENT_SYNC)
             ->shouldBeCalled()
-            ->willReturn(['Parameter' => [
-                'Name' => '/default/flag/document-sync',
-                'Value' => '0'
-            ]]);
+            ->willReturn('0');
 
         /** @var RestClient|ObjectProphecy $restClient */
         $restClient = self::prophesize(RestClient::class);
@@ -90,7 +84,7 @@ class DocumentSyncCommandTest extends KernelTestCase
         $container = $kernel->getContainer();
         $container->set(DocumentSyncService::class, $documentSyncService->reveal());
         $container->set(RestClient::class, $restClient->reveal());
-        $container->set(SsmClient::class, $ssmClient->reveal());
+        $container->set(FeatureFlagService::class, $featureFlags->reveal());
 
         $command = $application->find('digideps:document-sync');
         $commandTester = new CommandTester($command);
