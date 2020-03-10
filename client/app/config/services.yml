@@ -45,4 +45,10 @@ services:
 
     AppBundle\Service\Client\Sirius\SiriusApiGatewayClient:
         class: AppBundle\Service\Client\Sirius\SiriusApiGatewayClient
-        arguments: ['@guzzle_api_gateway_client', '%env(SIRIUS_API_BASE_URI)%']
+        arguments:
+            $httpClient: '@guzzle_api_gateway_client'
+            $requestSigner: '@AppBundle\Service\AWS\RequestSigner'
+            $baseUrl: '%env(SIRIUS_API_BASE_URI)%'
+
+    AppBundle\Service\AWS\RequestSigner:
+        class: AppBundle\Service\AWS\RequestSigner

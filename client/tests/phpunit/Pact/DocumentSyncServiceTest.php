@@ -5,15 +5,23 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
+use AppBundle\Service\Client\Sirius\SiriusDocumentFile;
+use AppBundle\Service\Client\Sirius\SiriusDocumentMetadata;
+use AppBundle\Service\Client\Sirius\SiriusDocumentUpload;
 use AppBundle\Service\DocumentSyncService;
 use AppBundle\Service\File\Storage\S3Storage;
 use DateTime;
+use GuzzleHttp\Psr7\Response;
 use PhpPact\Consumer\InteractionBuilder;
 use PhpPact\Consumer\Matcher\Matcher;
 use PhpPact\Consumer\Model\ConsumerRequest;
 use PhpPact\Consumer\Model\ProviderResponse;
 use PhpPact\Standalone\MockService\MockServerEnvConfig;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class SiriusDocumentsContractTest extends TestCase
 {
@@ -110,5 +118,71 @@ class SiriusDocumentsContractTest extends TestCase
         $builder->verify();
 
         self::assertEquals('33ea0382-cfc9-4776-9036-667eeb68fa4b', $result);
+    }
+
+    /** @test */
+    public function sendReportDocument()
+    {
+        /** @var S3Storage&ObjectProphecy $s3Storage */
+        $s3Storage = self::prophesize(S3Storage::class);
+
+        /** @var SiriusApiGatewayClient&ObjectProphecy $siriusApiGatewayClient */
+        $siriusApiGatewayClient = self::prophesize(SiriusApiGatewayClient::class);
+
+        /** @var RestClient|ObjectProphecy $restClient */
+        $restClient = self::prophesize(RestClient::class);
+
+        $reportStartDate = new DateTime('2018-05-14');
+        $reportEndDate = new DateTime('2019-05-13');
+        $reportSubmittedDate = new DateTime('2019-06-20');
+
+        $client = new Client();
+        $client->setCaseNumber('1234567T');
+
+        $report = new Report();
+        $report->setType(Report::TYPE_102);
+        $report->setClient($client);
+        $report->setStartDate($reportStartDate);
+        $report->setEndDate($reportEndDate);
+        $report->setSubmitDate($reportSubmittedDate);
+        $report->setId('9876');
+
+        $document = new Document();
+        $document->setReport($report);
+        $document->setStorageReference('test');
+        $document->setFileName('Report_1234567T_2018_2019_11111.pdf');
+
+        $s3Storage->retrieve('test')->willReturn('fake_contents');
+
+        $siriusDocumentMetadata = (new SiriusDocumentMetadata())
+            ->setReportingPeriodFrom($reportStartDate)
+            ->setReportingPeriodTo($reportEndDate)
+            ->setYear('2019')
+            ->setDateSubmitted($reportSubmittedDate)
+            ->setOrderType('PF');
+
+        $siriusDocumentFile = (new SiriusDocumentFile())
+            ->setFileName('Report_1234567T_2018_2019_11111.pdf')
+            ->setMimeType('application/pdf')
+            ->setSource('JVBERi0xLjMKJcT...etc==');
+
+        $siriusDocumentUpload = (new SiriusDocumentUpload())
+            ->setCaseRef('1234567T')
+            ->setDocumentType('Report')
+            ->setDocumentSubType('Report')
+            ->setDirection('DIRECTION_INCOMING')
+            ->setMetadata($siriusDocumentMetadata)
+            ->setFile($siriusDocumentFile);
+
+        $uuid = '5a8b1a26-8296-4373-ae61-f8d0b250e773';
+        $successResponseBody = json_encode(['data' => ['uuid' => $uuid]]);
+        $successResponse = new Response('200', [], $successResponseBody);
+
+        $siriusApiGatewayClient->sendDocument($siriusDocumentUpload)->shouldBeCalled()->willReturn($successResponse);
+        $restClient->put('report-submission/9876', json_encode(['uuid' => $uuid]))
+          ->shouldBeCalled()
+          ->willReturn(new SymfonyResponse('9876'));
+
+        $sut = new DocumentSyncService($s3Storage->reveal(), $siriusApiGatewayClient->reveal(), $restClient->reveal());
     }
 }
