@@ -62,6 +62,7 @@ services:
             VIRTUAL_HOST: www.digideps.local,digideps.local
             VIRTUAL_PROTO: https
             VIRTUAL_PORT: 443
+            PACT_BROKER_HTTP_AUTH_USER: ${PACT_BROKER_HTTP_AUTH_USER}
         env_file:
             - ./client/docker/env/frontend.env
         restart: always
