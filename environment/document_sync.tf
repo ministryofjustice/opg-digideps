@@ -90,7 +90,7 @@ locals {
       { "name": "EMAIL_SEND_INTERNAL", "value": "${local.account.is_production == 1 ? "true" : "false"}" },
       { "name": "GA_DEFAULT", "value": "${local.account.ga_default}" },
       { "name": "GA_GDS", "value": "${local.account.ga_gds}" },
-      { "name": "FLAG_NAME_DOCUMENT_SYNC", "value": "${aws_ssm_parameter.flag_document_sync.name}" }
+      { "name": "FEATURE_FLAG_PREFIX", "value": "${local.feature_flag_prefix}" }
     ]
   }
 
