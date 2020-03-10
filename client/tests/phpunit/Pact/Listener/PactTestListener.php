@@ -2,8 +2,11 @@
 
 namespace AppBundle\Pact\Listener;
 
+use GuzzleHttp\Psr7\Uri;
+use PhpPact\Broker\Service\BrokerHttpClient;
 use PhpPact\Http\GuzzleClient;
 use PhpPact\Standalone\Exception\MissingEnvVariableException;
+use PhpPact\Standalone\MockService\MockServer;
 use PhpPact\Standalone\MockService\MockServerConfigInterface;
 use PhpPact\Standalone\MockService\MockServerEnvConfig;
 use PhpPact\Standalone\MockService\Service\MockServerHttpService;
@@ -82,8 +85,25 @@ class PactTestListener implements TestListener
             } else {
                 $httpService = new MockServerHttpService(new GuzzleClient(), $this->mockServerConfig);
                 $httpService->verifyInteractions();
-                $httpService->getPactJson();
+                $json = $httpService->getPactJson();
             }
+            $clientConfig = [];
+            if (($user = \getenv('PACT_BROKER_HTTP_AUTH_USER')) &&
+                ($pass = \getenv('PACT_BROKER_HTTP_AUTH_PASS'))
+            ) {
+                $clientConfig = [
+                    'auth' => [$user, $pass],
+                ];
+            }
+            $client = new GuzzleClient($clientConfig);
+            $headers = [];
+            $pactBrokerUri = 'https://dev-pact-broker.api.opg.service.justice.gov.uk/';
+            $tag = "master";
+            $consumerVersion = "1.0.0";
+            $brokerHttpService = new BrokerHttpClient($client, new Uri($pactBrokerUri), $headers);
+            $brokerHttpService->tag($this->mockServerConfig->getConsumer(), $consumerVersion, $tag);
+            $brokerHttpService->publishJson($json, $consumerVersion);
+            print 'Pact file has been uploaded to the Broker successfully.';
         }
     }
 }
