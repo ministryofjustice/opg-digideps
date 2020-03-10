@@ -83,6 +83,7 @@
                 InternetAlt2(db_local_clamav_net, "db.local.clamav.net",)
                 InternetAlt2(registry_docker_io, "registry-1.docker.io",)
                 InternetAlt2(notify, "Gov UK Notify",)
+                InternetAlt2(sirius, "Sirius",)
                 SimpleEmailServiceSES(ses, "email-smtp.eu-west-1.amazonaws.com",)
             }
         }
@@ -99,6 +100,10 @@
                     rectangle {
                         ECSService(admin_service,"admin ",)
                         ElastiCacheForRedis(admin_redis,"admin cache",)
+                    }
+
+                    rectangle {
+                        ECSService(document_sync_service,"document_sync",)
                     }
                 }
 
@@ -133,6 +138,7 @@
     igw -[#red]up-|> db_local_clamav_net
     igw -[#blue]up-|> registry_docker_io
     igw -[#blue]up-|> notify
+    igw -[#blue]up-|> sirius
     igw -[#yellow]up-|> ses
 
     admin_lb -[#blue]down-|> admin_service
@@ -145,12 +151,15 @@
     admin_service -[#blue]down-|> api_service
     admin_service -[#green]right-|> admin_redis
 
+    document_sync_service -[#blue]down-|> api_service
+
     front_service -[#red]|> pdf_service
     admin_service -[#red]-|> pdf_service
 
     scan_service -[#orange]|> nat
     front_service -[#lime]|> nat
     admin_service -[#lime]|> nat
+    document_sync_service -[#lime]|> nat
 
     api_unit_test_task -[#green]-|> api_redis
     api_unit_test_task -[#purple]--|> rds

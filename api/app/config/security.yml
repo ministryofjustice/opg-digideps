@@ -92,14 +92,10 @@ security:
             pattern: ^/selfregister
             security: false
             methods: [POST]
-        documentGetSoftDeleted:
-           pattern: ^/document/soft-deleted
+        queuedDocuments:
+           pattern: ^/document/queued
            security: false
            methods: [GET]
-        documentHardDelete:
-           pattern: ^/document/hard-delete/
-           security: false
-           methods: [DELETE]
         reportSubmissionGetOld:
            pattern: ^/report-submission/old
            security: false
