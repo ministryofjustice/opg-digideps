@@ -1,15 +1,15 @@
 <?php declare(strict_types=1);
 
+
 namespace AppBundle\Service\Client\Sirius;
 
-use AppBundle\Entity\Report\Report;
+
 use AppBundle\Service\AWS\RequestSigner;
-use AppBundle\Service\Client\Sirius\SiriusDocumentMetadata;
 use DateTime;
+use DigidepsTests\Helpers\SiriusHelpers;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -32,23 +32,13 @@ class SiriusApiGatewayClientTest extends TestCase
     /** @var RequestSigner&ObjectProphecy */
     private $requestSigner;
 
-    /** @var SiriusDocumentMetadata */
-    private $siriusDocumentMetadata;
-
-    /** @var SiriusDocumentUpload */
-    private $siriusDocumentUpload;
-
-    /** @var SiriusDocumentFile */
-    private $siriusDocumentFile;
-
     /** @var string */
     private $uploadJSONBlob;
 
     /** @var string */
     private $successResponseBody;
-    /**
-     * @var Serializer&ObjectProphecy
-     */
+
+    /** @var Serializer&ObjectProphecy */
     private $serializer;
 
     public function setUp(): void
@@ -56,47 +46,22 @@ class SiriusApiGatewayClientTest extends TestCase
         $this->baseURL = 'test.com';
         $this->endpoint = 'an-endpoint';
 
-        $this->siriusDocumentMetadata = (new SiriusDocumentMetadata())
-            ->setReportingPeriodFrom(new DateTime('2019-01-01'))
-            ->setReportingPeriodTo(new DateTime('2019-12-31'))
-            ->setYear('2019')
-            ->setDateSubmitted(new DateTime('2020-01-03T09:30:00.001Z'))
-            ->setOrderType('PF');
-
-        $this->siriusDocumentFile = (new SiriusDocumentFile())
-            ->setFileName('Report_1234567T_2018_2019_11111.pdf')
-            ->setMimeType('application/pdf')
-            ->setSource('JVBERi0xLjMKJcT...etc==');
-
-        $this->siriusDocumentUpload = (new SiriusDocumentUpload())
-            ->setCaseRef('1234567T')
-        ->setDocumentType('Report')
-        ->setDocumentSubType('Report')
-        ->setDirection('DIRECTION_INCOMING')
-        ->setMetadata($this->siriusDocumentMetadata)
-        ->setFile($this->siriusDocumentFile);
-
         $this->uploadJSONBlob = json_encode(
 	[
-	    'caseRef' => '1234567T',
-	    'documentType' => 'Report',
-        'documentSubType' => 'Report',
-        'direction' => 'DIRECTION_INCOMING',
-        'metadata' => [
-            'reportingPeriodFrom' => '2019-01-01T00:00:00+00:00',
-            'orderType' => 'PF',
-            'reportingPeriodTo' => '2019-12-31T00:00:00+00:00',
-            'year' => '2019',
-            'dateSubmitted' => '2020-01-03T09:30:00+00:00'
+	    'report' => [
+	        'type' => 'reports',
+            'attributes' => [
+                'reportingPeriodFrom' => '2019-01-01T00:00:00+00:00',
+                'orderType' => 'PF',
+                'reportingPeriodTo' => '2019-12-31T00:00:00+00:00',
+                'year' => '2019',
+                'dateSubmitted' => '2020-01-03T09:30:00+00:00'
+            ]
         ],
-        'file' => [
-            'fileName' => 'Report_1234567T_2018_2019_11111.pdf',
-            'mimeType' => 'application/pdf',
-            'source' => 'JVBERi0xLjMKJcT...etc=='
-        ]
+        'report_file' => [ 'JVBERi0xLjMKJcT...etc==' ]
     ]);
 
-        $this->successResponseBody = json_encode(['uuid' => '5a8b1a26-8296-4373-ae61-f8d0b250e773']);
+        $this->successResponseBody = json_encode(['data' => ['id' => '5a8b1a26-8296-4373-ae61-f8d0b250e773']]);
 
         /** @var Client&ObjectProphecy $httpClient */
         $this->httpClient = self::prophesize(Client::class);
@@ -122,18 +87,6 @@ class SiriusApiGatewayClientTest extends TestCase
     }
 
     /** @test */
-    public function post()
-    {
-        $signedRequest = $this->buildRequest($this->baseURL, $this->endpoint, 'POST' ,['A-Header' => 'value']);
-
-        $this->requestSigner->signRequest(Argument::type(Request::class), 'execute-api')->shouldBeCalled()->willReturn($signedRequest);
-        $this->httpClient->send($signedRequest)->shouldBeCalled()->willReturn(new Response());
-
-        $sut = new SiriusApiGatewayClient($this->httpClient->reveal(), $this->requestSigner->reveal(), $this->baseURL, $this->serializer);
-        $sut->post($this->endpoint, '');
-    }
-
-    /** @test */
     public function sendDocument()
     {
         $signedRequest = $this->buildRequest($this->baseURL, 'documents', 'POST' , ['A-Header' => 'value'], $this->uploadJSONBlob);
@@ -143,7 +96,14 @@ class SiriusApiGatewayClientTest extends TestCase
 
         $sut = new SiriusApiGatewayClient($this->httpClient->reveal(), $this->requestSigner->reveal(), $this->baseURL, $this->serializer);
 
-        $sut->sendDocument($this->siriusDocumentUpload);
+        $siriusDocumentUpload = SiriusHelpers::generateSiriusDocumentUpload(
+            new DateTime('2019-01-01'),
+            new DateTime('2019-12-31'),
+            new DateTime('2020-01-03T09:30:00.001Z'),
+            'PF'
+        );
+
+        $sut->sendDocument($siriusDocumentUpload, 'JVBERi0xLjMKJcT...etc==', '1234567T');
     }
 
     private function buildRequest(string $baseURL, string $endpoint, string $method, array $additionalHeaders=[], string $body="")
