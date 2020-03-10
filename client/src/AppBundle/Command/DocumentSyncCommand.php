@@ -5,7 +5,7 @@ namespace AppBundle\Command;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\DocumentSyncService;
-use Aws\Ssm\SsmClient;
+use AppBundle\Service\FeatureFlagService;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -19,14 +19,14 @@ class DocumentSyncCommand extends DaemonableCommand
     /** @var RestClient */
     private $restClient;
 
-    /** @var SsmClient */
-    private $ssmClient;
+    /** @var FeatureFlagService */
+    private $featureFlags;
 
-    public function __construct(DocumentSyncService $documentSyncService, RestClient $restClient, SsmClient $ssmClient)
+    public function __construct(DocumentSyncService $documentSyncService, RestClient $restClient, FeatureFlagService $featureFlags)
     {
         $this->documentSyncService = $documentSyncService;
         $this->restClient = $restClient;
-        $this->ssmClient = $ssmClient;
+        $this->featureFlags = $featureFlags;
 
         parent::__construct();
     }
@@ -59,10 +59,7 @@ class DocumentSyncCommand extends DaemonableCommand
 
     private function isFeatureEnabled(): bool
     {
-        $flagName = getenv('FLAG_NAME_DOCUMENT_SYNC');
-        $flag = $this->ssmClient->getParameter([ 'Name' => $flagName ]);
-
-        return $flag['Parameter']['Value'] === "1";
+        return $this->featureFlags->get(FeatureFlagService::FLAG_DOCUMENT_SYNC) === '1';
     }
 
     /**
