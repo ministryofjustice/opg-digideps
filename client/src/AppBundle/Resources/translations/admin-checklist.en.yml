@@ -221,7 +221,7 @@ checklistPage:
           sent an acknowledgment to the deputy(s)
       fullReviewOptions:
         satisfied: No further action required
-        furtherCaseworkRequired: Further case work/actions are required
+        furtherCaseworkRequired:  I have closed the review but further case work/actions are required
         escalate: Case escalated
     finalDecisionExplanation:
       label: Reason for final decision
