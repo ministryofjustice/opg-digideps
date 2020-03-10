@@ -2,21 +2,18 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\ReportSubmission;
+
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
-use AppBundle\Service\Client\Sirius\SiriusDocumentFile;
-use AppBundle\Service\Client\Sirius\SiriusDocumentMetadata;
-use AppBundle\Service\Client\Sirius\SiriusDocumentUpload;
 use AppBundle\Service\File\Storage\S3Storage;
 use DateTime;
+use DigidepsTests\Helpers\DocumentHelpers;
+use DigidepsTests\Helpers\SiriusHelpers;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class SiriusDocumentsContractTest extends KernelTestCase
@@ -50,7 +47,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
         $reportSubmittedDate = new DateTime('2019-06-20');
         $fileContents = 'fake_contents';
 
-        $submittedReportDocument = $this->generateSubmittedReportDocument(
+        $submittedReportDocument = DocumentHelpers::generateSubmittedReportDocument(
             '1234567T',
             $reportStartDate,
             $reportEndDate,
@@ -59,22 +56,20 @@ class SiriusDocumentsContractTest extends KernelTestCase
 
         $this->s3Storage->retrieve('test')->willReturn($fileContents);
 
-        $siriusDocumentUpload = $this->generateSiriusDocumentUpload(
-            '1234567T',
+        $siriusDocumentUpload = SiriusHelpers::generateSiriusDocumentUpload(
             $reportStartDate,
             $reportEndDate,
             $reportSubmittedDate,
             'PF',
-            $fileContents
         );
 
         $uuid = '5a8b1a26-8296-4373-ae61-f8d0b250e773';
-        $successResponseBody = json_encode(['data' => ['uuid' => $uuid]]);
+        $successResponseBody = json_encode(['data' => ['id' => $uuid]]);
         $successResponse = new Response('200', [], $successResponseBody);
 
-        $this->siriusApiGatewayClient->sendDocument($siriusDocumentUpload)->shouldBeCalled()->willReturn($successResponse);
+        $this->siriusApiGatewayClient->sendDocument($siriusDocumentUpload, 'fake_contents', '1234567T')->shouldBeCalled()->willReturn($successResponse);
 
-        $this->restClient->put('report-submission/9876', json_encode(['uuid' => $uuid]))
+        $this->restClient->put('report-submission/9876', json_encode(['data' => ['response' => json_encode($successResponse->getBody())]]))
             ->shouldBeCalled()
             ->willReturn(new SymfonyResponse('9876'));
 
@@ -90,7 +85,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
         $reportSubmittedDate = new DateTime('2019-06-20');
         $fileContents = 'fake_contents';
 
-        $submittedReportDocument = $this->generateSubmittedReportDocument(
+        $submittedReportDocument = DocumentHelpers::generateSubmittedReportDocument(
             '1234567T',
             $reportStartDate,
             $reportEndDate,
@@ -99,111 +94,25 @@ class SiriusDocumentsContractTest extends KernelTestCase
 
         $this->s3Storage->retrieve('test')->willReturn($fileContents);
 
-        $siriusDocumentUpload = $this->generateSiriusDocumentUpload(
-            '1234567T',
+        $siriusDocumentUpload = SiriusHelpers::generateSiriusDocumentUpload(
             $reportStartDate,
             $reportEndDate,
             $reportSubmittedDate,
             'PF',
-            $fileContents
-        );
+            );
 
-        $uuid = '5a8b1a26-8296-4373-ae61-f8d0b250e773';
-        $successResponseBody = json_encode(['data' => ['uuid' => $uuid]]);
-        $successResponse = new Response('200', [], $successResponseBody);
+        $failureResponseBody = json_encode(['errors' => [0 => ['id' => 'ABC123', 'code' => 'OPGDATA-API-FORBIDDEN']]]);
+        $failureResponse = new Response('403', [], $failureResponseBody);
 
-        $this->siriusApiGatewayClient->sendDocument($siriusDocumentUpload)->shouldBeCalled()->willReturn($successResponse);
+        $requestException = new RequestException('An error occurred', new Request('POST', '/report-submission/9876'), $failureResponse);
 
-        $this->restClient->put('report-submission/9876', json_encode(['uuid' => $uuid]))
+        $this->siriusApiGatewayClient->sendDocument($siriusDocumentUpload, 'fake_contents', '1234567T')->shouldBeCalled()->willThrow($requestException);
+
+        $this->restClient->put('report-submission/9876', json_encode(['data' => ['response' => $failureResponse->getBody()]]))
             ->shouldBeCalled()
             ->willReturn(new SymfonyResponse('9876'));
 
         $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
         $sut->syncReportDocument($submittedReportDocument);
-    }
-
-    private function generateSiriusDocumentUpload(
-        string $caseRef,
-        DateTime $startDate,
-        DateTime $endDate,
-        DateTime $submittedDate,
-        string $orderType,
-        string $fileContents,
-        string $mimeType = 'application/pdf',
-        string $fileName = 'test.pdf'
-    )
-    {
-        $siriusDocumentMetadata = (new SiriusDocumentMetadata())
-            ->setReportingPeriodFrom($startDate)
-            ->setReportingPeriodTo($endDate)
-            ->setYear('2018')
-            ->setDateSubmitted($submittedDate)
-            ->setOrderType($orderType);
-
-        $siriusDocumentFile = (new SiriusDocumentFile())
-            ->setFileName($fileName)
-            ->setMimeType($mimeType)
-            ->setSource(base64_encode($fileContents));
-
-        return (new SiriusDocumentUpload())
-            ->setCaseRef($caseRef)
-            ->setDocumentType('Report')
-            ->setDocumentSubType('Report')
-            ->setDirection('DIRECTION_INCOMING')
-            ->setMetadata($siriusDocumentMetadata)
-            ->setFile($siriusDocumentFile);
-    }
-
-    private function generateSubmittedReportDocument(
-        string $caseRef,
-        DateTime $startDate,
-        DateTime $endDate,
-        DateTime $submittedDate,
-        string $mimeType = 'application/pdf',
-        string $fileName = 'test.pdf',
-        string $storageReference = 'test'
-    )
-    {
-        $client = new Client();
-        $client->setCaseNumber($caseRef);
-
-        $reportSubmissions = [(new ReportSubmission())->setId(9876)];
-
-        $report = (new Report())
-            ->setType(Report::TYPE_102)
-            ->setClient($client)
-            ->setStartDate($startDate)
-            ->setEndDate($endDate)
-            ->setSubmitDate($submittedDate)
-            ->setReportSubmissions($reportSubmissions);
-
-        $uploadedFile = $this->generateUploadedFile(
-            'tests/phpunit/TestData/test.pdf',
-            $fileName,
-            $mimeType
-        );
-
-        return (new Document())
-            ->setReport($report)
-            ->setStorageReference($storageReference)
-            ->setFileName($fileName)
-            ->setFile($uploadedFile);
-    }
-
-    /**
-     * Creates an UploadedFile object based on an existing file in the project.
-     *
-     * @param string $fileLocation
-     * @param string $originalName
-     * @param string $mimeType
-     * @return UploadedFile
-     */
-    private function generateUploadedFile(string $fileLocation, string $originalName, string $mimeType)
-    {
-        //@TODO drop the /../ file path when projectDir works as expected in Symfony 4+
-        $projectDir = (self::bootKernel(['debug' => false]))->getProjectDir();
-        $location = sprintf('%s/../%s', $projectDir, $fileLocation);
-
-        return new UploadedFile($location, $originalName, $mimeType, null);
     }
 }
