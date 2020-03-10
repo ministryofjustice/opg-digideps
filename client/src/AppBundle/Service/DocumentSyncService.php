@@ -6,11 +6,11 @@ use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\ReportInterface;
+use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use AppBundle\Service\File\Storage\S3Storage;
 use DateTime;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response as Psr7Response;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,7 +24,7 @@ class DocumentSyncService
     /** @var S3Storage */
     private $storage;
 
-    public function __construct(S3Storage $storage)
+    public function __construct(S3Storage $storage, SiriusApiGatewayClient $client)
     {
         $this->storage = $storage;
         $this->client = new Client([
