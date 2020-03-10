@@ -5,7 +5,6 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
-use AppBundle\Service\Client\Sirius\SiriusDocumentFile;
 use AppBundle\Service\File\Storage\S3Storage;
 use DateTime;
 use PhpPact\Consumer\InteractionBuilder;
@@ -13,9 +12,9 @@ use PhpPact\Consumer\Matcher\Matcher;
 use PhpPact\Consumer\Model\ConsumerRequest;
 use PhpPact\Consumer\Model\ProviderResponse;
 use PhpPact\Standalone\MockService\MockServerEnvConfig;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use PHPUnit\Framework\TestCase;
 
-class SiriusDocumentsContractTest extends KernelTestCase
+class SiriusDocumentsContractTest extends TestCase
 {
     /**
      * Example PACT test.
