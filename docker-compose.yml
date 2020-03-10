@@ -35,7 +35,7 @@ services:
             - DEFAULT_REGION=eu-west-1
             - DEBUG=1
         volumes:
-            - ./docker/localstack-init.sh:/docker-entrypoint-initaws.d/localstack-init.sh
+            - ./docker/localstack-s3-init.sh:/docker-entrypoint-initaws.d/s3-init.sh
 
     frontend:
         build:
