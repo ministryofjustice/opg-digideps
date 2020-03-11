@@ -108,7 +108,7 @@ class OrganisationController extends AbstractController
                     $currentUser = $this->getUser();
 
                     $invitationEmail = $this->getMailFactory()->createInvitationEmail($user, $currentUser->getFullName());
-                    $this->getMailSender()->send($invitationEmail, ['text', 'html']);
+                    $this->getMailSender()->send($invitationEmail);
 
                     $this->getRestClient()->put('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId(), '');
                 }
@@ -260,7 +260,7 @@ class OrganisationController extends AbstractController
     }
 
     /**
-     * @Route("{orgId}/send-activation-link/{userId}", name="org_organisation_send_activation_link")
+     * @Route("/{orgId}/send-activation-link/{userId}", name="org_organisation_send_activation_link")
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function resendActivationEmailAction(Request $request, int $orgId, int $userId)
@@ -280,7 +280,7 @@ class OrganisationController extends AbstractController
             $currentUser = $this->getUser();
 
             $invitationEmail = $this->getMailFactory()->createInvitationEmail($user, $currentUser->getFullName());
-            $this->getMailSender()->send($invitationEmail, ['text', 'html']);
+            $this->getMailSender()->send($invitationEmail);
 
             $this->addFlash(
                 'notice',
