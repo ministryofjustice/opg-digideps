@@ -184,26 +184,4 @@ class FixtureController extends AbstractController
 
         return new Response();
     }
-
-    /**
-     * @Route("/getUserIDByEmail/{email}", methods={"GET"})
-     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     */
-    public function getUserIDByEmail(KernelInterface $kernel, string $email)
-    {
-        if ($kernel->getEnvironment() === 'prod') {
-            throw $this->createNotFoundException();
-        }
-
-        /** @var array $response */
-        $response = json_decode($this
-            ->getRestClient()
-            ->get("v2/fixture/getUserIDByEmail/$email", 'response')->getBody(), true);
-
-        if ($response['success']) {
-            return new Response($response['data']['id']);
-        } else {
-            return new Response($response['message'], Response::HTTP_NOT_FOUND);
-        }
-    }
 }

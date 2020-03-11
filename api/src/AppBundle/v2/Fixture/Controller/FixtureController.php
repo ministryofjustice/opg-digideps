@@ -330,19 +330,4 @@ class FixtureController
 
         return $this->buildSuccessResponse($fromRequest, 'User created', Response::HTTP_OK);
     }
-
-    /**
-     * @Route("/getUserIDByEmail/{email}", methods={"GET"})
-     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     */
-    public function getUserIDByEmail(string $email)
-    {
-        $user = $this->userRepository->findOneBy(['email' => $email]);
-
-        if ($user !== null) {
-            return $this->buildSuccessResponse(['id' => $user->getId()], 'User found', Response::HTTP_OK);
-        } else {
-            return $this->buildNotFoundResponse("Could not find user with email address '$email'");
-        }
-    }
 }

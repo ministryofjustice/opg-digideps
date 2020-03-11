@@ -51,7 +51,7 @@ class MailFactoryTest extends TestCase
     {
         $this->client = $this->generateClient();
 
-        $this->layDeputy = $this->generateLayDeputy();
+        $this->layDeputy = $this->generateUser();
         $this->layDeputy->setClients([$this->client]);
 
         $this->submittedReport = (new Report())
@@ -325,7 +325,7 @@ class MailFactoryTest extends TestCase
             ->setComments('Amazing service!')
             ->setSatisfactionLevel('4');
 
-        $email = ($this->generateSUT())->createPostSubmissionFeedbackEmail($response, $this->generateLayDeputy());
+        $email = ($this->generateSUT())->createPostSubmissionFeedbackEmail($response, $this->generateUser());
 
         $this->assertStaticEmailProperties($email);
 
@@ -429,7 +429,7 @@ class MailFactoryTest extends TestCase
         );
     }
 
-    private function generateLayDeputy() : User
+    private function generateUser($role = User::ROLE_LAY_DEPUTY) : User
     {
         return (new User())
             ->setRegistrationToken('regToken')
@@ -443,7 +443,7 @@ class MailFactoryTest extends TestCase
             ->setAddressPostcode('A12 3BC')
             ->setAddress3('Notrealingham')
             ->setAddressCountry('GB')
-            ->setRoleName(User::ROLE_LAY_DEPUTY);
+            ->setRoleName($role);
     }
 
     private function generateClient() : Client
