@@ -22,7 +22,7 @@ class PaginatorTest extends WebTestCase
             return $a . '/' . http_build_query($b);
         });
 
-        $this->frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => true]);
+        $this->frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false]);
         $container = $this->frameworkBundleClient->getContainer();
         $container->set('router', $this->mockRouter);
 
