@@ -1,7 +1,6 @@
 clientSearch:
   htmlTitle: Administration - Clients
-  pageTitle: Admin
-  supportTitle: Clients
+  pageTitle: Clients
   searchBy: Search by client surname or case number
   clientTable:
     heading: Client list

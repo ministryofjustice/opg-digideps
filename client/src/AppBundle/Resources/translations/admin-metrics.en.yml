@@ -1,7 +1,6 @@
 indexPage:
-    htmlTitle: Administration - Statistics
-    pageTitle: Statistics
-    subTitle: Admin
+    htmlTitle: Administration - Analytics
+    pageTitle: Analytics
     downloadDAT: Download DAT file
 
 form:
