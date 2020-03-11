@@ -57,7 +57,7 @@ default:
 
         report-management:
             description: Coverage of report management features
-            paths: [ "%paths.base%/features/v2/ReportManagement" ]
+            paths: [ "%paths.base%/features/v2/reportManagement" ]
             contexts:
                 - DigidepsBehat\ReportManagement\ReportManagementFeatureContext
 
