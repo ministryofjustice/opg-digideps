@@ -141,7 +141,7 @@ class UserController extends AbstractController
         $this->getRestClient()->userRecreateToken($user->getEmail(), 'activate');
 
         $activationEmail = $this->getMailFactory()->createActivationEmail($user);
-        $this->getMailSender()->send($activationEmail, ['text', 'html']);
+        $this->getMailSender()->send($activationEmail);
 
         return $this->redirect($this->generateUrl('activation_link_sent', ['token' => $token]));
     }
@@ -229,7 +229,7 @@ class UserController extends AbstractController
 
                 $resetPasswordEmail = $this->getMailFactory()->createResetPasswordEmail($user);
 
-                $this->getMailSender()->send($resetPasswordEmail, ['text', 'html']);
+                $this->getMailSender()->send($resetPasswordEmail);
                 $logger->warning('Email sent to ' . $disguisedEmail);
             } catch (RestClientException $e) {
                 $logger->warning('Email ' . $emailAddress . ' not found');

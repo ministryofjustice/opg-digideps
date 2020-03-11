@@ -42,7 +42,7 @@ class FormattedTest extends WebTestCase
 
     public function setUp(): void
     {
-        $this->frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => true]);
+        $this->frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false]);
         $request = new Request();
         $request->create('/');
         $this->container = $this->frameworkBundleClient->getContainer();
