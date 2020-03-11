@@ -36,10 +36,10 @@ Feature: Deleting Users
     Given I am logged in to admin as 'admin@publicguardian.gov.uk' with password 'Abcd1234'
     And I am viewing the edit user page for 'adminuser2@publicguardian.gov.uk'
     Then the url should match "/admin/edit-user"
-    And I should see "Delete user is disabled for non lay deputies, deputies with multiple clients or clients with reports"
+    And I should see "Delete user is disabled for deputies with multiple clients or clients with reports"
 
   Scenario: Users cannot delete themselves
     Given I am logged in to admin as 'superAdminUser1@publicguardian.gov.uk' with password 'Abcd1234'
     And I am viewing the edit user page for 'superAdminUser1@publicguardian.gov.uk'
     Then the url should match "/admin/edit-user"
-    And I should see "Delete user is disabled for non lay deputies, deputies with multiple clients or clients with reports"
+    And I should see "Delete user is disabled for deputies with multiple clients or clients with reports"
