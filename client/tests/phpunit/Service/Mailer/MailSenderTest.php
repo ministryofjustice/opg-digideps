@@ -158,7 +158,6 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
 
     /**
      * @test
-     * @group acs
      */
     public function send_notify()
     {
@@ -169,7 +168,6 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
 
     /**
      * @test
-     * @group acs
      */
     public function send_notify_exceptions_are_logged()
     {

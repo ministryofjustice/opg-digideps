@@ -5,6 +5,8 @@ namespace AppBundle\Entity\Report;
 use AppBundle\Entity\DocumentInterface;
 use AppBundle\Entity\Report\Traits\HasReportTrait;
 use AppBundle\Entity\Traits\CreationAudit;
+use AppBundle\Entity\User;
+use DateTime;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -17,6 +19,11 @@ class Document implements DocumentInterface
 {
     const FILE_NAME_MAX_LENGTH = 255;
     const MAX_UPLOAD_PER_REPORT = 100;
+    const SYNC_STATUS_QUEUED = 'QUEUED';
+    const SYNC_STATUS_IN_PROGRESS = 'IN_PROGRESS';
+    const SYNC_STATUS_SUCCESS = 'SUCCESS';
+    const SYNC_STATUS_TEMPORARY_ERROR = 'TEMPORARY_ERROR';
+    const SYNC_STATUS_PERMANENT_ERROR = 'PERMANENT_ERROR';
 
     use CreationAudit;
     use HasReportTrait;
@@ -24,7 +31,7 @@ class Document implements DocumentInterface
     /**
      * @param ExecutionContextInterface $context
      */
-    public function isValidForReport(ExecutionContextInterface $context)
+    public function isValidForReport(ExecutionContextInterface $context): void
     {
         if (!($this->getFile() instanceof UploadedFile)) {
             return;
@@ -36,6 +43,11 @@ class Document implements DocumentInterface
         }
 
         $fileOriginalName = $this->getFile()->getClientOriginalName();
+
+        if (is_null($fileOriginalName)) {
+            $context->buildViolation('document.file.errors.invalidName')->atPath('file')->addViolation();
+            return;
+        }
 
         if (strlen($fileOriginalName) > self::FILE_NAME_MAX_LENGTH) {
             $context->buildViolation('document.file.errors.maxMessage')->atPath('file')->addViolation();
@@ -109,6 +121,34 @@ class Document implements DocumentInterface
      * @JMS\Groups({"document-report-subnmission"})
      */
     private $reportSubmission;
+
+    /**
+     * @var string|null
+     * @JMS\Type("string")
+     * @JMS\Groups({"document-synchronisation"})
+     */
+    private $synchronisationStatus;
+
+    /**
+     * @var DateTime|null
+     * @JMS\Type("DateTime")
+     * @JMS\Groups({"document-synchronisation"})
+     */
+    private $synchronisationTime;
+
+    /**
+     * @var string|null
+     * @JMS\Type("string")
+     * @JMS\Groups({"document-synchronisation"})
+     */
+    private $synchronisationError;
+
+    /**
+     * @var User|null
+     * @JMS\Type("AppBundle\Entity\User")
+     * @JMS\Groups({"document-synchronisation"})
+     */
+    private $synchronisedBy;
 
     /**
      * @return int
@@ -195,10 +235,12 @@ class Document implements DocumentInterface
 
     /**
      * @param bool $isReportPdf
+     * @return $this
      */
     public function setIsReportPdf($isReportPdf)
     {
         $this->isReportPdf = $isReportPdf;
+        return $this;
     }
 
     /**
@@ -207,6 +249,88 @@ class Document implements DocumentInterface
     public function getReportSubmission()
     {
         return $this->reportSubmission;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSynchronisationStatus(): ?string
+    {
+        return $this->synchronisationStatus;
+    }
+
+    /**
+     * @param string $status
+     * @return $this
+     */
+    public function setSynchronisationStatus(?string $status)
+    {
+        if (!in_array($status, array(
+            self::SYNC_STATUS_QUEUED,
+            self::SYNC_STATUS_IN_PROGRESS,
+            self::SYNC_STATUS_SUCCESS,
+            self::SYNC_STATUS_TEMPORARY_ERROR,
+            self::SYNC_STATUS_PERMANENT_ERROR,
+        ))) {
+            throw new \InvalidArgumentException('Invalid synchronisation status');
+        }
+
+        $this->synchronisationStatus = $status;
+        return $this;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getSynchronisationTime(): ?DateTime
+    {
+        return $this->synchronisationTime;
+    }
+
+    /**
+     * @param DateTime $time
+     * @return $this
+     */
+    public function setSynchronisationTime(?DateTime $time)
+    {
+        $this->synchronisationTime = $time;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSynchronisationError(): ?string
+    {
+        return $this->synchronisationError;
+    }
+
+    /**
+     * @param string $error
+     * @return $this
+     */
+    public function setSynchronisationError(?string $error)
+    {
+        $this->synchronisationError = $error;
+        return $this;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getSynchronisedBy(): ?User
+    {
+        return $this->synchronisedBy;
+    }
+
+    /**
+     * @param User $user
+     * @return $this
+     */
+    public function setSynchronisedBy(?User $user)
+    {
+        $this->synchronisedBy = $user;
+        return $this;
     }
 
     /**

@@ -12,4 +12,3 @@ Feature: Report submit
         And I press "report_declaration_save"
         Then the form should be valid
         And the URL should match "/report/\d+/submitted"
-        And the last email should contain "next annual deputy report (for 01/01/2017 to 31/12/2017)"

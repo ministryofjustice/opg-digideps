@@ -2,7 +2,9 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Document;
+use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Model\MissingDocument;
 use AppBundle\Model\RetrievedDocument;
@@ -10,9 +12,9 @@ use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\Storage\FileNotFoundException;
 use AppBundle\Service\File\Storage\S3Storage;
 use Doctrine\Common\Collections\ArrayCollection;
-use Mockery\Exception;
-use Mockery as m;
+use Exception;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Twig\Environment;
@@ -26,22 +28,22 @@ class DocumentServiceTest extends TestCase
     protected $object;
 
     /**
-     * @var m\MockInterface|S3Storage
+     * @var ObjectProphecy|S3Storage
      */
     private $s3Storage;
 
     /**
-     * @var m\MockInterface|RestClient
+     * @var ObjectProphecy|RestClient
      */
     private $restClient;
 
     /**
-     * @var m\MockInterface|Environment
+     * @var ObjectProphecy|Environment
      */
     private $twig;
 
     /**
-     * @var LoggerInterface
+     * @var ObjectProphecy|LoggerInterface
      */
     private $logger;
 
@@ -68,13 +70,21 @@ class DocumentServiceTest extends TestCase
 
     public function setUp(): void
     {
-        $this->s3Storage = m::mock(S3Storage::class);
-        $this->restClient = m::mock(RestClient::class);
-        $this->logger = m::mock(LoggerInterface::class);
-        $this->logger->shouldIgnoreMissing();
-        $this->twig = m::mock(Environment::class);
+        /** @var ObjectProphecy|S3Storage $s3Storage */
+        $s3Storage = self::prophesize(S3Storage::class);
+        /** @var ObjectProphecy|RestClient $restClient */
+        $restClient = self::prophesize(RestClient::class);
+        /** @var ObjectProphecy|LoggerInterface $logger */
+        $logger = self::prophesize(LoggerInterface::class);
+        /** @var ObjectProphecy|Environment $twig */
+        $twig = self::prophesize(Environment::class);
 
-        $this->object = new DocumentService($this->s3Storage, $this->restClient, $this->logger, $this->twig);
+        $this->s3Storage = $s3Storage;
+        $this->restClient = $restClient;
+        $this->logger = $logger;
+        $this->twig = $twig;
+
+        $this->object = new DocumentService($this->s3Storage->reveal(), $this->restClient->reveal(), $this->logger->reveal(), $this->twig->reveal());
 
         $this->doc1 = self::prophesize(Document::class);
         $this->doc1->getStorageReference()->willReturn('ref-1');
@@ -97,19 +107,7 @@ class DocumentServiceTest extends TestCase
         $this->doc4->getFileName()->willReturn('file-name4.pdf');
     }
 
-
-    public static function cleanUpDataProvider()
-    {
-        return [
-            [0], // s3 failures NOT ignored -> hard delete gets called
-            [1], // s3 failures ignored -> hard delete gets called
-        ];
-    }
-
-    /**
-     * @doesNotPerformAssertions
-     */
-    public function testRemoveDocumentFromS3()
+    public function testRemoveDocumentFromS3(): void
     {
         $docId = 1;
         $document = new Document();
@@ -117,18 +115,20 @@ class DocumentServiceTest extends TestCase
         $document->setStorageReference('r1');
 
         $this->s3Storage
-            ->shouldReceive('removeFromS3')->once()->with('r1')->andReturn([]);
+            ->removeFromS3('r1')
+            ->shouldBeCalled()
+            ->willReturn([]);
 
-        $this->restClient->shouldReceive('delete')
-            ->once()
-            ->with('document/' . $docId)
-            ->andReturn(true);
+        $this->restClient
+            ->delete('document/' . $docId)
+            ->shouldBeCalled()
+            ->willReturn(true);
 
         $this->object->removeDocumentFromS3($document);
 
     }
 
-    public function testRemoveDocumentWithS3Failure()
+    public function testRemoveDocumentWithS3Failure(): void
     {
         $docId = 1;
 
@@ -137,22 +137,24 @@ class DocumentServiceTest extends TestCase
         $document->setStorageReference('r1');
 
         $this->s3Storage
-            ->shouldReceive('removeFromS3')->once()->with('r1')->andThrow(Exception::class);
+            ->removeFromS3('r1')
+            ->shouldBeCalled()
+            ->willThrow(Exception::class);
 
-        $this->restClient->shouldReceive('apiCall')->never()->with('DELETE', 'document/1', null, 'array', [], false);
+        $this->restClient
+            ->delete(Argument::cetera())
+            ->shouldNotBeCalled();
 
-        $this->expectException('Exception');
+        $this->expectException(Exception::class);
 
         $this->object->removeDocumentFromS3($document);
 
     }
 
-    public function testRetrieveDocumentsFromS3ByReportSubmission()
+    public function testRetrieveDocumentsFromS3ByReportSubmission(): void
     {
-        /** @var S3Storage|ObjectProphecy $storage */
-        $storage = self::prophesize(S3Storage::class);
-        $storage->retrieve('ref-1')->shouldBeCalled()->willReturn('doc1 contents');
-        $storage->retrieve('ref-2')->shouldBeCalled()->willReturn('doc2 contents');
+        $this->s3Storage->retrieve('ref-1')->shouldBeCalled()->willReturn('doc1 contents');
+        $this->s3Storage->retrieve('ref-2')->shouldBeCalled()->willReturn('doc2 contents');
 
         /** @var ObjectProphecy|ReportSubmission $reportSubmission */
         $reportSubmission = self::prophesize(ReportSubmission::class);
@@ -160,12 +162,7 @@ class DocumentServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(new ArrayCollection([$this->doc1->reveal(), $this->doc2->reveal()]));
 
-        $logger = self::prophesize(LoggerInterface::class);
-        $restClient = self::prophesize(RestClient::class);
-        $twig = self::prophesize(Environment::class);
-
-        $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal(), $twig->reveal());
-        [$documents, $missing] = $sut->retrieveDocumentsFromS3ByReportSubmission($reportSubmission->reveal());
+        [$documents, $missing] = $this->object->retrieveDocumentsFromS3ByReportSubmission($reportSubmission->reveal());
 
         $expectedRetrievedDoc1 = new RetrievedDocument();
         $expectedRetrievedDoc1->setFileName('file-name1.pdf');
@@ -181,12 +178,10 @@ class DocumentServiceTest extends TestCase
         self::assertEmpty($missing);
     }
 
-    public function testMissingDocumentsFileNamesAreReturnedIfNotRetrievable()
+    public function testMissingDocumentsFileNamesAreReturnedIfNotRetrievable(): void
     {
-        /** @var S3Storage|ObjectProphecy $storage */
-        $storage = self::prophesize(S3Storage::class);
-        $storage->retrieve('ref-1')->shouldBeCalled()->willReturn('doc1 contents');
-        $storage->retrieve('ref-2')->shouldBeCalled()
+        $this->s3Storage->retrieve('ref-1')->shouldBeCalled()->willReturn('doc1 contents');
+        $this->s3Storage->retrieve('ref-2')->shouldBeCalled()
             ->willThrow(new FileNotFoundException("Cannot find file with reference ref-2"));
 
         /** @var ObjectProphecy|ReportSubmission $reportSubmission */
@@ -195,12 +190,7 @@ class DocumentServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(new ArrayCollection([$this->doc1->reveal(), $this->doc2->reveal()]));
 
-        $logger = self::prophesize(LoggerInterface::class);
-        $restClient = self::prophesize(RestClient::class);
-        $twig = self::prophesize(Environment::class);
-
-        $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal(), $twig->reveal());
-        [$documents, $missing] = $sut->retrieveDocumentsFromS3ByReportSubmission($reportSubmission->reveal());
+        [$documents, $missing] = $this->object->retrieveDocumentsFromS3ByReportSubmission($reportSubmission->reveal());
 
         $expectedRetrievedDoc = new RetrievedDocument();
         $expectedRetrievedDoc->setFileName('file-name1.pdf');
@@ -215,13 +205,11 @@ class DocumentServiceTest extends TestCase
         self::assertEquals([$expectedMissingDoc], $missing);
     }
 
-    public function testRetrieveDocumentsFromS3ByReportSubmissions()
+    public function testRetrieveDocumentsFromS3ByReportSubmissions(): void
     {
-        /** @var S3Storage|ObjectProphecy $storage */
-        $storage = self::prophesize(S3Storage::class);
-        $storage->retrieve('ref-1')->shouldBeCalled()->willReturn('doc1 contents');
-        $storage->retrieve('ref-2')->shouldBeCalled()->willReturn('doc2 contents');
-        $storage->retrieve('ref-3')->shouldBeCalled()->willReturn('doc3 contents');
+        $this->s3Storage->retrieve('ref-1')->shouldBeCalled()->willReturn('doc1 contents');
+        $this->s3Storage->retrieve('ref-2')->shouldBeCalled()->willReturn('doc2 contents');
+        $this->s3Storage->retrieve('ref-3')->shouldBeCalled()->willReturn('doc3 contents');
 
         /** @var ObjectProphecy|ReportSubmission $reportSubmission */
         $reportSubmission = self::prophesize(ReportSubmission::class);
@@ -235,13 +223,7 @@ class DocumentServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(new ArrayCollection([$this->doc3->reveal()]));
 
-        $logger = self::prophesize(LoggerInterface::class);
-        $restClient = self::prophesize(RestClient::class);
-        $twig = self::prophesize(Environment::class);
-
-        $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal(), $twig->reveal());
-
-        [$documents, $missing] = $sut->retrieveDocumentsFromS3ByReportSubmissions(
+        [$documents, $missing] = $this->object->retrieveDocumentsFromS3ByReportSubmissions(
             [$reportSubmission->reveal(), $reportSubmission2->reveal()]
         );
 
@@ -264,16 +246,14 @@ class DocumentServiceTest extends TestCase
         self::assertEmpty($missing);
     }
 
-    public function testRetrieveDocumentsFromS3ByReportSubmissionsMissingDocs()
+    public function testRetrieveDocumentsFromS3ByReportSubmissionsMissingDocs(): void
     {
-        /** @var S3Storage|ObjectProphecy $storage */
-        $storage = self::prophesize(S3Storage::class);
-        $storage->retrieve('ref-1')->shouldBeCalled()->willReturn('doc1 contents');
-        $storage->retrieve('ref-2')->shouldBeCalled()
+        $this->s3Storage->retrieve('ref-1')->shouldBeCalled()->willReturn('doc1 contents');
+        $this->s3Storage->retrieve('ref-2')->shouldBeCalled()
             ->willThrow(new FileNotFoundException("Cannot find file with reference ref-2"));
-        $storage->retrieve('ref-3')->shouldBeCalled()
+        $this->s3Storage->retrieve('ref-3')->shouldBeCalled()
             ->willThrow(new FileNotFoundException("Cannot find file with reference ref-3"));
-        $storage->retrieve('ref-4')->shouldBeCalled()->willReturn('doc4 contents');
+        $this->s3Storage->retrieve('ref-4')->shouldBeCalled()->willReturn('doc4 contents');
 
         /** @var ObjectProphecy|ReportSubmission $reportSubmission */
         $reportSubmission = self::prophesize(ReportSubmission::class);
@@ -287,13 +267,7 @@ class DocumentServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(new ArrayCollection([$this->doc3->reveal(), $this->doc4->reveal()]));
 
-        $logger = self::prophesize(LoggerInterface::class);
-        $restClient = self::prophesize(RestClient::class);
-        $twig = self::prophesize(Environment::class);
-
-        $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal(), $twig->reveal());
-
-        [$documents, $missing] = $sut->retrieveDocumentsFromS3ByReportSubmissions(
+        [$documents, $missing] = $this->object->retrieveDocumentsFromS3ByReportSubmissions(
             [$reportSubmission->reveal(), $reportSubmission2->reveal()]
         );
 
@@ -320,50 +294,56 @@ class DocumentServiceTest extends TestCase
         self::assertEquals([$expectedMissingDoc1, $expectedMissingDoc2], $missing);
     }
 
-    public function testCreateMissingDocumentsFlashMessage()
+    public function testCreateMissingDocumentsFlashMessage(): void
     {
         $missingDoc = new MissingDocument();
         $missingDocuments = [$missingDoc];
 
         $expectedFlash = 'some flash message here';
 
-        $storage = self::prophesize(S3Storage::class);
-        $logger = self::prophesize(LoggerInterface::class);
-        $restClient = self::prophesize(RestClient::class);
-        $twig = self::prophesize(Environment::class);
-        $twig->render('AppBundle:FlashMessages:missing-documents.html.twig', ['missingDocuments' => $missingDocuments])
+        $this->twig
+            ->render('AppBundle:FlashMessages:missing-documents.html.twig', ['missingDocuments' => $missingDocuments])
             ->shouldBeCalled()
             ->willReturn($expectedFlash);
 
-        $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal(), $twig->reveal());
-        $actualFlash = $sut->createMissingDocumentsFlashMessage($missingDocuments);
+        $actualFlash = $this->object->createMissingDocumentsFlashMessage($missingDocuments);
 
         self::assertEquals($expectedFlash, $actualFlash);
     }
 
-    public function testTwigTemplate()
+    private function generateReportSubmission(string $caseNumber): ReportSubmission
     {
-        /** @var ObjectProphecy|ReportSubmission $reportSubmission */
-        $reportSubmission1 = self::prophesize(ReportSubmission::class);
-        $reportSubmission1->getCaseNumber()->shouldBeCalled()->willReturn('CaseNumber1');
+        $client = new Client();
+        $client->setCaseNumber($caseNumber);
 
-        /** @var ObjectProphecy|ReportSubmission $reportSubmission2 */
-        $reportSubmission2 = self::prophesize(ReportSubmission::class);
-        $reportSubmission2->getCaseNumber()->shouldBeCalled()->willReturn('CaseNumber2');
+        $report = new Report();
+        $report->setClient($client);
+
+        $reportSubmission = new ReportSubmission();
+        $reportSubmission->setReport($report);
+
+        return $reportSubmission;
+    }
+
+    public function testTwigTemplate(): void
+    {
+        $reportSubmission1 = $this->generateReportSubmission('CaseNumber1');
+        $reportSubmission2 = $this->generateReportSubmission('CaseNumber2');
 
         $missingDoc1 = new MissingDocument();
         $missingDoc1->setFileName('file-name1.pdf');
-        $missingDoc1->setReportSubmission($reportSubmission1->reveal());
+        $missingDoc1->setReportSubmission($reportSubmission1);
 
         $missingDoc2 = new MissingDocument();
         $missingDoc2->setFileName('file-name2.pdf');
-        $missingDoc2->setReportSubmission($reportSubmission2->reveal());
+        $missingDoc2->setReportSubmission($reportSubmission2);
 
         $missingDoc3 = new MissingDocument();
         $missingDoc3->setFileName('file-name3.pdf');
-        $missingDoc3->setReportSubmission($reportSubmission1->reveal());
+        $missingDoc3->setReportSubmission($reportSubmission1);
 
         $missingDocuments = [$missingDoc1, $missingDoc2, $missingDoc3];
+        $missingDocumentCaseNumbers = ['CaseNumber1', 'CaseNumber2', 'CaseNumber1'];
 
         $loader = new FilesystemLoader([__DIR__ . '/../../../src/AppBundle/Resources/views/FlashMessages']);
 
@@ -373,17 +353,12 @@ class DocumentServiceTest extends TestCase
 
         self::assertStringContainsString('<p>The following documents could not be downloaded:</p>', $renderedTwig);
 
-        foreach($missingDocuments as $missingDocument) {
-            $caseNumber = $missingDocument->getReportSubmission()->getCaseNumber();
+        foreach($missingDocuments as $index => $missingDocument) {
+            $caseNumber = $missingDocumentCaseNumbers[$index];
             $fileName = $missingDocument->getFileName();
 
             $expectedListItem = "<li>${caseNumber} - ${fileName}</li>";
             self::assertStringContainsString($expectedListItem, $renderedTwig);
         }
-    }
-
-    public function tearDown(): void
-    {
-        m::close();
     }
 }

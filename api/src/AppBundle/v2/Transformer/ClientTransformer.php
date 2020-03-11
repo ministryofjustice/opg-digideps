@@ -55,7 +55,6 @@ class ClientTransformer
             'lastname' => $dto->getLastName(),
             'email' => $dto->getEmail(),
             'archived_at' => $this->transformArchivedAt($dto),
-            'deleted_at' => $this->transformDeletedAt($dto),
             'total_report_count' => $dto->getReportCount()
         ];
 
@@ -85,15 +84,6 @@ class ClientTransformer
     private function transformArchivedAt(ClientDto $dto)
     {
         return $dto->getArchivedAt() instanceof \DateTime ? $dto->getArchivedAt()->format('Y-m-d H:i:s') : null;
-    }
-
-    /**
-     * @param ClientDto $dto
-     * @return null|string
-     */
-    private function transformDeletedAt(ClientDto $dto)
-    {
-        return $dto->getDeletedAt() instanceof \DateTime ? $dto->getDeletedAt()->format('Y-m-d H:i:s') : null;
     }
 
 

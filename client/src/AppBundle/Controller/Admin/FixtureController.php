@@ -82,6 +82,53 @@ class FixtureController extends AbstractController
     }
 
     /**
+     * @Route("/createAdmin", methods={"GET"})
+     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     */
+    public function createAdmin(Request $request, KernelInterface $kernel)
+    {
+        if ($kernel->getEnvironment() === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
+        $this
+            ->getRestClient()
+            ->post("v2/fixture/createAdmin", json_encode([
+                "adminType" => $request->query->get('adminType'),
+                "email" => $request->query->get('email'),
+                "firstName" => $request->query->get('firstName'),
+                "lastName" => $request->query->get('lastName'),
+                "activated" => $request->query->get('activated')
+            ]));
+
+        return new Response();
+    }
+
+    /**
+     * @Route("/getUserIDByEmail/{email}", methods={"GET"})
+     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     */
+    public function getUserIDByEmail(KernelInterface $kernel, string $email)
+    {
+        if ($kernel->getEnvironment() === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
+        /** @var array $response */
+        $response = json_decode($this
+            ->getRestClient()
+            ->get("v2/fixture/getUserIDByEmail/$email", 'response')->getBody(), true);
+
+        if ($response['success']) {
+            return new Response($response['data']['id']);
+        } else {
+            return new Response($response['message'], Response::HTTP_NOT_FOUND);
+        }
+    }
+
+
+
+    /**
      * @Route("/createUser", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
      */

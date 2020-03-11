@@ -49,6 +49,27 @@ class UserFactory
         return $user;
     }
 
+    /**
+     * @param array $data
+     * @return User
+     * @throws \Exception
+     */
+    public function createAdmin(array $data): User
+    {
+        $user = (new User())
+            ->setFirstname(isset($data['firstName']) ? $data['firstName'] : ucfirst($data['adminType']) . ' Admin ' . $data['email'])
+            ->setLastname(isset($data['lastName']) ? $data['lastName'] : 'User')
+            ->setEmail($data['email'])
+            ->setRegistrationDate(new \DateTime())
+            ->setRoleName($data['adminType']);
+
+        if ($data['activated'] === 'true') {
+            $user->setPassword($this->encoder->encodePassword($user, 'Abcd1234'))->setActive(true);
+        }
+
+        return $user;
+    }
+
     private function convertRoleName(string $roleName): string
     {
         switch ($roleName) {

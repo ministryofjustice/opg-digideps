@@ -12,7 +12,7 @@ RUN npm install
 
 # Check linting
 RUN npm run lint
-RUN npm audit
+#RUN npm audit
 
 # Build assets
 RUN NODE_ENV=production npm run build
@@ -43,7 +43,7 @@ ENV PHP_EXT_DIR=/usr/lib/php7/modules
 # Install core PHP extensions
 RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec postgresql-client libzip-dev unzip php7-igbinary php7-pecl-redis
 RUN docker-php-ext-enable opcache $PHP_EXT_DIR/igbinary.so $PHP_EXT_DIR/redis.so
-RUN docker-php-ext-install zip
+RUN docker-php-ext-install pcntl zip
 
 # Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=false
@@ -86,6 +86,7 @@ COPY --from=composer /app/app app
 COPY --from=composer /app/bin bin
 COPY --from=composer /app/vendor vendor
 COPY --from=composer /app/composer.lock composer.lock
+COPY scripts scripts
 COPY src src
 COPY tests tests
 COPY web web

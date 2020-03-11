@@ -56,5 +56,17 @@ parameters:
   {{ else }}
       validate: true
   {{ end }}
+    ssm_client_params:
+      version: 'latest'
+      region: 'eu-west-1'
+  {{ if exists "/s3/localstack" }}
+      endpoint: 'http://localstack:4583'
+      validate: false
+      credentials:
+        key: 'FAKE_ID'
+        secret: 'FAKE_KEY'
+  {{ else }}
+      validate: true
+  {{ end }}
     file_scanner_url: {{ if exists "/filescanner/url" }}{{ getv "/filescanner/url" }}{{ else }}http://file-scanner-rest:8080{{ end }}
     file_scanner_sslverify: {{ if exists "/filescanner/sslverify" }}{{ getv "/filescanner/sslverify" }}{{ else }}true{{ end }}

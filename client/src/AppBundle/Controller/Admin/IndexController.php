@@ -4,10 +4,10 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Exception\DisplayableException;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\Client\RestClient;
+use AppBundle\Security\UserVoter;
 use AppBundle\Service\CsvUploader;
 use AppBundle\Service\DataImporter\CsvToArray;
 use AppBundle\Service\Mailer\MailFactory;
@@ -32,9 +32,15 @@ class IndexController extends AbstractController
      */
     private $orgService;
 
-    public function __construct(OrgService $orgService)
+    /**
+     * @var UserVoter
+     */
+    private $userVoter;
+
+    public function __construct(OrgService $orgService, UserVoter $userVoter)
     {
         $this->orgService = $orgService;
+        $this->userVoter = $userVoter;
     }
 
     /**
@@ -233,17 +239,11 @@ class IndexController extends AbstractController
      */
     public function deleteConfirmAction($id)
     {
+        /** @var EntityDir\User $userToDelete */
         $userToDelete = $this->getRestClient()->get("user/{$id}", 'User');
 
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            throw new DisplayableException('Only Admin can delete users');
-        }
+        $this->denyAccessUnlessGranted(UserVoter::DELETE_USER, $userToDelete, 'Unable to delete this user');
 
-        /** @var EntityDir\User $loggedInUser */
-        $loggedInUser = $this->getUser();
-        if ($loggedInUser->getId() == $userToDelete->getId()) {
-            throw new DisplayableException('Cannot delete logged user');
-        }
         return ['user' => $userToDelete];
     }
 

@@ -3,6 +3,8 @@
 namespace AppBundle\Controller\Admin\Client;
 
 use AppBundle\Controller\AbstractController;
+use AppBundle\Entity\Client;
+use AppBundle\Entity\User;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -27,6 +29,51 @@ class ClientController extends AbstractController
     {
         $client = $this->getRestClient()->get('v2/client/' . $id, 'Client');
 
+        return [
+            'client'      => $client,
+            'namedDeputy' => $this->getNamedDeputy($id, $client)
+        ];
+    }
+
+    /**
+     * @Route("/{id}/discharge", name="admin_client_discharge", requirements={"id":"\d+"})
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @param $id
+     *
+     * @Template("AppBundle:Admin/Client/Client:discharge.html.twig")
+     *
+     * @return array
+     */
+    public function dischargeAction($id)
+    {
+        $client = $this->getRestClient()->get('v2/client/' . $id, 'Client');
+
+        return [
+            'client' => $client,
+            'namedDeputy' => $this->getNamedDeputy($id, $client)
+        ];
+    }
+
+    /**
+     * @Route("/{id}/discharge-confirm", name="admin_client_discharge_confirm", requirements={"id":"\d+"})
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function dischargeConfirmAction($id)
+    {
+        $this->getRestClient()->delete('client/' . $id . '/delete');
+
+        return $this->redirectToRoute('admin_client_search');
+    }
+
+    /**
+     * @param int $id
+     * @param Client $client
+     * @return User|null
+     */
+    private function getNamedDeputy(int $id, Client $client)
+    {
         $namedDeputy = null;
         if (!is_null($client->getNamedDeputy())) {
             $namedDeputy = $client->getNamedDeputy();
@@ -41,9 +88,6 @@ class ClientController extends AbstractController
             }
         }
 
-        return [
-            'client'      => $client,
-            'namedDeputy' => $namedDeputy,
-        ];
+        return $namedDeputy;
     }
 }
