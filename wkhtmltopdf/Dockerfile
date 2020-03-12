@@ -21,5 +21,3 @@ RUN ["chmod", "+x", "/docker-entrypoint.sh"]
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 CMD ["-b", "0.0.0.0:80", "--log-file", "-", "app:application"]
-
-HEALTHCHECK CMD curl --fail -X POST -H 'Content-Type:application/json' -d '{"contents":"dGVzdA=="}' -o /dev/null http://localhost:80/ || exit 1
