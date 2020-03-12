@@ -371,7 +371,7 @@ class ReportController extends AbstractController
 
         $sessionData = $request->getSession()->get('report-management-changes');
         if (null === $sessionData || $this->insufficientDataInSession($sessionData)) {
-            $this->redirect($this->generateUrl('admin_report_manage', ['id'=>$report->getId()]));
+            return $this->redirect($this->generateUrl('admin_report_manage', ['id'=>$report->getId()]));
         }
 
         $form = $this->createForm(ManageReportConfirmType::class, $report);
