@@ -32,6 +32,8 @@ class MailFactory
 
     const NOTIFY_FROM_EMAIL_ID = 'db930cb2-2153-4e2a-b3d0-06f7c7f92f37';
 
+    const DATE_FORMAT = 'j F Y';
+
     /**
      * @var TranslatorInterface
      */
@@ -338,12 +340,12 @@ class MailFactory
             'clientFullname' => $submittedReport->getClient()->getFullname(),
             'deputyFullname' => $user->getFullName(),
             'orgIntro' => self::getRecipientRole($user) == 'default' ? '' : $this->buildOrgIntroText($submittedReport->getClient()),
-            'startDate' => $submittedReport->getStartDate()->format('d/m/Y'),
-            'endDate' => $submittedReport->getEndDate()->format('d/m/Y'),
+            'startDate' => $submittedReport->getStartDate()->format(self::DATE_FORMAT),
+            'endDate' => $submittedReport->getEndDate()->format(self::DATE_FORMAT),
             'homepageURL' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
-            'newStartDate' => $newReport->getStartDate()->format('d/m/Y'),
-            'newEndDate' => $newReport->getEndDate()->format('d/m/Y'),
-            'EndDatePlus1' => $dateSubmittableFrom->format('d/m/Y'),
+            'newStartDate' => $newReport->getStartDate()->format(self::DATE_FORMAT),
+            'newEndDate' => $newReport->getEndDate()->format(self::DATE_FORMAT),
+            'EndDatePlus1' => $dateSubmittableFrom->format(self::DATE_FORMAT),
             'PFA' => substr($submittedReport->getType(), 0, 3 ) === '104' ? 'no' : 'yes',
             'lay' => $user->isLayDeputy() ? 'yes' : 'no'
         ];
@@ -392,9 +394,9 @@ class MailFactory
             'clientFullname' => $ndr->getClient()->getFullname(),
             'deputyFullname' => $user->getFullName(),
             'homepageURL' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
-            'startDate' => $report->getStartDate()->format('d/m/Y'),
-            'endDate' => $report->getEndDate()->format('d/m/Y'),
-            'EndDatePlus1' => $dateSubmittableFrom->format('d/m/Y'),
+            'startDate' => $report->getStartDate()->format(self::DATE_FORMAT),
+            'endDate' => $report->getEndDate()->format(self::DATE_FORMAT),
+            'EndDatePlus1' => $dateSubmittableFrom->format(self::DATE_FORMAT),
             'PFA' => 'yes',
         ];
 
