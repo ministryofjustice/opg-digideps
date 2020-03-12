@@ -1,4 +1,4 @@
-{% extends 'AppBundle:Layouts:moj_template.html.twig' %}
+{% extends env == 'admin' ? 'AppBundle:Layouts:admin_moj_template.html.twig' : 'AppBundle:Layouts:moj_template.html.twig' %}
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
@@ -27,67 +27,6 @@
     <nav>
         {% if app.user %}
             <ul id="navigation" class="govuk-header__navigation behat-region-navbar" aria-label="Top Level Navigation">
-                {% if is_granted('ROLE_ADMIN') %}
-                    <li class="govuk-header__navigation-item">
-                        <a href="{{ path('admin_homepage') }}"  class="govuk-header__link behat-link-admin-homepage ">
-                            {{ 'nav.adminArea' | trans }}
-                        </a>
-                    </li>
-                    <li class="govuk-header__navigation-item">
-                        <a href="{{ path('admin_client_search') }}"  class="govuk-header__link behat-link-admin-client-search ">
-                            {{ 'nav.adminClients' | trans }}
-                        </a>
-                    </li>
-                    <li class="govuk-header__navigation-item">
-                        <a href="{{ path('admin_organisation_homepage') }}" class="govuk-header__link behat-link-admin-organisations">
-                            {{ 'nav.adminOrganisations' | trans }}
-                        </a>
-                    </li>
-                    <li class="govuk-header__navigation-item">
-                        <a href="{{ path('casrec_upload') }}" class="govuk-header__link behat-link-csv-upload ">
-                            {{ 'nav.adminUploadLay' | trans }}
-                        </a>
-                    </li>
-                    <li class="govuk-header__navigation-item">
-                        <a href="{{ path('admin_org_upload') }}" class="govuk-header__link behat-link-admin-upload-pa ">
-                            {{ 'nav.adminUploadPAProf' | trans }}
-                        </a>
-                    </li>
-                    <li class="govuk-header__navigation-item">
-                        <a href="{{ path('admin_metrics')  }}" class="govuk-header__link">
-                            {{ 'nav.adminStats' | trans }}
-                        </a>
-                    </li>
-                    <li class="govuk-header__navigation-item">
-                        <a href="{{path('account_settings')}}" class="govuk-header__link behat-link-user-account">
-                            {{ 'nav.userAccount' | trans }}
-                        </a>
-                    </li>
-                    <li class="govuk-header__navigation-item">
-                        <a href="{{ path('admin_documents') }}" class="govuk-header__link behat-link-admin-documents">
-                            {{ 'nav.adminDocuments' | trans }}
-                        </a>
-                    </li>
-                    <li class="govuk-header__navigation-item">
-                        <a href="{{ path('admin_setting_service_notifications') }}"  class="govuk-header__link behat-link-admin-settings">
-                            {{ 'nav.serviceNotification' | trans }}
-                        </a>
-                    </li>
-                {% endif %}
-
-
-                {% if is_granted('ROLE_AD') %}
-                    <li class="govuk-header__navigation-item">
-                        <a href="{{ path('ad_homepage')  }}" class="govuk-header__link">{% trans %}nav.adArea{% endtrans %}</a>
-                    </li>
-                    <li class="govuk-header__navigation-item">
-                        <a href="{{ path('admin_homepage')  }}" class="govuk-header__link">{% trans %}nav.adminArea{% endtrans %}</a>
-                    </li>
-                    <li class="govuk-header__navigation-item">
-                        <a href="{{path('account_settings')}}" class="govuk-header__link behat-link-user-account"   >{{ 'nav.userAccount' | trans }}</a>
-                    </li>
-                {% endif %}
-
                 {% if is_granted('ROLE_LAY_DEPUTY') %}
                     {% if adLoggedAsDeputy %}
                         <li class="govuk-header__navigation-item">
@@ -158,15 +97,28 @@
         {% endfor %}
     {% endblock %}
 
-    <h1 class="govuk-heading-xl">
-        {% if block("supportTitleTop") is defined and block("supportTitleTop") != "" %}
-            <span class="govuk-caption-xl">{% block supportTitleTop %}{% endblock %}</span>
-        {% endif %}
-        {% block pageTitle %} Deputy report {% endblock %}
-        {% if block("supportTitleBottom") is defined and block("supportTitleBottom") != "" %}
-            <span class="govuk-caption-xl">{% block supportTitleBottom %}{% endblock %}</span>
-        {% endif %}
-    </h1>
+    <div class="moj-page-header-actions">
+        <div class="moj-page-header-actions__title">
+            <h1 class="govuk-heading-xl">
+                {% if block("supportTitleTop") is defined and block("supportTitleTop") != "" %}
+                    <span class="govuk-caption-xl">{% block supportTitleTop %}{% endblock %}</span>
+                {% endif %}
+                {% block pageTitle %} Deputy report {% endblock %}
+                {% if block("supportTitleBottom") is defined and block("supportTitleBottom") != "" %}
+                    <span class="govuk-caption-xl">{% block supportTitleBottom %}{% endblock %}</span>
+                {% endif %}
+            </h1>
+        </div>
+
+        <div class="moj-page-header-actions__actions">
+            <div class="moj-button-menu">
+                <div class="moj-button-menu__wrapper">
+                    {% block actions %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     {% block progressBar %}{% endblock %}
 

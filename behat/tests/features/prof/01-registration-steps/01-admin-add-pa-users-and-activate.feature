@@ -4,7 +4,7 @@ Feature: Add PROF users and activate PROF user (journey)
     Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
        # upload PROF users
-    When I click on "admin-upload-pa"
+    When I go to admin page "/admin/org-csv-upload"
     When I attach the file "behat-prof.csv" to "admin_upload_file"
     And I press "admin_upload_upload"
     Then the form should be valid

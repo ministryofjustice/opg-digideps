@@ -80,8 +80,8 @@ default:
                 - DigidepsBehat\Registration\RegistrationFeatureContext
 
         user-management:
-            description: Coverage of user management features
-            paths: [ "%paths.base%/features/userManagement" ]
+            description: Coverage of user management features (deleteing, editing etc)
+            paths: [ "%paths.base%/features/UserManagement" ]
             contexts:
                 - DigidepsBehat\UserManagement\UserManagementFeatureContext
 

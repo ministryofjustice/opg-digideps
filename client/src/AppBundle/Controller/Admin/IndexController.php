@@ -15,9 +15,13 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @Route("/admin")
@@ -254,6 +258,40 @@ class IndexController extends AbstractController
         $this->getRestClient()->delete('user/' . $id);
 
         return $this->redirect($this->generateUrl('admin_homepage'));
+    }
+
+    /**
+     * @Route("/upload", name="admin_upload")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Template("AppBundle:Admin/Index:upload.html.twig")
+     */
+    public function uploadAction(Request $request, RouterInterface $router)
+    {
+        $form = $this->createFormBuilder()
+            ->add('type', ChoiceType::class, [
+                'choice_translation_domain' => 'admin',
+                'expanded' => true,
+                'choices' => [
+                    'upload.form.type.choices.lay' => 'lay',
+                    'upload.form.type.choices.org' => 'org',
+                ]
+            ])
+            ->add('save', SubmitType::class)
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('type')->getData() === 'lay') {
+                return new RedirectResponse($router->generate('casrec_upload'));
+            } else if ($form->get('type')->getData() === 'org') {
+                return new RedirectResponse($router->generate('admin_org_upload'));
+            }
+        }
+
+        return [
+            'form' => $form->createView(),
+        ];
     }
 
     /**

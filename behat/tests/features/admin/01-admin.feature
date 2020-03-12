@@ -38,27 +38,33 @@ Feature: admin / admin
 
   Scenario: Admins cannot add super admins
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    When I follow "Add a new user"
+    When I follow "Add new user"
     And I fill in "admin_roleType_1" with "staff"
     Then I should see "Admin"
     And I should not see "Super admin"
 
   Scenario: Super admins can add super admins
     Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "Abcd1234"
-    When I follow "Add a new user"
+    When I follow "Add new user"
     And I fill in "admin_roleType_1" with "staff"
     Then I should see "Admin"
     And I should see "Super admin"
 
-  Scenario: check pages
-    Given I am logged in to admin as "behat-admin-user@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "csv-upload" in the "navbar" region
-    Then the response status code should be 200
-    When I go to admin page "/admin/stats"
-    Then the response status code should be 200
-      # /user no longer exists, changed to main home screen (user page)
-    When I am on admin page "/"
-    Then the response status code should be 200
+  Scenario: Can follow links to lay upload page
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    When I am on admin page "/admin"
+    And I follow "Upload users"
+    And I fill in "form_type_0" with "lay"
+    And I press "Continue"
+    Then I should be on "/admin/casrec-upload"
+
+  Scenario: Can follow links to org upload page
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    When I am on admin page "/admin"
+    And I follow "Upload users"
+    And I fill in "form_type_1" with "org"
+    And I press "Continue"
+    Then I should be on "/admin/org-csv-upload"
 
   Scenario: Report submissions CSV download No dates
     Given I am logged in to admin as "behat-admin-user@publicguardian.gov.uk" with password "Abcd1234"

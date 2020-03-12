@@ -52,3 +52,9 @@ services:
 
     AppBundle\Service\AWS\RequestSigner:
         class: AppBundle\Service\AWS\RequestSigner
+
+    Aws\Ssm\SsmClient:
+        arguments: ["%ssm_client_params%"]
+
+    AppBundle\Service\FeatureFlagService:
+        arguments: ['@Aws\Ssm\SsmClient', '%env(FEATURE_FLAG_PREFIX)%']

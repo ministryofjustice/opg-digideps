@@ -1,8 +1,10 @@
 home:
   htmlTitle: Administration - Users
-  pageTitle: Admin
+  pageTitle: Users
   supportTitle: User management
-  addUserButton: Add a new user
+  actions:
+    addUser: Add new user
+    upload: Upload users
   userTable:
     heading: User list
     resultsLimited: Results limited to 100 users.<br>Use search to filter the wanted users.
@@ -116,10 +118,22 @@ statsPage:
     submitAndDownload:
       label: Download
 
+upload:
+  htmlTitle: Administration - Upload users
+  pageTitle: Upload
+  supportTitle: Users
+  form:
+    type:
+      choices:
+        lay: Upload lay users
+        org: Upload PA/professional users
+    continue:
+        label: Continue
+
 uploadPA:
   htmlTitle: Administration - Upload PA/Prof users
-  pageTitle: Admin
-  supportTitle: PA/Prof user management
+  pageTitle: Upload PA/professional users
+  supportTitle: Users
   heading: Upload PA/Prof users along with clients and reports
   uploading: |
     Uploading... please wait.
@@ -132,8 +146,8 @@ uploadPA:
 
 uploadUsers:
   htmlTitle: Administration - Upload users
-  pageTitle: Admin
-  supportTitle: User management
+  pageTitle: Upload lay users
+  supportTitle: Users
   heading: Upload users
   usersInTheDB: users in the database
   uploading: Uploading... please wait.<br/>Do not refresh this page

@@ -63,12 +63,11 @@ parameters:
     s3_client_params:
       version: 'latest'
       region: 'eu-west-1'
-      endpoint: 'http://localstack:4572'
-      use_path_style_endpoint: true
-      validate: false
-      credentials:
-        key: 'YOUR_ACCESS_KEY_ID'
-        secret: 'YOUR_SECRET_ACCESS_KEY'
+      validate: true
+    ssm_client_params:
+      version: 'latest'
+      region: 'eu-west-1'
+      validate: true
     file_scanner_url: http://file-scanner-rest:8080
     file_scanner_sslverify: false
     wkhtmltopdf_address: "http://wkhtmltopdf:80"

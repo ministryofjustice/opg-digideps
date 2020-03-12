@@ -1,7 +1,7 @@
 {% extends '@WebProfiler/Profiler/layout.html.twig' %}
 
 {% block toolbar %}
-    {% if collector.data.other | length > (collector.data.app | length + collector.data.govuk | length) %}
+    {% if collector.data.other | length > (collector.data.app | length + collector.data.govuk | length + collector.data.moj | length) %}
         {% set status_colour = 'red' %}
     {% elseif collector.data.other | length > 0 %}
         {% set status_colour = 'yellow' %}
@@ -31,6 +31,10 @@
         <div class="sf-toolbar-info-piece">
             <b>GovUK CSS classes</b>
             <span class="sf-toolbar-status">{{ collector.data.govuk | length }}</span>
+        </div>
+        <div class="sf-toolbar-info-piece">
+            <b>MOJ CSS classes</b>
+            <span class="sf-toolbar-status">{{ collector.data.moj | length }}</span>
         </div>
         <div class="sf-toolbar-info-piece">
             <b>OPG CSS classes</b>
@@ -75,6 +79,20 @@
         </summary>
         <table>
             {% for class, count in collector.data.govuk %}
+            <tr>
+                <td>{{ class }}</td>
+                <td class="text-right">{{ count }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </details>
+
+    <details open>
+        <summary>
+            <h2>MOJ classes</h2>
+        </summary>
+        <table>
+            {% for class, count in collector.data.moj %}
             <tr>
                 <td>{{ class }}</td>
                 <td class="text-right">{{ count }}</td>

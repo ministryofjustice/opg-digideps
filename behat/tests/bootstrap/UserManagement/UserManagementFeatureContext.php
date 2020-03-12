@@ -3,10 +3,14 @@
 namespace DigidepsBehat\UserManagement;
 
 use DigidepsBehat\Common\BaseFeatureContext;
+use DigidepsBehat\Common\LinksTrait;
+use DigidepsBehat\Common\RegionTrait;
 use DigidepsBehat\UserTrait;
 
 class UserManagementFeatureContext extends BaseFeatureContext
 {
-    use UserTrait;
+    use LinksTrait;
+    use RegionTrait;
     use UserManagementTrait;
+    use UserTrait;
 }

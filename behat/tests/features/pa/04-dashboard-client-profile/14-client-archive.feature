@@ -26,7 +26,7 @@ Feature: PA client archive
   Scenario: CSV re-upload
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
       # upload PA users
-    When I click on "admin-upload-pa"
+    When I go to admin page "/admin/org-csv-upload"
     And I attach the file "behat-pa.csv" to "admin_upload_file"
     And I press "admin_upload_upload"
     Then the form should be valid
