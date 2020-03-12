@@ -105,10 +105,10 @@ class MailFactory
         if ($user->isLayDeputy()) {
             $emailKey = 'layDeputySupportEmail';
             $phoneKey = 'helpline';
-        } else if ($user->isDeputyProf()) {
+        } else if ($user->isDeputyPa()) {
             $emailKey = 'paSupportEmail';
             $phoneKey = 'helplinePA';
-        } else if ($user->isDeputyPa()) {
+        } else if ($user->isDeputyProf()) {
             $emailKey = 'profSupportEmail';
             $phoneKey = 'helplineProf';
         } else {

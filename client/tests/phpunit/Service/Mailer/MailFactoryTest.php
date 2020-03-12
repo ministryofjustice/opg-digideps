@@ -109,6 +109,52 @@ class MailFactoryTest extends TestCase
     /**
      * @test
      */
+    public function profActivationEmailHasProfContacts()
+    {
+        $this->router->generate('user_activate', [
+            'action' => 'activate',
+            'token'  => 'regToken'
+        ])->shouldBeCalled()->willReturn('/activate/regToken');
+
+        $this->translator->trans('activation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+        $this->translator->trans('profSupportEmail', [], 'common')->shouldBeCalled()->willReturn('prof-email@publicguardian.gov.uk');
+        $this->translator->trans('helplineProf', [], 'common')->shouldBeCalled()->willReturn('07987654321');
+
+        $profDeputy = clone $this->layDeputy;
+        $profDeputy->setRoleName(User::ROLE_PROF_ADMIN);
+
+        $email = ($this->generateSUT())->createActivationEmail($profDeputy);
+
+        self::assertEquals('prof-email@publicguardian.gov.uk', $email->getParameters()['email']);
+        self::assertEquals('07987654321', $email->getParameters()['phone']);
+    }
+
+    /**
+     * @test
+     */
+    public function paActivationEmailHasPaContacts()
+    {
+        $this->router->generate('user_activate', [
+            'action' => 'activate',
+            'token'  => 'regToken'
+        ])->shouldBeCalled()->willReturn('/activate/regToken');
+
+        $this->translator->trans('activation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+        $this->translator->trans('paSupportEmail', [], 'common')->shouldBeCalled()->willReturn('pa-email@publicguardian.gov.uk');
+        $this->translator->trans('helplinePA', [], 'common')->shouldBeCalled()->willReturn('07777777777');
+
+        $paDeputy = clone $this->layDeputy;
+        $paDeputy->setRoleName(User::ROLE_PA_ADMIN);
+
+        $email = ($this->generateSUT())->createActivationEmail($paDeputy);
+
+        self::assertEquals('pa-email@publicguardian.gov.uk', $email->getParameters()['email']);
+        self::assertEquals('07777777777', $email->getParameters()['phone']);
+    }
+
+    /**
+     * @test
+     */
     public function createInvitationEmail()
     {
         $profDeputy = $this->generateUser()
