@@ -100,6 +100,28 @@ class MailFactory
         }
     }
 
+    private function getContactParameters(User $user): array
+    {
+        if ($user->isLayDeputy()) {
+            $emailKey = 'layDeputySupportEmail';
+            $phoneKey = 'helpline';
+        } else if ($user->isDeputyProf()) {
+            $emailKey = 'paSupportEmail';
+            $phoneKey = 'helplinePA';
+        } else if ($user->isDeputyPa()) {
+            $emailKey = 'profSupportEmail';
+            $phoneKey = 'helplineProf';
+        } else {
+            $emailKey = 'generalSupportEmail';
+            $phoneKey = 'helplineGeneral';
+        }
+
+        return [
+            'email' => $this->translator->trans($emailKey, [], 'common'),
+            'phone' => $this->translator->trans($phoneKey, [], 'common'),
+        ];
+    }
+
     /**
      * @param User $user
      *
@@ -109,13 +131,12 @@ class MailFactory
     {
         $area = $this->getUserArea($user);
 
-        $parameters = [
+        $parameters = array_merge($this->getContactParameters($user), [
             'activationLink' => $this->generateAbsoluteLink($area, 'user_activate', [
                 'action' => 'activate',
                 'token'  => $user->getRegistrationToken(),
             ]),
-            'registerLink' => $this->generateAbsoluteLink($area, 'register'),
-        ];
+        ]);
 
         $email = (new ModelDir\Email())
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
@@ -189,13 +210,13 @@ class MailFactory
     {
         $area = $this->getUserArea($user);
 
-        $notifyParams = [
+        $notifyParams = array_merge($this->getContactParameters($user), [
             'resetLink' => $this->generateAbsoluteLink($area, 'user_activate', [
                 'action' => 'password-reset',
                 'token'  => $user->getRegistrationToken(),
             ]),
             'recreateLink' => $this->generateAbsoluteLink($area, 'password_forgotten'),
-        ];
+        ]);
 
         return (new ModelDir\Email())
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
