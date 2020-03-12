@@ -54,7 +54,7 @@ abstract class AbstractControllerTestCase extends WebTestCase
     /**
      * Provide the services necessary to mock the currently logged in user
      */
-    protected function mockLoggedInUser(array $roleNames, User $user = null): void
+    protected function mockLoggedInUser(array $roleNames, User $user = null): User
     {
         if (is_null($user)) {
             $user = new User();
@@ -79,5 +79,7 @@ abstract class AbstractControllerTestCase extends WebTestCase
         // Respond to calls to hydrate user details from API
         $this->restClient->setLoggedUserId(1)->willReturn($this->restClient->reveal());
         $this->restClient->get('user/1', Argument::cetera())->willReturn($user);
+
+        return $user;
     }
 }
