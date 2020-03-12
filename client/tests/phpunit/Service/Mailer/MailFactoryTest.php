@@ -91,11 +91,11 @@ class MailFactoryTest extends TestCase
             'token'  => 'regToken'
         ])->shouldBeCalled()->willReturn('/activate/regToken');
 
-        $this->router->generate('register', [])
-            ->shouldBeCalled()
-            ->willReturn('/register');
-
         $this->translator->trans('activation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+
+        $expectedTemplateParams = array_merge($this->getContactParameters(), [
+            'activationLink' => 'https://front.base.url/activate/regToken',
+        ]);
 
         $email = ($this->generateSUT())->createActivationEmail($this->layDeputy);
 
@@ -103,12 +103,6 @@ class MailFactoryTest extends TestCase
         self::assertEquals('OPG', $email->getFromName());
         self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
         self::assertEquals(MailFactory::ACTIVATION_TEMPLATE_ID, $email->getTemplate());
-
-        $expectedTemplateParams = [
-            'activationLink' => 'https://front.base.url/activate/regToken',
-            'registerLink' => 'https://front.base.url/register',
-        ];
-
         self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 
@@ -289,18 +283,17 @@ class MailFactoryTest extends TestCase
 
         $this->translator->trans('resetPassword.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
 
+        $expectedTemplateParams = array_merge($this->getContactParameters(), [
+            'resetLink' => 'https://front.base.url/reset-password/regToken',
+            'recreateLink' => 'https://front.base.url/password-managing/forgotten',
+        ]);
+
         $email = ($this->generateSUT())->createResetPasswordEmail($this->layDeputy);
 
         self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
         self::assertEquals('OPG', $email->getFromName());
         self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
         self::assertEquals(MailFactory::RESET_PASSWORD_TEMPLATE_ID, $email->getTemplate());
-
-        $expectedTemplateParams = [
-            'resetLink' => 'https://front.base.url/reset-password/regToken',
-            'recreateLink' => 'https://front.base.url/password-managing/forgotten',
-        ];
-
         self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 
@@ -487,5 +480,16 @@ class MailFactoryTest extends TestCase
             ->setCounty('Notrealingham')
             ->setCountry('GB')
             ->setPhone('01215553333');
+    }
+
+    private function getContactParameters(): array
+    {
+        $this->translator->trans('layDeputySupportEmail', [], 'common')->shouldBeCalled()->willReturn('help-email@publicguardian.gov.uk');
+        $this->translator->trans('helpline', [], 'common')->shouldBeCalled()->willReturn('0123456789');
+
+        return [
+            'email' => 'help-email@publicguardian.gov.uk',
+            'phone' => '0123456789',
+        ];
     }
 }
