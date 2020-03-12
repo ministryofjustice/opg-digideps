@@ -296,7 +296,7 @@ class ReportController extends AbstractController
         }
 
         foreach (['dueDateCustom', 'startDate', 'endDate'] as $field) {
-            $form->has($field) && $form[$field]->setData(new \DateTime($dataFromUrl[$field]));
+            $form->has($field) && array_key_exists($field, $dataFromUrl) && $form[$field]->setData(new \DateTime($dataFromUrl[$field]));
         }
 
         if ($form->has('unsubmittedSection') && isset($dataFromUrl['unsubmittedSectionsList'])) {
