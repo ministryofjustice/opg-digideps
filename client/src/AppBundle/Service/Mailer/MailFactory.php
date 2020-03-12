@@ -440,39 +440,4 @@ class MailFactory
     {
         return $this->translator->trans($key, $params, 'email');
     }
-
-    /**
-     * @param User $user
-     *
-     * @return \AppBundle\Model\Email
-     */
-    public function createCoDeputyInvitationEmail(User $invitedUser, User $loggedInUser)
-    {
-        $area = $this->getUserArea($loggedInUser);
-
-        $viewParams = [
-            'deputyName'  => $loggedInUser->getFirstname() . ' ' . $loggedInUser->getLastname(),
-            'domain'           => $this->generateAbsoluteLink($area, 'homepage', []),
-            'link'             => $this->generateAbsoluteLink($area, 'user_activate', [
-                'action' => 'activate',
-                'token'  => $invitedUser->getRegistrationToken(),
-            ]),
-            'tokenExpireHours' => User::TOKEN_EXPIRE_HOURS,
-            'homepageUrl'      => $this->generateAbsoluteLink($area, 'homepage'),
-            'recipientRole' => self::getRecipientRole($loggedInUser)
-        ];
-
-        $email = new ModelDir\Email();
-
-        $email
-            ->setFromEmail($this->emailParams['from_email'])
-            ->setFromName($this->translate('codeputyInvitation.fromName'))
-            ->setToEmail($invitedUser->getEmail())
-            ->setToName($invitedUser->getFullName())
-            ->setSubject($this->translate('codeputyInvitation.subject'))
-            ->setBodyHtml($this->templating->render('AppBundle:Email:coDeputy-invitation.html.twig', $viewParams))
-            ->setBodyText($this->templating->render('AppBundle:Email:coDeputy-invitation.text.twig', $viewParams));
-
-        return $email;
-    }
 }
