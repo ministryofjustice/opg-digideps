@@ -96,10 +96,7 @@ class TeamController extends AbstractController
                 $user = $this->getRestClient()->post('user', $user, ['org_team_add'], 'User');
                 $request->getSession()->getFlashBag()->add('notice', 'The user has been added');
 
-                /** @var EntityDir\User $currentUser */
-                $currentUser = $this->getUser();
-
-                $invitationEmail = $this->getMailFactory()->createInvitationEmail($user, $currentUser->getFullName());
+                $invitationEmail = $this->getMailFactory()->createInvitationEmail($user);
                 $this->getMailSender()->send($invitationEmail, ['text', 'html']);
 
                 return $this->redirectToRoute('org_team');
@@ -199,10 +196,7 @@ class TeamController extends AbstractController
 
             $user = $this->getRestClient()->userRecreateToken($user->getEmail(), 'pass-reset');
 
-            /** @var EntityDir\User $currentUser */
-            $currentUser = $this->getUser();
-
-            $invitationEmail = $this->getMailFactory()->createInvitationEmail($user, $currentUser->getFullName());
+            $invitationEmail = $this->getMailFactory()->createInvitationEmail($user);
             $this->getMailSender()->send($invitationEmail, ['text', 'html']);
 
             $request->getSession()->getFlashBag()->add(

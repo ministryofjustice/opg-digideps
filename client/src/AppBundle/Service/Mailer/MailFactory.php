@@ -26,7 +26,8 @@ class MailFactory
     const NDR_SUBMITTED_CONFIRMATION_TEMPLATE_ID = '96fcb7e1-d80f-4e0e-80c8-2c1237af8b10';
     const CLIENT_DETAILS_CHANGE_TEMPLATE_ID = '258aaf2d-076b-4b5c-a386-f3551c5f3945';
     const DEPUTY_DETAILS_CHANGE_TEMPLATE_ID = '6469b39b-6ace-4f93-9e80-6152627e0d36';
-    const INVITATION_TEMPLATE_ID = 'b8afb0d0-c8e5-4191-bce7-74ba91c74cad';
+    const INVITATION_LAY_TEMPLATE_ID = 'b8afb0d0-c8e5-4191-bce7-74ba91c74cad';
+    const INVITATION_ORG_TEMPLATE_ID = 'd410fce7-ce00-46eb-824d-82f998a437a4';
     const POST_SUBMISSION_FEEDBACK_TEMPLATE_ID = '862f1ce7-bde5-4397-be68-bd9e4537cff0';
     const RESET_PASSWORD_TEMPLATE_ID = '827555cc-498a-43ef-957a-63fa387065e3';
 
@@ -150,27 +151,30 @@ class MailFactory
 
     /**
      * @param User $user
-     * @param string $deputyName
+     * @param string|null $deputyName
      *
      * @return \AppBundle\Model\Email
      */
-    public function createInvitationEmail(User $user, string $deputyName)
+    public function createInvitationEmail(User $user, string $deputyName = null)
     {
         $area = $this->getUserArea($user);
 
-        $parameters = [
+        $parameters = array_merge($this->getContactParameters($user), [
             'link' => $this->generateAbsoluteLink($area, 'user_activate', [
                 'action' => 'activate',
                 'token'  => $user->getRegistrationToken(),
             ]),
-            'deputyName' => $deputyName,
-        ];
+        ]);
+
+        if (!is_null($deputyName)) {
+            $parameters['deputyName'] = $deputyName;
+        }
 
         $email = (new ModelDir\Email())
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('activation.fromName'))
             ->setToEmail($user->getEmail())
-            ->setTemplate(self::INVITATION_TEMPLATE_ID)
+            ->setTemplate($user->isLayDeputy() ? self::INVITATION_LAY_TEMPLATE_ID : self::INVITATION_ORG_TEMPLATE_ID)
             ->setParameters($parameters);
 
         return $email;

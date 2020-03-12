@@ -120,8 +120,7 @@ class MailFactoryTest extends TestCase
         $this->translator->trans('profSupportEmail', [], 'common')->shouldBeCalled()->willReturn('prof-email@publicguardian.gov.uk');
         $this->translator->trans('helplineProf', [], 'common')->shouldBeCalled()->willReturn('07987654321');
 
-        $profDeputy = clone $this->layDeputy;
-        $profDeputy->setRoleName(User::ROLE_PROF_ADMIN);
+        $profDeputy = $this->generateUser()->setRoleName(User::ROLE_PROF_ADMIN);
 
         $email = ($this->generateSUT())->createActivationEmail($profDeputy);
 
@@ -143,8 +142,7 @@ class MailFactoryTest extends TestCase
         $this->translator->trans('paSupportEmail', [], 'common')->shouldBeCalled()->willReturn('pa-email@publicguardian.gov.uk');
         $this->translator->trans('helplinePA', [], 'common')->shouldBeCalled()->willReturn('07777777777');
 
-        $paDeputy = clone $this->layDeputy;
-        $paDeputy->setRoleName(User::ROLE_PA_ADMIN);
+        $paDeputy = $this->generateUser()->setRoleName(User::ROLE_PA_ADMIN);
 
         $email = ($this->generateSUT())->createActivationEmail($paDeputy);
 
@@ -155,7 +153,33 @@ class MailFactoryTest extends TestCase
     /**
      * @test
      */
-    public function createInvitationEmail()
+    public function createInvitationEmailLayUser()
+    {
+        $this->router->generate('user_activate', [
+            'action' => 'activate',
+            'token'  => 'regToken'
+        ])->shouldBeCalled()->willReturn('/activate/regToken');
+
+        $this->translator->trans('activation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+
+        $expectedTemplateParams = array_merge($this->getContactParameters(), [
+            'link' => 'https://front.base.url/activate/regToken',
+            'deputyName' => 'Buford Mcfarling'
+        ]);
+
+        $email = ($this->generateSUT())->createInvitationEmail($this->layDeputy, 'Buford Mcfarling');
+
+        self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
+        self::assertEquals('OPG', $email->getFromName());
+        self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
+        self::assertEquals(MailFactory::INVITATION_LAY_TEMPLATE_ID, $email->getTemplate());
+        self::assertEquals($expectedTemplateParams, $email->getParameters());
+    }
+
+    /**
+     * @test
+     */
+    public function createInvitationEmailOrgUser()
     {
         $profDeputy = $this->generateUser()
             ->setEmail('l.wolny@somesolicitors.org')
@@ -167,19 +191,21 @@ class MailFactoryTest extends TestCase
         ])->shouldBeCalled()->willReturn('/activate/regToken');
 
         $this->translator->trans('activation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+        $this->translator->trans('profSupportEmail', [], 'common')->shouldBeCalled()->willReturn('prof-email@publicguardian.gov.uk');
+        $this->translator->trans('helplineProf', [], 'common')->shouldBeCalled()->willReturn('07987654321');
 
-        $email = ($this->generateSUT())->createInvitationEmail($profDeputy, 'Buford Mcfarling');
+        $expectedTemplateParams = [
+            'link' => 'https://front.base.url/activate/regToken',
+            'email' => 'prof-email@publicguardian.gov.uk',
+            'phone' => '07987654321'
+        ];
+
+        $email = ($this->generateSUT())->createInvitationEmail($profDeputy);
 
         self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
         self::assertEquals('OPG', $email->getFromName());
         self::assertEquals('l.wolny@somesolicitors.org', $email->getToEmail());
-        self::assertEquals(MailFactory::INVITATION_TEMPLATE_ID, $email->getTemplate());
-
-        $expectedTemplateParams = [
-            'link' => 'https://front.base.url/activate/regToken',
-            'deputyName' => 'Buford Mcfarling'
-        ];
-
+        self::assertEquals(MailFactory::INVITATION_ORG_TEMPLATE_ID, $email->getTemplate());
         self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 

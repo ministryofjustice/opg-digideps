@@ -104,10 +104,7 @@ class OrganisationController extends AbstractController
                     /** @var EntityDir\User $user */
                     $user = $this->getRestClient()->post('user', $user, ['org_team_add'], 'User');
 
-                    /** @var EntityDir\User $currentUser */
-                    $currentUser = $this->getUser();
-
-                    $invitationEmail = $this->getMailFactory()->createInvitationEmail($user, $currentUser->getFullName());
+                    $invitationEmail = $this->getMailFactory()->createInvitationEmail($user);
                     $this->getMailSender()->send($invitationEmail);
 
                     $this->getRestClient()->put('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId(), '');
@@ -276,10 +273,7 @@ class OrganisationController extends AbstractController
             /* @var $user EntityDir\User */
             $user = $this->getRestClient()->userRecreateToken($user->getEmail(), 'pass-reset');
 
-            /** @var EntityDir\User $currentUser */
-            $currentUser = $this->getUser();
-
-            $invitationEmail = $this->getMailFactory()->createInvitationEmail($user, $currentUser->getFullName());
+            $invitationEmail = $this->getMailFactory()->createInvitationEmail($user);
             $this->getMailSender()->send($invitationEmail);
 
             $this->addFlash(
