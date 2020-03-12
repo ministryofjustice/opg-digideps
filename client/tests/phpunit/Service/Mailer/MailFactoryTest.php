@@ -164,12 +164,12 @@ class MailFactoryTest extends TestCase
             'clientFullname' => 'Joanne Bloggs',
             'deputyFullname' => 'Joe Bloggs',
             'orgIntro' => '',
-            'startDate' => '24/03/2017',
-            'endDate' => '23/03/2018',
+            'startDate' => '24 March 2017',
+            'endDate' => '23 March 2018',
             'homepageURL' => 'https://front.base.url',
-            'newStartDate' => '24/03/2018',
-            'newEndDate' => '23/03/2019',
-            'EndDatePlus1' => '24/03/2019',
+            'newStartDate' => '24 March 2018',
+            'newEndDate' => '23 March 2019',
+            'EndDatePlus1' => '24 March 2019',
             'PFA' => substr($reportType, 0, 3 ) === '104' ? 'no' : 'yes',
             'lay' => 'yes'
         ];
@@ -216,12 +216,12 @@ class MailFactoryTest extends TestCase
             'clientFullname' => 'Joanne Bloggs',
             'deputyFullname' => 'Joe Bloggs',
             'orgIntro' => 'Client: Joanne Bloggs Case number: 12345678',
-            'startDate' => '24/03/2017',
-            'endDate' => '23/03/2018',
+            'startDate' => '24 March 2017',
+            'endDate' => '23 March 2018',
             'homepageURL' => 'https://front.base.url',
-            'newStartDate' => '24/03/2018',
-            'newEndDate' => '23/03/2019',
-            'EndDatePlus1' => '24/03/2019',
+            'newStartDate' => '24 March 2018',
+            'newEndDate' => '23 March 2019',
+            'EndDatePlus1' => '24 March 2019',
             'PFA' => substr($reportType, 0, 3 ) === '104' ? 'no' : 'yes',
             'lay' => 'no'
         ];
@@ -264,9 +264,9 @@ class MailFactoryTest extends TestCase
             'clientFullname' => 'Joanne Bloggs',
             'deputyFullname' => 'Joe Bloggs',
             'homepageURL' => 'https://front.base.url',
-            'startDate' => '24/03/2018',
-            'endDate' => '23/03/2019',
-            'EndDatePlus1' => '24/03/2019',
+            'startDate' => '24 March 2018',
+            'endDate' => '23 March 2019',
+            'EndDatePlus1' => '24 March 2019',
             'PFA' => 'yes',
         ];
 
