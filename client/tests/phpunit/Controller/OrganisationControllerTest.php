@@ -41,7 +41,7 @@ class OrganisationControllerTest extends AbstractControllerTestCase
             ->send(Argument::that(function ($email) use ($emailAddress) {
                 return $email instanceof Email
                     && $email->getToEmail() === $emailAddress
-                    && $email->getTemplate() === MailFactory::INVITATION_TEMPLATE_ID
+                    && $email->getTemplate() === MailFactory::INVITATION_ORG_TEMPLATE_ID
                     && strpos($email->getParameters()['link'], "user/activate/invitation-token") !== false;
             }))
             ->shouldBeCalled()
@@ -123,7 +123,7 @@ class OrganisationControllerTest extends AbstractControllerTestCase
             ->send(Argument::that(function ($email) use ($emailAddress) {
                 return $email instanceof Email
                     && $email->getToEmail() === $emailAddress
-                    && $email->getTemplate() === MailFactory::INVITATION_TEMPLATE_ID
+                    && $email->getTemplate() === MailFactory::INVITATION_ORG_TEMPLATE_ID
                     && strpos($email->getParameters()['link'], "user/activate/invitation-token") !== false;
             }))
             ->shouldBeCalled()
