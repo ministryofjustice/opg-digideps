@@ -97,3 +97,5 @@ COPY docker/confd /etc/confd
 
 # Check for security issues
 RUN su-exec www-data php app/console security:check
+
+HEALTHCHECK CMD curl --fail -k https://localhost:443/manage/elb || exit 1
