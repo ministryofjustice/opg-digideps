@@ -15,10 +15,10 @@ class TeamRepository extends EntityRepository
 {
     /**
      * @param User $user
-     * @return array
+     * @return array<int>
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function findAllTeamIdsByUser(User $user)
+    public function findAllTeamIdsByUser(User $user): array
     {
         $conn = $this->getEntityManager()->getConnection();
         $stmt = $conn->executeQuery(

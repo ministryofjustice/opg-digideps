@@ -3,12 +3,13 @@
 namespace AppBundle\Entity\Repository;
 
 use AppBundle\Entity\Organisation;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 
 class OrganisationRepository extends EntityRepository
 {
     /**
-     * @return array
+     * @return array<array>
      */
     public function getAllArray(): array
     {
@@ -21,7 +22,7 @@ class OrganisationRepository extends EntityRepository
 
     /**
      * @param int $id
-     * @return array|null
+     * @return array<array>|null
      */
     public function findArrayById(int $id): ?array
     {
@@ -62,12 +63,12 @@ class OrganisationRepository extends EntityRepository
     {
         $email = strtolower($email);
         $queryString = 'SELECT COUNT(o.id) FROM AppBundle\Entity\Organisation o WHERE o.emailIdentifier = ?1';
-        $queryParams = [1 => $email];
+        $queryParams = new ArrayCollection([1 => $email]);
 
         if (false !== ($atSymbolPosition = strpos($email, '@'))) {
             $domain = substr($email, $atSymbolPosition + 1);
             $queryString .= ' OR o.emailIdentifier = ?2';
-            $queryParams[2] = $domain;
+            $queryParams->set(2, $domain);
         }
 
         $query = $this
@@ -88,18 +89,21 @@ class OrganisationRepository extends EntityRepository
     {
         $email = strtolower($email);
         $queryString = 'SELECT o FROM AppBundle\Entity\Organisation o WHERE o.emailIdentifier = ?1';
-        $queryParams = [1 => $email];
+        $parameters = [1 => $email];
 
         if (false !== ($atSymbolPosition = strpos($email, '@'))) {
             $domain = substr($email, $atSymbolPosition + 1);
             $queryString .= ' OR o.emailIdentifier = ?2';
-            $queryParams[2] = $domain;
+            $parameters[2] = $domain;
         }
 
         $query = $this
             ->getEntityManager()
-            ->createQuery($queryString)
-            ->setParameters($queryParams);
+            ->createQuery($queryString);
+
+        foreach ($parameters as $key => $value) {
+            $query->setParameter($key, $value);
+        }
 
         $result = $query->getResult();
 

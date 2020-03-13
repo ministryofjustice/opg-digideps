@@ -6,6 +6,7 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
+use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 
 class ReportSubmissionRepository extends EntityRepository
 {
@@ -18,7 +19,7 @@ class ReportSubmissionRepository extends EntityRepository
      * @param string $orderBy       default createdOn
      * @param string $order         default ASC
      *
-     * @return array [  counts=>[new=>integer, archived=>integer],    records => [array<ReportSubmission>]    ]
+     * @return array<array> [  counts=>[new=>integer, archived=>integer],    records => [array<ReportSubmission>]    ]
      */
     public function findByFiltersWithCounts(
         $status,
@@ -81,8 +82,13 @@ class ReportSubmissionRepository extends EntityRepository
             ->orderBy('rs.' . $orderBy, $order)
             ->setFirstResult($offset)
             ->setMaxResults($limit);
-        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(User::class); //disable softdelete for createdBy, needed from admin area
-        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class); //disable softdelete for createdBy, needed from admin area
+
+        /** @var SoftDeleteableFilter $softDeleteableFilter */
+        $softDeleteableFilter = $this->_em->getFilters()->getFilter('softdeleteable');
+
+        $softDeleteableFilter->disableForEntity(User::class); //disable softdelete for createdBy, needed from admin area
+        $softDeleteableFilter->disableForEntity(Client::class); //disable softdelete for createdBy, needed from admin area
+
         $records = $qbSelect->getQuery()->getResult(); /* @var $records ReportSubmission[] */
         $this->_em->getFilters()->enable('softdeleteable');
 
@@ -121,19 +127,13 @@ class ReportSubmissionRepository extends EntityRepository
     }
 
     /**
-     * @param $offset
-     * @param $limit
-     * @param \DateTime $fromDate
-     * @param \DateTime $toDate
-     * @param string $orderBy default createdOn
-     * @param string $order default ASC
-     * @return array
+     * @return array<ReportSubmission>
      */
     public function findAllReportSubmissions(
         \DateTime $fromDate = null,
         \DateTime $toDate = null,
-        $orderBy = 'createdOn',
-        $order = 'ASC'
+        string $orderBy = 'createdOn',
+        string $order = 'ASC'
     ) {
 
         $qb = $this->createQueryBuilder('rs');
@@ -183,10 +183,16 @@ class ReportSubmissionRepository extends EntityRepository
         return ($date instanceof \DateTime) ? $date : new \DateTime();
     }
 
-    public function findOneByIdUnfiltered($id)
+    public function findOneByIdUnfiltered(int $id): ?ReportSubmission
     {
-        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class); //disable softdelete for createdBy, needed from admin area
+        /** @var SoftDeleteableFilter $softDeleteableFilter */
+        $softDeleteableFilter = $this->_em->getFilters()->getFilter('softdeleteable');
+
+        $softDeleteableFilter->disableForEntity(Client::class); //disable softdelete for createdBy, needed from admin area
+
+        /** @var ReportSubmission|null $reportSubmission */
         $reportSubmission = $this->find($id);
+
         $this->_em->getFilters()->enable('softdeleteable');
 
         return $reportSubmission;

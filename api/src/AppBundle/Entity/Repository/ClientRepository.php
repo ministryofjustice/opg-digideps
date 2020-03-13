@@ -55,7 +55,7 @@ class ClientRepository extends EntityRepository
 
     /**
      * @param User $user
-     * @return array
+     * @return array<int>
      * @throws \Doctrine\DBAL\DBALException
      */
     public function findAllClientIdsByUser(User $user)
@@ -74,7 +74,7 @@ class ClientRepository extends EntityRepository
      * @param int $clientId
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function saveUserToClient(User $user, $clientId)
+    public function saveUserToClient(User $user, $clientId): void
     {
         $conn = $this->getEntityManager()->getConnection();
 
@@ -89,7 +89,7 @@ class ClientRepository extends EntityRepository
      * @param int $teamId
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function saveUserToTeam(User $user, $teamId)
+    public function saveUserToTeam(User $user, $teamId): void
     {
         $conn = $this->getEntityManager()->getConnection();
 

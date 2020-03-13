@@ -109,11 +109,11 @@ class ReportRepository extends EntityRepository
     }
 
     /**
-     * @param array $caseNumbers
+     * @param array<string> $caseNumbers
      * @param string $role
-     * @return mixed
+     * @return array<Report>
      */
-    public function findAllActiveReportsByCaseNumbersAndRole(array $caseNumbers, $role)
+    public function findAllActiveReportsByCaseNumbersAndRole(array $caseNumbers, string $role): ?array
     {
         $qb = $this->createQueryBuilder('r');
         $qb->leftJoin('r.client', 'c')
@@ -128,13 +128,13 @@ class ReportRepository extends EntityRepository
     /**
      * @param mixed $orgIdsOrUserId
      * @param int $determinant
-     * @param ParameterBag $query
+     * @param ParameterBag<mixed> $query
      * @param string $select
      * @param string|null $status
      * @return array|mixed|null
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getAllByDeterminant($orgIdsOrUserId, $determinant, ParameterBag $query, $select, $status)
+    public function getAllByDeterminant($orgIdsOrUserId, int $determinant, ParameterBag $query, string $select, string $status = null)
     {
         $qb = $this->createQueryBuilder('r');
 

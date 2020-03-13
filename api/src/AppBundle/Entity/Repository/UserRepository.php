@@ -15,10 +15,9 @@ class UserRepository extends AbstractEntityRepository
     private $qb;
 
     /**
-     * @param int $id
-     * @return null|array
+     * @return null|array<mixed>
      */
-    public function findUserArrayById($id)
+    public function findUserArrayById(int $id)
     {
         $query = $this
             ->getEntityManager()
@@ -31,8 +30,7 @@ class UserRepository extends AbstractEntityRepository
     }
 
     /**
-     * @param Request $request
-     * @return array|null
+     * @return null|array<User>
      */
     public function findUsersByQueryParameters(Request $request): ?array
     {
@@ -135,9 +133,8 @@ class UserRepository extends AbstractEntityRepository
     /**
      * @param string $searchTerm
      * @param bool $includeClients
-     * @return string
      */
-    function addBroadMatchFilter(string $searchTerm, bool $includeClients)
+    function addBroadMatchFilter(string $searchTerm, bool $includeClients): void
     {
         $nameBasedQuery = '(lower(u.email) LIKE :qLike OR lower(u.firstname) LIKE :qLike OR lower(u.lastname) LIKE :qLike)';
 
@@ -153,9 +150,8 @@ class UserRepository extends AbstractEntityRepository
      * @param string $firstName
      * @param string $lastname
      * @param bool $includeClients
-     * @return string
      */
-    function addFullNameExactMatchFilter(string $firstName, string $lastname, bool $includeClients)
+    function addFullNameExactMatchFilter(string $firstName, string $lastname, bool $includeClients): void
     {
         $nameBasedQuery = '(lower(u.firstname) = :firstname AND lower(u.lastname) = :lastname)';
 
@@ -172,7 +168,7 @@ class UserRepository extends AbstractEntityRepository
     /**
      * @return User[]
      */
-    public function findInactive($select = null)
+    public function findInactive(string $select = null)
     {
         $thirtyDaysAgo = new DateTime();
         $thirtyDaysAgo->sub(new DateInterval('P30D'));
