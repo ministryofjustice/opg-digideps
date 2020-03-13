@@ -87,25 +87,30 @@ class PactTestListener implements TestListener
                 $httpService->verifyInteractions();
                 $json = $httpService->getPactJson();
             }
-            $clientConfig = [];
-            if (($user = \getenv('PACT_BROKER_HTTP_AUTH_USER')) &&
-                ($pass = \getenv('PACT_BROKER_HTTP_AUTH_PASS'))
-            ) {
-                $clientConfig = [
-                    'auth' => [$user, $pass],
-                ];
-            }
 
-            $headers = [];
-            $pactBrokerUri = 'https://dev-pact-broker.api.opg.service.justice.gov.uk/';
-            $tag = \getenv('PACT_TAG');
-            $consumerVersion = \getenv('PACT_CONSUMER_VERSION');
-            $client = new GuzzleClient($clientConfig);
-            print "user is " . $user . " password len is " . strlen($pass) . "tag is: " . $tag . "consumerver: " . $consumerVersion;
-            $brokerHttpService = new BrokerHttpClient($client, new Uri($pactBrokerUri), $headers);
-            $brokerHttpService->tag($this->mockServerConfig->getConsumer(), $consumerVersion, $tag);
-            $brokerHttpService->publishJson($json, $consumerVersion);
-            print 'Pact file has been uploaded to the Broker successfully.';
+            //requires these to exist
+            if (($pactBrokerUri = \getenv('PACT_BROKER_BASE_URL')) &&
+                ($consumerVersion = \getenv('PACT_CONSUMER_VERSION')) &&
+                ($tag = \getenv('PACT_TAG'))
+            ) {
+                $clientConfig = [];
+                if (($user = \getenv('PACT_BROKER_HTTP_AUTH_USER')) &&
+                    ($pass = \getenv('PACT_BROKER_HTTP_AUTH_PASS'))
+                ) {
+                    $clientConfig = [
+                        'auth' => [$user, $pass],
+                    ];
+                }
+                $headers = [];
+                $pactBrokerUriFull = 'https://' . $pactBrokerUri . '/';
+                $client = new GuzzleClient($clientConfig);
+                $brokerHttpService = new BrokerHttpClient($client, new Uri($pactBrokerUriFull), $headers);
+                $brokerHttpService->tag($this->mockServerConfig->getConsumer(), $consumerVersion, $tag);
+                $brokerHttpService->publishJson($json, $consumerVersion);
+                print 'Pact file has been uploaded to the Broker successfully.';
+            } else {
+                print 'One or more environment variables not set';
+            }
         }
     }
 }
