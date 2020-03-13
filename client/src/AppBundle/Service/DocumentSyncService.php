@@ -74,13 +74,7 @@ class DocumentSyncService
                 json_encode(['data' => ['response' => json_encode($response->getBody())]])
             );
         } catch (RequestException $exception) {
-            $response = $exception->getResponse();
-
-            if ($response) {
-                $body = $exception->getResponse()->getBody();
-            } else {
-                $body = json_encode($exception->getMessage());
-            }
+            $body = $exception->getResponse() ? $exception->getResponse()->getBody() : json_encode($exception->getMessage());
 
             $this->restClient->put(
                 sprintf('report-submission/%s', $submissionId),
