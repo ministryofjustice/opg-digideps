@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 
+use AppBundle\Entity\Report\Document;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use AppBundle\Service\File\Storage\S3Storage;
@@ -12,6 +13,7 @@ use DigidepsTests\Helpers\SiriusHelpers;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use JMS\Serializer\Serializer;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -27,6 +29,9 @@ class SiriusDocumentsContractTest extends KernelTestCase
     /** @var RestClient|ObjectProphecy $restClient */
     private $restClient;
 
+    /** @var Serializer $serializer */
+    private $serializer;
+
     public function setUp(): void
     {
         /** @var S3Storage&ObjectProphecy $s3Storage */
@@ -37,6 +42,9 @@ class SiriusDocumentsContractTest extends KernelTestCase
 
         /** @var RestClient|ObjectProphecy $restClient */
         $this->restClient = self::prophesize(RestClient::class);
+
+        /** @var Serializer serializer */
+        $this->serializer = (self::bootKernel(['debug' => false]))->getContainer()->get('jms_serializer');
     }
 
     /** @test */
@@ -45,6 +53,8 @@ class SiriusDocumentsContractTest extends KernelTestCase
         $reportStartDate = new DateTime('2018-05-14');
         $reportEndDate = new DateTime('2019-05-13');
         $reportSubmittedDate = new DateTime('2019-06-20');
+        $reportSubmissionId = 9876;
+        $documentId = 6789;
         $fileContents = 'fake_contents';
 
         $submittedReportDocument = DocumentHelpers::generateSubmittedReportDocument(
@@ -52,6 +62,8 @@ class SiriusDocumentsContractTest extends KernelTestCase
             $reportStartDate,
             $reportEndDate,
             $reportSubmittedDate,
+            $reportSubmissionId,
+            $documentId
             );
 
         $this->s3Storage->retrieve('test')->willReturn($fileContents);
@@ -64,14 +76,18 @@ class SiriusDocumentsContractTest extends KernelTestCase
         );
 
         $uuid = '5a8b1a26-8296-4373-ae61-f8d0b250e773';
-        $successResponseBody = json_encode(['data' => ['id' => $uuid]]);
-        $successResponse = new Response('200', [], $successResponseBody);
+        $successResponseBody = ['data' => ['id' => $uuid]];
+        $successResponse = new Response('200', [], json_encode($successResponseBody));
 
         $this->siriusApiGatewayClient->sendDocument($siriusDocumentUpload, 'fake_contents', '1234567T')->shouldBeCalled()->willReturn($successResponse);
 
-        $this->restClient->put('report-submission/9876', json_encode(['data' => ['response' => json_encode($successResponse->getBody())]]))
+        $this->restClient->put('report-submission/9876', json_encode(['data' => ['uuid' => $uuid]]))
             ->shouldBeCalled()
             ->willReturn(new SymfonyResponse('9876'));
+
+        $this->restClient->put('document/6789', json_encode(['data' => ['syncStatus' => Document::SYNC_STATUS_SUCCESS]]))
+            ->shouldBeCalled()
+            ->willReturn($this->serializer->serialize($submittedReportDocument, 'json'));
 
         $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
         $sut->syncReportDocument($submittedReportDocument);
@@ -83,6 +99,8 @@ class SiriusDocumentsContractTest extends KernelTestCase
         $reportStartDate = new DateTime('2018-05-14');
         $reportEndDate = new DateTime('2019-05-13');
         $reportSubmittedDate = new DateTime('2019-06-20');
+        $reportSubmissionId = 9876;
+        $documentId = 6789;
         $fileContents = 'fake_contents';
 
         $submittedReportDocument = DocumentHelpers::generateSubmittedReportDocument(
@@ -90,7 +108,9 @@ class SiriusDocumentsContractTest extends KernelTestCase
             $reportStartDate,
             $reportEndDate,
             $reportSubmittedDate,
-            );
+            $reportSubmissionId,
+            $documentId
+        );
 
         $this->s3Storage->retrieve('test')->willReturn($fileContents);
 
@@ -101,16 +121,19 @@ class SiriusDocumentsContractTest extends KernelTestCase
             'PF',
             );
 
-        $failureResponseBody = json_encode(['errors' => [0 => ['id' => 'ABC123', 'code' => 'OPGDATA-API-FORBIDDEN']]]);
-        $failureResponse = new Response('403', [], $failureResponseBody);
+        $failureResponseBody = ['errors' => [0 => ['id' => 'ABC123', 'code' => 'OPGDATA-API-FORBIDDEN']]];
+        $failureResponse = new Response('403', [], json_encode($failureResponseBody));
 
         $requestException = new RequestException('An error occurred', new Request('POST', '/report-submission/9876'), $failureResponse);
 
         $this->siriusApiGatewayClient->sendDocument($siriusDocumentUpload, 'fake_contents', '1234567T')->shouldBeCalled()->willThrow($requestException);
 
-        $this->restClient->put('report-submission/9876', json_encode(['data' => ['response' => $failureResponse->getBody()]]))
+        $this->restClient->put('document/6789', json_encode(
+            ['data' =>
+                ['syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR, 'syncError' => $failureResponseBody]
+            ]))
             ->shouldBeCalled()
-            ->willReturn(new SymfonyResponse('9876'));
+            ->willReturn($this->serializer->serialize($submittedReportDocument, 'json'));
 
         $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
         $sut->syncReportDocument($submittedReportDocument);

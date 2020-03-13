@@ -6,16 +6,13 @@ use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Entity\ReportInterface;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use AppBundle\Service\Client\Sirius\SiriusDocumentMetadata;
 use AppBundle\Service\Client\Sirius\SiriusDocumentUpload;
 use AppBundle\Service\File\Storage\S3Storage;
-use DateTime;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Psr7\Response as Psr7Response;
 use Symfony\Component\HttpFoundation\Response;
 
 class DocumentSyncService
@@ -65,25 +62,30 @@ class DocumentSyncService
 
         try {
             $upload = $this->buildUpload($document);
-            $response = $this->siriusApiGateWayClient->sendDocument($upload, $content, $report->getClient()->getCaseNumber());
+            $apiGatewayResponse = $this->siriusApiGateWayClient->sendDocument($upload, $content, $report->getClient()->getCaseNumber());
 
-            $data = json_decode(strval($response->getBody()), true);
+            $data = json_decode(strval($apiGatewayResponse->getBody()), true);
 
             $this->restClient->put(
                 sprintf('report-submission/%s', $submissionId),
-                json_encode(['data' => ['response' => json_encode($response->getBody())]])
+                json_encode(['data' => ['uuid' => $data['data']['id']]])
+            );
+
+            $this->restClient->put(
+                sprintf('document/%s', $document->getId()),
+                json_encode(['data' =>
+                    ['syncStatus' => Document::SYNC_STATUS_SUCCESS]
+                ])
             );
         } catch (RequestException $exception) {
-            $body = $exception->getResponse() ? $exception->getResponse()->getBody() : json_encode($exception->getMessage());
+            $body = $exception->getResponse() ? (string) $exception->getResponse()->getBody() : (string) $exception->getMessage();
 
             $this->restClient->put(
-                sprintf('report-submission/%s', $submissionId),
-                json_encode(['data' => ['response' => $body]])
+                sprintf('document/%s', $document->getId()),
+                json_encode(['data' =>
+                    ['syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR, 'syncError' => json_decode($body)]
+                ])
             );
-        }
-
-        if ($data['data']['id'])  {
-            return $data['data']['id'];
         }
     }
 
