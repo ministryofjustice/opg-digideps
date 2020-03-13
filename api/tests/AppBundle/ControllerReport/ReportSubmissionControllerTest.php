@@ -2,11 +2,13 @@
 
 namespace Tests\AppBundle\ControllerReport;
 
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
-use Doctrine\Tests\ORM\Mapping\User;
+use AppBundle\Entity\User;
 use Tests\AppBundle\Controller\AbstractTestController;
+use Tests\TestHelpers\ReportSubmissionHelper;
+use Tests\TestHelpers\ReportTestHelper;
 
 class ReportSubmissionControllerTest extends AbstractTestController
 {
@@ -223,6 +225,29 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
         $result = $this->makeRequestAndReturnResults('/report-submission/casrec_data', []);
         $this->assertResponseIncludesReportWithCaseNumber($result, '1000000');
+    }
+
+    /**
+     * @test
+     */
+    public function updatePersistsUuidWhenProvided()
+    {
+        $reportSubmission = (new ReportSubmissionHelper())->generateAndPersistReportSubmission();
+
+        $uuid = '5a8b1a26-8296-4373-ae61-f8d0b250e773';
+
+        $url = sprintf('/report-submission/%s', $reportSubmission->getId());
+
+        $response = $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenAdmin,
+            'data' => ['uuid' => $uuid]
+        ]);
+
+        $updatedSubmission = $this->makeRequestAndReturnResults('/report-submission/' . $reportSubmission->getId(), []);
+
+        self::assertEquals($response['data'], $reportSubmission->getId());
+        self::assertEquals($uuid, $updatedSubmission['uuid']);
     }
 
     /**
