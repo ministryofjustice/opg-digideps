@@ -17,6 +17,8 @@ class DocumentHelpers
         DateTime $startDate,
         DateTime $endDate,
         DateTime $submittedDate,
+        int $reportSubmissionId = 9876,
+        int $documentId = 6789,
         string $mimeType = 'application/pdf',
         string $fileName = 'test.pdf',
         string $storageReference = 'test'
@@ -25,7 +27,7 @@ class DocumentHelpers
         $client = new Client();
         $client->setCaseNumber($caseRef);
 
-        $reportSubmissions = [(new ReportSubmission())->setId(9876)];
+        $reportSubmissions = [(new ReportSubmission())->setId($reportSubmissionId)];
 
         $report = (new Report())
             ->setType(Report::TYPE_102)
@@ -45,6 +47,7 @@ class DocumentHelpers
             ->setReport($report)
             ->setStorageReference($storageReference)
             ->setFileName($fileName)
-            ->setFile($uploadedFile);
+            ->setFile($uploadedFile)
+            ->setId($documentId);
     }
 }
