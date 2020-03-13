@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Model;
 
@@ -69,7 +69,7 @@ class SelfRegisterData
     /**
      * @return string
      */
-    public function getFirstname()
+    public function getFirstname(): string
     {
         return $this->firstname;
     }
@@ -77,15 +77,17 @@ class SelfRegisterData
     /**
      * @param string $firstname
      */
-    public function setFirstname($firstname)
+    public function setFirstname($firstname): SelfRegisterData
     {
         $this->firstname = $firstname;
+
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getLastname()
+    public function getLastname(): string
     {
         return $this->lastname;
     }
@@ -93,15 +95,17 @@ class SelfRegisterData
     /**
      * @param string $lastname
      */
-    public function setLastname($lastname)
+    public function setLastname($lastname): SelfRegisterData
     {
         $this->lastname = $lastname;
+
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -109,15 +113,17 @@ class SelfRegisterData
     /**
      * @param string $email
      */
-    public function setEmail($email)
+    public function setEmail($email): SelfRegisterData
     {
         $this->email = strtolower($email);
+
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getPostcode()
+    public function getPostcode(): string
     {
         return $this->postcode;
     }
@@ -125,15 +131,17 @@ class SelfRegisterData
     /**
      * @param string $postcode
      */
-    public function setPostcode($postcode)
+    public function setPostcode($postcode): SelfRegisterData
     {
         $this->postcode = $postcode;
+
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getClientFirstname()
+    public function getClientFirstname(): string
     {
         return $this->clientFirstname;
     }
@@ -141,15 +149,17 @@ class SelfRegisterData
     /**
      * @param string $clientFirstname
      */
-    public function setClientFirstname($clientFirstname)
+    public function setClientFirstname($clientFirstname): SelfRegisterData
     {
         $this->clientFirstname = $clientFirstname;
+
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getClientLastname()
+    public function getClientLastname(): string
     {
         return $this->clientLastname;
     }
@@ -157,15 +167,17 @@ class SelfRegisterData
     /**
      * @param string $clientLastname
      */
-    public function setClientLastname($clientLastname)
+    public function setClientLastname($clientLastname): SelfRegisterData
     {
         $this->clientLastname = $clientLastname;
+
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getCaseNumber()
+    public function getCaseNumber(): string
     {
         return $this->caseNumber;
     }
@@ -173,12 +185,17 @@ class SelfRegisterData
     /**
      * @param string $caseNumber
      */
-    public function setCaseNumber($caseNumber)
+    public function setCaseNumber($caseNumber): SelfRegisterData
     {
         $this->caseNumber = $caseNumber;
+
+        return $this;
     }
 
-    public function toArray()
+    /**
+     * @return array<string>
+     */
+    public function toArray(): array
     {
         return [
             //'deputy_firstname' => $this->firstname,
