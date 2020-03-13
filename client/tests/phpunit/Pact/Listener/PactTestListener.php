@@ -101,7 +101,7 @@ class PactTestListener implements TestListener
             $tag = \getenv('PACT_TAG');
             $consumerVersion = \getenv('PACT_CONSUMER_VERSION');
             $client = new GuzzleClient($clientConfig);
-            print "user is " . $user . " password len is " . strlen($pass) . "tag is: " . $tag . "consumerver: " . $consumerVersion;
+            print " tag is: " . $tag . "consumerver: " . $consumerVersion;
             $brokerHttpService = new BrokerHttpClient($client, new Uri($pactBrokerUri), $headers);
             $brokerHttpService->tag($this->mockServerConfig->getConsumer(), $consumerVersion, $tag);
             $brokerHttpService->publishJson($json, $consumerVersion);
