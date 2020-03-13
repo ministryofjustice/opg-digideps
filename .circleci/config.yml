@@ -378,7 +378,7 @@ jobs:
             export PACT_CONSUMER_VERSION=${CIRCLE_SHA1:0:7}
             export PACT_TAG=${CIRCLE_BRANCH}
             docker-compose up -d pact-mock
-            sleep 5
+            sleep 4
             docker run --rm --network=project_default \
             -e PACT_BROKER_HTTP_AUTH_PASS \
             -e PACT_BROKER_HTTP_AUTH_USER \
