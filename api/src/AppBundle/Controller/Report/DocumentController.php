@@ -6,6 +6,7 @@ use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Exception\UnauthorisedException;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -126,5 +127,39 @@ class DocumentController extends RestController
             ? (array) $request->query->get('groups') : ['documents'];
         $this->setJmsSerialiserGroups($serialisedGroups);
         return $documentRepo->findBy(['synchronisationStatus' => Document::SYNC_STATUS_QUEUED]);
+    }
+
+    /**
+     * Update a Document
+     *
+     * @Route("/document/{id}", methods={"PUT"})
+     *
+     * @return Document
+     */
+    public function update(Request $request, int $id, EntityManagerInterface $em): Document
+    {
+        // hydrate and persist
+        $data = $this->deserializeBodyContent($request);
+
+        $document = $em->getRepository(Document::class)->find($id);
+
+        $serialisedGroups = $request->query->has('groups')
+            ? (array) $request->query->get('groups') : ['document-synchronisation', 'document-id'];
+
+        $this->setJmsSerialiserGroups($serialisedGroups);
+
+        if (!empty($data['syncStatus'])) {
+            $document->setSynchronisationStatus($data['syncStatus']);
+
+            if ($data['syncStatus'] !== Document::SYNC_STATUS_SUCCESS) {
+                $document->setSynchronisationError($data['syncError']);
+            } else {
+                $document->setSynchronisationTime(new DateTime($data['syncTime']));
+            }
+        }
+
+        $this->persistAndFlush($document);
+
+        return $document;
     }
 }

@@ -11,9 +11,11 @@ use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use AppBundle\Service\Client\Sirius\SiriusDocumentMetadata;
 use AppBundle\Service\Client\Sirius\SiriusDocumentUpload;
 use AppBundle\Service\File\Storage\S3Storage;
+use Aws\S3\Exception\S3Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class DocumentSyncService
 {
@@ -51,14 +53,45 @@ class DocumentSyncService
 
     public function syncReportDocument(Document $document)
     {
-        $content = $this->storage->retrieve($document->getStorageReference());
-
         /** @var Report $report */
         $report = $document->getReport();
 
+        if (!$document->isReportPdf()) {
+            $reportPdfHasBeenSubmitted = false;
+
+            foreach ($report->getSubmittedDocuments() as $doc) {
+                if ($doc->isReportPdf()) {
+                    $reportPdfHasBeenSubmitted = true;
+                    break;
+                } else {
+                    continue;
+                }
+            }
+
+            if (!$reportPdfHasBeenSubmitted) {
+                return $this->restClient->put(
+                    sprintf('document/%s', $document->getId()),
+                    json_encode(['data' =>
+                        ['syncStatus' => Document::SYNC_STATUS_QUEUED]
+                    ])
+                );
+            }
+        }
+
+        try {
+            $content = $this->storage->retrieve($document->getStorageReference());
+        } catch (S3Exception $e) {
+            $syncStatus = in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES) ?
+                Document::SYNC_STATUS_PERMANENT_ERROR : Document::SYNC_STATUS_TEMPORARY_ERROR;
+
+            return $this->restClient->put(
+                sprintf('document/%s', $document->getId()),
+                json_encode(['data' => ['syncStatus' => $syncStatus, 'syncError' => 'S3 error: ' . $e->getMessage()]])
+            );
+        }
+
         /** @var ReportSubmission $latestSubmission */
         $latestSubmission = $report->getReportSubmissions()[0];
-        $submissionId = $latestSubmission->getId();
 
         try {
             $upload = $this->buildUpload($document);
@@ -67,11 +100,11 @@ class DocumentSyncService
             $data = json_decode(strval($apiGatewayResponse->getBody()), true);
 
             $this->restClient->put(
-                sprintf('report-submission/%s', $submissionId),
+                sprintf('report-submission/%s', $latestSubmission->getId()),
                 json_encode(['data' => ['uuid' => $data['data']['id']]])
             );
 
-            $this->restClient->put(
+            return $this->restClient->put(
                 sprintf('document/%s', $document->getId()),
                 json_encode(['data' =>
                     ['syncStatus' => Document::SYNC_STATUS_SUCCESS]
@@ -80,7 +113,7 @@ class DocumentSyncService
         } catch (RequestException $exception) {
             $body = $exception->getResponse() ? (string) $exception->getResponse()->getBody() : (string) $exception->getMessage();
 
-            $this->restClient->put(
+            return $this->restClient->put(
                 sprintf('document/%s', $document->getId()),
                 json_encode(['data' =>
                     ['syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR, 'syncError' => json_decode($body)]
