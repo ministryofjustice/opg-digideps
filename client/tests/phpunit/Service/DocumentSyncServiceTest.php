@@ -7,6 +7,8 @@ use AppBundle\Entity\Report\Document;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use AppBundle\Service\File\Storage\S3Storage;
+use Aws\Command;
+use Aws\S3\Exception\S3Exception;
 use DateTime;
 use DigidepsTests\Helpers\DocumentHelpers;
 use DigidepsTests\Helpers\SiriusHelpers;
@@ -94,7 +96,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
     }
 
     /** @test */
-    public function sendReportDocument_sync_failure()
+    public function sendReportDocument_sync_failure_sirius()
     {
         $reportStartDate = new DateTime('2018-05-14');
         $reportEndDate = new DateTime('2019-05-13');
@@ -131,6 +133,81 @@ class SiriusDocumentsContractTest extends KernelTestCase
         $this->restClient->put('document/6789', json_encode(
             ['data' =>
                 ['syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR, 'syncError' => $failureResponseBody]
+            ]))
+            ->shouldBeCalled()
+            ->willReturn($this->serializer->serialize($submittedReportDocument, 'json'));
+
+        $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
+        $sut->syncReportDocument($submittedReportDocument);
+    }
+
+    /**
+     * @dataProvider s3ErrorProvider
+     * @test
+     */
+    public function sendReportDocument_sync_failure_s3(string $awsErrorCode, string $awsErrorMessage, string $syncStatus)
+    {
+        $reportStartDate = new DateTime('2018-05-14');
+        $reportEndDate = new DateTime('2019-05-13');
+        $reportSubmittedDate = new DateTime('2019-06-20');
+        $reportSubmissionId = 9876;
+        $documentId = 6789;
+
+        $submittedReportDocument = DocumentHelpers::generateSubmittedReportDocument(
+            '1234567T',
+            $reportStartDate,
+            $reportEndDate,
+            $reportSubmittedDate,
+            $reportSubmissionId,
+            $documentId
+        );
+
+        $s3Exception = new S3Exception($awsErrorMessage, new Command('getObject'), ['code' => $awsErrorCode]);
+
+        $this->s3Storage->retrieve('test')->willThrow($s3Exception);
+
+        $this->restClient->put('document/6789', json_encode(
+            ['data' =>
+                ['syncStatus' => $syncStatus, 'syncError' => 'S3 error: ' . $awsErrorMessage]
+            ]))
+            ->shouldBeCalled()
+            ->willReturn($this->serializer->serialize($submittedReportDocument, 'json'));
+
+        $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
+        $sut->syncReportDocument($submittedReportDocument);
+    }
+
+    public function s3ErrorProvider()
+    {
+        return [
+            'Missing key' => ['NoSuchKey', 'The specified key does not exist.', Document::SYNC_STATUS_PERMANENT_ERROR],
+            'Access denied (for deleted items not yet purged)' => ['AccessDenied', 'Access Denied', Document::SYNC_STATUS_PERMANENT_ERROR],
+            'Internal error' => ['InternalError', 'We encountered an internal error. Please try again.', Document::SYNC_STATUS_TEMPORARY_ERROR]
+        ];
+    }
+
+    /** @test */
+    public function sendReportDocument_supporting_document_report_pdf_not_submitted()
+    {
+        $reportStartDate = new DateTime('2018-05-14');
+        $reportEndDate = new DateTime('2019-05-13');
+        $reportSubmittedDate = new DateTime('2019-06-20');
+        $reportSubmissionId = 9876;
+        $documentId = 6789;
+
+        $submittedReportDocument = (new DocumentHelpers())->generateSubmittedReportDocument(
+            '1234567T',
+            $reportStartDate,
+            $reportEndDate,
+            $reportSubmittedDate,
+            $reportSubmissionId,
+            $documentId,
+            false
+        );
+
+        $this->restClient->put('document/6789', json_encode(
+            ['data' =>
+                ['syncStatus' => Document::SYNC_STATUS_QUEUED]
             ]))
             ->shouldBeCalled()
             ->willReturn($this->serializer->serialize($submittedReportDocument, 'json'));

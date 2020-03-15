@@ -5,13 +5,14 @@ namespace Tests\AppBundle\Controller;
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Repository\DocumentRepository;
+use DateTime;
+use DigidepsTests\Helpers\FileHelpers;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\User;
+use Tests\TestHelpers\ReportSubmissionHelper;
 
 class DocumentControllerTest extends AbstractTestController
 {
-    /**
-     * @var DocumentRepository
-     */
+    /** @var DocumentRepository */
     private $repo;
 
     // users
@@ -24,19 +25,22 @@ class DocumentControllerTest extends AbstractTestController
     private static $report1;
     private static $ndr1;
 
+    /** @var Document */
+    private static $document;
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
         //deputy1
-        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
-        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
-
-        // report 1
-        self::$report1 = self::fixtures()->createReport(self::$client1);
-        self::$ndr1 = self::fixtures()->createNdr(self::$client1);
-
-        self::fixtures()->flush();
+//        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+//        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
+//
+//        // report 1
+//        self::$report1 = self::fixtures()->createReport(self::$client1);
+//        self::$ndr1 = self::fixtures()->createNdr(self::$client1);
+//
+//        self::fixtures()->flush();
     }
 
     /**
@@ -51,6 +55,16 @@ class DocumentControllerTest extends AbstractTestController
 
     public function setUp(): void
     {
+        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
+
+        self::$report1 = self::fixtures()->createReport(self::$client1);
+        self::$ndr1 = self::fixtures()->createNdr(self::$client1);
+
+        self::$document = self::fixtures()->createDocument(self::$report1, 'file_name.pdf');
+
+        self::fixtures()->flush();
+
         $this->repo = self::fixtures()->getRepo('Report\Document');
         self::$tokenDeputy = $this->loginAsDeputy();
     }
@@ -141,7 +155,7 @@ class DocumentControllerTest extends AbstractTestController
     public function testGetQueuedDocuments(): void
     {
         // Queue a document
-        $document = $this->repo->find(1);
+        $document = $this->repo->find(self::$document->getId());
         self::assertInstanceOf(Document::class, $document);
 
         $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
@@ -153,5 +167,50 @@ class DocumentControllerTest extends AbstractTestController
         ]);
 
         self::assertCount(1, $return['data']);
+    }
+
+    public function testUpdateDocument_sync_success(): void
+    {
+        $url = sprintf('/document/%s', self::$document->getId());
+
+        $syncTime = (new DateTime())->format(DateTime::ATOM);
+
+        $response = $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenDeputy,
+            'data' => ['syncStatus' => Document::SYNC_STATUS_SUCCESS, 'syncTime' => $syncTime]
+        ]);
+
+        self::assertEquals(self::$document->getId(), $response['data']['id']);
+        self::assertEquals(Document::SYNC_STATUS_SUCCESS, $response['data']['synchronisation_status']);
+        self::assertEquals($syncTime, $response['data']['synchronisation_time']);
+    }
+
+    /**
+     * @dataProvider statusProvider
+     */
+    public function testUpdateDocument_not_success(string $status, ?string $error): void
+    {
+        $url = sprintf('/document/%s', self::$document->getId());
+
+        $response = $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenDeputy,
+            'data' => ['syncStatus' => $status, 'syncError' => $error]
+        ]);
+
+        self::assertEquals(self::$document->getId(), $response['data']['id']);
+        self::assertEquals($status, $response['data']['synchronisation_status']);
+        self::assertEquals($error, $response['data']['synchronisation_error']);
+    }
+
+    public function statusProvider()
+    {
+        return [
+            'Permanent error' => [Document::SYNC_STATUS_PERMANENT_ERROR, 'Permanent error occurred'],
+            'Temporary error' => [Document::SYNC_STATUS_TEMPORARY_ERROR, 'Temporary error occurred'],
+            'In progress' => [Document::SYNC_STATUS_IN_PROGRESS, null],
+            'Queued' => [Document::SYNC_STATUS_QUEUED, null],
+        ];
     }
 }
