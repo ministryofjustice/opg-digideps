@@ -56,26 +56,13 @@ class DocumentSyncService
         /** @var Report $report */
         $report = $document->getReport();
 
-        if (!$document->isReportPdf()) {
-            $reportPdfHasBeenSubmitted = false;
-
-            foreach ($report->getSubmittedDocuments() as $doc) {
-                if ($doc->isReportPdf()) {
-                    $reportPdfHasBeenSubmitted = true;
-                    break;
-                } else {
-                    continue;
-                }
-            }
-
-            if (!$reportPdfHasBeenSubmitted) {
-                return $this->restClient->put(
-                    sprintf('document/%s', $document->getId()),
-                    json_encode(['data' =>
-                        ['syncStatus' => Document::SYNC_STATUS_QUEUED]
-                    ])
-                );
-            }
+        if (!$document->canBeSynced()) {
+            return $this->restClient->put(
+                sprintf('document/%s', $document->getId()),
+                json_encode(['data' =>
+                    ['syncStatus' => Document::SYNC_STATUS_QUEUED]
+                ])
+            );
         }
 
         try {
@@ -90,10 +77,9 @@ class DocumentSyncService
             );
         }
 
-        /** @var ReportSubmission $latestSubmission */
-        $latestSubmission = $report->getReportSubmissions()[0];
-
         try {
+            /** @var ReportSubmission $latestSubmission */
+            $latestSubmission = $report->getReportSubmissions()[0];
             $upload = $this->buildUpload($document);
             $apiGatewayResponse = $this->siriusApiGateWayClient->sendDocument($upload, $content, $report->getClient()->getCaseNumber());
 

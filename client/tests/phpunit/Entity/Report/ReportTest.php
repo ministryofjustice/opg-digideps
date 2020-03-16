@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity\Report;
 
+use DateTime;
+use DigidepsTests\Helpers\DocumentHelpers;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
@@ -192,5 +194,14 @@ class ReportTest extends TestCase
         $this->assertEquals(100000, $report->getAssetsTotalsSummaryPage('property'));
         $this->assertEquals(10 + 20 + 30 + 40, $report->getAssetsTotalsSummaryPage('cash'));
         $this->assertEquals(1+2+3+4+5, $report->getAssetsTotalsSummaryPage('other'));
+    }
+
+    /** @test */
+    public function reportPdfHasBeenSubmitted()
+    {
+        $submittedDocuments = [(new Document())->setIsReportPdf(false), (new Document())->setIsReportPdf(true)];
+        $report = (new Report())->setSubmittedDocuments($submittedDocuments);
+
+        self::assertTrue($report->reportPdfHasBeenSubmitted());
     }
 }
