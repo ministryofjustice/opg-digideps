@@ -29,6 +29,19 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
             throw new \InvalidArgumentException('Cannot assemble LayDeputyshipDto: Missing expected data');
         }
 
+        try {
+            return $this->buildDto($data);
+        } catch (\InvalidArgumentException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @param array $data
+     * @return LayDeputyshipDto
+     */
+    private function buildDto(array $data): LayDeputyshipDto
+    {
         return
             (new LayDeputyshipDto())
                 ->setCaseNumber($this->normaliser->normaliseCaseNumber($data['Case']))
@@ -37,7 +50,7 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
                 ->setDeputySurname($this->normaliser->normaliseSurname($data['Dep Surname']))
                 ->setDeputyPostcode($this->normaliser->normalisePostCode($data['Dep Postcode']))
                 ->setTypeOfReport($data['Typeofrep'])
-                ->setCorref($data['Corref'])
+                ->setCorref($this->determineCorref($data['Typeofrep']))
                 ->setIsNdrEnabled(false)
                 ->setSource(CasRec::SIRIUS_SOURCE);
     }
@@ -54,7 +67,22 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
             array_key_exists('Deputy No', $data) &&
             array_key_exists('Dep Surname', $data) &&
             array_key_exists('Dep Postcode', $data) &&
-            array_key_exists('Typeofrep', $data) &&
-            array_key_exists('Corref', $data);
+            array_key_exists('Typeofrep', $data);
+    }
+
+    /**
+     * @param string $reportType
+     * @return string
+     */
+    private function determineCorref(string $reportType): string
+    {
+        switch ($reportType) {
+            case 'OPG102':
+                return 'L2';
+            case 'OPG103':
+                return 'L3';
+            default:
+                throw new \InvalidArgumentException('Cannot assemble LayDeputyshipDto: Unexpected report type');
+        }
     }
 }

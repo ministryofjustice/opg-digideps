@@ -43,15 +43,31 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
             ['Deputy No'],
             ['Dep Surname'],
             ['Dep Postcode'],
-            ['Typeofrep'],
-            ['Corref']
+            ['Typeofrep']
         ];
     }
 
-    /** @test */
-    public function assembleFromArrayAssemblesAndReturnsALayDeputyshipDto(): void
+    /**
+     * @test
+     */
+    public function assembleFromArrayReturnsNullIfGivenUnexpectedReportType(): void
     {
-        $result = $this->sut->assembleFromArray($this->getInput());
+        $input = $this->getInput();
+        $input['Typeofrep'] = 'OPG104';
+
+        $this->assertNull($this->sut->assembleFromArray($input));
+    }
+
+    /**
+     * @test
+     * @dataProvider getReportTypeToCorrefExpectation
+     */
+    public function assembleFromArrayAssemblesAndReturnsALayDeputyshipDto($reportType, $expectedCorref): void
+    {
+        $input = $this->getInput();
+        $input['Typeofrep'] = $reportType;
+
+        $result = $this->sut->assembleFromArray($input);
 
         $this->assertInstanceOf(LayDeputyshipDto::class, $result);
         $this->assertEquals('caset', $result->getCaseNumber());
@@ -59,10 +75,18 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
         $this->assertEquals('deputy_no', $result->getDeputyNumber());
         $this->assertEquals('deputysurname', $result->getDeputySurname());
         $this->assertEquals('deputypostcode', $result->getDeputyPostcode());
-        $this->assertEquals('type_of_rep', $result->getTypeOfReport());
-        $this->assertEquals('corref', $result->getCorref());
+        $this->assertEquals($reportType, $result->getTypeOfReport());
+        $this->assertEquals($expectedCorref, $result->getCorref());
         $this->assertEquals(false, $result->isNdrEnabled());
         $this->assertEquals(CasRec::SIRIUS_SOURCE, $result->getSource());
+    }
+
+    public function getReportTypeToCorrefExpectation()
+    {
+        return [
+            ['reportType' => 'OPG102', 'expectedCorref' => 'L2'],
+            ['reportType' => 'OPG103', 'expectedCorref' => 'L3']
+        ];
     }
 
     /** @return array */
@@ -75,7 +99,6 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
             'Dep Surname' => 'deputysurname',
             'Dep Postcode' => 'deputy_postcode',
             'Typeofrep' => 'type_of_rep',
-            'Corref' => 'corref',
             'Source' => 'will-use-constant-instead',
             'Not used' => 'not_used',
         ];
