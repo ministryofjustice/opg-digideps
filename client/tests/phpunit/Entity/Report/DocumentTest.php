@@ -21,9 +21,10 @@ class DocumentTest extends TestCase
      * @dataProvider supportingDocumentProvider
      * @test
      */
-    public function canBeSynced_supporting_document(Document $document1, Document $document2, bool $expectedResult)
+    public function canBeSynced_supporting_document(Document $document1, Document $document2, ?string $uuid, bool $expectedResult)
     {
-        $report = (new Report())->setSubmittedDocuments([$document1, $document2]);
+        $reportSubmissions = [(new ReportSubmission())->setUuid($uuid)];
+        $report = (new Report())->setSubmittedDocuments([$document1, $document2])->setReportSubmissions($reportSubmissions);
 
         $document1->setReport($report);
         self::assertEquals($expectedResult, $document1->canBeSynced());
@@ -31,9 +32,12 @@ class DocumentTest extends TestCase
 
     public function supportingDocumentProvider()
     {
+        $reportPdfDocument = (new Document())->setIsReportPdf(true);
+        $supportingDocument = (new Document())->setIsReportPdf(false);
+
         return [
-            'Can be synced' => [(new Document())->setIsReportPdf(false), (new Document())->setIsReportPdf(true), true],
-            'Cannot be synced' => [(new Document())->setIsReportPdf(false), (new Document())->setIsReportPdf(false), false]
+            'Can be synced' => [$supportingDocument, $reportPdfDocument, 'abc-123-def-456', true],
+            'Cannot be synced' => [$supportingDocument, $supportingDocument, null, false]
         ];
     }
 }

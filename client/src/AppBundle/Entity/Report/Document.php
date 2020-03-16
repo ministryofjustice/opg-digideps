@@ -348,7 +348,7 @@ class Document implements DocumentInterface
         if ($this->isReportPdf()) {
             return true;
         } else {
-            return $this->getReport()->reportPdfHasBeenSubmitted();
+            return !is_null($this->getReport()->getReportSubmissions()[0]->getUuid());
         }
     }
 
