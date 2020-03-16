@@ -59,7 +59,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
         $documentId = 6789;
         $fileContents = 'fake_contents';
 
-        $submittedReportDocument = DocumentHelpers::generateSubmittedReportDocument(
+        $submittedReportDocument = (new DocumentHelpers())->generateSubmittedReportDocument(
             '1234567T',
             $reportStartDate,
             $reportEndDate,
@@ -105,7 +105,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
         $documentId = 6789;
         $fileContents = 'fake_contents';
 
-        $submittedReportDocument = DocumentHelpers::generateSubmittedReportDocument(
+        $submittedReportDocument = (new DocumentHelpers())->generateSubmittedReportDocument(
             '1234567T',
             $reportStartDate,
             $reportEndDate,
@@ -153,7 +153,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
         $reportSubmissionId = 9876;
         $documentId = 6789;
 
-        $submittedReportDocument = DocumentHelpers::generateSubmittedReportDocument(
+        $submittedReportDocument = (new DocumentHelpers())->generateSubmittedReportDocument(
             '1234567T',
             $reportStartDate,
             $reportEndDate,

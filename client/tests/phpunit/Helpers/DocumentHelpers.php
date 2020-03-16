@@ -33,15 +33,15 @@ class DocumentHelpers extends TestCase
         $reportSubmissions = [(new ReportSubmission())->setId($reportSubmissionId)];
 
         /** @var Report&ObjectProphecy $report */
-        $report = self::prophesize(Report::class);
+        $report = new Report();
 
-        $report->getId()->willReturn(1);
-        $report->getType()->willReturn(Report::TYPE_102);
-        $report->getClient()->willReturn($client);
-        $report->getStartDate()->willReturn($startDate);
-        $report->getEndDate()->willReturn($endDate);
-        $report->getSubmitDate()->willReturn($submittedDate);
-        $report->getReportSubmissions()->willReturn($reportSubmissions);
+        $report->setId(1);
+        $report->setType(Report::TYPE_102);
+        $report->setClient($client);
+        $report->setStartDate($startDate);
+        $report->setEndDate($endDate);
+        $report->setSubmitDate($submittedDate);
+        $report->setReportSubmissions($reportSubmissions);
 
         $relatedDocument = self::prophesize(Document::class);
         $relatedDocument->getReportId()->willReturn(1);
@@ -52,7 +52,7 @@ class DocumentHelpers extends TestCase
             $relatedDocument->isReportPdf()->willReturn(false);
         }
 
-        $report->getSubmittedDocuments()->willReturn([$relatedDocument->reveal()]);
+        $report->setSubmittedDocuments([$relatedDocument->reveal()]);
 
         $uploadedFile = FileHelpers::generateUploadedFile(
             'tests/phpunit/TestData/test.pdf',
@@ -61,7 +61,7 @@ class DocumentHelpers extends TestCase
         );
 
         return (new Document())
-            ->setReport($report->reveal())
+            ->setReport($report)
             ->setStorageReference($storageReference)
             ->setFileName($fileName)
             ->setFile($uploadedFile)

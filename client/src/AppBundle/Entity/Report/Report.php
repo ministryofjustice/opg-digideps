@@ -968,6 +968,17 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
+     * @param Document[] $submittedDocuments
+     * @return Report
+     */
+    public function setSubmittedDocuments(array $submittedDocuments): self
+    {
+        $this->submittedDocuments = $submittedDocuments;
+
+        return $this;
+    }
+
+    /**
      * @return Document[]
      */
     public function getUnsubmittedDocuments()
@@ -1222,5 +1233,19 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return $this;
     }
 
+    public function reportPdfHasBeenSubmitted()
+    {
+        $reportPdfHasBeenSubmitted = false;
 
+        foreach ($this->getSubmittedDocuments() as $doc) {
+            if ($doc->isReportPdf()) {
+                $reportPdfHasBeenSubmitted = true;
+                break;
+            } else {
+                continue;
+            }
+        }
+
+        return $reportPdfHasBeenSubmitted;
+    }
 }
