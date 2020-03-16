@@ -51,6 +51,10 @@ class DocumentSyncService
         $this->restClient = $restClient;
     }
 
+    /**
+     * @param Document $document
+     * @return string
+     */
     public function syncReportDocument(Document $document)
     {
         /** @var Report $report */
