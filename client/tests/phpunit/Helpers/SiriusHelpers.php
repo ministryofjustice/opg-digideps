@@ -3,21 +3,22 @@
 namespace DigidepsTests\Helpers;
 
 
-use AppBundle\Service\Client\Sirius\SiriusDocumentMetadata;
+use AppBundle\Service\Client\Sirius\SiriusReportPdfDocumentMetadata;
 use AppBundle\Service\Client\Sirius\SiriusDocumentUpload;
+use AppBundle\Service\Client\Sirius\SiriusSupportingDocumentMetadata;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class SiriusHelpers extends KernelTestCase
 {
-    static public function generateSiriusDocumentUpload(
+    static public function generateSiriusReportPdfDocumentUpload(
         DateTime $startDate,
         DateTime $endDate,
         DateTime $submittedDate,
         string $orderType
     )
     {
-        $siriusDocumentMetadata = (new SiriusDocumentMetadata())
+        $siriusReportPdfDocumentMetadata = (new SiriusReportPdfDocumentMetadata())
             ->setReportingPeriodFrom($startDate)
             ->setReportingPeriodTo($endDate)
             ->setYear('2018')
@@ -26,6 +27,16 @@ class SiriusHelpers extends KernelTestCase
 
         return (new SiriusDocumentUpload())
             ->setType('reports')
-            ->setAttributes($siriusDocumentMetadata);
+            ->setAttributes($siriusReportPdfDocumentMetadata);
+    }
+
+    static public function generateSiriusSupportingDocumentUpload(int $submissionId)
+    {
+        $siriusSupportingDocumentMetadata = (new SiriusSupportingDocumentMetadata())
+            ->setSubmissionId($submissionId);
+
+        return (new SiriusDocumentUpload())
+            ->setType('supportingdocument')
+            ->setAttributes($siriusSupportingDocumentMetadata);
     }
 }

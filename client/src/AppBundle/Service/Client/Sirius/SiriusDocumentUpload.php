@@ -9,7 +9,7 @@ class SiriusDocumentUpload
     /** @var string */
     private $type;
 
-    /** @var SiriusDocumentMetadata */
+    /** @var SiriusReportPdfDocumentMetadata */
     private $attributes;
 
     /**
@@ -32,18 +32,18 @@ class SiriusDocumentUpload
     }
 
     /**
-     * @return SiriusDocumentMetadata
+     * @return SiriusMetadataInterface
      */
-    public function getAttributes(): SiriusDocumentMetadata
+    public function getAttributes(): SiriusMetadataInterface
     {
         return $this->attributes;
     }
 
     /**
-     * @param SiriusDocumentMetadata $metadata
+     * @param SiriusMetadataInterface $attributes
      * @return SiriusDocumentUpload
      */
-    public function setAttributes(SiriusDocumentMetadata $attributes): self
+    public function setAttributes(SiriusMetadataInterface $attributes): self
     {
         $this->attributes = $attributes;
 

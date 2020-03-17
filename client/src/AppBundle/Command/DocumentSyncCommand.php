@@ -52,7 +52,7 @@ class DocumentSyncCommand extends DaemonableCommand
             $output->writeln(count($documents) . ' documents to upload');
 
             foreach ($documents as $document) {
-                $this->documentSyncService->syncReportDocument($document);
+                $this->documentSyncService->syncDocument($document);
             }
         }, 5 * 60);
     }

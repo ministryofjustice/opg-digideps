@@ -53,7 +53,7 @@ class SiriusApiGatewayClient
         return $this->httpClient->send($signedRequest);
     }
 
-    public function sendDocument(SiriusDocumentUpload $upload, string $content, string $caseRef)
+    public function sendReportPdfDocument(SiriusDocumentUpload $upload, string $content, string $caseRef)
     {
         $reportJson = $this->serializer->serialize($upload, 'json');
 
@@ -69,6 +69,27 @@ class SiriusApiGatewayClient
         ]);
 
         $signedRequest = $this->buildSignedRequest(sprintf('clients/%s/reports', $caseRef), 'POST', $multipart);
+
+        return $this->httpClient->send($signedRequest);
+    }
+
+    /** @TODO check with final swagger doc on endpoint for multipart naming conventions once its ready */
+    public function sendSupportingDocument(SiriusDocumentUpload $upload, string $content, string $submissionUuid)
+    {
+        $reportJson = $this->serializer->serialize($upload, 'json');
+
+        $multipart = new MultipartStream([
+            [
+                'name' => 'supporting_document',
+                'contents' => $reportJson
+            ],
+            [
+                'name' => 'supporting_document_file',
+                'contents' => base64_encode($content)
+            ],
+        ]);
+
+        $signedRequest = $this->buildSignedRequest(sprintf('reports/%s/supportingdocuments', $submissionUuid), 'POST', $multipart);
 
         return $this->httpClient->send($signedRequest);
     }

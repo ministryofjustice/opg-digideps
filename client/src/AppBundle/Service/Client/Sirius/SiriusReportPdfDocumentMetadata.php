@@ -6,7 +6,7 @@ namespace AppBundle\Service\Client\Sirius;
 
 use DateTime;
 
-class SiriusDocumentMetadata
+class SiriusReportPdfDocumentMetadata implements SiriusMetadataInterface
 {
     /** @var DateTime */
     private $reportingPeriodFrom;
@@ -33,7 +33,7 @@ class SiriusDocumentMetadata
 
     /**
      * @param DateTime $reportingPeriodFrom
-     * @return SiriusDocumentMetadata
+     * @return SiriusReportPdfDocumentMetadata
      */
     public function setReportingPeriodFrom(DateTime $reportingPeriodFrom): self
     {
@@ -52,7 +52,7 @@ class SiriusDocumentMetadata
 
     /**
      * @param string $orderType
-     * @return SiriusDocumentMetadata
+     * @return SiriusReportPdfDocumentMetadata
      */
     public function setOrderType(string $orderType): self
     {
@@ -71,7 +71,7 @@ class SiriusDocumentMetadata
 
     /**
      * @param DateTime $reportingPeriodTo
-     * @return SiriusDocumentMetadata
+     * @return SiriusReportPdfDocumentMetadata
      */
     public function setReportingPeriodTo(DateTime $reportingPeriodTo): self
     {
@@ -90,7 +90,7 @@ class SiriusDocumentMetadata
 
     /**
      * @param string $year
-     * @return SiriusDocumentMetadata
+     * @return SiriusReportPdfDocumentMetadata
      */
     public function setYear(string $year): self
     {
@@ -109,7 +109,7 @@ class SiriusDocumentMetadata
 
     /**
      * @param DateTime $dateSubmitted
-     * @return SiriusDocumentMetadata
+     * @return SiriusReportPdfDocumentMetadata
      */
     public function setDateSubmitted(DateTime $dateSubmitted): self
     {

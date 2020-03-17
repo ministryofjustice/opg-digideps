@@ -14,57 +14,173 @@ use Prophecy\Prophecy\ObjectProphecy;
 
 class DocumentHelpers extends TestCase
 {
-    public function generateSubmittedReportDocument(
+    private function generateDocument(
+        string $documentType,
         string $caseRef,
         DateTime $startDate,
         DateTime $endDate,
         DateTime $submittedDate,
-        int $reportSubmissionId = 9876,
+        int $reportPdfSubmissionId = 9876,
+        int $supportingDocSubmissionId = 9877,
         int $documentId = 6789,
-        bool $hasSubmittedReportPdf = true,
-        string $mimeType = 'application/pdf',
-        string $fileName = 'test.pdf',
+        ?string $submittedReportPdfUuid = 'uuid-123-goes-here',
+        ?string $submittedSupportingDocUuid = 'uuid-321-goes-here',
         string $storageReference = 'test'
     )
     {
         $client = new Client();
         $client->setCaseNumber($caseRef);
+        $reportPdfDocument = (new Document())->setIsReportPdf(true);
+        $supportingDocument = (new Document())->setIsReportPdf(false);
 
-        $reportSubmissions = [(new ReportSubmission())->setId($reportSubmissionId)];
+        $reportPdfReportSubmission =
+            (new ReportSubmission())
+                ->setId($reportPdfSubmissionId)
+                ->setUuid($submittedReportPdfUuid)
+                ->setDocuments([$reportPdfDocument]);
 
-        /** @var Report&ObjectProphecy $report */
-        $report = new Report();
+        $supportingDocReportSubmission =
+            (new ReportSubmission())
+                ->setId($supportingDocSubmissionId)
+                ->setUuid($submittedSupportingDocUuid)
+                ->setDocuments([$supportingDocument]);
 
-        $report->setId(1);
-        $report->setType(Report::TYPE_102);
-        $report->setClient($client);
-        $report->setStartDate($startDate);
-        $report->setEndDate($endDate);
-        $report->setSubmitDate($submittedDate);
-        $report->setReportSubmissions($reportSubmissions);
+        $reportSubmissions = [$reportPdfReportSubmission, $supportingDocReportSubmission];
 
-        $relatedDocument = self::prophesize(Document::class);
-        $relatedDocument->getReportId()->willReturn(1);
+        $report = (new Report())
+            ->setId(1)
+            ->setType(Report::TYPE_102)
+            ->setClient($client)
+            ->setStartDate($startDate)
+            ->setEndDate($endDate)
+            ->setSubmitDate($submittedDate)
+            ->setReportSubmissions($reportSubmissions);
 
-        if ($hasSubmittedReportPdf) {
-            $relatedDocument->isReportPdf()->willReturn(true);
-        } else {
-            $relatedDocument->isReportPdf()->willReturn(false);
+        if ($documentType === 'reportPdf' && $submittedReportPdfUuid) {
+            $report->setSubmittedDocuments([$reportPdfDocument]);
+        } elseif ($documentType === 'supportingDocument' && $submittedSupportingDocUuid) {
+            $report->setSubmittedDocuments([$supportingDocument]);
         }
-
-        $report->setSubmittedDocuments([$relatedDocument->reveal()]);
 
         $uploadedFile = FileHelpers::generateUploadedFile(
             'tests/phpunit/TestData/test.pdf',
-            $fileName,
-            $mimeType
+            'test.pdf',
+            'application/pdf'
         );
 
-        return (new Document())
-            ->setReport($report)
-            ->setStorageReference($storageReference)
-            ->setFileName($fileName)
-            ->setFile($uploadedFile)
-            ->setId($documentId);
+        if ($documentType === 'reportPdf') {
+            return $reportPdfDocument
+                ->setReport($report)
+                ->setStorageReference($storageReference)
+                ->setFileName('test.pdf')
+                ->setFile($uploadedFile)
+                ->setId($documentId);
+        } elseif ($documentType === 'supportingDocument') {
+            return $supportingDocument
+                ->setReport($report)
+                ->setStorageReference($storageReference)
+                ->setFileName('test.pdf')
+                ->setFile($uploadedFile)
+                ->setId($documentId);
+        }
+
+        return new \Exception('$documentType must be either reportPdf or supportingDocument');
+    }
+
+    public function generateSubmittedReportDocument(
+        string $caseRef,
+        DateTime $startDate,
+        DateTime $endDate,
+        DateTime $submittedDate,
+        int $reportPdfSubmissionId = 9876,
+        int $supportingDocSubmissionId = 9877,
+        int $documentId = 6789,
+        ?string $submittedReportPdfUuid = 'uuid-123-goes-here',
+        ?string $submittedSupportingDocUuid = 'uuid-321-goes-here',
+        string $storageReference = 'test'
+    )
+    {
+        return $this->generateDocument(
+            'reportPdf',
+            $caseRef,
+            $startDate,
+            $endDate,
+            $submittedDate,
+            $reportPdfSubmissionId,
+            $supportingDocSubmissionId,
+            $documentId,
+            $submittedReportPdfUuid,
+            $submittedSupportingDocUuid,
+            $storageReference
+        );
+    }
+
+    public function generateSubmittedSupportingDocument(
+        string $caseRef,
+        DateTime $startDate,
+        DateTime $endDate,
+        DateTime $submittedDate,
+        int $reportPdfSubmissionId = 9876,
+        int $supportingDocSubmissionId = 9877,
+        int $documentId = 6789,
+        ?string $submittedReportPdfUuid = 'uuid-123-goes-here',
+        ?string $submittedSupportingDocUuid = 'uuid-321-goes-here',
+        string $storageReference = 'test'
+    )
+    {
+        return $this->generateDocument(
+            'supportingDocument',
+            $caseRef,
+            $startDate,
+            $endDate,
+            $submittedDate,
+            $reportPdfSubmissionId,
+            $supportingDocSubmissionId,
+            $documentId,
+            $submittedReportPdfUuid,
+            $submittedSupportingDocUuid,
+            $storageReference
+        );
+
+//        $client = new Client();
+//        $client->setCaseNumber($caseRef);
+//        $reportPdfDocument = (new Document())->setIsReportPdf(true);
+//        $supportingDocument = (new Document())->setIsReportPdf(false);
+//
+//        $reportPdfReportSubmission =
+//            (new ReportSubmission())
+//                ->setId($reportPdfSubmissionId)
+//                ->setUuid($submittedReportPdfUuid)
+//                ->setDocuments([$reportPdfDocument]);
+//
+//        $supportingDocReportSubmission =
+//            (new ReportSubmission())
+//                ->setId($supportingDocSubmissionId)
+//                ->setUuid($submittedSupportingDocUuid)
+//                ->setDocuments([$supportingDocument]);
+//
+//        $reportSubmissions = [$reportPdfReportSubmission, $supportingDocReportSubmission];
+//
+//        $report = (new Report())
+//            ->setId(1)
+//            ->setType(Report::TYPE_102)
+//            ->setClient($client)
+//            ->setStartDate($startDate)
+//            ->setEndDate($endDate)
+//            ->setSubmitDate($submittedDate)
+//            ->setReportSubmissions($reportSubmissions);
+//
+//        $uploadedFile = FileHelpers::generateUploadedFile(
+//            'tests/phpunit/TestData/test.pdf',
+//            'test.pdf',
+//            'application/pdf'
+//        );
+//
+//        return $supportingDocument
+//            ->setReport($report)
+//            ->setStorageReference($storageReference)
+//            ->setFileName('test.pdf')
+//            ->setFile($uploadedFile)
+//            ->setId($documentId);
     }
 }
