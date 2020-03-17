@@ -25,7 +25,7 @@ class ReportSubmissionHelper extends KernelTestCase
             ->setLastname('Last')
             ->setEmail('first.last@example.com')
             ->setRoleName(User::ROLE_ADMIN);
-        // create a reportSubmission
+
         $reportSubmission = new ReportSubmission($report, $user);
 
         $em = (self::bootKernel(['debug' => false]))->getContainer()->get('em');

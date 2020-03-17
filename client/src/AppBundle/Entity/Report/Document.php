@@ -343,13 +343,9 @@ class Document implements DocumentInterface
         return $this->isReportPdf() || $this->isTransactionDocument();
     }
 
-    public function canBeSynced()
+    public function supportingDocumentCanBeSynced()
     {
-        if ($this->isReportPdf()) {
-            return true;
-        } else {
-            return !is_null($this->getReport()->getReportSubmissions()[0]->getUuid());
-        }
+        return !$this->isReportPdf() && $this->getReport()->reportPdfHasBeenSynced();
     }
 
     /**

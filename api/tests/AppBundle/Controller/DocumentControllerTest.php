@@ -31,16 +31,6 @@ class DocumentControllerTest extends AbstractTestController
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-
-        //deputy1
-//        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
-//        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
-//
-//        // report 1
-//        self::$report1 = self::fixtures()->createReport(self::$client1);
-//        self::$ndr1 = self::fixtures()->createNdr(self::$client1);
-//
-//        self::fixtures()->flush();
     }
 
     /**

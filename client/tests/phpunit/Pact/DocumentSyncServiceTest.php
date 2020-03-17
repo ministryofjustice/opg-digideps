@@ -104,7 +104,7 @@ class SiriusDocumentsContractTest extends TestCase
         $document->setReport($report);
         $document->setStorageReference('test');
 
-        $result = $sut->syncReportDocument($document);
+        $result = $sut->syncDocument($document);
 
         $builder->verify();
 
