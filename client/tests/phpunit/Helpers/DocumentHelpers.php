@@ -45,6 +45,9 @@ class DocumentHelpers extends TestCase
                 ->setUuid($submittedSupportingDocUuid)
                 ->setDocuments([$supportingDocument]);
 
+        $reportPdfDocument->setReportSubmission($reportPdfReportSubmission);
+        $supportingDocument->setReportSubmission($supportingDocReportSubmission);
+
         $reportSubmissions = [$reportPdfReportSubmission, $supportingDocReportSubmission];
 
         $report = (new Report())
@@ -59,7 +62,7 @@ class DocumentHelpers extends TestCase
         if ($documentType === 'reportPdf' && $submittedReportPdfUuid) {
             $report->setSubmittedDocuments([$reportPdfDocument]);
         } elseif ($documentType === 'supportingDocument' && $submittedSupportingDocUuid) {
-            $report->setSubmittedDocuments([$supportingDocument]);
+            $report->setSubmittedDocuments([$reportPdfDocument, $supportingDocument]);
         }
 
         $uploadedFile = FileHelpers::generateUploadedFile(

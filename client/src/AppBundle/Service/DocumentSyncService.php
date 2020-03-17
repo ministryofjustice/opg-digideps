@@ -87,7 +87,7 @@ class DocumentSyncService
             $body = $siriusResponse->getResponse() ?
                 (string) $siriusResponse->getResponse()->getBody() : (string) $siriusResponse->getMessage();
 
-            return $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_PERMANENT_ERROR, $body);
+            return $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_PERMANENT_ERROR,$body);
         }
 
         $data = json_decode(strval($siriusResponse->getBody()), true);
@@ -260,13 +260,15 @@ class DocumentSyncService
      */
     private function handleDocumentStatusUpdate(Document $document, string $status, ?string $errorMessage=null)
     {
+        $errorMessage = json_decode($errorMessage) ? json_decode($errorMessage) : $errorMessage;
+
         $data = is_null($errorMessage) ?
             ['syncStatus' => $status] : ['syncStatus' => $status, 'syncError' => $errorMessage];
 
         try {
             return $this->restClient->put(
                 sprintf('document/%s', $document->getId()),
-                json_encode(['data' => $data])
+               json_encode(['data' => $data])
             );
         } catch (Throwable $exception) {
             return $exception;

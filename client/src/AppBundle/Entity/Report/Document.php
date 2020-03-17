@@ -252,6 +252,16 @@ class Document implements DocumentInterface
     }
 
     /**
+     * @return Document
+     */
+    public function setReportSubmission(ReportSubmission $repostSubmission)
+    {
+        $this->reportSubmission = $repostSubmission;
+
+        return $this;
+    }
+
+    /**
      * @return string|null
      */
     public function getSynchronisationStatus(): ?string
