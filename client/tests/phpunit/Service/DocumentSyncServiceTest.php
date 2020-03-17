@@ -20,7 +20,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
-class SiriusDocumentsContractTest extends KernelTestCase
+class DocumentSyncServiceTest extends KernelTestCase
 {
     /** @var S3Storage&ObjectProphecy $s3Storage */
     private $s3Storage;
@@ -200,8 +200,8 @@ class SiriusDocumentsContractTest extends KernelTestCase
         $reportPdfSubmissionId = 9876;
         $supportingDocSubmissionId = 9877;
         $documentId = 6789;
-        $reportPdfSubmissionUuid = '5a8b1a26-8296-4373-ae61-f8d0b250e773';
-        $supportingDocSubmissionUuid = '5a8b1a26-8296-4373-ae61-f8d0b250e773';
+        $reportPdfSubmissionUuid = '5a8b1a26-8296-4373-ae61-f8d0b250e123';
+        $supportingDocSubmissionUuid = '5a8b1a26-8296-4373-ae61-f8d0b250e321';
         $fileContents = 'fake_contents';
 
         $submittedSupportingDocument = (new DocumentHelpers())->generateSubmittedSupportingDocument(
