@@ -4,6 +4,9 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Report\Document;
+use AppBundle\Exception\UnauthorisedException;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -103,5 +106,25 @@ class DocumentController extends RestController
         $this->getEntityManager()->flush();
 
         return ['id' => $id];
+    }
+
+    /**
+     * Get queued documents
+     *
+     * @Route("/document/queued", methods={"GET"})
+     *
+     * @return Document[]
+     */
+    public function getQueuedDocuments(Request $request, EntityManagerInterface $em): array
+    {
+        if (!$this->getAuthService()->isSecretValid($request)) {
+            throw new UnauthorisedException('client secret not accepted.');
+        }
+
+        $documentRepo = $em->getRepository(Document::class);
+        $serialisedGroups = $request->query->has('groups')
+            ? (array) $request->query->get('groups') : ['documents'];
+        $this->setJmsSerialiserGroups($serialisedGroups);
+        return $documentRepo->findBy(['synchronisationStatus' => Document::SYNC_STATUS_QUEUED]);
     }
 }

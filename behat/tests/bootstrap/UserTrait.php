@@ -94,7 +94,7 @@ trait UserTrait
      */
     public function iCreateTheUserWithEmailAndPostcode($ndrType, $role, $firstname, $lastname, $email, $postcode = '')
     {
-        $this->clickOnBehatLink('user-add-new');
+        $this->clickLink('Add new user');
         $this->fillField('admin_email', $email);
         $this->fillField('admin_firstname', $firstname);
         $this->fillField('admin_lastname', $lastname);

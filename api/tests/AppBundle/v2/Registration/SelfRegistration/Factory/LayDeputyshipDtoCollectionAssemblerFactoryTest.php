@@ -23,7 +23,7 @@ class LayDeputyshipDtoCollectionAssemblerFactoryTest extends TestCase
      */
     public function createsCasRecAssemblerWhenSourceIsNotValid()
     {
-        $assembler = (new LayDeputyshipDtoCollectionAssemblerFactory())->create([['source' => 'invalid']]);
+        $assembler = (new LayDeputyshipDtoCollectionAssemblerFactory())->create([['Source' => 'invalid']]);
         $this->assertInstanceOf(CasRecToLayDeputyshipDtoAssembler::class, $assembler->getLayDeputyshipDtoAssembler());
     }
 
@@ -32,7 +32,7 @@ class LayDeputyshipDtoCollectionAssemblerFactoryTest extends TestCase
      */
     public function createsCasRecAssemblerWhenSourceIsCasRec()
     {
-        $assembler = (new LayDeputyshipDtoCollectionAssemblerFactory())->create([['source' => 'casrec']]);
+        $assembler = (new LayDeputyshipDtoCollectionAssemblerFactory())->create([['Source' => 'casrec']]);
         $this->assertInstanceOf(CasRecToLayDeputyshipDtoAssembler::class, $assembler->getLayDeputyshipDtoAssembler());
     }
 
@@ -41,7 +41,7 @@ class LayDeputyshipDtoCollectionAssemblerFactoryTest extends TestCase
      */
     public function createsSiriusAssemblerWhenSourceIsSirius()
     {
-        $assembler = (new LayDeputyshipDtoCollectionAssemblerFactory())->create([['source' => 'sirius']]);
+        $assembler = (new LayDeputyshipDtoCollectionAssemblerFactory())->create([['Source' => 'sirius']]);
         $this->assertInstanceOf(SiriusToLayDeputyshipDtoAssembler::class, $assembler->getLayDeputyshipDtoAssembler());
     }
 }

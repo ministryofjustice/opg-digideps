@@ -145,8 +145,42 @@ class FixtureController extends AbstractController
                 "deputyEmail" => $request->query->get('email'),
                 "firstName" => $request->query->get('firstName'),
                 "lastName" => $request->query->get('lastName'),
-                "postCode" => $request->query->get('postCode')
+                "postCode" => $request->query->get('postCode'),
+                "activated" => $request->query->get('activated')
             ]));
+
+        return new Response();
+    }
+
+    /**
+     * @Route("/createClientAttachDeputy", methods={"GET"})
+     * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
+     */
+    public function createClientAndAttachToDeputy(Request $request, KernelInterface $kernel)
+    {
+        if ($kernel->getEnvironment() === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
+        try {
+            $this
+                ->getRestClient()
+                ->post("v2/fixture/createClientAttachDeputy",
+                    json_encode([
+                        "firstName" => $request->query->get('firstName'),
+                        "lastName" => $request->query->get('lastName'),
+                        "phone" => $request->query->get('phone'),
+                        "address" => $request->query->get('address'),
+                        "address2" => $request->query->get('address2'),
+                        "county" => $request->query->get('county'),
+                        "postCode" => $request->query->get('postCode'),
+                        "caseNumber" => $request->query->get('caseNumber'),
+                        "deputyEmail" => $request->query->get('deputyEmail')]
+                    )
+                );
+        } catch(\Throwable $e) {
+            throw $e;
+        }
 
         return new Response();
     }

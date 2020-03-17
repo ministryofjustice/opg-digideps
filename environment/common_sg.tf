@@ -13,6 +13,11 @@ data "aws_vpc_endpoint" "s3_endpoint" {
   vpc_id       = data.aws_vpc.vpc.id
 }
 
+data "aws_security_group" "ssm_endpoint" {
+  tags   = { Name = "ssm_endpoint" }
+  vpc_id = data.aws_vpc.vpc.id
+}
+
 locals {
   common_sg_rules = {
     ecr = {

@@ -46,3 +46,9 @@ services:
     AppBundle\Service\Client\Sirius\SiriusApiGatewayClient:
         class: AppBundle\Service\Client\Sirius\SiriusApiGatewayClient
         arguments: ['@guzzle_api_gateway_client', '%env(SIRIUS_API_BASE_URI)%']
+
+    Aws\Ssm\SsmClient:
+        arguments: ["%ssm_client_params%"]
+
+    AppBundle\Service\FeatureFlagService:
+        arguments: ['@Aws\Ssm\SsmClient', '%env(FEATURE_FLAG_PREFIX)%']

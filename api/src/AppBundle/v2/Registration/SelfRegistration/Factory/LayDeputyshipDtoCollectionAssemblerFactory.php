@@ -26,16 +26,16 @@ class LayDeputyshipDtoCollectionAssemblerFactory
     private function determineSource(array $postedData)
     {
         // Absence of a source implies it is from CasRec.
-        if (!isset($postedData[0]['source'])) {
+        if (!isset($postedData[0]['Source'])) {
             return CasRec::CASREC_SOURCE;
         }
 
         // Not expected, but if invalid source, fallback to casrec, for now at least.
-        if (!in_array($postedData[0]['source'], CasRec::validSources())) {
+        if (!in_array($postedData[0]['Source'], CasRec::validSources())) {
             return CasRec::CASREC_SOURCE;
         }
 
-        return $postedData[0]['source'];
+        return $postedData[0]['Source'];
     }
 
     private function buildAssemblerBySourceType(string $source): LayDeputyshipDtoAssemblerInterface

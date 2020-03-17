@@ -4,10 +4,11 @@ namespace AppBundle\Service\Mailer;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
 use AppBundle\Model as ModelDir;
 use AppBundle\Model\FeedbackReport;
-use Symfony\Component\Intl\Intl;
+use AppBundle\Service\IntlService;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -23,6 +24,8 @@ class MailFactory
     const GENERAL_FEEDBACK_TEMPLATE_ID = '63a25dfa-116f-4991-b7c4-35a79ac5061e';
     const REPORT_SUBMITTED_CONFIRMATION_TEMPLATE_ID = '2f8fff09-5a71-446a-a220-d8a3dc78fa42';
     const NDR_SUBMITTED_CONFIRMATION_TEMPLATE_ID = '96fcb7e1-d80f-4e0e-80c8-2c1237af8b10';
+    const CLIENT_DETAILS_CHANGE_TEMPLATE_ID = '258aaf2d-076b-4b5c-a386-f3551c5f3945';
+    const DEPUTY_DETAILS_CHANGE_TEMPLATE_ID = '6469b39b-6ace-4f93-9e80-6152627e0d36';
 
     const NOTIFY_FROM_EMAIL_ID = 'db930cb2-2153-4e2a-b3d0-06f7c7f92f37';
 
@@ -51,10 +54,16 @@ class MailFactory
      */
     private $baseURLs;
 
+    /**
+     * @var IntlService
+     */
+    private $intlService;
+
     public function __construct(
         TranslatorInterface $translator,
         RouterInterface $router,
         EngineInterface $templating,
+        IntlService $intlService,
         array $emailParams,
         array $baseURLs
     )
@@ -64,6 +73,7 @@ class MailFactory
         $this->templating = $templating;
         $this->emailParams = $emailParams;
         $this->baseURLs = $baseURLs;
+        $this->intlService = $intlService;
     }
 
     /**
@@ -269,7 +279,6 @@ class MailFactory
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('feedbackForm.fromName'))
             ->setToEmail($this->emailParams['feedback_send_to_address'])
-            ->setToName($this->translate('feedbackForm.toName'))
             ->setTemplate(self::GENERAL_FEEDBACK_TEMPLATE_ID)
             ->setParameters($notifyParams);
     }
@@ -290,44 +299,58 @@ class MailFactory
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('feedbackForm.fromName'))
             ->setToEmail($this->emailParams['feedback_send_to_address'])
-            ->setToName($this->translate('feedbackForm.toName'))
             ->setTemplate(self::POST_SUBMISSION_FEEDBACK_TEMPLATE_ID)
             ->setParameters($notifyParams);
     }
 
-
-    /**
-     * @param string $response
-     *
-     * @return ModelDir\Email
-     */
-    public function createAddressUpdateEmail($response, User $user, $type)
+    public function createUpdateClientDetailsEmail(Client $client): ModelDir\Email
     {
-        if ($type === 'deputy') {
-            $countryCode = $response->getAddressCountry();
-        } else {
-            $countryCode = $response->getCountry();
-        }
+        $email = (new ModelDir\Email())
+          ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
+          ->setFromName($this->translator->trans('client.fromName', [], 'email'))
+          ->setSubject($this->translator->trans('client.subject', [], 'email'))
+          ->setToEmail($this->emailParams['update_send_to_address'])
+          ->setTemplate(self::CLIENT_DETAILS_CHANGE_TEMPLATE_ID);
 
-        $countryName = Intl::getRegionBundle()->getCountryName($countryCode);
-
-        $viewParams = [
-            'response' => $response,
-            'countryName' => $countryName,
-            'caseNumber' => $user->getClients()[0]->getCaseNumber(),
-            'userRole' => $user->getRoleFullName()
+        $notifyParams = [
+            'caseNumber' => $client->getCaseNumber(),
+            'fullName' => $client->getFullName(),
+            'address' => $client->getAddress(),
+            'address2' => $client->getAddress2(),
+            'address3' => $client->getCounty(),
+            'postcode' =>$client->getPostcode(),
+            'countryName' => $this->intlService->getCountryNameByCountryCode($client->getCountry()),
+            'phone' => $client->getPhone(),
         ];
 
-        $template = 'AppBundle:Email:address-update-' . $type . '.html.twig';
+        $email->setParameters($notifyParams);
 
-        $email = new ModelDir\Email();
-        $email
-            ->setFromEmail($this->emailParams['from_email'])
-            ->setFromName($this->translate('addressUpdateForm.' . $type . '.fromName'))
+        return $email;
+    }
+
+    public function createUpdateDeputyDetailsEmail(User $deputy): ModelDir\Email
+    {
+        $email = (new ModelDir\Email())
+            ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
+            ->setFromName($this->translator->trans('client.fromName', [], 'email'))
+            ->setSubject($this->translator->trans('client.subject', [], 'email'))
             ->setToEmail($this->emailParams['update_send_to_address'])
-            ->setToName($this->translate('addressUpdateForm.' . $type . '.toName'))
-            ->setSubject($this->translate('addressUpdateForm.' . $type . '.subject'))
-            ->setBodyHtml($this->templating->render($template, $viewParams));
+            ->setTemplate(self::DEPUTY_DETAILS_CHANGE_TEMPLATE_ID);
+
+        $notifyParams = [
+            'caseNumber' => $deputy->getFirstClient()->getCaseNumber(),
+            'fullName' => $deputy->getFullName(),
+            'address' => $deputy->getAddress1(),
+            'address2' => $deputy->getAddress2() !== null ? $deputy->getAddress2() : 'Not provided',
+            'address3' => $deputy->getAddress3() !== null ? $deputy->getAddress3() : 'Not provided',
+            'postcode' =>$deputy->getAddressPostcode(),
+            'countryName' => $this->intlService->getCountryNameByCountryCode($deputy->getAddressCountry()),
+            'phone' => $deputy->getPhoneMain(),
+            'altPhoneNumber' => $deputy->getPhoneAlternative() !== null ? $deputy->getPhoneAlternative() : 'Not provided',
+            'email' => $deputy->getEmail(),
+        ];
+
+        $email->setParameters($notifyParams);
 
         return $email;
     }

@@ -123,15 +123,17 @@ class SettingsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $formData = $form->getData();
+            $deputy = $form->getData();
 
             if ($form->has('removeAdmin') && !empty($form->get('removeAdmin')->getData())) {
                 $newRole = $this->determineNoAdminRole();
                 $user->setRoleName($newRole);
-                $request->getSession()->getFlashBag()->add('notice', 'For security reasons you have been logged out because you have changed your admin rights. Please log in again below');
+
+                $this->addFlash('notice', 'For security reasons you have been logged out because you have changed your admin rights. Please log in again below');
+
                 $redirectRoute = $this->generateUrl('logout');
             } else {
-                $request->getSession()->getFlashBag()->add('notice', 'Your account details have been updated');
+                $this->addFlash('notice', 'Your account details have been updated');
 
                 if ('declaration' === $request->get('from') && null !== $request->get('rid')) {
                     $redirectRoute = $this->generateUrl('report_declaration', ['reportId' => $request->get('rid')]);
@@ -143,12 +145,13 @@ class SettingsController extends AbstractController
             }
 
             try {
-                $this->getRestClient()->put('user/' . $user->getId(), $formData, $jmsPutGroups);
+                $this->getRestClient()->put('user/' . $user->getId(), $deputy, $jmsPutGroups);
 
                 if ($user->isLayDeputy()) {
-                    $groups = ['user-clients', 'client'];
-                    $addressUpdateEmail = $this->getMailFactory()->createAddressUpdateEmail($form->getData(), $this->getUserWithData($groups), 'deputy');
-                    $this->getMailSender()->send($addressUpdateEmail, ['html']);
+                    $hydratedDeputy = $this->getUserWithData(['user-clients', 'client']);
+
+                    $updateDeputyDetailsEmail = $this->getMailFactory()->createUpdateDeputyDetailsEmail($hydratedDeputy);
+                    $this->getMailSender()->send($updateDeputyDetailsEmail, ['html']);
                 }
 
                 return $this->redirect($redirectRoute);

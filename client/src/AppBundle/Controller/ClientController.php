@@ -73,8 +73,8 @@ class ClientController extends AbstractController
             $user = $this->getUserWithData(['user-clients', 'client']);
 
             if ($user->isLayDeputy()) {
-                $addressUpdateEmail = $this->getMailFactory()->createAddressUpdateEmail($form->getData(), $user, 'client');
-                $this->getMailSender()->send($addressUpdateEmail, ['html']);
+                $updateClientDetailsEmail = $this->getMailFactory()->createUpdateClientDetailsEmail($clientUpdated);
+                $this->getMailSender()->send($updateClientDetailsEmail, ['html']);
             }
 
             $activeReport = $client->getActiveReport();

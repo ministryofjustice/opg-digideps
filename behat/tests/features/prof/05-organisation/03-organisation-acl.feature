@@ -13,7 +13,7 @@ Feature: Users can access the correct clients
   Scenario: New client is added to existing deputy and brand new organisation added
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     # upload new Prof client 50000051 attached to org
-    When I click on "admin-upload-pa"
+    When I go to admin page "/admin/org-csv-upload"
     And I attach the file "behat-prof-new-clients.csv" to "admin_upload_file"
     And I press "admin_upload_upload"
     Then the form should be valid

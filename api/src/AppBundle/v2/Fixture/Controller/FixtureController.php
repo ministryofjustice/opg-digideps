@@ -125,7 +125,8 @@ class FixtureController
         $deputy = $this->userFactory->create([
             'id' => $fromRequest['deputyEmail'],
             'deputyType' => $fromRequest['deputyType'],
-            'email' => $fromRequest['deputyEmail']
+            'email' => $fromRequest['deputyEmail'],
+            'activated'=> 'true',
         ]);
 
         $this->em->persist($deputy);
@@ -251,7 +252,7 @@ class FixtureController
         $this->em->persist($deputy);
         $this->em->flush();
 
-        return $this->buildSuccessResponse($fromRequest, 'User created', Response::HTTP_OK);
+        return $this->buildSuccessResponse($fromRequest, 'User created');
     }
 
     /**
@@ -289,6 +290,40 @@ class FixtureController
             'postCode' => $fromRequest['postCode'],
             'activated' => $fromRequest['activated']
         ]);
+
+        $this->em->persist($deputy);
+        $this->em->flush();
+
+        return $this->buildSuccessResponse($fromRequest, 'User created', Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/createClientAttachDeputy", methods={"POST"})
+     * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
+     */
+    public function createClientAndAttachToDeputy(Request $request)
+    {
+        $fromRequest = json_decode($request->getContent(), true);
+
+        $client = $this->clientFactory->create([
+            "firstName" => $fromRequest['firstName'],
+            "lastName" => $fromRequest['lastName'],
+            "phone" => $fromRequest['phone'],
+            "address" => $fromRequest['address'],
+            "address2" => $fromRequest['address2'],
+            "county" => $fromRequest['county'],
+            "postCode" => $fromRequest['postCode'],
+            "caseNumber" => $fromRequest['caseNumber'],
+        ]);
+
+        /** @var User $deputy */
+        $deputy = $this->em->getRepository(User::class)->findOneBy(['email' => $fromRequest['deputyEmail']]);
+
+        if ($deputy === null) {
+            return $this->buildNotFoundResponse(sprintf("Could not find user with email address '%s'", $fromRequest['deputyEmail']));
+        }
+
+        $deputy->addClient($client);
 
         $this->em->persist($deputy);
         $this->em->flush();

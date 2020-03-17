@@ -111,14 +111,12 @@ class MailSender implements MailSenderInterface
 
     /**
      * @param Email $email
-     * @param array $groups
      *
      * @throws \Exception
      *
-     * @return type
-     *
+     * @return bool
      */
-    private function sendNotify(Email $email)
+    private function sendNotify(Email $email): bool
     {
         try {
             $this->notifyClient->sendEmail(
