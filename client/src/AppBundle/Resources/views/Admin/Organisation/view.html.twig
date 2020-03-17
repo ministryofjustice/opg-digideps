@@ -7,6 +7,12 @@
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ organisation.name }}{% endblock %}
 
+{% block actions %}
+    <a href="{{ path('admin_organisation_edit', {'id': organisation.id}) }}" role="button" data-module="govuk-button" class="govuk-button govuk-button--secondary">
+        {{ (page ~ '.summary.editOrganisation') | trans }}
+    </a>
+{% endblock %}
+
 {% block supportTitleTop %}
     <span class="govuk-caption-xl">{{ (page ~ '.supportTitle') | trans }}</span>
 {% endblock %}
@@ -20,11 +26,6 @@
 {% endblock %}
 
 {% block pageContent %}
-
-    <a href="{{ path('admin_organisation_edit', {'id': organisation.id}) }}" role="button" data-module="govuk-button" class="govuk-button govuk-button--secondary">
-        {{ (page ~ '.summary.editOrganisation') | trans }}
-    </a>
-
     <dl class="govuk-summary-list govuk-summary-list--no-border">
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
