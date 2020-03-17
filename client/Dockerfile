@@ -4,7 +4,6 @@ WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
 COPY webpack.config.js .
-COPY .sass-lint.yml .
 COPY src src
 
 # Install NPM dependencies
