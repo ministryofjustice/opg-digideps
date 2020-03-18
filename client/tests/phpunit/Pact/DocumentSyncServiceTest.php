@@ -5,29 +5,51 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use AppBundle\Service\File\Storage\S3Storage;
 use DateTime;
+use DigidepsTests\Helpers\DocumentHelpers;
+use DigidepsTests\Helpers\SiriusHelpers;
+use JMS\Serializer\Serializer;
 use PhpPact\Consumer\InteractionBuilder;
 use PhpPact\Consumer\Matcher\Matcher;
 use PhpPact\Consumer\Model\ConsumerRequest;
 use PhpPact\Consumer\Model\ProviderResponse;
 use PhpPact\Standalone\MockService\MockServerEnvConfig;
-use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
-class SiriusDocumentsContractTest extends TestCase
+class SiriusDocumentsContractTest extends KernelTestCase
 {
     /**
-     * Example PACT test.
+     * As we have multiple callouts for the main syncDocument function to Digideps API and Sirius this test
+     * focuses purely on the Sirius callout to minimise complexity.
+     *
+     * @test
      *
      * @throws \Exception
      */
-    public function testSendReportDocument()
+    public function handleSiriusSync()
     {
         $matcher = new Matcher();
 
         $reportStartDate = new DateTime('2018-05-14');
         $reportEndDate = new DateTime('2019-05-13');
         $reportSubmittedDate = new DateTime('2019-06-20');
+        $reportSubmissionId = 9876;
+        $supportingDocSubmissionId = 9877;
+        $caseRef = '1234567T';
+
+        $submittedReportDocument = (new DocumentHelpers())->generateSubmittedReportDocument(
+            $caseRef,
+            $reportStartDate,
+            $reportEndDate,
+            $reportSubmittedDate,
+            $reportSubmissionId,
+            $supportingDocSubmissionId
+        );
 
         $exampleBody = '--boundary\r\nContent-Disposition: form-data; name="report"\r\nContent-Length: 185\r\n\r\n{"data":{"type":"reports","attributes":{"reporting_period_from":"2018-05-14","reporting_period_to":"2019-05-13","year":"2018","date_submitted":"2019-06-20T00:00:00+00:00","type":"PF"}}}\r\n--boundary\r\nContent-Disposition: form-data; name="report_file"\r\nContent-Length: 13\r\n\r\nuploaded_file_contents\r\n--boundary--\r\n';
 
@@ -50,10 +72,17 @@ class SiriusDocumentsContractTest extends TestCase
         $request = new ConsumerRequest();
         $request
             ->setMethod('POST')
-            ->setPath('/clients/27493727/reports')
-            ->setHeaders([
-                'Content-Type' => $matcher->regex('multipart/form-data; boundary=5872fc54a8fa5f5be65ee0af590d1ae813a1b091', 'multipart\/form-data; boundary=[0-9a-f]{32}')
-            ])
+            ->setPath(sprintf('/clients/%s/reports', $caseRef))
+            ->setHeaders(
+                [
+                    'Content-Type' =>
+                        $matcher->regex(
+                            'multipart/form-data; boundary=5872fc54a8fa5f5be65ee0af590d1ae813a1b091',
+                            'multipart\/form-data; boundary=[0-9a-f]{32}'
+                        ),
+                    ''
+                ]
+            )
             ->setBody($matcher->regex($exampleBody, $requestRegex));
 
         // Create your expected response from the provider.
@@ -86,25 +115,13 @@ class SiriusDocumentsContractTest extends TestCase
         // ------------------
 
         $s3Mock = self::prophesize(S3Storage::class);
-        $s3Mock->retrieve('test')->willReturn('fake_contents');
+        $siriusApiGatewayClient = self::prophesize(SiriusApiGatewayClient::class);
+        $restClient = self::prophesize(RestClient::class);
 
-        $sut = new DocumentSyncService($s3Mock->reveal());
+        $sut = new DocumentSyncService($s3Mock->reveal(), $siriusApiGatewayClient->reveal(), $restClient->reveal());
 
-        $client = new Client();
-        $client->setCaseNumber(27493727);
-
-        $report = new Report();
-        $report->setType(Report::TYPE_102);
-        $report->setClient($client);
-        $report->setStartDate($reportStartDate);
-        $report->setEndDate($reportEndDate);
-        $report->setSubmitDate($reportSubmittedDate);
-
-        $document = new Document();
-        $document->setReport($report);
-        $document->setStorageReference('test');
-
-        $result = $sut->syncDocument($document);
+        $content = 'fake_contents';
+        $result = $sut->handleSiriusSync($submittedReportDocument, $content);
 
         $builder->verify();
 

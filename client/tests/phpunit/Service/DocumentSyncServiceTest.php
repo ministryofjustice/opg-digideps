@@ -57,9 +57,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         $reportSubmittedDate = new DateTime('2019-06-20');
         $reportSubmissionId = 9876;
         $supportingDocSubmissionId = 9877;
-        $documentId = 6789;
         $reportPdfSubmissionUuid = '5a8b1a26-8296-4373-ae61-f8d0b250e123';
-        $supportingDocSubmissionUuid = '5a8b1a26-8296-4373-ae61-f8d0b250e321';
         $fileContents = 'fake_contents';
 
         $submittedReportDocument = (new DocumentHelpers())->generateSubmittedReportDocument(
@@ -68,11 +66,8 @@ class DocumentSyncServiceTest extends KernelTestCase
             $reportEndDate,
             $reportSubmittedDate,
             $reportSubmissionId,
-            $supportingDocSubmissionId,
-            $documentId,
-            $reportPdfSubmissionUuid,
-            $supportingDocSubmissionUuid
-            );
+            $supportingDocSubmissionId
+        );
 
         $this->s3Storage->retrieve('test')->willReturn($fileContents);
 
@@ -212,8 +207,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             $reportPdfSubmissionId,
             $supportingDocSubmissionId,
             $documentId,
-            $reportPdfSubmissionUuid,
-            $supportingDocSubmissionUuid
+            $reportPdfSubmissionUuid
         );
 
         $this->s3Storage->retrieve('test')->willReturn($fileContents);
@@ -224,7 +218,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         $siriusDocumentUpload = SiriusHelpers::generateSiriusSupportingDocumentUpload($supportingDocSubmissionId);
 
         $this->siriusApiGatewayClient
-            ->sendSupportingDocument($siriusDocumentUpload, 'fake_contents', $supportingDocSubmissionUuid)
+            ->sendSupportingDocument($siriusDocumentUpload, 'fake_contents', $reportPdfSubmissionUuid)
             ->shouldBeCalled()
             ->willReturn($successResponse);
 
@@ -246,7 +240,6 @@ class DocumentSyncServiceTest extends KernelTestCase
         $supportingDocSubmissionId = 9877;
         $documentId = 6789;
         $reportPdfSubmissionUuid = null;
-        $supportingDocSubmissionUuid = null;
 
         $submittedSupportingDocument = (new DocumentHelpers())->generateSubmittedSupportingDocument(
             '1234567T',
@@ -256,8 +249,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             $reportPdfSubmissionId,
             $supportingDocSubmissionId,
             $documentId,
-            $reportPdfSubmissionUuid,
-            $supportingDocSubmissionUuid
+            $reportPdfSubmissionUuid
         );
 
         $this->restClient->put('document/6789', json_encode(

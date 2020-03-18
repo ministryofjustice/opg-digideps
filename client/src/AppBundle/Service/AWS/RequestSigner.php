@@ -2,16 +2,30 @@
 
 namespace AppBundle\Service\AWS;
 
-use Aws\Credentials\CredentialProvider;
 use Aws\Signature\SignatureV4;
 use GuzzleHttp\Psr7\Request;
 
 class RequestSigner
 {
+    /**
+     * @var DefaultCredentialProvider
+     */
+    private $credentialProvider;
+
+    /**
+     * @var SignatureV4Signer
+     */
+    private $signer;
+
+    public function __construct(DefaultCredentialProvider $credentialProvider, SignatureV4Signer $signer)
+    {
+        $this->credentialProvider = $credentialProvider;
+        $this->signer = $signer;
+    }
+
     public function signRequest(Request $request, string $service)
     {
-        $provider = CredentialProvider::defaultProvider();
-        $signer = new SignatureV4($service, 'eu-west-1');
-        return $signer->signRequest($request, $provider()->wait());
+        $provider = $this->credentialProvider->getProvider();
+        return $this->signer->signRequest($request, $provider()->wait(), $service);
     }
 }
