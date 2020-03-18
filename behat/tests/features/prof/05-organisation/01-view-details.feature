@@ -26,7 +26,7 @@ Feature: Users can view their organisations
     When I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     When I go to admin page "/admin/organisations"
     And I follow "Leever Partners"
-    And I follow "Add someone to this organisation"
+    And I follow "Add user"
     And I fill in "organisation_add_user_email" with "main.contact@leever.example"
     And I press "Find user"
     And I press "Add user to organisation"
