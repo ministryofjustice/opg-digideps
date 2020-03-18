@@ -11,7 +11,7 @@ RUN npm install
 
 # Check linting
 RUN npm run lint
-RUN npm audit
+RUN npm audit --production
 
 # Build assets
 RUN NODE_ENV=production npm run build
@@ -74,7 +74,6 @@ RUN mkdir -p var/cache \
   && chown -R www-data var
 
 CMD confd -onetime -backend env \
-  && su-exec www-data php -d memory_limit=-1 app/console cache:warmup \
   && waitforit -address=$API_URL/manage/availability -timeout=$TIMEOUT -insecure \
   && php-fpm -D \
   && nginx
@@ -93,6 +92,9 @@ COPY --from=webpack /app/web/assets web/assets
 COPY --from=webpack /app/web/images web/images
 COPY phpstan.neon .
 COPY docker/confd /etc/confd
+
+# Prebuild cache
+RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
 # Check for security issues
 RUN su-exec www-data php app/console security:check
