@@ -31,6 +31,7 @@ class ReportSubmissionRepository extends EntityRepository
     ) {
         $statusFilters = [
             'new' => 'rs.archivedBy IS NULL',
+            'pending' => 'rs.archivedBy IS NULL',
             'archived' => 'rs.archivedBy IS NOT NULL',
         ];
 

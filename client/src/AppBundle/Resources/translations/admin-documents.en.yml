@@ -2,8 +2,9 @@ page:
   htmlTitle: Administration - Submissions
   pageTitle: Submitted reports and supporting documents
   tabs:
-    new.label: "New"
-    archived.label: "Archived"
+    new.label: New
+    pending.label: Pending
+    archived.label: Synchronised
   searchForm:
     search:
       label: Client, deputy or case number
