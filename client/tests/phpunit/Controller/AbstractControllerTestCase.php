@@ -2,82 +2,77 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\User;
-use AppBundle\Service\Client\RestClient;
-use Prophecy\Argument;
-use Prophecy\Prophecy\ObjectProphecy;
+use Mockery as m;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Role\Role;
+use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractControllerTestCase extends WebTestCase
 {
-    /** @var Client */
+    protected $report;
     protected $client;
-
-    /** @var RestClient|ObjectProphecy */
     protected $restClient;
+
+    /**
+     * @var Client
+     */
+    protected $frameworkBundleClient;
 
     public function setUp(): void
     {
-        $this->client = static::createClient(['environment' => 'unittest', 'debug' => false]);
-        $this->client->disableReboot();
+        $this->frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => true]);
 
-        $this->restClient = $this->injectProphecyService(RestClient::class, function() {}, ['rest_client']);
+        $this->report = m::mock('AppBundle\Entity\Report\Report')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getId')->andReturn(1)
+            ->shouldReceive('getDecisions')->andReturn([])
+            ->shouldReceive('getSubmitted')->andReturn(false)
+            ->shouldReceive('getClient')->andReturn(1)
+            ->shouldReceive('getReasonForNoDecisions')->andReturn('')
+            ->getMock();
+
+        $this->client = m::mock('AppBundle\Entity\Client')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getId')->andReturn(1)
+            ->getMock();
+
+        $this->restClient = m::mock('AppBundle\Service\Client\RestClient')
+            ->shouldReceive('get')->withArgs(['report/1', 'Report\\Report', m::any()])->andReturn($this->report)
+            ->shouldReceive('get')->withArgs(['client/1', 'Client', m::any()])->andReturn($this->client)
+            ->getMock();
+
+        static::$kernel->getContainer()->set('rest_client', $this->restClient);
     }
 
     /**
-     * Create a prophet for a Symfony service and overwrite it in the client container
+     * @param string $method
+     * @param string $uri
+     * @param array  $parameters
+     * @param array  $files
+     * @param array  $server
+     *
+     * @return Response
      */
-    protected function injectProphecyService(string $className, callable $callback = null, array $aliases = []): ObjectProphecy
+    protected function ajaxRequest($method, $uri, array $parameters = [], array $files = [], array $server = [])
     {
-        /** @var Container $container */
-        $container = $this->client->getContainer();
+        $this->frameworkBundleClient->request($method, $uri, $parameters, $files, ['CONTENT_TYPE' => 'application/json', 'HTTP_X-Requested-With' => 'XMLHttpRequest'] + $server);
 
-        $prophet = self::prophesize($className);
-        $container->set($className, $prophet->reveal());
-
-        foreach ($aliases as $alias) {
-            $container->set($alias, $prophet->reveal());
-        }
-
-        if (is_callable($callback)) {
-            call_user_func($callback, $prophet);
-        }
-
-        return $prophet;
+        return $this->frameworkBundleClient->getResponse();
     }
 
     /**
-     * Provide the services necessary to mock the currently logged in user
+     * @param string $method
+     * @param string $uri
+     * @param array  $parameters
+     * @param array  $files
+     * @param array  $server
+     *
+     * @return Response
      */
-    protected function mockLoggedInUser(array $roleNames, User $user = null): void
+    protected function httpRequest($method, $uri, array $parameters = [], array $files = [], array $server = [])
     {
-        if (is_null($user)) {
-            $user = new User();
-        }
+        $this->frameworkBundleClient->request($method, $uri, $parameters, $files, $server);
 
-        if (is_null($user->getId())) {
-            $user->setId(1);
-        }
-
-        $roles = array_map(function ($roleName) {
-            return new Role($roleName);
-        }, $roleNames);
-
-        $token = new UsernamePasswordToken($user, 'password', 'mock', $roles);
-
-        // Mock token storage to return our fake token
-        $this->injectProphecyService(TokenStorage::class, function($tokenStorage) use ($token) {
-            $tokenStorage->getToken()->willReturn($token);
-            $tokenStorage->setToken(Argument::cetera())->willReturn();
-        }, ['security.token_storage']);
-
-        // Respond to calls to hydrate user details from API
-        $this->restClient->setLoggedUserId(1)->willReturn($this->restClient->reveal());
-        $this->restClient->get('user/1', Argument::cetera())->willReturn($user);
+        return $this->frameworkBundleClient->getResponse();
     }
 }
