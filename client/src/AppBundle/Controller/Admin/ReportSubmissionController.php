@@ -81,10 +81,11 @@ class ReportSubmissionController extends AbstractController
             ] : [self::ACTION_DOWNLOAD],
             'counts'  => [
                 'new'      => $ret['counts']['new'],
+                'pending'  => $ret['counts']['pending'],
                 'archived' => $ret['counts']['archived'],
             ],
             'nOfdownloadableSubmissions' => $nOfdownloadableSubmissions,
-            'isNewPage' => $isNewPage,
+            'currentTab' => $currentFilters['status'],
         ];
     }
 
