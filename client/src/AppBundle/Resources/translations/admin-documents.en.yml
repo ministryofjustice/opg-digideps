@@ -16,9 +16,10 @@ page:
   resultsTable:
     header:
       all: All
-      clientAndCaseNo: Client and case no
+      client: Client
+      caseNumber: Case number
       deputy: Deputy
-      period: Period
+      period: Reporting period
       documents: Documents
       submitted: Submitted
       user: User
