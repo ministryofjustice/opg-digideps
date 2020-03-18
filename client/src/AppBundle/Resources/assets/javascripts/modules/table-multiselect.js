@@ -2,48 +2,39 @@
 const checkedClass = 'opg-table__row--checked'
 
 module.exports = function () {
-  const $disabledButtons = $('[data-js="disabled-button"]')
-  $disabledButtons.prop('disabled', true);
+  const $checkboxAll = $('[data-js="multiselect-checkbox-all"]')
+  const $checkboxes = $('[data-js="multiselect-checkbox"]')
+  const $selectedCounter = $('[data-js="multiselect-selected-count"]')
+  const $disabledButtons = $('[data-js="multiselect-disabled-button"]')
+
+  $disabledButtons.prop('disabled', true)
+
+  function updateText () {
+    const selectedCount = $checkboxes.filter(':checked').length
+    const caseString = selectedCount === 1 ? ' case' : ' cases'
+    $selectedCounter.text(selectedCount + caseString)
+  }
 
   // Select all checkbox change
-  $('.js-checkbox-all').change(function () {
-    $disabledButtons.prop('disabled', false)
+  $checkboxAll.change(function () {
+    const isChecked = $checkboxAll.prop('checked')
 
-    // Change all '.js-checkbox' checked status
-    $('.js-checkbox').prop('checked', $(this).prop('checked'))
+    $checkboxes.prop('checked', isChecked)
+    $checkboxes.parents('tr').toggleClass(checkedClass, isChecked)
+    $disabledButtons.prop('disabled', !isChecked)
 
-    // Toggle checked class on other checkboxes
-    if ($(this).prop('checked')) {
-      $('.js-checkbox').parents('tr').addClass(checkedClass)
-    } else {
-      $('.js-checkbox').parents('tr').removeClass(checkedClass)
-      $disabledButtons.prop('disabled', true)
-    }
-
-    var caseString = $('.js-checkbox:checked').length === 1 ? ' case' : ' cases'
-    $('#numberOfCases').text($('.js-checkbox:checked').length + caseString)
+    updateText()
   })
 
-  // '.js-checkbox' change
-  $('.js-checkbox').change(function () {
-    $disabledButtons.prop('disabled', false)
+  // Individual checkbox change
+  $checkboxes.change(function (e) {
+    const $currentCheckbox = $(e.currentTarget)
+    const selectedCount = $checkboxes.filter(':checked').length
 
-    $(this).parents('tr').toggleClass(checkedClass)
+    $currentCheckbox.parents('tr').toggleClass(checkedClass)
+    $disabledButtons.prop('disabled', selectedCount === 0)
+    $checkboxAll.prop('checked', selectedCount === $checkboxes.length)
 
-    // uncheck 'select all', if one of the listed checkbox item is unchecked
-    if ($(this).prop('checked') === false) {
-      // change 'select all' checked status to false
-      $('.js-checkbox-all').prop('checked', false)
-    }
-
-    // check 'select all' if all checkbox items are checked
-    if ($('.js-checkbox:checked').length === $('.js-checkbox').length) {
-      $('.js-checkbox-all').prop('checked', true)
-    } else if ($('.js-checkbox:checked').length === 0) {
-      $disabledButtons.prop('disabled', true)
-    }
-
-    var caseString = $('.js-checkbox:checked').length === 1 ? ' case' : ' cases'
-    $('#numberOfCases').text($('.js-checkbox:checked').length + caseString)
+    updateText()
   })
 }
