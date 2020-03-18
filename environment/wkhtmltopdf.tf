@@ -70,6 +70,15 @@ locals {
       "mountPoints": [],
       "name": "wkhtmltopdf",
       "volumesFrom": [],
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "curl --fail -X POST -H 'Content-Type:application/json' -d '{\"contents\":\"dGVzdA==\"}' -o /dev/null http://localhost:80/ || exit 1"
+        ],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3
+      },
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {

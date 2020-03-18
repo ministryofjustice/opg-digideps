@@ -62,6 +62,10 @@ resource "aws_rds_cluster" "api" {
   enable_http_endpoint         = local.account.always_on ? false : true
   preferred_maintenance_window = "sun:01:00-sun:01:30"
 
+  scaling_configuration {
+    seconds_until_auto_pause = 900
+  }
+
   depends_on = [aws_cloudwatch_log_group.api_cluster]
 
   tags = merge(
