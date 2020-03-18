@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@ministryofjustice/frontend": "0.0.17-alpha",
-    "govuk-frontend": "^3.0.0"
+    "govuk-frontend": "^3.6.0"
   },
   "babel": {
     "presets": [

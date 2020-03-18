@@ -129,9 +129,6 @@ class ReportSubmissionControllerTest extends AbstractTestController
         // check pagination and limit
         $submissions = $reportsGetAllRequest(['status'=>'new', 'q'=>'test'])['records'];
         $this->assertEquals(['1000000', '1000001','1000002','1000003'], $this->getOrderedCaseNumbersFromSubmissions($submissions));
-
-        $submissions = $reportsGetAllRequest(['status'=>'new', 'q'=>'test', 'offset'=>1, 'limit'=>2])['records'];
-        $this->assertEquals(['1000001', '1000002'], $this->getOrderedCaseNumbersFromSubmissions($submissions));
     }
 
     private function getOrderedCaseNumbersFromSubmissions($submissions)
