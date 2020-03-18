@@ -59,4 +59,23 @@ class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
         $this->assertInstanceOf(LayDeputyshipDtoCollection::class, $this->result);
         $this->assertEquals(2, $this->result->count());
     }
+
+    /** @test */
+    public function assembleFromDoesNotAddInvalidNodesToItsCollection(): void
+    {
+        $input = [
+            ['alpha' => 'not-valid-enough-to-create-a-DTO'],
+            ['beta' => 'beta-data']
+        ];
+
+        $this
+            ->layDeputyshipDtoAssembler
+            ->expects($this->exactly(count($input)))
+            ->method('assembleFromArray')
+            ->withConsecutive([['alpha' => 'not-valid-enough-to-create-a-DTO']], [['beta' => 'beta-data']])
+            ->willReturnOnConsecutiveCalls(null, new LayDeputyshipDto());
+
+        $this->result = $this->sut->assembleFromArray($input);
+        $this->assertEquals(1, $this->result->count());
+    }
 }

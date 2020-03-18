@@ -296,7 +296,7 @@ class ReportController extends AbstractController
         }
 
         foreach (['dueDateCustom', 'startDate', 'endDate'] as $field) {
-            $form->has($field) && $form[$field]->setData(new \DateTime($dataFromUrl[$field]));
+            $form->has($field) && array_key_exists($field, $dataFromUrl) && $form[$field]->setData(new \DateTime($dataFromUrl[$field]));
         }
 
         if ($form->has('unsubmittedSection') && isset($dataFromUrl['unsubmittedSectionsList'])) {
@@ -370,8 +370,8 @@ class ReportController extends AbstractController
         $report = $this->getReport(intval($id), ['report-checklist', 'action']);
 
         $sessionData = $request->getSession()->get('report-management-changes');
-        if (null === $sessionData || $this->insufficientDataInSession($sessionData)) {
-            $this->redirect($this->generateUrl('admin_report_manage', ['id'=>$report->getId()]));
+        if (null === $sessionData || !$this->sufficientDataInSession($sessionData)) {
+            return $this->redirect($this->generateUrl('admin_report_manage', ['id'=>$report->getId()]));
         }
 
         $form = $this->createForm(ManageReportConfirmType::class, $report);
@@ -407,7 +407,7 @@ class ReportController extends AbstractController
      * @param array $sessionData
      * @return bool
      */
-    private function insufficientDataInSession(array $sessionData): bool
+    private function sufficientDataInSession(array $sessionData): bool
     {
         return
             array_key_exists('type', $sessionData) &&
