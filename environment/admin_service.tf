@@ -49,6 +49,15 @@ locals {
       "protocol": "tcp"
     }],
     "volumesFrom": [],
+    "healthCheck": {
+      "command": [
+        "CMD-SHELL",
+        "curl -f -k https://localhost:443/manage/elb || exit 1"
+      ],
+      "interval": 30,
+      "timeout": 5,
+      "retries": 3
+    },
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {

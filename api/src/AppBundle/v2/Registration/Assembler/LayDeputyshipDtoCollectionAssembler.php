@@ -2,6 +2,7 @@
 
 namespace AppBundle\v2\Registration\Assembler;
 
+use AppBundle\v2\Registration\DTO\LayDeputyshipDto;
 use AppBundle\v2\Registration\DTO\LayDeputyshipDtoCollection;
 
 class LayDeputyshipDtoCollectionAssembler
@@ -27,7 +28,9 @@ class LayDeputyshipDtoCollectionAssembler
 
         foreach ($data as $uploadRow) {
             $item = $this->layDeputyshipDtoAssembler->assembleFromArray($uploadRow);
-            $collection->append($item);
+            if ($item instanceof LayDeputyshipDto) {
+                $collection->append($item);
+            }
         }
 
         return $collection;
