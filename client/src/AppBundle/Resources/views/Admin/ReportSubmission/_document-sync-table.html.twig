@@ -1,0 +1,54 @@
+{% trans_default_domain "admin-documents" %}
+
+{% macro syncStatus(status, document) %}
+    {% if status == 'QUEUED' %}
+        <span style="color:darkgray">Queued</span>
+    {% elseif status == 'IN_PROGRESS' %}
+        <span style="color:darkgray">In progress</span>
+    {% elseif status == 'SUCCESS' %}
+        <strong style="color:green">Success</strong>
+    {% elseif status == 'PERMANENT_ERROR' %}
+        <strong style="color:red">Permanent fail</strong>
+    {% elseif status == 'TEMPORARY_ERROR' %}
+        <span style="color:brown">Temporary fail</span>
+    {% else %}
+
+    {% endif %}
+{% endmacro %}
+
+<div class="govuk-inset-text">
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Document</th>
+                <th scope="col" class="govuk-table__header govuk-!-font-size-14"><span class="govuk-visually-hidden">Download</span></th>
+                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Status</th>
+                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Information</th>
+                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Time</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            {% for document in documents %}
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell govuk-!-font-size-14">{{ document.fileName }}</td>
+                    <td class="govuk-table__cell govuk-!-font-size-14">
+                        <a href="{{ path('admin_document_download', { submissionId: reportSubmission.id, documentId: document.id }) }}">
+                            {{- 'page.postactions.download' | trans -}}
+                        </a>
+                    </td>
+                    <td class="govuk-table__cell govuk-!-font-size-14">
+                        {{ _self.syncStatus(document.synchronisationStatus, document) }}
+                    </td>
+                    <td class="govuk-table__cell govuk-!-font-size-14">
+                        {% if document.synchronisationError %}
+                            <strong>Error:</strong> {{ document.synchronisationError }}
+                        {% endif %}
+                    </td>
+                    <td class="govuk-table__cell govuk-!-font-size-14">
+                        {{ document.synchronisationTime | date('j F Y g:ia') }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
