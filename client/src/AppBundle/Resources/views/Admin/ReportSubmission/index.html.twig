@@ -194,6 +194,12 @@
                             {% endif %}
                         </td>
                     </tr>
+
+                    <tr>
+                        <td colspan="7">
+                            {{ include('AppBundle:Admin/ReportSubmission:_document-sync-table.html.twig', { reportSubmission: reportSubmission, documents: reportSubmission.documents }) }}
+                        </td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>
