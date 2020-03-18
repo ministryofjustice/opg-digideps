@@ -1,18 +1,23 @@
 /* globals $ */
+const checkedClass = 'opg-table__row--checked'
+
 module.exports = function () {
+  const $disabledButtons = $('[data-js="disabled-button"]')
+  $disabledButtons.prop('disabled', true);
+
   // Select all checkbox change
   $('.js-checkbox-all').change(function () {
-    $('.js-disabled').removeAttr('disabled')
+    $disabledButtons.prop('disabled', false)
 
     // Change all '.js-checkbox' checked status
     $('.js-checkbox').prop('checked', $(this).prop('checked'))
 
     // Toggle checked class on other checkboxes
     if ($(this).prop('checked')) {
-      $('.js-checkbox').parents('tr').addClass('checked')
+      $('.js-checkbox').parents('tr').addClass(checkedClass)
     } else {
-      $('.js-checkbox').parents('tr').removeClass('checked')
-      $('.js-disabled').attr('disabled', 'disabled')
+      $('.js-checkbox').parents('tr').removeClass(checkedClass)
+      $disabledButtons.prop('disabled', true)
     }
 
     var caseString = $('.js-checkbox:checked').length === 1 ? ' case' : ' cases'
@@ -21,9 +26,9 @@ module.exports = function () {
 
   // '.js-checkbox' change
   $('.js-checkbox').change(function () {
-    $('.js-disabled').removeAttr('disabled')
+    $disabledButtons.prop('disabled', false)
 
-    $(this).parents('tr').toggleClass('checked')
+    $(this).parents('tr').toggleClass(checkedClass)
 
     // uncheck 'select all', if one of the listed checkbox item is unchecked
     if ($(this).prop('checked') === false) {
@@ -35,7 +40,7 @@ module.exports = function () {
     if ($('.js-checkbox:checked').length === $('.js-checkbox').length) {
       $('.js-checkbox-all').prop('checked', true)
     } else if ($('.js-checkbox:checked').length === 0) {
-      $('.js-disabled').attr('disabled', 'disabled')
+      $disabledButtons.prop('disabled', true)
     }
 
     var caseString = $('.js-checkbox:checked').length === 1 ? ' case' : ' cases'
