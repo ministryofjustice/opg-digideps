@@ -7,7 +7,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\MultipartStream;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
-use Symfony\Component\Serializer\Serializer;
+use JMS\Serializer\Serializer;
 
 class SiriusApiGatewayClient
 {
@@ -110,6 +110,8 @@ class SiriusApiGatewayClient
         ], $body);
 
         // Sign the request with an AWS Authorization header.
-        return $this->requestSigner->signRequest($request, 'execute-api');
+        $signedRequest = $this->requestSigner->signRequest($request, 'execute-api');
+        print_r($signedRequest);
+        return $signedRequest;
     }
 }

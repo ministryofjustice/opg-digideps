@@ -23,8 +23,7 @@ class DocumentHelpers extends TestCase
         int $reportPdfSubmissionId = 9876,
         int $supportingDocSubmissionId = 9877,
         int $documentId = 6789,
-        ?string $submittedReportPdfUuid = 'uuid-123-goes-here',
-        ?string $submittedSupportingDocUuid = 'uuid-321-goes-here',
+        ?string $submittedReportPdfUuid = null,
         string $storageReference = 'test'
     )
     {
@@ -42,7 +41,6 @@ class DocumentHelpers extends TestCase
         $supportingDocReportSubmission =
             (new ReportSubmission())
                 ->setId($supportingDocSubmissionId)
-                ->setUuid($submittedSupportingDocUuid)
                 ->setDocuments([$supportingDocument]);
 
         $reportPdfDocument->setReportSubmission($reportPdfReportSubmission);
@@ -61,7 +59,7 @@ class DocumentHelpers extends TestCase
 
         if ($documentType === 'reportPdf' && $submittedReportPdfUuid) {
             $report->setSubmittedDocuments([$reportPdfDocument]);
-        } elseif ($documentType === 'supportingDocument' && $submittedSupportingDocUuid) {
+        } elseif ($documentType === 'supportingDocument' && ($submittedReportPdfUuid)) {
             $report->setSubmittedDocuments([$reportPdfDocument, $supportingDocument]);
         }
 
@@ -99,7 +97,6 @@ class DocumentHelpers extends TestCase
         int $supportingDocSubmissionId = 9877,
         int $documentId = 6789,
         ?string $submittedReportPdfUuid = 'uuid-123-goes-here',
-        ?string $submittedSupportingDocUuid = 'uuid-321-goes-here',
         string $storageReference = 'test'
     )
     {
@@ -113,7 +110,6 @@ class DocumentHelpers extends TestCase
             $supportingDocSubmissionId,
             $documentId,
             $submittedReportPdfUuid,
-            $submittedSupportingDocUuid,
             $storageReference
         );
     }
@@ -127,7 +123,6 @@ class DocumentHelpers extends TestCase
         int $supportingDocSubmissionId = 9877,
         int $documentId = 6789,
         ?string $submittedReportPdfUuid = 'uuid-123-goes-here',
-        ?string $submittedSupportingDocUuid = 'uuid-321-goes-here',
         string $storageReference = 'test'
     )
     {
@@ -141,49 +136,7 @@ class DocumentHelpers extends TestCase
             $supportingDocSubmissionId,
             $documentId,
             $submittedReportPdfUuid,
-            $submittedSupportingDocUuid,
             $storageReference
         );
-
-//        $client = new Client();
-//        $client->setCaseNumber($caseRef);
-//        $reportPdfDocument = (new Document())->setIsReportPdf(true);
-//        $supportingDocument = (new Document())->setIsReportPdf(false);
-//
-//        $reportPdfReportSubmission =
-//            (new ReportSubmission())
-//                ->setId($reportPdfSubmissionId)
-//                ->setUuid($submittedReportPdfUuid)
-//                ->setDocuments([$reportPdfDocument]);
-//
-//        $supportingDocReportSubmission =
-//            (new ReportSubmission())
-//                ->setId($supportingDocSubmissionId)
-//                ->setUuid($submittedSupportingDocUuid)
-//                ->setDocuments([$supportingDocument]);
-//
-//        $reportSubmissions = [$reportPdfReportSubmission, $supportingDocReportSubmission];
-//
-//        $report = (new Report())
-//            ->setId(1)
-//            ->setType(Report::TYPE_102)
-//            ->setClient($client)
-//            ->setStartDate($startDate)
-//            ->setEndDate($endDate)
-//            ->setSubmitDate($submittedDate)
-//            ->setReportSubmissions($reportSubmissions);
-//
-//        $uploadedFile = FileHelpers::generateUploadedFile(
-//            'tests/phpunit/TestData/test.pdf',
-//            'test.pdf',
-//            'application/pdf'
-//        );
-//
-//        return $supportingDocument
-//            ->setReport($report)
-//            ->setStorageReference($storageReference)
-//            ->setFileName('test.pdf')
-//            ->setFile($uploadedFile)
-//            ->setId($documentId);
     }
 }

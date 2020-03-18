@@ -49,9 +49,19 @@ services:
             $httpClient: '@guzzle_api_gateway_client'
             $requestSigner: '@AppBundle\Service\AWS\RequestSigner'
             $baseUrl: '%env(SIRIUS_API_BASE_URI)%'
+            $serializer: '@jms_serializer'
 
     AppBundle\Service\AWS\RequestSigner:
         class: AppBundle\Service\AWS\RequestSigner
+        arguments:
+            $credentialProvider: '@AppBundle\Service\AWS\DefaultCredentialProvider'
+            $signer: '@AppBundle\Service\AWS\SignatureV4Signer'
+
+    AppBundle\Service\AWS\DefaultCredentialProvider:
+        class: AppBundle\Service\AWS\DefaultCredentialProvider
+
+    AppBundle\Service\AWS\SignatureV4Signer:
+        class: AppBundle\Service\AWS\SignatureV4Signer
 
     Aws\Ssm\SsmClient:
         arguments: ["%ssm_client_params%"]

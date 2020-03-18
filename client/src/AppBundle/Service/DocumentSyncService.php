@@ -87,7 +87,9 @@ class DocumentSyncService
             $body = $siriusResponse->getResponse() ?
                 (string) $siriusResponse->getResponse()->getBody() : (string) $siriusResponse->getMessage();
 
-            return $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_PERMANENT_ERROR,$body);
+            // Add check for perm errors here and pass either temp or perm accordingly
+
+            return $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_PERMANENT_ERROR, $body);
         }
 
         $data = json_decode(strval($siriusResponse->getBody()), true);
@@ -106,49 +108,6 @@ class DocumentSyncService
         }
 
         return $apiDocumentResponse;
-
-//        try {
-//            $content = $this->storage->retrieve($document->getStorageReference());
-//        } catch (S3Exception $e) {
-//            $syncStatus = in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES) ?
-//                Document::SYNC_STATUS_PERMANENT_ERROR : Document::SYNC_STATUS_TEMPORARY_ERROR;
-//
-//            return $this->restClient->put(
-//                sprintf('document/%s', $document->getId()),
-//                json_encode(['data' => ['syncStatus' => $syncStatus, 'syncError' => 'S3 error: ' . $e->getMessage()]])
-//            );
-//        }
-
-//        try {
-//            $upload = $this->buildUpload($document);
-//            $apiGatewayResponse = $this->siriusApiGateWayClient->sendReportPdfDocument($upload, $content, $report->getClient()->getCaseNumber());
-//
-//            $data = json_decode(strval($apiGatewayResponse->getBody()), true);
-//
-//            /** @var ReportSubmission $latestSubmission */
-//            $latestSubmission = $report->getReportSubmissions()[0];
-//
-//            $this->restClient->put(
-//                sprintf('report-submission/%s', $latestSubmission->getId()),
-//                json_encode(['data' => ['uuid' => $data['data']['id']]])
-//            );
-//
-//            return $this->restClient->put(
-//                sprintf('document/%s', $document->getId()),
-//                json_encode(['data' =>
-//                    ['syncStatus' => Document::SYNC_STATUS_SUCCESS]
-//                ])
-//            );
-//        } catch (RequestException $exception) {
-//            $body = $exception->getResponse() ? (string) $exception->getResponse()->getBody() : (string) $exception->getMessage();
-//
-//            return $this->restClient->put(
-//                sprintf('document/%s', $document->getId()),
-//                json_encode(['data' =>
-//                    ['syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR, 'syncError' => json_decode($body)]
-//                ])
-//            );
-//        }
     }
 
     /**
@@ -237,17 +196,18 @@ class DocumentSyncService
         }
     }
 
-    private function handleSiriusSync(Document $document, string $content)
+    public function handleSiriusSync(Document $document, string $content)
     {
         try {
-            /** @var ReportSubmission $latestSubmission */
-            $relevantSubmission = $document->getReport()->getReportSubmissionByDocument($document);
             $upload = $this->buildUpload($document);
 
             if($document->isReportPdf()) {
-               return $this->siriusApiGateWayClient->sendReportPdfDocument($upload, $content, $document->getReport()->getClient()->getCaseNumber());
+               $response = $this->siriusApiGateWayClient->sendReportPdfDocument($upload, $content, $document->getReport()->getClient()->getCaseNumber());
+               return $response;
             } else {
-                return $this->siriusApiGateWayClient->sendSupportingDocument($upload, $content, $relevantSubmission->getUuid());
+                /** @var ReportSubmission $reportPdfSubmission */
+                $reportPdfSubmission = $document->getReportPdfSubmission();
+                return $this->siriusApiGateWayClient->sendSupportingDocument($upload, $content, $reportPdfSubmission->getUuid());
             }
         } catch (RequestException $exception) {
             return $exception;

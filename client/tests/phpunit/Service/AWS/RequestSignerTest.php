@@ -2,16 +2,20 @@
 
 namespace AppBundle\Service\Client\AWS;
 
+
+use AppBundle\Service\AWS\DefaultCredentialProvider;
 use AppBundle\Service\AWS\RequestSigner;
-use Aws\Credentials\CredentialProvider;
-use Aws\Signature\SignatureV4;
+use AppBundle\Service\AWS\SignatureV4Signer;
+use Aws\Credentials\Credentials;
+use GuzzleHttp\Promise;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class RequestSignerTest extends TestCase
 {
-
-    public function testSignRequest()
+    /** @test */
+    public function signRequest()
     {
         $headers['X-Amz-Content-Sha256'] = 'A payload';
         $headers['Authorization'] = [
@@ -22,11 +26,22 @@ class RequestSignerTest extends TestCase
 
         $originalRequest = new Request('GET', 'some.url');
         $signedRequest = new Request('GET', 'some.url', $headers);
+        $credentials = new Credentials('aKey', 'aSecret', NULL);
+        $service = 'some-service';
 
-        $signer = self::prophesize(SignatureV4::class);
-        $signer->signRequest($originalRequest)->shouldBeCalled()->willReturn($signedRequest);
+        /** @var DefaultCredentialProvider&ObjectProphecy $provider */
+        $provider = self::prophesize(DefaultCredentialProvider::class);
+        $credentialsPromise = function() use ($credentials) {
+            return Promise\promise_for($credentials);
+        };
 
-        $sut = new RequestSigner($signer->reveal());
-        $sut->signRequest($originalRequest, 'some-service');
+        /** @var SignatureV4Signer&ObjectProphecy $signer */
+        $signer = self::prophesize(SignatureV4Signer::class);
+        $signer->signRequest($originalRequest, $credentials, $service)->shouldBeCalled()->willReturn($signedRequest);
+
+        $provider->getProvider()->shouldBeCalled()->willReturn($credentialsPromise);
+
+        $sut = new RequestSigner($provider->reveal(), $signer->reveal());
+        $sut->signRequest($originalRequest, $service);
     }
 }
