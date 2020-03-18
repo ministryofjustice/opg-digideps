@@ -21,7 +21,6 @@ page:
       period: Period
       documents: Documents
       submitted: Submitted
-      discharged: Discharged
       user: User
     noDocumentsFound: No documents found
   table:
