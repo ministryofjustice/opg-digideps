@@ -56,7 +56,7 @@
 
     {# tabs #}
 
-    <div class="govuk-tabs" data-module="govuk-tabs">
+    <div class="govuk-tabs">
         <ul class="govuk-tabs__list" role="tablist">
             <li class="govuk-tabs__list-item {% if currentTab == 'new' %}govuk-tabs__list-item--selected{% endif %}">
                 <a class="govuk-tabs__tab behat-link-tab-new" href="{{ path(baseRoute, {'status': 'new'} | merge(filtersToPreserveInTabs) ) }}" role="tab" tabindex="0">
