@@ -2,15 +2,15 @@
 
 {% macro syncStatus(status, document) %}
     {% if status == 'QUEUED' %}
-        <span style="color:darkgray">Queued</span>
+        <span class="opg-text--secondary">Queued</span>
     {% elseif status == 'IN_PROGRESS' %}
-        <span style="color:darkgray">In progress</span>
+        <span class="opg-text--secondary">In progress</span>
     {% elseif status == 'SUCCESS' %}
-        <strong style="color:green">Success</strong>
+        <strong class="opg-text--success">Success</strong>
     {% elseif status == 'PERMANENT_ERROR' %}
-        <strong style="color:red">Permanent fail</strong>
+        <strong class="opg-text--danger">Permanent fail</strong>
     {% elseif status == 'TEMPORARY_ERROR' %}
-        <span style="color:brown">Temporary fail</span>
+        <span class="opg-text--danger">Temporary fail</span>
     {% else %}
 
     {% endif %}
