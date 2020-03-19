@@ -156,7 +156,11 @@
                           </td>
                         {% endif %}
                         <td class="govuk-table__cell">
-                            {{ client.fullname }}
+                            <div class="govuk-details govuk-!-margin-bottom-0" aria-controls="docs-table-{{ reportSubmission.id }}" data-module="opg-detached-details">
+                                <a href="#" role="button" class="govuk-details__summary">
+                                    {{ client.fullname }}
+                                </a>
+                            </div>
                         </td>
                         <td class="govuk-table__cell">
                             <div class="govuk-tag">
@@ -197,7 +201,7 @@
                         </td>
                     </tr>
 
-                    <tr>
+                    <tr id="docs-table-{{ reportSubmission.id }}">
                         <td colspan="7">
                             {{ include('AppBundle:Admin/ReportSubmission:_document-sync-table.html.twig', { reportSubmission: reportSubmission, documents: reportSubmission.documents }) }}
                         </td>

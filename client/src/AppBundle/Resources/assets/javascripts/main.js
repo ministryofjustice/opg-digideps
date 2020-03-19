@@ -7,6 +7,7 @@ var Stickyfill = require('stickyfilljs')
 var limitChars = require('./modules/characterLimiter.js')
 var cookieBanner = require('./modules/cookieBanner.js')
 var detailsExpander = require('./modules/detailsExpander.js')
+var DetachedDetails = require('./modules/detached-details.js')
 var formatCurrency = require('./modules/formatcurrency.js')
 var Ga = require('./modules/ga.js')
 var moneyTransfer = require('./modules/moneyTransfer.js')
@@ -62,6 +63,11 @@ $(document).ready(function () {
 
   // Table Multi Select
   tableMultiSelect()
+
+  // Detached details/summary
+  document.querySelectorAll('[data-module="opg-detached-details"]').forEach(function ($el) {
+    new DetachedDetails($el).init()
+  })
 
   // Initialising the Show Hide Content GOVUK module
   var showHideContent = new ShowHideContent()
