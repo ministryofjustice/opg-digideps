@@ -15,7 +15,8 @@ class SiriusHelpers extends KernelTestCase
         DateTime $startDate,
         DateTime $endDate,
         DateTime $submittedDate,
-        string $orderType
+        string $orderType,
+        int $submissionId
     )
     {
         $siriusReportPdfDocumentMetadata = (new SiriusReportPdfDocumentMetadata())
@@ -23,7 +24,8 @@ class SiriusHelpers extends KernelTestCase
             ->setReportingPeriodTo($endDate)
             ->setYear('2018')
             ->setDateSubmitted($submittedDate)
-            ->setOrderType($orderType);
+            ->setType($orderType)
+            ->setSubmissionId($submissionId);
 
         return (new SiriusDocumentUpload())
             ->setType('reports')

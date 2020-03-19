@@ -15,7 +15,7 @@ class SignatureV4Signer
      * @param Credentials $credentials
      * @param string $service
      * @param string $region
-     * @return SignatureV4
+     * @return Request|\Psr\Http\Message\RequestInterface
      */
     public function signRequest(Request $request, Credentials $credentials, string $service, string $region='eu-west-1')
     {

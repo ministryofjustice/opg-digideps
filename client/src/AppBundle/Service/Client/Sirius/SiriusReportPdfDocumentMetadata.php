@@ -5,13 +5,18 @@ namespace AppBundle\Service\Client\Sirius;
 
 
 use DateTime;
+use JMS\Serializer\Annotation\Type;
 
 class SiriusReportPdfDocumentMetadata implements SiriusMetadataInterface
 {
-    /** @var DateTime */
+    /**
+     * @Type("DateTime<'Y-m-d'>")
+     */
     private $reportingPeriodFrom;
 
-    /** @var DateTime */
+    /**
+     * @Type("DateTime<'Y-m-d'>")
+     */
     private $reportingPeriodTo;
 
     /** @var string */
@@ -21,10 +26,13 @@ class SiriusReportPdfDocumentMetadata implements SiriusMetadataInterface
     private $dateSubmitted;
 
     /** @var string */
-    private $orderType;
+    private $type;
+
+    /** @var int */
+    private $submissionId;
 
     /**
-     * @return DateTime
+     * @Type("DateTime<'Y-m-d'>")
      */
     public function getReportingPeriodFrom(): DateTime
     {
@@ -45,24 +53,24 @@ class SiriusReportPdfDocumentMetadata implements SiriusMetadataInterface
     /**
      * @return string
      */
-    public function getOrderType(): string
+    public function getType(): string
     {
-        return $this->orderType;
+        return $this->type;
     }
 
     /**
-     * @param string $orderType
+     * @param string $type
      * @return SiriusReportPdfDocumentMetadata
      */
-    public function setOrderType(string $orderType): self
+    public function setType(string $type): self
     {
-        $this->orderType = $orderType;
+        $this->type = $type;
 
         return $this;
     }
 
     /**
-     * @return DateTime
+     * @Type("DateTime<'Y-m-d'>")
      */
     public function getReportingPeriodTo(): DateTime
     {
@@ -114,6 +122,25 @@ class SiriusReportPdfDocumentMetadata implements SiriusMetadataInterface
     public function setDateSubmitted(DateTime $dateSubmitted): self
     {
         $this->dateSubmitted = $dateSubmitted;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSubmissionId(): int
+    {
+        return $this->submissionId;
+    }
+
+    /**
+     * @param int $submissionId
+     * @return SiriusReportPdfDocumentMetadata
+     */
+    public function setSubmissionId(int $submissionId): self
+    {
+        $this->submissionId = $submissionId;
 
         return $this;
     }

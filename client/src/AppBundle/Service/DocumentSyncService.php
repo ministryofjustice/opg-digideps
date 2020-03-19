@@ -151,7 +151,8 @@ class DocumentSyncService
                 ->setReportingPeriodTo($this->determineEndDate($report))
                 ->setYear($report->getStartDate()->format('Y'))
                 ->setDateSubmitted($report->getSubmitDate())
-                ->setOrderType($this->determineReportType($report));
+                ->setType($this->determineReportType($report))
+                ->setSubmissionId($document->getReportSubmission()->getId());
 
             $type = 'reports';
         } else {

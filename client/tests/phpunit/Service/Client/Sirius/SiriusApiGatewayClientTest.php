@@ -13,12 +13,12 @@ use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
-class SiriusApiGatewayClientTest extends TestCase
+class SiriusApiGatewayClientTest extends KernelTestCase
 {
     /** @var string */
     private $baseURL;
@@ -85,7 +85,8 @@ class SiriusApiGatewayClientTest extends TestCase
         $this->supportingDocumentSuccessResponseBody = json_encode(['data' => ['type' => 'supportingdocuments', 'id' => '5a8b1a26-8296-4373-ae61-f8d0b250e773']]);
         $this->httpClient = self::prophesize(Client::class);
         $this->requestSigner = self::prophesize(RequestSigner::class);
-        $this->serializer = new Serializer([new DateTimeNormalizer(), new ObjectNormalizer()], [new JsonEncoder()]);
+        $this->serializer = (self::bootKernel(['debug' => false]))->getContainer()->get('jms_serializer');
+
     }
 
     /** @test */
