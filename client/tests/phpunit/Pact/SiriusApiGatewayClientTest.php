@@ -33,9 +33,9 @@ class SiriusDocumentsContractTest extends KernelTestCase
     {
         $matcher = new Matcher();
 
-        $multiPartRequest = new MultipartPactRequest();
-        $multiPartRequest->addPart('report_file', 'c29tZV9jb250ZW50');
-        $multiPartRequest->addPart('report', [
+        $multipartRequest = new MultipartPactRequest();
+        $multipartRequest->addPart('report_file', 'c29tZV9jb250ZW50');
+        $multipartRequest->addPart('report', [
             'data' => [
                 'type' => 'reports',
                 'attributes' => [
@@ -65,7 +65,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
                         )
                 ]
             )
-            ->setBody($matcher->regex($multiPartRequest->getExampleBody(), $multiPartRequest->getRegex('report')));
+            ->setBody($matcher->regex($multipartRequest->getExampleBody(), $multipartRequest->getRegex('report')));
 
         // Create your expected response from the provider.
         $response = new ProviderResponse();
