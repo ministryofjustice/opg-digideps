@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DocumentController extends RestController
 {
+    const DOCUMENT_SYNC_ERROR_STATUSES = [Document::SYNC_STATUS_TEMPORARY_ERROR || Document::SYNC_STATUS_PERMANENT_ERROR];
+
     private $sectionIds = [EntityDir\Report\Report::SECTION_DOCUMENTS];
 
     /**
@@ -151,7 +153,7 @@ class DocumentController extends RestController
         if (!empty($data['syncStatus'])) {
             $document->setSynchronisationStatus($data['syncStatus']);
 
-            if ($data['syncStatus'] !== Document::SYNC_STATUS_SUCCESS) {
+            if (in_array($data['syncStatus'], self::DOCUMENT_SYNC_ERROR_STATUSES)) {
                 $document->setSynchronisationError($data['syncError']);
             } else {
                 $document->setSynchronisationTime(new DateTime($data['syncTime']));
