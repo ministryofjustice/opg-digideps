@@ -3,8 +3,6 @@
 namespace DigidepsTests\Helpers;
 
 use GuzzleHttp\Psr7\MultipartStream;
-use RecursiveArrayIterator;
-use RecursiveIteratorIterator;
 
 function array_walk_recursive_include_branches(array &$array, callable $callback) {
     foreach ($array as $k => &$v) {
@@ -19,6 +17,9 @@ class MultipartPactRequest
 {
     private $parts = [];
 
+    /**
+     * Add an expected part to the request
+     */
     public function addPart(string $name, $contents)
     {
         $this->parts[$name] = [
@@ -27,6 +28,9 @@ class MultipartPactRequest
         ];
     }
 
+    /**
+     * Generate an example of a request part
+     */
     private function getExamplePart($part)
     {
         if (is_array($part['contents'])) {
@@ -46,6 +50,9 @@ class MultipartPactRequest
         }
     }
 
+    /**
+     * Generate an example request body. This substitutes the values found in matchers
+     */
     public function getExampleBody(): string
     {
         $encodedParts = array_map([$this, 'getExamplePart'], $this->parts);
@@ -53,6 +60,9 @@ class MultipartPactRequest
         return (new MultipartStream($encodedParts))->getContents();
     }
 
+    /**
+     * Get a regex statement for a part. This uses the regex statements found in matchers
+     */
     public function getRegex($name): string
     {
         $part = $this->parts[$name];
@@ -62,9 +72,8 @@ class MultipartPactRequest
             'match' => [],
             'replace' => [],
         ];
-        $i = 0;
 
-        array_walk_recursive_include_branches($contents, function (&$leaf) use (&$i, &$replacements) {
+        array_walk_recursive_include_branches($contents, function (&$leaf) use (&$replacements) {
             if (is_array($leaf) && $leaf['json_class'] === 'Pact::Term') {
                 $id = uniqid();
                 $replacements['match'][] = $id;
