@@ -144,6 +144,7 @@ trait ReportManagementTrait
 
         $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
         $this->clickOnBehatLink('admin-client-search');
+        $this->clickOnBehatLink('search_clients_search');
         $this->clickOnBehatLink('client-detail-'.$client);
 
         $adjustment = intval($adjustment);
@@ -162,6 +163,7 @@ trait ReportManagementTrait
 
         $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
         $this->clickOnBehatLink('admin-client-search');
+        $this->clickOnBehatLink('search_clients_search');
         $this->clickOnBehatLink('client-detail-'.$client);
 
         $expectedDueDate = new \DateTime($adjustment);

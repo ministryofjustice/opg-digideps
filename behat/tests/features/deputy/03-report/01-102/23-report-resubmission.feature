@@ -3,15 +3,7 @@ Feature: Admin unsubmit report (from client page)
   @deputy
   Scenario: Admin client page + search
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search"
-    Then each text should be present in the corresponding region:
-      | John 102-client | client-102 |
-    When I fill in the following:
-      | search_clients_q | 102-client |
-    And I click on "search_clients_search"
-    Then I should see the "client-row" region exactly "1" times
-    And each text should be present in the corresponding region:
-      | John 102-client | client-102 |
+    And I click on "admin-client-search, "search_clients_search"
     And I click on "client-details" in the "client-102" region
     And I save the current URL as "admin-client-search-client-102"
 

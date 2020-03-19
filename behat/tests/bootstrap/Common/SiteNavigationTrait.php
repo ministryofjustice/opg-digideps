@@ -49,6 +49,7 @@ trait SiteNavigationTrait
     {
         $this->visitAdminPath('/');
         $this->clickOnBehatLink('admin-client-search');
+        $this->clickOnBehatLink('search_clients_search');
         $this->clickOnBehatLink('client-detail-' . $caseNumber);
         $this->clickLinkInsideElement('checklist', 'report-' . $period);
     }

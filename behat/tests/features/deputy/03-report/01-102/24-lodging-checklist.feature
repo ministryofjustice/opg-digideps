@@ -4,7 +4,7 @@ Feature: Admin report checklist
   Scenario: Case manager submits empty checklist for the report 102
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
-    And I click on "admin-client-search"
+    And I click on "admin-client-search, search_clients_search"
     Then each text should be present in the corresponding region:
       | John 102-client | client-102 |
     When I fill in the following:

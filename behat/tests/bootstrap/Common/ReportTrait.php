@@ -204,6 +204,7 @@ trait ReportTrait
         $endDate = self::$currentReportCache['endDate'];
 
         $this->clickOnBehatLink('admin-client-search');
+        $this->clickOnBehatLink('search_clients_search');
         $this->clickOnBehatLink("client-detail-$client");
         $this->iShouldSeeTheRegionInTheRegion("report-$startDate-to-$endDate", 'report-group-incomplete');
     }
