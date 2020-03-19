@@ -9,14 +9,10 @@ use JMS\Serializer\Annotation\Type;
 
 class SiriusReportPdfDocumentMetadata implements SiriusMetadataInterface
 {
-    /**
-     * @Type("DateTime<'Y-m-d'>")
-     */
+    /** @var DateTime */
     private $reportingPeriodFrom;
 
-    /**
-     * @Type("DateTime<'Y-m-d'>")
-     */
+    /** @var DateTime */
     private $reportingPeriodTo;
 
     /** @var string */
@@ -32,7 +28,7 @@ class SiriusReportPdfDocumentMetadata implements SiriusMetadataInterface
     private $submissionId;
 
     /**
-     * @Type("DateTime<'Y-m-d'>")
+     * @return DateTime
      */
     public function getReportingPeriodFrom(): DateTime
     {
@@ -51,26 +47,7 @@ class SiriusReportPdfDocumentMetadata implements SiriusMetadataInterface
     }
 
     /**
-     * @return string
-     */
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param string $type
-     * @return SiriusReportPdfDocumentMetadata
-     */
-    public function setType(string $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * @Type("DateTime<'Y-m-d'>")
+     * @return DateTime
      */
     public function getReportingPeriodTo(): DateTime
     {
@@ -122,6 +99,25 @@ class SiriusReportPdfDocumentMetadata implements SiriusMetadataInterface
     public function setDateSubmitted(DateTime $dateSubmitted): self
     {
         $this->dateSubmitted = $dateSubmitted;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     * @return SiriusReportPdfDocumentMetadata
+     */
+    public function setType(string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

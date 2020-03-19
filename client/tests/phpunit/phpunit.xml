@@ -10,7 +10,7 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
         stopOnError="true"
-        stopOnFailure="true"
+        stopOnFailure="false"
         stopOnRisky="true"
         stopOnWarning="true"
 >

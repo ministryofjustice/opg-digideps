@@ -110,7 +110,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
         $client = new GuzzleClient();
         $signer = self::prophesize(RequestSigner::class);
         $baseUrl = 'http://pact-mock';
-        $serializer = (self::bootKernel(['debug' => false]))->getContainer()->get('jms_serializer');
+        $serializer = (self::bootKernel(['debug' => false]))->getContainer()->get('serializer');
 
         $signer->signRequest(Argument::type(Request::class), 'execute-api')->willReturnArgument(0);
 
