@@ -49,7 +49,7 @@ services:
             $httpClient: '@guzzle_api_gateway_client'
             $requestSigner: '@AppBundle\Service\AWS\RequestSigner'
             $baseUrl: '%env(SIRIUS_API_BASE_URI)%'
-            $serializer: '@jms_serializer'
+            $serializer: '@serializer'
 
     AppBundle\Service\AWS\RequestSigner:
         class: AppBundle\Service\AWS\RequestSigner
@@ -68,3 +68,8 @@ services:
 
     AppBundle\Service\FeatureFlagService:
         arguments: ['@Aws\Ssm\SsmClient', '%env(FEATURE_FLAG_PREFIX)%']
+
+    AppBundle\Serializer\SiriusDocumentUploadSerializer:
+        autowire: true
+        autoconfigure: true
+        tags: ['serializer.normalizer']

@@ -7,7 +7,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\MultipartStream;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
-use JMS\Serializer\Serializer;
+use Symfony\Component\Serializer\Serializer;
 
 class SiriusApiGatewayClient
 {
@@ -56,10 +56,6 @@ class SiriusApiGatewayClient
     public function sendReportPdfDocument(SiriusDocumentUpload $upload, string $content, string $caseRef)
     {
         $reportJson = $this->serializer->serialize(['data' => $upload], 'json');
-
-        $reportJson = str_replace('2018-05-14T00:00:00+01:00', '2018-05-14', $reportJson);
-        $reportJson = str_replace('2019-05-13T00:00:00+01:00', '2019-05-13', $reportJson);
-        $reportJson = str_replace('"submission_id":9876', '"type":"PF","submission_id":9876', $reportJson);
 
         $multipart = new MultipartStream([
             [
