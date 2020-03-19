@@ -39,23 +39,12 @@ class SiriusDocumentsContractTest extends KernelTestCase
             'data' => [
                 'type' => 'reports',
                 'attributes' => [
-                    'reporting_period_from' => '2018-05-14',
-                    'reporting_period_to' => '2019-05-13',
-                    'year' => '2018',
-                    'date_submitted' => '2019-06-20T00:00:00+01:00',
-                    'type' => 'PF',
-                    'submission_id' => 9876
-                ]
-            ]
-        ], [
-            'data' => [
-                'attributes' => [
-                    'reporting_period_from' => '\d{4}-\d{2}-\d{2}',
-                    'reporting_period_to' => '\d{4}-\d{2}-\d{2}',
-                    'year' => '\d{4}',
-                    'date_submitted' => '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+\d{2}:\d{2}',
-                    'type' => '(PF|HW|NDR)',
-                    'submission_id' => '\d+'
+                    'reporting_period_from' => $matcher->dateISO8601('2018-05-14'),
+                    'reporting_period_to' => $matcher->dateISO8601('2019-05-13'),
+                    'year' => $matcher->regex('2018', '[0-9]{4}'),
+                    'date_submitted' => $matcher->dateTimeISO8601('2019-06-20T00:00:00+01:00'),
+                    'type' => $matcher->regex('PF', 'PF|HW|NDR'),
+                    'submission_id' => $matcher->integer(9876)
                 ]
             ]
         ]);
@@ -90,7 +79,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
                     'attributes' => [
                         'reporting_period_from' => $matcher->dateISO8601(),
                         'reporting_period_to' => $matcher->dateISO8601(),
-                        'year' => $matcher->regex('2019', '[0-9]{4}'),
+                        'year' => $matcher->regex('2018', '[0-9]{4}'),
                         'date_submitted' => $matcher->dateTimeWithMillisISO8601(),
                         'type' => $matcher->regex('PF', 'PF|HW|NDR'),
                         'submission_id' => $matcher->integer()
