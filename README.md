@@ -1,5 +1,7 @@
 # Complete the deputy report
 
+This is a test environment to be used for accessibility testing.
+
 This app is the [Complete the deputy report][service] service. It provides an online reporting service used by deputies to submit their reports, and the private area for case managers to review submitted reports.
 
 ## Requirements
