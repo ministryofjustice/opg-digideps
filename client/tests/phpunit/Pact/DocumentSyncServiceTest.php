@@ -13,6 +13,7 @@ use AppBundle\Service\Client\Sirius\SiriusReportPdfDocumentMetadata;
 use AppBundle\Service\File\Storage\S3Storage;
 use DateTime;
 use DigidepsTests\Helpers\DocumentHelpers;
+use DigidepsTests\Helpers\MultipartPactRequest;
 use DigidepsTests\Helpers\SiriusHelpers;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Request;
@@ -41,11 +42,22 @@ class SiriusDocumentsContractTest extends KernelTestCase
     {
         $matcher = new Matcher();
 
-        $exampleBody = "--aed7f18b4198ed16e793694efb19852a47488dfe\r\nContent-Disposition: form-data; name=\"report\"\r\nContent-Length: 233\r\n\r\n{\"data\":{\"type\":\"reports\",\"attributes\":{\"reporting_period_from\":\"2018-05-14\",\"reporting_period_to\":\"2019-05-13\",\"year\":\"2018\",\"date_submitted\":\"2019-06-20T00:00:00+01:00\",\"type\":\"PF\",\"submission_id\":9876}}}\r\n--aed7f18b4198ed16e793694efb19852a47488dfe\r\nContent-Disposition: form-data; name=\"report_file\"\r\nContent-Length: 16\r\n\r\nc29tZV9jb250ZW50\r\n--aed7f18b4198ed16e793694efb19852a47488dfe--\r\n";
-
-        $requestRegexObj = [
+        $multiPartRequest = new MultipartPactRequest();
+        $multiPartRequest->addPart('report_file', 'c29tZV9jb250ZW50');
+        $multiPartRequest->addPart('report', [
             'data' => [
                 'type' => 'reports',
+                'attributes' => [
+                    'reporting_period_from' => '2018-05-14',
+                    'reporting_period_to' => '2019-05-13',
+                    'year' => '2018',
+                    'date_submitted' => '2019-06-20T00:00:00+01:00',
+                    'type' => 'PF',
+                    'submission_id' => 9876
+                ]
+            ]
+        ], [
+            'data' => [
                 'attributes' => [
                     'reporting_period_from' => '\d{4}-\d{2}-\d{2}',
                     'reporting_period_to' => '\d{4}-\d{2}-\d{2}',
@@ -55,9 +67,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
                     'submission_id' => '\d+'
                 ]
             ]
-        ];
-
-        $requestRegex = str_replace(['{"','"}', '\\\\', '"\d+"', '}}}'], ['\{"', '"\}', '\\', '\d+', '}\}\}'], json_encode($requestRegexObj));
+        ]);
 
         $caseRef = '1234567T';
 
@@ -75,7 +85,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
                         )
                 ]
             )
-            ->setBody($matcher->regex($exampleBody, $requestRegex));
+            ->setBody($matcher->regex($multiPartRequest->getExampleBody(), $multiPartRequest->getRegex('report')));
 
         // Create your expected response from the provider.
         $response = new ProviderResponse();
