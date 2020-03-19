@@ -3,32 +3,52 @@
 namespace DigidepsTests\Helpers;
 
 use GuzzleHttp\Psr7\MultipartStream;
+use RecursiveArrayIterator;
+use RecursiveIteratorIterator;
+
+function array_walk_recursive_include_branches(array &$array, callable $callback) {
+    foreach ($array as $k => &$v) {
+        $callback($v, $k);
+        if (is_array($v)) {
+            array_walk_recursive_include_branches($v, $callback);
+        }
+    }
+}
 
 class MultipartPactRequest
 {
     private $parts = [];
 
-    public function addPart(string $name, $contents, $rules = null)
+    public function addPart(string $name, $contents)
     {
         $this->parts[$name] = [
             'name' => $name,
-            'contents' => $contents,
-            'rules' => $rules
+            'contents' => $contents
         ];
+    }
+
+    private function getExamplePart($part)
+    {
+        if (is_array($part['contents'])) {
+            $contents = $part['contents'];
+            array_walk_recursive_include_branches($contents, function (&$leaf) {
+                if (is_array($leaf) && $leaf['json_class'] === 'Pact::Term') {
+                    $leaf = $leaf['data']['generate'];
+                }
+            });
+
+            return [
+                'name' => $part['name'],
+                'contents' => json_encode($contents),
+            ];
+        } else {
+            return $part;
+        }
     }
 
     public function getExampleBody(): string
     {
-        $encodedParts = array_map(function ($part) {
-            if (is_array($part['contents'])) {
-                return [
-                    'name' => $part['name'],
-                    'contents' => json_encode($part['contents']),
-                ];
-            } else {
-                return $part;
-            }
-        }, $this->parts);
+        $encodedParts = array_map([$this, 'getExamplePart'], $this->parts);
 
         return (new MultipartStream($encodedParts))->getContents();
     }
@@ -36,17 +56,24 @@ class MultipartPactRequest
     public function getRegex($name): string
     {
         $part = $this->parts[$name];
-        $regex = str_replace(['{', '}'], ['\{', '\}'], json_encode($part['contents']));
 
-        // Replace example values with rules
-        array_walk_recursive($part['rules'], function($value, $key) use (&$regex) {
-            $regex = preg_replace(
-                '/"' . $key . '":("?)(' . $value . ')\1/',
-                '"' . $key . '":$1' . $value . '$1',
-                $regex
-            );
+        $contents = $part['contents'];
+        $replacements = [
+            'match' => [],
+            'replace' => [],
+        ];
+        $i = 0;
+
+        array_walk_recursive_include_branches($contents, function (&$leaf) use (&$i, &$replacements) {
+            if (is_array($leaf) && $leaf['json_class'] === 'Pact::Term') {
+                $id = uniqid();
+                $replacements['match'][] = $id;
+                $replacements['replace'][] = trim($leaf['data']['matcher']['s'], '^$/');
+                $leaf = $id;
+            }
         });
 
-        return $regex;
+        $baseRegex = preg_quote(json_encode($contents));
+        return str_replace($replacements['match'], $replacements['replace'], $baseRegex);
     }
 }
