@@ -55,7 +55,11 @@ class SiriusApiGatewayClient
 
     public function sendReportPdfDocument(SiriusDocumentUpload $upload, string $content, string $caseRef)
     {
-        $reportJson = $this->serializer->serialize($upload, 'json');
+        $reportJson = $this->serializer->serialize(['data' => $upload], 'json');
+
+        $reportJson = str_replace('2018-05-14T00:00:00+01:00', '2018-05-14', $reportJson);
+        $reportJson = str_replace('2019-05-13T00:00:00+01:00', '2019-05-13', $reportJson);
+        $reportJson = str_replace('"submission_id":9876', '"type":"PF","submission_id":9876', $reportJson);
 
         $multipart = new MultipartStream([
             [
@@ -68,7 +72,13 @@ class SiriusApiGatewayClient
             ],
         ]);
 
-        $signedRequest = $this->buildSignedRequest(sprintf('clients/%s/reports', $caseRef), 'POST', $multipart);
+        $signedRequest = $this->buildSignedRequest(
+            sprintf('clients/%s/reports', $caseRef),
+            'POST',
+            $multipart,
+            'application/vnd.opg-data.v1+json',
+            'multipart/form-data'
+        );
 
         return $this->httpClient->send($signedRequest);
     }
@@ -89,7 +99,14 @@ class SiriusApiGatewayClient
             ],
         ]);
 
-        $signedRequest = $this->buildSignedRequest(sprintf('reports/%s/supportingdocuments', $submissionUuid), 'POST', $multipart);
+        $signedRequest = $this->buildSignedRequest(
+            sprintf('reports/%s/supportingdocuments',
+                $submissionUuid),
+            'POST',
+            $multipart,
+            'application/vnd.opg-data.v1+json',
+            'multipart/form-data'
+        );
 
         return $this->httpClient->send($signedRequest);
     }
@@ -98,20 +115,27 @@ class SiriusApiGatewayClient
      * @param string $endpoint
      * @param string $method
      * @param string|null|resource|StreamInterface $body
+     * @param string $accept
+     * @param string $contentType
      * @return Request|\Psr\Http\Message\RequestInterface
      */
-    private function buildSignedRequest(string $endpoint, string $method, $body='')
+    private function buildSignedRequest(
+        string $endpoint,
+        string $method,
+        $body='',
+        string $accept='application/json',
+        string $contentType='application/json'
+    )
     {
         $url = new Uri(sprintf('%s/%s', $this->baseUrl, $endpoint));
 
         $request = new Request($method, $url, [
-            'Accept' => 'application/json',
-            'Content-type' => 'application/json'
+            'Accept' => $accept,
+            'Content-type' => $contentType
         ], $body);
 
         // Sign the request with an AWS Authorization header.
         $signedRequest = $this->requestSigner->signRequest($request, 'execute-api');
-        print_r($signedRequest);
         return $signedRequest;
     }
 }
