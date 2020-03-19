@@ -2,30 +2,20 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\Report;
+
 use AppBundle\Service\AWS\RequestSigner;
-use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
-use AppBundle\Service\Client\Sirius\SiriusDocumentUpload;
-use AppBundle\Service\Client\Sirius\SiriusReportPdfDocumentMetadata;
-use AppBundle\Service\File\Storage\S3Storage;
 use DateTime;
-use DigidepsTests\Helpers\DocumentHelpers;
 use DigidepsTests\Helpers\SiriusHelpers;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Request;
-use JMS\Serializer\Serializer;
 use PhpPact\Consumer\InteractionBuilder;
 use PhpPact\Consumer\Matcher\Matcher;
 use PhpPact\Consumer\Model\ConsumerRequest;
 use PhpPact\Consumer\Model\ProviderResponse;
 use PhpPact\Standalone\MockService\MockServerEnvConfig;
 use Prophecy\Argument;
-use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class SiriusDocumentsContractTest extends KernelTestCase
 {
@@ -37,7 +27,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
      *
      * @throws \Exception
      */
-    public function handleSiriusSync()
+    public function sendDocuments()
     {
         $matcher = new Matcher();
 
@@ -127,7 +117,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
             $reportSubmittedDate,
             'PF',
             $reportSubmissionId
-            );
+        );
 
         $result = $sut->sendReportPdfDocument($upload, 'some_content', $caseRef);
 
@@ -137,5 +127,16 @@ class SiriusDocumentsContractTest extends KernelTestCase
             '33ea0382-cfc9-4776-9036-667eeb68fa4b',
             $result->getBody()->getContents()
         );
+    }
+
+    // Write provider for the different docs and responses we expect from Sirius
+        // Create another regex for supporting docs
+        // Create a failure response
+        // Go trough all variations that are defined in swagger doc
+    public function uploadProvider()
+    {
+        return [
+
+        ];
     }
 }
