@@ -40,7 +40,7 @@ Feature: Users can access the correct clients
     When I go to admin page "/admin/organisations"
     And I follow "ABC Solicitors"
     #And I create a new "NDR-disabled" "Prof Named" user "ABC org" "Administrator" with email "behat-pa-org1@pa-org1.gov.uk" and postcode "SW1"
-    And I follow "Add someone to this organisation"
+    And I follow "Add user"
     And I fill in "organisation_add_user_email" with "existing-deputy1@abc-solicitors.uk"
     And I press "Find user"
     And I press "Add user to organisation"

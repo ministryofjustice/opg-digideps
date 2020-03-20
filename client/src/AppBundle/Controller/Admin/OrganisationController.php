@@ -37,7 +37,7 @@ class OrganisationController extends AbstractController
      * @Security("has_role('ROLE_ADMIN')")
      * @Template("AppBundle:Admin/Organisation:view.html.twig")
      */
-    public function viewAction(Request $request, $id)
+    public function viewAction($id)
     {
         try {
             $organisation = $this->getRestClient()->get('v2/organisation/' . $id, 'Organisation');

@@ -22,9 +22,22 @@ viewPage:
     htmlTitle: Administration - Organisations
     pageTitle: Edit organisation
     supportTitle: Organisations
-    addMember: Add someone to this organisation
+    addMember: Add user
     noMembers: This organisation doesn't have any members
     noClients: This organisation doesn't have any clients
+    summary:
+        emailDomain: Email domain
+        users: Users
+        clients: Clients
+        status:
+            label: Status
+            active: Active
+            inactive: Inactive
+        editOrganisation: Edit organisation
+
+    tabs:
+        users: Users
+        clients: Clients
     users:
         caption: Users
         name: Name
