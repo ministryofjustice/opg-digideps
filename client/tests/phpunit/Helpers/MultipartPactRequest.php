@@ -36,7 +36,7 @@ class MultipartPactRequest
         if (is_array($part['contents'])) {
             $contents = $part['contents'];
             array_walk_recursive_include_branches($contents, function (&$leaf) {
-                if (is_array($leaf) && $leaf['json_class'] === 'Pact::Term') {
+                if (is_array($leaf) && $leaf['json_class'] && substr($leaf['json_class'], 0, 6) === 'Pact::') {
                     $leaf = $leaf['data']['generate'];
                 }
             });
@@ -74,9 +74,14 @@ class MultipartPactRequest
         ];
 
         array_walk_recursive_include_branches($contents, function (&$leaf) use (&$replacements) {
-            if (is_array($leaf) && $leaf['json_class'] === 'Pact::Term') {
+            if (is_array($leaf) && $leaf['json_class'] && substr($leaf['json_class'], 0, 6) === 'Pact::') {
                 $id = uniqid();
-                $replacements['match'][] = $id;
+                if (is_int($leaf['data']['generate']) || is_float($leaf['data']['generate'])) {
+                    $replacements['match'][] = '"' . $id . '"';
+                } else {
+                    $replacements['match'][] = $id;
+                }
+
                 $replacements['replace'][] = trim($leaf['data']['matcher']['s'], '^$/');
                 $leaf = $id;
             }
