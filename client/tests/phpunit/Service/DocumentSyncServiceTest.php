@@ -76,6 +76,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             $reportEndDate,
             $reportSubmittedDate,
             'PF',
+            $reportSubmissionId
         );
 
         $successResponseBody = ['data' => ['id' => $reportPdfSubmissionUuid]];
@@ -121,6 +122,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             $reportEndDate,
             $reportSubmittedDate,
             'PF',
+            $reportSubmissionId
             );
 
         $failureResponseBody = ['errors' => [0 => ['id' => 'ABC123', 'code' => 'OPGDATA-API-FORBIDDEN']]];
@@ -218,7 +220,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         $siriusDocumentUpload = SiriusHelpers::generateSiriusSupportingDocumentUpload($supportingDocSubmissionId);
 
         $this->siriusApiGatewayClient
-            ->sendSupportingDocument($siriusDocumentUpload, 'fake_contents', $reportPdfSubmissionUuid)
+            ->sendSupportingDocument($siriusDocumentUpload, 'fake_contents', $reportPdfSubmissionUuid, '1234567T')
             ->shouldBeCalled()
             ->willReturn($successResponse);
 
