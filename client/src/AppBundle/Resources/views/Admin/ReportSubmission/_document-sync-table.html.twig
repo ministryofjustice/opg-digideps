@@ -30,7 +30,7 @@
         <tbody class="govuk-table__body">
             {% for document in documents %}
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell govuk-!-font-size-14">{{ document.fileName }}</td>
+                    <td class="govuk-table__cell govuk-!-font-size-14 opg-text--wrap    ">{{ document.fileName }}</td>
                     <td class="govuk-table__cell govuk-!-font-size-14">
                         <a href="{{ path('admin_document_download', { submissionId: reportSubmission.id, documentId: document.id }) }}">
                             {{- 'page.postactions.download' | trans -}}

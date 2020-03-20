@@ -9,3 +9,7 @@
 .opg-text--danger {
     color: govuk-colour('red');
 }
+
+.opg-text--wrap {
+    word-break: break-all;
+}
