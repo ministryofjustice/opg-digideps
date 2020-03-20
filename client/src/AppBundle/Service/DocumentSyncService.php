@@ -201,14 +201,15 @@ class DocumentSyncService
     {
         try {
             $upload = $this->buildUpload($document);
+            $caseRef = $document->getReport()->getClient()->getCaseNumber();
 
             if($document->isReportPdf()) {
-               $response = $this->siriusApiGateWayClient->sendReportPdfDocument($upload, $content, $document->getReport()->getClient()->getCaseNumber());
+               $response = $this->siriusApiGateWayClient->sendReportPdfDocument($upload, $content, $caseRef);
                return $response;
             } else {
                 /** @var ReportSubmission $reportPdfSubmission */
                 $reportPdfSubmission = $document->getReportPdfSubmission();
-                return $this->siriusApiGateWayClient->sendSupportingDocument($upload, $content, $reportPdfSubmission->getUuid());
+                return $this->siriusApiGateWayClient->sendSupportingDocument($upload, $content, $reportPdfSubmission->getUuid(), $caseRef);
             }
         } catch (RequestException $exception) {
             return $exception;

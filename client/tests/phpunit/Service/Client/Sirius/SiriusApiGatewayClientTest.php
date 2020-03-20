@@ -119,7 +119,8 @@ class SiriusApiGatewayClientTest extends KernelTestCase
             new DateTime('2019-01-01'),
             new DateTime('2019-12-31'),
             new DateTime('2020-01-03T09:30:00.001Z'),
-            'PF'
+            'PF',
+            123456
         );
 
         $sut->sendReportPdfDocument($siriusDocumentUpload, 'JVBERi0xLjMKJcT...etc==', '1234567T');
@@ -130,7 +131,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
     {
         $signedRequest = $this->buildRequest(
             $this->baseURL,
-            'reports/uuid-goes-123-here/supportingdocuments',
+            'clients/1/reports/uuid-goes-123-here/supportingdocuments',
             'POST' ,
             ['A-Header' => 'value'],
             $this->uploadSupportingDocumentJSONBlob
@@ -143,7 +144,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusSupportingDocumentUpload(123);
 
-        $sut->sendSupportingDocument($siriusDocumentUpload, 'JVBERi0xLjMKJcT...etc==', '1234567T');
+        $sut->sendSupportingDocument($siriusDocumentUpload, 'JVBERi0xLjMKJcT...etc==', '1234567T', '1');
     }
 
     private function buildRequest(string $baseURL, string $endpoint, string $method, array $additionalHeaders=[], string $body="")
