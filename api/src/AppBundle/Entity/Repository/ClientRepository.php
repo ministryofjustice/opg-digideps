@@ -121,6 +121,22 @@ class ClientRepository extends EntityRepository
     }
 
     /**
+     * @param $caseNumber
+     * @return |null
+     */
+    public function getArrayByCaseNumber($caseNumber)
+    {
+        $query = $this
+            ->getEntityManager()
+            ->createQuery('SELECT c FROM AppBundle\Entity\Client c WHERE c.caseNumber = ?1')
+            ->setParameter(1, $caseNumber);
+
+        $result = $query->getArrayResult();
+
+        return count($result) === 0 ? null : $result[0];
+    }
+
+    /**
      * @param ClientSearchFilter $filter
      */
     public function setSearchFilter(ClientSearchFilter $filter): void

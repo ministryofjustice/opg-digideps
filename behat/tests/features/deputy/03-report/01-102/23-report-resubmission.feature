@@ -1,16 +1,9 @@
 Feature: Admin unsubmit report (from client page)
 
   @deputy
-  Scenario: Admin client page + search
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search, search_clients_search"
-    And I click on "client-details" in the "client-102" region
-    And I save the current URL as "admin-client-search-client-102"
-
-  @deputy
   Scenario: Admin unsubmits report and changes report due date and reporting period
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I go to the URL previously saved as "admin-client-search-client-102"
+    When I visit the client page for "102"
     # reports page
     Then the URL should match "/admin/client/\d+/details"
     Then I should see the "report-2016" region in the "report-group-submitted" region
@@ -112,7 +105,7 @@ Feature: Admin unsubmit report (from client page)
   Scenario: admin sees new submission and client page updated
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     # check report being resubmitted
-    And I go to the URL previously saved as "admin-client-search-client-102"
+    When I visit the client page for "102"
     Then I should see the "report-2016" region in the "report-group-submitted" region
     # check there is a new submission, with all the documents
     When I click on "admin-documents"

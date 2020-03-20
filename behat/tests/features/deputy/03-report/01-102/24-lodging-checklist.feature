@@ -3,19 +3,7 @@ Feature: Admin report checklist
   @deputy
   Scenario: Case manager submits empty checklist for the report 102
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    # Navigate to checklist via search
-    And I click on "admin-client-search, search_clients_search"
-    Then each text should be present in the corresponding region:
-      | John 102-client | client-102 |
-    When I fill in the following:
-      | search_clients_q | 102-client |
-    And I click on "search_clients_search"
-    Then I should see the "client-row" region exactly "1" times
-    And each text should be present in the corresponding region:
-      | John 102-client | client-102 |
-    And I click on "client-details" in the "client-102" region
-    Then the URL should match "/admin/client/\d+/details"
-    # Begin scenario
+    When I visit the client page for "102"
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:

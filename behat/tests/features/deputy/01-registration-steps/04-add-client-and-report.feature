@@ -95,9 +95,7 @@ Feature: deputy / user / add client and report
   @ndr
   Scenario: New NDR report shown in admin panel
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "admin-client-search"
-    And I fill in "search_clients_q" with "33333333"
-    And I follow "Cly3 Hent3"
+    When I visit the client page for "33333333"
     Then the URL should match "/admin/client/\d+/details"
     And I should see the "report-ndr" region in the "report-group-active" region
 

@@ -5,6 +5,7 @@ namespace AppBundle\v2\Controller;
 use AppBundle\Entity\Repository\ClientRepository;
 use AppBundle\v2\Assembler\ClientAssembler;
 use AppBundle\v2\Transformer\ClientTransformer;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -45,7 +46,7 @@ class ClientController
      * @param $id
      * @return JsonResponse
      */
-    public function getByIdAction($id)
+    public function getByIdAction(int $id): JsonResponse
     {
         if (null === ($data = $this->repository->getArrayById($id))) {
             throw new NotFoundHttpException(sprintf('Client id %s not found', $id));
@@ -54,6 +55,26 @@ class ClientController
         $dto = $this->assembler->assembleFromArray($data);
 
         $transformedDto = $this->transformer->transform($dto);
+
+        return $this->buildSuccessResponse($transformedDto);
+    }
+
+    /**
+     * @Route("/case-number/{caseNumber}", methods={"GET"})
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     *
+     * @param string $caseNumber
+     * @return JsonResponse
+     */
+    public function getByCaseNumber(string $caseNumber): JsonResponse
+    {
+        if (null === ($data = $this->repository->getArrayByCaseNumber($caseNumber))) {
+            throw new NotFoundHttpException(sprintf('Client with case number %s not found', $caseNumber));
+        }
+
+        $dto = $this->assembler->assembleFromArray($data);
+
+        $transformedDto = $this->transformer->transform($dto, ['reports', 'ndr', 'organisation', 'namedDeputy']);
 
         return $this->buildSuccessResponse($transformedDto);
     }
