@@ -126,10 +126,9 @@
                     <th scope="col" class="govuk-table__header"><span class="visually-hidden">{{ 'page.resultsTable.header.documents' | trans }}</span></th>
                     <th scope="col" class="govuk-table__header">{{ 'page.resultsTable.header.caseNumber' | trans }}</th>
                     <th scope="col" class="govuk-table__header">{{ 'page.resultsTable.header.submitted' | trans }}</th>
-                    {% if not isNewPage %}
+                    {% if currentTab == 'archived' %}
                         <th>{{ 'page.resultsTable.header.user' | trans }}</th>
                     {% endif %}
-                    <th scope="col" class="govuk-table__header">{{ 'page.resultsTable.header.discharged' | trans }}</th>
                 </tr>
             </thead>
             <tbody class="govuk-table__body">
@@ -181,24 +180,11 @@
                             {# show hour and time #}
                             {{ submissionDate | date('g:ia') }}
                         </td>
-                        {% if not isNewPage %}
+                        {% if currentTab == 'archived' %}
                             <td class="govuk-table__cell">
                                 <span title="{{ reportSubmission.archivedBy.firstname }} {{ reportSubmission.archivedBy.lastname }}">{{ reportSubmission.archivedBy.firstname | first }}{{ reportSubmission.archivedBy.lastname | first }}</span>
                             </td>
                         {% endif %}
-                        <td class="govuk-table__cell width-tenth">
-                            {% set dischargedDate = client.deletedAt %}
-                            {% if dischargedDate is defined and dischargedDate is not null %}
-                                {% if ("now" | date('Y-m-d') == dischargedDate | date('Y-m-d')) %}
-                                    Today
-                                {% else %}
-                                    {{ dischargedDate | date('d/m/Y') }}
-                                {% endif %}
-                                <br/>
-                                {# show hour and time #}
-                                {{ dischargedDate | date('g:ia') }}
-                            {% endif %}
-                        </td>
                     </tr>
 
                     <tr id="docs-table-{{ reportSubmission.id }}">
