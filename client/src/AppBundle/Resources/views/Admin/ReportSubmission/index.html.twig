@@ -185,7 +185,7 @@
                         {% endif %}
                     </tr>
 
-                    <tr id="docs-table-{{ reportSubmission.id }}">
+                    <tr id="docs-table-{{ reportSubmission.id }}" class="behat-region-report-submission-documents-{{ loop.index }}">
                         <td colspan="7">
                             {{ include('AppBundle:Admin/ReportSubmission:_document-sync-table.html.twig', { reportSubmission: reportSubmission, documents: reportSubmission.documents }) }}
                         </td>

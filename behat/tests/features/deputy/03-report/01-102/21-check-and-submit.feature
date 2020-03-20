@@ -144,8 +144,10 @@ Feature: Report submit
         Then I should see the "report-submission" region exactly 1 times
         And each text should be present in the corresponding region:
             | John 102 | report-submission-1 |
-            | 102 | report-submission-1 |
-            | Report + docs | report-submission-1 |
+            | 102      | report-submission-1 |
+        And each text should be present in the corresponding region:
+            | DigiRep-2016_2020-03-20_102.pdf | report-submission-documents-1 |
+            | good.png                        | report-submission-documents-1 |
 
     @deputy
     Scenario: admin can download individual report flies
@@ -173,9 +175,11 @@ Feature: Report submit
         And I click on "tab-archived"
         Then each text should be present in the corresponding region:
             | John 102 | report-submission-1 |
-            | 102 | report-submission-1 |
-            | Report + docs | report-submission-1 |
-            | AU | report-submission-1 |
+            | 102      | report-submission-1 |
+            | AU       | report-submission-1 |
+        Then each text should be present in the corresponding region:
+            | DigiRep-2016_2020-03-20_102.pdf | report-submission-documents-1 |
+            | good.png                        | report-submission-documents-1 |
 
     @deputy
     Scenario: assert 2nd year report has been created
