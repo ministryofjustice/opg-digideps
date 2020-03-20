@@ -35,8 +35,14 @@ class SiriusDocumentUploadSerializer implements NormalizerInterface
     public function normalize($metaData, $format = null, array $context = [])
     {
         $data = $this->normalizer->normalize($metaData, $format, $context);
-        $data['attributes']['reporting_period_from'] = (new DateTime($data['attributes']['reporting_period_from']))->format('Y-m-d');
-        $data['attributes']['reporting_period_to'] = (new DateTime($data['attributes']['reporting_period_to']))->format('Y-m-d');
+
+        if ($data['attributes']['reporting_period_from']) {
+            $data['attributes']['reporting_period_from'] = (new DateTime($data['attributes']['reporting_period_from']))->format('Y-m-d');
+        }
+
+        if ($data['attributes']['reporting_period_to']) {
+            $data['attributes']['reporting_period_to'] = (new DateTime($data['attributes']['reporting_period_to']))->format('Y-m-d');
+        }
 
         return $data;
     }

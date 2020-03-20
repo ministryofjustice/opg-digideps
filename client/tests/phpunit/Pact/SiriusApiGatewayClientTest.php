@@ -17,43 +17,124 @@ use PhpPact\Consumer\Model\ConsumerRequest;
 use PhpPact\Consumer\Model\ProviderResponse;
 use PhpPact\Standalone\MockService\MockServerEnvConfig;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class SiriusDocumentsContractTest extends KernelTestCase
 {
+    /** @var string */
+    private $caseRef;
+
+    /**  @var GuzzleClient */
+    private $client;
+
+    /** @var RequestSigner&ObjectProphecy */
+    private $signer;
+
+    /** @var string */
+    private $baseUrl;
+
+    /** @var object|null  */
+    private $serializer;
+
+    /**  @var SiriusApiGatewayClient */
+    private $sut;
+
+    /** @var string */
+    private $reportPdfUuid;
+
+    /** @var string */
+    private $expectedSupportingDocumentUuid;
+
+    public function setUp(): void
+    {
+        $this->caseRef = '1234567T';
+        $this->reportPdfUuid = '33ea0382-cfc9-4776-9036-667eeb68fa4b';
+        $this->expectedSupportingDocumentUuid = '9c0cb55e-718d-4ffb-9599-f3164e12dbdb';
+        $this->client = new GuzzleClient();
+        $this->signer = self::prophesize(RequestSigner::class);
+        $this->baseUrl = getenv('PACT_MOCK_SERVER_HOST');
+        $this->serializer = (self::bootKernel(['debug' => false]))->getContainer()->get('serializer');
+        $this->sut = new SiriusApiGatewayClient($this->client, $this->signer->reveal(), 'http://' . $this->baseUrl, $this->serializer);
+    }
+
     /**
-     * As we have multiple callouts for the main syncDocument function to Digideps API and Sirius this test
-     * focuses purely on the Sirius callout to minimise complexity.
-     *
      * @test
-     *
      * @throws \Exception
      */
-    public function sendDocuments()
+    public function sendReportPdfDocument()
+    {
+        $builder = $this->generateReportPdfPactBuilder($this->caseRef);
+
+        $this->signer->signRequest(Argument::type(Request::class), 'execute-api')->willReturnArgument(0);
+
+        $reportStartDate = new DateTime('2018-05-14');
+        $reportEndDate = new DateTime('2019-05-13');
+        $reportSubmittedDate = new DateTime('2019-06-20');
+        $reportSubmissionId = 9876;
+
+        $upload = $siriusDocumentUpload = SiriusHelpers::generateSiriusReportPdfDocumentUpload(
+            $reportStartDate,
+            $reportEndDate,
+            $reportSubmittedDate,
+            'PF',
+            $reportSubmissionId
+        );
+
+        $result = $this->sut->sendReportPdfDocument($upload, 'some_content', $this->caseRef);
+
+        $builder->verify();
+
+        self::assertStringContainsString(
+            $this->reportPdfUuid,
+            $result->getBody()->getContents()
+        );
+    }
+
+    /**
+     * @test
+     * @throws \Exception
+     */
+    public function sendSupportingDocument()
+    {
+        $builder = $this->generateSupportingDocumentPactBuilder($this->caseRef, $this->reportPdfUuid);
+
+        $this->signer->signRequest(Argument::type(Request::class), 'execute-api')->willReturnArgument(0);
+
+        $upload = $siriusDocumentUpload = SiriusHelpers::generateSiriusSupportingDocumentUpload(9876);
+
+        $result = $this->sut->sendSupportingDocument($upload, 'some_content', $this->reportPdfUuid, $this->caseRef);
+
+        $builder->verify();
+
+        self::assertStringContainsString(
+            $this->reportPdfUuid,
+            $result->getBody()->getContents()
+        );
+    }
+
+    private function generateReportPdfPactBuilder(string $caseRef)
     {
         $matcher = new Matcher();
 
-        $multipartRequest = new MultipartPactRequest();
-        $multipartRequest->addPart('report_file', 'c29tZV9jb250ZW50');
-        $multipartRequest->addPart('report', [
-            'data' => [
-                'type' => 'reports',
-                'attributes' => [
-                    'reporting_period_from' => $matcher->dateISO8601('2018-05-14'),
-                    'reporting_period_to' => $matcher->dateISO8601('2019-05-13'),
-                    'year' => $matcher->regex('2018', '[0-9]{4}'),
-                    'date_submitted' => $matcher->dateTimeISO8601('2019-06-20T00:00:00+01:00'),
-                    'type' => $matcher->regex('PF', 'PF|HW|NDR'),
-                    'submission_id' => $matcher->integer(9876)
+        $multipartRequest = (new MultipartPactRequest())
+            ->addPart('report_file', 'c29tZV9jb250ZW50')
+            ->addPart('report', [
+                'data' => [
+                    'type' => 'reports',
+                    'attributes' => [
+                        'reporting_period_from' => $matcher->dateISO8601('2018-05-14'),
+                        'reporting_period_to' => $matcher->dateISO8601('2019-05-13'),
+                        'year' => $matcher->regex('2018', '[0-9]{4}'),
+                        'date_submitted' => $matcher->dateTimeISO8601('2019-06-20T00:00:00+01:00'),
+                        'type' => $matcher->regex('PF', 'PF|HW|NDR'),
+                        'submission_id' => $matcher->regex(9876, '\d+')
+                    ]
                 ]
-            ]
-        ]);
-
-        $caseRef = '1234567T';
+            ]);
 
         // Create your expected request from the consumer.
-        $request = new ConsumerRequest();
-        $request
+        $request = (new ConsumerRequest())
             ->setMethod('POST')
             ->setPath(sprintf('/clients/%s/reports', $caseRef))
             ->setHeaders(
@@ -75,14 +156,14 @@ class SiriusDocumentsContractTest extends KernelTestCase
             ->setBody([
                 'data' => [
                     'type' => 'reports',
-                    'id' => $matcher->uuid('33ea0382-cfc9-4776-9036-667eeb68fa4b'),
+                    'id' => $matcher->uuid($this->reportPdfUuid),
                     'attributes' => [
                         'reporting_period_from' => $matcher->dateISO8601(),
                         'reporting_period_to' => $matcher->dateISO8601(),
                         'year' => $matcher->regex('2018', '[0-9]{4}'),
                         'date_submitted' => $matcher->dateTimeWithMillisISO8601(),
                         'type' => $matcher->regex('PF', 'PF|HW|NDR'),
-                        'submission_id' => $matcher->integer()
+                        'submission_id' => $matcher->integer(9876)
                     ]
                 ],
             ]);
@@ -95,44 +176,65 @@ class SiriusDocumentsContractTest extends KernelTestCase
             ->with($request)
             ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
 
-        // ------------------
-
-        $client = new GuzzleClient();
-        $signer = self::prophesize(RequestSigner::class);
-        $baseUrl = getenv('PACT_MOCK_SERVER_HOST');
-        $serializer = (self::bootKernel(['debug' => false]))->getContainer()->get('serializer');
-
-        $signer->signRequest(Argument::type(Request::class), 'execute-api')->willReturnArgument(0);
-
-        $sut = new SiriusApiGatewayClient($client, $signer->reveal(), $baseUrl, $serializer);
-
-        $reportStartDate = new DateTime('2018-05-14');
-        $reportEndDate = new DateTime('2019-05-13');
-        $reportSubmittedDate = new DateTime('2019-06-20');
-        $reportSubmissionId = 9876;
-
-        $upload = $siriusDocumentUpload = SiriusHelpers::generateSiriusReportPdfDocumentUpload(
-            $reportStartDate,
-            $reportEndDate,
-            $reportSubmittedDate,
-            'PF',
-            $reportSubmissionId
-        );
-
-        $result = $sut->sendReportPdfDocument($upload, 'some_content', $caseRef);
-
-        $builder->verify();
-
-        self::assertStringContainsString(
-            '33ea0382-cfc9-4776-9036-667eeb68fa4b',
-            $result->getBody()->getContents()
-        );
+        return $builder;
     }
 
-    // Write provider for the different docs and responses we expect from Sirius
-        // Create another regex for supporting docs
-        // Create a failure response
-        // Go trough all variations that are defined in swagger doc
+    private function generateSupportingDocumentPactBuilder(string $caseRef, string $reportPdfDocumentUuid)
+    {
+        $matcher = new Matcher();
+
+        $multipartRequest = (new MultipartPactRequest())
+            ->addPart('supporting_document_file', 'c29tZV9jb250ZW50')
+            ->addPart('supporting_document', [
+                'data' => [
+                    'type' => 'supportingdocument',
+                    'attributes' => [
+                        'submission_id' => $matcher->regex(9876, '\d+')
+                    ]
+                ]
+            ]);
+
+        // Create your expected request from the consumer.
+        $request = (new ConsumerRequest())
+            ->setMethod('POST')
+            ->setPath(sprintf('/clients/%s/reports/%s/supportingdocuments', $caseRef, $reportPdfDocumentUuid))
+            ->setHeaders(
+                [
+                    'Content-Type' =>
+                        $matcher->regex(
+                            'multipart/form-data; boundary=5872fc54a8fa5f5be65ee0af590d1ae813a1b091',
+                            'multipart\/form-data.*'
+                        )
+                ]
+            )
+            ->setBody($matcher->regex($multipartRequest->getExampleBody(), $multipartRequest->getRegex('supporting_document')));
+
+        // Create your expected response from the provider.
+        $response = new ProviderResponse();
+        $response
+            ->setStatus(201)
+            ->addHeader('Content-Type', 'application/json')
+            ->setBody([
+                'data' => [
+                    'type' => 'supportingdocuments',
+                    'id' => $matcher->uuid($this->reportPdfUuid),
+                    'attributes' => [
+                        'submission_id' => $matcher->integer()
+                    ]
+                ],
+            ]);
+
+        // Create a configuration that reflects the server that was started. You can create a custom MockServerConfigInterface if needed.
+        $config  = new MockServerEnvConfig();
+        $builder = new InteractionBuilder($config);
+        $builder
+            ->uponReceiving('A submitted supporting document')
+            ->with($request)
+            ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
+
+        return $builder;
+    }
+
     public function uploadProvider()
     {
         return [

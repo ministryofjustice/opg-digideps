@@ -26,6 +26,8 @@ class MultipartPactRequest
             'name' => $name,
             'contents' => $contents
         ];
+
+        return $this;
     }
 
     /**

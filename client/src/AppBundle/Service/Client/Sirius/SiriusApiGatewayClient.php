@@ -11,6 +11,9 @@ use Symfony\Component\Serializer\Serializer;
 
 class SiriusApiGatewayClient
 {
+    const SIRIUS_REPORT_ENDPOINT = 'clients/%s/reports';
+    const SIRIUS_SUPPORTING_DOCUMENTS_ENDPOINT = 'clients/%s/reports/%s/supportingdocuments';
+
     /** @var Client */
     private $httpClient;
 
@@ -69,7 +72,7 @@ class SiriusApiGatewayClient
         ]);
 
         $signedRequest = $this->buildSignedRequest(
-            sprintf('clients/%s/reports', $caseRef),
+            sprintf(self::SIRIUS_REPORT_ENDPOINT, $caseRef),
             'POST',
             $multipart,
             'application/vnd.opg-data.v1+json',
@@ -80,9 +83,9 @@ class SiriusApiGatewayClient
     }
 
     /** @TODO check with final swagger doc on endpoint for multipart naming conventions once its ready */
-    public function sendSupportingDocument(SiriusDocumentUpload $upload, string $content, string $submissionUuid)
+    public function sendSupportingDocument(SiriusDocumentUpload $upload, string $content, string $submissionUuid, string $caseRef)
     {
-        $reportJson = $this->serializer->serialize($upload, 'json');
+        $reportJson = $this->serializer->serialize(['data' => $upload], 'json');
 
         $multipart = new MultipartStream([
             [
@@ -96,8 +99,7 @@ class SiriusApiGatewayClient
         ]);
 
         $signedRequest = $this->buildSignedRequest(
-            sprintf('reports/%s/supportingdocuments',
-                $submissionUuid),
+            sprintf(self::SIRIUS_SUPPORTING_DOCUMENTS_ENDPOINT, $caseRef, $submissionUuid),
             'POST',
             $multipart,
             'application/vnd.opg-data.v1+json',
