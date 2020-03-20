@@ -3,6 +3,7 @@
 namespace DigidepsTests\Helpers;
 
 use GuzzleHttp\Psr7\MultipartStream;
+use RuntimeException;
 
 function array_walk_recursive_include_branches(array &$array, callable $callback) {
     foreach ($array as $k => &$v) {
@@ -20,12 +21,27 @@ class MultipartPactRequest
     /**
      * Add an expected part to the request
      */
-    public function addPart(string $name, $contents)
+    public function addPart(string $name, $contents): MultipartPactRequest
     {
         $this->parts[$name] = [
             'name' => $name,
             'contents' => $contents
         ];
+
+        return $this;
+    }
+
+    private function isPactMatcher($node): bool
+    {
+        if (is_array($node) && $node['json_class'] && substr($node['json_class'], 0, 6) === 'Pact::') {
+            if ($node['json_class'] === 'Pact::Term') {
+                return true;
+            } else {
+                throw new RuntimeException('Cannot support non-regex-based matchers in multipart requests. Please use a regex matcher instead.');
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -36,7 +52,7 @@ class MultipartPactRequest
         if (is_array($part['contents'])) {
             $contents = $part['contents'];
             array_walk_recursive_include_branches($contents, function (&$leaf) {
-                if (is_array($leaf) && $leaf['json_class'] && substr($leaf['json_class'], 0, 6) === 'Pact::') {
+                if ($this->isPactMatcher($leaf)) {
                     $leaf = $leaf['data']['generate'];
                 }
             });
@@ -74,8 +90,9 @@ class MultipartPactRequest
         ];
 
         array_walk_recursive_include_branches($contents, function (&$leaf) use (&$replacements) {
-            if (is_array($leaf) && $leaf['json_class'] && substr($leaf['json_class'], 0, 6) === 'Pact::') {
+            if ($this->isPactMatcher($leaf)) {
                 $id = uniqid();
+
                 if (is_int($leaf['data']['generate']) || is_float($leaf['data']['generate'])) {
                     $replacements['match'][] = '"' . $id . '"';
                 } else {
