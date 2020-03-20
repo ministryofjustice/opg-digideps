@@ -50,6 +50,8 @@ class ReportSubmissionController extends AbstractController
      * @Route("/documents/list", name="admin_documents", methods={"GET", "POST"})
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("AppBundle:Admin/ReportSubmission:index.html.twig")
+     *
+     * @return array<mixed>|Response
      */
     public function indexAction(Request $request)
     {
@@ -93,7 +95,7 @@ class ReportSubmissionController extends AbstractController
      * @Route("/documents/list/download", name="admin_documents_download", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      */
-    public function downloadDocuments(Request $request)
+    public function downloadDocuments(Request $request): Response
     {
         $reportSubmissionIds =
             !empty($request->query->get('reportSubmissionIds')) ? json_decode(urldecode($request->query->get('reportSubmissionIds'))) : null;
@@ -119,7 +121,7 @@ class ReportSubmissionController extends AbstractController
      * @Route("/documents/{submissionId}/{documentId}/download", name="admin_document_download", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      */
-    public function downloadIndividualDocument(int $submissionId, int $documentId)
+    public function downloadIndividualDocument(int $submissionId, int $documentId): Response
     {
         $client = $this->getRestClient();
 
@@ -156,6 +158,8 @@ class ReportSubmissionController extends AbstractController
      * @Route("/documents/list/download_ready", name="admin_documents_download_ready", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("AppBundle:Admin/ReportSubmission:download-ready.html.twig")
+     *
+     * @return array<mixed>
      */
     public function downloadReady(Request $request)
     {
@@ -166,7 +170,7 @@ class ReportSubmissionController extends AbstractController
      * Process a post
      *
      * @param Request $request request
-     *
+     * @return Response|void
      */
     private function processPost(Request $request)
     {
@@ -209,8 +213,6 @@ class ReportSubmissionController extends AbstractController
                         $this->addFlash('error', 'There was an error downloading the requested documents: ' . $e->getMessage());
                         return $this->redirectToRoute('admin_documents');
                     }
-
-                    break;
             }
         }
     }
@@ -218,10 +220,10 @@ class ReportSubmissionController extends AbstractController
     /**
      * Archive multiple documents based on the supplied ids
      *
-     * @param array $checkedBoxes ids selected by the user
+     * @param array<int, int|string> $checkedBoxes ids selected by the user
      *
      */
-    private function processArchive($checkedBoxes)
+    private function processArchive($checkedBoxes): void
     {
         foreach ($checkedBoxes as $reportSubmissionId) {
             $this->getRestClient()->put("report-submission/{$reportSubmissionId}", ['archive'=>true]);
@@ -230,7 +232,7 @@ class ReportSubmissionController extends AbstractController
 
     /**
      * @param  Request $request
-     * @return array
+     * @return array<mixed>
      */
     private static function getFiltersFromRequest(Request $request)
     {
