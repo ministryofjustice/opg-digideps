@@ -1,7 +1,8 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
 {% trans_default_domain "admin-settings" %}
-{% set transOptions = {} %}
+
+{% set navSection = 'notifications' %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
