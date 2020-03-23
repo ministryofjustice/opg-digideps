@@ -20,28 +20,13 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-
-    {{ form_input(form.email,'addUserForm.email') }}
     {{ form_input(form.firstname,'addUserForm.firstname') }}
     {{ form_input(form.lastname,'addUserForm.lastname') }}
     {{ form_input(form.addressPostcode,'addUserForm.addressPostcode', {inputClass: 'govuk-!-width-one-third'}) }}
 
-    {% set deputyRole %}
-        {{ form_select(form.roleNameDeputy,'addUserForm.roleNameDeputy') }}
+    {% if 'ROLE_LAY_DEPUTY' == user.roleName %}
         {{ form_checkbox(form.ndrEnabled, 'addUserForm.ndrEnabled') }}
-    {% endset %}
-
-    {% set adminRole %}
-        {{ form_select(form.roleNameStaff,'addUserForm.roleNameStaff') }}
-    {%  endset %}
-
-    {{ form_checkbox_group(form.roleType, 'addUserForm.roleType', {
-        disabled: true,
-        items: [
-            { conditional: deputyRole },
-            { conditional: adminRole },
-        ]
-    }) }}
+    {% endif %}
 
     {% if 'ROLE_LAY_DEPUTY' == user.roleName and reportsCount > 0 %}
         <p class="text">{{ 'editUserForm.reportsExist' | trans }}</p>
