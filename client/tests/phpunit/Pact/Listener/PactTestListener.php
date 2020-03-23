@@ -2,8 +2,11 @@
 
 namespace AppBundle\Pact\Listener;
 
+use GuzzleHttp\Psr7\Uri;
+use PhpPact\Broker\Service\BrokerHttpClient;
 use PhpPact\Http\GuzzleClient;
 use PhpPact\Standalone\Exception\MissingEnvVariableException;
+use PhpPact\Standalone\MockService\MockServer;
 use PhpPact\Standalone\MockService\MockServerConfigInterface;
 use PhpPact\Standalone\MockService\MockServerEnvConfig;
 use PhpPact\Standalone\MockService\Service\MockServerHttpService;
@@ -82,7 +85,31 @@ class PactTestListener implements TestListener
             } else {
                 $httpService = new MockServerHttpService(new GuzzleClient(), $this->mockServerConfig);
                 $httpService->verifyInteractions();
-                $httpService->getPactJson();
+                $json = $httpService->getPactJson();
+            }
+
+            //requires these to exist
+            if (($pactBrokerUri = \getenv('PACT_BROKER_BASE_URL')) &&
+                ($consumerVersion = \getenv('PACT_CONSUMER_VERSION')) &&
+                ($tag = \getenv('PACT_TAG'))
+            ) {
+                $clientConfig = [];
+                if (($user = \getenv('PACT_BROKER_HTTP_AUTH_USER')) &&
+                    ($pass = \getenv('PACT_BROKER_HTTP_AUTH_PASS'))
+                ) {
+                    $clientConfig = [
+                        'auth' => [$user, $pass],
+                    ];
+                }
+                $headers = [];
+                $pactBrokerUriFull = 'https://' . $pactBrokerUri . '/';
+                $client = new GuzzleClient($clientConfig);
+                $brokerHttpService = new BrokerHttpClient($client, new Uri($pactBrokerUriFull), $headers);
+                $brokerHttpService->tag($this->mockServerConfig->getConsumer(), $consumerVersion, $tag);
+                $brokerHttpService->publishJson($json, $consumerVersion);
+                print 'Pact file has been uploaded to the Broker successfully.';
+            } else {
+                print 'One or more environment variables not set';
             }
         }
     }

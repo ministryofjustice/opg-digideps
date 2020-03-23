@@ -362,16 +362,27 @@ jobs:
           name: Load docker images
           command: docker load -i ~/project/docker-images.tar
       - run:
+          name: install aws cli
+          command: |
+            pip3 install awscli --upgrade --user
+            aws --version
+      - run:
+          name: Set environment
+          command: |
+            ~/project/.circleci/set_env.sh >> $BASH_ENV
+            ~/project/.circleci/set_env_pact.sh >> $BASH_ENV
+      - run:
           name: Run tests
           command: |
             docker-compose up -d pact-mock
-            sleep 1
-            docker run \
-                --rm \
-                --network=project_default \
-                --env-file=client/docker/env/frontend.env \
-                client:latest \
-                bin/phpunit -c tests/phpunit
+            sleep 3
+            docker run --rm --network=project_default \
+            -e PACT_BROKER_HTTP_AUTH_PASS \
+            -e PACT_BROKER_HTTP_AUTH_USER \
+            -e PACT_CONSUMER_VERSION \
+            -e PACT_BROKER_BASE_URL \
+            -e PACT_TAG \
+            client:latest bin/phpunit -c tests/phpunit
             docker-compose exec pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
             docker-compose stop pact-mock
       - store_artifacts:
