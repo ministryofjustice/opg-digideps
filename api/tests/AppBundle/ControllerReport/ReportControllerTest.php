@@ -331,7 +331,7 @@ class ReportControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenAdmin,
         ])['data'];
-        $this->assertEquals(['new' => 1, 'archived' => 0], $data['counts']);
+        $this->assertEquals(['new' => 1, 'pending' => 0, 'archived' => 0], $data['counts']);
         $this->assertEquals('file2.pdf', $data['records'][0]['documents'][0]['file_name']);
 
         return $report->getId();
