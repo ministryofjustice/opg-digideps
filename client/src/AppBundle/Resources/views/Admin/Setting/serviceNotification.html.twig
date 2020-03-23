@@ -21,7 +21,8 @@
                 }) }}
 
                 {{ form_checkbox_group(form.enabled, 'serviceNotifications.form.enabled', {
-                    'legendClass' : 'govuk-fieldset__legend--m'
+                    formGroupClass: 'govuk-radios--inline',
+                    legendClass: 'govuk-fieldset__legend--m',
                 }) }}
 
                 {{ form_submit(form.save, 'serviceNotifications.form.save', {'buttonClass': 'behat-link-save'}) }}
