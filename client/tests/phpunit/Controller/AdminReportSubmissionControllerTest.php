@@ -57,36 +57,46 @@ class AdminReportSubmissionControllerTest extends AbstractControllerTestCase
         self::assertStringContainsString('bill-scanned.jpg', $documentsRow->text());
     }
 
-    public function testIndexActionShowsSynchronisationStatus(): void
+    /**
+     * @dataProvider docSynchronisationStatusProvider
+     */
+    public function testIndexActionShowsSynchronisationStatus($status, $error, $expectation): void
     {
+        $document = $this
+            ->generateDocument('ready-doc.pdf', $status)
+            ->setSynchronisationError($error);
+
         $this->restClient
             ->arrayToEntities(ReportSubmission::class . '[]', ['placeholder'])
             ->shouldBeCalled()
             ->willReturn([
                 $this
                     ->generateReportSubmission('72549273', 'Reynaldo', 'Noud')
-                    ->setDocuments([
-                        $this->generateDocument('ready-doc.pdf', Document::SYNC_STATUS_QUEUED),
-                        $this->generateDocument('in-progress-doc.pdf', Document::SYNC_STATUS_IN_PROGRESS),
-                        $this->generateDocument('complete-doc.pdf', Document::SYNC_STATUS_SUCCESS),
-                        $this->generateDocument('temp-error-doc.pdf', Document::SYNC_STATUS_TEMPORARY_ERROR)
-                            ->setSynchronisationError('S3 is unavailable'),
-                        $this->generateDocument('permanent-error-doc.pdf', Document::SYNC_STATUS_PERMANENT_ERROR)
-                            ->setSynchronisationError('Invalid file type application/json'),
-                    ]),
+                    ->setDocuments([ $document ]),
             ]);
 
         $crawler = $this->client->request('GET', '/admin/documents/list?status=pending');
 
-        $documentRows = $crawler->filter('.behat-region-report-submission-documents-1 table > tbody > tr');
+        $documentsRow = $crawler->filter('.behat-region-report-submission-documents-1')->first();
 
-        self::assertStringContainsString('Queued', $documentRows->eq(0)->text());
-        self::assertStringContainsString('In progress', $documentRows->eq(1)->text());
-        self::assertStringContainsString('Success', $documentRows->eq(2)->text());
-        self::assertStringContainsString('Temporary fail', $documentRows->eq(3)->text());
-        self::assertStringContainsString('Error: S3 is unavailable', $documentRows->eq(3)->text());
-        self::assertStringContainsString('Permanent fail', $documentRows->eq(4)->text());
-        self::assertStringContainsString('Error: Invalid file type application/json', $documentRows->eq(4)->text());
+        self::assertStringContainsString($expectation, $documentsRow->text());
+
+        if ($error) {
+            self::assertStringContainsString('Error: ' . $error, $documentsRow->text());
+        } else {
+            self::assertStringNotContainsString('Error', $documentsRow->text());
+        }
+    }
+
+    public function docSynchronisationStatusProvider(): array
+    {
+        return [
+            [Document::SYNC_STATUS_QUEUED, null, 'Queued'],
+            [Document::SYNC_STATUS_IN_PROGRESS, null, 'In progress'],
+            [Document::SYNC_STATUS_SUCCESS, null, 'Success'],
+            [Document::SYNC_STATUS_TEMPORARY_ERROR, 'S3 is unavailable', 'Temporary fail'],
+            [Document::SYNC_STATUS_PERMANENT_ERROR, 'Invalid file type application/json', 'Permanent fail'],
+        ];
     }
 
     public function testIndexActionShowsWhoArchivedBy(): void
