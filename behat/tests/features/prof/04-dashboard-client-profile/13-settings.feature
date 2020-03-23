@@ -24,7 +24,6 @@ Feature: PROF settings
     Then I fill in the following:
       | profile_firstname  | John Named Chap                       |
       | profile_lastname   | Greenish                              |
-      | profile_email      | behat-prof1@publicguardian.gov.uk   |
       | profile_jobTitle   | Solicitor General                     |
       | profile_phoneMain  | 10000000011                           |
       | profile_address1         | 123 Streetname |
@@ -55,7 +54,6 @@ Feature: PROF settings
     Then I fill in the following:
       | profile_firstname  | Mark Admin Chap                           |
       | profile_lastname   | Yellowish                                 |
-      | profile_email      | behat-prof1-admin@publicguardian.gov.uk |
       | profile_jobTitle   | Solicitor Assistant                       |
       | profile_phoneMain  | 10000000012                               |
     And I press "profile_save"
@@ -88,18 +86,15 @@ Feature: PROF settings
     When I fill in the following:
       | profile_firstname  |                                                 |
       | profile_lastname   |                                                 |
-      | profile_email      |                                                 |
       | profile_jobTitle   |                                                 |
       | profile_phoneMain  |                                                 |
     And I press "profile_save"
     Then the following fields should have an error:
       | profile_firstname        |
       | profile_lastname         |
-      | profile_email            |
     When I fill in the following:
       | profile_firstname        | Tim Team Member                                 |
       | profile_lastname         | Chap                                            |
-      | profile_email            | behat-prof3-team-member@publicguardian.gov.uk |
       | profile_jobTitle         | Solicitor helper                                |
       | profile_phoneMain        | 30000000123                                     |
       | profile_address1         | 123 SomeRoad                                    |

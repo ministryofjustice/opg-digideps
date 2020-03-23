@@ -124,7 +124,6 @@ Feature: PROF team setup
     Then the following fields should have the corresponding values:
       | team_member_account_firstname | Robert Team member                              |
       | team_member_account_lastname  | Black                                           |
-      | team_member_account_email     | behat-prof1-team-member@publicguardian.gov.uk |
       | team_member_account_jobTitle  | Solicitor helper                                |
       | team_member_account_phoneMain | 10000000003                                     |
     And I should not see a "team_member_account_roleName_0" element
@@ -132,7 +131,6 @@ Feature: PROF team setup
     When I fill in the following:
       | team_member_account_firstname | Bobby Team member                               |
       | team_member_account_lastname  | BlackAndBlue                                    |
-      | team_member_account_email     | behat-prof1-team-member@publicguardian.gov.uk |
       | team_member_account_jobTitle  | Helper solicitor                                |
       | team_member_account_phoneMain | +4410000000003                                  |
     And I press "team_member_account_save"
@@ -256,32 +254,3 @@ Feature: PROF team setup
     Then the form should be valid
     And I save the application status into "prof-team-users-complete"
     And I should see the "client-33000001" region
-
-  Scenario: PROF_ADMIN3 logs in and edits PROF_TEAM_MEMBER using existing email address
-    Given I am logged in as "behat-prof3@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "org-settings, user-accounts"
-    # edit PROF named
-    When I click on "edit" in the "team-user-behat-prof3-team-memberpublicguardiangovuk" region
-    And I fill in the following:
-      | team_member_account_firstname | Edited PROF3                                |
-      | team_member_account_lastname  | Edited Team Member                        |
-      | team_member_account_email     | behat-prof3-admin@publicguardian.gov.uk |
-    And I press "team_member_account_save"
-    Then the following fields should have an error:
-      | team_member_account_email |
-
-  Scenario: PROF_ADMIN3 logs in and edits PROF_TEAM_MEMBER using existing email address for a deleted user
-    Given I am logged in as "behat-prof3@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "org-settings, user-accounts"
-    # delete existing admin user
-    And I click on "delete" in the "team-user-behat-prof3-adminpublicguardiangovuk" region
-    And I click on "confirm"
-    # edit PROF named
-    When I click on "edit" in the "team-user-behat-prof3-team-memberpublicguardiangovuk" region
-    And I fill in the following:
-      | team_member_account_firstname | Edited PROF3                                |
-      | team_member_account_lastname  | Edited Team Member                        |
-      | team_member_account_email     | behat-prof3-admin@publicguardian.gov.uk |
-    And I press "team_member_account_save"
-    Then the form should be valid
-    And I should see "behat-prof3-admin@publicguardian.gov.uk" in the "team-user-behat-prof3-adminpublicguardiangovuk" region

@@ -23,7 +23,6 @@ Feature: PA settings
     Then I fill in the following:
       | profile_firstname  | John Named Chap                       |
       | profile_lastname   | Greenish                              |
-      | profile_email      | behat-pa1@publicguardian.gov.uk   |
       | profile_jobTitle   | Solicitor General                     |
       | profile_phoneMain  | 10000000011                           |
       | profile_address1         | 123 Streetname |
@@ -46,7 +45,6 @@ Feature: PA settings
     Then I fill in the following:
       | profile_firstname  | Mark Admin Chap                           |
       | profile_lastname   | Yellowish                                 |
-      | profile_email      | behat-pa1-admin@publicguardian.gov.uk |
       | profile_jobTitle   | Solicitor Assistant                       |
       | profile_phoneMain  | 10000000012                               |
     And I press "profile_save"
@@ -87,18 +85,15 @@ Feature: PA settings
     When I fill in the following:
       | profile_firstname  |                                                 |
       | profile_lastname   |                                                 |
-      | profile_email      |                                                 |
       | profile_jobTitle   |                                                 |
       | profile_phoneMain  |                                                 |
     And I press "profile_save"
     Then the following fields should have an error:
       | profile_firstname        |
       | profile_lastname         |
-      | profile_email            |
     When I fill in the following:
       | profile_firstname        | Tim Team Member                                 |
       | profile_lastname         | Chap                                            |
-      | profile_email            | behat-pa3-team-member@publicguardian.gov.uk |
       | profile_jobTitle         | Solicitor helper                                |
       | profile_phoneMain        | 30000000123                                     |
       | profile_address1         | 123 SomeRoad                                    |
@@ -176,13 +171,3 @@ Feature: PA settings
     Then the form should be valid
     And I should see "Password edited"
     And I should be on "/org/settings"
-
-  Scenario: Named PA logs in and changes email to an existing one (expected error)
-    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd2345"
-    When I click on "org-settings, profile-show, profile-edit"
-    When I fill in the following:
-      | profile_email       | behat-pa2@publicguardian.gov.uk  |
-    And I press "profile_save"
-    Then the following fields should have an error:
-      | profile_email  |
-

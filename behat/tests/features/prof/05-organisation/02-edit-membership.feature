@@ -62,23 +62,21 @@ Feature: Users can edit members of their organisation
     And I click on "edit" in the "team-user-ylacasseabc-solicitorsexamplecom" region
     Then the "organisation_member_firstname" field should contain "Yvonne"
     And the "organisation_member_lastname" field should contain "Lacasse"
-    And the "organisation_member_email" field should contain "y.lacasse@abc-solicitors.example.com"
     When I follow "Cancel"
     Then the URL should match "/org/settings/organisation/\d+"
     When I click on "edit" in the "team-user-ylacasseabc-solicitorsexamplecom" region
-    And  I fill in "organisation_member_email" with "yvonne.lacasse@publicguardian.gov.uk"
+    And  I fill in "organisation_member_firstname" with "Yulia"
     And I press "Save"
     Then the URL should match "/org/settings/organisation/\d+"
-    And I should see "Yvonne Lacasse"
-    And I should see "yvonne.lacasse@publicguardian.gov.uk"
+    And I should see "Yulia Lacasse"
 
   @prof
   Scenario: Admin users can resend activation emails to non-activated users
     Given I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
     And emails are sent from "deputy" area
     When I go to "/org/settings/organisation"
-    And I click on "send-activation-email" in the "team-user-yvonnelacassepublicguardiangovuk" region
-    Then the last email should have been sent to "yvonne.lacasse@publicguardian.gov.uk"
+    And I click on "send-activation-email" in the "team-user-ylacasseabc-solicitorsexamplecom" region
+    Then the last email should have been sent to "y.lacasse@abc-solicitors.example.com"
     And the last email should contain "Activate your account"
     And the last email should contain "/user/activate"
 
@@ -89,21 +87,21 @@ Feature: Users can edit members of their organisation
     And I activate the user with password "Abcd1234"
     And I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
     And I go to "/org/settings/organisation"
-    Then I should see "Edit" in the "team-user-yvonnelacassepublicguardiangovuk" region
-    Then I should not see "Resend activation email" in the "team-user-yvonnelacassepublicguardiangovuk" region
+    Then I should see "Edit" in the "team-user-ylacasseabc-solicitorsexamplecom" region
+    Then I should not see "Resend activation email" in the "team-user-ylacasseabc-solicitorsexamplecom" region
 
   @prof
   Scenario: Admin users can delete colleagues in their organisation
     Given I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
     When I go to "/org/settings/organisation"
-    And I click on "delete" in the "team-user-yvonnelacassepublicguardiangovuk" region
+    And I click on "delete" in the "team-user-ylacasseabc-solicitorsexamplecom" region
     Then I should see "Are you sure you want to remove this user from this organisation?"
-    And I should see "Yvonne Lacasse"
-    And I should see "yvonne.lacasse@publicguardian.gov.uk"
+    And I should see "Yulia Lacasse"
+    And I should see "y.lacasse@abc-solicitors.example.com"
     When I press "Yes, remove user from this organisation"
     Then the URL should match "/org/settings/organisation/\d+"
-    And I should not see "Yvonne Lacasse"
-    And I should not see "yvonne.lacasse@publicguardian.gov.uk"
+    And I should not see "Yulia Lacasse"
+    And I should not see "y.lacasse@abc-solicitors.example.com"
 
   @prof
   Scenario: Admin users can edit themselves from the organisation page
