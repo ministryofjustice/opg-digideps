@@ -146,8 +146,9 @@ Feature: Report submit
             | John 102 | report-submission-1 |
             | 102      | report-submission-1 |
         And each text should be present in the corresponding region:
-            | DigiRep-2016_2020-03-20_102.pdf | report-submission-documents-1 |
-            | good.png                        | report-submission-documents-1 |
+            | DigiRep-2016             | report-submission-documents-1 |
+            | DigiRepTransactions-2016 | report-submission-documents-1 |
+            | good.png                 | report-submission-documents-1 |
 
     @deputy
     Scenario: admin can download individual report flies
@@ -178,8 +179,9 @@ Feature: Report submit
             | 102      | report-submission-1 |
             | AU       | report-submission-1 |
         Then each text should be present in the corresponding region:
-            | DigiRep-2016_2020-03-20_102.pdf | report-submission-documents-1 |
-            | good.png                        | report-submission-documents-1 |
+            | DigiRep-2016             | report-submission-documents-1 |
+            | DigiRepTransactions-2016 | report-submission-documents-1 |
+            | good.png                 | report-submission-documents-1 |
 
     @deputy
     Scenario: assert 2nd year report has been created
