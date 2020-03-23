@@ -10,7 +10,6 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use DateTime;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Prophecy\ObjectProphecy;
 
 class DocumentHelpers extends TestCase
 {
@@ -63,25 +62,19 @@ class DocumentHelpers extends TestCase
             $report->setSubmittedDocuments([$reportPdfDocument, $supportingDocument]);
         }
 
-        $uploadedFile = FileHelpers::generateUploadedFile(
-            'tests/phpunit/TestData/test.pdf',
-            'test.pdf',
-            'application/pdf'
-        );
-
         if ($documentType === 'reportPdf') {
             return $reportPdfDocument
                 ->setReport($report)
                 ->setStorageReference($storageReference)
                 ->setFileName('test.pdf')
-                ->setFile($uploadedFile)
+                ->setFile(null)
                 ->setId($documentId);
         } elseif ($documentType === 'supportingDocument') {
             return $supportingDocument
                 ->setReport($report)
                 ->setStorageReference($storageReference)
                 ->setFileName('test.pdf')
-                ->setFile($uploadedFile)
+                ->setFile(null)
                 ->setId($documentId);
         }
 

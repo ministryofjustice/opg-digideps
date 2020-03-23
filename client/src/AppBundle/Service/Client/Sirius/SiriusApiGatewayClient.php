@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service\Client\Sirius;
 
+use AppBundle\Model\Sirius\SiriusDocumentUpload;
 use AppBundle\Service\AWS\RequestSigner;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\MultipartStream;
@@ -82,7 +83,14 @@ class SiriusApiGatewayClient
         return $this->httpClient->send($signedRequest);
     }
 
-    /** @TODO check with final swagger doc on endpoint for multipart naming conventions once its ready */
+    /**
+     * @param SiriusDocumentUpload $upload
+     * @param string $content
+     * @param string $submissionUuid
+     * @param string $caseRef
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function sendSupportingDocument(SiriusDocumentUpload $upload, string $content, string $submissionUuid, string $caseRef)
     {
         $reportJson = $this->serializer->serialize(['data' => $upload], 'json');

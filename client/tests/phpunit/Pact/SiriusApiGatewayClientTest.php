@@ -25,17 +25,8 @@ class SiriusDocumentsContractTest extends KernelTestCase
     /** @var string */
     private $caseRef;
 
-    /**  @var GuzzleClient */
-    private $client;
-
     /** @var RequestSigner&ObjectProphecy */
     private $signer;
-
-    /** @var string */
-    private $baseUrl;
-
-    /** @var object|null  */
-    private $serializer;
 
     /**  @var SiriusApiGatewayClient */
     private $sut;
@@ -46,16 +37,30 @@ class SiriusDocumentsContractTest extends KernelTestCase
     /** @var string */
     private $expectedSupportingDocumentUuid;
 
+    /** @var InteractionBuilder */
+    private $builder;
+
     public function setUp(): void
     {
+        $client = new GuzzleClient();
+        $baseUrl = getenv('PACT_MOCK_SERVER_HOST');
+        $serializer = (self::bootKernel(['debug' => false]))->getContainer()->get('serializer');
+
+        // Create a configuration that reflects the server that was started. You can create a custom MockServerConfigInterface if needed.
+        $config  = new MockServerEnvConfig();
+        $this->builder = new InteractionBuilder($config);
+
         $this->caseRef = '1234567T';
         $this->reportPdfUuid = '33ea0382-cfc9-4776-9036-667eeb68fa4b';
         $this->expectedSupportingDocumentUuid = '9c0cb55e-718d-4ffb-9599-f3164e12dbdb';
-        $this->client = new GuzzleClient();
         $this->signer = self::prophesize(RequestSigner::class);
-        $this->baseUrl = getenv('PACT_MOCK_SERVER_HOST');
-        $this->serializer = (self::bootKernel(['debug' => false]))->getContainer()->get('serializer');
-        $this->sut = new SiriusApiGatewayClient($this->client, $this->signer->reveal(), 'http://' . $this->baseUrl, $this->serializer);
+
+        $this->sut = new SiriusApiGatewayClient(
+            $client,
+            $this->signer->reveal(),
+            'http://' . $baseUrl,
+            $serializer
+        );
     }
 
     /**
@@ -64,7 +69,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
      */
     public function sendReportPdfDocument()
     {
-        $builder = $this->generateReportPdfPactBuilder($this->caseRef);
+        $this->setUpReportPdfPactBuilder($this->caseRef);
 
         $this->signer->signRequest(Argument::type(Request::class), 'execute-api')->willReturnArgument(0);
 
@@ -83,7 +88,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
 
         $result = $this->sut->sendReportPdfDocument($upload, 'some_content', $this->caseRef);
 
-        $builder->verify();
+        $this->builder->verify();
 
         self::assertStringContainsString(
             $this->reportPdfUuid,
@@ -97,7 +102,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
      */
     public function sendSupportingDocument()
     {
-        $builder = $this->generateSupportingDocumentPactBuilder($this->caseRef, $this->reportPdfUuid);
+        $this->setUpSupportingDocumentPactBuilder($this->caseRef, $this->reportPdfUuid);
 
         $this->signer->signRequest(Argument::type(Request::class), 'execute-api')->willReturnArgument(0);
 
@@ -105,7 +110,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
 
         $result = $this->sut->sendSupportingDocument($upload, 'some_content', $this->reportPdfUuid, $this->caseRef);
 
-        $builder->verify();
+        $this->builder->verify();
 
         self::assertStringContainsString(
             $this->reportPdfUuid,
@@ -113,7 +118,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
         );
     }
 
-    private function generateReportPdfPactBuilder(string $caseRef)
+    private function setUpReportPdfPactBuilder(string $caseRef)
     {
         $matcher = new Matcher();
 
@@ -168,18 +173,14 @@ class SiriusDocumentsContractTest extends KernelTestCase
                 ],
             ]);
 
-        // Create a configuration that reflects the server that was started. You can create a custom MockServerConfigInterface if needed.
-        $config  = new MockServerEnvConfig();
-        $builder = new InteractionBuilder($config);
-        $builder
+
+        $this->builder
             ->uponReceiving('A submitted report')
             ->with($request)
             ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
-
-        return $builder;
     }
 
-    private function generateSupportingDocumentPactBuilder(string $caseRef, string $reportPdfDocumentUuid)
+    private function setUpSupportingDocumentPactBuilder(string $caseRef, string $reportPdfDocumentUuid)
     {
         $matcher = new Matcher();
 
@@ -224,21 +225,9 @@ class SiriusDocumentsContractTest extends KernelTestCase
                 ],
             ]);
 
-        // Create a configuration that reflects the server that was started. You can create a custom MockServerConfigInterface if needed.
-        $config  = new MockServerEnvConfig();
-        $builder = new InteractionBuilder($config);
-        $builder
+        $this->builder
             ->uponReceiving('A submitted supporting document')
             ->with($request)
             ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
-
-        return $builder;
-    }
-
-    public function uploadProvider()
-    {
-        return [
-
-        ];
     }
 }

@@ -4,7 +4,7 @@
 namespace AppBundle\Serializer;
 
 
-use AppBundle\Service\Client\Sirius\SiriusDocumentUpload;
+use AppBundle\Model\Sirius\SiriusDocumentUpload;
 use DateTime;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;

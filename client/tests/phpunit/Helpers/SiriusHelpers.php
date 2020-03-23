@@ -3,9 +3,9 @@
 namespace DigidepsTests\Helpers;
 
 
-use AppBundle\Service\Client\Sirius\SiriusReportPdfDocumentMetadata;
-use AppBundle\Service\Client\Sirius\SiriusDocumentUpload;
-use AppBundle\Service\Client\Sirius\SiriusSupportingDocumentMetadata;
+use AppBundle\Model\Sirius\SiriusDocumentUpload;
+use AppBundle\Model\Sirius\SiriusReportPdfDocumentMetadata;
+use AppBundle\Model\Sirius\SiriusSupportingDocumentMetadata;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 

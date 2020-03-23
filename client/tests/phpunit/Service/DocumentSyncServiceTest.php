@@ -170,7 +170,7 @@ class DocumentSyncServiceTest extends KernelTestCase
 
         $this->restClient->put('document/6789', json_encode(
             ['data' =>
-                ['syncStatus' => $syncStatus, 'syncError' => 'S3 error: ' . $awsErrorMessage]
+                ['syncStatus' => $syncStatus, 'syncError' => 'S3 error while syncing document: ' . $awsErrorMessage]
             ]))
             ->shouldBeCalled()
             ->willReturn($this->serializer->serialize($submittedReportDocument, 'json'));

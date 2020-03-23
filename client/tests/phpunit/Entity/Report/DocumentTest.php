@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Report;
 
 
+use DateTime;
 use PHPUnit\Framework\TestCase;
 
 
@@ -36,25 +37,37 @@ class DocumentTest extends TestCase
     }
 
     /** @test */
-    public function getReportPdfSubmission()
+    public function getPreviousReportPdfSubmission()
     {
         $report = new Report();
 
-        $reportPdfDocument = (new Document())->setIsReportPdf(true)->setReport($report);
+        $oldReportPdfDocument = (new Document())->setIsReportPdf(true)->setReport($report);
+        $newReportPdfDocument = (new Document())->setIsReportPdf(true)->setReport($report);
         $supportingDocumentSubmittedWithReport = (new Document())->setIsReportPdf(false)->setReport($report);
         $supportingDocumentSubmittedAfterReport = (new Document())->setIsReportPdf(false)->setReport($report);
 
-        $reportPdfSubmission = (new ReportSubmission())->setDocuments([$reportPdfDocument, $supportingDocumentSubmittedWithReport]);
-        $supportingDocumentSubmission = (new ReportSubmission())->setDocuments([$supportingDocumentSubmittedAfterReport]);
+        $oldReportPdfSubmission = (new ReportSubmission())
+            ->setDocuments([$oldReportPdfDocument, $supportingDocumentSubmittedWithReport])
+            ->setCreatedOn(new DateTime());
 
-        $reportPdfDocument->setReportSubmission($reportPdfSubmission);
-        $supportingDocumentSubmittedWithReport->setReportSubmission($reportPdfSubmission);
+        $newReportPdfSubmission = (new ReportSubmission())
+            ->setDocuments([$newReportPdfDocument])
+            ->setCreatedOn(new DateTime('+1 Day'));
+
+        $supportingDocumentSubmission = (new ReportSubmission())
+            ->setDocuments([$supportingDocumentSubmittedAfterReport])
+            ->setCreatedOn(new DateTime());
+
+        $oldReportPdfDocument->setReportSubmission($oldReportPdfSubmission);
+        $newReportPdfDocument->setReportSubmission($newReportPdfSubmission);
+        $supportingDocumentSubmittedWithReport->setReportSubmission($oldReportPdfSubmission);
         $supportingDocumentSubmittedAfterReport->setReportSubmission($supportingDocumentSubmission);
 
-        $report->setReportSubmissions([$reportPdfSubmission, $supportingDocumentSubmission]);
+        $report->setReportSubmissions([$newReportPdfSubmission, $oldReportPdfSubmission, $supportingDocumentSubmission]);
 
-        self::assertEquals($reportPdfSubmission, $reportPdfDocument->getReportPdfSubmission());
-        self::assertEquals($reportPdfSubmission, $supportingDocumentSubmittedWithReport->getReportPdfSubmission());
-        self::assertEquals($reportPdfSubmission, $supportingDocumentSubmittedAfterReport->getReportPdfSubmission());
+        self::assertEquals($oldReportPdfSubmission, $oldReportPdfDocument->getPreviousReportPdfSubmission());
+        self::assertEquals($oldReportPdfSubmission, $newReportPdfDocument->getPreviousReportPdfSubmission());
+        self::assertEquals($oldReportPdfSubmission, $supportingDocumentSubmittedWithReport->getPreviousReportPdfSubmission());
+        self::assertEquals($oldReportPdfSubmission, $supportingDocumentSubmittedAfterReport->getPreviousReportPdfSubmission());
     }
 }
