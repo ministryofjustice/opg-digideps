@@ -16,7 +16,6 @@ Feature: deputy / report / edit user
              | profile_addressCountry | GB |
              | profile_phoneMain | 07911111111111   |
              | profile_phoneAlternative | |
-             | profile_email | behat-lay-deputy-102@publicguardian.gov.uk |
         When I fill in the following:
             | profile_firstname |  |
             | profile_lastname |  |
@@ -24,7 +23,6 @@ Feature: deputy / report / edit user
             | profile_addressPostcode | |
             | profile_addressCountry | |
             | profile_phoneMain |   |
-            | profile_email | |
         And I press "profile_save"
         Then the following fields should have an error:
             | profile_firstname |
@@ -33,7 +31,6 @@ Feature: deputy / report / edit user
             | profile_addressPostcode |
             | profile_addressCountry |
             | profile_phoneMain |
-            | profile_email |
       And I press "profile_save"
         Then the form should be invalid
         When I fill in the following:
@@ -46,7 +43,6 @@ Feature: deputy / report / edit user
            | profile_addressCountry | GB |
            | profile_phoneMain | 020 3334 3556  |
            | profile_phoneAlternative | 020 1234 5679  |
-           | profile_email | behat-lay-deputy-102@publicguardian.gov.uk |
       And I press "profile_save"
         Then the form should be valid
         And I should be on "/deputyship-details/your-details"

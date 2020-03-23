@@ -178,38 +178,12 @@ Feature: Add PROF users and activate PROF user (journey)
     When I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "user-behat-prof2publicguardiangovuk" in the "user-behat-prof2publicguardiangovuk" region
     Then the following fields should have the corresponding values:
-      | admin_email          | behat-prof2@publicguardian.gov.uk |
       | admin_firstname      | Pa User                           |
       | admin_lastname       | Two                               |
-      | admin_roleNameDeputy | ROLE_PROF_NAMED                   |
     When I fill in the following:
-      | admin_email      | behat-prof2-edited@publicguardian.gov.uk |
       | admin_firstname  | Edited Pa User                             |
       | admin_lastname   | Edited Two                                 |
     And I press "admin_save"
     Then the form should be valid
     When I click on "admin_cancel"
-    Then I should not see the "user-behat-prof2publicguardiangovuk" region
-    And I should see "Edited Pa User Edited Two" in the "user-behat-prof2-editedpublicguardiangovuk" region
-    And I should see "behat-prof2-edited@publicguardian.gov.uk" in the "user-behat-prof2-editedpublicguardiangovuk" region
-    When I go to "/logout"
-    # try logging in with the new email
-    And I am logged in as "behat-prof2-edited@publicguardian.gov.uk" with password "Abcd1234"
-    Then I should see the "client-32000001" region
-
-  Scenario: Edit PROF2 user email to an existing email
-    Given I load the application status from "prof-users-uploaded"
-    When I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "user-behat-prof2publicguardiangovuk" in the "user-behat-prof2publicguardiangovuk" region
-    And I fill in the following:
-      | admin_email      | behat-prof3@publicguardian.gov.uk |
-      | admin_firstname  | Pa User                             |
-      | admin_lastname   | Three                               |
-    And I press "admin_save"
-    Then the following fields should have an error:
-      | admin_email |
-    When I click on "admin_cancel"
-    # edit did not occur due to re used email
-    Then I should see the "user-behat-prof2publicguardiangovuk" region
-    And I should see "Pa User Two" in the "user-behat-prof2publicguardiangovuk" region
-    And I should see "behat-prof2@publicguardian.gov.uk" in the "user-behat-prof2publicguardiangovuk" region
+    And I should see "Edited Pa User Edited Two" in the "user-behat-prof2publicguardiangovuk" region
