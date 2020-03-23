@@ -23,7 +23,7 @@
 
     {% if client_validated %}
 
-        <h3 class="heading-medium">{{ 'form.editYourDetails.detailsEntered' | trans({}, 'settings') }}</h3>
+        <h3 class="govuk-heading-m">{{ 'form.editYourDetails.detailsEntered' | trans({}, 'settings') }}</h3>
 
         {{ form_widget(form.firstname, {'type': 'hidden'}) }}
         {{ form_widget(form.lastname, {'type': 'hidden'}) }}
@@ -45,7 +45,7 @@
     {% endif %}
 
     {% if client_validated %}
-        <h3 class="heading-medium">{{ 'form.editYourDetails.furtherDetailsNeeded' | trans({}, 'settings') }}</h3>
+        <h3 class="govuk-heading-m">{{ 'form.editYourDetails.furtherDetailsNeeded' | trans({}, 'settings') }}</h3>
     {% endif %}
 
     {{ form_input(form.address, 'address') }}

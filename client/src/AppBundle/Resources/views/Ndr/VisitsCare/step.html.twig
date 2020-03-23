@@ -8,7 +8,7 @@
 
 {% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'stepPage.pageTitle' | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
@@ -133,7 +133,7 @@
 
     {% if skipLink %}
         <a href="{{ skipLink }}"
-           class="button-link behat-link-step-skip">{{ 'skipLink' | trans({}, 'common') }}</a>
+           class="govuk-link button-link behat-link-step-skip">{{ 'skipLink' | trans({}, 'common') }}</a>
     {% endif %}
 
     {{ form_end(form) }}

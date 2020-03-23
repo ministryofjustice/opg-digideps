@@ -5,7 +5,7 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 
 {% block helpline %}{% endblock %}
@@ -32,7 +32,7 @@
             {{ form_submit(form.submitAndDownload, (page ~ '.form.submitAndDownload'), {
                 'buttonClass': 'behat-link-submit-and-download'
             }) }}
-            <a href="{{ path('admin_stats') }}" class="button-link">{{ 'homeForm.clear' | trans }}</a>
+            <a href="{{ path('admin_stats') }}" class="govuk-link button-link">{{ 'homeForm.clear' | trans }}</a>
         </div>
         {{ form_end(form) }}
 

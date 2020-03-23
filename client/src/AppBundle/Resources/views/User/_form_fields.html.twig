@@ -1,7 +1,7 @@
 {% set translationDomain = "settings" %}
 
 {% if client_validated %}
-    <h3 class="heading-medium">{{ 'form.editYourDetails.detailsEntered' | trans({}, translationDomain) }}</h3>
+    <h3 class="govuk-heading-m">{{ 'form.editYourDetails.detailsEntered' | trans({}, translationDomain) }}</h3>
 {% endif %}
 
 {% if form.firstname is defined and client_validated %}
@@ -37,7 +37,7 @@
 {% endif %}
 
 {% if client_validated %}
-    <h3 class="heading-medium">{{ 'form.editYourDetails.furtherDetailsNeeded' | trans({}, translationDomain) }}</h3>
+    <h3 class="govuk-heading-m">{{ 'form.editYourDetails.furtherDetailsNeeded' | trans({}, translationDomain) }}</h3>
 {% endif %}
 
 {% if form.firstname is defined %}

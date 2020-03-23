@@ -8,7 +8,7 @@
 
 {% block htmlTitle %}{{ 'editPage.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ 'editPage.pageTitle' | trans(transOptions) }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
@@ -16,7 +16,7 @@
 
 {% block pageContent %}
 
-    <h3 class="heading-small push-half--bottom">
+    <h3 class="govuk-heading-s push-half--bottom">
         {{ 'editPage.pageSectionDescription' | trans(transOptions, translationDomain) }}
         <span class="form-hint text push-half--bottom">{{ 'editPage.pageHint' | trans(transOptions, translationDomain) }}</span>
     </h3>

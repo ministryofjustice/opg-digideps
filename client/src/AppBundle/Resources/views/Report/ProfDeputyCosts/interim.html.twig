@@ -9,7 +9,7 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
@@ -19,7 +19,7 @@
 
 {% block pageContent %}
 
-    <h2 class="heading-medium flush--ends text">{{ (page ~ '.pageSectionDescription01') | trans(transOptions) }}</h2>
+    <h2 class="govuk-heading-m flush--ends text">{{ (page ~ '.pageSectionDescription01') | trans(transOptions) }}</h2>
 
 
     <div class="text">
@@ -30,7 +30,7 @@
 
     {% for ic in form.profDeputyInterimCosts %}
         <div class="form-section push--bottom">
-            <p class="heading-medium">Interim {{ loop.index }}</p>
+            <p class="govuk-heading-m">Interim {{ loop.index }}</p>
             {{ form_input(ic.amount, page ~ '.form.amount', {
                 'inputPrefix' : '£',
                 'inputClass' : 'form-control-1-4 js-format-currency',

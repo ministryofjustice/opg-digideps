@@ -11,7 +11,7 @@
 {# Page Titles #}
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {# Breadcrumbs #}
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
@@ -29,7 +29,7 @@
             </div>
 
             {# Check answers text #}
-            <h2 class="heading-small">{{ 'weHaveListed' | trans({}, 'common') }}</h2>
+            <h2 class="govuk-heading-s">{{ 'weHaveListed' | trans({}, 'common') }}</h2>
             <p class="text">{{ 'checkCorrect' | trans({}, 'common') }}</p>
         </div>
         <div class="column-third">
@@ -63,7 +63,7 @@
     {% if report.currentProfPaymentsReceived == 'yes' %}
         <div class="grid-row push--top">
             <div class="column-half">
-                <h2 class="heading-medium flush--ends">{{ (page ~ '.table.heading') | trans }}</h2>
+                <h2 class="govuk-heading-m flush--ends">{{ (page ~ '.table.heading') | trans }}</h2>
             </div>
             <div class="column-half text--right">
                 <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'step': 1, 'from':'summary' }) }}"
@@ -77,7 +77,7 @@
 
         {# fixed fees #}
         {% if hasFixedFees %}
-            <h3 class="heading-small--table">{{ (page ~ '.table.subheading.fixed') | trans }}</h3>
+            <h3 class="govuk-heading-s--table">{{ (page ~ '.table.subheading.fixed') | trans }}</h3>
 
             <dl class="govuk-summary-list behat-region-fixed-fees">
                 <div class="govuk-summary-list__row">
@@ -138,7 +138,7 @@
 
         {# assessed fees #}
         {% if hasAssessedCostsFees %}
-            <h3 class="heading-small--table">{{ (page ~ '.table.subheading.assessed') | trans }}</h3>
+            <h3 class="govuk-heading-s--table">{{ (page ~ '.table.subheading.assessed') | trans }}</h3>
 
             <dl class="govuk-summary-list">
                 <div class="govuk-summary-list__row">
@@ -204,13 +204,13 @@
                 <tbody>
                 <tr class="no-border-bottom">
                     <td class="text--right width-third grandtotals-border--transparent">
-                        <span class="heading-medium">{{ (page ~ '.table.grandtotal') | trans }}</span>
+                        <span class="govuk-heading-m">{{ (page ~ '.table.grandtotal') | trans }}</span>
                     </td>
                     <td class="numeric-small width-sixth grandtotals-border">
-                        <span class="heading-medium behat-region-grand-total-charged">£{{ (report.feeTotals['totalAssessedFeesCharged'] + report.feeTotals['totalFixedFeesCharged']) | money_format }}</span>
+                        <span class="govuk-heading-m behat-region-grand-total-charged">£{{ (report.feeTotals['totalAssessedFeesCharged'] + report.feeTotals['totalFixedFeesCharged']) | money_format }}</span>
                     </td>
                     <td class="numeric-small width-sixth grandtotals-border">
-                        <span class="heading-medium behat-region-grand-total-received">£{{ (report.feeTotals['totalAssessedFeesReceived'] + report.feeTotals['totalFixedFeesReceived']) | money_format }}</span>
+                        <span class="govuk-heading-m behat-region-grand-total-received">£{{ (report.feeTotals['totalAssessedFeesReceived'] + report.feeTotals['totalFixedFeesReceived']) | money_format }}</span>
                     </td>
                     <td class="width-fifth"></td>
                     <td class="width-seventh"></td>

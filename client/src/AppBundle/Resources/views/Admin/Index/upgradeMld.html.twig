@@ -5,7 +5,7 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block supportTitleBottom %}
     <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
@@ -20,7 +20,7 @@
         <span class="data-item bold-small">Lay deputies assigned to a Multi-deputy case</span>
     </div>
 
-    <h2 class="heading-medium">Upgrade lay deputies to MLD</h2>
+    <h2 class="govuk-heading-m">Upgrade lay deputies to MLD</h2>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 

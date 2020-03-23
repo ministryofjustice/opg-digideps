@@ -9,7 +9,7 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
@@ -19,7 +19,7 @@
 
 {% block pageContent %}
 
-    <p class="heading-small push-half--bottom  text">
+    <p class="govuk-heading-s push-half--bottom  text">
         {{ (page ~ '.pageSectionDescription') | trans(transOptions) }}
     </p>
     <span class="form-hint text push-half--bottom">{{ (page ~ '.pageHint') | trans() }}</span>

@@ -13,7 +13,7 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
@@ -25,7 +25,7 @@
         <p>{{ (page ~ '.pageSectionDescription3') | trans }}</p>
     </div>
 
-    <a href="{{ path('prof_deputy_costs_estimate_how_charged', { 'reportId': report.id}) }}" class="button button-start behat-link-start">{{ (page ~ '.startButton') | trans }}</a>
+    <a href="{{ path('prof_deputy_costs_estimate_how_charged', { 'reportId': report.id}) }}" class="govuk-button behat-link-start" data-module="button" role="button">{{ (page ~ '.startButton') | trans }}</a>
 
     {# Pagination #}
     {% include 'AppBundle:Report:_nextprevious.html.twig' with {

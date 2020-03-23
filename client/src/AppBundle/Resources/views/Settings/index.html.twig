@@ -17,14 +17,14 @@
     {% if 'ROLE_LAY_DEPUTY' == app.user.roleName %}
         {% set transOptions = {'%client%': client.firstname} %}
         <h2 class="govuk-heading-m">
-            <a href="{{ path('client_show') }}" class="behat-link-client-show">
+            <a href="{{ path('client_show') }}" class="govuk-link behat-link-client-show">
                 {{ 'settings-page.links.client.title' | trans(transOptions) }}
             </a>
         </h2>
         <p class="text text-info">{{ 'settings-page.links.client.description' | trans(transOptions) }}</p>
     {% elseif hasOrganisations is defined and hasOrganisations %}
         <h2 class="govuk-heading-m">
-            <a href="{{ path('org_organisation_list') }}" class="behat-link-org-accounts">
+            <a href="{{ path('org_organisation_list') }}" class="govuk-link behat-link-org-accounts">
                 {{ 'settings-page.links.organisation.title' | trans }}
             </a>
         </h2>
@@ -32,7 +32,7 @@
     {% elseif app.user.isDeputyOrg() %}
         {% set transOptions = {} %}
         <h2 class="govuk-heading-m">
-            <a href="{{ path('org_team') }}" class="behat-link-user-accounts">
+            <a href="{{ path('org_team') }}" class="govuk-link behat-link-user-accounts">
                 {{ 'settings-page.links.team.title' | trans }}
             </a>
         </h2>
@@ -47,14 +47,14 @@
     {% endif %}
 
     <h2 class="govuk-heading-m">
-        <a href="{{ path(app.user.isDeputyOrg() ? 'org_profile_show' : 'user_show') }}" class="behat-link-profile-show">
+        <a href="{{ path(app.user.isDeputyOrg() ? 'org_profile_show' : 'user_show') }}" class="govuk-link behat-link-profile-show">
             {{ 'settings-page.links.profile.title' | trans }}
         </a>
     </h2>
     <p class="text text-info">{{ (app.user.isDeputyOrg() ? 'settings-page.links.profile.pa-description' : 'settings-page.links.profile.description') | trans }}</p>
 
     <h2 class="govuk-heading-m">
-        <a href="{{ path(app.user.isDeputyOrg() ? 'org_profile_password_edit' : 'user_password_edit') }}" class="behat-link-password-edit">
+        <a href="{{ path(app.user.isDeputyOrg() ? 'org_profile_password_edit' : 'user_password_edit') }}" class="govuk-link behat-link-password-edit">
             {{ 'settings-page.links.password.title' | trans }}
         </a>
     </h2>

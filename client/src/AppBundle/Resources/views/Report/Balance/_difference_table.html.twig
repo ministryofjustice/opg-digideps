@@ -8,7 +8,7 @@
 
 {% set hideEditLink = hideEditLink | default(false) %}
 
-<h3 class="heading-medium">
+<h3 class="govuk-heading-m">
     {% if not report.isTotalsMatch %}
         {{ 'differenceTable.headingNotBalanced' | trans }}
     {% else %}

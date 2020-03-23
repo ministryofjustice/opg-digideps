@@ -16,7 +16,7 @@
         {{ 'stepPage.property.pageTitle' | trans }}
     {% endif %}
 {% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
@@ -119,7 +119,7 @@
     {{ macros.saveAndContinueButton(form.save) }}
 
     {% if skipLink %}
-        <a href="{{ skipLink }}" class="button-link behat-link-step-skip">{{ 'skipLink' | trans({}, 'common') }}</a>
+        <a href="{{ skipLink }}" class="govuk-link button-link behat-link-step-skip">{{ 'skipLink' | trans({}, 'common') }}</a>
     {% endif %}
 
     {{ form_end(form) }}

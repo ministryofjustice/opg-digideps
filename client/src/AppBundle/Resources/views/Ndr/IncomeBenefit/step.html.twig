@@ -15,7 +15,7 @@
         4: 'stepPage.pageTitle.damages',
         5: 'stepPage.pageTitle.oneOff'}[step] | trans(transOptions)  }}
 {% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
@@ -54,7 +54,7 @@
 
         {% if skipLink %}
             <a href="{{ skipLink }}"
-               class="button-link behat-link-step-skip">{{ 'skipLink' | trans({}, 'common') }}</a>
+               class="govuk-link button-link behat-link-step-skip">{{ 'skipLink' | trans({}, 'common') }}</a>
         {% endif %}
     {% endif %}
 
@@ -86,7 +86,7 @@
 
         {% if skipLink %}
             <a href="{{ skipLink }}"
-               class="button-link behat-link-step-skip">{{ 'skipLink' | trans({}, 'common') }}</a>
+               class="govuk-link button-link behat-link-step-skip">{{ 'skipLink' | trans({}, 'common') }}</a>
         {% endif %}
     {% endif %}
 
@@ -117,7 +117,7 @@
 
         {% if skipLink %}
             <a href="{{ skipLink }}"
-               class="button-link behat-link-step-skip">{{ 'skipLink' | trans({}, 'common') }}</a>
+               class="govuk-link button-link behat-link-step-skip">{{ 'skipLink' | trans({}, 'common') }}</a>
         {% endif %}
     {% endif %}
 

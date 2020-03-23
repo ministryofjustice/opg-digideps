@@ -9,7 +9,7 @@
 {# Page Titles #}
 {% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ 'summaryPage.pageTitle' | trans(transOptions) }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {# Breadcrumbs #}
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
@@ -24,7 +24,7 @@
             </div>
 
             {# Check answers text #}
-            <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
+            <h2 class="govuk-heading-s">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
             <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
 
             {% if report.getBankAccountsIncomplete() %}

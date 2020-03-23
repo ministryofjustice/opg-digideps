@@ -26,7 +26,7 @@
 
     <div class="behat-region-clients client-list">
 
-        <h2 id="client-list-title" class="heading-medium flush--ends">{{ (page ~ '.clientTable.heading') | trans }}</h2>
+        <h2 id="client-list-title" class="govuk-heading-m flush--ends">{{ (page ~ '.clientTable.heading') | trans }}</h2>
         {% if clients | length  == filters.limit %}
             <p class="text">{{ (page ~ '.clientTable.resultsLimited') | trans|raw }}</p>
         {% else %}

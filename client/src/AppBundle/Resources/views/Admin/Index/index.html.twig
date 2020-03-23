@@ -45,7 +45,7 @@
     <div class="form-group">
         {{ form_submit(form.search, '', {
             'labelText': 'Search'}) }}
-        <a href="{{ path('admin_homepage') }}" class="button-link">{{ 'homeForm.clear' | trans }}</a>
+        <a href="{{ path('admin_homepage') }}" class="govuk-link button-link">{{ 'homeForm.clear' | trans }}</a>
     </div>
 
     {{ form_end(form) }}
@@ -58,7 +58,7 @@
 
         <div class="grid-row">
             <div class="column-one-half">
-                <h2 id="users-list-title" class="heading-medium flush--ends">{{ (page ~ '.userTable.heading') | trans }}</h2>
+                <h2 id="users-list-title" class="govuk-heading-m flush--ends">{{ (page ~ '.userTable.heading') | trans }}</h2>
                 {% if users | length  == filters.limit %}
                     <p class="text">{{ (page ~ '.userTable.resultsLimited') | trans|raw }}</p>
                 {% else %}
@@ -68,7 +68,7 @@
         </div>
 
         {# user list #}
-        <table class="table-font-xsmall">
+        <table class="table-govuk-body-s">
             <thead>
                 <tr>
                     <th scope="col">{{ (page ~ '.userTable.header.name') | trans }}</th>

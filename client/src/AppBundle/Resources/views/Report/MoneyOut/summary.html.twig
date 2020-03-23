@@ -18,7 +18,7 @@
 {# Page Titles #}
 {% block htmlTitle %}{{ 'summaryPage.moneyOut.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ 'summaryPage.moneyOut.pageTitle' | trans(transOptions) }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {# Breadcrumbs #}
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
@@ -40,13 +40,13 @@
                 <div class="opg-indented-block text">
                     <p>{{ ('startPage.moneyOut.pageSectionDescription2' ~ app.user.getRoleForTrans) | trans(transOptions) | raw }}</p>
                     <p>{{ 'startPage.moneyOut.pageSectionDescription3' | trans }}</p>
-                    <h2 class="heading-small">{{ 'startPage.moneyOut.totalOrIndividualHeading' | trans }}</h2>
+                    <h2 class="govuk-heading-s">{{ 'startPage.moneyOut.totalOrIndividualHeading' | trans }}</h2>
                     <p>{{ 'startPage.moneyOut.totalOrIndividualPara' | trans }}</p>
                 </div>
             </details>
 
             {# Check answers text #}
-            <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
+            <h2 class="govuk-heading-s">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
             <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
         </div>
         <div class="column-third">

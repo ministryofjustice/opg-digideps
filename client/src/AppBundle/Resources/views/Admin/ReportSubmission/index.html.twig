@@ -49,7 +49,7 @@
             </div>
             <input id="search_submit" class="button flush--bottom behat-link-search" type="submit" value="Search">
             {% if filters.q or filters.created_by_role %}
-                <a href="{{ path(baseRoute, {'status': filters.status}) }}" class="button-link">Clear filters</a>
+                <a href="{{ path(baseRoute, {'status': filters.status}) }}" class="govuk-link button-link">Clear filters</a>
             {% endif %}
         </fieldset>
     </form>
