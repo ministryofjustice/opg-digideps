@@ -41,6 +41,11 @@ class ReportSubmissionControllerTest extends AbstractTestController
             // add documents, needed for future tests
             $document = new Document($report);
             $document->setFileName('file1.pdf')->setStorageReference('storageref1')->setReportSubmission($submission);
+
+            if ($i === 2) {
+                $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
+            }
+
             self::fixtures()->persist($document, $submission);
         }
 
@@ -71,7 +76,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
         // assert submission (only one expected)
         $data = $reportsGetAllRequest(['status'=>'new']);
-        $this->assertEquals(['new'=>5, 'archived'=>0], $data['counts']);
+        $this->assertEquals(['new'=>4, 'pending' => 1, 'archived'=>0], $data['counts']);
 
         $submission4 = $this->getSubmissionByCaseNumber($data['records'], '1000004');
         $this->assertNotEmpty($submission4['id']);
@@ -106,29 +111,40 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
         // check counts after submission
         $data = $reportsGetAllRequest([]);
-        $this->assertEquals(['new'=>4, 'archived'=>1], $data['counts']);
+        $this->assertEquals(['new'=>3, 'pending' => 1, 'archived'=>1], $data['counts']);
         $this->assertCount(5, $data['records']);
 
         // check filters and counts
         $data = $reportsGetAllRequest(['q'=>'1000000']);
-        $this->assertEquals(['new'=>1, 'archived'=>0], $data['counts']);
+        $this->assertEquals(['new'=>1, 'pending' => 0, 'archived'=>0], $data['counts']);
         $this->assertCount(1, $data['records']);
 
         $data = $reportsGetAllRequest(['q'=>'1000000', 'status'=>'new']);
-        $this->assertEquals(['new'=>1, 'archived'=>0], $data['counts']);
+        $this->assertEquals(['new'=>1, 'pending' => 0, 'archived'=>0], $data['counts']);
         $this->assertCount(1, $data['records']);
 
-        $this->assertEquals(['new'=>1, 'archived'=>0], $reportsGetAllRequest(['status'=>'new', 'q'=>'c0'])['counts']); // client name
-        $this->assertEquals(['new'=>1, 'archived'=>0], $reportsGetAllRequest(['status'=>'new', 'q'=>'l0'])['counts']); //client surname
-        $this->assertEquals(['new'=>4, 'archived'=>1], $reportsGetAllRequest(['status'=>'new', 'q'=>'test'])['counts']); // deputy name
-        $this->assertEquals(['new'=>1, 'archived'=>1], $reportsGetAllRequest(['created_by_role'=>'ROLE_LAY_DEPUTY'])['counts']);
+        $data = $reportsGetAllRequest(['q'=>'1000002', 'status'=>'new']);
+        $this->assertEquals(['new'=>0, 'pending' => 1, 'archived'=>0], $data['counts']);
+        $this->assertCount(0, $data['records']);
+
+        $data = $reportsGetAllRequest(['q'=>'1000002', 'status'=>'pending']);
+        $this->assertEquals(['new'=>0, 'pending' => 1, 'archived'=>0], $data['counts']);
+        $this->assertCount(1, $data['records']);
+
+        $this->assertEquals(['new'=>1, 'pending' => 0, 'archived'=>0], $reportsGetAllRequest(['status'=>'new', 'q'=>'c0'])['counts']); // client name
+        $this->assertEquals(['new'=>1, 'pending' => 0, 'archived'=>0], $reportsGetAllRequest(['status'=>'new', 'q'=>'l0'])['counts']); //client surname
+        $this->assertEquals(['new'=>3, 'pending' => 1, 'archived'=>1], $reportsGetAllRequest(['status'=>'new', 'q'=>'test'])['counts']); // deputy name
+        $this->assertEquals(['new'=>1, 'pending' => 0, 'archived'=>1], $reportsGetAllRequest(['created_by_role'=>'ROLE_LAY_DEPUTY'])['counts']);
         // since this filter works with the role being a prefix, ROLE_PA would include all the ROLE_PA* ones
         // a better version would calculate all the inheritance
-        $this->assertEquals(['new'=>3, 'archived'=>0], $reportsGetAllRequest(['created_by_role'=>'ROLE_PA'])['counts']);
+        $this->assertEquals(['new'=>2, 'pending' => 1, 'archived'=>0], $reportsGetAllRequest(['created_by_role'=>'ROLE_PA'])['counts']);
 
         // check pagination and limit
         $submissions = $reportsGetAllRequest(['status'=>'new', 'q'=>'test'])['records'];
-        $this->assertEquals(['1000000', '1000001','1000002','1000003'], $this->getOrderedCaseNumbersFromSubmissions($submissions));
+        $this->assertEquals(['1000000', '1000001', '1000003'], $this->getOrderedCaseNumbersFromSubmissions($submissions));
+
+        $submissions = $reportsGetAllRequest(['status'=>'new', 'q'=>'test', 'orderBy'=>'id', 'limit' => 2, 'offset' => 1])['records'];
+        $this->assertEquals(['1000001', '1000003'], $this->getOrderedCaseNumbersFromSubmissions($submissions));
     }
 
     private function getOrderedCaseNumbersFromSubmissions($submissions)
