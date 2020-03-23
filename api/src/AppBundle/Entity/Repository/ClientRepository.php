@@ -122,7 +122,7 @@ class ClientRepository extends EntityRepository
 
     /**
      * @param $caseNumber
-     * @return |null
+     * @return array<mixed>|null
      */
     public function getArrayByCaseNumber($caseNumber)
     {
