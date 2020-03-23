@@ -2,8 +2,13 @@
 
 {% trans_default_domain "layout" %}
 
-{% macro navLink(path, labelKey, classes = "text") -%}
-    <a href="{{ path(path) }}" class="moj-primary-navigation__link {{ classes }}" {% if app.request.get('_route') == path %}aria-current="page"{% endif %}>
+{% if navSection is not defined %}
+    {% set navSection = '' %}
+{% endif %}
+
+
+{% macro navLink(path, labelKey, isSelected, classes = "text") -%}
+    <a href="{{ path(path) }}" class="moj-primary-navigation__link {{ classes }}" {% if isSelected %}aria-current="page"{% endif %}>
         {{- labelKey | trans -}}
     </a>
 {%- endmacro %}
@@ -65,34 +70,54 @@
                 <ul class="moj-primary-navigation__list">
                     {% if is_granted('ROLE_ADMIN') %}
                         <li class="moj-primary-navigation__item">
-                            {{ _self.navLink('admin_homepage', 'nav.adminArea', 'behat-link-admin-homepage') }}
+                            {{ _self.navLink(
+                                'admin_homepage',
+                                'nav.adminArea',
+                                navSection == 'users',
+                                'behat-link-admin-homepage'
+                            ) }}
                         </li>
-
                         <li class="moj-primary-navigation__item">
-                            {{ _self.navLink('admin_client_search', 'nav.adminClients', 'behat-link-admin-client-search') }}
+                            {{ _self.navLink(
+                                'admin_client_search',
+                                'nav.adminClients',
+                                navSection == 'clients',
+                                'behat-link-admin-client-search'
+                            ) }}
                         </li>
-
                         <li class="moj-primary-navigation__item">
-                            {{ _self.navLink('admin_organisation_homepage', 'nav.adminOrganisations', 'behat-link-admin-organisations') }}
+                            {{ _self.navLink(
+                                'admin_organisation_homepage',
+                                'nav.adminOrganisations',
+                                navSection == 'organisations',
+                                'behat-link-admin-organisations'
+                            ) }}
                         </li>
-
                         <li class="moj-primary-navigation__item">
-                            {{ _self.navLink('admin_documents', 'nav.adminDocuments', 'behat-link-admin-documents') }}
+                            {{ _self.navLink(
+                                'admin_documents',
+                                'nav.adminDocuments',
+                                navSection == 'submissions',
+                                'behat-link-admin-documents'
+                            ) }}
                         </li>
-
                         <li class="moj-primary-navigation__item">
-                            {{ _self.navLink('admin_setting_service_notifications', 'nav.serviceNotification', 'behat-link-admin-settings') }}
+                            {{ _self.navLink(
+                                'admin_setting_service_notifications',
+                                'nav.serviceNotification',
+                                navSection == 'notifications',
+                                'behat-link-admin-settings'
+                            ) }}
                         </li>
-
                         <li class="moj-primary-navigation__item">
-                            {{ _self.navLink('admin_metrics', 'nav.adminStats') }}
+                            {{ _self.navLink('admin_metrics', 'nav.adminStats', navSection == 'metrics') }}
                         </li>
                     {% elseif is_granted('ROLE_AD') %}
                         <li class="moj-primary-navigation__item">
-                            {{ _self.navLink('ad_homepage', 'nav.adArea') }}
+                            {{ _self.navLink('ad_homepage', 'nav.adArea', navSection == 'ad') }}
                         </li>
                         <li class="moj-primary-navigation__item">
-                            {{ _self.navLink('admin_homepage', 'nav.adminArea') }}
+                            {{ _self.navLink('admin_homepage', 'nav.adminArea', navSection == 'users') }}
                         </li>
                     {% endif %}
                 </ul>
