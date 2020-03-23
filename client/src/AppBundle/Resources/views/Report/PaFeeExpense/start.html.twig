@@ -28,7 +28,7 @@
         <p>{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
     </div>
 
-    <a href="{{ path('pa_fee_expense_fee_exist', { 'reportId': report.id}) }}" class="govuk-button behat-link-start" data-module="button" role="button">{{ 'startPage.startButton' | trans }}</a>
+    {{ macros.startSectionButton(path('pa_fee_expense_fee_exist', { 'reportId': report.id}), 'startPage.startButton' | trans) }}
 
     {# Pagination #}
     {% include 'AppBundle:Report:_nextprevious.html.twig' with {

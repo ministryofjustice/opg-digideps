@@ -22,7 +22,7 @@
         {{ 'startPage.moneyIn.pageSectionDescription1' | trans(transOptions, translationDomain) }}
     </p>
 
-    <a href="{{ path('money_in_short_category', { 'reportId': report.id}) }}" class="govuk-button behat-link-start" data-module="button" role="button">{{ 'startPage.moneyIn.startButton' | trans }}</a>
+    {{ macros.startSectionButton(path('money_in_short_category', { 'reportId': report.id}), 'startPage.moneyIn.startButton' | trans) }}
 
     {# Pagination #}
     {% include 'AppBundle:Report:_nextprevious.html.twig' with {

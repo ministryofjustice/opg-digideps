@@ -35,7 +35,7 @@
         </details>
 	</div>
 
-    <a href="{{ path('ndr_actions_step', { 'ndrId': ndr.id, 'step': 1 }) }}" class="govuk-button behat-link-start" data-module="button" role="button">{{ 'startPage.startButton' | trans }}</a>
+    {{ macros.startSectionButton(path('ndr_actions_step', { 'ndrId': ndr.id, 'step': 1 }), 'startPage.startButton' | trans ) }}
 
     {# Pagination #}
     {% include 'AppBundle:Report:_nextprevious.html.twig' with {

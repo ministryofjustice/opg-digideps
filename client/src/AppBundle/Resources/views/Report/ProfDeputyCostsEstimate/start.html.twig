@@ -25,7 +25,7 @@
         <p>{{ (page ~ '.pageSectionDescription3') | trans }}</p>
     </div>
 
-    <a href="{{ path('prof_deputy_costs_estimate_how_charged', { 'reportId': report.id}) }}" class="govuk-button behat-link-start" data-module="button" role="button">{{ (page ~ '.startButton') | trans }}</a>
+    {{ macros.startSectionButton(path('prof_deputy_costs_estimate_how_charged', { 'reportId': report.id}), (page ~ '.startButton') | trans ) }}
 
     {# Pagination #}
     {% include 'AppBundle:Report:_nextprevious.html.twig' with {

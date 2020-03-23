@@ -19,7 +19,7 @@
         <p>{{ (page ~ '.pageSectionDescription1') | trans(transOptions) }}</p>
     </div>
 
-    <a href="{{ path('contacts_exist', { 'reportId': report.id}) }}" class="govuk-button behat-link-start" data-module="button" role="button">{{ (page ~ '.startButton') | trans }}</a>
+    {{ macros.startSectionButton(path('contacts_exist', { 'reportId': report.id}), (page ~ '.startButton') | trans ) }}
 
     {# Pagination #}
     {% include 'AppBundle:Report:_nextprevious.html.twig' with {

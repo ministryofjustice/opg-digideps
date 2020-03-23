@@ -38,7 +38,7 @@
         {% endif %}
     </div>
 
-    <a href="{{ path('money_out_step', { 'reportId': report.id, 'step': 1 }) }}" class="govuk-button behat-link-start">{{ 'startPage.moneyOut.startButton' | trans }}</a>
+    {{ macros.startSectionButton(path('money_out_step', { 'reportId': report.id, 'step': 1 }), 'startPage.moneyOut.startButton' | trans ) }}
 
     {# Pagination #}
     {% include 'AppBundle:Report:_nextprevious.html.twig' with {

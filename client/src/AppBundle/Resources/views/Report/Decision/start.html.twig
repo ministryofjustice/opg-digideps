@@ -54,8 +54,7 @@
         <p class="text">{{ (page ~ '.description2') | trans }}</p>
     {% endif %}
 
-    <a href="{{ path('decisions_mental_capacity', { 'reportId': report.id}) }}"
-       class="govuk-button behat-link-start" data-module="button" role="button">{{ (page ~ '.startButton') | trans }}</a>
+    {{ macros.startSectionButton(path('decisions_mental_capacity', { 'reportId': report.id}), (page ~ '.startButton') | trans) }}
 
     {# Pagination #}
     {% include 'AppBundle:Report:_nextprevious.html.twig' with {
