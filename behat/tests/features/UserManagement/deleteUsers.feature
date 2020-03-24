@@ -8,11 +8,11 @@ Feature: Deleting Users
   Scenario: Create users for scenarios
     Given I am logged in to admin as 'admin@publicguardian.gov.uk' with password 'Abcd1234'
     And the following admins exist:
-    | adminType        | firstName     | lastName | email                                 | activated |
-    | ROLE_ADMIN       | admin-1       | user     | adminUser1@publicguardian.gov.uk      | true      |
-    | ROLE_ADMIN       | admin-2       | user     | adminUser2@publicguardian.gov.uk      | true      |
-    | ROLE_SUPER_ADMIN | super-admin-1 | user     | superAdminUser1@publicguardian.gov.uk | true      |
-    | ROLE_SUPER_ADMIN | super-admin-2 | user     | superAdminUser2@publicguardian.gov.uk | true      |
+    | adminType              | firstName        | lastName | email                                  | activated |
+    | ROLE_ADMIN             | admin-1          | user     | adminUser1@publicguardian.gov.uk       | true      |
+    | ROLE_ADMIN             | admin-2          | user     | adminUser2@publicguardian.gov.uk       | true      |
+    | ROLE_SUPER_ADMIN       | super-admin-1    | user     | superAdminUser1@publicguardian.gov.uk  | true      |
+    | ROLE_SUPER_ADMIN       | super-admin-2    | user     | superAdminUser2@publicguardian.gov.uk  | true      |
 
   Scenario: Super admin users can delete admin users
     Given I am logged in to admin as 'superAdminUser1@publicguardian.gov.uk' with password 'Abcd1234'

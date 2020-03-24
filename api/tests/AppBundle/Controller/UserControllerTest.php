@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Tests\AppBundle\Controller;
 
@@ -11,6 +11,7 @@ class UserControllerTest extends AbstractTestController
     private static $admin1;
     private static $deputy2;
     private static $tokenAdmin = null;
+    private static $tokenSuperAdmin = null;
     private static $tokenDeputy = null;
 
     public static function setUpBeforeClass(): void
@@ -37,6 +38,7 @@ class UserControllerTest extends AbstractTestController
     public function setUp(): void
     {
         if (null === self::$tokenAdmin) {
+            self::$tokenSuperAdmin = $this->loginAsSuperAdmin();
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
         }
@@ -336,7 +338,7 @@ class UserControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenDeputy);
     }
 
-    public function testDelete()
+    public function testDeletePermittedForSuperAdmin()
     {
         $deputy3 = self::fixtures()->createUser();
         $deputy3->setRoleName(User::ROLE_LAY_DEPUTY);
@@ -348,40 +350,19 @@ class UserControllerTest extends AbstractTestController
 
         $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,
-            'AuthToken' => self::$tokenAdmin,
+            'AuthToken' => self::$tokenSuperAdmin,
         ]);
 
         $this->assertTrue(null === self::fixtures()->clear()->getRepo('User')->find($userToDeleteId));
     }
 
-    public function testDeletePermittedForPAs()
+    public function testDeleteNotPermittedForAdmin()
     {
-        $deputy4 = self::fixtures()->createUser();
-        $deputy4->setRoleName(User::ROLE_PA_TEAM_MEMBER);
+        $deputy3 = self::fixtures()->createUser();
+        $deputy3->setRoleName(User::ROLE_LAY_DEPUTY);
 
         self::fixtures()->flush();
-        $userToDeleteId = $deputy4->getId();
-
-        $url = '/user/' . $userToDeleteId;
-
-        $this->assertJsonRequest('DELETE', $url, [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenAdmin,
-        ]);
-
-        $this->assertTrue(null === self::fixtures()->clear()->getRepo('User')->find($userToDeleteId));
-    }
-
-    public function testDeleteNotPermittedForLayWithMultipleClients()
-    {
-        $deputy5 = self::fixtures()->createUser();
-        $deputy5->setRoleName(User::ROLE_LAY_DEPUTY);
-
-        self::fixtures()->createClient($deputy5);
-        self::fixtures()->createClient($deputy5);
-
-        self::fixtures()->flush();
-        $userToDeleteId = $deputy5->getId();
+        $userToDeleteId = $deputy3->getId();
 
         $url = '/user/' . $userToDeleteId;
 
@@ -390,8 +371,6 @@ class UserControllerTest extends AbstractTestController
             'assertResponseCode' => 403,
             'AuthToken' => self::$tokenAdmin,
         ]);
-
-        $this->assertFalse(null === self::fixtures()->clear()->getRepo('User')->find($userToDeleteId));
     }
 
     public function testGetAllAuth()
