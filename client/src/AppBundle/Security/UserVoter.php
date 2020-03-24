@@ -145,6 +145,7 @@ class UserVoter extends Voter
             case User::ROLE_PA_NAMED:
             case User::ROLE_PA_ADMIN:
             case User::ROLE_PROF_NAMED:
+            case User::ROLE_PROF_ADMIN:
                 return $this->paProfNamedAdminPermissions($deletee);
             case User::ROLE_SUPER_ADMIN:
                 return $this->superAdminPermissions($deletor, $deletee);
