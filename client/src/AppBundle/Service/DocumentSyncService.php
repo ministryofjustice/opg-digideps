@@ -40,12 +40,12 @@ class DocumentSyncService
 
     public function __construct(
         S3Storage $storage,
-        SiriusApiGatewayClient $siriusApiGateWayClient,
+        SiriusApiGatewayClient $siriusApiGatewayClient,
         RestClient $restClient
     )
     {
         $this->storage = $storage;
-        $this->siriusApiGatewayClient = $siriusApiGateWayClient;
+        $this->siriusApiGatewayClient = $siriusApiGatewayClient;
         $this->restClient = $restClient;
     }
 
@@ -55,6 +55,8 @@ class DocumentSyncService
      */
     public function syncDocument(Document $document)
     {
+        $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_IN_PROGRESS);
+
         if ($document->isReportPdf()) {
             return $this->syncReportDocument($document);
         } else {

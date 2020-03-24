@@ -1,14 +1,13 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Tests\AppBundle\Controller;
+
 
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Repository\DocumentRepository;
 use DateTime;
-use DigidepsTests\Helpers\FileHelpers;
-use Symfony\Bridge\Doctrine\Tests\Fixtures\User;
-use Tests\TestHelpers\ReportSubmissionHelper;
+
 
 class DocumentControllerTest extends AbstractTestController
 {
