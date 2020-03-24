@@ -4,7 +4,7 @@
 {% macro caseNumber(caseNumber) %}
 <div class="box" id="case-number">
     <dl class="labelvalue inline">
-        <dt class="label bold bigger">Case number</dt>
+        <dt class="label govuk-!-font-weight-bold bigger">Case number</dt>
         <dd class="value" id="caseNumber">{{ caseNumber }}</dd>
     </dl>
 </div>
@@ -87,7 +87,7 @@
 <div class="dont-break">
     <h3>Care arrangements</h3>
     <div class="box" id="care-arrangements-subsection">
-        <h3 class="label question bold">{{ 'form.doesClientReceivePaidCare.label' | trans(transOptions, translationDomain) }}</h3>
+        <h3 class="label question govuk-!-font-weight-bold">{{ 'form.doesClientReceivePaidCare.label' | trans(transOptions, translationDomain) }}</h3>
 
         <table class="checkboxes labelvalue inline">
             <tr>
@@ -99,7 +99,7 @@
         </table>
 
         <div id="safeguarding-care-funding" class="labelvalue push-half--top">
-            <h3 class="label question bold">If yes, how is the care funded?</h3>
+            <h3 class="label question govuk-!-font-weight-bold">If yes, how is the care funded?</h3>
             <table class="checkboxes labelvalue">
                 <tr>
                     <td class="clean-cell">
@@ -129,7 +129,7 @@
         </div>
 
         <div class="labelvalue push-half--top">
-            <h3 class="label question bold">Who is doing the caring?</h3>
+            <h3 class="label question govuk-!-font-weight-bold">Who is doing the caring?</h3>
             <div class="value">{{ visitsCare.whoIsDoingTheCaring }}</div>
         </div>
 
@@ -143,7 +143,7 @@
 {% macro deputyExpenses(ndr,report) %}
 <div class="dont-break">
     <div class="box">
-        <h3 class="label question bold">
+        <h3 class="label question govuk-!-font-weight-bold">
             {% if ndr %}
                 Did you pay for anything for the client before you were given your court order?
             {% else %}
@@ -178,7 +178,7 @@
 {% macro answerSimple(param) %}
     <div class="dont-break">
         <div class="box">
-            <h3 class="label question bold">{{ param.question }}</h3>
+            <h3 class="label question govuk-!-font-weight-bold">{{ param.question }}</h3>
             <div class="value">{{ param.answer }}</div>
         </div>
     </div>
@@ -187,7 +187,7 @@
 {% macro answerYesNo(param) %}
     <div class="dont-break">
         <div class="box">
-            <h3 class="label question bold">{{ param.question }}</h3>
+            <h3 class="label question govuk-!-font-weight-bold">{{ param.question }}</h3>
 
             <table class="checkboxes labelvalue inline">
                 <tr>
@@ -201,7 +201,7 @@
             {% if param.showMoreDetailsWith | default(false) and param.answer == param.showMoreDetailsWith %}
                 <div class="labelvalue push-half--top">
                     {% if param.moreDetailsLabel | default(false) %}
-                        <h3 class="label question bold">{{ param.moreDetailsLabel }}</h3>
+                        <h3 class="label question govuk-!-font-weight-bold">{{ param.moreDetailsLabel }}</h3>
                     {% endif %}
                     <div class="value">{{ param.moreDetails | nl2br }}</div>
                 </div>

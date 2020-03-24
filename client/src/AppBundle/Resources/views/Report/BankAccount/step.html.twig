@@ -28,7 +28,7 @@
         </p>
 
         {{ form_checkbox_group(form.accountType, 'form.accountType', {
-            'legendClass' : 'form-label-bold'
+            'legendClass' : 'govuk-label--s'
         }) }}
     {% endif %}
 
@@ -63,12 +63,12 @@
         {{ form_input(form.openingBalance, '', {
             'labelText': 'form.openingBalance.label' | trans({'%startDate%': report.startDate | date("j F Y")}, translationDomain),
             'inputPrefix' : '£',
-            'inputClass' : 'form-control-1-4 js-format-currency'
+            'inputClass' : 'govuk-!-width-one-quarter js-format-currency'
         } ) }}
         {{ form_input(form.closingBalance, 'form.closingBalance', {
             'labelText': 'form.closingBalance.label' | trans({'%endDate%': report.endDate | date("j F Y")}, translationDomain),
             'inputPrefix' : '£',
-            'inputClass' : 'form-control-1-4 js-format-currency'
+            'inputClass' : 'govuk-!-width-one-quarter js-format-currency'
         } ) }}
     {% endif %}
 

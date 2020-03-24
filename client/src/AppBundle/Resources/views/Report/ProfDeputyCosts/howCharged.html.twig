@@ -29,9 +29,9 @@
         {#{{ (page ~ '.profDeputyCostsHow.label') | trans(transOptions) }}#}
     {#</p>#}
 
-        <div class="form-group push--bottom {% if not form.profDeputyCostsHowCharged.vars.valid %}form-group-error{% endif %}">
+        <div class="govuk-form-group push--bottom {% if not form.profDeputyCostsHowCharged.vars.valid %}form-group-error{% endif %}">
             {{ form_checkbox_group(form.profDeputyCostsHowCharged, 'report.form.profDeputyCostsHowCharged', {
-                'legendClass' : 'form-label-bold',
+                'legendClass' : 'govuk-label--s',
                 'useFormGroup': false,
             }) }}
         </div>

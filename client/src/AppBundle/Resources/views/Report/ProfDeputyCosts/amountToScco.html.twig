@@ -21,11 +21,11 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <div class="form-section push--bottom">
+    <div class="push--bottom">
         {{ form_input(form.profDeputyCostsAmountToScco, page ~ '.form.profDeputyCostsAmountToScco', {
             'inputPrefix' : '£',
-            'inputClass' : 'form-control-1-4 js-format-currency',
-            'labelClass' : 'form-label-bold',
+            'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
+            'labelClass' : 'govuk-label--s',
             'formGroupClass': ' form-group-value'
         }) }}
 

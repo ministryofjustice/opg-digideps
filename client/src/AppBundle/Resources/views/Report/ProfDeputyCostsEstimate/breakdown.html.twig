@@ -28,7 +28,7 @@
     <div>
         {{ form_input(form.profDeputyManagementCostAmount, 'amount', {
             'inputPrefix' : '£',
-            'inputClass' : 'form-control-1-4 js-format-currency',
+            'inputClass' : 'govuk-label--s-1-4 js-format-currency',
             'labelText' : (page ~ '.form.profDeputyCostsEstimateManagementCost.label') | trans,
             'labelRaw': true
         }) }}
@@ -43,7 +43,7 @@
             {{ form_row(profDeputyEstimateCost.profDeputyEstimateCostTypeId) }}
             {{ form_input(profDeputyEstimateCost.amount, 'amount', {
                 'inputPrefix' : '£',
-                'inputClass' : 'form-control-1-4 js-format-currency',
+                'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
                 'labelText': (page ~ '.form.entries.' ~ profDeputyEstimateCost.profDeputyEstimateCostTypeId.vars.value ~ '.label') | trans,
                 'labelRaw': true
             }) }}

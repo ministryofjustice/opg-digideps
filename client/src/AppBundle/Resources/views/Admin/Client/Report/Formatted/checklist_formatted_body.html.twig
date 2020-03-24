@@ -15,7 +15,7 @@
         <div class="section">
             <h2 class="section-heading">{{ (page ~ '.heading.lodging.info') | trans({}, 'admin-checklist') }}</h2>
 
-            <h3 class="label question bold">{{ (page ~ '.form.reportingPeriodAccurate.label') | trans({}, 'admin-checklist') }}</h3>
+            <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.reportingPeriodAccurate.label') | trans({}, 'admin-checklist') }}</h3>
 
             <table class="checkboxes labelvalue inline">
                 <tbody>
@@ -31,7 +31,7 @@
             {# DDPB-2293 question not relevant for PA #}
             {% if not report.hasSection('paDeputyExpenses') %}
 
-                <h3 class="label question bold">{{ (page ~ '.form.contactDetailsUptoDate.label') | trans({}, 'admin-checklist') }}</h3>
+                <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.contactDetailsUptoDate.label') | trans({}, 'admin-checklist') }}</h3>
 
                 <table class="checkboxes labelvalue inline">
                     <tbody>
@@ -42,7 +42,7 @@
                     </tbody>
                 </table>
 
-                <h3 class="label question bold">{{ (page ~ '.form.deputyFullNameAccurateInCasrec.label') | trans({}, 'admin-checklist') }}</h3>
+                <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.deputyFullNameAccurateInCasrec.label') | trans({}, 'admin-checklist') }}</h3>
 
                 <table class="checkboxes labelvalue inline">
                     <tbody>
@@ -60,7 +60,7 @@
         <div class="section">
             <h2 class="section-heading">{{ (page ~ '.heading.lodging.decisions') | trans({}, 'admin-checklist') }}</h2>
 
-            <h3 class="label question bold">{{ (page ~ '.form.decisionsSatisfactory.label') | trans({}, 'admin-checklist') }}</h3>
+            <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.decisionsSatisfactory.label') | trans({}, 'admin-checklist') }}</h3>
 
             <table class="checkboxes labelvalue inline">
                 <tbody>
@@ -77,7 +77,7 @@
         <div class="section">
             <h2 class="section-heading">{{ (page ~ '.heading.lodging.contacts') | trans({}, 'admin-checklist') }}</h2>
 
-            <h3 class="label question bold">{{ (page ~ '.form.consultationsSatisfactory.label') | trans({}, 'admin-checklist') }}</h3>
+            <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.consultationsSatisfactory.label') | trans({}, 'admin-checklist') }}</h3>
 
             <table class="checkboxes labelvalue inline">
                 <tbody>
@@ -94,7 +94,7 @@
         <div class="section">
             <h2 class="section-heading">{{ (page ~ '.heading.lodging.visitsAndCare') | trans({}, 'admin-checklist') }}</h2>
 
-            <h3 class="label question bold">{{ (page ~ '.form.careArrangements.label') | trans({}, 'admin-checklist') }}</h3>
+            <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.careArrangements.label') | trans({}, 'admin-checklist') }}</h3>
 
             <table class="checkboxes labelvalue inline">
                 <tbody>
@@ -112,7 +112,7 @@
             <div class="section">
                 <h2 class="section-heading">{{ (page ~ '.heading.lodging.healthAndLifestyle') | trans({}, 'admin-checklist') }}</h2>
 
-                <h3 class="label question bold">{{ (page ~ '.form.satisfiedWithHealthAndLifestyle.label') | trans({}, 'admin-checklist') }}</h3>
+                <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.satisfiedWithHealthAndLifestyle.label') | trans({}, 'admin-checklist') }}</h3>
 
                 <table class="checkboxes labelvalue inline">
                     <tbody>
@@ -132,7 +132,7 @@
             <div class="section">
                 <h2 class="section-heading">{{ (page ~ '.heading.lodging.assetsAndDebts') | trans({}, 'admin-checklist') }}</h2>
 
-                <h3 class="label question bold">{{ (page ~ '.form.assetsDeclaredAndManaged.label') | trans({}, 'admin-checklist') }}</h3>
+                <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.assetsDeclaredAndManaged.label') | trans({}, 'admin-checklist') }}</h3>
 
                 <table class="checkboxes labelvalue inline">
                     <tbody>
@@ -147,7 +147,7 @@
                     </tbody>
                 </table>
 
-                <h3 class="label question bold">{{ (page ~ '.form.debtsManaged.label') | trans({}, 'admin-checklist') }}</h3>
+                <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.debtsManaged.label') | trans({}, 'admin-checklist') }}</h3>
 
                 <table class="checkboxes labelvalue inline">
                     <tbody>
@@ -168,7 +168,7 @@
             <div class="section">
                 <h2 class="section-heading">{{ (page ~ '.heading.lodging.money') | trans({}, 'admin-checklist') }}</h2>
 
-                <h3 class="label question bold">{{ (page ~ '.form.openClosingBalancesMatch.label') | trans({}, 'admin-checklist') }}</h3>
+                <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.openClosingBalancesMatch.label') | trans({}, 'admin-checklist') }}</h3>
 
                 <table class="checkboxes labelvalue inline">
                     <tbody>
@@ -189,7 +189,7 @@
                     {% set nonLayAppend = '' %}
                 {% endif %}
 
-                <h3 class="label question bold">{{ (page ~ '.form.accountsBalance' ~ nonLayAppend ~ '.label') | trans({}, 'admin-checklist') }}</h3>
+                <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.accountsBalance' ~ nonLayAppend ~ '.label') | trans({}, 'admin-checklist') }}</h3>
 
                 <table class="checkboxes labelvalue inline">
                     <tbody>
@@ -204,7 +204,7 @@
                     </tbody>
                 </table>
 
-                <h3 class="label question bold">{{ (page ~ '.form.moneyMovementsAcceptable.label') | trans({}, 'admin-checklist') }}</h3>
+                <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.moneyMovementsAcceptable.label') | trans({}, 'admin-checklist') }}</h3>
 
                 <table class="checkboxes labelvalue inline">
                     <tbody>
@@ -226,7 +226,7 @@
             {% if report.hasSection('paDeputyExpenses') %}
                 <h2 class="section-heading">{{ (page ~ '.heading.lodging.paFeeExpenses') | trans({}, 'admin-checklist') }}</h2>
 
-                <h3 class="label question bold">{{ (page ~ '.form.deputyChargeAllowedByCourt.label') | trans({}, 'admin-checklist') }}</h3>
+                <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.deputyChargeAllowedByCourt.label') | trans({}, 'admin-checklist') }}</h3>
 
                 <table class="checkboxes labelvalue inline">
                     <tbody>
@@ -239,7 +239,7 @@
                     </tbody>
                 </table>
 
-                <h3 class="label question bold">{{ (page ~ '.form.satisfiedWithPaExpenses.label') | trans({}, 'admin-checklist') }}</h3>
+                <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.satisfiedWithPaExpenses.label') | trans({}, 'admin-checklist') }}</h3>
 
                 <table class="checkboxes labelvalue inline">
                     <tbody>
@@ -256,7 +256,7 @@
             {% else %}
                 <h2 class="section-heading">{{ (page ~ '.heading.lodging.bonds') | trans({}, 'admin-checklist') }}</h2>
 
-                <h3 class="label question bold">{{ (page ~ '.form.bondAdequate.label') | trans({}, 'admin-checklist') }}</h3>
+                <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.bondAdequate.label') | trans({}, 'admin-checklist') }}</h3>
 
                 <table class="checkboxes labelvalue inline">
                     <tbody>
@@ -271,7 +271,7 @@
                     </tbody>
                 </table>
 
-                <h3 class="label question bold">{{ (page ~ '.form.bondOrderMatchCasrec.label') | trans({}, 'admin-checklist') }}</h3>
+                <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.bondOrderMatchCasrec.label') | trans({}, 'admin-checklist') }}</h3>
 
                 <table class="checkboxes labelvalue inline">
                     <tbody>
@@ -293,7 +293,7 @@
         <div class="section">
             <h2 class="section-heading">{{ (page ~ '.heading.lodging.profDeputyCosts') | trans({}, 'admin-checklist') }}</h2>
 
-            <h3 class="label question bold">{{ (page ~ '.form.paymentsMatchCostCertificate.label') | trans({}, 'admin-checklist') }}</h3>
+            <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.paymentsMatchCostCertificate.label') | trans({}, 'admin-checklist') }}</h3>
 
             <table class="checkboxes labelvalue inline">
                 <tbody>
@@ -306,7 +306,7 @@
                 </tbody>
             </table>
 
-            <h3 class="label question bold">{{ (page ~ '.form.profCostsReasonableAndProportionate.label') | trans({}, 'admin-checklist') }}</h3>
+            <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.profCostsReasonableAndProportionate.label') | trans({}, 'admin-checklist') }}</h3>
 
             <table class="checkboxes labelvalue inline">
                 <tbody>
@@ -319,7 +319,7 @@
                 </tbody>
             </table>
 
-            <h3 class="label question bold">{{ (page ~ '.form.hasDeputyOverchargedFromPreviousEstimates.label') | trans({}, 'admin-checklist') }}</h3>
+            <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.hasDeputyOverchargedFromPreviousEstimates.label') | trans({}, 'admin-checklist') }}</h3>
 
             <table class="checkboxes labelvalue inline">
                 <tbody>
@@ -340,7 +340,7 @@
         <div class="section">
             <h2 class="section-heading">{{ (page ~ '.heading.lodging.profDeputyCostsEstimate') | trans({}, 'admin-checklist') }}</h2>
 
-            <h3 class="label question bold">{{ (page ~ '.form.nextBillingEstimatesSatisfactory.label') | trans({}, 'admin-checklist') }}</h3>
+            <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.nextBillingEstimatesSatisfactory.label') | trans({}, 'admin-checklist') }}</h3>
 
             <table class="checkboxes labelvalue inline">
                 <tbody>
@@ -354,7 +354,7 @@
             </table>
 
             {% if report.profDeputyManagementCostAmount is not null %}
-                <h3 class="label question bold">
+                <h3 class="label question govuk-!-font-weight-bold">
                     {{ (page ~ '.form.totalEstimatedCosts.label') | trans({}, 'admin-checklist') }}:
                     £{{ report.profDeputyManagementCostAmount | money_format }}
                 </h3>
@@ -366,9 +366,9 @@
             <h2 class="section-heading">{{ (page ~ '.heading.lodging.nextPeriod') | trans({}, 'admin-checklist') }}</h2>
 
             {% if report.hasSection('lifestyle') %}
-                <h3 class="label question bold">{{ (page ~ '.form.futureSignificantChanges.label') | trans({}, 'admin-checklist') }}</h3>
+                <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.futureSignificantChanges.label') | trans({}, 'admin-checklist') }}</h3>
             {%  else %}
-                <h3 class="label question bold">{{ (page ~ '.form.futureSignificantDecisions.label') | trans({}, 'admin-checklist') }}</h3>
+                <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.futureSignificantDecisions.label') | trans({}, 'admin-checklist') }}</h3>
             {% endif %}
 
             <table class="checkboxes labelvalue inline">
@@ -384,7 +384,7 @@
                 </tbody>
             </table>
 
-            <h3 class="label question bold">{{ (page ~ '.form.hasDeputyRaisedConcerns.label') | trans({}, 'admin-checklist') }}</h3>
+            <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.hasDeputyRaisedConcerns.label') | trans({}, 'admin-checklist') }}</h3>
 
             <table class="checkboxes labelvalue inline">
                 <tbody>
@@ -403,7 +403,7 @@
         <div class="section">
             <h2 class="section-heading">{{ (page ~ '.heading.lodging.declaration') | trans({}, 'admin-checklist') }}</h2>
 
-            <h3 class="label question bold">{{ (page ~ '.form.caseWorkerSatisified.label') | trans({}, 'admin-checklist') }}</h3>
+            <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.caseWorkerSatisified.label') | trans({}, 'admin-checklist') }}</h3>
 
             <table class="checkboxes labelvalue inline">
                 <tbody>
@@ -423,12 +423,12 @@
             <h2 class="section-heading">{{ (page ~ '.heading.lodging.summary') | trans({}, 'admin-checklist') }}</h2>
 
             <div class="labelvalue push-half--top">
-                <h3 class="label question bold">{{ (page ~ '.form.lodgingSummary.label') | trans({}, 'admin-checklist') }}</h3>
+                <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.lodgingSummary.label') | trans({}, 'admin-checklist') }}</h3>
                 <div class="value">{{ lodgingChecklist.lodgingSummary | nl2br }}</div>
             </div>
 
             <div class="labelvalue push-half--top">
-                <h3 class="label question bold">{{ (page ~ '.form.finalDecision.label') | trans({}, 'admin-checklist') }}</h3>
+                <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.finalDecision.label') | trans({}, 'admin-checklist') }}</h3>
                 <table class="checkboxes labelvalue">
                     <tr>
                         <td class="clean-cell">
@@ -525,7 +525,7 @@
 
                 <div class="section">
                     <h2 class="section-heading">{{ (page ~ '.heading.fullReview.bankStatements') | trans({}, 'admin-checklist') }}</h2>
-                    <h3 class="label question bold">{{ (page ~ '.form.fullBankStatementsExist.label') | trans({}, 'admin-checklist') }}</h3>
+                    <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.fullBankStatementsExist.label') | trans({}, 'admin-checklist') }}</h3>
                     <table class="checkboxes labelvalue inline">
                         <tbody>
                         <tr>
@@ -541,7 +541,7 @@
                 </div>
                 <div class="section">
                     <h2 class="section-heading">{{ (page ~ '.heading.fullReview.lodgingConcerns') | trans({}, 'admin-checklist') }}</h2>
-                    <h3 class="label question bold">{{ (page ~ '.form.anyLodgingConcerns.label') | trans({}, 'admin-checklist') }}</h3>
+                    <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.anyLodgingConcerns.label') | trans({}, 'admin-checklist') }}</h3>
                     <table class="checkboxes labelvalue inline">
                         <tbody>
                         <tr>
@@ -557,7 +557,7 @@
                 </div>
                 <div>
                     <h2 class="section-heading">{{ (page ~ '.heading.fullReview.spendingAndDebt') | trans({}, 'admin-checklist') }}</h2>
-                    <h3 class="label question bold">{{ (page ~ '.form.spendingAcceptable.label') | trans({}, 'admin-checklist') }}</h3>
+                    <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.spendingAcceptable.label') | trans({}, 'admin-checklist') }}</h3>
                     <table class="checkboxes labelvalue inline">
                         <tbody>
                         <tr>
@@ -571,7 +571,7 @@
                         </tbody>
                     </table>
 
-                    <h3 class="label question bold">{{ (page ~ '.form.expensesReasonable.label') | trans({}, 'admin-checklist') }}</h3>
+                    <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.expensesReasonable.label') | trans({}, 'admin-checklist') }}</h3>
                     <table class="checkboxes labelvalue inline">
                         <tbody>
                         <tr>
@@ -585,7 +585,7 @@
                         </tbody>
                     </table>
 
-                    <h3 class="label question bold">{{ (page ~ '.form.giftingReasonable.label') | trans({}, 'admin-checklist') }}</h3>
+                    <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.giftingReasonable.label') | trans({}, 'admin-checklist') }}</h3>
                     <table class="checkboxes labelvalue inline">
                         <tbody>
                         <tr>
@@ -599,7 +599,7 @@
                         </tbody>
                     </table>
 
-                    <h3 class="label question bold">{{ (page ~ '.form.debtManageable.label') | trans({}, 'admin-checklist') }}</h3>
+                    <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.debtManageable.label') | trans({}, 'admin-checklist') }}</h3>
                     <table class="checkboxes labelvalue inline">
                         <tbody>
                         <tr>
@@ -613,7 +613,7 @@
                         </tbody>
                     </table>
 
-                    <h3 class="label question bold">{{ (page ~ '.form.anySpendingConcerns.label') | trans({}, 'admin-checklist') }}</h3>
+                    <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.anySpendingConcerns.label') | trans({}, 'admin-checklist') }}</h3>
                     <table class="checkboxes labelvalue inline">
                         <tbody>
                         <tr>
@@ -629,7 +629,7 @@
                 </div>
                 <div class="section">
                     <h2 class="section-heading">{{ (page ~ '.heading.fullReview.referral') | trans({}, 'admin-checklist') }}</h2>
-                    <h3 class="label question bold">{{ (page ~ '.form.needReferral.label') | trans({}, 'admin-checklist') }}</h3>
+                    <h3 class="label question govuk-!-font-weight-bold">{{ (page ~ '.form.needReferral.label') | trans({}, 'admin-checklist') }}</h3>
                     <table class="checkboxes labelvalue inline">
                         <tbody>
                         <tr>

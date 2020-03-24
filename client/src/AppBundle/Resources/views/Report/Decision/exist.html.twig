@@ -20,13 +20,13 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-        <div class="form-section push--bottom">
-            <div class="form-group flush--bottom {% if not form.hasDecisions.vars.valid %}form-group-error{% endif %}">
+        <div class="push--bottom">
+            <div class="govuk-form-group flush--bottom {% if not form.hasDecisions.vars.valid %}form-group-error{% endif %}">
                 {{ form_checkbox_group(form.hasDecisions, (page ~ '.form.hasDecisions'), {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
                     'labelParameters': transOptions,
-                    'legendClass' : 'form-label-bold text',
+                    'legendClass' : 'govuk-label--s text',
                     'items': [
                         {},
                         {'dataTarget': 'reason-for-no-decisions'}
@@ -53,7 +53,7 @@
             <div class="text opg-indented-block">
                 <p>{{ (page ~ '.whatisdecisionPara1' ~ append104) | trans(transOptions) }}</p>
                 <p>{{ (page ~ '.whatisdecisionPara2' ~ append104) | trans(transOptions) }}</p>
-                <ul class="list list-bullet">
+                <ul class="govuk-list govuk-list--bullet">
                     <li>{{ (page ~ '.whatisdecisionListItem1' ~ append104) | trans(transOptions) }}</li>
                     <li>{{ (page ~ '.whatisdecisionListItem2' ~ append104) | trans(transOptions) }}</li>
                     <li>{{ (page ~ '.whatisdecisionListItem3' ~ append104) | trans(transOptions) }}</li>

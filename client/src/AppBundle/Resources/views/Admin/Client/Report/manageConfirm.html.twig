@@ -16,8 +16,8 @@
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}
-    <p class="flush--bottom">{{ 'client' | trans({}, 'common') }}: <span class="bold">{{ report.client.fullName }}</span></p>
-    <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="bold">{{ report.client.caseNumber }}</span></p>
+    <p class="flush--bottom">{{ 'client' | trans({}, 'common') }}: <span class="govuk-!-font-weight-bold">{{ report.client.fullName }}</span></p>
+    <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="govuk-!-font-weight-bold">{{ report.client.caseNumber }}</span></p>
 
     {% if report.isSubmitted %}
         <p>{{ (page ~ '.form.confirmation.submittedGuidance') | trans }}</p>
@@ -84,10 +84,10 @@
     </table>
 
     {% if report.isSubmitted %}
-        <div class="form-section push--bottom">
+        <div class="push--bottom">
             {{ form_checkbox_group(form.confirm, (page ~ '.form.confirmation'), {
                 'fieldSetClass' : 'inline',
-                'legendClass' : 'form-label-bold text',
+                'legendClass' : 'govuk-label--s text',
                 'formGroupClass': 'flush--bottom'
             }) }}
         </div>

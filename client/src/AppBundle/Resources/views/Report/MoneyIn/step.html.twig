@@ -36,10 +36,10 @@
     {{ form_start(form, {attr: {id: 'account-form', novalidate: 'novalidate' } }) }}
 
     {% if step == 1 %}
-        <div id="form-group-account_category" class="form-group push--top {% if not form.category.vars.valid %}form-group-error{% endif %}">
+        <div id="form-group-account_category" class="govuk-form-group push--top {% if not form.category.vars.valid %}form-group-error{% endif %}">
         {% for group, categories in categoriesGrouped %}
             <fieldset class="push--top">
-                <legend class="form-label-bold text push-half--bottom">{{ ('form.group.entries.' ~ group) | trans(clientTransOptions, translationDomain) }}</legend>
+                <legend class="govuk-label--s text push-half--bottom">{{ ('form.group.entries.' ~ group) | trans(clientTransOptions, translationDomain) }}</legend>
                 {% for category in categories %}
                     {% for el in form.category %}
                         {% if el.vars.value == category %}
@@ -62,7 +62,7 @@
 
         {{ form_input(form.amount, 'form.amount', {
             'inputPrefix' : '£',
-            'inputClass' : 'form-control-1-4 js-format-currency',
+            'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
             'formGroupClass': ' form-group-value'
         }) }}
 

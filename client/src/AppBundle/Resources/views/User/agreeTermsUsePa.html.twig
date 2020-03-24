@@ -36,7 +36,7 @@
         <p>{{ 'section02.para01' | trans(transOptions) }}</p>
         <p>{{ 'section02.para02' | trans(transOptions) }}</p>
 
-        <ul class="list list-bullet">
+        <ul class="govuk-list govuk-list--bullet">
             <li>{{ 'section02.listItem01' | trans(transOptions) }}</li>
             <li>{{ 'section02.listItem02' | trans(transOptions) }}</li>
             <li>{{ 'section02.listItem03' | trans(transOptions) }}</li>
@@ -59,7 +59,7 @@
 
     {{ form_checkbox(form.agreeTermsUse, 'form.agreeTermsUse', { 'labelClass': 'required' }) }}
 
-    <div class="form-group">
+    <div class="govuk-form-group">
         {{ form_submit(form.save, 'form.save') }}
     </div>
 

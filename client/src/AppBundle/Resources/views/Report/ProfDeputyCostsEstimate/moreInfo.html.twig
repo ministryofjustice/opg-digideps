@@ -23,13 +23,13 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <div class="form-section push--bottom">
+    <div class="push--bottom">
 
-        <div class="form-group push--bottom {% if not form.profDeputyCostsEstimateHasMoreInfo.vars.valid %}form-group-error{% endif %}">
+        <div class="govuk-form-group push--bottom {% if not form.profDeputyCostsEstimateHasMoreInfo.vars.valid %}form-group-error{% endif %}">
             {{ form_checkbox_group(form.profDeputyCostsEstimateHasMoreInfo, 'form.profDeputyCostsEstimateHasMoreInfo', {
                 'useFormGroup': false,
                 'fieldSetClass' : 'inline',
-                'legendClass' : 'form-label-bold',
+                'legendClass' : 'govuk-label--s',
                 'items': [
                     {'dataTarget': 'more-info-textarea' }
                 ]

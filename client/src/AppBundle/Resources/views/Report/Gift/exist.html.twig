@@ -18,11 +18,11 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <div class="form-section push--bottom">
+    <div class="push--bottom">
         {{ form_checkbox_group(form.giftsExist, 'existPage.form.giftsExist', {
             'fieldSetClass' : 'inline',
             'labelParameters': transOptions,
-            'legendClass' : 'form-label-bold text',
+            'legendClass' : 'govuk-label--s text',
             'formGroupClass': 'flush--bottom'
         }) }}
     </div>

@@ -8,7 +8,7 @@
                 {% if categories | length == 0 %}
                     None
                 {% else %}
-                    <ul class="list list-bullet flush--ends">
+                    <ul class="govuk-list govuk-list--bullet flush--ends">
                         {% for c in categories %}
                             <li>
                                 {{ ('form.categoriesEntries.' ~ c.typeId ~ '.label') | trans(transOptions, "report-money-short") }}
@@ -21,7 +21,7 @@
     </div>
 
     <div class="box">
-        <h3 class="label question bold">{{ existQuestion }}</h3>
+        <h3 class="label question govuk-!-font-weight-bold">{{ existQuestion }}</h3>
         <table class="checkboxes labelvalue inline">
             <tr>
                 <td class="value checkbox">{% if transactionsExist == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
@@ -53,7 +53,7 @@
             {# total value #}
             <table class="labelvalue">
                 <tr>
-                    <td class="label bold">{{ totalText }}</td>
+                    <td class="label govuk-!-font-weight-bold">{{ totalText }}</td>
                     <td class="value total width-fifth" id="assetsTotal">&pound;{{ report.totalValue(transactions) | money_format }}</td>
                 </tr>
             </table>

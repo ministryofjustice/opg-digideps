@@ -18,13 +18,13 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-        <div class="form-section push--bottom">
-            <div class="form-group flush--bottom {% if not form.hasFees.vars.valid %}form-group-error{% endif %}">
+        <div class="push--bottom">
+            <div class="govuk-form-group flush--bottom {% if not form.hasFees.vars.valid %}form-group-error{% endif %}">
                 {{ form_checkbox_group(form.hasFees, 'feeExistPage.form.hasFees', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
                     'labelParameters': transOptions,
-                    'legendClass' : 'form-label-bold text',
+                    'legendClass' : 'govuk-label--s text',
                     'items': [
                         {},
                         {'dataTarget': 'reason-for-no-fee'}

@@ -21,12 +21,12 @@
                     <tr>
                         <td class="label">
                             {% set currentBank = transfer.accountFrom %}
-                            <span class="bold">{{ currentBank.bank }} {{ currentBank.accountTypeText }}</span>
+                            <span class="govuk-!-font-weight-bold">{{ currentBank.bank }} {{ currentBank.accountTypeText }}</span>
                             <p class="flush--bottom">****{{ currentBank.accountNumber }}</p>
                         </td>
                         <td class="label">
                             {% set currentBank = transfer.accountTo %}
-                            <span class="bold">{{ currentBank.bank }} {{ currentBank.accountTypeText }}</span>
+                            <span class="govuk-!-font-weight-bold">{{ currentBank.bank }} {{ currentBank.accountTypeText }}</span>
                             <p class="flush--bottom">****{{ currentBank.accountNumber }}</p>
                         </td>
                         <td class="value text--right width-fifth">&pound;{{ transfer.amount | money_format }}</td>

@@ -11,15 +11,15 @@
 
 {% block pageContent %}
 
-    <div class="grid-row">
-        <div class="column-two-thirds">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
             <div class="text">
                 <p class="govuk-body-l">{{ 'intro.lede' |trans }}</p>
                 {{ macros.notification('info', 'intro.para01' |trans) }}
                 <p>{{ 'intro.para02' |trans }}</p>
             </div>
 
-            <div class="grid-row push--top">
+            <div class="govuk-grid-row push--top">
                 <div class="column-half">
                     <h2 class="govuk-heading-m flush--top">{{ 'iwanttocreate' | trans }}</h2>
                 </div>
@@ -34,7 +34,7 @@
                             <span class="summary">{{ 'whatyouneed' |trans }}</span>
                         </summary>
                         <div class="opg-indented-block">
-                            <ul class="list list-bullet">
+                            <ul class="govuk-list govuk-list--bullet">
                                 <li>{{ 'whatyouneedListItem1' | trans }}</li>
                                 <li>{{ 'whatyouneedListItem2' | trans }}</li>
                                 <li>{{ 'whatyouneedListItem3' | trans }}</li>
@@ -44,7 +44,7 @@
                 </div>
             </div>
 
-            <div class="grid-row push-half--top">
+            <div class="govuk-grid-row push-half--top">
                 <div class="column-half">
                     <h2 class="govuk-heading-m flush--top">{{ 'ialready' |trans }}</h2>
                 </div>
@@ -72,13 +72,13 @@
                     </summary>
                     <div class="opg-indented-block">
                         <p>{{ 'provideDetails.para01' |trans }}</p>
-                        <ul class="list list-bullet">
+                        <ul class="govuk-list govuk-list--bullet">
                             <li>{{ 'provideDetails.listItem01' |trans }}</li>
                             <li>{{ 'provideDetails.listItem02' |trans }}</li>
                             <li>{{ 'provideDetails.listItem03' |trans }}</li>
                         </ul>
                         <p>{{ 'provideDetails.para02' |trans }}</p>
-                        <ul class="list list-bullet">
+                        <ul class="govuk-list govuk-list--bullet">
                             <li>{{ 'provideDetails.listItem04' |trans }}</li>
                             <li>{{ 'provideDetails.listItem05' |trans }}</li>
                             <li>{{ 'provideDetails.listItem06' |trans }}</li>

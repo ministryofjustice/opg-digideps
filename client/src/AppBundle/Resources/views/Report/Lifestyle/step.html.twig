@@ -19,9 +19,9 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {% if step == 1 %}
-        <div class="form-section push--bottom">
+        <div class="push--bottom">
             {{ form_input(form.careAppointments, 'form.careAppointments', {
-                'labelClass': 'form-label-bold',
+                'labelClass': 'govuk-label--s',
                 'formGroupClass': 'flush--bottom',
                 'labelRaw': true,
                 'labelText': ('form.careAppointments.label') | trans(transOptions)
@@ -30,12 +30,12 @@
     {% endif %}
 
     {% if step == 2 %}
-        <div class="form-section push--bottom">
-            <div class="form-group flush--bottom {% if not form.doesClientUndertakeSocialActivities.vars.valid %}error{% endif %}">
+        <div class="push--bottom">
+            <div class="govuk-form-group flush--bottom {% if not form.doesClientUndertakeSocialActivities.vars.valid %}error{% endif %}">
                 {{ form_checkbox_group(form.doesClientUndertakeSocialActivities, 'form.doesClientUndertakeSocialActivities', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
-                    'legendClass' : 'form-label-bold',
+                    'legendClass' : 'govuk-label--s',
                     'legendText' : 'form.doesClientUndertakeSocialActivities.label' | trans(transOptions, translationDomain),
                     'items': [
                     {'dataTarget': 'undertake-social-activities-yes-wrapper' },

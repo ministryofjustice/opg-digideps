@@ -42,8 +42,8 @@
             </tr>
             {% if report.type != '103'  %}
                 <tr class="totals">
-                    <td><span class="bold">Balance after income and expenditure:</span></td>
-                    <td class="reverse numeric"><span class="bold">&pound;{{ report.calculatedBalance | money_format}}</span></td>
+                    <td><span class="govuk-!-font-weight-bold">Balance after income and expenditure:</span></td>
+                    <td class="reverse numeric"><span class="govuk-!-font-weight-bold">&pound;{{ report.calculatedBalance | money_format}}</span></td>
                 </tr>
             {% endif %}
         </table>

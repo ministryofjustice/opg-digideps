@@ -23,20 +23,20 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
-    <div class="form-section push--bottom">
+    <div class="push--bottom">
         {% for debt in form.debts %}
             <div class="{{ debt.moreDetails is defined ? ' js-details-expander ' : '' }}">
                 {{ form_row(debt.debtTypeId) }}
                 {{ form_input(debt.amount, 'amount', {
                     'inputPrefix' : '£',
-                    'inputClass' : 'form-control-1-4 js-format-currency',
+                    'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
                     'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.label') | trans,
                     'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.hint') | trans(transOptions),
                     'labelRaw': true
                 }) }}
 
                 {% if debt.moreDetails is defined %}
-                    <div class="form-group flush--bottom">
+                    <div class="govuk-form-group flush--bottom">
                         <div class="opg-indented-block flush--bottom js-hidden">
                             {{ form_input(debt.moreDetails, 'moreDetails', {
                                 'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,

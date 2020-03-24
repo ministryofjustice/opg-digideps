@@ -37,7 +37,7 @@
 
     {% if report.hasSection('assets') %}
         <div class="box">
-            <h3 class="label question bold">Assets</h3>
+            <h3 class="label question govuk-!-font-weight-bold">Assets</h3>
             <table class="labelvalue money">
                 <tbody>
                     <tr>
@@ -78,7 +78,7 @@
             <table class="labelvalue money">
                 {% if report.hasSection('gifts') %}
                     <tr>
-                        <td class="label bold">Gifts</td>
+                        <td class="label govuk-!-font-weight-bold">Gifts</td>
                         <td class="value total width-fifth">
                             &pound;{{ report.giftsTotalValue | money_format }}
                         </td>
@@ -86,7 +86,7 @@
                 {% endif %}
                 {% if report.hasSection('deputyExpenses') %}
                     <tr>
-                        <td class="label bold">Deputy expenses</td>
+                        <td class="label govuk-!-font-weight-bold">Deputy expenses</td>
                         <td class="value total width-fifth">
                             &pound;{{ report.expensesTotal | money_format }}
                         </td>
@@ -94,7 +94,7 @@
                 {% endif %}
                 {% if report.hasSection('paDeputyExpenses') %}
                     <tr>
-                        <td class="label bold">Deputy fees and expenses</td>
+                        <td class="label govuk-!-font-weight-bold">Deputy fees and expenses</td>
                         <td class="value total width-fifth">
                             &pound;{{ (report.feesTotal + report.expensesTotal) | money_format }}
                         </td>

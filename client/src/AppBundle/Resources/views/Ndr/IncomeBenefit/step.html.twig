@@ -30,7 +30,7 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {% if step == 1 %}
-        <p class="bold-small text">
+        <p class="govuk-!-font-size-19 govuk-!-font-weight-bold text">
             {{ 'form.stateBenefits.label' | trans(transOptions) }}
         </p>
         <p class="text">
@@ -60,13 +60,13 @@
 
     {% if step == 3 %}
 
-        <div class="form-section push--bottom">
-            <div class="form-group flush--bottom {% if not form.receiveOtherIncome.vars.valid %}form-group-error{% endif %}">
+        <div class="push--bottom">
+            <div class="govuk-form-group flush--bottom {% if not form.receiveOtherIncome.vars.valid %}form-group-error{% endif %}">
 
                 {{ form_checkbox_group(form.receiveOtherIncome, '', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
-                    'legendClass' : 'form-label-bold',
+                    'legendClass' : 'govuk-label--s',
                     'legendText' : 'form.receiveOtherIncome.label' | trans(transOptions),
                     'hintText' : 'form.receiveOtherIncome.hint' | trans(transOptions),
                     'items': [
@@ -92,13 +92,13 @@
 
 
     {% if step == 4 %}
-        <div class="form-section push--bottom">
-            <div class="form-group flush--bottom {% if not form.expectCompensationDamages.vars.valid %}form-group-error{% endif %}">
+        <div class="push--bottom">
+            <div class="govuk-form-group flush--bottom {% if not form.expectCompensationDamages.vars.valid %}form-group-error{% endif %}">
 
                 {{ form_checkbox_group(form.expectCompensationDamages, '', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
-                    'legendClass' : 'form-label-bold',
+                    'legendClass' : 'govuk-label--s',
                     'legendText' : 'form.expectCompensationDamages.label' | trans(transOptions),
                     'items': [
                     {'dataTarget': 'expect-compensation-damages-details' }
@@ -123,7 +123,7 @@
 
 
     {% if step == 5 %}
-        <p class="bold-small text">
+        <p class="govuk-!-font-size-19 govuk-!-font-weight-bold text">
             {{ 'form.oneOff.label' | trans(transOptions) }}
         </p>
         <p class="text">

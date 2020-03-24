@@ -68,7 +68,7 @@
 
         {% if readyToBalance and not report.isTotalsMatch %}
 
-            <p class="bold">{{ 'moreInfo.para4' | trans(transOptions) }}</p>
+            <p class="govuk-!-font-weight-bold">{{ 'moreInfo.para4' | trans(transOptions) }}</p>
 
             <details class="push--bottom">
                 <summary>
@@ -76,7 +76,7 @@
                 </summary>
                 <div class="opg-indented-block">
                     <p>{{ 'moreInfo.whatToDo.para1' | trans }}</p>
-                    <ul class="list list-bullet">
+                    <ul class="govuk-list govuk-list--bullet">
                         <li>{{ 'moreInfo.whatToDo.listItem1' | trans }}</li>
                         <li>{{ ('moreInfo.whatToDo.listItem2' ~ app.user.getRoleForTrans) | trans }}</li>
                         <li>{{ ('moreInfo.whatToDo.listItem3' ~ app.user.getRoleForTrans) | trans(transOptions) }}</li>

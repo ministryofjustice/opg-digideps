@@ -19,12 +19,12 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {% if step == 1 %}
-        <div class="form-section push--bottom">
-            <div class="form-group flush--bottom {% if not form.wishToProvideDocumentation.vars.valid %}form-group-error{% endif %}">
+        <div class="push--bottom">
+            <div class="govuk-form-group flush--bottom {% if not form.wishToProvideDocumentation.vars.valid %}form-group-error{% endif %}">
                 {{ form_checkbox_group(form.wishToProvideDocumentation, 'form.wishToProvideDocumentation', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
-                    'legendClass' : 'form-label-bold',
+                    'legendClass' : 'govuk-label--s',
                     'legendText' : 'stepPage.form.wishToUploadDocumentation.label' | trans(transOptions, translationDomain),
                 }) }}
 

@@ -31,7 +31,7 @@
             {{ form_row(profDeputyOtherCost.profDeputyOtherCostTypeId) }}
             {{ form_input(profDeputyOtherCost.amount, 'amount', {
                 'inputPrefix' : '£',
-                'inputClass' : 'form-control-1-4 js-format-currency',
+                'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
                 'labelText': (page ~ '.form.entries.' ~ profDeputyOtherCost.profDeputyOtherCostTypeId.vars.value ~ '.label') | trans,
                 'labelRaw': true
             }) }}

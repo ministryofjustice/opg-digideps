@@ -21,15 +21,15 @@
 
 {% block pageContent %}
 
-    <p class="text"><strong class="bold">{{ 'question' | trans }}</strong></p>
+    <p class="text"><strong class="govuk-!-font-weight-bold">{{ 'question' | trans }}</strong></p>
     <table class="text push--bottom">
         <tbody>
             <tr>
-                <th scope="row"><strong class="bold">{{ 'name' | trans({}, 'common') }}:</strong></th>
+                <th scope="row"><strong class="govuk-!-font-weight-bold">{{ 'name' | trans({}, 'common') }}:</strong></th>
                 <td>{{ client.fullname }}</td>
             </tr>
             <tr>
-                <th scope="row"><strong class="bold">{{ 'courtOrderNumber' | trans({}, 'common') }}:</strong></th>
+                <th scope="row"><strong class="govuk-!-font-weight-bold">{{ 'courtOrderNumber' | trans({}, 'common') }}:</strong></th>
                 <td>{{ client.caseNumber }}</td>
             </tr>
         </tbody>
@@ -41,8 +41,8 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
 
-    <div class="form-section push--bottom">
-        <div class="form-group flush--bottom">
+    <div class="push--bottom">
+        <div class="govuk-form-group flush--bottom">
             {{ form_checkbox(form.confirmArchive, 'form.confirmArchive', {'labelText': ('form.confirmArchive.label') | trans}) }}
         </div>
     </div>

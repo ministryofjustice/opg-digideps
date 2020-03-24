@@ -2,15 +2,15 @@
     <fieldset>
         <legend class="form-label">Change your password</legend>
         <div class="form-change-password">
-            <div class="form-group">
+            <div class="govuk-form-group">
                 {{ form_label(form.current_password,'Current Password') }}
                 {{ form_widget(form.current_password) }}
             </div>
-            <div class="form-group">
+            <div class="govuk-form-group">
                 {{ form_label(form.new_password.first, 'New password') }}
                 {{ form_widget(form.new_password.first) }}
             </div>
-            <div class="form-group">
+            <div class="govuk-form-group">
                 {{ form_label(form.new_password.second, 'Confirm new password') }}
                 {{ form_widget(form.new_password.second) }}
             </div>

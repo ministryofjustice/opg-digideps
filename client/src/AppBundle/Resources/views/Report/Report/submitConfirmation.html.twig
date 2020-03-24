@@ -25,7 +25,7 @@
     </a>
 
     {% if report.hasSection('profDeputyCosts') %}
-        <ul class="list list-bullet push--top">
+        <ul class="govuk-list govuk-list--bullet push--top">
             <li>{{ ('page.professionalDeputyListItems.item1') | trans(transOptions) }}</li>
             <li>{{ ('page.professionalDeputyListItems.item2') | trans(transOptions) }}</li>
             <li>{{ ('page.professionalDeputyListItems.item3') | trans }}</li>
@@ -38,12 +38,12 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'push--bottom' } }) }}
 
     {{ form_checkbox_group(form.satisfactionLevel, 'form.satisfactionLevel', {
-        'legendClass' : 'text form-label-bold',
+        'legendClass' : 'text govuk-label--s',
         'legend': 'satisfactionLevel'
     }) }}
 
     {{ form_input(form.comments, 'form.comments', {
-        'labelClass' : 'form-label-bold'
+        'labelClass' : 'govuk-label--s'
     }) }}
 
     <p class="text">{{ 'page.feedback.limit' | trans }}</p>
