@@ -7,9 +7,7 @@ $govuk-global-styles: true;
 @import "govuk-elements";
 
 //GOV.UK EXTENSIONS
-@import "extensions/elements/forms";
 @import "extensions/elements/layout";
-@import "extensions/elements/elements-typography";
 @import "extensions/elements/tables";
 
 // DIGIDEPS
