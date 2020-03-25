@@ -15,6 +15,8 @@ use Psr\Log\LoggerInterface;
  */
 class S3Storage implements StorageInterface
 {
+    // If a file is deleted in S3 it will return an AccessDenied error until its permanently deleted
+    const MISSING_FILE_AWS_ERROR_CODES = ['NoSuchKey', 'AccessDenied'];
     /**
      * @var S3ClientInterface
      *
@@ -66,9 +68,6 @@ class S3Storage implements StorageInterface
      */
     public function retrieve(string $key)
     {
-        // If a file is deleted in S3 it will return an AccessDenied error until its permanently deleted
-        $missingFileAWSErrorCodes = ['NoSuchKey', 'AccessDenied'];
-
         try {
             $result = $this->s3Client->getObject([
                 'Bucket' => $this->bucketName,
@@ -77,7 +76,7 @@ class S3Storage implements StorageInterface
 
             return $result['Body'];
         } catch (S3Exception $e) {
-            if (in_array($e->getAwsErrorCode(), $missingFileAWSErrorCodes)) {
+            if (in_array($e->getAwsErrorCode(), self::MISSING_FILE_AWS_ERROR_CODES)) {
                 throw new FileNotFoundException("Cannot find file with reference $key");
             }
             throw $e;

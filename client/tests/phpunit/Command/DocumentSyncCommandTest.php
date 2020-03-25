@@ -36,7 +36,7 @@ class DocumentSyncCommandTest extends KernelTestCase
         /** @var DocumentSyncService|ObjectProphecy $documentSyncService */
         $documentSyncService = self::prophesize(DocumentSyncService::class);
         $documentSyncService
-            ->syncReportDocument($doc)
+            ->syncDocument($doc)
             ->shouldBeCalled();
 
         $kernel = static::bootKernel([ 'debug' => false ]);
@@ -74,7 +74,7 @@ class DocumentSyncCommandTest extends KernelTestCase
         /** @var DocumentSyncService|ObjectProphecy $documentSyncService */
         $documentSyncService = self::prophesize(DocumentSyncService::class);
         $documentSyncService
-            ->syncReportDocument(Argument::cetera())
+            ->syncDocument(Argument::cetera())
             ->shouldNotBeCalled();
 
         $kernel = static::bootKernel([ 'debug' => false ]);

@@ -1,18 +1,22 @@
-<?php
+<?php declare(strict_types=1);
+
 
 namespace AppBundle\Service;
+
 
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\ReportInterface;
+use AppBundle\Entity\Report\ReportSubmission;
+use AppBundle\Model\Sirius\SiriusDocumentUpload;
+use AppBundle\Model\Sirius\SiriusReportPdfDocumentMetadata;
+use AppBundle\Model\Sirius\SiriusSupportingDocumentMetadata;
+use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use AppBundle\Service\File\Storage\S3Storage;
-use DateTime;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response as Psr7Response;
+use Aws\S3\Exception\S3Exception;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class DocumentSyncService
 {
@@ -24,87 +28,206 @@ class DocumentSyncService
     /** @var S3Storage */
     private $storage;
 
-    public function __construct(S3Storage $storage)
+    /**
+     * @var SiriusApiGatewayClient
+     */
+    private $siriusApiGatewayClient;
+
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    public function __construct(
+        S3Storage $storage,
+        SiriusApiGatewayClient $siriusApiGatewayClient,
+        RestClient $restClient
+    )
     {
         $this->storage = $storage;
-        $this->client = new Client([
-            'base_uri' => 'http://pact-mock'
-        ]);
+        $this->siriusApiGatewayClient = $siriusApiGatewayClient;
+        $this->restClient = $restClient;
     }
 
-    public function syncReportDocument(Document $document)
+    /**
+     * @param Document $document
+     * @return string
+     */
+    public function syncDocument(Document $document)
     {
-        $contents = $this->storage->retrieve($document->getStorageReference());
+        $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_IN_PROGRESS);
 
-        $report = $document->getReport();
-        $attributes = $this->getAttributesFromReport($report);
-
-        try {
-            $response = $this->sendReportDocument($report->getClient()->getCaseNumber(), $contents, $attributes);
-
-            $data = json_decode(strval($response->getBody()), true);
-            return $data['data']['id'];
-        } catch (RequestException $exception) {
-            $response = $exception->getResponse();
-            if ($response) {
-                $response = json_decode($exception->getResponse()->getBody());
-
-                return $response->errors[0]->detail;
-            } else {
-                return $exception->getMessage();
+        if ($document->isReportPdf()) {
+            return $this->syncReportDocument($document);
+        } else {
+            if (!$document->supportingDocumentCanBeSynced()) {
+                return $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_QUEUED);
             }
+
+            return $this->syncSupportingDocument($document);
         }
     }
 
     /**
-     * @param Report|Ndr $report
-     * @return array
+     * @param Document $document
+     * @return string|null
      */
-    private function getAttributesFromReport(ReportInterface $report): array
+    public function syncReportDocument(Document $document): ?string
     {
-        if ($report instanceof Ndr) {
-            $type = 'NDR';
-        } else if (in_array($report->getType(), [Report::TYPE_HEALTH_WELFARE, Report::TYPE_COMBINED_HIGH_ASSETS, Report::TYPE_COMBINED_LOW_ASSETS])) {
-            $type = 'HW';
-        } else {
-            $type = 'PF';
-        }
+        try {
+            /** @var Report $report */
+            $report = $document->getReport();
 
-        if ($report instanceof Ndr) {
-            $endDate = $report->getStartDate()->format('Y-m-d');
-        } else {
-            $endDate = $report->getEndDate()->format('Y-m-d');
-        }
+            $content = $this->retrieveDocumentContentFromS3($document);
+            $siriusResponse = $this->handleSiriusSync($document, $content);
 
-        return [
-            'reporting_period_from' => $report->getStartDate()->format('Y-m-d'),
-            'reporting_period_to' => $endDate,
-            'year' => $report->getStartDate()->format('Y'),
-            'date_submitted' => $report->getSubmitDate()->format(DateTime::ATOM),
-            'type' => $type
-        ];
+            $data = json_decode(strval($siriusResponse->getBody()), true);
+            $relevantSubmission = $report->getReportSubmissionByDocument($document);
+
+            $this->handleReportSubmissionUpdate($relevantSubmission->getId(), $data['data']['id']);
+
+            return $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_SUCCESS);
+        } catch (Throwable $e) {
+            $this->handleSyncErrors($e, $document);
+            return null;
+        }
     }
 
-    private function sendReportDocument($caseRef, $contents, $attributes): Psr7Response
+    /**
+     * @param Document $document
+     * @return string|null
+     */
+    public function syncSupportingDocument(Document $document): ?string
     {
-        $data = json_encode([
-            'data' => [
-                'type' => 'reports',
-                'attributes' => $attributes,
-            ]
-        ]);
+        try {
+            $content = $this->retrieveDocumentContentFromS3($document);
+            $this->handleSiriusSync($document, $content);
+            return $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_SUCCESS);
+        } catch (Throwable $e) {
+            $this->handleSyncErrors($e, $document);
+        }
+    }
 
-        return $this->client->request('POST', "/clients/$caseRef/reports", [
-            'multipart' => [
-                [
-                    'name' => 'report',
-                    'contents' => $data,
-                ],
-                [
-                    'name' => 'report_file',
-                    'contents' => $contents
-                ]
-            ],
-        ]);
+    private function buildUpload(Document $document)
+    {
+        $report = $document->getReport();
+
+        if ($document->isReportPdf()) {
+            $siriusDocumentMetadata = (new SiriusReportPdfDocumentMetadata())
+                ->setReportingPeriodFrom($report->getStartDate())
+                ->setReportingPeriodTo($this->determineEndDate($report))
+                ->setYear($report->getStartDate()->format('Y'))
+                ->setDateSubmitted($report->getSubmitDate())
+                ->setType($this->determineReportType($report))
+                ->setSubmissionId($document->getReportSubmission()->getId());
+
+            $type = 'reports';
+        } else {
+            $siriusDocumentMetadata =
+                (new SiriusSupportingDocumentMetadata())
+                    ->setSubmissionId($report->getReportSubmissionByDocument($document)->getId());
+
+            $type = 'supportingdocument';
+        }
+
+        return (new SiriusDocumentUpload())
+            ->setType($type)
+            ->setAttributes($siriusDocumentMetadata);
+    }
+
+    private function determineReportType(Report $report)
+    {
+        if ($report instanceof Ndr) {
+            return 'NDR';
+        } else if (in_array($report->getType(), [Report::TYPE_HEALTH_WELFARE, Report::TYPE_COMBINED_HIGH_ASSETS, Report::TYPE_COMBINED_LOW_ASSETS])) {
+            return 'HW';
+        } else {
+            return 'PF';
+        }
+    }
+
+    public function determineEndDate(Report $report)
+    {
+        return $report instanceof Ndr ? $report->getStartDate() : $report->getEndDate();
+    }
+
+    /**
+     * @param Document $document
+     * @return string
+     */
+    private function retrieveDocumentContentFromS3(Document $document)
+    {
+        return $this->storage->retrieve($document->getStorageReference());
+    }
+
+    /**
+     * @param Document $document
+     * @param string $content
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     */
+    public function handleSiriusSync(Document $document, string $content)
+    {
+        $upload = $this->buildUpload($document);
+        $caseRef = $document->getReport()->getClient()->getCaseNumber();
+
+        if($document->isReportPdf()) {
+           return $this->siriusApiGatewayClient->sendReportPdfDocument($upload, $content, $caseRef);
+        } else {
+            /** @var ReportSubmission $reportPdfSubmission */
+            $reportPdfSubmission = $document->getPreviousReportPdfSubmission();
+            return $this->siriusApiGatewayClient->sendSupportingDocument($upload, $content, $reportPdfSubmission->getUuid(), $caseRef);
+        }
+    }
+
+    /**
+     * @param Document $document
+     * @return string|Throwable
+     */
+    private function handleDocumentStatusUpdate(Document $document, string $status, ?string $errorMessage=null)
+    {
+        $data = ['syncStatus' => $status];
+
+        if (!is_null($errorMessage)) {
+            $errorMessage = json_decode($errorMessage, true) ? json_decode($errorMessage, true) : $errorMessage;
+            $data['syncError'] = $errorMessage;
+        }
+
+        try {
+            return $this->restClient->put(
+                sprintf('document/%s', $document->getId()),
+               json_encode(['data' => $data])
+            );
+        } catch (Throwable $exception) {
+            return $exception;
+        }
+    }
+
+    private function handleReportSubmissionUpdate(int $reportSubmissionId, string $uuid)
+    {
+        try {
+            return $this->restClient->put(
+                sprintf('report-submission/%s', $reportSubmissionId),
+                json_encode(['data' => ['uuid' => $uuid]])
+            );
+        } catch (Throwable $exception) {
+            return $exception;
+        }
+    }
+
+    private function handleSyncErrors(Throwable $e, Document $document)
+    {
+        if (get_class($e) === S3Exception::class) {
+            $syncStatus = in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES) ?
+                Document::SYNC_STATUS_PERMANENT_ERROR : Document::SYNC_STATUS_TEMPORARY_ERROR;
+
+            $errorMessage = sprintf('S3 error while syncing document: %s', $e->getMessage());
+        } else {
+            $errorMessage = $e->getResponse() ?
+                (string) $e->getResponse()->getBody() : (string) $e->getMessage();
+
+            $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
+        }
+
+        $this->handleDocumentStatusUpdate($document, $syncStatus, $errorMessage);
     }
 }
