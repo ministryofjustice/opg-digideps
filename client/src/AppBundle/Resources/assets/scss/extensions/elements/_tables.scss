@@ -10,16 +10,6 @@ table {
     }
 }
 
-.table-font-xsmall {
-    th {
-        @include bold-16;
-    }
-
-    td {
-        @include core-16;
-    }
-}
-
 .grandtotals-border {
     border-top: 2px solid $border-colour;
 

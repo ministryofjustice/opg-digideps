@@ -30,12 +30,12 @@
             <div class="govuk-grid-row push-half--bottom">
                 <div class="govuk-grid-column-one-third">
                     <label for="search" class="form-label text">{{ 'page.searchForm.search.label' | trans }}</label>
-                    <input type="text" id="search" name="q" value="{{ filters.q }}" class="js-search-focus form-control form-control--full">
+                    <input type="text" id="search" name="q" value="{{ filters.q }}" class="js-search-focus govuk-input govuk-grid-column-full">
                     <input type="hidden" name="status" value="{{ filters.status }}" />
                 </div>
                 <div class="govuk-grid-column-one-third">
                     <label for="created_by_role" class="form-label">{{ 'role' | trans({}, 'common' ) }}</label>
-                    <select name="created_by_role" id="created_by_role" class="search-dropdown form-control width-two-thirds">
+                    <select name="created_by_role" id="created_by_role" class="search-dropdown govuk-input govuk-!-width-two-thirds">
                         <option value="">All</option>
                         {% for value, label in {
                             'ROLE_PA_%': 'Public authority',
@@ -133,7 +133,7 @@
                         {% endif %}
                         <td class="govuk-table__cell width-fifth">
                             {{ client.fullname }}<br>
-                            <span class="text-secondary">{{ client.caseNumber }}</span>
+                            <span class="govuk-caption-m">{{ client.caseNumber }}</span>
                         </td>
                         <td class="govuk-table__cell width-fifth">
                             {% if reportSubmission.createdBy %}

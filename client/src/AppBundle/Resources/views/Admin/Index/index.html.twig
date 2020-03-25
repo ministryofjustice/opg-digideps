@@ -90,7 +90,7 @@
                             <a href='{{ path('admin_editUser', { filter: user.id }) }}'
                                class="behat-link-user-{{ user.email | behat_namify }} govuk-!-font-weight-bold">{{ fullName }}</a><br>
                         {% endif %}
-                        <div class="text-secondary">
+                        <div class="govuk-caption-m">
                             {{ user.roleFullName }}
                             {% if user.adManaged %} {{ (page ~ '.userTable.assistedState') | trans }}{% endif %}
                             {% if app.user.id == user.id %} {{ (page ~ '.userTable.loggedInState') | trans }} {% endif %}
