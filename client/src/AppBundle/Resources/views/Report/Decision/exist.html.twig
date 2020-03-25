@@ -21,7 +21,7 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
         <div class="push--bottom">
-            <div class="govuk-form-group flush--bottom {% if not form.hasDecisions.vars.valid %}form-group-error{% endif %}">
+            <div class="govuk-form-group flush--bottom {% if not form.hasDecisions.vars.valid %}govuk-form-group--error{% endif %}">
                 {{ form_checkbox_group(form.hasDecisions, (page ~ '.form.hasDecisions'), {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',

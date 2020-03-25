@@ -78,7 +78,7 @@
         </div>
 
         <div class="push--bottom">
-            <div id="form-group-prof_service_fee_type_paymentReceived" class="govuk-form-group inline flush--bottom {% if not form.paymentReceived.vars.valid %}form-group-error{% endif %}">
+            <div id="form-group-prof_service_fee_type_paymentReceived" class="govuk-form-group inline flush--bottom {% if not form.paymentReceived.vars.valid %}govuk-form-group--error{% endif %}">
                 {{ form_checkbox_group(form.paymentReceived, 'form.paymentReceived', {
                     'useFormGroup': false,
                     'legendClass' : 'govuk-label--s',

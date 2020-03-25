@@ -31,7 +31,7 @@ Feature: Report submit
         Then the URL should match "/report/\d+/declaration"
         And I should see "SW5 8DO" in the "deputy-contact" region
 
-    @deputy
+    @deputy @foo
     Scenario: report submission
         Given emails are sent from "deputy" area
         And I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"

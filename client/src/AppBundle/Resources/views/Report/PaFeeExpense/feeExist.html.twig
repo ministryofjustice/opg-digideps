@@ -19,7 +19,7 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
         <div class="push--bottom">
-            <div class="govuk-form-group flush--bottom {% if not form.hasFees.vars.valid %}form-group-error{% endif %}">
+            <div class="govuk-form-group flush--bottom {% if not form.hasFees.vars.valid %}govuk-form-group--error{% endif %}">
                 {{ form_checkbox_group(form.hasFees, 'feeExistPage.form.hasFees', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',

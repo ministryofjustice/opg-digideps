@@ -25,7 +25,7 @@
 
     <div class="push--bottom">
 
-        <div class="govuk-form-group push--bottom {% if not form.profDeputyCostsEstimateHasMoreInfo.vars.valid %}form-group-error{% endif %}">
+        <div class="govuk-form-group push--bottom {% if not form.profDeputyCostsEstimateHasMoreInfo.vars.valid %}govuk-form-group--error{% endif %}">
             {{ form_checkbox_group(form.profDeputyCostsEstimateHasMoreInfo, 'form.profDeputyCostsEstimateHasMoreInfo', {
                 'useFormGroup': false,
                 'fieldSetClass' : 'inline',

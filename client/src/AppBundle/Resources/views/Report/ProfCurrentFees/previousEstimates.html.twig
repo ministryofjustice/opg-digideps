@@ -27,7 +27,7 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     <div class="push--bottom">
-        <div class="govuk-form-group flush--bottom {% if not form.previousProfFeesEstimateGiven.vars.valid %}form-group-error{% endif %}">
+        <div class="govuk-form-group flush--bottom {% if not form.previousProfFeesEstimateGiven.vars.valid %}govuk-form-group--error{% endif %}">
             {{ form_checkbox_group(form.previousProfFeesEstimateGiven, 'existPage.form.hasFees', {
                 'useFormGroup': false,
                 'legendText' : (page ~ '.form.estimateCosts.legend') | trans,

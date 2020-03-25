@@ -61,7 +61,7 @@
     {% if step == 3 %}
 
         <div class="push--bottom">
-            <div class="govuk-form-group flush--bottom {% if not form.receiveOtherIncome.vars.valid %}form-group-error{% endif %}">
+            <div class="govuk-form-group flush--bottom {% if not form.receiveOtherIncome.vars.valid %}govuk-form-group--error{% endif %}">
 
                 {{ form_checkbox_group(form.receiveOtherIncome, '', {
                     'useFormGroup': false,
@@ -93,7 +93,7 @@
 
     {% if step == 4 %}
         <div class="push--bottom">
-            <div class="govuk-form-group flush--bottom {% if not form.expectCompensationDamages.vars.valid %}form-group-error{% endif %}">
+            <div class="govuk-form-group flush--bottom {% if not form.expectCompensationDamages.vars.valid %}govuk-form-group--error{% endif %}">
 
                 {{ form_checkbox_group(form.expectCompensationDamages, '', {
                     'useFormGroup': false,

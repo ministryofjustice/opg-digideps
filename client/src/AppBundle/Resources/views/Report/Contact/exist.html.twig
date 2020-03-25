@@ -20,7 +20,7 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
         <div class="push--bottom">
-            <div class="govuk-form-group flush--bottom {% if not form.hasContacts.vars.valid %}form-group-error{% endif %}">
+            <div class="govuk-form-group flush--bottom {% if not form.hasContacts.vars.valid %}govuk-form-group--error{% endif %}">
                 {% set append104 = report.get104TransSuffix %}
                 {{ form_checkbox_group(form.hasContacts, (page ~ '.form.hasContacts'), {
                     'useFormGroup': false,

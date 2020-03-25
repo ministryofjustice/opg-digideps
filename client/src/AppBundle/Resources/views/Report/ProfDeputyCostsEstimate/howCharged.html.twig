@@ -27,7 +27,7 @@
 
     <div class="push--bottom">
 
-        <div class="govuk-form-group push--bottom {% if not form.profDeputyCostsEstimateHowCharged.vars.valid %}form-group-error{% endif %}">
+        <div class="govuk-form-group push--bottom {% if not form.profDeputyCostsEstimateHowCharged.vars.valid %}govuk-form-group--error{% endif %}">
             {{ form_checkbox_group(form.profDeputyCostsEstimateHowCharged, 'report.form.profDeputyCostsEstimateHowCharged', {
                 'legendClass' : 'govuk-label--s',
                 'useFormGroup': false,

@@ -35,7 +35,7 @@
 
     {% if step == 3 %}
         <div class="push--bottom">
-            <div class="govuk-form-group flush--bottom {% if not form.owned.vars.valid %}form-group-error{% endif %}">
+            <div class="govuk-form-group flush--bottom {% if not form.owned.vars.valid %}govuk-form-group--error{% endif %}">
                 {{ form_checkbox_group(form.owned, 'form.property.owned', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
@@ -59,7 +59,7 @@
 
     {% if step == 4 %}
         <div class="push--bottom">
-            <div class="govuk-form-group flush--bottom {% if not form.hasMortgage.vars.valid %}form-group-error{% endif %}">
+            <div class="govuk-form-group flush--bottom {% if not form.hasMortgage.vars.valid %}govuk-form-group--error{% endif %}">
                 {{ form_checkbox_group(form.hasMortgage, 'form.property.hasMortgage', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
@@ -103,7 +103,7 @@
 
     {% if step == 8 %}
         <div class="push--bottom">
-            <div class="govuk-form-group flush--bottom {% if not form.isRentedOut.vars.valid %}form-group-error{% endif %}">
+            <div class="govuk-form-group flush--bottom {% if not form.isRentedOut.vars.valid %}govuk-form-group--error{% endif %}">
                 {{ form_checkbox_group(form.isRentedOut, 'form.property.isRentedOut', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',

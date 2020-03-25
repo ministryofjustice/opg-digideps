@@ -36,7 +36,7 @@
     {{ form_start(form, {attr: {id: 'account-form', novalidate: 'novalidate' } }) }}
 
     {% if step == 1 %}
-        <div id="form-group-account_category" class="govuk-form-group push--top {% if not form.category.vars.valid %}form-group-error{% endif %}">
+        <div id="form-group-account_category" class="govuk-form-group push--top {% if not form.category.vars.valid %}govuk-form-group--error{% endif %}">
         {% for group, categories in categoriesGrouped %}
             <fieldset class="push--top">
                 <legend class="govuk-label--s text push-half--bottom">{{ ('form.group.entries.' ~ group) | trans(clientTransOptions, translationDomain) }}</legend>
