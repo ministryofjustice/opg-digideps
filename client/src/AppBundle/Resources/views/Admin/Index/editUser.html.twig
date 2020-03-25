@@ -97,8 +97,6 @@
             </tbody>
         </table>
     {% endif %}
-
-
     {% if action is defined %}
         {% if action == 'edit' %}
             {% if is_granted('delete-user', user) %}
@@ -108,8 +106,6 @@
                     linkClass: 'button-warning push--top',
                     linkHref: path('admin_delete_confirm', { id: id })
                 } %}
-            {% else %}
-                <p class="text text-secondary push--top">{{ (page ~ '.deleteDisabled') | trans }}</p>
             {% endif %}
         {% endif %}
     {% endif %}
