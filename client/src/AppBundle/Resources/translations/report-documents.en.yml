@@ -59,9 +59,6 @@ stepPage:
   htmlTitle: "Deputy report - suporting documents | GOV.UK"
   pageTitle: Supporting documents
   backLink: Back
-  form:
-    wishToUploadDocumentation:
-        label: Would you like to provide any supporting documents?
 
 summaryPage:
   htmlTitle: "Deputy report - supporting documents | GOV.UK"
