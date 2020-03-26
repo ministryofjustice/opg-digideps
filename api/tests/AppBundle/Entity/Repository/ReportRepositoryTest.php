@@ -61,10 +61,7 @@ class ReportRepositoryTest extends WebTestCase
     public function testAddFeesToReportIfMissingForNonPAUser()
     {
 
-        $mockUser = m::mock(User::class);
-        $mockUser->shouldReceive('isPaDeputy')->andReturn(false);
-
-        $this->mockClient->shouldReceive('getUsers')->andReturn(new ArrayCollection([$mockUser]));
+        $this->mockReport->shouldReceive('isPAReport')->andReturn(false);
 
         $this->assertNull($this->sut->addFeesToReportIfMissing($this->mockReport));
     }
@@ -76,10 +73,8 @@ class ReportRepositoryTest extends WebTestCase
         $this->mockReport->shouldReceive('addFee')->times(count(Fee::$feeTypeIds))->andReturnSelf();
 
         $this->mockEm->shouldReceive('persist')->times(count(Fee::$feeTypeIds));
-        $mockUser = m::mock(User::class);
-        $mockUser->shouldReceive('isPaDeputy')->andReturn(true);
 
-        $this->mockClient->shouldReceive('getUsers')->andReturn(new ArrayCollection([$mockUser]));
+        $this->mockReport->shouldReceive('isPAReport')->andReturn(true);
 
         $this->assertEquals(7, $this->sut->addFeesToReportIfMissing($this->mockReport));
     }
@@ -92,10 +87,7 @@ class ReportRepositoryTest extends WebTestCase
 
         $this->mockEm->shouldReceive('persist')->never();
 
-        $mockUser = m::mock(User::class);
-        $mockUser->shouldReceive('isPaDeputy')->andReturn(true);
-
-        $this->mockClient->shouldReceive('getUsers')->andReturn(new ArrayCollection([$mockUser]));
+        $this->mockReport->shouldReceive('isPAReport')->andReturn(true);
 
         $this->assertEquals(0, $this->sut->addFeesToReportIfMissing($this->mockReport));
     }
