@@ -133,7 +133,7 @@ class SiriusApiGatewayClient
         string $contentType='application/json'
     )
     {
-        $url = new Uri(sprintf('%s/%s', $this->baseUrl, $endpoint));
+        $url = new Uri(sprintf('%s/1_0_0/%s', $this->baseUrl, $endpoint));
 
         $request = new Request($method, $url, [
             'Accept' => $accept,
