@@ -125,6 +125,7 @@ services:
         volumes:
             - ./api/app:/var/www/app
             - ./api/config:/var/www/config
+            - ./api/DoctrineMigrations:/var/www/DoctrineMigrations
             - ./api/scripts:/var/www/scripts
             - ./api/src:/var/www/src:ro
             - ./api/tests:/var/www/tests
