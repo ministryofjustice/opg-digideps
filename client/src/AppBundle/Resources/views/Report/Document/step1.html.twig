@@ -20,12 +20,13 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <h2 class="heading-medium">{{ (page ~ '.step1Heading') | trans }}</h2>
+    <h2 class="govuk-heading-m">{{ (page ~ '.step1Heading') | trans }}</h2>
 
     <div class="govuk-inset-text">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
                 {{ (page ~ '.selectHint1') | trans }}
+                <br>
                 <p>{{ (page ~ '.selectHint2') | trans }}</p>
             </div>
         </div>
@@ -37,7 +38,7 @@
                 {{ form_checkbox_group(form.wishToProvideDocumentation, 'form.wishToProvideDocumentation', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
-                    'legendClass' : 'form-label-bold'
+                    'legendClass' : 'govuk-fieldset__legend--m'
                 }) }}
             </div>
         </div>
