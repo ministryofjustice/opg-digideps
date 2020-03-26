@@ -1,0 +1,19 @@
+{% set translationDomain = "report-overview" %}
+{% trans_default_domain translationDomain %}
+
+<table class="no-border">
+    <tbody>
+    <tr>
+        <td class="hard"><strong>{{ 'reportingPeriod' | trans() }}:</strong></td>
+        <td class="hard">{{ report.startDate | date("j F Y") }} to {{ report.endDate | date("j F Y") }}</td>
+    </tr>
+    <tr>
+        <td class="{{ report.unSubmitDate ? 'orangeWarning' : '' }} hard"><strong>{{ 'dueDate' | trans() }}:</strong></td>
+        <td class="hard">{{ report.dueDate | date("j F Y") }}</td>
+    </tr>
+    <tr>
+        <td class="hard"><strong>{{ 'reportStatus' | trans() }}:</strong></td>
+        <td class="hard">{{ ('status.' ~ reportStatus.status) | trans() }}</td>
+    </tr>
+    </tbody>
+</table>

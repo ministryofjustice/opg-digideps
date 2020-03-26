@@ -8,33 +8,24 @@
     '%client%': report.client.firstname | e
 } %}
 {% set reportStatus = report.status %}
-{# TODO REPLACE those two using report.hasSection() #}
+
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ report.period }} {{ 'report.header.report' | trans({}, 'report-common') }}{% endblock %}
-{% block supportTitleBottom %}{{ report.client.fullname }}{% endblock %}
+
+{% block supportTitleTop %}{{ report.client.fullname }}{% endblock %}
+{% block pageTitle %}{{ report.period }} {{ 'reportOverviewTitle' | trans() }}{% endblock %}
 
 {% block breadcrumbs %}{{ macros.homepage }}{% endblock %}
 
 {% block pageContent %}
+    <div class="govuk-grid-row push--bottom">
+        <div class="govuk-grid-column-two-thirds">
+            {% include 'AppBundle:Report/Report:_report_details.html.twig' %}
+        </div>
+    </div>
+
     {% block pageHeader %}
         {% include 'AppBundle:Report/Report:_header.html.twig' %}
     {% endblock %}
-
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-half">
-            <ul>
-                <li>{{ 'reportingPeriod' | trans() }}:
-                    <strong>{{ report.startDate | date("j F Y") }} to {{ report.endDate | date("j F Y") }}</strong>
-                </li>
-                <li class="{{ report.unSubmitDate ? 'orangeWarning' : '' }}">{{ 'dueDate' | trans() }}:
-                    <strong>{{ report.dueDate | date("j F Y") }}</strong>
-                </li>
-                <li>Report status:
-                    <strong>{{ ('status.' ~ reportStatus.status) | trans() }}</strong>
-                </li>
-            </ul>
-        </div>
-    </div>
 
     {% if not report.isDue or report.isDue and not reportStatus.isReadyToSubmit %}
         <div class="push--top">
