@@ -3,6 +3,7 @@
 
 {% trans_default_domain "admin-organisation-users" %}
 {% set page = 'addPage' %}
+{% set navSection = 'organisations' %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans({ '%organisation%': organisation.name }) }}{% endblock %}

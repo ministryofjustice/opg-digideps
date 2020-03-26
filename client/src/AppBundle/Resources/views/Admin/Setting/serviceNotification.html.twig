@@ -1,7 +1,8 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
 {% trans_default_domain "admin-settings" %}
-{% set transOptions = {} %}
+
+{% set navSection = 'notifications' %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
@@ -21,7 +22,8 @@
                 }) }}
 
                 {{ form_checkbox_group(form.enabled, 'serviceNotifications.form.enabled', {
-                    'legendClass' : 'govuk-fieldset__legend--m'
+                    formGroupClass: 'govuk-radios--inline',
+                    legendClass: 'govuk-fieldset__legend--m',
                 }) }}
 
                 {{ form_submit(form.save, 'serviceNotifications.form.save', {'buttonClass': 'behat-link-save'}) }}
