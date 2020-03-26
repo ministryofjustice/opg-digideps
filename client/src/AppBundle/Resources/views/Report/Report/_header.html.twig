@@ -8,19 +8,18 @@
         <div id="header-report-submit" class="govuk-panel govuk-panel--confirmation behat-region-report-ready-banner">
             <h2 class="govuk-tag opg-tag--warning govuk-!-margin-bottom-6">{{ 'changesNeeded' | trans({}, 'common') }}</h2>
         </div>
-    {% endif %}
-
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <div class="moj-banner moj-banner--success">
-                <div class="moj-banner__message">
-                    <span class="moj-banner__assistive">Success</span>
-                    {{ 'reportIsReady' | trans() }}
+    {% else %}
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <div class="moj-banner moj-banner--success">
+                    <div class="moj-banner__message">
+                        <span class="moj-banner__assistive">Success</span>
+                        {{ 'reportIsReady' | trans() }}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
+    {% endif %}
 
     <div class="govuk-panel__body">
         <a class="govuk-button govuk-!-margin-0 behat-link-report-submit" href="{{ path('report_review', {'reportId': report.id}) }}" role="button" data-module="govuk-button">
