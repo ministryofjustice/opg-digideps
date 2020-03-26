@@ -154,6 +154,10 @@ class UserVoter extends Voter
         return false;
     }
 
+    /**
+     * @param User $deletee
+     * @return bool
+     */
     private function paProfNamedAdminPermissions(User $deletee): bool
     {
         switch ($deletee->getRoleName()) {
@@ -166,6 +170,11 @@ class UserVoter extends Voter
         return true;
     }
 
+    /**
+     * @param User $deletor
+     * @param User $deletee
+     * @return bool
+     */
     private function superAdminPermissions(User $deletor, User $deletee): bool
     {
         switch ($deletee->getRoleName()) {
