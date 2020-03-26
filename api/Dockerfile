@@ -79,6 +79,7 @@ COPY web web
 COPY phpstan.neon .
 
 # Prebuild cache
+RUN cp config/parameters.yml.dist config/parameters.yml
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
 # Check for security issues
