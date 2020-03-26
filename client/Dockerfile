@@ -28,6 +28,7 @@ COPY composer.lock .
 RUN composer install --prefer-dist --no-interaction --no-scripts
 
 COPY app app
+COPY config config
 COPY src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
@@ -84,6 +85,7 @@ COPY --from=composer /app/app app
 COPY --from=composer /app/bin bin
 COPY --from=composer /app/vendor vendor
 COPY --from=composer /app/composer.lock composer.lock
+COPY config config
 COPY scripts scripts
 COPY src src
 COPY tests tests
@@ -94,6 +96,7 @@ COPY phpstan.neon .
 COPY docker/confd /etc/confd
 
 # Prebuild cache
+RUN cp config/parameters.yml.dist config/parameters.yml
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
 # Check for security issues

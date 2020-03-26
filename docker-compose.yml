@@ -63,10 +63,10 @@ services:
             - router
             - localstack
         volumes:
-            - ./client/app/config/security.yml:/var/www/app/config/security.yml
-            - ./client/app/config/config.yml:/var/www/app/config/config.yml
-            - ./client/app/config/services.yml:/var/www/app/config/services.yml
-            - ./client/app/config/services:/var/www/app/config/services
+            - ./client/config/security.yml:/var/www/config/security.yml
+            - ./client/config/config.yml:/var/www/config/config.yml
+            - ./client/config/services.yml:/var/www/config/services.yml
+            - ./client/config/services:/var/www/config/services
             - ./client/src:/var/www/src:ro
             - ./client/tests:/var/www/tests
             - ./client/phpstan.neon:/var/www/phpstan.neon
@@ -93,10 +93,10 @@ services:
             - api
             - redisadmin
         volumes:
-            - ./client/app/config/security.yml:/var/www/app/config/security.yml
-            - ./client/app/config/config.yml:/var/www/app/config/config.yml
-            - ./client/app/config/services.yml:/var/www/app/config/services.yml
-            - ./client/app/config/services:/var/www/app/config/services
+            - ./client/config/security.yml:/var/www/config/security.yml
+            - ./client/config/config.yml:/var/www/config/config.yml
+            - ./client/config/services.yml:/var/www/config/services.yml
+            - ./client/config/services:/var/www/config/services
             - ./client/src:/var/www/src:ro
             - ./client/tests:/var/www/tests
             - ./client/phpstan.neon:/var/www/phpstan.neon
