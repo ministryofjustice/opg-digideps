@@ -86,12 +86,12 @@ COPY --from=composer /app/bin bin
 COPY --from=composer /app/vendor vendor
 COPY --from=composer /app/composer.lock composer.lock
 COPY config config
+COPY public public
+COPY --from=webpack /app/public/assets public/assets
+COPY --from=webpack /app/public/images public/images
 COPY scripts scripts
 COPY src src
 COPY tests tests
-COPY web web
-COPY --from=webpack /app/web/assets web/assets
-COPY --from=webpack /app/web/images web/images
 COPY phpstan.neon .
 COPY docker/confd /etc/confd
 
@@ -101,3 +101,6 @@ RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
 # Check for security issues
 RUN su-exec www-data php app/console security:check
+
+# Cleanup temp file
+RUN rm config/parameters.yml

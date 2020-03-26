@@ -126,10 +126,10 @@ services:
             - ./api/app:/var/www/app
             - ./api/config:/var/www/config
             - ./api/DoctrineMigrations:/var/www/DoctrineMigrations
+            - ./api/public:/var/www/public
             - ./api/scripts:/var/www/scripts
             - ./api/src:/var/www/src:ro
             - ./api/tests:/var/www/tests
-            - ./api/web:/var/www/web
             - ./api/phpstan.neon:/var/www/phpstan.neon
         env_file:
             - ./api/docker/env/api.env

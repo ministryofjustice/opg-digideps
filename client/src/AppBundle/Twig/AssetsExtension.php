@@ -38,7 +38,7 @@ class AssetsExtension extends AbstractExtension
     public function assetSourceFilter($originalUrl)
     {
         $tag = $this->getTag();
-        $source = file_get_contents($this->rootDir . '/../web/assets/' . $tag . '/' . $originalUrl);
+        $source = file_get_contents($this->rootDir . '/public/assets/' . $tag . '/' . $originalUrl);
 
         return $source;
     }
@@ -50,7 +50,7 @@ class AssetsExtension extends AbstractExtension
     {
         if (!$this->tag) {
             // List the files in the web/assets folder
-            $assetRoot = $this->rootDir . '/../web/assets';
+            $assetRoot = $this->rootDir . '/public/assets';
             $assetContents = array_diff(scandir($assetRoot, SCANDIR_SORT_DESCENDING), ['..', '.']);
 
             // set the value to the folder we find.
