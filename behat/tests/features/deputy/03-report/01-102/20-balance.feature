@@ -21,7 +21,7 @@ Feature: Report balance
             | account_closingBalance | 41.89 |
         And I click on "breadcrumbs-report-overview"
         # assert balance is now good
-        Then I should see the "report-ready-banner" region
+        Then I should see "Your report is ready to submit."
         Then I should see the "balance-state-done" region
         # assert report can be sumbmitted
         Then the lay report should be submittable
@@ -40,7 +40,7 @@ Feature: Report balance
         And the step with the following values CAN be submitted:
             | balance_balanceMismatchExplanation    | lost 110 pounds on the road |
         Then the URL should match "report/\d+/overview"
-        Then I should see the "report-ready-banner" region
+        Then I should see "Your report is ready to submit."
         Then I should see the "balance-state-explained" region
         And the lay report should be submittable
 
