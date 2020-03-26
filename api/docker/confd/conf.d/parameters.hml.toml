@@ -1,6 +1,6 @@
 [template]
 src = "parameters.yml.tmpl"
-dest = "/var/www/app/config/parameters.yml"
+dest = "/var/www/config/parameters.yml"
 keys = [
     "/database",
     "/smtp",

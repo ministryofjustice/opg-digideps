@@ -59,7 +59,7 @@ services:
         public: true
 
     AppBundle\DataFixtures\:
-        resource: '../../src/AppBundle/DataFixtures'
+        resource: '../src/AppBundle/DataFixtures'
         tags: ['doctrine.fixture.orm']
         arguments: ['@security.password_encoder', '@AppBundle\Service\OrgService']
 
