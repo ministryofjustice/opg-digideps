@@ -2,24 +2,45 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Service\Availability as ServiceAvailability;
+use AppBundle\Service\Availability\ApiAvailability;
+use AppBundle\Service\Availability\ClamAvAvailability;
 use AppBundle\Service\Availability\NotifyAvailability;
+use AppBundle\Service\Availability\RedisAvailability;
+use AppBundle\Service\Availability\SiriusApiAvailability;
+use AppBundle\Service\Availability\WkHtmlToPdfAvailability;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
  * @Route("/manage")
  */
 class ManageController extends AbstractController
 {
-    /**
-     * @var NotifyAvailability
-     */
-    private $notifyAvailability;
+    /** @var array<ServiceAvailabilityAbstract> */
+    private $services = [];
 
-    public function __construct(NotifyAvailability $notifyAvailability)
+    public function __construct(
+        ParameterBagInterface $params,
+        ApiAvailability $apiAvailability,
+        ClamAvAvailability $clamAvAvailability,
+        NotifyAvailability $notifyAvailability,
+        RedisAvailability $redisAvailability,
+        SiriusApiAvailability $siriusApiAvailability,
+        WkHtmlToPdfAvailability $wkHtmlToPdfAvailability
+    )
     {
-        $this->notifyAvailability = $notifyAvailability;
+        $this->services = [
+            $apiAvailability,
+            $redisAvailability,
+            $siriusApiAvailability,
+            $notifyAvailability
+        ];
+
+        if ($params->get('env') !== 'admin') {
+            $this->services[] = $clamAvAvailability;
+            $this->services[] = $wkHtmlToPdfAvailability;
+        }
     }
 
     /**
@@ -73,28 +94,16 @@ class ManageController extends AbstractController
     {
         $start = microtime(true);
 
-        $services = [
-            new ServiceAvailability\RedisAvailability($this->container),
-            new ServiceAvailability\ApiAvailability($this->container),
-            new ServiceAvailability\SiriusApiAvailability($this->container),
-            $this->notifyAvailability
-        ];
-
-        if ($this->getParameter('env') !== 'admin') {
-            $services[] = new ServiceAvailability\WkHtmlToPdfAvailability($this->container);
-            $services[] = new ServiceAvailability\ClamAvAvailability($this->container);
-        }
-
         $healthy = true;
         $errors = [];
 
-        foreach ($services as $service) {
+        foreach ($this->services as $service) {
             if (!$service->isHealthy()) {
                 $healthy = false;
                 $errors[] = $service->getErrors();
             }
         }
 
-        return [$healthy, $services, $errors, microtime(true) - $start];
+        return [$healthy, $this->services, $errors, microtime(true) - $start];
     }
 }

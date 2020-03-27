@@ -2,16 +2,16 @@
 
 namespace AppBundle\Service\Availability;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 
 class SiriusApiAvailability extends ServiceAvailabilityAbstract
 {
-    public function __construct(ContainerInterface $container)
+    public function __construct(SiriusApiGatewayClient $client)
     {
         $this->isHealthy = true;
 
         try {
-            $response = $container->get('AppBundle\Service\Client\Sirius\SiriusApiGatewayClient')->get('v1/healthcheck');
+            $response = $client->get('v1/healthcheck');
 
             if (200 !== $response->getStatusCode()) {
                 throw new \RuntimeException('returned HTTP code ' . $response->getStatusCode());
