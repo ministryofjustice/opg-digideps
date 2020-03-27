@@ -6,7 +6,7 @@
 
         {% if ndr.assets | length == 0 %}
             <div class="box">
-                <h3 class="label question govuk-!-font-weight-bold">Does the client have any assets?</h3>
+                <h3 class="label question bold">Does the client have any assets?</h3>
                 <table class="checkboxes labelvalue inline">
                     <tr>
                         <td class="value checkbox">X</td>
@@ -32,7 +32,7 @@
                 {# total value #}
                 <table class="labelvalue">
                     <tr>
-                        <td class="label govuk-!-font-weight-bold">Assets Total Value</td>
+                        <td class="label bold">Assets Total Value</td>
                         <td class="value total width-fifth" id="assetsTotal">&pound;{{ ndr.assetsTotalValue | money_format }}</td>
                     </tr>
                 </table>

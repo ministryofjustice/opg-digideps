@@ -40,7 +40,7 @@ or ndr.getExpectCompensationDamages() %}
             <h3>Pensions and other income</h3>
 
             <div class="box">
-                <h3 class="label question govuk-!-font-weight-bold">Does the client receive a state pension?</h3>
+                <h3 class="label question bold">Does the client receive a state pension?</h3>
                 <table class="checkboxes labelvalue inline">
                     <tr>
                         <td class="value checkbox">{% if ndr.receiveStatePension == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
@@ -52,7 +52,7 @@ or ndr.getExpectCompensationDamages() %}
             </div>
 
             <div class="box">
-                <h3 class="label question govuk-!-font-weight-bold">Does the client receive any other regular income?</h3>
+                <h3 class="label question bold">Does the client receive any other regular income?</h3>
                 <table class="checkboxes labelvalue inline">
                     <tr>
                         <td class="value checkbox">{% if ndr.receiveOtherIncome == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
@@ -75,7 +75,7 @@ or ndr.getExpectCompensationDamages() %}
             <h3>Damages</h3>
 
             <div class="box">
-                <h3 class="label question govuk-!-font-weight-bold">Are you expecting any compensation awards or damages to be paid to the client?</h3>
+                <h3 class="label question bold">Are you expecting any compensation awards or damages to be paid to the client?</h3>
                 <table class="checkboxes labelvalue inline">
                     <tr>
                         <td class="value checkbox">{% if ndr.expectCompensationDamages == 'yes' %}X{% else %}&nbsp;{% endif %}</td>

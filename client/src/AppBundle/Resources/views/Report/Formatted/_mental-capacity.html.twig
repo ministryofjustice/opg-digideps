@@ -3,7 +3,7 @@
 
     <div class="box">
         {% set reportType = ('-4' == report.get104TransSuffix) ? 'financial or health and welfare' : ('104' in report.type) ? 'health and welfare' : 'financial'  %}
-        <h3 class="label question govuk-!-font-weight-bold">Has {{ client.firstName }}'s mental capacity to make {{ reportType }} decisions changed?</h3>
+        <h3 class="label question bold">Has {{ client.firstName }}'s mental capacity to make {{ reportType }} decisions changed?</h3>
 
         <table class="checkboxes labelvalue inline">
             <tr>
@@ -21,7 +21,7 @@
         {% endif %}
 
         <div class="labelvalue push-half--top">
-            <h3 class="label question govuk-!-font-weight-bold">When was {{ client.firstName }}'s mental capacity to make decisions last assessed by a professional (such as a psychiatrist or social worker)? </h3>
+            <h3 class="label question bold">When was {{ client.firstName }}'s mental capacity to make decisions last assessed by a professional (such as a psychiatrist or social worker)? </h3>
             <div class="value">
                 {{ mentalCapacity.mentalAssessmentDate ? mentalCapacity.mentalAssessmentDate  | date("m/Y") : 'n.a.' }}
             </div>

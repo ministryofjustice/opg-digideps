@@ -9,7 +9,7 @@ or ndr.actionPropertyBuy
         <div class="dont-break">
             <h3>Gifts</h3>
             <div class="box">
-                <h3 class="label question govuk-!-font-weight-bold">Are you planning to give any gifts on the client's behalf?</h3>
+                <h3 class="label question bold">Are you planning to give any gifts on the client's behalf?</h3>
 
                 <table class="checkboxes labelvalue inline">
                     <tr>
@@ -34,7 +34,7 @@ or ndr.actionPropertyBuy
             <div class="box">
 
                 <div class="labelvalue">
-                    <h3 class="label question govuk-!-font-weight-bold flush--top">Are there plans for maintenance or alterations to any property owned by the client?</h3>
+                    <h3 class="label question bold flush--top">Are there plans for maintenance or alterations to any property owned by the client?</h3>
                     <table class="checkboxes labelvalue inline">
                         <tr>
                             <td class="value checkbox">{% if ndr.actionPropertyMaintenance == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
@@ -46,7 +46,7 @@ or ndr.actionPropertyBuy
                 </div>
 
                 <div class="labelvalue">
-                    <h3 class="label question govuk-!-font-weight-bold">Are you planning to sell or rent any property owned by the client?</h3>
+                    <h3 class="label question bold">Are you planning to sell or rent any property owned by the client?</h3>
                     <table class="checkboxes labelvalue inline">
                         <tr>
                             <td class="value checkbox">{% if ndr.actionPropertySellingRent == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
@@ -58,7 +58,7 @@ or ndr.actionPropertyBuy
                 </div>
 
                 <div class="labelvalue">
-                    <h3 class="label question govuk-!-font-weight-bold">Are you planning to buy a property for the client?</h3>
+                    <h3 class="label question bold">Are you planning to buy a property for the client?</h3>
                     <table class="checkboxes labelvalue inline">
                         <tr>
                             <td class="value checkbox">{% if ndr.actionPropertyBuy == 'yes' %}X{% else %}&nbsp;{% endif %}</td>

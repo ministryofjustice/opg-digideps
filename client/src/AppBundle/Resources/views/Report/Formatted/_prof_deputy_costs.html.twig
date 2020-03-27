@@ -6,7 +6,7 @@
     <h2 class="section-heading">{{ 'startPage.pageTitle'|trans(transOptions) }}</h2>
     <div class="dont-break">
         <div class="box" data-prof-deputy-costs-how-charged>
-            <h3 class="label question govuk-!-font-weight-bold">{{ 'howCharged.form.profDeputyCostsHow.label'|trans(transOptions) }}</h3>
+            <h3 class="label question bold">{{ 'howCharged.form.profDeputyCostsHow.label'|trans(transOptions) }}</h3>
             <div class="value">
                 {% if report.profDeputyCostsHowCharged %}
                     {{ ('howCharged.form.options.' ~
@@ -20,7 +20,7 @@
 
     <div class="dont-break">
         <div class="box" data-prof-deputy-costs-has-previous>
-            <h3 class="label question govuk-!-font-weight-bold">{{ 'previousReceivedExists.form.profDeputyCostsHasPrevious.label'|trans(transOptions) }}</h3>
+            <h3 class="label question bold">{{ 'previousReceivedExists.form.profDeputyCostsHasPrevious.label'|trans(transOptions) }}</h3>
             <table class="checkboxes labelvalue inline">
                 <tr>
                     <td class="value checkbox">{% if report.profDeputyCostsHasPrevious == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
@@ -61,14 +61,14 @@
             (not report.profDeputyCostsHowCharged == 'fixed' and not report.profDeputyCostsHowCharged == 'assessed')
         %}
             <div class="box" data-prof-deputy-costs-fixed-cost>
-                <h3 class="label question govuk-!-font-weight-bold">{{ 'fixedCost.form.profDeputyFixedCost.label' | trans(transOptions) }}</h3>
+                <h3 class="label question bold">{{ 'fixedCost.form.profDeputyFixedCost.label' | trans(transOptions) }}</h3>
                 <div class="value">
                     £{{ report.profDeputyFixedCost | money_format }}
                 </div>
             </div>
         {% else %}
             <div class="box" data-prof-deputy-costs-has-interim>
-                <h3 class="label question govuk-!-font-weight-bold">{{ 'interimExists.form.profDeputyCostsHasInterim.label'|trans(transOptions) }}</h3>
+                <h3 class="label question bold">{{ 'interimExists.form.profDeputyCostsHasInterim.label'|trans(transOptions) }}</h3>
                 <table class="checkboxes labelvalue inline">
                     <tr>
                         <td class="value checkbox">{% if report.profDeputyCostsHasInterim == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
@@ -80,14 +80,14 @@
             </div>
             {% if report.profDeputyCostsHasInterim == 'no' %}
                 <div class="box" data-prof-deputy-costs-fixed-cost>
-                    <h3 class="label question govuk-!-font-weight-bold">{{ 'fixedCost.form.profDeputyFixedCost.label' | trans(transOptions) }}</h3>
+                    <h3 class="label question bold">{{ 'fixedCost.form.profDeputyFixedCost.label' | trans(transOptions) }}</h3>
                     <div class="value">
                         £{{ report.profDeputyFixedCost | money_format }}
                     </div>
                 </div>
             {% elseif report.profDeputyCostsHasInterim == 'yes' %}
                 <div class="box" data-prof-deputy-costs-interim-list>
-                    <h3 class="label question govuk-!-font-weight-bold">{{ 'interim.pageSectionDescription01' | trans(transOptions) }}</h3>
+                    <h3 class="label question bold">{{ 'interim.pageSectionDescription01' | trans(transOptions) }}</h3>
                     {% for j in range(0, 2) %}
                         <div data-prof-deputy-costs-interim-list-item>
                             <h4>Interim {{ j + 1 }}</h4>
@@ -118,7 +118,7 @@
     <div class="dont-break">
         <div class="box" data-prof-deputy-costs-amount-scco>
             <dl class="labelvalue push--bottom">
-                <dt class="label govuk-!-font-weight-bold">{{ 'amountToScco.form.profDeputyCostsAmountToScco.label' | trans(transOptions) }}</dt>
+                <dt class="label bold">{{ 'amountToScco.form.profDeputyCostsAmountToScco.label' | trans(transOptions) }}</dt>
                 <dd class="value">£{{ report.profDeputyCostsAmountToScco | money_format }}</dd>
             </dl>
             <dl class="labelvalue">
@@ -130,7 +130,7 @@
 
     <div class="dont-break">
         <div class="box" data-prof-deputy-costs-breakdown>
-            <h3 class="label question govuk-!-font-weight-bold">{{ 'breakdown.pageSectionDescription'|trans(transOptions) }}</h3>
+            <h3 class="label question bold">{{ 'breakdown.pageSectionDescription'|trans(transOptions) }}</h3>
             <table class="labelvalue money">
             {% for otherCostTypeId in report.getProfDeputyOtherCostTypeIds %}
                 {% set costRow = report.generateActualSubmittedOtherCosts[otherCostTypeId.typeId] %}
@@ -152,7 +152,7 @@
 
     <div class="dont-break">
         <div class="box" data-prof-deputy-costs-total>
-            <h3 class="label question govuk-!-font-weight-bold">Total costs paid this reporting period</h3>
+            <h3 class="label question bold">Total costs paid this reporting period</h3>
             <div class="value">
                 £{{ report.profDeputyTotalCosts | money_format }}
             </div>

@@ -6,7 +6,7 @@
     <div class="dont-break">
         <h2 class="section-heading">{{ 'startPage.pageTitle'|trans }}</h2>
         <div class="box">
-            <h3 class="label question govuk-!-font-weight-bold">{{ 'feeExistPage.form.hasFees.label'|trans }}</h3>
+            <h3 class="label question bold">{{ 'feeExistPage.form.hasFees.label'|trans }}</h3>
 
             <table class="checkboxes labelvalue inline">
                 <tr>
@@ -20,7 +20,7 @@
             {% if report.hasFees =='yes' %}
 
                 <div class="labelvalue push-half--top">
-                    <h3 class="label question govuk-!-font-weight-bold">Fees and expenses</h3>
+                    <h3 class="label question bold">Fees and expenses</h3>
 
                     <table class="labelvalue money">
                         {% for fee in report.fees %}
@@ -45,7 +45,7 @@
             {% else %}
 
                 <div class="labelvalue">
-                    <h3 class="label question govuk-!-font-weight-bold">Reason for not having charged the client any fees</h3>
+                    <h3 class="label question bold">Reason for not having charged the client any fees</h3>
                 </div>
                 <div class="value">{{ report.reasonForNoFees | nl2br }}</div>
 
@@ -58,7 +58,7 @@
                 {# total value #}
                 <table class="labelvalue money">
                     <tr>
-                        <td class="label govuk-!-font-weight-bold">Total amount</td>
+                        <td class="label bold">Total amount</td>
                         <td class="value total width-fifth" id="assetsTotal">&pound;{{ report.feesTotal | money_format }}</td>
                     </tr>
                 </table>
@@ -68,7 +68,7 @@
 
     <div class="dont-break">
         <div class="box">
-            <h3 class="label question govuk-!-font-weight-bold">{{ 'otherExistPage.form.paidForAnything.label'|trans }}</h3>
+            <h3 class="label question bold">{{ 'otherExistPage.form.paidForAnything.label'|trans }}</h3>
 
             <table class="checkboxes labelvalue inline">
                 <tr>
@@ -82,7 +82,7 @@
 
             {% if report.paidForAnything == 'yes' %}
                 <div class="labelvalue push-half--top">
-                    <h3 class="label question govuk-!-font-weight-bold">Expenses outside the practice direction</h3>
+                    <h3 class="label question bold">Expenses outside the practice direction</h3>
 
                     <table class="labelvalue money">
                         {% for expense in report.expenses %}
@@ -103,7 +103,7 @@
                 {# total value #}
                 <table class="labelvalue money">
                     <tr>
-                        <td class="label govuk-!-font-weight-bold">Total amount</td>
+                        <td class="label bold">Total amount</td>
                         <td class="value total width-fifth" id="assetsTotal">&pound;{{ report.expensesTotal | money_format }}</td>
                     </tr>
                 </table>
