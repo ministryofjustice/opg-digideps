@@ -195,7 +195,9 @@ class DocumentSyncService
         try {
             return $this->restClient->put(
                 sprintf('document/%s', $document->getId()),
-               json_encode(['data' => $data])
+               json_encode(['data' => $data]),
+                [],
+                ['addAuthToken' => true]
             );
         } catch (Throwable $exception) {
             return $exception;
