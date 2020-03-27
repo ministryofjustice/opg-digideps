@@ -20,7 +20,7 @@ class AuthController extends RestController
      *
      * @Route("/login", methods={"POST"})
      */
-    public function login(Request $request)
+    public function login(Request $request, UserProvider $userProvider)
     {
         if (!$this->getAuthService()->isSecretValid($request)) {
             throw new AppException\UnauthorisedException('client secret not accepted.');
@@ -69,7 +69,7 @@ class AuthController extends RestController
         $attemptsInTimechecker->resetAttempts($key);
         $incrementalWaitingTimechecker->resetAttempts($key);
 
-        $randomToken = $this->getProvider()->generateRandomTokenAndStore($user);
+        $randomToken = $userProvider->generateRandomTokenAndStore($user);
         $user->setLastLoggedIn(new \DateTime());
         $this->get('em')->flush($user);
 
@@ -85,24 +85,16 @@ class AuthController extends RestController
     }
 
     /**
-     * @return UserProvider
-     */
-    private function getProvider()
-    {
-        return $this->container->get('user_provider');
-    }
-
-    /**
      * Return the user by email and hashed password (or exception if not found).
      *
      *
      * @Route("/logout", methods={"POST"})
      */
-    public function logout(Request $request)
+    public function logout(Request $request, UserProvider $userProvider)
     {
         $authToken = HeaderTokenAuthenticator::getTokenFromRequest($request);
 
-        return $this->getProvider()->removeToken($authToken);
+        return $userProvider->removeToken($authToken);
     }
 
     /**
