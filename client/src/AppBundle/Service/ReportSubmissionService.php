@@ -35,7 +35,7 @@ class ReportSubmissionService
     private $templating;
 
     /**
-     * wkhtmltopdf
+     * @var WkHtmlToPdfGenerator
      */
     private $wkhtmltopdf;
 
@@ -64,14 +64,14 @@ class ReportSubmissionService
      * @param  ContainerInterface  $container
      * @throws \Exception
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, WkHtmlToPdfGenerator $wkhtmltopdf)
     {
         $this->fileUploader = $container->get('file_uploader');
         $this->restClient = $container->get('rest_client');
         $this->mailSender = $container->get('AppBundle\Service\Mailer\MailSender');
         $this->mailFactory =$container->get('AppBundle\Service\Mailer\MailFactory');
         $this->templating = $container->get('templating');
-        $this->wkhtmltopdf = $container->get('wkhtmltopdf');
+        $this->wkhtmltopdf = $wkhtmltopdf;
         $this->logger =$container->get('logger');
         $this->csvGenerator = $container->get('csv_generator_service');
     }

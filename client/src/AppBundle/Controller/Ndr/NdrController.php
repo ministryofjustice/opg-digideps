@@ -44,6 +44,14 @@ class NdrController extends AbstractController
         'ndr-action-more-info',
     ];
 
+    /** @var WkHtmlToPdfGenerator */
+    private $htmlToPdf;
+
+    public function __construct(WkHtmlToPdfGenerator $wkHtmlToPdfGenerator)
+    {
+        $this->htmlToPdf = $wkHtmlToPdfGenerator;
+    }
+
     /**
      * //TODO move view into Ndr directory when branches are integrated.
      *
@@ -178,11 +186,7 @@ class NdrController extends AbstractController
             'ndr' => $ndr, 'adLoggedAsDeputy' => $this->isGranted(User::ROLE_AD)
         ])->getContent();
 
-
-        /** @var WkHtmlToPdfGenerator */
-        $htmlToPdf = $this->get('wkhtmltopdf');
-
-        return $htmlToPdf->getPdfFromHtml($html);
+        return $this->htmlToPdf->getPdfFromHtml($html);
     }
 
     /**
