@@ -165,7 +165,7 @@ class DocumentSyncService
      */
     private function retrieveDocumentContentFromS3(Document $document)
     {
-        return $this->storage->retrieve($document->getStorageReference());
+        return (string) $this->storage->retrieve($document->getStorageReference());
     }
 
     /**
