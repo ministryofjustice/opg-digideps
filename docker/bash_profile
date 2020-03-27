@@ -47,10 +47,12 @@ dd-psql-export() {
 
 dd-mode-prod()
 {
-    containers=(frontend api admin)
+    dd-exec api sh -c 'unset APP_DEBUG; pkill php-fpm; php-fpm -D'
+
+    containers=(frontend admin)
     for i in "${containers[@]}"
     do
-      dd-exec $i touch /var/www/.enableProdMode
+      dd-exec $i sh -c 'export APP_ENV=test; unset APP_DEBUG; pkill php-fpm; php-fpm -D'
       echo "$i: prod mode enabled."
     done
 }
@@ -60,8 +62,8 @@ dd-mode-dev()
     containers=(frontend api admin)
     for i in "${containers[@]}"
     do
-       dd-exec $i rm -f /var/www/.enableProdMode
-       echo "$i: dev mode."
+      dd-exec $i sh -c 'export APP_ENV=dev; export APP_DEBUG=true; pkill php-fpm; php-fpm -D'
+      echo "$i: dev mode."
     done
 }
 
