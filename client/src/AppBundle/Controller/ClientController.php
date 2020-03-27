@@ -20,13 +20,11 @@ class ClientController extends AbstractController
      * @Route("/deputyship-details/your-client", name="client_show")
      * @Template("AppBundle:Client:show.html.twig")
      */
-    public function showAction(Request $request)
+    public function showAction(Redirector $redirector)
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->getUserWithData();
 
-        /** @var Redirector $redirector */
-        $redirector = $this->get('redirector_service');
         $route = $redirector->getCorrectRouteIfDifferent($user, 'client_show');
 
         if (is_string($route)) {
@@ -96,13 +94,11 @@ class ClientController extends AbstractController
      * @Route("/client/add", name="client_add")
      * @Template("AppBundle:Client:add.html.twig")
      */
-    public function addAction(Request $request)
+    public function addAction(Request $request, Redirector $redirector)
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->getUserWithData();
 
-        /** @var Redirector $redirector */
-        $redirector = $this->get('redirector_service');
         $route = $redirector->getCorrectRouteIfDifferent($user, 'client_add');
 
         if (is_string($route)) {

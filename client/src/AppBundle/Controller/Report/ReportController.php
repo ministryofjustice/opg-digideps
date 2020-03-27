@@ -91,14 +91,11 @@ class ReportController extends AbstractController
      * //TODO we should add Security("has_role('ROLE_LAY_DEPUTY')") here, but not sure as not clear what "getCorrectRouteIfDifferent" does
      * @Template("AppBundle:Report/Report:index.html.twig")
      */
-    public function indexAction(Request $request)
+    public function indexAction(Redirector $redirector)
     {
         // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
         // due to the way
         $user = $this->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
-
-        /** @var Redirector */
-        $redirector = $this->get('redirector_service');
 
         // redirect if user has missing details or is on wrong page
         $route = $redirector->getCorrectRouteIfDifferent($user, 'lay_home');
@@ -209,14 +206,11 @@ class ReportController extends AbstractController
      * @Route("/report/{reportId}/overview", name="report_overview")
      * @Template("AppBundle:Report/Report:overview.html.twig")
      */
-    public function overviewAction(Request $request, $reportId)
+    public function overviewAction(Redirector $redirector, $reportId)
     {
         $reportJmsGroup = ['status', 'balance', 'user', 'client', 'client-reports', 'balance-state'];
         // redirect if user has missing details or is on wrong page
         $user = $this->getUserWithData();
-
-        /** @var Redirector */
-        $redirector = $this->get('redirector_service');
 
         $route = $redirector->getCorrectRouteIfDifferent($user, 'report_overview');
         if (is_string($route)) {

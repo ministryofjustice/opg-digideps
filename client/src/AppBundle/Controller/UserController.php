@@ -31,7 +31,7 @@ class UserController extends AbstractController
      *   "action" = "(activate|password-reset)"
      * })
      */
-    public function activateUserAction(Request $request, string $action, string $token): Response
+    public function activateUserAction(Request $request, Redirector $redirector, string $action, string $token): Response
     {
         /** @var TranslatorInterface */
         $translator = $this->get('translator');
@@ -112,9 +112,6 @@ class UserController extends AbstractController
                 $route = $user->getIsCoDeputy() ? 'codep_verification' : 'user_details';
                 return $this->redirectToRoute($route);
             } else {
-                /** @var Redirector */
-                $redirector = $this->get('redirector_service');
-
                 return $this->redirect($redirector->getFirstPageAfterLogin());
             }
         }
@@ -171,7 +168,7 @@ class UserController extends AbstractController
      * @Route("/user/details", name="user_details")
      * @Template("AppBundle:User:details.html.twig")
      */
-    public function detailsAction(Request $request)
+    public function detailsAction(Request $request, Redirector $redirector)
     {
         $user = $this->getUserWithData();
 
@@ -189,8 +186,6 @@ class UserController extends AbstractController
                 return $this->redirectToRoute('client_add');
             }
 
-            /** @var Redirector */
-            $redirector = $this->get('redirector_service');
 
             // all other users go to their homepage (dashboard for PROF/PA), or /admin for Admins
             return $this->redirect($redirector->getHomepageRedirect());

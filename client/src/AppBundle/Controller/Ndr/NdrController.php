@@ -58,13 +58,11 @@ class NdrController extends AbstractController
      * @Route("/ndr", name="ndr_index")
      * @Template("AppBundle:Ndr/Ndr:index.html.twig")
      */
-    public function indexAction()
+    public function indexAction(Redirector $redirector)
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->getUserWithData(array_merge(self::$ndrGroupsForValidation, ['status']));
 
-        /** @var Redirector */
-        $redirector = $this->get('redirector_service');
         $route = $redirector->getCorrectRouteIfDifferent($user, 'ndr_index');
 
         if (is_string($route)) {
@@ -89,12 +87,10 @@ class NdrController extends AbstractController
      * @Route("/ndr/{ndrId}/overview", name="ndr_overview")
      * @Template("AppBundle:Ndr/Ndr:overview.html.twig")
      */
-    public function overviewAction($ndrId)
+    public function overviewAction($ndrId, Redirector $redirector)
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->getUserWithData();
-        /** @var Redirector */
-        $redirector = $this->get('redirector_service');
         $route = $redirector->getCorrectRouteIfDifferent($user, 'ndr_overview');
 
         if (is_string($route)) {
