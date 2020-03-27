@@ -115,7 +115,7 @@ class DocumentController extends AbstractController
      * @Route("/report/{reportId}/documents/step/2", name="report_documents", defaults={"what"="new"})
      * @Template("AppBundle:Report/Document:step2.html.twig")
      */
-    public function step2Action(Request $request, $reportId)
+    public function step2Action(Request $request, MultiFileFormUploadVerifier $multiFileVerifier, $reportId)
     {
         $report = $this->getReport($reportId, self::$jmsGroups);
         list($nextLink, $backLink) = $this->buildNavigationLinks($report);
@@ -137,8 +137,6 @@ class DocumentController extends AbstractController
             $files = $request->files->get('report_document_upload')['files'];
 
             if (is_array($files)) {
-                /** @var MultiFileFormUploadVerifier */
-                $multiFileVerifier = $this->container->get('AppBundle\Service\File\Verifier\MultiFileFormUploadVerifier');
                 $verified = $multiFileVerifier->verify($files, $form, $report);
 
                 if ($verified) {

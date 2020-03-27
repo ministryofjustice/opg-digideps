@@ -11,8 +11,8 @@ use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\FileUploader;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
-use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Twig\Environment;
 
 class ReportSubmissionService
 {
@@ -61,19 +61,27 @@ class ReportSubmissionService
 
     /**
      * ReportSubmissionService constructor.
-     * @param  ContainerInterface  $container
      * @throws \Exception
      */
-    public function __construct(ContainerInterface $container, WkHtmlToPdfGenerator $wkhtmltopdf)
+    public function __construct(
+        CsvGeneratorService $csvGenerator,
+        Environment $templating,
+        FileUploader $fileUploader,
+        RestClient $restClient,
+        LoggerInterface $logger,
+        MailFactory $mailFactory,
+        MailSender $mailSender,
+        WkHtmlToPdfGenerator $wkhtmltopdf
+    )
     {
-        $this->fileUploader = $container->get('file_uploader');
-        $this->restClient = $container->get('rest_client');
-        $this->mailSender = $container->get('AppBundle\Service\Mailer\MailSender');
-        $this->mailFactory =$container->get('AppBundle\Service\Mailer\MailFactory');
-        $this->templating = $container->get('templating');
+        $this->fileUploader = $fileUploader;
+        $this->restClient = $restClient;
+        $this->mailSender = $mailSender;
+        $this->mailFactory =$mailFactory;
+        $this->templating = $templating;
         $this->wkhtmltopdf = $wkhtmltopdf;
-        $this->logger =$container->get('logger');
-        $this->csvGenerator = $container->get('csv_generator_service');
+        $this->logger =$logger;
+        $this->csvGenerator = $csvGenerator;
     }
 
     /**
