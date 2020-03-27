@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Repository\CasRecRepository;
+use AppBundle\Service\CasrecVerificationService;
 use AppBundle\Service\CsvUploader;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -42,14 +43,17 @@ class CasRecController extends RestController
      *
      * @Route("/verify", methods={"POST"})
      */
-    public function verify(Request $request)
+    public function verify(Request $request, CasrecVerificationService $verificationService)
     {
         $clientData = $this->deserializeBodyContent($request);
         $user = $this->getUser();
 
-        $casrecVerified = $this->container->get('opg_digideps.casrec_verification_service')
-            ->validate($clientData['case_number'], $clientData['lastname'], $user->getLastname(), $user->getAddressPostcode()
-            );
+        $casrecVerified = $verificationService->validate(
+            $clientData['case_number'],
+            $clientData['lastname'],
+            $user->getLastname(),
+            $user->getAddressPostcode()
+        );
 
         return ['verified' => $casrecVerified];
     }

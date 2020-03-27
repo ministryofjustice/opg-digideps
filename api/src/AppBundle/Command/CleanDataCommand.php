@@ -4,6 +4,8 @@ namespace AppBundle\Command;
 
 use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
+use AppBundle\Service\CasrecVerificationService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,6 +21,20 @@ class CleanDataCommand extends ContainerAwareCommand
 {
     use ContainerAwareTrait;
 
+    /** @var EntityManagerInterface */
+    private $em;
+
+    /** @var CasrecVerificationService */
+    private $verificationService;
+
+    public function __construct(EntityManagerInterface $em, CasrecVerificationService $verificationService)
+    {
+        $this->em = $em;
+        $this->verificationService = $verificationService;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this
@@ -28,9 +44,6 @@ class CleanDataCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $em = $this->getContainer()->get('em'); /* @var $em \Doctrine\ORM\EntityManager */
-        $vs = $this->getContainer()->get('opg_digideps.casrec_verification_service');
-
         /**
          *
          * add DeputyNo to LAY users that skipped the self-registration process.
@@ -42,7 +55,7 @@ class CleanDataCommand extends ContainerAwareCommand
         $mismatch = 0;
         $clientNotCreated = 0;
 
-        foreach ($em->getRepository(User::class)->findBy([
+        foreach ($this->em->getRepository(User::class)->findBy([
             'deputyNo'=>null,
             'roleName' => User::ROLE_LAY_DEPUTY,
         ]) as $user) {
@@ -59,10 +72,10 @@ class CleanDataCommand extends ContainerAwareCommand
                 $deputySurname = $user->getLastname();
                 $deputyPostcode = $user->getAddressPostcode();
 
-                $vs->validate($caseNumber, $clientSurname, $deputySurname, $deputyPostcode);
-                $deputyNo = implode(',', $vs->getLastMatchedDeputyNumbers());
+                $this->verificationService->validate($caseNumber, $clientSurname, $deputySurname, $deputyPostcode);
+                $deputyNo = implode(',', $this->verificationService->getLastMatchedDeputyNumbers());
                 $user->setDeputyNo($deputyNo);
-                $em->flush($user);
+                $this->em->flush($user);
                 $output->writeln(" deputyNo set to $deputyNo ");
                 $fixed++;
             } catch (\Throwable $e) {
