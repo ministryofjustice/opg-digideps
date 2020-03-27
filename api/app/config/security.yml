@@ -12,9 +12,6 @@ services:
         public: false
     AppBundle\Service\Auth\UserProvider:
         arguments: [ '@em', "@snc_redis.default", "@logger", { "timeout_seconds": "%user_provider_timeout_seconds%" }, '@AppBundle\Entity\Repository\UserRepository' ]
-        public: true
-    user_provider:
-        alias: AppBundle\Service\Auth\UserProvider
 
     AppBundle\Service\Auth\AuthService:
         class: AppBundle\Service\Auth\AuthService
@@ -58,10 +55,9 @@ security:
         Symfony\Component\Security\Core\User\User: plaintext
         AppBundle\Entity\User: sha512
 
-
     providers:
         user_provider_redis:
-            id: user_provider
+            id: AppBundle\Service\Auth\UserProvider
 
     firewalls:
         elb:
