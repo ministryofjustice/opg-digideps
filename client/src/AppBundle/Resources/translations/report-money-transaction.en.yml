@@ -290,8 +290,6 @@ form:
         moreInformations: Please enter the type of benefit %client% gets
       client-transport-bus-train-taxi-fares:
         label: Transport (for example, bus, train, taxi fares)
-      food:
-        label: Food
       toiletries:
         label: Toiletries
       clothes:
@@ -361,4 +359,3 @@ form:
       moneyout-other:
         label: Anything else paid out
         moreInformation: Give us more information
-
