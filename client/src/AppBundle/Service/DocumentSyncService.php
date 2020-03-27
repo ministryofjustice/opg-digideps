@@ -245,6 +245,7 @@ class DocumentSyncService
         }
 
         $this->logger->warning(sprintf('Document %d did not sync: %s', $document->getId(), $errorMessage));
+        $this->logger->warning(sprintf('Trace: %s', $e->getTraceAsString()));
 
         $this->handleDocumentStatusUpdate($document, $syncStatus, $errorMessage);
     }
