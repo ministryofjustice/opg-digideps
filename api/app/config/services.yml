@@ -14,10 +14,6 @@ services:
         alias: doctrine.orm.entity_manager
         public: true
 
-    user_registration_service:
-        class: AppBundle\Service\UserRegistrationService
-        arguments: [ "@em", '@AppBundle\Service\CasrecVerificationService' ]
-
     monolog.processor.add_request_id:
         class: AppBundle\Service\RequestIdLoggerProcessor
         arguments:  [ "@service_container" ]
