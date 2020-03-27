@@ -124,7 +124,7 @@ form:
     label: What was the significant decision? Why did you make it at the time?
     hint: ""
   clientInvolvedBoolean:
-    heading: %client%'s involvement
+    heading: "%client%'s involvement"
     label: Did you involve %client% in this decision?
     hint: ""
     defaultOption: Please select...
@@ -133,5 +133,3 @@ form:
     hint: ""
   save:
     label: Save and continue
-
-

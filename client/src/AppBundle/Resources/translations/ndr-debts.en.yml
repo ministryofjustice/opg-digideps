@@ -34,7 +34,7 @@ editPage:
 summaryPage:
   weAskAbout: |
     In this section, we ask you about %client%'s debts, for example, overdue care fees, credit cards or loans.
-  moreAbout: %client%'s other debts of £%amount%
+  moreAbout: "%client%'s other debts of £%amount%"
 
 form:
   entries:
