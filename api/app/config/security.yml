@@ -96,6 +96,14 @@ security:
            pattern: ^/document/queued
            security: false
            methods: [GET]
+        updateDocument:
+            pattern: ^/document/\d+
+            security: false
+            methods: [PUT]
+        reportSubmission:
+            pattern: ^/report-submission/\d+
+            security: false
+            methods: [PUT]
         reportSubmissionGetOld:
            pattern: ^/report-submission/old
            security: false

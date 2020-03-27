@@ -193,11 +193,13 @@ class DocumentSyncService
         }
 
         try {
-            return $this->restClient->put(
+            return $this->restClient->apiCall(
+                'put',
                 sprintf('document/%s', $document->getId()),
                json_encode(['data' => $data]),
+                Document::class,
                 [],
-                ['addAuthToken' => true]
+                false
             );
         } catch (Throwable $exception) {
             return $exception;
@@ -207,9 +209,13 @@ class DocumentSyncService
     private function handleReportSubmissionUpdate(int $reportSubmissionId, string $uuid)
     {
         try {
-            return $this->restClient->put(
+            return $this->restClient->apiCall(
+                'put',
                 sprintf('report-submission/%s', $reportSubmissionId),
-                json_encode(['data' => ['uuid' => $uuid]])
+                json_encode(['data' => ['uuid' => $uuid]]),
+                'raw',
+                [],
+                false
             );
         } catch (Throwable $exception) {
             return $exception;
@@ -224,7 +230,7 @@ class DocumentSyncService
 
             $errorMessage = sprintf('S3 error while syncing document: %s', $e->getMessage());
         } else {
-            $errorMessage = $e->getResponse() ?
+            $errorMessage = method_exists($e, 'getResponse') ?
                 (string) $e->getResponse()->getBody() : (string) $e->getMessage();
 
             $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
