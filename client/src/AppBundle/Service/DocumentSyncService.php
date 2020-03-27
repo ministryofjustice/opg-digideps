@@ -15,6 +15,7 @@ use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use AppBundle\Service\File\Storage\S3Storage;
 use Aws\S3\Exception\S3Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -38,15 +39,22 @@ class DocumentSyncService
      */
     private $restClient;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function __construct(
         S3Storage $storage,
         SiriusApiGatewayClient $siriusApiGatewayClient,
-        RestClient $restClient
+        RestClient $restClient,
+        LoggerInterface $logger
     )
     {
         $this->storage = $storage;
         $this->siriusApiGatewayClient = $siriusApiGatewayClient;
         $this->restClient = $restClient;
+        $this->logger = $logger;
     }
 
     /**
@@ -171,7 +179,7 @@ class DocumentSyncService
         $caseRef = $document->getReport()->getClient()->getCaseNumber();
 
         if($document->isReportPdf()) {
-           return $this->siriusApiGatewayClient->sendReportPdfDocument($upload, $content, $caseRef);
+            return $this->siriusApiGatewayClient->sendReportPdfDocument($upload, $content, $caseRef);
         } else {
             /** @var ReportSubmission $reportPdfSubmission */
             $reportPdfSubmission = $document->getPreviousReportPdfSubmission();
@@ -235,6 +243,8 @@ class DocumentSyncService
 
             $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
         }
+
+        $this->logger->warning(sprintf('Document %d did not sync: %s', $document->getId(), $errorMessage));
 
         $this->handleDocumentStatusUpdate($document, $syncStatus, $errorMessage);
     }
