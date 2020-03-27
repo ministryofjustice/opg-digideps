@@ -26,7 +26,7 @@
         {#{{ macros.notification('info', 'startPage.notice' | trans) }}#}
     {#{% endif %}#}
 
-    <a href="{{ path('documents_step', { 'reportId': report.id }) }}" class="govuk-button push--top behat-link-start" data-module="button" role="button">{{ 'startPage.startButton' | trans }}</a>
+    {{ macros.startSectionButton(path('documents_step', { 'reportId': report.id }), 'startPage.startButton' | trans) }}
 
     {# Pagination #}
     {% include 'AppBundle:Report:_nextprevious.html.twig' with {
