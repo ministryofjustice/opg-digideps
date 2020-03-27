@@ -20,3 +20,4 @@ services:
 
     rest_client:
         alias: AppBundle\Service\Client\RestClient
+        public: true

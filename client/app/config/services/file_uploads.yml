@@ -21,6 +21,7 @@ services:
 
   guzzle_file_scanner_client:
     class: GuzzleHttp\Client
+    public: true
     arguments:
       $config:
         base_uri: "%file_scanner_url%"
