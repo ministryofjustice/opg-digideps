@@ -2,15 +2,44 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Service\Availability as ServiceAvailability;
+use AppBundle\Service\Availability\ApiAvailability;
+use AppBundle\Service\Availability\ClamAvAvailability;
+use AppBundle\Service\Availability\RedisAvailability;
+use AppBundle\Service\Availability\SiriusApiAvailability;
+use AppBundle\Service\Availability\WkHtmlToPdfAvailability;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
  * @Route("/manage")
  */
 class ManageController extends AbstractController
 {
+    /** @var array<ServiceAvailabilityAbstract> */
+    private $services = [];
+
+    public function __construct(
+        ParameterBagInterface $params,
+        ApiAvailability $apiAvailability,
+        ClamAvAvailability $clamAvAvailability,
+        RedisAvailability $redisAvailability,
+        SiriusApiAvailability $siriusApiAvailability,
+        WkHtmlToPdfAvailability $wkHtmlToPdfAvailability
+    )
+    {
+        $this->services = [
+            $apiAvailability,
+            $redisAvailability,
+            $siriusApiAvailability
+        ];
+
+        if ($params->get('env') !== 'admin') {
+            $this->services[] = $clamAvAvailability;
+            $this->services[] = $wkHtmlToPdfAvailability;
+        }
+    }
+
     /**
      * @Route("/availability", methods={"GET"})
      */
@@ -62,30 +91,16 @@ class ManageController extends AbstractController
     {
         $start = microtime(true);
 
-        $services = [
-            new ServiceAvailability\RedisAvailability($this->container),
-            new ServiceAvailability\ApiAvailability($this->container),
-            new ServiceAvailability\SiriusApiAvailability($this->container)
-        ];
-
-        if (!$this->getParameter('kernel.debug')) {
-            $services[] = new ServiceAvailability\SmtpAvailability($this->container, 'mailer.transport.smtp.default');
-        }
-        if ($this->getParameter('env') !== 'admin') {
-            $services[] = new ServiceAvailability\WkHtmlToPdfAvailability($this->container);
-            $services[] = new ServiceAvailability\ClamAvAvailability($this->container);
-        }
-
         $healthy = true;
         $errors = [];
 
-        foreach ($services as $service) {
+        foreach ($this->services as $service) {
             if (!$service->isHealthy()) {
                 $healthy = false;
                 $errors[] = $service->getErrors();
             }
         }
 
-        return [$healthy, $services, $errors, microtime(true) - $start];
+        return [$healthy, $this->services, $errors, microtime(true) - $start];
     }
 }
