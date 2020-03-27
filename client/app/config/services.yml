@@ -16,9 +16,6 @@ services:
         class: AppBundle\Service\Redirector
         arguments: [ "@security.token_storage", "@security.authorization_checker", "@router", "@session", "%env%" ]
 
-    redirector_service:
-        alias: AppBundle\Service\Redirector
-
     AppBundle\Service\WkHtmlToPdfGenerator:
         arguments: [ "%wkhtmltopdf_address%", 30]
 
