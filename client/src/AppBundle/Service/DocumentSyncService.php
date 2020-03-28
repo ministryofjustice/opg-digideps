@@ -238,8 +238,10 @@ class DocumentSyncService
 
             $errorMessage = sprintf('S3 error while syncing document: %s', $e->getMessage());
         } else {
-            $errorMessage = method_exists($e, 'getResponse') ?
-                (string) $e->getResponse()->getBody() : (string) $e->getMessage();
+//            $errorMessage = method_exists($e, 'getResponse') ?
+//                (string) $e->getResponse() : (string) $e->getMessage();
+
+            $errorMessage = (string) $e->getMessage();
 
             $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
         }
