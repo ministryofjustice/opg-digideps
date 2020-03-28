@@ -78,7 +78,7 @@ class DocumentSyncCommand extends DaemonableCommand
                     'report-client',
                     'client-case-number',
                     'document-report-submission',
-                    'report-submission-id',
+                    'report-submission',
                 ]
             ]
         ];
