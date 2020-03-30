@@ -10,11 +10,8 @@ services:
   Aws\S3\S3Client:
     arguments: ["%s3_client_params%"]
 
-  s3_client:
-    alias: Aws\S3\S3Client
-
   AppBundle\Service\File\Storage\S3Storage:
-    arguments: [ "@s3_client", "%s3_bucket_name%", "@logger" ]
+    arguments: [ '@Aws\S3\S3Client', "%s3_bucket_name%", "@logger" ]
 
   s3_storage:
     alias: AppBundle\Service\File\Storage\S3Storage
