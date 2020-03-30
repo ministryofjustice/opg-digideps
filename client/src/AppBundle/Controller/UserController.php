@@ -31,7 +31,13 @@ class UserController extends AbstractController
      *   "action" = "(activate|password-reset)"
      * })
      */
-    public function activateUserAction(Request $request, Redirector $redirector, string $action, string $token): Response
+    public function activateUserAction(
+        Request $request,
+        Redirector $redirector,
+        DeputyProvider $deputyProvider,
+        string $action,
+        string $token
+    ): Response
     {
         /** @var TranslatorInterface */
         $translator = $this->get('translator');
@@ -78,9 +84,6 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isValid()) {
-            /** @var DeputyProvider */
-            $deputyProvider = $this->get('deputy_provider');
-
             // login user into API
             try {
                 $deputyProvider->login(['token' => $token]);
