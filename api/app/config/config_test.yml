@@ -11,9 +11,7 @@ doctrine:
         dbname: digideps_unit_test
 
 services:
-    attemptsInTimeChecker:
-        class:  AppBundle\Service\BruteForce\AttemptsInTimeChecker
-        public: true
+    AppBundle\Service\BruteForce\AttemptsInTimeChecker:
         arguments: [ "@snc_redis.default" ]
         calls:
             - [ setRedisPrefix, ["test_ac_ret_code"] ]
