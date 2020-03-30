@@ -1,3 +1,0 @@
-services:
-  transformer.report_submission_bur_fixed_width_transformer:
-    class: AppBundle\Transformer\ReportSubmission\ReportSubmissionBurFixedWidthTransformer
