@@ -269,7 +269,7 @@ class UserController extends RestController
      * Delete user with clients.
      *
      * @Route("/{id}", methods={"DELETE"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
      *
      * @param int $id
      * @return array
@@ -286,21 +286,13 @@ class UserController extends RestController
 
         $canDelete = $this->userVoter->vote($token, $deletee, [UserVoter::DELETE_USER]);
 
-        $clients = $deletee->getClients();
-
         if ($canDelete === UserVoter::ACCESS_DENIED) {
-            if (count($clients) > 1) {
-                $errMessage = 'Cannot delete a user with multiple clients';
-            } elseif (count($clients) === 1 && $clients[0]->getReports() > 0) {
-                $errMessage = 'Cannot delete user with reports';
-            } else {
-                $errMessage = sprintf("A %s cannot delete a %s", $token->getUser()->getRoleName(), $deletee->getRoleName());
-            }
-
+            $errMessage = sprintf("A %s cannot delete a %s", $token->getUser()->getRoleName(), $deletee->getRoleName());
             throw $this->createAccessDeniedException($errMessage);
         }
 
         if ($deletee->getFirstClient()) {
+            $clients = $deletee->getClients();
             $this->getEntityManager()->remove($clients[0]);
         }
 
