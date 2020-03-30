@@ -22,9 +22,6 @@ services:
     wkhtmltopdf:
         alias: AppBundle\Service\WkHtmlToPdfGenerator
 
-    csv_generator_service:
-      alias: AppBundle\Service\CsvGeneratorService
-
     # Disable autowiring
     AppBundle\Model\EmailAttachment: ~
     AppBundle\Service\DataImporter\CsvToArray: ~
