@@ -6,6 +6,7 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Form as FormDir;
+use AppBundle\Resolver\SubSectionRoute\ProfCostsEstimateSubSectionRouteResolver;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormInterface;
@@ -33,12 +34,11 @@ class ProfDeputyCostsEstimateController extends AbstractController
      * @param $reportId
      * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function startAction($reportId)
+    public function startAction($reportId, ProfCostsEstimateSubSectionRouteResolver $routeResolver)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $state = $report->getStatus()->getProfDeputyCostsEstimateState()['state'];
 
-        $routeResolver = $this->get('resolver.prof_costs_estimate_subsection_route_resolver');
         if (null !== ($forwardRoute = $routeResolver->resolve($report, $state))) {
             return $this->redirectToRoute($forwardRoute, ['reportId' => $reportId]);
         }
