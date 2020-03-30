@@ -131,7 +131,7 @@ abstract class RestController extends Controller
      */
     protected function getAuthService()
     {
-        return $this->get('authService');
+        return $this->get(AuthService::class);
     }
 
     /**
