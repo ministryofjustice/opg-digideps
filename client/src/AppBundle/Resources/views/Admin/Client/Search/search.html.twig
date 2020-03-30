@@ -25,6 +25,7 @@
     <hr>
 
     {# LIST #}
+    {% if app.request.get('search_clients') is not null %}
 
     <div class="behat-region-clients client-list">
 
@@ -73,11 +74,12 @@
                     {% endfor %}
                 {% else %}
                     <tr>
-                        <td colspan="2">{{ (page ~ '.clientTable.noResults') | trans  }}</td>
+                        <td colspan="3">{{ (page ~ '.clientTable.noResults') | trans  }}</td>
                     </tr>
                 {% endif %}
             </tbody>
         </table>
     </div>
+    {% endif %}
 
 {% endblock %}

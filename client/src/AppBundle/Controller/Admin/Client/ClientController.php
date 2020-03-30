@@ -36,6 +36,20 @@ class ClientController extends AbstractController
     }
 
     /**
+     * @Route("/case-number/{caseNumber}/details", name="admin_client_by_case_number_details")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @param string $caseNumber
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function detailsByCaseNumberAction($caseNumber)
+    {
+        $client = $this->getRestClient()->get('v2/client/case-number/' . $caseNumber, 'Client');
+
+        return $this->redirectToRoute('admin_client_details', ['id' => $client->getId()]);
+    }
+
+    /**
      * @Route("/{id}/discharge", name="admin_client_discharge", requirements={"id":"\d+"})
      * @Security("has_role('ROLE_SUPER_ADMIN')")
      * @param $id

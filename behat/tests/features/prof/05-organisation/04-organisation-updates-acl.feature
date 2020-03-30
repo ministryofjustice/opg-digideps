@@ -32,7 +32,7 @@ Feature: Organisation deputyship updates
     Then I should see the "client-01000010" region
     # Assert client still associated with same org
     Then I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search, client-detail-01000010"
+    When I visit the client page for "01000010"
     # Assert same organisation
     And I should see "PA OPG" in the "assigned-organisation" region
     # Assert new named deputy within same organisation
@@ -47,7 +47,7 @@ Feature: Organisation deputyship updates
     Then I should see the "client-1138393T" region
     # Assert client associated with new org
     Then I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search, client-detail-1138393t"
+    When I visit the client page for "1138393t"
     # Assert same named deputy within new organisation
     Then each text should be present in the corresponding region:
       | Your Organisation (example.com1)                        | assigned-organisation |
@@ -69,7 +69,7 @@ Feature: Organisation deputyship updates
     # Assert client associated with new org
     Then I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
     # Assert new organisation for new client
-    Then I click on "admin-client-search, client-detail-11498120"
+    When I visit the client page for "11498120"
     Then each text should be present in the corresponding region:
       | Your Organisation (example.com2)      | assigned-organisation |
       | NEW DEP3 NEW SURNAME3                 | named-deputy-fullname |
