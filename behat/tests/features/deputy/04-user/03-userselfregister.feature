@@ -94,9 +94,6 @@ Feature: User Self Registration
     Then the form should be valid
     Then I should see "Please check your email"
     And I should see "We've sent you a link to behat-zac.tolley@digital.justice.gov.uk"
-    And the last email containing a link matching "/user/activate/" should have been sent to "behat-zac.tolley@digital.justice.gov.uk"
-    When I open the "/user/activate/" link from the email
-    Then the response status code should be 200
       #
       # check user is created
       #
@@ -169,8 +166,7 @@ Feature: User Self Registration
     And I press "self_registration_save"
     Then I should see "Please check your email"
     And I should see "We've sent you a link to behat-jenny.lens@digital.justice.gov.uk"
-    And the last email containing a link matching "/user/activate/" should have been sent to "behat-jenny.lens@digital.justice.gov.uk"
-    And I activate the user with password "Abcd1234"
+    When I activate the user "behat-jenny.lens@digital.justice.gov.uk" with password "Abcd1234"
     Then the URL should match "/user/details"
     When I fill in the following:
       | user_details_address1       | Address1     |

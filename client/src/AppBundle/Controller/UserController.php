@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model\SelfRegisterData;
 use AppBundle\Service\DeputyProvider;
@@ -140,7 +141,7 @@ class UserController extends AbstractController
         $this->getRestClient()->userRecreateToken($user->getEmail(), 'activate');
 
         $activationEmail = $this->getMailFactory()->createActivationEmail($user);
-        $this->getMailSender()->send($activationEmail, ['text', 'html']);
+        $this->getMailSender()->send($activationEmail);
 
         return $this->redirect($this->generateUrl('activation_link_sent', ['token' => $token]));
     }
@@ -217,25 +218,21 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isValid()) {
+            $emailAddress = $user->getEmail();
+            $disguisedEmail = '***' . substr($emailAddress, 3);
+            $logger->warning('Reset password request for : ' . $emailAddress);
+
             try {
-                $emailAddress = $user->getEmail();
-                $disguisedEmail = '***' . substr($emailAddress, 3);
-                $logger->warning('Reset password request for : ' . $emailAddress);
-                /* @var $user EntityDir\User */
                 $user = $this->getRestClient()->userRecreateToken($user->getEmail(), 'pass-reset');
-                if (empty($user)) {
-                    $logger->warning('Email ' . $emailAddress . ' not found');
-                }
 
                 $logger->warning('Sending reset email to ' . $disguisedEmail);
 
                 $resetPasswordEmail = $this->getMailFactory()->createResetPasswordEmail($user);
 
-                $sendResult = $this->getMailSender()->send($resetPasswordEmail, ['text', 'html']);
+                $this->getMailSender()->send($resetPasswordEmail);
                 $logger->warning('Email sent to ' . $disguisedEmail);
-
-            } catch (\Throwable $e) {
-                $logger->warning($e->getMessage());
+            } catch (RestClientException $e) {
+                $logger->warning('Email ' . $emailAddress . ' not found');
             }
 
             // after details are added, admin users to go their homepage, deputies go to next step
