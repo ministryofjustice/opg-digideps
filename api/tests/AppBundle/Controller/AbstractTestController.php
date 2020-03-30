@@ -162,7 +162,7 @@ abstract class AbstractTestController extends WebTestCase
         $timeChecker->resetAttempts($key);
 
         /** @var AttemptsIncrementalWaitingChecker $waitingChecker */
-        $waitingChecker = $container->get('attemptsIncrementalWaitingChecker');
+        $waitingChecker = $container->get(AttemptsIncrementalWaitingChecker::class);
         $waitingChecker->resetAttempts($key);
 
         $responseArray = $this->assertJsonRequest('POST', '/auth/login', [

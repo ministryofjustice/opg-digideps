@@ -43,8 +43,6 @@ services:
             - [ addFreezingRule, [  20, 3600 ] ]
             # after further 10 attempts. freeze for 2h
             - [ addFreezingRule, [  30, 7200 ] ]
-    attemptsIncrementalWaitingChecker:
-        alias: AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker
 
 
 security:
