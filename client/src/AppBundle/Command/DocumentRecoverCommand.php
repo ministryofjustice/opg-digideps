@@ -26,6 +26,8 @@ class DocumentRecoverCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
     public function __construct(S3Client $s3)
     {
         $this->s3 = $s3;
+
+        parent::__construct();
     }
 
     protected function configure()
