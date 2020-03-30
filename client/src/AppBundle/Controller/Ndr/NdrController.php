@@ -189,7 +189,7 @@ class NdrController extends AbstractController
      * @Route("/ndr/{ndrId}/declaration", name="ndr_declaration")
      * @Template("AppBundle:Ndr/Ndr:declaration.html.twig")
      */
-    public function declarationAction(Request $request, $ndrId)
+    public function declarationAction(Request $request, $ndrId, FileUploader $fileUploader)
     {
         $client = $this->getFirstClient(self::$ndrGroupsForValidation);
 
@@ -222,9 +222,6 @@ class NdrController extends AbstractController
 
             // store PDF as a document
             $pdfBinaryContent = $this->getPdfBinaryContent($ndr);
-
-            /** @var FileUploader */
-            $fileUploader = $this->get('file_uploader');
 
             $document = $fileUploader->uploadFile(
                 $ndr,

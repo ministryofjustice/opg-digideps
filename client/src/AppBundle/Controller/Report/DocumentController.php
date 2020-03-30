@@ -31,6 +31,14 @@ class DocumentController extends AbstractController
         'documents-state',
     ];
 
+    /** @var FileUploader */
+    private $fileUploader;
+
+    public function __construct(FileUploader $fileUploader)
+    {
+        $this->fileUploader = $fileUploader;
+    }
+
     /**
      * @Route("/report/{reportId}/documents", name="documents")
      * @Template("AppBundle:Report/Document:start.html.twig")
@@ -203,16 +211,13 @@ class DocumentController extends AbstractController
      */
     private function uploadFile(UploadedFile $file, EntityDir\Report\Report $report): void
     {
-        /** @var FileUploader $fileUploader */
-        $fileUploader = $this->get('file_uploader');
-
         /** @var string $body */
         $body = file_get_contents($file->getPathname());
 
         /** @var string $fileName */
         $fileName = $file->getClientOriginalName();
 
-        $fileUploader->uploadFile($report, $body, $fileName, false);
+        $this->fileUploader->uploadFile($report, $body, $fileName, false);
     }
 
     /**
