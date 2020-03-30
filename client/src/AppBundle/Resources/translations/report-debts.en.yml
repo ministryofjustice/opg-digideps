@@ -34,13 +34,13 @@ editPage:
 summaryPage:
   weAskAbout: |
     In this section, we ask you about %client%'s debts, for example, overdue care fees, credit cards or loans.
-  moreAbout: %client%'s other debts of £%amount%
+  moreAbout: "%client%'s other debts of £%amount%"
 
 form:
-  clientsDebts.label: %client%'s debts
+  clientsDebts.label: "%client%'s debts"
   doesClientHaveDebts:
     label: Does %client% have any debts?
-    noDebts.label: %client% has no debts
+    noDebts.label: "%client% has no debts"
   entries:
     care-fees:
       label: Outstanding care home fees
@@ -63,4 +63,3 @@ save:
   label: Save
 
 navLink: Debts
-
