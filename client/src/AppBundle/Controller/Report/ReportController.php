@@ -506,7 +506,7 @@ class ReportController extends AbstractController
      *
      * @Route("/report/transactions-{reportId}.csv", name="report_transactions_csv")
      */
-    public function transactionsCsvViewAction($reportId)
+    public function transactionsCsvViewAction($reportId, CsvGeneratorService $csvGenerator)
     {
         $report = $this->getReport($reportId, self::$reportGroupsAll);
 
@@ -516,8 +516,6 @@ class ReportController extends AbstractController
             throw $this->createAccessDeniedException('Access denied');
         }
 
-        /** @var CsvGeneratorService */
-        $csvGenerator = $this->get('csv_generator_service');
         $csvContent = $csvGenerator->generateTransactionsCsv($report);
 
         $response = new Response($csvContent);
