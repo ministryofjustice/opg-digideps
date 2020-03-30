@@ -4,6 +4,7 @@ services:
         autoconfigure: true
 
     AppBundle\Service\Mailer\MailFactory:
+        public: true
         arguments:
             $emailParams: "%email_params%"
             $baseURLs:
