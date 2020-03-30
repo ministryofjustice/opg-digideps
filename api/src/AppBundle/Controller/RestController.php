@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Report;
+use AppBundle\EventListener\RestInputOuputFormatter;
 use AppBundle\Exception\NotFound;
 use AppBundle\Service\Auth\AuthService;
 use Doctrine\ORM\EntityRepository;
@@ -17,15 +18,13 @@ abstract class RestController extends Controller
      */
     protected function deserializeBodyContent(Request $request, array $assertions = [])
     {
-        if ($this->container->has('kernel.listener.responseConverter')) {
-            $return = $this->container->get('kernel.listener.responseConverter')->requestContentToArray($request);
+        $restInputOuputFormatter = $this->get(RestInputOuputFormatter::class);
 
-            $this->validateArray($return, $assertions);
+        $return = $restInputOuputFormatter->requestContentToArray($request);
 
-            return $return;
-        }
+        $this->validateArray($return, $assertions);
 
-        return $request->getContent();
+        return $return;
     }
 
     /**
@@ -121,7 +120,9 @@ abstract class RestController extends Controller
      */
     protected function setJmsSerialiserGroups(array $groups)
     {
-        $this->get('kernel.listener.responseConverter')->addContextModifier(function ($context) use ($groups) {
+        $restInputOuputFormatter = $this->get(RestInputOuputFormatter::class);
+
+        $restInputOuputFormatter->addContextModifier(function ($context) use ($groups) {
             $context->setGroups($groups);
         });
     }
