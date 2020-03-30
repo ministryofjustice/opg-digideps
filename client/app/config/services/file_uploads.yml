@@ -42,7 +42,3 @@ services:
 
   AppBundle\Service\File\Scanner\ClamFileScanner:
     arguments: [ "@guzzle_file_scanner_client", "@logger", "%bad_pdf_keywords%"]
-
-  file_uploader:
-    class: AppBundle\Service\File\FileUploader
-    arguments: [ "@s3_storage", "@rest_client", "@logger" ]
