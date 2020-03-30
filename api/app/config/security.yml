@@ -28,13 +28,10 @@ services:
 
     AppBundle\Service\BruteForce\AttemptsInTimeChecker:
         arguments: [ "@snc_redis.default" ]
-        public: true
         calls:
             - [ setRedisPrefix, ["ac_ret_code"] ]
             # after 5 attempts in the last 10 minutes, return a different return code (activate captcha)
             - [ addTrigger, [  5, 600 ] ]
-    attemptsInTimeChecker:
-        alias: AppBundle\Service\BruteForce\AttemptsInTimeChecker
     AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker:
         arguments: [ "@snc_redis.default" ]
         public: true

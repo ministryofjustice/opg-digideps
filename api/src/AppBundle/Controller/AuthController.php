@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Exception as AppException;
 use AppBundle\Service\Auth\HeaderTokenAuthenticator;
 use AppBundle\Service\Auth\UserProvider;
+use AppBundle\Service\BruteForce\AttemptsInTimeChecker;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -20,7 +21,7 @@ class AuthController extends RestController
      *
      * @Route("/login", methods={"POST"})
      */
-    public function login(Request $request, UserProvider $userProvider)
+    public function login(Request $request, UserProvider $userProvider, AttemptsInTimeChecker $attemptsInTimechecker)
     {
         if (!$this->getAuthService()->isSecretValid($request)) {
             throw new AppException\UnauthorisedException('client secret not accepted.');
@@ -30,7 +31,6 @@ class AuthController extends RestController
         //brute force checks
         $index = array_key_exists('token', $data) ? 'token' : 'email';
         $key = $index . $data[$index];
-        $attemptsInTimechecker = $this->get('attemptsInTimeChecker');
         $incrementalWaitingTimechecker = $this->get('attemptsIncrementalWaitingChecker');
 
         $attemptsInTimechecker->registerAttempt($key); //e.g emailName@example.org
