@@ -7,9 +7,9 @@ use AppBundle\Service\Availability\ClamAvAvailability;
 use AppBundle\Service\Availability\RedisAvailability;
 use AppBundle\Service\Availability\SiriusApiAvailability;
 use AppBundle\Service\Availability\WkHtmlToPdfAvailability;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
  * @Route("/manage")
@@ -20,7 +20,7 @@ class ManageController extends AbstractController
     private $services = [];
 
     public function __construct(
-        ParameterBagInterface $params,
+        ContainerInterface $container,
         ApiAvailability $apiAvailability,
         ClamAvAvailability $clamAvAvailability,
         RedisAvailability $redisAvailability,
@@ -34,7 +34,7 @@ class ManageController extends AbstractController
             $siriusApiAvailability
         ];
 
-        if ($params->get('env') !== 'admin') {
+        if ($container->getParameter('env') !== 'admin') {
             $this->services[] = $clamAvAvailability;
             $this->services[] = $wkHtmlToPdfAvailability;
         }
