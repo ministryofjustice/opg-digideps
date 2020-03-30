@@ -41,9 +41,11 @@ guidanceNotice: |
   You don't have to fill in all the sections in one go. You can complete the report in any
   order you want, save it and return to it.
 
+incompleteNoticeHeading: More information needed
 incompleteNotice: |
-  We have marked your report as incomplete due to certain parts being unfinished or requiring
-  further attention. Please see below for the items which we have highlighted
+  We need more information to help us review your report. We've written to you to exmplain what information we need you to add.
+
+  We've highlghted the sections you need to look at again
 
 unsubmittedConfirm:
   notification: Before reviewing your report, please confirm that you've completed the sections marked above.
