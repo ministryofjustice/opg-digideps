@@ -22,9 +22,6 @@ services:
     wkhtmltopdf:
         alias: AppBundle\Service\WkHtmlToPdfGenerator
 
-    step_redirector:
-      alias: AppBundle\Service\StepRedirector
-
     csv_generator_service:
       alias: AppBundle\Service\CsvGeneratorService
 

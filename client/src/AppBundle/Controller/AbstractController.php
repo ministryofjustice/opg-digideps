@@ -216,7 +216,7 @@ abstract class AbstractController extends Controller
     protected function stepRedirector()
     {
         /** @var StepRedirector */
-        $stepDirector = $this->get('step_redirector');
+        $stepDirector = $this->get(StepRedirector::class);
         return $stepDirector;
     }
 
