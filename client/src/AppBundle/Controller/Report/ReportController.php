@@ -311,11 +311,8 @@ class ReportController extends AbstractController
      * @Route("/report/{reportId}/declaration", name="report_declaration")
      * @Template("AppBundle:Report/Report:declaration.html.twig")
      */
-    public function declarationAction(Request $request, $reportId)
+    public function declarationAction(Request $request, $reportId, ReportSubmissionService $reportSubmissionService)
     {
-        /** @var ReportSubmissionService $reportSubmissionService */
-        $reportSubmissionService = $this->get('AppBundle\Service\ReportSubmissionService');
-
         $report = $this->getReportIfNotSubmitted($reportId, self::$reportGroupsAll);
 
         /** @var TranslatorInterface $translator */
@@ -478,11 +475,8 @@ class ReportController extends AbstractController
     /**
      * @Route("/report/deputyreport-{reportId}.pdf", name="report_pdf")
      */
-    public function pdfViewAction($reportId)
+    public function pdfViewAction($reportId, ReportSubmissionService $reportSubmissionService)
     {
-        /** @var ReportSubmissionService $reportSubmissionService */
-        $reportSubmissionService = $this->get('AppBundle\Service\ReportSubmissionService');
-
         $report = $this->getReport($reportId, self::$reportGroupsAll);
         $pdfBinary = $reportSubmissionService->getPdfBinaryContent($report);
 
