@@ -6,6 +6,7 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Form\Admin\ReportSubmissionDownloadFilterType;
 use AppBundle\Form\Admin\StatPeriodType;
+use AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryMapper;
 use AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryQuery;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -25,7 +26,7 @@ class StatsController extends AbstractController
      * @param Request $request
      * @return array|Response
      */
-    public function statsAction(Request $request)
+    public function statsAction(Request $request, ReportSubmissionSummaryMapper $mapper)
     {
         $form = $this->createForm(ReportSubmissionDownloadFilterType::class , new ReportSubmissionSummaryQuery());
         $form->handleRequest($request);
@@ -33,7 +34,6 @@ class StatsController extends AbstractController
         if ($form->isValid()) {
             try {
 
-                $mapper = $this->get('mapper.report_submission_summary_mapper');
                 $transformer = $this->get('transformer.report_submission_bur_fixed_width_transformer');
 
                 $reportSubmissionSummaries = $mapper->getBy($form->getData());
