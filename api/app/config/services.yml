@@ -20,13 +20,6 @@ services:
         tags:
               - { name: monolog.processor, method: processRecord }
 
-    opg_digideps.report_service:
-        class: AppBundle\Service\ReportService
-        arguments:
-          - '@em'
-          - '@AppBundle\Entity\Repository\ReportRepository'
-        public: true
-
     gedmo.listener.softdeleteable:
       class: Gedmo\SoftDeleteable\SoftDeleteableListener
       tags:

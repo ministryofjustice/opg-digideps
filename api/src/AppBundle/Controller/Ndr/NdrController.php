@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\ReportService;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +36,7 @@ class NdrController extends RestController
      * @Route("/ndr/{id}/submit", methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
-    public function submit(Request $request, $id)
+    public function submit(Request $request, $id, ReportService $reportService)
     {
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $id, 'Ndr not found');
         /* @var $ndr EntityDir\Ndr\Ndr */
@@ -64,7 +65,7 @@ class NdrController extends RestController
         $ndr->setSubmitDate(new \DateTime($data['submit_date']));
 
         // submit and create new year's report
-        $nextYearReport = $this->get('opg_digideps.report_service')
+        $nextYearReport = $reportService
             ->submit($ndr, $this->getUser(), new \DateTime($data['submit_date']), $documentId);
 
         return ['id' => $nextYearReport->getId()];

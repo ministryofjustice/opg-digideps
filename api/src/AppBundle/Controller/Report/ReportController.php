@@ -57,7 +57,7 @@ class ReportController extends RestController
      * @Route("", methods={"POST"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
-    public function addAction(Request $request)
+    public function addAction(Request $request, ReportService $reportService)
     {
         $reportData = $this->deserializeBodyContent($request);
 
@@ -73,8 +73,6 @@ class ReportController extends RestController
         ]);
 
         // report type is taken from CASREC. In case that's not available (shouldn't happen unless casrec table is dropped), use a 102
-        /** @var ReportService $reportService */
-        $reportService = $this->get('opg_digideps.report_service');
         $reportType = $reportService->getReportTypeBasedOnCasrec($client) ?: Report::TYPE_102;
         $report = new Report($client, $reportType, new \DateTime($reportData['start_date']), new \DateTime($reportData['end_date']));
         $report->setReportSeen(true);
@@ -120,7 +118,7 @@ class ReportController extends RestController
      * @Route("/{id}/submit", requirements={"id":"\d+"}, methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
-    public function submit(Request $request, $id)
+    public function submit(Request $request, $id, ReportService $reportService)
     {
         $currentReport = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
         /* @var $currentReport Report */
@@ -146,9 +144,6 @@ class ReportController extends RestController
         $xplanation = ($data['agreed_behalf_deputy'] === 'more_deputies_not_behalf')
             ? $data['agreed_behalf_deputy_explanation'] : null;
         $currentReport->setAgreedBehalfDeputyExplanation($xplanation);
-
-        /** @var ReportService $reportService */
-        $reportService = $this->get('opg_digideps.report_service');
 
         /** @var User $user */
         $user = $this->getUser();
@@ -501,7 +496,7 @@ class ReportController extends RestController
      * @Route("/{id}/unsubmit", requirements={"id":"\d+"}, methods={"PUT"})
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function unsubmit(Request $request, $id)
+    public function unsubmit(Request $request, $id, ReportService $rs)
     {
         /** @var Report $report */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
@@ -517,8 +512,6 @@ class ReportController extends RestController
             'end_date' => 'notEmpty',
         ]);
 
-        /** @var ReportService $rs */
-        $rs = $this->get('opg_digideps.report_service');
         $rs->unSubmit(
             $report,
             new \DateTime($data['un_submit_date']),
@@ -697,14 +690,11 @@ class ReportController extends RestController
      * @Route("/{id}/submit-documents", requirements={"id":"\d+"}, methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
-    public function submitDocuments(Request $request, $id)
+    public function submitDocuments($id, ReportService $reportService)
     {
         /* @var Report $currentReport */
         $currentReport = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
         $this->denyAccessIfReportDoesNotBelongToUser($currentReport);
-
-        /** @var ReportService $reportService */
-        $reportService = $this->get('opg_digideps.report_service');
 
         /** @var User $user */
         $user = $this->getUser();
