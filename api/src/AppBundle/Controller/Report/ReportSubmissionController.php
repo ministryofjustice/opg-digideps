@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -144,7 +145,7 @@ class ReportSubmissionController extends RestController
      * @Route("/casrec_data", name="casrec_data", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function getCasrecData(Request $request)
+    public function getCasrecData(Request $request, ReportSubmissionSummaryTransformer $reportSubmissionSummaryTransformer)
     {
         /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
         $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class);
@@ -156,7 +157,7 @@ class ReportSubmissionController extends RestController
             $request->get('order', 'ASC')
         );
 
-        return $this->get('app.transformer.report_submission.report_submission_summary_transformer')->transform($ret);
+        return $reportSubmissionSummaryTransformer->transform($ret);
     }
 
     /**

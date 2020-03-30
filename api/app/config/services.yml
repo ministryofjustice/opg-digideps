@@ -41,15 +41,6 @@ services:
         calls:
             - [ setAnnotationReader, [ "@annotation_reader" ] ]
 
-    app.transformer.report_submission.report_submission_summary_transformer:
-        class: AppBundle\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer
-        public: true
-        arguments: [ '@app.service.date_time_provider' ]
-
-    app.service.date_time_provider:
-        class: AppBundle\Service\DateTimeProvider
-        public: true
-
     AppBundle\DataFixtures\:
         resource: '../../src/AppBundle/DataFixtures'
         tags: ['doctrine.fixture.orm']
