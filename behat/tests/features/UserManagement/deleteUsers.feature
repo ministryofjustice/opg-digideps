@@ -19,7 +19,7 @@ Feature: Deleting Users
       | disabled | LAY        | Lay       | User     | lay123@publicguardian.gov.uk          | SW1H 9AJ | true      |
       | disabled | PA         | Pa        | User     | pa123@publicguardian.gov.uk           | SW1H 9AJ | true      |
       | disabled | PROF       | Prof      | User     | prof123@publicguardian.gov.uk         | SW1H 9AJ | true      |
-      | disabled | ROLE_AD        | Ad        | User      | ad123@publicguardian.gov.uk           | SW1H 9AJ | true      |
+      | disabled | AD         | Ad        | User     | ad123@publicguardian.gov.uk           | SW1H 9AJ | true      |
 
   Scenario: Super admin users can delete admin users
     Given I am logged in to admin as 'superAdminUser1@publicguardian.gov.uk' with password 'Abcd1234'
