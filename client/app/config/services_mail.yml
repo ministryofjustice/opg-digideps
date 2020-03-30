@@ -17,6 +17,7 @@ services:
         arguments: [ "@mailer.transport.smtp.default" ]
 
     AppBundle\Service\Mailer\MailFactory:
+        public: true
         arguments:
             $emailParams: "%email_params%"
             $baseURLs:
@@ -25,6 +26,7 @@ services:
 
     # mail sender accepting those the above-created swift mailer
     AppBundle\Service\Mailer\MailSender:
+        public: true
         calls:
             - [ addSwiftMailer, [ 'default', '@mailer.swift_mailers.default'] ]
 
