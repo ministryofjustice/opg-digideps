@@ -1,32 +1,25 @@
 {% set translationDomain = "report-overview" %}
 {% trans_default_domain translationDomain %}
 
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
 {% if reportStatus.isReadyToSubmit and report.isDue %}
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             {% if report.unSubmitDate and report.submitted == false %}
-                <div class="moj-banner moj-banner--warning">
-                    <div class="moj-banner__message">
-                        <span class="moj-banner__assistive">Warning</span>
-                        {{ 'changesNeeded' | trans({}, 'common') }}
-                    </div>
-                </div>
+                {{ macros.warningBanner('incompleteNotice', 'report-overview', 'incompleteNoticeHeading') }}
             {% else %}
-                <div class="moj-banner moj-banner--success">
-                    <div class="moj-banner__message">
-                        <span class="moj-banner__assistive">Success</span>
-                        {{ 'reportIsReady' | trans() }}
-                    </div>
-                </div>
+                {{ macros.successBanner('reportIsReady', 'report-overview', 'asasasa') }}
             {% endif %}
         </div>
     </div>
 
-    <div class="govuk-panel__body">
-        <a class="govuk-button govuk-!-margin-0 behat-link-report-submit" href="{{ path('report_review', {'reportId': report.id}) }}" role="button" data-module="govuk-button">
-            {{ 'previewSubmitButton' | trans() }}
-        </a>
-    </div>
+    {% if report.isReadyToSubmit %}
+        <div class="govuk-panel__body">
+            <a class="govuk-button govuk-!-margin-0 behat-link-report-submit" href="{{ path('report_review', {'reportId': report.id}) }}" role="button" data-module="govuk-button">
+                {{ 'previewSubmitButton' | trans() }}
+            </a>
+        </div>
+    {% endif %}
 {% endif %}
