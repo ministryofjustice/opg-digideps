@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\EventListener\RestInputOuputFormatter;
 use AppBundle\Exception as AppException;
 use AppBundle\Service\Auth\HeaderTokenAuthenticator;
 use AppBundle\Service\Auth\UserProvider;
@@ -26,7 +27,8 @@ class AuthController extends RestController
         Request $request,
         UserProvider $userProvider,
         AttemptsInTimeChecker $attemptsInTimechecker,
-        AttemptsIncrementalWaitingChecker $incrementalWaitingTimechecker
+        AttemptsIncrementalWaitingChecker $incrementalWaitingTimechecker,
+        RestInputOuputFormatter $restInputOuputFormatter
     )
     {
         if (!$this->getAuthService()->isSecretValid($request)) {
@@ -79,7 +81,7 @@ class AuthController extends RestController
         $this->get('em')->flush($user);
 
         // add token into response
-        $this->get('kernel.listener.responseConverter')->addResponseModifier(function ($response) use ($randomToken) {
+        $restInputOuputFormatter->addResponseModifier(function ($response) use ($randomToken) {
             $response->headers->set(HeaderTokenAuthenticator::HEADER_NAME, $randomToken);
         });
 
