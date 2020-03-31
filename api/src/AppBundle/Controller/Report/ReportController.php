@@ -57,7 +57,7 @@ class ReportController extends RestController
      * @Route("", methods={"POST"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
-    public function addAction(Request $request, ReportService $reportService)
+    public function addAction(Request $request)
     {
         $reportData = $this->deserializeBodyContent($request);
 
@@ -73,7 +73,7 @@ class ReportController extends RestController
         ]);
 
         // report type is taken from CASREC. In case that's not available (shouldn't happen unless casrec table is dropped), use a 102
-        $reportType = $reportService->getReportTypeBasedOnCasrec($client) ?: Report::TYPE_102;
+        $reportType = $this->reportService->getReportTypeBasedOnCasrec($client) ?: Report::TYPE_102;
         $report = new Report($client, $reportType, new \DateTime($reportData['start_date']), new \DateTime($reportData['end_date']));
         $report->setReportSeen(true);
 
@@ -118,7 +118,7 @@ class ReportController extends RestController
      * @Route("/{id}/submit", requirements={"id":"\d+"}, methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
-    public function submit(Request $request, $id, ReportService $reportService)
+    public function submit(Request $request, $id)
     {
         $currentReport = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
         /* @var $currentReport Report */
@@ -149,7 +149,7 @@ class ReportController extends RestController
         $user = $this->getUser();
 
         /** @var Report|null $nextYearReport */
-        $nextYearReport = $reportService->submit($currentReport, $user, new \DateTime($data['submit_date']));
+        $nextYearReport = $this->reportService->submit($currentReport, $user, new \DateTime($data['submit_date']));
 
         return $nextYearReport ? $nextYearReport->getId() : null;
     }
@@ -496,7 +496,7 @@ class ReportController extends RestController
      * @Route("/{id}/unsubmit", requirements={"id":"\d+"}, methods={"PUT"})
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function unsubmit(Request $request, $id, ReportService $rs)
+    public function unsubmit(Request $request, $id)
     {
         /** @var Report $report */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
@@ -512,7 +512,7 @@ class ReportController extends RestController
             'end_date' => 'notEmpty',
         ]);
 
-        $rs->unSubmit(
+        $this->reportService->unSubmit(
             $report,
             new \DateTime($data['un_submit_date']),
             new \DateTime($data['due_date']),
@@ -690,7 +690,7 @@ class ReportController extends RestController
      * @Route("/{id}/submit-documents", requirements={"id":"\d+"}, methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
-    public function submitDocuments($id, ReportService $reportService)
+    public function submitDocuments($id)
     {
         /* @var Report $currentReport */
         $currentReport = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
@@ -699,7 +699,7 @@ class ReportController extends RestController
         /** @var User $user */
         $user = $this->getUser();
 
-        $reportService->submitAdditionalDocuments($currentReport, $user, new \DateTime());
+        $this->reportService->submitAdditionalDocuments($currentReport, $user, new \DateTime());
 
         return ['reportId' => $currentReport->getId()];
     }
