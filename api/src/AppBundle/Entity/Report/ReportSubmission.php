@@ -80,7 +80,7 @@ class ReportSubmission
      * @JMS\Groups({"report-submission"})
      * @ORM\Column(name="archived", type="boolean", options={"default": false}, nullable=false)
      */
-    private $archived;
+    private $archived = false;
 
     /**
      * @var User|null
