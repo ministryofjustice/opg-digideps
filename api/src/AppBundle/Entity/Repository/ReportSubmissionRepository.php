@@ -30,9 +30,9 @@ class ReportSubmissionRepository extends EntityRepository
         $order = 'ASC'
     ) {
         $statusFilters = [
-            'new' => 'rs.archivedBy IS NULL AND NOT EXISTS (SELECT 1 FROM AppBundle:Report\Document d WHERE d.reportSubmission = rs AND d.synchronisationStatus IS NOT NULL)',
-            'pending' => 'rs.archivedBy IS NULL AND EXISTS (SELECT 1 FROM AppBundle:Report\Document d WHERE d.reportSubmission = rs AND d.synchronisationStatus IS NOT NULL)',
-            'archived' => 'rs.archivedBy IS NOT NULL',
+            'new' => 'rs.archived = false AND NOT EXISTS (SELECT 1 FROM AppBundle:Report\Document d WHERE d.reportSubmission = rs AND d.synchronisationStatus IS NOT NULL)',
+            'pending' => 'rs.archived = false AND EXISTS (SELECT 1 FROM AppBundle:Report\Document d WHERE d.reportSubmission = rs AND d.synchronisationStatus IS NOT NULL)',
+            'archived' => 'rs.archived = true',
         ];
 
         // BASE QUERY BUILDER with filters (for both count and results)
