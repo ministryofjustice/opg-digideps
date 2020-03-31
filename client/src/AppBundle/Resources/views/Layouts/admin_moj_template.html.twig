@@ -2,8 +2,12 @@
 
 {% trans_default_domain "layout" %}
 
-{% macro navLink(path, labelKey, classes = "") -%}
-    <a href="{{ path(path) }}" class="moj-primary-navigation__link {{ classes }}" {% if app.request.get('_route') == path %}aria-current="page"{% endif %}>
+{% if navSection is not defined %}
+    {% set navSection = '' %}
+{% endif %}
+
+{% macro navLink(path, labelKey, isSelected, classes = "") -%}
+    <a href="{{ path(path) }}" class="moj-primary-navigation__link {{ classes }}" {% if isSelected %}aria-current="page"{% endif %}>
         {{- labelKey | trans -}}
     </a>
 {%- endmacro %}
