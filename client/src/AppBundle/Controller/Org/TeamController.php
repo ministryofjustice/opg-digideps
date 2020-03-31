@@ -95,8 +95,9 @@ class TeamController extends AbstractController
                 // if the above doesn't apply: continue adding the user
                 $user = $this->getRestClient()->post('user', $user, ['org_team_add'], 'User');
                 $request->getSession()->getFlashBag()->add('notice', 'The user has been added');
-                $activationEmail = $this->getMailFactory()->createActivationEmail($user);
-                $this->getMailSender()->send($activationEmail, ['text', 'html']);
+
+                $invitationEmail = $this->getMailFactory()->createInvitationEmail($user);
+                $this->getMailSender()->send($invitationEmail, ['text', 'html']);
 
                 return $this->redirectToRoute('org_team');
             } catch (\Throwable $e) {
@@ -194,8 +195,9 @@ class TeamController extends AbstractController
             $user = $this->getRestClient()->get('team/member/' . $id, 'User');
 
             $user = $this->getRestClient()->userRecreateToken($user->getEmail(), 'pass-reset');
-            $activationEmail = $this->getMailFactory()->createActivationEmail($user);
-            $this->getMailSender()->send($activationEmail, ['text', 'html']);
+
+            $invitationEmail = $this->getMailFactory()->createInvitationEmail($user);
+            $this->getMailSender()->send($invitationEmail, ['text', 'html']);
 
             $request->getSession()->getFlashBag()->add(
                 'notice',

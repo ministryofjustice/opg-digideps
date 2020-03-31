@@ -15,9 +15,7 @@ stepPage:
 
 summaryPage:
   htmlTitle: "New deputy report - any other information | GOV.UK"
-  supportTitle: Any other information
   pageTitle: Any other information
-  supportTitle: ""
   weAskAbout: |
     In this section, you can raise concerns about your deputyship and give us any other information
     you think we should have.

@@ -82,8 +82,8 @@ trait UserTrait
 
     private function assertValidRole(string $roleName): void
     {
-        if (!in_array($roleName, ['ROLE_ADMIN', 'ROLE_AD', 'LAY', 'PA', 'PROF'])) {
-            throw new \Exception("DeputyType should be one of 'ROLE_ADMIN', 'ROLE_AD', 'LAY', 'PA', 'PROF'; '$roleName' provided");
+        if (!in_array($roleName, ['ADMIN', 'AD', 'LAY', 'PA', 'PROF'])) {
+            throw new \Exception("DeputyType should be one of 'ADMIN', 'AD', 'LAY', 'PA', 'PROF'; '$roleName' provided");
         }
     }
 
@@ -139,12 +139,12 @@ trait UserTrait
     }
 
     /**
-     * @When I activate the user with password :password
+     * @When I activate the user :email with password :password
      */
-    public function iActivateTheUserAndSetThePasswordTo($password)
+    public function iActivateTheUserAndSetThePasswordTo($email, $password)
     {
         $this->visit('/logout');
-        $this->iOpenTheSpecificLinkOnTheEmail('/user/activate/');
+        $this->openActivationOrPasswordResetPage(false, 'activation', $email);
         $this->assertResponseStatus(200);
         $this->fillField('set_password_password_first', $password);
         $this->fillField('set_password_password_second', $password);
@@ -155,13 +155,12 @@ trait UserTrait
     }
 
     /**
-     * @TODO to use in places where needed
-     * @When I activate the user with password :password - no T&C expected
+     * @When I activate the admin user :email with password :password
      */
-    public function iActivateTheUserAndSetThePasswordToNoTcExpected($password)
+    public function iActivateTheAdminUserAndSetThePasswordTo($email, $password)
     {
-        $this->visit('/logout');
-        $this->iOpenTheSpecificLinkOnTheEmail('/user/activate/');
+        $this->visitAdminPath('/logout');
+        $this->openActivationOrPasswordResetPage(true, 'activation', $email);
         $this->assertResponseStatus(200);
         $this->fillField('set_password_password_first', $password);
         $this->fillField('set_password_password_second', $password);
@@ -171,12 +170,12 @@ trait UserTrait
     }
 
     /**
-     * @When I activate the named deputy with password :password
+     * @When I activate the named deputy :email with password :password
      */
-    public function iActivateTheNamedDeputyAndSetThePasswordTo($password)
+    public function iActivateTheNamedDeputyAndSetThePasswordTo($email, $password)
     {
         $this->visit('/logout');
-        $this->iOpenTheSpecificLinkOnTheEmail('/user/activate/');
+        $this->openActivationOrPasswordResetPage(false, 'activation', $email);
         $this->assertResponseStatus(200);
         $this->checkOption('agree_terms_agreeTermsUse');
         $this->pressButton('agree_terms_save');
@@ -352,7 +351,7 @@ trait UserTrait
     {
         $ndrStatus = 'NDR-' . $ndrStatus;
         $this->iCreateTheUserWithEmailAndPostcode($ndrStatus, $depType, 'Lay', 'Dep', $email, 'SW11AA');
-        $this->iActivateTheUserAndSetThePasswordTo($password);
+        $this->iActivateTheUserAndSetThePasswordTo($email, $password);
 
         $this->iAddTheFollowingUsersToCASREC(new TableNode([
             ['Case', 'Surname', 'Deputy No', 'Dep Surname', 'Dep Postcode', 'Typeofrep'],

@@ -135,7 +135,7 @@ form:
       care_fees.label: Care fees or local authority charges for care
       holidays.label: Holidays and trips
       households_bills.label: Household bills – for example, water, gas, electricity, phone, council tax
-      personal_allowance.label: %client%'s personal allowance
+      personal_allowance.label: "%client%'s personal allowance"
       professional_fees.label: Professional fees – for example, solicitor or accountant fees
       new_investments.label: New investments – for example, buying shares, new bonds
       travel_costs.label: Travel costs – for example, bus, train, taxi fares
@@ -165,5 +165,3 @@ form:
           label: 12345345646
         save:
             label: Save payment
-
-

@@ -252,6 +252,16 @@ class Document implements DocumentInterface
     }
 
     /**
+     * @return Document
+     */
+    public function setReportSubmission(ReportSubmission $repostSubmission)
+    {
+        $this->reportSubmission = $repostSubmission;
+
+        return $this;
+    }
+
+    /**
      * @return string|null
      */
     public function getSynchronisationStatus(): ?string
@@ -341,6 +351,26 @@ class Document implements DocumentInterface
     public function isAdminDocument()
     {
         return $this->isReportPdf() || $this->isTransactionDocument();
+    }
+
+    public function supportingDocumentCanBeSynced()
+    {
+        return !$this->isReportPdf() && $this->getReport()->reportPdfHasBeenSynced();
+    }
+
+    public function getPreviousReportPdfSubmission()
+    {
+        $previousSubmissions = array_filter(
+            $this->getReport()->getReportSubmissions(),
+            function($submission) {
+                return $submission->getCreatedOn() <= $this->getReportSubmission()->getCreatedOn();
+            });
+
+        foreach (array_reverse($previousSubmissions) as $submission) {
+            if ($submission->hasReportPdf()) {
+                return $submission;
+            }
+        }
     }
 
     /**

@@ -7,8 +7,11 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use AppBundle\Security\UserVoter;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\CsvUploader;
 use AppBundle\Service\DataImporter\CsvToArray;
+use AppBundle\Service\Mailer\MailFactory;
+use AppBundle\Service\Mailer\MailSenderInterface;
 use AppBundle\Service\OrgService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
@@ -82,7 +85,12 @@ class IndexController extends AbstractController
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("AppBundle:Admin/Index:addUser.html.twig")
      */
-    public function addUserAction(Request $request)
+    public function addUserAction(
+        Request $request,
+        RestClient $restClient,
+        MailFactory $mailFactory,
+        MailSenderInterface $mailSender
+    )
     {
         $form = $this->createForm(FormDir\Admin\AddUserType::class, new EntityDir\User());
 
@@ -95,10 +103,10 @@ class IndexController extends AbstractController
                 }
 
                 /** @var EntityDir\User $user */
-                $user = $this->getRestClient()->post('user', $form->getData(), ['admin_add_user'], 'User');
+                $user = $restClient->post('user', $form->getData(), ['admin_add_user'], 'User');
 
-                $activationEmail = $this->getMailFactory()->createActivationEmail($user);
-                $this->getMailSender()->send($activationEmail, ['text', 'html']);
+                $activationEmail = $mailFactory->createActivationEmail($user);
+                $mailSender->send($activationEmail);
 
                 $this->addFlash(
                     'notice',
@@ -511,17 +519,20 @@ class IndexController extends AbstractController
      * @Route("/send-activation-link/{email}", name="admin_send_activation_link")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      **/
-    public function sendUserActivationLinkAction(Request $request, $email)
+    public function sendUserActivationLinkAction(
+        $email,
+        MailFactory $mailFactory,
+        MailSenderInterface $mailSender,
+        LoggerInterface $logger,
+        RestClient $restClient
+    )
     {
         try {
-            /* @var $user EntityDir\User */
-            $user = $this->getRestClient()->userRecreateToken($email, 'pass-reset');
-            $resetPasswordEmail = $this->getMailFactory()->createActivationEmail($user);
+            $user = $restClient->userRecreateToken($email, 'pass-reset');
+            $resetPasswordEmail = $mailFactory->createActivationEmail($user);
 
-            $this->getMailSender()->send($resetPasswordEmail, ['text', 'html']);
+            $mailSender->send($resetPasswordEmail);
         } catch (\Throwable $e) {
-            /** @var LoggerInterface $logger */
-            $logger = $this->get('logger');
             $logger->debug($e->getMessage());
         }
 

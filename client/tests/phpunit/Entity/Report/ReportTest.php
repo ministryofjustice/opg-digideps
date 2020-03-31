@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity\Report;
 
+use DateTime;
+use DigidepsTests\Helpers\DocumentHelpers;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
@@ -192,5 +194,43 @@ class ReportTest extends TestCase
         $this->assertEquals(100000, $report->getAssetsTotalsSummaryPage('property'));
         $this->assertEquals(10 + 20 + 30 + 40, $report->getAssetsTotalsSummaryPage('cash'));
         $this->assertEquals(1+2+3+4+5, $report->getAssetsTotalsSummaryPage('other'));
+    }
+
+    /** @test */
+    public function reportPdfHasBeenSynced()
+    {
+        $supportingDocument = self::prophesize(Document::class);
+        $supportingDocument->isReportPdf()->willReturn(false);
+
+        $reportPdfDocument = self::prophesize(Document::class);
+        $reportPdfDocument->isReportPdf()->willReturn(true);
+
+        $submittedDocuments = [$supportingDocument->reveal(), $reportPdfDocument->reveal()];
+
+        $submission = (new ReportSubmission())->setDocuments($submittedDocuments)->setUuid('abc-123');
+
+        $reportPdfDocument->getReportSubmission()->willReturn($submission);
+
+        $report = (new Report())
+            ->setSubmittedDocuments($submittedDocuments)
+            ->setReportSubmissions([$submission]);
+
+        self::assertTrue($report->reportPdfHasBeenSynced());
+    }
+
+    /** @test */
+    public function getReportSubmissionByDocument()
+    {
+        $document1 = new Document();
+        $document2 = new Document();
+        $document3 = new Document();
+        $submission1 = (new ReportSubmission())->setDocuments([$document2]);
+        $submission2 = (new ReportSubmission())->setDocuments([$document1]);
+
+        $report = (new Report())->setReportSubmissions([$submission1, $submission2]);
+
+        self::assertEquals($submission2, $report->getReportSubmissionByDocument($document1));
+        self::assertEquals($submission1, $report->getReportSubmissionByDocument($document2));
+        self::assertEquals(null, $report->getReportSubmissionByDocument($document3));
     }
 }

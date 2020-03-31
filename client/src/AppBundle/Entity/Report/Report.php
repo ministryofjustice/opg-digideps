@@ -140,6 +140,13 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     private $submittedBy;
 
     /**
+     * @JMS\Type("array<AppBundle\Entity\Report\ReportSubmission>")
+     *
+     * @var ReportSubmission[]
+     */
+    private $reportSubmissions;
+
+    /**
      * @JMS\Type("AppBundle\Entity\Client")
      *
      * @var Client
@@ -961,6 +968,17 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
+     * @param Document[] $submittedDocuments
+     * @return Report
+     */
+    public function setSubmittedDocuments(array $submittedDocuments): self
+    {
+        $this->submittedDocuments = $submittedDocuments;
+
+        return $this;
+    }
+
+    /**
      * @return Document[]
      */
     public function getUnsubmittedDocuments()
@@ -1195,5 +1213,59 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     public function isProfReport(): bool
     {
         return in_array($this->getType(), [self::TYPE_102_5, self::TYPE_103_5, self::TYPE_104_5, self::TYPE_102_4_5, self::TYPE_103_4_5]);
+    }
+
+    /**
+     * @return ReportSubmission[]
+     */
+    public function getReportSubmissions(): array
+    {
+        return $this->reportSubmissions;
+    }
+
+    /**
+     * @param ReportSubmission[] $reportSubmissions
+     */
+    public function setReportSubmissions(array $reportSubmissions): self
+    {
+        $this->reportSubmissions = $reportSubmissions;
+
+        return $this;
+    }
+
+    public function reportPdfHasBeenSynced()
+    {
+        $reportPdfHasBeenSubmitted = false;
+
+        foreach ($this->getSubmittedDocuments() as $doc) {
+            if ($doc->isReportPdf()) {
+                $reportPdfHasBeenSubmitted = !is_null($doc->getReportSubmission()->getUuid()) ? true : false;
+                break;
+            } else {
+                continue;
+            }
+        }
+
+        return $reportPdfHasBeenSubmitted;
+    }
+
+    /**
+     * @param Document $document
+     * @return ReportSubmission|null
+     */
+    public function getReportSubmissionByDocument(Document $document): ?ReportSubmission
+    {
+        $reportSubmissions = $this->getReportSubmissions();
+
+        /** @var ReportSubmission $submission */
+        foreach ($reportSubmissions as $submission) {
+            foreach ($submission->getDocuments() as $doc) {
+                if ($document === $doc) {
+                    return $submission;
+                }
+            }
+        }
+
+        return null;
     }
 }

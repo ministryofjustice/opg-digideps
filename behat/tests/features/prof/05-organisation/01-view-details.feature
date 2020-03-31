@@ -22,7 +22,7 @@ Feature: Users can view their organisations
     And I go to admin page "/admin"
     And I create a new "NDR-disabled" "prof named" user "Main" "Leever Contact" with email "main.contact@leever.example" and postcode "HA4"
     And emails are sent from "admin" area
-    And I activate the named deputy with password "Abcd1234"
+    And I activate the named deputy "main.contact@leever.example" with password "Abcd1234"
     When I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     When I go to admin page "/admin/organisations"
     And I follow "Leever Partners"

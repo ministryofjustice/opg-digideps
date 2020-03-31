@@ -1,22 +1,17 @@
 Feature: Organisation deputyship updates
 
   Scenario: Apply deputyship updates via CSV
-    Given emails are sent from "admin" area
-    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I create a new "NDR-disabled" "prof named" user "New Dep1" "Surname1" with email "new-behat-prof1@publicguardian.gov.uk" and postcode "SW1"
-    And I activate the named deputy with password "Abcd1234"
-    Then I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I create a new "NDR-disabled" "prof named" user "New Dep2" "Surname2" with email "behat-prof1@example.com1" and postcode "SW2"
-    And I activate the named deputy with password "Abcd1234"
-    Then I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I create a new "NDR-disabled" "prof named" user "New Dep3" "Surname3" with email "behat-prof1@example.com2" and postcode "SW3"
-    And I activate the named deputy with password "Abcd1234"
-    Then I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And the following users exist:
+      | ndr      | deputyType | firstName | lastName | email                                 | postCode | activated |
+      | disabled | PROF       | New Dep1  | Surname1 | new-behat-prof1@publicguardian.gov.uk | SW1      | true      |
+      | disabled | PROF       | New Dep2  | Surname1 | behat-prof1@example.com1              | SW2      | true      |
+      | disabled | PROF       | New Dep3  | Surname1 | behat-prof1@example.com2              | SW3      | true      |
     # upload PROF updates
     When I go to admin page "/admin/org-csv-upload"
-    When I attach the file "behat-prof-org-updates.csv" to "admin_upload_file"
+    And I attach the file "behat-prof-org-updates.csv" to "admin_upload_file"
     And I press "admin_upload_upload"
-    And the organisation "publicguardian.gov.uk" is active
+    Then the organisation "publicguardian.gov.uk" is active
     And "new-behat-prof1@publicguardian.gov.uk" has been added to the "publicguardian.gov.uk" organisation
     And the organisation "example.com1" is active
     And "behat-prof1@example.com1" has been added to the "example.com1" organisation
@@ -32,7 +27,7 @@ Feature: Organisation deputyship updates
     Then I should see the "client-01000010" region
     # Assert client still associated with same org
     Then I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search, client-detail-01000010"
+    When I visit the client page for "01000010"
     # Assert same organisation
     And I should see "PA OPG" in the "assigned-organisation" region
     # Assert new named deputy within same organisation
@@ -47,7 +42,7 @@ Feature: Organisation deputyship updates
     Then I should see the "client-1138393T" region
     # Assert client associated with new org
     Then I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search, client-detail-1138393t"
+    When I visit the client page for "1138393t"
     # Assert same named deputy within new organisation
     Then each text should be present in the corresponding region:
       | Your Organisation (example.com1)                        | assigned-organisation |
@@ -69,7 +64,7 @@ Feature: Organisation deputyship updates
     # Assert client associated with new org
     Then I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
     # Assert new organisation for new client
-    Then I click on "admin-client-search, client-detail-11498120"
+    When I visit the client page for "11498120"
     Then each text should be present in the corresponding region:
       | Your Organisation (example.com2)      | assigned-organisation |
       | NEW DEP3 NEW SURNAME3                 | named-deputy-fullname |

@@ -37,4 +37,11 @@ class ApiCollector extends DataCollector implements DataCollectorInterface
     {
         return $this->data['calls'];
     }
+
+    public function reset()
+    {
+        $this->data = [
+            'calls' => []
+        ];
+    }
 }

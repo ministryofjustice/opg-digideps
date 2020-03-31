@@ -8,7 +8,6 @@ no: No
 ok: OK
 signOut: Sign out
 continue: Continue
-reviewReport: Review report
 saveAndContinue: Save and continue
 saveAndAddAnother: Save and add another
 skipLink: Skip this question for now
@@ -94,7 +93,6 @@ reportType: Report type
 ndr: NDR
 type: Type
 defaultDateHintText: For example, 18 4 2017
-namedDeputy: Named deputy
 
 # Statuses
 notCreated: Not created
@@ -129,6 +127,7 @@ clearSearch: Clear search
 sorryNoResultsFor: No reports found
 
 # Emails
+generalSupportEmail: customerservices@publicguardian.gov.uk
 layDeputySupportEmail: laydeputysupport@publicguardian.gov.uk
 paSupportEmail: opg.publicauthorityteam@publicguardian.gov.uk
 profSupportEmail: opg.pro@publicguardian.gov.uk

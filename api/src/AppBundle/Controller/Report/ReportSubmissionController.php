@@ -84,6 +84,10 @@ class ReportSubmissionController extends RestController
             $reportSubmission->setArchivedBy($this->getUser());
         }
 
+        if (!empty($data['uuid'])) {
+            $reportSubmission->setUuid($data['uuid']);
+        }
+
         $this->getEntityManager()->flush();
 
         return $reportSubmission->getId();

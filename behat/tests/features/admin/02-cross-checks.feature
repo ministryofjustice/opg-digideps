@@ -23,7 +23,6 @@ Feature: admin / acl
         Then I should be on "/password-managing/forgotten"
         When I fill in "password_forgotten_email" with "behat-admin-user@publicguardian.gov.uk"
         And I press "password_forgotten_submit"
-        Then the last email should have been sent to "behat-admin-user@publicguardian.gov.uk"
         # check admin CANNOT recover password from DEPUTY site
         When I go to "/login"
         And I click on "forgotten-password"
