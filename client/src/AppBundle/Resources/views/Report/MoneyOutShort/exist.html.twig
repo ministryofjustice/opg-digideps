@@ -8,7 +8,7 @@
 
 {% block htmlTitle %}{{ 'existPage.moneyOut.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'existPage.moneyOut.pageTitle' | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
@@ -18,11 +18,11 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <div class="form-section push--bottom">
+    <div class="push--bottom">
     {{ form_checkbox_group(form.moneyTransactionsShortOutExist, 'existPage.form.moneyTransactionsShortOutExist', {
         'fieldSetClass' : 'inline',
         'labelParameters': transOptions,
-        'legendClass' : 'form-label-bold text',
+        'legendClass' : 'govuk-label--s text',
         'formGroupClass': 'flush--bottom'
     }) }}
     </div>

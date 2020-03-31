@@ -10,7 +10,7 @@
 
 {% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'stepPage.pageTitle' | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
@@ -33,8 +33,8 @@
     </div>
 
     {% if step == 1 %}
-        <div class="form-section push--bottom">
-            <div class="form-group flush--bottom {% if not form.wishToProvideDocumentation.vars.valid %}form-group-error{% endif %}">
+        <div class="push--bottom">
+            <div class="govuk-form-group flush--bottom {% if not form.wishToProvideDocumentation.vars.valid %}govuk-form-group--error{% endif %}">
                 {{ form_checkbox_group(form.wishToProvideDocumentation, 'form.wishToProvideDocumentation', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',

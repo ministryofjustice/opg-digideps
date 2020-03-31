@@ -74,6 +74,9 @@
 .text--center   { text-align: center !important; }
 .text--right    { text-align: right  !important; }
 
+// Text colours
+.text-red { color: $govuk-error-colour; }
+
 // Percentage widths
 .width-full             { width: 100%; }
 .width-three-quarters   { width: $three-quarters; } // 75%
@@ -150,5 +153,4 @@
 .align--bottom {
     vertical-align: bottom;
 }
-
 

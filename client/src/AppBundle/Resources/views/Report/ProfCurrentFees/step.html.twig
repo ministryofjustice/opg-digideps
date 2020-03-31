@@ -19,7 +19,7 @@
         {{ ('addTypePage.form.serviceType.' ~ fee.serviceTypeId) | trans }}
     {% endif %}
 {% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block supportTitleTop %}
     <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
@@ -45,9 +45,9 @@
 
         {{ form_widget(form.id, { 'attr': {'class': 'hidden-row'} }) }}
 
-        <div class="form-section push--bottom">
+        <div class="push--bottom">
             {{ form_checkbox_group(form.serviceTypeId, 'form.serviceTypeId', {
-                'legendClass' : 'form-label-bold',
+                'legendClass' : 'govuk-label--s',
                 'legendText' : (page ~ '.form.label') | trans,
                 'formGroupClass': 'push--top'
             }) }}
@@ -60,9 +60,9 @@
         {{ form_widget(form.id, { 'attr': {'class': 'hidden-row'} }) }}
         {{ form_widget(form.serviceTypeId, { 'attr': {'class': 'hidden-row'} }) }}
 
-        <div class="form-section push--bottom">
+        <div class="push--bottom">
             {{ form_checkbox_group(form.assessedOrFixed, 'form.assessedOrFixed', {
-                'legendClass' : 'form-label-bold',
+                'legendClass' : 'govuk-label--s',
                 'legendText' : (page ~ '.form.assessedOrFixed.legend') | trans,
                 'formGroupClass': 'inline push--top'
             }) }}
@@ -71,17 +71,17 @@
         <div>
             {{ form_input(form.amountCharged, 'addDetailsPage.form.amountCharged', {
                 'inputPrefix' : '£',
-                'inputClass' : 'form-control-1-4 js-format-currency',
-                'labelClass' : 'form-label-bold',
+                'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
+                'labelClass' : 'govuk-label--s',
                 'formGroupClass': ' form-group-value'
             }) }}
         </div>
 
-        <div class="form-section push--bottom">
-            <div id="form-group-prof_service_fee_type_paymentReceived" class="form-group inline flush--bottom {% if not form.paymentReceived.vars.valid %}form-group-error{% endif %}">
+        <div class="push--bottom">
+            <div id="form-group-prof_service_fee_type_paymentReceived" class="govuk-form-group inline flush--bottom {% if not form.paymentReceived.vars.valid %}govuk-form-group--error{% endif %}">
                 {{ form_checkbox_group(form.paymentReceived, 'form.paymentReceived', {
                     'useFormGroup': false,
-                    'legendClass' : 'form-label-bold',
+                    'legendClass' : 'govuk-label--s',
                     'legendText' : (page ~ '.form.paymentReceived.legend') | trans,
                     'items': [
                         {'dataTarget': 'was-payment-received'},
@@ -91,8 +91,8 @@
                 <div id="was-payment-received" class="opg-indented-block js-hidden">
                     {{ form_input(form.amountReceived, 'addDetailsPage.form.amountReceived', {
                         'inputPrefix' : '£',
-                        'inputClass' : 'form-control-1-4 js-format-currency',
-                        'labelClass' : 'form-label-bold',
+                        'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
+                        'labelClass' : 'govuk-label--s',
                         'formGroupClass': ' form-group-value'
                     }) }}
                     {{ form_known_date(form.paymentReceivedDate, 'addDetailsPage.form.paymentReceivedDate') }}

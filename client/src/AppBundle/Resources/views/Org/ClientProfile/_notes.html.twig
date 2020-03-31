@@ -14,7 +14,7 @@
 
     <div class="govuk-accordion__section-content behat-region-client-profile-notes">
         <div>{{ (page ~ '.notice') | trans }}</div>
-        <a href="{{ path('add_note', {'clientId': client.id}) }}" class="bold-small action-link right behat-link-add-notes-button">
+        <a href="{{ path('add_note', {'clientId': client.id}) }}" class="govuk-!-font-size-19 govuk-!-font-weight-bold action-link right behat-link-add-notes-button">
             <span class="icon icon-plus"></span>
             {{ (page ~ '.addNote') | trans }}
         </a>

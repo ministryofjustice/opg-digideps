@@ -9,7 +9,7 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
@@ -21,20 +21,20 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
-    <p class="heading-small push-half--bottom  text">
+    <p class="govuk-heading-s push-half--bottom  text">
         {{ (page ~ '.form.profDeputyCostsEstimateManagementCost.sectionDescription') | trans(transOptions) }}
     </p>
 
     <div>
         {{ form_input(form.profDeputyManagementCostAmount, 'amount', {
             'inputPrefix' : '£',
-            'inputClass' : 'form-control-1-4 js-format-currency',
+            'inputClass' : 'govuk-label--s-1-4 js-format-currency',
             'labelText' : (page ~ '.form.profDeputyCostsEstimateManagementCost.label') | trans,
             'labelRaw': true
         }) }}
     </div>
 
-    <p class="heading-small push-half--bottom  text">
+    <p class="govuk-heading-s push-half--bottom  text">
         {{ (page ~ '.pageSectionDescription') | trans(transOptions) }}
     </p>
 
@@ -43,7 +43,7 @@
             {{ form_row(profDeputyEstimateCost.profDeputyEstimateCostTypeId) }}
             {{ form_input(profDeputyEstimateCost.amount, 'amount', {
                 'inputPrefix' : '£',
-                'inputClass' : 'form-control-1-4 js-format-currency',
+                'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
                 'labelText': (page ~ '.form.entries.' ~ profDeputyEstimateCost.profDeputyEstimateCostTypeId.vars.value ~ '.label') | trans,
                 'labelRaw': true
             }) }}

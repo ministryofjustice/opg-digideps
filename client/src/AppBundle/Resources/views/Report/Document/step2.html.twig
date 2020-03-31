@@ -10,7 +10,7 @@
 {# Page Titles #}
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block supportTitleTop %}
     <span class="heading-secondary">{{ 'pageTitle' | trans }}</span>
@@ -22,7 +22,7 @@
 
 {% block pageContent %}
 
-    <h2 class="heading-medium">{{ (page ~ '.selectHeading') | trans }}</h2>
+    <h2 class="govuk-heading-m">{{ (page ~ '.selectHeading') | trans }}</h2>
 
     <p>{{ (page ~ '.selectHelp') | trans }}</p>
 
@@ -43,7 +43,7 @@
         'inputClass': 'no-border behat-link-choose-file' })
     }}
 
-    <h2 class="heading-medium flush--top">{{ (page ~ '.uploadHeading') | trans }}</h2>
+    <h2 class="govuk-heading-m flush--top">{{ (page ~ '.uploadHeading') | trans }}</h2>
 
     <div class="js-hidden">
         {{ macros.notification('info', (page ~ '.uploadHint') | trans) }}

@@ -14,7 +14,7 @@
 
 {% block htmlTitle %}{{ 'startPage.moneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.moneyIn.pageTitle' | trans(transOptions) }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
@@ -25,16 +25,16 @@
         <p>{{ 'startPage.moneyIn.pageSectionDescription2' | trans(transOptions) | raw }}</p>
         <p>{{ 'startPage.moneyIn.pageSectionDescription3' | trans }}</p>
 
-        <h3 class="heading-small">{{ 'startPage.moneyIn.totalOrIndividualHeading' | trans }}</h3>
+        <h3 class="govuk-heading-s">{{ 'startPage.moneyIn.totalOrIndividualHeading' | trans }}</h3>
         <p>{{ 'startPage.moneyIn.totalOrIndividualPara' | trans }}</p>
 
         {% if report.bankAccounts is empty and report.canLinkToBankAccounts %}
-            <h3 class="heading-small">{{ 'startPage.moneyIn.accountLinksHeading' | trans(transOptions) }}</h3>
+            <h3 class="govuk-heading-s">{{ 'startPage.moneyIn.accountLinksHeading' | trans(transOptions) }}</h3>
             <p>{{ 'startPage.moneyIn.accountLinksPara1' | trans(transOptions) | raw }}</p>
         {% endif %}
     </div>
 
-    <a href="{{ path('money_in_step', { 'reportId': report.id, 'step': 1 }) }}" class="button button-start behat-link-start">{{ 'startPage.moneyIn.startButton' | trans }}</a>
+    {{ macros.startSectionButton(path('money_in_step', { 'reportId': report.id, 'step': 1 }), 'startPage.moneyIn.startButton' | trans ) }}
 
     {# Pagination #}
     {% include 'AppBundle:Report:_nextprevious.html.twig' with {

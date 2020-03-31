@@ -8,10 +8,10 @@
 {# Total cost this period#}
 <div class="govuk-summary-list__row behat-region-total-cost">
     <dt class="govuk-summary-list__key">
-        <strong class="bold">{{ (page ~ '.questionLabel.totalCosts') | trans(transOptions) }}</strong>
+        <strong class="govuk-!-font-weight-bold">{{ (page ~ '.questionLabel.totalCosts') | trans(transOptions) }}</strong>
     </dt>
     <dd class="govuk-summary-list__value text--right">
-        <strong class="bold">£{{ report.profDeputyTotalCostsTakenFromClient | money_format }}</strong>
+        <strong class="govuk-!-font-weight-bold">£{{ report.profDeputyTotalCostsTakenFromClient | money_format }}</strong>
     </dd>
     {% if not hideEditLink %}
         <dd class="govuk-summary-list__actions"></dd>

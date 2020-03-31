@@ -5,7 +5,7 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block supportTitleBottom %}
     <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
@@ -15,8 +15,8 @@
 
 {% block pageContent %}
 
-    <p class="flush--bottom">{{ 'client' | trans({}, 'common') }}: <span class="bold">{{ report.client.fullName }}</span></p>
-    <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="bold">{{ report.client.caseNumber }}</span></p>
+    <p class="flush--bottom">{{ 'client' | trans({}, 'common') }}: <span class="govuk-!-font-weight-bold">{{ report.client.fullName }}</span></p>
+    <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="govuk-!-font-weight-bold">{{ report.client.caseNumber }}</span></p>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-form' }}) }}
 
@@ -29,9 +29,9 @@
         {{ (page ~ '.form.endDate.label') | trans }}
         {{ form_known_date(form.endDate, 'endDate') }}
 
-        <fieldset class="form-group {% if not form.unsubmittedSection.vars.valid %}form-group-error{% endif %}">
+        <fieldset class="govuk-form-group {% if not form.unsubmittedSection.vars.valid %}govuk-form-group--error{% endif %}">
             <legend>
-                <h2 class="heading-small flush--top">{{ (page ~ '.form.markSections.legend') | trans }}</h2>
+                <h2 class="govuk-heading-s flush--top">{{ (page ~ '.form.markSections.legend') | trans }}</h2>
             </legend>
             <div class="govuk-checkboxes govuk-checkboxes--small">
                 {% for section in form.unsubmittedSection  %}
@@ -45,12 +45,12 @@
         </fieldset>
     {% endif %}
 
-    <p class="heading-small flush--ends">{{  'reportManage.currentDueDate' | trans }}</p>
+    <p class="govuk-heading-s flush--ends">{{  'reportManage.currentDueDate' | trans }}</p>
     <p>
         {{ report.dueDate | date("j F Y") }}
         {% set dueDateDiffDays = report.dueDateDiffDays  %}
         {% if dueDateDiffDays < 0 %}
-        <br/><span class="font-xsmall bold text-red">{{  'reportManage.overdueBy' | trans ({
+        <br/><span class="govuk-body-s govuk-!-font-weight-bold text-red">{{  'reportManage.overdueBy' | trans ({
                 '%overdueDays%': report.dueDateDiffDays|abs,
                 '%dueDays%': report.dueDateDiffDays
             }) }}
@@ -58,9 +58,9 @@
         {% endif %}
     </p>
 
-    <div class="form-group push--bottom {% if not form.dueDateChoice.vars.valid %}form-group-error{% endif %}">
+    <div class="govuk-form-group push--bottom {% if not form.dueDateChoice.vars.valid %}govuk-form-group--error{% endif %}">
         {{ form_checkbox_group(form.dueDateChoice, 'reportManage.form.dueDateChoice', {
-            'legendClass' : 'form-label-bold',
+            'legendClass' : 'govuk-label--s',
             'useFormGroup': false,
             'items': [
                 {},
@@ -77,7 +77,7 @@
 
     {{ form_submit(form.save, 'reportManage.form.save') }}
 
-    <a href="{{ path('admin_client_details', {'id': report.client.id}) }}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+    <a href="{{ path('admin_client_details', {'id': report.client.id}) }}" class="govuk-link button-link">{{ 'cancel' | trans({}, 'common') }}</a>
 
     {{ form_end(form) }}
 

@@ -5,7 +5,7 @@
 
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block pageContent %}
 
@@ -107,11 +107,11 @@
                     {% if report.dueDate is not null %}
                         <span>{{ report.dueDate | date("j M Y") }}</span><br>
                         {% if report.dueDateDiffDays < 0 %}
-                            <span class="font-xsmall bold text-red">{{ 'overdue' | trans(transOptions) }}</span>
+                            <span class="govuk-body-s govuk-!-font-weight-bold text-red">{{ 'overdue' | trans(transOptions) }}</span>
                         {% elseif report.dueDateDiffDays == 0 %}
-                            <span class="font-xsmall bold">{{ 'dueToday' | trans }}</span>
+                            <span class="govuk-body-s govuk-!-font-weight-bold">{{ 'dueToday' | trans }}</span>
                         {% elseif report.dueDateDiffDays <= 30 %}
-                            <span class="font-xsmall">{{ 'dueIn' | trans(transOptions) }}</span>
+                            <span class="govuk-body-s">{{ 'dueIn' | trans(transOptions) }}</span>
                         {% endif %}
                     {% else %}
                         -

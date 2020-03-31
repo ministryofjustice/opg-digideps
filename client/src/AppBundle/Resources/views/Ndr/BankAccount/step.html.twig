@@ -8,7 +8,7 @@
 
 {% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ ('stepPage.pageTitle.' ~ (account.id ? 'edit' : 'add')) | trans(transOptions) }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block supportTitleTop %}
     <span class="heading-secondary">{{ 'stepPage.supportTitle' | trans }}</span>
@@ -28,7 +28,7 @@
         </p>
 
         {{ form_checkbox_group(form.accountType, 'form.accountType', {
-            'legendClass' : 'form-label-bold'
+            'legendClass' : 'govuk-label--s'
         }) }}
     {% endif %}
 
@@ -62,7 +62,7 @@
         {{ form_input(form.balanceOnCourtOrderDate, '', {
             'labelText': 'form.balanceOnCourtOrderDate.label' | trans({'%cotDate%': ndr.client.courtDate | date("j F Y")}, translationDomain),
             'inputPrefix' : '£',
-            'inputClass' : 'form-control-1-4 js-format-currency'
+            'inputClass' : 'govuk-!-width-one-quarter js-format-currency'
         } ) }}
     {% endif %}
 

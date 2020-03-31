@@ -8,7 +8,7 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block linkBack %}
     {% if backLink %}
@@ -26,13 +26,13 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <div class="form-section push--bottom">
-        <div class="form-group flush--bottom {% if not form.previousProfFeesEstimateGiven.vars.valid %}form-group-error{% endif %}">
+    <div class="push--bottom">
+        <div class="govuk-form-group flush--bottom {% if not form.previousProfFeesEstimateGiven.vars.valid %}govuk-form-group--error{% endif %}">
             {{ form_checkbox_group(form.previousProfFeesEstimateGiven, 'existPage.form.hasFees', {
                 'useFormGroup': false,
                 'legendText' : (page ~ '.form.estimateCosts.legend') | trans,
                 'fieldSetClass' : 'inline',
-                'legendClass' : 'form-label-bold text push-half--bottom',
+                'legendClass' : 'govuk-label--s text push-half--bottom',
                 'items': [
                     {'dataTarget': 'scco-reason'},
                     {},

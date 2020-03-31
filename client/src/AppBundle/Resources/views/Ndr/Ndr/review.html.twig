@@ -45,14 +45,14 @@
                 <a class="button" href="{{ path("ndr_overview" , {'ndrId': ndr.id }) }}">
                     {{ 'incomplete.backToEditingReport' | trans() }}
                 </a>
-                <a class="button-link js-trackDownloadLink" href="{{ path('ndr_pdf', {'ndrId': ndr.id}) }}">
+                <a class="govuk-link button-link js-trackDownloadLink" href="{{ path('ndr_pdf', {'ndrId': ndr.id}) }}">
                     <i class="icon icon-pdf"></i>{{ 'downloadAsPdf' | trans() }}
                 </a>
             {% endif %}
         {% else %}
             <p class="text">{{ (page ~ '.introPara') | trans() }} {{ ndr.submitDate | date("j F Y") }}.</p>
-            <a class="button" href="{{ path('homepage') }}">{{ 'backToYourReports' | trans({}, 'common') }}</a>
-            <a class="button-link js-trackDownloadLink" href="{{ path('ndr_pdf', {'ndrId': ndr.id}) }}">
+            <a class="govuk-button button" href="{{ path('homepage') }}">{{ 'backToYourReports' | trans({}, 'common') }}</a>
+            <a class="govuk-link button-link js-trackDownloadLink" href="{{ path('ndr_pdf', {'ndrId': ndr.id}) }}">
                 <i class="icon icon-pdf"></i>{{ 'downloadAsPdf' | trans() }}
             </a>
         {% endif %}
@@ -64,20 +64,20 @@
 
     {% if ndr.submitted == false %}
         {% if preview %}
-            <a class="button" href="{{ path("ndr_overview" , {'ndrId': ndr.id }) }}">
+            <a class="govuk-button" href="{{ path("ndr_overview" , {'ndrId': ndr.id }) }}">
                 {{ 'incomplete.backToEditingReport' | trans() }}
             </a>
         {% else %}
-            <a class="button behat-link-ndr-declaration-page" href="{{ path("ndr_declaration" , {'ndrId': ndr.id }) }}">{{ 'continue' | trans({}, 'common') }}</a>
-            <a class="button-link" href="{{ path("ndr_overview" , {'ndrId': ndr.id }) }}">
+            <a class="govuk-button behat-link-ndr-declaration-page" href="{{ path("ndr_declaration" , {'ndrId': ndr.id }) }}">{{ 'continue' | trans({}, 'common') }}</a>
+            <a class="govuk-link button-link" href="{{ path("ndr_overview" , {'ndrId': ndr.id }) }}">
                 {{ 'incomplete.backToEditingReport' | trans() }}
             </a>
         {% endif %}
     {% else %}
-        <a class="button" href="{{ path('homepage') }}">{{ 'backToYourReports' | trans({}, 'common') }}</a>
+        <a class="govuk-button" href="{{ path('homepage') }}">{{ 'backToYourReports' | trans({}, 'common') }}</a>
     {% endif %}
 
-    <a class="button-link js-trackDownloadLink" href="{{ path('ndr_pdf', {'ndrId': ndr.id}) }}">
+    <a class="govuk-link button-link js-trackDownloadLink" href="{{ path('ndr_pdf', {'ndrId': ndr.id}) }}">
         <i class="icon icon-pdf"></i>{{ 'downloadAsPdf' | trans() }}
     </a>
 

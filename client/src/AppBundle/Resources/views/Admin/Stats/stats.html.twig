@@ -7,7 +7,7 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 
 {% block helpline %}{% endblock %}
@@ -19,22 +19,22 @@
 
         {{ form_start(form, {attr: {class: 'search', novalidate: 'novalidate' }}) }}
 
-        <div class="form-group form-groups-inline flush--bottom">
+        <div class="govuk-form-group form-groups-inline flush--bottom">
             {{ form_known_date(form.startDate, 'statsPage.form.fromDate', {
                 'hintText': 'statsPage.form.fromDate.hint'
             }) }}
         </div>
-        <div class="form-group form-groups-inline flush--bottom">
+        <div class="govuk-form-group form-groups-inline flush--bottom">
             {{ form_known_date(form.endDate, 'statsPage.form.toDate', {
                 'hintText': 'statsPage.form.toDate.hint'
             }) }}
         </div>
 
-        <div class="form-group">
+        <div class="govuk-form-group">
             {{ form_submit(form.submitAndDownload, (page ~ '.form.submitAndDownload'), {
                 'buttonClass': 'behat-link-submit-and-download'
             }) }}
-            <a href="{{ path('admin_stats') }}" class="button-link">{{ 'homeForm.clear' | trans }}</a>
+            <a href="{{ path('admin_stats') }}" class="govuk-link button-link">{{ 'homeForm.clear' | trans }}</a>
         </div>
         {{ form_end(form) }}
 
