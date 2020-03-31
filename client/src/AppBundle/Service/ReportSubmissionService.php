@@ -10,7 +10,7 @@ use AppBundle\Exception\ReportSubmissionDocumentsNotDownloadableException;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\FileUploader;
 use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
+use AppBundle\Service\Mailer\MailSenderInterface;
 use Psr\Log\LoggerInterface;
 use Twig\Environment;
 
@@ -40,7 +40,7 @@ class ReportSubmissionService
     private $wkhtmltopdf;
 
     /**
-     * @var MailSender
+     * @var MailSenderInterface
      */
     private $mailSender;
 
@@ -70,7 +70,7 @@ class ReportSubmissionService
         RestClient $restClient,
         LoggerInterface $logger,
         MailFactory $mailFactory,
-        MailSender $mailSender,
+        MailSenderInterface $mailSender,
         WkHtmlToPdfGenerator $wkhtmltopdf
     )
     {
