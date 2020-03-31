@@ -1,7 +1,10 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
-{% asset 'overview' %}
+
+{% block javascripts %}
+    <script src="{{ 'javascripts/overview.js'| assetUrl }}"></script>
+{% endblock %}
 
 {% set translationDomain = "report-overview" %}
 {% trans_default_domain translationDomain %}
@@ -309,7 +312,9 @@
                 </fieldset>
             </div>
 
-            <a id="edit-report-review" class="govuk-button push--top behat-link-edit-report-review" href="{{ path('report_review', {'reportId': report.id}) }}" data-module="govuk-button">{{ 'continue' | trans({}, 'common') }}</a>
+            <a id="edit-report-review" class="push--top behat-link-edit-report-review" href="{{ path('report_review', {'reportId': report.id}) }}">
+                <button id="edit-report-review-button" disabled="disabled" aria-disabled="true" class="govuk-button govuk-button--disabled">{{ 'continue' | trans({}, 'common') }}</button>
+            </a>
 
         {% endif %}
 
