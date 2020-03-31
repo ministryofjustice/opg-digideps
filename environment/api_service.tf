@@ -68,6 +68,7 @@ locals {
       "protocol": "tcp"
     }],
     "volumesFrom": [],
+    "stopTimeout": 60,
     "healthCheck": {
       "command": [
         "CMD-SHELL",
