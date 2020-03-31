@@ -182,7 +182,11 @@
                         </td>
                         {% if currentTab == 'archived' %}
                             <td class="govuk-table__cell">
-                                <span title="{{ reportSubmission.archivedBy.firstname }} {{ reportSubmission.archivedBy.lastname }}">{{ reportSubmission.archivedBy.firstname | first }}{{ reportSubmission.archivedBy.lastname | first }}</span>
+                                {% if reportSubmission.archivedBy %}
+                                    <span title="{{ reportSubmission.archivedBy.firstname }} {{ reportSubmission.archivedBy.lastname }}">{{ reportSubmission.archivedBy.firstname | first }}{{ reportSubmission.archivedBy.lastname | first }}</span>
+                                {% else %}
+                                    <span title="{{ 'page.resultsTable.automaticallyArchived' | trans }}">-</span>
+                                {% endif %}
                             </td>
                         {% endif %}
                     </tr>

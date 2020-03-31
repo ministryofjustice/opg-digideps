@@ -24,6 +24,7 @@ page:
       submitted: Submitted
       user: User
     noDocumentsFound: No documents found
+    automaticallyArchived: Automatically archived by automation
   table:
     rows:
       documents: "{0} No documents | {1} 1 document | ]1,Inf[ %count% documents"
