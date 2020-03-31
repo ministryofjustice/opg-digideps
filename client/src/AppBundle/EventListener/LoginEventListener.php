@@ -48,7 +48,7 @@ class LoginEventListener
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        $redirectUrl = $this->redirector->getFirstPageAfterLogin();
+        $redirectUrl = $this->redirector->getFirstPageAfterLogin($event->getRequest()->getSession());
 
         $this->redirector->removeLastAccessedUrl(); //avoid this URL to be used a the next login
 

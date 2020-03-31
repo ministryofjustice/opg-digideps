@@ -12,6 +12,7 @@ signedOut:
 signInAdmin:
   htmlTitle: "Admin - sign in | GOV.UK"
   pageTitle: OPG user sign in
+  pageTitleUpdatedPassword: Sign in with your new password
 
 forgottenPassword: Forgotten your password?
 sessionTimeoutOutWarning: There's a problem with your connection to this service. You've been signed out because you've not used the service for more than %time%.
