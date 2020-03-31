@@ -74,6 +74,15 @@ class ReportSubmission
     private $documents;
 
     /**
+     * @var bool
+     *
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"report-submission"})
+     * @ORM\Column(name="archived", type="boolean", options={"default": false}, nullable=false)
+     */
+    private $archived;
+
+    /**
      * @var User|null
      *
      * @JMS\Type("AppBundle\Entity\User")
@@ -186,6 +195,18 @@ class ReportSubmission
         if (!$this->documents->contains(($document))) {
             $this->documents->add($document);
         }
+
+        return $this;
+    }
+
+    public function getArchived(): bool
+    {
+        return $this->archived;
+    }
+
+    public function setArchived(bool $archived): ReportSubmission
+    {
+        $this->archived = $archived;
 
         return $this;
     }
