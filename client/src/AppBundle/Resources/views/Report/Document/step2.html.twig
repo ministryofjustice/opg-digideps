@@ -24,9 +24,16 @@
 
     <h2 class="govuk-heading-m">{{ (page ~ '.selectHeading') | trans }}</h2>
 
-    <div class="text">
-        <p>{{ (page ~ '.selectHelp') | trans }}</p>
-        <p>{{ (page ~ '.selectHint') | trans }}</p>
+    <p>{{ (page ~ '.selectHelp') | trans }}</p>
+
+    <div class="govuk-inset-text">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <strong>{{ (page ~ '.selectHint1') | trans }}</strong>
+                <br>
+                {{ (page ~ '.selectHint2') | trans }}
+             </div>
+        </div>
     </div>
 
     {{ form_start(form, {'attr': {'id': 'upload_form', 'class': 'push-double--bottom'}}) }}
