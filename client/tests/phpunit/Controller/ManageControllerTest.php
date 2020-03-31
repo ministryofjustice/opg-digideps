@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Service\WkHtmlToPdfGenerator;
 use GuzzleHttp\Message\ResponseInterface;
 use Mockery as m;
 
@@ -10,11 +11,11 @@ class ManageControllerTest extends AbstractControllerTestCase
     public static function availabilityProvider()
     {
         return [
-            [true, true,  true,  true,  true,  200, 200, ['OK']], //all good
-            [false, true, true,  true,  true, 200,  500, ['redis-error']],
-            [true, false, true,  true,  true, 200,  500, ['api_errors']],
-            [true, true,  true,  true,  false, 200, 500, ['wkhtmltopdf.isAlive']],
-            [true, true,  true,  true,  false, 500, 500, ['returned HTTP']],
+            [true,  true,  true,  200, 200, ['OK']], //all good
+            [false, true,  true,  200, 500, ['redis-error']],
+            [true,  false, true,  200, 500, ['api_errors']],
+            [true,  true,  false, 200, 500, ['wkhtmltopdf.isAlive']],
+            [true,  true,  false, 500, 500, ['returned HTTP']],
         ];
     }
 
@@ -22,7 +23,7 @@ class ManageControllerTest extends AbstractControllerTestCase
      * @dataProvider availabilityProvider
      */
     public function testAvailability(
-        $redisHealthy, $apiHealthy, $smtpDefault, $smtpSecure, $wkhtmltopdfError, $clamReturnCode,
+        $redisHealthy, $apiHealthy, $wkhtmltopdfError, $clamReturnCode,
         $statusCode, array $mustContain)
     {
         $container = $this->client->getContainer();
@@ -43,29 +44,11 @@ class ManageControllerTest extends AbstractControllerTestCase
             'errors' => $apiHealthy ? '' : 'api_errors',
         ]);
 
-        // smtp mock
-        $smtpMock = m::mock('Swift_Transport');
-        if ($smtpDefault) {
-            $smtpMock->shouldReceive('start')->atLeast(1)->shouldReceive('stop')->atLeast(1);
-        } else {
-            $smtpMock->shouldReceive('start')->andThrow(new \RuntimeException('sd-error'));
-        }
-        $container->set('mailer.transport.smtp.default', $smtpMock);
-
-        // smtp secure mock
-        $secureSmtpMock = m::mock('Swift_Transport');
-        if ($smtpSecure) {
-            $secureSmtpMock->shouldReceive('start')->atLeast(1)->shouldReceive('stop')->atLeast(1);
-        } else {
-            $secureSmtpMock->shouldReceive('start')->andThrow(new \RuntimeException('ss-error'));
-        }
-        $container->set('mailer.transport.smtp.default', $secureSmtpMock);
-
         // pdf mock
         $wkhtmltopdfErrorMock = m::mock('AppBundle\Service\WkHtmlToPdfGenerator')
             ->shouldReceive('isAlive')->andReturn($wkhtmltopdfError)
         ->getMock();
-        $container->set('wkhtmltopdf', $wkhtmltopdfErrorMock);
+        $container->set(WkHtmlToPdfGenerator::class, $wkhtmltopdfErrorMock);
 
         // clamAV mock
         $response = m::mock(ResponseInterface::class)
