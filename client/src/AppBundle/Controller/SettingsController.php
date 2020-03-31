@@ -61,7 +61,7 @@ class SettingsController extends AbstractController
             $this->getRestClient()->put('user/' . $user->getId() . '/set-password', json_encode([
                 'password_plain' => $plainPassword,
             ]));
-            $request->getSession()->getFlashBag()->add('notice', 'Password edited');
+            $request->getSession()->set('login-context', 'password-update');
 
             $successRoute = $this->getUser()->isDeputyOrg() ? 'org_settings' : 'user_password_edit_done';
             return $this->redirect($this->generateUrl($successRoute));

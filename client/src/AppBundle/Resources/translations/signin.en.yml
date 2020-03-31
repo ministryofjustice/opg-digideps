@@ -1,6 +1,8 @@
 signIn:
   htmlTitle: "Deputy report - sign in | GOV.UK"
   pageTitle: Sign in
+  pageTitleNewPassword: Sign in to your new account
+  pageTitleUpdatedPassword: Sign in with your new password
 
 signedOut:
   pageTitle: You are now signed out
