@@ -3,6 +3,8 @@
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
 {% set translationDomain = "report-documents" %}
+{% set page = "attachPage" %}
+
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
@@ -18,16 +20,26 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
+    <h2 class="govuk-heading-m">{{ (page ~ '.step1Heading') | trans }}</h2>
+
+    <div class="govuk-inset-text">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                {{ (page ~ '.selectHint1') | trans }}
+                <br>
+                {{ (page ~ '.selectHint2') | trans }}
+            </div>
+        </div>
+    </div>
+
     {% if step == 1 %}
         <div class="form-section push--bottom">
             <div class="form-group flush--bottom {% if not form.wishToProvideDocumentation.vars.valid %}form-group-error{% endif %}">
                 {{ form_checkbox_group(form.wishToProvideDocumentation, 'form.wishToProvideDocumentation', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
-                    'legendClass' : 'form-label-bold',
-                    'legendText' : 'stepPage.form.wishToUploadDocumentation.label' | trans(transOptions, translationDomain),
+                    'legendClass' : 'govuk-fieldset__legend--m'
                 }) }}
-
             </div>
         </div>
 
@@ -38,4 +50,3 @@
     {{ form_end(form) }}
 
 {% endblock %}
-
