@@ -1,6 +1,7 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
+{% asset 'overview' %}
 
 {% set translationDomain = "report-overview" %}
 {% trans_default_domain translationDomain %}
@@ -290,9 +291,23 @@
             <div class="push--top">
                 {{ macros.notification('info', 'previewNotice' | trans()) }}
             </div>
+
             <a id="edit-report-preview" class="govuk-button behat-link-edit-report-preview" href="{{ path('report_review', {'reportId': report.id}) }}" data-module="govuk-button">{{ 'options.previewReport' | trans() }}</a>
 
         {% else %}
+
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="confirmReview" name="confirmReview" type="checkbox">
+                            <label class="govuk-label govuk-checkboxes__label" for="confirmReview">
+                                I've reviewed the sections marked above and added all the information I'm able to.
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
 
             <a id="edit-report-review" class="govuk-button push--top behat-link-edit-report-review" href="{{ path('report_review', {'reportId': report.id}) }}" data-module="govuk-button">{{ 'continue' | trans({}, 'common') }}</a>
 
