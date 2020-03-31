@@ -72,15 +72,16 @@ class ReportSubmissionController extends AbstractController
             return $s->isDownloadable();
         }));
 
-        $isNewPage = $currentFilters['status'] == 'new';
+        if ($currentFilters['status'] === 'archived') {
+            $postActions = [self::ACTION_DOWNLOAD];
+        } else {
+            $postActions = [self::ACTION_DOWNLOAD, self::ACTION_ARCHIVE];
+        }
 
         return [
             'filters' => $currentFilters,
             'records' => $records,
-            'postActions' => $isNewPage ? [
-                self::ACTION_DOWNLOAD,
-                self::ACTION_ARCHIVE,
-            ] : [self::ACTION_DOWNLOAD],
+            'postActions' => $postActions,
             'counts'  => [
                 'new'      => $ret['counts']['new'],
                 'pending'  => $ret['counts']['pending'],
