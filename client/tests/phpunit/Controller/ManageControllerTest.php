@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use Alphagov\Notifications\Client as NotifyClient;
 use AppBundle\Service\Availability\NotifyAvailability;
 use GuzzleHttp\Message\ResponseInterface;
 use Mockery as m;
@@ -61,7 +60,7 @@ class ManageControllerTest extends AbstractControllerTestCase
         $wkhtmltopdfErrorMock = m::mock('AppBundle\Service\WkHtmlToPdfGenerator')
             ->shouldReceive('isAlive')->andReturn($wkhtmltopdfError)
         ->getMock();
-        $container->set('wkhtmltopdf', $wkhtmltopdfErrorMock);
+        $container->set(WkHtmlToPdfGenerator::class, $wkhtmltopdfErrorMock);
 
         // clamAV mock
         $response = m::mock(ResponseInterface::class)
