@@ -1,8 +1,7 @@
 Feature: Enabling and disabling NDR for Lay deputies
 
   Scenario: Enabling and disabling NDR from admin toggles the availability of the NDR and Report accordingly
-    Given emails are sent from "admin" area
-    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And there is an activated "Lay Deputy" user with NDR "disabled" and email "red-squirrel@publicguardian.gov.uk" and password "Abcd1234"
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
 

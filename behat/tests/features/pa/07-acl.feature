@@ -96,7 +96,6 @@ Feature: PA cannot access other's PA's reports and clients
 
   Scenario: Admin activates PA Org 1 deputy
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And emails are sent from "admin" area
     And the following users exist:
       | ndr | deputyType | firstName | lastName | email | postCode | activated |
       | disabled | PA | Org1 Case | Worker | behat-pa-org1@pa-org1.gov.uk | SW1 | true |
@@ -105,7 +104,6 @@ Feature: PA cannot access other's PA's reports and clients
 
   Scenario: Admin activates PA Org 2 deputy
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And emails are sent from "admin" area
     And the following users exist:
       | ndr | deputyType | firstName | lastName | email | postCode | activated |
       | disabled | PA | Org2 Case | Worker | behat-pa-org2@pa-org2.gov.uk | SW1 | true |

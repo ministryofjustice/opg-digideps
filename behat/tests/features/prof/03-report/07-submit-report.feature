@@ -43,8 +43,7 @@ Feature: Report submit (client 31000010)
         And I should not see the link "edit-deputy-contact"
 
     Scenario: 102-5 report submission
-        Given emails are sent from "deputy" area
-        And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "pa-report-open" in the "client-31000010" region
         And I click on "edit-report_submit"
         Then each text should be present in the corresponding region:

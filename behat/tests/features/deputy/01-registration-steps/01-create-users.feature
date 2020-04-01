@@ -27,8 +27,7 @@ Feature: deputy / user / add user
 
   @deputy
   Scenario: add deputy user from registration page
-    Given emails are sent from "deputy" area
-    When I am on "/register"
+    Given I am on "/register"
     And I add the following users to CASREC:
       | Case     | Surname | Deputy No | Dep Surname | Dep Postcode | Typeofrep |
       | BEHAT001 | Hent    | BEHAT001  | Doe         | P0ST C0D3    | OPG102    |
@@ -46,8 +45,7 @@ Feature: deputy / user / add user
 
   @ndr
   Scenario: add deputy user (ndr)
-    Given emails are sent from "admin" area
-    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
       # assert form OK
     When I create a new "NDR-enabled" "Lay Deputy" user "John NDR" "Doe NDR" with email "behat-user-ndr@publicguardian.gov.uk" and postcode "AB12CD"
     Then I should see "behat-user-ndr@publicguardian.gov.uk" in the "users" region

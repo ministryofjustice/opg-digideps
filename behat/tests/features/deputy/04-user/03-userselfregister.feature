@@ -3,7 +3,6 @@ Feature: User Self Registration
   @deputy
   Scenario: A user can enter their self registration information
     Given I truncate the users from CASREC:
-    And emails are sent from "deputy" area
       #
       # Form all empty
       #
@@ -149,8 +148,7 @@ Feature: User Self Registration
 
   @deputy
   Scenario: A user can self register and activate
-    Given emails are sent from "deputy" area
-    And I add the following users to CASREC:
+    Given I add the following users to CASREC:
       | Case     | Surname      | Deputy No | Dep Surname | Dep Postcode | Typeofrep |
       | 11112233 | Cross-Lens   | D001      | Lens      | SW1 3RF      | OPG102    |
     And I am on "/register"
