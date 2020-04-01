@@ -80,7 +80,7 @@ class ReportSubmissionService
         $this->mailFactory =$mailFactory;
         $this->templating = $templating;
         $this->wkhtmltopdf = $wkhtmltopdf;
-        $this->logger =$logger;
+        $this->logger = $logger;
         $this->csvGenerator = $csvGenerator;
     }
 
