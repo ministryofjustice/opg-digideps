@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use Alphagov\Notifications\Client as NotifyClient;
+use AppBundle\Service\Availability\NotifyAvailability;
 use GuzzleHttp\Message\ResponseInterface;
 use Mockery as m;
 
@@ -10,11 +12,12 @@ class ManageControllerTest extends AbstractControllerTestCase
     public static function availabilityProvider()
     {
         return [
-            [true, true,  true,  200, 200, ['OK']], //all good
-            [false, true, true, 200,  500, ['redis-error']],
-            [true, false, true, 200,  500, ['api_errors']],
-            [true, true,  false, 200, 500, ['wkhtmltopdf.isAlive']],
-            [true, true,  false, 500, 500, ['returned HTTP']],
+            [true, true,  true, true,  200, 200, ['OK']], //all good
+            [false, true, true, true, 200,  500, ['redis-error']],
+            [true, false, true, true, 200,  500, ['api_errors']],
+            [true, true, false, false, 200, 500, ['invalid key']],
+            [true, true,  true, false, 200, 500, ['wkhtmltopdf.isAlive']],
+            [true, true,  true, false, 500, 500, ['returned HTTP']],
         ];
     }
 
@@ -22,7 +25,7 @@ class ManageControllerTest extends AbstractControllerTestCase
      * @dataProvider availabilityProvider
      */
     public function testAvailability(
-        $redisHealthy, $apiHealthy, $wkhtmltopdfError, $clamReturnCode,
+        $redisHealthy, $apiHealthy, $notifyHealthy, $wkhtmltopdfError, $clamReturnCode,
         $statusCode, array $mustContain)
     {
         $container = $this->client->getContainer();
@@ -42,6 +45,17 @@ class ManageControllerTest extends AbstractControllerTestCase
             'healthy' => $apiHealthy,
             'errors' => $apiHealthy ? '' : 'api_errors',
         ]);
+
+        // notify mock
+        $this->injectProphecyService(NotifyAvailability::class, function ($availability) use ($notifyHealthy) {
+            $availability->getName()->shouldBeCalled()->willReturn();
+            $availability->isHealthy()->shouldBeCalled()->willReturn($notifyHealthy);
+            $availability->getCustomMessage()->willReturn('');
+
+            if (!$notifyHealthy) {
+                $availability->getErrors()->shouldBeCalled()->willReturn('invalid key');
+            }
+        });
 
         // pdf mock
         $wkhtmltopdfErrorMock = m::mock('AppBundle\Service\WkHtmlToPdfGenerator')
