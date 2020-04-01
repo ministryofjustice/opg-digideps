@@ -16,8 +16,7 @@ Feature: Add PA users and activate PA user (journey)
 #    And the last email containing a link matching "/user/activate/" should have been sent to "behat-pa1@publicguardian.gov.uk"
 
   Scenario: Activate PA user
-    Given emails are sent from "admin" area
-    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
       # upload PA users
     When I go to admin page "/admin/org-csv-upload"
     When I attach the file "behat-pa.csv" to "admin_upload_file"
@@ -72,8 +71,7 @@ Feature: Add PA users and activate PA user (journey)
     Then I should not see "send-activation-email" in the "user-behat-pa1publicguardiangovuk" region
 
   Scenario: Register PA2 user
-    Given emails are sent from "admin" area
-    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "send-activation-email" in the "user-behat-pa2publicguardiangovuk" region
     And I go to "/logout"
     When I open the activation page for "behat-pa2@publicguardian.gov.uk"
@@ -98,8 +96,7 @@ Feature: Add PA users and activate PA user (journey)
     And I should see the "client-02200001" region
 
   Scenario: Register PA3 user
-    Given emails are sent from "admin" area
-    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "send-activation-email" in the "user-behat-pa3publicguardiangovuk" region
     And I go to "/logout"
     When I open the activation page for "behat-pa3@publicguardian.gov.uk"

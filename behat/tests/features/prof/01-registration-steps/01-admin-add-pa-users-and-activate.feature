@@ -1,8 +1,7 @@
 Feature: Add PROF users and activate PROF user (journey)
 
   Scenario: Activate Prof user
-    Given emails are sent from "admin" area
-    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
        # upload PROF users
     When I go to admin page "/admin/org-csv-upload"
     When I attach the file "behat-prof.csv" to "admin_upload_file"
@@ -50,8 +49,7 @@ Feature: Add PROF users and activate PROF user (journey)
     Then I should not see "send-activation-email" in the "user-behat-prof1publicguardiangovuk" region
 
   Scenario: Register PROF2 user
-    Given emails are sent from "admin" area
-    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "send-activation-email" in the "user-behat-prof2publicguardiangovuk" region
     And I go to "/logout"
     When I open the activation page for "behat-prof2@publicguardian.gov.uk"
@@ -76,8 +74,7 @@ Feature: Add PROF users and activate PROF user (journey)
     And I should see the "client-32000001" region
 
   Scenario: Register PROF3 user
-    Given emails are sent from "admin" area
-    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "send-activation-email" in the "user-behat-prof3publicguardiangovuk" region
     And I go to "/logout"
     When I open the activation page for "behat-prof3@publicguardian.gov.uk"
@@ -102,8 +99,7 @@ Feature: Add PROF users and activate PROF user (journey)
     And I should see the "client-33000001" region
 
   Scenario: Register PROF4 user
-    Given emails are sent from "admin" area
-    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I create a new "NDR-disabled" "Prof Named" user "ABC org" "Administrator" with email "behat-prof-org-1@org-1.co.uk" and postcode "SW1"
     And "behat-prof-org-1@org-1.co.uk" has been added to the "org-1.co.uk" organisation
     And I add the client with case number "03000025" to be deputised by email "behat-prof-org-1@org-1.co.uk"
@@ -125,8 +121,7 @@ Feature: Add PROF users and activate PROF user (journey)
     Then the form should be valid
 
   Scenario: Register PROF5 user
-    Given emails are sent from "admin" area
-    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I create a new "NDR-disabled" "Prof Named" user "ABC org" "Administrator" with email "behat-prof-org-2@org-1.co.uk" and postcode "SW1"
     And I add the client with case number "03000026" to be deputised by email "behat-prof-org-2@org-1.co.uk"
     And I click on "send-activation-email" in the "user-behat-prof-org-2org-1couk" region
@@ -148,8 +143,7 @@ Feature: Add PROF users and activate PROF user (journey)
     Then the form should be valid
 
   Scenario: Register PROF6 user
-    Given emails are sent from "admin" area
-    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I create a new "NDR-disabled" "Prof Named" user "ABC org" "Administrator" with email "behat-prof-org-3@org-2.co.uk" and postcode "SW1"
     And I add the client with case number "03000027" to be deputised by email "behat-prof-org-3@org-2.co.uk"
     And I add the client with case number "03000028" to be deputised by email "behat-prof-org-3@org-2.co.uk"

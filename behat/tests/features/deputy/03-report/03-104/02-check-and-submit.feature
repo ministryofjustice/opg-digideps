@@ -2,8 +2,7 @@ Feature: Report submit
 
     @deputy @deputy-104
     Scenario: submit 104
-        Given emails are sent from "deputy" area
-        And I am logged in as "behat-lay-deputy-104@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-104@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-start, report-submit, declaration-page"
         And I fill in the following:
             | report_declaration_agree | 1 |

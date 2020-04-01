@@ -3,7 +3,6 @@ Feature: Codeputy Self Registration
   @deputy
   Scenario: Codeps setup
     Given I truncate the users from CASREC:
-    And emails are sent from "deputy" area
     Given I add the following users to CASREC:
       | Case     | Surname | Deputy No | Dep Surname | Dep Postcode | Typeofrep |
       | 00000000 | Jones   | D000      | Goodby      | AA1 2BB      | OPG102    |
@@ -14,9 +13,8 @@ Feature: Codeputy Self Registration
 
   @deputy
   Scenario: absence of co-deputies section for a client without multiple assigned deputies
-    Given emails are sent from "deputy" area
-    When I am on "/register"
-    And I fill in the following:
+    Given I am on "/register"
+    When I fill in the following:
       | self_registration_firstname       | Jack                                              |
       | self_registration_lastname        | Goodby                                            |
       | self_registration_email_first     | behat-jack.goodby-noncodep@digital.justice.gov.uk |
@@ -51,11 +49,9 @@ Feature: Codeputy Self Registration
 
   @deputy
   Scenario: The first co-deputy of a client is able to self register
-    Given emails are sent from "deputy" area
-
     # CORRECT
-    When I am on "/register"
-    And I fill in the following:
+    Given I am on "/register"
+    When I fill in the following:
       | self_registration_firstname       | Jack                                          |
       | self_registration_lastname        | Goodby                                        |
       | self_registration_email_first     | behat-jack.goodby-mld1@digital.justice.gov.uk |
@@ -131,8 +127,7 @@ Feature: Codeputy Self Registration
 
   @deputy
   Scenario: The first co-deputy logs in and sees the deputy area and invites a codeputy
-    Given emails are sent from "deputy" area
-    When I am logged in as "behat-jack.goodby-mld1@digital.justice.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-jack.goodby-mld1@digital.justice.gov.uk" with password "Abcd1234"
     Then the URL should match "/lay"
     And I should see the "codeputies" region
     And I click on "invite-codeputy-button"
@@ -151,9 +146,8 @@ Feature: Codeputy Self Registration
 
   @deputy @ndr
   Scenario: NDR user can see a list of deputies in the codeputy region
-    Given emails are sent from "deputy" area
     # Set up to a register an NDR client with multiple deputies
-    And I add the following users to CASREC:
+    Given I add the following users to CASREC:
       | Case     | Surname | Deputy No | Dep Surname | Dep Postcode | Typeofrep | NDR  |
       | 22222222 | Jones   | D000      | NDR         | AA1 2BB      | OPG102    | true |
       | 22222222 | Jones   | D100      | NDR-2       | AA1 2BB      | OPG102    | true |

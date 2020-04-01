@@ -5,7 +5,6 @@ Feature: Self registration
 
   Background:
     Given the self registration lookup table is empty
-    And emails are sent from "deputy" area
 
   Scenario: Register a deputy from a casrec source
     Given an admin user uploads the "behat-lay-casrec.csv" file into the Lay CSV uploader
@@ -24,4 +23,3 @@ Feature: Self registration
     And I am logged in as "bruce@wayne.com" with password "Abcd1234"
     Then I should be on "/lay"
     And I should see "Hendry"
-
