@@ -29,7 +29,7 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
         });
 
         $this->injectProphecyService(MailSender::class, function($mailSender) {
-            $mailSender->send(new Email())->shouldBeCalled()->willReturn();
+            $mailSender->send(new Email())->shouldBeCalled()->willReturn(true);
         });
 
         $crawler = $this->client->request('GET', "/admin/user-add");
@@ -55,7 +55,7 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
         });
 
         $this->injectProphecyService(MailSender::class, function ($mailSender) {
-            $mailSender->send(new Email())->shouldBeCalled()->willReturn();
+            $mailSender->send(new Email())->shouldBeCalled()->willReturn(true);
         });
 
         $this->injectProphecyService(LoggerInterface::class, function ($logger) {

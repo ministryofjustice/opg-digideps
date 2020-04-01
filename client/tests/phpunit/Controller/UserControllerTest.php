@@ -37,7 +37,7 @@ class UserControllerTest extends AbstractControllerTestCase
                     && strpos($email->getParameters()['activationLink'], "user/activate/$token") !== false;
             }))
             ->shouldBeCalled()
-            ->willReturn();
+            ->willReturn(true);
 
         $this->client->request('GET', "/user/activate/password/send/$token");
         $this->client->followRedirect();
@@ -79,7 +79,7 @@ class UserControllerTest extends AbstractControllerTestCase
                     && strpos($email->getParameters()['activationLink'], 'user/activate/selfregister-token') !== false;
             }))
             ->shouldBeCalled()
-            ->willReturn();
+            ->willReturn(true);
 
         $this->client->submit($button->form(), [
             'self_registration[firstname]' => $data->getFirstname(),
@@ -118,7 +118,7 @@ class UserControllerTest extends AbstractControllerTestCase
                     && strpos($email->getParameters()['resetLink'], 'user/password-reset/test') !== false;
             }))
             ->shouldBeCalled()
-            ->willReturn();
+            ->willReturn(true);
 
         $crawler = $this->client->request('GET', "/password-managing/forgotten");
 

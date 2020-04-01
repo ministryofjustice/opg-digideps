@@ -56,7 +56,7 @@ class CoDeputyControllerTest extends AbstractControllerTestCase
                 && strpos($email->getParameters()['link'], "user/activate/invitation-token") !== false;
             }))
             ->shouldBeCalled()
-            ->willReturn();
+            ->willReturn(true);
 
         $crawler = $this->client->request('GET', '/codeputy/25/add');
         $button = $crawler->selectButton('Send invitation');
@@ -101,7 +101,7 @@ class CoDeputyControllerTest extends AbstractControllerTestCase
                 && strpos($email->getParameters()['link'], "user/activate/invitation-token") !== false;
             }))
             ->shouldBeCalled()
-            ->willReturn();
+            ->willReturn(true);
 
         $crawler = $this->client->request('GET', "/codeputy/re-invite/$emailAddress");
         $button = $crawler->selectButton('Resend invitation');
