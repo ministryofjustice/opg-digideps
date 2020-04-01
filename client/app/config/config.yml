@@ -53,15 +53,6 @@ twig:
     form_themes:
         - 'AppBundle:Form:fields.html.twig'
 
-
-# Swiftmailer Configuration
-swiftmailer:
-    transport: smtp
-    host:      localhost
-    username:  ~
-    password:  ~
-    spool:     { type: memory }
-
 snc_redis:
     clients:
         default:
