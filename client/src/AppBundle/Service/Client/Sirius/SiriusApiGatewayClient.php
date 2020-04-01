@@ -65,11 +65,13 @@ class SiriusApiGatewayClient
         $multipart = new MultipartStream([
             [
                 'name' => 'report',
-                'contents' => $reportJson
+                'contents' => $reportJson,
+                'headers' => ['Content-Type' => 'application/vnd.opg-data.v1+json']
             ],
             [
                 'name' => 'report_file',
-                'contents' => base64_encode($content)
+                'contents' => base64_encode($content),
+                'headers' => ['Content-Type' => 'application/pdf']
             ],
         ]);
 
@@ -81,7 +83,8 @@ class SiriusApiGatewayClient
             'multipart/form-data'
         );
 
-        return $this->httpClient->send($signedRequest);
+        print_r((string) $signedRequest->getBody());
+        return $this->httpClient->send($signedRequest, ['debug' => true]);
     }
 
     /**
@@ -115,7 +118,8 @@ class SiriusApiGatewayClient
             'multipart/form-data'
         );
 
-        return $this->httpClient->send($signedRequest);
+        print_r((string) $signedRequest->getBody());
+        return $this->httpClient->send($signedRequest, ['debug' => true]);
     }
 
     /**
