@@ -11,7 +11,7 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
@@ -36,7 +36,7 @@
         <div class="text opg-indented-block">
             <p>{{ (page ~ '.whatisdecisionPara1' ~ append104) | trans(transOptions) }}</p>
             <p>{{ (page ~ '.whatisdecisionPara2' ~ append104) | trans(transOptions) }}</p>
-            <ul class="list list-bullet">
+            <ul class="govuk-list govuk-list--bullet">
                 <li>{{ (page ~ '.whatisdecisionListItem1' ~ append104) | trans(transOptions) }}</li>
                 <li>{{ (page ~ '.whatisdecisionListItem2' ~ append104) | trans(transOptions) }}</li>
                 <li>{{ (page ~ '.whatisdecisionListItem3' ~ append104) | trans(transOptions) }}</li>
@@ -54,8 +54,7 @@
         <p class="text">{{ (page ~ '.description2') | trans }}</p>
     {% endif %}
 
-    <a href="{{ path('decisions_mental_capacity', { 'reportId': report.id}) }}"
-       class="button button-start behat-link-start">{{ (page ~ '.startButton') | trans }}</a>
+    {{ macros.startSectionButton(path('decisions_mental_capacity', { 'reportId': report.id}), (page ~ '.startButton') | trans) }}
 
     {# Pagination #}
     {% include 'AppBundle:Report:_nextprevious.html.twig' with {

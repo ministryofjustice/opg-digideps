@@ -7,7 +7,7 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
@@ -17,19 +17,19 @@
 
 {% block pageContent %}
 
-    <h3 class="heading-small push-half--bottom">
+    <h3 class="govuk-heading-s push-half--bottom">
         {{ (page ~ '.form.profDeputyCostsEstimateHasMoreInfo.label') | trans }}
     </h3>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <div class="form-section push--bottom">
+    <div class="push--bottom">
 
-        <div class="form-group push--bottom {% if not form.profDeputyCostsEstimateHasMoreInfo.vars.valid %}form-group-error{% endif %}">
+        <div class="govuk-form-group push--bottom {% if not form.profDeputyCostsEstimateHasMoreInfo.vars.valid %}govuk-form-group--error{% endif %}">
             {{ form_checkbox_group(form.profDeputyCostsEstimateHasMoreInfo, 'form.profDeputyCostsEstimateHasMoreInfo', {
                 'useFormGroup': false,
                 'fieldSetClass' : 'inline',
-                'legendClass' : 'form-label-bold',
+                'legendClass' : 'govuk-label--s',
                 'items': [
                     {'dataTarget': 'more-info-textarea' }
                 ]

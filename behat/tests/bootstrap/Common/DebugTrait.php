@@ -1,6 +1,6 @@
 <?php
 
-namespace DigidepsBehat;
+namespace DigidepsBehat\Common;
 
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Tester\Result\ExecutedStepResult;

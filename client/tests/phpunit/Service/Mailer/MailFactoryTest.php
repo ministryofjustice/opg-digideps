@@ -86,36 +86,127 @@ class MailFactoryTest extends TestCase
      */
     public function createActivationEmail()
     {
-        $this->router->generate('homepage', [])->shouldBeCalled()->willReturn('/homepage');
         $this->router->generate('user_activate', [
             'action' => 'activate',
             'token'  => 'regToken'
-        ])->shouldBeCalled()->willReturn('/user-activate/regToken');
+        ])->shouldBeCalled()->willReturn('/activate/regToken');
 
         $this->translator->trans('activation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
-        $this->translator->trans('activation.subject', [], 'email')->shouldBeCalled()->willReturn('Activation Subject');
 
-        $expectedViewParams = [
-            'name'             => 'Joe Bloggs',
-            'domain'           => 'https://front.base.url/homepage',
-            'link'             => 'https://front.base.url/user-activate/regToken',
-            'tokenExpireHours' => 48,
-            'homepageUrl'      => 'https://front.base.url/homepage',
-            'recipientRole'    => 'default'
-        ];
-
-        $this->templating->render('AppBundle:Email:user-activate.html.twig', $expectedViewParams)->shouldBeCalled()->willReturn('<html>Rendered body</html>');
-        $this->templating->render('AppBundle:Email:user-activate.text.twig', $expectedViewParams)->shouldBeCalled()->willReturn('Rendered body');
+        $expectedTemplateParams = array_merge($this->getContactParameters(), [
+            'activationLink' => 'https://front.base.url/activate/regToken',
+        ]);
 
         $email = ($this->generateSUT())->createActivationEmail($this->layDeputy);
 
-        self::assertEquals('digideps+from@digital.justice.gov.uk', $email->getFromEmail());
+        self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
         self::assertEquals('OPG', $email->getFromName());
         self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
-        self::assertEquals('Joe Bloggs', $email->getToName());
-        self::assertEquals('Activation Subject', $email->getSubject());
-        self::assertStringContainsString('<html>Rendered body</html>', $email->getBodyHtml());
-        self::assertStringContainsString('Rendered body', $email->getBodyText());
+        self::assertEquals(MailFactory::ACTIVATION_TEMPLATE_ID, $email->getTemplate());
+        self::assertEquals($expectedTemplateParams, $email->getParameters());
+    }
+
+    /**
+     * @test
+     */
+    public function profActivationEmailHasProfContacts()
+    {
+        $this->router->generate('user_activate', [
+            'action' => 'activate',
+            'token'  => 'regToken'
+        ])->shouldBeCalled()->willReturn('/activate/regToken');
+
+        $this->translator->trans('activation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+        $this->translator->trans('profSupportEmail', [], 'common')->shouldBeCalled()->willReturn('prof-email@publicguardian.gov.uk');
+        $this->translator->trans('helplineProf', [], 'common')->shouldBeCalled()->willReturn('07987654321');
+
+        $profDeputy = $this->generateUser()->setRoleName(User::ROLE_PROF_ADMIN);
+
+        $email = ($this->generateSUT())->createActivationEmail($profDeputy);
+
+        self::assertEquals('prof-email@publicguardian.gov.uk', $email->getParameters()['email']);
+        self::assertEquals('07987654321', $email->getParameters()['phone']);
+    }
+
+    /**
+     * @test
+     */
+    public function paActivationEmailHasPaContacts()
+    {
+        $this->router->generate('user_activate', [
+            'action' => 'activate',
+            'token'  => 'regToken'
+        ])->shouldBeCalled()->willReturn('/activate/regToken');
+
+        $this->translator->trans('activation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+        $this->translator->trans('paSupportEmail', [], 'common')->shouldBeCalled()->willReturn('pa-email@publicguardian.gov.uk');
+        $this->translator->trans('helplinePA', [], 'common')->shouldBeCalled()->willReturn('07777777777');
+
+        $paDeputy = $this->generateUser()->setRoleName(User::ROLE_PA_ADMIN);
+
+        $email = ($this->generateSUT())->createActivationEmail($paDeputy);
+
+        self::assertEquals('pa-email@publicguardian.gov.uk', $email->getParameters()['email']);
+        self::assertEquals('07777777777', $email->getParameters()['phone']);
+    }
+
+    /**
+     * @test
+     */
+    public function createInvitationEmailLayUser()
+    {
+        $this->router->generate('user_activate', [
+            'action' => 'activate',
+            'token'  => 'regToken'
+        ])->shouldBeCalled()->willReturn('/activate/regToken');
+
+        $this->translator->trans('activation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+
+        $expectedTemplateParams = array_merge($this->getContactParameters(), [
+            'link' => 'https://front.base.url/activate/regToken',
+            'deputyName' => 'Buford Mcfarling'
+        ]);
+
+        $email = ($this->generateSUT())->createInvitationEmail($this->layDeputy, 'Buford Mcfarling');
+
+        self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
+        self::assertEquals('OPG', $email->getFromName());
+        self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
+        self::assertEquals(MailFactory::INVITATION_LAY_TEMPLATE_ID, $email->getTemplate());
+        self::assertEquals($expectedTemplateParams, $email->getParameters());
+    }
+
+    /**
+     * @test
+     */
+    public function createInvitationEmailOrgUser()
+    {
+        $profDeputy = $this->generateUser()
+            ->setEmail('l.wolny@somesolicitors.org')
+            ->setRoleName('ROLE_PROF_TEAM_MEMBER');
+
+        $this->router->generate('user_activate', [
+            'action' => 'activate',
+            'token'  => 'regToken'
+        ])->shouldBeCalled()->willReturn('/activate/regToken');
+
+        $this->translator->trans('activation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+        $this->translator->trans('profSupportEmail', [], 'common')->shouldBeCalled()->willReturn('prof-email@publicguardian.gov.uk');
+        $this->translator->trans('helplineProf', [], 'common')->shouldBeCalled()->willReturn('07987654321');
+
+        $expectedTemplateParams = [
+            'link' => 'https://front.base.url/activate/regToken',
+            'email' => 'prof-email@publicguardian.gov.uk',
+            'phone' => '07987654321'
+        ];
+
+        $email = ($this->generateSUT())->createInvitationEmail($profDeputy);
+
+        self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
+        self::assertEquals('OPG', $email->getFromName());
+        self::assertEquals('l.wolny@somesolicitors.org', $email->getToEmail());
+        self::assertEquals(MailFactory::INVITATION_ORG_TEMPLATE_ID, $email->getTemplate());
+        self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 
     /**
@@ -139,12 +230,12 @@ class MailFactoryTest extends TestCase
             'clientFullname' => 'Joanne Bloggs',
             'deputyFullname' => 'Joe Bloggs',
             'orgIntro' => '',
-            'startDate' => '24/03/2017',
-            'endDate' => '23/03/2018',
+            'startDate' => '24 March 2017',
+            'endDate' => '23 March 2018',
             'homepageURL' => 'https://front.base.url',
-            'newStartDate' => '24/03/2018',
-            'newEndDate' => '23/03/2019',
-            'EndDatePlus1' => '24/03/2019',
+            'newStartDate' => '24 March 2018',
+            'newEndDate' => '23 March 2019',
+            'EndDatePlus1' => '24 March 2019',
             'PFA' => substr($reportType, 0, 3 ) === '104' ? 'no' : 'yes',
             'lay' => 'yes'
         ];
@@ -191,12 +282,12 @@ class MailFactoryTest extends TestCase
             'clientFullname' => 'Joanne Bloggs',
             'deputyFullname' => 'Joe Bloggs',
             'orgIntro' => 'Client: Joanne Bloggs Case number: 12345678',
-            'startDate' => '24/03/2017',
-            'endDate' => '23/03/2018',
+            'startDate' => '24 March 2017',
+            'endDate' => '23 March 2018',
             'homepageURL' => 'https://front.base.url',
-            'newStartDate' => '24/03/2018',
-            'newEndDate' => '23/03/2019',
-            'EndDatePlus1' => '24/03/2019',
+            'newStartDate' => '24 March 2018',
+            'newEndDate' => '23 March 2019',
+            'EndDatePlus1' => '24 March 2019',
             'PFA' => substr($reportType, 0, 3 ) === '104' ? 'no' : 'yes',
             'lay' => 'no'
         ];
@@ -239,9 +330,9 @@ class MailFactoryTest extends TestCase
             'clientFullname' => 'Joanne Bloggs',
             'deputyFullname' => 'Joe Bloggs',
             'homepageURL' => 'https://front.base.url',
-            'startDate' => '24/03/2018',
-            'endDate' => '23/03/2019',
-            'EndDatePlus1' => '24/03/2019',
+            'startDate' => '24 March 2018',
+            'endDate' => '23 March 2019',
+            'EndDatePlus1' => '24 March 2019',
             'PFA' => 'yes',
         ];
 
@@ -249,29 +340,32 @@ class MailFactoryTest extends TestCase
     }
 
     /**
-     * @todo rename once we drop Notify from the end of the function
      * @test
      */
-    public function createResetPasswordEmailNotify()
+    public function createResetPasswordEmail()
     {
         $this->router->generate('user_activate', [
             'action' => 'password-reset',
             'token'  => 'regToken'
         ])->shouldBeCalled()->willReturn('/reset-password/regToken');
 
-        $this->translator->trans('resetPassword.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
-        $this->translator->trans('resetPassword.subject', [], 'email')->shouldBeCalled()->willReturn('Reset Password Subject');
+        $this->router->generate('password_forgotten', [])
+            ->shouldBeCalled()
+            ->willReturn('/password-managing/forgotten');
 
-        $email = ($this->generateSUT())->createResetPasswordEmailNotify($this->layDeputy);
+        $this->translator->trans('resetPassword.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+
+        $expectedTemplateParams = array_merge($this->getContactParameters(), [
+            'resetLink' => 'https://front.base.url/reset-password/regToken',
+            'recreateLink' => 'https://front.base.url/password-managing/forgotten',
+        ]);
+
+        $email = ($this->generateSUT())->createResetPasswordEmail($this->layDeputy);
 
         self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
         self::assertEquals('OPG', $email->getFromName());
         self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
-        self::assertEquals('Joe Bloggs', $email->getToName());
-        self::assertEquals('Reset Password Subject', $email->getSubject());
         self::assertEquals(MailFactory::RESET_PASSWORD_TEMPLATE_ID, $email->getTemplate());
-
-        $expectedTemplateParams = ['resetLink' => 'https://front.base.url/reset-password/regToken'];
         self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 
@@ -458,5 +552,16 @@ class MailFactoryTest extends TestCase
             ->setCounty('Notrealingham')
             ->setCountry('GB')
             ->setPhone('01215553333');
+    }
+
+    private function getContactParameters(): array
+    {
+        $this->translator->trans('layDeputySupportEmail', [], 'common')->shouldBeCalled()->willReturn('help-email@publicguardian.gov.uk');
+        $this->translator->trans('helpline', [], 'common')->shouldBeCalled()->willReturn('0123456789');
+
+        return [
+            'email' => 'help-email@publicguardian.gov.uk',
+            'phone' => '0123456789',
+        ];
     }
 }

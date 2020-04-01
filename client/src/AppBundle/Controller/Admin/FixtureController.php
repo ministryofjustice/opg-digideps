@@ -6,6 +6,7 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Form\Admin\Fixture\CourtOrderFixtureType;
+use AppBundle\Service\Client\RestClient;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -183,5 +184,22 @@ class FixtureController extends AbstractController
         }
 
         return new Response();
+    }
+
+    /**
+     * @Route("/user-registration-token", methods={"GET"})
+     * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
+     */
+    public function getUserRegistrationToken(Request $request, KernelInterface $kernel, RestClient $restClient)
+    {
+        if ($kernel->getEnvironment() === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
+        $email = $request->query->get('email');
+
+        $user = $restClient->get("user/get-one-by/email/$email", 'User');
+
+        return new Response($user->getRegistrationToken());
     }
 }

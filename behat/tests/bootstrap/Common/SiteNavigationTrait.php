@@ -47,9 +47,15 @@ trait SiteNavigationTrait
      */
     public function iOpenChecklistForClient($period, $caseNumber)
     {
-        $this->visitAdminPath('/');
-        $this->clickOnBehatLink('admin-client-search');
-        $this->clickOnBehatLink('client-detail-' . $caseNumber);
+        $this->visitAdminPath("/admin/client/case-number/$caseNumber/details");
         $this->clickLinkInsideElement('checklist', 'report-' . $period);
+    }
+
+    /**
+     * @When I visit the client page for :caseNumber
+     */
+    public function iVisitClientPageOnAdmin($caseNumber)
+    {
+        $this->visitAdminPath("/admin/client/case-number/$caseNumber/details");
     }
 }

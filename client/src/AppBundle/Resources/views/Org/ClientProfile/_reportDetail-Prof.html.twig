@@ -9,11 +9,11 @@
     {% set incompleteAppend = '_incomplete' %}
 {% endif %}
 
-<div class="grid-row">
-    <div class="column-one-half">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
         <dl class="push--bottom">
             <dt>
-                <strong class="bold">{{ 'reportStatus' | trans() }}</strong>
+                <strong class="govuk-!-font-weight-bold">{{ 'reportStatus' | trans() }}</strong>
             </dt>
             <dd class="push--bottom">
                 <span class="govuk-tag {{ (report.isUnsubmitted ? 'notFinished' : reportStatus.state) | status_to_tag_css }}">
@@ -21,8 +21,8 @@
                 </span>
             </dd>
 
-            <dt class="visually-hidden">
-                <strong class="bold">{{ 'reportOptions' | trans() }}</strong>
+            <dt class="govuk-visually-hidden">
+                <strong class="govuk-!-font-weight-bold">{{ 'reportOptions' | trans() }}</strong>
             </dt>
             <dd class="push--bottom">
                 {% if report.submitted == false and reportStatus.isReadyToSubmit and report.isDue %}
@@ -39,10 +39,10 @@
         </dl>
     </div>
 
-    <div class="column-one-half">
+    <div class="govuk-grid-column-one-half">
         <dl class="push--bottom">
             <dt>
-                <strong class="bold">{{ 'reportingPeriod' | trans() }}</strong>
+                <strong class="govuk-!-font-weight-bold">{{ 'reportingPeriod' | trans() }}</strong>
             </dt>
             <dd class="push--bottom">
                 <span class="push--right">{{ report.startDate | date(" j F Y") }} to {{ report.endDate | date(" j F Y") }}</span>
@@ -60,16 +60,16 @@
             </details>
 
             <dt>
-                <strong class="bold">{{ 'reportDueDate' | trans() }}</strong>
+                <strong class="govuk-!-font-weight-bold">{{ 'reportDueDate' | trans() }}</strong>
             </dt>
             <dd class="push--bottom">
                 {{ report.dueDate | date(" j F Y") }}<br>
                 {% if report.dueDateDiffDays < 0 %}
-                    <span class="font-xsmall bold text-red">Overdue by {{ report.dueDateDiffDays|abs }} days</span>
+                    <span class="govuk-body-s govuk-!-font-weight-bold text-red">Overdue by {{ report.dueDateDiffDays|abs }} days</span>
                 {% elseif report.dueDateDiffDays == 0 %}
-                    <span class="font-xsmall bold">Due today</span>
+                    <span class="govuk-body-s govuk-!-font-weight-bold">Due today</span>
                 {% elseif report.dueDateDiffDays <= 30 %}
-                    <span class="font-xsmall">Due in {{ report.dueDateDiffDays }} days</span>
+                    <span class="govuk-body-s">Due in {{ report.dueDateDiffDays }} days</span>
                 {% endif %}
             </dd>
         </dl>
@@ -78,13 +78,13 @@
 </div>
 
 <p>
-    <strong class="bold">{{ 'reportSectionsToComplete' | trans() }}</strong>
+    <strong class="govuk-!-font-weight-bold">{{ 'reportSectionsToComplete' | trans() }}</strong>
 </p>
 
 <div id="overview-sections{{ incompleteAppend }}" class="push--bottom">
 
-            <div class="grid-row">
-                <div class="column-one-half">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
                     <ul>
 
                         {% if report.hasSection('decisions') %}
@@ -223,7 +223,7 @@
                     </ul>
                 </div>
 
-                <div class="column-one-half">
+                <div class="govuk-grid-column-one-half">
                     <ul>
 
                         {% if report.hasSection('gifts') %}

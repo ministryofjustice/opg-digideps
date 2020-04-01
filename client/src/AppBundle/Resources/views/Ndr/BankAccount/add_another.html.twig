@@ -8,7 +8,7 @@
 
 {% block htmlTitle %}{{ 'addAnotherPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'addAnotherPage.pageTitle' | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(ndr) }}{% endblock %}
 
@@ -18,7 +18,7 @@
 
     {{ form_checkbox_group(form.addAnother, 'addAnotherPage.form.addAnother', {
         'fieldSetClass' : 'inline',
-        'legendClass' : 'form-label-bold'
+        'legendClass' : 'govuk-label--s'
     }) }}
 
     {{ macros.addAnotherSaveButton(form.save) }}

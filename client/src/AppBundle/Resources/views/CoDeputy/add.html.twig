@@ -11,7 +11,6 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
 
 {% block breadcrumbs %}{{ macros.homepage }}{% endblock %}
 
@@ -28,7 +27,7 @@
         'labelText': (page ~ '.submitButton') | trans
     }) }}
 
-    <a href="{{ backLink }}" class="behat-link-cancel-invitation button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+    <a href="{{ backLink }}" class="behat-link-cancel-invitation button-link govuk-link">{{ 'cancel' | trans({}, 'common') }}</a>
 
     {{ form_end(form) }}
 

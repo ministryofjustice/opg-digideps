@@ -118,12 +118,13 @@ class CoDeputyController extends AbstractController
         $form->handleRequest($request);
         if ($form->isValid()) {
             try {
+                /** @var EntityDir\User $invitedUser */
                 $invitedUser = $this->getRestClient()->post('codeputy/add', $form->getData(), ['codeputy'], 'User');
 
                 // Regular deputies should become coDeputies via a CSV import, but at least for testing handle the change from non co-dep to co-dep here
                 $this->getRestClient()->put('user/' . $loggedInUser->getId(), ['co_deputy_client_confirmed' => true], []);
 
-                $invitationEmail = $this->getMailFactory()->createCoDeputyInvitationEmail($invitedUser, $loggedInUser);
+                $invitationEmail = $this->getMailFactory()->createInvitationEmail($invitedUser, $loggedInUser->getFullName());
                 $this->getMailSender()->send($invitationEmail);
 
                 $request->getSession()->getFlashBag()->add('notice', 'Deputy invitation has been sent');
@@ -171,7 +172,7 @@ class CoDeputyController extends AbstractController
                 if ($form->getData()->getEmail() != $email) {
                     $this->getRestClient()->put('codeputy/' . $invitedUser->getId(), $form->getData(), []);
                 }
-                $invitationEmail = $this->getMailFactory()->createCoDeputyInvitationEmail($invitedUser, $loggedInUser);
+                $invitationEmail = $this->getMailFactory()->createInvitationEmail($invitedUser, $loggedInUser->getFullName());
                 $this->getMailSender()->send($invitationEmail);
                 $request->getSession()->getFlashBag()->add('notice', 'Deputy invitation was re-sent');
 

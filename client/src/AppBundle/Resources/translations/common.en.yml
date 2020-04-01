@@ -127,6 +127,7 @@ clearSearch: Clear search
 sorryNoResultsFor: No reports found
 
 # Emails
+generalSupportEmail: customerservices@publicguardian.gov.uk
 layDeputySupportEmail: laydeputysupport@publicguardian.gov.uk
 paSupportEmail: opg.publicauthorityteam@publicguardian.gov.uk
 profSupportEmail: opg.pro@publicguardian.gov.uk

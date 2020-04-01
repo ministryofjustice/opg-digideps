@@ -25,10 +25,11 @@
     <hr>
 
     {# LIST #}
+    {% if app.request.get('search_clients') is not null %}
 
     <div class="behat-region-clients client-list">
 
-        <h2 id="client-list-title" class="heading-medium flush--ends">{{ (page ~ '.clientTable.heading') | trans }}</h2>
+        <h2 id="client-list-title" class="govuk-heading-m flush--ends">{{ (page ~ '.clientTable.heading') | trans }}</h2>
         {% if clients | length  == filters.limit %}
             <p class="text">{{ (page ~ '.clientTable.resultsLimited') | trans|raw }}</p>
         {% else %}
@@ -54,7 +55,7 @@
                         {% endif %}
                         <tr class="behat-region-client-row behat-region-{{ discharged }}client-{{ client.caseNumber }}">
                             <td>
-                                <a class="behat-link-client-details behat-link-{{ discharged }}client-detail-{{ client.caseNumber }} bold" href="{{ path('admin_client_details', {'id' : client.id}) }}">
+                                <a class="behat-link-client-details behat-link-{{ discharged }}client-detail-{{ client.caseNumber }} govuk-!-font-weight-bold" href="{{ path('admin_client_details', {'id' : client.id}) }}">
                                     {{ client.fullName }}
                                 </a>
                             </td>
@@ -73,11 +74,12 @@
                     {% endfor %}
                 {% else %}
                     <tr>
-                        <td colspan="2">{{ (page ~ '.clientTable.noResults') | trans  }}</td>
+                        <td colspan="3">{{ (page ~ '.clientTable.noResults') | trans  }}</td>
                     </tr>
                 {% endif %}
             </tbody>
         </table>
     </div>
+    {% endif %}
 
 {% endblock %}

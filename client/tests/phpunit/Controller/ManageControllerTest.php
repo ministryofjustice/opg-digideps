@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use GuzzleHttp\Message\Response;
 use GuzzleHttp\Message\ResponseInterface;
 use Mockery as m;
 
@@ -26,7 +25,7 @@ class ManageControllerTest extends AbstractControllerTestCase
         $redisHealthy, $apiHealthy, $smtpDefault, $smtpSecure, $wkhtmltopdfError, $clamReturnCode,
         $statusCode, array $mustContain)
     {
-        $container = $this->frameworkBundleClient->getContainer();
+        $container = $this->client->getContainer();
 
         //redis mock
         $redisMock = m::mock('Predis\Client');
@@ -39,7 +38,7 @@ class ManageControllerTest extends AbstractControllerTestCase
         $container->set('snc_redis.default', $redisMock);
 
         // api mock
-        $this->restClient->shouldReceive('get')->with('manage/availability', 'array')->andReturn([
+        $this->restClient->get('manage/availability', 'array')->shouldBeCalled()->willReturn([
             'healthy' => $apiHealthy,
             'errors' => $apiHealthy ? '' : 'api_errors',
         ]);
@@ -77,7 +76,9 @@ class ManageControllerTest extends AbstractControllerTestCase
         $container->set('guzzle_file_scanner_client', $guzzleMock);
 
         // dispatch /manage/availability and status code and check response
-        $response = $this->httpRequest('GET', '/manage/availability');
+        $this->client->request('GET', '/manage/availability');
+        $response = $this->client->getResponse();
+
         $this->assertEquals($statusCode, $response->getStatusCode(), $response->getContent());
         foreach ($mustContain as $m) {
             $this->assertStringContainsString($m, $response->getContent());
@@ -86,7 +87,8 @@ class ManageControllerTest extends AbstractControllerTestCase
 
     public function testElb()
     {
-        $response = $this->httpRequest('GET', '/manage/elb');
+        $this->client->request('GET', '/manage/elb');
+        $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString('OK', $response->getContent());

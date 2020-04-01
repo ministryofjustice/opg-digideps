@@ -99,60 +99,18 @@ Feature: PA cannot access other's PA's reports and clients
     And emails are sent from "admin" area
     And the following users exist:
       | ndr | deputyType | firstName | lastName | email | postCode | activated |
-      | disabled | PA | Org1 Case | Worker | behat-pa-org1@pa-org1.gov.uk | SW1 | false |
+      | disabled | PA | Org1 Case | Worker | behat-pa-org1@pa-org1.gov.uk | SW1 | true |
     # simulate existing deputies with clients by adding entry to deputy_case table
     And I add the client with case number "40000041" to be deputised by email "behat-pa-org1@pa-org1.gov.uk"
-    # activate PA Org 1 user
-    When I am on admin page "/admin"
-    And I click on "send-activation-email" in the "user-behat-pa-org1pa-org1govuk" region
-    Then the response status code should be 200
-    And the last email containing a link matching "/user/activate/" should have been sent to "behat-pa-org1@pa-org1.gov.uk"
-    And I open the "/user/activate/" link from the email
-    # terms
-    When I check "agree_terms_agreeTermsUse"
-    And I press "agree_terms_save"
-    Then the form should be valid
-    # password step
-    When I fill in the password fields with "Abcd1234"
-    And I check "set_password_showTermsAndConditions"
-    And I click on "save"
-    Then the form should be valid
-    When I am logged in as "behat-pa-org1@pa-org1.gov.uk" with password "Abcd1234"
-    When I fill in the following:
-      | user_details_jobTitle   | Case worker      |
-      | user_details_phoneMain  | 40000000001 |
-    And I press "user_details_save"
-    Then the form should be valid
 
   Scenario: Admin activates PA Org 2 deputy
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And emails are sent from "admin" area
     And the following users exist:
       | ndr | deputyType | firstName | lastName | email | postCode | activated |
-      | disabled | PA | Org2 Case | Worker | behat-pa-org2@pa-org2.gov.uk | SW1 | false |
+      | disabled | PA | Org2 Case | Worker | behat-pa-org2@pa-org2.gov.uk | SW1 | true |
     # simulate existing deputies with clients by adding entry to deputy_case table
     And I add the client with case number "40000042" to be deputised by email "behat-pa-org2@pa-org2.gov.uk"
-   # activate PA Org 1 user
-    When I am on admin page "/admin"
-    And I click on "send-activation-email" in the "user-behat-pa-org2pa-org2govuk" region
-    Then the response status code should be 200
-    And the last email containing a link matching "/user/activate/" should have been sent to "behat-pa-org2@pa-org2.gov.uk"
-    And I open the "/user/activate/" link from the email
-   # terms
-    When I check "agree_terms_agreeTermsUse"
-    And I press "agree_terms_save"
-    Then the form should be valid
-   # password step
-    When I fill in the password fields with "Abcd1234"
-    And I check "set_password_showTermsAndConditions"
-    And I click on "save"
-    Then the form should be valid
-    When I am logged in as "behat-pa-org2@pa-org2.gov.uk" with password "Abcd1234"
-    When I fill in the following:
-      | user_details_jobTitle   | Case worker      |
-      | user_details_phoneMain  | 40000000002 |
-    And I press "user_details_save"
-    Then the form should be valid
 
   Scenario: PA Org 1 can access own reports and clients
     Given I am logged in as "behat-pa-org1@pa-org1.gov.uk" with password "Abcd1234"

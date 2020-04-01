@@ -11,7 +11,7 @@
 
 {% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.pageTitle' | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
@@ -27,7 +27,7 @@
             </summary>
             <div class="opg-indented-block">
                 <p>{{ 'startPage.hiddenText01.content.para01' |trans(transOptions) }}</p>
-                <ul class="list list-bullet">
+                <ul class="govuk-list govuk-list--bullet">
                     <li>{{ 'startPage.hiddenText01.content.listItem01' | trans }}</li>
                     <li>{{ 'startPage.hiddenText01.content.listItem02' | trans }}</li>
                     <li>{{ 'startPage.hiddenText01.content.listItem03' | trans }}</li>
@@ -40,12 +40,12 @@
         </details>
 
         {% if report.bankAccounts is empty and report.canLinkToBankAccounts %}
-            <h3 class="heading-small">{{ 'startPage.accountLinksHeading' | trans(transOptions) }}</h3>
+            <h3 class="govuk-heading-s">{{ 'startPage.accountLinksHeading' | trans(transOptions) }}</h3>
             <p>{{ 'startPage.accountLinksPara1' | trans(transOptions) | raw }}</p>
         {% endif %}
     </div>
 
-    <a href="{{ path('gifts_exist', { 'reportId': report.id}) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
+    {{ macros.startSectionButton(path('gifts_exist', { 'reportId': report.id}), 'startPage.startButton' | trans ) }}
 
     {# Pagination #}
     {% include 'AppBundle:Report:_nextprevious.html.twig' with {

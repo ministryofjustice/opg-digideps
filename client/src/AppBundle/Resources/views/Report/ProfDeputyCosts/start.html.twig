@@ -13,7 +13,7 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
@@ -22,7 +22,7 @@
     <div class="text behat-region-start-page">
         <p>{{ (page ~ '.pageSectionDescription1') | trans(transOptions) }}</p>
         <p>{{ (page ~ '.pageSectionDescription2') | trans(transOptions) }}</p>
-        <ul class="list list-bullet">
+        <ul class="govuk-list govuk-list--bullet">
             <li>{{ (page ~ '.listItem01') | trans }}</li>
             <li>{{ (page ~ '.listItem02') | trans }}</li>
         </ul>
@@ -31,7 +31,7 @@
         <p>{{ (page ~ '.pageSectionDescription5') | trans }}</p>
     </div>
 
-    <a href="{{ path('prof_deputy_costs_how_charged', { 'reportId': report.id}) }}" class="button button-start behat-link-start">{{ (page ~ '.startButton') | trans }}</a>
+    {{ macros.startSectionButton(path('prof_deputy_costs_how_charged', { 'reportId': report.id}), (page ~ '.startButton') | trans ) }}
 
     {# Pagination #}
     {% include 'AppBundle:Report:_nextprevious.html.twig' with {

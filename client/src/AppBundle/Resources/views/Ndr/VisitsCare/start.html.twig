@@ -8,7 +8,7 @@
 
 {% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.pageTitle' | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(ndr) }}{% endblock %}
 
@@ -18,7 +18,7 @@
         {{ 'startPage.pageSectionDescription' | trans(transOptions, translationDomain) }}
     </p>
 
-    <a href="{{ path('ndr_visits_care_step', { 'ndrId': ndr.id, 'step': 1 }) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
+    {{ macros.startSectionButton(path('ndr_visits_care_step', { 'ndrId': ndr.id, 'step': 1 }), 'startPage.startButton' | trans ) }}
 
     {# Pagination #}
     {% include 'AppBundle:Report:_nextprevious.html.twig' with {

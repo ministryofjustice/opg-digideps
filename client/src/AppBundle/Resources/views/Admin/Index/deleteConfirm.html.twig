@@ -5,7 +5,7 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block supportTitleBottom %}
     <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
@@ -15,7 +15,7 @@
 
 {% block pageContent %}
 
-    <h2 class="heading-medium">{{ (page ~ '.heading') | trans }}</h2>
+    <h2 class="govuk-heading-m">{{ (page ~ '.heading') | trans }}</h2>
 
     <p class="text">{{ (page ~ '.question') | trans({'%fullName%': user.getFullname()}) | raw }}</p>
 

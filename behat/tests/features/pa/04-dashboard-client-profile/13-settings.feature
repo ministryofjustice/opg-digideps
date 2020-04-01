@@ -56,14 +56,6 @@ Feature: PA settings
     And I should see "Solicitor Assistant" in the "profile-job" region
     And I should see "10000000012" in the "profile-phone" region
 
-  Scenario: Notification email not sent for PA deputy changes
-    Given emails are sent from "deputy" area
-    And I am logged in as "behat-pa-admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "org-settings, profile-show, profile-edit"
-    When I press "profile_save"
-    Then I should be on "/org/settings/your-details"
-    And the last "deputy" email should not have been sent to "behat-digideps+update-contact@digital.justice.gov.uk"
-
   Scenario: PA Admin logs in and updates profile and removes admin
     Given I am logged in as "behat-pa1-admin@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, profile-show, profile-edit"
@@ -185,4 +177,3 @@ Feature: PA settings
     And I press "profile_save"
     Then the following fields should have an error:
       | profile_email  |
-

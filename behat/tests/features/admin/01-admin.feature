@@ -13,26 +13,11 @@ Feature: admin / admin
     Then I should be on "/admin/"
     And I create a new "NDR-disabled" "Admin" user "John" "Doe" with email "behat-admin-user@publicguardian.gov.uk" and postcode "AB12CD"
     Then I should see "behat-admin-user@publicguardian.gov.uk" in the "users" region
-    Then the response status code should be 200
-    And I should see "Admin" in the "users" region
-    And the last email containing a link matching "/user/activate/" should have been sent to "behat-admin-user@publicguardian.gov.uk"
-      #When I go to "/logout"
-    Given I am on admin page "/logout"
+    And the response status code should be 200
 
 
   Scenario: login and add user (admin)
-    Given emails are sent from "admin" area
-    And I go to "/logout"
-      # assert email link doesn't work on admin area
-    When I open the "/user/activate/" link from the email on the "deputy" area
-    Then the response status code should be 500
-      # follow link as it is
-    When I open the "/user/activate/" link from the email
-    Then the response status code should be 200
-      # only testing the correct case, as the form is the same for deputy
-      # note: no TC box here
-    When I fill in the password fields with "Abcd1234"
-    And I press "set_password_save"
+    When I activate the admin user "behat-admin-user@publicguardian.gov.uk" with password "Abcd1234"
     Then I should not see an "#error-summary" element
     And I should be on "/login"
     And I should see "Sign in to your new account"

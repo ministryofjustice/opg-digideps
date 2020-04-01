@@ -44,7 +44,7 @@
     } %}
 
     <div id="declaration-container">
-        <h2 class="heading-small">{{ 'page.declarationSectionHeader' | trans }}</h2>
+        <h2 class="govuk-heading-s">{{ 'page.declarationSectionHeader' | trans }}</h2>
         <div class="text">
             <p>{{ 'page.declarationTerms01' | trans }}</p>
             <p>{{ 'page.declarationTerms02' | trans }}</p>
@@ -52,7 +52,7 @@
                 <p>{{ 'page.declarationTerms03.lay' | trans }}</p>
             {% else %}
                 <p>{{ 'page.declarationTerms03.nonLay.intro' | trans }}</p>
-                <ul class="list list-bullet">
+                <ul class="govuk-list govuk-list--bullet">
                     <li>{{ 'page.declarationTerms03.nonLay.option1' | trans }}</li>
                     <li>{{ 'page.declarationTerms03.nonLay.option2' | trans }}</li>
                 </ul>
@@ -64,11 +64,11 @@
 
         {{ form_checkbox(form.agree, 'agree', { 'labelClass': 'required' }) }}
 
-        <div class="form-group push-half--bottom {% if not form.agreedBehalfDeputy.vars.valid %}form-group-error{% endif %}">
+        <div class="govuk-form-group push-half--bottom {% if not form.agreedBehalfDeputy.vars.valid %}govuk-form-group--error{% endif %}">
             {{ form_checkbox_group(form.agreedBehalfDeputy, 'agreedBehalfDeputy', {
                 'useFormGroup': false,
                 'fieldSetClass' : 'radio-agreed-behalf-deputy',
-                'legendClass' : 'form-label-bold',
+                'legendClass' : 'govuk-label--s',
                 'items': [
                     {},
                     {},
@@ -86,7 +86,7 @@
             {{ macros.notification('important', 'unableToEditAfterSubmission' | trans) }}
         </div>
 
-        <div class="form-group push-half--top">
+        <div class="govuk-form-group push-half--top">
             {{ form_submit(form.save,'save') }}
         </div>
 

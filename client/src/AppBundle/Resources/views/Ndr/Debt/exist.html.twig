@@ -8,7 +8,7 @@
 
 {% block htmlTitle %}{{ 'existPage.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ 'existPage.pageTitle' | trans(transOptions) }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
@@ -18,10 +18,10 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <div class="form-section push--bottom">
+    <div class="push--bottom">
         {{ form_checkbox_group(form.hasDebts, 'existPage.form.exist', {
             'fieldSetClass' : 'inline',
-            'legendClass' : 'form-label-bold text',
+            'legendClass' : 'govuk-label--s text',
             'legendText' : 'existPage.form.exist.label' | trans(transOptions, translationDomain),
             'formGroupClass': 'flush--bottom'
         }) }}

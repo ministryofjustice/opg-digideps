@@ -19,25 +19,25 @@
             <a href="{{ path('org_client_archive', {'clientId': client.id}) }}" class="btn behat-link-client-archive push-half--left">{{ (page ~ '.archiveClient') | trans }}</a>
         </p>
 
-        <div class="grid-row behat-region-client-profile-details">
-            <div class="column-one-half">
+        <div class="govuk-grid-row behat-region-client-profile-details">
+            <div class="govuk-grid-column-one-half">
                 <dl>
                     <dt>
-                        <strong class="bold">{{ (page ~ '.name') | trans }}</strong>
+                        <strong class="govuk-!-font-weight-bold">{{ (page ~ '.name') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom">
                         {{ client.fullname | title }}
                     </dd>
 
                     <dt>
-                        <strong class="bold">{{ (page ~ '.dateOfBirth') | trans }}</strong>
+                        <strong class="govuk-!-font-weight-bold">{{ (page ~ '.dateOfBirth') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom">
                         {{ (client.dateOfBirth) ? client.dateOfBirth | date(" j F Y") ~ ' (aged ' ~ client.getAge() ~ ')' : '-' }}
                     </dd>
 
                     <dt>
-                        <strong class="bold">{{ (page ~ '.phone') | trans }}</strong>
+                        <strong class="govuk-!-font-weight-bold">{{ (page ~ '.phone') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom">
                         {{ (client.phone) ? client.phone : '-' }}
@@ -46,17 +46,17 @@
                 </dl>
             </div>
 
-            <div class="column-one-half">
+            <div class="govuk-grid-column-one-half">
                 <dl>
                     <dt>
-                        <strong class="bold">{{ (page ~ '.email') | trans }}</strong>
+                        <strong class="govuk-!-font-weight-bold">{{ (page ~ '.email') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom dont-break-out">
                         {{ (client.email) ? client.email : '-' }}
                     </dd>
 
                     <dt>
-                        <strong class="bold">{{ (page ~ '.address') | trans }}</strong>
+                        <strong class="govuk-!-font-weight-bold">{{ (page ~ '.address') | trans }}</strong>
                     </dt>
                     <dd>
                         {{ (client.addressNotEmptyParts) ? client.addressNotEmptyParts | join('<br/>') | raw : '-' }}

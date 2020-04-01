@@ -43,7 +43,6 @@ Feature: deputy / user / add user
       | self_registration_caseNumber      | BEHAT001                             |
     And I press "self_registration_save"
     Then I should see "Please check your email"
-    And the last email containing a link matching "/user/activate/" should have been sent to "behat-user@publicguardian.gov.uk"
 
   @ndr
   Scenario: add deputy user (ndr)
@@ -53,4 +52,3 @@ Feature: deputy / user / add user
     When I create a new "NDR-enabled" "Lay Deputy" user "John NDR" "Doe NDR" with email "behat-user-ndr@publicguardian.gov.uk" and postcode "AB12CD"
     Then I should see "behat-user-ndr@publicguardian.gov.uk" in the "users" region
     And I should see "yes" in the "behat-user-ndrpublicguardiangovuk-ndr-enabled" region
-    And the last email containing a link matching "/user/activate/" should have been sent to "behat-user-ndr@publicguardian.gov.uk"

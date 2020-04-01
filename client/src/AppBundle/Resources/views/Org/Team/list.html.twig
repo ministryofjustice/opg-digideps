@@ -7,7 +7,7 @@
 
 {% block htmlTitle %}{{ 'listPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'listPage.pageTitle' | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block breadcrumbs %}
     {{ macros.breadcrumbsSettings('settings-team') }}
@@ -25,14 +25,14 @@
         {% endif %}
     </p>
 
-    <div class="grid-row push--top">
+    <div class="govuk-grid-row push--top">
         <div class="column-half">
-            <h2 class="heading-medium flush--ends">{{ 'listPage.tableHeading' | trans }}</h2>
+            <h2 class="govuk-heading-m flush--ends">{{ 'listPage.tableHeading' | trans }}</h2>
         </div>
         <div class="column-half text--right">
             {% if is_granted('add-user') %}
                 <a href="{{ path('add_team_member') }}"
-               class="bold-small move-quarter--up action-link behat-link-add">
+               class="govuk-!-font-size-19 govuk-!-font-weight-bold move-quarter--up action-link behat-link-add">
                 <span class="icon icon-plus"></span>
                 {{ 'listPage.addUser' | trans }}
             </a>
@@ -46,7 +46,7 @@
                 <th scope="col" class="govuk-table__header">{{ 'listPage.nameAndJob' | trans }}</th>
                 <th scope="col" class="govuk-table__header">{{ 'listPage.contactInfo' | trans }}</th>
                 <th scope="col" class="govuk-table__header">
-                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                    <span class="govuk-visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
                 </th>
             </tr>
         </thead>
@@ -56,7 +56,7 @@
             <tr class="govuk-table__row behat-region-team-user-{{ user.email | behat_namify }}">
                 <td valign="top" class="govuk-table__cell width-third">
                     <p class="flush--ends">
-                        <strong class="bold">{{ user.firstname }} {{ user.lastname }}</strong>
+                        <strong class="govuk-!-font-weight-bold">{{ user.firstname }} {{ user.lastname }}</strong>
                         {% if app.user.id == user.id %}
                         <br/>(Signed in)
                         {% endif %}
@@ -70,18 +70,18 @@
                     {% if showTeamMembershipInUserRow %}
                         <br />Belongs to :
                         {% for teamId, teamName in user.teamNames %}
-                        <strong class="bold">{{ teamName }}</strong>{{ loop.last ? '':', ' }}
+                        <strong class="govuk-!-font-weight-bold">{{ teamName }}</strong>{{ loop.last ? '':', ' }}
                         {% endfor %}
                     {% endif %}
                 </td>
                 <td class="govuk-table__cell">
                     <p class="flush--ends">
-                        <strong class="bold">{{ 'email' | trans({}, 'common') }}</strong><br>
+                        <strong class="govuk-!-font-weight-bold">{{ 'email' | trans({}, 'common') }}</strong><br>
                         {{ user.email }}
                     </p>
                     {% if user.phoneMain != '' %}
                     <p class="flush--bottom push-half--top">
-                        <strong class="bold">{{ 'phone' | trans({}, 'common' ) }}</strong><br>
+                        <strong class="govuk-!-font-weight-bold">{{ 'phone' | trans({}, 'common' ) }}</strong><br>
                         {{ user.phoneMain }}
                     </p>
                     {% endif %}

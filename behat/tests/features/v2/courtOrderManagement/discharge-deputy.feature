@@ -31,5 +31,5 @@ Feature: Manually discharge deputies from a court order
       | client   | deputy    | deputy_type | report_type        | court_date |
       | 84775409 | Deputy329 | PA          | Health and Welfare | 2017-03-30 |
     When I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search, client-detail-84775409"
+    When I visit the client page for "84775409"
     Then I should not see "Discharge deputy"

@@ -9,7 +9,7 @@
 
 {% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'stepPage.pageTitle' | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
@@ -20,12 +20,12 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {% if step == 1 %}
-        <div class="form-section push--bottom">
-            <div class="form-group flush--bottom {% if not form.doYouExpectFinancialDecisions.vars.valid %}form-group-error{% endif %}">
+        <div class="push--bottom">
+            <div class="govuk-form-group flush--bottom {% if not form.doYouExpectFinancialDecisions.vars.valid %}govuk-form-group--error{% endif %}">
                 {{ form_checkbox_group(form.doYouExpectFinancialDecisions, 'form.doYouExpectFinancialDecisions', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
-                    'legendClass' : 'form-label-bold',
+                    'legendClass' : 'govuk-label--s',
                     'legendText' : ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions, translationDomain),
                     'hintText' : ('form.doYouExpectFinancialDecisions.hint' ~ append104 ) | trans(transOptions, translationDomain),
                     'items': [
@@ -61,13 +61,13 @@
     {% endif %}
 
     {% if step == 2 %}
-        <div class="form-section push--bottom">
+        <div class="push--bottom">
 
-            <div class="form-group flush--bottom {% if not form.doYouHaveConcerns.vars.valid %}form-group-error{% endif %}">
+            <div class="govuk-form-group flush--bottom {% if not form.doYouHaveConcerns.vars.valid %}govuk-form-group--error{% endif %}">
                 {{ form_checkbox_group(form.doYouHaveConcerns, 'form.doYouHaveConcerns', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
-                    'legendClass' : 'form-label-bold',
+                    'legendClass' : 'govuk-label--s',
                     'legendText' : 'form.doYouHaveConcerns.label' | trans(transOptions, translationDomain),
                     'hintText' : ('form.doYouHaveConcerns.hint' ~ append104)  | trans(transOptions, translationDomain),
                     'items': [
@@ -89,7 +89,7 @@
     {{ macros.saveAndContinueButton(form.save) }}
 
     {% if skipLink %}
-        <a href="{{ skipLink }}" class="button-link behat-link-step-skip">{{ 'skipLink' | trans({}, 'common') }}</a>
+        <a href="{{ skipLink }}" class="govuk-link button-link behat-link-step-skip">{{ 'skipLink' | trans({}, 'common') }}</a>
     {% endif %}
 
     {{ form_end(form) }}

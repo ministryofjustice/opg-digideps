@@ -44,10 +44,10 @@
             'formGroupClass': 'govuk-grid-column-one-quarter govuk-!-margin-top-6'}) }}
     </div>
 
-    <div class="form-group">
+    <div class="govuk-form-group">
         {{ form_submit(form.search, '', {
             'labelText': 'Search'}) }}
-        <a href="{{ path('admin_homepage') }}" class="button-link">{{ 'homeForm.clear' | trans }}</a>
+        <a href="{{ path('admin_homepage') }}" class="govuk-link button-link">{{ 'homeForm.clear' | trans }}</a>
     </div>
 
     {{ form_end(form) }}
@@ -58,9 +58,9 @@
 
     <div class="behat-region-users user-list">
 
-        <div class="grid-row">
-            <div class="column-one-half">
-                <h2 id="users-list-title" class="heading-medium flush--ends">{{ (page ~ '.userTable.heading') | trans }}</h2>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                <h2 id="users-list-title" class="govuk-heading-m flush--ends">{{ (page ~ '.userTable.heading') | trans }}</h2>
                 {% if users | length  == filters.limit %}
                     <p class="text">{{ (page ~ '.userTable.resultsLimited') | trans|raw }}</p>
                 {% else %}
@@ -70,7 +70,7 @@
         </div>
 
         {# user list #}
-        <table class="table-font-xsmall">
+        <table class="table-govuk-body-s">
             <thead>
                 <tr>
                     <th scope="col">{{ (page ~ '.userTable.header.name') | trans }}</th>
@@ -90,9 +90,9 @@
                     <td>
                         {% if user.roleName != 'ROLE_ADMIN' or is_granted('ROLE_ADMIN') %}
                             <a href='{{ path('admin_editUser', { filter: user.id }) }}'
-                               class="behat-link-user-{{ user.email | behat_namify }} bold">{{ fullName }}</a><br>
+                               class="behat-link-user-{{ user.email | behat_namify }} govuk-!-font-weight-bold">{{ fullName }}</a><br>
                         {% endif %}
-                        <div class="text-secondary">
+                        <div class="govuk-caption-m">
                             {{ user.roleFullName }}
                             {% if user.adManaged %} {{ (page ~ '.userTable.assistedState') | trans }}{% endif %}
                             {% if app.user.id == user.id %} {{ (page ~ '.userTable.loggedInState') | trans }} {% endif %}

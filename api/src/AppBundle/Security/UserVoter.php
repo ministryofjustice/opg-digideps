@@ -72,9 +72,8 @@ class UserVoter extends Voter
             case User::ROLE_PROF_NAMED:
             case User::ROLE_PROF_ADMIN:
                 return $this->paProfNamedAdminPermissions($deletee);
-            case User::ROLE_ADMIN:
             case User::ROLE_SUPER_ADMIN:
-                return $this->adminSuperAdminPermissions($deletor, $deletee);
+                return $this->superAdminPermissions($deletor, $deletee);
         }
 
         return false;
@@ -92,9 +91,10 @@ class UserVoter extends Voter
         return true;
     }
 
-    private function adminSuperAdminPermissions(User $deletor, User $deletee): bool
+    private function superAdminPermissions(User $deletor, User $deletee): bool
     {
         switch ($deletee->getRoleName()) {
+            case User::ROLE_LAY_DEPUTY:
             case User::ROLE_PA:
             case User::ROLE_PA_TEAM_MEMBER:
             case User::ROLE_PA_NAMED:
@@ -104,8 +104,6 @@ class UserVoter extends Voter
             case User::ROLE_PROF_NAMED:
             case User::ROLE_PROF_ADMIN:
                 return true;
-            case User::ROLE_LAY_DEPUTY:
-                return count($deletee->getClients()) <= 1 && !$deletee->hasReports() ? true : false;
         }
 
         return $deletor->getRoleName() === User::ROLE_SUPER_ADMIN ? true : false;

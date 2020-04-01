@@ -9,7 +9,7 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block linkBack %}
     {% if backLink %}
@@ -24,7 +24,7 @@
 {% endblock %}
 {% block pageContent %}
 
-    <h2 class="heading-medium flush--ends">{{ (page ~ '.pageSectionDescription01') | trans }}</h2>
+    <h2 class="govuk-heading-m flush--ends">{{ (page ~ '.pageSectionDescription01') | trans }}</h2>
 
     <div class="text">
         <p>{{ (page ~ '.pageSectionDescription02') | trans(transOptions, translationDomain) }}</p>
@@ -32,15 +32,15 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <div class="form-section push--bottom">
+    <div class="push--bottom">
         {{ form_known_date(form.startDate, page ~ '.form.startDate') }}
 
         {{ form_known_date(form.endDate, page ~ '.form.endDate') }}
 
         {{ form_input(form.amount, page ~ '.form.amount', {
             'inputPrefix' : '£',
-            'inputClass' : 'form-control-1-4 js-format-currency',
-            'labelClass' : 'form-label-bold',
+            'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
+            'labelClass' : 'govuk-label--s',
             'formGroupClass': ' form-group-value'
         }) }}
 

@@ -8,7 +8,7 @@
 
 {% block htmlTitle %}{{ 'managementPage.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ 'managementPage.pageTitle' | trans(transOptions) }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
 
 {% block linkBack %}
 {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
@@ -18,11 +18,11 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-        <div class="form-section push--bottom">
+        <div class="push--bottom">
 
 
             {{  form_input(form.debtManagement,'managementPage.form.debtManagement', {
-                'labelClass': 'form-label-bold',
+                'labelClass': 'govuk-label--s',
                 'formGroupClass': 'flush--bottom',
                 'labelRaw': true
             }) }}
@@ -32,7 +32,7 @@
         {{ macros.saveAndContinueButton(form.save) }}
 
         {% if skipLink %}
-        <a href="{{ skipLink }}" class="button-link behat-link-step-skip">{{ 'skipLink' | trans({}, 'common') }}</a>
+        <a href="{{ skipLink }}" class="govuk-link button-link behat-link-step-skip">{{ 'skipLink' | trans({}, 'common') }}</a>
         {% endif %}
 
     {{ form_end(form) }}

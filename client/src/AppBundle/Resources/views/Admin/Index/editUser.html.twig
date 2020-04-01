@@ -62,7 +62,7 @@
     {{ form_end(form) }}
 
     {% if 'ROLE_LAY_DEPUTY' == user.roleName and numberOfClients > 0 %}
-        <h2 class="heading-medium">{{ (page ~ '.clientTable.heading') | trans }}</h2>
+        <h2 class="govuk-heading-m">{{ (page ~ '.clientTable.heading') | trans }}</h2>
         <table class="width-two-thirds">
             <thead>
                 <tr>
@@ -99,8 +99,6 @@
             </tbody>
         </table>
     {% endif %}
-
-
     {% if action is defined %}
         {% if action == 'edit' %}
             {% if is_granted('delete-user', user) %}
@@ -110,8 +108,6 @@
                     linkClass: 'button-warning push--top',
                     linkHref: path('admin_delete_confirm', { id: id })
                 } %}
-            {% else %}
-                <p class="text text-secondary push--top">{{ (page ~ '.deleteDisabled') | trans }}</p>
             {% endif %}
         {% endif %}
     {% endif %}

@@ -377,11 +377,12 @@ jobs:
             docker-compose up -d pact-mock
             sleep 3
             docker run --rm --network=project_default \
-            -e PACT_BROKER_HTTP_AUTH_PASS \
-            -e PACT_BROKER_HTTP_AUTH_USER \
-            -e PACT_CONSUMER_VERSION \
-            -e PACT_BROKER_BASE_URL \
-            -e PACT_TAG \
+                --env-file=client/docker/env/frontend.env \
+                -e PACT_BROKER_HTTP_AUTH_PASS \
+                -e PACT_BROKER_HTTP_AUTH_USER \
+                -e PACT_CONSUMER_VERSION \
+                -e PACT_BROKER_BASE_URL \
+                -e PACT_TAG \
             client:latest bin/phpunit -c tests/phpunit
             docker-compose exec pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
             docker-compose stop pact-mock
