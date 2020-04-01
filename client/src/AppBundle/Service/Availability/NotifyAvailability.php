@@ -4,7 +4,7 @@
 namespace AppBundle\Service\Availability;
 
 use Alphagov\Notifications\Client as NotifyClient;
-use Alphagov\Notifications\Exception\ApiException as NotifyAPIException;
+use Alphagov\Notifications\Exception\NotifyException;
 
 class NotifyAvailability extends ServiceAvailabilityAbstract
 {
@@ -20,7 +20,7 @@ class NotifyAvailability extends ServiceAvailabilityAbstract
 
         try{
             $this->pingNotify();
-        } catch (NotifyAPIException $e) {
+        } catch (NotifyException $e) {
             $this->isHealthy = false;
             $this->errors = sprintf('Notify - %s', $e->getErrorMessage());
         }
