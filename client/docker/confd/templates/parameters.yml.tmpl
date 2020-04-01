@@ -25,13 +25,9 @@ parameters:
     mock_emails: {{ if eq (getv "/mock/emails") "true" }}true{{ else }}false{{ end }}
     email_params:
         {{ if eq (getv "/email/send/internal") "true" }}
-        from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
-        report_submit_to_address: deputyshipservice@publicguardian.gov.uk
         feedback_send_to_address: digideps+feedback@digital.justice.gov.uk
         update_send_to_address: laydeputysupport@publicguardian.gov.uk
         {{ else }}
-        from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
-        report_submit_to_address: digideps+noop@digital.justice.gov.uk
         feedback_send_to_address: digideps+noop@digital.justice.gov.uk
         update_send_to_address: digideps+noop@digital.justice.gov.uk
         {{ end }}

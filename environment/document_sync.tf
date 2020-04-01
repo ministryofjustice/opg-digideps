@@ -86,7 +86,6 @@ locals {
       { "name": "NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
       { "name": "SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.front_redis.fqdn}" },
       { "name": "MOCK_EMAILS", "value": "${local.account.mock_emails ? "true" : "false"}" },
-      { "name": "EMAIL_DOMAIN", "value": "${local.domain}" },
       { "name": "EMAIL_SEND_INTERNAL", "value": "${local.account.is_production == 1 ? "true" : "false"}" },
       { "name": "SMTP_DEFAULT_PASSWORD", "value": "${aws_iam_access_key.ses.ses_smtp_password}" },
       { "name": "SMTP_DEFAULT_USER", "value": "${aws_iam_access_key.ses.id}" },

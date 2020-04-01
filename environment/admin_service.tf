@@ -74,7 +74,6 @@ locals {
     "environment": [
       { "name": "ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
       { "name": "API_URL", "value": "https://${local.api_service_fqdn}" },
-      { "name": "EMAIL_DOMAIN", "value": "${local.domain}" },
       { "name": "EMAIL_SEND_INTERNAL", "value": "${local.account.is_production == 1 ? "true" : "false"}" },
       { "name": "FILESCANNER_SSLVERIFY", "value": "False" },
       { "name": "FILESCANNER_URL", "value": "https://${local.scan_service_fqdn}:8443" },
