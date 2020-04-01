@@ -6,15 +6,9 @@ use Alphagov\Notifications\Client as NotifyClient;
 use Alphagov\Notifications\Exception\NotifyException;
 use AppBundle\Model\Email;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class MailSender implements MailSenderInterface
 {
-    /**
-     * @var ValidatorInterface
-     */
-    protected $validator;
-
     /**
      * @var LoggerInterface
      */
@@ -28,17 +22,14 @@ class MailSender implements MailSenderInterface
     /**
      * MailSender constructor.
      *
-     * @param ValidatorInterface $validator
      * @param LoggerInterface $logger
      * @param NotifyClient $notifyClient
      */
     public function __construct(
-        ValidatorInterface $validator,
         LoggerInterface $logger,
         NotifyClient $notifyClient
     )
     {
-        $this->validator = $validator;
         $this->logger = $logger;
         $this->notifyClient = $notifyClient;
     }
