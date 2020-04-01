@@ -84,7 +84,6 @@ locals {
       { "name": "ROLE", "value": "front" },
       { "name": "S3_BUCKETNAME", "value": "pa-uploads-${local.environment}" },
       { "name": "SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.front_redis.fqdn}" },
-      { "name": "MOCK_EMAILS", "value": "${local.account.mock_emails ? "true" : "false"}" },
       { "name": "SYMFONY_ENV", "value": "${local.account.symfony_env}" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
       { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" }
