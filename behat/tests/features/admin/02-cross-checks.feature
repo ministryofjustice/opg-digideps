@@ -14,19 +14,3 @@ Feature: admin / acl
         And I click on "login"
         Then I should see an "#error-summary" element
         And I should be on "/login"
-
-    Scenario: An admin cannot reset password from the deputy area
-        # check admin can recover password from admin site
-        Given emails are sent from "admin" area
-        And I am on admin login page
-        When I click on "forgotten-password"
-        Then I should be on "/password-managing/forgotten"
-        When I fill in "password_forgotten_email" with "behat-admin-user@publicguardian.gov.uk"
-        And I press "password_forgotten_submit"
-        # check admin CANNOT recover password from DEPUTY site
-        When I go to "/login"
-        And I click on "forgotten-password"
-        Then I should be on "/password-managing/forgotten"
-        When I fill in "password_forgotten_email" with "behat-admin-user@publicguardian.gov.uk"
-        And I press "password_forgotten_submit"
-        And no "deputy" email should have been sent to "behat-admin-user@publicguardian.gov.uk"

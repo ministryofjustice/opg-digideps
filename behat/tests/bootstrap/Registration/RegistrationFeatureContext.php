@@ -4,12 +4,10 @@ namespace DigidepsBehat\Registration;
 
 use Behat\Gherkin\Node\TableNode;
 use DigidepsBehat\Common\BaseFeatureContext;
-use DigidepsBehat\Common\EmailTrait;
 use DigidepsBehat\Common\LinksTrait;
 
 class RegistrationFeatureContext extends BaseFeatureContext
 {
-    use EmailTrait;
     use LinksTrait;
 
     /**
