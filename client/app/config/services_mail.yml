@@ -10,10 +10,6 @@ services:
                 front: '%env(NONADMIN_HOST)%'
                 admin: '%env(ADMIN_HOST)%'
 
-    # mail sender accepting those the above-created swift mailer
-    AppBundle\Service\Mailer\MailSender:
-        class: AppBundle\Service\Mailer\MailSender
-
     AppBundle\Service\Mailer\MailSenderInterface: '@AppBundle\Service\Mailer\MailSender'
 
     Alphagov\Notifications\Client:
