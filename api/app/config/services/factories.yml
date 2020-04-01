@@ -25,5 +25,6 @@ parameters:
 
 services:
   AppBundle\Factory\OrganisationFactory:
+    public: true
     class: AppBundle\Factory\OrganisationFactory
     arguments: ['%shared_email_domains%']
