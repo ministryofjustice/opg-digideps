@@ -24,10 +24,6 @@ services:
         - { name: data_collector, template: 'AppBundle:Manage:css-class-collector', id: 'css-class-collector' }
       public: false
 
-    AppBundle\Service\Mailer\MailSender:
-        class: AppBundle\Service\Mailer\MailSenderMock
-        autowire: true
-
     Alphagov\Notifications\Client:
         alias: AppBundle\Service\Mailer\NotifyClientMock
 
