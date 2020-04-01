@@ -66,10 +66,6 @@ security:
             pattern:  ^/user/(password-reset|activate|agree-terms-use)/*
             security: false
 
-        behatControllers:
-            pattern:  ^/behat
-            security: false
-
         manageController:
             pattern:  ^/manage/*
             security: false
