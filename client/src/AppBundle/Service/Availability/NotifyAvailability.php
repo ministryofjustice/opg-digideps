@@ -18,11 +18,11 @@ class NotifyAvailability extends ServiceAvailabilityAbstract
         $this->notifyClient = $notifyClient;
         $this->isHealthy = true;
 
-        try{
+        try {
             $this->pingNotify();
         } catch (NotifyException $e) {
             $this->isHealthy = false;
-            $this->errors = sprintf('Notify - %s', $e->getErrorMessage());
+            $this->errors = sprintf('Notify - %s', $e->getMessage());
         }
     }
 
