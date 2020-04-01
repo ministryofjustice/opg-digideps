@@ -6,7 +6,9 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\NamedDeputy;
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\Entity\User;
+use AppBundle\Factory\OrganisationFactory;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class UserFixtures extends AbstractDataFixture
@@ -160,11 +162,14 @@ class UserFixtures extends AbstractDataFixture
 //        ],
     ];
 
+    public function __construct(OrganisationRepository $orgRepository, OrganisationFactory $orgFactory)
+    {
+        $this->orgRepository = $orgRepository;
+        $this->orgFactory = $orgFactory;
+    }
+
     public function doLoad(ObjectManager $manager)
     {
-        $this->orgRepository = $this->container->get('AppBundle\Entity\Repository\OrganisationRepository');
-        $this->orgFactory = $this->container->get('AppBundle\Factory\OrganisationFactory');
-
         // Add users from array
         foreach ($this->userData as $data) {
             $this->addUser($data, $manager);
