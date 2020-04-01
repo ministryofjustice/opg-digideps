@@ -34,16 +34,7 @@ class MailSender implements MailSenderInterface
         $this->notifyClient = $notifyClient;
     }
 
-    /**
-     * @param Email $email
-     * @param array $groups
-     *
-     * @throws \Exception
-     *
-     * @return type
-     *
-     */
-    public function send(Email $email, array $groups = ['text'], $transport = 'default')
+    public function send(Email $email): bool
     {
         try {
             $this->notifyClient->sendEmail(

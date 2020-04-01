@@ -6,5 +6,5 @@ use AppBundle\Model\Email;
 
 interface MailSenderInterface
 {
-    public function send(Email $email, array $groups = ['text']);
+    public function send(Email $email): bool;
 }
