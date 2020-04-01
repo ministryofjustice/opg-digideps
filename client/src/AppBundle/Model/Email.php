@@ -13,18 +13,6 @@ class Email
     private $toEmail;
 
     /**
-     * @Assert\NotBlank(message="sendEmail.toName.notBlank", groups={"html","text"})
-     * @Assert\Type(type="string", message="sendEmail.toName.invalid", groups={"html","text"})
-     */
-    private $toName;
-
-    /**
-     * @Assert\NotBlank(message="sendEmail.fromEmail.notBlank", groups={"html","text"})
-     * @Assert\Email(message="sendEmail.fromEmail.invalid", groups={"html","text"})
-     */
-    private $fromEmail;
-
-    /**
      * @Assert\NotBlank(message="sendEmail.fromName.notBlank", groups={"html","text"})
      * @Assert\Type(type="string", message="sendEmail.fromName.invalid", groups={"html","text"})
      */
@@ -36,12 +24,6 @@ class Email
      * @Assert\NotBlank(message="sendEmail.subject.notBlank", groups={"html","text"})
      */
     private $subject;
-
-    private $bodyText;
-
-    private $bodyHtml;
-
-    private $attachments = [];
 
     private $template;
 
@@ -63,48 +45,6 @@ class Email
     public function setToEmail($toEmail)
     {
         $this->toEmail = $toEmail;
-
-        return $this;
-    }
-
-    /**
-     * @param string $toName
-     *
-     * @return string $toName
-     */
-    public function getToName()
-    {
-        return $this->toName;
-    }
-
-    /**
-     * @param string $toName
-     *
-     * @return \AppBundle\Model\Email
-     */
-    public function setToName($toName)
-    {
-        $this->toName = $toName;
-
-        return $this;
-    }
-
-    /**
-     * @return string $fromEmail
-     */
-    public function getFromEmail()
-    {
-        return $this->fromEmail;
-    }
-
-    /**
-     * @param string $fromEmail
-     *
-     * @return \AppBundle\Model\Email
-     */
-    public function setFromEmail($fromEmail)
-    {
-        $this->fromEmail = $fromEmail;
 
         return $this;
     }
@@ -147,59 +87,6 @@ class Email
         $this->subject = $subject;
 
         return $this;
-    }
-
-    /**
-     * @return string $bodyText
-     */
-    public function getBodyText()
-    {
-        return $this->bodyText;
-    }
-
-    /**
-     * @param string $bodyText
-     */
-    public function setBodyText($bodyText)
-    {
-        $this->bodyText = $bodyText;
-
-        return $this;
-    }
-
-    /**
-     * @return string $bodyHtml
-     */
-    public function getBodyHtml()
-    {
-        return $this->bodyHtml;
-    }
-
-    /**
-     * @param string $bodyHtml
-     *
-     * @return \AppBundle\Model\Email
-     */
-    public function setBodyHtml($bodyHtml)
-    {
-        $this->bodyHtml = $bodyHtml;
-
-        return $this;
-    }
-
-    public function setAttachments(array $attachments)
-    {
-        $this->attachments = $attachments;
-
-        return $this;
-    }
-
-    /**
-     * @return EmailAttachment[]
-     */
-    public function getAttachments()
-    {
-        return $this->attachments;
     }
 
     public function getTemplate(): ?string
