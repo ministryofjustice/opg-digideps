@@ -44,11 +44,9 @@ Feature: deputy / user / set password
         And I check "set_password_showTermsAndConditions"
         And I press "set_password_save"
         Then the form should be valid
-        And I should see the "user-details" region
-        # test login
-        When I go to "logout"
-        And I go to "/login"
-        And I fill in the following:
+        And I should be on "/login"
+        And I should see "Sign in to your new account"
+        When I fill in the following:
             | login_email     | behat-user@publicguardian.gov.uk |
             | login_password  | Abcd1234 |
         And I press "login_login"

@@ -12,6 +12,7 @@ signedOut:
 signInAdmin:
   htmlTitle: "Admin - sign in | GOV.UK"
   pageTitle: OPG user sign in
+  pageTitleNewPassword: Sign in to your new account
   pageTitleUpdatedPassword: Sign in with your new password
 
 forgottenPassword: Forgotten your password?

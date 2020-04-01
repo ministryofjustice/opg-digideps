@@ -118,7 +118,10 @@ Feature: deputy / report / edit user
           | change_password_plain_password_second | Abcd12345 |
         And I press "change_password_save"
         Then the form should be valid
+        And I should be on "/login"
+        And I should see "Sign in with your new password"
         # restore old password (and assert the current password can be used as old password)
+        When I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd12345"
         When I click on "user-account, password-edit"
         And I fill in the following:
           | change_password_current_password | Abcd12345 |
@@ -126,4 +129,3 @@ Feature: deputy / report / edit user
           | change_password_plain_password_second | Abcd1234 |
         And I press "change_password_save"
         Then the form should be valid
-        And I should be on "/deputyship-details/your-details/change-password/done"

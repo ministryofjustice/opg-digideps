@@ -171,6 +171,8 @@ Feature: User Self Registration
     And I should see "We've sent you a link to behat-jenny.lens@digital.justice.gov.uk"
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-jenny.lens@digital.justice.gov.uk"
     And I activate the user with password "Abcd1234"
+    Then the URL should match "/login"
+    When I am logged in as "behat-jenny.lens@digital.justice.gov.uk" with password "Abcd1234"
     Then the URL should match "/user/details"
     When I fill in the following:
       | user_details_address1       | Address1     |

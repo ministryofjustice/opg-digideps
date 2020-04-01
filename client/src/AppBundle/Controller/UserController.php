@@ -116,7 +116,7 @@ class UserController extends AbstractController
                 $request->getSession()->set('login-context', 'password-update');
                 $redirector = $this->get('redirector_service');
 
-                return $this->redirect($redirector->getFirstPageAfterLogin());
+                return $this->redirect($redirector->getFirstPageAfterLogin($request->getSession()));
             }
         }
 

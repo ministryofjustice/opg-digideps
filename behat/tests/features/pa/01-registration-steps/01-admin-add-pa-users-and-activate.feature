@@ -45,8 +45,12 @@ Feature: Add PA users and activate PA user (journey)
     And I check "set_password_showTermsAndConditions"
     And I click on "save"
     Then the form should be valid
+    And the url should match "/login"
+    And I should see "Sign in to your new account"
+    When I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     # assert pre-fill
-    Then the following fields should have the corresponding values:
+    Then the url should match "/user/details"
+    And the following fields should have the corresponding values:
       | user_details_firstname | DEP1     |
       | user_details_lastname  | SURNAME1 |
     # check errors
@@ -89,8 +93,9 @@ Feature: Add PA users and activate PA user (journey)
     And I check "set_password_showTermsAndConditions"
     And I click on "save"
     Then the form should be valid
+    When I am logged in as "behat-pa2@publicguardian.gov.uk" with password "Abcd1234"
     # correct
-    When I fill in the following:
+    And I fill in the following:
       | user_details_firstname  | Pa User     |
       | user_details_lastname   | Two         |
       | user_details_jobTitle   | Solicitor   |
@@ -115,6 +120,7 @@ Feature: Add PA users and activate PA user (journey)
     And I check "set_password_showTermsAndConditions"
     When I click on "save"
     Then the form should be valid
+    When I am logged in as "behat-pa3@publicguardian.gov.uk" with password "Abcd1234"
     # correct
     And I fill in the following:
       | user_details_firstname  | Pa User     |

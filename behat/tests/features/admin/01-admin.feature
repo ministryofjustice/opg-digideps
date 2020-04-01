@@ -34,7 +34,8 @@ Feature: admin / admin
     When I fill in the password fields with "Abcd1234"
     And I press "set_password_save"
     Then I should not see an "#error-summary" element
-    And I should be on "/user/details"
+    And I should be on "/login"
+    And I should see "Sign in to your new account"
 
   Scenario: Admins cannot add super admins
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
@@ -156,16 +157,17 @@ Feature: admin / admin
       | change_password_plain_password_second | Abcd12345 |
     And I press "change_password_save"
     Then the form should be valid
+    And I should be on "/login"
+    And I should see "Sign in with your new password"
       # restore old password (and assert the current password can be used as old password)
-    When I click on "user-account, password-edit"
+    When I am logged in to admin as "behat-admin-user@publicguardian.gov.uk" with password "Abcd12345"
+    And I click on "user-account, password-edit"
     And I fill in the following:
       | change_password_current_password      | Abcd12345 |
       | change_password_plain_password_first  | Abcd1234  |
       | change_password_plain_password_second | Abcd1234  |
     And I press "change_password_save"
     Then the form should be valid
-    And I should be on "/deputyship-details/your-details/change-password/done"
-
 
   Scenario: service notification
     # test the notification doesn't not appear if not set at all

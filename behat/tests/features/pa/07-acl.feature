@@ -117,6 +117,7 @@ Feature: PA cannot access other's PA's reports and clients
     And I check "set_password_showTermsAndConditions"
     And I click on "save"
     Then the form should be valid
+    When I am logged in as "behat-pa-org1@pa-org1.gov.uk" with password "Abcd1234"
     When I fill in the following:
       | user_details_jobTitle   | Case worker      |
       | user_details_phoneMain  | 40000000001 |
@@ -146,6 +147,7 @@ Feature: PA cannot access other's PA's reports and clients
     And I check "set_password_showTermsAndConditions"
     And I click on "save"
     Then the form should be valid
+    When I am logged in as "behat-pa-org2@pa-org2.gov.uk" with password "Abcd1234"
     When I fill in the following:
       | user_details_jobTitle   | Case worker      |
       | user_details_phoneMain  | 40000000002 |

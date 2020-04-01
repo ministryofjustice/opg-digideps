@@ -56,6 +56,11 @@ class RegistrationFeatureContext extends BaseFeatureContext
             $this->checkOption('set_password_showTermsAndConditions');
             $this->pressButton('set_password_save');
 
+            $this->assertPageContainsText('Sign in to your new account');
+            $this->fillField('login_email', $courtOrder['deputyEmail']);
+            $this->fillField('login_password', 'Abcd1234');
+            $this->pressButton('login_login');
+
             $this->fillField('user_details_address1', '102 Petty France');
             $this->fillField('user_details_address2', 'MOJ');
             $this->fillField('user_details_address3', 'London');

@@ -28,7 +28,9 @@ Feature: Codeputy Self Registration
     And I press "self_registration_save"
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-jack.goodby+noncodep@digital.justice.gov.uk"
     When I activate the user with password "Abcd1234"
-    And I fill in the following:
+    And I am logged in as "behat-jack.goodby+noncodep@digital.justice.gov.uk" with password "Abcd1234"
+    Then the URL should match "/user/details"
+    When I fill in the following:
       | user_details_address1       | Address1     |
       | user_details_addressCountry | GB           |
       | user_details_phoneMain      | 0777 222 333 |
@@ -110,6 +112,7 @@ Feature: Codeputy Self Registration
     When I open the "/user/activate/" link from the email
     Then the response status code should be 200
     When I activate the user with password "Abcd1234"
+    And I am logged in as "behat-jack.goodby+mld1@digital.justice.gov.uk" with password "Abcd1234"
     Then the URL should match "/user/details"
     When I fill in the following:
       | user_details_address1       | Address1     |

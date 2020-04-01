@@ -4,13 +4,13 @@ Feature: Organisation deputyship updates
     Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I create a new "NDR-disabled" "prof named" user "New Dep1" "Surname1" with email "new-behat-prof1@publicguardian.gov.uk" and postcode "SW1"
-    And I activate the named deputy with password "Abcd1234"
+    And I activate the named deputy "new-behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     Then I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I create a new "NDR-disabled" "prof named" user "New Dep2" "Surname2" with email "behat-prof1@example.com1" and postcode "SW2"
-    And I activate the named deputy with password "Abcd1234"
+    And I activate the named deputy "behat-prof1@example.com1" with password "Abcd1234"
     Then I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I create a new "NDR-disabled" "prof named" user "New Dep3" "Surname3" with email "behat-prof1@example.com2" and postcode "SW3"
-    And I activate the named deputy with password "Abcd1234"
+    And I activate the named deputy "behat-prof1@example.com2" with password "Abcd1234"
     Then I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     # upload PROF updates
     When I go to admin page "/admin/org-csv-upload"

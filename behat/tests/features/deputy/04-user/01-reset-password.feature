@@ -51,7 +51,8 @@ Feature: deputy / password reset
           | reset_password_password_second  | Abcd12345 |
       And I press "reset_password_save"
       Then the form should be valid
-      And the URL should match "/lay"
+      And the URL should match "/login"
+      And I should see "Sign in with your new password"
       # test login
       Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd12345"
       Then the URL should match "/lay"

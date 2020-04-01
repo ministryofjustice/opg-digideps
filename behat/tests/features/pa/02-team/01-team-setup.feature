@@ -42,6 +42,7 @@ Feature: PA team setup
   Scenario: activate PA_ADMIN user
     Given emails are sent from "deputy" area
     And I activate the user with password "Abcd1234"
+    When I am logged in as "behat-pa1-admin@publicguardian.gov.uk" with password "Abcd1234"
     # assert pre-fill
     Then the following fields should have the corresponding values:
       | user_details_firstname | Markk Admin |
@@ -94,6 +95,7 @@ Feature: PA team setup
   Scenario: activate ROLE_PA_TEAM_MEMBER user
     Given emails are sent from "deputy" area
     And I activate the user with password "Abcd1234"
+    When I am logged in as "behat-pa1-team-member@publicguardian.gov.uk" with password "Abcd1234"
     # assert pre-fill
     Then the following fields should have the corresponding values:
       | user_details_firstname | Robertt Team member |
@@ -230,7 +232,8 @@ Feature: PA team setup
     Then I should see the "team-user-behat-pa3-adminpublicguardiangovuk" region
     When emails are sent from "deputy" area
     And I activate the user with password "Abcd1234"
-    When I fill in the following:
+    When I am logged in as "behat-pa3-admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I fill in the following:
       | user_details_jobTitle  | Solicitor assistant |
       | user_details_phoneMain | 20000000002         |
     And I press "user_details_save"
@@ -249,6 +252,7 @@ Feature: PA team setup
     Then the form should be valid
     When emails are sent from "deputy" area
     And I activate the user with password "Abcd1234"
+    When I am logged in as "behat-pa3-team-member@publicguardian.gov.uk" with password "Abcd1234"
     When I fill in the following:
       | user_details_jobTitle  | Solicitor helper   |
       | user_details_phoneMain | 30000000003        |
