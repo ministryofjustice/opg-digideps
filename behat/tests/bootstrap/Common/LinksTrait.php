@@ -27,21 +27,6 @@ trait LinksTrait
         }
     }
 
-    public function visitBehatLink($link)
-    {
-        $secret = md5('behat-dd-' . getenv('SECRET'));
-
-        $this->visit("/behat/{$secret}/{$link}");
-    }
-
-    public function visitBehatAdminLink($link)
-    {
-        $secret = md5('behat-dd-' . getenv('SECRET'));
-
-        $adminUrl = $this->getAdminUrl();
-        $this->visitPath($adminUrl . "/behat/{$secret}/{$link}");
-    }
-
     /**
      * Click on element with attribute [behat-link=:link].
      *
