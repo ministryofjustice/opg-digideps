@@ -7,8 +7,10 @@ use AppBundle\Entity\NamedDeputy;
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Repository\NamedDeputyRepository;
+use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\Entity\Team;
 use AppBundle\Entity\User;
+use AppBundle\Factory\OrganisationFactory;
 use AppBundle\Service\ReportUtils;
 use AppBundle\Service\OrgService;
 
@@ -488,14 +490,18 @@ class ProfTestUserFixtures extends AbstractDataFixture
         ]
     ];
 
+    public function __construct(OrgService $orgService, OrganisationRepository $orgRepository, OrganisationFactory $orgFactory)
+    {
+        $this->orgService = $orgService;
+        $this->orgRepository = $orgRepository;
+        $this->orgFactory = $orgFactory;
+    }
+
     /**
      * @param ObjectManager $manager
      */
     public function doLoad(ObjectManager $manager)
     {
-        $this->orgService = $this->container->get('AppBundle\Service\OrgService');
-        $this->orgRepository = $this->container->get('AppBundle\Entity\Repository\OrganisationRepository');
-        $this->orgFactory = $this->container->get('AppBundle\Factory\OrganisationFactory');
         $this->namedDeputyRepository = $manager->getRepository(NamedDeputy::class);
 
         // Add users from array
