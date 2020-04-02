@@ -3,11 +3,11 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Service\Availability\ApiAvailability;
-use AppBundle\Service\Availability\ClamAvAvailability;
+// use AppBundle\Service\Availability\ClamAvAvailability;
 use AppBundle\Service\Availability\RedisAvailability;
 use AppBundle\Service\Availability\SiriusApiAvailability;
-use AppBundle\Service\Availability\WkHtmlToPdfAvailability;
-use Psr\Container\ContainerInterface;
+// use AppBundle\Service\Availability\WkHtmlToPdfAvailability;
+// use Psr\Container\ContainerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
@@ -20,12 +20,12 @@ class ManageController extends AbstractController
     private $services = [];
 
     public function __construct(
-        ContainerInterface $container,
+        // ContainerInterface $container,
         ApiAvailability $apiAvailability,
-        ClamAvAvailability $clamAvAvailability,
+        // ClamAvAvailability $clamAvAvailability,
         RedisAvailability $redisAvailability,
-        SiriusApiAvailability $siriusApiAvailability,
-        WkHtmlToPdfAvailability $wkHtmlToPdfAvailability
+        SiriusApiAvailability $siriusApiAvailability
+        // WkHtmlToPdfAvailability $wkHtmlToPdfAvailability
     )
     {
         $this->services = [
@@ -34,10 +34,10 @@ class ManageController extends AbstractController
             $siriusApiAvailability
         ];
 
-        if ($container->getParameter('env') !== 'admin') {
-            $this->services[] = $clamAvAvailability;
-            $this->services[] = $wkHtmlToPdfAvailability;
-        }
+        // if ($container->getParameter('env') !== 'admin') {
+        //     $this->services[] = $clamAvAvailability;
+        //     $this->services[] = $wkHtmlToPdfAvailability;
+        // }
     }
 
     /**
