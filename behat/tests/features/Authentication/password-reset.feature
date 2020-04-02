@@ -22,6 +22,9 @@ Feature: Users can reset their password via self-service
         And I should see "Sign in with your new password"
         When I am logged in as "enrique75@mail.example" with password "Abcd12345"
         Then the form should be valid
+        Given I am on "/login"
+        Then I should see "Sign in"
+        And I should not see "Sign in with your new password"
 
     Scenario: Admin can reset password
         Given I am on admin page "/login"
