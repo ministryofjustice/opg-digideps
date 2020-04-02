@@ -2,7 +2,7 @@
 
 namespace AppBundle\Service\Availability;
 
-use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 
 /**
  * Check if the Clam AV antivirus is running, using the PING enpoint
@@ -10,7 +10,7 @@ use GuzzleHttp\Client;
  */
 class ClamAvAvailability extends ServiceAvailabilityAbstract
 {
-    public function __construct(Client $fileScannerClient)
+    public function __construct(ClientInterface $fileScannerClient)
     {
         try {
             $response = $fileScannerClient->get('/');
