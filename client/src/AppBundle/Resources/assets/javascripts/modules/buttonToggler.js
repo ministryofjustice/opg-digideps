@@ -1,13 +1,16 @@
 class ButtonToggler {
-  static toggleButton (buttonId) {
-    let button = document.getElementById(buttonId)
-    button.disabled = (buttonId === 'false') ? 'true' : 'false'
+  toggleButtonDisabled (buttonId) {
+    const button = document.getElementById(buttonId)
+    const disabled = button.disabled ? false : true
+
+    button.disabled = disabled
+    button.setAttribute('aria-disabled', disabled.toString())
+    button.classList.toggle("govuk-button--disabled")
   }
 
-  static addToggleEventListener (elementId, buttonId) {
-      let element = document.getElementById(elementId)
-      element.addEventListener('onclick', this.toggleButton(buttonId))
-      // Update classes and aria-disabled too
+  addToggleEventListener (elementId, buttonId) {
+    const element = document.getElementById(elementId)
+    element.addEventListener('click', () => this.toggleButtonDisabled(buttonId))
   }
 }
 
