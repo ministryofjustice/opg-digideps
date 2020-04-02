@@ -5,6 +5,7 @@ namespace DigidepsBehat;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\MinkExtension\Context\MinkContext;
 use DigidepsBehat\Common\AuthenticationTrait;
+use DigidepsBehat\Common\ButtonTrait;
 use DigidepsBehat\Common\EmailTrait;
 use DigidepsBehat\Common\FormTrait;
 use DigidepsBehat\Common\LinksTrait;
@@ -21,6 +22,7 @@ use DigidepsBehat\Common\SiteNavigationTrait;
 class FeatureContext extends MinkContext implements SnippetAcceptingContext
 {
     use AuthenticationTrait,
+        ButtonTrait,
         DebugTrait,
         DbTrait,
         CookieTrait,

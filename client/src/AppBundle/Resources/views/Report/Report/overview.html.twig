@@ -279,47 +279,39 @@
     </ul>
 
     {% if not report.isDue %}
-
         <div class="push--top">
             {% set endDate = report.getEndDate() | date("j F Y")  %}
             {% set transOptions = {'%date%': endDate} %}
 
             {{ macros.notification('info', 'previewNoticeNotDue' | trans(transOptions)) }}
         </div>
-        <a id="edit-report-preview" class="button behat-link-edit-report-preview" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a>
-
     {% else %}
-        {% if not reportStatus.isReadyToSubmit %}
-
-            <div class="push--top">
-                {{ macros.notification('info', 'previewNotice' | trans()) }}
-            </div>
-
-            <a id="edit-report-preview" class="govuk-button behat-link-edit-report-preview" href="{{ path('report_review', {'reportId': report.id}) }}" data-module="govuk-button">{{ 'options.previewReport' | trans() }}</a>
-
-        {% else %}
-
-            <div class="govuk-form-group">
-                <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
-                    <div class="govuk-checkboxes">
-                        <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input" id="confirmReview" name="confirmReview" type="checkbox">
-                            <label class="govuk-label govuk-checkboxes__label" for="confirmReview">
-                                I've reviewed the sections marked above and added all the information I'm able to.
-                            </label>
+        {% if report.isUnsubmitted %}
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <div class="govuk-checkboxes">
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="confirmReview" name="confirmReview" type="checkbox">
+                                <label class="govuk-label govuk-checkboxes__label" for="confirmReview">
+                                    I've reviewed the sections marked above and added all the information I'm able to.
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                </fieldset>
-            </div>
-
-            <a id="edit-report-review" class="push--top behat-link-edit-report-review" href="{{ path('report_review', {'reportId': report.id}) }}">
-                <button id="edit-report-review-button" disabled="disabled" aria-disabled="true" class="govuk-button govuk-button--disabled">{{ 'continue' | trans({}, 'common') }}</button>
-            </a>
-
+                    </fieldset>
+                </div>
         {% endif %}
-
+        report isUnsubmitted is {{ report.isUnsubmitted }}
+        <a id="preview-report-review" class="push--top behat-link-edit-report-review" href="{{ path('report_review', {'reportId': report.id}) }}">
+            <button
+                id="edit-report-button"
+                aria-disabled="{{ report.isUnsubmitted ? 'true' : 'false' }}"
+                class="govuk-button {{ report.isUnsubmitted ? 'govuk-button--disabled' : '' }}"
+                {% if report.isUnsubmitted %}
+                    disabled="disabled"
+                {% endif %}
+            >
+                {{ 'options.previewReport' | trans() }}
+            </button>
+        </a>
     {% endif %}
-
-
-
 {% endblock %}
