@@ -61,3 +61,12 @@ services:
         autowire: true
         autoconfigure: true
         tags: ['serializer.normalizer']
+
+    # Make optional availability services pullable
+    AppBundle\Service\Availability\ClamAvAvailability:
+        arguments: ['@guzzle_file_scanner_client']
+        public: true
+
+    AppBundle\Service\Availability\WkHtmlToPdfAvailability:
+        arguments: ['@AppBundle\Service\WkHtmlToPdfGenerator']
+        public: true
