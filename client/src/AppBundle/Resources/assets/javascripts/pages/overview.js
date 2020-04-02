@@ -1,5 +1,6 @@
 import ButtonToggler from '../modules/buttonToggler'
 
 window.addEventListener('DOMContentLoaded', () => {
-  ButtonToggler.addToggleEventListener('confirmReview', 'edit-report-review-button')
+    let bt = new ButtonToggler()
+    bt.addToggleEventListener('confirmReview', 'edit-report-review-button')
 })
