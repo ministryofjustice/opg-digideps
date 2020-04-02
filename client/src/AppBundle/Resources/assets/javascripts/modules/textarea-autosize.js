@@ -7,8 +7,8 @@ module.exports = function (containerSelector) {
   const textArea = $(containerSelector).find("[class*='js-auto-size'] textarea")
 
   textArea.on('keyup input paste change', function (event) {
-    let $this = $(this)
-    let initialHeight = $this.height()
+    const $this = $(this)
+    const initialHeight = $this.height()
 
     $this
       .height(initialHeight - 20)
