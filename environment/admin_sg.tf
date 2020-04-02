@@ -24,13 +24,6 @@ locals {
       target_type = "security_group_id"
       target      = module.admin_cache_security_group.id
     }
-    scan = {
-      port        = 8080
-      type        = "egress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = module.scan_security_group.id
-    }
     admin_elb = {
       port        = 443
       type        = "ingress"
