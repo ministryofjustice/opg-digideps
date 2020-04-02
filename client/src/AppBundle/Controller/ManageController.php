@@ -21,7 +21,7 @@ class ManageController extends AbstractController
     private $services = [];
 
     public function __construct(
-        // ContainerInterface $container,
+        ContainerInterface $container,
         ApiAvailability $apiAvailability,
         // ClamAvAvailability $clamAvAvailability,
         NotifyAvailability $notifyAvailability,
@@ -37,10 +37,10 @@ class ManageController extends AbstractController
             $notifyAvailability
         ];
 
-        // if ($container->getParameter('env') !== 'admin') {
+        if ($container->getParameter('env') !== 'admin') {
         //     $this->services[] = $clamAvAvailability;
         //     $this->services[] = $wkHtmlToPdfAvailability;
-        // }
+        }
     }
 
     /**
