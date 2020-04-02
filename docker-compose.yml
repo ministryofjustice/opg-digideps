@@ -70,6 +70,7 @@ services:
             - ./client/src:/var/www/src:ro
             - ./client/tests:/var/www/tests
             - ./client/phpstan.neon:/var/www/phpstan.neon
+            - ./client/web:/var/www/web
         environment:
             VIRTUAL_HOST: www.digideps.local,digideps.local
             VIRTUAL_PROTO: https
