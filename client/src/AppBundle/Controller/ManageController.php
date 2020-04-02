@@ -22,17 +22,16 @@ class ManageController extends AbstractController
     public function __construct(
         ContainerInterface $container,
         ApiAvailability $apiAvailability,
-        RedisAvailability $redisAvailability,
-        SiriusApiAvailability $siriusApiAvailability
+        RedisAvailability $redisAvailability
     )
     {
         $this->services = [
             $apiAvailability,
-            $redisAvailability,
-            $siriusApiAvailability
+            $redisAvailability
         ];
 
         if ($container->getParameter('env') !== 'admin') {
+            $this->services[] = $container->get(SiriusApiAvailability::class);
             $this->services[] = $container->get(ClamAvAvailability::class);
             $this->services[] = $container->get(WkHtmlToPdfAvailability::class);
         }

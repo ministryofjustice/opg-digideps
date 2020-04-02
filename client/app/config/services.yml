@@ -67,6 +67,10 @@ services:
         arguments: ['@guzzle_file_scanner_client']
         public: true
 
+    AppBundle\Service\Availability\SiriusApiAvailability:
+        arguments: ['@AppBundle\Service\Client\Sirius\SiriusApiGatewayClient']
+        public: true
+
     AppBundle\Service\Availability\WkHtmlToPdfAvailability:
         arguments: ['@AppBundle\Service\WkHtmlToPdfGenerator']
         public: true
