@@ -97,6 +97,12 @@ default:
             contexts:
                 - DigidepsBehat\UserManagement\UserManagementFeatureContext
 
+        completing-reports:
+            description: Coverage of the report completion flow
+            paths: [ "%paths.base%/features/CompletingReports" ]
+            contexts:
+                - DigidepsBehat\CompletingReports\CompletingReportsFeatureContext
+
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
               goutte:

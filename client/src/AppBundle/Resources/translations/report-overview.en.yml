@@ -34,7 +34,7 @@ reportSectionsToComplete: "Report sections to complete"
 options:
   submitReport: Submit report
   viewReport: View report
-  previewReport: Preview report
+  previewReport: Preview and check report
   reviewReport: Review report
 
 guidanceNotice: |
