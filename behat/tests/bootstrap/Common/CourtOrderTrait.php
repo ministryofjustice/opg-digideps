@@ -27,7 +27,7 @@ trait CourtOrderTrait
 
             $this->fillField('court_order_fixture_deputyType', $row['deputy_type']);
             $this->fillField('court_order_fixture_reportType', $this->resolveReportType($row));
-            $this->fillField('court_order_fixture_reportStatus', 'notStarted');
+            $this->fillField('court_order_fixture_reportStatus', $row['completed'] ? 'readyToSubmit' : 'notStarted');
             $this->pressButton('court_order_fixture_submit');
         }
     }
