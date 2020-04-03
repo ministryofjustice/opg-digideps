@@ -298,10 +298,24 @@
     </div>
 {% endmacro %}
 
-{% macro startButtonIcon() %}
-    <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" role="presentation" focusable="false">
-        <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
-    </svg>
+{% macro icon(type, svgClass) %}
+    {% if type = 'success' %}
+        <svg class="{{ svgClass }}" fill="currentColor" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
+            <path d="M25,6.2L8.7,23.2L0,14.1l4-4.2l4.7,4.9L21,2L25,6.2z" />
+        </svg>
+    {% endif %}
+
+    {% if type = 'warning' %}
+        <svg class="{{ svgClass }}" fill="currentColor" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
+            <path d="M13.6,15.4h-2.3v-4.5h2.3V15.4z M13.6,19.8h-2.3v-2.2h2.3V19.8z M0,23.2h25L12.5,2L0,23.2z" />
+        </svg>
+    {% endif %}
+
+    {% if type = 'startButton' %}
+        <svg class="{{ svgClass }}" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" role="presentation" focusable="false">
+            <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
+        </svg>
+    {% endif %}
 {% endmacro %}
 
 {% macro details(options) %}
@@ -324,17 +338,13 @@
         <div class="moj-banner__message">
             {% if successHeading is not null %}
                 <h3 class="govuk-heading-m">
-                    <svg class="moj-banner__icon" fill="currentColor" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
-                        <path d="M25,6.2L8.7,23.2L0,14.1l4-4.2l4.7,4.9L21,2L25,6.2z" />
-                    </svg>
+                    {{ _self.icon('success', 'moj-banner__icon') }}
                     {{ successHeading | trans({}, transDomain)  }}
                 </h3>
             {% endif %}
 
             {% if successHeading is null %}
-                <svg class="moj-banner__icon" fill="currentColor" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
-                    <path d="M25,6.2L8.7,23.2L0,14.1l4-4.2l4.7,4.9L21,2L25,6.2z" />
-                </svg>
+                {{ _self.icon('success', 'moj-banner__icon') }}
             {% endif %}
             <span class="moj-banner__assistive">Success</span>
             {{ successText | trans({}, transDomain) | nl2br }}
@@ -347,17 +357,13 @@
         <div class="moj-banner__message">
             {% if warningHeading is not null %}
                 <h3 class="govuk-heading-m">
-                    <svg class="moj-banner__icon" fill="currentColor" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
-                        <path d="M13.6,15.4h-2.3v-4.5h2.3V15.4z M13.6,19.8h-2.3v-2.2h2.3V19.8z M0,23.2h25L12.5,2L0,23.2z" />
-                    </svg>
+                    {{ _self.icon('warning', 'moj-banner__icon') }}
                     {{ warningHeading | trans({}, transDomain)  }}
                 </h3>
             {% endif %}
 
             {% if warningHeading is null %}
-                <svg class="moj-banner__icon" fill="currentColor" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
-                    <path d="M13.6,15.4h-2.3v-4.5h2.3V15.4z M13.6,19.8h-2.3v-2.2h2.3V19.8z M0,23.2h25L12.5,2L0,23.2z" />
-                </svg>
+                {{ _self.icon('warning', 'moj-banner__icon') }}
             {% endif %}
 
             <span class="moj-banner__assistive">Warning</span>
@@ -366,11 +372,12 @@
     </div>
 {% endmacro %}
 
+{# Shows the start date, end date and status of a report #}
 {% macro reportDetails(report) %}
     <dl class="govuk-summary-list govuk-summary-list--no-border">
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key govuk-!-padding-0">
-                <strong>{{ 'reportingPeriod' | trans({}, 'report-overview') }}:</strong>
+                {{ 'reportingPeriod' | trans({}, 'report-overview') }}:
             </dt>
             <dd class="govuk-summary-list__value govuk-!-padding-0">
                 {{ report.startDate | date("j F Y") }} to {{ report.endDate | date("j F Y") }}
@@ -378,7 +385,7 @@
         </div>
         <div class="govuk-summary-list__row ">
             <dt class="govuk-summary-list__key govuk-!-padding-0 {{ report.unSubmitDate ? 'orangeWarning' : '' }}">
-                <strong>{{ 'dueDate' | trans({}, 'report-overview') }}:</strong>
+                {{ 'dueDate' | trans({}, 'report-overview') }}:
             </dt>
             <dd class="govuk-summary-list__value govuk-!-padding-0">
                 {{ report.dueDate | date("j F Y") }}
@@ -386,7 +393,7 @@
         </div>
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key govuk-!-padding-0">
-                <strong>{{ 'reportStatus' | trans({}, 'report-overview') }}:</strong>
+                {{ 'reportStatus' | trans({}, 'report-overview') }}:
             </dt>
             <dd class="govuk-summary-list__value govuk-!-padding-0">
                 {{ ('status.' ~ reportStatus.status) | trans() }}
