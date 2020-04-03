@@ -7,7 +7,6 @@ use AppBundle\Service\AWS\RequestSigner;
 use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use DateTime;
 use DigidepsTests\Helpers\DocumentHelpers;
-use DigidepsTests\Helpers\MultipartPactRequest;
 use DigidepsTests\Helpers\SiriusHelpers;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Request;
@@ -121,11 +120,13 @@ class SiriusDocumentsContractTest extends KernelTestCase
     private function setUpReportPdfPactBuilder(string $caseRef)
     {
         $matcher = new Matcher();
-
-        $multipartRequest = (new MultipartPactRequest())
-            ->addPart('report_file', 'c29tZV9jb250ZW50')
-            ->addPart('report', [
-                'data' => [
+        // Create your expected request from the consumer.
+        $request = (new ConsumerRequest())
+            ->setMethod('POST')
+            ->setPath(sprintf('/clients/%s/reports', $caseRef))
+            ->addHeader('Content-Type', 'application/json')
+            ->setBody([
+                'data'=> [
                     'type' => 'reports',
                     'attributes' => [
                         'reporting_period_from' => $matcher->dateISO8601('2018-05-14'),
@@ -133,25 +134,15 @@ class SiriusDocumentsContractTest extends KernelTestCase
                         'year' => $matcher->regex('2018', '[0-9]{4}'),
                         'date_submitted' => $matcher->dateTimeISO8601('2019-06-20T00:00:00+01:00'),
                         'type' => $matcher->regex('PF', 'PF|HW|NDR'),
-                        'submission_id' => $matcher->regex(9876, '\d+')
+                        'submission_id' => $matcher->integer(9876)
+                    ],
+                    'file' => [
+                        'name' => 'Report_1234567T_2018_2019_11111.pdf',
+                        'mimetype' => 'application/pdf',
+                        'source' => $matcher->regex('dGVzdA==', '.+')
                     ]
                 ]
             ]);
-
-        // Create your expected request from the consumer.
-        $request = (new ConsumerRequest())
-            ->setMethod('POST')
-            ->setPath(sprintf('/clients/%s/reports', $caseRef))
-            ->setHeaders(
-                [
-                    'Content-Type' =>
-                        $matcher->regex(
-                            'multipart/form-data; boundary=5872fc54a8fa5f5be65ee0af590d1ae813a1b091',
-                            'multipart\/form-data.*'
-                        )
-                ]
-            )
-            ->setBody($matcher->regex($multipartRequest->getExampleBody(), $multipartRequest->getRegex('report')));
 
         // Create your expected response from the provider.
         $response = new ProviderResponse();
@@ -184,31 +175,24 @@ class SiriusDocumentsContractTest extends KernelTestCase
     {
         $matcher = new Matcher();
 
-        $multipartRequest = (new MultipartPactRequest())
-            ->addPart('supporting_document_file', 'c29tZV9jb250ZW50')
-            ->addPart('supporting_document', [
-                'data' => [
-                    'type' => 'supportingdocument',
-                    'attributes' => [
-                        'submission_id' => $matcher->regex(9876, '\d+')
-                    ]
-                ]
-            ]);
-
         // Create your expected request from the consumer.
         $request = (new ConsumerRequest())
             ->setMethod('POST')
             ->setPath(sprintf('/clients/%s/reports/%s/supportingdocuments', $caseRef, $reportPdfDocumentUuid))
-            ->setHeaders(
-                [
-                    'Content-Type' =>
-                        $matcher->regex(
-                            'multipart/form-data; boundary=5872fc54a8fa5f5be65ee0af590d1ae813a1b091',
-                            'multipart\/form-data.*'
-                        )
+            ->addHeader('Content-Type', 'application/json')
+            ->setBody([
+                'data' => [
+                    'type' => 'supportingdocument',
+                    'attributes' => [
+                        'submission_id' => $matcher->integer(9876)
+                    ],
+                    'file' => [
+                        'name' => 'bank-statement-March.pdf',
+                        'mimetype' => 'application/pdf',
+                        'source' => $matcher->regex('dGVzdA==', '.+')
+                    ]
                 ]
-            )
-            ->setBody($matcher->regex($multipartRequest->getExampleBody(), $multipartRequest->getRegex('supporting_document')));
+            ]);
 
         // Create your expected response from the provider.
         $response = new ProviderResponse();
