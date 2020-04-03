@@ -299,19 +299,19 @@
 {% endmacro %}
 
 {% macro icon(type, svgClass) %}
-    {% if type = 'success' %}
+    {% if type == 'success' %}
         <svg class="{{ svgClass }}" fill="currentColor" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
             <path d="M25,6.2L8.7,23.2L0,14.1l4-4.2l4.7,4.9L21,2L25,6.2z" />
         </svg>
     {% endif %}
 
-    {% if type = 'warning' %}
+    {% if type == 'warning' %}
         <svg class="{{ svgClass }}" fill="currentColor" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
             <path d="M13.6,15.4h-2.3v-4.5h2.3V15.4z M13.6,19.8h-2.3v-2.2h2.3V19.8z M0,23.2h25L12.5,2L0,23.2z" />
         </svg>
     {% endif %}
 
-    {% if type = 'startButton' %}
+    {% if type == 'startButton' %}
         <svg class="{{ svgClass }}" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" role="presentation" focusable="false">
             <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
         </svg>
@@ -396,7 +396,7 @@
                 {{ 'reportStatus' | trans({}, 'report-overview') }}:
             </dt>
             <dd class="govuk-summary-list__value govuk-!-padding-0">
-                {{ ('status.' ~ reportStatus.status) | trans() }}
+                {{ ('status.' ~ report.status.status) | trans({}, 'report-overview') }}
             </dd>
         </div>
     </dl>
