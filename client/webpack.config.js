@@ -10,8 +10,7 @@ module.exports = {
   entry: {
     application: './src/AppBundle/Resources/assets/javascripts/main.js',
     'formatted-report': './src/AppBundle/Resources/assets/scss/formatted-report.scss',
-    fonts: './src/AppBundle/Resources/assets/scss/fonts.scss',
-    overview: './src/AppBundle/Resources/assets/javascripts/pages/overview.js'
+    fonts: './src/AppBundle/Resources/assets/scss/fonts.scss'
   },
   mode: 'production',
   devtool: 'source-map',
