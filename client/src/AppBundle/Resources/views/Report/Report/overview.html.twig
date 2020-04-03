@@ -23,7 +23,7 @@
 {% block pageContent %}
     <div class="govuk-grid-row push--bottom">
         <div class="govuk-grid-column-two-thirds">
-            {% include 'AppBundle:Report/Report:_report_details.html.twig' %}
+            {{ macros.reportDetails(report) }}
         </div>
     </div>
 
