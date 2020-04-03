@@ -365,3 +365,32 @@
         </div>
     </div>
 {% endmacro %}
+
+{% macro reportDetails(report) %}
+    <dl class="govuk-summary-list govuk-summary-list--no-border">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-!-padding-0">
+                <strong>{{ 'reportingPeriod' | trans({}, 'report-overview') }}:</strong>
+            </dt>
+            <dd class="govuk-summary-list__value govuk-!-padding-0">
+                {{ report.startDate | date("j F Y") }} to {{ report.endDate | date("j F Y") }}
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row ">
+            <dt class="govuk-summary-list__key govuk-!-padding-0 {{ report.unSubmitDate ? 'orangeWarning' : '' }}">
+                <strong>{{ 'dueDate' | trans({}, 'report-overview') }}:</strong>
+            </dt>
+            <dd class="govuk-summary-list__value govuk-!-padding-0">
+                {{ report.dueDate | date("j F Y") }}
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-!-padding-0">
+                <strong>{{ 'reportStatus' | trans({}, 'report-overview') }}:</strong>
+            </dt>
+            <dd class="govuk-summary-list__value govuk-!-padding-0">
+                {{ ('status.' ~ reportStatus.status) | trans() }}
+            </dd>
+        </div>
+    </dl>
+{% endmacro %}
