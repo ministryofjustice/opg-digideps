@@ -1,17 +1,26 @@
 class ButtonToggler {
-  toggleButtonDisabled (buttonId) {
-    const button = document.getElementById(buttonId)
-    const disabled = !button.disabled
-
-    button.disabled = disabled
-    button.setAttribute('aria-disabled', disabled.toString())
-    button.classList.toggle('govuk-button--disabled')
+  constructor (toggle) {
+    this.toggle = toggle
   }
 
-  addToggleButtonEventListener (elementId, buttonId) {
-    const element = document.getElementById(elementId)
-    element.addEventListener('click', () => this.toggleButtonDisabled(buttonId))
+  init () {
+    console.log('inited')
+    this.toggle.addEventListener('click', () => this.toggleButtonDisabled())
+  }
+
+  toggleButtonDisabled () {
+    console.log('clicked')
+
+    const nodes = document.querySelector('[data-module="opg-toggleable-button"]')
+
+    nodes.forEach(button => {
+      const disabled = !button.disabled
+
+      button.disabled = disabled
+      button.setAttribute('aria-disabled', disabled.toString())
+      button.classList.toggle('govuk-button--disabled')
+    })
   }
 }
 
-export default ButtonToggler
+export { ButtonToggler }
