@@ -1,4 +1,5 @@
 /* globals $ */
+import { ButtonToggler } from './modules/buttonToggler.js'
 require('../scss/application.scss')
 require('./modules/bind.js')
 
@@ -86,6 +87,14 @@ $(document).ready(function () {
   // Initialising the Show Hide Content GOVUK module
   var showHideContent = new ShowHideContent()
   showHideContent.init()
+})
+
+window.addEventListener('DOMContentLoaded', () => {
+  const togglers = document.querySelector('[data-module="opg-button-toggler"]')
+
+  togglers.forEach(toggler => {
+    new ButtonToggler(toggler).init()
+  })
 })
 
 GOVUKFrontend.initAll()
