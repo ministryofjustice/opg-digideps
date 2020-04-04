@@ -2,8 +2,6 @@
 
 namespace AppBundle\v2\DTO;
 
-use AppBundle\Entity\Organisation;
-
 class ClientDto
 {
     /** @var int */
@@ -19,7 +17,28 @@ class ClientDto
     private $lastName;
 
     /** @var string */
+    private $address;
+
+    /** @var string */
+    private $address2;
+
+    /** @var string */
+    private $county;
+
+    /** @var string */
+    private $postcode;
+
+    /** @var string */
+    private $country;
+
+    /** @var string */
+    private $phone;
+
+    /** @var string */
     private $email;
+
+    /** @var \DateTime */
+    private $dateOfBirth;
 
     /** @var \DateTime */
     private $archivedAt;
@@ -33,7 +52,7 @@ class ClientDto
     /** @var array */
     private $reports;
 
-    /** @var Organisation */
+    /** @var OrganisationDto */
     private $organisation;
 
     /** @var NamedDeputyDto */
@@ -71,12 +90,52 @@ class ClientDto
         return $this->lastName;
     }
 
-    /**
-     * @return string
-     */
+    /** @return string */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /** @return string */
+    public function getAddress2()
+    {
+        return $this->address2;
+    }
+
+    /** @return string */
+    public function getCounty()
+    {
+        return $this->county;
+    }
+
+    /** @return string */
+    public function getPostcode()
+    {
+        return $this->postcode;
+    }
+
+    /** @return string */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    /** @return string */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /** @return string */
     public function getEmail()
     {
         return $this->email;
+    }
+
+    /** @return \DateTime */
+    public function getDateOfBirth()
+    {
+        return $this->dateOfBirth;
     }
 
     /**
@@ -112,7 +171,7 @@ class ClientDto
     }
 
     /**
-     * @return array
+     * @return OrganisationDto
      */
     public function getOrganisation()
     {
@@ -168,12 +227,82 @@ class ClientDto
     }
 
     /**
+     * @param string $address
+     * @return ClientDto
+     */
+    public function setAddress(string $address)
+    {
+        $this->address = $address;
+        return $this;
+    }
+
+    /**
+     * @param string $address2
+     * @return ClientDto
+     */
+    public function setAddress2(string $address2)
+    {
+        $this->address2 = $address2;
+        return $this;
+    }
+
+    /**
+     * @param string $county
+     * @return ClientDto
+     */
+    public function setCounty(string $county)
+    {
+        $this->county = $county;
+        return $this;
+    }
+
+    /**
+     * @param string $postcode
+     * @return ClientDto
+     */
+    public function setPostcode(string $postcode)
+    {
+        $this->postcode = $postcode;
+        return $this;
+    }
+
+    /**
+     * @param string $country
+     * @return ClientDto
+     */
+    public function setCountry(string $country)
+    {
+        $this->country = $country;
+        return $this;
+    }
+
+    /**
+     * @param string $phone
+     * @return ClientDto
+     */
+    public function setPhone(string $phone)
+    {
+        $this->phone = $phone;
+        return $this;
+    }
+
+    /**
      * @param string $email
      * @return ClientDto
      */
     public function setEmail($email)
     {
         $this->email = strtolower($email);
+        return $this;
+    }
+
+    /**
+     * @param \DateTime $dateOfBirth
+     * @return ClientDto
+     */
+    public function setDateOfBirth(\DateTime $dateOfBirth)
+    {
+        $this->dateOfBirth = $dateOfBirth;
         return $this;
     }
 
@@ -218,10 +347,10 @@ class ClientDto
     }
 
     /**
-     * @param $organisation
+     * @param OrganisationDto $organisation
      * @return ClientDto
      */
-    public function setOrganisation($organisation)
+    public function setOrganisation(OrganisationDto $organisation)
     {
         $this->organisation = $organisation;
         return $this;

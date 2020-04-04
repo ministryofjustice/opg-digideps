@@ -51,7 +51,7 @@ class ClientAssembler
     {
         $dto = new ClientDto();
 
-        $exclude = ['ndr', 'reports', 'namedDeputy'];
+        $exclude = ['ndr', 'reports', 'namedDeputy', 'organisation'];
         $this->setPropertiesFromData($dto, $data, $exclude);
 
         if (isset($data['ndr']) && is_array($data['ndr'])) {

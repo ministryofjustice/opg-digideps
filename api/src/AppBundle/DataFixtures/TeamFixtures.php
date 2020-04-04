@@ -48,7 +48,7 @@ class TeamFixtures extends AbstractDataFixture implements OrderedFixtureInterfac
         $clientRepository = $manager->getRepository(Client::class);
         $clients = $clientRepository->findAll('');
         foreach ($clients as $client) {
-            if ($client->getUsers()[0]->getRoleName() === 'ROLE_' . $code . '_NAMED') {
+            if (!is_null($client->getUsers()[0]) && $client->getUsers()[0]->getRoleName() === 'ROLE_' . $code . '_NAMED') {
                 $teamAdminUser->addClient($client);
                 $teamMemberUser->addClient($client);
             }
