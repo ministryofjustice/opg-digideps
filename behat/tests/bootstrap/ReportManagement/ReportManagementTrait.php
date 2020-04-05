@@ -3,7 +3,6 @@
 namespace DigidepsBehat\ReportManagement;
 
 use Behat\Gherkin\Node\TableNode;
-use Exception;
 
 trait ReportManagementTrait
 {
@@ -167,56 +166,5 @@ trait ReportManagementTrait
 
         $expectedDueDate = new \DateTime($adjustment);
         $this->iShouldSeeInTheRegion($expectedDueDate->format('j F Y'), "report-$startDate-to-$endDate-due-date");
-    }
-
-    /**
-     * @When the submitted report is returned with the following changes:
-     */
-    public function aSubmittedReportIsReturnedWithFollowingChanges(TableNode $table)
-    {
-        $reportId = self::$currentReportCache['reportId'];
-
-        // Only log in and reload the session if we're not already on the management page.
-        $currentUrl = $this->getSession()->getCurrentUrl();
-        if (strpos($currentUrl, "/admin/report/$reportId/manage") === false) {
-            $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
-            $this->visitAdminPath("/admin/report/$reportId/manage");
-        }
-
-        foreach ($table as $inputs) {
-
-            if (isset($inputs['type'])) {
-                $this->selectOption('manage_report[type]', $inputs['type']);
-            }
-
-            if (isset($inputs['dueDateChoice'])) {
-                $value = (intval($inputs['dueDateChoice'])) ?: $inputs['dueDateChoice'];
-                $this->selectOption('manage_report[dueDateChoice]', $value);
-            }
-
-            if (isset($inputs['incompleteSection'])) {
-                $this->checkOption($inputs['incompleteSection']);
-            }
-
-            if (isset($inputs['startDate'])) {
-                $date = new \DateTime($inputs['startDate']);
-                $this->fillField('manage_report_startDate_day', $date->format('d'));
-                $this->fillField('manage_report_startDate_month', $date->format('m'));
-                $this->fillField('manage_report_startDate_year', $date->format('Y'));
-            }
-
-            if (isset($inputs['endDate'])) {
-                $date = new \DateTime($inputs['endDate']);
-                $this->fillField('manage_report_endDate_day', $date->format('d'));
-                $this->fillField('manage_report_endDate_month', $date->format('m'));
-                $this->fillField('manage_report_endDate_year', $date->format('Y'));
-            }
-
-            break; // Only expect one row in this table.
-        }
-
-        $this->pressButton('manage_report[save]');
-        $this->selectOption('manage_report_confirm[confirm]', 'yes');
-        $this->pressButton('manage_report_confirm[save]');
     }
 }

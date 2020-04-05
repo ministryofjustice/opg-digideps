@@ -297,9 +297,11 @@
                     </fieldset>
                 </div>
             {% endif %}
-            <a id="preview-report-review" class="push--top behat-link-edit-report-review" href="{{ path('report_review', {'reportId': report.id}) }}">
+            <a id="{{ report.isUnsubmitted ? 'edit-report-review' : 'edit-report-preview' }}"
+               class="push--top behat-link-edit-report-review"
+               href="{{ path('report_review', {'reportId': report.id}) }}"
+            >
                 <button
-                    id="edit-report-button"
                     class="govuk-button {{ report.isUnsubmitted ? 'govuk-button--disabled' : '' }}"
                     aria-disabled="{{ report.isUnsubmitted ? 'true' : 'false' }}"
                     {% if report.isUnsubmitted %}
@@ -317,14 +319,14 @@
             <style type="text/css">
                 #js-enabled-controls { display:none; }
             </style>
-            <a id="preview-report-review" class="push--top behat-link-edit-report-review" href="{{ path('report_review', {'reportId': report.id}) }}">
+            <a id="{{ report.isUnsubmitted ? 'edit-report-review' : 'edit-report-preview' }}"
+               class="push--top behat-link-edit-report-review"
+               href="{{ path('report_review', {'reportId': report.id}) }}"
+            >
                 <button class="govuk-button">
                     {{ 'options.previewReport' | trans() }}
                 </button>
             </a>
         </noscript>
     {% endif %}
-
-
-
 {% endblock %}
