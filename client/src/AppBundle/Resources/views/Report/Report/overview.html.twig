@@ -297,7 +297,7 @@
                     </fieldset>
                 </div>
             {% endif %}
-            <a id="{{ report.isUnsubmitted ? 'edit-report-review' : 'edit-report-preview' }}"
+            <a id="{{ report.status.isReadyToSubmit ? 'edit-report-review' : 'edit-report-preview' }}"
                class="push--top behat-link-edit-report-review"
                href="{{ path('report_review', {'reportId': report.id}) }}"
             >
@@ -319,7 +319,7 @@
             <style type="text/css">
                 #js-enabled-controls { display:none; }
             </style>
-            <a id="{{ report.isUnsubmitted ? 'edit-report-review' : 'edit-report-preview' }}"
+            <a id="{{ report.status.isReadyToSubmit ? 'edit-report-review' : 'edit-report-preview' }}"
                class="push--top behat-link-edit-report-review"
                href="{{ path('report_review', {'reportId': report.id}) }}"
             >
