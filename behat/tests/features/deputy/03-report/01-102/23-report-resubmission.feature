@@ -93,7 +93,7 @@ Feature: Admin unsubmit report (from client page)
     Then I should see "More information needed"
     And I should see the "section-decisions-needs-attention" region
     And I should see the "section-deputyExpenses-needs-attention" region
-    When I click on "edit-report-review"
+    When I follow "Preview and check report"
     And I click on "declaration-page"
     Then the following fields should have the corresponding values:
       | report_declaration_agreedBehalfDeputy_0 | only_deputy |
