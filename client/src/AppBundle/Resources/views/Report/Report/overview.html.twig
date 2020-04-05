@@ -282,32 +282,49 @@
             {{ macros.notification('info', 'previewNoticeNotDue' | trans(transOptions)) }}
         </div>
     {% else %}
-        {% if report.isUnsubmitted %}
+        <div id="js-enabled-controls">
+            {% if report.isUnsubmitted %}
                 <div class="govuk-form-group">
                     <fieldset class="govuk-fieldset">
                         <div class="govuk-checkboxes">
                             <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="confirmReview" name="confirmReview" type="checkbox" data-module="opg-button-toggler">
+                                <input class="govuk-checkboxes__input" name="confirmReview" type="checkbox" data-module="opg-button-toggler">
                                 <label class="govuk-label govuk-checkboxes__label" for="confirmReview">
-                                    I've reviewed the sections marked above and added all the information I'm able to.
+                                    {{ 'confirmSectionsReviewed' | trans() }}
                                 </label>
                             </div>
                         </div>
                     </fieldset>
                 </div>
-        {% endif %}
-        <a id="preview-report-review" class="push--top behat-link-edit-report-review" href="{{ path('report_review', {'reportId': report.id}) }}">
-            <button
-                id="edit-report-button"
-                class="govuk-button {{ report.isUnsubmitted ? 'govuk-button--disabled' : '' }}"
-                aria-disabled="{{ report.isUnsubmitted ? 'true' : 'false' }}"
-                {% if report.isUnsubmitted %}
-                    disabled="disabled"
-                {% endif %}
-                data-module="opg-toggleable-button"
-            >
-                {{ 'options.previewReport' | trans() }}
-            </button>
-        </a>
+            {% endif %}
+            <a id="preview-report-review" class="push--top behat-link-edit-report-review" href="{{ path('report_review', {'reportId': report.id}) }}">
+                <button
+                    id="edit-report-button"
+                    class="govuk-button {{ report.isUnsubmitted ? 'govuk-button--disabled' : '' }}"
+                    aria-disabled="{{ report.isUnsubmitted ? 'true' : 'false' }}"
+                    {% if report.isUnsubmitted %}
+                        disabled="disabled"
+                    {% endif %}
+                    data-module="opg-toggleable-button"
+                >
+                    {{ 'options.previewReport' | trans() }}
+                </button>
+            </a>
+        </div>
+
+        {# Fallback for JS disabled browsers #}
+        <noscript>
+            <style type="text/css">
+                #js-enabled-controls { display:none; }
+            </style>
+            <a id="preview-report-review" class="push--top behat-link-edit-report-review" href="{{ path('report_review', {'reportId': report.id}) }}">
+                <button class="govuk-button">
+                    {{ 'options.previewReport' | trans() }}
+                </button>
+            </a>
+        </noscript>
     {% endif %}
+
+
+
 {% endblock %}

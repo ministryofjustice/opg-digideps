@@ -1,19 +1,12 @@
 class ButtonToggler {
-  constructor (toggle) {
-    this.toggle = toggle
-  }
-
-  init () {
-    console.log('inited')
-    this.toggle.addEventListener('click', () => this.toggleButtonDisabled())
+  init (toggle) {
+    toggle.addEventListener('click', () => this.toggleButtonDisabled())
   }
 
   toggleButtonDisabled () {
-    console.log('clicked')
+    const buttons = document.querySelectorAll('[data-module="opg-toggleable-button"]')
 
-    const nodes = document.querySelector('[data-module="opg-toggleable-button"]')
-
-    nodes.forEach(button => {
+    buttons.forEach(button => {
       const disabled = !button.disabled
 
       button.disabled = disabled

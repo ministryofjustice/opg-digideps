@@ -67,14 +67,14 @@ $(document).ready(function () {
   // Initialising the Show Hide Content GOVUK module
   var showHideContent = new ShowHideContent()
   showHideContent.init()
-})
 
-window.addEventListener('DOMContentLoaded', () => {
-  const togglers = document.querySelector('[data-module="opg-button-toggler"]')
+  const togglers = document.querySelectorAll('[data-module="opg-button-toggler"]')
 
-  togglers.forEach(toggler => {
-    new ButtonToggler(toggler).init()
-  })
+  if (togglers !== null) {
+    togglers.forEach(toggler => {
+      new ButtonToggler().init(toggler)
+    })
+  }
 })
 
 GOVUKFrontend.initAll()

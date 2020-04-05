@@ -30,6 +30,7 @@ incompleteReport: "Incomplete report"
 reportStatus: "Report status"
 reportOptions: "Report options"
 reportSectionsToComplete: "Report sections to complete"
+confirmSectionsReviewed: "I've reviewed the sections marked above and added all the information I'm able to."
 
 options:
   submitReport: Submit report
