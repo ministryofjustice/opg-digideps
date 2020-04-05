@@ -22,7 +22,6 @@ use DigidepsBehat\Common\SiteNavigationTrait;
 class FeatureContext extends MinkContext implements SnippetAcceptingContext
 {
     use AuthenticationTrait,
-        ButtonTrait,
         DebugTrait,
         DbTrait,
         CookieTrait,
