@@ -21,7 +21,9 @@ Feature: Infrastructure document tests
   @infra
   Scenario: Can generate report PDF
     Given I am logged in as "behat-lay-deputy-103-4@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "report-start, edit-report-preview, download-pdf"
+    When I click on "report-start"
+    And I follow "Preview and check report"
+    And I click on "download-pdf"
     Then the response status code should be 200
     And the response should have the "Content-Type" header containing "application/pdf"
     And the response should have the "Content-Disposition" header containing "DigiRep-"
