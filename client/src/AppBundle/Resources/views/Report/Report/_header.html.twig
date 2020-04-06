@@ -10,7 +10,7 @@
             {% if report.unSubmitDate and report.submitted == false %}
                 {{ macros.warningBanner('incompleteNotice', 'report-overview', 'incompleteNoticeHeading') }}
             {% else %}
-                {{ macros.successBanner('reportIsReady', 'report-overview', 'asasasa') }}
+                {{ macros.successBanner('reportIsReady', 'report-overview') }}
             {% endif %}
         </div>
     </div>
