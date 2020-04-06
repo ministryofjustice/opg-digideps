@@ -58,32 +58,18 @@ class SiriusApiGatewayClient
         return $this->httpClient->send($signedRequest);
     }
 
-    public function sendReportPdfDocument(SiriusDocumentUpload $upload, string $content, string $caseRef)
+    public function sendReportPdfDocument(SiriusDocumentUpload $upload, string $caseRef)
     {
         $reportJson = $this->serializer->serialize(['data' => $upload], 'json');
-
-        $multipart = new MultipartStream([
-            [
-                'name' => 'report',
-                'contents' => $reportJson,
-                'headers' => ['Content-Type' => 'application/vnd.opg-data.v1+json']
-            ],
-            [
-                'name' => 'report_file',
-                'contents' => base64_encode($content),
-                'headers' => ['Content-Type' => 'application/pdf']
-            ],
-        ]);
 
         $signedRequest = $this->buildSignedRequest(
             sprintf(self::SIRIUS_REPORT_ENDPOINT, $caseRef),
             'POST',
-            $multipart,
+            $reportJson,
             'application/vnd.opg-data.v1+json',
             'multipart/form-data'
         );
 
-        print_r((string) $signedRequest->getBody());
         return $this->httpClient->send($signedRequest, ['debug' => true]);
     }
 
@@ -95,7 +81,7 @@ class SiriusApiGatewayClient
      * @return mixed|\Psr\Http\Message\ResponseInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function sendSupportingDocument(SiriusDocumentUpload $upload, string $content, string $submissionUuid, string $caseRef)
+    public function sendSupportingDocument(SiriusDocumentUpload $upload, string $submissionUuid, string $caseRef)
     {
         $reportJson = $this->serializer->serialize(['data' => $upload], 'json');
 
@@ -118,14 +104,13 @@ class SiriusApiGatewayClient
             'multipart/form-data'
         );
 
-        print_r((string) $signedRequest->getBody());
         return $this->httpClient->send($signedRequest, ['debug' => true]);
     }
 
     /**
      * @param string $endpoint
      * @param string $method
-     * @param string|null|resource|StreamInterface $body
+     * @param string $body
      * @param string $accept
      * @param string $contentType
      * @return Request|\Psr\Http\Message\RequestInterface
@@ -133,7 +118,7 @@ class SiriusApiGatewayClient
     private function buildSignedRequest(
         string $endpoint,
         string $method,
-        $body='',
+        string $body='',
         string $accept='application/json',
         string $contentType='application/json'
     )

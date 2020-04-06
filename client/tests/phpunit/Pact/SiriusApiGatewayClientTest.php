@@ -125,21 +125,23 @@ class SiriusDocumentsContractTest extends KernelTestCase
             ->setMethod('POST')
             ->setPath(sprintf('/clients/%s/reports', $caseRef))
             ->addHeader('Content-Type', 'application/json')
-            ->setBody([
-                'data'=> [
-                    'type' => 'reports',
-                    'attributes' => [
-                        'reporting_period_from' => $matcher->dateISO8601('2018-05-14'),
-                        'reporting_period_to' => $matcher->dateISO8601('2019-05-13'),
-                        'year' => $matcher->regex('2018', '[0-9]{4}'),
-                        'date_submitted' => $matcher->dateTimeISO8601('2019-06-20T00:00:00+01:00'),
-                        'type' => $matcher->regex('PF', 'PF|HW|NDR'),
-                        'submission_id' => $matcher->integer(9876)
-                    ],
-                    'file' => [
-                        'name' => 'Report_1234567T_2018_2019_11111.pdf',
-                        'mimetype' => 'application/pdf',
-                        'source' => $matcher->regex('dGVzdA==', '.+')
+            ->setBody( [
+                'report' => [
+                    'data'=> [
+                        'type' => 'reports',
+                        'attributes' => [
+                            'reporting_period_from' => $matcher->dateISO8601('2018-05-14'),
+                            'reporting_period_to' => $matcher->dateISO8601('2019-05-13'),
+                            'year' => $matcher->regex('2018', '[0-9]{4}'),
+                            'date_submitted' => $matcher->dateTimeISO8601('2019-06-20T00:00:00+01:00'),
+                            'type' => $matcher->regex('PF', 'PF|HW|NDR'),
+                            'submission_id' => $matcher->integer(9876)
+                        ],
+                        'file' => [
+                            'name' => 'Report_1234567T_2018_2019_11111.pdf',
+                            'mimetype' => 'application/pdf',
+                            'source' => $matcher->regex('dGVzdA==', '.+')
+                        ]
                     ]
                 ]
             ]);
@@ -162,8 +164,12 @@ class SiriusDocumentsContractTest extends KernelTestCase
                         'submission_id' => $matcher->integer(9876)
                     ]
                 ],
+                'file' => [
+                    'name' => $matcher->regex('Report_1234567T_2018_2019_11111.pdf', '.+\.pdf$'),
+                    'mimetype' => $matcher->regex('application/pdf', 'application\/pdf'),
+                    'source' => $matcher->regex('dGVzdA==', '.+'),
+                ]
             ]);
-
 
         $this->builder
             ->uponReceiving('A submitted report')
@@ -181,15 +187,17 @@ class SiriusDocumentsContractTest extends KernelTestCase
             ->setPath(sprintf('/clients/%s/reports/%s/supportingdocuments', $caseRef, $reportPdfDocumentUuid))
             ->addHeader('Content-Type', 'application/json')
             ->setBody([
-                'data' => [
-                    'type' => 'supportingdocument',
-                    'attributes' => [
-                        'submission_id' => $matcher->integer(9876)
-                    ],
-                    'file' => [
-                        'name' => 'bank-statement-March.pdf',
-                        'mimetype' => 'application/pdf',
-                        'source' => $matcher->regex('dGVzdA==', '.+')
+                'supporting_document' => [
+                    'data' => [
+                        'type' => 'supportingdocument',
+                        'attributes' => [
+                            'submission_id' => $matcher->integer(9876)
+                        ],
+                        'file' => [
+                            'name' => 'bank-statement-March.pdf',
+                            'mimetype' => 'application/pdf',
+                            'source' => $matcher->regex('dGVzdA==', '.+')
+                        ]
                     ]
                 ]
             ]);

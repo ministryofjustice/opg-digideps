@@ -8,6 +8,7 @@ use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
+use AppBundle\Model\Sirius\SiriusDocumentFile;
 use AppBundle\Model\Sirius\SiriusDocumentUpload;
 use AppBundle\Model\Sirius\SiriusReportPdfDocumentMetadata;
 use AppBundle\Model\Sirius\SiriusSupportingDocumentMetadata;
@@ -109,14 +110,14 @@ class DocumentSyncService
     {
         try {
             $content = $this->retrieveDocumentContentFromS3($document);
-            $this->handleSiriusSync($document, $content);
+            $this->handleSiriusSync($document, base64_encode($content));
             return $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_SUCCESS);
         } catch (Throwable $e) {
             $this->handleSyncErrors($e, $document);
         }
     }
 
-    private function buildUpload(Document $document)
+    private function buildUpload(Document $document, string $content)
     {
         $report = $document->getReport();
 
@@ -138,9 +139,15 @@ class DocumentSyncService
             $type = 'supportingdocument';
         }
 
+        $file = (new SiriusDocumentFile())
+            ->setName($document->getFileName())
+            ->setMimetype($document->getFile()->getClientMimeType())
+            ->setSource($content);
+
         return (new SiriusDocumentUpload())
             ->setType($type)
-            ->setAttributes($siriusDocumentMetadata);
+            ->setAttributes($siriusDocumentMetadata)
+            ->setFile($file);
     }
 
     private function determineReportType(Report $report)
@@ -175,15 +182,15 @@ class DocumentSyncService
      */
     public function handleSiriusSync(Document $document, string $content)
     {
-        $upload = $this->buildUpload($document);
+        $upload = $this->buildUpload($document, $content);
         $caseRef = $document->getReport()->getClient()->getCaseNumber();
 
         if($document->isReportPdf()) {
-            return $this->siriusApiGatewayClient->sendReportPdfDocument($upload, $content, $caseRef);
+            return $this->siriusApiGatewayClient->sendReportPdfDocument($upload, $caseRef);
         } else {
             /** @var ReportSubmission $reportPdfSubmission */
             $reportPdfSubmission = $document->getPreviousReportPdfSubmission();
-            return $this->siriusApiGatewayClient->sendSupportingDocument($upload, $content, $reportPdfSubmission->getUuid(), $caseRef);
+            return $this->siriusApiGatewayClient->sendSupportingDocument($upload, $reportPdfSubmission->getUuid(), $caseRef);
         }
     }
 
