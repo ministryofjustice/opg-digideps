@@ -2,7 +2,7 @@
 
 namespace DigidepsTests\Helpers;
 
-
+use AppBundle\Model\Sirius\SiriusDocumentFile;
 use AppBundle\Model\Sirius\SiriusDocumentUpload;
 use AppBundle\Model\Sirius\SiriusReportPdfDocumentMetadata;
 use AppBundle\Model\Sirius\SiriusSupportingDocumentMetadata;
@@ -27,9 +27,15 @@ class SiriusHelpers extends KernelTestCase
             ->setType($orderType)
             ->setSubmissionId($submissionId);
 
+        $file = (new SiriusDocumentFile())
+            ->setFilename('Report_1234567T_2018_2019_11111.pdf')
+            ->setMimetype('application/pdf')
+            ->setSource('dGVzdA==');
+
         return (new SiriusDocumentUpload())
             ->setType('reports')
-            ->setAttributes($siriusReportPdfDocumentMetadata);
+            ->setAttributes($siriusReportPdfDocumentMetadata)
+            ->setFile($file);
     }
 
     static public function generateSiriusSupportingDocumentUpload(int $submissionId)
@@ -37,8 +43,14 @@ class SiriusHelpers extends KernelTestCase
         $siriusSupportingDocumentMetadata = (new SiriusSupportingDocumentMetadata())
             ->setSubmissionId($submissionId);
 
+        $file = (new SiriusDocumentFile())
+            ->setFilename('Report_1234567T_2018_2019_11111.pdf')
+            ->setMimetype('application/pdf')
+            ->setSource('dGVzdA==');
+
         return (new SiriusDocumentUpload())
             ->setType('supportingdocument')
-            ->setAttributes($siriusSupportingDocumentMetadata);
+            ->setAttributes($siriusSupportingDocumentMetadata)
+            ->setFile($file);
     }
 }
