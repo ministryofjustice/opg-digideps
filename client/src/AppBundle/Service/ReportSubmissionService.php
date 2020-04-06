@@ -89,7 +89,7 @@ class ReportSubmissionService
             $report,
             $csvContent,
             $report->createAttachmentName('DigiRepTransactions-%s_%s_%s.csv'),
-            true
+            false
         );
     }
 

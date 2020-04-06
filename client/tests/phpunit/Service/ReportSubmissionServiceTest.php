@@ -98,7 +98,7 @@ class ReportSubmissionServiceTest extends TestCase
 
         $this->mockFileUploader->shouldReceive('uploadFile')->with($this->mockReport, m::type('String'), m::type('String'), true);
         $this->mockCsvGenerator->shouldReceive('generateTransactionsCsv')->with($this->mockReport)->andReturn('CSV CONTENT');
-        $this->mockFileUploader->shouldReceive('uploadFile')->with($this->mockReport, m::type('String'), m::type('String'), true);
+        $this->mockFileUploader->shouldReceive('uploadFile')->with($this->mockReport, m::type('String'), m::type('String'), false);
 
         $this->sut = $this->generateSut();
 
