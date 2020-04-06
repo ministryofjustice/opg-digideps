@@ -246,8 +246,10 @@ trait ReportTrait
             $sectionNames[] = substr($sectionId, strpos($sectionId, "-") + 1);
         }
 
-        if ($index = array_search('report-preview', $sectionNames)) {
-            unset($sectionNames[$index]);
+        if ($matches = array_keys($sectionNames, 'report-preview')) {
+            foreach ($matches as $index) {
+                unset($sectionNames[$index]);
+            }
         }
 
         $this->completeSections(implode(',', $sectionNames));
@@ -256,7 +258,7 @@ trait ReportTrait
         $this->visit("report/$reportId/overview");
 
         try {
-            $this->clickOnBehatLink('edit-report-review');
+            $this->clickLink('Preview and check report');
         } catch (\Exception $e) {
             $this->clickOnBehatLink('edit-report_submit');
         }
