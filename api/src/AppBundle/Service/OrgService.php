@@ -105,9 +105,6 @@ class OrgService
      */
     private $log;
 
-    /** @var EntityDir\CourtOrder */
-    private $courtOrder;
-
     /** @var CourtOrderRepository */
     private $courtOrderRepository;
 

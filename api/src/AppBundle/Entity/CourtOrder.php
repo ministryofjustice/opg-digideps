@@ -62,7 +62,7 @@ class CourtOrder
     /**
      * @var Client
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="courtOrders", cascade={"persist"})
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $client;
 

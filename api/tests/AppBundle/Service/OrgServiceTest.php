@@ -162,6 +162,9 @@ class OrgServiceTest extends WebTestCase
      */
     private $teamRepository;
 
+    /** @var EntityDir\Repository\CourtOrderRepository */
+    private $courtOrderRepository;
+
     public static function setUpBeforeClass(): void
     {
         self::$frameworkBundleClient = static::createClient(['environment' => 'test',
@@ -186,6 +189,7 @@ class OrgServiceTest extends WebTestCase
         $this->organisationRepository = $container->get('AppBundle\Entity\Repository\OrganisationRepository');
         $this->teamRepository = $container->get('AppBundle\Entity\Repository\TeamRepository');
         $this->namedDeputyRepository = $container->get('AppBundle\Entity\Repository\NamedDeputyRepository');
+        $this->courtOrderRepository = $container->get('AppBundle\Entity\Repository\CourtOrderRepository');
 
         $this->pa = new OrgService(self::$em,
             $this->logger,
@@ -196,7 +200,8 @@ class OrgServiceTest extends WebTestCase
             $this->teamRepository,
             $this->namedDeputyRepository,
             new OrganisationFactory([]),
-            new NamedDeputyFactory()
+            new NamedDeputyFactory(),
+            $this->courtOrderRepository
         );
 
         Fixtures::deleteReportsData(['dd_user', 'client']);
@@ -565,7 +570,8 @@ class OrgServiceTest extends WebTestCase
             $this->teamRepository,
             $namedDeputyRepository->reveal(),
             $orgFactory->reveal(),
-            $namedDeputyFactory->reveal()
+            $namedDeputyFactory->reveal(),
+            $this->courtOrderRepository
         );
 
         $sut->addFromCasrecRows([$row]);
@@ -597,6 +603,7 @@ class OrgServiceTest extends WebTestCase
         /** @var EntityDir\Report\Report&ObjectProphecy $report */
         $report = $this->prophesize(EntityDir\Report\Report::class);
         $report->getType()->shouldBeCalled()->willReturn('102-5');
+        $report->setCourtOrder(Argument::type(EntityDir\CourtOrder::class))->shouldBeCalled();
 
         /** @var EntityDir\Client&ObjectProphecy $client */
         $client = $this->prophesize(EntityDir\Client::class);
@@ -607,6 +614,7 @@ class OrgServiceTest extends WebTestCase
         $client->setNamedDeputy(Argument::any())->shouldBeCalled();
         $client->setOrganisation(Argument::any())->shouldBeCalled();
         $client->setCourtDate(Argument::any())->shouldBeCalled();
+        $client->getCaseNumber(Argument::any())->shouldBeCalled();
 
 
         // Ensure no client data is updated
@@ -631,7 +639,8 @@ class OrgServiceTest extends WebTestCase
             $this->teamRepository,
             $this->namedDeputyRepository,
             new OrganisationFactory([]),
-            new NamedDeputyFactory()
+            new NamedDeputyFactory(),
+            $this->courtOrderRepository
         );
 
         $output = $sut->addFromCasrecRows([ $row ]);
@@ -673,7 +682,8 @@ class OrgServiceTest extends WebTestCase
             $this->teamRepository,
             $namedDeputyRepository->reveal(),
             new OrganisationFactory([]),
-            new NamedDeputyFactory()
+            new NamedDeputyFactory(),
+            $this->courtOrderRepository
         );
 
         $this->assertEquals($namedDeputy, $sut->identifyNamedDeputy(self::$deputy1 + self::$client1));
