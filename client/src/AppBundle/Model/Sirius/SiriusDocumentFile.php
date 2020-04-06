@@ -7,7 +7,7 @@ namespace AppBundle\Model\Sirius;
 class SiriusDocumentFile
 {
     /** @var string */
-    private $filename;
+    private $name;
 
     /** @var string */
     private $mimetype;
@@ -18,18 +18,18 @@ class SiriusDocumentFile
     /**
      * @return string
      */
-    public function getFilename(): string
+    public function getName(): string
     {
-        return $this->filename;
+        return $this->name;
     }
 
     /**
-     * @param string $filename
+     * @param string $name
      * @return SiriusDocumentFile
      */
-    public function setFilename(string $filename): self
+    public function setName(string $name): self
     {
-        $this->filename = $filename;
+        $this->name = $name;
 
         return $this;
     }
@@ -43,7 +43,7 @@ class SiriusDocumentFile
     }
 
     /**
-     * @param string $filename
+     * @param string $mimetype
      * @return SiriusDocumentFile
      */
     public function setMimetype(string $mimetype): self

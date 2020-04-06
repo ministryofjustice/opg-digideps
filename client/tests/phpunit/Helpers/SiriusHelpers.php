@@ -28,7 +28,7 @@ class SiriusHelpers extends KernelTestCase
             ->setSubmissionId($submissionId);
 
         $file = (new SiriusDocumentFile())
-            ->setFilename('Report_1234567T_2018_2019_11111.pdf')
+            ->setName('Report_1234567T_2018_2019_11111.pdf')
             ->setMimetype('application/pdf')
             ->setSource('dGVzdA==');
 
@@ -44,7 +44,7 @@ class SiriusHelpers extends KernelTestCase
             ->setSubmissionId($submissionId);
 
         $file = (new SiriusDocumentFile())
-            ->setFilename('Report_1234567T_2018_2019_11111.pdf')
+            ->setName('bank-statement-March.pdf')
             ->setMimetype('application/pdf')
             ->setSource('dGVzdA==');
 
