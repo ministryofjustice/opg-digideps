@@ -12,6 +12,9 @@ class SiriusDocumentUpload
     /** @var SiriusReportPdfDocumentMetadata */
     private $attributes;
 
+    /** @var SiriusDocumentFile */
+    private $file;
+
     /**
      * @return string
      */
@@ -46,6 +49,25 @@ class SiriusDocumentUpload
     public function setAttributes(SiriusMetadataInterface $attributes): self
     {
         $this->attributes = $attributes;
+
+        return $this;
+    }
+
+    /**
+     * @return SiriusDocumentFile
+     */
+    public function getFile(): SiriusDocumentFile
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param SiriusDocumentFile $file
+     * @return SiriusDocumentUpload
+     */
+    public function setFile(SiriusDocumentFile $file): self
+    {
+        $this->file = $file;
 
         return $this;
     }
