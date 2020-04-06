@@ -20,7 +20,7 @@ class DataNormaliser
      * @param string $value
      * @return string
      */
-    public static function normaliseSurname(string $value): string
+    public function normaliseSurname(string $value): string
     {
         $value = trim($value);
         $value = strtolower($value);
@@ -38,7 +38,7 @@ class DataNormaliser
      * @param string $value
      * @return string
      */
-    public static function normaliseCaseNumber(string $value): string
+    public function normaliseCaseNumber(string $value): string
     {
         $value = trim($value);
         $value = strtolower($value);
@@ -51,7 +51,7 @@ class DataNormaliser
      * @param string $value
      * @return string
      */
-    public static function normaliseDeputyNo(string $value): string
+    public function normaliseDeputyNo(string $value): string
     {
         $value = trim($value);
         $value = strtolower($value);
@@ -63,7 +63,7 @@ class DataNormaliser
      * @param string $value
      * @return string
      */
-    public static function normalisePostCode(string $value): string
+    public function normalisePostCode(string $value): string
     {
         $value = trim($value);
         $value = strtolower($value);

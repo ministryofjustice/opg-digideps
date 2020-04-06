@@ -18,8 +18,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class CourtOrder
 {
-    const SUBTYPE_HW = 'HW';
-    const SUBTYPE_PFA = 'PFA';
+    const SUBTYPE_HW = 'hw';
+    const SUBTYPE_PFA = 'pfa';
 
     const LEVEL_MINIMAL = 'MINIMAL';
     const LEVEL_GENERAL = 'GENERAL';
@@ -72,9 +72,13 @@ class CourtOrder
      */
     private $reports;
 
-    public function __construct()
+    /** @var DataNormaliser */
+    private $normaliser;
+
+    public function __construct(DataNormaliser $normaliser)
     {
         $this->reports = new ArrayCollection();
+        $this->normaliser = $normaliser;
     }
 
     /**
@@ -155,7 +159,7 @@ class CourtOrder
     public function setSupervisionLevel(string $supervisionLevel): CourtOrder
     {
         if (!in_array($supervisionLevel, [self::LEVEL_GENERAL, self::LEVEL_MINIMAL])) {
-            throw new InvalidArgumentException("Invalid CourtOrder supervision level: $supervisionLevel");
+            throw new InvalidArgumentException('Invalid CourtOrder supervision level');
         }
 
         $this->supervisionLevel = $supervisionLevel;
@@ -180,7 +184,7 @@ class CourtOrder
      */
     public function setCaseNumber($caseNumber): CourtOrder
     {
-        $this->caseNumber = $caseNumber;
+        $this->caseNumber = $this->normaliser->normaliseCaseNumber($caseNumber);
 
         return $this;
     }

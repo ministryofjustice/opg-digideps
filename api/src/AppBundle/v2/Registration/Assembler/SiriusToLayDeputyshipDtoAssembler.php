@@ -8,6 +8,17 @@ use AppBundle\v2\Registration\DTO\LayDeputyshipDto;
 
 class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInterface
 {
+    /** @var DataNormaliser */
+    private $normaliser;
+
+    /**
+     * @param DataNormaliser $normaliser
+     */
+    public function __construct(DataNormaliser $normaliser)
+    {
+        $this->normaliser = $normaliser;
+    }
+
     /**
      * @param array $data
      * @return LayDeputyshipDto
@@ -33,11 +44,11 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
     {
         return
             (new LayDeputyshipDto())
-                ->setCaseNumber(DataNormaliser::normaliseCaseNumber($data['Case']))
-                ->setClientSurname(DataNormaliser::normaliseSurname($data['Surname']))
-                ->setDeputyNumber(DataNormaliser::normaliseDeputyNo($data['Deputy No']))
-                ->setDeputySurname(DataNormaliser::normaliseSurname($data['Dep Surname']))
-                ->setDeputyPostcode(DataNormaliser::normalisePostCode($data['Dep Postcode']))
+                ->setCaseNumber($this->normaliser->normaliseCaseNumber($data['Case']))
+                ->setClientSurname($this->normaliser->normaliseSurname($data['Surname']))
+                ->setDeputyNumber($this->normaliser->normaliseDeputyNo($data['Deputy No']))
+                ->setDeputySurname($this->normaliser->normaliseSurname($data['Dep Surname']))
+                ->setDeputyPostcode($this->normaliser->normalisePostCode($data['Dep Postcode']))
                 ->setTypeOfReport($data['Typeofrep'])
                 ->setCorref($this->determineCorref($data['Typeofrep']))
                 ->setIsNdrEnabled(false)

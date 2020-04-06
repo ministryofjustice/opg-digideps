@@ -1,7 +1,6 @@
 imports:
     - { resource: services/defaults.yml }
     - { resource: services/assemblers.yml }
-    - { resource: services/builders.yml }
     - { resource: services/controllers.yml }
     - { resource: services/event_listeners.yml }
     - { resource: services/factories.yml }

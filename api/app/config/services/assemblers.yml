@@ -24,5 +24,3 @@ services:
   AppBundle\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler: ~
   AppBundle\v2\Registration\Assembler\LayDeputyshipDtoAssemblerInterface: '@AppBundle\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler'
 
-  AppBundle\v2\Assembler\DoctrineFixtureCourtOrderAssembler: ~
-
