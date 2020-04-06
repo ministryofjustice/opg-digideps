@@ -4,9 +4,11 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Client;
+use AppBundle\Entity\CourtOrder;
 use AppBundle\Entity\NamedDeputy;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Repository\ClientRepository;
+use AppBundle\Entity\Repository\CourtOrderRepository;
 use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\Entity\Repository\TeamRepository;
@@ -103,6 +105,12 @@ class OrgService
      */
     private $log;
 
+    /** @var EntityDir\CourtOrder */
+    private $courtOrder;
+
+    /** @var CourtOrderRepository */
+    private $courtOrderRepository;
+
     /**
      * @param EntityManagerInterface $em
      * @param LoggerInterface $logger
@@ -114,6 +122,7 @@ class OrgService
      * @param NamedDeputyRepository $namedDeputyRepository
      * @param OrganisationFactory $orgFactory
      * @param NamedDeputyFactory $namedDeputyFactory
+     * @param CourtOrderRepository $courtOrderRepository
      */
     public function __construct(
         EntityManagerInterface $em,
@@ -125,7 +134,8 @@ class OrgService
         TeamRepository $teamRepository,
         NamedDeputyRepository $namedDeputyRepository,
         OrganisationFactory $orgFactory,
-        NamedDeputyFactory $namedDeputyFactory
+        NamedDeputyFactory $namedDeputyFactory,
+        CourtOrderRepository $courtOrderRepository
     ) {
         $this->em = $em;
         $this->logger = $logger;
@@ -138,6 +148,7 @@ class OrgService
         $this->orgFactory = $orgFactory;
         $this->namedDeputyFactory = $namedDeputyFactory;
         $this->log = [];
+        $this->courtOrderRepository = $courtOrderRepository;
     }
 
     /**
@@ -190,7 +201,15 @@ class OrgService
 
                 $client = $this->upsertClientFromCsv($row, $namedDeputy);
                 if ($client instanceof Client) {
-                    $this->upsertReportFromCsv($row, $client);
+                    $report = $this->upsertReportFromCsv($row, $client);
+
+                    $courtOrderType = strtolower($row['Corref']) === 'hw' ? CourtOrder::SUBTYPE_HW : CourtOrder::SUBTYPE_PFA;
+
+                    if (!$this->courtOrderExists($client, $courtOrderType)) {
+                        $this->createCourtOrder($client, $row, $courtOrderType, $report);
+                    }
+
+
                 } else {
                     throw new \RuntimeException('Client could not be identified or created');
                 }
@@ -397,7 +416,6 @@ class OrgService
         $this->added['reports'][] = $client->getCaseNumber() . '-' . $reportEndDate->format('Y-m-d');
         $this->em->persist($report);
         $this->em->flush();
-        $this->em->clear();
         return $report;
     }
 
@@ -558,6 +576,53 @@ class OrgService
     {
         $this->added['discharged_clients'][] = $client->getCaseNumber();
         $this->em->remove($client);
+        $this->em->flush();
+    }
+
+    /**
+     * @param Client|null $client
+     * @param string $courtOrderType
+     * @return bool
+     */
+    private function courtOrderExists(?Client $client, string $courtOrderType)
+    {
+        $courtOrder = $this
+            ->courtOrderRepository
+            ->findOneBy([
+                'caseNumber' => $client->getCaseNumber(),
+                'type' => $courtOrderType
+            ]);
+
+        return $courtOrder === null ? false : true;
+    }
+
+    /**
+     * @param Client|null $client
+     * @param array $row
+     * @param string $courtOrderType
+     * @param EntityDir\Report\Report $report
+     * @throws \Exception
+     */
+    private function createCourtOrder(?Client $client, array $row, string $courtOrderType, EntityDir\Report\Report $report): void
+    {
+        $courtOrder = new CourtOrder();
+
+        $courtOrder
+            ->setCaseNumber($client->getCaseNumber())
+            ->setOrderDate(new \DateTime($row['Made Date']))
+            ->setType($courtOrderType)
+            ->setClient($client)
+            ->addReport($report);
+
+        if (strtolower($row['Typeofrep']) == 'opg102') {
+            $courtOrder->setSupervisionLevel(CourtOrder::LEVEL_GENERAL);
+        } else if (strtolower($row['Typeofrep']) == 'opg103') {
+            $courtOrder->setSupervisionLevel(CourtOrder::LEVEL_MINIMAL);
+        }
+
+        $report->setCourtOrder($courtOrder);
+
+        $this->em->persist($courtOrder);
         $this->em->flush();
     }
 }
