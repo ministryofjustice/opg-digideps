@@ -140,10 +140,6 @@ class DocumentController extends RestController
      */
     public function update(Request $request, int $id, EntityManagerInterface $em): Document
     {
-        if (!$this->getAuthService()->isSecretValid($request)) {
-            throw new UnauthorisedException('client secret not accepted.');
-        }
-
         // hydrate and persist
         $data = $this->deserializeBodyContent($request);
 

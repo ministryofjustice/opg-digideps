@@ -15,7 +15,6 @@ use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use AppBundle\Service\File\Storage\S3Storage;
 use Aws\S3\Exception\S3Exception;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -39,22 +38,15 @@ class DocumentSyncService
      */
     private $restClient;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
         S3Storage $storage,
         SiriusApiGatewayClient $siriusApiGatewayClient,
-        RestClient $restClient,
-        LoggerInterface $logger
+        RestClient $restClient
     )
     {
         $this->storage = $storage;
         $this->siriusApiGatewayClient = $siriusApiGatewayClient;
         $this->restClient = $restClient;
-        $this->logger = $logger;
     }
 
     /**
@@ -165,7 +157,7 @@ class DocumentSyncService
      */
     private function retrieveDocumentContentFromS3(Document $document)
     {
-        return (string) $this->storage->retrieve($document->getStorageReference());
+        return $this->storage->retrieve($document->getStorageReference());
     }
 
     /**
@@ -179,7 +171,7 @@ class DocumentSyncService
         $caseRef = $document->getReport()->getClient()->getCaseNumber();
 
         if($document->isReportPdf()) {
-            return $this->siriusApiGatewayClient->sendReportPdfDocument($upload, $content, $caseRef);
+           return $this->siriusApiGatewayClient->sendReportPdfDocument($upload, $content, $caseRef);
         } else {
             /** @var ReportSubmission $reportPdfSubmission */
             $reportPdfSubmission = $document->getPreviousReportPdfSubmission();
@@ -201,13 +193,9 @@ class DocumentSyncService
         }
 
         try {
-            return $this->restClient->apiCall(
-                'put',
+            return $this->restClient->put(
                 sprintf('document/%s', $document->getId()),
-               json_encode(['data' => $data]),
-                Document::class,
-                [],
-                false
+               json_encode(['data' => $data])
             );
         } catch (Throwable $exception) {
             return $exception;
@@ -217,13 +205,9 @@ class DocumentSyncService
     private function handleReportSubmissionUpdate(int $reportSubmissionId, string $uuid)
     {
         try {
-            return $this->restClient->apiCall(
-                'put',
+            return $this->restClient->put(
                 sprintf('report-submission/%s', $reportSubmissionId),
-                json_encode(['data' => ['uuid' => $uuid]]),
-                'raw',
-                [],
-                false
+                json_encode(['data' => ['uuid' => $uuid]])
             );
         } catch (Throwable $exception) {
             return $exception;
@@ -238,16 +222,11 @@ class DocumentSyncService
 
             $errorMessage = sprintf('S3 error while syncing document: %s', $e->getMessage());
         } else {
-//            $errorMessage = method_exists($e, 'getResponse') ?
-//                (string) $e->getResponse() : (string) $e->getMessage();
-
-            $errorMessage = (string) $e->getMessage();
+            $errorMessage = $e->getResponse() ?
+                (string) $e->getResponse()->getBody() : (string) $e->getMessage();
 
             $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
         }
-
-        $this->logger->warning(sprintf('Document %d did not sync: %s', $document->getId(), $errorMessage));
-        $this->logger->warning(sprintf('Trace: %s', $e->getTraceAsString()));
 
         $this->handleDocumentStatusUpdate($document, $syncStatus, $errorMessage);
     }

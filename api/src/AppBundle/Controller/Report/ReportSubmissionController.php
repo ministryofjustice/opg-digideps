@@ -76,10 +76,6 @@ class ReportSubmissionController extends RestController
      */
     public function update(Request $request, $reportSubmissionId)
     {
-        if (!$this->getAuthService()->isSecretValid($request)) {
-            throw new UnauthorisedException('client secret not accepted.');
-        }
-
         /* @var $reportSubmission EntityDir\Report\ReportSubmission */
         $reportSubmission = $this->findEntityBy(EntityDir\Report\ReportSubmission::class, $reportSubmissionId);
 

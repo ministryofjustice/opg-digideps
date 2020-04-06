@@ -12,7 +12,6 @@ use Symfony\Component\Serializer\Serializer;
 
 class SiriusApiGatewayClient
 {
-    CONST SIRIUS_API_GATEWAY_VERSION = 'v1';
     const SIRIUS_REPORT_ENDPOINT = 'clients/%s/reports';
     const SIRIUS_SUPPORTING_DOCUMENTS_ENDPOINT = 'clients/%s/reports/%s/supportingdocuments';
 
@@ -65,13 +64,11 @@ class SiriusApiGatewayClient
         $multipart = new MultipartStream([
             [
                 'name' => 'report',
-                'contents' => $reportJson,
-                'headers' => ['Content-Type' => 'application/vnd.opg-data.v1+json']
+                'contents' => $reportJson
             ],
             [
                 'name' => 'report_file',
-                'contents' => base64_encode($content),
-                'headers' => ['Content-Type' => 'application/pdf']
+                'contents' => base64_encode($content)
             ],
         ]);
 
@@ -83,8 +80,7 @@ class SiriusApiGatewayClient
             'multipart/form-data'
         );
 
-        print_r((string) $signedRequest->getBody());
-        return $this->httpClient->send($signedRequest, ['debug' => true]);
+        return $this->httpClient->send($signedRequest);
     }
 
     /**
@@ -118,8 +114,7 @@ class SiriusApiGatewayClient
             'multipart/form-data'
         );
 
-        print_r((string) $signedRequest->getBody());
-        return $this->httpClient->send($signedRequest, ['debug' => true]);
+        return $this->httpClient->send($signedRequest);
     }
 
     /**
@@ -138,7 +133,7 @@ class SiriusApiGatewayClient
         string $contentType='application/json'
     )
     {
-        $url = new Uri(sprintf('https://%s/%s/%s', $this->baseUrl, self::SIRIUS_API_GATEWAY_VERSION, $endpoint));
+        $url = new Uri(sprintf('%s/%s', $this->baseUrl, $endpoint));
 
         $request = new Request($method, $url, [
             'Accept' => $accept,
