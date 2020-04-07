@@ -30,8 +30,7 @@ clientDischarge:
 
 reportManage:
   htmlTitle: Administration - Manage report
-  pageTitle: Admin
-  supportTitle: Manage report
+  pageTitle: Manage report
   currentDueDate: "Current due date:"
   overdueBy: Overdue by %overdueDays% days
   form:

@@ -71,9 +71,7 @@ addUserForm:
 
 deleteConfirm:
   htmlTitle: Administration - Users
-  pageTitle: Admin
-  supportTitle: User management
-  heading: Delete user
+  pageTitle: Delete user
   question: Are you sure that you want to delete <strong class="bold">%fullName%</strong>? This action cannot be undone.
 
 editUser:
@@ -146,7 +144,6 @@ uploadPA:
 uploadUsers:
   htmlTitle: Administration - Upload users
   pageTitle: Upload lay users
-  supportTitle: Users
   heading: Upload users
   usersInTheDB: users in the database
   uploading: Uploading... please wait.<br/>Do not refresh this page
