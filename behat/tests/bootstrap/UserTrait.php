@@ -185,6 +185,9 @@ trait UserTrait
         $this->pressButton('set_password_save');
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
+        $this->fillField('login_email', $email);
+        $this->fillField('login_password', $password);
+        $this->pressButton('login_login');
         $this->fillField('user_details_jobTitle', 'Main org contact');
         $this->pressButton('user_details_save');
         $this->theFormShouldBeValid();
@@ -354,6 +357,7 @@ trait UserTrait
         $ndrStatus = 'NDR-' . $ndrStatus;
         $this->iCreateTheUserWithEmailAndPostcode($ndrStatus, $depType, 'Lay', 'Dep', $email, 'SW11AA');
         $this->iActivateTheUserAndSetThePasswordTo($email, $password);
+        $this->iLogInWithNewPassword($email, $password);
 
         $this->iAddTheFollowingUsersToCASREC(new TableNode([
             ['Case', 'Surname', 'Deputy No', 'Dep Surname', 'Dep Postcode', 'Typeofrep', 'OrderDate', 'Corref'],
@@ -391,5 +395,17 @@ trait UserTrait
         $this->clickOnBehatLink('save');
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
+    }
+
+    /**
+     * @param $email
+     * @param $password
+     */
+    private function iLogInWithNewPassword($email, $password): void
+    {
+        $this->assertPageContainsText('Sign in to your new account');
+        $this->fillField('login_email', $email);
+        $this->fillField('login_password', $password);
+        $this->pressButton('login_login');
     }
 }

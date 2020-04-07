@@ -109,13 +109,15 @@ class UserController extends AbstractController
             $session->set('_security_secured_area', serialize($clientToken));
 
             if ($isActivatePage) {
+                $request->getSession()->set('login-context', 'password-create');
                 $route = $user->getIsCoDeputy() ? 'codep_verification' : 'user_details';
                 return $this->redirectToRoute($route);
             } else {
                 /** @var Redirector */
+                $request->getSession()->set('login-context', 'password-update');
                 $redirector = $this->get('redirector_service');
 
-                return $this->redirect($redirector->getFirstPageAfterLogin());
+                return $this->redirect($redirector->getFirstPageAfterLogin($request->getSession()));
             }
         }
 

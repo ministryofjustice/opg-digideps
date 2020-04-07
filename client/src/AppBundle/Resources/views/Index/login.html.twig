@@ -10,7 +10,15 @@
 {% endif %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
-{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitle %}
+    {% if app.session.get('login-context') == 'password-create' %}
+        {{ (page ~ '.pageTitleNewPassword') | trans }}
+    {% elseif app.session.get('login-context') == 'password-update' %}
+        {{ (page ~ '.pageTitleUpdatedPassword') | trans }}
+    {% else %}
+        {{ (page ~ '.pageTitle') | trans }}
+    {% endif %}
+{% endblock %}
 
 {% block pageContent %}
 

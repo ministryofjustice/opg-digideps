@@ -69,17 +69,10 @@ class CourtOrderController
     public function createAction(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-
-        /** @var Client $client */
         $client = $this->clientRepository->find($data['id']);
-
-        /** @var CasRec $registrationData */
         $registrationData = $this->casRecRepository->findOneBy(['caseNumber' => $client->getCaseNumber()]);
 
-        /** @var CourtOrderDto $courtOrderDto */
         $courtOrderDto = $this->courtOrderAssembler->assemble($registrationData);
-
-        /** @var CourtOrder $courtOrder */
         $courtOrder = $this->courtOrderFactory->create($courtOrderDto, $client, $client->getCurrentReport());
 
         $this->em->persist($courtOrder);

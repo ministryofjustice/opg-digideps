@@ -6,6 +6,7 @@ use AppBundle\Entity\User;
 use AppBundle\Service\ReportSectionsLinkService;
 use Symfony\Component\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 use Twig_Environment;
 
 class ComponentsExtension extends AbstractExtension
@@ -38,6 +39,9 @@ class ComponentsExtension extends AbstractExtension
             new \Twig_SimpleFunction('accordionLinks', [$this, 'renderAccordionLinks']),
             new \Twig_SimpleFunction('section_link_params', function ($report, $sectionId, $offset) {
                 return $this->reportSectionsLinkService->getSectionParams($report, $sectionId, $offset);
+            }),
+            new TwigFunction('class_const', function($className, $constant) {
+                return constant("$className::$constant");
             }),
         ];
     }

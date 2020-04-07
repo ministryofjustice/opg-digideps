@@ -2,8 +2,9 @@ page:
   htmlTitle: Administration - Submissions
   pageTitle: Submitted reports and supporting documents
   tabs:
-    new.label: "New"
-    archived.label: "Archived"
+    new.label: New
+    pending.label: Pending
+    archived.label: Synchronised
   searchForm:
     search:
       label: Client, deputy or case number
@@ -15,14 +16,15 @@ page:
   resultsTable:
     header:
       all: All
-      clientAndCaseNo: Client and case no
+      client: Client
+      caseNumber: Case number
       deputy: Deputy
-      period: Period
+      period: Reporting period
       documents: Documents
       submitted: Submitted
-      discharged: Discharged
       user: User
     noDocumentsFound: No documents found
+    automaticallyArchived: Automatically archived by automation
   table:
     rows:
       documents: "{0} No documents | {1} 1 document | ]1,Inf[ %count% documents"

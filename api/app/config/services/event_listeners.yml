@@ -11,10 +11,10 @@ services:
     kernel.listener.responseConverter:
         alias: AppBundle\EventListener\RestInputOuputFormatter
 
-    doctrine.listener:
-        class: AppBundle\EventListener\DoctrineListener
+    AppBundle\EventListener\DoctrineListener:
         tags:
             - { name: doctrine.event_listener, event: prePersist, method: prePersist }
+            - { name: doctrine.event_listener, event: preUpdate, method: preUpdate }
             - { name: doctrine.event_listener, event: preRemove, method: preRemove }
 
     AppBundle\EventListener\FixDefaultSchemaListener:

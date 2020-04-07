@@ -14,7 +14,7 @@ final class Version232 extends AbstractMigration
 {
     public function getDescription() : string
     {
-        return 'Create court_order table';
+        return '';
     }
 
     public function up(Schema $schema) : void
@@ -22,9 +22,7 @@ final class Version232 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('CREATE TABLE court_order (id SERIAL NOT NULL, client_id INT NOT NULL, type VARCHAR(4) NOT NULL, supervision_level VARCHAR(8) NOT NULL, order_date DATE NOT NULL, case_number VARCHAR(16) NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE INDEX IDX_E824C019EB6921 ON court_order (client_id)');
-        $this->addSql('ALTER TABLE court_order ADD CONSTRAINT FK_E824C019EB6921 FOREIGN KEY (client_id) REFERENCES client (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE report_submission ADD archived BOOLEAN DEFAULT \'false\' NOT NULL');
     }
 
     public function down(Schema $schema) : void
@@ -32,6 +30,6 @@ final class Version232 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('DROP TABLE court_order');
+        $this->addSql('ALTER TABLE report_submission DROP archived');
     }
 }

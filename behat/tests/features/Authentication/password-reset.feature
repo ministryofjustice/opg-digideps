@@ -18,8 +18,13 @@ Feature: Users can reset their password via self-service
             | reset_password_password_first  | Abcd12345 |
             | reset_password_password_second | Abcd12345 |
         And I press "Save password"
-        And I am logged in as "enrique75@mail.example" with password "Abcd12345"
+        Then I should be on "/login"
+        And I should see "Sign in with your new password"
+        When I am logged in as "enrique75@mail.example" with password "Abcd12345"
         Then the form should be valid
+        Given I am on "/login"
+        Then I should see "Sign in"
+        And I should not see "Sign in with your new password"
 
     Scenario: Admin can reset password
         Given I am on admin page "/login"
@@ -32,7 +37,9 @@ Feature: Users can reset their password via self-service
             | reset_password_password_first  | Abcd12345 |
             | reset_password_password_second | Abcd12345 |
         And I press "Save password"
-        And I am logged in to admin as "o.fiecke@publicguardian.gov.uk" with password "Abcd12345"
+        Then I should be on "/login"
+        And I should see "Sign in with your new password"
+        When I am logged in to admin as "o.fiecke@publicguardian.gov.uk" with password "Abcd12345"
         Then the form should be valid
 
     Scenario: Invalid emails are not accepted

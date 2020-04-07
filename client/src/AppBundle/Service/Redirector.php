@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -88,7 +89,7 @@ class Redirector
     /**
      * @return string
      */
-    public function getFirstPageAfterLogin()
+    public function getFirstPageAfterLogin(SessionInterface $session)
     {
         $user = $this->getLoggedUser();
 
@@ -97,7 +98,11 @@ class Redirector
         } elseif ($this->authChecker->isGranted(EntityDir\User::ROLE_AD)) {
             return $this->router->generate('ad_homepage');
         } elseif ($user->isDeputyOrg()) {
-            return $this->router->generate('org_dashboard');
+            if ($session->has('login-context') && $session->get('login-context') === 'password-create') {
+                return $this->router->generate('user_details');
+            } else {
+                return $this->router->generate('org_dashboard');
+            }
         } elseif ($this->authChecker->isGranted(EntityDir\User::ROLE_LAY_DEPUTY)) {
             return $this->getLayDeputyHomepage($user, false);
         } else {

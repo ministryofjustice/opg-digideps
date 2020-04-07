@@ -48,10 +48,13 @@ class LoginEventListener
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        $redirectUrl = $this->redirector->getFirstPageAfterLogin();
+        $redirectUrl = $this->redirector->getFirstPageAfterLogin($event->getRequest()->getSession());
 
         $this->redirector->removeLastAccessedUrl(); //avoid this URL to be used a the next login
 
         $event->getResponse()->headers->set('Location', $redirectUrl);
+
+        // 'login-context' determines a one-time message that may have been displayed during login. Remove to prevent showing again.
+        $event->getRequest()->getSession()->remove('login-context');
     }
 }

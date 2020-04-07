@@ -4,14 +4,14 @@
 // Note that associated styles live under _.forms.scss
 
 module.exports = function (containerSelector) {
-  var textArea = $(containerSelector).find("[class*='js-auto-size'] textarea")
+  const textArea = $(containerSelector).find("[class*='js-auto-size'] textarea")
 
   textArea.on('keyup input paste change', function (event) {
-    var $this = $(event.target)
+    const $this = $(this)
+    const initialHeight = $this.height()
 
-    setTimeout(function () {
-      $this.css('height', 'auto')
-      $this.css('height', $this.prop('scrollHeight') + 'px')
-    }, 0)
+    $this
+      .height(initialHeight - 20)
+      .height($this[0].scrollHeight + 20)
   }).trigger('keyup')
 }

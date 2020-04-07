@@ -298,7 +298,7 @@ class Document
      */
     private function isTransactionDocument()
     {
-        return strpos('DigiRepTransactions', $this->getFileName());
+        return strpos($this->getFileName(), 'DigiRepTransactions') !== false;
     }
 
     /**

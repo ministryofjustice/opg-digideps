@@ -39,6 +39,18 @@ class DoctrineListener
         }
     }
 
+    public function preUpdate(LifecycleEventArgs $args)
+    {
+        $entity = $args->getEntity();
+        $entityManager = $args->getEntityManager();
+
+        if ($entity instanceof EntityDir\Report\Document && !is_null($entity->getReportSubmission())) {
+            /** @var EntityDir\Repository\ReportSubmissionRepository $reportSubmissionRepo */
+            $reportSubmissionRepo = $entityManager->getRepository(EntityDir\Report\ReportSubmission::class);
+            $reportSubmissionRepo->updateArchivedStatus($entity->getReportSubmission());
+        }
+    }
+
     public function preRemove(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
