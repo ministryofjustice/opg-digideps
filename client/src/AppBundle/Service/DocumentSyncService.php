@@ -62,13 +62,10 @@ class DocumentSyncService
      */
     public function syncDocument(Document $document)
     {
-        print("=====1=====");
         $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_IN_PROGRESS);
-        print("=====2=====");
+
         if ($document->isReportPdf()) {
-            print("=====3=====");
             return $this->syncReportDocument($document);
-            print("=====4=====");
         } else {
             if (!$document->supportingDocumentCanBeSynced()) {
                 return $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_QUEUED);
@@ -87,18 +84,17 @@ class DocumentSyncService
         try {
             /** @var Report $report */
             $report = $document->getReport();
-            print("=====A=====");
+
             $content = $this->retrieveDocumentContentFromS3($document);
-            print("=====B=====");
+
             $siriusResponse = $this->handleSiriusSync($document, $content);
-            print("=====C=====");
             $data = json_decode(strval($siriusResponse->getBody()), true);
+
             $relevantSubmission = $report->getReportSubmissionByDocument($document);
-            print("=====D=====");
+
             $this->handleReportSubmissionUpdate($relevantSubmission->getId(), $data['data']['id']);
-            print("=====E=====");
+
             return $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_SUCCESS);
-            print("=====F=====");
         } catch (Throwable $e) {
             $this->handleSyncErrors($e, $document);
             return null;
@@ -113,17 +109,18 @@ class DocumentSyncService
     {
         try {
             $content = $this->retrieveDocumentContentFromS3($document);
-            $this->handleSiriusSync($document, base64_encode($content));
+            $this->handleSiriusSync($document, $content);
             return $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_SUCCESS);
         } catch (Throwable $e) {
             $this->handleSyncErrors($e, $document);
+            return null;
         }
     }
 
     private function buildUpload(Document $document, string $content)
     {
         $report = $document->getReport();
-        print("=====Z9=====");
+
         if ($document->isReportPdf()) {
             $siriusDocumentMetadata = (new SiriusReportPdfDocumentMetadata())
                 ->setReportingPeriodFrom($report->getStartDate())
@@ -141,16 +138,12 @@ class DocumentSyncService
 
             $type = 'supportingdocument';
         }
-        print("=====ZZ=====");
-        print_r($document->getFile());
 
         $file = (new SiriusDocumentFile())
             ->setName($document->getFileName())
             ->setMimetype($document->getFile()->getClientMimeType())
             ->setSource(base64_encode($content));
 
-
-        print("=====ZY=====");
         return (new SiriusDocumentUpload())
             ->setType($type)
             ->setAttributes($siriusDocumentMetadata)
@@ -193,16 +186,12 @@ class DocumentSyncService
         $caseRef = $document->getReport()->getClient()->getCaseNumber();
 
         if($document->isReportPdf()) {
-            print("=====CC=====");
             return $this->siriusApiGatewayClient->sendReportPdfDocument($upload, $caseRef);
-            print("=====CD=====");
         } else {
-            print("=====DD=====");
             /** @var ReportSubmission $reportPdfSubmission */
             $reportPdfSubmission = $document->getPreviousReportPdfSubmission();
             return $this->siriusApiGatewayClient->sendSupportingDocument($upload, $reportPdfSubmission->getUuid(), $caseRef);
         }
-        print("=====EE=====");
     }
 
     /**
@@ -256,16 +245,11 @@ class DocumentSyncService
 
             $errorMessage = sprintf('S3 error while syncing document: %s', $e->getMessage());
         } else {
-//            $errorMessage = method_exists($e, 'getResponse') ?
-//                (string) $e->getResponse() : (string) $e->getMessage();
-
-            $errorMessage = (string) $e->getMessage();
+            $errorMessage = method_exists($e, 'getResponse') ?
+                (string) $e->getResponse()->getBody() : (string) $e->getMessage();
 
             $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
         }
-
-        // $this->logger->warning(sprintf('Document %d did not sync: %s', $document->getId(), $errorMessage));
-        // $this->logger->warning(sprintf('Trace: %s', $e->getTraceAsString()));
 
         $this->handleDocumentStatusUpdate($document, $syncStatus, $errorMessage);
     }

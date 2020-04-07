@@ -63,6 +63,7 @@ class DocumentHelpers extends TestCase
         } elseif ($documentType === 'supportingDocument' && ($submittedReportPdfUuid)) {
             $report->setSubmittedDocuments([$reportPdfDocument, $supportingDocument]);
         }
+
         $file = new UploadedFile("/","mypdf.pdf","application/pdf", 1024, 100);
 
         if ($documentType === 'reportPdf') {
@@ -117,6 +118,7 @@ class DocumentHelpers extends TestCase
         DateTime $startDate,
         DateTime $endDate,
         DateTime $submittedDate,
+        string $fileName = 'test.pdf',
         int $reportPdfSubmissionId = 9876,
         int $supportingDocSubmissionId = 9877,
         int $documentId = 6789,
@@ -134,7 +136,8 @@ class DocumentHelpers extends TestCase
             $supportingDocSubmissionId,
             $documentId,
             $submittedReportPdfUuid,
-            $storageReference
+            $storageReference,
+            $fileName
         );
     }
 }

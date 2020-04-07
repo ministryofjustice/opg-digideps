@@ -40,15 +40,15 @@ class SiriusHelpers extends KernelTestCase
             ->setFile($file);
     }
 
-    static public function generateSiriusSupportingDocumentUpload(int $submissionId)
+    static public function generateSiriusSupportingDocumentUpload(int $submissionId, string $fileName, string $fileContents)
     {
         $siriusSupportingDocumentMetadata = (new SiriusSupportingDocumentMetadata())
             ->setSubmissionId($submissionId);
 
         $file = (new SiriusDocumentFile())
-            ->setName('bank-statement-March.pdf')
+            ->setName($fileName)
             ->setMimetype('application/pdf')
-            ->setSource('dGVzdA==');
+            ->setSource(base64_encode($fileContents));
 
         return (new SiriusDocumentUpload())
             ->setType('supportingdocument')
