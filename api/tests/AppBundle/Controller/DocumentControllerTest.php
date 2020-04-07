@@ -166,7 +166,7 @@ class DocumentControllerTest extends AbstractTestController
 
         $response = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
-            'AuthToken'   => self::$tokenDeputy,
+            'ClientSecret' => API_TOKEN_DEPUTY,
             'data' => ['syncStatus' => Document::SYNC_STATUS_SUCCESS, 'syncTime' => $syncTime]
         ]);
 
@@ -184,7 +184,7 @@ class DocumentControllerTest extends AbstractTestController
 
         $response = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
-            'AuthToken'   => self::$tokenDeputy,
+            'ClientSecret' => API_TOKEN_DEPUTY,
             'data' => ['syncStatus' => $status, 'syncError' => $error]
         ]);
 
