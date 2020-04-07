@@ -10,6 +10,7 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class DocumentHelpers extends TestCase
 {
@@ -61,20 +62,20 @@ class DocumentHelpers extends TestCase
         } elseif ($documentType === 'supportingDocument' && ($submittedReportPdfUuid)) {
             $report->setSubmittedDocuments([$reportPdfDocument, $supportingDocument]);
         }
-
+        $file = new UploadedFile("/","mypdf.pdf","application/pdf","1024", 100);
         if ($documentType === 'reportPdf') {
             return $reportPdfDocument
                 ->setReport($report)
                 ->setStorageReference($storageReference)
                 ->setFileName('test.pdf')
-                ->setFile(null)
+                ->setFile($file)
                 ->setId($documentId);
         } elseif ($documentType === 'supportingDocument') {
             return $supportingDocument
                 ->setReport($report)
                 ->setStorageReference($storageReference)
                 ->setFileName('test.pdf')
-                ->setFile(null)
+                ->setFile($file)
                 ->setId($documentId);
         }
 

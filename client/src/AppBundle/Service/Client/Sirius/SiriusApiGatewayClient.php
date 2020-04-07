@@ -59,15 +59,17 @@ class SiriusApiGatewayClient
 
     public function sendReportPdfDocument(SiriusDocumentUpload $upload, string $caseRef)
     {
+        print("====JIM0=====");
+        print_r($upload);
         $reportJson = $this->serializer->serialize(['data' => $upload], 'json');
-
+        print("====JIM1=====");
         $signedRequest = $this->buildSignedRequest(
             sprintf(self::SIRIUS_REPORT_ENDPOINT, $caseRef),
             'POST',
             $reportJson,
             'application/vnd.opg-data.v1+json'
         );
-
+        print("====JIM2=====");
         return $this->httpClient->send($signedRequest, ['debug' => true]);
     }
 

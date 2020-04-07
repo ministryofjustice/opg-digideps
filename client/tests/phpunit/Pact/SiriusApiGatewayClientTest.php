@@ -152,24 +152,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
             ->setStatus(201)
             ->addHeader('Content-Type', 'application/json')
             ->setBody([
-                'data' => [
-                    'type' => 'reports',
-                    'id' => $matcher->uuid($this->reportPdfUuid),
-                    'attributes' => [
-                        'reporting_period_from' => $matcher->dateISO8601(),
-                        'reporting_period_to' => $matcher->dateISO8601(),
-                        'year' => $matcher->regex('2018', '[0-9]{4}'),
-                        'date_submitted' => $matcher->dateTimeWithMillisISO8601(),
-                        'type' => $matcher->regex('PF', 'PF|HW|NDR'),
-                        'submission_id' => $matcher->integer(9876)
-                    ]
-                ],
-                'file' => [
-                    'name' => $matcher->regex('Report_1234567T_2018_2019_11111.pdf', '.+\.pdf$'),
-                    'mimetype' => $matcher->regex('application/pdf', 'application\/pdf'),
-                    'source' => $matcher->regex('dGVzdA==', '.+'),
-                ]
-            ]);
+                'uuid' => $matcher->uuid($this->reportPdfUuid)]);
 
         $this->builder
             ->uponReceiving('A submitted report')
@@ -208,14 +191,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
             ->setStatus(201)
             ->addHeader('Content-Type', 'application/json')
             ->setBody([
-                'data' => [
-                    'type' => 'supportingdocuments',
-                    'id' => $matcher->uuid($this->reportPdfUuid),
-                    'attributes' => [
-                        'submission_id' => $matcher->integer()
-                    ]
-                ],
-            ]);
+              'uuid' => $matcher->uuid($this->reportPdfUuid)]);
 
         $this->builder
             ->uponReceiving('A submitted supporting document')

@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 
 use AppBundle\Entity\Report\Document;
+use AppBundle\Model\Sirius\SiriusDocumentFile;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use AppBundle\Service\File\Storage\S3Storage;
@@ -71,18 +72,21 @@ class DocumentSyncServiceTest extends KernelTestCase
 
         $this->s3Storage->retrieve('test')->willReturn($fileContents);
 
+//        $siriusDocumentFile = (new SiriusDocumentFile())->setName("test.pdf");
+
         $siriusDocumentUpload = SiriusHelpers::generateSiriusReportPdfDocumentUpload(
             $reportStartDate,
             $reportEndDate,
             $reportSubmittedDate,
             'PF',
-            $reportSubmissionId
+            $reportSubmissionId,
+//            $siriusDocumentFile
         );
 
         $successResponseBody = ['data' => ['id' => $reportPdfSubmissionUuid]];
         $successResponse = new Response('200', [], json_encode($successResponseBody));
 
-        $this->siriusApiGatewayClient->sendReportPdfDocument($siriusDocumentUpload, 'fake_contents', '1234567T')->shouldBeCalled()->willReturn($successResponse);
+        $this->siriusApiGatewayClient->sendReportPdfDocument($siriusDocumentUpload, '1234567T')->shouldBeCalled()->willReturn($successResponse);
 
         $this->restClient->put('document/6789', json_encode(['data' => ['syncStatus' => Document::SYNC_STATUS_IN_PROGRESS]]))
             ->shouldBeCalled();

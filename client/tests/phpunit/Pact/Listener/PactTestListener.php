@@ -86,30 +86,29 @@ class PactTestListener implements TestListener
                 $httpService = new MockServerHttpService(new GuzzleClient(), $this->mockServerConfig);
                 $httpService->verifyInteractions();
                 $json = $httpService->getPactJson();
-            }
-
-            //requires these to exist
-            if (($pactBrokerUri = \getenv('PACT_BROKER_BASE_URL')) &&
-                ($consumerVersion = \getenv('PACT_CONSUMER_VERSION')) &&
-                ($tag = \getenv('PACT_TAG'))
-            ) {
-                $clientConfig = [];
-                if (($user = \getenv('PACT_BROKER_HTTP_AUTH_USER')) &&
-                    ($pass = \getenv('PACT_BROKER_HTTP_AUTH_PASS'))
-                ) {
-                    $clientConfig = [
-                        'auth' => [$user, $pass],
-                    ];
+                            //requires these to exist
+                if (($pactBrokerUri = \getenv('PACT_BROKER_BASE_URL')) &&
+                    ($consumerVersion = \getenv('PACT_CONSUMER_VERSION')))
+                {
+                    $clientConfig = [];
+                    if (($user = \getenv('PACT_BROKER_HTTP_AUTH_USER')) &&
+                        ($pass = \getenv('PACT_BROKER_HTTP_AUTH_PASS'))
+                    ) {
+                        $clientConfig = [
+                            'auth' => [$user, $pass],
+                        ];
+                    }
+                    $headers = [];
+                    $tag = SiriusApiGatewayClient::SIRIUS_API_GATEWAY_VERSION;
+                    $pactBrokerUriFull = 'https://' . $pactBrokerUri . '/';
+                    $client = new GuzzleClient($clientConfig);
+                    $brokerHttpService = new BrokerHttpClient($client, new Uri($pactBrokerUriFull), $headers);
+                    $brokerHttpService->tag($this->mockServerConfig->getConsumer(), $consumerVersion, $tag);
+                    $brokerHttpService->publishJson($json, $consumerVersion);
+                    print 'Pact file has been uploaded to the Broker successfully.';
+                } else {
+                    print 'One or more environment variables not set';
                 }
-                $headers = [];
-                $pactBrokerUriFull = 'https://' . $pactBrokerUri . '/';
-                $client = new GuzzleClient($clientConfig);
-                $brokerHttpService = new BrokerHttpClient($client, new Uri($pactBrokerUriFull), $headers);
-                $brokerHttpService->tag($this->mockServerConfig->getConsumer(), $consumerVersion, $tag);
-                $brokerHttpService->publishJson($json, $consumerVersion);
-                print 'Pact file has been uploaded to the Broker successfully.';
-            } else {
-                print 'One or more environment variables not set';
             }
         }
     }
