@@ -429,6 +429,11 @@ class FormFieldsExtension extends AbstractExtension
             'formGroupClass' => $formGroupClass,
             'labelRaw' => !empty($vars['labelRaw']),
             'preInputText' => $preInputText,
+            'label' => array_merge([
+                'text' => $labelText,
+                'isPageHeading' => false,
+                'caption' => false,
+            ], $vars['label'] ?? []),
         ];
     }
 

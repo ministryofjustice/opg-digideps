@@ -1,13 +1,18 @@
 {% set describedby = '' %}
 <div id="form-group-{{ element.vars.id }}" class="govuk-form-group{% if not element.vars.valid %} govuk-form-group--error{% endif %}{% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
 
-    {% if labelRaw is defined and labelRaw %}
-        <label class="govuk-label {{ labelClass }}" for="{{ element.vars.id }}">
-            {{ labelText | raw }}
-        </label>
+    {% if label.isPageHeading %}
+        <h1 class="govuk-label-wrapper">
+            {% if label.caption %}
+                <span class="govuk-caption-xl">{{ label.caption }}</span>
+            {% endif %}
+            <label class="govuk-label govuk-label--xl {{ labelClass | default('') }}" for="{{ element.vars.id }}">
+                {{ labelRaw is defined and labelRaw ? label.text | raw : label.text }}
+            </label>
+        </h1>
     {% else %}
         <label for="{{ element.vars.id }}" class="govuk-label {{ labelClass | default('') }}">
-           {{ labelText }}
+           {{ labelRaw is defined and labelRaw ? label.text | raw : label.text }}
         </label>
     {% endif %}
 
