@@ -12,10 +12,6 @@
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 
 
-{% block supportTitleTop %}
-    <span class="heading-secondary">{{ 'pageTitle' | trans }}</span>
-{% endblock %}
-
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
 {% endblock %}
