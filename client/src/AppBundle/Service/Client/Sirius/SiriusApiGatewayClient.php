@@ -5,7 +5,6 @@ namespace AppBundle\Service\Client\Sirius;
 use AppBundle\Model\Sirius\SiriusDocumentUpload;
 use AppBundle\Service\AWS\RequestSigner;
 use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\MultipartStream;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 use Symfony\Component\Serializer\Serializer;
@@ -66,8 +65,7 @@ class SiriusApiGatewayClient
             sprintf(self::SIRIUS_REPORT_ENDPOINT, $caseRef),
             'POST',
             $reportJson,
-            'application/vnd.opg-data.v1+json',
-            'multipart/form-data'
+            'application/vnd.opg-data.v1+json'
         );
 
         return $this->httpClient->send($signedRequest, ['debug' => true]);
@@ -85,23 +83,11 @@ class SiriusApiGatewayClient
     {
         $reportJson = $this->serializer->serialize(['data' => $upload], 'json');
 
-        $multipart = new MultipartStream([
-            [
-                'name' => 'supporting_document',
-                'contents' => $reportJson
-            ],
-            [
-                'name' => 'supporting_document_file',
-                'contents' => base64_encode($content)
-            ],
-        ]);
-
         $signedRequest = $this->buildSignedRequest(
             sprintf(self::SIRIUS_SUPPORTING_DOCUMENTS_ENDPOINT, $caseRef, $submissionUuid),
             'POST',
-            $multipart,
-            'application/vnd.opg-data.v1+json',
-            'multipart/form-data'
+            $reportJson,
+            'application/vnd.opg-data.v1+json'
         );
 
         return $this->httpClient->send($signedRequest, ['debug' => true]);
