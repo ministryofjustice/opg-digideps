@@ -40,8 +40,7 @@ editPage:
 
 addAnotherPage:
   htmlTitle: "New deputy report - assets | GOV.UK"
-  supportTitle: Assets
-  pageTitle: Add another asset?
+  pageTitle: Accounts
   form:
     addAnother:
       label: The asset has been saved. Would you like to add another now?
