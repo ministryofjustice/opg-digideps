@@ -43,7 +43,8 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
             ['Deputy No'],
             ['Dep Surname'],
             ['Dep Postcode'],
-            ['Typeofrep']
+            ['Typeofrep'],
+            ['Made Date']
         ];
     }
 
@@ -79,6 +80,7 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
         $this->assertEquals($expectedCorref, $result->getCorref());
         $this->assertEquals(false, $result->isNdrEnabled());
         $this->assertEquals(CasRec::SIRIUS_SOURCE, $result->getSource());
+        $this->assertEquals('2011-06-14', $result->getOrderDate()->format('Y-m-d'));
     }
 
     public function getReportTypeToCorrefExpectation()
@@ -101,6 +103,7 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
             'Typeofrep' => 'type_of_rep',
             'Source' => 'will-use-constant-instead',
             'Not used' => 'not_used',
+            'Made Date' => '14-Jun-11'
         ];
     }
 }

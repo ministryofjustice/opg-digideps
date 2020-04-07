@@ -201,6 +201,7 @@ class UserFixtures extends AbstractDataFixture
                 'Dep Postcode' => 'SW1',
                 'Typeofrep' => $data['reportType'],
                 'Corref' => $data['reportVariation'],
+                'OrderDate' => new \DateTime('2010-03-30')
             ]);
             $manager->persist($casRec);
         }

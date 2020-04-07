@@ -2,23 +2,12 @@
 
 namespace AppBundle\v2\Registration\Assembler;
 
-    use AppBundle\Entity\CasRec;
-    use AppBundle\Service\DataNormaliser;
+use AppBundle\Entity\CasRec;
+use AppBundle\Service\DataNormaliser;
 use AppBundle\v2\Registration\DTO\LayDeputyshipDto;
 
 class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInterface
 {
-    /** @var DataNormaliser */
-    private $normaliser;
-
-    /**
-     * @param DataNormaliser $normaliser
-     */
-    public function __construct(DataNormaliser $normaliser)
-    {
-        $this->normaliser = $normaliser;
-    }
-
     /**
      * @param array $data
      * @return LayDeputyshipDto
@@ -44,15 +33,16 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
     {
         return
             (new LayDeputyshipDto())
-                ->setCaseNumber($this->normaliser->normaliseCaseNumber($data['Case']))
-                ->setClientSurname($this->normaliser->normaliseSurname($data['Surname']))
-                ->setDeputyNumber($this->normaliser->normaliseDeputyNo($data['Deputy No']))
-                ->setDeputySurname($this->normaliser->normaliseSurname($data['Dep Surname']))
-                ->setDeputyPostcode($this->normaliser->normalisePostCode($data['Dep Postcode']))
+                ->setCaseNumber(DataNormaliser::normaliseCaseNumber($data['Case']))
+                ->setClientSurname(DataNormaliser::normaliseSurname($data['Surname']))
+                ->setDeputyNumber(DataNormaliser::normaliseDeputyNo($data['Deputy No']))
+                ->setDeputySurname(DataNormaliser::normaliseSurname($data['Dep Surname']))
+                ->setDeputyPostcode(DataNormaliser::normalisePostCode($data['Dep Postcode']))
                 ->setTypeOfReport($data['Typeofrep'])
                 ->setCorref($this->determineCorref($data['Typeofrep']))
                 ->setIsNdrEnabled(false)
-                ->setSource(CasRec::SIRIUS_SOURCE);
+                ->setSource(CasRec::SIRIUS_SOURCE)
+                ->setOrderDate(new \DateTime($data['Made Date']));
     }
 
     /**
@@ -67,7 +57,8 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
             array_key_exists('Deputy No', $data) &&
             array_key_exists('Dep Surname', $data) &&
             array_key_exists('Dep Postcode', $data) &&
-            array_key_exists('Typeofrep', $data);
+            array_key_exists('Typeofrep', $data) &&
+            array_key_exists('Made Date', $data);
     }
 
     /**

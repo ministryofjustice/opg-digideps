@@ -17,7 +17,7 @@ class Client
 
     /**
      * @JMS\Type("integer")
-     * @JMS\Groups({"edit", "pa-edit"})
+     * @JMS\Groups({"edit", "pa-edit", "client-id"})
      *
      * @var int
      */

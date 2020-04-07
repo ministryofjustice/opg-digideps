@@ -80,10 +80,12 @@ class CasRecFactoryTest extends TestCase
         $this->assertEquals(true, $result->getColumn('NDR'));
         $this->assertEquals('2010-01-03 12:03:23', $result->getUpdatedAt()->format('Y-m-d H:i:s'));
         $this->assertEquals(CasRec::SIRIUS_SOURCE, $result->getSource());
+        $this->assertEquals('2011-06-14', $result->getOrderDate()->format('Y-m-d'));
     }
 
     /**
      * @return LayDeputyshipDto
+     * @throws \Exception
      */
     private function buildLayDeputyshipDto(): LayDeputyshipDto
     {
@@ -96,6 +98,7 @@ class CasRecFactoryTest extends TestCase
             ->setTypeOfReport('type')
             ->setIsNdrEnabled(true)
             ->setCorref('corref')
-            ->setSource(CasRec::SIRIUS_SOURCE);
+            ->setSource(CasRec::SIRIUS_SOURCE)
+            ->setOrderDate(new \DateTime('2011-06-14'));
     }
 }
