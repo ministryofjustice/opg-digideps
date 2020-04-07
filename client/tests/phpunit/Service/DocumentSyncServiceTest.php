@@ -51,7 +51,7 @@ class DocumentSyncServiceTest extends KernelTestCase
     }
 
     /** @test */
-    public function sendDocument_report_pdf_sync_success()
+    public function syncDocument_report_pdf_sync_success()
     {
         $reportStartDate = new DateTime('2018-05-14');
         $reportEndDate = new DateTime('2019-05-13');
@@ -60,19 +60,19 @@ class DocumentSyncServiceTest extends KernelTestCase
         $supportingDocSubmissionId = 9877;
         $reportPdfSubmissionUuid = '5a8b1a26-8296-4373-ae61-f8d0b250e123';
         $fileContents = 'fake_contents';
+        $fileName = 'test.pdf';
 
         $submittedReportDocument = (new DocumentHelpers())->generateSubmittedReportDocument(
             '1234567T',
             $reportStartDate,
             $reportEndDate,
             $reportSubmittedDate,
+            $fileName,
             $reportSubmissionId,
             $supportingDocSubmissionId
         );
 
         $this->s3Storage->retrieve('test')->willReturn($fileContents);
-
-//        $siriusDocumentFile = (new SiriusDocumentFile())->setName("test.pdf");
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusReportPdfDocumentUpload(
             $reportStartDate,
@@ -80,7 +80,8 @@ class DocumentSyncServiceTest extends KernelTestCase
             $reportSubmittedDate,
             'PF',
             $reportSubmissionId,
-//            $siriusDocumentFile
+            $fileName,
+            $fileContents
         );
 
         $successResponseBody = ['data' => ['id' => $reportPdfSubmissionUuid]];

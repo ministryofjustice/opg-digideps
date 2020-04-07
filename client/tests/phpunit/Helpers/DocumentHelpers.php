@@ -24,7 +24,8 @@ class DocumentHelpers extends TestCase
         int $supportingDocSubmissionId = 9877,
         int $documentId = 6789,
         ?string $submittedReportPdfUuid = null,
-        string $storageReference = 'test'
+        string $storageReference = 'test',
+        string $fileName
     )
     {
         $client = new Client();
@@ -62,19 +63,20 @@ class DocumentHelpers extends TestCase
         } elseif ($documentType === 'supportingDocument' && ($submittedReportPdfUuid)) {
             $report->setSubmittedDocuments([$reportPdfDocument, $supportingDocument]);
         }
-        $file = new UploadedFile("/","mypdf.pdf","application/pdf","1024", 100);
+        $file = new UploadedFile("/","mypdf.pdf","application/pdf", 1024, 100);
+
         if ($documentType === 'reportPdf') {
             return $reportPdfDocument
                 ->setReport($report)
                 ->setStorageReference($storageReference)
-                ->setFileName('test.pdf')
+                ->setFileName($fileName)
                 ->setFile($file)
                 ->setId($documentId);
         } elseif ($documentType === 'supportingDocument') {
             return $supportingDocument
                 ->setReport($report)
                 ->setStorageReference($storageReference)
-                ->setFileName('test.pdf')
+                ->setFileName($fileName)
                 ->setFile($file)
                 ->setId($documentId);
         }
@@ -87,6 +89,7 @@ class DocumentHelpers extends TestCase
         DateTime $startDate,
         DateTime $endDate,
         DateTime $submittedDate,
+        string $fileName = 'test.pdf',
         int $reportPdfSubmissionId = 9876,
         int $supportingDocSubmissionId = 9877,
         int $documentId = 6789,
@@ -104,8 +107,9 @@ class DocumentHelpers extends TestCase
             $supportingDocSubmissionId,
             $documentId,
             $submittedReportPdfUuid,
-            $storageReference
-        );
+            $storageReference,
+            $fileName
+    );
     }
 
     public function generateSubmittedSupportingDocument(

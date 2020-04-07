@@ -16,7 +16,9 @@ class SiriusHelpers extends KernelTestCase
         DateTime $endDate,
         DateTime $submittedDate,
         string $orderType,
-        int $submissionId
+        int $submissionId,
+        string $fileName,
+        string $fileContents
     )
     {
         $siriusReportPdfDocumentMetadata = (new SiriusReportPdfDocumentMetadata())
@@ -28,9 +30,9 @@ class SiriusHelpers extends KernelTestCase
             ->setSubmissionId($submissionId);
 
         $file = (new SiriusDocumentFile())
-            ->setName('Report_1234567T_2018_2019_11111.pdf')
+            ->setName($fileName)
             ->setMimetype('application/pdf')
-            ->setSource('dGVzdA==');
+            ->setSource(base64_encode($fileContents));
 
         return (new SiriusDocumentUpload())
             ->setType('reports')

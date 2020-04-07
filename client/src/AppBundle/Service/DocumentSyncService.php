@@ -62,7 +62,6 @@ class DocumentSyncService
      */
     public function syncDocument(Document $document)
     {
-
         print("=====1=====");
         $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_IN_PROGRESS);
         print("=====2=====");
@@ -190,12 +189,9 @@ class DocumentSyncService
      */
     public function handleSiriusSync(Document $document, string $content)
     {
-        print("=====AZ=====");
         $upload = $this->buildUpload($document, $content);
-        print("=====AA=====");
         $caseRef = $document->getReport()->getClient()->getCaseNumber();
-        print("=====BB=====");
-        print_r("===BLAH===" . $document->isReportPdf());
+
         if($document->isReportPdf()) {
             print("=====CC=====");
             return $this->siriusApiGatewayClient->sendReportPdfDocument($upload, $caseRef);
