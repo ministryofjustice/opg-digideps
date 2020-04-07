@@ -11,7 +11,7 @@
 
 
 {% block supportTitleTop %}
-    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }} {{ client.fullname | title }}</span>
+    {{ (page ~ '.supportTitle') | trans({'%fullName%': client.fullname | title}) }}
 {% endblock %}
 
 {% block breadcrumbs %}

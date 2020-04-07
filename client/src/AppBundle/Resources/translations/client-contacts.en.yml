@@ -1,11 +1,11 @@
 addContact:
   htmlTitle: Client profile - add contact | GOV.UK
   pageTitle: Add contact
-  supportTitle: "Client profile:"
+  supportTitle: "Client profile: %fullName%"
 editContact:
   htmlTitle: Client profile - edit contact | GOV.UK
   pageTitle: Edit contact
-  supportTitle: "Client profile:"
+  supportTitle: "Client profile: %fullName%"
 deletePage:
   htmlTitle: "Client profile - remove contact | GOV.UK"
   subject: contact
