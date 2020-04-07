@@ -7,8 +7,7 @@
 {% set transOptions = {'%client%': ndr.client.firstname | e } %}
 
 {% block htmlTitle %}{{ 'existPage.htmlTitle' | trans(transOptions) }}{% endblock %}
-{% block pageTitle %}{{ 'existPage.pageTitle' | trans(transOptions) }}{% endblock %}
-
+{% block pageHeader %}{% endblock %}
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
@@ -18,14 +17,14 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <div class="push--bottom">
-        {{ form_checkbox_group(form.hasDebts, 'existPage.form.exist', {
-            'fieldSetClass' : 'inline',
-            'legendClass' : 'govuk-label--s text',
-            'legendText' : 'existPage.form.exist.label' | trans(transOptions, translationDomain),
-            'formGroupClass': 'flush--bottom'
-        }) }}
-    </div>
+    {{ form_checkbox_group(form.hasDebts, 'existPage.form.exist', {
+        'fieldSetClass' : 'govuk-radios--inline',
+        'legendText' : 'existPage.form.exist.label' | trans(transOptions, translationDomain),
+        legend: {
+            isPageHeading: true,
+            caption: 'existPage.supportTitle' | trans
+        }
+    }) }}
 
     {{ macros.saveAndContinueButton(form.save) }}
 

@@ -7,8 +7,7 @@
 {% set transOptions = {'%client%': ndr.client.firstname | e } %}
 
 {% block htmlTitle %}{{ 'managementPage.htmlTitle' | trans(transOptions) }}{% endblock %}
-{% block pageTitle %}{{ 'managementPage.pageTitle' | trans(transOptions) }}{% endblock %}
-
+{% block pageHeader %}{% endblock %}
 
 {% block linkBack %}
 {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
@@ -18,16 +17,12 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-        <div class="push--bottom">
-
-
-            {{  form_input(form.debtManagement,'managementPage.form.debtManagement', {
-                'labelClass': 'govuk-label--s',
-                'formGroupClass': 'flush--bottom',
-                'labelRaw': true
-            }) }}
-
-        </div>
+        {{ form_input(form.debtManagement,'managementPage.form.debtManagement', {
+            label: {
+                isPageHeading: true,
+                caption: 'managementPage.supportTitle' | trans
+            },
+        }) }}
 
         {{ macros.saveAndContinueButton(form.save) }}
 
