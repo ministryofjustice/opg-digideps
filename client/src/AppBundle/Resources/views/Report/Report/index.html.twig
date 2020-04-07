@@ -7,10 +7,7 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-
-{% block supportTitleBottom %}
-    <span class="heading-secondary">{{ client.firstname }} {{ client.lastname }}</span>
-{% endblock %}
+{% block supportTitleTop %}{{ client.fullname }}{% endblock %}
 
 {% block breadcrumbs %}{% endblock %}
 
