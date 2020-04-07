@@ -27,7 +27,9 @@ Feature: Codeputy Self Registration
       | self_registration_caseNumber      | 00000000                                          |
     And I press "self_registration_save"
     And I activate the user "behat-jack.goodby-noncodep@digital.justice.gov.uk" with password "Abcd1234"
-    And I fill in the following:
+    And I am logged in as "behat-jack.goodby-noncodep@digital.justice.gov.uk" with password "Abcd1234"
+    Then the URL should match "/user/details"
+    When I fill in the following:
       | user_details_address1       | Address1     |
       | user_details_addressCountry | GB           |
       | user_details_phoneMain      | 0777 222 333 |
@@ -106,6 +108,7 @@ Feature: Codeputy Self Registration
 
     # 1st codep registers fully
     When I activate the user "behat-jack.goodby-mld1@digital.justice.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-jack.goodby-mld1@digital.justice.gov.uk" with password "Abcd1234"
     Then the URL should match "/user/details"
     When I fill in the following:
       | user_details_address1       | Address1     |

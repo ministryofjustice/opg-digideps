@@ -47,9 +47,6 @@ profile-page:
   jobTitle: Job title
   editButton: Edit your details
 
-page:
-  passwordChangedNotification: "You have changed your password. We have sent you an email to confirm this change."
-
 # Co-deputy registration
 verifyDeputy:
   yourDetails: Your details

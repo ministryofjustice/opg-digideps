@@ -29,6 +29,9 @@ Feature: Add PROF users and activate PROF user (journey)
     And I check "set_password_showTermsAndConditions"
     And I click on "save"
     Then the form should be valid
+    And the url should match "/login"
+    And I should see "Sign in to your new account"
+    When I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     # assert pre-fill
     Then the following fields should have the corresponding values:
       | user_details_firstname | DEP1     |
@@ -64,6 +67,7 @@ Feature: Add PROF users and activate PROF user (journey)
     And I check "set_password_showTermsAndConditions"
     And I click on "save"
     Then the form should be valid
+    When I am logged in as "behat-prof2@publicguardian.gov.uk" with password "Abcd1234"
     # correct
     When I fill in the following:
       | user_details_firstname  | Pa User     |
@@ -90,6 +94,7 @@ Feature: Add PROF users and activate PROF user (journey)
     And I check "set_password_showTermsAndConditions"
     When I click on "save"
     Then the form should be valid
+    When I am logged in as "behat-prof3@publicguardian.gov.uk" with password "Abcd1234"
     # correct
     And I fill in the following:
       | user_details_firstname  | Pa User     |
@@ -116,6 +121,7 @@ Feature: Add PROF users and activate PROF user (journey)
     And I check "set_password_showTermsAndConditions"
     When I click on "save"
     Then the form should be valid
+    When I am logged in as "behat-prof-org-1@org-1.co.uk" with password "Abcd1234"
     And I fill in the following:
       | user_details_firstname  | Prof User   |
       | user_details_lastname   | Three       |
@@ -139,6 +145,7 @@ Feature: Add PROF users and activate PROF user (journey)
     And I check "set_password_showTermsAndConditions"
     When I click on "save"
     Then the form should be valid
+    When I am logged in as "behat-prof-org-2@org-1.co.uk" with password "Abcd1234"
     And I fill in the following:
       | user_details_firstname  | Prof User   |
       | user_details_lastname   | Three       |
@@ -163,6 +170,7 @@ Feature: Add PROF users and activate PROF user (journey)
     And I check "set_password_showTermsAndConditions"
     When I click on "save"
     Then the form should be valid
+    When I am logged in as "behat-prof-org-3@org-2.co.uk" with password "Abcd1234"
     And I fill in the following:
       | user_details_firstname  | Prof User   |
       | user_details_lastname   | Three       |

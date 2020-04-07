@@ -167,8 +167,8 @@ Feature: PROF settings
       | change_password_plain_password_second  | Abcd2345  |
     When I press "change_password_save"
     Then the form should be valid
-    And I should see "Password edited"
-    And I should be on "/org/settings"
+    And I should see "Sign in with your new password"
+    And I should be on "/login"
 
   Scenario: Prof in two organisations can access the settings page of each organisation
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
