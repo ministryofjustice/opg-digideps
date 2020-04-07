@@ -1,3 +1,4 @@
+
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
@@ -7,124 +8,119 @@
 {% set transOptions = {'%client%': ndr.client.firstname | e } %}
 
 {% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'stepPage.pageTitle' | trans }}{% endblock %}
-
+{% block pageHeader %}{% endblock %}
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
 {% endblock %}
+
+{% set pageCaption = 'stepPage.supportTitle' | trans %}
 
 {% block pageContent %}
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {% if step == 1 %}
-        <div class="push--bottom">
-
-            <div class="govuk-form-group flush--bottom {% if not form.doYouLiveWithClient.vars.valid %}govuk-form-group--error{% endif %}">
-                {{ form_checkbox_group(form.doYouLiveWithClient, 'form.doYouLiveWithClient', {
-                    'useFormGroup': false,
-                    'fieldSetClass' : 'inline',
-                    'legendClass' : 'govuk-label--s',
-                    'legendText' : 'form.doYouLiveWithClient.label' | trans(transOptions, translationDomain),
-                    'items': [
+        <div class="govuk-form-group {% if not form.doYouLiveWithClient.vars.valid %}govuk-form-group--error{% endif %}">
+            {{ form_checkbox_group(form.doYouLiveWithClient, 'form.doYouLiveWithClient', {
+                'useFormGroup': false,
+                'legendText' : 'form.doYouLiveWithClient.label' | trans(transOptions, translationDomain),
+                legend: {
+                    isPageHeading: true,
+                    caption: pageCaption
+                },
+                'items': [
                     {},
                     {'dataTarget': 'how-often-contact-client-wrapper' }
-                    ]
-                }) }}
+                ]
+            }) }}
 
-                <div id="how-often-contact-client-wrapper" class="opg-indented-block js-hidden">
-                    {{ form_input(form.howOftenDoYouContactClient, 'form.howOftenDoYouContactClient', {
-                        'labelClass': 'required',
-                        'labelParameters': transOptions
-                    }) }}
-                </div>
+            <div id="how-often-contact-client-wrapper" class="opg-indented-block js-hidden">
+                {{ form_input(form.howOftenDoYouContactClient, 'form.howOftenDoYouContactClient', {
+                    'labelClass': 'required',
+                    'labelParameters': transOptions
+                }) }}
             </div>
         </div>
     {% endif %}
 
     {% if step == 2 %}
-        <div class="push--bottom">
-
-            <div class="govuk-form-group flush--bottom {% if not form.doesClientReceivePaidCare.vars.valid %}govuk-form-group--error{% endif %}">
-                {{ form_checkbox_group(form.doesClientReceivePaidCare, 'form.doesClientReceivePaidCare', {
-                    'useFormGroup': false,
-                    'fieldSetClass' : 'inline',
-                    'legendClass' : 'govuk-label--s',
-                    'legendText' : 'form.doesClientReceivePaidCare.label' | trans(transOptions, translationDomain),
-                    'items': [
+        <div class="govuk-form-group {% if not form.doesClientReceivePaidCare.vars.valid %}govuk-form-group--error{% endif %}">
+            {{ form_checkbox_group(form.doesClientReceivePaidCare, 'form.doesClientReceivePaidCare', {
+                'useFormGroup': false,
+                'legendText' : 'form.doesClientReceivePaidCare.label' | trans(transOptions, translationDomain),
+                legend: {
+                    isPageHeading: true,
+                    caption: pageCaption
+                },
+                'items': [
                     {'dataTarget': 'how-care-funded-wrapper' },
                     {}
-                    ]
-                }) }}
+                ]
+            }) }}
 
-                <div id="how-care-funded-wrapper" class="opg-indented-block js-hidden">
-                    {{ form_checkbox_group(form.howIsCareFunded, 'form.howIsCareFunded', {
-                        'fieldSetClass': 'text',
-                        'legendClass' : 'govuk-label--s'
-                    }) }}
-                </div>
+            <div id="how-care-funded-wrapper" class="opg-indented-block js-hidden">
+                {{ form_checkbox_group(form.howIsCareFunded, 'form.howIsCareFunded', {
+                    'fieldSetClass': 'text',
+                    'legendClass' : 'govuk-label--s'
+                }) }}
             </div>
         </div>
     {% endif %}
 
     {% if step == 3 %}
-        <div class="push--bottom">
-            {{ form_input(form.whoIsDoingTheCaring,'form.whoIsDoingTheCaring', {
-                'labelClass': 'form-label',
-                'formGroupClass': 'flush--bottom',
-                'labelRaw': true
-            }) }}
-        </div>
+        {{ form_input(form.whoIsDoingTheCaring,'form.whoIsDoingTheCaring', {
+            label: {
+                isPageHeading: true,
+                caption: pageCaption
+            }
+        }) }}
     {% endif %}
 
     {% if step == 4 %}
-        <div class="push--bottom">
+        <div class="govuk-form-group {% if not form.doesClientHaveACarePlan.vars.valid %}govuk-form-group--error{% endif %}">
+            {{ form_checkbox_group(form.doesClientHaveACarePlan, 'form.doesClientHaveACarePlan', {
+                'useFormGroup': false,
+                'legendText' : 'form.doesClientHaveACarePlan.label' | trans(transOptions, translationDomain),
+                legend: {
+                    isPageHeading: true,
+                    caption: pageCaption
+                },
+                'hintText': 'form.doesClientHaveACarePlan.hint' | trans(transOptions, translationDomain),
+                'items': [
+                    {'dataTarget': 'when-care-plan-last-reviewed-wrapper'},
+                    {}
+                ]
+            }) }}
 
-            <div class="govuk-form-group flush--bottom {% if not form.doesClientHaveACarePlan.vars.valid %}govuk-form-group--error{% endif %}">
-                {{ form_checkbox_group(form.doesClientHaveACarePlan, 'form.doesClientHaveACarePlan', {
-                    'useFormGroup': false,
-                    'fieldSetClass' : 'inline',
-                    'legendClass' : 'govuk-label--s',
-                    'legendText' : 'form.doesClientHaveACarePlan.label' | trans(transOptions, translationDomain),
-                    'hintText': 'form.doesClientHaveACarePlan.hint' | trans(transOptions, translationDomain),
-                    'items': [
-                        {'dataTarget': 'when-care-plan-last-reviewed-wrapper'},
-                        {}
-                    ]
+            <div id="when-care-plan-last-reviewed-wrapper" class="opg-indented-block  js-hidden">
+                {{ form_known_date(form.whenWasCarePlanLastReviewed, 'form.whenWasCarePlanLastReviewed', {
+                    'showDay': 'false'
                 }) }}
-
-                <div id="when-care-plan-last-reviewed-wrapper" class="opg-indented-block  js-hidden">
-                    {# legendClass is-not-working #}
-                    {{ form_known_date(form.whenWasCarePlanLastReviewed, 'form.whenWasCarePlanLastReviewed', {
-                        'legendClass' : 'govuk-label--s',
-                        'showDay': 'false'
-                    }) }}
-                </div>
             </div>
         </div>
     {% endif %}
 
     {% if step == 5 %}
-        <div class="push--bottom">
-            <div class="govuk-form-group flush--bottom {% if not form.planMoveNewResidence.vars.valid %}govuk-form-group--error{% endif %}">
-                {{ form_checkbox_group(form.planMoveNewResidence, 'form.planMoveNewResidence', {
-                    'useFormGroup': false,
-                    'fieldSetClass' : 'inline',
-                    'legendClass' : 'govuk-label--s',
-                    'legendText' : 'form.planMoveNewResidence.label' | trans(transOptions, translationDomain),
-                    'items': [
+        <div class="govuk-form-group {% if not form.planMoveNewResidence.vars.valid %}govuk-form-group--error{% endif %}">
+            {{ form_checkbox_group(form.planMoveNewResidence, 'form.planMoveNewResidence', {
+                'useFormGroup': false,
+                'legendText' : 'form.planMoveNewResidence.label' | trans(transOptions, translationDomain),
+                legend: {
+                    isPageHeading: true,
+                    caption: pageCaption
+                },
+                'items': [
                     {'dataTarget': 'plan-move-residence-details-textarea'},
-                    {}]
+                    {}
+                ]
+            }) }}
+            <div id="plan-move-residence-details-textarea" class="opg-indented-block  js-hidden">
+                {{ form_input(form.planMoveNewResidenceDetails, 'form.planMoveNewResidenceDetails', {
+                    'labelClass': 'required',
+                    'labelParameters': transOptions,
+                    'hintText' : 'form.planMoveNewResidenceDetails.hint' | trans(transOptions, translationDomain)
                 }) }}
-                <div id="plan-move-residence-details-textarea" class="opg-indented-block  js-hidden">
-                    {{ form_input(form.planMoveNewResidenceDetails, 'form.planMoveNewResidenceDetails', {
-                        'labelClass': 'required',
-                        'labelParameters': transOptions,
-                        'hintText' : 'form.planMoveNewResidenceDetails.hint' | trans(transOptions, translationDomain),
-                        'labelRaw': true
-                    }) }}
-                </div>
             </div>
         </div>
     {% endif %}
@@ -139,4 +135,3 @@
     {{ form_end(form) }}
 
 {% endblock %}
-
