@@ -23,9 +23,7 @@
         </div>
     </div>
 
-    {% block pageHeader %}
-        {% include 'AppBundle:Report/Report:_header.html.twig' %}
-    {% endblock %}
+    {% include 'AppBundle:Report/Report:_header.html.twig' %}
 
     {% if not report.isDue or report.isDue and not reportStatus.isReadyToSubmit %}
         <div class="push--top">

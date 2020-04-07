@@ -5,7 +5,7 @@
 
 {% block pageTitle %}{{ 'signedOut.pageTitle' | trans }}{% endblock %}
 
-{% block pageHeader %}
+{% block loginHeader %}
 
     {% if not isAdmin %}
         <p class="govuk-body-l">{{ 'signedOut.para01' | trans }}</p>
