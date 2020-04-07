@@ -72,6 +72,7 @@ addUserForm:
 deleteConfirm:
   htmlTitle: Administration - Users
   pageTitle: Delete user
+  supportTitle: Users
   question: Are you sure that you want to delete <strong class="bold">%fullName%</strong>? This action cannot be undone.
 
 editUser:
@@ -99,8 +100,9 @@ editUserForm:
     mismatchError: Cannot change user between staff-type and deputy-type role.
 
 statsPage:
-  htmlTitle: Administration - Statistics
-  pageTitle: Report Submissions
+  htmlTitle: Administration - Download Report Submissions
+  pageTitle: Download Report Submissions
+  supportTitle: Analytics
   reportSubmissionsPara: Today's report submissions file for uploading into CASREC
   pleaseWait: Please wait ...
   dataGenerated: |
@@ -144,6 +146,7 @@ uploadPA:
 uploadUsers:
   htmlTitle: Administration - Upload users
   pageTitle: Upload lay users
+  supportTitle: Users
   heading: Upload users
   usersInTheDB: users in the database
   uploading: Uploading... please wait.<br/>Do not refresh this page

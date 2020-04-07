@@ -3,8 +3,11 @@
 {% trans_default_domain "admin" %}
 {% set page = 'deleteConfirm' %}
 
+{% set navSection = 'users' %}
+
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block supportTitleTop %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
 
 {% block helpline %}{% endblock %}
 
