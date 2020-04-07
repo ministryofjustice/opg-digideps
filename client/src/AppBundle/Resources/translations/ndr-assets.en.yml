@@ -9,7 +9,7 @@ startPage:
 
 existPage:
   htmlTitle: "New deputy report - assets | GOV.UK"
-  pageTitle: Assets
+  supportTitle: Assets
   form:
     noAssetToAdd:
       label: Does %client% own any assets?
@@ -40,7 +40,8 @@ editPage:
 
 addAnotherPage:
   htmlTitle: "New deputy report - assets | GOV.UK"
-  pageTitle: Assets
+  supportTitle: Assets
+  pageTitle: Add another asset?
   form:
     addAnother:
       label: The asset has been saved. Would you like to add another now?
