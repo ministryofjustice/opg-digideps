@@ -3,6 +3,7 @@
 
 namespace AppBundle\Model\Sirius;
 
+use InvalidArgumentException;
 
 class SiriusDocumentFile
 {
@@ -67,6 +68,11 @@ class SiriusDocumentFile
      */
     public function setSource(string $source): self
     {
+        // Ensure string is base64
+        if(empty(htmlspecialchars(base64_decode($source, true)))) {
+            throw new InvalidArgumentException('Source must be base64 encoded');
+        }
+
         $this->source = $source;
 
         return $this;
