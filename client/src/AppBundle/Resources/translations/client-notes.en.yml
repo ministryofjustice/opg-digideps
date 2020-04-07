@@ -1,11 +1,11 @@
 addNote:
   htmlTitle: Client profile - add note | GOV.UK
   pageTitle: Add note
-  supportTitle: "Client profile:"
+  supportTitle: "Client profile: %fullName%"
 editNote:
   htmlTitle: Client profile - edit note | GOV.UK
   pageTitle: Edit note
-  supportTitle: "Client profile:"
+  supportTitle: "Client profile: %fullName%"
 deletePage:
   htmlTitle: "Client profile - remove note | GOV.UK"
   subject: note
