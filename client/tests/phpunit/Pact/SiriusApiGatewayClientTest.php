@@ -39,6 +39,12 @@ class SiriusDocumentsContractTest extends KernelTestCase
     /** @var InteractionBuilder */
     private $builder;
 
+    /** @var string */
+    private $fileName;
+
+    /** @var string */
+    private $fileContents;
+
     public function setUp(): void
     {
         $client = new GuzzleClient();
@@ -53,6 +59,8 @@ class SiriusDocumentsContractTest extends KernelTestCase
         $this->reportPdfUuid = '33ea0382-cfc9-4776-9036-667eeb68fa4b';
         $this->expectedSupportingDocumentUuid = '9c0cb55e-718d-4ffb-9599-f3164e12dbdb';
         $this->signer = self::prophesize(RequestSigner::class);
+        $this->fileName = 'test.pdf';
+        $this->fileContents = 'fake_contents';
 
         $this->sut = new SiriusApiGatewayClient(
             $client,
@@ -82,10 +90,12 @@ class SiriusDocumentsContractTest extends KernelTestCase
             $reportEndDate,
             $reportSubmittedDate,
             'PF',
-            $reportSubmissionId
+            $reportSubmissionId,
+            $this->fileName,
+            $this->fileContents
         );
 
-        $result = $this->sut->sendReportPdfDocument($upload, 'some_content', $this->caseRef);
+        $result = $this->sut->sendReportPdfDocument($upload, $this->caseRef);
 
         $this->builder->verify();
 
@@ -105,9 +115,13 @@ class SiriusDocumentsContractTest extends KernelTestCase
 
         $this->signer->signRequest(Argument::type(Request::class), 'execute-api')->willReturnArgument(0);
 
-        $upload = $siriusDocumentUpload = SiriusHelpers::generateSiriusSupportingDocumentUpload(9876);
+        $upload = $siriusDocumentUpload = SiriusHelpers::generateSiriusSupportingDocumentUpload(
+            9876,
+            $this->fileName,
+            $this->fileContents
+        );
 
-        $result = $this->sut->sendSupportingDocument($upload, 'some_content', $this->reportPdfUuid, $this->caseRef);
+        $result = $this->sut->sendSupportingDocument($upload, $this->reportPdfUuid, $this->caseRef);
 
         $this->builder->verify();
 
@@ -138,9 +152,9 @@ class SiriusDocumentsContractTest extends KernelTestCase
                             'submission_id' => $matcher->integer(9876)
                         ],
                         'file' => [
-                            'name' => 'Report_1234567T_2018_2019_11111.pdf',
+                            'name' => $this->fileName,
                             'mimetype' => 'application/pdf',
-                            'source' => $matcher->regex('dGVzdA==', '.+')
+                            'source' => $matcher->regex(base64_encode($this->fileContents), '.+')
                         ]
                     ]
                 ]
@@ -152,7 +166,8 @@ class SiriusDocumentsContractTest extends KernelTestCase
             ->setStatus(201)
             ->addHeader('Content-Type', 'application/json')
             ->setBody([
-                'uuid' => $matcher->uuid($this->reportPdfUuid)]);
+                'uuid' => $matcher->uuid($this->reportPdfUuid)
+            ]);
 
         $this->builder
             ->uponReceiving('A submitted report')
@@ -177,9 +192,9 @@ class SiriusDocumentsContractTest extends KernelTestCase
                             'submission_id' => $matcher->integer(9876)
                         ],
                         'file' => [
-                            'name' => 'bank-statement-March.pdf',
+                            'name' => $this->fileName,
                             'mimetype' => 'application/pdf',
-                            'source' => $matcher->regex('dGVzdA==', '.+')
+                            'source' => $matcher->regex(base64_encode($this->fileContents), '.+')
                         ]
                     ]
                 ]
@@ -191,7 +206,8 @@ class SiriusDocumentsContractTest extends KernelTestCase
             ->setStatus(201)
             ->addHeader('Content-Type', 'application/json')
             ->setBody([
-              'uuid' => $matcher->uuid($this->reportPdfUuid)]);
+              'uuid' => $matcher->uuid($this->reportPdfUuid)
+            ]);
 
         $this->builder
             ->uponReceiving('A submitted supporting document')
