@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Repository;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
@@ -30,8 +31,9 @@ class ReportSubmissionRepository extends EntityRepository
         $order = 'ASC'
     ) {
         $statusFilters = [
-            'new' => 'rs.archivedBy IS NULL',
-            'archived' => 'rs.archivedBy IS NOT NULL',
+            'new' => 'rs.archived = false AND NOT EXISTS (SELECT 1 FROM AppBundle:Report\Document d WHERE d.reportSubmission = rs AND d.synchronisationStatus IS NOT NULL)',
+            'pending' => 'rs.archived = false AND EXISTS (SELECT 1 FROM AppBundle:Report\Document d WHERE d.reportSubmission = rs AND d.synchronisationStatus IS NOT NULL)',
+            'archived' => 'rs.archived = true',
         ];
 
         // BASE QUERY BUILDER with filters (for both count and results)
@@ -190,5 +192,24 @@ class ReportSubmissionRepository extends EntityRepository
         $this->_em->getFilters()->enable('softdeleteable');
 
         return $reportSubmission;
+    }
+
+    public function updateArchivedStatus(ReportSubmission $reportSubmission): void
+    {
+        if ($reportSubmission->getDocuments() && !$reportSubmission->getArchived()) {
+            $allSynced = true;
+
+            foreach ($reportSubmission->getDocuments() as $document) {
+                if ($document->getSynchronisationStatus() !== Document::SYNC_STATUS_SUCCESS) {
+                    $allSynced = false;
+                }
+            }
+
+            if ($allSynced) {
+                $reportSubmission->setArchived(true);
+                $this->_em->persist($reportSubmission);
+                $this->_em->flush();
+            }
+        }
     }
 }

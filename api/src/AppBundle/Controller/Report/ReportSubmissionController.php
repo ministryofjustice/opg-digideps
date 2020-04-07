@@ -29,6 +29,7 @@ class ReportSubmissionController extends RestController
         'user-rolename',
         'user-teamname',
         'documents',
+        'document-synchronisation',
     ];
 
     /**
@@ -81,6 +82,7 @@ class ReportSubmissionController extends RestController
 
         $data = $this->deserializeBodyContent($request);
         if (!empty($data['archive'])) {
+            $reportSubmission->setArchived(true);
             $reportSubmission->setArchivedBy($this->getUser());
         }
 

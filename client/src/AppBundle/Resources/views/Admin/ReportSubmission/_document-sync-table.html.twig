@@ -1,0 +1,56 @@
+{% trans_default_domain "admin-documents" %}
+
+{% macro syncStatus(status, document) %}
+    {% set DocumentClass = 'AppBundle\\Entity\\Report\\Document' %}
+
+    {% if status == class_const(DocumentClass, 'SYNC_STATUS_QUEUED') %}
+        <span class="opg-text--secondary">Queued</span>
+    {% elseif status == class_const(DocumentClass, 'SYNC_STATUS_IN_PROGRESS') %}
+        <span class="opg-text--secondary">In progress</span>
+    {% elseif status == class_const(DocumentClass, 'SYNC_STATUS_SUCCESS') %}
+        <strong class="opg-text--success">Success</strong>
+    {% elseif status == class_const(DocumentClass, 'SYNC_STATUS_PERMANENT_ERROR') %}
+        <strong class="opg-text--danger">Permanent fail</strong>
+    {% elseif status == class_const(DocumentClass, 'SYNC_STATUS_TEMPORARY_ERROR') %}
+        <span class="opg-text--danger">Temporary fail</span>
+    {% endif %}
+{% endmacro %}
+
+<div class="govuk-details__text">
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Document</th>
+                <th scope="col" class="govuk-table__header govuk-!-font-size-14"><span class="govuk-visually-hidden">Download</span></th>
+                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Status</th>
+                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Information</th>
+                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Time</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            {% for document in documents %}
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell govuk-!-font-size-14 opg-text--wrap">{{ document.fileName }}</td>
+                    <td class="govuk-table__cell govuk-!-font-size-14">
+                        <a href="{{ path('admin_document_download', { submissionId: reportSubmission.id, documentId: document.id }) }}">
+                            {{- 'page.postactions.download' | trans -}}
+                        </a>
+                    </td>
+                    <td class="govuk-table__cell govuk-!-font-size-14">
+                        {{ _self.syncStatus(document.synchronisationStatus, document) }}
+                    </td>
+                    <td class="govuk-table__cell govuk-!-font-size-14">
+                        {% if document.synchronisationError %}
+                            <strong>Error:</strong> {{ document.synchronisationError }}
+                        {% endif %}
+                    </td>
+                    <td class="govuk-table__cell govuk-!-font-size-14">
+                        {% if document.synchronisationTime %}
+                            {{ document.synchronisationTime | date('j F Y g:ia') }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

@@ -6,8 +6,7 @@
     {% set navSection = '' %}
 {% endif %}
 
-
-{% macro navLink(path, labelKey, isSelected, classes = "text") -%}
+{% macro navLink(path, labelKey, isSelected, classes = "") -%}
     <a href="{{ path(path) }}" class="moj-primary-navigation__link {{ classes }}" {% if isSelected %}aria-current="page"{% endif %}>
         {{- labelKey | trans -}}
     </a>
