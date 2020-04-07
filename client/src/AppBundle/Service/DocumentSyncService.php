@@ -48,14 +48,12 @@ class DocumentSyncService
     public function __construct(
         S3Storage $storage,
         SiriusApiGatewayClient $siriusApiGatewayClient,
-        RestClient $restClient,
-        LoggerInterface $logger
+        RestClient $restClient
     )
     {
         $this->storage = $storage;
         $this->siriusApiGatewayClient = $siriusApiGatewayClient;
         $this->restClient = $restClient;
-        $this->logger = $logger;
     }
 
     /**
@@ -142,7 +140,7 @@ class DocumentSyncService
         $file = (new SiriusDocumentFile())
             ->setName($document->getFileName())
             ->setMimetype($document->getFile()->getClientMimeType())
-            ->setSource($content);
+            ->setSource(base64_encode($content));
 
         return (new SiriusDocumentUpload())
             ->setType($type)
@@ -239,7 +237,7 @@ class DocumentSyncService
 
     private function handleSyncErrors(Throwable $e, Document $document)
     {
-        if (get_class($e) === S3Exception::class) {
+        if ($e instanceof S3Exception) {
             $syncStatus = in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES) ?
                 Document::SYNC_STATUS_PERMANENT_ERROR : Document::SYNC_STATUS_TEMPORARY_ERROR;
 
@@ -253,8 +251,8 @@ class DocumentSyncService
             $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
         }
 
-        $this->logger->warning(sprintf('Document %d did not sync: %s', $document->getId(), $errorMessage));
-        $this->logger->warning(sprintf('Trace: %s', $e->getTraceAsString()));
+        // $this->logger->warning(sprintf('Document %d did not sync: %s', $document->getId(), $errorMessage));
+        // $this->logger->warning(sprintf('Trace: %s', $e->getTraceAsString()));
 
         $this->handleDocumentStatusUpdate($document, $syncStatus, $errorMessage);
     }
