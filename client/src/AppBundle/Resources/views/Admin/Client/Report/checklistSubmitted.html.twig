@@ -12,7 +12,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <div class="govuk-panel govuk-panel--confirmation">
-                <h1 class="govuk-panel__title">{{ (page ~ '.supportTitle') | trans }}</h1>
+                <h1 class="govuk-panel__title">{{ (page ~ '.panelTitle') | trans }}</h1>
                 <div class="govuk-panel__body">
                     {{ report.client.fullName }} - {{ ('reportTitles.' ~ report.reportTitle) | trans({}, 'report') }}
                 </div>
@@ -46,5 +46,3 @@
       window.location.href = "{{ path('admin_checklist_pdf', {'id': report.id}) }}";
     </script>
 {% endblock %}
-
-
