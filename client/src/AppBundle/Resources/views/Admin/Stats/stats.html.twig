@@ -19,16 +19,13 @@
 
         {{ form_start(form, {attr: {class: 'search', novalidate: 'novalidate' }}) }}
 
-        <div class="govuk-form-group form-groups-inline flush--bottom">
-            {{ form_known_date(form.startDate, 'statsPage.form.fromDate', {
-                'hintText': 'statsPage.form.fromDate.hint'
-            }) }}
-        </div>
-        <div class="govuk-form-group form-groups-inline flush--bottom">
-            {{ form_known_date(form.endDate, 'statsPage.form.toDate', {
-                'hintText': 'statsPage.form.toDate.hint'
-            }) }}
-        </div>
+        {{ form_known_date(form.startDate, 'statsPage.form.fromDate', {
+            'hintText': 'statsPage.form.fromDate.hint'
+        }) }}
+
+        {{ form_known_date(form.endDate, 'statsPage.form.toDate', {
+            'hintText': 'statsPage.form.toDate.hint'
+        }) }}
 
         <div class="govuk-form-group">
             {{ form_submit(form.submitAndDownload, (page ~ '.form.submitAndDownload'), {
