@@ -16,7 +16,7 @@ startPage:
 
 existPage:
   htmlTitle: "Deputy report - add deputy expense | GOV.UK"
-  pageTitle: Deputy expenses
+  supportTitle: Deputy expenses
   form:
     paidForAnything:
       label: Did you pay for anything for %client% before you got your court order?
@@ -71,4 +71,3 @@ form:
     label: Add another expense
   save:
       label: Save expense
-
