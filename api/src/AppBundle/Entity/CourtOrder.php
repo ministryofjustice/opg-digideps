@@ -94,9 +94,9 @@ class CourtOrder
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getSupervisionLevel(): string
+    public function getSupervisionLevel(): ?string
     {
         return $this->supervisionLevel;
     }
@@ -149,12 +149,12 @@ class CourtOrder
     }
 
     /**
-     * @param string $supervisionLevel
+     * @param string|null $supervisionLevel
      * @return CourtOrder
      */
-    public function setSupervisionLevel(string $supervisionLevel): CourtOrder
+    public function setSupervisionLevel(?string $supervisionLevel): CourtOrder
     {
-        if (!in_array($supervisionLevel, [self::LEVEL_GENERAL, self::LEVEL_MINIMAL])) {
+        if (null !== $supervisionLevel && !in_array($supervisionLevel, [self::LEVEL_GENERAL, self::LEVEL_MINIMAL])) {
             throw new InvalidArgumentException("Invalid CourtOrder supervision level: $supervisionLevel");
         }
 

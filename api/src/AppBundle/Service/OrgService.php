@@ -7,6 +7,7 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\CourtOrder;
 use AppBundle\Entity\NamedDeputy;
 use AppBundle\Entity\Organisation;
+use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Repository\ClientRepository;
 use AppBundle\Entity\Repository\CourtOrderRepository;
 use AppBundle\Entity\Repository\OrganisationRepository;
@@ -17,6 +18,8 @@ use AppBundle\Entity\Repository\NamedDeputyRepository;
 use AppBundle\Entity\User;
 use AppBundle\Factory\NamedDeputyFactory;
 use AppBundle\Factory\OrganisationFactory;
+use AppBundle\v2\Assembler\CourtOrder\OrgCsvToCourtOrderDtoAssembler;
+use AppBundle\v2\Factory\CourtOrderFactory;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
@@ -108,6 +111,12 @@ class OrgService
     /** @var CourtOrderRepository */
     private $courtOrderRepository;
 
+    /** @var OrgCsvToCourtOrderDtoAssembler */
+    private $courtOrderAssembler;
+
+    /** @var CourtOrderFactory */
+    private $courtOrderFactory;
+
     /**
      * @param EntityManagerInterface $em
      * @param LoggerInterface $logger
@@ -120,6 +129,8 @@ class OrgService
      * @param OrganisationFactory $orgFactory
      * @param NamedDeputyFactory $namedDeputyFactory
      * @param CourtOrderRepository $courtOrderRepository
+     * @param OrgCsvToCourtOrderDtoAssembler $courtOrderAssembler
+     * @param CourtOrderFactory $courtOrderFactory
      */
     public function __construct(
         EntityManagerInterface $em,
@@ -132,7 +143,9 @@ class OrgService
         NamedDeputyRepository $namedDeputyRepository,
         OrganisationFactory $orgFactory,
         NamedDeputyFactory $namedDeputyFactory,
-        CourtOrderRepository $courtOrderRepository
+        CourtOrderRepository $courtOrderRepository,
+        OrgCsvToCourtOrderDtoAssembler $courtOrderAssembler,
+        CourtOrderFactory $courtOrderFactory
     ) {
         $this->em = $em;
         $this->logger = $logger;
@@ -146,6 +159,8 @@ class OrgService
         $this->namedDeputyFactory = $namedDeputyFactory;
         $this->log = [];
         $this->courtOrderRepository = $courtOrderRepository;
+        $this->courtOrderAssembler = $courtOrderAssembler;
+        $this->courtOrderFactory = $courtOrderFactory;
     }
 
     /**
@@ -203,7 +218,7 @@ class OrgService
                     $courtOrderType = strtolower($row['Corref']) === 'hw' ? CourtOrder::SUBTYPE_HW : CourtOrder::SUBTYPE_PFA;
 
                     if (!$this->courtOrderExists($client, $courtOrderType)) {
-                        $this->createCourtOrder($client, $row, $courtOrderType, $report);
+                        $this->createCourtOrder($row, $client, $report);
                     }
 
 
@@ -594,30 +609,14 @@ class OrgService
     }
 
     /**
-     * @param Client|null $client
      * @param array $row
-     * @param string $courtOrderType
-     * @param EntityDir\Report\Report $report
-     * @throws \Exception
+     * @param Client $client
+     * @param Report $report
      */
-    private function createCourtOrder(?Client $client, array $row, string $courtOrderType, EntityDir\Report\Report $report): void
+    private function createCourtOrder(array $row, Client $client, Report $report): void
     {
-        $courtOrder = new CourtOrder();
-
-        $courtOrder
-            ->setCaseNumber($client->getCaseNumber())
-            ->setOrderDate(new \DateTime($row['Made Date']))
-            ->setType($courtOrderType)
-            ->setClient($client)
-            ->addReport($report);
-
-        if (strtolower($row['Typeofrep']) == 'opg102') {
-            $courtOrder->setSupervisionLevel(CourtOrder::LEVEL_GENERAL);
-        } else if (strtolower($row['Typeofrep']) == 'opg103') {
-            $courtOrder->setSupervisionLevel(CourtOrder::LEVEL_MINIMAL);
-        }
-
-        $report->setCourtOrder($courtOrder);
+        $courtOrderDto = $this->courtOrderAssembler->assemble($row);
+        $courtOrder = $this->courtOrderFactory->create($courtOrderDto, $client, $report);
 
         $this->em->persist($courtOrder);
         $this->em->flush();

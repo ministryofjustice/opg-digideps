@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Repository\CourtOrderRepository;
 use AppBundle\Factory\NamedDeputyFactory;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Repository\ClientRepository;
@@ -13,6 +14,8 @@ use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\Repository\NamedDeputyRepository;
 use AppBundle\Factory\OrganisationFactory;
 use AppBundle\Service\OrgService;
+use AppBundle\v2\Assembler\CourtOrder\OrgCsvToCourtOrderDtoAssembler;
+use AppBundle\v2\Factory\CourtOrderFactory;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Mockery as m;
@@ -103,6 +106,7 @@ class OrgServiceTest extends WebTestCase
         'Corref'     => 'L3',
         'Typeofrep'  => 'OPG103',
         'Last Report Day' => '04-Feb-2015',
+        'Made Date' => '01-Jan-2015'
     ];
 
     public static $client3 = [
@@ -112,6 +116,7 @@ class OrgServiceTest extends WebTestCase
         'Corref'     => 'L3G',
         'Typeofrep'  => 'OPG103',
         'Last Report Day' => '05-Feb-2015',
+        'Made Date' => '01-Jan-2015'
     ];
 
     public static $client4 = [
@@ -121,6 +126,7 @@ class OrgServiceTest extends WebTestCase
         'Corref'     => 'L3G',
         'Typeofrep'  => 'OPG103',
         'Last Report Day' => '06-Feb-2015',
+        'Made Date' => '01-Jan-2015'
     ];
 
     /**
@@ -162,8 +168,14 @@ class OrgServiceTest extends WebTestCase
      */
     private $teamRepository;
 
-    /** @var EntityDir\Repository\CourtOrderRepository */
+    /** @var CourtOrderRepository */
     private $courtOrderRepository;
+
+    /** @var OrgCsvToCourtOrderDtoAssembler */
+    private $courtOrderAssembler;
+
+    /** @var CourtOrderFactory */
+    private $courtOrderfactory;
 
     public static function setUpBeforeClass(): void
     {
@@ -190,6 +202,8 @@ class OrgServiceTest extends WebTestCase
         $this->teamRepository = $container->get('AppBundle\Entity\Repository\TeamRepository');
         $this->namedDeputyRepository = $container->get('AppBundle\Entity\Repository\NamedDeputyRepository');
         $this->courtOrderRepository = $container->get('AppBundle\Entity\Repository\CourtOrderRepository');
+        $this->courtOrderAssembler = $container->get('AppBundle\v2\Assembler\CourtOrder\OrgCsvToCourtOrderDtoAssembler');
+        $this->courtOrderfactory = $container->get('AppBundle\v2\Factory\CourtOrderFactory');
 
         $this->pa = new OrgService(self::$em,
             $this->logger,
@@ -201,7 +215,9 @@ class OrgServiceTest extends WebTestCase
             $this->namedDeputyRepository,
             new OrganisationFactory([]),
             new NamedDeputyFactory(),
-            $this->courtOrderRepository
+            $this->courtOrderRepository,
+            $this->courtOrderAssembler,
+            $this->courtOrderfactory
         );
 
         Fixtures::deleteReportsData(['dd_user', 'client']);
@@ -571,7 +587,9 @@ class OrgServiceTest extends WebTestCase
             $namedDeputyRepository->reveal(),
             $orgFactory->reveal(),
             $namedDeputyFactory->reveal(),
-            $this->courtOrderRepository
+            $this->courtOrderRepository,
+            $this->courtOrderAssembler,
+            $this->courtOrderfactory
         );
 
         $sut->addFromCasrecRows([$row]);
@@ -592,7 +610,9 @@ class OrgServiceTest extends WebTestCase
             'Client Phone'    => '07123456789',
             'Client Email'    => 'client@example.com',
             'Last Report Day' => '23-JUN-2016',
-            'Made Date'       => '01-JAN-2016'
+            'Made Date'       => '01-JAN-2016',
+            'Corref'          => 'l2',
+            'Typeofrep'       => 'opg102'
         ];
 
         /** @var EntityManager&ObjectProphecy $em */
@@ -640,11 +660,12 @@ class OrgServiceTest extends WebTestCase
             $this->namedDeputyRepository,
             new OrganisationFactory([]),
             new NamedDeputyFactory(),
-            $this->courtOrderRepository
+            $this->courtOrderRepository,
+            $this->courtOrderAssembler,
+            $this->courtOrderfactory
         );
 
         $output = $sut->addFromCasrecRows([ $row ]);
-
         $this->assertEmpty($output['errors']);
     }
 
@@ -683,7 +704,9 @@ class OrgServiceTest extends WebTestCase
             $namedDeputyRepository->reveal(),
             new OrganisationFactory([]),
             new NamedDeputyFactory(),
-            $this->courtOrderRepository
+            $this->courtOrderRepository,
+            $this->courtOrderAssembler,
+            $this->courtOrderfactory
         );
 
         $this->assertEquals($namedDeputy, $sut->identifyNamedDeputy(self::$deputy1 + self::$client1));

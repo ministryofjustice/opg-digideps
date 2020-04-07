@@ -328,7 +328,8 @@ trait UserTrait
                 'deputy_postcode'    => $row['Dep Postcode'],
                 'type_of_report'     => $row['Typeofrep'],
                 'other_columns'      => str_replace('"', '\\"',serialize($row)),
-                'order_date'        => (new \DateTime($row['OrderDate']))->format('Y-m-d H:i:s')
+                'order_date'         => (new \DateTime($row['OrderDate']))->format('Y-m-d H:i:s'),
+                'corref'             => $row['Corref']
             ]);
         }
     }
@@ -355,8 +356,8 @@ trait UserTrait
         $this->iActivateTheUserAndSetThePasswordTo($email, $password);
 
         $this->iAddTheFollowingUsersToCASREC(new TableNode([
-            ['Case', 'Surname', 'Deputy No', 'Dep Surname', 'Dep Postcode', 'Typeofrep', 'OrderDate'],
-            ['12355555', 'Jones', '00213', 'Dep', 'SW11AA', 'OPG102','2011-04-30']
+            ['Case', 'Surname', 'Deputy No', 'Dep Surname', 'Dep Postcode', 'Typeofrep', 'OrderDate', 'Corref'],
+            ['12355555', 'Jones', '00213', 'Dep', 'SW11AA', 'OPG102','2011-04-30', 'l2']
         ]));
 
         $this->iSetTheUserDetailsTo(new TableNode([

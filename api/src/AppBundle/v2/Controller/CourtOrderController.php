@@ -8,6 +8,9 @@ use AppBundle\Entity\CourtOrder;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Repository\CasRecRepository;
 use AppBundle\Entity\Repository\ClientRepository;
+use AppBundle\v2\Assembler\CourtOrder\LayToCourtOrderDtoAssembler;
+use AppBundle\v2\DTO\CourtOrderDto;
+use AppBundle\v2\Factory\CourtOrderFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -30,13 +33,27 @@ class CourtOrderController
     /** @var CasRecRepository */
     private $casRecRepository;
 
+    /** @var LayToCourtOrderDtoAssembler */
+    private $courtOrderAssembler;
+
+    /** @var CourtOrderFactory */
+    private $courtOrderFactory;
+
     /** @var EntityManagerInterface */
     private $em;
 
-    public function __construct(ClientRepository $clientRepository, CasRecRepository $casRecRepository, EntityManagerInterface $em)
+    public function __construct(
+        ClientRepository $clientRepository,
+        CasRecRepository $casRecRepository,
+        LayToCourtOrderDtoAssembler $courtOrderAssembler,
+        CourtOrderFactory $courtOrderFactory,
+        EntityManagerInterface $em
+    )
     {
         $this->clientRepository = $clientRepository;
         $this->casRecRepository = $casRecRepository;
+        $this->courtOrderAssembler = $courtOrderAssembler;
+        $this->courtOrderFactory = $courtOrderFactory;
         $this->em = $em;
     }
 
@@ -56,29 +73,15 @@ class CourtOrderController
         /** @var Client $client */
         $client = $this->clientRepository->find($data['id']);
 
-        /** @var Report $report */
-        $report = $client->getCurrentReport();
-
         /** @var CasRec $registrationData */
         $registrationData = $this->casRecRepository->findOneBy(['caseNumber' => $client->getCaseNumber()]);
 
-        $courtOrderType = strtolower($registrationData->getCorref()) === 'hw' ? CourtOrder::SUBTYPE_HW : CourtOrder::SUBTYPE_PFA;
-        $courtOrder = new CourtOrder();
+        /** @var CourtOrderDto $courtOrderDto */
+        $courtOrderDto = $this->courtOrderAssembler->assemble($registrationData);
 
-        $courtOrder
-            ->setCaseNumber($client->getCaseNumber())
-            ->setOrderDate($registrationData->getOrderDate())
-            ->setType($courtOrderType)
-            ->setClient($client)
-            ->addReport($report);
+        /** @var CourtOrder $courtOrder */
+        $courtOrder = $this->courtOrderFactory->create($courtOrderDto, $client, $client->getCurrentReport());
 
-        if (strtolower($registrationData->getTypeOfReport()) == 'opg102') {
-            $courtOrder->setSupervisionLevel(CourtOrder::LEVEL_GENERAL);
-        } else if (strtolower($registrationData->getTypeOfReport()) == 'opg103') {
-            $courtOrder->setSupervisionLevel(CourtOrder::LEVEL_MINIMAL);
-        }
-
-        $report->setCourtOrder($courtOrder);
         $this->em->persist($courtOrder);
         $this->em->flush();
 

@@ -10,4 +10,3 @@ services:
       - '@AppBundle\Entity\Repository\ReportRepository'
       - '@opg_digideps.report_service'
       - '@em'
-      - '@AppBundle\Entity\Repository\CasRecRepository'
