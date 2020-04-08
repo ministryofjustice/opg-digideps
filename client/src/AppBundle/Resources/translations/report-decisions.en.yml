@@ -45,7 +45,7 @@ startPage:
 
 mentalCapacity:
   htmlTitle: "Deputy report - mental capacity | GOV.UK"
-  pageTitle: "Mental capacity"
+  supportTitle: Decisions
   form:
     hasCapacityChanged:
       label: "Has %client%'s mental capacity to make financial decisions changed?"
@@ -64,7 +64,7 @@ mentalCapacity:
 
 existPage:
   htmlTitle: "Deputy report - add decision | GOV.UK"
-  pageTitle: Decisions
+  supportTitle: Decisions
   form:
     hasDecisions:
       label: Have you made any significant decisions for %client% during this reporting period?
