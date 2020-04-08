@@ -100,8 +100,8 @@ security:
             pattern: ^/document/\d+
             security: false
             methods: [PUT]
-        reportSubmission:
-            pattern: ^/report-submission/\d+
+        updateReportSubmissionUuid:
+            pattern: ^/report-submission/\d+/update-uuid
             security: false
             methods: [PUT]
         reportSubmissionGetOld:

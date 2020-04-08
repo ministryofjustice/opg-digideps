@@ -87,7 +87,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         $this->documentId = 6789;
         $this->reportPdfSubmissionUuid = '5a8b1a26-8296-4373-ae61-f8d0b250e123';
         $this->supportingDocSubmissionUuid = '5a8b1a26-8296-4373-ae61-f8d0b250e321';
-        $this->fileContents = 'fake_contents';
+        $this->fileContents = '%PDF-1.4\nfake_contents';
         $this->fileName = 'test.pdf';
     }
 
@@ -133,7 +133,7 @@ class DocumentSyncServiceTest extends KernelTestCase
 
         $this->restClient
             ->apiCall('put',
-                'report-submission/9876',
+                'report-submission/9876/update-uuid',
                 json_encode(['data' => ['uuid' => $this->reportPdfSubmissionUuid]]),
                 'raw',
                 [],
@@ -185,7 +185,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         $failureResponseBody = ['errors' => [0 => ['id' => 'ABC123', 'code' => 'OPGDATA-API-FORBIDDEN']]];
         $failureResponse = new Response('403', [], json_encode($failureResponseBody));
 
-        $requestException = new RequestException('An error occurred', new Request('POST', '/report-submission/9876'), $failureResponse);
+        $requestException = new RequestException('An error occurred', new Request('POST', '/report-submission/9876/update-uuid'), $failureResponse);
 
         $this->siriusApiGatewayClient->sendReportPdfDocument($siriusDocumentUpload, '1234567T')
             ->shouldBeCalled()

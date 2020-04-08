@@ -19,6 +19,7 @@ use Aws\S3\Exception\S3Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
+use function GuzzleHttp\Psr7\mimetype_from_filename;
 
 class DocumentSyncService
 {
@@ -141,7 +142,7 @@ class DocumentSyncService
 
         $file = (new SiriusDocumentFile())
             ->setName($document->getFileName())
-            ->setMimetype($document->getFile()->getClientMimeType())
+            ->setMimetype(mimetype_from_filename($document->getFileName()))
             ->setSource(base64_encode($content));
 
         return (new SiriusDocumentUpload())
@@ -226,7 +227,7 @@ class DocumentSyncService
         try {
             return $this->restClient->apiCall(
                 'put',
-                sprintf('report-submission/%s', $reportSubmissionId),
+                sprintf('report-submission/%s/update-uuid', $reportSubmissionId),
                 json_encode(['data' => ['uuid' => $uuid]]),
                 'raw',
                 [],

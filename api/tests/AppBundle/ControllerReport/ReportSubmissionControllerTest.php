@@ -236,11 +236,11 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
         $uuid = '5a8b1a26-8296-4373-ae61-f8d0b250e773';
 
-        $url = sprintf('/report-submission/%s', $reportSubmission->getId());
+        $url = sprintf('/report-submission/%s/update-uuid', $reportSubmission->getId());
 
         $response = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
-            'AuthToken'   => self::$tokenAdmin,
+            'ClientSecret'   => API_TOKEN_DEPUTY,
             'data' => ['uuid' => $uuid]
         ]);
 
