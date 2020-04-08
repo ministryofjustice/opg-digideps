@@ -78,9 +78,9 @@ $(document).ready(function () {
   tableMultiSelect()
 
   // Detached details/summary
-  var $detachedDetails = document.querySelectorAll('[data-module="opg-detached-details"]')
-  nodeListForEach($detachedDetails).each(function () {
-    new DetachedDetails(this).init()
+  const $detachedDetails = document.querySelectorAll('[data-module="opg-detached-details"]')
+  nodeListForEach($detachedDetails, function ($el) {
+    new DetachedDetails($el).init()
   })
 
   // Initialising the Show Hide Content GOVUK module
