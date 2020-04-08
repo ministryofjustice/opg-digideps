@@ -91,6 +91,7 @@ addAnotherPage:
   moneyIn:
     htmlTitle: "Deputy report - Add another item of income | GOV.UK"
     pageTitle: Add another item
+    supportTitle: Money in
     form:
       addAnother:
         label: The item has been saved. Would you like to add another now?
@@ -100,6 +101,7 @@ addAnotherPage:
   moneyOut:
     htmlTitle: "Deputy report - Add another payment | GOV.UK"
     pageTitle: Add a payment
+    supportTitle: Money out
     form:
       addAnother:
         label: The payment has been saved. Would you like to add another now?
