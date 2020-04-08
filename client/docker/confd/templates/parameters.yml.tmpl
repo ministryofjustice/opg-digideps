@@ -25,22 +25,12 @@ parameters:
     mock_emails: {{ if eq (getv "/mock/emails") "true" }}true{{ else }}false{{ end }}
     email_params:
         {{ if eq (getv "/email/send/internal") "true" }}
-        from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
-        report_submit_to_address: deputyshipservice@publicguardian.gov.uk
         feedback_send_to_address: digideps+feedback@digital.justice.gov.uk
         update_send_to_address: laydeputysupport@publicguardian.gov.uk
         {{ else }}
-        from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
-        report_submit_to_address: digideps+noop@digital.justice.gov.uk
         feedback_send_to_address: digideps+noop@digital.justice.gov.uk
         update_send_to_address: digideps+noop@digital.justice.gov.uk
         {{ end }}
-  {{ if lsdir "/smtp" }}
-    smtp_default_hostname: {{ getv "/smtp/default/hostname" "email-smtp.eu-west-1.amazonaws.com" }}
-    smtp_default_port: {{ getv "/smtp/default/port" "587" }}
-    smtp_default_user: {{ getv "/smtp/default/user" }}
-    smtp_default_password: {{ getv "/smtp/default/password" }}
-  {{ end }}
     wkhtmltopdf_address: {{ if exists "/wkhtmltopdf/address" }}{{ getv "/wkhtmltopdf/address" }}{{ else }}'http://wkhtmltopdf'{{ end }}
     s3_bucket_name: {{ if exists "/s3/bucketname" }}{{ getv "/s3/bucketname" }}{{ else }}not_set{{ end }}
     s3_client_params:

@@ -784,18 +784,8 @@ sendEmail:
     toEmail:
         notBlank: Please supply recipient's email (toEmail)
         invalid:  Recipient email address is invalid
-    toName:
-        notBlank: Please supply recipient's name (toName)
-        invalid: Recipient name is invalid
-    fromEmail:
-        notBlank: Please supply sender's email (fromEmail)
-        invalid:  Sender email address is invalid
     fromName:
         notBlank: Please supply sender's name (fromName)
         invalid: Sender name is invalid
     subject:
         notBlank: Please supply email subject
-    bodyText:
-        notBlank: Please supply message for your email
-    bodyHtml:
-        notBlank: Please supply message for your email

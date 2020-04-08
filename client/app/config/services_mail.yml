@@ -3,30 +3,12 @@ services:
         autowire: true
         autoconfigure: true
 
-    mailer.transport.smtp.default:
-        autowire: false
-        class: Swift_SmtpTransport
-        arguments: [ "%smtp_default_hostname%", "%smtp_default_port%" ]
-        calls:
-            - [ setEncryption, [ "tls"]]
-            - [ setUsername, [ "%smtp_default_user%"]]
-            - [ setPassword, [ "%smtp_default_password%"]]
-
-    mailer.swift_mailers.default:
-        class: Swift_Mailer
-        arguments: [ "@mailer.transport.smtp.default" ]
-
     AppBundle\Service\Mailer\MailFactory:
         arguments:
             $emailParams: "%email_params%"
             $baseURLs:
                 front: '%env(NONADMIN_HOST)%'
                 admin: '%env(ADMIN_HOST)%'
-
-    # mail sender accepting those the above-created swift mailer
-    AppBundle\Service\Mailer\MailSender:
-        calls:
-            - [ addSwiftMailer, [ 'default', '@mailer.swift_mailers.default'] ]
 
     AppBundle\Service\Mailer\MailSenderInterface: '@AppBundle\Service\Mailer\MailSender'
 

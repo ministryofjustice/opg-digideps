@@ -45,7 +45,7 @@ class OrganisationControllerTest extends AbstractControllerTestCase
                     && strpos($email->getParameters()['link'], "user/activate/invitation-token") !== false;
             }))
             ->shouldBeCalled()
-            ->willReturn();
+            ->willReturn(true);
 
         $crawler = $this->client->request('GET', "/org/settings/organisation/14/add-user");
         $button = $crawler->selectButton('Save');
@@ -127,7 +127,7 @@ class OrganisationControllerTest extends AbstractControllerTestCase
                     && strpos($email->getParameters()['link'], "user/activate/invitation-token") !== false;
             }))
             ->shouldBeCalled()
-            ->willReturn();
+            ->willReturn(true);
 
         $this->client->request('GET', "/org/settings/organisation/14/send-activation-link/17");
         $this->client->followRedirect();

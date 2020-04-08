@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Service\Availability as ServiceAvailability;
+use AppBundle\Service\Availability\NotifyAvailability;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
@@ -11,6 +12,16 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  */
 class ManageController extends AbstractController
 {
+    /**
+     * @var NotifyAvailability
+     */
+    private $notifyAvailability;
+
+    public function __construct(NotifyAvailability $notifyAvailability)
+    {
+        $this->notifyAvailability = $notifyAvailability;
+    }
+
     /**
      * @Route("/availability", methods={"GET"})
      */
@@ -65,12 +76,10 @@ class ManageController extends AbstractController
         $services = [
             new ServiceAvailability\RedisAvailability($this->container),
             new ServiceAvailability\ApiAvailability($this->container),
-            new ServiceAvailability\SiriusApiAvailability($this->container)
+            new ServiceAvailability\SiriusApiAvailability($this->container),
+            $this->notifyAvailability
         ];
 
-        if (!$this->getParameter('kernel.debug')) {
-            $services[] = new ServiceAvailability\SmtpAvailability($this->container, 'mailer.transport.smtp.default');
-        }
         if ($this->getParameter('env') !== 'admin') {
             $services[] = new ServiceAvailability\WkHtmlToPdfAvailability($this->container);
             $services[] = new ServiceAvailability\ClamAvAvailability($this->container);

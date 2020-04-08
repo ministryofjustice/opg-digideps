@@ -24,17 +24,6 @@ services:
         - { name: data_collector, template: 'AppBundle:Manage:css-class-collector', id: 'css-class-collector' }
       public: false
 
-    AppBundle\Service\Mailer\MailSender:
-        class: AppBundle\Service\Mailer\MailSenderMock
-        autowire: true
-        arguments:
-            $redis: '@snc_redis.default'
-        calls:
-            - [ addSwiftMailer, [ "default", "@mailer.swift_mailers.default"] ]
-
-    mailer.transport.smtp.default:
-        class: AppBundle\Service\Mailer\Transport\TransportMock
-
     Alphagov\Notifications\Client:
         alias: AppBundle\Service\Mailer\NotifyClientMock
 
