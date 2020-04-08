@@ -21,18 +21,18 @@ startPage:
 categoryPage:
   moneyIn:
     htmlTitle: "Deputy report - Money in | GOV.UK"
-    pageTitle: Money in
+    supportTitle: Money in
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
-    pageTitle: Money out
+    supportTitle: Money out
 
 existPage:
   moneyIn:
     htmlTitle: "Deputy report - Money in | GOV.UK"
-    pageTitle: Money in
+    supportTitle: Money in
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
-    pageTitle: Money out
+    supportTitle: Money out
   form:
     moneyTransactionsShortInExist:
       label: Have there been any one-off income payments over £1,000?

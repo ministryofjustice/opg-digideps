@@ -7,8 +7,7 @@
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {% block htmlTitle %}{{ 'existPage.moneyIn.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'existPage.moneyIn.pageTitle' | trans }}{% endblock %}
-
+{% block pageHeader %}{% endblock %}
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
@@ -18,14 +17,14 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <div class="push--bottom">
     {{ form_checkbox_group(form.moneyTransactionsShortInExist, 'existPage.form.moneyTransactionsShortInExist', {
-        'fieldSetClass' : 'inline',
+        'fieldSetClass' : 'govuk-radios--inline',
         'labelParameters': transOptions,
-        'legendClass' : 'govuk-label--s text',
-        'formGroupClass': 'flush--bottom'
+        legend: {
+            isPageHeading: true,
+            caption: 'existPage.moneyIn.supportTitle' | trans
+        }
     }) }}
-    </div>
 
     {{ macros.saveAndContinueButton(form.save) }}
 
