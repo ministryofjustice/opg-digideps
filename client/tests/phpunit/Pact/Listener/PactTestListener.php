@@ -2,6 +2,7 @@
 
 namespace AppBundle\Pact\Listener;
 
+use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use GuzzleHttp\Psr7\Uri;
 use PhpPact\Broker\Service\BrokerHttpClient;
 use PhpPact\Http\GuzzleClient;
