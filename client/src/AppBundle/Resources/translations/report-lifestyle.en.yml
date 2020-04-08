@@ -7,9 +7,7 @@ startPage:
 
 stepPage:
   htmlTitle: "Deputy report - Health and lifestyle | GOV.UK"
-  pageTitle: Health and lifestyle
-  pageSectionDescription: |
-      todo
+  supportTitle: Health and lifestyle
 
 summaryPage:
   htmlTitle: "Deputy report - Health and lifestyle | GOV.UK"
@@ -19,7 +17,7 @@ summaryPage:
 
 form:
   careAppointments:
-    label: Describe %client%'s health and provide details of any care appointments you or %client% attended.
+    label: Describe %client%'s health and provide details of any care appointments you or %client% attended
     hint: Tell us about any health issues or incidents during the reporting period. Give details of any significant meetings with health or care professionals. We don’t need details about routine weekly appointments.
   doesClientUndertakeSocialActivities:
     label: Does %client% take part in any leisure or social activities?
