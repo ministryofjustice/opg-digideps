@@ -33,8 +33,7 @@ Feature: Report submit
 
     @deputy
     Scenario: report submission
-        Given emails are sent from "deputy" area
-        And I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-start"
         And I save the report as "102 report"
         # assert I cannot access the submitted page directly
@@ -94,8 +93,7 @@ Feature: Report submit
 
     @deputy
     Scenario: deputy gives feedback after submitting report
-        Given emails are sent from "deputy" area
-        And I load the application status from "report-submit-pre"
+        Given I load the application status from "report-submit-pre"
         And I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-start"
         And I click on "report-submit"

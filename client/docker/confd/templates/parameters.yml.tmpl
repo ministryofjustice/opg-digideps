@@ -22,7 +22,6 @@ parameters:
         default: {{ getv "/ga/default" }}
         gds: {{ getv "/ga/gds" }}
     opg_docker_tag: {{ getv "/opg/docker/tag" }}
-    mock_emails: {{ if eq (getv "/mock/emails") "true" }}true{{ else }}false{{ end }}
     email_params:
         {{ if eq (getv "/email/send/internal") "true" }}
         feedback_send_to_address: digideps+feedback@digital.justice.gov.uk

@@ -25,10 +25,9 @@ Feature: Report submit (client 02100014)
 
 
     Scenario: 102 report submission
-        Given emails are sent from "deputy" area
         # log in as team member to submit the report and test that named deputy details are displayed
-        And I am logged in as "behat-pa1-team-member@publicguardian.gov.uk" with password "Abcd1234"
-        And I click on "pa-report-open" in the "client-02100014" region
+        Given I am logged in as "behat-pa1-team-member@publicguardian.gov.uk" with password "Abcd1234"
+        When I click on "pa-report-open" in the "client-02100014" region
         And I should see "Ready to submit" in the "report-detail-status" region
         And I click on "edit-report_submit"
         Then each text should be present in the corresponding region:

@@ -3,8 +3,7 @@ Feature: deputy / Activation link resending
 
     @deputy
     Scenario: Activation link: resend expired link and restart from activation step
-        Given emails are sent from "deputy" area
-        And I load the application status from "report-submit-pre"
+        Given I load the application status from "report-submit-pre"
         And I change the user "behat-user@publicguardian.gov.uk" token to "behatuser123abc" dated last week
         When I go to "/user/activate/behatuser123abc"
         And I click on "ask-us-to-send-new-link"
@@ -13,8 +12,7 @@ Feature: deputy / Activation link resending
 
     @deputy
     Scenario: Forgotten password page: expired token shows error page and link to go back
-        Given emails are sent from "deputy" area
-        And I change the user "behat-user@publicguardian.gov.uk" token to "behatuser123abc" dated last week
+        Given I change the user "behat-user@publicguardian.gov.uk" token to "behatuser123abc" dated last week
         When I go to "/user/password-reset/behatuser123abc"
         And I click on "go-back-to-reset-password"
         Then I should be on "/password-managing/forgotten"

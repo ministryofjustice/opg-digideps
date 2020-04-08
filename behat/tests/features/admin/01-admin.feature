@@ -5,8 +5,7 @@ Feature: admin / admin
     Then I should be on "/admin/"
 
   Scenario: login and add admin user
-    Given emails are sent from "admin" area
-    And I am on admin page "/"
+    Given I am on admin page "/"
     Then I should be on "/login"
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     Given I am on admin page "/"

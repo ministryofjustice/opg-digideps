@@ -20,8 +20,7 @@ Feature: deputy / acl / cross domain (admin and deputy) checks
     @deputy
     Scenario: A deputy cannot reset password from the admin area
         # check deputy can recover password from deputy site
-        Given emails are sent from "deputy" area
-        And I go to "/login"
-        When I click on "forgotten-password"
+        When I go to "/login"
+        And I click on "forgotten-password"
         And I fill in "password_forgotten_email" with "behat-lay-deputy-102@publicguardian.gov.uk"
         And I press "password_forgotten_submit"
