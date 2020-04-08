@@ -10,7 +10,7 @@ startPage:
 
 existPage:
   htmlTitle: "Deputy report - money transfers | GOV.UK"
-  pageTitle: Money transfers
+  supportTitle: Money transfers
   form:
     noTransfersToAdd:
       label: Have you made any money transfers between %client%'s accounts in this reporting period?
