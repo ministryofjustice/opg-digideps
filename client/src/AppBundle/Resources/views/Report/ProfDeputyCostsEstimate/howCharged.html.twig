@@ -8,8 +8,7 @@
 {% set page = 'howCharged' %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
-{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-
+{% block pageHeader %}{% endblock %}
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
@@ -19,21 +18,17 @@
 
 {% block pageContent %}
 
-    <h3 class="govuk-heading-s push-half--bottom">
-        {{ (page ~ '.form.profDeputyCostsEstimateHowCharged.label') | trans(transOptions, translationDomain) }}
-    </h3>
-
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <div class="push--bottom">
-
-        <div class="govuk-form-group push--bottom {% if not form.profDeputyCostsEstimateHowCharged.vars.valid %}govuk-form-group--error{% endif %}">
-            {{ form_checkbox_group(form.profDeputyCostsEstimateHowCharged, 'report.form.profDeputyCostsEstimateHowCharged', {
-                'legendClass' : 'govuk-label--s',
-                'useFormGroup': false,
-            }) }}
-        </div>
-
+    <div class="govuk-form-group {% if not form.profDeputyCostsEstimateHowCharged.vars.valid %}govuk-form-group--error{% endif %}">
+        {{ form_checkbox_group(form.profDeputyCostsEstimateHowCharged, 'report.form.profDeputyCostsEstimateHowCharged', {
+            'useFormGroup': false,
+            legendText: (page ~ '.form.profDeputyCostsEstimateHowCharged.label') | trans,
+            legend: {
+                isPageHeading: true,
+                caption: (page ~ '.supportTitle') | trans
+            }
+        }) }}
     </div>
 
     {{ macros.saveAndContinueButton(form.save) }}

@@ -16,7 +16,7 @@ startPage:
 
 howCharged:
   htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
-  pageTitle: Deputy costs estimates
+  supportTitle: Deputy costs estimates
   form:
     profDeputyCostsEstimateHowCharged:
       label: "How will you be charging for your services?"
@@ -50,7 +50,7 @@ breakdown:
 
 moreInfo:
   htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
-  pageTitle: Deputy cost estimates
+  supportTitle: Deputy cost estimates
   pageHeader: More Information
   form:
     profDeputyCostsEstimateHasMoreInfo:
