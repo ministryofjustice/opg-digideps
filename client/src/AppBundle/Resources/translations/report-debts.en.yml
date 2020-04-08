@@ -8,7 +8,7 @@ startPage:
 
 existPage:
   htmlTitle: "Deputy report - debts | GOV.UK"
-  pageTitle: Debts
+  supportTitle: Debts
   form:
     exist:
       label: Does %client% have any debts?
@@ -17,8 +17,8 @@ existPage:
 
 managementPage:
   htmlTitle: "Deputy report - debts | GOV.UK"
-  pageTitle: Debts
-  pageSectionDescription: How is the debt being managed or reduced?
+  supportTitle: Debts
+  pageTitle: How is the debt being managed or reduced?
   pageHint: For example, list any regular payments to creditors or payment plans in place
   form:
     debtManagement:
@@ -27,8 +27,8 @@ managementPage:
 
 editPage:
   htmlTitle: "Deputy report - debts | GOV.UK"
-  pageTitle: Debts
-  pageSectionDescription: Please tell us more about %client%'s debts.
+  supportTitle: Debts
+  pageTitle: Please tell us more about %client%'s debts.
   pageHint: If %client% has a mortgage on a property, use the Assets section to tell us about it
 
 summaryPage:
