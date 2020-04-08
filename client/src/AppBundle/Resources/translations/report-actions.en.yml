@@ -31,7 +31,7 @@ startPage:
 
 stepPage:
   htmlTitle: "Deputy report - actions you plan to take | GOV.UK"
-  pageTitle: Actions you plan to take
+  supportTitle: Actions you plan to take
   backLink: Back
 
 summaryPage:
