@@ -6,13 +6,8 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
-{% block htmlTitle %}
-    {{ 'stepPage.htmlTitle' | trans }}
-{% endblock %}
-{% block pageTitle %}
-    {{ 'stepPage.pageTitle' | trans }}
-{% endblock %}
-
+{% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans }}{% endblock %}
+{% block pageHeader %}{% endblock %}
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
@@ -22,28 +17,27 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-        <div class="push--bottom">
-            <div class="govuk-form-group flush--bottom {% if not form.actionMoreInfo.vars.valid %}govuk-form-group--error{% endif %}">
-                {{ form_checkbox_group(form.actionMoreInfo, 'form.actionMoreInfo', {
-                    'useFormGroup': false,
-                    'fieldSetClass' : 'inline',
-                    'legendClass' : 'govuk-label--s',
-                    'items': [
-                        {'dataTarget': 'more-info-textarea' }
-                    ]
-                }) }}
+    <div class="govuk-form-group {% if not form.actionMoreInfo.vars.valid %}govuk-form-group--error{% endif %}">
+        {{ form_checkbox_group(form.actionMoreInfo, 'form.actionMoreInfo', {
+            'useFormGroup': false,
+            legend: {
+                isPageHeading: true,
+                caption: 'stepPage.supportTitle' | trans
+            },
+            'items': [
+                {'dataTarget': 'more-info-textarea' }
+            ]
+        }) }}
 
-                <div id="more-info-textarea" class="opg-indented-block js-hidden">
-                    {{ form_input(form.actionMoreInfoDetails, 'form.actionMoreInfoDetails', {
-                        'labelParameters': transOptions
-                    }) }}
-                </div>
-            </div>
+        <div id="more-info-textarea" class="opg-indented-block js-hidden">
+            {{ form_input(form.actionMoreInfoDetails, 'form.actionMoreInfoDetails', {
+                'labelParameters': transOptions
+            }) }}
         </div>
+    </div>
 
     {{ macros.saveAndContinueButton(form.save) }}
 
     {{ form_end(form) }}
 
 {% endblock %}
-
