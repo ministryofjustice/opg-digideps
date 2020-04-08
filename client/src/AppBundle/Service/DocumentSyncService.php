@@ -63,6 +63,7 @@ class DocumentSyncService
      */
     public function syncDocument(Document $document)
     {
+
         $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_IN_PROGRESS);
 
         if ($document->isReportPdf()) {
@@ -83,17 +84,13 @@ class DocumentSyncService
     public function syncReportDocument(Document $document): ?string
     {
         try {
-            /** @var Report $report */
-            $report = $document->getReport();
-
             $content = $this->retrieveDocumentContentFromS3($document);
 
             $siriusResponse = $this->handleSiriusSync($document, $content);
+
             $data = json_decode(strval($siriusResponse->getBody()), true);
 
-            $relevantSubmission = $report->getReportSubmissionByDocument($document);
-
-            $this->handleReportSubmissionUpdate($relevantSubmission->getId(), $data['data']['id']);
+            $this->handleReportSubmissionUpdate($document->getReportSubmission()->getId(), $data['uuid']);
 
             return $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_SUCCESS);
         } catch (Throwable $e) {
@@ -120,13 +117,14 @@ class DocumentSyncService
 
     private function buildUpload(Document $document, string $content)
     {
+
         $report = $document->getReport();
 
         if ($document->isReportPdf()) {
             $siriusDocumentMetadata = (new SiriusReportPdfDocumentMetadata())
                 ->setReportingPeriodFrom($report->getStartDate())
                 ->setReportingPeriodTo($this->determineEndDate($report))
-                ->setYear($report->getStartDate()->format('Y'))
+                ->setYear((intval($report->getStartDate()->format('Y'))))
                 ->setDateSubmitted($report->getSubmitDate())
                 ->setType($this->determineReportType($report))
                 ->setSubmissionId($document->getReportSubmission()->getId());
@@ -228,7 +226,7 @@ class DocumentSyncService
             return $this->restClient->apiCall(
                 'put',
                 sprintf('report-submission/%s/update-uuid', $reportSubmissionId),
-                json_encode(['data' => ['uuid' => $uuid]]),
+                json_encode(['uuid' => $uuid]),
                 'raw',
                 [],
                 false

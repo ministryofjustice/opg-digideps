@@ -74,7 +74,7 @@ class Document
     /**
      * @var Report
      *
-     * @JMS\Groups({"document-report"})
+     * @JMS\Groups({"document-report", "documentSync"})
      *
      * @JMS\Type("AppBundle\Entity\Report\Report")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="documents")

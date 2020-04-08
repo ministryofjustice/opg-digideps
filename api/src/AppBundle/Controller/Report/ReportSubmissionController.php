@@ -6,7 +6,6 @@ use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

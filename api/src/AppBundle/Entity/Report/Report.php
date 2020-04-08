@@ -372,6 +372,7 @@ class Report implements ReportInterface
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Report\ReportSubmission>")
+     * @JMS\Groups({"documentSync"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ReportSubmission", mappedBy="report", fetch="EXTRA_LAZY")
      */
     private $reportSubmissions;
@@ -1037,7 +1038,6 @@ class Report implements ReportInterface
 
     /**
      * @JMS\SerializedName("report_submissions")
-     * @JMS\Groups({"documentSync"})
      * @return mixed
      */
     public function getReportSubmissions()
