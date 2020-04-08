@@ -19,7 +19,7 @@ startPage:
 
 feeExistPage:
   htmlTitle: "Deputy report - Deputy fees and expenses | GOV.UK"
-  pageTitle: Deputy fees and expenses
+  supportTitle: Deputy fees and expenses
   form:
     hasFees:
       label: Have you charged the client any fees for your services during the reporting period?
