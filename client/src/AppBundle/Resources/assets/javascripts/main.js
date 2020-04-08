@@ -20,6 +20,19 @@ var uploadFile = require('./modules/uploadFile.js')
 var uploadProgressPA = require('./modules/uploadProgressPA.js')
 var uploadProgress = require('./modules/uploadProgress.js')
 
+/**
+ * Taken from govuk-frontend. Supports back to IE8
+ * See: https://github.com/alphagov/govuk-frontend/blob/063cd8e2470b62b824c6e50ca66342ac7a95d2d8/src/govuk/common.js#L6
+ */
+function nodeListForEach (nodes, callback) {
+  if (window.NodeList.prototype.forEach) {
+    return nodes.forEach(callback)
+  }
+  for (let i = 0; i < nodes.length; i++) {
+    callback.call(window, nodes[i], i, nodes)
+  }
+}
+
 window.opg = {
   Ga: Ga,
   SessionTimeoutDialog: SessionTimeoutDialog
@@ -65,8 +78,9 @@ $(document).ready(function () {
   tableMultiSelect()
 
   // Detached details/summary
-  document.querySelectorAll('[data-module="opg-detached-details"]').forEach(function ($el) {
-    new DetachedDetails($el).init()
+  var $detachedDetails = document.querySelectorAll('[data-module="opg-detached-details"]')
+  nodeListForEach($detachedDetails).each(function () {
+    new DetachedDetails(this).init()
   })
 
   // Initialising the Show Hide Content GOVUK module
