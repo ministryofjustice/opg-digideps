@@ -7,8 +7,7 @@
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {% block htmlTitle %}{{ 'otherExistPage.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'otherExistPage.pageTitle' | trans }}{% endblock %}
-
+{% block pageHeader %}{% endblock %}
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
@@ -18,14 +17,14 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <div class="push--bottom">
     {{ form_checkbox_group(form.paidForAnything, 'otherExistPage.form.paidForAnything', {
         'fieldSetClass' : 'inline',
         'labelParameters': transOptions,
-        'legendClass' : 'govuk-label--s text',
-        'formGroupClass': 'flush--bottom'
+        legend: {
+                isPageHeading: true,
+                caption: 'feeExistPage.supportTitle' | trans
+            },
     }) }}
-    </div>
 
     {{ macros.saveAndContinueButton(form.save) }}
 
