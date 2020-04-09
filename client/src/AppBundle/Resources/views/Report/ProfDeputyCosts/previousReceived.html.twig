@@ -9,7 +9,7 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-
+{% block supportTitleTop %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
 
 {% block linkBack %}
     {% if backLink %}
@@ -24,10 +24,8 @@
 {% endblock %}
 {% block pageContent %}
 
-    <h2 class="govuk-heading-m flush--ends">{{ (page ~ '.pageSectionDescription01') | trans }}</h2>
-
     <div class="text">
-        <p>{{ (page ~ '.pageSectionDescription02') | trans(transOptions, translationDomain) }}</p>
+        <p>{{ (page ~ '.pageSectionDescription') | trans(transOptions, translationDomain) }}</p>
     </div>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
