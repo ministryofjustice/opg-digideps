@@ -51,7 +51,7 @@ class SiriusHelpers extends KernelTestCase
             ->setSource(base64_encode($fileContents));
 
         return (new SiriusDocumentUpload())
-            ->setType('supportingdocument')
+            ->setType('supportingdocuments')
             ->setAttributes($siriusSupportingDocumentMetadata)
             ->setFile($file);
     }

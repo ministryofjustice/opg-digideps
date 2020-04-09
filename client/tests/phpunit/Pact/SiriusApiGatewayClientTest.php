@@ -187,7 +187,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
             ->setBody([
                 'supporting_document' => [
                     'data' => [
-                        'type' => 'supportingdocument',
+                        'type' => 'supportingdocuments',
                         'attributes' => [
                             'submission_id' => $matcher->integer(9876)
                         ],

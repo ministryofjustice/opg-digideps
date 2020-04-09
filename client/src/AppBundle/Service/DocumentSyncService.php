@@ -135,7 +135,7 @@ class DocumentSyncService
                 (new SiriusSupportingDocumentMetadata())
                     ->setSubmissionId($report->getReportSubmissionByDocument($document)->getId());
 
-            $type = 'supportingdocument';
+            $type = 'supportingdocuments';
         }
 
         $file = (new SiriusDocumentFile())
