@@ -15,13 +15,6 @@ class ButtonToggler {
       $el.setAttribute('aria-disabled', disabled.toString())
       $el.classList.toggle('govuk-button--disabled')
     })
-    // buttons.forEach(button => {
-    //   const disabled = !button.disabled
-    //
-    //   button.disabled = disabled
-    //   button.setAttribute('aria-disabled', disabled.toString())
-    //   button.classList.toggle('govuk-button--disabled')
-    // })
   }
 }
 
