@@ -41,11 +41,6 @@ class DocumentSyncService
      */
     private $restClient;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
         S3Storage $storage,
         SiriusApiGatewayClient $siriusApiGatewayClient,

@@ -96,14 +96,6 @@ class Document implements DocumentInterface
      *
      * @var string
      */
-    private $mimetype;
-
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"document"})
-     *
-     * @var string
-     */
     private $fileName;
 
     /**
@@ -389,13 +381,4 @@ class Document implements DocumentInterface
     {
         return strpos('DigiRepTransactions', $this->getFileName());
     }
-
-    /**
-     * @return string
-     */
-    public function getMimetype()
-    {
-        return $this->file->getClientMimeType();
-    }
-
 }
