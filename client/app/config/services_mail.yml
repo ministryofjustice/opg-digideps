@@ -11,6 +11,9 @@ services:
                 front: '%env(NONADMIN_HOST)%'
                 admin: '%env(ADMIN_HOST)%'
 
+    AppBundle\Service\Mailer\MailSender:
+        public: true
+
     AppBundle\Service\Mailer\MailSenderInterface: '@AppBundle\Service\Mailer\MailSender'
 
     Alphagov\Notifications\Client:
