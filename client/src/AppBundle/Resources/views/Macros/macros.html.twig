@@ -344,16 +344,12 @@
 
 {% macro successBanner(successText, transDomain, successHeading) %}
     <div class="moj-banner moj-banner--success">
+        {{ _self.icon('success', 'moj-banner__icon') }}
         <div class="moj-banner__message">
             {% if successHeading is not null %}
-                <h3 class="govuk-heading-m">
-                    {{ _self.icon('success', 'moj-banner__icon') }}
+                <h2 class="govuk-heading-m">
                     {{ successHeading | trans({}, transDomain)  }}
-                </h3>
-            {% endif %}
-
-            {% if successHeading is null %}
-                {{ _self.icon('success', 'moj-banner__icon') }}
+                </h2>
             {% endif %}
             <span class="moj-banner__assistive">Success</span>
             {{ successText | trans({}, transDomain) | nl2br }}
@@ -363,18 +359,13 @@
 
 {% macro warningBanner(warningText, transDomain, warningHeading) %}
     <div class="moj-banner moj-banner--warning">
+        {{ _self.icon('warning', 'moj-banner__icon') }}
         <div class="moj-banner__message">
             {% if warningHeading is not null %}
-                <h3 class="govuk-heading-m">
-                    {{ _self.icon('warning', 'moj-banner__icon') }}
+                <h2 class="govuk-heading-m">
                     {{ warningHeading | trans({}, transDomain)  }}
-                </h3>
+                </h2>
             {% endif %}
-
-            {% if warningHeading is null %}
-                {{ _self.icon('warning', 'moj-banner__icon') }}
-            {% endif %}
-
             <span class="moj-banner__assistive">Warning</span>
             {{ warningText | trans({}, transDomain) | nl2br  }}
         </div>
