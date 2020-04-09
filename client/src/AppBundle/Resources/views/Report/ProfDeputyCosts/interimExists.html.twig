@@ -9,7 +9,7 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-
+{% block supportTitleTop %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
@@ -18,20 +18,12 @@
 {% endblock %}
 
 {% block pageContent %}
-
-    <p class="govuk-heading-m">{{ (page ~ '.pageSectionDescription') | trans }}</p>
-
-
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <div class="push--bottom">
-        {{ form_checkbox_group(form.profDeputyCostsHasInterim, page ~ '.form.profDeputyCostsHasInterim', {
-            'fieldSetClass' : 'inline',
-            'labelParameters': transOptions,
-            'legendClass' : 'text',
-            'formGroupClass': 'flush--bottom'
-        }) }}
-    </div>
+    {{ form_checkbox_group(form.profDeputyCostsHasInterim, page ~ '.form.profDeputyCostsHasInterim', {
+        'fieldSetClass' : 'govuk-radios--inline',
+        'labelParameters': transOptions
+    }) }}
 
     {{ macros.saveAndContinueButton(form.save) }}
 
