@@ -158,11 +158,11 @@ abstract class AbstractTestController extends WebTestCase
         $container = self::$frameworkBundleClient->getContainer();
 
         /** @var AttemptsInTimeChecker $timeChecker */
-        $timeChecker = $container->get('attemptsInTimeChecker');
+        $timeChecker = $container->get(AttemptsInTimeChecker::class);
         $timeChecker->resetAttempts($key);
 
         /** @var AttemptsIncrementalWaitingChecker $waitingChecker */
-        $waitingChecker = $container->get('attemptsIncrementalWaitingChecker');
+        $waitingChecker = $container->get(AttemptsIncrementalWaitingChecker::class);
         $waitingChecker->resetAttempts($key);
 
         $responseArray = $this->assertJsonRequest('POST', '/auth/login', [

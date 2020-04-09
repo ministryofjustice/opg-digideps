@@ -7,17 +7,10 @@ parameters:
 
 services:
     # authenticator
-    authenticator.token_header:
-        class: AppBundle\Service\Auth\HeaderTokenAuthenticator
-        public: false
     AppBundle\Service\Auth\UserProvider:
         arguments: [ '@em', "@snc_redis.default", "@logger", { "timeout_seconds": "%user_provider_timeout_seconds%" }, '@AppBundle\Entity\Repository\UserRepository' ]
-        public: true
-    user_provider:
-        alias: AppBundle\Service\Auth\UserProvider
 
     AppBundle\Service\Auth\AuthService:
-        class: AppBundle\Service\Auth\AuthService
         public: true
         arguments:
             $encoderFactory: '@security.encoder_factory'
@@ -26,18 +19,12 @@ services:
             $roleHierarchy: '@security.role_hierarchy'
             $clientPermissions: '%client_permissions%'
 
-    authService:
-        alias: AppBundle\Service\Auth\AuthService
-
     AppBundle\Service\BruteForce\AttemptsInTimeChecker:
         arguments: [ "@snc_redis.default" ]
-        public: true
         calls:
             - [ setRedisPrefix, ["ac_ret_code"] ]
             # after 5 attempts in the last 10 minutes, return a different return code (activate captcha)
             - [ addTrigger, [  5, 600 ] ]
-    attemptsInTimeChecker:
-        alias: AppBundle\Service\BruteForce\AttemptsInTimeChecker
     AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker:
         arguments: [ "@snc_redis.default" ]
         public: true
@@ -49,8 +36,6 @@ services:
             - [ addFreezingRule, [  20, 3600 ] ]
             # after further 10 attempts. freeze for 2h
             - [ addFreezingRule, [  30, 7200 ] ]
-    attemptsIncrementalWaitingChecker:
-        alias: AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker
 
 
 security:
@@ -58,10 +43,9 @@ security:
         Symfony\Component\Security\Core\User\User: plaintext
         AppBundle\Entity\User: sha512
 
-
     providers:
         user_provider_redis:
-            id: user_provider
+            id: AppBundle\Service\Auth\UserProvider
 
     firewalls:
         elb:
@@ -117,7 +101,7 @@ security:
             pattern: .*
             security: true
             simple_preauth:
-                authenticator: authenticator.token_header
+                authenticator: AppBundle\Service\Auth\HeaderTokenAuthenticator
             provider: user_provider_redis
             stateless:   true
 

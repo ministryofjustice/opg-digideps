@@ -4,11 +4,15 @@ services:
         autoconfigure: true
 
     AppBundle\Service\Mailer\MailFactory:
+        public: true
         arguments:
             $emailParams: "%email_params%"
             $baseURLs:
                 front: '%env(NONADMIN_HOST)%'
                 admin: '%env(ADMIN_HOST)%'
+
+    AppBundle\Service\Mailer\MailSender:
+        public: true
 
     AppBundle\Service\Mailer\MailSenderInterface: '@AppBundle\Service\Mailer\MailSender'
 

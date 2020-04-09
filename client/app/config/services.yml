@@ -1,9 +1,6 @@
 imports:
     - { resource: services/defaults.yml }
     - { resource: services/file_uploads.yml }
-    - { resource: services/mappers.yml }
-    - { resource: services/resolvers.yml }
-    - { resource: services/transformers.yml }
     - { resource: services/twig.yml }
     - { resource: services_mail.yml }
     - { resource: services_forms.yml }
@@ -16,20 +13,11 @@ services:
         class: AppBundle\Service\Redirector
         arguments: [ "@security.token_storage", "@security.authorization_checker", "@router", "@session", "%env%" ]
 
-    redirector_service:
-        alias: AppBundle\Service\Redirector
-
     AppBundle\Service\WkHtmlToPdfGenerator:
         arguments: [ "%wkhtmltopdf_address%", 30]
 
     wkhtmltopdf:
         alias: AppBundle\Service\WkHtmlToPdfGenerator
-
-    step_redirector:
-      alias: AppBundle\Service\StepRedirector
-
-    csv_generator_service:
-      alias: AppBundle\Service\CsvGeneratorService
 
     # Disable autowiring
     AppBundle\Model\EmailAttachment: ~
@@ -73,3 +61,16 @@ services:
         autowire: true
         autoconfigure: true
         tags: ['serializer.normalizer']
+
+    # Make optional availability services pullable
+    AppBundle\Service\Availability\ClamAvAvailability:
+        arguments: ['@guzzle_file_scanner_client']
+        public: true
+
+    AppBundle\Service\Availability\SiriusApiAvailability:
+        arguments: ['@AppBundle\Service\Client\Sirius\SiriusApiGatewayClient']
+        public: true
+
+    AppBundle\Service\Availability\WkHtmlToPdfAvailability:
+        arguments: ['@AppBundle\Service\WkHtmlToPdfGenerator']
+        public: true

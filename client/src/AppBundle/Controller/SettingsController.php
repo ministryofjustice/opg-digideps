@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Redirector;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
@@ -18,7 +19,7 @@ class SettingsController extends AbstractController
      * @Route("/org/settings", name="org_settings")
      * @Template("AppBundle:Settings:index.html.twig")
      **/
-    public function indexAction()
+    public function indexAction(Redirector $redirector)
     {
         if ($this->getUser()->isDeputyOrg()) {
             $user = $this->getUserWithData(['user-organisations', 'organisation']);
@@ -30,7 +31,7 @@ class SettingsController extends AbstractController
 
         // redirect if user has missing details or is on wrong page
         $user = $this->getUserWithData(['user-clients', 'client', 'client-reports', 'report']);
-        if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'account_settings')) {
+        if ($route = $redirector->getCorrectRouteIfDifferent($user, 'account_settings')) {
             return $this->redirectToRoute($route);
         }
 

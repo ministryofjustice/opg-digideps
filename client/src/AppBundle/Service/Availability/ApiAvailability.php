@@ -2,14 +2,14 @@
 
 namespace AppBundle\Service\Availability;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use AppBundle\Service\Client\RestClient;
 
 class ApiAvailability extends ServiceAvailabilityAbstract
 {
-    public function __construct(ContainerInterface $container)
+    public function __construct(RestClient $restClient)
     {
         try {
-            $data = $container->get('rest_client')->get('manage/availability', 'array');
+            $data = $restClient->get('manage/availability', 'array');
             // API not healtyh
             if (json_last_error() !== JSON_ERROR_NONE || !isset($data['healthy'])) {
                 $this->isHealthy = false;

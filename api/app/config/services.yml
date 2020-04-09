@@ -14,26 +14,11 @@ services:
         alias: doctrine.orm.entity_manager
         public: true
 
-    opg_digideps.casrec_verification_service:
-        class: AppBundle\Service\CasrecVerificationService
-        arguments: [ "@em" ]
-
-    user_registration_service:
-        class: AppBundle\Service\UserRegistrationService
-        arguments: [ "@em", "@opg_digideps.casrec_verification_service" ]
-
     monolog.processor.add_request_id:
         class: AppBundle\Service\RequestIdLoggerProcessor
         arguments:  [ "@service_container" ]
         tags:
               - { name: monolog.processor, method: processRecord }
-
-    opg_digideps.report_service:
-        class: AppBundle\Service\ReportService
-        arguments:
-          - '@em'
-          - '@AppBundle\Entity\Repository\ReportRepository'
-        public: true
 
     gedmo.listener.softdeleteable:
       class: Gedmo\SoftDeleteable\SoftDeleteableListener
@@ -49,19 +34,10 @@ services:
         calls:
             - [ setAnnotationReader, [ "@annotation_reader" ] ]
 
-    app.transformer.report_submission.report_submission_summary_transformer:
-        class: AppBundle\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer
-        public: true
-        arguments: [ '@app.service.date_time_provider' ]
-
-    app.service.date_time_provider:
-        class: AppBundle\Service\DateTimeProvider
-        public: true
-
     AppBundle\DataFixtures\:
         resource: '../../src/AppBundle/DataFixtures'
         tags: ['doctrine.fixture.orm']
-        arguments: ['@security.password_encoder', '@AppBundle\Service\OrgService']
+        autowire: true
 
     # Disable autowiring for these helper classes
     AppBundle\Service\ReportStatusService: ~

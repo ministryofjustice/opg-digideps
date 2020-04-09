@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Model\SelfRegisterData;
+use AppBundle\Service\UserRegistrationService;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -14,7 +15,7 @@ class SelfRegisterController extends RestController
     /**
      * @Route("", methods={"POST"})
      */
-    public function register(Request $request)
+    public function register(Request $request, UserRegistrationService $userRegistrationService)
     {
         if (!$this->getAuthService()->isSecretValid($request)) {
             throw new \RuntimeException('client secret not accepted.', 403);
@@ -34,7 +35,7 @@ class SelfRegisterController extends RestController
         }
 
         try {
-            $user = $this->container->get('user_registration_service')->selfRegisterUser($selfRegisterData);
+            $user = $userRegistrationService->selfRegisterUser($selfRegisterData);
             $this->get('logger')->warning('CasRec register success: ', ['extra' => ['page' => 'user_registration', 'success' => true] + $selfRegisterData->toArray()]);
         } catch (\Throwable $e) {
             $this->get('logger')->warning('CasRec register failed:', ['extra' => ['page' => 'user_registration', 'success' => false] + $selfRegisterData->toArray()]);
@@ -49,7 +50,7 @@ class SelfRegisterController extends RestController
     /**
      * @Route("/verifycodeputy", methods={"POST"})
      */
-    public function verifyCoDeputy(Request $request)
+    public function verifyCoDeputy(Request $request, UserRegistrationService $userRegistrationService)
     {
         $coDeputyVerified = false;
 
@@ -68,7 +69,7 @@ class SelfRegisterController extends RestController
         }
 
         try {
-            $coDeputyVerified = $this->container->get('user_registration_service')->validateCoDeputy($selfRegisterData);
+            $coDeputyVerified = $userRegistrationService->validateCoDeputy($selfRegisterData);
             $this->get('logger')->warning('CasRec codeputy validation success: ', ['extra' => ['page' => 'codep_validation', 'success' => true] + $selfRegisterData->toArray()]);
         } catch (\Throwable $e) {
             $this->get('logger')->warning('CasRec codeputy validation failed:', ['extra' => ['page' => 'codep_validation', 'success' => false] + $selfRegisterData->toArray()]);

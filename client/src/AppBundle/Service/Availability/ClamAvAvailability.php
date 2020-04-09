@@ -2,7 +2,7 @@
 
 namespace AppBundle\Service\Availability;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use GuzzleHttp\ClientInterface;
 
 /**
  * Check if the Clam AV antivirus is running, using the PING enpoint
@@ -10,10 +10,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ClamAvAvailability extends ServiceAvailabilityAbstract
 {
-    public function __construct(ContainerInterface $container)
+    public function __construct(ClientInterface $fileScannerClient)
     {
         try {
-            $response = $container->get('guzzle_file_scanner_client')->get('/');
+            $response = $fileScannerClient->get('/');
             if (200 !== $response->getStatusCode()) {
                 throw new \RuntimeException('returned HTTP code ' . $response->getStatusCode());
             }

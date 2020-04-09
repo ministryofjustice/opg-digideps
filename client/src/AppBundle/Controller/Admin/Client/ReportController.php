@@ -222,12 +222,10 @@ class ReportController extends AbstractController
      * @param int $id
      * @return Response
      */
-    public function checklistPDFViewAction(int $id)
+    public function checklistPDFViewAction(int $id, ReportSubmissionService $reportSubmissionService)
     {
         $report = $this->getReport(intval($id), array_merge(self::$reportGroupsAll, ['report-checklist', 'checklist-information', 'user']));
 
-        /** @var ReportSubmissionService $reportSubmissionService */
-        $reportSubmissionService = $this->get('AppBundle\Service\ReportSubmissionService');
         $pdfBinary = $reportSubmissionService->getChecklistPdfBinaryContent($report);
         $response = new Response($pdfBinary);
         $response->headers->set('Content-Type', 'application/pdf');

@@ -3,6 +3,7 @@
 namespace AppBundle\Command;
 
 use Aws\S3\Exception\S3Exception;
+use Aws\S3\S3Client;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,6 +20,16 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class DocumentRecoverCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand
 {
+    /** @var S3Client */
+    private $s3;
+
+    public function __construct(S3Client $s3)
+    {
+        $this->s3 = $s3;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this
@@ -32,7 +43,6 @@ class DocumentRecoverCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
     {
         $refs = array_map('trim', array_filter(file($input->getArgument('file'))));
 
-        $s3 = $this->getContainer()->get('s3_client');
         $bucketName = $this->getContainer()->getParameter('s3_bucket_name');
 
         $ok = 0;
@@ -40,7 +50,7 @@ class DocumentRecoverCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
 
         foreach ($refs as $ref) {
             try {
-                $object = $s3->getObject([
+                $object = $this->s3->getObject([
                     'Bucket' => $bucketName,
                     'Key'    => $ref
                 ]);

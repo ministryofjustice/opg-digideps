@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Model\SelfRegisterData;
+use AppBundle\Service\Redirector;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
@@ -16,12 +17,12 @@ class CoDeputyController extends AbstractController
      * @Route("/codeputy/verification", name="codep_verification")
      * @Template("AppBundle:CoDeputy:verification.html.twig")
      */
-    public function verificationAction(Request $request)
+    public function verificationAction(Request $request, Redirector $redirector)
     {
         $user = $this->getUserWithData(['user', 'user-clients', 'client']);
 
         // redirect if user has missing details or is on wrong page
-        if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'codep_verification')) {
+        if ($route = $redirector->getCorrectRouteIfDifferent($user, 'codep_verification')) {
             return $this->redirectToRoute($route);
         }
 
@@ -98,12 +99,12 @@ class CoDeputyController extends AbstractController
      * @Route("/codeputy/{clientId}/add", name="add_co_deputy")
      * @Template("AppBundle:CoDeputy:add.html.twig")
      */
-    public function addAction(Request $request)
+    public function addAction(Request $request, Redirector $redirector)
     {
         $loggedInUser = $this->getUserWithData(['user-clients', 'client']);
 
         // redirect if user has missing details or is on wrong page
-        if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($loggedInUser, 'add_co_deputy')) {
+        if ($route = $redirector->getCorrectRouteIfDifferent($loggedInUser, 'add_co_deputy')) {
             return $this->redirectToRoute($route);
         }
 

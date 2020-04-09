@@ -36,14 +36,14 @@ class TeamController extends RestController
      * @Route("/member/{id}", requirements={"id":"\d+"}, methods={"GET"})
      * @Security("has_role('ROLE_ORG')")
      */
-    public function getMemberById(Request $request, $id)
+    public function getMemberById($id, OrgService $orgService)
     {
         $this->setJmsSerialiserGroups(['team', 'team-users', 'user', 'team-names']);
 
         /** @var User $user */
         $user = $this->getUser();
 
-        return $this->orgService()->getMemberById($user, $id);
+        return $orgService->getMemberById($user, $id);
     }
 
     /**
@@ -52,7 +52,7 @@ class TeamController extends RestController
      * @Route("/add-to-team/{userId}", methods={"PUT"})
      * @Security("has_role('ROLE_ORG')")
      */
-    public function addToTeam(Request $request, $userId)
+    public function addToTeam($userId, OrgService $orgService)
     {
         /** @var User $user */
         $user = $this->findEntityBy(User::class, $userId, 'User not found');
@@ -60,8 +60,8 @@ class TeamController extends RestController
         /** @var User $currentUser */
         $currentUser = $this->getUser();
 
-        $this->orgService()->addUserToUsersClients($currentUser, $user);
-        $this->orgService()->addUserToUsersTeams($currentUser, $user);
+        $orgService->addUserToUsersClients($currentUser, $user);
+        $orgService->addUserToUsersTeams($currentUser, $user);
 
         return ['id' => $user->getId()];
     }
@@ -77,25 +77,15 @@ class TeamController extends RestController
      *
      * @return array
      */
-    public function deleteOrgTeamUser(Request $request, string $userId)
+    public function deleteOrgTeamUser(string $userId, OrgService $orgService)
     {
         /** @var User $currentUser */
         $currentUser = $this->getUser();
 
         /** @var User $user */
-        $user = $this->orgService()->getMemberById($currentUser, $userId);
-        $this->orgService()->removeUserFromTeamsOf($currentUser, $user);
+        $user = $orgService->getMemberById($currentUser, $userId);
+        $orgService->removeUserFromTeamsOf($currentUser, $user);
 
         return [];
-    }
-
-    /**
-     * @return OrgService
-     */
-    private function orgService()
-    {
-        /** @var OrgService $orgService */
-        $orgService = $this->get('AppBundle\Service\OrgService');
-        return $orgService;
     }
 }

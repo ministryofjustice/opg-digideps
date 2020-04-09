@@ -2,14 +2,14 @@
 
 namespace AppBundle\Service\Availability;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use AppBundle\Service\WkHtmlToPdfGenerator;
 
 class WkHtmlToPdfAvailability extends ServiceAvailabilityAbstract
 {
-    public function __construct(ContainerInterface $container)
+    public function __construct(WkHtmlToPdfGenerator $wkHtmlToPdfGenerator)
     {
         try {
-            $ret = $container->get('wkhtmltopdf')->isAlive();
+            $ret = $wkHtmlToPdfGenerator->isAlive();
             if (!$ret) {
                 throw new \RuntimeException('wkhtmltopdf.isAlive did not return true');
             }

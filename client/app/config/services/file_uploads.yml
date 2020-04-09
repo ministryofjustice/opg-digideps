@@ -10,17 +10,12 @@ services:
   Aws\S3\S3Client:
     arguments: ["%s3_client_params%"]
 
-  s3_client:
-    alias: Aws\S3\S3Client
-
   AppBundle\Service\File\Storage\S3Storage:
-    arguments: [ "@s3_client", "%s3_bucket_name%", "@logger" ]
-
-  s3_storage:
-    alias: AppBundle\Service\File\Storage\S3Storage
+    arguments: [ '@Aws\S3\S3Client', "%s3_bucket_name%", "@logger" ]
 
   guzzle_file_scanner_client:
     class: GuzzleHttp\Client
+    public: true
     arguments:
       $config:
         base_uri: "%file_scanner_url%"
@@ -41,7 +36,3 @@ services:
 
   AppBundle\Service\File\Scanner\ClamFileScanner:
     arguments: [ "@guzzle_file_scanner_client", "@logger", "%bad_pdf_keywords%"]
-
-  file_uploader:
-    class: AppBundle\Service\File\FileUploader
-    arguments: [ "@s3_storage", "@rest_client", "@logger" ]

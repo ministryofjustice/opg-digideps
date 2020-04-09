@@ -1,6 +1,5 @@
 services:
   AppBundle\Controller\Report\ReportController:
-    public: true
     class: AppBundle\Controller\Report\ReportController
     arguments:
       -
@@ -8,5 +7,5 @@ services:
         - '@rest_handler.report.deputy_costs_report_update_handler'
         - '@rest_handler.report.pa_fees_expenses_report_update_handler'
       - '@AppBundle\Entity\Repository\ReportRepository'
-      - '@opg_digideps.report_service'
+      - '@AppBundle\Service\ReportService'
       - '@em'

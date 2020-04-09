@@ -44,19 +44,25 @@ class NdrController extends AbstractController
         'ndr-action-more-info',
     ];
 
+    /** @var WkHtmlToPdfGenerator */
+    private $htmlToPdf;
+
+    public function __construct(WkHtmlToPdfGenerator $wkHtmlToPdfGenerator)
+    {
+        $this->htmlToPdf = $wkHtmlToPdfGenerator;
+    }
+
     /**
      * //TODO move view into Ndr directory when branches are integrated.
      *
      * @Route("/ndr", name="ndr_index")
      * @Template("AppBundle:Ndr/Ndr:index.html.twig")
      */
-    public function indexAction()
+    public function indexAction(Redirector $redirector)
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->getUserWithData(array_merge(self::$ndrGroupsForValidation, ['status']));
 
-        /** @var Redirector */
-        $redirector = $this->get('redirector_service');
         $route = $redirector->getCorrectRouteIfDifferent($user, 'ndr_index');
 
         if (is_string($route)) {
@@ -81,12 +87,10 @@ class NdrController extends AbstractController
      * @Route("/ndr/{ndrId}/overview", name="ndr_overview")
      * @Template("AppBundle:Ndr/Ndr:overview.html.twig")
      */
-    public function overviewAction($ndrId)
+    public function overviewAction($ndrId, Redirector $redirector)
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->getUserWithData();
-        /** @var Redirector */
-        $redirector = $this->get('redirector_service');
         $route = $redirector->getCorrectRouteIfDifferent($user, 'ndr_overview');
 
         if (is_string($route)) {
@@ -178,18 +182,14 @@ class NdrController extends AbstractController
             'ndr' => $ndr, 'adLoggedAsDeputy' => $this->isGranted(User::ROLE_AD)
         ])->getContent();
 
-
-        /** @var WkHtmlToPdfGenerator */
-        $htmlToPdf = $this->get('wkhtmltopdf');
-
-        return $htmlToPdf->getPdfFromHtml($html);
+        return $this->htmlToPdf->getPdfFromHtml($html);
     }
 
     /**
      * @Route("/ndr/{ndrId}/declaration", name="ndr_declaration")
      * @Template("AppBundle:Ndr/Ndr:declaration.html.twig")
      */
-    public function declarationAction(Request $request, $ndrId)
+    public function declarationAction(Request $request, $ndrId, FileUploader $fileUploader)
     {
         $client = $this->getFirstClient(self::$ndrGroupsForValidation);
 
@@ -222,9 +222,6 @@ class NdrController extends AbstractController
 
             // store PDF as a document
             $pdfBinaryContent = $this->getPdfBinaryContent($ndr);
-
-            /** @var FileUploader */
-            $fileUploader = $this->get('file_uploader');
 
             $document = $fileUploader->uploadFile(
                 $ndr,

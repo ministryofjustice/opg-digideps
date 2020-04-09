@@ -31,6 +31,14 @@ class DocumentController extends AbstractController
         'documents-state',
     ];
 
+    /** @var FileUploader */
+    private $fileUploader;
+
+    public function __construct(FileUploader $fileUploader)
+    {
+        $this->fileUploader = $fileUploader;
+    }
+
     /**
      * @Route("/report/{reportId}/documents", name="documents")
      * @Template("AppBundle:Report/Document:start.html.twig")
@@ -115,7 +123,7 @@ class DocumentController extends AbstractController
      * @Route("/report/{reportId}/documents/step/2", name="report_documents", defaults={"what"="new"})
      * @Template("AppBundle:Report/Document:step2.html.twig")
      */
-    public function step2Action(Request $request, $reportId)
+    public function step2Action(Request $request, MultiFileFormUploadVerifier $multiFileVerifier, $reportId)
     {
         $report = $this->getReport($reportId, self::$jmsGroups);
         list($nextLink, $backLink) = $this->buildNavigationLinks($report);
@@ -137,8 +145,6 @@ class DocumentController extends AbstractController
             $files = $request->files->get('report_document_upload')['files'];
 
             if (is_array($files)) {
-                /** @var MultiFileFormUploadVerifier */
-                $multiFileVerifier = $this->container->get('AppBundle\Service\File\Verifier\MultiFileFormUploadVerifier');
                 $verified = $multiFileVerifier->verify($files, $form, $report);
 
                 if ($verified) {
@@ -205,16 +211,13 @@ class DocumentController extends AbstractController
      */
     private function uploadFile(UploadedFile $file, EntityDir\Report\Report $report): void
     {
-        /** @var FileUploader $fileUploader */
-        $fileUploader = $this->get('file_uploader');
-
         /** @var string $body */
         $body = file_get_contents($file->getPathname());
 
         /** @var string $fileName */
         $fileName = $file->getClientOriginalName();
 
-        $fileUploader->uploadFile($report, $body, $fileName, false);
+        $this->fileUploader->uploadFile($report, $body, $fileName, false);
     }
 
     /**

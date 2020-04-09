@@ -43,7 +43,7 @@ trait OrganisationManagementTrait
         foreach ($table as $inputs) {
             $this->visitAdminPath('/admin/organisations');
             $this->clickLink($inputs['orgName']);
-            $this->clickLink('Add someone to this organisation');
+            $this->clickLink('Add user');
             $this->fillField('organisation_add_user_email', $inputs['userEmail']);
             $this->pressButton('Find user');
             $this->pressButton('Add user to organisation');

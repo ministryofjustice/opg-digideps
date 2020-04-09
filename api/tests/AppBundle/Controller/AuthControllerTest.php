@@ -3,6 +3,8 @@
 namespace Tests\AppBundle\Controller;
 
 use AppBundle\Entity\User;
+use AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker;
+use AppBundle\Service\BruteForce\AttemptsInTimeChecker;
 use Mockery as m;
 
 class AuthControllerTest extends AbstractTestController
@@ -16,8 +18,8 @@ class AuthControllerTest extends AbstractTestController
     {
         self::$frameworkBundleClient->request('GET', '/'); // warm up to get container
 
-        self::$frameworkBundleClient->getContainer()->get('attemptsInTimeChecker')->resetAttempts($key);
-        self::$frameworkBundleClient->getContainer()->get('attemptsIncrementalWaitingChecker')->resetAttempts($key);
+        self::$frameworkBundleClient->getContainer()->get(AttemptsInTimeChecker::class)->resetAttempts($key);
+        self::$frameworkBundleClient->getContainer()->get(AttemptsIncrementalWaitingChecker::class)->resetAttempts($key);
     }
 
     /**

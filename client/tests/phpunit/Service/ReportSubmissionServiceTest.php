@@ -13,14 +13,11 @@ use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\FileUploader;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 use Symfony\Bridge\Monolog\Logger;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\DependencyInjection\Container;
+use Twig\Environment;
 
 class ReportSubmissionServiceTest extends TestCase
 {
@@ -48,7 +45,7 @@ class ReportSubmissionServiceTest extends TestCase
         $this->mockRestClient = m::mock(RestClient::class);
         $this->mockMailSender = m::mock(MailSender::class);
         $this->mockMailFactory = m::mock(MailFactory::class);
-        $this->mockTemplatingEngine = m::mock(TwigEngine::class);
+        $this->mockTemplatingEngine = m::mock(Environment::class);
         $this->mockPdfGenerator = m::mock(WkHtmlToPdfGenerator::class);
         $this->mockLogger = m::mock(Logger::class);
         $this->mockCsvGenerator = m::mock(CsvGeneratorService::class);
@@ -70,11 +67,19 @@ class ReportSubmissionServiceTest extends TestCase
         $mockContainer->shouldReceive('get')->with('AppBundle\Service\Mailer\MailSender')->andReturn($this->mockMailSender);
         $mockContainer->shouldReceive('get')->with('AppBundle\Service\Mailer\MailFactory')->andReturn($this->mockMailFactory);
         $mockContainer->shouldReceive('get')->with('templating')->andReturn($this->mockTemplatingEngine);
-        $mockContainer->shouldReceive('get')->with('wkhtmltopdf')->andReturn($this->mockPdfGenerator);
         $mockContainer->shouldReceive('get')->with('logger')->andReturn($this->mockLogger);
         $mockContainer->shouldReceive('get')->with('csv_generator_service')->andReturn($this->mockCsvGenerator);
 
-        return new ReportSubmissionService($mockContainer);
+        return new ReportSubmissionService(
+            $this->mockCsvGenerator,
+            $this->mockTemplatingEngine,
+            $this->mockFileUploader,
+            $this->mockRestClient,
+            $this->mockLogger,
+            $this->mockMailFactory,
+            $this->mockMailSender,
+            $this->mockPdfGenerator
+        );
     }
 
     /**

@@ -73,9 +73,7 @@ class ReportController extends RestController
         ]);
 
         // report type is taken from CASREC. In case that's not available (shouldn't happen unless casrec table is dropped), use a 102
-        /** @var ReportService $reportService */
-        $reportService = $this->get('opg_digideps.report_service');
-        $reportType = $reportService->getReportTypeBasedOnCasrec($client) ?: Report::TYPE_102;
+        $reportType = $this->reportService->getReportTypeBasedOnCasrec($client) ?: Report::TYPE_102;
         $report = new Report($client, $reportType, new \DateTime($reportData['start_date']), new \DateTime($reportData['end_date']));
         $report->setReportSeen(true);
 
@@ -147,14 +145,11 @@ class ReportController extends RestController
             ? $data['agreed_behalf_deputy_explanation'] : null;
         $currentReport->setAgreedBehalfDeputyExplanation($xplanation);
 
-        /** @var ReportService $reportService */
-        $reportService = $this->get('opg_digideps.report_service');
-
         /** @var User $user */
         $user = $this->getUser();
 
         /** @var Report|null $nextYearReport */
-        $nextYearReport = $reportService->submit($currentReport, $user, new \DateTime($data['submit_date']));
+        $nextYearReport = $this->reportService->submit($currentReport, $user, new \DateTime($data['submit_date']));
 
         return $nextYearReport ? $nextYearReport->getId() : null;
     }
@@ -517,9 +512,7 @@ class ReportController extends RestController
             'end_date' => 'notEmpty',
         ]);
 
-        /** @var ReportService $rs */
-        $rs = $this->get('opg_digideps.report_service');
-        $rs->unSubmit(
+        $this->reportService->unSubmit(
             $report,
             new \DateTime($data['un_submit_date']),
             new \DateTime($data['due_date']),
@@ -697,19 +690,16 @@ class ReportController extends RestController
      * @Route("/{id}/submit-documents", requirements={"id":"\d+"}, methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
-    public function submitDocuments(Request $request, $id)
+    public function submitDocuments($id)
     {
         /* @var Report $currentReport */
         $currentReport = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
         $this->denyAccessIfReportDoesNotBelongToUser($currentReport);
 
-        /** @var ReportService $reportService */
-        $reportService = $this->get('opg_digideps.report_service');
-
         /** @var User $user */
         $user = $this->getUser();
 
-        $reportService->submitAdditionalDocuments($currentReport, $user, new \DateTime());
+        $this->reportService->submitAdditionalDocuments($currentReport, $user, new \DateTime());
 
         return ['reportId' => $currentReport->getId()];
     }
