@@ -149,7 +149,7 @@ class TeamController extends AbstractController
             $user = $form->getData();
 
             try {
-                $this->getRestClient()->put('user/' . $id, $user, ['org_team_add'], 'User');
+                $this->getRestClient()->put('user/' . $id, $user, ['org_team_add'], ['User']);
 
                 if ($id == $this->getUser()->getId() && ($user->getRoles() != $this->getUser()->getRoles())) {
                     $request->getSession()->getFlashBag()->add('notice', 'For security reasons you have been logged out because you have changed your admin rights. Please log in again below');
