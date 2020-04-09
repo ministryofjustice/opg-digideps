@@ -28,3 +28,11 @@ hr {
     display: none;
     visibility: hidden;
 }
+
+// combining .js-enabled and .js-only (see moj_template script tag) displays javascript
+// dependent elements
+.js-enabled .js-only { display: block; }
+
+// .js-only is used to hide elements that rely on javascript to display or function
+// correctly
+.js-only { display: none; }

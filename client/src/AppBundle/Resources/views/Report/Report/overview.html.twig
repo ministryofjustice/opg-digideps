@@ -282,7 +282,7 @@
             {{ macros.notification('info', 'previewNoticeNotDue' | trans(transOptions)) }}
         </div>
     {% else %}
-        <div id="js-enabled-controls">
+        <div class="js-only">
             {% if report.isUnsubmitted %}
                 <div class="govuk-form-group">
                     <fieldset class="govuk-fieldset">
@@ -315,10 +315,7 @@
         </div>
 
         {# Fallback for JS disabled browsers #}
-        <noscript>
-            <style type="text/css">
-                #js-enabled-controls { display:none; }
-            </style>
+        <div class="js-hidden">
             <a id="{{ report.status.isReadyToSubmit ? 'edit-report-review' : 'edit-report-preview' }}"
                class="push--top behat-link-edit-report-review"
                href="{{ path('report_review', {'reportId': report.id}) }}"
@@ -327,6 +324,8 @@
                     {{ 'options.previewReport' | trans() }}
                 </button>
             </a>
-        </noscript>
+        </div>
+
+
     {% endif %}
 {% endblock %}
