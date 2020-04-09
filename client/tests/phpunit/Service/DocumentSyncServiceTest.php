@@ -116,10 +116,8 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->fileContents
         );
 
-        $successResponseBody = ['data' => ['id' => $this->reportPdfSubmissionUuid]];
+        $successResponseBody = ['uuid' => $this->reportPdfSubmissionUuid];
         $successResponse = new Response('200', [], json_encode($successResponseBody));
-
-        $this->siriusApiGatewayClient->sendReportPdfDocument($siriusDocumentUpload, '1234567T')->shouldBeCalled()->willReturn($successResponse);
 
         $this->restClient
             ->apiCall('put',
@@ -131,10 +129,12 @@ class DocumentSyncServiceTest extends KernelTestCase
             )
             ->shouldBeCalled();
 
+        $this->siriusApiGatewayClient->sendReportPdfDocument($siriusDocumentUpload, '1234567T')->shouldBeCalled()->willReturn($successResponse);
+
         $this->restClient
             ->apiCall('put',
                 'report-submission/9876/update-uuid',
-                json_encode(['data' => ['uuid' => $this->reportPdfSubmissionUuid]]),
+                json_encode(['uuid' => $this->reportPdfSubmissionUuid]),
                 'raw',
                 [],
                 false

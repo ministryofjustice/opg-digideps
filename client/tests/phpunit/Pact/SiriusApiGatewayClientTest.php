@@ -146,7 +146,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
                         'attributes' => [
                             'reporting_period_from' => $matcher->dateISO8601('2018-05-14'),
                             'reporting_period_to' => $matcher->dateISO8601('2019-05-13'),
-                            'year' => $matcher->regex('2018', '[0-9]{4}'),
+                            'year' => $matcher->integer(2018),
                             'date_submitted' => $matcher->dateTimeISO8601('2019-06-20T00:00:00+01:00'),
                             'type' => $matcher->regex('PF', 'PF|HW|NDR'),
                             'submission_id' => $matcher->integer(9876)
