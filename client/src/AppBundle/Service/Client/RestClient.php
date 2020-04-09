@@ -227,12 +227,13 @@ class RestClient
      * @param string $endpoint e.g. /user
      * @param string|object|array $mixed HTTP body. json_encoded string or entity (that will JMS-serialised)
      * @param array $jmsGroups deserialise_groups
-     * @param array $options
      *
      * @return string response body
      */
-    public function put($endpoint, $mixed, array $jmsGroups = [], $options=[])
+    public function put($endpoint, $mixed, array $jmsGroups = [])
     {
+        $options = [];
+
         if ($jmsGroups) {
             $options['deserialise_groups'] = $jmsGroups;
         }
