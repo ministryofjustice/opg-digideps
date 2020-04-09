@@ -3,7 +3,10 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Service\Availability\NotifyAvailability;
+use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
+use AppBundle\Service\WkHtmlToPdfGenerator;
 use GuzzleHttp\Message\ResponseInterface;
+use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 use Mockery as m;
 
 class ManageControllerTest extends AbstractControllerTestCase
@@ -11,12 +14,13 @@ class ManageControllerTest extends AbstractControllerTestCase
     public static function availabilityProvider()
     {
         return [
-            [true, true,  true, true,  200, 200, ['OK']], //all good
-            [false, true, true, true, 200,  500, ['redis-error']],
-            [true, false, true, true, 200,  500, ['api_errors']],
-            [true, true, false, false, 200, 500, ['invalid key']],
-            [true, true,  true, false, 200, 500, ['wkhtmltopdf.isAlive']],
-            [true, true,  true, false, 500, 500, ['returned HTTP']],
+            [true,  true, true,  true,  true, 200, 200, ['OK']], //all good
+            [false, true, true,  true,  true, 200, 500, ['redis-error']],
+            [true, false, true,  true,  true, 200, 500, ['api_errors']],
+            [true,  true, false, true,  true, 200, 200, ['sirius_error']],
+            [true,  true, true, false,  true, 200, 500, ['invalid key']],
+            [true,  true, true,  true, false, 200, 500, ['wkhtmltopdf.isAlive']],
+            [true,  true, true,  true, false, 500, 500, ['returned HTTP']],
         ];
     }
 
@@ -24,7 +28,7 @@ class ManageControllerTest extends AbstractControllerTestCase
      * @dataProvider availabilityProvider
      */
     public function testAvailability(
-        $redisHealthy, $apiHealthy, $notifyHealthy, $wkhtmltopdfError, $clamReturnCode,
+        $redisHealthy, $apiHealthy, $siriusHealthy, $notifyHealthy, $wkhtmltopdfError, $clamReturnCode,
         $statusCode, array $mustContain)
     {
         $container = $this->client->getContainer();
@@ -45,6 +49,18 @@ class ManageControllerTest extends AbstractControllerTestCase
             'errors' => $apiHealthy ? '' : 'api_errors',
         ]);
 
+        // sirius mock
+        $this->injectProphecyService(SiriusApiGatewayClient::class, function ($client) use ($siriusHealthy) {
+            $response = self::prophesize(PsrResponseInterface::class);
+            if ($siriusHealthy) {
+                $response->getStatusCode()->shouldBeCalled()->willReturn(200);
+            } else {
+                $response->getStatusCode()->shouldBeCalled()->willThrow(new \RuntimeException('sirius_error'));
+            }
+
+            $client->get('v1/healthcheck')->shouldBeCalled()->willReturn($response->reveal());
+        });
+
         // notify mock
         $this->injectProphecyService(NotifyAvailability::class, function ($availability) use ($notifyHealthy) {
             $availability->getName()->shouldBeCalled()->willReturn();
@@ -57,10 +73,9 @@ class ManageControllerTest extends AbstractControllerTestCase
         });
 
         // pdf mock
-        $wkhtmltopdfErrorMock = m::mock('AppBundle\Service\WkHtmlToPdfGenerator')
-            ->shouldReceive('isAlive')->andReturn($wkhtmltopdfError)
-        ->getMock();
-        $container->set(WkHtmlToPdfGenerator::class, $wkhtmltopdfErrorMock);
+        $this->injectProphecyService(WkHtmlToPdfGenerator::class, function ($generator) use ($wkhtmltopdfError) {
+            $generator->isAlive()->shouldBeCalled()->willReturn($wkhtmltopdfError);
+        });
 
         // clamAV mock
         $response = m::mock(ResponseInterface::class)
