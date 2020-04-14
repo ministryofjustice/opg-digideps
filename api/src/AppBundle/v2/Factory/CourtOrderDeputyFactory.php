@@ -12,13 +12,7 @@ use AppBundle\v2\DTO\CourtOrderDto;
 
 class CourtOrderDeputyFactory
 {
-    /**
-     * @param CourtOrderDto $dto
-     * @param Client $client
-     * @param Report $report
-     * @return CourtOrder
-     */
-    public function create(CourtOrderDeputyDto $deputyDto, CourtOrder $courtOrder)
+    public function create(CourtOrderDeputyDto $deputyDto, CourtOrder $courtOrder): CourtOrderDeputy
     {
         $deputy = new CourtOrderDeputy();
         $deputy

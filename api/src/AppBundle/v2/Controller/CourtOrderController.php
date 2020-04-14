@@ -9,7 +9,9 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Repository\CasRecRepository;
 use AppBundle\Entity\Repository\ClientRepository;
 use AppBundle\v2\Assembler\CourtOrder\LayToCourtOrderDtoAssembler;
+use AppBundle\v2\Assembler\CourtOrderDeputy\LayToCourtOrderDeputyDtoAssembler;
 use AppBundle\v2\DTO\CourtOrderDto;
+use AppBundle\v2\Factory\CourtOrderDeputyFactory;
 use AppBundle\v2\Factory\CourtOrderFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
@@ -19,11 +21,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/court-order")
  */
-class CourtOrderController
+class CourtOrderController extends AbstractController
 {
     use ControllerTrait;
 
@@ -66,14 +69,24 @@ class CourtOrderController
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function createAction(Request $request): JsonResponse
+    public function createAction(
+        Request $request,
+        LayToCourtOrderDeputyDtoAssembler $deputyAssembler,
+        CourtOrderDeputyFactory $deputyFactory
+    ): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
         $client = $this->clientRepository->find($data['id']);
+        $user = $this->getUser();
         $registrationData = $this->casRecRepository->findOneBy(['caseNumber' => $client->getCaseNumber()]);
 
         $courtOrderDto = $this->courtOrderAssembler->assemble($registrationData);
         $courtOrder = $this->courtOrderFactory->create($courtOrderDto, $client, $client->getCurrentReport());
+
+        $deputyDto = $deputyAssembler->assemble($registrationData, $user);
+        $deputy = $deputyFactory->create($deputyDto, $courtOrder);
+
+        $deputy->setUser($user);
 
         $this->em->persist($courtOrder);
         $this->em->flush();
