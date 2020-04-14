@@ -21,6 +21,9 @@ class CourtOrderDeputyDto
     /** @var DateTime|null */
     private $dob;
 
+    /** @var CourtOrderAddressDto */
+    private $address;
+
     public function getDeputyNumber(): string
     {
         return $this->deputyNumber;
@@ -44,6 +47,11 @@ class CourtOrderDeputyDto
     public function getDob(): ?DateTime
     {
         return $this->dob;
+    }
+
+    public function getAddress(): CourtOrderAddressDto
+    {
+        return $this->address;
     }
 
     public function setDeputyNumber(string $deputyNumber): CourtOrderDeputyDto
@@ -77,6 +85,13 @@ class CourtOrderDeputyDto
     public function setDob(?DateTime $dob): CourtOrderDeputyDto
     {
         $this->dob = $dob;
+
+        return $this;
+    }
+
+    public function setAddress(CourtOrderAddressDto $address): CourtOrderDeputyDto
+    {
+        $this->address = $address;
 
         return $this;
     }

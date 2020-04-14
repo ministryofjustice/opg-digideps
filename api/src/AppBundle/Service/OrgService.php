@@ -18,7 +18,6 @@ use AppBundle\Entity\Repository\NamedDeputyRepository;
 use AppBundle\Entity\User;
 use AppBundle\Factory\NamedDeputyFactory;
 use AppBundle\Factory\OrganisationFactory;
-use AppBundle\v2\Assembler\CourtOrderAddress\OrgCsvToCourtOrderAddressDtoAssembler;
 use AppBundle\v2\Assembler\CourtOrderDeputy\OrgCsvToCourtOrderDeputyDtoAssembler;
 use AppBundle\v2\Assembler\CourtOrder\OrgCsvToCourtOrderDtoAssembler;
 use AppBundle\v2\Factory\CourtOrderDeputyFactory;
@@ -123,6 +122,9 @@ class OrgService
     /** @var CourtOrderFactory */
     private $courtOrderFactory;
 
+    /** @var CourtOrderDeputyFactory */
+    private $courtOrderDeputyFactory;
+
     /**
      * @param EntityManagerInterface $em
      * @param LoggerInterface $logger
@@ -138,6 +140,7 @@ class OrgService
      * @param OrgCsvToCourtOrderDtoAssembler $courtOrderAssembler
      * @param OrgCsvToCourtOrderDeputyDtoAssembler $courtOrderDeputyAssembler
      * @param CourtOrderFactory $courtOrderFactory
+     * @param CourtOrderDeputyFactory $courtOrderDeputyFactory
      */
     public function __construct(
         EntityManagerInterface $em,
@@ -153,7 +156,8 @@ class OrgService
         CourtOrderRepository $courtOrderRepository,
         OrgCsvToCourtOrderDtoAssembler $courtOrderAssembler,
         OrgCsvToCourtOrderDeputyDtoAssembler $courtOrderDeputyAssembler,
-        CourtOrderFactory $courtOrderFactory
+        CourtOrderFactory $courtOrderFactory,
+        CourtOrderDeputyFactory $courtOrderDeputyFactory
     ) {
         $this->em = $em;
         $this->logger = $logger;
@@ -170,6 +174,7 @@ class OrgService
         $this->courtOrderAssembler = $courtOrderAssembler;
         $this->courtOrderDeputyAssembler = $courtOrderDeputyAssembler;
         $this->courtOrderFactory = $courtOrderFactory;
+        $this->courtOrderDeputyFactory = $courtOrderDeputyFactory;
     }
 
     /**
@@ -628,9 +633,7 @@ class OrgService
         $courtOrder = $this->courtOrderFactory->create($courtOrderDto, $client, $report);
 
         $courtOrderDeputyDto = $this->courtOrderDeputyAssembler->assemble($row);
-        $courtOrderAddressDto = (new OrgCsvToCourtOrderAddressDtoAssembler())->assemble($row);
-
-        (new CourtOrderDeputyFactory())->create($courtOrderDeputyDto, $courtOrderAddressDto, $courtOrder);
+        $this->courtOrderDeputyFactory->create($courtOrderDeputyDto, $courtOrder);
 
         $this->em->persist($courtOrder);
         $this->em->flush();
