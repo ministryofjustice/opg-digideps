@@ -236,10 +236,14 @@ class OrgService
                     if (is_null($courtOrder)) {
                         $courtOrder = $this->createCourtOrder($row, $client, $report);
                     } else {
+                        $found = false;
+
                         foreach ($courtOrder->getDeputies() as $deputy) {
                             $deputyDto = $this->courtOrderDeputyAssembler->assemble($row);
 
                             if ($deputy->getDeputyNumber() === $deputyDto->getDeputyNumber()) {
+                                $found = true;
+
                                 // Update deputy
                                 $deputy
                                     ->setFirstname($deputyDto->getFirstname())
@@ -258,6 +262,11 @@ class OrgService
                                 // Replace deputy
                                 $courtOrder->removeDeputy($deputy);
                             }
+                        }
+
+                        if (!$found) {
+                            // Add new deputy
+                            $this->courtOrderDeputyFactory->create($deputyDto, $courtOrder);
                         }
                     }
 
