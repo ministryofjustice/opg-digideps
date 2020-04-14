@@ -158,14 +158,14 @@ class CourtOrderDeputy
         return $this;
     }
 
-    public function setEmail(string $email): CourtOrderDeputy
+    public function setEmail(?string $email): CourtOrderDeputy
     {
         $this->email = $email;
 
         return $this;
     }
 
-    public function setDob(DateTime $dob): CourtOrderDeputy
+    public function setDob(?DateTime $dob): CourtOrderDeputy
     {
         $this->dob = $dob;
 
