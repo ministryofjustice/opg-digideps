@@ -237,4 +237,17 @@ class CourtOrder
 
         return $this;
     }
+
+    /**
+     * @param CourtOrderDeputy $deputy
+     * @return CourtOrder
+     */
+    public function removeDeputy(CourtOrderDeputy $deputy): CourtOrder
+    {
+        if ($this->deputies->contains($deputy)) {
+            $this->deputies->removeElement($deputy);
+        }
+
+        return $this;
+    }
 }
