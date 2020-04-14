@@ -54,7 +54,7 @@ class CourtOrderDeputy
 
     /**
      * @var CourtOrder
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrder", inversedBy="deputies", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrder", inversedBy="deputies", cascade={"persist"})
      * @ORM\JoinColumn(name="court_order_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $courtOrder;
