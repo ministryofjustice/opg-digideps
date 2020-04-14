@@ -248,7 +248,8 @@ class OrgService
                                 $deputy
                                     ->setFirstname($deputyDto->getFirstname())
                                     ->setSurname($deputyDto->getSurname())
-                                    ->setEmail($deputyDto->getEmail());
+                                    ->setEmail($deputyDto->getEmail())
+                                    ->setOrganisation($this->currentOrganisation);
 
                                 $deputy->getAddresses()[0]
                                     ->setAddressLine1($deputyDto->getAddress()->getAddressLine1())
@@ -266,7 +267,8 @@ class OrgService
 
                         if (!$found) {
                             // Add new deputy
-                            $this->courtOrderDeputyFactory->create($deputyDto, $courtOrder);
+                            $deputy = $this->courtOrderDeputyFactory->create($deputyDto, $courtOrder);
+                            $deputy->setOrganisation($this->currentOrganisation);
                         }
                     }
 
