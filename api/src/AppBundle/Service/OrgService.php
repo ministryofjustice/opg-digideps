@@ -231,10 +231,38 @@ class OrgService
 
                     $courtOrderType = strtolower($row['Corref']) === 'hw' ? CourtOrder::SUBTYPE_HW : CourtOrder::SUBTYPE_PFA;
 
-                    if (!$this->courtOrderExists($client, $courtOrderType)) {
-                        $this->createCourtOrder($row, $client, $report);
+                    $courtOrder = $this->getCourtOrder($client, $courtOrderType);
+
+                    if (is_null($courtOrder)) {
+                        $courtOrder = $this->createCourtOrder($row, $client, $report);
+                    } else {
+                        foreach ($courtOrder->getDeputies() as $deputy) {
+                            $deputyDto = $this->courtOrderDeputyAssembler->assemble($row);
+
+                            if ($deputy->getDeputyNumber() === $deputyDto->getDeputyNumber()) {
+                                // Update deputy
+                                $deputy
+                                    ->setFirstname($deputyDto->getFirstname())
+                                    ->setSurname($deputyDto->getSurname())
+                                    ->setEmail($deputyDto->getEmail());
+
+                                $deputy->getAddresses()[0]
+                                    ->setAddressLine1($deputyDto->getAddress()->getAddressLine1())
+                                    ->setAddressLine2($deputyDto->getAddress()->getAddressLine2())
+                                    ->setAddressLine3($deputyDto->getAddress()->getAddressLine3())
+                                    ->setTown($deputyDto->getAddress()->getTown())
+                                    ->setCounty($deputyDto->getAddress()->getCounty())
+                                    ->setPostcode($deputyDto->getAddress()->getPostcode())
+                                    ->setCountry($deputyDto->getAddress()->getCountry());
+                            } else {
+                                // Replace deputy
+                                $courtOrder->removeDeputy($deputy);
+                            }
+                        }
                     }
 
+                    $this->em->persist($courtOrder);
+                    $this->em->flush();
 
                 } else {
                     throw new \RuntimeException('Client could not be identified or created');
@@ -608,9 +636,9 @@ class OrgService
     /**
      * @param Client|null $client
      * @param string $courtOrderType
-     * @return bool
+     * @return CourtOrder
      */
-    private function courtOrderExists(?Client $client, string $courtOrderType)
+    private function getCourtOrder(?Client $client, string $courtOrderType): ?CourtOrder
     {
         $courtOrder = $this
             ->courtOrderRepository
@@ -619,7 +647,7 @@ class OrgService
                 'type' => $courtOrderType
             ]);
 
-        return $courtOrder === null ? false : true;
+        return $courtOrder;
     }
 
     /**
@@ -627,7 +655,7 @@ class OrgService
      * @param Client $client
      * @param Report $report
      */
-    private function createCourtOrder(array $row, Client $client, Report $report): void
+    private function createCourtOrder(array $row, Client $client, Report $report): CourtOrder
     {
         $courtOrderDto = $this->courtOrderAssembler->assemble($row);
         $courtOrder = $this->courtOrderFactory->create($courtOrderDto, $client, $report);
@@ -635,7 +663,6 @@ class OrgService
         $courtOrderDeputyDto = $this->courtOrderDeputyAssembler->assemble($row);
         $this->courtOrderDeputyFactory->create($courtOrderDeputyDto, $courtOrder);
 
-        $this->em->persist($courtOrder);
-        $this->em->flush();
+        return $courtOrder;
     }
 }
