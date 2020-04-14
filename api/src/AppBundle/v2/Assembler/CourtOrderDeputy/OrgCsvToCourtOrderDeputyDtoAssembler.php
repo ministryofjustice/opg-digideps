@@ -15,8 +15,8 @@ class OrgCsvToCourtOrderDeputyDtoAssembler
 
         return (new CourtOrderDeputyDto())
             ->setDeputyNumber($data['Deputy No'])
-            ->setFirstname($data['Forename'])
-            ->setSurname($data['Surname'])
+            ->setFirstname($data['Dep Forename'])
+            ->setSurname($data['Dep Surname'])
             ->setEmail($data['Email'] ?: null)
             ->setAddress($this->assembleAddress($data));
     }
@@ -25,8 +25,8 @@ class OrgCsvToCourtOrderDeputyDtoAssembler
     {
         return
             array_key_exists('Deputy No', $data) &&
-            array_key_exists('Forename', $data) &&
-            array_key_exists('Surname', $data);
+            array_key_exists('Dep Forename', $data) &&
+            array_key_exists('Dep Surname', $data);
     }
 
     private function assembleAddress(array $data): CourtOrderAddressDto
