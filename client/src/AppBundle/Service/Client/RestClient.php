@@ -303,7 +303,6 @@ class RestClient
             'addClientSecret' => !$authenticated,
             'addAuthToken' => $authenticated,
         ]);
-
         if ($expectedResponseType == 'raw') {
             return  $response->getBody();
         }

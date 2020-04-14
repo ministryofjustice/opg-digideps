@@ -103,7 +103,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->reportSubmissionId,
             $this->supportingDocSubmissionId
         );
-
         $this->s3Storage->retrieve('test')->willReturn($this->fileContents);
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusReportPdfDocumentUpload(
@@ -118,7 +117,6 @@ class DocumentSyncServiceTest extends KernelTestCase
 
         $successResponseBody = ['uuid' => $this->reportPdfSubmissionUuid];
         $successResponse = new Response('200', [], json_encode($successResponseBody));
-
         $this->restClient
             ->apiCall('put',
                 'document/6789',
@@ -152,8 +150,8 @@ class DocumentSyncServiceTest extends KernelTestCase
             )
             ->shouldBeCalled()
             ->willReturn($this->serializer->serialize($submittedReportDocument, 'json'));
-
         $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
+        //var_dump($sut);
         $sut->syncDocument($submittedReportDocument);
     }
 
@@ -206,7 +204,8 @@ class DocumentSyncServiceTest extends KernelTestCase
                 'document/6789',
                 json_encode(
                     ['data' =>
-                        ['syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR, 'syncError' => $failureResponseBody]
+                        ['syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR],
+                    'syncError' => $failureResponseBody
                     ]),
                 Document::class,
                 [],
@@ -254,7 +253,8 @@ class DocumentSyncServiceTest extends KernelTestCase
                 'document/6789',
                 json_encode(
                     ['data' =>
-                        ['syncStatus' => $syncStatus, 'syncError' => 'S3 error while syncing document: ' . $awsErrorMessage]
+                        ['syncStatus' => $syncStatus],
+                    'syncError' => 'S3 error while syncing document: ' . $awsErrorMessage
                     ]),
                 Document::class,
                 [],

@@ -58,9 +58,7 @@ class DocumentSyncService
      */
     public function syncDocument(Document $document)
     {
-
         $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_IN_PROGRESS);
-
         if ($document->isReportPdf()) {
             return $this->syncReportDocument($document);
         } else {
@@ -194,8 +192,11 @@ class DocumentSyncService
      */
     private function handleDocumentStatusUpdate(Document $document, string $status, ?string $errorMessage=null)
     {
-        $data = ['syncStatus' => $status];
+        $data = ['data' => ['syncStatus' => $status]];
 
+
+        print("error");
+        var_dump($errorMessage);
         if (!is_null($errorMessage)) {
             $errorMessage = json_decode($errorMessage, true) ? json_decode($errorMessage, true) : $errorMessage;
             $data['syncError'] = $errorMessage;
