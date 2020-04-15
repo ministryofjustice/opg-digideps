@@ -15,6 +15,8 @@ use AppBundle\Entity\Repository\NamedDeputyRepository;
 use AppBundle\Factory\OrganisationFactory;
 use AppBundle\Service\OrgService;
 use AppBundle\v2\Assembler\CourtOrder\OrgCsvToCourtOrderDtoAssembler;
+use AppBundle\v2\Assembler\CourtOrderDeputy\OrgCsvToCourtOrderDeputyDtoAssembler;
+use AppBundle\v2\Factory\CourtOrderDeputyFactory;
 use AppBundle\v2\Factory\CourtOrderFactory;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -174,8 +176,14 @@ class OrgServiceTest extends WebTestCase
     /** @var OrgCsvToCourtOrderDtoAssembler */
     private $courtOrderAssembler;
 
+    /** @var OrgCsvToCourtOrderDeputyDtoAssembler */
+    private $courtOrderDeputyAssembler;
+
     /** @var CourtOrderFactory */
     private $courtOrderfactory;
+
+    /** @var CourtOrderDeputyFactory */
+    private $courtOrderDeputyFactory;
 
     public static function setUpBeforeClass(): void
     {
@@ -203,7 +211,9 @@ class OrgServiceTest extends WebTestCase
         $this->namedDeputyRepository = $container->get('AppBundle\Entity\Repository\NamedDeputyRepository');
         $this->courtOrderRepository = $container->get('AppBundle\Entity\Repository\CourtOrderRepository');
         $this->courtOrderAssembler = $container->get('AppBundle\v2\Assembler\CourtOrder\OrgCsvToCourtOrderDtoAssembler');
+        $this->courtOrderDeputyAssembler = $container->get('AppBundle\v2\Assembler\CourtOrder\OrgCsvToCourtOrderDeputyDtoAssembler');
         $this->courtOrderfactory = $container->get('AppBundle\v2\Factory\CourtOrderFactory');
+        $this->courtOrderDeputyFactory = $container->get('AppBundle\v2\Factory\CourtOrderDeputyFactory');
 
         $this->pa = new OrgService(self::$em,
             $this->logger,
@@ -217,7 +227,9 @@ class OrgServiceTest extends WebTestCase
             new NamedDeputyFactory(),
             $this->courtOrderRepository,
             $this->courtOrderAssembler,
-            $this->courtOrderfactory
+            $this->courtOrderDeputyAssembler,
+            $this->courtOrderfactory,
+            $this->courtOrderDeputyFactory
         );
 
         Fixtures::deleteReportsData(['dd_user', 'client']);
@@ -589,7 +601,9 @@ class OrgServiceTest extends WebTestCase
             $namedDeputyFactory->reveal(),
             $this->courtOrderRepository,
             $this->courtOrderAssembler,
-            $this->courtOrderfactory
+            $this->courtOrderDeputyAssembler,
+            $this->courtOrderfactory,
+            $this->courtOrderDeputyFactory
         );
 
         $sut->addFromCasrecRows([$row]);
@@ -662,7 +676,9 @@ class OrgServiceTest extends WebTestCase
             new NamedDeputyFactory(),
             $this->courtOrderRepository,
             $this->courtOrderAssembler,
-            $this->courtOrderfactory
+            $this->courtOrderDeputyAssembler,
+            $this->courtOrderfactory,
+            $this->courtOrderDeputyFactory
         );
 
         $output = $sut->addFromCasrecRows([ $row ]);
@@ -706,7 +722,9 @@ class OrgServiceTest extends WebTestCase
             new NamedDeputyFactory(),
             $this->courtOrderRepository,
             $this->courtOrderAssembler,
-            $this->courtOrderfactory
+            $this->courtOrderDeputyAssembler,
+            $this->courtOrderfactory,
+            $this->courtOrderDeputyFactory
         );
 
         $this->assertEquals($namedDeputy, $sut->identifyNamedDeputy(self::$deputy1 + self::$client1));
