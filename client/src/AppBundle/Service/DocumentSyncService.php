@@ -85,7 +85,7 @@ class DocumentSyncService
 
             $this->handleReportSubmissionUpdate($document->getReportSubmission()->getId(), $data['uuid']);
 
-            return $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_SUCCESS);
+            return (string)$this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_SUCCESS);
         } catch (Throwable $e) {
             $this->handleSyncErrors($e, $document);
             return null;
@@ -192,8 +192,9 @@ class DocumentSyncService
      */
     private function handleDocumentStatusUpdate(Document $document, string $status, ?string $errorMessage=null)
     {
-        $data = ['data' => ['syncStatus' => $status]];
 
+        //$data = ['data' => ['syncStatus' => $status]];
+        $data = ['syncStatus' => $status];
 
         print("error");
         var_dump($errorMessage);
@@ -201,6 +202,8 @@ class DocumentSyncService
             $errorMessage = json_decode($errorMessage, true) ? json_decode($errorMessage, true) : $errorMessage;
             $data['syncError'] = $errorMessage;
         }
+
+        var_dump(json_encode($data));
 
         try {
             return $this->restClient->apiCall(

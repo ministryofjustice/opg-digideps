@@ -120,7 +120,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         $this->restClient
             ->apiCall('put',
                 'document/6789',
-                json_encode(['data' => ['syncStatus' => Document::SYNC_STATUS_IN_PROGRESS]]),
+                json_encode(['syncStatus' => Document::SYNC_STATUS_IN_PROGRESS]),
                 Document::class,
                 [],
                 false
@@ -143,7 +143,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         $this->restClient
             ->apiCall('put',
                 'document/6789',
-                json_encode(['data' => ['syncStatus' => Document::SYNC_STATUS_SUCCESS]]),
+                json_encode(['syncStatus' => Document::SYNC_STATUS_SUCCESS]),
                 Document::class,
                 [],
                 false
@@ -192,7 +192,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         $this->restClient
             ->apiCall('put',
                 'document/6789',
-                json_encode(['data' => ['syncStatus' => Document::SYNC_STATUS_IN_PROGRESS]]),
+                json_encode(['syncStatus' => Document::SYNC_STATUS_IN_PROGRESS]),
                 Document::class,
                 [],
                 false
@@ -203,8 +203,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->apiCall('put',
                 'document/6789',
                 json_encode(
-                    ['data' =>
-                        ['syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR],
+                    ['syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR,
                     'syncError' => $failureResponseBody
                     ]),
                 Document::class,
@@ -241,7 +240,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         $this->restClient
             ->apiCall('put',
                 'document/6789',
-                json_encode(['data' => ['syncStatus' => Document::SYNC_STATUS_IN_PROGRESS]]),
+                json_encode(['syncStatus' => Document::SYNC_STATUS_IN_PROGRESS]),
                 Document::class,
                 [],
                 false
@@ -252,8 +251,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->apiCall('put',
                 'document/6789',
                 json_encode(
-                    ['data' =>
-                        ['syncStatus' => $syncStatus],
+                    ['syncStatus' => $syncStatus,
                     'syncError' => 'S3 error while syncing document: ' . $awsErrorMessage
                     ]),
                 Document::class,
@@ -301,7 +299,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         $this->restClient
             ->apiCall('put',
                 'document/6789',
-                json_encode(['data' => ['syncStatus' => Document::SYNC_STATUS_IN_PROGRESS]]),
+                json_encode(['syncStatus' => Document::SYNC_STATUS_IN_PROGRESS]),
                 Document::class,
                 [],
                 false
@@ -316,7 +314,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         $this->restClient
             ->apiCall('put',
                 'document/6789',
-                json_encode(['data' => ['syncStatus' => Document::SYNC_STATUS_SUCCESS]]),
+                json_encode(['syncStatus' => Document::SYNC_STATUS_SUCCESS]),
                 Document::class,
                 [],
                 false
@@ -346,7 +344,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         $this->restClient
             ->apiCall('put',
                 'document/6789',
-                json_encode(['data' => ['syncStatus' => Document::SYNC_STATUS_QUEUED]]),
+                json_encode(['syncStatus' => Document::SYNC_STATUS_QUEUED]),
                 Document::class,
                 [],
                 false
