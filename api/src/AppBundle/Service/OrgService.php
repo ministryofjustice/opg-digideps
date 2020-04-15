@@ -238,33 +238,37 @@ class OrgService
                     if (is_null($courtOrder)) {
                         $courtOrder = $this->createCourtOrder($row, $client, $report);
                     } else {
-                        $found = false;
+                        $deputies = $courtOrder->getDeputies();
 
-                        foreach ($courtOrder->getDeputies() as $deputy) {
-                            $deputyDto = $this->courtOrderDeputyAssembler->assemble($row);
-
-                            if ($deputy->getDeputyNumber() === $deputyDto->getDeputyNumber()) {
-                                $found = true;
-
-                                $this->updateCourtOrderDeputy($deputy, $deputyDto);
-
-                                $deputy->setOrganisation($this->currentOrganisation);
-                            } else {
-                                // Replace deputy
-                                $courtOrder->removeDeputy($deputy);
+                        foreach ($deputies as $deputy) {
+                            if (!is_null($deputy->getUser())) {
+                                throw new \RuntimeException('Case number already used by lay deputy');
                             }
                         }
 
-                        if (!$found) {
-                            // Add new deputy
+                        $deputyDto = $this->courtOrderDeputyAssembler->assemble($row);
+
+                        if (count($deputies) === 0) {
                             $deputy = $this->courtOrderDeputyFactory->create($deputyDto, $courtOrder);
                             $deputy->setOrganisation($this->currentOrganisation);
+                            $this->em->flush();
+                        } else if (count($deputies) > 1) {
+                            throw new \RuntimeException('Court order has multiple organisations attached');
+                        } else {
+                            $deputy = $deputies[0];
+
+                            if ($deputy->getDeputyNumber() === $deputyDto->getDeputyNumber()) {
+                                $this->updateCourtOrderDeputy($deputy, $deputyDto);
+                                $deputy->setOrganisation($this->currentOrganisation);
+                                $this->em->flush();
+                            } else {
+                                $this->em->remove($courtOrder);
+                                $this->em->flush();
+
+                                $this->createCourtOrder($row, $client, $report);
+                            }
                         }
                     }
-
-                    $this->em->persist($courtOrder);
-                    $this->em->flush();
-
                 } else {
                     throw new \RuntimeException('Client could not be identified or created');
                 }
@@ -662,7 +666,11 @@ class OrgService
         $courtOrder = $this->courtOrderFactory->create($courtOrderDto, $client, $report);
 
         $courtOrderDeputyDto = $this->courtOrderDeputyAssembler->assemble($row);
-        $this->courtOrderDeputyFactory->create($courtOrderDeputyDto, $courtOrder);
+        $deputy = $this->courtOrderDeputyFactory->create($courtOrderDeputyDto, $courtOrder);
+        $deputy->setOrganisation($this->currentOrganisation);
+
+        $this->em->persist($courtOrder);
+        $this->em->flush();
 
         return $courtOrder;
     }
