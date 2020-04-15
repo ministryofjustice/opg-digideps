@@ -211,7 +211,7 @@ class OrgServiceTest extends WebTestCase
         $this->namedDeputyRepository = $container->get('AppBundle\Entity\Repository\NamedDeputyRepository');
         $this->courtOrderRepository = $container->get('AppBundle\Entity\Repository\CourtOrderRepository');
         $this->courtOrderAssembler = $container->get('AppBundle\v2\Assembler\CourtOrder\OrgCsvToCourtOrderDtoAssembler');
-        $this->courtOrderDeputyAssembler = $container->get('AppBundle\v2\Assembler\CourtOrder\OrgCsvToCourtOrderDeputyDtoAssembler');
+        $this->courtOrderDeputyAssembler = $container->get('AppBundle\v2\Assembler\CourtOrderDeputy\OrgCsvToCourtOrderDeputyDtoAssembler');
         $this->courtOrderfactory = $container->get('AppBundle\v2\Factory\CourtOrderFactory');
         $this->courtOrderDeputyFactory = $container->get('AppBundle\v2\Factory\CourtOrderDeputyFactory');
 
