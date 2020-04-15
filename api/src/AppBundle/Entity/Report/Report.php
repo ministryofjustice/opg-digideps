@@ -435,8 +435,8 @@ class Report implements ReportInterface
     private $checklist;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrder", inversedBy="reports")
-     * @ORM\JoinColumn(name="court_order_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrder", inversedBy="reports", cascade={"persist"})
+     * @ORM\JoinColumn(name="court_order_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $courtOrder;
 
