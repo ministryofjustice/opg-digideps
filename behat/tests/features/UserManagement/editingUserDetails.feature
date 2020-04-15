@@ -25,7 +25,6 @@ Feature: Editing Deputy and Client details
       | profile_addressCountry | GB |
       | profile_phoneMain | 07911111111111 |
       | profile_phoneAlternative | |
-      | profile_email | hena.mercia@test.com |
     When I fill in the following:
       | profile_firstname |  |
       | profile_lastname |  |
@@ -33,7 +32,6 @@ Feature: Editing Deputy and Client details
       | profile_addressPostcode | |
       | profile_addressCountry | |
       | profile_phoneMain |   |
-      | profile_email | |
     And I press "profile_save"
     Then the following fields should have an error:
       | profile_firstname |
@@ -42,7 +40,6 @@ Feature: Editing Deputy and Client details
       | profile_addressPostcode |
       | profile_addressCountry |
       | profile_phoneMain |
-      | profile_email |
     When I press "profile_save"
     Then the form should be invalid
     When I fill in the following:
@@ -53,9 +50,8 @@ Feature: Editing Deputy and Client details
       | profile_address3 | London |
       | profile_addressPostcode | SW1H 9AA |
       | profile_addressCountry | GB |
-      | profile_phoneMain | 020 3334 3556  |
-      | profile_phoneAlternative | 020 1234 5679  |
-      | profile_email | hena.mercia@test.com |
+      | profile_phoneMain | 020 3334 3556 |
+      | profile_phoneAlternative | 020 1234 5679 |
     And I press "profile_save"
     Then the form should be valid
 

@@ -8,6 +8,8 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints;
 
@@ -30,12 +32,6 @@ class OrganisationMemberType extends AbstractType
                     new Constraints\NotBlank(['message' => 'user.lastname.notBlankOtherUser']),
                 ]
             ])
-            ->add('email', FormTypes\TextType::class, [
-                'required' => true,
-                'constraints' => [
-                    new Email(),
-                ]
-            ])
             ->add('jobTitle', FormTypes\TextType::class, ['required' => !empty($targetUser)])
             ->add('phoneMain', FormTypes\TextType::class, ['required' => !empty($targetUser)])
             ->add('roleName', FormTypes\ChoiceType::class, [
@@ -50,6 +46,20 @@ class OrganisationMemberType extends AbstractType
                     new Constraints\NotBlank(['message' => 'user.role.notBlankPa']),
                 ]
             ]);
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $user = $event->getData();
+            $form = $event->getForm();
+
+            if (!$user || null === $user->getId()) {
+                $form->add('email', FormTypes\TextType::class, [
+                    'required' => true,
+                    'constraints' => [
+                        new Email(),
+                    ]
+                ]);
+            }
+        });
 
         $builder->add('save', FormTypes\SubmitType::class);
     }

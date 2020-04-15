@@ -7,6 +7,8 @@ use AppBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -24,9 +26,6 @@ class TeamMemberAccountType extends AbstractType
         $builder
             ->add('firstname', FormTypes\TextType::class, ['required' => true])
             ->add('lastname', FormTypes\TextType::class, ['required' => true])
-            ->add('email', FormTypes\TextType::class, [
-                'required' => true
-            ])
             ->add('jobTitle', FormTypes\TextType::class, ['required' => !empty($targetUser)])
             ->add('phoneMain', FormTypes\TextType::class, ['required' => !empty($targetUser)]);
 
@@ -47,6 +46,18 @@ class TeamMemberAccountType extends AbstractType
                 ]);
             }
         }
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $user = $event->getData();
+            $form = $event->getForm();
+
+            if (!$user || null === $user->getId()) {
+                $form->add('email', FormTypes\TextType::class, [
+                    'required' => true
+                ]);
+            }
+        });
+
         $builder->add('save', FormTypes\SubmitType::class);
     }
 
