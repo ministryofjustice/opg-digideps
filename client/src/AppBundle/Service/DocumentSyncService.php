@@ -58,9 +58,7 @@ class DocumentSyncService
      */
     public function syncDocument(Document $document)
     {
-
         $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_IN_PROGRESS);
-
         if ($document->isReportPdf()) {
             return $this->syncReportDocument($document);
         } else {
@@ -87,7 +85,7 @@ class DocumentSyncService
 
             $this->handleReportSubmissionUpdate($document->getReportSubmission()->getId(), $data['uuid']);
 
-            return $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_SUCCESS);
+            return (string)$this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_SUCCESS);
         } catch (Throwable $e) {
             $this->handleSyncErrors($e, $document);
             return null;
@@ -194,6 +192,7 @@ class DocumentSyncService
      */
     private function handleDocumentStatusUpdate(Document $document, string $status, ?string $errorMessage=null)
     {
+
         $data = ['syncStatus' => $status];
 
         if (!is_null($errorMessage)) {

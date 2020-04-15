@@ -76,6 +76,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
      */
     public function sendReportPdfDocument()
     {
+
         $this->setUpReportPdfPactBuilder($this->caseRef);
 
         $this->signer->signRequest(Argument::type(Request::class), 'execute-api')->willReturnArgument(0);
@@ -168,7 +169,6 @@ class SiriusDocumentsContractTest extends KernelTestCase
             ->setBody([
                 'uuid' => $matcher->uuid($this->reportPdfUuid)
             ]);
-
         $this->builder
             ->uponReceiving('A submitted report')
             ->with($request)

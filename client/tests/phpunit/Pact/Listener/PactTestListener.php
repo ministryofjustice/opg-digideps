@@ -87,7 +87,7 @@ class PactTestListener implements TestListener
                 $httpService = new MockServerHttpService(new GuzzleClient(), $this->mockServerConfig);
                 $httpService->verifyInteractions();
                 $json = $httpService->getPactJson();
-                            //requires these to exist
+                //requires these to exist
                 if (($pactBrokerUri = \getenv('PACT_BROKER_BASE_URL')) &&
                     ($consumerVersion = \getenv('PACT_CONSUMER_VERSION')))
                 {

@@ -205,7 +205,9 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->apiCall('put',
                 'document/6789',
                 json_encode(
-                    ['syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR, 'syncError' => $failureResponseBody]),
+                    ['syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR,
+                    'syncError' => $failureResponseBody
+                    ]),
                 Document::class,
                 [],
                 false
@@ -250,7 +252,10 @@ class DocumentSyncServiceTest extends KernelTestCase
         $this->restClient
             ->apiCall('put',
                 'document/6789',
-                json_encode(['syncStatus' => $syncStatus, 'syncError' => 'S3 error while syncing document: ' . $awsErrorMessage]),
+                json_encode(
+                    ['syncStatus' => $syncStatus,
+                    'syncError' => 'S3 error while syncing document: ' . $awsErrorMessage
+                    ]),
                 Document::class,
                 [],
                 false

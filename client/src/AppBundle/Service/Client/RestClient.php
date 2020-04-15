@@ -295,6 +295,7 @@ class RestClient
      */
     public function apiCall($method, $endpoint, $data, $expectedResponseType, $options = [], $authenticated = true)
     {
+
         if ($data) {
             $options['body'] = $this->toJson($data, $options);
         }
@@ -368,9 +369,7 @@ class RestClient
         $start = microtime(true);
         try {
             $response = $this->client->$method($url, $options);
-
             $this->logRequest($url, $method, $start, $options, $response);
-
             return $response;
         } catch (RequestException $e) {
             // request exception contains a body, that gets decoded and passed to RestClientException
@@ -409,6 +408,7 @@ class RestClient
     private function extractDataArray(ResponseInterface $response)
     {
         //TODO validate $response->getStatusCode()
+
 
         try {
             $data = $this->serialiser->deserialize(strval($response->getBody()), 'array', 'json');
