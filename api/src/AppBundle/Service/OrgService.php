@@ -5,6 +5,7 @@ namespace AppBundle\Service;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\CourtOrder;
+use AppBundle\Entity\CourtOrderDeputy;
 use AppBundle\Entity\NamedDeputy;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Report\Report;
@@ -20,6 +21,7 @@ use AppBundle\Factory\NamedDeputyFactory;
 use AppBundle\Factory\OrganisationFactory;
 use AppBundle\v2\Assembler\CourtOrderDeputy\OrgCsvToCourtOrderDeputyDtoAssembler;
 use AppBundle\v2\Assembler\CourtOrder\OrgCsvToCourtOrderDtoAssembler;
+use AppBundle\v2\DTO\CourtOrderDeputyDto;
 use AppBundle\v2\Factory\CourtOrderDeputyFactory;
 use AppBundle\v2\Factory\CourtOrderFactory;
 use DateTime;
@@ -244,21 +246,9 @@ class OrgService
                             if ($deputy->getDeputyNumber() === $deputyDto->getDeputyNumber()) {
                                 $found = true;
 
-                                // Update deputy
-                                $deputy
-                                    ->setFirstname($deputyDto->getFirstname())
-                                    ->setSurname($deputyDto->getSurname())
-                                    ->setEmail($deputyDto->getEmail())
-                                    ->setOrganisation($this->currentOrganisation);
+                                $this->updateCourtOrderDeputy($deputy, $deputyDto);
 
-                                $deputy->getAddresses()[0]
-                                    ->setAddressLine1($deputyDto->getAddress()->getAddressLine1())
-                                    ->setAddressLine2($deputyDto->getAddress()->getAddressLine2())
-                                    ->setAddressLine3($deputyDto->getAddress()->getAddressLine3())
-                                    ->setTown($deputyDto->getAddress()->getTown())
-                                    ->setCounty($deputyDto->getAddress()->getCounty())
-                                    ->setPostcode($deputyDto->getAddress()->getPostcode())
-                                    ->setCountry($deputyDto->getAddress()->getCountry());
+                                $deputy->setOrganisation($this->currentOrganisation);
                             } else {
                                 // Replace deputy
                                 $courtOrder->removeDeputy($deputy);
@@ -675,5 +665,23 @@ class OrgService
         $this->courtOrderDeputyFactory->create($courtOrderDeputyDto, $courtOrder);
 
         return $courtOrder;
+    }
+
+    private function updateCourtOrderDeputy(CourtOrderDeputy $deputy, CourtOrderDeputyDto $deputyDto): void
+    {
+        $deputy
+            ->setFirstname($deputyDto->getFirstname())
+            ->setSurname($deputyDto->getSurname())
+            ->setEmail($deputyDto->getEmail());
+
+        $addressDto = $deputyDto->getAddress();
+        $deputy->getAddresses()[0]
+            ->setAddressLine1($addressDto->getAddressLine1())
+            ->setAddressLine2($addressDto->getAddressLine2())
+            ->setAddressLine3($addressDto->getAddressLine3())
+            ->setTown($addressDto->getTown())
+            ->setCounty($addressDto->getCounty())
+            ->setPostcode($addressDto->getPostcode())
+            ->setCountry($addressDto->getCountry());
     }
 }
