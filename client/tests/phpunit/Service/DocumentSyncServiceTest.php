@@ -103,6 +103,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->reportSubmissionId,
             $this->supportingDocSubmissionId
         );
+
         $this->s3Storage->retrieve('test')->willReturn($this->fileContents);
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusReportPdfDocumentUpload(
@@ -117,6 +118,7 @@ class DocumentSyncServiceTest extends KernelTestCase
 
         $successResponseBody = ['uuid' => $this->reportPdfSubmissionUuid];
         $successResponse = new Response('200', [], json_encode($successResponseBody));
+
         $this->restClient
             ->apiCall('put',
                 'document/6789',
@@ -150,6 +152,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             )
             ->shouldBeCalled()
             ->willReturn($this->serializer->serialize($submittedReportDocument, 'json'));
+
         $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
         $sut->syncDocument($submittedReportDocument);
     }

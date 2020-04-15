@@ -411,7 +411,6 @@ class RestClient
     {
         //TODO validate $response->getStatusCode()
 
-
         try {
             $data = $this->serialiser->deserialize(strval($response->getBody()), 'array', 'json');
         } catch (\Throwable $e) {
