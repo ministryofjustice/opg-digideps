@@ -231,44 +231,7 @@ class OrgService
                 if ($client instanceof Client) {
                     $report = $this->upsertReportFromCsv($row, $client);
 
-                    $courtOrderType = strtolower($row['Corref']) === 'hw' ? CourtOrder::SUBTYPE_HW : CourtOrder::SUBTYPE_PFA;
-
-                    $courtOrder = $this->getCourtOrder($client, $courtOrderType);
-
-                    if (is_null($courtOrder)) {
-                        $courtOrder = $this->createCourtOrder($row, $client, $report);
-                    } else {
-                        $deputies = $courtOrder->getDeputies();
-
-                        foreach ($deputies as $deputy) {
-                            if (!is_null($deputy->getUser())) {
-                                throw new \RuntimeException('Case number already used by lay deputy');
-                            }
-                        }
-
-                        $deputyDto = $this->courtOrderDeputyAssembler->assemble($row);
-
-                        if (count($deputies) === 0) {
-                            $deputy = $this->courtOrderDeputyFactory->create($deputyDto, $courtOrder);
-                            $deputy->setOrganisation($this->currentOrganisation);
-                            $this->em->flush();
-                        } else if (count($deputies) > 1) {
-                            throw new \RuntimeException('Court order has multiple organisations attached');
-                        } else {
-                            $deputy = $deputies[0];
-
-                            if ($deputy->getDeputyNumber() === $deputyDto->getDeputyNumber()) {
-                                $this->updateCourtOrderDeputy($deputy, $deputyDto);
-                                $deputy->setOrganisation($this->currentOrganisation);
-                                $this->em->flush();
-                            } else {
-                                $this->em->remove($courtOrder);
-                                $this->em->flush();
-
-                                $this->createCourtOrder($row, $client, $report);
-                            }
-                        }
-                    }
+                    $this->upsertCourtOrderFromCsv($row, $client, $report);
                 } else {
                     throw new \RuntimeException('Client could not be identified or created');
                 }
@@ -478,6 +441,51 @@ class OrgService
         return $report;
     }
 
+    private function courtOrderHasLayDeputy(CourtOrder $courtOrder): bool
+    {
+        foreach ($courtOrder->getDeputies() as $deputy) {
+            if (!is_null($deputy->getUser())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function upsertCourtOrderFromCsv(array $row, Client $client, Report $report): CourtOrder
+    {
+        $courtOrderType = strtolower($row['Corref']) === 'hw' ? CourtOrder::SUBTYPE_HW : CourtOrder::SUBTYPE_PFA;
+        $courtOrder = $this->getCourtOrder($client, $courtOrderType);
+
+        if (is_null($courtOrder)) {
+            return $this->createCourtOrder($row, $client, $report);
+        }
+
+        if ($this->courtOrderHasLayDeputy($courtOrder)) {
+            throw new \RuntimeException('Case number already used by lay deputy');
+        }
+
+        if (count($courtOrder->getDeputies()) > 1) {
+            throw new \RuntimeException('Court order has multiple organisations attached');
+        }
+
+        $deputy = $courtOrder->getDeputies()[0];
+        $deputyDto = $this->courtOrderDeputyAssembler->assemble($row);
+
+        // Deputy has changed, so generate a new court order
+        if ($deputy->getDeputyNumber() !== $deputyDto->getDeputyNumber()) {
+            $this->em->remove($courtOrder);
+            $this->em->flush();
+
+            return $this->createCourtOrder($row, $client, $report);
+        }
+
+        $this->updateCourtOrderDeputy($deputy, $deputyDto, $this->currentOrganisation);
+        $this->em->flush();
+
+        return $courtOrder;
+    }
+
     /**
      * @param User $userCreator
      * @param string $id
@@ -675,7 +683,7 @@ class OrgService
         return $courtOrder;
     }
 
-    private function updateCourtOrderDeputy(CourtOrderDeputy $deputy, CourtOrderDeputyDto $deputyDto): void
+    private function updateCourtOrderDeputy(CourtOrderDeputy $deputy, CourtOrderDeputyDto $deputyDto, Organisation $organisation = null): void
     {
         $deputy
             ->setFirstname($deputyDto->getFirstname())
@@ -691,5 +699,9 @@ class OrgService
             ->setCounty($addressDto->getCounty())
             ->setPostcode($addressDto->getPostcode())
             ->setCountry($addressDto->getCountry());
+
+        if (!is_null($organisation)) {
+            $deputy->setOrganisation($organisation);
+        }
     }
 }
