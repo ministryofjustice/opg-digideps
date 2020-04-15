@@ -511,7 +511,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      *
      * @return Report
      */
-    public function setUnSubmitDate(\DateTime $unSubmitDate)
+    public function setUnSubmitDate(?\DateTime $unSubmitDate)
     {
         $this->unSubmitDate = $unSubmitDate;
 

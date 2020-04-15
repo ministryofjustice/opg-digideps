@@ -81,4 +81,18 @@
 
     {{ form_end(form) }}
 
+    {% if closeForm is not null %}
+        {{ form_start(closeForm) }}
+            <legend class="govuk-fieldset__legend govuk-label--s">Close this report</legend>
+            {{ form_checkbox(closeForm.agreeCloseReport, 'reportManage.closeReport.form.agreeCloseReport', {
+                'labelClass': 'required'
+            }) }}
+            <div class="govuk-form-group">
+                {{ form_submit(closeForm.save, 'reportManage.closeReport.form.save', {
+                    'buttonClass': 'behat-link-close-report govuk-button govuk-button--warning',
+                }) }}
+            </div>
+        {{ form_end(closeForm) }}
+    {% endif %}
+
 {% endblock %}

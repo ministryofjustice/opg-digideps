@@ -137,6 +137,10 @@ report-declaration:
     agree:
         notBlank: You must agree to this statement to continue
 
+report-management:
+  close:
+    notBlank: You must confirm that you want to close this report
+
 login:
     email:
         notBlank: Enter your email

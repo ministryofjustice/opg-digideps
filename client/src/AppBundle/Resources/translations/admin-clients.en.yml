@@ -70,3 +70,12 @@ reportManage:
         before making changes to this report.
       label: Are you sure you want to mark this report as incomplete?
       warning: Once you have made the report incomplete you will not be able to undo this action.
+  closeReport:
+    form:
+      agreeCloseReport:
+        label: This report was submitted offline or was wrongly marked as incomplete
+      save:
+        label: Close report
+      confirmSave:
+        label: Confirm close report
+    confirmMessage: Are you sure you want to close this report?

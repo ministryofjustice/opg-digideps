@@ -6,6 +6,8 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Exception\ReportNotSubmittedException;
+use AppBundle\Form\Admin\CloseReportConfirmType;
+use AppBundle\Form\Admin\CloseReportType;
 use AppBundle\Form\Admin\ManageActiveReportType;
 use AppBundle\Form\Admin\ReviewChecklistType;
 use AppBundle\Form\Admin\ReportChecklistType;
@@ -276,9 +278,21 @@ class ReportController extends AbstractController
             return $this->redirect($this->generateUrl('admin_report_manage_confirm', ['id'=>$report->getId()]));
         }
 
+        $closeReportForm = null;
+        if ($report->isUnsubmitted()) {
+            $closeReportForm = $this->createForm(CloseReportType::class);
+            $closeReportForm->handleRequest($request);
+
+            if ($closeReportForm->isSubmitted() && $closeReportForm->isValid()) {
+                return $this->redirect($this->generateUrl('admin_report_manage_close_report_confirm', ['id'=>$report->getId()]));
+            }
+        }
+
+
         return [
             'report'   => $report,
-            'form'     => $form->createView()
+            'form'     => $form->createView(),
+            'closeForm' => $closeReportForm ? $closeReportForm->createView() : null
         ];
     }
 
@@ -436,6 +450,35 @@ class ReportController extends AbstractController
                 $report->{$setter}(new \DateTime($sessionData[$field]));
             }
         }
+    }
+
+    /**
+     * @Route("manage-close-report-confirm", name="admin_report_manage_close_report_confirm")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     *
+     * @param Request $request
+     * @param $id
+     * @return array|RedirectResponse
+     * @Template("AppBundle:Admin/Client/Report:manageCloseReportConfirm.html.twig")
+     *
+     * @throws \Exception
+     */
+    public function manageCloseReportConfirmAction(Request $request, $id)
+    {
+        $form = $this->createForm(CloseReportConfirmType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $report = $this->getReport(intval($id));
+            $report->setSubmitted(true);
+            $report->setUnSubmitDate(null);
+            $this->getRestClient()->put('report/' . $id, $report, ['submitted', 'unsubmit_date']);
+            return $this->redirect($this->generateUrl('admin_client_details', ['id'=>$report->getClient()->getId()]));
+        }
+
+        return [
+            'form' => $form->createView()
+        ];
     }
 
     /**
