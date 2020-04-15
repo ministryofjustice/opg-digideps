@@ -196,14 +196,14 @@ class DocumentSyncService
         //$data = ['data' => ['syncStatus' => $status]];
         $data = ['syncStatus' => $status];
 
-        print("error");
-        var_dump($errorMessage);
+        //print("error");
+        //var_dump($errorMessage);
         if (!is_null($errorMessage)) {
             $errorMessage = json_decode($errorMessage, true) ? json_decode($errorMessage, true) : $errorMessage;
             $data['syncError'] = $errorMessage;
         }
 
-        var_dump(json_encode($data));
+        //var_dump(json_encode($data));
 
         try {
             return $this->restClient->apiCall(

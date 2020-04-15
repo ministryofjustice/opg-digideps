@@ -47,7 +47,6 @@ class SiriusDocumentsContractTest extends KernelTestCase
 
     public function setUp(): void
     {
-        print("does this get called?");
         $client = new GuzzleClient();
         $baseUrl = getenv('PACT_MOCK_SERVER_HOST');
         $serializer = (self::bootKernel(['debug' => false]))->getContainer()->get('serializer');
@@ -170,12 +169,10 @@ class SiriusDocumentsContractTest extends KernelTestCase
             ->setBody([
                 'uuid' => $matcher->uuid($this->reportPdfUuid)
             ]);
-        print("jim - breaks in here");
         $this->builder
             ->uponReceiving('A submitted report')
             ->with($request)
             ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
-        print("jim 3");
     }
 
     private function setUpSupportingDocumentPactBuilder(string $caseRef, string $reportPdfDocumentUuid)

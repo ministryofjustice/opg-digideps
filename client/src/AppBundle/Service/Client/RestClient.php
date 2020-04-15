@@ -295,45 +295,41 @@ class RestClient
      */
     public function apiCall($method, $endpoint, $data, $expectedResponseType, $options = [], $authenticated = true)
     {
-        var_dump(json_encode($data));
+        //var_dump(json_encode($data));
         if ($data) {
             $options['body'] = $this->toJson($data, $options);
         }
-        print("\noptions\n");
-        var_dump(json_encode($options));
-        print("\nmethod\n");
-        var_dump(json_encode($method));
-        print("\nendpoint\n");
-        var_dump(json_encode($endpoint));
+        //print("\noptions\n");
+        //var_dump(json_encode($options));
+        //print("\nmethod\n");
+        //var_dump(json_encode($method));
+        //print("\nendpoint\n");
+        //var_dump(json_encode($endpoint));
         $response = $this->rawSafeCall($method, $endpoint, $options + [
             'addClientSecret' => !$authenticated,
             'addAuthToken' => $authenticated,
         ]);
 
-        print("\nresponse\n");
-        var_dump($response);
+        //print("\nresponse\n");
+        //var_dump($response);
 
-        print("\nexpected response\n");
-        var_dump($expectedResponseType);
+        //print("\nexpected response\n");
+        //var_dump($expectedResponseType);
 
         if ($expectedResponseType == 'raw') {
-            print("\nresponse 1\n");
             return  $response->getBody();
         }
 
         if ($expectedResponseType == 'response') {
-            print("\nresponse 2\n");
             return $response;
         }
 
         if ($response->getStatusCode() === Response::HTTP_NO_CONTENT) {
-            print("\nresponse 3\n");
             return;
         }
 
         $responseArray = $this->extractDataArray($response);
         if ($expectedResponseType == 'array') {
-            print("\nresponse 4\n");
             return $responseArray;
         } elseif (substr($expectedResponseType, -2) == '[]') {
             return $this->arrayToEntities('AppBundle\\Entity\\' . $expectedResponseType, $responseArray);
@@ -393,8 +389,8 @@ class RestClient
             $this->logger->warning('RestClient | RequestException | ' . $url . ' | ' . $e->getMessage());
 
             $response = $e->getResponse();
-            print("\nERROR RESPONSE\n");
-            var_dump($response);
+            //print("\nERROR RESPONSE\n");
+            //var_dump($response);
 
             $this->logRequest($url, $method, $start, $options, $response);
 
@@ -428,8 +424,8 @@ class RestClient
     {
         //TODO validate $response->getStatusCode()
 
-        print("\nMY BODY\n");
-        var_dump($response->getBody());
+        //print("\nMY BODY\n");
+        //var_dump($response->getBody());
 
         try {
             $data = $this->serialiser->deserialize(strval($response->getBody()), 'array', 'json');
