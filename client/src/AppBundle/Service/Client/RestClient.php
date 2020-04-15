@@ -369,8 +369,6 @@ class RestClient
         $start = microtime(true);
         try {
             $response = $this->client->$method($url, $options);
-//            print("\nTHIS RESPONSE\n");
-//            var_dump($response);
             $this->logRequest($url, $method, $start, $options, $response);
             return $response;
         } catch (RequestException $e) {
