@@ -1013,14 +1013,16 @@ class Report implements ReportInterface
     /**
      * Submitted reports
      *
-     * @JMS\VirtualProperty
+     * @JMS\VirtualProperty("submittedDocuments")
      * @JMS\SerializedName("submitted_documents")
      * @JMS\Groups({"documents"})
+     * @JMS\Type("array<AppBundle\Entity\Report\Document>")
      *
      * @return ArrayCollection|Document[]
      */
     public function getSubmittedDocuments()
     {
+
         return $this->getDeputyDocuments()->filter(function ($d) {
             return !empty($d->getReportSubmission());
         });

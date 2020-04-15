@@ -355,6 +355,10 @@ class Document implements DocumentInterface
 
     public function supportingDocumentCanBeSynced()
     {
+        print("\nCHECK REP\n");
+        var_dump(!$this->isReportPdf());
+        print("\nREP SYNC\n");
+        var_dump($this->getReport()->reportPdfHasBeenSynced());
         return !$this->isReportPdf() && $this->getReport()->reportPdfHasBeenSynced();
     }
 
