@@ -151,7 +151,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->shouldBeCalled()
             ->willReturn($this->serializer->serialize($submittedReportDocument, 'json'));
         $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
-        //var_dump($sut);
         $sut->syncDocument($submittedReportDocument);
     }
 

@@ -295,26 +295,15 @@ class RestClient
      */
     public function apiCall($method, $endpoint, $data, $expectedResponseType, $options = [], $authenticated = true)
     {
-        //var_dump(json_encode($data));
+
         if ($data) {
             $options['body'] = $this->toJson($data, $options);
         }
-        //print("\noptions\n");
-        //var_dump(json_encode($options));
-        //print("\nmethod\n");
-        //var_dump(json_encode($method));
-        //print("\nendpoint\n");
-        //var_dump(json_encode($endpoint));
+
         $response = $this->rawSafeCall($method, $endpoint, $options + [
             'addClientSecret' => !$authenticated,
             'addAuthToken' => $authenticated,
         ]);
-
-        //print("\nresponse\n");
-        //var_dump($response);
-
-        //print("\nexpected response\n");
-        //var_dump($expectedResponseType);
 
         if ($expectedResponseType == 'raw') {
             return  $response->getBody();
@@ -389,8 +378,6 @@ class RestClient
             $this->logger->warning('RestClient | RequestException | ' . $url . ' | ' . $e->getMessage());
 
             $response = $e->getResponse();
-            //print("\nERROR RESPONSE\n");
-            //var_dump($response);
 
             $this->logRequest($url, $method, $start, $options, $response);
 
@@ -424,8 +411,6 @@ class RestClient
     {
         //TODO validate $response->getStatusCode()
 
-        //print("\nMY BODY\n");
-        //var_dump($response->getBody());
 
         try {
             $data = $this->serialiser->deserialize(strval($response->getBody()), 'array', 'json');
