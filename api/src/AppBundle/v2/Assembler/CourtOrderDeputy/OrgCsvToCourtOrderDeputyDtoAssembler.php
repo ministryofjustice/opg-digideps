@@ -2,6 +2,7 @@
 
 namespace AppBundle\v2\Assembler\CourtOrderDeputy;
 
+use AppBundle\Entity\User;
 use AppBundle\v2\DTO\CourtOrderAddressDto;
 use AppBundle\v2\DTO\CourtOrderDeputyDto;
 
@@ -14,7 +15,7 @@ class OrgCsvToCourtOrderDeputyDtoAssembler
         }
 
         return (new CourtOrderDeputyDto())
-            ->setDeputyNumber($data['Deputy No'])
+            ->setDeputyNumber(User::padDeputyNumber($data['Deputy No']))
             ->setFirstname($data['Dep Forename'])
             ->setSurname($data['Dep Surname'])
             ->setEmail($data['Email'] ?: null)
