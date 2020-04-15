@@ -86,7 +86,7 @@ class DocumentSyncService
 
             $this->handleReportSubmissionUpdate($document->getReportSubmission()->getId(), $data['uuid']);
 
-            return (string)$this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_SUCCESS);
+            return (string) $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_SUCCESS);
         } catch (Throwable $e) {
             $this->handleSyncErrors($e, $document);
             return null;
@@ -102,7 +102,7 @@ class DocumentSyncService
         try {
             $content = $this->retrieveDocumentContentFromS3($document);
             $this->handleSiriusSync($document, $content);
-            return $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_SUCCESS);
+            return (string) $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_SUCCESS);
         } catch (Throwable $e) {
             $this->handleSyncErrors($e, $document);
             return null;
@@ -125,9 +125,13 @@ class DocumentSyncService
 
             $type = 'reports';
         } else {
+            print("\nbuildUpload() line 128\n");
+//            var_dump($report->getReportSubmissions()[0]->getDocuments());
+//            var_dump($document);
+
             $siriusDocumentMetadata =
                 (new SiriusSupportingDocumentMetadata())
-                    ->setSubmissionId($report->getReportSubmissionByDocument($document)->getId());
+                    ->setSubmissionId($document->getReportSubmission()->getId());
 
             $type = 'supportingdocuments';
         }
@@ -176,13 +180,15 @@ class DocumentSyncService
     public function handleSiriusSync(Document $document, string $content)
     {
         $upload = $this->buildUpload($document, $content);
+        var_dump($upload);
         $caseRef = $document->getReport()->getClient()->getCaseNumber();
 
         if($document->isReportPdf()) {
             return $this->siriusApiGatewayClient->sendReportPdfDocument($upload, $caseRef);
         } else {
             /** @var ReportSubmission $reportPdfSubmission */
-            $reportPdfSubmission = $document->getPreviousReportPdfSubmission();
+            $reportPdfSubmission = $document->getSubmittedReportPdfSubmission();
+
             return $this->siriusApiGatewayClient->sendSupportingDocument($upload, $reportPdfSubmission->getUuid(), $caseRef);
         }
     }
@@ -239,6 +245,7 @@ class DocumentSyncService
 
             $errorMessage = sprintf('S3 error while syncing document: %s', $e->getMessage());
         } else {
+            // Fix - try looking at not_ull getResponse and not_null getBody
             $errorMessage = method_exists($e, 'getResponse') ?
                 (string) $e->getResponse()->getBody() : (string) $e->getMessage();
 

@@ -1022,7 +1022,6 @@ class Report implements ReportInterface
      */
     public function getSubmittedDocuments()
     {
-
         return $this->getDeputyDocuments()->filter(function ($d) {
             return !empty($d->getReportSubmission());
         });

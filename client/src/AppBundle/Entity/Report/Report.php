@@ -1236,16 +1236,14 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     public function reportPdfHasBeenSynced()
     {
         $reportPdfHasBeenSubmitted = false;
-        print("\nARRAY OF DOCS\n");
-        var_dump($this->getSubmittedDocuments());
 
-        foreach ($this->getSubmittedDocuments() as $doc) {
+        $submittedDocuments = array_filter($this->getDocuments(), function ($d) {
+            return !empty($d->getReportSubmission());
+        });
+
+        foreach ($submittedDocuments as $doc) {
             if ($doc->isReportPdf()) {
-                print("\nREP SUB\n");
-                var_dump($doc->getReportSubmission());
                 $reportPdfHasBeenSubmitted = !is_null($doc->getReportSubmission()->getUuid()) ? true : false;
-                print("\nPDF SUB\n");
-                var_dump($reportPdfHasBeenSubmitted);
 
                 break;
             } else {

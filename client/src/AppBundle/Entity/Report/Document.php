@@ -359,19 +359,22 @@ class Document implements DocumentInterface
         var_dump(!$this->isReportPdf());
         print("\nREP SYNC\n");
         var_dump($this->getReport()->reportPdfHasBeenSynced());
+
         return !$this->isReportPdf() && $this->getReport()->reportPdfHasBeenSynced();
     }
 
-    public function getPreviousReportPdfSubmission()
+    public function getSubmittedReportPdfSubmission()
     {
-        $previousSubmissions = array_filter(
+        $previousOrCurrentSubmissions = array_filter(
             $this->getReport()->getReportSubmissions(),
             function($submission) {
                 return $submission->getCreatedOn() <= $this->getReportSubmission()->getCreatedOn();
             });
 
-        foreach (array_reverse($previousSubmissions) as $submission) {
-            if ($submission->hasReportPdf()) {
+        var_dump($previousOrCurrentSubmissions);
+
+        foreach (array_reverse($previousOrCurrentSubmissions) as $submission) {
+            if ($submission->getUuid()) {
                 return $submission;
             }
         }

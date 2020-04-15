@@ -81,12 +81,22 @@ class DocumentSyncCommand extends DaemonableCommand
                     'report-submission',
                     'documentSync',
                     'report' => [
-                        'documents',
-                        'submittedDocuments' => [
+                        'documentSync',
+                        'report-documents',
+                        'report-client',
+                        'documentSync',
+                        'documents' => [
+                            'documents',
                             'document-report-submission',
                             'reportSubmission' => [
                                 'report-submission'
                             ]
+                        ],
+                        'client' => [
+                            'client-case-number'
+                        ],
+                        'reportSubmissions' => [
+                            'report-submission'
                         ]
                     ]
                 ]
