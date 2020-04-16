@@ -149,6 +149,8 @@ class DocumentController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
+        var_dump($data);
+
         $document = $em->getRepository(Document::class)->find($id);
 
         $serialisedGroups = $request->query->has('groups')
