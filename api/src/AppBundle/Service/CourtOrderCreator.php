@@ -8,8 +8,6 @@ use AppBundle\Entity\CourtOrderDeputy;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Repository\CourtOrderRepository;
-use AppBundle\v2\Assembler\CourtOrder\OrgCsvToCourtOrderDtoAssembler;
-use AppBundle\v2\Assembler\CourtOrderDeputy\OrgCsvToCourtOrderDeputyDtoAssembler;
 use AppBundle\v2\DTO\CourtOrderDeputyDto;
 use AppBundle\v2\DTO\CourtOrderDto;
 use AppBundle\v2\Factory\CourtOrderDeputyFactory;
@@ -24,12 +22,6 @@ class CourtOrderCreator
     /** @var CourtOrderRepository */
     private $courtOrderRepository;
 
-    /** @var OrgCsvToCourtOrderDtoAssembler */
-    private $courtOrderAssembler;
-
-    /** @var OrgCsvToCourtOrderDeputyDtoAssembler */
-    private $courtOrderDeputyAssembler;
-
     /** @var CourtOrderFactory */
     private $courtOrderFactory;
 
@@ -39,16 +31,12 @@ class CourtOrderCreator
     public function __construct(
         EntityManagerInterface $em,
         CourtOrderRepository $courtOrderRepository,
-        OrgCsvToCourtOrderDtoAssembler $courtOrderAssembler,
-        OrgCsvToCourtOrderDeputyDtoAssembler $courtOrderDeputyAssembler,
         CourtOrderFactory $courtOrderFactory,
         CourtOrderDeputyFactory $courtOrderDeputyFactory
     )
     {
         $this->em = $em;
         $this->courtOrderRepository = $courtOrderRepository;
-        $this->courtOrderAssembler = $courtOrderAssembler;
-        $this->courtOrderDeputyAssembler = $courtOrderDeputyAssembler;
         $this->courtOrderFactory = $courtOrderFactory;
         $this->courtOrderDeputyFactory = $courtOrderDeputyFactory;
     }
