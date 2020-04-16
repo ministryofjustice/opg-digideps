@@ -213,8 +213,10 @@ class OrgService
                     $report = $this->upsertReportFromCsv($row, $client);
 
                     $orderDto = $this->courtOrderAssembler->assemble($row);
+                    $courtOrder = $this->courtOrderCreator->upsertCourtOrder($orderDto, $report);
+
                     $deputyDto = $this->courtOrderDeputyAssembler->assemble($row);
-                    $this->courtOrderCreator->upsertCourtOrder($orderDto, $deputyDto, $report, $this->currentOrganisation);
+                    $deputy = $this->courtOrderCreator->upsertCourtOrderDeputy($deputyDto, $courtOrder, $this->currentOrganisation);
                 } else {
                     throw new \RuntimeException('Client could not be identified or created');
                 }

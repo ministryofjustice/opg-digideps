@@ -53,12 +53,7 @@ class CourtOrderCreator
         $this->courtOrderDeputyFactory = $courtOrderDeputyFactory;
     }
 
-    /**
-     * @param Client|null $client
-     * @param string $courtOrderType
-     * @return CourtOrder
-     */
-    private function getCourtOrder(?Client $client, string $courtOrderType): ?CourtOrder
+    private function getCourtOrder(Client $client, string $courtOrderType): ?CourtOrder
     {
         $courtOrder = $this
             ->courtOrderRepository
@@ -70,27 +65,44 @@ class CourtOrderCreator
         return $courtOrder;
     }
 
-    /**
-     * @param array $row
-     * @param Client $client
-     * @param Report $report
-     */
-    private function createCourtOrder(
-        CourtOrderDto $courtOrderDto,
-        CourtOrderDeputyDto $courtOrderDeputyDto,
-        Client $client,
-        Report $report,
-        Organisation $organisation
-    ): CourtOrder
+    private function createCourtOrder(CourtOrderDto $courtOrderDto, Client $client, Report $report): CourtOrder
     {
         $courtOrder = $this->courtOrderFactory->create($courtOrderDto, $client, $report);
-        $deputy = $this->courtOrderDeputyFactory->create($courtOrderDeputyDto, $courtOrder);
-        $deputy->setOrganisation($organisation);
 
         $this->em->persist($courtOrder);
         $this->em->flush();
 
         return $courtOrder;
+    }
+
+    /**
+     * Replace an existing court order with a dulpicate
+     */
+    private function recreateCourtOrder(CourtOrder $courtOrder): CourtOrder
+    {
+        $orderDto = (new CourtOrderDto())
+            ->setCaseNumber($courtOrder->getCaseNumber())
+            ->setType($courtOrder->getType())
+            ->setSupervisionLevel($courtOrder->getSupervisionLevel())
+            ->setOrderDate($courtOrder->getOrderDate());
+        $client = $courtOrder->getClient();
+        $report = $courtOrder->getReports()[0];
+
+        $this->em->remove($courtOrder);
+        $this->em->flush();
+
+        return $this->createCourtOrder($orderDto, $client, $report);
+    }
+
+    private function createCourtOrderDeputy(CourtOrderDeputyDto $deputyDto, CourtOrder $courtOrder, Organisation $organisation): CourtOrderDeputy
+    {
+        $deputy = $this->courtOrderDeputyFactory->create($deputyDto, $courtOrder);
+        $deputy->setOrganisation($organisation);
+
+        $this->em->persist($deputy);
+        $this->em->flush();
+
+        return $deputy;
     }
 
     private function updateCourtOrderDeputy(CourtOrderDeputy $deputy, CourtOrderDeputyDto $deputyDto, Organisation $organisation = null): void
@@ -115,16 +127,22 @@ class CourtOrderCreator
         }
     }
 
-    public function upsertCourtOrder(CourtOrderDto $orderDto, CourtOrderDeputyDto $deputyDto, Report $report, Organisation $organisation): CourtOrder
+    public function upsertCourtOrder(CourtOrderDto $orderDto, Report $report): CourtOrder
     {
         $client = $report->getClient();
 
         $courtOrder = $this->getCourtOrder($client, $orderDto->getType());
 
         if (is_null($courtOrder)) {
-            return $this->createCourtOrder($orderDto, $deputyDto, $client, $report, $organisation);
+            return $this->createCourtOrder($orderDto, $client, $report);
+        } else {
+            $courtOrder->setOrderDate($orderDto->getOrderDate());
+            return $courtOrder;
         }
+    }
 
+    public function upsertCourtOrderDeputy(CourtOrderDeputyDto $deputyDto, CourtOrder $courtOrder, Organisation $organisation): CourtOrderDeputy
+    {
         if ($this->courtOrderHasLayDeputy($courtOrder)) {
             throw new \RuntimeException('Case number already used by lay deputy');
         }
@@ -133,20 +151,23 @@ class CourtOrderCreator
             throw new \RuntimeException('Court order has multiple organisations attached');
         }
 
+        if (count($courtOrder->getDeputies()) === 0) {
+            return $this->createCourtOrderDeputy($deputyDto, $courtOrder, $organisation);
+        }
+
         $deputy = $courtOrder->getDeputies()[0];
 
         // Deputy has changed, so generate a new court order
         if ($deputy->getDeputyNumber() !== $deputyDto->getDeputyNumber()) {
-            $this->em->remove($courtOrder);
+            $newCourtOrder = $this->recreateCourtOrder($courtOrder);
+            return $this->createCourtOrderDeputy($deputyDto, $newCourtOrder, $organisation);
+        } else {
+            $this->updateCourtOrderDeputy($deputy, $deputyDto, $organisation);
             $this->em->flush();
 
-            return $this->createCourtOrder($orderDto, $deputyDto, $client, $report, $organisation);
+            return $deputy;
         }
 
-        $this->updateCourtOrderDeputy($deputy, $deputyDto, $organisation);
-        $this->em->flush();
-
-        return $courtOrder;
     }
 
     private function courtOrderHasLayDeputy(CourtOrder $courtOrder): bool
