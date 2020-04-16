@@ -167,12 +167,12 @@ class DocumentControllerTest extends AbstractTestController
         $response = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,
-            'data' => ['syncStatus' => Document::SYNC_STATUS_SUCCESS, 'syncTime' => $syncTime]
+            'data' => ['syncStatus' => Document::SYNC_STATUS_SUCCESS]
         ]);
 
         self::assertEquals(self::$document->getId(), $response['data']['id']);
         self::assertEquals(Document::SYNC_STATUS_SUCCESS, $response['data']['synchronisation_status']);
-        self::assertEquals($syncTime, $response['data']['synchronisation_time']);
+        self::assertEqualsWithDelta($syncTime, $response['data']['synchronisation_time'], 5);
     }
 
     /**
