@@ -116,7 +116,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->fileContents
         );
 
-        $successResponseBody = ['uuid' => $this->reportPdfSubmissionUuid];
+        $successResponseBody = ['data' => ['id' => $this->reportPdfSubmissionUuid]];
         $successResponse = new Response('200', [], json_encode($successResponseBody));
 
         $this->restClient

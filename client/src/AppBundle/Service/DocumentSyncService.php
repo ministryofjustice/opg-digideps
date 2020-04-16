@@ -84,7 +84,7 @@ class DocumentSyncService
 
             $data = json_decode(strval($siriusResponse->getBody()), true);
 
-            $this->handleReportSubmissionUpdate($document->getReportSubmission()->getId(), $data['uuid']);
+            $this->handleReportSubmissionUpdate($document->getReportSubmission()->getId(), $data['data']['id']);
 
             return $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_SUCCESS);
         } catch (Throwable $e) {
