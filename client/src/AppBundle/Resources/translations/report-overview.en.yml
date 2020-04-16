@@ -44,9 +44,9 @@ guidanceNotice: |
 
 incompleteNoticeHeading: More information needed
 incompleteNotice: |
-  We need more information to help us review your report. We've written to you to exmplain what information we need you to add.
+  We need more information to help us review your report. We've written to you to explain what information we need you to add.
 
-  We've highlghted the sections you need to look at again
+  We've highlighted the sections you need to look at again
 
 unsubmittedConfirm:
   notification: Before reviewing your report, please confirm that you've completed the sections marked above.
