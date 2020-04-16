@@ -149,8 +149,6 @@ class DocumentController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-        var_dump($data);
-
         $document = $em->getRepository(Document::class)->find($id);
 
         $serialisedGroups = $request->query->has('groups')
@@ -162,7 +160,8 @@ class DocumentController extends RestController
             $document->setSynchronisationStatus($data['syncStatus']);
 
             if (in_array($data['syncStatus'], self::DOCUMENT_SYNC_ERROR_STATUSES)) {
-                $document->setSynchronisationError($data['syncError']);
+                $errorMessage = is_array($data['syncError']) ? json_encode($data['syncError']) : $data['syncError'];
+                $document->setSynchronisationError($errorMessage);
             } else {
                 $document->setSynchronisationError(null);
                 $document->setSynchronisationTime(new DateTime());
