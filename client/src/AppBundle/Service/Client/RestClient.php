@@ -305,7 +305,6 @@ class RestClient
             'addAuthToken' => $authenticated,
         ]);
 
-        var_dump((string)$response->getBody());
         if ($expectedResponseType == 'raw') {
             return $response->getBody();
         }

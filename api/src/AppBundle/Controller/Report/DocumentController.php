@@ -125,9 +125,10 @@ class DocumentController extends RestController
         }
 
         $documentRepo = $em->getRepository(Document::class);
+
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['documents'];
-        file_put_contents('php://stderr', print_r($serialisedGroups, TRUE));
+
         $this->setJmsSerialiserGroups($serialisedGroups);
 
         return $documentRepo->findBy(['synchronisationStatus' => Document::SYNC_STATUS_QUEUED]);

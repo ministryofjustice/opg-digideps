@@ -102,10 +102,7 @@ class DocumentSyncService
         try {
             $content = $this->retrieveDocumentContentFromS3($document);
             $this->handleSiriusSync($document, $content);
-            $syncedDocument = $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_SUCCESS);
-
-            var_dump($syncedDocument);
-            return $syncedDocument;
+            return $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_SUCCESS);
         } catch (Throwable $e) {
             $this->handleSyncErrors($e, $document);
             return null;
@@ -114,7 +111,6 @@ class DocumentSyncService
 
     private function buildUpload(Document $document, string $content)
     {
-
         $report = $document->getReport();
 
         if ($document->isReportPdf()) {
