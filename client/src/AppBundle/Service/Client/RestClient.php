@@ -299,16 +299,15 @@ class RestClient
         if ($data) {
             $options['body'] = $this->toJson($data, $options);
         }
-        //print("\nDATA\n");
-        //var_dump($data);
+
         $response = $this->rawSafeCall($method, $endpoint, $options + [
             'addClientSecret' => !$authenticated,
             'addAuthToken' => $authenticated,
         ]);
-        print("\nRESPONSE\n");
+
         var_dump((string)$response->getBody());
         if ($expectedResponseType == 'raw') {
-            return  $response->getBody();
+            return $response->getBody();
         }
 
         if ($expectedResponseType == 'response') {

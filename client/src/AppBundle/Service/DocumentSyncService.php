@@ -16,6 +16,7 @@ use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use AppBundle\Service\File\Storage\S3Storage;
 use Aws\S3\Exception\S3Exception;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -63,7 +64,6 @@ class DocumentSyncService
             return $this->syncReportDocument($document);
         } else {
             if (!$document->supportingDocumentCanBeSynced()) {
-                print("\nNOT SYNC\n");
                 return $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_QUEUED);
             }
 
@@ -73,9 +73,9 @@ class DocumentSyncService
 
     /**
      * @param Document $document
-     * @return string|null
+     * @return Document|null
      */
-    public function syncReportDocument(Document $document): ?string
+    public function syncReportDocument(Document $document): ?Document
     {
         try {
             $content = $this->retrieveDocumentContentFromS3($document);
@@ -86,7 +86,7 @@ class DocumentSyncService
 
             $this->handleReportSubmissionUpdate($document->getReportSubmission()->getId(), $data['uuid']);
 
-            return (string) $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_SUCCESS);
+            return $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_SUCCESS);
         } catch (Throwable $e) {
             $this->handleSyncErrors($e, $document);
             return null;
@@ -95,14 +95,17 @@ class DocumentSyncService
 
     /**
      * @param Document $document
-     * @return string|null
+     * @return Document|null
      */
-    public function syncSupportingDocument(Document $document): ?string
+    public function syncSupportingDocument(Document $document): ?Document
     {
         try {
             $content = $this->retrieveDocumentContentFromS3($document);
             $this->handleSiriusSync($document, $content);
-            return (string) $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_SUCCESS);
+            $syncedDocument = $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_SUCCESS);
+
+            var_dump($syncedDocument);
+            return $syncedDocument;
         } catch (Throwable $e) {
             $this->handleSyncErrors($e, $document);
             return null;
@@ -125,10 +128,6 @@ class DocumentSyncService
 
             $type = 'reports';
         } else {
-            print("\nbuildUpload() line 128\n");
-//            var_dump($report->getReportSubmissions()[0]->getDocuments());
-//            var_dump($document);
-
             $siriusDocumentMetadata =
                 (new SiriusSupportingDocumentMetadata())
                     ->setSubmissionId($document->getReportSubmission()->getId());
@@ -175,31 +174,29 @@ class DocumentSyncService
     /**
      * @param Document $document
      * @param string $content
-     * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @return mixed|ResponseInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function handleSiriusSync(Document $document, string $content)
     {
         $upload = $this->buildUpload($document, $content);
-        var_dump($upload);
         $caseRef = $document->getReport()->getClient()->getCaseNumber();
 
         if($document->isReportPdf()) {
             return $this->siriusApiGatewayClient->sendReportPdfDocument($upload, $caseRef);
         } else {
             /** @var ReportSubmission $reportPdfSubmission */
-            $reportPdfSubmission = $document->getSubmittedReportPdfSubmission();
-
+            $reportPdfSubmission = $document->getSyncedReportPdfSubmission();
             return $this->siriusApiGatewayClient->sendSupportingDocument($upload, $reportPdfSubmission->getUuid(), $caseRef);
         }
     }
 
     /**
      * @param Document $document
-     * @return string|Throwable
+     * @return Document|Throwable
      */
-    private function handleDocumentStatusUpdate(Document $document, string $status, ?string $errorMessage=null)
+    private function handleDocumentStatusUpdate(Document $document, string $status, ?string $errorMessage=null): Document
     {
-
         $data = ['syncStatus' => $status];
 
         if (!is_null($errorMessage)) {
@@ -212,7 +209,7 @@ class DocumentSyncService
                 'put',
                 sprintf('document/%s', $document->getId()),
                json_encode($data),
-                Document::class,
+                'Report\\Document',
                 [],
                 false
             );
@@ -223,18 +220,14 @@ class DocumentSyncService
 
     private function handleReportSubmissionUpdate(int $reportSubmissionId, string $uuid)
     {
-        try {
-            return $this->restClient->apiCall(
-                'put',
-                sprintf('report-submission/%s/update-uuid', $reportSubmissionId),
-                json_encode(['uuid' => $uuid]),
-                'raw',
-                [],
-                false
-            );
-        } catch (Throwable $exception) {
-            return $exception;
-        }
+        return $this->restClient->apiCall(
+            'put',
+            sprintf('report-submission/%s/update-uuid', $reportSubmissionId),
+            json_encode(['uuid' => $uuid]),
+            'raw',
+            [],
+            false
+        );
     }
 
     private function handleSyncErrors(Throwable $e, Document $document)
@@ -245,8 +238,7 @@ class DocumentSyncService
 
             $errorMessage = sprintf('S3 error while syncing document: %s', $e->getMessage());
         } else {
-            // Fix - try looking at not_ull getResponse and not_null getBody
-            $errorMessage = method_exists($e, 'getResponse') ?
+            $errorMessage = (method_exists($e, 'getResponse') && method_exists($e->getResponse(), 'getBody')) ?
                 (string) $e->getResponse()->getBody() : (string) $e->getMessage();
 
             $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;

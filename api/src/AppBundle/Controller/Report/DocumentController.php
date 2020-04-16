@@ -146,11 +146,7 @@ class DocumentController extends RestController
             throw new UnauthorisedException('client secret not accepted.');
         }
 
-        // hydrate and persist
-
         $data = $this->deserializeBodyContent($request);
-//        file_put_contents('php://stderr', print_r($data, TRUE));
-//        file_put_contents('php://stderr', print_r($data['syncStatus'], TRUE));
 
         $document = $em->getRepository(Document::class)->find($id);
 
@@ -165,7 +161,8 @@ class DocumentController extends RestController
             if (in_array($data['syncStatus'], self::DOCUMENT_SYNC_ERROR_STATUSES)) {
                 $document->setSynchronisationError($data['syncError']);
             } else {
-                $document->setSynchronisationTime(new DateTime($data['syncTime']));
+                $document->setSynchronisationError(null);
+                $document->setSynchronisationTime(new DateTime());
             }
         }
 
