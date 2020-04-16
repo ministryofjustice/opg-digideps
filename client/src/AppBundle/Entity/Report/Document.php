@@ -358,19 +358,15 @@ class Document implements DocumentInterface
         return !$this->isReportPdf() && $this->getReport()->reportPdfHasBeenSynced();
     }
 
-    public function getSyncedReportPdfSubmission()
+    public function getSyncedReportSubmission(): ?ReportSubmission
     {
-        $previousOrCurrentSubmissions = array_filter(
-            $this->getReport()->getReportSubmissions(),
-            function($submission) {
-                return $submission->getCreatedOn() <= $this->getReportSubmission()->getCreatedOn();
-            });
-
-        foreach (array_reverse($previousOrCurrentSubmissions) as $submission) {
+        foreach ($this->getReport()->getReportSubmissions() as $submission) {
             if ($submission->getUuid()) {
                 return $submission;
             }
         }
+
+        return null;
     }
 
     /**

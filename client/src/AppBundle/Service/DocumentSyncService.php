@@ -182,7 +182,7 @@ class DocumentSyncService
             return $this->siriusApiGatewayClient->sendReportPdfDocument($upload, $caseRef);
         } else {
             /** @var ReportSubmission $reportPdfSubmission */
-            $reportPdfSubmission = $document->getSyncedReportPdfSubmission();
+            $reportPdfSubmission = $document->getSyncedReportSubmission();
             return $this->siriusApiGatewayClient->sendSupportingDocument($upload, $reportPdfSubmission->getUuid(), $caseRef);
         }
     }
@@ -191,7 +191,7 @@ class DocumentSyncService
      * @param Document $document
      * @return Document|Throwable
      */
-    private function handleDocumentStatusUpdate(Document $document, string $status, ?string $errorMessage=null): Document
+    private function handleDocumentStatusUpdate(Document $document, string $status, ?string $errorMessage=null)
     {
         $data = ['syncStatus' => $status];
 

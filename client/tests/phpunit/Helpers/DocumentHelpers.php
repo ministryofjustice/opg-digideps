@@ -59,9 +59,9 @@ class DocumentHelpers extends TestCase
             ->setReportSubmissions($reportSubmissions);
 
         if ($documentType === 'reportPdf' && $submittedReportPdfUuid) {
-            $report->setSubmittedDocuments([$reportPdfDocument]);
+            $report->setDocuments([$reportPdfDocument]);
         } elseif ($documentType === 'supportingDocument' && ($submittedReportPdfUuid)) {
-            $report->setSubmittedDocuments([$reportPdfDocument, $supportingDocument]);
+            $report->setDocuments([$reportPdfDocument, $supportingDocument]);
         }
 
         $file = new UploadedFile("/","mypdf.pdf","application/pdf", 1024, 100);
