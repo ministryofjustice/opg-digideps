@@ -162,7 +162,7 @@ class DocumentControllerTest extends AbstractTestController
     {
         $url = sprintf('/document/%s', self::$document->getId());
 
-        $syncTime = (new DateTime())->format(DateTime::ATOM);
+        $syncTime = new DateTime();
 
         $response = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -172,7 +172,7 @@ class DocumentControllerTest extends AbstractTestController
 
         self::assertEquals(self::$document->getId(), $response['data']['id']);
         self::assertEquals(Document::SYNC_STATUS_SUCCESS, $response['data']['synchronisation_status']);
-        self::assertEqualsWithDelta($syncTime, $response['data']['synchronisation_time'], 5);
+        self::assertEqualsWithDelta($syncTime->getTimeStamp(), (new Datetime($response['data']['synchronisation_time']))->getTimestamp(), 5);
     }
 
     /**
