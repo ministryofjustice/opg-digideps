@@ -4,13 +4,9 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Client;
-use AppBundle\Entity\CourtOrder;
-use AppBundle\Entity\CourtOrderDeputy;
 use AppBundle\Entity\NamedDeputy;
 use AppBundle\Entity\Organisation;
-use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Repository\ClientRepository;
-use AppBundle\Entity\Repository\CourtOrderRepository;
 use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\Entity\Repository\TeamRepository;
@@ -19,11 +15,8 @@ use AppBundle\Entity\Repository\NamedDeputyRepository;
 use AppBundle\Entity\User;
 use AppBundle\Factory\NamedDeputyFactory;
 use AppBundle\Factory\OrganisationFactory;
-use AppBundle\v2\Assembler\CourtOrderDeputy\OrgCsvToCourtOrderDeputyDtoAssembler;
 use AppBundle\v2\Assembler\CourtOrder\OrgCsvToCourtOrderDtoAssembler;
-use AppBundle\v2\DTO\CourtOrderDeputyDto;
-use AppBundle\v2\Factory\CourtOrderDeputyFactory;
-use AppBundle\v2\Factory\CourtOrderFactory;
+use AppBundle\v2\Assembler\CourtOrderDeputy\OrgCsvToCourtOrderDeputyDtoAssembler;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
@@ -112,20 +105,14 @@ class OrgService
      */
     private $log;
 
-    /** @var CourtOrderRepository */
-    private $courtOrderRepository;
-
     /** @var OrgCsvToCourtOrderDtoAssembler */
     private $courtOrderAssembler;
 
     /** @var OrgCsvToCourtOrderDeputyDtoAssembler */
     private $courtOrderDeputyAssembler;
 
-    /** @var CourtOrderFactory */
-    private $courtOrderFactory;
-
-    /** @var CourtOrderDeputyFactory */
-    private $courtOrderDeputyFactory;
+    /** @var CourtOrderCreator */
+    private $courtOrderCreator;
 
     /**
      * @param EntityManagerInterface $em
@@ -138,11 +125,9 @@ class OrgService
      * @param NamedDeputyRepository $namedDeputyRepository
      * @param OrganisationFactory $orgFactory
      * @param NamedDeputyFactory $namedDeputyFactory
-     * @param CourtOrderRepository $courtOrderRepository
      * @param OrgCsvToCourtOrderDtoAssembler $courtOrderAssembler
      * @param OrgCsvToCourtOrderDeputyDtoAssembler $courtOrderDeputyAssembler
-     * @param CourtOrderFactory $courtOrderFactory
-     * @param CourtOrderDeputyFactory $courtOrderDeputyFactory
+     * @param CourtOrderCreator $courtOrderCreator
      */
     public function __construct(
         EntityManagerInterface $em,
@@ -155,11 +140,9 @@ class OrgService
         NamedDeputyRepository $namedDeputyRepository,
         OrganisationFactory $orgFactory,
         NamedDeputyFactory $namedDeputyFactory,
-        CourtOrderRepository $courtOrderRepository,
         OrgCsvToCourtOrderDtoAssembler $courtOrderAssembler,
         OrgCsvToCourtOrderDeputyDtoAssembler $courtOrderDeputyAssembler,
-        CourtOrderFactory $courtOrderFactory,
-        CourtOrderDeputyFactory $courtOrderDeputyFactory
+        CourtOrderCreator $courtOrderCreator
     ) {
         $this->em = $em;
         $this->logger = $logger;
@@ -172,11 +155,9 @@ class OrgService
         $this->orgFactory = $orgFactory;
         $this->namedDeputyFactory = $namedDeputyFactory;
         $this->log = [];
-        $this->courtOrderRepository = $courtOrderRepository;
         $this->courtOrderAssembler = $courtOrderAssembler;
         $this->courtOrderDeputyAssembler = $courtOrderDeputyAssembler;
-        $this->courtOrderFactory = $courtOrderFactory;
-        $this->courtOrderDeputyFactory = $courtOrderDeputyFactory;
+        $this->courtOrderCreator = $courtOrderCreator;
     }
 
     /**
@@ -231,7 +212,9 @@ class OrgService
                 if ($client instanceof Client) {
                     $report = $this->upsertReportFromCsv($row, $client);
 
-                    $this->upsertCourtOrderFromCsv($row, $client, $report);
+                    $orderDto = $this->courtOrderAssembler->assemble($row);
+                    $deputyDto = $this->courtOrderDeputyAssembler->assemble($row);
+                    $this->courtOrderCreator->upsertCourtOrder($orderDto, $deputyDto, $report, $this->currentOrganisation);
                 } else {
                     throw new \RuntimeException('Client could not be identified or created');
                 }
@@ -441,51 +424,6 @@ class OrgService
         return $report;
     }
 
-    private function courtOrderHasLayDeputy(CourtOrder $courtOrder): bool
-    {
-        foreach ($courtOrder->getDeputies() as $deputy) {
-            if (!is_null($deputy->getUser())) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private function upsertCourtOrderFromCsv(array $row, Client $client, Report $report): CourtOrder
-    {
-        $courtOrderType = strtolower($row['Corref']) === 'hw' ? CourtOrder::SUBTYPE_HW : CourtOrder::SUBTYPE_PFA;
-        $courtOrder = $this->getCourtOrder($client, $courtOrderType);
-
-        if (is_null($courtOrder)) {
-            return $this->createCourtOrder($row, $client, $report);
-        }
-
-        if ($this->courtOrderHasLayDeputy($courtOrder)) {
-            throw new \RuntimeException('Case number already used by lay deputy');
-        }
-
-        if (count($courtOrder->getDeputies()) > 1) {
-            throw new \RuntimeException('Court order has multiple organisations attached');
-        }
-
-        $deputy = $courtOrder->getDeputies()[0];
-        $deputyDto = $this->courtOrderDeputyAssembler->assemble($row);
-
-        // Deputy has changed, so generate a new court order
-        if ($deputy->getDeputyNumber() !== $deputyDto->getDeputyNumber()) {
-            $this->em->remove($courtOrder);
-            $this->em->flush();
-
-            return $this->createCourtOrder($row, $client, $report);
-        }
-
-        $this->updateCourtOrderDeputy($deputy, $deputyDto, $this->currentOrganisation);
-        $this->em->flush();
-
-        return $courtOrder;
-    }
-
     /**
      * @param User $userCreator
      * @param string $id
@@ -644,64 +582,5 @@ class OrgService
         $this->added['discharged_clients'][] = $client->getCaseNumber();
         $this->em->remove($client);
         $this->em->flush();
-    }
-
-    /**
-     * @param Client|null $client
-     * @param string $courtOrderType
-     * @return CourtOrder
-     */
-    private function getCourtOrder(?Client $client, string $courtOrderType): ?CourtOrder
-    {
-        $courtOrder = $this
-            ->courtOrderRepository
-            ->findOneBy([
-                'caseNumber' => $client->getCaseNumber(),
-                'type' => $courtOrderType
-            ]);
-
-        return $courtOrder;
-    }
-
-    /**
-     * @param array $row
-     * @param Client $client
-     * @param Report $report
-     */
-    private function createCourtOrder(array $row, Client $client, Report $report): CourtOrder
-    {
-        $courtOrderDto = $this->courtOrderAssembler->assemble($row);
-        $courtOrder = $this->courtOrderFactory->create($courtOrderDto, $client, $report);
-
-        $courtOrderDeputyDto = $this->courtOrderDeputyAssembler->assemble($row);
-        $deputy = $this->courtOrderDeputyFactory->create($courtOrderDeputyDto, $courtOrder);
-        $deputy->setOrganisation($this->currentOrganisation);
-
-        $this->em->persist($courtOrder);
-        $this->em->flush();
-
-        return $courtOrder;
-    }
-
-    private function updateCourtOrderDeputy(CourtOrderDeputy $deputy, CourtOrderDeputyDto $deputyDto, Organisation $organisation = null): void
-    {
-        $deputy
-            ->setFirstname($deputyDto->getFirstname())
-            ->setSurname($deputyDto->getSurname())
-            ->setEmail($deputyDto->getEmail());
-
-        $addressDto = $deputyDto->getAddress();
-        $deputy->getAddresses()[0]
-            ->setAddressLine1($addressDto->getAddressLine1())
-            ->setAddressLine2($addressDto->getAddressLine2())
-            ->setAddressLine3($addressDto->getAddressLine3())
-            ->setTown($addressDto->getTown())
-            ->setCounty($addressDto->getCounty())
-            ->setPostcode($addressDto->getPostcode())
-            ->setCountry($addressDto->getCountry());
-
-        if (!is_null($organisation)) {
-            $deputy->setOrganisation($organisation);
-        }
     }
 }
