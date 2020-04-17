@@ -8,43 +8,28 @@
     '%client%': report.client.firstname | e
 } %}
 {% set reportStatus = report.status %}
-{# TODO REPLACE those two using report.hasSection() #}
+
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ report.period }} {{ 'report.header.report' | trans({}, 'report-common') }}{% endblock %}
-{% block supportTitleBottom %}{{ report.client.fullname }}{% endblock %}
+
+{% block supportTitleTop %}{{ report.client.fullname }}{% endblock %}
+{% block pageTitle %}{{ report.period }} {{ 'reportOverviewTitle' | trans() }}{% endblock %}
 
 {% block breadcrumbs %}{{ macros.homepage }}{% endblock %}
 
 {% block pageContent %}
+    <div class="govuk-grid-row push--bottom">
+        <div class="govuk-grid-column-two-thirds">
+            {{ macros.reportDetails(report) }}
+        </div>
+    </div>
+
     {% block pageHeader %}
         {% include 'AppBundle:Report/Report:_header.html.twig' %}
     {% endblock %}
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-half">
-            <ul>
-                <li>{{ 'reportingPeriod' | trans() }}:
-                    <strong>{{ report.startDate | date("j F Y") }} to {{ report.endDate | date("j F Y") }}</strong>
-                </li>
-                <li class="{{ report.unSubmitDate ? 'orangeWarning' : '' }}">{{ 'dueDate' | trans() }}:
-                    <strong>{{ report.dueDate | date("j F Y") }}</strong>
-                </li>
-                <li>Report status:
-                    <strong>{{ ('status.' ~ reportStatus.status) | trans() }}</strong>
-                </li>
-            </ul>
-        </div>
-    </div>
-
     {% if not report.isDue or report.isDue and not reportStatus.isReadyToSubmit %}
         <div class="push--top">
             {{ macros.notification('info', 'guidanceNotice' | trans(transOptions)) }}
-        </div>
-    {% endif %}
-
-    {% if report.unSubmitDate %}
-        <div class="push--top">
-            {{ macros.notification('important', 'incompleteNotice' | trans) }}
         </div>
     {% endif %}
 
@@ -290,31 +275,57 @@
     </ul>
 
     {% if not report.isDue %}
-
         <div class="push--top">
             {% set endDate = report.getEndDate() | date("j F Y")  %}
             {% set transOptions = {'%date%': endDate} %}
 
             {{ macros.notification('info', 'previewNoticeNotDue' | trans(transOptions)) }}
         </div>
-        <a id="edit-report-preview" class="button behat-link-edit-report-preview" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a>
-
     {% else %}
-        {% if not reportStatus.isReadyToSubmit %}
+        <div class="js-only">
+            {% if report.isUnsubmitted %}
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <div class="govuk-checkboxes">
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" name="confirmReview" type="checkbox" data-module="opg-button-toggler">
+                                <label class="govuk-label govuk-checkboxes__label" for="confirmReview">
+                                    {{ 'confirmSectionsReviewed' | trans() }}
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            {% endif %}
+            <a id="{{ report.status.isReadyToSubmit ? 'edit-report-review' : 'edit-report-preview' }}"
+               class="push--top behat-link-edit-report-review"
+               href="{{ path('report_review', {'reportId': report.id}) }}"
+            >
+                <button
+                    class="govuk-button {{ report.isUnsubmitted ? 'govuk-button--disabled' : '' }}"
+                    aria-disabled="{{ report.isUnsubmitted ? 'true' : 'false' }}"
+                    {% if report.isUnsubmitted %}
+                        disabled="disabled"
+                    {% endif %}
+                    data-module="opg-toggleable-button"
+                >
+                    {{ 'options.previewReport' | trans() }}
+                </button>
+            </a>
+        </div>
 
-            <div class="push--top">
-                {{ macros.notification('info', 'previewNotice' | trans()) }}
-            </div>
-            <a id="edit-report-preview" class="govuk-button behat-link-edit-report-preview" href="{{ path('report_review', {'reportId': report.id}) }}" data-module="govuk-button">{{ 'options.previewReport' | trans() }}</a>
+        {# Fallback for JS disabled browsers #}
+        <div class="js-hidden">
+            <a id="{{ report.status.isReadyToSubmit ? 'edit-report-review' : 'edit-report-preview' }}"
+               class="push--top behat-link-edit-report-review"
+               href="{{ path('report_review', {'reportId': report.id}) }}"
+            >
+                <button class="govuk-button">
+                    {{ 'options.previewReport' | trans() }}
+                </button>
+            </a>
+        </div>
 
-        {% else %}
-
-            <a id="edit-report-review" class="govuk-button push--top behat-link-edit-report-review" href="{{ path('report_review', {'reportId': report.id}) }}" data-module="govuk-button">{{ 'continue' | trans({}, 'common') }}</a>
-
-        {% endif %}
 
     {% endif %}
-
-
-
 {% endblock %}

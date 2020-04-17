@@ -1,4 +1,5 @@
 /* globals $ */
+import { ButtonToggler } from './modules/buttonToggler.js'
 require('../scss/application.scss')
 require('./modules/bind.js')
 
@@ -24,7 +25,7 @@ var uploadProgress = require('./modules/uploadProgress.js')
  * Taken from govuk-frontend. Supports back to IE8
  * See: https://github.com/alphagov/govuk-frontend/blob/063cd8e2470b62b824c6e50ca66342ac7a95d2d8/src/govuk/common.js#L6
  */
-function nodeListForEach (nodes, callback) {
+export function nodeListForEach (nodes, callback) {
   if (window.NodeList.prototype.forEach) {
     return nodes.forEach(callback)
   }
@@ -86,6 +87,14 @@ $(document).ready(function () {
   // Initialising the Show Hide Content GOVUK module
   var showHideContent = new ShowHideContent()
   showHideContent.init()
+
+  const $togglers = document.querySelectorAll('[data-module="opg-button-toggler"]')
+
+  if ($togglers !== null) {
+    nodeListForEach($togglers, function ($el) {
+      new ButtonToggler().init($el)
+    })
+  }
 })
 
 GOVUKFrontend.initAll()
