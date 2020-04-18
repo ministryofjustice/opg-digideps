@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form\Admin;
 
+use AppBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,14 +20,28 @@ class EditUserType extends AbstractType
             ->add('addressPostcode', FormTypes\TextType::class)
             ->add('save', FormTypes\SubmitType::class);
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+        $listener = $this->getEventListener($options['user']);
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, $listener);
+    }
+
+    /**
+     * @param User $operatingUser
+     * @return \Closure
+     */
+    private function getEventListener(User $operatingUser): \Closure
+    {
+        return function (FormEvent $event) use ($operatingUser) {
             $user = $event->getData();
             $form = $event->getForm();
 
             if ($user->isLayDeputy()) {
                 $form->add('ndrEnabled', FormTypes\CheckboxType::class);
             }
-        });
+
+            if ($operatingUser->getRoleName() === User::ROLE_SUPER_ADMIN) {
+                $form->add('email', FormTypes\EmailType::class);
+            }
+        };
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -34,7 +49,7 @@ class EditUserType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'admin',
             'validation_groups' => ['admin_add_user'],
-        ]);
+        ])->setRequired(['user']);
     }
 
     public function getBlockPrefix()

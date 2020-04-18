@@ -159,7 +159,7 @@ class IndexController extends AbstractController
             ]);
         }
 
-        $form = $this->createForm(FormDir\Admin\EditUserType::class, $user);
+        $form = $this->createForm(FormDir\Admin\EditUserType::class, $user, ['user' => $this->getUser()]);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

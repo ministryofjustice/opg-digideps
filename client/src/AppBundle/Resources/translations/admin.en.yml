@@ -33,6 +33,9 @@ addUserForm:
   email:
     label: Email
     hint: 'An activation email will be sent to the provided email address'
+  emailEdit:
+    label: Email
+    hint: ""
   firstname:
     label: First name
     hint: ""
