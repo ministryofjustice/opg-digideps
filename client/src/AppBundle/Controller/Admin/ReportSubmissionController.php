@@ -184,7 +184,7 @@ class ReportSubmissionController extends AbstractController
         $checkedBoxes = array_keys($request->request->get('checkboxes'));
         $action = strtolower($request->request->get('multiAction'));
 
-        if (in_array($action, [self::ACTION_DOWNLOAD,self::ACTION_ARCHIVE])) {
+        if (in_array($action, [self::ACTION_DOWNLOAD, self::ACTION_ARCHIVE, self::ACTION_SYNCHRONISE])) {
             $totalChecked = count($checkedBoxes);
 
             switch ($action) {
@@ -214,6 +214,11 @@ class ReportSubmissionController extends AbstractController
                     } catch (Throwable $e) {
                         $this->addFlash('error', 'There was an error downloading the requested documents: ' . $e->getMessage());
                         return $this->redirectToRoute('admin_documents');
+                    }
+
+                case self::ACTION_SYNCHRONISE:
+                    foreach ($checkedBoxes as $reportSubmissionId) {
+                        $this->getRestClient()->put("report-submission/{$reportSubmissionId}/queue-documents", []);
                     }
             }
         }

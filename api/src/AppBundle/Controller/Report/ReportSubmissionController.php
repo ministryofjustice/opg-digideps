@@ -4,10 +4,11 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Report\Document;
+use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -15,6 +16,12 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ReportSubmissionController extends RestController
 {
+    const QUEUEABLE_STATUSES = [
+        null,
+        Document::SYNC_STATUS_TEMPORARY_ERROR,
+        Document::SYNC_STATUS_PERMANENT_ERROR
+    ];
+
     private static $jmsGroups = [
         'report-submission',
         'report-type',
@@ -134,6 +141,30 @@ class ReportSubmissionController extends RestController
         $reportSubmission->setDownloadable(false);
         foreach ($reportSubmission->getDocuments() as $document) {
             $document->setStorageReference(null);
+        }
+
+        $this->getEntityManager()->flush();
+
+        return true;
+    }
+
+    /**
+     * Queue submission documents which have been synced yet
+     *
+     * @Route("/{id}/queue-documents", requirements={"id":"\d+"}, methods={"PUT"})
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function queueDocuments($id)
+    {
+        /** @var ReportSubmission $reportSubmission */
+        $reportSubmission = $this->getRepository(ReportSubmission::class)->find($id);
+
+        foreach ($reportSubmission->getDocuments() as $document) {
+            if (in_array($document->getSynchronisationStatus(), self::QUEUEABLE_STATUSES)) {
+                $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
+                $document->setSynchronisationError(null);
+                $document->setSynchronisedBy($this->getUser());
+            }
         }
 
         $this->getEntityManager()->flush();
