@@ -72,14 +72,14 @@ class User implements AdvancedUserInterface, DeputyInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full", "user_details_basic", "user_details_org", "org_team_add",
-     *     "admin_add_user", "ad_add_user"})
+     *     "admin_add_user", "ad_add_user", "admin_edit_user"})
      * @Assert\NotBlank( message="user.firstname.notBlankOtherUser",
      *     groups={"org_team_add", "user_details_org", "admin_add_user", "ad_add_user", "user_details_basic", "codeputy",
-     *     "user_details_full", "verify-codeputy"
+     *     "user_details_full", "verify-codeputy", "admin_edit_user"
      * } )
      * @Assert\Length(min=2, max=50, minMessage="user.firstname.minLength", maxMessage="user.firstname.maxLength",
      *     groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_org",
-     *             "org_team_add", "verify-codeputy"} )
+     *             "org_team_add", "verify-codeputy", "admin_edit_user"} )
      *
      * @var string
      */
@@ -87,12 +87,12 @@ class User implements AdvancedUserInterface, DeputyInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"user_details_full", "user_details_basic", "user_details_org", "org_team_add", "admin_add_user", "ad_add_user"})
+     * @JMS\Groups({"user_details_full", "user_details_basic", "user_details_org", "org_team_add", "admin_add_user", "ad_add_user", "admin_edit_user"})
      * @Assert\NotBlank(message="user.lastname.notBlankOtherUser",
      *     groups={"admin_add_user","ad_add_user","user_details_basic","user_details_full","org_team_add",
-     *     "user_details_org", "verify-codeputy"
+     *     "user_details_org", "verify-codeputy", "admin_edit_user"
      * } )
-     * @Assert\Length(min=2, max=50, minMessage="user.lastname.minLength", maxMessage="user.lastname.maxLength", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_org", "verify-codeputy"} )
+     * @Assert\Length(min=2, max=50, minMessage="user.lastname.minLength", maxMessage="user.lastname.maxLength", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_org", "verify-codeputy", "admin_edit_user"} )
      *
      * @var string
      */
@@ -100,10 +100,10 @@ class User implements AdvancedUserInterface, DeputyInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"admin_add_user", "ad_add_user", "org_team_add", "user_details_full", "user_details_org", "codeputy"})
-     * @Assert\NotBlank( message="user.email.notBlank", groups={"admin_add_user", "user_details_full", "user_details_org", "org_team_add", "password_reset", "codeputy_invite", "verify-codeputy"} )
-     * @Assert\Email( message="user.email.invalid", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_org", "org_team_add", "codeputy_invite", "verify-codeputy"}, checkMX=false, checkHost=false )
-     * @Assert\Length( max=60, maxMessage="user.email.maxLength", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_org", "org_team_add", "codeputy_invite", "verify-codeputy"} )
+     * @JMS\Groups({"ad_add_user", "org_team_add", "user_details_full", "user_details_org", "codeputy", "admin_edit_user"})
+     * @Assert\NotBlank( message="user.email.notBlank", groups={"user_details_full", "user_details_org", "org_team_add", "password_reset", "codeputy_invite", "verify-codeputy", "admin_edit_user"} )
+     * @Assert\Email( message="user.email.invalid", groups={"password_reset", "user_details_full", "user_details_org", "org_team_add", "codeputy_invite", "verify-codeputy", "admin_edit_user"}, checkMX=false, checkHost=false )
+     * @Assert\Length( max=60, maxMessage="user.email.maxLength", groups={"password_reset", "user_details_full", "user_details_org", "org_team_add", "codeputy_invite", "verify-codeputy", "admin_edit_user"} )
      * @EmailSameDomain( message="user.email.invalidDomain", groups={"email_same_domain"})
      *
      * @var string
@@ -214,9 +214,9 @@ class User implements AdvancedUserInterface, DeputyInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"user_details_full", "profile_org", "admin_add_user", "ad_add_user"})
-     * @Assert\NotBlank( message="user.addressPostcode.notBlank", groups={"user_details_full", "verify-codeputy", "admin_add_user"} )
-     * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength", groups={"user_details_full", "profile_org", "verify-codeputy"} )
+     * @JMS\Groups({"user_details_full", "profile_org", "admin_add_user", "ad_add_user", "admin_edit_user"})
+     * @Assert\NotBlank( message="user.addressPostcode.notBlank", groups={"user_details_full", "verify-codeputy", "admin_edit_user"} )
+     * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength", groups={"user_details_full", "profile_org", "verify-codeputy", "admin_edit_user"} )
      *
      * @var string
      */
@@ -267,7 +267,7 @@ class User implements AdvancedUserInterface, DeputyInterface
 
     /**
      * @JMS\Type("boolean")
-     * @JMS\Groups({"admin_add_user", "ad_add_user"})
+     * @JMS\Groups({"admin_add_user", "ad_add_user", "admin_edit_user"})
      *
      * @var bool
      */

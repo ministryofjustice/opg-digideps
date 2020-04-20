@@ -48,7 +48,7 @@ class EditUserType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'admin',
-            'validation_groups' => ['admin_add_user'],
+            'validation_groups' => ['admin_edit_user'],
         ])->setRequired(['user']);
     }
 

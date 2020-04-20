@@ -166,7 +166,7 @@ class IndexController extends AbstractController
             $updateUser = $form->getData();
 
             try {
-                $this->getRestClient()->put('user/' . $user->getId(), $updateUser, ['admin_add_user']);
+                $this->getRestClient()->put('user/' . $user->getId(), $updateUser, ['admin_edit_user']);
 
                 $this->addFlash('notice', 'Your changes were saved');
 
