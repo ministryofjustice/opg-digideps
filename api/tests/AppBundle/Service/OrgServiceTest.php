@@ -3,7 +3,6 @@
 namespace Tests\AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
-use AppBundle\Entity\Repository\CourtOrderRepository;
 use AppBundle\Factory\NamedDeputyFactory;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Repository\ClientRepository;
@@ -13,11 +12,12 @@ use AppBundle\Entity\Repository\TeamRepository;
 use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\Repository\NamedDeputyRepository;
 use AppBundle\Factory\OrganisationFactory;
+use AppBundle\Service\CourtOrderCreator;
 use AppBundle\Service\OrgService;
 use AppBundle\v2\Assembler\CourtOrder\OrgCsvToCourtOrderDtoAssembler;
 use AppBundle\v2\Assembler\CourtOrderDeputy\OrgCsvToCourtOrderDeputyDtoAssembler;
-use AppBundle\v2\Factory\CourtOrderDeputyFactory;
-use AppBundle\v2\Factory\CourtOrderFactory;
+use AppBundle\v2\DTO\CourtOrderDeputyDto;
+use AppBundle\v2\DTO\CourtOrderDto;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Mockery as m;
@@ -170,20 +170,14 @@ class OrgServiceTest extends WebTestCase
      */
     private $teamRepository;
 
-    /** @var CourtOrderRepository */
-    private $courtOrderRepository;
-
     /** @var OrgCsvToCourtOrderDtoAssembler */
     private $courtOrderAssembler;
 
     /** @var OrgCsvToCourtOrderDeputyDtoAssembler */
     private $courtOrderDeputyAssembler;
 
-    /** @var CourtOrderFactory */
-    private $courtOrderfactory;
-
-    /** @var CourtOrderDeputyFactory */
-    private $courtOrderDeputyFactory;
+    /** @var CourtOrderCreator|ObjectProphecy */
+    private $courtOrderCreator;
 
     public static function setUpBeforeClass(): void
     {
@@ -209,11 +203,16 @@ class OrgServiceTest extends WebTestCase
         $this->organisationRepository = $container->get('AppBundle\Entity\Repository\OrganisationRepository');
         $this->teamRepository = $container->get('AppBundle\Entity\Repository\TeamRepository');
         $this->namedDeputyRepository = $container->get('AppBundle\Entity\Repository\NamedDeputyRepository');
-        $this->courtOrderRepository = $container->get('AppBundle\Entity\Repository\CourtOrderRepository');
         $this->courtOrderAssembler = $container->get('AppBundle\v2\Assembler\CourtOrder\OrgCsvToCourtOrderDtoAssembler');
         $this->courtOrderDeputyAssembler = $container->get('AppBundle\v2\Assembler\CourtOrderDeputy\OrgCsvToCourtOrderDeputyDtoAssembler');
-        $this->courtOrderfactory = $container->get('AppBundle\v2\Factory\CourtOrderFactory');
-        $this->courtOrderDeputyFactory = $container->get('AppBundle\v2\Factory\CourtOrderDeputyFactory');
+
+        $this->courtOrderCreator = self::prophesize(CourtOrderCreator::class);
+        $this->courtOrderCreator
+            ->upsertCourtOrder(Argument::type(CourtOrderDto::class), Argument::type(EntityDir\Report\Report::class))
+            ->willReturn(new EntityDir\CourtOrder());
+        $this->courtOrderCreator
+            ->upsertCourtOrderDeputy(Argument::type(CourtOrderDeputyDto::class), Argument::type(EntityDir\CourtOrder::class), Argument::type(EntityDir\Organisation::class))
+            ->willReturn(new EntityDir\CourtOrderDeputy());
 
         $this->pa = new OrgService(self::$em,
             $this->logger,
@@ -225,11 +224,9 @@ class OrgServiceTest extends WebTestCase
             $this->namedDeputyRepository,
             new OrganisationFactory([]),
             new NamedDeputyFactory(),
-            $this->courtOrderRepository,
             $this->courtOrderAssembler,
             $this->courtOrderDeputyAssembler,
-            $this->courtOrderfactory,
-            $this->courtOrderDeputyFactory
+            $this->courtOrderCreator->reveal()
         );
 
         Fixtures::deleteReportsData(['dd_user', 'client']);
@@ -599,11 +596,9 @@ class OrgServiceTest extends WebTestCase
             $namedDeputyRepository->reveal(),
             $orgFactory->reveal(),
             $namedDeputyFactory->reveal(),
-            $this->courtOrderRepository,
             $this->courtOrderAssembler,
             $this->courtOrderDeputyAssembler,
-            $this->courtOrderfactory,
-            $this->courtOrderDeputyFactory
+            $this->courtOrderCreator->reveal()
         );
 
         $sut->addFromCasrecRows([$row]);
@@ -637,7 +632,6 @@ class OrgServiceTest extends WebTestCase
         /** @var EntityDir\Report\Report&ObjectProphecy $report */
         $report = $this->prophesize(EntityDir\Report\Report::class);
         $report->getType()->shouldBeCalled()->willReturn('102-5');
-        $report->setCourtOrder(Argument::type(EntityDir\CourtOrder::class))->shouldBeCalled();
 
         /** @var EntityDir\Client&ObjectProphecy $client */
         $client = $this->prophesize(EntityDir\Client::class);
@@ -648,8 +642,6 @@ class OrgServiceTest extends WebTestCase
         $client->setNamedDeputy(Argument::any())->shouldBeCalled();
         $client->setOrganisation(Argument::any())->shouldBeCalled();
         $client->setCourtDate(Argument::any())->shouldBeCalled();
-        $client->getCaseNumber(Argument::any())->shouldBeCalled();
-
 
         // Ensure no client data is updated
         $client->setCaseNumber(Argument::any())->shouldNotBeCalled();
@@ -674,11 +666,9 @@ class OrgServiceTest extends WebTestCase
             $this->namedDeputyRepository,
             new OrganisationFactory([]),
             new NamedDeputyFactory(),
-            $this->courtOrderRepository,
             $this->courtOrderAssembler,
             $this->courtOrderDeputyAssembler,
-            $this->courtOrderfactory,
-            $this->courtOrderDeputyFactory
+            $this->courtOrderCreator->reveal()
         );
 
         $output = $sut->addFromCasrecRows([ $row ]);
@@ -720,11 +710,9 @@ class OrgServiceTest extends WebTestCase
             $namedDeputyRepository->reveal(),
             new OrganisationFactory([]),
             new NamedDeputyFactory(),
-            $this->courtOrderRepository,
             $this->courtOrderAssembler,
             $this->courtOrderDeputyAssembler,
-            $this->courtOrderfactory,
-            $this->courtOrderDeputyFactory
+            $this->courtOrderCreator->reveal()
         );
 
         $this->assertEquals($namedDeputy, $sut->identifyNamedDeputy(self::$deputy1 + self::$client1));
