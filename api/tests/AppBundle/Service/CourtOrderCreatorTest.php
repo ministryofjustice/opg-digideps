@@ -4,14 +4,14 @@ namespace Tests\AppBundle\Service;
 
 use AppBundle\Entity\Client;
 use AppBundle\Entity\CourtOrder;
-use AppBundle\Entity\CourtOrderAddress;
+use AppBundle\Entity\CourtOrderDeputyAddress;
 use AppBundle\Entity\CourtOrderDeputy;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Repository\CourtOrderRepository;
 use AppBundle\Entity\User;
 use AppBundle\Service\CourtOrderCreator;
-use AppBundle\v2\DTO\CourtOrderAddressDto;
+use AppBundle\v2\DTO\CourtOrderDeputyAddressDto;
 use AppBundle\v2\DTO\CourtOrderDeputyDto;
 use AppBundle\v2\DTO\CourtOrderDto;
 use AppBundle\v2\Factory\CourtOrderDeputyFactory;
@@ -113,7 +113,7 @@ class CourtOrderCreatorTest extends WebTestCase
         $deputy = (new CourtOrderDeputy())
             ->setDeputyNumber($deputyDto->getDeputyNumber())
             ->setFirstname('William')
-            ->addAddress(new CourtOrderAddress());
+            ->addAddress(new CourtOrderDeputyAddress());
 
         $courtOrder = (new CourtOrder())
             ->addDeputy($deputy);
@@ -220,7 +220,7 @@ class CourtOrderCreatorTest extends WebTestCase
 
     private function generateDeputyDto()
     {
-        $address = new CourtOrderAddressDto();
+        $address = new CourtOrderDeputyAddressDto();
 
         return (new CourtOrderDeputyDto())
             ->setDeputyNumber(strval(mt_rand(10000000, 99999999)))

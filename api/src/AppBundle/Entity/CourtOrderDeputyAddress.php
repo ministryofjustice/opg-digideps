@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="court_order_address")
  * @ORM\Entity()
  */
-class CourtOrderAddress
+class CourtOrderDeputyAddress
 {
     /**
      * @var int
@@ -115,56 +115,56 @@ class CourtOrderAddress
         return $this->deputy;
     }
 
-    public function setAddressLine1(?string $addressLine1): CourtOrderAddress
+    public function setAddressLine1(?string $addressLine1): CourtOrderDeputyAddress
     {
         $this->addressLine1 = $addressLine1;
 
         return $this;
     }
 
-    public function setAddressLine2(?string $addressLine2): CourtOrderAddress
+    public function setAddressLine2(?string $addressLine2): CourtOrderDeputyAddress
     {
         $this->addressLine2 = $addressLine2;
 
         return $this;
     }
 
-    public function setAddressLine3(?string $addressLine3): CourtOrderAddress
+    public function setAddressLine3(?string $addressLine3): CourtOrderDeputyAddress
     {
         $this->addressLine3 = $addressLine3;
 
         return $this;
     }
 
-    public function setTown(?string $town): CourtOrderAddress
+    public function setTown(?string $town): CourtOrderDeputyAddress
     {
         $this->town = $town;
 
         return $this;
     }
 
-    public function setCounty(?string $county): CourtOrderAddress
+    public function setCounty(?string $county): CourtOrderDeputyAddress
     {
         $this->county = $county;
 
         return $this;
     }
 
-    public function setPostcode(?string $postcode): CourtOrderAddress
+    public function setPostcode(?string $postcode): CourtOrderDeputyAddress
     {
         $this->postcode = $postcode;
 
         return $this;
     }
 
-    public function setCountry(?string $country): CourtOrderAddress
+    public function setCountry(?string $country): CourtOrderDeputyAddress
     {
         $this->country = $country;
 
         return $this;
     }
 
-    public function setDeputy(CourtOrderDeputy $deputy): CourtOrderAddress
+    public function setDeputy(CourtOrderDeputy $deputy): CourtOrderDeputyAddress
     {
         $this->deputy = $deputy;
 

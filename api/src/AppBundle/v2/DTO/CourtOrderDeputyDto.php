@@ -21,7 +21,7 @@ class CourtOrderDeputyDto
     /** @var DateTime|null */
     private $dob;
 
-    /** @var CourtOrderAddressDto */
+    /** @var CourtOrderDeputyAddressDto */
     private $address;
 
     public function getDeputyNumber(): string
@@ -49,7 +49,7 @@ class CourtOrderDeputyDto
         return $this->dob;
     }
 
-    public function getAddress(): CourtOrderAddressDto
+    public function getAddress(): CourtOrderDeputyAddressDto
     {
         return $this->address;
     }
@@ -89,7 +89,7 @@ class CourtOrderDeputyDto
         return $this;
     }
 
-    public function setAddress(CourtOrderAddressDto $address): CourtOrderDeputyDto
+    public function setAddress(CourtOrderDeputyAddressDto $address): CourtOrderDeputyDto
     {
         $this->address = $address;
 

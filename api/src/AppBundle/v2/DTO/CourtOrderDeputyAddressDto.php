@@ -2,7 +2,7 @@
 
 namespace AppBundle\v2\DTO;
 
-class CourtOrderAddressDto
+class CourtOrderDeputyAddressDto
 {
     /** @var string|null */
     private $addressLine1;
@@ -60,49 +60,49 @@ class CourtOrderAddressDto
         return $this->country;
     }
 
-    public function setAddressLine1(?string $addressLine1): CourtOrderAddressDto
+    public function setAddressLine1(?string $addressLine1): CourtOrderDeputyAddressDto
     {
         $this->addressLine1 = $addressLine1;
 
         return $this;
     }
 
-    public function setAddressLine2(?string $addressLine2): CourtOrderAddressDto
+    public function setAddressLine2(?string $addressLine2): CourtOrderDeputyAddressDto
     {
         $this->addressLine2 = $addressLine2;
 
         return $this;
     }
 
-    public function setAddressLine3(?string $addressLine3): CourtOrderAddressDto
+    public function setAddressLine3(?string $addressLine3): CourtOrderDeputyAddressDto
     {
         $this->addressLine3 = $addressLine3;
 
         return $this;
     }
 
-    public function setTown(?string $town): CourtOrderAddressDto
+    public function setTown(?string $town): CourtOrderDeputyAddressDto
     {
         $this->town = $town;
 
         return $this;
     }
 
-    public function setCounty(?string $county): CourtOrderAddressDto
+    public function setCounty(?string $county): CourtOrderDeputyAddressDto
     {
         $this->county = $county;
 
         return $this;
     }
 
-    public function setPostcode(?string $postcode): CourtOrderAddressDto
+    public function setPostcode(?string $postcode): CourtOrderDeputyAddressDto
     {
         $this->postcode = $postcode;
 
         return $this;
     }
 
-    public function setCountry(?string $country): CourtOrderAddressDto
+    public function setCountry(?string $country): CourtOrderDeputyAddressDto
     {
         $this->country = $country;
 

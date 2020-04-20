@@ -74,8 +74,8 @@ class CourtOrderDeputy
     private $organisation;
 
     /**
-     * @var Collection<int, CourtOrderAddress>
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CourtOrderAddress", mappedBy="deputy", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @var Collection<int, CourtOrderDeputyAddress>
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CourtOrderDeputyAddress", mappedBy="deputy", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $addresses;
 
@@ -130,7 +130,7 @@ class CourtOrderDeputy
     }
 
     /**
-     * @return Collection<int, CourtOrderAddress>
+     * @return Collection<int, CourtOrderDeputyAddress>
      */
     public function getAddresses(): Collection
     {
@@ -193,7 +193,7 @@ class CourtOrderDeputy
         return $this;
     }
 
-    public function addAddress(CourtOrderAddress $address): CourtOrderDeputy
+    public function addAddress(CourtOrderDeputyAddress $address): CourtOrderDeputy
     {
         if (!$this->addresses->contains($address)) {
             $this->addresses->add($address);

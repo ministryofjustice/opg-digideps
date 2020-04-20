@@ -4,7 +4,7 @@ namespace AppBundle\v2\Factory;
 
 use AppBundle\Entity\Client;
 use AppBundle\Entity\CourtOrder;
-use AppBundle\Entity\CourtOrderAddress;
+use AppBundle\Entity\CourtOrderDeputyAddress;
 use AppBundle\Entity\CourtOrderDeputy;
 use AppBundle\Entity\Report\Report;
 use AppBundle\v2\DTO\CourtOrderDeputyDto;
@@ -22,7 +22,7 @@ class CourtOrderDeputyFactory
             ->setEmail($deputyDto->getEmail());
 
         $addressDto = $deputyDto->getAddress();
-        $address = new CourtOrderAddress();
+        $address = new CourtOrderDeputyAddress();
         $address
             ->setAddressLine1($addressDto->getAddressLine1())
             ->setAddressLine2($addressDto->getAddressLine2())

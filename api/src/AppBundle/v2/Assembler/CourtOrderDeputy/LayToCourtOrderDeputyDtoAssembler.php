@@ -4,7 +4,7 @@ namespace AppBundle\v2\Assembler\CourtOrderDeputy;
 
 use AppBundle\Entity\CasRec;
 use AppBundle\Entity\User;
-use AppBundle\v2\DTO\CourtOrderAddressDto;
+use AppBundle\v2\DTO\CourtOrderDeputyAddressDto;
 use AppBundle\v2\DTO\CourtOrderDeputyDto;
 
 class LayToCourtOrderDeputyDtoAssembler
@@ -19,9 +19,9 @@ class LayToCourtOrderDeputyDtoAssembler
             ->setAddress($this->assembleAddress($casRec, $user));
     }
 
-    private function assembleAddress(CasRec $casRec, User $user): CourtOrderAddressDto
+    private function assembleAddress(CasRec $casRec, User $user): CourtOrderDeputyAddressDto
     {
-        return (new CourtOrderAddressDto())
+        return (new CourtOrderDeputyAddressDto())
             ->setAddressLine1($user->getAddress1())
             ->setAddressLine2($user->getAddress2())
             ->setAddressLine3($user->getAddress3())

@@ -3,7 +3,7 @@
 namespace AppBundle\v2\Assembler\CourtOrderDeputy;
 
 use AppBundle\Entity\User;
-use AppBundle\v2\DTO\CourtOrderAddressDto;
+use AppBundle\v2\DTO\CourtOrderDeputyAddressDto;
 use AppBundle\v2\DTO\CourtOrderDeputyDto;
 
 class OrgCsvToCourtOrderDeputyDtoAssembler
@@ -30,9 +30,9 @@ class OrgCsvToCourtOrderDeputyDtoAssembler
             array_key_exists('Dep Surname', $data);
     }
 
-    private function assembleAddress(array $data): CourtOrderAddressDto
+    private function assembleAddress(array $data): CourtOrderDeputyAddressDto
     {
-        return (new CourtOrderAddressDto())
+        return (new CourtOrderDeputyAddressDto())
             ->setAddressLine1($data['Dep Adrs1'])
             ->setAddressLine2($data['Dep Adrs2'])
             ->setAddressLine3($data['Dep Adrs3'])
