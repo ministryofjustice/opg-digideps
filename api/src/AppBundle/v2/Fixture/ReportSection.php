@@ -155,22 +155,6 @@ class ReportSection
         $report->addDocument($supportingDocument);
     }
 
-//    /**
-//     * @param ReportInterface $report
-//     */
-//    private function completeDocumentsWithDocuments(ReportInterface $report): void
-//    {
-//        $report->setWishToProvideDocumentation('yes');
-//
-//        $helper = new DocumentHelpers();
-//
-//        $reportDocument = $helper->generateReportDocument($report->getClient()->getCaseNumber(), $report->getStartDate(), $report->getEndDate());
-//        $supportDocument = $helper->generateSupportingDocument($report->getClient()->getCaseNumber(), $report->getStartDate(), $report->getEndDate());
-//
-//        $report->addDocument($reportDocument);
-//        $report->addDocument($supportDocument);
-//    }
-
     /**
      * @param ReportInterface $report
      */
