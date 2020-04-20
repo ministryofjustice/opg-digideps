@@ -7,7 +7,6 @@ use DigidepsBehat\Common\CourtOrderTrait;
 use DigidepsBehat\Common\LinksTrait;
 use DigidepsBehat\Common\RegionTrait;
 use DigidepsBehat\Common\ReportTrait;
-use DigidepsBehat\UserTrait;
 
 class DocumentSynchronisationFeatureContext extends BaseFeatureContext
 {
@@ -16,5 +15,4 @@ class DocumentSynchronisationFeatureContext extends BaseFeatureContext
     use DocumentSynchronisationTrait;
     use RegionTrait;
     use ReportTrait;
-    use UserTrait;
 }
