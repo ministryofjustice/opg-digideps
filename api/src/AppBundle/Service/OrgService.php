@@ -4,12 +4,9 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Client;
-use AppBundle\Entity\CourtOrder;
 use AppBundle\Entity\NamedDeputy;
 use AppBundle\Entity\Organisation;
-use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Repository\ClientRepository;
-use AppBundle\Entity\Repository\CourtOrderRepository;
 use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\Entity\Repository\TeamRepository;
@@ -19,7 +16,7 @@ use AppBundle\Entity\User;
 use AppBundle\Factory\NamedDeputyFactory;
 use AppBundle\Factory\OrganisationFactory;
 use AppBundle\v2\Assembler\CourtOrder\OrgCsvToCourtOrderDtoAssembler;
-use AppBundle\v2\Factory\CourtOrderFactory;
+use AppBundle\v2\Assembler\CourtOrderDeputy\OrgCsvToCourtOrderDeputyDtoAssembler;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
@@ -108,14 +105,14 @@ class OrgService
      */
     private $log;
 
-    /** @var CourtOrderRepository */
-    private $courtOrderRepository;
-
     /** @var OrgCsvToCourtOrderDtoAssembler */
     private $courtOrderAssembler;
 
-    /** @var CourtOrderFactory */
-    private $courtOrderFactory;
+    /** @var OrgCsvToCourtOrderDeputyDtoAssembler */
+    private $courtOrderDeputyAssembler;
+
+    /** @var CourtOrderCreator */
+    private $courtOrderCreator;
 
     /**
      * @param EntityManagerInterface $em
@@ -128,9 +125,9 @@ class OrgService
      * @param NamedDeputyRepository $namedDeputyRepository
      * @param OrganisationFactory $orgFactory
      * @param NamedDeputyFactory $namedDeputyFactory
-     * @param CourtOrderRepository $courtOrderRepository
      * @param OrgCsvToCourtOrderDtoAssembler $courtOrderAssembler
-     * @param CourtOrderFactory $courtOrderFactory
+     * @param OrgCsvToCourtOrderDeputyDtoAssembler $courtOrderDeputyAssembler
+     * @param CourtOrderCreator $courtOrderCreator
      */
     public function __construct(
         EntityManagerInterface $em,
@@ -143,9 +140,9 @@ class OrgService
         NamedDeputyRepository $namedDeputyRepository,
         OrganisationFactory $orgFactory,
         NamedDeputyFactory $namedDeputyFactory,
-        CourtOrderRepository $courtOrderRepository,
         OrgCsvToCourtOrderDtoAssembler $courtOrderAssembler,
-        CourtOrderFactory $courtOrderFactory
+        OrgCsvToCourtOrderDeputyDtoAssembler $courtOrderDeputyAssembler,
+        CourtOrderCreator $courtOrderCreator
     ) {
         $this->em = $em;
         $this->logger = $logger;
@@ -158,9 +155,9 @@ class OrgService
         $this->orgFactory = $orgFactory;
         $this->namedDeputyFactory = $namedDeputyFactory;
         $this->log = [];
-        $this->courtOrderRepository = $courtOrderRepository;
         $this->courtOrderAssembler = $courtOrderAssembler;
-        $this->courtOrderFactory = $courtOrderFactory;
+        $this->courtOrderDeputyAssembler = $courtOrderDeputyAssembler;
+        $this->courtOrderCreator = $courtOrderCreator;
     }
 
     /**
@@ -215,13 +212,11 @@ class OrgService
                 if ($client instanceof Client) {
                     $report = $this->upsertReportFromCsv($row, $client);
 
-                    $courtOrderType = strtolower($row['Corref']) === 'hw' ? CourtOrder::SUBTYPE_HW : CourtOrder::SUBTYPE_PFA;
+                    $orderDto = $this->courtOrderAssembler->assemble($row);
+                    $courtOrder = $this->courtOrderCreator->upsertCourtOrder($orderDto, $report);
 
-                    if (!$this->courtOrderExists($client, $courtOrderType)) {
-                        $this->createCourtOrder($row, $client, $report);
-                    }
-
-
+                    $deputyDto = $this->courtOrderDeputyAssembler->assemble($row);
+                    $deputy = $this->courtOrderCreator->upsertCourtOrderDeputy($deputyDto, $courtOrder, $this->currentOrganisation);
                 } else {
                     throw new \RuntimeException('Client could not be identified or created');
                 }
@@ -588,37 +583,6 @@ class OrgService
     {
         $this->added['discharged_clients'][] = $client->getCaseNumber();
         $this->em->remove($client);
-        $this->em->flush();
-    }
-
-    /**
-     * @param Client|null $client
-     * @param string $courtOrderType
-     * @return bool
-     */
-    private function courtOrderExists(?Client $client, string $courtOrderType)
-    {
-        $courtOrder = $this
-            ->courtOrderRepository
-            ->findOneBy([
-                'caseNumber' => $client->getCaseNumber(),
-                'type' => $courtOrderType
-            ]);
-
-        return $courtOrder === null ? false : true;
-    }
-
-    /**
-     * @param array $row
-     * @param Client $client
-     * @param Report $report
-     */
-    private function createCourtOrder(array $row, Client $client, Report $report): void
-    {
-        $courtOrderDto = $this->courtOrderAssembler->assemble($row);
-        $courtOrder = $this->courtOrderFactory->create($courtOrderDto, $client, $report);
-
-        $this->em->persist($courtOrder);
         $this->em->flush();
     }
 }

@@ -3,9 +3,9 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Entity\Report\Report;
-use AppBundle\Service\DataNormaliser;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -41,7 +41,7 @@ class CourtOrder
     private $type;
 
     /**
-     * @var string
+     * @var string|null
      * @Assert\Choice({CourtOrder::LEVEL_MINIMAL, CourtOrder::LEVEL_GENERAL})
      * @ORM\Column(name="supervision_level", type="string", nullable=true, length=8)
      */
@@ -67,14 +67,21 @@ class CourtOrder
     private $client;
 
     /**
-     * @var ArrayCollection
+     * @var Collection<int, Report>
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Report", mappedBy="courtOrder")
      */
     private $reports;
 
+    /**
+     * @var Collection<int, CourtOrderDeputy>
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CourtOrderDeputy", mappedBy="courtOrder", cascade={"persist", "remove"}, orphanRemoval=true)
+     */
+    private $deputies;
+
     public function __construct()
     {
         $this->reports = new ArrayCollection();
+        $this->deputies = new ArrayCollection();
     }
 
     /**
@@ -126,11 +133,19 @@ class CourtOrder
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection<int, Report>
      */
     public function getReports(): iterable
     {
         return $this->reports;
+    }
+
+    /**
+     * @return Collection<int, CourtOrderDeputy>
+     */
+    public function getDeputies(): Collection
+    {
+        return $this->deputies;
     }
 
     /**
@@ -175,10 +190,10 @@ class CourtOrder
     }
 
     /**
-     * @param $caseNumber
+     * @param string $caseNumber
      * @return $this
      */
-    public function setCaseNumber($caseNumber): CourtOrder
+    public function setCaseNumber(string $caseNumber): CourtOrder
     {
         $this->caseNumber = $caseNumber;
 
@@ -204,6 +219,33 @@ class CourtOrder
     {
         if (!$this->reports->contains($report)) {
             $this->reports->add($report);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param CourtOrderDeputy $deputy
+     * @return CourtOrder
+     */
+    public function addDeputy(CourtOrderDeputy $deputy): CourtOrder
+    {
+        if (!$this->deputies->contains($deputy)) {
+            $this->deputies->add($deputy);
+            $deputy->setCourtOrder($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param CourtOrderDeputy $deputy
+     * @return CourtOrder
+     */
+    public function removeDeputy(CourtOrderDeputy $deputy): CourtOrder
+    {
+        if ($this->deputies->contains($deputy)) {
+            $this->deputies->removeElement($deputy);
         }
 
         return $this;

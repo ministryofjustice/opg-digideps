@@ -3,6 +3,8 @@
 namespace Tests\AppBundle\Service;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\CourtOrder;
+use AppBundle\Entity\CourtOrderDeputy;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Repository\ClientRepository;
 use AppBundle\Entity\Repository\UserRepository;
@@ -10,6 +12,7 @@ use AppBundle\Entity\User;
 use AppBundle\Model\SelfRegisterData;
 use AppBundle\Service\CasrecVerificationService;
 use AppBundle\Service\UserRegistrationService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Mockery as m;
@@ -325,6 +328,54 @@ class UserRegistrationServiceTest extends TestCase
         $client = m::mock(Client::class)
             ->shouldReceive('hasDeputies')->andReturn(false)
             ->shouldReceive('getOrganisation')->andReturn(new Organisation())
+            ->getMock();
+
+        $clientRepo = m::mock(ClientRepository::class)
+            ->shouldReceive('findOneByCaseNumber')->andReturn($client)
+            ->getMock();
+
+        $userRepo = m::mock(UserRepository::class)
+            ->shouldReceive('findOneByEmail')->andReturn(null)
+            ->getMock();
+
+        $em = m::mock(EntityManager::class)
+            ->shouldReceive('getRepository')->with('AppBundle\Entity\Client')->andReturn($clientRepo)
+            ->shouldReceive('getRepository')->with('AppBundle\Entity\User')->andReturn($userRepo)
+            ->getMock();
+
+        $casrecVerificationService = m::mock(CasrecVerificationService::class)
+            ->shouldReceive('isMultiDeputyCase')->andReturn(false)
+            ->getMock();
+
+        self::expectException(RuntimeException::class);
+        self::expectExceptionMessage('User registration: Case number already used');
+
+        $this->userRegistrationService = new UserRegistrationService($em, $casrecVerificationService);
+        $this->userRegistrationService->selfRegisterUser($data);
+    }
+
+    public function testUserCannotRegisterIfCourtOrderEnacted()
+    {
+        $data = new SelfRegisterData();
+        $data->setFirstname('Zac');
+        $data->setLastname('Tolley');
+        $data->setEmail('zac@thetolleys.com');
+        $data->setClientLastname('Cross-Tolley');
+        $data->setCaseNumber('12341234');
+
+        $courtOrderDeputy = m::mock(CourtOrderDeputy::class)
+            ->shouldReceive('getUser')->andReturn(null)
+            ->shouldReceive('getOrganisation')->andReturn(new Organisation())
+            ->getMock();
+
+        $courtOrder = m::mock(CourtOrder::class)
+            ->shouldReceive('getDeputies')->andReturn(new ArrayCollection([$courtOrderDeputy]))
+            ->getMock();
+
+        $client = m::mock(Client::class)
+            ->shouldReceive('hasDeputies')->andReturn(false)
+            ->shouldReceive('getOrganisation')->andReturn(null)
+            ->shouldReceive('getCourtOrders')->andReturn(new ArrayCollection([$courtOrder]))
             ->getMock();
 
         $clientRepo = m::mock(ClientRepository::class)
