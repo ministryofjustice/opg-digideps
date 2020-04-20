@@ -23,6 +23,7 @@ class ReportSubmissionController extends AbstractController
 {
     const ACTION_DOWNLOAD = 'download';
     const ACTION_ARCHIVE = 'archive';
+    const ACTION_SYNCHRONISE = 'synchronise';
 
     /**
      * @var DocumentDownloader
@@ -75,7 +76,7 @@ class ReportSubmissionController extends AbstractController
         if ($currentFilters['status'] === 'archived') {
             $postActions = [self::ACTION_DOWNLOAD];
         } else {
-            $postActions = [self::ACTION_DOWNLOAD, self::ACTION_ARCHIVE];
+            $postActions = [self::ACTION_DOWNLOAD, self::ACTION_ARCHIVE, self::ACTION_SYNCHRONISE];
         }
 
         return [
