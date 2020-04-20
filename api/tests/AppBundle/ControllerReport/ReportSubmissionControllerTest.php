@@ -312,4 +312,62 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
         $this->assertTrue($testPassed, sprintf('Response does not contain report for case number %s', $caseNumber));
     }
+
+    public function testQueueDocumentsHasSuitablePermissions()
+    {
+        $url = '/report-submission/1/queue-documents';
+
+        // assert Auth
+        $this->assertEndpointNeedsAuth('PUT', $url);
+        $this->assertEndpointAllowedFor('PUT', $url, self::$tokenAdmin);
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenDeputy);
+    }
+
+    public function testQueueDocumentsQueuesValidRecords()
+    {
+        $documents = [
+            ['null.pdf', null, true],
+            ['QUEUED.pdf', Document::SYNC_STATUS_QUEUED, false],
+            ['IN_PROGRESS.pdf', Document::SYNC_STATUS_IN_PROGRESS, false],
+            ['SUCCESS.pdf', Document::SYNC_STATUS_SUCCESS, false],
+            ['TEMPORARY_ERROR.pdf', Document::SYNC_STATUS_TEMPORARY_ERROR, true],
+            ['PERMANENT_ERROR.pdf', Document::SYNC_STATUS_PERMANENT_ERROR, true],
+        ];
+
+        $user = self::fixtures()->createUser();
+        $client = self::fixtures()->createClient($user);
+        $report = self::fixtures()->createReport($client);
+        $reportSubmission = new ReportSubmission($report, $user);
+        self::fixtures()->persist($reportSubmission);
+
+        foreach ($documents as $i => $document) {
+            $record = self::fixtures()->createDocument($report, $document[0]);
+            $record->setReportSubmission($reportSubmission);
+
+            if (!is_null($document[1])) {
+                $record->setSynchronisationStatus($document[1]);
+            }
+        }
+
+        self::fixtures()->flush();
+        self::fixtures()->clear();
+
+        $this->assertJsonRequest('PUT', '/report-submission/' . $reportSubmission->getId() . '/queue-documents', [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenAdmin,
+            'data' => [],
+        ]);
+
+        foreach ($documents as $document) {
+            $record = self::fixtures()->getRepo('Report\Document')->findOneBy(['fileName' => $document[0]]);
+
+            if ($document[2]) {
+                self::assertEquals(Document::SYNC_STATUS_QUEUED, $record->getSynchronisationStatus());
+                self::assertEquals('admin@example.org', $record->getSynchronisedBy()->getEmail());
+            } else {
+                self::assertEquals($document[1], $record->getSynchronisationStatus());
+                self::assertEquals(null, $record->getSynchronisedBy());
+            }
+        }
+    }
 }
