@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Report\Document;
 use AppBundle\Service\ReportService;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -52,6 +53,11 @@ class NdrController extends RestController
         if (empty($documentId)) {
             throw new \InvalidArgumentException('documentId must be specified');
         }
+
+        /** @var Document $reportPdf */
+        $reportPdf = $this->getEntityManager()->getRepository(EntityDir\Report\Document::class)->find($documentId);
+        $reportPdf->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
+        $this->getEntityManager()->flush($reportPdf);
 
         $ndr->setAgreedBehalfDeputy($data['agreed_behalf_deputy']);
 

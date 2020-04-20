@@ -97,6 +97,12 @@ default:
             contexts:
                 - DigidepsBehat\UserManagement\UserManagementFeatureContext
 
+        document-synchronisation:
+            description: Coverage of document synchronisation features
+            paths: [ "%paths.base%/features/v2/DocumentSynchronisation" ]
+            contexts:
+                - DigidepsBehat\DocumentSynchronisation\DocumentSynchronisationFeatureContext
+
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
               goutte:
