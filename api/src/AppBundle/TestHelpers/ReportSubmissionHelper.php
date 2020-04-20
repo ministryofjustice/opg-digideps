@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 
-namespace Tests\TestHelpers;
+namespace AppBundle\TestHelpers;
 
 
 use AppBundle\Entity\Client;
