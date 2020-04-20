@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Admin;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Service\DocumentDownloader;
+use AppBundle\Service\FeatureFlagService;
 use AppBundle\Service\File\Storage\S3Storage;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -54,7 +55,7 @@ class ReportSubmissionController extends AbstractController
      *
      * @return array<mixed>|Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, FeatureFlagService $featureFlagService)
     {
         if ($request->isMethod('POST')) {
             $ret = $this->processPost($request);
@@ -76,7 +77,11 @@ class ReportSubmissionController extends AbstractController
         if ($currentFilters['status'] === 'archived') {
             $postActions = [self::ACTION_DOWNLOAD];
         } else {
-            $postActions = [self::ACTION_DOWNLOAD, self::ACTION_ARCHIVE, self::ACTION_SYNCHRONISE];
+            $postActions = [self::ACTION_DOWNLOAD, self::ACTION_ARCHIVE];
+        }
+
+        if ($featureFlagService->get(FeatureFlagService::FLAG_DOCUMENT_SYNC) === '1') {
+            $postActions[] = self::ACTION_SYNCHRONISE;
         }
 
         return [
