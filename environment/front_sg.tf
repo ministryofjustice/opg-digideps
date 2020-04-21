@@ -3,6 +3,7 @@ locals {
     ecr  = local.common_sg_rules.ecr
     logs = local.common_sg_rules.logs
     s3   = local.common_sg_rules.s3
+    ssm  = local.common_sg_rules.ssm
     cache = {
       port        = 6379
       type        = "egress"
