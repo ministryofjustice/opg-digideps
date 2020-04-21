@@ -4,7 +4,6 @@
 {% set page = 'editUser' %}
 
 {% set navSection = 'users' %}
-{% set UserClass = 'AppBundle\\Entity\\User' %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
@@ -24,7 +23,7 @@
     {{ form_input(form.firstname,'addUserForm.firstname') }}
     {{ form_input(form.lastname,'addUserForm.lastname') }}
 
-    {% if form.email is defined and app.user.roleName == class_const(UserClass, 'ROLE_SUPER_ADMIN') %}
+    {% if form.email is defined %}
         {{ form_input(form.email,'addUserForm.emailEdit') }}
     {% endif %}
 
