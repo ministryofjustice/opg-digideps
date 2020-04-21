@@ -4,6 +4,7 @@ set -e
 ACCOUNT="997462338508"
 PACT_BROKER_USER="admin"
 PACT_BROKER_URL="pact-broker.api.opg.service.justice.gov.uk"
+API_VERSION="v1"
 
 export SECRETSTRING=$(aws sts assume-role \
 --role-arn "arn:aws:iam::${ACCOUNT}:role/get-pact-secret-production" \
@@ -33,3 +34,4 @@ echo "export PACT_BROKER_BASE_URL=${PACT_BROKER_URL}"
 echo "export PACT_CONSUMER_VERSION=${CONSUMER_VERSION}"
 echo "export PACT_BROKER_HTTP_AUTH_USER=${PACT_BROKER_USER}"
 echo "export PACT_BROKER_HTTP_AUTH_PASS=${PACT_BROKER_PASS}"
+echo "export PACT_API_VERSION=${API_VERSION}"

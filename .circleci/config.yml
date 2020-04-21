@@ -158,6 +158,7 @@ workflows:
           requires: [ apply shared-production ]
           filters: { branches: { only: [ master ] } }
           tf_workspace: production02
+          pact_tag: true
 
       - run-task:
           name: backup production
@@ -246,6 +247,10 @@ jobs:
         description: terraform command
         default: apply
         type: string
+      pact_tag:
+        description: whether to add environment tag to pact broker
+        default: false
+        type: boolean
     environment:
       TF_TIER: << parameters.tf_tier >>
       WORKSPACE: << parameters.tf_workspace >>
@@ -271,6 +276,31 @@ jobs:
       - run:
           name: Stabilize
           command: stabilizer
+      - when:
+          condition: << parameters.pact_tag >>
+          steps:
+            - run:
+                name: set pact environment variables
+                command: ~/project/.circleci/set_env_pact.sh >> $BASH_ENV
+            - run:
+                name: tag pact commit with v<x>_production
+                command: |
+                  echo "applying production tag to pact broker on ${PACT_CONSUMER_VERSION}"
+                  STATUS_CODE=$(curl -I -s -X GET -u "${PACT_BROKER_HTTP_AUTH_USER}":"${PACT_BROKER_HTTP_AUTH_PASS}" \
+                  -H "Content-Type: application/json" \
+                  https://"${PACT_BROKER_BASE_URL}"/pacticipants/Complete%20the%20deputy%20report/versions/"${PACT_CONSUMER_VERSION}" \
+                  | grep "HTTP" | awk '{print $2}')
+
+                  if [ "${STATUS_CODE}" -eq "200" ]
+                  then
+                    STATUS_CODE=$(curl -X PUT -u "${PACT_BROKER_HTTP_AUTH_USER}":"${PACT_BROKER_HTTP_AUTH_PASS}" \
+                    -H "Content-Type: application/json" \
+                    https://"${PACT_BROKER_BASE_URL}"/pacticipants/Complete%20the%20deputy%20report/versions/"${PACT_CONSUMER_VERSION}"/tags/"${PACT_API_VERSION}_production" \
+                    | grep "HTTP" | awk '{print $2}')
+                    echo "Pact tagging completed with status code: ${STATUS_CODE}"
+                  else
+                    echo "version of provider with git commit ${GIT_COMMIT_PROVIDER}, not found"
+                  fi
   build:
     docker:
       - image: circleci/python:2.7
