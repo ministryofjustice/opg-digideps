@@ -11,10 +11,8 @@ Feature: Synchronising Documents with Sirius
       | 34343434 | DeputyC | LAY          | NDR                                        | 2018-01-30 |
       | 45454545 | DeputyD | PROF         | Property and Financial Affairs High Assets | 2018-01-30 |
       | 56565656 | DeputyE | PROF         | Health and Welfare                         | 2018-01-30 |
-      | 67676767 | DeputyF | PROF         | NDR                                        | 2018-01-30 |
-      | 78787878 | DeputyG | PA           | Property and Financial Affairs High Assets | 2018-01-30 |
-      | 89898989 | DeputyH | PA           | Health and Welfare                         | 2018-01-30 |
-      | 99999999 | DeputyI | PA           | NDR                                        | 2018-01-30 |
+      | 67676767 | DeputyF | PA           | Property and Financial Affairs High Assets | 2018-01-30 |
+      | 78787878 | DeputyG | PA           | Health and Welfare                         | 2018-01-30 |
 
   Scenario Outline: Submitting a report sets the synchronisation status to queued
     Given I have the "2018" to "2019" report between "<deputy>" and "<case_number>"
@@ -30,7 +28,5 @@ Feature: Synchronising Documents with Sirius
       | 34343434    | DeputyC |
       | 45454545    | DeputyD |
       | 56565656    | DeputyE |
-      | 67676767    | DeputyF |
+      | 64646464    | DeputyF |
       | 78787878    | DeputyG |
-      | 89898989    | DeputyH |
-      | 99999999    | DeputyI |
