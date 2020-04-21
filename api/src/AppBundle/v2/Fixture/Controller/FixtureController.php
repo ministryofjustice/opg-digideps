@@ -4,6 +4,7 @@ namespace AppBundle\v2\Fixture\Controller;
 
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Ndr\Ndr;
+use AppBundle\Entity\Ndr\NdrRepository;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\NamedDeputy;
 use AppBundle\Entity\Repository\OrganisationRepository;
@@ -40,6 +41,7 @@ class FixtureController
     private $deputyRepository;
     private $orgRepository;
     private $userRepository;
+    private $ndrRepository;
 
     public function __construct(
         EntityManagerInterface $em,
@@ -51,7 +53,8 @@ class FixtureController
         ReportSection $reportSection,
         UserRepository $deputyRepository,
         OrganisationRepository $organisationRepository,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        NdrRepository $ndrRepository
     ) {
         $this->em = $em;
         $this->clientFactory = $clientFactory;
@@ -63,6 +66,7 @@ class FixtureController
         $this->deputyRepository = $deputyRepository;
         $this->orgRepository = $organisationRepository;
         $this->userRepository = $userRepository;
+        $this->ndrRepository = $ndrRepository;
     }
 
     /**
@@ -82,6 +86,8 @@ class FixtureController
         if (null === $deputy = $this->deputyRepository->findOneBy(['email' => strtolower($fromRequest['deputyEmail'])])) {
             $deputy = $this->createDeputy($fromRequest);
         }
+
+        file_put_contents('php://stderr', print_r($fromRequest, TRUE));
 
         if (strtolower($fromRequest['reportType']) === 'ndr') {
             $this->createNdr($fromRequest, $client);
@@ -204,7 +210,7 @@ class FixtureController
     }
 
     /**
-     * @Route("/complete-sections/{reportId}", requirements={"id":"\d+"}, methods={"PUT"})
+     * @Route("/complete-sections/{reportType}/{reportId}", requirements={"id":"\d+"}, methods={"PUT"})
      * @Security("has_role('ROLE_ADMIN')")
      *
      * @param Request $request
@@ -212,9 +218,11 @@ class FixtureController
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      * @throws \Exception
      */
-    public function completeReportSectionsAction(Request $request, $reportId)
+    public function completeReportSectionsAction(Request $request, string $reportType, $reportId)
     {
-        if (null === $report = $this->reportRepository->find(intval($reportId))) {
+        $repository = $reportType === 'ndr' ? $this->ndrRepository : $this->reportRepository;
+
+        if (null === $report = $repository->find(intval($reportId))) {
             throw new NotFoundHttpException(sprintf('Report id %s not found', $reportId));
         }
 
@@ -226,7 +234,10 @@ class FixtureController
             $this->reportSection->completeSection($report, $section);
         }
 
-        $report->updateSectionsStatusCache($report->getAvailableSections());
+        if ($reportType === 'report') {
+            $report->updateSectionsStatusCache($report->getAvailableSections());
+        }
+
         $this->em->flush();
 
         return $this->buildSuccessResponse([], 'Report updated', Response::HTTP_OK);

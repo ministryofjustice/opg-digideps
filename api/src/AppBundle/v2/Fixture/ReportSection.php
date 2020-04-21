@@ -254,6 +254,14 @@ class ReportSection
     /**
      * @param ReportInterface $report
      */
+    private function completeExpenses(ReportInterface $report): void
+    {
+        $this->completeDeputyExpenses($report);
+    }
+
+    /**
+     * @param ReportInterface $report
+     */
     private function completeIncomeBenefits(ReportInterface $report)
     {
         if (!$report instanceof Ndr\Ndr) {
