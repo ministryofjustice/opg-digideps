@@ -76,6 +76,7 @@ locals {
       { "name": "ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
       { "name": "API_URL", "value": "https://${local.api_service_fqdn}" },
       { "name": "EMAIL_SEND_INTERNAL", "value": "${local.account.is_production == 1 ? "true" : "false"}" },
+      { "name": "FEATURE_FLAG_PREFIX", "value": "${local.feature_flag_prefix}" },
       { "name": "FILESCANNER_SSLVERIFY", "value": "False" },
       { "name": "FILESCANNER_URL", "value": "http://${local.scan_service_fqdn}:8080" },
       { "name": "GA_DEFAULT", "value": "${local.account.ga_default}" },
