@@ -132,7 +132,8 @@ Feature: Organisation admins can edit members of their organisation
         | set_password_password_second | Abcd1234 |
     And I check "set_password_showTermsAndConditions"
     And I press "Submit"
-    When I go to "/org/settings/organisation"
+    When I am logged in as "k.damore@malvern.example" with password "Abcd1234"
+    And I go to "/org/settings/organisation"
     Then I should see "Add user"
     And I should see "Edit" in the "team-user-ylacassemalvernexample" region
     And I should see "Remove" in the "team-user-ylacassemalvernexample" region
