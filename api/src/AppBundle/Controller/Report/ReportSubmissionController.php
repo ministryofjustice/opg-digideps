@@ -7,6 +7,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer;
+use InvalidArgumentException;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -158,6 +159,10 @@ class ReportSubmissionController extends RestController
     {
         /** @var ReportSubmission $reportSubmission */
         $reportSubmission = $this->getRepository(ReportSubmission::class)->find($id);
+
+        if ($reportSubmission->getArchived()) {
+            throw new InvalidArgumentException('Cannot queue documents for an archived report submission');
+        }
 
         foreach ($reportSubmission->getDocuments() as $document) {
             if (in_array($document->getSynchronisationStatus(), self::QUEUEABLE_STATUSES)) {

@@ -6,6 +6,7 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\User;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\AppBundle\Controller\AbstractTestController;
 use Tests\TestHelpers\ReportSubmissionHelper;
 use Tests\TestHelpers\ReportTestHelper;
@@ -369,5 +370,24 @@ class ReportSubmissionControllerTest extends AbstractTestController
                 self::assertEquals(null, $record->getSynchronisedBy());
             }
         }
+    }
+
+    public function testCannotQueueArchivedSubmissions()
+    {
+        $user = self::fixtures()->createUser();
+        $client = self::fixtures()->createClient($user);
+        $report = self::fixtures()->createReport($client);
+        $reportSubmission = new ReportSubmission($report, $user);
+        $reportSubmission->setArchived(true);
+        self::fixtures()->persist($reportSubmission);
+
+        self::fixtures()->flush();
+
+        $this->assertJsonRequest('PUT', '/report-submission/' . $reportSubmission->getId() . '/queue-documents', [
+            'mustFail' => true,
+            'assertResponseCode' => Response::HTTP_BAD_REQUEST,
+            'AuthToken' => self::$tokenAdmin,
+            'data' => [],
+        ]);
     }
 }
