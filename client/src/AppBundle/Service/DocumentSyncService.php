@@ -204,7 +204,7 @@ class DocumentSyncService
             return $this->restClient->apiCall(
                 'put',
                 sprintf('document/%s', $document->getId()),
-               json_encode($data),
+                json_encode($data),
                 'Report\\Document',
                 [],
                 false

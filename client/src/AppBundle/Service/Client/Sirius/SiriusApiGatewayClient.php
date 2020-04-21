@@ -68,7 +68,8 @@ class SiriusApiGatewayClient
             'application/vnd.opg-data.v1+json'
         );
 
-        return $this->httpClient->send($signedRequest, ['debug' => true]);
+        // Add second argument ['debug' => true] to see requests in action
+        return $this->httpClient->send($signedRequest);
     }
 
     /**
@@ -90,7 +91,7 @@ class SiriusApiGatewayClient
             'application/vnd.opg-data.v1+json'
         );
 
-        return $this->httpClient->send($signedRequest, ['debug' => true]);
+        return $this->httpClient->send($signedRequest);
     }
 
     /**
