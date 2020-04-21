@@ -327,11 +327,11 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('2015-12-30', $report->getSubmitDate()->format('Y-m-d'));
 
         // assert submission is created
-        $data = $this->assertJsonRequest('GET', '/report-submission?status=new', [
+        $data = $this->assertJsonRequest('GET', '/report-submission?status=pending', [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenAdmin,
         ])['data'];
-        $this->assertEquals(['new' => 1, 'pending' => 0, 'archived' => 0], $data['counts']);
+        $this->assertEquals(['new' => 0, 'pending' => 1, 'archived' => 0], $data['counts']);
         $this->assertEquals('file2.pdf', $data['records'][0]['documents'][0]['file_name']);
 
         return $report->getId();
