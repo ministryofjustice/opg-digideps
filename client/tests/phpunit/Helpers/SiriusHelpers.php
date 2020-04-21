@@ -2,7 +2,7 @@
 
 namespace DigidepsTests\Helpers;
 
-
+use AppBundle\Model\Sirius\SiriusDocumentFile;
 use AppBundle\Model\Sirius\SiriusDocumentUpload;
 use AppBundle\Model\Sirius\SiriusReportPdfDocumentMetadata;
 use AppBundle\Model\Sirius\SiriusSupportingDocumentMetadata;
@@ -16,29 +16,43 @@ class SiriusHelpers extends KernelTestCase
         DateTime $endDate,
         DateTime $submittedDate,
         string $orderType,
-        int $submissionId
+        int $submissionId,
+        string $fileName,
+        string $fileContents
     )
     {
         $siriusReportPdfDocumentMetadata = (new SiriusReportPdfDocumentMetadata())
             ->setReportingPeriodFrom($startDate)
             ->setReportingPeriodTo($endDate)
-            ->setYear('2018')
+            ->setYear(2018)
             ->setDateSubmitted($submittedDate)
             ->setType($orderType)
             ->setSubmissionId($submissionId);
 
+        $file = (new SiriusDocumentFile())
+            ->setName($fileName)
+            ->setMimetype('application/pdf')
+            ->setSource(base64_encode($fileContents));
+
         return (new SiriusDocumentUpload())
             ->setType('reports')
-            ->setAttributes($siriusReportPdfDocumentMetadata);
+            ->setAttributes($siriusReportPdfDocumentMetadata)
+            ->setFile($file);
     }
 
-    static public function generateSiriusSupportingDocumentUpload(int $submissionId)
+    static public function generateSiriusSupportingDocumentUpload(int $submissionId, string $fileName, string $fileContents)
     {
         $siriusSupportingDocumentMetadata = (new SiriusSupportingDocumentMetadata())
             ->setSubmissionId($submissionId);
 
+        $file = (new SiriusDocumentFile())
+            ->setName($fileName)
+            ->setMimetype('application/pdf')
+            ->setSource(base64_encode($fileContents));
+
         return (new SiriusDocumentUpload())
-            ->setType('supportingdocument')
-            ->setAttributes($siriusSupportingDocumentMetadata);
+            ->setType('supportingdocuments')
+            ->setAttributes($siriusSupportingDocumentMetadata)
+            ->setFile($file);
     }
 }

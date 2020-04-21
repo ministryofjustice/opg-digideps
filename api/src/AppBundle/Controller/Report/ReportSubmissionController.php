@@ -7,7 +7,6 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -82,10 +81,33 @@ class ReportSubmissionController extends RestController
         $reportSubmission = $this->findEntityBy(EntityDir\Report\ReportSubmission::class, $reportSubmissionId);
 
         $data = $this->deserializeBodyContent($request);
+
         if (!empty($data['archive'])) {
             $reportSubmission->setArchived(true);
             $reportSubmission->setArchivedBy($this->getUser());
         }
+
+        $this->getEntityManager()->flush();
+
+        return $reportSubmission->getId();
+    }
+
+    /**
+     * Separating this from update() as it needs to be accessible via client secret which removes the
+     * User from the request.
+     *
+     * @Route("/{reportSubmissionId}/update-uuid", requirements={"reportSubmissionId":"\d+"}, methods={"PUT"})
+     */
+    public function updateUuid(Request $request, $reportSubmissionId)
+    {
+        if (!$this->getAuthService()->isSecretValid($request)) {
+            throw new UnauthorisedException('client secret not accepted.');
+        }
+
+        /* @var $reportSubmission EntityDir\Report\ReportSubmission */
+        $reportSubmission = $this->findEntityBy(EntityDir\Report\ReportSubmission::class, $reportSubmissionId);
+
+        $data = $this->deserializeBodyContent($request);
 
         if (!empty($data['uuid'])) {
             $reportSubmission->setUuid($data['uuid']);

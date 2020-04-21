@@ -80,6 +80,14 @@ security:
            pattern: ^/document/queued
            security: false
            methods: [GET]
+        updateDocument:
+            pattern: ^/document/\d+
+            security: false
+            methods: [PUT]
+        updateReportSubmissionUuid:
+            pattern: ^/report-submission/\d+/update-uuid
+            security: false
+            methods: [PUT]
         reportSubmissionGetOld:
            pattern: ^/report-submission/old
            security: false

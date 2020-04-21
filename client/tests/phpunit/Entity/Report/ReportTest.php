@@ -210,27 +210,12 @@ class ReportTest extends TestCase
         $submission = (new ReportSubmission())->setDocuments($submittedDocuments)->setUuid('abc-123');
 
         $reportPdfDocument->getReportSubmission()->willReturn($submission);
+        $supportingDocument->getReportSubmission()->willReturn($submission);
 
         $report = (new Report())
-            ->setSubmittedDocuments($submittedDocuments)
+            ->setDocuments($submittedDocuments)
             ->setReportSubmissions([$submission]);
 
         self::assertTrue($report->reportPdfHasBeenSynced());
-    }
-
-    /** @test */
-    public function getReportSubmissionByDocument()
-    {
-        $document1 = new Document();
-        $document2 = new Document();
-        $document3 = new Document();
-        $submission1 = (new ReportSubmission())->setDocuments([$document2]);
-        $submission2 = (new ReportSubmission())->setDocuments([$document1]);
-
-        $report = (new Report())->setReportSubmissions([$submission1, $submission2]);
-
-        self::assertEquals($submission2, $report->getReportSubmissionByDocument($document1));
-        self::assertEquals($submission1, $report->getReportSubmissionByDocument($document2));
-        self::assertEquals(null, $report->getReportSubmissionByDocument($document3));
     }
 }

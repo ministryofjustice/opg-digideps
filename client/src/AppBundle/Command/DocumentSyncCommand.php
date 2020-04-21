@@ -69,7 +69,34 @@ class DocumentSyncCommand extends DaemonableCommand
     {
         $options = [
             'query' => [
-                'groups' => ['documents', 'document-synchronisation', 'document-storage-reference', 'document-report', 'report', 'report-client', 'client-case-number']
+                'groups' => [
+                    'documents',
+                    'document-synchronisation',
+                    'document-storage-reference',
+                    'document-report',
+                    'document-report-submission',
+                    'report-submission',
+                    'report' => [
+                        'report',
+                        'document-sync',
+                        'report-documents',
+                        'report-client',
+                        'documentSync',
+                        'documents' => [
+                            'documents',
+                            'document-report-submission',
+                            'reportSubmission' => [
+                                'report-submission'
+                            ]
+                        ],
+                        'client' => [
+                            'client-case-number'
+                        ],
+                        'reportSubmissions' => [
+                            'report-submission'
+                        ]
+                    ]
+                ]
             ]
         ];
 

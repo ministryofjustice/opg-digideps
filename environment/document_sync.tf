@@ -17,6 +17,13 @@ locals {
       target_type = "security_group_id"
       target      = module.api_service_security_group.id
     }
+    api_gateway = {
+      port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "0.0.0.0/0"
+    }
   }
 }
 

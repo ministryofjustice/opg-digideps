@@ -162,17 +162,17 @@ class DocumentControllerTest extends AbstractTestController
     {
         $url = sprintf('/document/%s', self::$document->getId());
 
-        $syncTime = (new DateTime())->format(DateTime::ATOM);
+        $syncTime = new DateTime();
 
         $response = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
-            'AuthToken'   => self::$tokenDeputy,
-            'data' => ['syncStatus' => Document::SYNC_STATUS_SUCCESS, 'syncTime' => $syncTime]
+            'ClientSecret' => API_TOKEN_DEPUTY,
+            'data' => ['syncStatus' => Document::SYNC_STATUS_SUCCESS]
         ]);
 
         self::assertEquals(self::$document->getId(), $response['data']['id']);
         self::assertEquals(Document::SYNC_STATUS_SUCCESS, $response['data']['synchronisation_status']);
-        self::assertEquals($syncTime, $response['data']['synchronisation_time']);
+        self::assertEqualsWithDelta($syncTime->getTimeStamp(), (new Datetime($response['data']['synchronisation_time']))->getTimestamp(), 5);
     }
 
     /**
@@ -184,7 +184,7 @@ class DocumentControllerTest extends AbstractTestController
 
         $response = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
-            'AuthToken'   => self::$tokenDeputy,
+            'ClientSecret' => API_TOKEN_DEPUTY,
             'data' => ['syncStatus' => $status, 'syncError' => $error]
         ]);
 

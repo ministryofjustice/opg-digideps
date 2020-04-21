@@ -372,6 +372,7 @@ class Report implements ReportInterface
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Report\ReportSubmission>")
+     * @JMS\Groups({"document-sync"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ReportSubmission", mappedBy="report", fetch="EXTRA_LAZY")
      */
     private $reportSubmissions;
@@ -1012,9 +1013,10 @@ class Report implements ReportInterface
     /**
      * Submitted reports
      *
-     * @JMS\VirtualProperty
+     * @JMS\VirtualProperty("submittedDocuments")
      * @JMS\SerializedName("submitted_documents")
      * @JMS\Groups({"documents"})
+     * @JMS\Type("array<AppBundle\Entity\Report\Document>")
      *
      * @return ArrayCollection|Document[]
      */
@@ -1037,7 +1039,6 @@ class Report implements ReportInterface
 
     /**
      * @JMS\SerializedName("report_submissions")
-     * @JMS\Groups({"documentSync"})
      * @return mixed
      */
     public function getReportSubmissions()

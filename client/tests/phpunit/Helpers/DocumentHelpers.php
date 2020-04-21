@@ -10,6 +10,7 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class DocumentHelpers extends TestCase
 {
@@ -23,7 +24,8 @@ class DocumentHelpers extends TestCase
         int $supportingDocSubmissionId = 9877,
         int $documentId = 6789,
         ?string $submittedReportPdfUuid = null,
-        string $storageReference = 'test'
+        string $storageReference = 'test',
+        string $fileName
     )
     {
         $client = new Client();
@@ -57,24 +59,26 @@ class DocumentHelpers extends TestCase
             ->setReportSubmissions($reportSubmissions);
 
         if ($documentType === 'reportPdf' && $submittedReportPdfUuid) {
-            $report->setSubmittedDocuments([$reportPdfDocument]);
+            $report->setDocuments([$reportPdfDocument]);
         } elseif ($documentType === 'supportingDocument' && ($submittedReportPdfUuid)) {
-            $report->setSubmittedDocuments([$reportPdfDocument, $supportingDocument]);
+            $report->setDocuments([$reportPdfDocument, $supportingDocument]);
         }
+
+        $file = new UploadedFile("/","mypdf.pdf","application/pdf", 1024, 100);
 
         if ($documentType === 'reportPdf') {
             return $reportPdfDocument
                 ->setReport($report)
                 ->setStorageReference($storageReference)
-                ->setFileName('test.pdf')
-                ->setFile(null)
+                ->setFileName($fileName)
+                ->setFile($file)
                 ->setId($documentId);
         } elseif ($documentType === 'supportingDocument') {
             return $supportingDocument
                 ->setReport($report)
                 ->setStorageReference($storageReference)
-                ->setFileName('test.pdf')
-                ->setFile(null)
+                ->setFileName($fileName)
+                ->setFile($file)
                 ->setId($documentId);
         }
 
@@ -86,6 +90,7 @@ class DocumentHelpers extends TestCase
         DateTime $startDate,
         DateTime $endDate,
         DateTime $submittedDate,
+        string $fileName = 'test.pdf',
         int $reportPdfSubmissionId = 9876,
         int $supportingDocSubmissionId = 9877,
         int $documentId = 6789,
@@ -103,8 +108,9 @@ class DocumentHelpers extends TestCase
             $supportingDocSubmissionId,
             $documentId,
             $submittedReportPdfUuid,
-            $storageReference
-        );
+            $storageReference,
+            $fileName
+    );
     }
 
     public function generateSubmittedSupportingDocument(
@@ -112,6 +118,7 @@ class DocumentHelpers extends TestCase
         DateTime $startDate,
         DateTime $endDate,
         DateTime $submittedDate,
+        string $fileName = 'test.pdf',
         int $reportPdfSubmissionId = 9876,
         int $supportingDocSubmissionId = 9877,
         int $documentId = 6789,
@@ -129,7 +136,8 @@ class DocumentHelpers extends TestCase
             $supportingDocSubmissionId,
             $documentId,
             $submittedReportPdfUuid,
-            $storageReference
+            $storageReference,
+            $fileName
         );
     }
 }

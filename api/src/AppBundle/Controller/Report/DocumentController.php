@@ -125,9 +125,12 @@ class DocumentController extends RestController
         }
 
         $documentRepo = $em->getRepository(Document::class);
+
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['documents'];
+
         $this->setJmsSerialiserGroups($serialisedGroups);
+
         return $documentRepo->findBy(['synchronisationStatus' => Document::SYNC_STATUS_QUEUED]);
     }
 
@@ -140,7 +143,10 @@ class DocumentController extends RestController
      */
     public function update(Request $request, int $id, EntityManagerInterface $em): Document
     {
-        // hydrate and persist
+        if (!$this->getAuthService()->isSecretValid($request)) {
+            throw new UnauthorisedException('client secret not accepted.');
+        }
+
         $data = $this->deserializeBodyContent($request);
 
         $document = $em->getRepository(Document::class)->find($id);
@@ -154,9 +160,11 @@ class DocumentController extends RestController
             $document->setSynchronisationStatus($data['syncStatus']);
 
             if (in_array($data['syncStatus'], self::DOCUMENT_SYNC_ERROR_STATUSES)) {
-                $document->setSynchronisationError($data['syncError']);
+                $errorMessage = is_array($data['syncError']) ? json_encode($data['syncError']) : $data['syncError'];
+                $document->setSynchronisationError($errorMessage);
             } else {
-                $document->setSynchronisationTime(new DateTime($data['syncTime']));
+                $document->setSynchronisationError(null);
+                $document->setSynchronisationTime(new DateTime());
             }
         }
 

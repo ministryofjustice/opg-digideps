@@ -15,7 +15,7 @@ class SiriusReportPdfDocumentMetadata implements SiriusMetadataInterface
     /** @var DateTime */
     private $reportingPeriodTo;
 
-    /** @var string */
+    /** @var int */
     private $year;
 
     /** @var DateTime */
@@ -66,18 +66,18 @@ class SiriusReportPdfDocumentMetadata implements SiriusMetadataInterface
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getYear(): string
+    public function getYear(): int
     {
         return $this->year;
     }
 
     /**
-     * @param string $year
+     * @param int $year
      * @return SiriusReportPdfDocumentMetadata
      */
-    public function setYear(string $year): self
+    public function setYear(int $year): self
     {
         $this->year = $year;
 

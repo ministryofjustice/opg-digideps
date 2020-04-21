@@ -224,15 +224,16 @@ class RestClient
     }
 
     /**
-     * @param string              $endpoint  e.g. /user
-     * @param string|object|array $mixed     HTTP body. json_encoded string or entity (that will JMS-serialised)
-     * @param array               $jmsGroups deserialise_groups
+     * @param string $endpoint e.g. /user
+     * @param string|object|array $mixed HTTP body. json_encoded string or entity (that will JMS-serialised)
+     * @param array $jmsGroups deserialise_groups
      *
      * @return string response body
      */
     public function put($endpoint, $mixed, array $jmsGroups = [])
     {
         $options = [];
+
         if ($jmsGroups) {
             $options['deserialise_groups'] = $jmsGroups;
         }
@@ -294,6 +295,7 @@ class RestClient
      */
     public function apiCall($method, $endpoint, $data, $expectedResponseType, $options = [], $authenticated = true)
     {
+
         if ($data) {
             $options['body'] = $this->toJson($data, $options);
         }
@@ -304,7 +306,7 @@ class RestClient
         ]);
 
         if ($expectedResponseType == 'raw') {
-            return  $response->getBody();
+            return $response->getBody();
         }
 
         if ($expectedResponseType == 'response') {
@@ -367,9 +369,7 @@ class RestClient
         $start = microtime(true);
         try {
             $response = $this->client->$method($url, $options);
-
             $this->logRequest($url, $method, $start, $options, $response);
-
             return $response;
         } catch (RequestException $e) {
             // request exception contains a body, that gets decoded and passed to RestClientException

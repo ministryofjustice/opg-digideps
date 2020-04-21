@@ -19,7 +19,7 @@ class DocumentTest extends TestCase
         $document1->setReportSubmission($reportSubmission);
         $document2->setReportSubmission($reportSubmission);
 
-        $report = (new Report())->setSubmittedDocuments([$document1, $document2])->setReportSubmissions([$reportSubmission]);
+        $report = (new Report())->setDocuments([$document1, $document2])->setReportSubmissions([$reportSubmission]);
 
         $document1->setReport($report);
         self::assertEquals($expectedResult, $document1->supportingDocumentCanBeSynced());
@@ -37,37 +37,22 @@ class DocumentTest extends TestCase
     }
 
     /** @test */
-    public function getPreviousReportPdfSubmission()
+    public function getSyncedReportSubmission()
     {
         $report = new Report();
 
-        $oldReportPdfDocument = (new Document())->setIsReportPdf(true)->setReport($report);
-        $newReportPdfDocument = (new Document())->setIsReportPdf(true)->setReport($report);
-        $supportingDocumentSubmittedWithReport = (new Document())->setIsReportPdf(false)->setReport($report);
-        $supportingDocumentSubmittedAfterReport = (new Document())->setIsReportPdf(false)->setReport($report);
+        $syncedReportPdfDocument = (new Document())->setIsReportPdf(true)->setReport($report);
+        $notSyncedReportPdfDocument = (new Document())->setIsReportPdf(true)->setReport($report);
 
-        $oldReportPdfSubmission = (new ReportSubmission())
-            ->setDocuments([$oldReportPdfDocument, $supportingDocumentSubmittedWithReport])
-            ->setCreatedOn(new DateTime());
+        $syncedReportPdfSubmission = (new ReportSubmission())->setDocuments([$syncedReportPdfDocument])->setUuid('abc');
+        $notSyncedReportPdfSubmission = (new ReportSubmission())->setDocuments([$notSyncedReportPdfDocument]);
 
-        $newReportPdfSubmission = (new ReportSubmission())
-            ->setDocuments([$newReportPdfDocument])
-            ->setCreatedOn(new DateTime('+1 Day'));
+        $syncedReportPdfDocument->setReportSubmission($syncedReportPdfSubmission);
+        $notSyncedReportPdfDocument->setReportSubmission($notSyncedReportPdfSubmission);
 
-        $supportingDocumentSubmission = (new ReportSubmission())
-            ->setDocuments([$supportingDocumentSubmittedAfterReport])
-            ->setCreatedOn(new DateTime());
+        $report->setReportSubmissions([$notSyncedReportPdfSubmission, $syncedReportPdfSubmission]);
 
-        $oldReportPdfDocument->setReportSubmission($oldReportPdfSubmission);
-        $newReportPdfDocument->setReportSubmission($newReportPdfSubmission);
-        $supportingDocumentSubmittedWithReport->setReportSubmission($oldReportPdfSubmission);
-        $supportingDocumentSubmittedAfterReport->setReportSubmission($supportingDocumentSubmission);
-
-        $report->setReportSubmissions([$newReportPdfSubmission, $oldReportPdfSubmission, $supportingDocumentSubmission]);
-
-        self::assertEquals($oldReportPdfSubmission, $oldReportPdfDocument->getPreviousReportPdfSubmission());
-        self::assertEquals($oldReportPdfSubmission, $newReportPdfDocument->getPreviousReportPdfSubmission());
-        self::assertEquals($oldReportPdfSubmission, $supportingDocumentSubmittedWithReport->getPreviousReportPdfSubmission());
-        self::assertEquals($oldReportPdfSubmission, $supportingDocumentSubmittedAfterReport->getPreviousReportPdfSubmission());
+        self::assertEquals($syncedReportPdfSubmission, $syncedReportPdfDocument->getSyncedReportSubmission());
+        self::assertEquals($syncedReportPdfSubmission, $notSyncedReportPdfDocument->getSyncedReportSubmission());
     }
 }
