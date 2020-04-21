@@ -9,7 +9,7 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-
+{% block supportTitleTop %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
@@ -21,15 +21,11 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <div class="push--bottom">
-        {{ form_input(form.profDeputyFixedCost, page ~ '.form.profDeputyFixedCost', {
-            'inputPrefix' : '£',
-            'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
-            'labelClass' : 'govuk-label--s',
-            'formGroupClass': ' form-group-value',
-            'labelParameters': {'%client%' : report.client.firstname}
-        }) }}
-    </div>
+    {{ form_input(form.profDeputyFixedCost, page ~ '.form.profDeputyFixedCost', {
+        'inputPrefix' : '£',
+        'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
+        'labelParameters': {'%client%' : report.client.firstname}
+    }) }}
 
     {{ macros.saveAndContinueButton(form.save) }}
 

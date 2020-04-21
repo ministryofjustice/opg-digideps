@@ -11,7 +11,7 @@
         </h3>
 
         {%  if description is defined and description %}
-            <p class="opg-overview-section__description">{{ (subSection ~ '.subSectionDescription') | trans({'%client%': client.firstname}, translationDomain ) }}</p>
+            <div class="opg-overview-section__description">{{ (subSection ~ '.subSectionDescription') | trans({'%client%': client.firstname}, translationDomain ) }}</div>
         {%  endif %}
     </div>
 

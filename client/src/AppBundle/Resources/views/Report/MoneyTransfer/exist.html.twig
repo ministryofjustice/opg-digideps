@@ -7,8 +7,7 @@
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {% block htmlTitle %}{{ 'existPage.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'existPage.pageTitle' | trans }}{% endblock %}
-
+{% block pageHeader %}{% endblock %}
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
@@ -18,17 +17,17 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-        <div class="push--bottom">
-            <div class="govuk-form-group flush--bottom {% if not form.noTransfersToAdd.vars.valid %}govuk-form-group--error{% endif %}">
-                {{ form_checkbox_group(form.noTransfersToAdd, 'existPage.form.noTransfersToAdd', {
-                    'useFormGroup': false,
-                    'fieldSetClass' : 'inline',
-                    'labelParameters': transOptions,
-                    'legendClass' : 'govuk-label--s text',
-                    'formGroupClass': 'flush--bottom'
-                }) }}
-            </div>
-        </div>
+    <div class="govuk-form-group {% if not form.noTransfersToAdd.vars.valid %}govuk-form-group--error{% endif %}">
+        {{ form_checkbox_group(form.noTransfersToAdd, 'existPage.form.noTransfersToAdd', {
+            'useFormGroup': false,
+            'fieldSetClass' : 'govuk-radios--inline',
+            'labelParameters': transOptions,
+            legend: {
+                isPageHeading: true,
+                caption: 'existPage.supportTitle' | trans
+            }
+        }) }}
+    </div>
 
     {{ macros.saveAndContinueButton(form.save) }}
 

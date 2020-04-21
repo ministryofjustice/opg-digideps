@@ -1,7 +1,6 @@
 checklistPage:
   htmlTitle: Administration - Report checklist
   pageTitle: Checklist
-  supportTitle: Admin
   heading:
     lodging:
         title: Lodging checklist
@@ -231,8 +230,7 @@ checklistPage:
 
 checklistSubmittedPage:
   htmlTitle: Administration - Report checklist
-  pageTitle: Admin
-  supportTitle: Checklist submitted
+  panelTitle: Checklist submitted
   downloadText: Your PDF download should start automatically. <a href="%downloadLinkUrl%" class="%downloadLinkClassList%">Click here</a> to download it if it does not download automatically.
   toChecklistButtonText: Return to checklist
   toClientListButtonText: View client list

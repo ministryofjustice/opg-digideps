@@ -3,19 +3,15 @@
 {% trans_default_domain "admin" %}
 {% set page = 'deleteConfirm' %}
 
+{% set navSection = 'users' %}
+
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-
-
-{% block supportTitleBottom %}
-    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
-{% endblock %}
+{% block supportTitleTop %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
 
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}
-
-    <h2 class="govuk-heading-m">{{ (page ~ '.heading') | trans }}</h2>
 
     <p class="text">{{ (page ~ '.question') | trans({'%fullName%': user.getFullname()}) | raw }}</p>
 
@@ -34,4 +30,3 @@
     } %}
 
 {% endblock %}
-

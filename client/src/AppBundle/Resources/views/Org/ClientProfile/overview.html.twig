@@ -7,9 +7,8 @@
 {% set transOptions = {'%client%': client.firstname | e } %}
 
 {% block htmlTitle %}{{ 'htmlTitle-ORG' | trans }}{% endblock %}
-{% block pageTitle %}
-    {{ 'pageTitle' | trans({}, 'client-profile') }} {{ client.fullname | title }}
-{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans({}, 'client-profile') }}{% endblock %}
+{% block supportTitleTop %}{{ client.fullname | title }}{% endblock %}
 
 {% block breadcrumbs %}
     <div class="breadcrumbs hard--bottom">

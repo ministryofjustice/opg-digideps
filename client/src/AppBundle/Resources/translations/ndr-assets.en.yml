@@ -9,7 +9,7 @@ startPage:
 
 existPage:
   htmlTitle: "New deputy report - assets | GOV.UK"
-  pageTitle: Assets
+  supportTitle: Assets
   form:
     noAssetToAdd:
       label: Does %client% own any assets?

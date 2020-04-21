@@ -7,8 +7,8 @@
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {% block htmlTitle %}{{ ('categoryPage.moneyIn.htmlTitle') | trans }}{% endblock %}
-{% block pageTitle %}{{ ('categoryPage.moneyIn.pageTitle') | trans }}{% endblock %}
-
+{% block pageTitle %}{{ 'form.categoriesIn.label' | trans(transOptions) }}{% endblock %}
+{% block supportTitleTop %}{{ ('categoryPage.moneyIn.supportTitle') | trans }}{% endblock %}
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
@@ -18,12 +18,10 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <p class="text">
-        {{ 'form.categoriesIn.label' | trans(transOptions) }}
-    </p>
-    <p class="form-hint">
+    <p class="govuk-hint">
         {{ 'form.categoriesIn.hint' | trans(transOptions) }}
     </p>
+
     {% include 'AppBundle:Report/MoneyInShort:_checkboxes_list.html.twig' with {
     'elements': form.moneyShortCategoriesIn,
     } %}
@@ -33,4 +31,3 @@
     {{ form_end(form) }}
 
 {% endblock %}
-

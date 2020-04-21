@@ -4,8 +4,7 @@
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
-
-{% block supportTitleBottom %}{{ client.firstname }} {{ client.lastname }}{% endblock %}
+{% block supportTitleTop %}{{ client.fullname }}{% endblock %}
 
 {% block pageContent %}
 

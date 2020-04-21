@@ -1,6 +1,6 @@
 addCoDeputy:
   htmlTitle: Deputy report - Invite deputy | GOV.UK
-  pageTitle: Deputies
+  pageTitle: Invite deputy
   intro: |
     You can invite additional deputies to %clientFirstName%'s reports, all we need is their
     email address.
@@ -8,7 +8,7 @@ addCoDeputy:
 
 reinviteDeputy:
   htmlTitle: Deputy report - Reinvite deputy | GOV.UK
-  pageTitle: Deputies
+  pageTitle: Reinvite deputy
   intro: |
     Use the box below to resend an invitation to the original or alternative email address.
   submitButton: Resend invitation

@@ -16,10 +16,7 @@
 
 {% block pageContent %}
 
-    <h3 class="govuk-heading-s push-half--bottom">
-        {{ 'editPage.pageSectionDescription' | trans(transOptions, translationDomain) }}
-        <span class="form-hint text push-half--bottom">{{ 'editPage.pageHint' | trans(transOptions, translationDomain) }}</span>
-    </h3>
+    <p class="govuk-hint">{{ 'editPage.pageHint' | trans(transOptions, translationDomain) }}</span>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 

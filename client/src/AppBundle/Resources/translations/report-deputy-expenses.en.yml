@@ -27,7 +27,7 @@ startPage:
 
 existPage:
   htmlTitle: "Deputy report - add deputy expense | GOV.UK"
-  pageTitle: Deputy expenses
+  supportTitle: Deputy expenses
   form:
     paidForAnything:
       label: Have you claimed any deputy expenses during this reporting period?

@@ -7,7 +7,7 @@ startPage:
 
 existPage:
   htmlTitle: "Deputy report - add contact | GOV.UK"
-  pageTitle: Contacts
+  supportTitle: Contacts
   form:
     hasContacts:
       label: Has anyone helped you make any significant decisions for %client% during this reporting period?
@@ -93,4 +93,3 @@ form:
       defaultOption: Please select ...
   save:
       label: Save and continue
-

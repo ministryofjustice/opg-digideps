@@ -122,7 +122,11 @@ class FormFieldsExtension extends AbstractExtension
             'disabled' => isset($vars['disabled']) ? $vars['disabled'] : false,
             'fieldSetClass' => isset($vars['fieldSetClass']) ? $vars['fieldSetClass'] : null,
             'formGroupClass' => isset($vars['formGroupClass']) ? $vars['formGroupClass'] : null,
-            'legendText' => $legendText,
+            'legend' => array_merge([
+                'text' => $legendText,
+                'isPageHeading' => false,
+                'caption' => false,
+            ], $vars['legend'] ?? []),
             'legendClass' => isset($vars['legendClass']) ? $vars['legendClass'] : null,
             'useFormGroup' => isset($vars['useFormGroup']) ? $vars['useFormGroup'] : true,
             'hintText' => $hintText,
@@ -241,7 +245,11 @@ class FormFieldsExtension extends AbstractExtension
         }
 
         $html = $env->render('AppBundle:Components/Form:_known-date.html.twig', [
-            'legendText' => $legendText,
+            'legend' => array_merge([
+                'text' => $legendText,
+                'isPageHeading' => false,
+                'caption' => false,
+            ], $vars['legend'] ?? []),
             'hintText' => $hintText,
             'element' => $element,
             'showDay' => $showDay,
@@ -265,10 +273,15 @@ class FormFieldsExtension extends AbstractExtension
 
         $legendText = ($legendTextTrans != $translationKey . '.legend') ? $legendTextTrans : null;
 
-        $html = $env->render('AppBundle:Components/Form:_sort-code.html.twig', ['legendText' => $legendText,
-                                                                                                'hintText' => $hintText,
-                                                                                                'element' => $element,
-                                                                                              ]);
+        $html = $env->render('AppBundle:Components/Form:_sort-code.html.twig', [
+            'legend' => array_merge([
+                'text' => $legendText,
+                'isPageHeading' => false,
+                'caption' => false,
+            ], $vars['legend'] ?? []),
+            'hintText' => $hintText,
+            'element' => $element,
+        ]);
         echo $html;
     }
 
@@ -416,6 +429,11 @@ class FormFieldsExtension extends AbstractExtension
             'formGroupClass' => $formGroupClass,
             'labelRaw' => !empty($vars['labelRaw']),
             'preInputText' => $preInputText,
+            'label' => array_merge([
+                'text' => $labelText,
+                'isPageHeading' => false,
+                'caption' => false,
+            ], $vars['label'] ?? []),
         ];
     }
 

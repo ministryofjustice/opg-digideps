@@ -29,7 +29,7 @@ startPage:
 
 existPage:
   htmlTitle: "Deputy report - add gift | GOV.UK"
-  pageTitle: Gifts
+  supportTitle: Gifts
   form:
     giftsExist:
       label: Have you given any gifts to other people on %client%'s behalf during this reporting period?
@@ -94,4 +94,3 @@ form:
     hint: ""
   save:
       label: Save gift
-

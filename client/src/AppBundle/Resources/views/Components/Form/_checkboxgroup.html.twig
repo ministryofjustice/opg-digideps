@@ -3,8 +3,15 @@
 {% endif %}
 
     <fieldset class="govuk-fieldset {{ fieldSetClass }}" {% if hintText %}aria-describedby="{{ element.vars.id }}-hint"{% endif %}>
-        <legend class="govuk-fieldset__legend {{ legendClass }}">
-            {{ legendText }}
+        <legend class="govuk-fieldset__legend {{ legendClass }} {{ legend.isPageHeading ? "govuk-fieldset__legend--xl" : "" }}">
+            {% if legend.isPageHeading %}
+                {% if legend.caption %}
+                    <span class="govuk-caption-xl">{{ legend.caption }}</span>
+                {% endif %}
+                <h1 class="govuk-fieldset__heading">{{ legend.text }}</h1>
+            {% else %}
+                {{ legend.text }}
+            {% endif %}
         </legend>
 
         {% if hintText is not null %}

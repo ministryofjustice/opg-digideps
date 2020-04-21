@@ -8,8 +8,7 @@
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
-{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-
+{% block pageHeader %}{% endblock %}
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
@@ -22,6 +21,10 @@
     {{ form_known_date(form.mentalAssessmentDate, (page ~ '.form.mentalAssessmentDate'), {
         'showDay': 'false',
         'legendParameters': transOptions,
+        legend: {
+            isPageHeading: true,
+            caption: (page ~ '.supportTitle') | trans
+        }
     }) }}
 
     {{ macros.saveAndContinueButton(form.save) }}
