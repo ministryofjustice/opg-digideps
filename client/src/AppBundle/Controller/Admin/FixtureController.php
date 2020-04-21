@@ -60,13 +60,15 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @Route("/complete-sections/{reportId}", requirements={"id":"\d+"}, methods={"GET"})
+     * @Route("/complete-sections/{reportType}/{reportId}", requirements={"id":"\d+"}, methods={"GET"})
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @param Request $request
+     * @param string $reportType
      * @param $reportId
+     * @param KernelInterface $kernel
      * @return JsonResponse
      */
-    public function completeReportSectionsAction(Request $request, $reportId, KernelInterface $kernel): JsonResponse
+    public function completeReportSectionsAction(Request $request, string $reportType, $reportId, KernelInterface $kernel): JsonResponse
     {
         if ($kernel->getEnvironment() === 'prod') {
             throw $this->createNotFoundException();
@@ -76,7 +78,7 @@ class FixtureController extends AbstractController
 
         $this
             ->getRestClient()
-            ->put("v2/fixture/complete-sections/$reportId?sections=$sections", []);
+            ->put("v2/fixture/complete-sections/$reportType/$reportId?sections=$sections", []);
 
         return new JsonResponse(['Report updated']);
     }
