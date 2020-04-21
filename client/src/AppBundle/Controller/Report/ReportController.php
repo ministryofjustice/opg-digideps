@@ -196,6 +196,7 @@ class ReportController extends AbstractController
 
         if ($form->isValid()) {
             $this->getRestClient()->post('report', $form->getData());
+            $this->getRestClient()->post('v2/court-order', $client, ['client-id']);
             return $this->redirect($this->generateUrl('homepage'));
         }
 

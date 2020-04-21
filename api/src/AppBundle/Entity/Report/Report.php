@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\CourtOrder;
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\ReportInterface;
@@ -433,6 +434,12 @@ class Report implements ReportInterface
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Checklist", mappedBy="report", cascade={"persist", "remove"})
      */
     private $checklist;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrder", inversedBy="reports", cascade={"persist"})
+     * @ORM\JoinColumn(name="court_order_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    private $courtOrder;
 
     /**
      * Report constructor.
@@ -1202,6 +1209,25 @@ class Report implements ReportInterface
                 'financial-summary' => $previousReport->getFinancialSummary()
             ];
         }
+
+    /**
+     * @return CourtOrder
+     */
+    public function getCourtOrder(): CourtOrder
+    {
+        return $this->courtOrder;
+    }
+
+    /**
+     * @param CourtOrder $courtOrder
+     * @return Report
+     */
+    public function setCourtOrder(CourtOrder $courtOrder): Report
+    {
+        $this->courtOrder = $courtOrder;
+
+        return $this;
+    }
 
     /**
      * Method to identify and return previous report.

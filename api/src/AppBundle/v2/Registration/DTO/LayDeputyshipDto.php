@@ -31,6 +31,9 @@ class LayDeputyshipDto
     /** @var string */
     private $source;
 
+    /** @var \DateTime */
+    private $orderDate;
+
     /** @return string */
     public function getCaseNumber(): string
     {
@@ -174,6 +177,24 @@ class LayDeputyshipDto
     public function setSource(string $source): LayDeputyshipDto
     {
         $this->source = $source;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getOrderDate(): \DateTime
+    {
+        return $this->orderDate;
+    }
+
+    /**
+     * @param \DateTime $orderDate
+     * @return LayDeputyshipDto
+     */
+    public function setOrderDate(\DateTime $orderDate): LayDeputyshipDto
+    {
+        $this->orderDate = $orderDate;
         return $this;
     }
 }

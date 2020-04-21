@@ -175,6 +175,12 @@ class CasRec
     private $source;
 
     /**
+     * @var \DateTime
+     * @ORM\Column(name="order_date", type="datetime", nullable=true)
+     */
+    private $orderDate;
+
+    /**
      * Filled from cron
      *
      * @var array
@@ -200,6 +206,7 @@ class CasRec
         $this->deputyPostCode = self::normaliseSurname($row['Dep Postcode']);
         $this->typeOfReport = self::normaliseCorrefAndTypeOfRep($row['Typeofrep']);
         $this->corref = self::normaliseCorrefAndTypeOfRep($row['Corref']);
+        $this->orderDate = $row['OrderDate'];
 
         $source = isset($row['Source']) ? $row['Source'] : self::CASREC_SOURCE;
         $this->setSource($source);
@@ -412,5 +419,23 @@ class CasRec
             self::CASREC_SOURCE,
             self::SIRIUS_SOURCE
         ];
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getOrderDate()
+    {
+        return $this->orderDate;
+    }
+
+    /**
+     * @param \DateTime $orderDate
+     * @return CasRec
+     */
+    public function setOrderDate(\DateTime $orderDate)
+    {
+        $this->orderDate = $orderDate;
+        return $this;
     }
 }

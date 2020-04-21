@@ -15,6 +15,8 @@ use AppBundle\Entity\Repository\NamedDeputyRepository;
 use AppBundle\Entity\User;
 use AppBundle\Factory\NamedDeputyFactory;
 use AppBundle\Factory\OrganisationFactory;
+use AppBundle\v2\Assembler\CourtOrder\OrgCsvToCourtOrderDtoAssembler;
+use AppBundle\v2\Assembler\CourtOrderDeputy\OrgCsvToCourtOrderDeputyDtoAssembler;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
@@ -103,6 +105,15 @@ class OrgService
      */
     private $log;
 
+    /** @var OrgCsvToCourtOrderDtoAssembler */
+    private $courtOrderAssembler;
+
+    /** @var OrgCsvToCourtOrderDeputyDtoAssembler */
+    private $courtOrderDeputyAssembler;
+
+    /** @var CourtOrderCreator */
+    private $courtOrderCreator;
+
     /**
      * @param EntityManagerInterface $em
      * @param LoggerInterface $logger
@@ -114,6 +125,9 @@ class OrgService
      * @param NamedDeputyRepository $namedDeputyRepository
      * @param OrganisationFactory $orgFactory
      * @param NamedDeputyFactory $namedDeputyFactory
+     * @param OrgCsvToCourtOrderDtoAssembler $courtOrderAssembler
+     * @param OrgCsvToCourtOrderDeputyDtoAssembler $courtOrderDeputyAssembler
+     * @param CourtOrderCreator $courtOrderCreator
      */
     public function __construct(
         EntityManagerInterface $em,
@@ -125,7 +139,10 @@ class OrgService
         TeamRepository $teamRepository,
         NamedDeputyRepository $namedDeputyRepository,
         OrganisationFactory $orgFactory,
-        NamedDeputyFactory $namedDeputyFactory
+        NamedDeputyFactory $namedDeputyFactory,
+        OrgCsvToCourtOrderDtoAssembler $courtOrderAssembler,
+        OrgCsvToCourtOrderDeputyDtoAssembler $courtOrderDeputyAssembler,
+        CourtOrderCreator $courtOrderCreator
     ) {
         $this->em = $em;
         $this->logger = $logger;
@@ -138,6 +155,9 @@ class OrgService
         $this->orgFactory = $orgFactory;
         $this->namedDeputyFactory = $namedDeputyFactory;
         $this->log = [];
+        $this->courtOrderAssembler = $courtOrderAssembler;
+        $this->courtOrderDeputyAssembler = $courtOrderDeputyAssembler;
+        $this->courtOrderCreator = $courtOrderCreator;
     }
 
     /**
@@ -190,7 +210,13 @@ class OrgService
 
                 $client = $this->upsertClientFromCsv($row, $namedDeputy);
                 if ($client instanceof Client) {
-                    $this->upsertReportFromCsv($row, $client);
+                    $report = $this->upsertReportFromCsv($row, $client);
+
+                    $orderDto = $this->courtOrderAssembler->assemble($row);
+                    $courtOrder = $this->courtOrderCreator->upsertCourtOrder($orderDto, $report);
+
+                    $deputyDto = $this->courtOrderDeputyAssembler->assemble($row);
+                    $deputy = $this->courtOrderCreator->upsertCourtOrderDeputy($deputyDto, $courtOrder, $this->currentOrganisation);
                 } else {
                     throw new \RuntimeException('Client could not be identified or created');
                 }
@@ -397,7 +423,6 @@ class OrgService
         $this->added['reports'][] = $client->getCaseNumber() . '-' . $reportEndDate->format('Y-m-d');
         $this->em->persist($report);
         $this->em->flush();
-        $this->em->clear();
         return $report;
     }
 

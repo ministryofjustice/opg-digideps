@@ -45,7 +45,8 @@ class CasRecToLayDeputyshipDtoAssemblerTest extends TestCase
             ['Dep Postcode'],
             ['Typeofrep'],
             ['Corref'],
-            ['NDR']
+            ['NDR'],
+            ['Made Date']
         ];
     }
 
@@ -64,6 +65,8 @@ class CasRecToLayDeputyshipDtoAssemblerTest extends TestCase
         $this->assertEquals('corref', $result->getCorref());
         $this->assertEquals(true, $result->isNdrEnabled());
         $this->assertEquals(CasRec::CASREC_SOURCE, $result->getSource());
+        $this->assertEquals('2011-06-14', $result->getOrderDate()->format('Y-m-d'));
+
     }
 
     /**
@@ -107,6 +110,7 @@ class CasRecToLayDeputyshipDtoAssemblerTest extends TestCase
             'Corref' => 'corref',
             'NDR' => 'Y',
             'Not used' => 'not_used',
+            'Made Date' => '14-Jun-11'
         ];
     }
 }
