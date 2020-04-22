@@ -87,8 +87,6 @@ class FixtureController
             $deputy = $this->createDeputy($fromRequest);
         }
 
-        file_put_contents('php://stderr', print_r($fromRequest, TRUE));
-
         if (strtolower($fromRequest['reportType']) === 'ndr') {
             $this->createNdr($fromRequest, $client);
             $deputy->setNdrEnabled(true);
