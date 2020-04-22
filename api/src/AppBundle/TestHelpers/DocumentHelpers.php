@@ -10,18 +10,18 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class DocumentHelpers
 {
-    public function generateReportPdfDocument(Report $report, int $documentId = 6789, string $storageReference = 'test')
+    public function generateReportPdfDocument(Report $report, int $documentId = 6789, string $storageReference = 'test', string $filename = 'report.pdf')
     {
         $document = new Document($report);
 
         return $document
             ->setStorageReference($storageReference)
-            ->setFileName('test.pdf')
+            ->setFileName($filename)
             ->setId($documentId);
     }
 
-    public function generateSupportingDocument(Report $report, int $documentId = 6789, string $storageReference = 'test')
+    public function generateSupportingDocument(Report $report, int $documentId = 6789, string $storageReference = 'test', string $filename = 'supporting-document.pdf')
     {
-        return ($this->generateReportPdfDocument($report, $documentId, $storageReference))->setIsReportPdf(false);
+        return ($this->generateReportPdfDocument($report, $documentId, $storageReference, $filename))->setIsReportPdf(false);
     }
 }
