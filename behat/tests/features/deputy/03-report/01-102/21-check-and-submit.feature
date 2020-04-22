@@ -139,6 +139,7 @@ Feature: Report submit
             | search | 102 |
             | created_by_role | ROLE_LAY_DEPUTY |
         And I press "search_submit"
+        Then I click on "tab-pending"
         Then I should see the "report-submission" region exactly 1 times
         And each text should be present in the corresponding region:
             | John 102 | report-submission-1 |
@@ -152,6 +153,7 @@ Feature: Report submit
     Scenario: admin can download individual report flies
         Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "admin-documents"
+        And I click on "tab-pending"
         When I follow "Download"
         Then the response status code should be 200
         And the response should have the "Content-Type" header containing "application/octet-stream"
@@ -162,6 +164,7 @@ Feature: Report submit
     Scenario: admin can download zips of a report's files
         Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "admin-documents"
+        And I click on "tab-pending"
         When I check "Select 102"
         Then I click on "download"
         # only checks one level deep. In this case, we check for a single report zip file
@@ -169,6 +172,7 @@ Feature: Report submit
             | Report_102_2016_2016_.*.zip | regexpName+sizeAtLeast | 60000 |
         # test archive
         When I go to the URL previously saved as "admin-documents-list-new"
+        And I click on "tab-pending"
         Then I check "Select 102"
         When I click on "archive"
         And I click on "tab-archived"
@@ -205,12 +209,9 @@ Feature: Report submit
         And the response should contain "102"
         And the response should contain "John"
         And the response should contain "102-client"
-        # assert documents
         And I should see "file1.pdf" in the "document-list" region
-        #And I should see "file2.pdf" in the "document-list" region
         And I should not see "DigiRep" in the "document-list" region
         And I should not see "DigiRepTransactions" in the "document-list" region
-        # test go back link
         When I click on "back-to-reports"
         Then the URL should match "/lay"
         And I should see the "report-download" link
