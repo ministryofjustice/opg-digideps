@@ -10,7 +10,7 @@ module.exports = function (containerSelector) {
     }
   })
 
-  // Show an error if file is over 15mb
+  // Show an error if file is over 5mb
   $('#upload_form').on('submit', function (e) {
     e.preventDefault()
     var fileElement = $('#report_document_upload_files')
