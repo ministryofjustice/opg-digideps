@@ -57,6 +57,8 @@ class NdrController extends RestController
         /** @var Document $reportPdf */
         $reportPdf = $this->getEntityManager()->getRepository(EntityDir\Report\Document::class)->find($documentId);
         $reportPdf->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
+        $reportPdf->setSynchronisedBy($this->getUser());
+
         $this->getEntityManager()->flush($reportPdf);
 
         $ndr->setAgreedBehalfDeputy($data['agreed_behalf_deputy']);
