@@ -206,7 +206,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
             ->setStatus(201)
             ->addHeader('Content-Type', 'application/json')
             ->setBody([
-              'uuid' => $matcher->uuid($this->reportPdfUuid)
+                'data' => ['id' => $matcher->uuid($this->reportPdfUuid)]
             ]);
 
         $this->builder
