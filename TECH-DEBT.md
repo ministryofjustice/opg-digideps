@@ -5,13 +5,12 @@ This file should be used to record known debt.
 If any debt may lead to larger risks, it should be transferred to the risk board. If we have identified an agreed solution to pay down the debt, it should be moved to a ticket in JIRA.
 
 ## CI
-- Stabilize runs too soon and may exit before deployment has started
 - Notify channel when environment ready
 
 ## Infra
 - scheduled scaling for cost saving
 - remove dependency on semvertag
-- periodically rotate CI access key & ses users
+- periodically rotate CI access key
 - move public routes to main route table
 - Move to secrets per account
 - Nginx timeout is universally high to allow for some use cases (e.g. compiling zips)
