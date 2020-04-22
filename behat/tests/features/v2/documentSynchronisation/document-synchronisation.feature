@@ -21,6 +21,7 @@ Feature: Synchronising Documents with Sirius
     When I view the submissions page
     And I click on "tab-pending"
     Then I should see "<case_number>"
+    And the documents should be queued
     Examples:
       | case_number | deputy  |
       | 12121212    | DeputyA |

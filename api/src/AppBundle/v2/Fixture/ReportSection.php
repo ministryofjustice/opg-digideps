@@ -148,10 +148,8 @@ class ReportSection
     {
         $report->setWishToProvideDocumentation('yes');
 
-        $reportDocument = $this->documentHelpers->generateReportPdfDocument($report);
         $supportingDocument = $this->documentHelpers->generateSupportingDocument($report);
 
-        $report->addDocument($reportDocument);
         $report->addDocument($supportingDocument);
     }
 
