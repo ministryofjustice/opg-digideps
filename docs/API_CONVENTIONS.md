@@ -42,3 +42,5 @@ Example with `account` (entity) and `ndr` (parent entity) entities.
 ## JMS groups
 
 We use JMS Serializer's [Groups functionality][jms-groups] to group entity properties. When querying, we can specify a group to ensure that the smallest set of data possible is retrieved.
+
+[jsm-groups]: https://jmsyst.com/libs/serializer/master/cookbook/exclusion_strategies#creating-different-views-of-your-objects
