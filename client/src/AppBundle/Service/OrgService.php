@@ -43,6 +43,8 @@ class OrgService
         ],
     ];
 
+    const CHUNK_SIZE = 50;
+
     /**
      * @param RestClient $restClient
      */
@@ -197,7 +199,7 @@ class OrgService
      */
     public function process($data, $redirectUrl)
     {
-        $chunks = array_chunk($data, 100);
+        $chunks = array_chunk($data, self::CHUNK_SIZE);
 
         $response = $this->generateStreamedResponse();
 
