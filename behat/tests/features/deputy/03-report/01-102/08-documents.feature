@@ -43,6 +43,13 @@ Feature: Report documents
     Then the following fields should have an error:
       | report_document_upload_files   |
 
+    # check size limit adhered
+    When I attach the file "too-big.jpg" to "report_document_upload_files"
+    And I click on "attach-file"
+    Then the following fields should have an error:
+      | report_document_upload_files   |
+    And I should see "The file you selected to upload is too big"
+
     # check good pdf gets uploaded
     When I attach the file "good.pdf" to "report_document_upload_files"
     And I click on "attach-file"
