@@ -126,6 +126,7 @@ Feature: Infrastructure document tests
   Scenario: Can download submitted documents
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "admin-documents"
+    And I click on "tab-pending"
     And I check "Select 103-4"
     And I click on "download"
     Then the page content should be a zip file containing files with the following files:

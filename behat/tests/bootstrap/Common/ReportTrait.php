@@ -280,7 +280,7 @@ trait ReportTrait
         $this->pressButton(sprintf('%s_declaration[save]', $reportType));
     }
 
-    private function completeSections(string $sections, string $reportType)
+    private function completeSections(string $sections, string $reportType='report')
     {
         $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'Abcd1234');
 
