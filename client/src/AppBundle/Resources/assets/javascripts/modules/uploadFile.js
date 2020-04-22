@@ -1,4 +1,6 @@
 /* globals $ */
+var UPLOAD_LIMIT = 5
+
 module.exports = function (containerSelector) {
   // Show in progress message
   $(containerSelector).on('click', function () {
@@ -17,7 +19,7 @@ module.exports = function (containerSelector) {
     // check whether browser fully supports all File API
     if (window.File && window.FileReader && window.FileList && window.Blob && fileElement[0].files.length > 0) {
       var fsize = fileElement[0].files[0].size
-      if (fsize > 15 * 1024 * 1024) {
+      if (fsize > UPLOAD_LIMIT * 1024 * 1024) {
         window.location = actionUrl + '?error=tooBig'
         return
       }
