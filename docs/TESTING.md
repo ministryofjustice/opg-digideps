@@ -34,9 +34,9 @@ docker-compose -f docker-compose.dev.yml run --rm test --suite=admin
 
 ## PHPUnit
 
-The PHPUnit tests are stored in a directory structure matching `src/AppBundle`. Tests classes should extend `PHPUnit\Framework\TestCase` and use methods starting `test` to define actual tests.
+The PHPUnit tests are stored in a directory structure matching `src/AppBundle`.
 
-We use [Mockery][mockery] to mock classes and entities which are not being tested.
+We use [Prophecy][prophecy] (and in some cases [Mockery][mockery]) to mock classes and entities which are not being tested. Client unit tests of controllers should extend `AbstractControllerTestCase` and can mock Symfony containers using the `injectProphecyService` method.
 
 ## Behat
 
@@ -44,7 +44,9 @@ Behat tests are run against the environment's client container, meaning test dat
 
 ### Suites
 
-The Behat tests are divided into 6 suites:
+Our modern behat suites are designed to test one piece of application functionality in isolation. This means multiple suites could be run in parallel, since they use different data and don't depend on each other.
+
+There are however 6 older suites which are much larger and have a lot of complicated dependent data. These cannot easily be broken down further, but are slowly being replaced with smaller suites to eventually be phased out.
 
 - `infra`: A basic set of tests which check the end-to-end application. This allows the tests to fail fast on a critical problems.
 - `admin`: Tests for the private administration part of the application.
@@ -55,9 +57,7 @@ The Behat tests are divided into 6 suites:
 
 ## Emails in non-production environments
 
-Non-production environments don't send emails to avoid data leakage, confusion and embarassment. Instead, email is sent to a mock service which stores it for future reference. You can access the emails stored by the mock service at `/behat/emails` in any non-production environment.
-
-Note that the public-facing frontend and the administration area have separate email stores (both accessible at `/behat/emails` of the relevant service URL).
+Non-production environments don't send emails to avoid data leakage, confusion and embarassment. This is achieved with a GOV.UK Notify "test" key, which causes Notify to behave as usual but not send the email out. Test emails can then be inspected through Notify's [admin interface][govuk-notify].
 
 ## Database Sync
 
@@ -80,4 +80,6 @@ docker-compose run --rm frontend bin/phpstan analyse src tests --memory-limit=0 
 ```
 
 [mockery]: http://docs.mockery.io/en/latest/
+[prophecy]: https://github.com/phpspec/prophecy
 [phpstan]: https://github.com/phpstan/phpstan
+[govuk-notify]: https://www.notifications.service.gov.uk/
