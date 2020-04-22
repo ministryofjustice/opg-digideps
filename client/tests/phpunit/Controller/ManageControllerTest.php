@@ -58,7 +58,7 @@ class ManageControllerTest extends AbstractControllerTestCase
                 $response->getStatusCode()->shouldBeCalled()->willThrow(new \RuntimeException('sirius_error'));
             }
 
-            $client->get('v1/healthcheck')->shouldBeCalled()->willReturn($response->reveal());
+            $client->get('healthcheck')->shouldBeCalled()->willReturn($response->reveal());
         });
 
         // notify mock
