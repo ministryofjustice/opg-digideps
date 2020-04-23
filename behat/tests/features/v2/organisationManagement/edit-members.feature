@@ -39,12 +39,12 @@ Feature: Organisation admins can edit members of their organisation
     And I fill in the following:
       | organisation_member_firstname  | Yvonne                         |
       | organisation_member_lastname   | Lacasse                        |
-      | organisation_member_email      | yvonne.lacasse@malvern.example |
+      | organisation_member_email      | y.lacasse@malvern.example |
       | organisation_member_roleName_1 | ROLE_PROF_TEAM_MEMBER          |
     And I press "Save"
     Then the URL should match "/org/settings/organisation/\d+"
     And I should see "Yvonne Lacasse"
-    And I should see "yvonne.lacasse@malvern.example"
+    And I should see "y.lacasse@malvern.example"
 
   Scenario: Admins of orgs with an email address identifier can add users to their organisation
     Given I am logged in as "guscioraonline@gmail.example" with password "Abcd1234"
@@ -59,21 +59,22 @@ Feature: Organisation admins can edit members of their organisation
     Then the URL should match "/org/settings/organisation/\d+"
     And I should see "Lacy Wallen"
 
-  Scenario: Org admins can edit non-activated users
-    Given I am logged in as "l.degroot@malvern.example" with password "Abcd1234"
-    When I go to "/org/settings/organisation"
-    And I click on "edit" in the "team-user-yvonnelacassemalvernexample" region
-    Then the "organisation_member_firstname" field should contain "Yvonne"
-    And the "organisation_member_lastname" field should contain "Lacasse"
-    And the "organisation_member_email" field should contain "yvonne.lacasse@malvern.example"
-    When I follow "Cancel"
-    Then the URL should match "/org/settings/organisation/\d+"
-    When I click on "edit" in the "team-user-yvonnelacassemalvernexample" region
-    And I fill in "organisation_member_email" with "y.lacasse@malvern.example"
-    And I press "Save"
-    Then the URL should match "/org/settings/organisation/\d+"
-    And I should see "Yvonne Lacasse"
-    And I should see "y.lacasse@malvern.example"
+#    TODO: uncomment once DDPB-3356 is merged
+#  Scenario: Org admins can edit non-activated users
+#    Given I am logged in as "l.degroot@malvern.example" with password "Abcd1234"
+#    When I go to "/org/settings/organisation"
+#    And I click on "edit" in the "team-user-yvonnelacassemalvernexample" region
+#    Then the "organisation_member_firstname" field should contain "Yvonne"
+#    And the "organisation_member_lastname" field should contain "Lacasse"
+#    And the "organisation_member_email" field should contain "yvonne.lacasse@malvern.example"
+#    When I follow "Cancel"
+#    Then the URL should match "/org/settings/organisation/\d+"
+#    When I click on "edit" in the "team-user-yvonnelacassemalvernexample" region
+#    And I fill in "organisation_member_email" with "y.lacasse@malvern.example"
+#    And I press "Save"
+#    Then the URL should match "/org/settings/organisation/\d+"
+#    And I should see "Yvonne Lacasse"
+#    And I should see "y.lacasse@malvern.example"
 
   Scenario: Org admins can resend activation emails to non-activated users
     Given I am logged in as "l.degroot@malvern.example" with password "Abcd1234"
@@ -132,7 +133,8 @@ Feature: Organisation admins can edit members of their organisation
         | set_password_password_second | Abcd1234 |
     And I check "set_password_showTermsAndConditions"
     And I press "Submit"
-    When I go to "/org/settings/organisation"
+    When I am logged in as "k.damore@malvern.example" with password "Abcd1234"
+    And I go to "/org/settings/organisation"
     Then I should see "Add user"
     And I should see "Edit" in the "team-user-ylacassemalvernexample" region
     And I should see "Remove" in the "team-user-ylacassemalvernexample" region
