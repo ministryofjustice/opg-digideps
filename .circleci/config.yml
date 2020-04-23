@@ -321,11 +321,8 @@ jobs:
             - 6f:4b:55:76:0e:cd:27:7d:ad:c3:28:38:53:69:5c:32
       - checkout
       - run:
-          name: Install semvertag
-          command: sudo pip install https://github.com/ministryofjustice/semvertag/archive/master.zip
-      - run:
-          name: Bump version
-          command: semvertag bump patch << parameters.semver_stage >> >> ~/project/VERSION
+          name: Set version
+          command: echo "$CIRCLE_BRANCH-$SHORT_HASH" >> ~/project/VERSION
       - persist_to_workspace:
           root: .
           paths:
