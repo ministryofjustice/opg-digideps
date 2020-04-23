@@ -16,7 +16,7 @@ resource "aws_cloudwatch_metric_alarm" "php_errors" {
   statistic           = "Sum"
   metric_name         = aws_cloudwatch_log_metric_filter.php_errors.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  threshold           = 1
+  threshold           = 3
   period              = 3600
   evaluation_periods  = 1
   namespace           = aws_cloudwatch_log_metric_filter.php_errors.metric_transformation[0].namespace
@@ -41,7 +41,7 @@ resource "aws_cloudwatch_metric_alarm" "nginx_errors" {
   statistic           = "Sum"
   metric_name         = aws_cloudwatch_log_metric_filter.nginx_errors.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  threshold           = 1
+  threshold           = 3
   period              = 3600
   evaluation_periods  = 1
   namespace           = aws_cloudwatch_log_metric_filter.nginx_errors.metric_transformation[0].namespace
