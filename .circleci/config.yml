@@ -334,12 +334,6 @@ jobs:
           name: Show version
           command: echo ${VERSION}
       - run:
-          name: Tag git
-          command: git tag ${VERSION}
-      - run:
-          name: Push git tags
-          command: git push --tags
-      - run:
           name: Docker login
           command: eval $(aws ecr get-login --region $AWS_REGION --no-include-email --profile digideps-ci)
       - run:
