@@ -19,7 +19,7 @@ psql -h postgres.<environment name>.internal -U digidepsmaster api
 
 If for any reason the environment is destroyed, the below instructions should be run to set up the required parts of the app to provide DB access
 
-These instructions should not be run each time a new user accesses the environment.
+**These instructions should not be run each time a new user accesses the environment.**
 
 ```
 ### Upgrade to PHP 7.3 and install required libs
