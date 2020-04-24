@@ -320,8 +320,12 @@ jobs:
       - run:
           name: Set version
           command: |
+            echo $CIRCLE_SHA1
             export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+            echo $SHORT_HASH
             export VERSION=${WORKSPACE}-${SHORT_HASH} >> $BASH_ENV
+            echo $WORKSPACE
+            echo $VERSION
 
             echo "$VERSION" >> ~/project/VERSION
       - persist_to_workspace:
