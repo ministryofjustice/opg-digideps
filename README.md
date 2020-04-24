@@ -42,7 +42,7 @@ You can then use the make files in `environment` and `shared` to set up the envi
 ```bash
 # ensure your environment is setup:
 export TF_WORKSPACE=myawesomeenvironment
-export TF_VAR_OPG_DOCKER_TAG=1.0.myawesometag
+export TF_VAR_OPG_DOCKER_TAG=mybranch-githash
 export AWS_ACCESS_KEY_ID=AKIAEXAMPLE
 export AWS_SECRET_ACCESS_KEY=cbeamsglittering
 cd environment
@@ -50,7 +50,7 @@ make
 
 # alternatively, using aws-vault:
 export TF_WORKSPACE=myawesomeenvironment
-export TF_VAR_OPG_DOCKER_TAG=1.0.myawesometag
+export TF_VAR_OPG_DOCKER_TAG=mybranch-githash
 cd environment
 aws-vault exec identity make
 ```
