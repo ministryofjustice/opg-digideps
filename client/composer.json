@@ -6,7 +6,7 @@
     "autoload": {
         "psr-0": {
             "": "src/",
-            "AppKernel": "",
+            "AppKernel": ""
         },
         "psr-4": { "DigidepsTests\\": "tests/phpunit" }
     },
@@ -30,7 +30,7 @@
         "php-http/guzzle6-adapter": "^2.0",
         "sensio/framework-extra-bundle": "5.4.1",
         "symfony/serializer": "3.4.38",
-        "symfony/phpunit-bridge": "^5.0"
+        "symfony/phpunit-bridge": "^4.4"
     },
     "scripts": {
         "post-install-cmd": [
