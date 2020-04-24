@@ -215,7 +215,7 @@ class NdrController extends AbstractController
 
         $form = $this->createForm(FormDir\Ndr\ReportDeclarationType::class, $ndr);
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             // set report submitted with date
 
             $ndr->setSubmitted(true)->setSubmitDate(new \DateTime());
@@ -279,7 +279,7 @@ class NdrController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             // Store in database
             $this->getRestClient()->post('satisfaction', [
                 'score' => $form->get('satisfactionLevel')->getData(),

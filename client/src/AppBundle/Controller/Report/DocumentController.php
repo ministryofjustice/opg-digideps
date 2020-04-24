@@ -141,7 +141,7 @@ class DocumentController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $files = $request->files->get('report_document_upload')['files'];
 
             if (is_array($files)) {
@@ -260,7 +260,7 @@ class DocumentController extends AbstractController
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             return $this->deleteDocument($request, $documentId);
         }
 

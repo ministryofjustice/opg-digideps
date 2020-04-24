@@ -49,7 +49,7 @@ class DeputyExpenseController extends AbstractController
                                  );
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             /* @var $data EntityDir\Report\Report */
             switch ($data->getPaidForAnything()) {
@@ -92,7 +92,7 @@ class DeputyExpenseController extends AbstractController
         );
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $data->setReport($report);
 
@@ -122,7 +122,7 @@ class DeputyExpenseController extends AbstractController
         $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-deputy-expenses']);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             switch ($form['addAnother']->getData()) {
                 case 'yes':
                     return $this->redirectToRoute('deputy_expenses_add', ['reportId' => $reportId, 'from' => 'add_another']);
@@ -168,7 +168,7 @@ class DeputyExpenseController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $request->getSession()->getFlashBag()->add('notice', 'Expense edited');
 
@@ -226,7 +226,7 @@ class DeputyExpenseController extends AbstractController
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getRestClient()->delete('report/' . $report->getId() . '/expense/' . $expenseId);
 
             $request->getSession()->getFlashBag()->add(

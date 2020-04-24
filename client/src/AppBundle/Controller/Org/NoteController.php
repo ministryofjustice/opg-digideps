@@ -43,7 +43,7 @@ class NoteController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $note = $form->getData();
 
             $this->getRestClient()->post('note/' . $client->getId(), $note, ['add_note']);
@@ -78,7 +78,7 @@ class NoteController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $note = $form->getData();
 
             $this->getRestClient()->put('note/' . $noteId, $note, ['add_note']);
@@ -114,7 +114,7 @@ class NoteController extends AbstractController
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 /** @var EntityDir\Note $note */
                 $note = $this->getNote($noteId);

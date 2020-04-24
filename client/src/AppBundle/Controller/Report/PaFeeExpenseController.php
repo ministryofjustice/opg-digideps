@@ -53,7 +53,7 @@ class PaFeeExpenseController extends AbstractController
         $form = $this->createForm(FormDir\Report\PaFeeExistType::class, $report);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             switch ($form['hasFees']->getData()) {
                 case 'yes':
                     $report->setReasonForNoFees(null);
@@ -88,7 +88,7 @@ class PaFeeExpenseController extends AbstractController
         $form->handleRequest($request);
         $fromPage = $request->get('from');
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getRestClient()->put('report/' . $report->getId(), $form->getData(), ['fee']);
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Fee edited');
@@ -120,7 +120,7 @@ class PaFeeExpenseController extends AbstractController
                                  );
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             /* @var $data EntityDir\Report\Report */
             switch ($data->getPaidForAnything()) {
@@ -168,7 +168,7 @@ class PaFeeExpenseController extends AbstractController
         );
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $data->setReport($report);
 
@@ -203,7 +203,7 @@ class PaFeeExpenseController extends AbstractController
         $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-pa-fee-expense']);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             switch ($form['addAnother']->getData()) {
                 case 'yes':
                     return $this->redirectToRoute('pa_fee_expense_other_add', ['reportId' => $reportId, 'from' => 'add_another']);
@@ -243,7 +243,7 @@ class PaFeeExpenseController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $request->getSession()->getFlashBag()->add('notice', 'Expense edited');
 
@@ -275,7 +275,7 @@ class PaFeeExpenseController extends AbstractController
 
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
             $this->getRestClient()->delete('report/' . $report->getId() . '/expense/' . $expenseId);

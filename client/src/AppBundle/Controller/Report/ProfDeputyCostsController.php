@@ -100,7 +100,7 @@ class ProfDeputyCostsController extends AbstractController
         );
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             /* @var $data EntityDir\Report\Report */
             switch ($data->getProfDeputyCostsHasPrevious()) {
@@ -153,7 +153,7 @@ class ProfDeputyCostsController extends AbstractController
         ]);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
             if ($previousReceivedId) { // edit
                 $this->getRestClient()->put('/prof-deputy-previous-cost/' . $previousReceivedId, $pr, ['profDeputyPrevCosts']);
@@ -199,7 +199,7 @@ class ProfDeputyCostsController extends AbstractController
 
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getRestClient()->delete('report/' . $report->getId() . '/prof-deputy-previous-cost/' . $previousReceivedId);
 
             $request->getSession()->getFlashBag()->add(
@@ -241,7 +241,7 @@ class ProfDeputyCostsController extends AbstractController
         );
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             /* @var $data EntityDir\Report\Report */
 
@@ -289,7 +289,7 @@ class ProfDeputyCostsController extends AbstractController
         $form = $this->createForm(FormDir\Report\ProfDeputyCostInterimType::class, $report);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
             $this->getRestClient()->put('/report/' . $reportId, $report, ['profDeputyInterimCosts']);
 
@@ -323,7 +323,7 @@ class ProfDeputyCostsController extends AbstractController
         $form = $this->createForm(FormDir\Report\ProfDeputyFixedCostType::class, $report);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
             $this->getRestClient()->put('/report/' . $reportId, $report, ['profDeputyFixedCost']);
 
@@ -360,7 +360,7 @@ class ProfDeputyCostsController extends AbstractController
         $form = $this->createForm(FormDir\Report\ProfDeputyCostSccoType::class, $report);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
             $this->getRestClient()->put('/report/' . $reportId, $report, ['profDeputyCostsScco']);
 
@@ -401,7 +401,7 @@ class ProfDeputyCostsController extends AbstractController
         $form = $this->createForm(FormDir\Report\ProfDeputyOtherCostsType::class, $report, []);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getRestClient()->put('report/' . $report->getId(), $form->getData(), ['prof-deputy-other-costs']);
 
             if ($from === 'summary') {

@@ -154,7 +154,7 @@ class BankAccountController extends AbstractController
         $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-bank-accounts']);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             switch ($form['addAnother']->getData()) {
                 case 'yes':
                     return $this->redirectToRoute('bank_accounts_step', ['reportId' => $reportId, 'step' => 1]);
@@ -217,7 +217,7 @@ class BankAccountController extends AbstractController
         $form->handleRequest($request);
 
         // delete the bank acount if the confirm button is pushed, or there are no payments. Then go back to summary page
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             if ($report->getBankAccountById($accountId)) {
                 $this->getRestClient()->delete("/account/{$accountId}");
             }

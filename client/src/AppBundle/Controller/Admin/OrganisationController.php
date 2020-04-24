@@ -66,7 +66,7 @@ class OrganisationController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $organisation = $form->getData();
 
             try {
@@ -103,7 +103,7 @@ class OrganisationController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $organisation = $form->getData();
 
             try {
@@ -136,7 +136,7 @@ class OrganisationController extends AbstractController
 
         $organisation = $this->getRestClient()->get('v2/organisation/' . $id, 'Organisation');
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->getRestClient()->delete('v2/organisation/' . $organisation->getId());
                 $request->getSession()->getFlashBag()->add('notice', 'The organisation has been removed');
@@ -229,7 +229,7 @@ class OrganisationController extends AbstractController
         $organisation = $this->getRestClient()->get('v2/organisation/' . $id, 'Organisation');
         $user = $this->getRestClient()->get('user/' . $userId, 'User');
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->getRestClient()->delete('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId());
                 $request->getSession()->getFlashBag()->add('notice', 'User has been removed from ' . $organisation->getName());

@@ -84,7 +84,7 @@ class MoneyOutShortController extends AbstractController
         $form->handleRequest($request);
         $fromSummaryPage = $request->get('from') == 'summary';
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             /* @var $data EntityDir\Report\Report */
             $this->getRestClient()->put('report/' . $reportId, $data, ['money-transactions-short-out-exist']);
@@ -117,7 +117,7 @@ class MoneyOutShortController extends AbstractController
         $form = $this->createForm(FormDir\Report\MoneyShortTransactionType::class, $record);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $this->getRestClient()->post('report/' . $report->getId() . '/money-transaction-short', $data, ['moneyTransactionShort']);
 
@@ -146,7 +146,7 @@ class MoneyOutShortController extends AbstractController
         $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-money-short']);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             switch ($form['addAnother']->getData()) {
                 case 'yes':
                     return $this->redirectToRoute('money_out_short_add', ['reportId' => $reportId, 'from' => 'add_another']);
@@ -173,7 +173,7 @@ class MoneyOutShortController extends AbstractController
         $form = $this->createForm(FormDir\Report\MoneyShortTransactionType::class, $transaction);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $request->getSession()->getFlashBag()->add('notice', 'Entry edited');
 
@@ -204,7 +204,7 @@ class MoneyOutShortController extends AbstractController
 
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
             $this->getRestClient()->delete('report/' . $report->getId() . '/money-transaction-short/' . $transactionId);

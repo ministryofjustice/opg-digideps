@@ -31,7 +31,7 @@ class SearchController extends AbstractController
         }
 
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $filters = $form->getData() + $this->getDefaultFilters($request);
         }
 

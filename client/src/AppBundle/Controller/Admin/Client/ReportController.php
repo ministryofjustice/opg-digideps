@@ -124,7 +124,7 @@ class ReportController extends AbstractController
         $reviewForm = $this->createForm(ReviewChecklistType::class, $reviewChecklist);
         $reviewForm->handleRequest($request);
 
-        if ($reviewForm->isValid()) {
+        if ($reviewForm->isSubmitted() && $reviewForm->isValid()) {
             /** @var SubmitButton $button */
             $button = $reviewForm->getClickedButton();
             if ($button->getName() === ReviewChecklistType::SUBMIT_ACTION) {
@@ -149,7 +149,7 @@ class ReportController extends AbstractController
             $checklist->setButtonClicked($buttonClicked->getName());
         }
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             if (!empty($checklist->getId())) {
                 $this->getRestClient()->put('report/' . $report->getId() . '/checked', $checklist, [
                     'report-checklist', 'checklist-information'
@@ -375,7 +375,7 @@ class ReportController extends AbstractController
         $form = $this->createForm(ManageReportConfirmType::class, $report);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             if ($form->has('confirm') && $form['confirm']->getData() === 'no') {
                 // User decided not to update.
                 return $this->redirect($this->generateUrl('admin_client_details', ['id'=>$report->getClient()->getId()]));

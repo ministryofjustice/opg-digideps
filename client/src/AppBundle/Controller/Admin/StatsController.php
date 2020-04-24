@@ -32,7 +32,7 @@ class StatsController extends AbstractController
         $form = $this->createForm(ReportSubmissionDownloadFilterType::class , new ReportSubmissionSummaryQuery());
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $reportSubmissionSummaries = $mapper->getBy($form->getData());
                 $downloadableData = $transformer->transform($reportSubmissionSummaries);
@@ -80,7 +80,7 @@ class StatsController extends AbstractController
 
         $append = '';
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $startDate = $form->get('startDate')->getData();
             $endDate = $form->get('endDate')->getData();
             $append = "&startDate={$startDate->format('Y-m-d')}&endDate={$endDate->format('Y-m-d')}";

@@ -41,7 +41,7 @@ class AdController extends AbstractController
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 // add user
                 try {
                     $userToAdd = $form->getData(); /* @var $userToAdd EntityDir\User*/

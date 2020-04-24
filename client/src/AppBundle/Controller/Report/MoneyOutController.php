@@ -148,7 +148,7 @@ class MoneyOutController extends AbstractController
         $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-money-transaction']);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             switch ($form['addAnother']->getData()) {
                 case 'yes':
                     return $this->redirectToRoute('money_out_step', ['reportId' => $reportId, 'step' => 1]);
@@ -210,7 +210,7 @@ class MoneyOutController extends AbstractController
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getRestClient()->delete('/report/' . $reportId . '/money-transaction/' . $transactionId);
 
             $this->addFlash(

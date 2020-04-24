@@ -45,7 +45,7 @@ class BalanceController extends AbstractController
         $form = $this->createForm(FormDir\Report\ReasonForBalanceType::class, $report);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $this->getRestClient()->put('report/' . $reportId, $data, ['balance_mismatch_explanation']);
 

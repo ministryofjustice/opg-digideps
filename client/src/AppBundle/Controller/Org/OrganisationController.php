@@ -88,7 +88,7 @@ class OrganisationController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
             try {
                 $email = $form->getData()->getEmail();
@@ -173,7 +173,7 @@ class OrganisationController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
 
             try {
@@ -224,7 +224,7 @@ class OrganisationController extends AbstractController
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->getRestClient()->delete('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId());
 

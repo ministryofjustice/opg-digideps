@@ -53,7 +53,7 @@ class AssetController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             switch ($ndr->getNoAssetToAdd()) {
                 case 0: // yes
                     return $this->redirectToRoute('ndr_assets_type', ['ndrId' => $ndrId,]);
@@ -86,7 +86,7 @@ class AssetController extends AbstractController
         ]);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $title = $form->getData()->getTitle();
             switch ($title) {
                 case 'Property':
@@ -118,7 +118,7 @@ class AssetController extends AbstractController
         $form = $this->createForm(FormDir\Ndr\Asset\AssetTypeOther::class, $asset);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $asset = $form->getData();
             $this->getRestClient()->post("ndr/{$ndrId}/asset", $asset);
 
@@ -153,7 +153,7 @@ class AssetController extends AbstractController
         $form = $this->createForm(FormDir\Ndr\Asset\AssetTypeOther::class, $asset);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $asset = $form->getData();
             $this->getRestClient()->put("ndr/{$ndrId}/asset/{$assetId}", $asset);
             $request->getSession()->getFlashBag()->add('notice', 'Asset edited');
@@ -180,7 +180,7 @@ class AssetController extends AbstractController
         $form = $this->createForm(FormDir\AddAnotherRecordType::class, $ndr, ['translation_domain' => 'ndr-assets']);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             switch ($form['addAnother']->getData()) {
                 case 'yes':
                     return $this->redirectToRoute('ndr_assets_type', ['ndrId' => $ndrId, 'from' => 'another']);
@@ -347,7 +347,7 @@ class AssetController extends AbstractController
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $ndr = $this->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
 
             if ($ndr->hasAssetWithId($assetId)) {

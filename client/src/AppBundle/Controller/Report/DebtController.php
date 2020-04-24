@@ -45,7 +45,7 @@ class DebtController extends AbstractController
                                  );
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getRestClient()->put('report/' . $reportId, $report, ['debt']);
 
             if ($report->getHasDebts() == 'yes') {
@@ -80,7 +80,7 @@ class DebtController extends AbstractController
         $form->handleRequest($request);
         $fromPage = $request->get('from');
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getRestClient()->put('report/' . $report->getId(), $form->getData(), ['debt']);
 
             if ($fromPage == 'summary') {
@@ -120,7 +120,7 @@ class DebtController extends AbstractController
         $fromPage = $request->get('from');
         $fromSummaryPage = $request->get('from') == 'summary';
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getRestClient()->put('report/' . $report->getId(), $form->getData(), ['debt-management']);
 
             if ($fromPage == 'summary') {

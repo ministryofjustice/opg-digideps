@@ -20,7 +20,7 @@ class FeedbackController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             // Store in database
             $score = $form->get('satisfactionLevel')->getData();
             if ($score) {

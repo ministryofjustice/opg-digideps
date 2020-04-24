@@ -50,7 +50,7 @@ class GiftController extends AbstractController
                                  );
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             /* @var $data EntityDir\Report\Report */
             switch ($data->getGiftsExist()) {
@@ -93,7 +93,7 @@ class GiftController extends AbstractController
         );
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $data->setReport($report);
 
@@ -146,7 +146,7 @@ class GiftController extends AbstractController
         );
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $request->getSession()->getFlashBag()->add('notice', 'Gift edited');
 
@@ -201,7 +201,7 @@ class GiftController extends AbstractController
 
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getRestClient()->delete('report/' . $report->getId() . '/gift/' . $giftId);
 
             $request->getSession()->getFlashBag()->add(

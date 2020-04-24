@@ -87,7 +87,7 @@ class IndexController extends AbstractController
         $form->handleRequest($request);
 
         // edit client form
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $clientUpdated = $form->getData();
             $clientUpdated->setId($client->getId());
             $this->getRestClient()->put('client/upsert', $clientUpdated, ['pa-edit']);

@@ -76,7 +76,7 @@ class IndexController extends AbstractController
             'isAdmin' => $this->container->getParameter('env') === 'admin',
         ];
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->logUserIn($form->getData(), $request, [
                     '_adId' => null,
@@ -273,7 +273,7 @@ class IndexController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid() || $request->query->get('accept') === 'all') {
+        if ($form->isSubmitted() && $form->isValid() || $request->query->get('accept') === 'all') {
             $settings = [
                 'essential' => true,
                 'usage' => $form->get('usage')->getData()

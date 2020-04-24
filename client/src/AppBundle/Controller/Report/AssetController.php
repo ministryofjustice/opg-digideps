@@ -58,7 +58,7 @@ class AssetController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             switch ($report->getNoAssetToAdd()) {
                 case 0: // yes
                     return $this->redirectToRoute('assets_type', ['reportId' => $reportId,]);
@@ -91,7 +91,7 @@ class AssetController extends AbstractController
         ]);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $title = $form->getData()->getTitle();
             switch ($title) {
                 case 'Property':
@@ -123,7 +123,7 @@ class AssetController extends AbstractController
         $form = $this->createForm(FormDir\Report\Asset\AssetTypeOther::class, $asset);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $asset = $form->getData();
             $this->getRestClient()->post("report/{$reportId}/asset", $asset);
 
@@ -158,7 +158,7 @@ class AssetController extends AbstractController
         $form = $this->createForm(FormDir\Report\Asset\AssetTypeOther::class, $asset);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $asset = $form->getData();
             $this->getRestClient()->put("report/{$reportId}/asset/{$assetId}", $asset);
             $request->getSession()->getFlashBag()->add('notice', 'Asset edited');
@@ -185,7 +185,7 @@ class AssetController extends AbstractController
         $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-assets']);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             switch ($form['addAnother']->getData()) {
                 case 'yes':
                     return $this->redirectToRoute('assets_type', ['reportId' => $reportId, 'from' => 'another']);
@@ -355,7 +355,7 @@ class AssetController extends AbstractController
         $form->handleRequest($request);
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             if ($report->hasAssetWithId($assetId)) {
                 $this->getRestClient()->delete("/report/{$reportId}/asset/{$assetId}");
                 $request->getSession()->getFlashBag()->add('notice', 'Asset removed');

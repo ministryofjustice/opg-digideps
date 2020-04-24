@@ -48,7 +48,7 @@ class DeputyExpenseController extends AbstractController
                                  );
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             /* @var $data EntityDir\Ndr\Ndr */
             switch ($data->getPaidForAnything()) {
@@ -84,7 +84,7 @@ class DeputyExpenseController extends AbstractController
         $form = $this->createForm(FormDir\Ndr\DeputyExpenseType::class, $expense);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $data->setNdr($ndr);
 
@@ -115,7 +115,7 @@ class DeputyExpenseController extends AbstractController
         $form = $this->createForm(FormDir\AddAnotherRecordType::class, $ndr, ['translation_domain' => 'ndr-deputy-expenses']);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             switch ($form['addAnother']->getData()) {
                 case 'yes':
                     return $this->redirectToRoute('ndr_deputy_expenses_add', ['ndrId' => $ndrId, 'from' => 'add_another']);
@@ -142,7 +142,7 @@ class DeputyExpenseController extends AbstractController
         $form = $this->createForm(FormDir\Ndr\DeputyExpenseType::class, $expense);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $request->getSession()->getFlashBag()->add('notice', 'Expense edited');
 
@@ -191,7 +191,7 @@ class DeputyExpenseController extends AbstractController
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $ndr = $this->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
 
             $this->getRestClient()->delete('ndr/' . $ndr->getId() . '/expense/' . $expenseId);
