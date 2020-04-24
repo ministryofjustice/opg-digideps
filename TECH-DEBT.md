@@ -9,7 +9,6 @@ If any debt may lead to larger risks, it should be transferred to the risk board
 
 ## Infra
 - scheduled scaling for cost saving
-- remove dependency on semvertag
 - periodically rotate CI access key
 - move public routes to main route table
 - Move to secrets per account
