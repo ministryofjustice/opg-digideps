@@ -322,7 +322,6 @@ jobs:
           command: |
             export VERSION=${TF_WORKSPACE}-${CIRCLE_SHA1:0:7}
 
-            echo "$VERSION"
             echo "export VERSION=${VERSION}" >> $BASH_ENV
             echo "$VERSION" >> ~/project/VERSION
       - persist_to_workspace:
