@@ -9,7 +9,6 @@ workflows:
 
       - build:
           name: build pr
-          semver_stage: --stage dev
           filters: { branches: { ignore: [ master ] } }
 
       - apply:
@@ -304,11 +303,6 @@ jobs:
   build:
     docker:
       - image: circleci/python:3
-    parameters:
-      semver_stage:
-        description: semver stage suffix
-        default: ""
-        type: string
     environment:
       AWS_REGION: eu-west-1
       AWS_CONFIG_FILE: ~/project/aws_config
