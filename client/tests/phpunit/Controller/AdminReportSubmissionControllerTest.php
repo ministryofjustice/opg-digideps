@@ -7,6 +7,7 @@ use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\User;
+use AppBundle\Service\FeatureFlagService;
 use Prophecy\Argument;
 
 class AdminReportSubmissionControllerTest extends AbstractControllerTestCase
@@ -25,6 +26,10 @@ class AdminReportSubmissionControllerTest extends AbstractControllerTestCase
                 ],
                 'records' => ['placeholder']
             ]);
+
+        $this->injectProphecyService(FeatureFlagService::class, function ($service) {
+            $service->get(FeatureFlagService::FLAG_DOCUMENT_SYNC)->shouldBeCalled()->willReturn('1');
+        });
 
         $this->mockLoggedInUser(['ROLE_ADMIN']);
     }
@@ -120,6 +125,60 @@ class AdminReportSubmissionControllerTest extends AbstractControllerTestCase
 
         self::assertEquals('SP', $archivedBy->text());
         self::assertEquals('Solomon Pinedo', $archivedBy->attr('title'));
+    }
+
+    public function testSynchroniseQueuesDocuments(): void
+    {
+        $submissionId = 47638;
+
+        $this->restClient
+            ->arrayToEntities(ReportSubmission::class . '[]', ['placeholder'])
+            ->shouldBeCalled()
+            ->willReturn([
+                $this->generateReportSubmission('72549273', 'Dario', 'Lucke')
+                    ->setId($submissionId)
+                    ->setDownloadable(true)
+            ]);
+
+        $crawler = $this->client->request('GET', '/admin/documents/list');
+
+        $this->restClient
+            ->put("report-submission/$submissionId/queue-documents", [])
+            ->shouldBeCalled()
+            ->willReturn();
+
+        $form = $crawler->selectButton('Synchronise')->form();
+        $form["checkboxes[$submissionId]"]->tick();
+
+        $this->client->submit($form);
+    }
+
+    public function testSynchroniseButtonHoldIfFlagOff(): void
+    {
+        $submissionId = 47638;
+
+        $this->restClient
+            ->arrayToEntities(ReportSubmission::class . '[]', ['placeholder'])
+            ->shouldBeCalled()
+            ->willReturn([
+                $this->generateReportSubmission('72549273', 'Dario', 'Lucke')
+                    ->setId($submissionId)
+                    ->setDownloadable(true)
+            ]);
+
+        $crawler = $this->client->request('GET', '/admin/documents/list');
+
+        $button = $crawler->selectButton('Synchronise');
+        self::assertNotNull($button->getNode(0));
+
+        $this->injectProphecyService(FeatureFlagService::class, function ($service) {
+            $service->get(FeatureFlagService::FLAG_DOCUMENT_SYNC)->shouldBeCalled()->willReturn('0');
+        });
+
+        $crawler = $this->client->request('GET', '/admin/documents/list');
+
+        $button = $crawler->selectButton('Synchronise');
+        self::assertNull($button->getNode(0));
     }
 
     private function generateReportSubmission(
