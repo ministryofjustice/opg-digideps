@@ -64,6 +64,10 @@
 
         {{ form_checkbox(form.agree, 'agree', { 'labelClass': 'required' }) }}
 
+        {% set conditional_details %}
+            {{ form_input(form.agreedBehalfDeputyExplanation, 'agreedBehalfDeputyExplanation' )}}
+        {% endset %}
+
         <div class="govuk-form-group push-half--bottom {% if not form.agreedBehalfDeputy.vars.valid %}govuk-form-group--error{% endif %}">
             {{ form_checkbox_group(form.agreedBehalfDeputy, 'agreedBehalfDeputy', {
                 'useFormGroup': false,
@@ -73,7 +77,7 @@
                     {},
                     {},
                     {},
-                    {'dataTarget': 'agreed-behalf-deputy-explanation-section' }
+                    {'conditional': conditional_details }
                 ]
             }) }}
 
