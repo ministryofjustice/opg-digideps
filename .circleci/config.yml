@@ -321,10 +321,10 @@ jobs:
           name: Set version
           command: |
             echo $CIRCLE_SHA1
-            export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+            echo "export SHORT_HASH=${CIRCLE_SHA1:0:7}" >> $BASH_ENV
             echo $SHORT_HASH
-            export VERSION=${WORKSPACE}-${SHORT_HASH} >> $BASH_ENV
-            echo $WORKSPACE
+            echo "export VERSION=${TF_WORKSPACE}-${SHORT_HASH}" >> $BASH_ENV
+            echo $TF_WORKSPACE
             echo $VERSION
 
             echo "$VERSION" >> ~/project/VERSION
