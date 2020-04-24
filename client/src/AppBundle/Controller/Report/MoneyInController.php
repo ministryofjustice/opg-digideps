@@ -102,7 +102,7 @@ class MoneyInController extends AbstractController
 
         /** @var SubmitButton $saveButton */
         $saveButton = $form->get('save');
-        if ($saveButton->isClicked() && $form->isValid()) {
+        if ($saveButton->isClicked() && $form->isSubmitted() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
             if ($step == 1) {
                 // unset from page to prevent step redirector skipping step 2

@@ -56,7 +56,7 @@ class ActionController extends AbstractController
         $form = $this->createForm(FormDir\Ndr\ActionType::class, $ndr, ['step' => $step]);
         $form->handleRequest($request);
 
-        if ($form->get('save')->isClicked() && $form->isValid()) {
+        if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $this->getRestClient()->put('ndr/' . $ndrId, $data, ['action']);
 

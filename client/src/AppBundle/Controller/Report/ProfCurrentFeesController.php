@@ -114,7 +114,7 @@ class ProfCurrentFeesController extends AbstractController
         $form->handleRequest($request);
         $buttonClicked = $form->getClickedButton();
 
-        if ($buttonClicked && $form->isValid()) {
+        if ($buttonClicked && $form->isSubmitted() && $form->isValid()) {
             /* @var $profServiceFee EntityDir\Report\ProfServiceFee */
             $profServiceFee = $form->getData();
             $profServiceFee->setReport($report);

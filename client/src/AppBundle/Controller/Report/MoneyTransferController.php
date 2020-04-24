@@ -139,7 +139,7 @@ class MoneyTransferController extends AbstractController
 
         /** @var SubmitButton $submitBtn */
         $submitBtn = $form->get('save');
-        if ($submitBtn->isClicked() && $form->isValid()) {
+        if ($submitBtn->isClicked() && $form->isSubmitted() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
             if ($step == 1) {
                 $stepUrlData['from-id'] = $transfer->getAccountFromId();

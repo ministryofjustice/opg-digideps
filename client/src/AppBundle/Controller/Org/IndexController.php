@@ -122,7 +122,7 @@ class IndexController extends AbstractController
 
         /** @var SubmitButton $submitBtn */
         $submitBtn = $form->get('save');
-        if ($submitBtn->isClicked() && $form->isValid()) {
+        if ($submitBtn->isClicked() && $form->isSubmitted() && $form->isValid()) {
             if (true === $form->get('confirmArchive')->getData()) {
                 $this->getRestClient()->apiCall('put', 'client/' . $client->getId() . '/archive', null, 'array');
                 $this->addFlash('notice', 'The client has been archived');

@@ -76,7 +76,7 @@ class BankAccountController extends AbstractController
         $form = $this->createForm(FormDir\Ndr\BankAccountType::class, $account, ['step' => $step]);
         $form->handleRequest($request);
 
-        if ($form->get('save')->isClicked() && $form->isValid()) {
+        if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
             if ($step == 1) {
                 $stepUrlData['type'] = $account->getAccountType();

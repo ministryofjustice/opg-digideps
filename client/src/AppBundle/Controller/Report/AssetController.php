@@ -256,7 +256,7 @@ class AssetController extends AbstractController
         $form = $this->createForm(FormDir\Report\Asset\AssetTypeProperty::class, $asset, ['step' => $step]);
         $form->handleRequest($request);
 
-        if ($form->get('save')->isClicked() && $form->isValid()) {
+        if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $asset = $form->getData();
             /* @var $asset Report\AssetProperty */
 

@@ -89,7 +89,7 @@ class DocumentController extends AbstractController
         /** @var SubmitButton $submitBtn */
         $submitBtn = $form->get('save');
 
-        if ($submitBtn->isClicked() && $form->isValid()) {
+        if ($submitBtn->isClicked() && $form->isSubmitted() && $form->isValid()) {
             /* @var $data EntityDir\Report\Report */
             $data = $form->getData();
 

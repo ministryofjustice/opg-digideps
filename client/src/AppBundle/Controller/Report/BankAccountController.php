@@ -81,7 +81,7 @@ class BankAccountController extends AbstractController
         $form = $this->createForm(FormDir\Report\BankAccountType::class, $account, ['step' => $step]);
         $form->handleRequest($request);
 
-        if ($form->get('save')->isClicked() && $form->isValid()) {
+        if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             // if closing balance is set to non-zero values, un-close the account
             /*if (!$data->isClosingBalanceZero()) {
                 $data->setIsClosed(false);

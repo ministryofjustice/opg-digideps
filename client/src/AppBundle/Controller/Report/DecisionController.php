@@ -57,7 +57,7 @@ class DecisionController extends AbstractController
         $form = $this->createForm(FormDir\Report\MentalCapacityType::class, $mc);
         $form->handleRequest($request);
 
-        if ($form->get('save')->isClicked() && $form->isValid()) {
+        if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $data->setReport($report);
 
@@ -94,7 +94,7 @@ class DecisionController extends AbstractController
         $form = $this->createForm(FormDir\Report\MentalAssessment::class, $mc);
         $form->handleRequest($request);
 
-        if ($form->get('save')->isClicked() && $form->isValid()) {
+        if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
             $data->setReport($report);

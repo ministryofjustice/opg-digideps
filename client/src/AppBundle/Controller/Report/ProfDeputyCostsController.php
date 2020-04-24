@@ -62,7 +62,7 @@ class ProfDeputyCostsController extends AbstractController
         $form = $this->createForm(FormDir\Report\ProfDeputyCostHowType::class, $report);
         $form->handleRequest($request);
 
-        if ($form->get('save')->isClicked() && $form->isValid()) {
+        if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
             $this->getRestClient()->put('report/' . $reportId, $data, ['deputyCostsHowCharged']);

@@ -48,7 +48,7 @@ class MoneyOutShortController extends AbstractController
         $form = $this->createForm(FormDir\Report\MoneyShortType::class, $report, ['field' => 'moneyShortCategoriesOut']);
         $form->handleRequest($request);
 
-        if ($form->get('save')->isClicked() && $form->isValid()) {
+        if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
             $this->getRestClient()->put('report/' . $reportId, $data, ['moneyShortCategoriesOut']);
