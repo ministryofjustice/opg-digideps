@@ -315,15 +315,19 @@ jobs:
             - 6f:4b:55:76:0e:cd:27:7d:ad:c3:28:38:53:69:5c:32
       - checkout
       - run:
+          name: Set environment
+          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
+      - run:
           name: Set version
-          command: echo "$CIRCLE_BRANCH-$SHORT_HASH" >> ~/project/VERSION
+          command: |
+            export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+            export VERSION=${WORKSPACE}-${SHORT_HASH} >> $BASH_ENV
+
+            echo "$VERSION" >> ~/project/VERSION
       - persist_to_workspace:
           root: .
           paths:
             - VERSION
-      - run:
-          name: Set environment
-          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
       - run:
           name: Show version
           command: echo ${VERSION}
