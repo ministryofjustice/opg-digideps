@@ -29,8 +29,7 @@
         "alphagov/notifications-php-client": "^2.1",
         "php-http/guzzle6-adapter": "^2.0",
         "sensio/framework-extra-bundle": "5.4.1",
-        "symfony/serializer": "3.4.38",
-        "symfony/phpunit-bridge": "^4.4"
+        "symfony/serializer": "3.4.38"
     },
     "scripts": {
         "post-install-cmd": [
