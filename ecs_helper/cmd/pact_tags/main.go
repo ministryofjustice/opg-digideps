@@ -1,14 +1,14 @@
 package main
 
 import (
-	"os"
-	"fmt"
-	"net/http"
 	"encoding/base64"
+	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/secretsmanager"
+	"net/http"
+	"os"
 )
 
 func basicAuth(username, password string) string {
@@ -16,14 +16,13 @@ func basicAuth(username, password string) string {
 	return base64.StdEncoding.EncodeToString([]byte(auth))
 }
 
-func getPactPassword(roletoassume string, pactsecretkey string) string {
+func getPactPassword(roleToAssume string, pactSecretKey string) string {
 	mysession := session.Must(session.NewSession())
-	creds := stscreds.NewCredentials(mysession, roletoassume)
-	cfg := aws.Config{Credentials: creds,Region: aws.String("eu-west-1")}
+	creds := stscreds.NewCredentials(mysession, roleToAssume)
+	cfg := aws.Config{Credentials: creds, Region: aws.String("eu-west-1")}
 	sess := session.Must(session.NewSession(&cfg))
 	sm := secretsmanager.New(sess)
-	secretkey := pactsecretkey
-	pact_password, err := sm.GetSecretValue(&secretsmanager.GetSecretValueInput{SecretId: &secretkey})
+	pact_password, err := sm.GetSecretValue(&secretsmanager.GetSecretValueInput{SecretId: &pactSecretKey})
 	if err != nil {
 		panic(err.Error())
 	}
@@ -32,38 +31,41 @@ func getPactPassword(roletoassume string, pactsecretkey string) string {
 
 func main() {
 
-	base_url := os.Getenv("PACT_BROKER_BASE_URL")
-	consumer_version := os.Getenv("PACT_CONSUMER_VERSION")
-	api_version := os.Getenv("PACT_API_VERSION")
+	baseUrl := os.Getenv("PACT_BROKER_BASE_URL")
+	consumerVersion := os.Getenv("PACT_CONSUMER_VERSION")
+	apiVersion := os.Getenv("PACT_API_VERSION")
+	account := os.Getenv("PACT_BROKER_ACCOUNT")
 
-	if len(base_url) == 0 || len(consumer_version) == 0 || len(api_version) == 0 {
+	if len(baseUrl) == 0 || len(consumerVersion) == 0 || len(apiVersion) == 0 || len(account) == 0 {
 		panic("One or more environment variables not set! Exiting")
 	}
 
 	consumer := "Complete%20the%20deputy%20report"
-	account := "997462338508"
-	roletoassume := fmt.Sprintf("arn:aws:iam::%s:role/get-pact-secret-production", account)
-	pactsecretkey := "pactbroker_admin"
+	roleToAssume := fmt.Sprintf("arn:aws:iam::%s:role/get-pact-secret-production", account)
+	pactSecretKey := "pactbroker_admin"
 
-	pact_password := getPactPassword(roletoassume, pactsecretkey)
+	pactPassword := getPactPassword(roleToAssume, pactSecretKey)
 
-	url := "https://"  + base_url + "/pacticipants/" + consumer + "/versions/" + consumer_version
+	url := "https://" + baseUrl + "/pacticipants/" + consumer + "/versions/" + consumerVersion
 	req, err := http.NewRequest("GET", url, nil)
-	req.Header.Add("Authorization","Basic " + basicAuth("admin",pact_password))
+	req.Header.Add("Authorization", "Basic "+basicAuth("admin", pactPassword))
 
 	response, err := http.DefaultClient.Do(req)
+	if err != nil {
+		panic(err.Error())
+	}
 	if response.Status == "200 OK" {
-		url = "https://"  + base_url + "/pacticipants/" + consumer + "/versions/" + consumer_version + "/tags/" + api_version + "_production"
+		url = "https://" + baseUrl + "/pacticipants/" + consumer + "/versions/" + consumerVersion + "/tags/" + apiVersion + "_production"
 		req, err = http.NewRequest("PUT", url, nil)
-		req.Header.Add("Authorization","Basic " + basicAuth("admin",pact_password))
+		req.Header.Add("Authorization", "Basic "+basicAuth("admin", pactPassword))
 		req.Header.Set("Content-Type", "application/json")
 		response, err = http.DefaultClient.Do(req)
 		if err != nil {
 			panic(err.Error())
 		}
-		fmt.Printf("Successfully updated pact broker. Tagged %s with %s_production\n", consumer_version, api_version)
+		fmt.Printf("Successfully updated pact broker. Tagged %s with %s_production\n", consumerVersion, apiVersion)
 
 	} else {
-		fmt.Printf("Version doesn't exist with commit %s, getting status code %s\n", consumer_version, response.Status)
+		fmt.Printf("Version doesn't exist with commit %s, getting status code %s\n", consumerVersion, response.Status)
 	}
 }
