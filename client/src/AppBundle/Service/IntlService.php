@@ -6,7 +6,11 @@ use Symfony\Component\Intl\Intl;
 
 class IntlService
 {
-    public function getCountryNameByCountryCode(?string $countryCode)
+    /**
+     * @param string|null $countryCode
+     * @return string|null
+     */
+    public function getCountryNameByCountryCode(?string $countryCode) : ?string
     {
         return Intl::getRegionBundle()->getCountryName($countryCode);
     }
