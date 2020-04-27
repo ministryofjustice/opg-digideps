@@ -1,23 +1,27 @@
-## AWS Console Database Access
+# AWS Console Database Access
 
-Cloud 9 is an Amazon hosted IDE with terminal and storage.
+Cloud9 is an Amazon hosted IDE with terminal and storage.
 With the correct network configuration it can be used to access RDS databases
 
-### Create a Cloud 9 environment
+## Shared Cloud9 environment
 
-Full instructions for setting up a Cloud 9 environment can be found here:
-https://docs.aws.amazon.com/cloud9/latest/user-guide/create-environment.html#create-environment-main
+We have a shared team cloud9 environment that is managed in terraform. Due to some limitations with terraforms AWS modules and the lack of an AWS account that can access environments the owner of the environment is set to Alex Saunders (alex.saunders@digital.justice.gov.uk). Any new users for the environment will need to be added by Alex via the share button inside the environment.
 
-Ensure you use values below for network settings:
-```
-Development account:
-    vpc:    vpc-daa790be
-    subnet: subnet-a61455fe
-Production account:
-    vpc:    vpc-4d6c7529
-    subnet: subnet-80cb2dc9
+## Connect to database
+
+In order to connect to the database run the following command and provide the DB password specific to the environment you are accessing it from (this can be found in Secrets Manager)
+
+```bash
+psql -h postgres.<environment name>.internal -U digidepsmaster api
 ```
 
+## One time set up instructions
+
+If for any reason the environment is destroyed, the below instructions should be run to set up the required parts of the app to provide DB access
+
+**These instructions should not be run each time a new user accesses the environment.**
+
+```
 ### Upgrade to PHP 7.3 and install required libs
 ```bash
 sudo yum remove php*
@@ -39,16 +43,10 @@ git clone https://github.com/ministryofjustice/opg-digideps.git
 ### Run composer
 
 ```bash
-cd opg-digideps\api
+cd opg-digideps/api
 composer install
 ```
-It will ask you to set parameters. Set database host to postgres.<environment-name>.internal, and add database credentials for database (these are available in secrets manager and the ECS task definition for API). Leave the others as default (just press enter).
-
-### Connect to database
-
-```bash
-psql -h postgres.<environment name>.internal -U digidepsmaster api
-```
+There will be a prompt to set parameters - you can just hit enter for all of the default values.
 
 ### Run migrations
 #### WARNING: Migrations will execute against whichever database is set in parameters.yml

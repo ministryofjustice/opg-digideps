@@ -28,36 +28,36 @@ You should generally only have one issue assigned to yourself in the "In Progres
 
 Stories should be estimated and have acceptance criteria before development begins (other types of issues, such as bugs, don't require these details).
 
-You should write your code on a branch named after the JIRA issue and a description. For example: `DDPB-2851-add-prof-deputy-money-out`
+You should write your code on a branch named after the JIRA issue. For example: `DDPB-2851`.
 
 During development you should add tests to check any new functionality works, and ensure that existing tests are not broken.
 
+Push the branch to GitHub and create a pull request. Fill out the PR template to explain your changes. CircleCI will automatically create a new feature environment in AWS named after your branch.
+
 ### Peer review
 
-Once you're happy with your work, push the branch to GitHub and create a pull request. Add a comment to the issue explaining your changes and including a link to the pull request.
+Once you're happy with your work, you should move it to the "Code Review" column to indicate that it is ready for peer review, and post a link to the issue in the dev Slack channel to alert a reviewer.
 
-You should then move it to the "Review" column to indicate that it is ready for peer review, and post a link to the issue in the dev Slack channel to alert a reviewer. If there is someone particular you would like to review the pull request, you can request a review from them through GitHub.
+### Acceptance
 
-### OPG review
+Once your work has been suitably reviewed and you've ensured that all tests are passing, it can be approved by the product team.
 
-Once your work has been suitably reviewed and you've ensured that all tests are passing, it can be tested by the product team.
+JIRA issues should be moved to the "Acceptance" column and have a product manager assigned. PMs will then do any necessary manual checking and approve the work for release.
 
-For your changes to be tested, you need to deploy your branch to a feature environment. You can identify which feature environments are available by looking at prefixes of tickets in JIRA. Prefix your ticket with the environment you're using (e.g. `[F1]`)
+### Ready to merge
 
-See the [deployment documentation][deployment-docs] for details of how to deploy to a feature environment.
+If the product manager approves your work, they will move the JIRA issue to the "Ready for Release" column. At this point you should approve the destruction of the feature environment in CircleCI, and merge the branch into `master`.
 
-You should then move your JIRA issue into the "OPG Acceptance" column and assign a product manager to test it. If the issue was originally reported by a product manager, you should assign it back to them to test. Otherwise, you may assign it to any product manager and they will pass it on as necessary.
-
-### Approval
-
-If the product manager approves your work, they will move the JIRA issue to the "Ready for Release" column. At this point you should complete your pull request and merge the changes into `master`.
-
-After the pull request has completed, the changes are automatically tested and, if the tests pass, deployed to pre-production and training environments.
+After the pull request has completed, the changes are automatically tested and, if the tests pass, deployed to pre-production.
 
 ### Releasing
 
 On a regular basis, the development team will review issues in the "Ready for Release" column and promote them to the production environment. This work is co-ordinated over Slack.
 
-See the [deployment documentation][deployment-docs] for details of how to deploy to production.
+See the [release procedure][release-procedure] for details of how to deploy to production.
 
-[deployment-docs]: docs/DEPLOYMENT.md
+## Verification
+
+The "Verification" column on JIRA should be used for tickets which need post-release verification. For example this may include checking a user's problem is resolved, monitoring service health, or waiting for activation from a third party.
+
+[release-procedure]: https://opgtransform.atlassian.net/wiki/spaces/DigiDeps/pages/59736181/Release+procedure

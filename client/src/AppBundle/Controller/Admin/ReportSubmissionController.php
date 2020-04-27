@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Admin;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Service\DocumentDownloader;
+use AppBundle\Service\FeatureFlagService;
 use AppBundle\Service\File\Storage\S3Storage;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -23,6 +24,7 @@ class ReportSubmissionController extends AbstractController
 {
     const ACTION_DOWNLOAD = 'download';
     const ACTION_ARCHIVE = 'archive';
+    const ACTION_SYNCHRONISE = 'synchronise';
 
     /**
      * @var DocumentDownloader
@@ -53,7 +55,7 @@ class ReportSubmissionController extends AbstractController
      *
      * @return array<mixed>|Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, FeatureFlagService $featureFlagService)
     {
         if ($request->isMethod('POST')) {
             $ret = $this->processPost($request);
@@ -76,6 +78,10 @@ class ReportSubmissionController extends AbstractController
             $postActions = [self::ACTION_DOWNLOAD];
         } else {
             $postActions = [self::ACTION_DOWNLOAD, self::ACTION_ARCHIVE];
+        }
+
+        if ($featureFlagService->get(FeatureFlagService::FLAG_DOCUMENT_SYNC) === '1') {
+            $postActions[] = self::ACTION_SYNCHRONISE;
         }
 
         return [
@@ -183,7 +189,7 @@ class ReportSubmissionController extends AbstractController
         $checkedBoxes = array_keys($request->request->get('checkboxes'));
         $action = strtolower($request->request->get('multiAction'));
 
-        if (in_array($action, [self::ACTION_DOWNLOAD,self::ACTION_ARCHIVE])) {
+        if (in_array($action, [self::ACTION_DOWNLOAD, self::ACTION_ARCHIVE, self::ACTION_SYNCHRONISE])) {
             $totalChecked = count($checkedBoxes);
 
             switch ($action) {
@@ -213,6 +219,11 @@ class ReportSubmissionController extends AbstractController
                     } catch (Throwable $e) {
                         $this->addFlash('error', 'There was an error downloading the requested documents: ' . $e->getMessage());
                         return $this->redirectToRoute('admin_documents');
+                    }
+
+                case self::ACTION_SYNCHRONISE:
+                    foreach ($checkedBoxes as $reportSubmissionId) {
+                        $this->getRestClient()->put("report-submission/{$reportSubmissionId}/queue-documents", []);
                     }
             }
         }

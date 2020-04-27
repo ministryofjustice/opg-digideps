@@ -1,6 +1,6 @@
 # CSS Policy
 
-We use the [GOVUK.UK Design System][govuk-ds] to provide as much as our styling as possible:
+We use the [GOV.UK Design System][govuk-ds] to provide as much as our styling as possible:
 
 - To benefit from their accessibility, performance and usability concerns
 - To be in-line with other GOV.UK services
@@ -8,6 +8,8 @@ We use the [GOVUK.UK Design System][govuk-ds] to provide as much as our styling 
 - To be compliant with GDS standards
 
 Where possible, **GOV.UK Design System components and patterns should be used**.
+
+We also use the [Ministry of Justice Design System][moj-ds] to provide some additional components. This provides similar benefits as the GOV.UK Design System but is not as widely used/tested.
 
 ## Custom app CSS
 
@@ -59,6 +61,7 @@ This functionality is now properly supported by the GOV.UK Design System, and re
 ```
 
 [govuk-ds]: https://design-system.service.gov.uk/
+[moj-ds]: https://moj-design-system.herokuapp.com/
 [govuk-ds-variables]: https://github.com/alphagov/govuk-frontend/tree/master/src/settings
 [bem]: https://css-tricks.com/bem-101/
 [conditional-radios]: https://design-system.service.gov.uk/components/radios/#conditionally-revealing-content

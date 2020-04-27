@@ -40,6 +40,13 @@ locals {
       protocol    = "tcp"
       target_type = "prefix_list_id"
       target      = data.aws_vpc_endpoint.s3_endpoint.prefix_list_id
+    },
+    ssm = {
+      port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = data.aws_security_group.ssm_endpoint.id
     }
   }
 }
