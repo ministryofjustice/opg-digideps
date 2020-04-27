@@ -6,25 +6,28 @@ PACT_BROKER_USER="admin"
 PACT_BROKER_URL="pact-broker.api.opg.service.justice.gov.uk"
 API_VERSION="v1"
 
-export SECRETSTRING=$(aws sts assume-role \
---role-arn "arn:aws:iam::${ACCOUNT}:role/get-pact-secret-production" \
---role-session-name AWSCLI-Session | \
-jq -r '.Credentials.SessionToken + " " + .Credentials.SecretAccessKey + " " + .Credentials.AccessKeyId' 2>/dev/null)
-
-#local export so they only exist in this stage
-export AWS_ACCESS_KEY_ID=$(echo "${SECRETSTRING}" | awk -F' ' '{print $3}' 2>/dev/null)
-export AWS_SECRET_ACCESS_KEY=$(echo "${SECRETSTRING}" | awk -F' ' '{print $2}' 2>/dev/null)
-export AWS_SESSION_TOKEN=$(echo "${SECRETSTRING}" | awk -F' ' '{print $1}' 2>/dev/null)
-
-export PACT_BROKER_PASS=$(aws secretsmanager get-secret-value \
---secret-id pactbroker_admin \
---region eu-west-1 | jq -r '.SecretString' 2>/dev/null)
-
-if [[ -z "${PACT_BROKER_PASS}" ]]
+if [ $(aws --version 2>&1 | grep -c "aws-cli") -ne 0 ]
 then
-  echo "Error setting env var PACT_BROKER_PASS"
-else
-  echo "Env var PACT_BROKER_PASS has been set"
+  export SECRETSTRING=$(aws sts assume-role \
+  --role-arn "arn:aws:iam::${ACCOUNT}:role/get-pact-secret-production" \
+  --role-session-name AWSCLI-Session | \
+  jq -r '.Credentials.SessionToken + " " + .Credentials.SecretAccessKey + " " + .Credentials.AccessKeyId' 2>/dev/null)
+
+  #local export so they only exist in this stage
+  export AWS_ACCESS_KEY_ID=$(echo "${SECRETSTRING}" | awk -F' ' '{print $3}' 2>/dev/null)
+  export AWS_SECRET_ACCESS_KEY=$(echo "${SECRETSTRING}" | awk -F' ' '{print $2}' 2>/dev/null)
+  export AWS_SESSION_TOKEN=$(echo "${SECRETSTRING}" | awk -F' ' '{print $1}' 2>/dev/null)
+
+  export PACT_BROKER_PASS=$(aws secretsmanager get-secret-value \
+  --secret-id pactbroker_admin \
+  --region eu-west-1 | jq -r '.SecretString' 2>/dev/null)
+
+  if [[ -z "${PACT_BROKER_PASS}" ]]
+  then
+    echo "Error setting env var PACT_BROKER_PASS"
+  else
+    echo "Env var PACT_BROKER_PASS has been set"
+  fi
 fi
 
 CONSUMER_VERSION=${CIRCLE_SHA1:0:7}

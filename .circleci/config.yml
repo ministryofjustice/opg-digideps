@@ -16,12 +16,49 @@ workflows:
           name: apply environment
           requires: [ build pr, lint terraform ]
           filters: { branches: { ignore: [ master ] } }
-          pact_tag: true
+
+      - run-task:
+          name: reset environment
+          requires: [ apply environment ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: reset_database
+          timeout: 180
+
+      - run-task:
+          name: integration test
+          requires: [ reset environment ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: integration_test
+          timeout: 2100
+
+      - client-unit-test:
+          name: client unit test
+          requires: [ apply environment ]
+          filters: { branches: { ignore: [ master ] } }
+
+      - run-task:
+          name: api unit test
+          requires: [ apply environment ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: api_unit_test
+          timeout: 600
+
+      - run-task:
+          name: backup environment
+          requires: [ api unit test, client unit test, integration test ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: backup
+
+      - run-task:
+          name: restore environment
+          requires: [ backup environment ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: restore
 
       - cleanup:
           name: approve destroy environment
           type: approval
-          requires: [ apply environment ]
+          requires: [ restore environment ]
           filters: { branches: { ignore: [ master ] } }
 
       - apply:
@@ -155,6 +192,10 @@ orbs:
               working_directory: ~/project/ecs_helper
               command: go install -mod vendor ./cmd/stabilizer
           - run:
+              name: Install pact_tags
+              working_directory: ~/project/ecs_helper
+              command: go install -mod vendor ./cmd/pact_tags
+          - run:
               name: Build redeployer
               working_directory: ~/project/shared/go_redeployer
               command: GOARCH=amd64 GOOS=linux go build -o main ./main.go
@@ -232,7 +273,7 @@ jobs:
           command: ~/project/.circleci/set_env.sh >> $BASH_ENV
       - run:
           name: Apply
-          command: echo "test" #terraform << parameters.tf_command >>
+          command: terraform << parameters.tf_command >>
       - run:
           name: Output
           command: terraform output -json > terraform.output.json
@@ -243,32 +284,11 @@ jobs:
           condition: << parameters.pact_tag >>
           steps:
             - run:
-                name: install aws cli
-                command: |
-                  pip3 install awscli --upgrade --user
-                  aws --version
-            - run:
                 name: set pact environment variables
                 command: ~/project/.circleci/set_env_pact.sh >> $BASH_ENV
             - run:
                 name: tag pact commit with v<x>_production
-                command: |
-                  echo "applying production tag to pact broker on ${PACT_CONSUMER_VERSION}"
-                  export STATUS_CODE=$(curl -X GET -I -s -u "${PACT_BROKER_HTTP_AUTH_USER}":"${PACT_BROKER_HTTP_AUTH_PASS}" \
-                  -H "Content-Type: application/json" \
-                  https://"${PACT_BROKER_BASE_URL}"/pacticipants/Complete%20the%20deputy%20report/versions/"${PACT_CONSUMER_VERSION}" \
-                  | grep "HTTP" | awk '{print $2}')
-
-                  if [ "${STATUS_CODE}" -eq "200" ]
-                  then
-                    export STATUS_CODE=$(curl -X PUT -I -s -u "${PACT_BROKER_HTTP_AUTH_USER}":"${PACT_BROKER_HTTP_AUTH_PASS}" \
-                    -H "Content-Type: application/json" \
-                    https://"${PACT_BROKER_BASE_URL}"/pacticipants/Complete%20the%20deputy%20report/versions/"${PACT_CONSUMER_VERSION}"/tags/"${PACT_API_VERSION}_production" \
-                    | grep "HTTP" | awk '{print $2}')
-                  echo "Pact tagging completed with status code: ${STATUS_CODE}"
-                  else
-                    echo "version of consumer with git commit ${PACT_CONSUMER_VERSION}, not found"
-                  fi
+                command: pact_tags
   build:
     docker:
       - image: circleci/python:2.7
