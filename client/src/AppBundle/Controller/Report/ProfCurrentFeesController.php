@@ -57,7 +57,7 @@ class ProfCurrentFeesController extends AbstractController
         $form->handleRequest($request);
         $fromPage = $request->get('from');
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             switch ($report->getCurrentProfPaymentsReceived()) {
                 case 'yes':
                     return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 1, 'from'=>'exist']);
@@ -114,7 +114,7 @@ class ProfCurrentFeesController extends AbstractController
         $form->handleRequest($request);
         $buttonClicked = $form->getClickedButton();
 
-        if ($buttonClicked && $form->isValid()) {
+        if ($buttonClicked && $form->isSubmitted() && $form->isValid()) {
             /* @var $profServiceFee EntityDir\Report\ProfServiceFee */
             $profServiceFee = $form->getData();
             $profServiceFee->setReport($report);
@@ -213,7 +213,7 @@ class ProfCurrentFeesController extends AbstractController
         $form = $this->createForm(FormDir\Report\ProfServicePreviousFeesEstimateType::class, $report);
 
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             /* @var $report EntityDir\Report\Report */
             $report = $form->getData();
 

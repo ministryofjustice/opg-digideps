@@ -61,7 +61,7 @@ class MoneyTransferController extends AbstractController
         ]);
 
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
             switch ($report->getNoTransfersToAdd()) {
                 case 0:
@@ -139,7 +139,7 @@ class MoneyTransferController extends AbstractController
 
         /** @var SubmitButton $submitBtn */
         $submitBtn = $form->get('save');
-        if ($submitBtn->isClicked() && $form->isValid()) {
+        if ($submitBtn->isClicked() && $form->isSubmitted() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
             if ($step == 1) {
                 $stepUrlData['from-id'] = $transfer->getAccountFromId();
@@ -188,7 +188,7 @@ class MoneyTransferController extends AbstractController
         $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-money-transfer']);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             switch ($form['addAnother']->getData()) {
                 case 'yes':
                     return $this->redirectToRoute('money_transfers_step', ['reportId' => $reportId, 'from' => 'another', 'step' => 1]);
@@ -239,7 +239,7 @@ class MoneyTransferController extends AbstractController
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getRestClient()->delete("/report/{$reportId}/money-transfers/{$transferId}");
 
             $this->addFlash(

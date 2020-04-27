@@ -41,7 +41,7 @@ class DebtController extends AbstractController
                                  );
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getRestClient()->put('ndr/' . $ndrId, $ndr, ['debt']);
 
             if ($ndr->getHasDebts() == 'yes') {
@@ -76,7 +76,7 @@ class DebtController extends AbstractController
         $form->handleRequest($request);
         $fromPage = $request->get('from');
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getRestClient()->put('ndr/' . $ndr->getId(), $form->getData(), ['debt']);
 
             if ($fromPage == 'summary') {
@@ -114,7 +114,7 @@ class DebtController extends AbstractController
         $fromPage = $request->get('from');
         $fromSummaryPage = $request->get('from') == 'summary';
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getRestClient()->put('ndr/' . $ndr->getId(), $form->getData(), ['ndr-debt-management']);
 
             if ($fromPage == 'summary') {

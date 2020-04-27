@@ -41,7 +41,7 @@ class CoDeputyController extends AbstractController
                 $form->get('client' . ucfirst($clientProperty))->addError(new FormError($error->getMessage()));
             }
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $selfRegisterData = new SelfRegisterData();
                 $selfRegisterData->setFirstname($form['firstname']->getData());
                 $selfRegisterData->setLastname($form['lastname']->getData());
@@ -117,7 +117,7 @@ class CoDeputyController extends AbstractController
             :$this->generateUrl('lay_home');
 
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 /** @var EntityDir\User $invitedUser */
                 $invitedUser = $this->getRestClient()->post('codeputy/add', $form->getData(), ['codeputy'], 'User');
@@ -167,7 +167,7 @@ class CoDeputyController extends AbstractController
             :$this->generateUrl('lay_home');
 
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 //email was updated on the fly
                 if ($form->getData()->getEmail() != $email) {

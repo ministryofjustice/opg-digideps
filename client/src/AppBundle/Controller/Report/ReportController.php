@@ -142,7 +142,7 @@ class ReportController extends AbstractController
             : $this->generateUrl('lay_home');
 
         $editReportDatesForm->handleRequest($request);
-        if ($editReportDatesForm->isValid()) {
+        if ($editReportDatesForm->isSubmitted() && $editReportDatesForm->isValid()) {
             $this->getRestClient()->put('report/' . $reportId, $report, ['startEndDates']);
 
             return $this->redirect($returnLink);
@@ -194,7 +194,7 @@ class ReportController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getRestClient()->post('report', $form->getData());
             $this->getRestClient()->post('v2/court-order', $client, ['client-id']);
             return $this->redirect($this->generateUrl('homepage'));
@@ -334,7 +334,7 @@ class ReportController extends AbstractController
 
         $form = $this->createForm(ReportDeclarationType::class, $report);
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             /** @var User $currentUser */
             $currentUser = $this->getUser();
 
@@ -379,7 +379,7 @@ class ReportController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             // Store in database
             $this->getRestClient()->post('satisfaction', [
                 'score' => $form->get('satisfactionLevel')->getData(),

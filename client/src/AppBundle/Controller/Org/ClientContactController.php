@@ -40,7 +40,7 @@ class ClientContactController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getRestClient()->post('clients/' . $client->getId() . '/clientcontacts', $form->getData(), ['add_clientcontact']
             );
             $request->getSession()->getFlashBag()->add('notice', 'The contact has been added');
@@ -71,7 +71,7 @@ class ClientContactController extends AbstractController
         $form = $this->createForm(FormDir\Org\ClientContactType::class, $clientContact);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getRestClient()->put('/clientcontacts/' . $id, $form->getData(), ['edit_clientcontact']
             );
             $request->getSession()->getFlashBag()->add('notice', 'The contact has been updated');
@@ -99,7 +99,7 @@ class ClientContactController extends AbstractController
         $client = $clientContact->getClient();
         $this->denyAccessUnlessGranted('delete-client-contact', $client, 'Access denied');
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->getRestClient()->delete('clientcontacts/' . $id);
                 $request->getSession()->getFlashBag()->add('notice', 'Contact has been removed');

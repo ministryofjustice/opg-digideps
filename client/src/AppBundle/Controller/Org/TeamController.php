@@ -74,7 +74,7 @@ class TeamController extends AbstractController
         }
 
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             /** @var $user EntityDir\User */
             $user = $form->getData();
 
@@ -145,7 +145,7 @@ class TeamController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
 
             try {
@@ -225,7 +225,7 @@ class TeamController extends AbstractController
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $userToRemove = $this->getRestClient()->get('team/member/' . $id, 'User');
 

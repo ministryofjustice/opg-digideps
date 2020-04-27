@@ -67,7 +67,7 @@ class IndexController extends AbstractController
 
         $form = $this->createForm(FormDir\Admin\SearchType::class, null, ['method' => 'GET']);
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $filters = $form->getData() + $filters;
         }
 
@@ -95,7 +95,7 @@ class IndexController extends AbstractController
         $form = $this->createForm(FormDir\Admin\AddUserType::class, new EntityDir\User());
 
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             // add user
             try {
                 if (!$this->isGranted(EntityDir\User::ROLE_SUPER_ADMIN) && $form->getData()->getRoleName() == EntityDir\User::ROLE_SUPER_ADMIN) {
@@ -162,7 +162,7 @@ class IndexController extends AbstractController
         $form = $this->createForm(FormDir\Admin\EditUserType::class, $user, ['user' => $this->getUser()]);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $updateUser = $form->getData();
 
             try {
@@ -219,7 +219,7 @@ class IndexController extends AbstractController
         if ($request->getMethod() == 'POST') {
             $ndrForm->handleRequest($request);
 
-            if ($ndrForm->isValid()) {
+            if ($ndrForm->isSubmitted() && $ndrForm->isValid()) {
                 $updateNdr = $ndrForm->getData();
                 $this->getRestClient()->put('ndr/' . $id, $updateNdr, ['start_date']);
                 $this->addFlash('notice', 'Your changes were saved');
@@ -317,7 +317,7 @@ class IndexController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $fileName = $form->get('file')->getData();
             try {
                 $csvToArray = new CsvToArray($fileName, false, true);
@@ -390,7 +390,7 @@ class IndexController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $fileName = $form->get('file')->getData();
             try {
                 $data = (new CsvToArray($fileName, true))
@@ -443,7 +443,7 @@ class IndexController extends AbstractController
 
         $outputStreamResponse = isset($_GET['ajax']);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $fileName = $form->get('file')->getData();
 

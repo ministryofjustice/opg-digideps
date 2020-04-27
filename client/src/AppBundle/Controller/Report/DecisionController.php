@@ -57,7 +57,7 @@ class DecisionController extends AbstractController
         $form = $this->createForm(FormDir\Report\MentalCapacityType::class, $mc);
         $form->handleRequest($request);
 
-        if ($form->get('save')->isClicked() && $form->isValid()) {
+        if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $data->setReport($report);
 
@@ -94,7 +94,7 @@ class DecisionController extends AbstractController
         $form = $this->createForm(FormDir\Report\MentalAssessment::class, $mc);
         $form->handleRequest($request);
 
-        if ($form->get('save')->isClicked() && $form->isValid()) {
+        if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
             $data->setReport($report);
@@ -125,7 +125,7 @@ class DecisionController extends AbstractController
         $form = $this->createForm(FormDir\Report\DecisionExistType::class, $report);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             switch ($form['hasDecisions']->getData()) {
                 case 'yes':
                     return $this->redirectToRoute('decisions_add', ['reportId' => $reportId, 'from'=>'decisions_exist']);
@@ -163,7 +163,7 @@ class DecisionController extends AbstractController
         $form = $this->createForm(FormDir\Report\DecisionType::class, $decision);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $data->setReport($report);
 
@@ -193,7 +193,7 @@ class DecisionController extends AbstractController
         $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-decisions']);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             switch ($form['addAnother']->getData()) {
                 case 'yes':
                     return $this->redirectToRoute('decisions_add', ['reportId' => $reportId, 'from'=>'decisions_add_another']);
@@ -221,7 +221,7 @@ class DecisionController extends AbstractController
         $form = $this->createForm(FormDir\Report\DecisionType::class, $decision);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $data->setReport($report);
 
@@ -276,7 +276,7 @@ class DecisionController extends AbstractController
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getRestClient()->delete("/report/decision/{$decisionId}");
 
             $request->getSession()->getFlashBag()->add(

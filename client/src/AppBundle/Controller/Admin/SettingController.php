@@ -30,7 +30,7 @@ class SettingController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $setting = $form->getData();
 
             $this->getRestClient()->put($endpoint, $setting, ['setting']);

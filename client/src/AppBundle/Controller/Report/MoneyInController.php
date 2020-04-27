@@ -102,7 +102,7 @@ class MoneyInController extends AbstractController
 
         /** @var SubmitButton $saveButton */
         $saveButton = $form->get('save');
-        if ($saveButton->isClicked() && $form->isValid()) {
+        if ($saveButton->isClicked() && $form->isSubmitted() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
             if ($step == 1) {
                 // unset from page to prevent step redirector skipping step 2
@@ -153,7 +153,7 @@ class MoneyInController extends AbstractController
         $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-money-transaction']);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             switch ($form['addAnother']->getData()) {
                 case 'yes':
                     return $this->redirectToRoute('money_in_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'money_in_add_another']);
@@ -215,7 +215,7 @@ class MoneyInController extends AbstractController
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getRestClient()->delete('/report/' . $reportId . '/money-transaction/' . $transactionId);
 
             $this->addFlash(

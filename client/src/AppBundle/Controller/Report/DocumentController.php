@@ -89,7 +89,7 @@ class DocumentController extends AbstractController
         /** @var SubmitButton $submitBtn */
         $submitBtn = $form->get('save');
 
-        if ($submitBtn->isClicked() && $form->isValid()) {
+        if ($submitBtn->isClicked() && $form->isSubmitted() && $form->isValid()) {
             /* @var $data EntityDir\Report\Report */
             $data = $form->getData();
 
@@ -141,7 +141,7 @@ class DocumentController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $files = $request->files->get('report_document_upload')['files'];
 
             if (is_array($files)) {
@@ -260,7 +260,7 @@ class DocumentController extends AbstractController
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             return $this->deleteDocument($request, $documentId);
         }
 

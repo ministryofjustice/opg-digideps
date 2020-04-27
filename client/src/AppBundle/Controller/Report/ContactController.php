@@ -49,7 +49,7 @@ class ContactController extends AbstractController
         $form = $this->createForm(FormDir\Report\ContactExistType::class, $report);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             switch ($form['hasContacts']->getData()) {
                 case 'yes':
                     return $this->redirectToRoute('contacts_add', ['reportId' => $reportId, 'from'=>'exist']);
@@ -86,7 +86,7 @@ class ContactController extends AbstractController
         $form = $this->createForm(FormDir\Report\ContactType::class, $contact);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $data->setReport($report);
 
@@ -117,7 +117,7 @@ class ContactController extends AbstractController
         $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-contacts']);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             switch ($form['addAnother']->getData()) {
                 case 'yes':
                     return $this->redirectToRoute('contacts_add', ['reportId' => $reportId, 'from'=>'add_another']);
@@ -145,7 +145,7 @@ class ContactController extends AbstractController
         $form = $this->createForm(FormDir\Report\ContactType::class, $contact);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $data->setReport($report);
 
@@ -196,7 +196,7 @@ class ContactController extends AbstractController
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getRestClient()->delete("/report/contact/{$contactId}");
 
             $request->getSession()->getFlashBag()->add(

@@ -76,7 +76,7 @@ class BankAccountController extends AbstractController
         $form = $this->createForm(FormDir\Ndr\BankAccountType::class, $account, ['step' => $step]);
         $form->handleRequest($request);
 
-        if ($form->get('save')->isClicked() && $form->isValid()) {
+        if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
             if ($step == 1) {
                 $stepUrlData['type'] = $account->getAccountType();
@@ -135,7 +135,7 @@ class BankAccountController extends AbstractController
         $form = $this->createForm(FormDir\AddAnotherRecordType::class, $ndr, ['translation_domain' => 'ndr-bank-accounts']);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             switch ($form['addAnother']->getData()) {
                 case 'yes':
                     return $this->redirectToRoute('ndr_bank_accounts_step', ['ndrId' => $ndrId, 'step' => 1]);
@@ -184,7 +184,7 @@ class BankAccountController extends AbstractController
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $ndr = $this->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
 
             $request->getSession()->getFlashBag()->add(

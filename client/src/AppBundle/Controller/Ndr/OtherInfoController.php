@@ -55,7 +55,7 @@ class OtherInfoController extends AbstractController
         $form = $this->createForm(FormDir\Ndr\OtherInfoType::class, $ndr);
         $form->handleRequest($request);
 
-        if ($form->get('save')->isClicked() && $form->isValid()) {
+        if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $this->getRestClient()->put('ndr/' . $ndrId, $data, ['more-info']);
 

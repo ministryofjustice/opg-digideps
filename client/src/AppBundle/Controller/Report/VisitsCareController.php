@@ -59,7 +59,7 @@ class VisitsCareController extends AbstractController
                                  );
         $form->handleRequest($request);
 
-        if ($form->get('save')->isClicked() && $form->isValid()) {
+        if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             /* @var $data EntityDir\Report\VisitsCare */
             $data

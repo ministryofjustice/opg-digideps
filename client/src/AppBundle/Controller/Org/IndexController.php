@@ -87,7 +87,7 @@ class IndexController extends AbstractController
         $form->handleRequest($request);
 
         // edit client form
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $clientUpdated = $form->getData();
             $clientUpdated->setId($client->getId());
             $this->getRestClient()->put('client/upsert', $clientUpdated, ['pa-edit']);
@@ -122,7 +122,7 @@ class IndexController extends AbstractController
 
         /** @var SubmitButton $submitBtn */
         $submitBtn = $form->get('save');
-        if ($submitBtn->isClicked() && $form->isValid()) {
+        if ($submitBtn->isClicked() && $form->isSubmitted() && $form->isValid()) {
             if (true === $form->get('confirmArchive')->getData()) {
                 $this->getRestClient()->apiCall('put', 'client/' . $client->getId() . '/archive', null, 'array');
                 $this->addFlash('notice', 'The client has been archived');

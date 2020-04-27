@@ -83,7 +83,7 @@ class UserController extends AbstractController
         }
 
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             // login user into API
             try {
                 $deputyProvider->login(['token' => $token]);
@@ -184,7 +184,7 @@ class UserController extends AbstractController
         $form = $this->createForm($formType, $user);
 
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getRestClient()->put('user/' . $user->getId(), $form->getData(), $jmsPutGroups);
 
             // lay deputies are redirected to adding a client (Step.3)
@@ -218,7 +218,7 @@ class UserController extends AbstractController
         $form = $this->createForm(FormDir\PasswordForgottenType::class, $user);
 
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $emailAddress = $user->getEmail();
             $disguisedEmail = '***' . substr($emailAddress, 3);
             $logger->warning('Reset password request for : ' . $emailAddress);
@@ -271,7 +271,7 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
             try {
@@ -343,7 +343,7 @@ class UserController extends AbstractController
 
         $form = $this->createForm(FormDir\User\AgreeTermsType::class, $user);
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getRestClient()->agreeTermsUse($token);
 
             return $this->redirectToRoute('user_activate', ['token' => $token, 'action' => 'activate']);

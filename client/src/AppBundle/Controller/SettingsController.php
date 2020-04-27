@@ -57,7 +57,7 @@ class SettingsController extends AbstractController
         ]);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $request->request->get('change_password')['plain_password']['first'];
             $this->getRestClient()->put('user/' . $user->getId() . '/set-password', json_encode([
                 'password_plain' => $plainPassword,
@@ -114,7 +114,7 @@ class SettingsController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $deputy = $form->getData();
 
             if ($form->has('removeAdmin') && !empty($form->get('removeAdmin')->getData())) {

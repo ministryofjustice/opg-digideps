@@ -62,7 +62,7 @@ class ClientController extends AbstractController
         $form->handleRequest($request);
 
         // edit client form
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $clientUpdated = $form->getData();
             $clientUpdated->setId($client->getId());
             $this->getRestClient()->put('client/upsert', $clientUpdated, ['edit']);
@@ -121,7 +121,7 @@ class ClientController extends AbstractController
         $form = $this->createForm(ClientType::class, $client);
 
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 // validate against casRec
                 $this->getRestClient()->apiCall('post', 'casrec/verify', $client, 'array', []);
