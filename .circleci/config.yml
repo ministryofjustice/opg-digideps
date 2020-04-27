@@ -9,7 +9,6 @@ workflows:
 
       - build:
           name: build pr
-          semver_stage: --stage dev
           filters: { branches: { ignore: [ master ] } }
 
       - apply:
@@ -303,12 +302,7 @@ jobs:
                   fi
   build:
     docker:
-      - image: circleci/python:2.7
-    parameters:
-      semver_stage:
-        description: semver stage suffix
-        default: ""
-        type: string
+      - image: circleci/python:3
     environment:
       AWS_REGION: eu-west-1
       AWS_CONFIG_FILE: ~/project/aws_config
@@ -321,27 +315,22 @@ jobs:
             - 6f:4b:55:76:0e:cd:27:7d:ad:c3:28:38:53:69:5c:32
       - checkout
       - run:
-          name: Install semvertag
-          command: sudo pip install https://github.com/ministryofjustice/semvertag/archive/master.zip
+          name: Set environment
+          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
       - run:
-          name: Bump version
-          command: semvertag bump patch << parameters.semver_stage >> >> ~/project/VERSION
+          name: Set version
+          command: |
+            export VERSION=${TF_WORKSPACE}-${CIRCLE_SHA1:0:7}
+
+            echo "export VERSION=${VERSION}" >> $BASH_ENV
+            echo "$VERSION" >> ~/project/VERSION
       - persist_to_workspace:
           root: .
           paths:
             - VERSION
       - run:
-          name: Set environment
-          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
-      - run:
           name: Show version
           command: echo ${VERSION}
-      - run:
-          name: Tag git
-          command: git tag ${VERSION}
-      - run:
-          name: Push git tags
-          command: git push --tags
       - run:
           name: Docker login
           command: eval $(aws ecr get-login --region $AWS_REGION --no-include-email --profile digideps-ci)
