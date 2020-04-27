@@ -159,14 +159,14 @@ class IndexController extends AbstractController
             ]);
         }
 
-        $form = $this->createForm(FormDir\Admin\EditUserType::class, $user);
+        $form = $this->createForm(FormDir\Admin\EditUserType::class, $user, ['user' => $this->getUser()]);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $updateUser = $form->getData();
 
             try {
-                $this->getRestClient()->put('user/' . $user->getId(), $updateUser, ['admin_add_user']);
+                $this->getRestClient()->put('user/' . $user->getId(), $updateUser, ['admin_edit_user']);
 
                 $this->addFlash('notice', 'Your changes were saved');
 

@@ -79,9 +79,9 @@ default:
             contexts:
                 - DigidepsBehat\Authentication\AuthenticationFeatureContext
 
-        organisationManagement:
+        organisation-management:
             description: Coverage of the organisation management features
-            paths: [ "%paths.base%/features/organisationManagement" ]
+            paths: [ "%paths.base%/features/OrganisationManagement" ]
             contexts:
                 - DigidepsBehat\OrganisationManagement\OrganisationManagementFeatureContext
 
