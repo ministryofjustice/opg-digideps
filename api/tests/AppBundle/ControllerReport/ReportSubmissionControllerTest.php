@@ -16,6 +16,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
     private static $pa1;
     private static $pa2;
     private static $deputy1;
+    private static $tokenSuperAdmin = null;
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
 
@@ -58,6 +59,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
     public function setUp(): void
     {
         if (null === self::$tokenAdmin) {
+            self::$tokenSuperAdmin = $this->loginAsSuperAdmin();
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
         }
@@ -320,7 +322,8 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
         // assert Auth
         $this->assertEndpointNeedsAuth('PUT', $url);
-        $this->assertEndpointAllowedFor('PUT', $url, self::$tokenAdmin);
+        $this->assertEndpointAllowedFor('PUT', $url, self::$tokenSuperAdmin);
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenDeputy);
     }
 
@@ -355,7 +358,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
         $this->assertJsonRequest('PUT', '/report-submission/' . $reportSubmission->getId() . '/queue-documents', [
             'mustSucceed' => true,
-            'AuthToken' => self::$tokenAdmin,
+            'AuthToken' => self::$tokenSuperAdmin,
             'data' => [],
         ]);
 
@@ -364,7 +367,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
             if ($document[2]) {
                 self::assertEquals(Document::SYNC_STATUS_QUEUED, $record->getSynchronisationStatus());
-                self::assertEquals('admin@example.org', $record->getSynchronisedBy()->getEmail());
+                self::assertEquals('super_admin@example.org', $record->getSynchronisedBy()->getEmail());
             } else {
                 self::assertEquals($document[1], $record->getSynchronisationStatus());
                 self::assertEquals(null, $record->getSynchronisedBy());
@@ -386,7 +389,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         $this->assertJsonRequest('PUT', '/report-submission/' . $reportSubmission->getId() . '/queue-documents', [
             'mustFail' => true,
             'assertResponseCode' => Response::HTTP_BAD_REQUEST,
-            'AuthToken' => self::$tokenAdmin,
+            'AuthToken' => self::$tokenSuperAdmin,
             'data' => [],
         ]);
     }
