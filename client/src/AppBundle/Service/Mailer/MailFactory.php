@@ -296,6 +296,8 @@ class MailFactory
           ->setToEmail($this->emailParams['update_send_to_address'])
           ->setTemplate(self::CLIENT_DETAILS_CHANGE_TEMPLATE_ID);
 
+        $countryName = $this->intlService->getCountryNameByCountryCode($client->getCountry()) ?? 'Country not provided';
+
         $notifyParams = [
             'caseNumber' => $client->getCaseNumber(),
             'fullName' => $client->getFullName(),
@@ -303,7 +305,7 @@ class MailFactory
             'address2' => $client->getAddress2(),
             'address3' => $client->getCounty(),
             'postcode' =>$client->getPostcode(),
-            'countryName' => $this->intlService->getCountryNameByCountryCode($client->getCountry()),
+            'countryName' => $countryName,
             'phone' => $client->getPhone(),
         ];
 
@@ -321,6 +323,9 @@ class MailFactory
             ->setToEmail($this->emailParams['update_send_to_address'])
             ->setTemplate(self::DEPUTY_DETAILS_CHANGE_TEMPLATE_ID);
 
+        $countryName =
+            $this->intlService->getCountryNameByCountryCode($deputy->getAddressCountry()) ?? 'Country not provided';
+
         $notifyParams = [
             'caseNumber' => $deputy->getFirstClient()->getCaseNumber(),
             'fullName' => $deputy->getFullName(),
@@ -328,7 +333,7 @@ class MailFactory
             'address2' => $deputy->getAddress2() !== null ? $deputy->getAddress2() : 'Not provided',
             'address3' => $deputy->getAddress3() !== null ? $deputy->getAddress3() : 'Not provided',
             'postcode' =>$deputy->getAddressPostcode(),
-            'countryName' => $this->intlService->getCountryNameByCountryCode($deputy->getAddressCountry()),
+            'countryName' => $countryName,
             'phone' => $deputy->getPhoneMain(),
             'altPhoneNumber' => $deputy->getPhoneAlternative() !== null ? $deputy->getPhoneAlternative() : 'Not provided',
             'email' => $deputy->getEmail(),
