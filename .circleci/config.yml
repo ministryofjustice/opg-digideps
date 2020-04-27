@@ -252,23 +252,8 @@ jobs:
                 command: ~/project/.circleci/set_env_pact.sh >> $BASH_ENV
             - run:
                 name: tag pact commit with v<x>_production
-                command: |
-                  echo "applying production tag to pact broker on ${PACT_CONSUMER_VERSION}"
-                  export STATUS_CODE=$(curl -X GET -I -s -u "${PACT_BROKER_HTTP_AUTH_USER}":"${PACT_BROKER_HTTP_AUTH_PASS}" \
-                  -H "Content-Type: application/json" \
-                  https://"${PACT_BROKER_BASE_URL}"/pacticipants/Complete%20the%20deputy%20report/versions/"${PACT_CONSUMER_VERSION}" \
-                  | grep "HTTP" | awk '{print $2}')
+                command: echo "do nothing"
 
-                  if [ "${STATUS_CODE}" -eq "200" ]
-                  then
-                    export STATUS_CODE=$(curl -X PUT -I -s -u "${PACT_BROKER_HTTP_AUTH_USER}":"${PACT_BROKER_HTTP_AUTH_PASS}" \
-                    -H "Content-Type: application/json" \
-                    https://"${PACT_BROKER_BASE_URL}"/pacticipants/Complete%20the%20deputy%20report/versions/"${PACT_CONSUMER_VERSION}"/tags/"${PACT_API_VERSION}_production" \
-                    | grep "HTTP" | awk '{print $2}')
-                  echo "Pact tagging completed with status code: ${STATUS_CODE}"
-                  else
-                    echo "version of consumer with git commit ${PACT_CONSUMER_VERSION}, not found"
-                  fi
   build:
     docker:
       - image: circleci/python:2.7
