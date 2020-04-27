@@ -58,6 +58,7 @@ abstract class AbstractControllerTestCase extends WebTestCase
     {
         if (is_null($user)) {
             $user = new User();
+            $user->setRoleName($roleNames[0]);
         }
 
         if (is_null($user->getId())) {

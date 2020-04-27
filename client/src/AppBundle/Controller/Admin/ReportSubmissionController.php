@@ -80,7 +80,10 @@ class ReportSubmissionController extends AbstractController
             $postActions = [self::ACTION_DOWNLOAD, self::ACTION_ARCHIVE];
         }
 
-        if ($featureFlagService->get(FeatureFlagService::FLAG_DOCUMENT_SYNC) === '1') {
+        /** @var EntityDir\User $user */
+        $user = $this->getUser();
+
+        if ($featureFlagService->get(FeatureFlagService::FLAG_DOCUMENT_SYNC) === '1' && $user->getRoleName() === EntityDir\User::ROLE_SUPER_ADMIN) {
             $postActions[] = self::ACTION_SYNCHRONISE;
         }
 
