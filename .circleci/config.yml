@@ -406,6 +406,32 @@ jobs:
           path: pact.json
           destination: Pact file
 
+  api-unit-tests:
+    docker:
+      - image: circleci/python:3
+    steps:
+      - setup_remote_docker
+      - checkout
+      - attach_workspace: { at: ~/project }
+      - run:
+          name: Load docker images
+          command: docker load -i ~/project/docker-images.tar
+      - run:
+          name: install aws cli
+          command: |
+            pip3 install awscli --upgrade --user
+            aws --version
+      - run:
+          name: Set environment
+          command: |
+            ~/project/.circleci/set_env.sh >> $BASH_ENV
+      - run:
+          name: Run tests
+          command: |
+            docker run --rm --network=project_default \
+                --env-file=api/docker/env/api.env \
+            api:latest sh scripts/apiunittest.sh
+
   run-task:
     executor: terraform/terraform
     parameters:
