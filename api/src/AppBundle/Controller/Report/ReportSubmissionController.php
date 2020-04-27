@@ -176,7 +176,7 @@ class ReportSubmissionController extends RestController
      * Queue submission documents which have been synced yet
      *
      * @Route("/{id}/queue-documents", requirements={"id":"\d+"}, methods={"PUT"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
      */
     public function queueDocuments($id)
     {

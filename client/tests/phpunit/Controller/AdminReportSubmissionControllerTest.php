@@ -127,8 +127,28 @@ class AdminReportSubmissionControllerTest extends AbstractControllerTestCase
         self::assertEquals('Solomon Pinedo', $archivedBy->attr('title'));
     }
 
+    public function testHiddenFromAdmins(): void
+    {
+        $this->restClient
+            ->arrayToEntities(ReportSubmission::class . '[]', ['placeholder'])
+            ->shouldBeCalled()
+            ->willReturn([
+                $this->generateReportSubmission('72549273', 'Dario', 'Lucke')
+                    ->setId(47638)
+                    ->setDownloadable(true)
+            ]);
+
+        $crawler = $this->client->request('GET', '/admin/documents/list');
+
+        $button = $crawler->selectButton('Synchronise');
+
+        self::assertNull($button->getNode(0));
+    }
+
     public function testSynchroniseQueuesDocuments(): void
     {
+        $this->mockLoggedInUser(['ROLE_SUPER_ADMIN']);
+
         $submissionId = 47638;
 
         $this->restClient
@@ -155,6 +175,8 @@ class AdminReportSubmissionControllerTest extends AbstractControllerTestCase
 
     public function testSynchroniseButtonHoldIfFlagOff(): void
     {
+        $this->mockLoggedInUser(['ROLE_SUPER_ADMIN']);
+
         $submissionId = 47638;
 
         $this->restClient
