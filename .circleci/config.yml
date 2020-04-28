@@ -427,8 +427,7 @@ jobs:
       - run:
           name: Run tests
           command: |
-            docker run --rm --network=project_default \
-                --env-file=api/docker/env/api.env \
+            docker run --rm --env-file=api/docker/env/api.env \
             api:latest sh scripts/apiunittest.sh
 
   run-task:
