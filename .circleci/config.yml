@@ -191,6 +191,10 @@ orbs:
               working_directory: ~/project/ecs_helper
               command: go install -mod vendor ./cmd/stabilizer
           - run:
+              name: Install pact_tags
+              working_directory: ~/project/ecs_helper
+              command: go install -mod vendor ./cmd/pact_tags
+          - run:
               name: Build redeployer
               working_directory: ~/project/shared/go_redeployer
               command: GOARCH=amd64 GOOS=linux go build -o main ./main.go
@@ -283,23 +287,7 @@ jobs:
                 command: ~/project/.circleci/set_env_pact.sh >> $BASH_ENV
             - run:
                 name: tag pact commit with v<x>_production
-                command: |
-                  echo "applying production tag to pact broker on ${PACT_CONSUMER_VERSION}"
-                  STATUS_CODE=$(curl -I -s -X GET -u "${PACT_BROKER_HTTP_AUTH_USER}":"${PACT_BROKER_HTTP_AUTH_PASS}" \
-                  -H "Content-Type: application/json" \
-                  https://"${PACT_BROKER_BASE_URL}"/pacticipants/Complete%20the%20deputy%20report/versions/"${PACT_CONSUMER_VERSION}" \
-                  | grep "HTTP" | awk '{print $2}')
-
-                  if [ "${STATUS_CODE}" -eq "200" ]
-                  then
-                    STATUS_CODE=$(curl -X PUT -u "${PACT_BROKER_HTTP_AUTH_USER}":"${PACT_BROKER_HTTP_AUTH_PASS}" \
-                    -H "Content-Type: application/json" \
-                    https://"${PACT_BROKER_BASE_URL}"/pacticipants/Complete%20the%20deputy%20report/versions/"${PACT_CONSUMER_VERSION}"/tags/"${PACT_API_VERSION}_production" \
-                    | grep "HTTP" | awk '{print $2}')
-                    echo "Pact tagging completed with status code: ${STATUS_CODE}"
-                  else
-                    echo "version of provider with git commit ${GIT_COMMIT_PROVIDER}, not found"
-                  fi
+                command: pact_tags
   build:
     docker:
       - image: circleci/python:3
@@ -397,11 +385,10 @@ jobs:
             sleep 3
             docker run --rm --network=project_default \
                 --env-file=client/docker/env/frontend.env \
-                -e PACT_BROKER_HTTP_AUTH_PASS \
+                -e PACT_BROKER_HTTP_AUTH_PASSWORD \
                 -e PACT_BROKER_HTTP_AUTH_USER \
                 -e PACT_CONSUMER_VERSION \
                 -e PACT_BROKER_BASE_URL \
-                -e PACT_TAG \
             client:latest bin/phpunit -c tests/phpunit
             docker-compose exec pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
             docker-compose stop pact-mock

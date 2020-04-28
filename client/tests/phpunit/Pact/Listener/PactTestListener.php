@@ -93,7 +93,7 @@ class PactTestListener implements TestListener
                 {
                     $clientConfig = [];
                     if (($user = \getenv('PACT_BROKER_HTTP_AUTH_USER')) &&
-                        ($pass = \getenv('PACT_BROKER_HTTP_AUTH_PASS'))
+                        ($pass = \getenv('PACT_BROKER_HTTP_AUTH_PASSWORD'))
                     ) {
                         $clientConfig = [
                             'auth' => [$user, $pass],

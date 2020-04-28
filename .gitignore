@@ -15,7 +15,7 @@ lib/
 node_modules/
 var/
 vendor/
-!ecs_helper/cmd/vendor/
+!ecs_helper/vendor/
 
 # Repo-specific excludes
 docker/log
@@ -24,4 +24,4 @@ terraform/to_import\.sh
 .certs
 
 **/terraform.output.json
-
+log/pact.log
