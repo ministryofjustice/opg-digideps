@@ -104,4 +104,5 @@ Feature: Admin unsubmit report (from client page)
     Then I should see the "report-2016" region in the "report-group-submitted" region
     # check there is a new submission, with all the documents
     When I click on "admin-documents"
+    And I click on "tab-pending"
     And I should see "John 102-client"

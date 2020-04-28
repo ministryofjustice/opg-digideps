@@ -133,13 +133,15 @@ trait ReportTrait
     {
         $this->iAmLoggedInAsWithPassword($deputy.'@behat-test.com', 'Abcd1234');
         $this->enterReport($client, $startDate, $endDate);
-        preg_match('/\/(\d+)\//', $this->getSession()->getCurrentUrl(), $match);
+        preg_match('/\/(ndr|report)\/(\d+)\//', $this->getSession()->getCurrentUrl(), $match);
+
         self::$currentReportCache = [
             'deputy' => $deputy,
             'client' => $client,
-            'reportId' => $match[1],
+            'reportId' => $match[2],
             'startDate' => $startDate,
-            'endDate' => $endDate
+            'endDate' => $endDate,
+            'reportType' => $match[1]
         ];
     }
 
@@ -237,44 +239,53 @@ trait ReportTrait
      */
     public function theReportHasBeenSubmitted()
     {
-        $this->logInAndEnterReport();
+        $reportType = self::$currentReportCache['reportType'];
 
-        $sections = $this->getSession()->getPage()->findAll('xpath', "//a[contains(@id, 'edit-')]");
-        $sectionNames = [];
-        foreach ($sections as $section) {
-            $sectionId = $section->getAttribute('id');
-            $sectionNames[] = substr($sectionId, strpos($sectionId, "-") + 1);
-        }
+        if ($reportType === 'ndr') {
+            $this->logInAndEnterReport();
 
-        if ($matches = array_keys($sectionNames, 'report-preview')) {
-            foreach ($matches as $index) {
-                unset($sectionNames[$index]);
+            $this->completeSections(implode(',', ['visits_care', 'expenses', 'income_benefits', 'bank_accounts', 'assets', 'debts', 'actions', 'other_info']), $reportType);
+        } else {
+            $this->logInAndEnterReport();
+
+            $sections = $this->getSession()->getPage()->findAll('xpath', "//a[contains(@id, 'edit-')]");
+            $sectionNames = [];
+            foreach ($sections as $section) {
+                $sectionId = $section->getAttribute('id');
+                $sectionNames[] = substr($sectionId, strpos($sectionId, "-") + 1);
             }
-        }
 
-        $this->completeSections(implode(',', $sectionNames));
+            if ($matches = array_keys($sectionNames, 'report-preview')) {
+                foreach ($matches as $index) {
+                    unset($sectionNames[$index]);
+                }
+            }
+
+            $this->completeSections(implode(',', $sectionNames), $reportType);
+        }
 
         $reportId = self::$currentReportCache['reportId'];
-        $this->visit("report/$reportId/overview");
+        $this->visit("$reportType/$reportId/overview");
 
         try {
             $this->clickLink('Preview and check report');
         } catch (\Exception $e) {
-            $this->clickOnBehatLink('edit-report_submit');
+            $link = $reportType === 'ndr' ? 'edit-report-review' : 'edit-report_submit';
+            $this->clickOnBehatLink($link);
         }
 
-        $this->clickOnBehatLink('declaration-page');
-        $this->checkOption('report_declaration[agree]');
-        $this->selectOption('report_declaration[agreedBehalfDeputy]', 'only_deputy');
-        $this->pressButton('report_declaration[save]');
+        $this->clickOnBehatLink($reportType === 'report' ? 'declaration-page' : 'ndr-declaration-page');
+        $this->checkOption(sprintf('%s_declaration[agree]', $reportType));
+        $this->selectOption(sprintf('%s_declaration[agreedBehalfDeputy]', $reportType), 'only_deputy');
+        $this->pressButton(sprintf('%s_declaration[save]', $reportType));
     }
 
-    private function completeSections(string $sections)
+    private function completeSections(string $sections, string $reportType='report')
     {
         $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'Abcd1234');
 
         $reportId = self::$currentReportCache['reportId'];
-        $url = sprintf('/admin/fixtures/complete-sections/%s?sections=%s', $reportId, $sections);
+        $url = sprintf('/admin/fixtures/complete-sections/%s/%s?sections=%s', $reportType, $reportId, $sections);
         $this->visitAdminPath($url);
     }
 
@@ -293,6 +304,7 @@ trait ReportTrait
     {
         $this->iAmLoggedInAsWithPassword(self::$currentReportCache['deputy'] . '@behat-test.com', 'Abcd1234');
         $reportId = self::$currentReportCache['reportId'];
-        $this->visit("report/$reportId/overview");
+        $reportType = self::$currentReportCache['reportType'];
+        $this->visit("$reportType/$reportId/overview");
     }
 }

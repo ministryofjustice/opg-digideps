@@ -75,13 +75,13 @@ default:
 
         authentication:
             description: Coverage of authentication
-            paths: [ "%paths.base%/features/authentication" ]
+            paths: [ "%paths.base%/features/v2/authentication" ]
             contexts:
                 - DigidepsBehat\Authentication\AuthenticationFeatureContext
 
-        organisation-management:
+        organisationManagement:
             description: Coverage of the organisation management features
-            paths: [ "%paths.base%/features/OrganisationManagement" ]
+            paths: [ "%paths.base%/features/v2/organisationManagement" ]
             contexts:
                 - DigidepsBehat\OrganisationManagement\OrganisationManagementFeatureContext
 
@@ -93,9 +93,15 @@ default:
 
         user-management:
             description: Coverage of user management features (deleteing, editing etc)
-            paths: [ "%paths.base%/features/UserManagement" ]
+            paths: [ "%paths.base%/features/v2/userManagement" ]
             contexts:
                 - DigidepsBehat\UserManagement\UserManagementFeatureContext
+
+        document-synchronisation:
+            description: Coverage of document synchronisation features
+            paths: [ "%paths.base%/features/v2/DocumentSynchronisation" ]
+            contexts:
+                - DigidepsBehat\DocumentSynchronisation\DocumentSynchronisationFeatureContext
 
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:

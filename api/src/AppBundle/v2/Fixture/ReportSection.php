@@ -5,6 +5,7 @@ namespace AppBundle\v2\Fixture;
 use AppBundle\Entity\Ndr as Ndr;
 use AppBundle\Entity\Report\Action;
 use AppBundle\Entity\Report\BankAccount;
+use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Lifestyle;
 use AppBundle\Entity\Report\MentalCapacity;
 use AppBundle\Entity\Report\MoneyTransaction;
@@ -14,14 +15,17 @@ use AppBundle\Entity\Report\VisitsCare;
 use AppBundle\Entity\ReportInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use AppBundle\TestHelpers\DocumentHelpers;
 
 class ReportSection
 {
     private $em;
+    private $documentHelpers;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, DocumentHelpers $documentHelpers)
     {
         $this->em = $em;
+        $this->documentHelpers = $documentHelpers;
     }
 
     public function completeReport(ReportInterface $report): void
@@ -32,7 +36,7 @@ class ReportSection
         $this->completeActions($report);
         $this->completeOtherInfo($report);
         $this->completeDocuments($report);
-        $this->completeExpenses($report);
+        $this->completeDeputyExpenses($report);
         $this->completeGifts($report);
         $this->completeBankAccounts($report);
         $this->completeMoneyIn($report);
@@ -142,7 +146,11 @@ class ReportSection
      */
     private function completeDocuments(ReportInterface $report): void
     {
-        $report->setWishToProvideDocumentation('no');
+        $report->setWishToProvideDocumentation('yes');
+
+        $supportingDocument = $this->documentHelpers->generateSupportingDocument($report);
+
+        $report->addDocument($supportingDocument);
     }
 
     /**
@@ -221,7 +229,7 @@ class ReportSection
     /**
      * @param ReportInterface $report
      */
-    private function completeExpenses(ReportInterface $report): void
+    private function completeDeputyExpenses(ReportInterface $report): void
     {
         if ($report instanceof Ndr\Ndr || $report->isLayReport()) {
             $report->setPaidForAnything('no');
@@ -244,6 +252,14 @@ class ReportSection
     /**
      * @param ReportInterface $report
      */
+    private function completeExpenses(ReportInterface $report): void
+    {
+        $this->completeDeputyExpenses($report);
+    }
+
+    /**
+     * @param ReportInterface $report
+     */
     private function completeIncomeBenefits(ReportInterface $report)
     {
         if (!$report instanceof Ndr\Ndr) {
@@ -255,4 +271,43 @@ class ReportSection
             ->setReceiveOtherIncome('no')
             ->setExpectCompensationDamages('no');
     }
+
+    /**
+     * @param ReportInterface $report
+     */
+    private function completeMoneyTransfers(ReportInterface $report)
+    {
+        if (!$report instanceof Ndr\Ndr) {
+            return;
+        }
+
+        $report->setNoTransfersToAdd(true);
+    }
+
+    private function completeBalance(ReportInterface $report)
+    {
+        if (!$report instanceof Ndr\Ndr) {
+            return;
+        }
+
+        $report->setBalanceMismatchExplanation('no reason');
+    }
+
+    private function completeProfDeputyCosts(ReportInterface $report)
+    {
+        $this->completeDeputyExpenses($report);
+    }
+
+    private function completeProfDeputyCostsEstimate(ReportInterface $report)
+    {
+        if ($report->isProfReport()) {
+            $report->setProfDeputyCostsEstimateHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_FIXED);
+        }
+    }
+
+    private function completePaFeeExpense(ReportInterface $report)
+    {
+        $this->completeDeputyExpenses($report);
+    }
+
 }

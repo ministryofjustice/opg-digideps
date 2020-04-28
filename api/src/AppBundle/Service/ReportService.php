@@ -318,11 +318,15 @@ class ReportService
 
             if ($document instanceof Document) {
                 $document->setReportSubmission($submission);
+                $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
+                $document->setSynchronisedBy($user);
             }
         } elseif ($currentReport instanceof Report) {
             foreach ($currentReport->getDocuments() as $document) {
                 if (!$document->getReportSubmission()) {
                     $document->setReportSubmission($submission);
+                    $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
+                    $document->setSynchronisedBy($user);
                 }
             }
         }

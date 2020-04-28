@@ -8,8 +8,8 @@ use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\AppBundle\Controller\AbstractTestController;
-use Tests\TestHelpers\ReportSubmissionHelper;
-use Tests\TestHelpers\ReportTestHelper;
+use AppBundle\TestHelpers\ReportSubmissionHelper;
+use AppBundle\TestHelpers\ReportTestHelper;
 
 class ReportSubmissionControllerTest extends AbstractTestController
 {

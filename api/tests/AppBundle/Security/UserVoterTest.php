@@ -5,7 +5,7 @@ namespace AppBundle\Security;
 use AppBundle\Entity\User;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Tests\TestHelpers\UserTestHelper;
+use AppBundle\TestHelpers\UserTestHelper;
 
 class UserVoterTest extends TestCase
 {

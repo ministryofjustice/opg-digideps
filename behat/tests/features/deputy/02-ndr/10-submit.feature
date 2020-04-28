@@ -66,7 +66,8 @@ Feature: ndr / report submit
         Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "admin-documents"
         Then I should be on "/admin/documents/list"
-        And I save the current URL as "ndr-admin-documents-list-new"
+        And I click on "tab-pending"
+        And I save the current URL as "ndr-admin-documents-list-pending"
             # assert submission and download
         Then I should see "John ndr-client"
         And I should see "ndr"
@@ -76,7 +77,7 @@ Feature: ndr / report submit
         And the page content should be a zip file containing files with the following files:
             | NdrRep.*.zip | regexpName+sizeAtLeast | 30000 |
         # test archive
-        When I go to the URL previously saved as "ndr-admin-documents-list-new"
+        When I go to the URL previously saved as "ndr-admin-documents-list-pending"
         Then I check "Select ndr"
         When I click on "archive"
         And I click on "tab-archived"
