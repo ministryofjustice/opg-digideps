@@ -36,7 +36,7 @@ workflows:
           filters: { branches: { ignore: [ master ] } }
 
       - api-unit-tests:
-          name: client unit test
+          name: api unit test
           requires: [ apply environment ]
           filters: { branches: { ignore: [ master ] } }
 
