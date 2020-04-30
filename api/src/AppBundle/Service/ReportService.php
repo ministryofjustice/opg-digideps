@@ -404,6 +404,7 @@ class ReportService
         foreach ($currentReport->getDocuments() as $document) {
             if (!$document->getReportSubmission()) {
                 $document->setReportSubmission($submission);
+                $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
             }
         }
 
