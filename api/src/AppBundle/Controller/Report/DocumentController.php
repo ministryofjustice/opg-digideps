@@ -131,7 +131,7 @@ class DocumentController extends RestController
 
         $this->setJmsSerialiserGroups($serialisedGroups);
 
-        return $documentRepo->findBy(['synchronisationStatus' => Document::SYNC_STATUS_QUEUED]);
+        return $documentRepo->getQueuedDocument(500);
     }
 
     /**
