@@ -353,22 +353,6 @@ class Document implements DocumentInterface
         return $this->isReportPdf() || $this->isTransactionDocument();
     }
 
-    public function supportingDocumentCanBeSynced()
-    {
-        return !$this->isReportPdf() && $this->getReport()->reportPdfHasBeenSynced();
-    }
-
-    public function getSyncedReportSubmission(): ?ReportSubmission
-    {
-        foreach ($this->getReport()->getReportSubmissions() as $submission) {
-            if ($submission->getUuid()) {
-                return $submission;
-            }
-        }
-
-        return null;
-    }
-
     /**
      * Is document a list of transaction document (admin only)
      * @return bool|int

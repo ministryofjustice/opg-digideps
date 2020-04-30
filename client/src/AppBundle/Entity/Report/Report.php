@@ -1227,32 +1227,12 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @param ReportSubmission[] $reportSubmissions
+     * @return Report
      */
     public function setReportSubmissions(array $reportSubmissions): self
     {
         $this->reportSubmissions = $reportSubmissions;
 
         return $this;
-    }
-
-    public function reportPdfHasBeenSynced()
-    {
-        $reportPdfHasBeenSubmitted = false;
-
-        $submittedDocuments = array_filter($this->getDocuments(), function ($d) {
-            return !empty($d->getReportSubmission());
-        });
-
-        foreach ($submittedDocuments as $doc) {
-            if ($doc->isReportPdf()) {
-                $reportPdfHasBeenSubmitted = !is_null($doc->getReportSubmission()->getUuid()) ? true : false;
-
-                break;
-            } else {
-                continue;
-            }
-        }
-
-        return $reportPdfHasBeenSubmitted;
     }
 }
