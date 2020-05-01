@@ -4,6 +4,9 @@ namespace AppBundle\Service;
 
 
 use AppBundle\Entity\Report\Document;
+use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Report\ReportSubmission;
+use AppBundle\Model\Sirius\QueuedDocumentData;
 use AppBundle\Model\Sirius\SiriusDocumentFile;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
@@ -17,6 +20,7 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use JMS\Serializer\Serializer;
+use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -47,9 +51,6 @@ class DocumentSyncServiceTest extends KernelTestCase
     /** @var int */
     private $reportSubmissionId;
 
-    /** @var int */
-    private $supportingDocSubmissionId;
-
     /** @var string*/
     private $reportPdfSubmissionUuid;
 
@@ -61,9 +62,6 @@ class DocumentSyncServiceTest extends KernelTestCase
 
     /** @var int */
     private $documentId;
-
-    /** @var string */
-    private $supportingDocSubmissionUuid;
 
     public function setUp(): void
     {
@@ -83,34 +81,44 @@ class DocumentSyncServiceTest extends KernelTestCase
         $this->reportEndDate = new DateTime('2019-05-13');
         $this->reportSubmittedDate = new DateTime('2019-06-20');
         $this->reportSubmissionId = 9876;
-        $this->supportingDocSubmissionId = 9877;
         $this->documentId = 6789;
         $this->reportPdfSubmissionUuid = '5a8b1a26-8296-4373-ae61-f8d0b250e123';
-        $this->supportingDocSubmissionUuid = '5a8b1a26-8296-4373-ae61-f8d0b250e321';
         $this->fileContents = '%PDF-1.4\nfake_contents';
         $this->fileName = 'test.pdf';
     }
 
-    /** @test */
-    public function syncDocument_report_pdf_sync_success()
+    /**
+     * @test
+     * @dataProvider reportTypeProvider
+     */
+    public function syncDocument_report_pdf_sync_success(string $reportTypeCode, string $expectedReportType)
     {
-        $submittedReportDocument = (new DocumentHelpers())->generateSubmittedReportDocument(
-            '1234567T',
-            $this->reportStartDate,
-            $this->reportEndDate,
-            $this->reportSubmittedDate,
-            $this->fileName,
-            $this->reportSubmissionId,
-            $this->supportingDocSubmissionId
-        );
+        $reportPdfReportSubmission =
+            (new ReportSubmission())
+                ->setId($this->reportSubmissionId)
+                ->setUuid($this->reportPdfSubmissionUuid);
 
-        $this->s3Storage->retrieve('test')->willReturn($this->fileContents);
+        $queuedDocumentData = (new QueuedDocumentData())
+            ->setReportType($reportTypeCode)
+            ->setDocumentId(6789)
+            ->setReportSubmissionId($this->reportSubmissionId)
+            ->setReportSubmissions([$reportPdfReportSubmission])
+            ->setReportStartDate($this->reportStartDate)
+            ->setReportEndDate($this->reportEndDate)
+            ->setReportSubmitDate($this->reportSubmittedDate)
+            ->setStorageReference('storage-ref-here')
+            ->setFilename('test.pdf')
+            ->setIsReportPdf(true)
+            ->setCaseNumber('1234567T')
+            ->setNdrId(null);
+
+        $this->s3Storage->retrieve('storage-ref-here')->shouldBeCalled()->willReturn($this->fileContents);
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusReportPdfDocumentUpload(
             $this->reportStartDate,
             $this->reportEndDate,
             $this->reportSubmittedDate,
-            'PF',
+            $expectedReportType,
             $this->reportSubmissionId,
             $this->fileName,
             $this->fileContents
@@ -118,16 +126,6 @@ class DocumentSyncServiceTest extends KernelTestCase
 
         $successResponseBody = ['data' => ['id' => $this->reportPdfSubmissionUuid]];
         $successResponse = new Response('200', [], json_encode($successResponseBody));
-
-        $this->restClient
-            ->apiCall('put',
-                'document/6789',
-                json_encode(['syncStatus' => Document::SYNC_STATUS_IN_PROGRESS]),
-                'Report\\Document',
-                [],
-                false
-            )
-            ->shouldBeCalled();
 
         $this->siriusApiGatewayClient->sendReportPdfDocument($siriusDocumentUpload, '1234567T')
             ->shouldBeCalled()
@@ -153,26 +151,115 @@ class DocumentSyncServiceTest extends KernelTestCase
                 false
             )
             ->shouldBeCalled()
-            ->willReturn($this->serializer->serialize($submittedReportDocument, 'json'));
+            ->willReturn(new Document());
 
         $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
-        $sut->syncDocument($submittedReportDocument);
+        $sut->syncDocument($queuedDocumentData);
+    }
+
+    public function reportTypeProvider()
+    {
+        return [
+            'Report type 102' => [Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS, 'PF'],
+            'Report type 103' => [Report::TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS, 'PF'],
+            'Report type 102-4' => [Report::TYPE_COMBINED_HIGH_ASSETS, 'HW'],
+            'Report type 103-4' => [Report::TYPE_COMBINED_LOW_ASSETS, 'HW'],
+            'Report type 104' => [Report::TYPE_HEALTH_WELFARE, 'HW'],
+        ];
+    }
+
+    /**
+     * @test
+     */
+    public function syncDocument_report_pdf_ndr_sync_success()
+    {
+        $reportPdfReportSubmission =
+            (new ReportSubmission())
+                ->setId($this->reportSubmissionId)
+                ->setUuid($this->reportPdfSubmissionUuid);
+
+        $queuedDocumentData = (new QueuedDocumentData())
+            ->setReportType(null)
+            ->setDocumentId(6789)
+            ->setReportSubmissionId($this->reportSubmissionId)
+            ->setReportSubmissions([$reportPdfReportSubmission])
+            ->setReportStartDate($this->reportStartDate)
+            ->setReportEndDate($this->reportEndDate)
+            ->setReportSubmitDate($this->reportSubmittedDate)
+            ->setStorageReference('storage-ref-here')
+            ->setFilename('test.pdf')
+            ->setIsReportPdf(true)
+            ->setCaseNumber('1234567T')
+            ->setNdrId(123);
+
+        $this->s3Storage->retrieve('storage-ref-here')->shouldBeCalled()->willReturn($this->fileContents);
+
+        $siriusDocumentUpload = SiriusHelpers::generateSiriusReportPdfDocumentUpload(
+            $this->reportStartDate,
+            $this->reportStartDate,
+            $this->reportSubmittedDate,
+            'NDR',
+            $this->reportSubmissionId,
+            $this->fileName,
+            $this->fileContents
+        );
+
+        $successResponseBody = ['data' => ['id' => $this->reportPdfSubmissionUuid]];
+        $successResponse = new Response('200', [], json_encode($successResponseBody));
+
+        $this->siriusApiGatewayClient->sendReportPdfDocument($siriusDocumentUpload, '1234567T')
+            ->shouldBeCalled()
+            ->willReturn($successResponse);
+
+        $this->restClient
+            ->apiCall('put',
+                'report-submission/9876/update-uuid',
+                json_encode(['uuid' => $this->reportPdfSubmissionUuid]),
+                'raw',
+                [],
+                false
+            )
+            ->shouldBeCalled()
+            ->willReturn(new SymfonyResponse('9876'));
+
+        $this->restClient
+            ->apiCall('put',
+                'document/6789',
+                json_encode(['syncStatus' => Document::SYNC_STATUS_SUCCESS]),
+                'Report\\Document',
+                [],
+                false
+            )
+            ->shouldBeCalled()
+            ->willReturn(new Document());
+
+        $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
+        $sut->syncDocument($queuedDocumentData);
     }
 
     /** @test */
     public function sendDocument_sync_failure_sirius()
     {
-        $submittedReportDocument = (new DocumentHelpers())->generateSubmittedReportDocument(
-            '1234567T',
-            $this->reportStartDate,
-            $this->reportEndDate,
-            $this->reportSubmittedDate,
-            $this->fileName,
-            $this->reportSubmissionId,
-            $this->documentId
-        );
+        $reportPdfReportSubmission =
+            (new ReportSubmission())
+                ->setId($this->reportSubmissionId)
+                ->setUuid($this->reportPdfSubmissionUuid);
 
-        $this->s3Storage->retrieve('test')->willReturn($this->fileContents);
+        $queuedDocumentData = (new QueuedDocumentData())
+            ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
+            ->setDocumentId(6789)
+            ->setReportSubmissionId($this->reportSubmissionId)
+            ->setReportSubmissions([$reportPdfReportSubmission])
+            ->setReportStartDate($this->reportStartDate)
+            ->setReportEndDate($this->reportEndDate)
+            ->setReportSubmitDate($this->reportSubmittedDate)
+            ->setStorageReference('storage-ref-here')
+            ->setFilename('test.pdf')
+            ->setIsReportPdf(true)
+            ->setCaseNumber('1234567T')
+            ->setNdrId(null);
+
+        $this->s3Storage->retrieve('storage-ref-here')->willReturn($this->fileContents);
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusReportPdfDocumentUpload(
             $this->reportStartDate,
@@ -196,16 +283,6 @@ class DocumentSyncServiceTest extends KernelTestCase
         $this->restClient
             ->apiCall('put',
                 'document/6789',
-                json_encode(['syncStatus' => Document::SYNC_STATUS_IN_PROGRESS]),
-                'Report\\Document',
-                [],
-                false
-            )
-            ->shouldBeCalled();
-
-        $this->restClient
-            ->apiCall('put',
-                'document/6789',
                 json_encode(
                     ['syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR,
                     'syncError' => $failureResponseBody
@@ -215,10 +292,10 @@ class DocumentSyncServiceTest extends KernelTestCase
                 false
             )
             ->shouldBeCalled()
-            ->willReturn($this->serializer->serialize($submittedReportDocument, 'json'));;
+            ->willReturn($this->serializer->serialize(new Document(), 'json'));;
 
         $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
-        $sut->syncDocument($submittedReportDocument);
+        $sut->syncDocument($queuedDocumentData);
     }
 
     /**
@@ -227,29 +304,28 @@ class DocumentSyncServiceTest extends KernelTestCase
      */
     public function sendReportDocument_sync_failure_s3(string $awsErrorCode, string $awsErrorMessage, string $syncStatus)
     {
-        $submittedReportDocument = (new DocumentHelpers())->generateSubmittedReportDocument(
-            '1234567T',
-            $this->reportStartDate,
-            $this->reportEndDate,
-            $this->reportSubmittedDate,
-            $this->fileName,
-            $this->reportSubmissionId,
-            $this->documentId
-        );
+        $reportPdfReportSubmission =
+            (new ReportSubmission())
+                ->setId($this->reportSubmissionId)
+                ->setUuid($this->reportPdfSubmissionUuid);
+
+        $queuedDocumentData = (new QueuedDocumentData())
+            ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
+            ->setDocumentId(6789)
+            ->setReportSubmissionId($this->reportSubmissionId)
+            ->setReportSubmissions([$reportPdfReportSubmission])
+            ->setReportStartDate($this->reportStartDate)
+            ->setReportEndDate($this->reportEndDate)
+            ->setReportSubmitDate($this->reportSubmittedDate)
+            ->setStorageReference('storage-ref-here')
+            ->setFilename('test.pdf')
+            ->setIsReportPdf(true)
+            ->setCaseNumber('1234567T')
+            ->setNdrId(null);
 
         $s3Exception = new S3Exception($awsErrorMessage, new Command('getObject'), ['code' => $awsErrorCode]);
 
-        $this->s3Storage->retrieve('test')->willThrow($s3Exception);
-
-        $this->restClient
-            ->apiCall('put',
-                'document/6789',
-                json_encode(['syncStatus' => Document::SYNC_STATUS_IN_PROGRESS]),
-                'Report\\Document',
-                [],
-                false
-            )
-            ->shouldBeCalled();
+        $this->s3Storage->retrieve('storage-ref-here')->willThrow($s3Exception);
 
         $this->restClient
             ->apiCall('put',
@@ -263,10 +339,10 @@ class DocumentSyncServiceTest extends KernelTestCase
                 false
             )
             ->shouldBeCalled()
-            ->willReturn($this->serializer->serialize($submittedReportDocument, 'json'));
+            ->willReturn($this->serializer->serialize(new Document(), 'json'));
 
         $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
-        $sut->syncDocument($submittedReportDocument);
+        $sut->syncDocument($queuedDocumentData);
     }
 
     public function s3ErrorProvider()
@@ -278,40 +354,52 @@ class DocumentSyncServiceTest extends KernelTestCase
         ];
     }
 
-    /** @test */
-    public function sendSupportingDocument_success()
+    /**
+     * @test
+     * @dataProvider supportingDocumentProivder
+     */
+    public function sendSupportingDocument_success(
+        int $reportPdfSubmissionId,
+        int $supportingDocSubmissionId,
+        int $expectedIdUsedForSync,
+        string $reportPdfUuid,
+        string $expectedUuidUsedToSyncDoc
+    )
     {
-        $submittedSupportingDocument = (new DocumentHelpers())->generateSubmittedSupportingDocument(
-            '1234567T',
-            $this->reportStartDate,
-            $this->reportEndDate,
-            $this->reportSubmittedDate,
-            $this->fileName,
-            $this->reportSubmissionId,
-            $this->supportingDocSubmissionId,
-            $this->documentId,
-            $this->reportPdfSubmissionUuid
-        );
+        $reportPdfReportSubmission =
+            (new ReportSubmission())
+                ->setId($reportPdfSubmissionId)
+                ->setUuid($reportPdfUuid);
 
-        $this->s3Storage->retrieve('test')->willReturn($this->fileContents);
+        $supportingDocSubmission = (new ReportSubmission())->setId($supportingDocSubmissionId);
 
-        $successResponseBody = ['data' => ['type' => 'supportingDocument', 'id' => $this->supportingDocSubmissionUuid]];
+        $queuedDocumentData = (new QueuedDocumentData())
+            ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
+            ->setDocumentId(6789)
+            ->setReportSubmissionId($supportingDocSubmissionId)
+            ->setReportSubmissions([$reportPdfReportSubmission, $supportingDocSubmission])
+            ->setReportStartDate($this->reportStartDate)
+            ->setReportEndDate($this->reportEndDate)
+            ->setReportSubmitDate($this->reportSubmittedDate)
+            ->setStorageReference('storage-ref-here')
+            ->setFilename('bank-statement.pdf')
+            ->setIsReportPdf(false)
+            ->setCaseNumber('1234567T')
+            ->setNdrId(null);
+
+        $this->s3Storage->retrieve('storage-ref-here')->willReturn($this->fileContents);
+
+        $successResponseBody = ['data' => ['type' => 'supportingDocument', 'id' => 'some-random-uuid']];
         $successResponse = new Response('200', [], json_encode($successResponseBody));
 
-        $siriusDocumentUpload = SiriusHelpers::generateSiriusSupportingDocumentUpload($this->supportingDocSubmissionId, $this->fileName, $this->fileContents);
-
-        $this->restClient
-            ->apiCall('put',
-                'document/6789',
-                json_encode(['syncStatus' => Document::SYNC_STATUS_IN_PROGRESS]),
-                'Report\\Document',
-                [],
-                false
-            )
-            ->shouldBeCalled();
+        $siriusDocumentUpload = SiriusHelpers::generateSiriusSupportingDocumentUpload(
+            $expectedIdUsedForSync,
+            'bank-statement.pdf',
+            $this->fileContents
+        );
 
         $this->siriusApiGatewayClient
-            ->sendSupportingDocument($siriusDocumentUpload, $this->reportPdfSubmissionUuid, '1234567T')
+            ->sendSupportingDocument($siriusDocumentUpload, $expectedUuidUsedToSyncDoc, '1234567T')
             ->shouldBeCalled()
             ->willReturn($successResponse);
 
@@ -324,26 +412,38 @@ class DocumentSyncServiceTest extends KernelTestCase
                 false
             )
             ->shouldBeCalled()
-            ->willReturn($this->serializer->serialize($submittedSupportingDocument, 'json'));
+            ->willReturn(new Document());
 
         $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
-        $sut->syncDocument($submittedSupportingDocument);
+        $sut->syncDocument($queuedDocumentData);
+    }
+
+    public function supportingDocumentProivder()
+    {
+        return [
+            'Sent with report PDF' => [1234, 1234, 1234, 'report-pdf-uuid', 'report-pdf-uuid'],
+            'Sent after report PDF' => [1234, 4321, 4321, 'report-pdf-uuid', 'report-pdf-uuid']
+        ];
     }
 
     /** @test */
     public function sendSupportingDocument_report_pdf_not_submitted()
     {
-        $submittedSupportingDocument = (new DocumentHelpers())->generateSubmittedSupportingDocument(
-            '1234567T',
-            $this->reportStartDate,
-            $this->reportEndDate,
-            $this->reportSubmittedDate,
-            $this->fileName,
-            $this->reportSubmissionId,
-            $this->supportingDocSubmissionId,
-            $this->documentId,
-            null
-        );
+        $supportingDocSubmission = (new ReportSubmission())->setId($this->reportSubmissionId);
+
+        $queuedDocumentData = (new QueuedDocumentData())
+            ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
+            ->setDocumentId(6789)
+            ->setReportSubmissionId($this->reportSubmissionId)
+            ->setReportSubmissions([$supportingDocSubmission])
+            ->setReportStartDate($this->reportStartDate)
+            ->setReportEndDate($this->reportEndDate)
+            ->setReportSubmitDate($this->reportSubmittedDate)
+            ->setStorageReference('storage-ref-here')
+            ->setFilename('bank-statement.pdf')
+            ->setIsReportPdf(false)
+            ->setCaseNumber('1234567T')
+            ->setNdrId(null);
 
         $this->restClient
             ->apiCall('put',
@@ -354,9 +454,9 @@ class DocumentSyncServiceTest extends KernelTestCase
                 false
             )
             ->shouldBeCalled()
-            ->willReturn($this->serializer->serialize($submittedSupportingDocument, 'json'));
+            ->willReturn($this->serializer->serialize(new Document(), 'json'));
 
         $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
-        $sut->syncDocument($submittedSupportingDocument);
+        $sut->syncDocument($queuedDocumentData);
     }
 }

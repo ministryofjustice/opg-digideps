@@ -70,10 +70,13 @@ class QueuedDocumentData
 
     /**
      * @param string $caseNumber
+     * @return QueuedDocumentData
      */
-    public function setCaseNumber(string $caseNumber): void
+    public function setCaseNumber(string $caseNumber): self
     {
         $this->caseNumber = $caseNumber;
+
+        return $this;
     }
 
     /**
@@ -86,10 +89,13 @@ class QueuedDocumentData
 
     /**
      * @param int $documentId
+     * @return QueuedDocumentData
      */
-    public function setDocumentId(int $documentId): void
+    public function setDocumentId(int $documentId): self
     {
         $this->documentId = $documentId;
+
+        return $this;
     }
 
     /**
@@ -102,10 +108,13 @@ class QueuedDocumentData
 
     /**
      * @param bool $isReportPdf
+     * @return QueuedDocumentData
      */
-    public function setIsReportPdf(bool $isReportPdf): void
+    public function setIsReportPdf(bool $isReportPdf): self
     {
         $this->isReportPdf = $isReportPdf;
+
+        return $this;
     }
 
     /**
@@ -118,10 +127,13 @@ class QueuedDocumentData
 
     /**
      * @param string $filename
+     * @return QueuedDocumentData
      */
-    public function setFilename(string $filename): void
+    public function setFilename(string $filename): self
     {
         $this->filename = $filename;
+
+        return $this;
     }
 
     /**
@@ -134,10 +146,13 @@ class QueuedDocumentData
 
     /**
      * @param string $storageReference
+     * @return QueuedDocumentData
      */
-    public function setStorageReference(string $storageReference): void
+    public function setStorageReference(string $storageReference): self
     {
         $this->storageReference = $storageReference;
+
+        return $this;
     }
 
     /**
@@ -150,10 +165,13 @@ class QueuedDocumentData
 
     /**
      * @param ReportSubmission[] $reportSubmissions
+     * @return QueuedDocumentData
      */
-    public function setReportSubmissions(array $reportSubmissions): void
+    public function setReportSubmissions(array $reportSubmissions): self
     {
         $this->reportSubmissions = $reportSubmissions;
+
+        return $this;
     }
 
     /**
@@ -166,10 +184,13 @@ class QueuedDocumentData
 
     /**
      * @param int|null $ndrId
+     * @return QueuedDocumentData
      */
-    public function setNdrId(?int $ndrId): void
+    public function setNdrId(?int $ndrId): self
     {
         $this->ndrId = $ndrId;
+
+        return $this;
     }
 
     /**
@@ -182,10 +203,13 @@ class QueuedDocumentData
 
     /**
      * @param DateTime|null $reportStartDate
+     * @return QueuedDocumentData
      */
-    public function setReportStartDate(?DateTime $reportStartDate): void
+    public function setReportStartDate(?DateTime $reportStartDate): self
     {
         $this->reportStartDate = $reportStartDate;
+
+        return $this;
     }
 
     /**
@@ -198,10 +222,13 @@ class QueuedDocumentData
 
     /**
      * @param DateTime|null $reportEndDate
+     * @return QueuedDocumentData
      */
-    public function setReportEndDate(?DateTime $reportEndDate): void
+    public function setReportEndDate(?DateTime $reportEndDate): self
     {
         $this->reportEndDate = $reportEndDate;
+
+        return $this;
     }
 
     /**
@@ -214,10 +241,13 @@ class QueuedDocumentData
 
     /**
      * @param DateTime|null $reportSubmitDate
+     * @return QueuedDocumentData
      */
-    public function setReportSubmitDate(?DateTime $reportSubmitDate): void
+    public function setReportSubmitDate(?DateTime $reportSubmitDate): self
     {
         $this->reportSubmitDate = $reportSubmitDate;
+
+        return $this;
     }
 
     /**
@@ -230,10 +260,13 @@ class QueuedDocumentData
 
     /**
      * @param string|null $reportType
+     * @return QueuedDocumentData
      */
-    public function setReportType(?string $reportType): void
+    public function setReportType(?string $reportType): self
     {
         $this->reportType = $reportType;
+
+        return $this;
     }
 
     /**
@@ -246,9 +279,12 @@ class QueuedDocumentData
 
     /**
      * @param int $reportSubmissionId
+     * @return QueuedDocumentData
      */
-    public function setReportSubmissionId(int $reportSubmissionId): void
+    public function setReportSubmissionId(int $reportSubmissionId): self
     {
         $this->reportSubmissionId = $reportSubmissionId;
+
+        return $this;
     }
 }
