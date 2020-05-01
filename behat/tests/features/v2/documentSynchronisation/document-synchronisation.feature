@@ -1,3 +1,4 @@
+@docs
 Feature: Synchronising Documents with Sirius
   As a case manager
   So I can carry out my supervision role efficiently
@@ -31,3 +32,20 @@ Feature: Synchronising Documents with Sirius
       | 56565656    | DeputyE |
       | 67676767    | DeputyF |
       | 78787878    | DeputyG |
+
+    Scenario Outline: Submitting supporting documents after a report submission sets the synchronisation status to queued
+      Given I am logged in as "<emailAddress>" with password "Abcd1234"
+      And I attached a supporting document "test-image.png" to the submitted report
+      And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+      When I view the submissions page
+      And I click on "tab-pending"
+      Then I should see "<case_number>"
+      And the document "test-image.png" should be queued
+      Examples:
+        | case_number | emailAddress  |
+        | 12121212    | DeputyA@behat-test.com |
+        | 23232323    | DeputyB@behat-test.com |
+        | 45454545    | DeputyD@behat-test.com |
+        | 56565656    | DeputyE@behat-test.com |
+        | 67676767    | DeputyF@behat-test.com |
+        | 78787878    | DeputyG@behat-test.com |
