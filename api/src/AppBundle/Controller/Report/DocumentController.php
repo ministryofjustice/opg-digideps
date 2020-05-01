@@ -116,9 +116,9 @@ class DocumentController extends RestController
      *
      * @Route("/document/queued", methods={"GET"})
      *
-     * @return Document[]
+     * @return string
      */
-    public function getQueuedDocuments(Request $request, EntityManagerInterface $em): array
+    public function getQueuedDocuments(Request $request, EntityManagerInterface $em): string
     {
         if (!$this->getAuthService()->isSecretValid($request)) {
             throw new UnauthorisedException('client secret not accepted.');
@@ -126,12 +126,7 @@ class DocumentController extends RestController
 
         $documentRepo = $em->getRepository(Document::class);
 
-        $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['documents'];
-
-        $this->setJmsSerialiserGroups($serialisedGroups);
-
-        return $documentRepo->getQueuedDocument(500);
+        return json_encode($documentRepo->getQueuedDocumentsAndSetToInProgress(250));
     }
 
     /**

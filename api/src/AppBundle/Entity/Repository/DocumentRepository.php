@@ -24,7 +24,7 @@ class DocumentRepository extends AbstractEntityRepository
         return $records;
     }
 
-    public function getQueuedDocument(int $limit)
+    public function getQueuedDocumentsAndSetToInProgress(int $limit)
     {
         // Using DENSE_RANK here as we get multiple rows for the same document due to multiple report submissions. This
         // ensures any limit applied will not miss out submissions by chance

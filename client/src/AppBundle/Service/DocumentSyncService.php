@@ -72,35 +72,32 @@ class DocumentSyncService
 
     /**
      * @param QueuedDocumentData $document
-     * @return QueuedDocumentData|null
+     * @return Document|null
      */
-    public function syncReportDocument(QueuedDocumentData $document): ?QueuedDocumentData
+    public function syncReportDocument(QueuedDocumentData $documentData): ?Document
     {
         try {
-            $content = $this->retrieveDocumentContentFromS3($document);
-
-            $siriusResponse = $this->handleSiriusSync($document, $content);
+            $siriusResponse = $this->handleSiriusSync($documentData, $this->retrieveDocumentContentFromS3($documentData));
 
             $data = json_decode(strval($siriusResponse->getBody()), true);
 
-            $this->handleReportSubmissionUpdate($document->getReportSubmission()->getId(), $data['data']['id']);
+            $this->handleReportSubmissionUpdate($documentData->getReportSubmissionId(), $data['data']['id']);
 
-            return $this->handleDocumentStatusUpdate($document, Document::SYNC_STATUS_SUCCESS);
+            return $this->handleDocumentStatusUpdate($documentData, Document::SYNC_STATUS_SUCCESS);
         } catch (Throwable $e) {
-            $this->handleSyncErrors($e, $document);
+            $this->handleSyncErrors($e, $documentData);
             return null;
         }
     }
 
     /**
      * @param QueuedDocumentData $documentData
-     * @return QueuedDocumentData|null
+     * @return Document|null
      */
-    public function syncSupportingDocument(QueuedDocumentData $documentData): ?QueuedDocumentData
+    public function syncSupportingDocument(QueuedDocumentData $documentData): ?Document
     {
         try {
-            $content = $this->retrieveDocumentContentFromS3($documentData);
-            $this->handleSiriusSync($documentData, $content);
+            $this->handleSiriusSync($documentData, $this->retrieveDocumentContentFromS3($documentData));
             return $this->handleDocumentStatusUpdate($documentData, Document::SYNC_STATUS_SUCCESS);
         } catch (Throwable $e) {
             $this->handleSyncErrors($e, $documentData);
@@ -172,15 +169,14 @@ class DocumentSyncService
      */
     public function handleSiriusSync(QueuedDocumentData $documentData, string $content)
     {
-        $upload = $this->buildUpload($documentData, $content);
-        $caseRef = $documentData->getCaseNumber();
-
         if($documentData->isReportPdf()) {
-            return $this->siriusApiGatewayClient->sendReportPdfDocument($upload, $caseRef);
+            return $this->siriusApiGatewayClient->sendReportPdfDocument($this->buildUpload($documentData, $content), $documentData->getCaseNumber());
         } else {
-            /** @var ReportSubmission $reportPdfSubmission */
-            $reportPdfSubmission = $documentData->getSyncedReportSubmission();
-            return $this->siriusApiGatewayClient->sendSupportingDocument($upload, $reportPdfSubmission->getUuid(), $caseRef);
+            return $this->siriusApiGatewayClient->sendSupportingDocument(
+                $this->buildUpload($documentData, $content),
+                $documentData->getSyncedReportSubmission()->getUuid(),
+                $documentData->getCaseNumber()
+            );
         }
     }
 

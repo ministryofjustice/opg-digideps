@@ -3,6 +3,7 @@
 namespace AppBundle\Command;
 
 
+use AppBundle\Model\Sirius\QueuedDocumentData;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\DocumentSyncService;
 use AppBundle\Service\FeatureFlagService;
@@ -45,9 +46,7 @@ class DocumentSyncCommand extends DaemonableCommand
     {
         parent::configure();
 
-        $this
-            ->setDescription('Uploads queued documents to Sirius and reports back the success');
-        ;
+        $this->setDescription('Uploads queued documents to Sirius and reports back the success');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -58,11 +57,12 @@ class DocumentSyncCommand extends DaemonableCommand
                 return;
             }
 
+            /** @var QueuedDocumentData[] $documents */
             $documents = $this->getQueuedDocumentsData();
 
             $output->writeln(count($documents) . ' documents to upload');
 
-            foreach ($documents as $document) {
+            foreach ($documents as &$document) {
                 $this->documentSyncService->syncDocument($document);
             }
         }, 3 * 60);
@@ -80,6 +80,6 @@ class DocumentSyncCommand extends DaemonableCommand
     {
         $queuedDocumentData = $this->restClient->apiCall('get', 'document/queued', [], 'array', [], false);
 
-        return $this->serializer->deserialize(json_encode($queuedDocumentData), 'AppBundle\Model\Sirius\QueuedDocumentData[]', 'json');
+        return $this->serializer->deserialize($queuedDocumentData, 'AppBundle\Model\Sirius\QueuedDocumentData[]', 'json');
     }
 }
