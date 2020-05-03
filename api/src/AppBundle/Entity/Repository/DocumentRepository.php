@@ -3,10 +3,12 @@
 namespace AppBundle\Entity\Repository;
 
 use AppBundle\Entity\Report\Document;
+use DateTime;
 use PDO;
 
 class DocumentRepository extends AbstractEntityRepository
 {
+    const ROWS_LIMIT = 250;
     /**
      * Get soft-deleted documents
      *
@@ -24,8 +26,9 @@ class DocumentRepository extends AbstractEntityRepository
         return $records;
     }
 
-    public function getQueuedDocumentsAndSetToInProgress(int $limit)
+    public function getQueuedDocumentsAndSetToInProgress()
     {
+        $limit = self::ROWS_LIMIT;
         // Using DENSE_RANK here as we get multiple rows for the same document due to multiple report submissions. This
         // ensures any limit applied will not miss out submissions by chance
         $queuedDocumentsQuery = "
@@ -63,7 +66,7 @@ WHERE dn < $limit;";
                     'is_report_pdf' => $row['is_report_pdf'],
                     'filename' => $row['filename'],
                     'storage_reference' => $row['storage_reference'],
-                    'report_start_date' => isset($row['report_start_date']) ? $row['report_start_date'] : $row['ndr_start_date'],
+                    'report_start_date' => isset($row['report_start_date']) ? $row['report_start_date'] : (new DateTime($row['ndr_start_date']))->format('Y-m-d'),
                     'report_end_date' => $row['report_end_date'],
                     'report_submit_date' => isset($row['report_submit_date']) ? $row['report_submit_date'] : $row['ndr_submit_date'],
                     'report_type' => $row['report_type']
@@ -87,6 +90,7 @@ WHERE dn < $limit;";
 
             $updateStatusQuery = "UPDATE document SET synchronisation_status = 'IN_PROGRESS' WHERE id IN ($idsString)";
             $stmt = $conn->prepare($updateStatusQuery);
+
             $stmt->execute();
         }
 
