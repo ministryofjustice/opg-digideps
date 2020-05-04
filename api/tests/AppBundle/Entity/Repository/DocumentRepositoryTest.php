@@ -44,6 +44,9 @@ class DocumentRepositoryTest extends KernelTestCase
     /** @var Ndr */
     private $ndr;
 
+    /** @var string */
+    private $uniq;
+
     protected function setUp(): void
     {
         $kernel = self::bootKernel();
@@ -51,11 +54,10 @@ class DocumentRepositoryTest extends KernelTestCase
         $this->now = new DateTime('now', new DateTimeZone('UTC'));
 
         // Set up Report documents
-        $uniq = (string) (new DateTime())->getTimestamp();
+        $this->uniq = (string) (new DateTime())->getTimestamp();
         $this->user = (new User())
             ->setFirstname('Test')
             ->setLastname('User')
-            ->setEmail(sprintf('test-user%s@test.com', $uniq))
             ->setPassword('password123');
 
         $this->client = (new Client())
@@ -184,6 +186,8 @@ class DocumentRepositoryTest extends KernelTestCase
 
     private function persistEntities()
     {
+        $this->user->setEmail(sprintf('test-user%s%s@test.com', $this->uniq, rand(0, 10000)));
+
         $this->entityManager->persist($this->user);
         $this->entityManager->persist($this->client);
         $this->entityManager->persist($this->report);
