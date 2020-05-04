@@ -29,10 +29,25 @@ class DocumentRepository extends AbstractEntityRepository
     public function getQueuedDocumentsAndSetToInProgress()
     {
         $limit = self::ROWS_LIMIT;
+
         // Using DENSE_RANK here as we get multiple rows for the same document due to multiple report submissions. This
         // ensures any limit applied will not miss out submissions by chance
         $queuedDocumentsQuery = "
-SELECT case_number, document_id, document_report_submission_id, is_report_pdf, filename, storage_reference, report_start_date, report_end_date, report_submit_date, report_type, ndr_id, ndr_start_date, ndr_submit_date, report_submission_id, report_submission_uuid
+SELECT case_number,
+document_id,
+document_report_submission_id,
+is_report_pdf,
+filename,
+storage_reference,
+report_start_date,
+report_end_date,
+report_submit_date,
+report_type,
+ndr_id,
+ndr_start_date,
+ndr_submit_date,
+report_submission_id,
+report_submission_uuid
 FROM (
 SELECT DENSE_RANK() OVER(ORDER BY d.id) AS dn,
 coalesce(c1.case_number, c2.case_number) AS case_number,
