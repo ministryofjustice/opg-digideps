@@ -34,16 +34,18 @@ class DocumentRepository extends AbstractEntityRepository
         $queuedDocumentsQuery = "
 SELECT case_number, document_id, document_report_submission_id, is_report_pdf, filename, storage_reference, report_start_date, report_end_date, report_submit_date, report_type, ndr_id, ndr_start_date, ndr_submit_date, report_submission_id, report_submission_uuid
 FROM (
-SELECT DENSE_RANK() OVER(ORDER BY d.id) as dn,
-coalesce(c1.case_number, c2.case_number) as case_number,
+SELECT DENSE_RANK() OVER(ORDER BY d.id) AS dn,
+coalesce(c1.case_number, c2.case_number) AS case_number,
+coalesce(rs1.id, rs2.id) AS report_submission_id,
+coalesce(rs1.opg_uuid, rs2.opg_uuid) AS report_submission_uuid,
 d.id AS document_id, d.is_report_pdf, d.filename, d.storage_reference, d.report_submission_id AS document_report_submission_id,
 r.start_date AS report_start_date, r.end_date AS report_end_date, r.submit_date AS report_submit_date, r.type AS report_type,
-o.id AS ndr_id, o.start_date AS ndr_start_date, o.submit_date AS ndr_submit_date,
-rs.id AS report_submission_id, rs.opg_uuid AS report_submission_uuid
+o.id AS ndr_id, o.start_date AS ndr_start_date, o.submit_date AS ndr_submit_date
 FROM document d
 LEFT JOIN report r ON r.id = d.report_id
-LEFT JOIN report_submission rs ON rs.report_id = r.id
 LEFT JOIN odr o ON o.id = d.ndr_id
+LEFT JOIN report_submission rs1 ON rs1.report_id = d.report_id
+LEFT JOIN report_submission rs2 ON rs2.ndr_id = d.ndr_id
 LEFT JOIN client c1 ON c1.id = r.client_id
 LEFT JOIN client c2 ON c2.id = o.client_id
 WHERE d.synchronisation_status = 'QUEUED') AS sub
