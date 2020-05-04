@@ -17,9 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class DocumentRepositoryTest extends KernelTestCase
 {
-    /**
-     * @var EntityManager
-     */
+    /** @var EntityManager */
     private $entityManager;
 
     /** @var Client */
@@ -128,10 +126,6 @@ class DocumentRepositoryTest extends KernelTestCase
 
         $this->documentRepository = $this->entityManager
             ->getRepository(Document::class);
-
-        $this->persistReportDocuments();
-        $this->persistNdrDocuments();
-        $this->entityManager->flush();
     }
 
     /**
@@ -139,6 +133,9 @@ class DocumentRepositoryTest extends KernelTestCase
      */
     public function getQueuedDocumentsAndSetToInProgress()
     {
+        $this->persistEntities();
+        $this->entityManager->flush();
+
         $documents = $this->documentRepository
             ->getQueuedDocumentsAndSetToInProgress();
 
@@ -161,6 +158,9 @@ class DocumentRepositoryTest extends KernelTestCase
      */
     public function multipleReportSubmissionsAreReturned()
     {
+        $this->persistEntities();
+        $this->entityManager->flush();
+
         $documents = $this->documentRepository
             ->getQueuedDocumentsAndSetToInProgress();
 
@@ -172,6 +172,9 @@ class DocumentRepositoryTest extends KernelTestCase
      */
     public function supportsNdrs()
     {
+        $this->persistEntities();
+        $this->entityManager->flush();
+
         $documents = $this->documentRepository
             ->getQueuedDocumentsAndSetToInProgress();
 
@@ -179,7 +182,7 @@ class DocumentRepositoryTest extends KernelTestCase
         $this->assertEquals(1, count($documents[$this->ndrReportPdfDocument->getId()]['report_submissions']));
     }
 
-    private function persistReportDocuments()
+    private function persistEntities()
     {
         $this->entityManager->persist($this->user);
         $this->entityManager->persist($this->client);
@@ -189,10 +192,6 @@ class DocumentRepositoryTest extends KernelTestCase
         $this->entityManager->persist($this->reportSubmission);
         $this->entityManager->persist($this->supportingDocumentAfterSubmission);
         $this->entityManager->persist($this->additionalReportSubmission);
-    }
-
-    private function persistNdrDocuments()
-    {
         $this->entityManager->persist($this->ndr);
         $this->entityManager->persist($this->ndrReportPdfDocument);
         $this->entityManager->persist($this->ndrSubmission);
