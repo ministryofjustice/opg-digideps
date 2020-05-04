@@ -126,7 +126,7 @@ class DocumentController extends RestController
 
         $documentRepo = $em->getRepository(Document::class);
 
-        return json_encode($documentRepo->getQueuedDocumentsAndSetToInProgress(250));
+        return json_encode($documentRepo->getQueuedDocumentsAndSetToInProgress());
     }
 
     /**

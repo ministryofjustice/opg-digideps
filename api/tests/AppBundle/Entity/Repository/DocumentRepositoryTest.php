@@ -136,7 +136,6 @@ class DocumentRepositoryTest extends KernelTestCase
     public function getQueuedDocumentsAndSetToInProgress()
     {
         $this->persistEntities();
-        $this->entityManager->flush();
 
         $documents = $this->documentRepository
             ->getQueuedDocumentsAndSetToInProgress();
@@ -161,7 +160,6 @@ class DocumentRepositoryTest extends KernelTestCase
     public function multipleReportSubmissionsAreReturned()
     {
         $this->persistEntities();
-        $this->entityManager->flush();
 
         $documents = $this->documentRepository
             ->getQueuedDocumentsAndSetToInProgress();
@@ -175,7 +173,6 @@ class DocumentRepositoryTest extends KernelTestCase
     public function supportsNdrs()
     {
         $this->persistEntities();
-        $this->entityManager->flush();
 
         $documents = $this->documentRepository
             ->getQueuedDocumentsAndSetToInProgress();
@@ -199,6 +196,8 @@ class DocumentRepositoryTest extends KernelTestCase
         $this->entityManager->persist($this->ndr);
         $this->entityManager->persist($this->ndrReportPdfDocument);
         $this->entityManager->persist($this->ndrSubmission);
+
+        $this->entityManager->flush();
     }
 
     /**
