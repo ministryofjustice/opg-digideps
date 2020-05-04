@@ -57,7 +57,7 @@ class DocumentRepositoryTest extends KernelTestCase
         $this->user = (new User())
             ->setFirstname('Test')
             ->setLastname('User')
-            ->setEmail(sprintf('test-user%s@test.com', substr($uniq, 0, 10)))
+            ->setEmail(sprintf('test-user%s@test.com', $uniq))
             ->setPassword('password123');
 
         $this->client = (new Client())
@@ -147,8 +147,6 @@ class DocumentRepositoryTest extends KernelTestCase
 
         $this->entityManager->refresh($reportPdf);
         $this->entityManager->refresh($supportingDocument);
-
-        $this->assertEquals(4, count($documents));
 
         $this->assertDataMatchesEntity($documents, $this->reportPdfDocument, $this->client, $this->reportSubmission, $this->report);
         $this->assertDataMatchesEntity($documents, $this->supportingDocument, $this->client, $this->reportSubmission, $this->report);
