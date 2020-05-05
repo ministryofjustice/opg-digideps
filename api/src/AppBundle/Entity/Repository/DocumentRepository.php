@@ -110,4 +110,20 @@ WHERE dn < $limit;";
 
         return $queuedDocumentData;
     }
+
+
+    public function updateDocumentStatusByReportSubmissionIds(array $reportSubmissionIds)
+    {
+        $idsString = implode(",", $reportSubmissionIds);
+        $status = Document::SYNC_STATUS_PERMANENT_ERROR;
+
+        $updateStatusQuery = "UPDATE document SET synchronisation_status = '$status' WHERE report_submission_id IN ($idsString)";
+
+        $conn = $this->getEntityManager()->getConnection();
+        $stmt = $conn->prepare($updateStatusQuery);
+        $stmt->execute();
+
+        return $stmt->rowCount();
+    }
+
 }

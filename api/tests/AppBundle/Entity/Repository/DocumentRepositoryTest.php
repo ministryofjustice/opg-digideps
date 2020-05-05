@@ -157,7 +157,7 @@ class DocumentRepositoryTest extends KernelTestCase
     /**
      * @test
      */
-    public function multipleReportSubmissionsAreReturned()
+    public function getQueuedDocumentsAndSetToInProgress_multipleReportSubmissionsAreReturned()
     {
         $this->persistEntities();
 
@@ -170,7 +170,7 @@ class DocumentRepositoryTest extends KernelTestCase
     /**
      * @test
      */
-    public function supportsNdrs()
+    public function getQueuedDocumentsAndSetToInProgress_supportsNdrs()
     {
         $this->persistEntities();
 
@@ -231,6 +231,31 @@ class DocumentRepositoryTest extends KernelTestCase
         }
 
     }
+
+    /** @test */
+    public function updateDocumentStatusByReportSubmissionId()
+    {
+        $this->persistEntities();
+
+        $updatedDocumentsCount = $this->documentRepository
+            ->updateDocumentStatusByReportSubmissionIds([$this->reportSubmission->getId(), $this->additionalReportSubmission->getId()]);
+
+        $this->refreshDocumentEntities();
+
+        $this->assertEquals(3, $updatedDocumentsCount);
+
+        foreach([$this->reportPdfDocument, $this->supportingDocument, $this->supportingDocumentAfterSubmission] as $doc) {
+            self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $doc->getSynchronisationStatus());
+        }
+    }
+
+    private function refreshDocumentEntities()
+    {
+        $this->entityManager->refresh($this->reportPdfDocument);
+        $this->entityManager->refresh($this->supportingDocument);
+        $this->entityManager->refresh($this->supportingDocumentAfterSubmission);
+    }
+
 
     protected function tearDown(): void
     {

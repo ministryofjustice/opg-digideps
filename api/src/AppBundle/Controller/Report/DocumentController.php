@@ -132,6 +132,24 @@ class DocumentController extends RestController
     }
 
     /**
+     * Get queued documents
+     *
+     * @Route("/document/update-related-statuses", methods={"PUT"})
+     *
+     * @return string
+     */
+    public function updateRelatedDocumentStatuses(Request $request, EntityManagerInterface $em): string
+    {
+        if (!$this->getAuthService()->isSecretValid($request)) {
+            throw new UnauthorisedException('client secret not accepted.');
+        }
+
+        $documentRepo = $em->getRepository(Document::class);
+
+        return json_encode(3);
+    }
+
+    /**
      * Update a Document
      *
      * @Route("/document/{id}", methods={"PUT"})

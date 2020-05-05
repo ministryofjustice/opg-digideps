@@ -63,10 +63,14 @@ class DocumentControllerTest extends AbstractTestController
 
         self::$document1 = self::fixtures()->createDocument(self::$report1, 'file_name.pdf');
         self::$document2 = self::fixtures()->createDocument(self::$report1, 'another_file_name.pdf');
-        self::$document3 = self::fixtures()->createDocument(self::$report2, 'another_file_name.pdf');
+        self::$document3 = self::fixtures()->createDocument(self::$report2, 'and_another_file_name.pdf');
 
         self::$reportSubmission1 = self::fixtures()->createReportSubmission(self::$report1);
-        self::$reportSubmission1 = self::fixtures()->createReportSubmission(self::$report1);
+        self::$reportSubmission2 = self::fixtures()->createReportSubmission(self::$report1);
+
+        self::$document1->setReportSubmission(self::$reportSubmission1);
+        self::$document2->setReportSubmission(self::$reportSubmission1);
+        self::$document3->setReportSubmission(self::$reportSubmission2);
 
         self::fixtures()->flush();
 
@@ -231,15 +235,15 @@ class DocumentControllerTest extends AbstractTestController
     /** @test */
     public function updateRelatedStatuses_success(): void
     {
-        // Create three docs - one attached to report submission, two attached to another. Assert the function returns 3 and updates status on docs
-
         $response = $this->assertJsonRequest(
             'PUT',
             '/document/update-related-statuses',
             [
             'mustSucceed' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,
-            ['data' => [1,2]]
+            ['data' => [self::$reportSubmission1->getId(), self::$reportSubmission2->getId()]]
         ]);
+
+        self::assertEquals('3', $response['data']);
     }
 }

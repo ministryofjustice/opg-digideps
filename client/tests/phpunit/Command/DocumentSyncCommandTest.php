@@ -77,6 +77,11 @@ class DocumentSyncCommandTest extends KernelTestCase
             ->syncDocument($queuedDocumentData)
             ->shouldBeCalled();
 
+        $documentSyncService
+            ->getSyncErrorSubmissionIds()
+            ->shouldBeCalled()
+            ->willReturn([]);
+
         $kernel = static::bootKernel([ 'debug' => false ]);
         $application = new Application($kernel);
 
