@@ -40,25 +40,10 @@ class DocumentSyncServiceTest extends KernelTestCase
     private $serializer;
 
     /**@var DateTime */
-    private $reportSubmittedDate;
-
-    /**@var DateTime */
-    private $reportEndDate;
-
-    /**@var DateTime */
-    private $reportStartDate;
+    private $reportSubmittedDate, $reportEndDate, $reportStartDate;
 
     /** @var int */
-    private $reportSubmissionId;
-
-    /** @var string*/
-    private $reportPdfSubmissionUuid;
-
-    /** @var string */
-    private $fileContents;
-
-    /** @var string */
-    private $fileName;
+    private $reportSubmissionId, $reportPdfSubmissionUuid, $fileContents, $fileName;
 
     /** @var int */
     private $documentId;
@@ -292,17 +277,19 @@ class DocumentSyncServiceTest extends KernelTestCase
                 false
             )
             ->shouldBeCalled()
-            ->willReturn($this->serializer->serialize(new Document(), 'json'));;
+            ->willReturn($this->serializer->serialize(new Document(), 'json'));
 
         $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
         $sut->syncDocument($queuedDocumentData);
+
+        self::assertContains($queuedDocumentData->getReportSubmissionId(), $sut->getSyncErrorSubmissionIds());
     }
 
     /**
      * @dataProvider s3ErrorProvider
      * @test
      */
-    public function sendReportDocument_sync_failure_s3(string $awsErrorCode, string $awsErrorMessage, string $syncStatus)
+    public function sendReportDocument_sync_failure_s3(string $awsErrorCode, string $awsErrorMessage, string $syncStatus, ?int $expectedSubmissionId)
     {
         $reportPdfReportSubmission =
             (new ReportSubmission())
@@ -343,14 +330,18 @@ class DocumentSyncServiceTest extends KernelTestCase
 
         $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
         $sut->syncDocument($queuedDocumentData);
+
+        if ($expectedSubmissionId) {
+            self::assertContains($expectedSubmissionId, $sut->getSyncErrorSubmissionIds());
+        }
     }
 
     public function s3ErrorProvider()
     {
         return [
-            'Missing key' => ['NoSuchKey', 'The specified key does not exist.', Document::SYNC_STATUS_PERMANENT_ERROR],
-            'Access denied (for deleted items not yet purged)' => ['AccessDenied', 'Access Denied', Document::SYNC_STATUS_PERMANENT_ERROR],
-            'Internal error' => ['InternalError', 'We encountered an internal error. Please try again.', Document::SYNC_STATUS_TEMPORARY_ERROR]
+            'Missing key' => ['NoSuchKey', 'The specified key does not exist.', Document::SYNC_STATUS_PERMANENT_ERROR, $this->reportSubmissionId],
+            'Access denied (for deleted items not yet purged)' => ['AccessDenied', 'Access Denied', Document::SYNC_STATUS_PERMANENT_ERROR, $this->reportSubmissionId],
+            'Internal error' => ['InternalError', 'We encountered an internal error. Please try again.', Document::SYNC_STATUS_TEMPORARY_ERROR, null]
         ];
     }
 
@@ -458,5 +449,32 @@ class DocumentSyncServiceTest extends KernelTestCase
 
         $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
         $sut->syncDocument($queuedDocumentData);
+    }
+
+    /**
+     * @test
+     */
+    public function setSubmissionsDocumentsToPermanentError()
+    {
+        $this->restClient
+            ->apiCall('put',
+                'document/update-related-statuses',
+                json_encode([
+                    'syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR,
+                    'submissionIds' => [1,2,3]]
+                ),
+                'raw',
+                [],
+                false
+            )
+            ->shouldBeCalled()
+            ->willReturn(6);
+
+        $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
+
+        $sut->addToSyncErrorSubmissionIds(1);
+        $sut->addToSyncErrorSubmissionIds(2);
+        $sut->addToSyncErrorSubmissionIds(3);
+        $sut->setSubmissionsDocumentsToPermanentError();
     }
 }

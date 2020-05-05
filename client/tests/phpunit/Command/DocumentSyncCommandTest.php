@@ -136,4 +136,50 @@ class DocumentSyncCommandTest extends KernelTestCase
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('Feature disabled, sleeping', $output);
     }
+
+    public function testExecute_with_sync_error_submission_ids(): void
+    {
+        /** @var FeatureFlagService|ObjectProphecy $featureFlags */
+        $featureFlags = self::prophesize(FeatureFlagService::class);
+        $featureFlags
+            ->get(FeatureFlagService::FLAG_DOCUMENT_SYNC)
+            ->shouldBeCalled()
+            ->willReturn('1');
+
+        /** @var RestClient|ObjectProphecy $restClient */
+        $restClient = self::prophesize(RestClient::class);
+        $restClient
+            ->apiCall('get', 'document/queued', [], 'array', Argument::type('array'), false)
+            ->shouldBeCalled()
+            ->willReturn(json_encode([]));
+
+        /** @var DocumentSyncService|ObjectProphecy $documentSyncService */
+        $documentSyncService = self::prophesize(DocumentSyncService::class);
+        $documentSyncService
+            ->getSyncErrorSubmissionIds()
+            ->shouldBeCalled()
+            ->willReturn([1, 2, 3]);
+
+        $documentSyncService
+            ->setSubmissionsDocumentsToPermanentError()
+            ->shouldBeCalled()
+            ->willReturn(6);
+
+        $kernel = static::bootKernel([ 'debug' => false ]);
+        $application = new Application($kernel);
+
+        /** @var ContainerInterface */
+        $container = $kernel->getContainer();
+        $container->set(DocumentSyncService::class, $documentSyncService->reveal());
+        $container->set(RestClient::class, $restClient->reveal());
+        $container->set(FeatureFlagService::class, $featureFlags->reveal());
+
+        $command = $application->find('digideps:document-sync');
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([]);
+
+        $output = $commandTester->getDisplay();
+        $this->assertStringContainsString('0 documents to upload', $output);
+        $this->assertStringContainsString('6 documents failed to sync', $output);
+    }
 }

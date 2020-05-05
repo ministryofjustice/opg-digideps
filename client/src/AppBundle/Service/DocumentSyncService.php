@@ -37,6 +37,9 @@ class DocumentSyncService
     /** @var RestClient */
     private $restClient;
 
+    /** @var int[] */
+    private $syncErrorSubmissionIds;
+
     public function __construct(
         S3Storage $storage,
         SiriusApiGatewayClient $siriusApiGatewayClient,
@@ -46,6 +49,7 @@ class DocumentSyncService
         $this->storage = $storage;
         $this->siriusApiGatewayClient = $siriusApiGatewayClient;
         $this->restClient = $restClient;
+        $this->syncErrorSubmissionIds = [];
     }
 
     /**
@@ -176,6 +180,41 @@ class DocumentSyncService
     }
 
     /**
+     * @return array|int[]
+     */
+    public function getSyncErrorSubmissionIds()
+    {
+        return $this->syncErrorSubmissionIds;
+    }
+
+    /**
+     * @param int $submissionId
+     */
+    public function addToSyncErrorSubmissionIds(int $submissionId)
+    {
+        $this->syncErrorSubmissionIds[] = $submissionId;
+    }
+
+    public function setSubmissionsDocumentsToPermanentError()
+    {
+        $countOfDocumentsUpdated = $this->restClient->apiCall(
+            'put',
+            'document/update-related-statuses',
+            json_encode(
+                [
+                    'syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR,
+                    'submissionIds' => $this->getSyncErrorSubmissionIds()
+                ]
+            ),
+            'raw',
+            [],
+            false
+        );
+
+        return $countOfDocumentsUpdated;
+    }
+
+    /**
      * @param QueuedDocumentData $documentData
      * @param string $status
      * @param string|null $errorMessage
@@ -237,6 +276,10 @@ class DocumentSyncService
                 (string) $e->getResponse()->getBody() : (string) $e->getMessage();
 
             $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
+        }
+
+        if ($syncStatus === Document::SYNC_STATUS_PERMANENT_ERROR) {
+            $this->addToSyncErrorSubmissionIds($documentData->getReportSubmissionId());
         }
 
         $this->handleDocumentStatusUpdate($documentData, $syncStatus, $errorMessage);
