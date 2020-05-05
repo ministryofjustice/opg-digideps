@@ -273,6 +273,8 @@ class Ndr implements ReportInterface
     public function setStartDate($startDate)
     {
         $this->startDate = $startDate;
+
+        return $this;
     }
 
     public function getDueDate()
@@ -308,6 +310,8 @@ class Ndr implements ReportInterface
     public function setSubmitDate(?DateTime $submitDate = null)
     {
         $this->submitDate = $submitDate;
+
+        return $this;
     }
 
     /**

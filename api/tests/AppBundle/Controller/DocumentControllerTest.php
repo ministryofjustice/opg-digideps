@@ -138,7 +138,7 @@ class DocumentControllerTest extends AbstractTestController
             'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
 
-        self::assertCount(0, $return['data']);
+        self::assertCount(0, json_decode($return['data'], true));
     }
 
     public function testGetQueuedDocuments(): void
@@ -155,7 +155,7 @@ class DocumentControllerTest extends AbstractTestController
             'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
 
-        self::assertCount(1, $return['data']);
+        self::assertCount(1, json_decode($return['data'], true));
     }
 
     public function testUpdateDocument_sync_success(): void

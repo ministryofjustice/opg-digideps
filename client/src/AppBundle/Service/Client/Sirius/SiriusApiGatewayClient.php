@@ -57,6 +57,12 @@ class SiriusApiGatewayClient
         return $this->httpClient->send($signedRequest);
     }
 
+    /**
+     * @param SiriusDocumentUpload $upload
+     * @param string $caseRef
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function sendReportPdfDocument(SiriusDocumentUpload $upload, string $caseRef)
     {
         $reportJson = $this->serializer->serialize(['report' => ['data' => $upload]], 'json');

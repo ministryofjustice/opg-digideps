@@ -39,6 +39,13 @@ services:
             $baseUrl: '%env(SIRIUS_API_BASE_URI)%'
             $serializer: '@serializer'
 
+    AppBundle\Command\DocumentSyncCommand:
+        autowire: true
+        autoconfigure: true
+        class: AppBundle\Command\DocumentSyncCommand
+        arguments:
+            $serializer: '@serializer'
+
     AppBundle\Service\AWS\RequestSigner:
         class: AppBundle\Service\AWS\RequestSigner
         arguments:

@@ -1,13 +1,15 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Command;
 
-use AppBundle\Entity\Report\Document;
+
+use AppBundle\Model\Sirius\QueuedDocumentData;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\DocumentSyncService;
 use AppBundle\Service\FeatureFlagService;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Serializer\Serializer;
 
 class DocumentSyncCommand extends DaemonableCommand
 {
@@ -22,11 +24,20 @@ class DocumentSyncCommand extends DaemonableCommand
     /** @var FeatureFlagService */
     private $featureFlags;
 
-    public function __construct(DocumentSyncService $documentSyncService, RestClient $restClient, FeatureFlagService $featureFlags)
+    /** @var Serializer  */
+    private $serializer;
+
+    public function __construct(
+        DocumentSyncService $documentSyncService,
+        RestClient $restClient,
+        FeatureFlagService $featureFlags,
+        Serializer $serializer
+    )
     {
         $this->documentSyncService = $documentSyncService;
         $this->restClient = $restClient;
         $this->featureFlags = $featureFlags;
+        $this->serializer = $serializer;
 
         parent::__construct();
     }
@@ -35,9 +46,7 @@ class DocumentSyncCommand extends DaemonableCommand
     {
         parent::configure();
 
-        $this
-            ->setDescription('Uploads queued documents to Sirius and reports back the success');
-        ;
+        $this->setDescription('Uploads queued documents to Sirius and reports back the success');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -48,13 +57,15 @@ class DocumentSyncCommand extends DaemonableCommand
                 return;
             }
 
-            $documents = $this->getQueuedDocuments();
+            /** @var QueuedDocumentData[] $documents */
+            $documents = $this->getQueuedDocumentsData();
+
             $output->writeln(count($documents) . ' documents to upload');
 
             foreach ($documents as $document) {
                 $this->documentSyncService->syncDocument($document);
             }
-        }, 5 * 60);
+        }, 3 * 60);
     }
 
     private function isFeatureEnabled(): bool
@@ -63,43 +74,12 @@ class DocumentSyncCommand extends DaemonableCommand
     }
 
     /**
-     * @return Document[]
+     * @return QueuedDocumentData[]
      */
-    private function getQueuedDocuments(): array
+    private function getQueuedDocumentsData(): array
     {
-        $options = [
-            'query' => [
-                'groups' => [
-                    'documents',
-                    'document-synchronisation',
-                    'document-storage-reference',
-                    'document-report',
-                    'document-report-submission',
-                    'report-submission',
-                    'report' => [
-                        'report',
-                        'document-sync',
-                        'report-documents',
-                        'report-client',
-                        'documentSync',
-                        'documents' => [
-                            'documents',
-                            'document-report-submission',
-                            'reportSubmission' => [
-                                'report-submission'
-                            ]
-                        ],
-                        'client' => [
-                            'client-case-number'
-                        ],
-                        'reportSubmissions' => [
-                            'report-submission'
-                        ]
-                    ]
-                ]
-            ]
-        ];
+        $queuedDocumentData = $this->restClient->apiCall('get', 'document/queued', [], 'array', [], false);
 
-        return $this->restClient->apiCall('get', 'document/queued', [], 'Report\\Document[]', $options, false);
+        return $this->serializer->deserialize($queuedDocumentData, 'AppBundle\Model\Sirius\QueuedDocumentData[]', 'json');
     }
 }
