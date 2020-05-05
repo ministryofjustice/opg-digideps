@@ -6,7 +6,6 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Model\Sirius\QueuedDocumentData;
 use AppBundle\Model\Sirius\SiriusDocumentFile;
 use AppBundle\Model\Sirius\SiriusDocumentUpload;
@@ -50,6 +49,22 @@ class DocumentSyncService
         $this->siriusApiGatewayClient = $siriusApiGatewayClient;
         $this->restClient = $restClient;
         $this->syncErrorSubmissionIds = [];
+    }
+
+    /**
+     * @return array|int[]
+     */
+    public function getSyncErrorSubmissionIds()
+    {
+        return $this->syncErrorSubmissionIds;
+    }
+
+    /**
+     * @param int $submissionId
+     */
+    public function addToSyncErrorSubmissionIds(int $submissionId)
+    {
+        $this->syncErrorSubmissionIds[] = $submissionId;
     }
 
     /**
@@ -179,37 +194,18 @@ class DocumentSyncService
         }
     }
 
-    /**
-     * @return array|int[]
-     */
-    public function getSyncErrorSubmissionIds()
-    {
-        return $this->syncErrorSubmissionIds;
-    }
-
-    /**
-     * @param int $submissionId
-     */
-    public function addToSyncErrorSubmissionIds(int $submissionId)
-    {
-        $this->syncErrorSubmissionIds[] = $submissionId;
-    }
-
     public function setSubmissionsDocumentsToPermanentError()
     {
-        $countOfDocumentsUpdated = $this->restClient->apiCall(
+        $response = $this->restClient->apiCall(
             'put',
             'document/update-related-statuses',
-            json_encode(
-                [
-                    'syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR,
-                    'submissionIds' => $this->getSyncErrorSubmissionIds()
-                ]
-            ),
+            json_encode(['submissionIds' => $this->getSyncErrorSubmissionIds(), 'errorMessage' => 'Report PDF failed to sync']),
             'raw',
             [],
             false
         );
+
+        $countOfDocumentsUpdated = json_decode((string) $response, true)['data'];
 
         return $countOfDocumentsUpdated;
     }

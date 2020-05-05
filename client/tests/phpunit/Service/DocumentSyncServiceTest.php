@@ -7,7 +7,6 @@ use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Model\Sirius\QueuedDocumentData;
-use AppBundle\Model\Sirius\SiriusDocumentFile;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use AppBundle\Service\File\Storage\S3Storage;
@@ -20,7 +19,6 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use JMS\Serializer\Serializer;
-use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -456,25 +454,25 @@ class DocumentSyncServiceTest extends KernelTestCase
      */
     public function setSubmissionsDocumentsToPermanentError()
     {
+        $expectedResponse = new Response(200, [], json_encode(['success' => true, 'data' => 3, 'message' => '']));
+
         $this->restClient
             ->apiCall('put',
                 'document/update-related-statuses',
-                json_encode([
-                    'syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR,
-                    'submissionIds' => [1,2,3]]
-                ),
+                json_encode(['submissionIds' => [1,2]]),
                 'raw',
                 [],
                 false
             )
             ->shouldBeCalled()
-            ->willReturn(6);
+            ->willReturn($expectedResponse->getBody());
 
         $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
 
         $sut->addToSyncErrorSubmissionIds(1);
         $sut->addToSyncErrorSubmissionIds(2);
-        $sut->addToSyncErrorSubmissionIds(3);
-        $sut->setSubmissionsDocumentsToPermanentError();
+
+        $updatedDocumentsCount = $sut->setSubmissionsDocumentsToPermanentError();
+        self::assertEquals(3, $updatedDocumentsCount);
     }
 }

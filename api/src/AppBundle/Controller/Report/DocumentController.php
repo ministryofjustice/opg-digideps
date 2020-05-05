@@ -146,7 +146,13 @@ class DocumentController extends RestController
 
         $documentRepo = $em->getRepository(Document::class);
 
-        return json_encode(3);
+        $data = json_decode($request->getContent(), true);
+        $reportSubmissionIds = $data['submissionIds'];
+        $errorMessage = $data['errorMessage'];
+
+        $count = $documentRepo->updateSupportingDocumentStatusByReportSubmissionIds($reportSubmissionIds, $errorMessage);
+
+        return json_encode($count);
     }
 
     /**
@@ -179,6 +185,9 @@ class DocumentController extends RestController
                 $document->setSynchronisationError($errorMessage);
             } else {
                 $document->setSynchronisationError(null);
+            }
+
+            if ($data['syncStatus'] === Document::SYNC_STATUS_SUCCESS) {
                 $document->setSynchronisationTime(new DateTime());
             }
         }

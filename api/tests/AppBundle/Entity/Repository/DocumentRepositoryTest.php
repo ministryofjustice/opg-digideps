@@ -233,20 +233,28 @@ class DocumentRepositoryTest extends KernelTestCase
     }
 
     /** @test */
-    public function updateDocumentStatusByReportSubmissionId()
+    public function updateSupportingDocumentStatusByReportSubmissionIds()
     {
+        $this->reportPdfDocument->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
         $this->persistEntities();
 
         $updatedDocumentsCount = $this->documentRepository
-            ->updateDocumentStatusByReportSubmissionIds([$this->reportSubmission->getId(), $this->additionalReportSubmission->getId()]);
+            ->updateSupportingDocumentStatusByReportSubmissionIds(
+                [$this->reportSubmission->getId(), $this->additionalReportSubmission->getId()],
+                'An error message'
+            );
 
         $this->refreshDocumentEntities();
 
         $this->assertEquals(3, $updatedDocumentsCount);
 
-        foreach([$this->reportPdfDocument, $this->supportingDocument, $this->supportingDocumentAfterSubmission] as $doc) {
+        foreach([$this->supportingDocument, $this->supportingDocumentAfterSubmission] as $doc) {
             self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $doc->getSynchronisationStatus());
+            self::assertEquals('An error message', $doc->getSynchronisationError());
         }
+
+        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $this->reportPdfDocument->getSynchronisationStatus());
+        self::assertEquals(null, $this->reportPdfDocument->getSynchronisationError());
     }
 
     private function refreshDocumentEntities()
