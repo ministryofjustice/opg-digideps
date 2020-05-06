@@ -88,9 +88,7 @@ locals {
       { "name": "SYMFONY_ENV", "value": "${local.account.symfony_env}" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
       { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" },
-      { "name": "PARAMETER_PREFIX", "value": "${local.parameter_prefix}" },
-      { "name": "DOCUMENT_SYNC_INTERVAL_MINUTES", "value": "${data.aws_ssm_parameter.document_sync_interval_minutes}" },
-      { "name": "DOCUMENT_SYNC_ROW_LIMIT", "value": "${data.aws_ssm_parameter.document_sync_row_limit}" },
+      { "name": "PARAMETER_PREFIX", "value": "${local.parameter_prefix}" }
     ]
   }
 
