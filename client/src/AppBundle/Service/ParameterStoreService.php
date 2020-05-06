@@ -15,10 +15,14 @@ class ParameterStoreService
     /** @var string */
     private $parameterPrefix;
 
-    public function __construct(SsmClient $ssmClient, string $parameterPrefix)
+    /** @var string */
+    private $flagPrefix;
+
+    public function __construct(SsmClient $ssmClient, string $parameterPrefix, string $flagPrefix)
     {
         $this->ssmClient = $ssmClient;
         $this->parameterPrefix = $parameterPrefix;
+        $this->flagPrefix = $flagPrefix;
     }
 
     public function getParameter(string $parameterKey)
@@ -27,5 +31,13 @@ class ParameterStoreService
         $parameter = $this->ssmClient->getParameter([ 'Name' => $parameterKey ]);
 
         return $parameter['Parameter']['Value'];
+    }
+
+    public function getFeatureFlag(string $flagKey)
+    {
+        $flagName = $this->flagPrefix . $flagKey;
+        $flag = $this->ssmClient->getParameter([ 'Name' => $flagName ]);
+
+        return $flag['Parameter']['Value'];
     }
 }

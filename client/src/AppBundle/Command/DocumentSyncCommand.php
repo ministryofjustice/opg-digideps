@@ -25,9 +25,6 @@ class DocumentSyncCommand extends DaemonableCommand
     /** @var RestClient */
     private $restClient;
 
-    /** @var FeatureFlagService */
-    private $featureFlags;
-
     /** @var Serializer  */
     private $serializer;
 
@@ -37,14 +34,12 @@ class DocumentSyncCommand extends DaemonableCommand
     public function __construct(
         DocumentSyncService $documentSyncService,
         RestClient $restClient,
-        FeatureFlagService $featureFlags,
         Serializer $serializer,
         ParameterStoreService $parameterStore
     )
     {
         $this->documentSyncService = $documentSyncService;
         $this->restClient = $restClient;
-        $this->featureFlags = $featureFlags;
         $this->serializer = $serializer;
         $this->parameterStore = $parameterStore;
 
@@ -79,7 +74,7 @@ class DocumentSyncCommand extends DaemonableCommand
 
     private function isFeatureEnabled(): bool
     {
-        return $this->featureFlags->get(FeatureFlagService::FLAG_DOCUMENT_SYNC) === '1';
+        return $this->parameterStore->getFeatureFlag(FeatureFlagService::FLAG_DOCUMENT_SYNC) === '1';
     }
 
     private function getSyncIntervalMinutes(): string

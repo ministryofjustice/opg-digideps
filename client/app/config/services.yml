@@ -65,7 +65,7 @@ services:
         arguments: ['@Aws\Ssm\SsmClient', '%env(FEATURE_FLAG_PREFIX)%']
 
     AppBundle\Service\ParameterStoreService:
-        arguments: ['@Aws\Ssm\SsmClient', '%env(PARAMETER_PREFIX)%']
+        arguments: ['@Aws\Ssm\SsmClient', '%env(PARAMETER_PREFIX)%', '%env(FEATURE_FLAG_PREFIX)%']
 
     AppBundle\Serializer\SiriusDocumentUploadSerializer:
         autowire: true
