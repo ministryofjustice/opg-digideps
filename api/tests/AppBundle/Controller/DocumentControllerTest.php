@@ -129,6 +129,7 @@ class DocumentControllerTest extends AbstractTestController
             'ClientSecret' => 'WRONG CLIENT SECRET',
             'assertCode' => 403,
             'assertResponseCode' => 403,
+            'data' => ['row_limit' => 100]
         ]);
 
         $this->assertStringContainsString('client secret not accepted', $return['message']);
@@ -136,6 +137,9 @@ class DocumentControllerTest extends AbstractTestController
         $return = $this->assertJsonRequest('GET', '/document/queued', [
             'mustSucceed' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,
+            [
+                'data' => ['row_limit' => 100]
+            ]
         ]);
 
         self::assertCount(0, json_decode($return['data'], true));

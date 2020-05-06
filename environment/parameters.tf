@@ -8,9 +8,9 @@ data "aws_ssm_parameter" "sirius_api_base_uri" {
 }
 
 resource "aws_ssm_parameter" "document_sync_interval_minutes" {
-  name  = "${local.feature_flag_prefix}document-sync-interval-minutes"
+  name  = "${local.parameter_prefix}document-sync-interval-minutes"
   type  = "String"
-  value = "4"
+  value = "4.5"
 
   tags = local.default_tags
 
@@ -22,7 +22,7 @@ resource "aws_ssm_parameter" "document_sync_interval_minutes" {
 resource "aws_ssm_parameter" "document_sync_row_limit" {
   name  = "${local.parameter_prefix}document-sync-row-limit"
   type  = "String"
-  value = "200"
+  value = "100"
 
   tags = local.default_tags
 

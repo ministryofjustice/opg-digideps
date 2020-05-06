@@ -14,6 +14,9 @@ use Symfony\Component\Serializer\Serializer;
 
 class DocumentSyncCommand extends DaemonableCommand
 {
+    const FALLBACK_INTERVAL_MINUTES = '4.5';
+    const FALLBACK_ROW_LIMITS = '100';
+
     protected static $defaultName = 'digideps:document-sync';
 
     /** @var DocumentSyncService */
@@ -81,12 +84,14 @@ class DocumentSyncCommand extends DaemonableCommand
 
     private function getSyncIntervalMinutes(): string
     {
-        return $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_INTERVAL_MINUTES);
+        $minutes = $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_INTERVAL_MINUTES);
+        return $minutes ? $minutes : self::FALLBACK_INTERVAL_MINUTES;
     }
 
     private function getSyncRowLimit(): string
     {
-        return $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT);
+        $limit = $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT);
+        return $limit ? $limit : self::FALLBACK_ROW_LIMITS;
     }
 
     /**
