@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Ndr;
 
 use AppBundle\Entity\AssetInterface;
 use AppBundle\Entity\Client;
+use AppBundle\Entity\CourtOrder;
 use AppBundle\Entity\Ndr\Traits as NdrTraits;
 use AppBundle\Entity\ReportInterface;
 use DateTime;
@@ -173,6 +174,15 @@ class Ndr implements ReportInterface
      * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", onDelete="SET NULL")
      */
     private $submittedBy;
+
+    /**
+     * @var CourtOrder
+     *
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\CourtOrder", inversedBy="ndr")
+     * @ORM\JoinColumn(name="court_order_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    private $courtOrder;
+
 
     /**
      * Ndr constructor.
@@ -626,6 +636,25 @@ class Ndr implements ReportInterface
     public function setSubmittedBy($submittedBy)
     {
         $this->submittedBy = $submittedBy;
+
+        return $this;
+    }
+
+    /**
+     * @return CourtOrder
+     */
+    public function getCourtOrder()
+    {
+        return $this->courtOrder;
+    }
+
+    /**
+     * @param CourtOrder $courtOrder
+     * @return $this
+     */
+    public function setCourtOrder(CourtOrder $courtOrder)
+    {
+        $this->courtOrder = $courtOrder;
 
         return $this;
     }
