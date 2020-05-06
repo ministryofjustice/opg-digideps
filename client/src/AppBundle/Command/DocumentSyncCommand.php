@@ -54,6 +54,8 @@ class DocumentSyncCommand extends DaemonableCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        ini_set('memory_limit', '512M');
+
         return $this->daemonize($input, $output, function() use ($output) {
             if (!$this->isFeatureEnabled()) {
                 $output->writeln('Feature disabled, sleeping');
