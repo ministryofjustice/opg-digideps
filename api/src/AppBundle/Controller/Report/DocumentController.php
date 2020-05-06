@@ -124,9 +124,11 @@ class DocumentController extends RestController
             throw new UnauthorisedException('client secret not accepted.');
         }
 
+        $data = $this->deserializeBodyContent($request);
+
         $documentRepo = $em->getRepository(Document::class);
 
-        return json_encode($documentRepo->getQueuedDocumentsAndSetToInProgress());
+        return json_encode($documentRepo->getQueuedDocumentsAndSetToInProgress($data['row_limit']));
     }
 
     /**

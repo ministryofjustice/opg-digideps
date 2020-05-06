@@ -1,9 +1,34 @@
 locals {
   feature_flag_prefix = "/${local.environment}/flag/"
+  parameter_prefix    = "/${local.environment}/parameter/"
 }
 
 data "aws_ssm_parameter" "sirius_api_base_uri" {
   name = format("/%s", join("/", compact([local.account.secrets_prefix, "sirius-api-base-uri"])))
+}
+
+resource "aws_ssm_parameter" "document_sync_interval_minutes" {
+  name  = "${local.feature_flag_prefix}document-sync-interval-minutes"
+  type  = "String"
+  value = "4"
+
+  tags = local.default_tags
+
+  lifecycle {
+    ignore_changes = [value]
+  }
+}
+
+resource "aws_ssm_parameter" "document_sync_row_limit" {
+  name  = "${local.parameter_prefix}document-sync-row-limit"
+  type  = "String"
+  value = "200"
+
+  tags = local.default_tags
+
+  lifecycle {
+    ignore_changes = [value]
+  }
 }
 
 resource "aws_ssm_parameter" "flag_document_sync" {

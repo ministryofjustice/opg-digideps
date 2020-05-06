@@ -8,7 +8,6 @@ use PDO;
 
 class DocumentRepository extends AbstractEntityRepository
 {
-    const ROWS_LIMIT = 250;
     /**
      * Get soft-deleted documents
      *
@@ -26,10 +25,8 @@ class DocumentRepository extends AbstractEntityRepository
         return $records;
     }
 
-    public function getQueuedDocumentsAndSetToInProgress()
+    public function getQueuedDocumentsAndSetToInProgress(string $limit)
     {
-        $limit = self::ROWS_LIMIT;
-
         // Using DENSE_RANK here as we get multiple rows for the same document due to multiple report submissions. This
         // ensures any limit applied will not miss out submissions by chance
         $queuedDocumentsQuery = "

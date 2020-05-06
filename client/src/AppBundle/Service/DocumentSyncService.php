@@ -31,14 +31,10 @@ class DocumentSyncService
     /** @var S3Storage */
     private $storage;
 
-    /**
-     * @var SiriusApiGatewayClient
-     */
+    /** @var SiriusApiGatewayClient */
     private $siriusApiGatewayClient;
 
-    /**
-     * @var RestClient
-     */
+    /** @var RestClient */
     private $restClient;
 
     public function __construct(

@@ -36,3 +36,17 @@ $ssmClient->putParameter([
     'Value' => '1',
     'Overwrite' => true
 ]);
+
+$ssmClient->putParameter([
+    'Name' => '/default/parameter/document-sync-row-limit',
+    'Type' => 'String',
+    'Value' => '200',
+    'Overwrite' => true
+]);
+
+$ssmClient->putParameter([
+    'Name' => '/default/parameter/document-sync-interval-minutes',
+    'Type' => 'String',
+    'Value' => '4',
+    'Overwrite' => true
+]);

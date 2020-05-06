@@ -89,7 +89,10 @@ locals {
       { "name": "EMAIL_SEND_INTERNAL", "value": "${local.account.is_production == 1 ? "true" : "false"}" },
       { "name": "GA_DEFAULT", "value": "${local.account.ga_default}" },
       { "name": "GA_GDS", "value": "${local.account.ga_gds}" },
-      { "name": "FEATURE_FLAG_PREFIX", "value": "${local.feature_flag_prefix}" }
+      { "name": "FEATURE_FLAG_PREFIX", "value": "${local.feature_flag_prefix}" },
+      { "name": "PARAMETER_PREFIX", "value": "${local.parameter_prefix}" },
+      { "name": "DOCUMENT_SYNC_INTERVAL_MINUTES", "value": "${data.aws_ssm_parameter.document_sync_interval_minutes}" },
+      { "name": "DOCUMENT_SYNC_ROW_LIMIT", "value": "${data.aws_ssm_parameter.document_sync_row_limit}" },
     ]
   }
 

@@ -7,6 +7,7 @@ use AppBundle\Model\Sirius\QueuedDocumentData;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\DocumentSyncService;
 use AppBundle\Service\FeatureFlagService;
+use AppBundle\Service\ParameterStoreService;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Serializer\Serializer;
@@ -27,17 +28,22 @@ class DocumentSyncCommand extends DaemonableCommand
     /** @var Serializer  */
     private $serializer;
 
+    /** @var ParameterStoreService */
+    private $parameterStore;
+
     public function __construct(
         DocumentSyncService $documentSyncService,
         RestClient $restClient,
         FeatureFlagService $featureFlags,
-        Serializer $serializer
+        Serializer $serializer,
+        ParameterStoreService $parameterStore
     )
     {
         $this->documentSyncService = $documentSyncService;
         $this->restClient = $restClient;
         $this->featureFlags = $featureFlags;
         $this->serializer = $serializer;
+        $this->parameterStore = $parameterStore;
 
         parent::__construct();
     }
@@ -65,7 +71,7 @@ class DocumentSyncCommand extends DaemonableCommand
             foreach ($documents as $document) {
                 $this->documentSyncService->syncDocument($document);
             }
-        }, 3 * 60);
+        }, (int) $this->getSyncIntervalMinutes() * 60);
     }
 
     private function isFeatureEnabled(): bool
@@ -73,12 +79,29 @@ class DocumentSyncCommand extends DaemonableCommand
         return $this->featureFlags->get(FeatureFlagService::FLAG_DOCUMENT_SYNC) === '1';
     }
 
+    private function getSyncIntervalMinutes(): string
+    {
+        return $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_INTERVAL_MINUTES);
+    }
+
+    private function getSyncRowLimit(): string
+    {
+        return $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT);
+    }
+
     /**
      * @return QueuedDocumentData[]
      */
     private function getQueuedDocumentsData(): array
     {
-        $queuedDocumentData = $this->restClient->apiCall('get', 'document/queued', [], 'array', [], false);
+        $queuedDocumentData = $this->restClient->apiCall(
+            'get',
+            'document/queued',
+            ['row_limit' => $this->getSyncRowLimit()],
+            'array',
+            [],
+            false
+        );
 
         return $this->serializer->deserialize($queuedDocumentData, 'AppBundle\Model\Sirius\QueuedDocumentData[]', 'json');
     }
