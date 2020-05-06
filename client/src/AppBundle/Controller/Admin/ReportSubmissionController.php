@@ -5,8 +5,8 @@ namespace AppBundle\Controller\Admin;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Service\DocumentDownloader;
-use AppBundle\Service\FeatureFlagService;
 use AppBundle\Service\File\Storage\S3Storage;
+use AppBundle\Service\ParameterStoreService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -55,7 +55,7 @@ class ReportSubmissionController extends AbstractController
      *
      * @return array<mixed>|Response
      */
-    public function indexAction(Request $request, FeatureFlagService $featureFlagService)
+    public function indexAction(Request $request, ParameterStoreService $parameterStoreService)
     {
         if ($request->isMethod('POST')) {
             $ret = $this->processPost($request);
@@ -83,7 +83,7 @@ class ReportSubmissionController extends AbstractController
         /** @var EntityDir\User $user */
         $user = $this->getUser();
 
-        if ($featureFlagService->get(FeatureFlagService::FLAG_DOCUMENT_SYNC) === '1' && $user->getRoleName() === EntityDir\User::ROLE_SUPER_ADMIN) {
+        if ($parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC) === '1' && $user->getRoleName() === EntityDir\User::ROLE_SUPER_ADMIN) {
             $postActions[] = self::ACTION_SYNCHRONISE;
         }
 

@@ -1,11 +1,10 @@
 <?php
 namespace App\Tests\Command;
 
-use AppBundle\Entity\Report\Document;
 use AppBundle\Model\Sirius\QueuedDocumentData;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\DocumentSyncService;
-use AppBundle\Service\FeatureFlagService;
+use AppBundle\Service\ParameterStoreService;
 use DateTime;
 use DateTimeZone;
 use Prophecy\Argument;
@@ -48,17 +47,27 @@ class DocumentSyncCommandTest extends KernelTestCase
             ->setReportSubmitDate(new DateTime('2020-04-29 15:05:23', new DateTimeZone('Europe/London')))
             ->setReportType('104');
 
-        /** @var FeatureFlagService|ObjectProphecy $featureFlags */
-        $featureFlags = self::prophesize(FeatureFlagService::class);
-        $featureFlags
-            ->get(FeatureFlagService::FLAG_DOCUMENT_SYNC)
+        /** @var ParameterStoreService|ObjectProphecy $parameterStoreService */
+        $parameterStoreService = self::prophesize(ParameterStoreService::class);
+        $parameterStoreService
+            ->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC)
             ->shouldBeCalled()
             ->willReturn('1');
+
+        $parameterStoreService
+            ->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_INTERVAL_MINUTES)
+            ->shouldBeCalled()
+            ->willReturn('4.5');
+
+        $parameterStoreService
+            ->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT)
+            ->shouldBeCalled()
+            ->willReturn('100');
 
         /** @var RestClient|ObjectProphecy $restClient */
         $restClient = self::prophesize(RestClient::class);
         $restClient
-            ->apiCall('get', 'document/queued', [], 'array', Argument::type('array'), false)
+            ->apiCall('get', 'document/queued', ['row_limit' => '100'], 'array', Argument::type('array'), false)
             ->shouldBeCalled()
             ->willReturn($rawQueuedDocumentData);
 
@@ -75,7 +84,7 @@ class DocumentSyncCommandTest extends KernelTestCase
         $container = $kernel->getContainer();
         $container->set(DocumentSyncService::class, $documentSyncService->reveal());
         $container->set(RestClient::class, $restClient->reveal());
-        $container->set(FeatureFlagService::class, $featureFlags->reveal());
+        $container->set(ParameterStoreService::class, $parameterStoreService->reveal());
 
         $command = $application->find('digideps:document-sync');
         $commandTester = new CommandTester($command);
@@ -87,12 +96,17 @@ class DocumentSyncCommandTest extends KernelTestCase
 
     public function testSleepsWhenTurnedOff()
     {
-        /** @var FeatureFlagService|ObjectProphecy $featureFlags */
-        $featureFlags = self::prophesize(FeatureFlagService::class);
-        $featureFlags
-            ->get(FeatureFlagService::FLAG_DOCUMENT_SYNC)
+        /** @var ParameterStoreService|ObjectProphecy $parameterStoreService */
+        $parameterStoreService = self::prophesize(ParameterStoreService::class);
+        $parameterStoreService
+            ->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC)
             ->shouldBeCalled()
             ->willReturn('0');
+
+        $parameterStoreService
+            ->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_INTERVAL_MINUTES)
+            ->shouldBeCalled()
+            ->willReturn('4.5');
 
         /** @var RestClient|ObjectProphecy $restClient */
         $restClient = self::prophesize(RestClient::class);
@@ -113,7 +127,7 @@ class DocumentSyncCommandTest extends KernelTestCase
         $container = $kernel->getContainer();
         $container->set(DocumentSyncService::class, $documentSyncService->reveal());
         $container->set(RestClient::class, $restClient->reveal());
-        $container->set(FeatureFlagService::class, $featureFlags->reveal());
+        $container->set(ParameterStoreService::class, $parameterStoreService->reveal());
 
         $command = $application->find('digideps:document-sync');
         $commandTester = new CommandTester($command);

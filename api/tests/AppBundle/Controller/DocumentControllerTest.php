@@ -137,9 +137,7 @@ class DocumentControllerTest extends AbstractTestController
         $return = $this->assertJsonRequest('GET', '/document/queued', [
             'mustSucceed' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,
-            [
-                'data' => ['row_limit' => 100]
-            ]
+            'data' => ['row_limit' => 100]
         ]);
 
         self::assertCount(0, json_decode($return['data'], true));
@@ -157,6 +155,7 @@ class DocumentControllerTest extends AbstractTestController
         $return = $this->assertJsonRequest('GET', '/document/queued', [
             'mustSucceed' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,
+            'data' => ['row_limit' => 100]
         ]);
 
         self::assertCount(1, json_decode($return['data'], true));

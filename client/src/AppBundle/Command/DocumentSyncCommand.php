@@ -6,7 +6,6 @@ namespace AppBundle\Command;
 use AppBundle\Model\Sirius\QueuedDocumentData;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\DocumentSyncService;
-use AppBundle\Service\FeatureFlagService;
 use AppBundle\Service\ParameterStoreService;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -74,7 +73,7 @@ class DocumentSyncCommand extends DaemonableCommand
 
     private function isFeatureEnabled(): bool
     {
-        return $this->parameterStore->getFeatureFlag(FeatureFlagService::FLAG_DOCUMENT_SYNC) === '1';
+        return $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC) === '1';
     }
 
     private function getSyncIntervalMinutes(): string

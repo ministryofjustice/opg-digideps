@@ -6,6 +6,7 @@ use Aws\Ssm\SsmClient;
 
 class ParameterStoreService
 {
+    public const FLAG_DOCUMENT_SYNC = 'document-sync';
     public const PARAMETER_DOCUMENT_SYNC_ROW_LIMIT = 'document-sync-row-limit';
     public const PARAMETER_DOCUMENT_SYNC_INTERVAL_MINUTES = 'document-sync-interval-minutes';
 
