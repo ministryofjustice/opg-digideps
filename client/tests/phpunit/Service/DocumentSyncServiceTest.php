@@ -459,7 +459,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         $this->restClient
             ->apiCall('put',
                 'document/update-related-statuses',
-                json_encode(['submissionIds' => [1,2]]),
+                json_encode(['submissionIds' => [1,2], 'errorMessage' => 'Report PDF failed to sync']),
                 'raw',
                 [],
                 false

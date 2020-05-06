@@ -241,7 +241,7 @@ class DocumentControllerTest extends AbstractTestController
             [
             'mustSucceed' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,
-            ['data' => [self::$reportSubmission1->getId(), self::$reportSubmission2->getId()]]
+            'data' => ['submissionIds' => [self::$reportSubmission1->getId(), self::$reportSubmission2->getId()], 'errorMessage' => 'An error message']
         ]);
 
         self::assertEquals('3', $response['data']);
