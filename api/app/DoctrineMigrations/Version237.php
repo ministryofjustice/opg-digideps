@@ -14,7 +14,7 @@ final class Version237 extends AbstractMigration
 {
     public function getDescription() : string
     {
-        return 'Create court order for all existing lay clients';
+        return 'Create court_order rows for all existing lay clients';
     }
 
     public function up(Schema $schema) : void
