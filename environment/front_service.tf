@@ -82,13 +82,13 @@ locals {
       { "name": "GA_DEFAULT", "value": "${local.account.ga_default}" },
       { "name": "GA_GDS", "value": "${local.account.ga_gds}" },
       { "name": "NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
+      { "name": "PARAMETER_PREFIX", "value": "${local.parameter_prefix}" },
       { "name": "ROLE", "value": "front" },
       { "name": "S3_BUCKETNAME", "value": "pa-uploads-${local.environment}" },
       { "name": "SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.front_redis.fqdn}" },
       { "name": "SYMFONY_ENV", "value": "${local.account.symfony_env}" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
-      { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" },
-      { "name": "PARAMETER_PREFIX", "value": "${local.parameter_prefix}" }
+      { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" }
     ]
   }
 
