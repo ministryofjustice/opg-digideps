@@ -132,6 +132,30 @@ class DocumentController extends RestController
     }
 
     /**
+     * Get queued documents
+     *
+     * @Route("/document/update-related-statuses", methods={"PUT"})
+     *
+     * @return string
+     */
+    public function updateRelatedDocumentStatuses(Request $request, EntityManagerInterface $em): string
+    {
+        if (!$this->getAuthService()->isSecretValid($request)) {
+            throw new UnauthorisedException('client secret not accepted.');
+        }
+
+        $documentRepo = $em->getRepository(Document::class);
+
+        $data = json_decode($request->getContent(), true);
+        $reportSubmissionIds = $data['submissionIds'];
+        $errorMessage = $data['errorMessage'];
+
+        $count = $documentRepo->updateSupportingDocumentStatusByReportSubmissionIds($reportSubmissionIds, $errorMessage);
+
+        return json_encode($count);
+    }
+
+    /**
      * Update a Document
      *
      * @Route("/document/{id}", methods={"PUT"})
@@ -161,6 +185,9 @@ class DocumentController extends RestController
                 $document->setSynchronisationError($errorMessage);
             } else {
                 $document->setSynchronisationError(null);
+            }
+
+            if ($data['syncStatus'] === Document::SYNC_STATUS_SUCCESS) {
                 $document->setSynchronisationTime(new DateTime());
             }
         }

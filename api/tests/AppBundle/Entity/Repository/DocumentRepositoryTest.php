@@ -157,7 +157,7 @@ class DocumentRepositoryTest extends KernelTestCase
     /**
      * @test
      */
-    public function multipleReportSubmissionsAreReturned()
+    public function getQueuedDocumentsAndSetToInProgress_multipleReportSubmissionsAreReturned()
     {
         $this->persistEntities();
 
@@ -170,7 +170,7 @@ class DocumentRepositoryTest extends KernelTestCase
     /**
      * @test
      */
-    public function supportsNdrs()
+    public function getQueuedDocumentsAndSetToInProgress_supportsNdrs()
     {
         $this->persistEntities();
 
@@ -231,6 +231,39 @@ class DocumentRepositoryTest extends KernelTestCase
         }
 
     }
+
+    /** @test */
+    public function updateSupportingDocumentStatusByReportSubmissionIds()
+    {
+        $this->reportPdfDocument->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
+        $this->persistEntities();
+
+        $updatedDocumentsCount = $this->documentRepository
+            ->updateSupportingDocumentStatusByReportSubmissionIds(
+                [$this->reportSubmission->getId(), $this->additionalReportSubmission->getId()],
+                'An error message'
+            );
+
+        $this->refreshDocumentEntities();
+
+        $this->assertEquals(3, $updatedDocumentsCount);
+
+        foreach([$this->supportingDocument, $this->supportingDocumentAfterSubmission] as $doc) {
+            self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $doc->getSynchronisationStatus());
+            self::assertEquals('An error message', $doc->getSynchronisationError());
+        }
+
+        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $this->reportPdfDocument->getSynchronisationStatus());
+        self::assertEquals(null, $this->reportPdfDocument->getSynchronisationError());
+    }
+
+    private function refreshDocumentEntities()
+    {
+        $this->entityManager->refresh($this->reportPdfDocument);
+        $this->entityManager->refresh($this->supportingDocument);
+        $this->entityManager->refresh($this->supportingDocumentAfterSubmission);
+    }
+
 
     protected function tearDown(): void
     {

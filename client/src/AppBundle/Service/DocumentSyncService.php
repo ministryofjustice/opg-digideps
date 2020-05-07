@@ -6,7 +6,6 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Model\Sirius\QueuedDocumentData;
 use AppBundle\Model\Sirius\SiriusDocumentFile;
 use AppBundle\Model\Sirius\SiriusDocumentUpload;
@@ -37,6 +36,9 @@ class DocumentSyncService
     /** @var RestClient */
     private $restClient;
 
+    /** @var int[] */
+    private $syncErrorSubmissionIds;
+
     public function __construct(
         S3Storage $storage,
         SiriusApiGatewayClient $siriusApiGatewayClient,
@@ -46,6 +48,23 @@ class DocumentSyncService
         $this->storage = $storage;
         $this->siriusApiGatewayClient = $siriusApiGatewayClient;
         $this->restClient = $restClient;
+        $this->syncErrorSubmissionIds = [];
+    }
+
+    /**
+     * @return array|int[]
+     */
+    public function getSyncErrorSubmissionIds()
+    {
+        return $this->syncErrorSubmissionIds;
+    }
+
+    /**
+     * @param int $submissionId
+     */
+    public function addToSyncErrorSubmissionIds(int $submissionId)
+    {
+        $this->syncErrorSubmissionIds[] = $submissionId;
     }
 
     /**
@@ -175,6 +194,22 @@ class DocumentSyncService
         }
     }
 
+    public function setSubmissionsDocumentsToPermanentError()
+    {
+        $response = $this->restClient->apiCall(
+            'put',
+            'document/update-related-statuses',
+            json_encode(['submissionIds' => $this->getSyncErrorSubmissionIds(), 'errorMessage' => 'Report PDF failed to sync']),
+            'raw',
+            [],
+            false
+        );
+
+        $countOfDocumentsUpdated = json_decode((string) $response, true)['data'];
+
+        return $countOfDocumentsUpdated;
+    }
+
     /**
      * @param QueuedDocumentData $documentData
      * @param string $status
@@ -237,6 +272,10 @@ class DocumentSyncService
                 (string) $e->getResponse()->getBody() : (string) $e->getMessage();
 
             $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
+        }
+
+        if ($syncStatus === Document::SYNC_STATUS_PERMANENT_ERROR) {
+            $this->addToSyncErrorSubmissionIds($documentData->getReportSubmissionId());
         }
 
         $this->handleDocumentStatusUpdate($documentData, $syncStatus, $errorMessage);

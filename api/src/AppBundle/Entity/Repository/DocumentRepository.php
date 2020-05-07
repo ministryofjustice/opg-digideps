@@ -110,4 +110,30 @@ WHERE dn < $limit;";
 
         return $queuedDocumentData;
     }
+
+
+    public function updateSupportingDocumentStatusByReportSubmissionIds(array $reportSubmissionIds, ?string $syncErrorMessage=null)
+    {
+        $idsString = implode(",", $reportSubmissionIds);
+        $status = Document::SYNC_STATUS_PERMANENT_ERROR;
+
+        $updateStatusQuery = "
+UPDATE document
+SET synchronisation_status = '$status', synchronisation_error = '$syncErrorMessage'
+WHERE report_submission_id IN ($idsString)
+AND is_report_pdf=false";
+
+        $conn = $this->getEntityManager()->getConnection();
+        $stmt = $conn->prepare($updateStatusQuery);
+        $stmt->execute();
+
+        $docsCountQuery = "
+SELECT COUNT(id)
+FROM document
+WHERE report_submission_id IN ($idsString)";
+
+        $res = $conn->query($docsCountQuery);
+        return $res->fetchColumn();
+    }
+
 }

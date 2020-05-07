@@ -65,10 +65,15 @@ class DocumentSyncCommand extends DaemonableCommand
             /** @var QueuedDocumentData[] $documents */
             $documents = $this->getQueuedDocumentsData();
 
-            $output->writeln(count($documents) . ' documents to upload');
+            $output->writeln(sprintf('%d documents to upload', count($documents)));
 
             foreach ($documents as $document) {
                 $this->documentSyncService->syncDocument($document);
+            }
+
+            if ($this->documentSyncService->getSyncErrorSubmissionIds()) {
+                $documentsUpdated = $this->documentSyncService->setSubmissionsDocumentsToPermanentError();
+                $output->writeln(sprintf('%d documents failed to sync', $documentsUpdated));
             }
         }, (int) $this->getSyncIntervalMinutes() * 60);
     }
