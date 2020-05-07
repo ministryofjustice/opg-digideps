@@ -62,6 +62,10 @@ data "aws_iam_policy_document" "query_ssm" {
     actions = [
       "ssm:GetParameter"
     ]
-    resources = [aws_ssm_parameter.flag_document_sync.arn]
+    resources = [
+      aws_ssm_parameter.flag_document_sync.arn,
+      aws_ssm_parameter.document_sync_interval_minutes.arn,
+      aws_ssm_parameter.document_sync_row_limit.arn
+    ]
   }
 }

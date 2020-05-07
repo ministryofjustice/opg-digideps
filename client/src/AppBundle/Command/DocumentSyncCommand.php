@@ -6,13 +6,16 @@ namespace AppBundle\Command;
 use AppBundle\Model\Sirius\QueuedDocumentData;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\DocumentSyncService;
-use AppBundle\Service\FeatureFlagService;
+use AppBundle\Service\ParameterStoreService;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Serializer\Serializer;
 
 class DocumentSyncCommand extends DaemonableCommand
 {
+    const FALLBACK_INTERVAL_MINUTES = '4.5';
+    const FALLBACK_ROW_LIMITS = '100';
+
     protected static $defaultName = 'digideps:document-sync';
 
     /** @var DocumentSyncService */
@@ -21,23 +24,23 @@ class DocumentSyncCommand extends DaemonableCommand
     /** @var RestClient */
     private $restClient;
 
-    /** @var FeatureFlagService */
-    private $featureFlags;
-
     /** @var Serializer  */
     private $serializer;
+
+    /** @var ParameterStoreService */
+    private $parameterStore;
 
     public function __construct(
         DocumentSyncService $documentSyncService,
         RestClient $restClient,
-        FeatureFlagService $featureFlags,
-        Serializer $serializer
+        Serializer $serializer,
+        ParameterStoreService $parameterStore
     )
     {
         $this->documentSyncService = $documentSyncService;
         $this->restClient = $restClient;
-        $this->featureFlags = $featureFlags;
         $this->serializer = $serializer;
+        $this->parameterStore = $parameterStore;
 
         parent::__construct();
     }
@@ -51,6 +54,8 @@ class DocumentSyncCommand extends DaemonableCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        ini_set('memory_limit', '512M');
+
         return $this->daemonize($input, $output, function() use ($output) {
             if (!$this->isFeatureEnabled()) {
                 $output->writeln('Feature disabled, sleeping');
@@ -65,12 +70,24 @@ class DocumentSyncCommand extends DaemonableCommand
             foreach ($documents as $document) {
                 $this->documentSyncService->syncDocument($document);
             }
-        }, 3 * 60);
+        }, (int) $this->getSyncIntervalMinutes() * 60);
     }
 
     private function isFeatureEnabled(): bool
     {
-        return $this->featureFlags->get(FeatureFlagService::FLAG_DOCUMENT_SYNC) === '1';
+        return $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC) === '1';
+    }
+
+    private function getSyncIntervalMinutes(): string
+    {
+        $minutes = $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_INTERVAL_MINUTES);
+        return $minutes ? $minutes : self::FALLBACK_INTERVAL_MINUTES;
+    }
+
+    private function getSyncRowLimit(): string
+    {
+        $limit = $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT);
+        return $limit ? $limit : self::FALLBACK_ROW_LIMITS;
     }
 
     /**
@@ -78,7 +95,14 @@ class DocumentSyncCommand extends DaemonableCommand
      */
     private function getQueuedDocumentsData(): array
     {
-        $queuedDocumentData = $this->restClient->apiCall('get', 'document/queued', [], 'array', [], false);
+        $queuedDocumentData = $this->restClient->apiCall(
+            'get',
+            'document/queued',
+            ['row_limit' => $this->getSyncRowLimit()],
+            'array',
+            [],
+            false
+        );
 
         return $this->serializer->deserialize($queuedDocumentData, 'AppBundle\Model\Sirius\QueuedDocumentData[]', 'json');
     }

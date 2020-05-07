@@ -138,7 +138,7 @@ class DocumentRepositoryTest extends KernelTestCase
         $this->persistEntities();
 
         $documents = $this->documentRepository
-            ->getQueuedDocumentsAndSetToInProgress();
+            ->getQueuedDocumentsAndSetToInProgress('100');
 
         $reportPdf = $this->documentRepository->find($this->reportPdfDocument->getId());
         $supportingDocument = $this->documentRepository->find($this->supportingDocument->getId());
@@ -162,7 +162,7 @@ class DocumentRepositoryTest extends KernelTestCase
         $this->persistEntities();
 
         $documents = $this->documentRepository
-            ->getQueuedDocumentsAndSetToInProgress();
+            ->getQueuedDocumentsAndSetToInProgress('100');
 
         $this->assertEquals(2, count($documents[$this->reportPdfDocument->getId()]['report_submissions']));
     }
@@ -175,7 +175,7 @@ class DocumentRepositoryTest extends KernelTestCase
         $this->persistEntities();
 
         $documents = $this->documentRepository
-            ->getQueuedDocumentsAndSetToInProgress();
+            ->getQueuedDocumentsAndSetToInProgress('100');
 
         $this->assertDataMatchesEntity($documents, $this->ndrReportPdfDocument, $this->client, $this->ndrSubmission, $this->ndr);
         $this->assertEquals(1, count($documents[$this->ndrReportPdfDocument->getId()]['report_submissions']));

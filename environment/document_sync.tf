@@ -89,7 +89,8 @@ locals {
       { "name": "EMAIL_SEND_INTERNAL", "value": "${local.account.is_production == 1 ? "true" : "false"}" },
       { "name": "GA_DEFAULT", "value": "${local.account.ga_default}" },
       { "name": "GA_GDS", "value": "${local.account.ga_gds}" },
-      { "name": "FEATURE_FLAG_PREFIX", "value": "${local.feature_flag_prefix}" }
+      { "name": "FEATURE_FLAG_PREFIX", "value": "${local.feature_flag_prefix}" },
+      { "name": "PARAMETER_PREFIX", "value": "${local.parameter_prefix}" }
     ]
   }
 
