@@ -71,7 +71,7 @@ data "aws_iam_policy_document" "query_ssm" {
 }
 
 resource "aws_iam_role_policy" "ecs_scheduled_tasks" {
-  name   = "front-query-ssm.${local.environment}"
+  name   = "front-ecs-scheduled-task.${local.environment}"
   policy = data.aws_iam_policy_document.ecs_scheduled_tasks.json
   role   = aws_iam_role.front.id
 }
