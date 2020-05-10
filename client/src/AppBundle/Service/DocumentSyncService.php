@@ -60,6 +60,14 @@ class DocumentSyncService
     }
 
     /**
+     * @param int[] $syncErrorSubmissionIds
+     */
+    public function setSyncErrorSubmissionIds(array $syncErrorSubmissionIds): void
+    {
+        $this->syncErrorSubmissionIds = $syncErrorSubmissionIds;
+    }
+
+    /**
      * @param int $submissionId
      */
     public function addToSyncErrorSubmissionIds(int $submissionId)
