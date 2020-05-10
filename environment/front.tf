@@ -85,8 +85,6 @@ data "aws_iam_policy_document" "ecs_scheduled_tasks" {
       "iam:ListRoles",
       "iam:PassRole"
     ]
-    resources = [
-      aws_cloudwatch_event_target.document_sync_scheduled_task.arn,
-    ]
+    resources = ["*"]
   }
 }
