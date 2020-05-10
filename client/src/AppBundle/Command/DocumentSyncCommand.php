@@ -13,7 +13,6 @@ use Symfony\Component\Serializer\Serializer;
 
 class DocumentSyncCommand extends DaemonableCommand
 {
-    const FALLBACK_INTERVAL_MINUTES = '4.5';
     const FALLBACK_ROW_LIMITS = '100';
 
     protected static $defaultName = 'digideps:document-sync';
@@ -61,23 +60,14 @@ class DocumentSyncCommand extends DaemonableCommand
             return 0;
         }
 
-        print_r('Memory usage at start is.........');
-        var_dump(memory_get_usage(true));
-
         /** @var QueuedDocumentData[] $documents */
         $documents = $this->getQueuedDocumentsData();
 
         $output->writeln(sprintf('%d documents to upload', count($documents)));
 
-        print_r('Memory usage after getting docs is.........');
-        var_dump(memory_get_usage(true));
-
         foreach ($documents as &$document) {
             $this->documentSyncService->syncDocument($document);
         }
-
-        print_r('Memory usage after syncing is.........');
-        var_dump(memory_get_usage(true));
 
         if ($this->documentSyncService->getSyncErrorSubmissionIds()) {
             $documentsUpdated = $this->documentSyncService->setSubmissionsDocumentsToPermanentError();
@@ -91,12 +81,6 @@ class DocumentSyncCommand extends DaemonableCommand
     private function isFeatureEnabled(): bool
     {
         return $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC) === '1';
-    }
-
-    private function getSyncIntervalMinutes(): string
-    {
-        $minutes = $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_INTERVAL_MINUTES);
-        return $minutes ? $minutes : self::FALLBACK_INTERVAL_MINUTES;
     }
 
     private function getSyncRowLimit(): string
