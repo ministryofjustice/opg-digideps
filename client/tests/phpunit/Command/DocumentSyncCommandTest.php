@@ -55,11 +55,6 @@ class DocumentSyncCommandTest extends KernelTestCase
             ->willReturn('1');
 
         $parameterStoreService
-            ->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_INTERVAL_MINUTES)
-            ->shouldBeCalled()
-            ->willReturn('4.5');
-
-        $parameterStoreService
             ->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT)
             ->shouldBeCalled()
             ->willReturn('100');
@@ -107,11 +102,6 @@ class DocumentSyncCommandTest extends KernelTestCase
             ->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC)
             ->shouldBeCalled()
             ->willReturn('0');
-
-        $parameterStore
-            ->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_INTERVAL_MINUTES)
-            ->shouldBeCalled()
-            ->willReturn('4.5');
 
         /** @var RestClient|ObjectProphecy $restClient */
         $restClient = self::prophesize(RestClient::class);
