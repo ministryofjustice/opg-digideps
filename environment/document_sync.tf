@@ -59,7 +59,7 @@ resource "aws_ecs_service" "document_sync" {
 }
 
 resource "aws_cloudwatch_event_rule" "document_sync_cron_rule" {
-  name                = "scheduled-ecs-event-rule"
+  name                = "${aws_ecs_task_definition.document_sync.family}-schedule"
   schedule_expression = "rate(5 minutes)"
 }
 
