@@ -45,7 +45,6 @@ resource "aws_ecs_service" "document_sync" {
   name                    = aws_ecs_task_definition.document_sync.family
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.document_sync.arn
-  desired_count           = 1
   launch_type             = "FARGATE"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
