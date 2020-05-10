@@ -52,38 +52,40 @@ class DocumentSyncCommand extends DaemonableCommand
         $this->setDescription('Uploads queued documents to Sirius and reports back the success');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         ini_set('memory_limit', '512M');
 
-            if (!$this->isFeatureEnabled()) {
-                $output->writeln('Feature disabled, sleeping');
-                return;
-            }
+        if (!$this->isFeatureEnabled()) {
+            $output->writeln('Feature disabled, sleeping');
+            return 0;
+        }
 
-            print_r('Memory usage at start is.........');
-            var_dump(memory_get_usage(true));
+        print_r('Memory usage at start is.........');
+        var_dump(memory_get_usage(true));
 
-            /** @var QueuedDocumentData[] $documents */
-            $documents = $this->getQueuedDocumentsData();
+        /** @var QueuedDocumentData[] $documents */
+        $documents = $this->getQueuedDocumentsData();
 
-            $output->writeln(sprintf('%d documents to upload', count($documents)));
+        $output->writeln(sprintf('%d documents to upload', count($documents)));
 
-            print_r('Memory usage after getting docs is.........');
-            var_dump(memory_get_usage(true));
+        print_r('Memory usage after getting docs is.........');
+        var_dump(memory_get_usage(true));
 
-            foreach ($documents as &$document) {
-                $this->documentSyncService->syncDocument($document);
-            }
+        foreach ($documents as &$document) {
+            $this->documentSyncService->syncDocument($document);
+        }
 
-            print_r('Memory usage after syncing is.........');
-            var_dump(memory_get_usage(true));
+        print_r('Memory usage after syncing is.........');
+        var_dump(memory_get_usage(true));
 
-            if ($this->documentSyncService->getSyncErrorSubmissionIds()) {
-                $documentsUpdated = $this->documentSyncService->setSubmissionsDocumentsToPermanentError();
-                $output->writeln(sprintf('%d documents failed to sync', $documentsUpdated));
-                $this->documentSyncService->setSyncErrorSubmissionIds([]);
-            }
+        if ($this->documentSyncService->getSyncErrorSubmissionIds()) {
+            $documentsUpdated = $this->documentSyncService->setSubmissionsDocumentsToPermanentError();
+            $output->writeln(sprintf('%d documents failed to sync', $documentsUpdated));
+            $this->documentSyncService->setSyncErrorSubmissionIds([]);
+        }
+
+        return 0;
     }
 
     private function isFeatureEnabled(): bool
