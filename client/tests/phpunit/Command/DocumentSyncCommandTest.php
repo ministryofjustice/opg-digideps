@@ -142,11 +142,6 @@ class DocumentSyncCommandTest extends KernelTestCase
            ->willReturn('1');
 
        $parameterStore
-           ->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_INTERVAL_MINUTES)
-           ->shouldBeCalled()
-           ->willReturn('4.5');
-
-       $parameterStore
            ->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT)
            ->shouldBeCalled()
            ->willReturn('100');
