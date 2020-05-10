@@ -58,6 +58,29 @@ resource "aws_ecs_service" "document_sync" {
   }
 }
 
+resource "aws_cloudwatch_event_rule" "document_sync_cron_rule" {
+  name                = "scheduled-ecs-event-rule"
+  schedule_expression = "rate(5 minutes)"
+}
+
+resource "aws_cloudwatch_event_target" "document_sync_scheduled_task" {
+  target_id = "ScheduledDocumentSync"
+  rule      = aws_cloudwatch_event_rule.document_sync_cron_rule.name
+  arn       = aws_ecs_cluster.main.arn
+  role_arn  = aws_iam_role.front.arn
+
+  ecs_target {
+    task_count          = 1
+    task_definition_arn = aws_ecs_task_definition.document_sync.arn
+    launch_type         = "FARGATE"
+    network_configuration {
+      subnets          = data.aws_subnet.private.*.id
+      assign_public_ip = true
+      security_groups  = [module.document_sync_service_security_group.id]
+    }
+  }
+}
+
 locals {
   document_sync_container = <<EOF
   {
