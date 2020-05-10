@@ -65,7 +65,7 @@ class DocumentSyncCommand extends DaemonableCommand
 
         $output->writeln(sprintf('%d documents to upload', count($documents)));
 
-        foreach ($documents as &$document) {
+        foreach ($documents as $document) {
             $this->documentSyncService->syncDocument($document);
         }
 
