@@ -448,31 +448,4 @@ class DocumentSyncServiceTest extends KernelTestCase
         $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
         $sut->syncDocument($queuedDocumentData);
     }
-
-    /**
-     * @test
-     */
-    public function setSubmissionsDocumentsToPermanentError()
-    {
-        $expectedResponse = new Response(200, [], json_encode(['success' => true, 'data' => 3, 'message' => '']));
-
-        $this->restClient
-            ->apiCall('put',
-                'document/update-related-statuses',
-                json_encode(['submissionIds' => [1,2], 'errorMessage' => 'Report PDF failed to sync']),
-                'raw',
-                [],
-                false
-            )
-            ->shouldBeCalled()
-            ->willReturn($expectedResponse->getBody());
-
-        $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
-
-        $sut->addToSyncErrorSubmissionIds(1);
-        $sut->addToSyncErrorSubmissionIds(2);
-
-        $updatedDocumentsCount = $sut->setSubmissionsDocumentsToPermanentError();
-        self::assertEquals(3, $updatedDocumentsCount);
-    }
 }

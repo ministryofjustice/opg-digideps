@@ -40,7 +40,7 @@ class DocumentSyncService
     private $syncErrorSubmissionIds;
 
     /** @var int */
-    private $countDocsNotSynced;
+    private $docsNotSyncedCount;
 
     public function __construct(
         S3Storage $storage,
@@ -52,7 +52,7 @@ class DocumentSyncService
         $this->siriusApiGatewayClient = $siriusApiGatewayClient;
         $this->restClient = $restClient;
         $this->syncErrorSubmissionIds = [];
-        $this->countDocsNotSynced = 0;
+        $this->docsNotSyncedCount = 0;
     }
 
     /**
@@ -79,14 +79,14 @@ class DocumentSyncService
         $this->syncErrorSubmissionIds[] = $submissionId;
     }
 
-    public function getCountDocsNotSynced()
+    public function getDocsNotSyncedCount()
     {
-        return $this->countDocsNotSynced;
+        return $this->docsNotSyncedCount;
     }
 
-    public function setCountDocsNotSynced(int $count)
+    public function setDocsNotSyncedCount(int $count)
     {
-        return $this->countDocsNotSynced = $count;
+        return $this->docsNotSyncedCount = $count;
     }
 
     /**
@@ -99,6 +99,7 @@ class DocumentSyncService
             return $this->syncReportDocument($documentData);
         } else {
             if (!$documentData->supportingDocumentCanBeSynced()) {
+                $this->docsNotSyncedCount++;
                 return $this->handleDocumentStatusUpdate($documentData, Document::SYNC_STATUS_QUEUED);
             }
 
@@ -294,7 +295,7 @@ class DocumentSyncService
 
         if ($syncStatus === Document::SYNC_STATUS_PERMANENT_ERROR) {
             $this->addToSyncErrorSubmissionIds($documentData->getReportSubmissionId());
-            $this->countDocsNotSynced++;
+            $this->docsNotSyncedCount++;
         }
 
         $this->handleDocumentStatusUpdate($documentData, $syncStatus, $errorMessage);

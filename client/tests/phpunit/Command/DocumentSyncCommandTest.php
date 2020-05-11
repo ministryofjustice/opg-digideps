@@ -162,8 +162,20 @@ class DocumentSyncCommandTest extends KernelTestCase
 
        $documentSyncService
            ->setSubmissionsDocumentsToPermanentError()
+           ->shouldBeCalled();
+
+       $documentSyncService
+           ->getDocsNotSyncedCount()
            ->shouldBeCalled()
            ->willReturn(6);
+
+       $documentSyncService
+           ->setSyncErrorSubmissionIds([])
+           ->shouldBeCalled();
+
+       $documentSyncService
+           ->setDocsNotSyncedCount(0)
+           ->shouldBeCalled();
 
        $kernel = static::bootKernel([ 'debug' => false ]);
        $application = new Application($kernel);

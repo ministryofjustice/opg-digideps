@@ -244,6 +244,6 @@ class DocumentControllerTest extends AbstractTestController
             'data' => ['submissionIds' => [self::$reportSubmission1->getId(), self::$reportSubmission2->getId()], 'errorMessage' => 'An error message']
         ]);
 
-        self::assertEquals('3', $response['data']);
+        self::assertEquals('true', $response['data']);
     }
 }
