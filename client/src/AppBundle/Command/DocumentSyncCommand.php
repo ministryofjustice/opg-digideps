@@ -69,7 +69,7 @@ class DocumentSyncCommand extends DaemonableCommand
             $this->documentSyncService->syncDocument($document);
         }
 
-        if ($this->documentSyncService->getSyncErrorSubmissionIds()) {
+        if ($this->documentSyncService->getDocsNotSyncedCount() > 0) {
             $this->documentSyncService->setSubmissionsDocumentsToPermanentError();
             $this->documentSyncService->setSyncErrorSubmissionIds([]);
 
