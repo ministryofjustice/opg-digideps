@@ -126,14 +126,6 @@ AND is_report_pdf=false";
         $conn = $this->getEntityManager()->getConnection();
         $stmt = $conn->prepare($updateStatusQuery);
         $stmt->execute();
-
-        $docsCountQuery = "
-SELECT COUNT(id)
-FROM document
-WHERE report_submission_id IN ($idsString)";
-
-        $res = $conn->query($docsCountQuery);
-        return $res->fetchColumn();
     }
 
 }

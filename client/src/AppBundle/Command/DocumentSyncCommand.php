@@ -70,9 +70,11 @@ class DocumentSyncCommand extends DaemonableCommand
         }
 
         if ($this->documentSyncService->getSyncErrorSubmissionIds()) {
-            $documentsUpdated = $this->documentSyncService->setSubmissionsDocumentsToPermanentError();
-            $output->writeln(sprintf('%d documents failed to sync', $documentsUpdated));
+            $this->documentSyncService->setSubmissionsDocumentsToPermanentError();
             $this->documentSyncService->setSyncErrorSubmissionIds([]);
+
+            $output->writeln(sprintf('%d documents failed to sync', $this->documentSyncService->getCountDocsNotSynced()));
+            $this->documentSyncService->setCountDocsNotSynced(0);
         }
 
         return 0;

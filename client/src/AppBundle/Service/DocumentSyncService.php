@@ -39,6 +39,9 @@ class DocumentSyncService
     /** @var int[] */
     private $syncErrorSubmissionIds;
 
+    /** @var int */
+    private $countDocsNotSynced;
+
     public function __construct(
         S3Storage $storage,
         SiriusApiGatewayClient $siriusApiGatewayClient,
@@ -49,6 +52,7 @@ class DocumentSyncService
         $this->siriusApiGatewayClient = $siriusApiGatewayClient;
         $this->restClient = $restClient;
         $this->syncErrorSubmissionIds = [];
+        $this->countDocsNotSynced = 0;
     }
 
     /**
@@ -73,6 +77,16 @@ class DocumentSyncService
     public function addToSyncErrorSubmissionIds(int $submissionId)
     {
         $this->syncErrorSubmissionIds[] = $submissionId;
+    }
+
+    public function getCountDocsNotSynced()
+    {
+        return $this->countDocsNotSynced;
+    }
+
+    public function setCountDocsNotSynced(int $count)
+    {
+        return $this->countDocsNotSynced = $count;
     }
 
     /**
@@ -204,7 +218,7 @@ class DocumentSyncService
 
     public function setSubmissionsDocumentsToPermanentError()
     {
-        $response = $this->restClient->apiCall(
+        $this->restClient->apiCall(
             'put',
             'document/update-related-statuses',
             json_encode(['submissionIds' => $this->getSyncErrorSubmissionIds(), 'errorMessage' => 'Report PDF failed to sync']),
@@ -212,10 +226,6 @@ class DocumentSyncService
             [],
             false
         );
-
-        $countOfDocumentsUpdated = json_decode((string) $response, true)['data'];
-
-        return $countOfDocumentsUpdated;
     }
 
     /**
@@ -284,6 +294,7 @@ class DocumentSyncService
 
         if ($syncStatus === Document::SYNC_STATUS_PERMANENT_ERROR) {
             $this->addToSyncErrorSubmissionIds($documentData->getReportSubmissionId());
+            $this->countDocsNotSynced++;
         }
 
         $this->handleDocumentStatusUpdate($documentData, $syncStatus, $errorMessage);
