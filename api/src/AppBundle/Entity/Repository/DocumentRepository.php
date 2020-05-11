@@ -125,7 +125,7 @@ AND is_report_pdf=false";
 
         $conn = $this->getEntityManager()->getConnection();
         $stmt = $conn->prepare($updateStatusQuery);
-        $stmt->execute();
+        return $stmt->execute();
     }
 
 }
