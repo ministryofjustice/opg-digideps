@@ -33,7 +33,6 @@ update report r set court_order_id =
 	and co.client_id = r.client_id
 	and u.role_name = 'ROLE_LAY_DEPUTY'
 	and u.active = true
-	group by co.client_id
 )         
        ");
 
@@ -48,7 +47,6 @@ update odr o set court_order_id =
 	and co.client_id = o.client_id
 	and u.role_name = 'ROLE_LAY_DEPUTY'
 	and u.active = true
-	group by co.client_id
 )        
        ");
     }
