@@ -61,7 +61,8 @@ LEFT JOIN report_submission rs2 ON rs2.ndr_id = d.ndr_id
 LEFT JOIN client c1 ON c1.id = r.client_id
 LEFT JOIN client c2 ON c2.id = o.client_id
 WHERE d.synchronisation_status = 'QUEUED') AS sub
-WHERE dn < $limit;";
+WHERE dn < $limit
+ORDER BY is_report_pdf DESC;";
 
         $conn = $this->getEntityManager()->getConnection();
         $stmt = $conn->prepare($queuedDocumentsQuery);
