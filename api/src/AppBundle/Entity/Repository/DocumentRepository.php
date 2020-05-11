@@ -46,7 +46,7 @@ ndr_submit_date,
 report_submission_id,
 report_submission_uuid
 FROM (
-SELECT DENSE_RANK() OVER(ORDER BY d.id) AS dn,
+SELECT DENSE_RANK() OVER(ORDER BY d.is_report_pdf) AS dn,
 coalesce(c1.case_number, c2.case_number) AS case_number,
 coalesce(rs1.id, rs2.id) AS report_submission_id,
 coalesce(rs1.opg_uuid, rs2.opg_uuid) AS report_submission_uuid,
@@ -61,8 +61,7 @@ LEFT JOIN report_submission rs2 ON rs2.ndr_id = d.ndr_id
 LEFT JOIN client c1 ON c1.id = r.client_id
 LEFT JOIN client c2 ON c2.id = o.client_id
 WHERE d.synchronisation_status = 'QUEUED') AS sub
-WHERE dn < $limit
-ORDER BY is_report_pdf DESC;";
+WHERE dn < $limit;";
 
         $conn = $this->getEntityManager()->getConnection();
         $stmt = $conn->prepare($queuedDocumentsQuery);

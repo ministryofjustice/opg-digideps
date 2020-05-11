@@ -81,8 +81,6 @@ class DocumentSyncService
      */
     public function syncDocument(QueuedDocumentData $documentData)
     {
-        print_r('DocumentData is.........');
-        var_dump($documentData);
         if ($documentData->isReportPdf() && mimetype_from_filename($documentData->getFileName()) == 'application/pdf') {
             return $this->syncReportDocument($documentData);
         } else {
