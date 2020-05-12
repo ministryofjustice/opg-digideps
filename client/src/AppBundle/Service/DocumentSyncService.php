@@ -294,7 +294,10 @@ class DocumentSyncService
         }
 
         if ($syncStatus === Document::SYNC_STATUS_PERMANENT_ERROR) {
-            $this->addToSyncErrorSubmissionIds($documentData->getReportSubmissionId());
+            if ($documentData->isReportPdf()) {
+                $this->addToSyncErrorSubmissionIds($documentData->getReportSubmissionId());
+            }
+
             $this->docsNotSyncedCount++;
         }
 

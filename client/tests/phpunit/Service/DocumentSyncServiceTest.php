@@ -19,6 +19,7 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use JMS\Serializer\Serializer;
+use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -221,7 +222,7 @@ class DocumentSyncServiceTest extends KernelTestCase
     }
 
     /** @test */
-    public function sendDocument_sync_failure_sirius()
+    public function sendDocument_sync_failure_sirius_report_pdf()
     {
         $reportPdfReportSubmission =
             (new ReportSubmission())
@@ -447,5 +448,58 @@ class DocumentSyncServiceTest extends KernelTestCase
 
         $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
         $sut->syncDocument($queuedDocumentData);
+    }
+
+    /** @test */
+    public function sendSupportingDocument_sync_failure()
+    {
+        $reportPdfReportSubmission =
+            (new ReportSubmission())
+                ->setId($this->reportSubmissionId)
+                ->setUuid($this->reportPdfSubmissionUuid);
+
+        $queuedDocumentData = (new QueuedDocumentData())
+            ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
+            ->setDocumentId(6789)
+            ->setReportSubmissionId($this->reportSubmissionId)
+            ->setReportSubmissions([$reportPdfReportSubmission])
+            ->setReportStartDate($this->reportStartDate)
+            ->setReportEndDate($this->reportEndDate)
+            ->setReportSubmitDate($this->reportSubmittedDate)
+            ->setStorageReference('storage-ref-here')
+            ->setFilename('bank-statement.pdf')
+            ->setIsReportPdf(false)
+            ->setCaseNumber('1234567T')
+            ->setNdrId(null);
+
+        $this->s3Storage->retrieve('storage-ref-here')->willReturn($this->fileContents);
+
+        $failureResponseBody = ['errors' => [0 => ['id' => 'ABC123', 'code' => 'OPGDATA-API-FORBIDDEN']]];
+        $failureResponse = new Response('403', [], json_encode($failureResponseBody));
+
+        $requestException = new RequestException('An error occurred', new Request('POST', '/report-submission/9876/update-uuid'), $failureResponse);
+
+        $this->siriusApiGatewayClient->sendSupportingDocument(Argument::cetera())
+            ->shouldBeCalled()
+            ->willThrow($requestException);
+
+        $this->restClient
+            ->apiCall('put',
+                'document/6789',
+                json_encode(
+                    ['syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR,
+                        'syncError' => $failureResponseBody
+                    ]),
+                'Report\\Document',
+                [],
+                false
+            )
+            ->shouldBeCalled()
+            ->willReturn($this->serializer->serialize(new Document(), 'json'));
+
+        $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
+        $sut->syncDocument($queuedDocumentData);
+
+        self::assertNotContains($queuedDocumentData->getReportSubmissionId(), $sut->getSyncErrorSubmissionIds());
     }
 }
