@@ -13,8 +13,10 @@ use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\FileUploader;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
+use AppBundle\TestHelpers\ReportTestHelper;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\DependencyInjection\Container;
 use Twig\Environment;
@@ -83,31 +85,46 @@ class ReportSubmissionServiceTest extends TestCase
     }
 
     /**
-     * @doesNotPerformAssertions
+     * @test
      */
-    public function testGenerateReportDocuments()
+    public function generateReportDocuments()
     {
-        $this->mockReport->shouldReceive('createAttachmentName')->with(m::type('String'))->andReturn('DigidepsFile');
+        $fileUploader = self::prophesize(FileUploader::class);
+        $restClient = self::prophesize(RestClient::class);
+        $mailSender = self::prophesize(MailSender::class);
+        $mailFactory = self::prophesize(MailFactory::class);
+        $twig = self::prophesize(Environment::class);
+        $pdfGenerator = self::prophesize(WkHtmlToPdfGenerator::class);
+        $logger = self::prophesize(Logger::class);
+        $csvGenerator = self::prophesize(CsvGeneratorService::class);
 
-        $this->mockTemplatingEngine->shouldReceive('render')
-            ->with(
-                'AppBundle:Report/Formatted:formatted_standalone.html.twig',
-                [
-                    'report' => $this->mockReport,
-                    'showSummary' => true
-                ]
-            )
-            ->andReturn('Report HTML');
+        $report = self::prophesize(Report::class);
+        $report->createAttachmentName('DigiRep-%s_%s_%s.pdf')->shouldBeCalled()->willReturn('reportFileName');
+        $report->createAttachmentName('DigiRepTransactions-%s_%s_%s.csv')->shouldBeCalled()->willReturn('transactionName');
 
-        $this->mockPdfGenerator->shouldReceive('getPdfFromHtml')->with('Report HTML')->andReturn('PDF CONTENT');
+        $csvGenerator->generateTransactionsCsv($report)->shouldBeCalled()->willReturn('CSV CONTENT');
 
-        $this->mockFileUploader->shouldReceive('uploadFile')->with($this->mockReport, m::type('String'), m::type('String'), true);
-        $this->mockCsvGenerator->shouldReceive('generateTransactionsCsv')->with($this->mockReport)->andReturn('CSV CONTENT');
-        $this->mockFileUploader->shouldReceive('uploadFile')->with($this->mockReport, m::type('String'), m::type('String'), false);
+        $twig->render(Argument::type('string'), ['report' => $report, 'showSummary' => Argument::type('bool')])
+            ->shouldBeCalled()
+            ->willReturn('PDF HTML CONTENT');
 
-        $this->sut = $this->generateSut();
+        $pdfGenerator->getPdfFromHtml('PDF HTML CONTENT')->shouldBeCalled()->willReturn('PDF CONTENT');
 
-        $this->sut->generateReportDocuments($this->mockReport);
+        $fileUploader->uploadFile($report, 'PDF CONTENT', 'reportFileName', true)->shouldBeCalled();
+        $fileUploader->uploadFile($report, 'CSV CONTENT', 'transactionName', false)->shouldBeCalled();
+
+        $sut = new ReportSubmissionService(
+            $csvGenerator->reveal(),
+            $twig->reveal(),
+            $fileUploader->reveal(),
+            $restClient->reveal(),
+            $logger->reveal(),
+            $mailFactory->reveal(),
+            $mailSender->reveal(),
+            $pdfGenerator->reveal(),
+        );
+
+        $sut->generateReportDocuments($report->reveal());
     }
 
     public function testGetPdfBinaryContent()
