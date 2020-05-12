@@ -17,6 +17,7 @@ use AppBundle\TestHelpers\ReportTestHelper;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\DependencyInjection\Container;
 use Twig\Environment;
@@ -38,6 +39,23 @@ class ReportSubmissionServiceTest extends TestCase
     private $mockCsvGenerator;
     private $mockReport;
 
+    /** @var ObjectProphecy&FileUploader */
+    private $fileUploader;
+    /** @var ObjectProphecy&RestClient */
+    private $restClient;
+    /** @var ObjectProphecy&MailSender */
+    private $mailSender;
+    /** @var ObjectProphecy&MailFactory */
+    private $mailFactory;
+    /** @var ObjectProphecy&Environment */
+    private $twig;
+    /** @var ObjectProphecy&WkHtmlToPdfGenerator */
+    private $pdfGenerator;
+    /** @var ObjectProphecy&Logger */
+    private $logger;
+    /** @var ObjectProphecy&CsvGeneratorService */
+    private $csvGenerator;
+
     /**
      * Set up the mockservies
      */
@@ -53,6 +71,15 @@ class ReportSubmissionServiceTest extends TestCase
         $this->mockCsvGenerator = m::mock(CsvGeneratorService::class);
 
         $this->mockReport = m::mock(ReportInterface::class);
+
+        $this->fileUploader = self::prophesize(FileUploader::class);
+        $this->restClient = self::prophesize(RestClient::class);
+        $this->mailSender = self::prophesize(MailSender::class);
+        $this->mailFactory = self::prophesize(MailFactory::class);
+        $this->twig = self::prophesize(Environment::class);
+        $this->pdfGenerator = self::prophesize(WkHtmlToPdfGenerator::class);
+        $this->logger = self::prophesize(Logger::class);
+        $this->csvGenerator = self::prophesize(CsvGeneratorService::class);
     }
 
     /**
@@ -84,47 +111,84 @@ class ReportSubmissionServiceTest extends TestCase
         );
     }
 
+    private function generateProphecySut()
+    {
+        return new ReportSubmissionService(
+            $this->csvGenerator->reveal(),
+            $this->twig->reveal(),
+            $this->fileUploader->reveal(),
+            $this->restClient->reveal(),
+            $this->logger->reveal(),
+            $this->mailFactory->reveal(),
+            $this->mailSender->reveal(),
+            $this->pdfGenerator->reveal(),
+        );
+    }
+
     /**
      * @test
+     * @dataProvider lowOrNoAssetsReportTypeProvider
      */
-    public function generateReportDocuments()
+    public function generateReportDocuments_without_transaction_csv(string $reportType)
     {
-        $fileUploader = self::prophesize(FileUploader::class);
-        $restClient = self::prophesize(RestClient::class);
-        $mailSender = self::prophesize(MailSender::class);
-        $mailFactory = self::prophesize(MailFactory::class);
-        $twig = self::prophesize(Environment::class);
-        $pdfGenerator = self::prophesize(WkHtmlToPdfGenerator::class);
-        $logger = self::prophesize(Logger::class);
-        $csvGenerator = self::prophesize(CsvGeneratorService::class);
-
         $report = self::prophesize(Report::class);
+        $report->getType()->willReturn($reportType);
         $report->createAttachmentName('DigiRep-%s_%s_%s.pdf')->shouldBeCalled()->willReturn('reportFileName');
-        $report->createAttachmentName('DigiRepTransactions-%s_%s_%s.csv')->shouldBeCalled()->willReturn('transactionName');
 
-        $csvGenerator->generateTransactionsCsv($report)->shouldBeCalled()->willReturn('CSV CONTENT');
-
-        $twig->render(Argument::type('string'), ['report' => $report, 'showSummary' => Argument::type('bool')])
+        $this->twig->render(Argument::type('string'), ['report' => $report, 'showSummary' => Argument::type('bool')])
             ->shouldBeCalled()
             ->willReturn('PDF HTML CONTENT');
 
-        $pdfGenerator->getPdfFromHtml('PDF HTML CONTENT')->shouldBeCalled()->willReturn('PDF CONTENT');
+        $this->pdfGenerator->getPdfFromHtml('PDF HTML CONTENT')->shouldBeCalled()->willReturn('PDF CONTENT');
 
-        $fileUploader->uploadFile($report, 'PDF CONTENT', 'reportFileName', true)->shouldBeCalled();
-        $fileUploader->uploadFile($report, 'CSV CONTENT', 'transactionName', false)->shouldBeCalled();
+        $this->fileUploader->uploadFile($report, 'PDF CONTENT', 'reportFileName', true)->shouldBeCalled();
+        $this->fileUploader->uploadFile($report, Argument::type('string'), Argument::type('string'), false)->shouldNotBeCalled();
 
-        $sut = new ReportSubmissionService(
-            $csvGenerator->reveal(),
-            $twig->reveal(),
-            $fileUploader->reveal(),
-            $restClient->reveal(),
-            $logger->reveal(),
-            $mailFactory->reveal(),
-            $mailSender->reveal(),
-            $pdfGenerator->reveal(),
-        );
-
+        $sut = $this->generateProphecySut();
         $sut->generateReportDocuments($report->reveal());
+    }
+
+    public function lowOrNoAssetsReportTypeProvider()
+    {
+        return [
+            'Health and Welfare' => [Report::TYPE_HEALTH_WELFARE],
+            'Property and Affairs - Low assets' => [Report::TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS],
+            'Combined - Low assets' => [Report::TYPE_COMBINED_LOW_ASSETS],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider HighAssetsReportTypeProvider
+     */
+    public function generateReportDocuments_with_transaction_csv(string $reportType)
+    {
+        $report = self::prophesize(Report::class);
+        $report->getType()->willReturn($reportType);
+        $report->createAttachmentName('DigiRep-%s_%s_%s.pdf')->shouldBeCalled()->willReturn('reportFileName');
+        $report->createAttachmentName('DigiRepTransactions-%s_%s_%s.csv')->shouldBeCalled()->willReturn('transactionCSVName');
+
+        $this->csvGenerator->generateTransactionsCsv($report)->shouldBeCalled()->willReturn('CSV CONTENT');
+
+        $this->twig->render(Argument::type('string'), ['report' => $report, 'showSummary' => Argument::type('bool')])
+            ->shouldBeCalled()
+            ->willReturn('PDF HTML CONTENT');
+
+        $this->pdfGenerator->getPdfFromHtml('PDF HTML CONTENT')->shouldBeCalled()->willReturn('PDF CONTENT');
+
+        $this->fileUploader->uploadFile($report, 'PDF CONTENT', 'reportFileName', true)->shouldBeCalled();
+        $this->fileUploader->uploadFile($report, 'CSV CONTENT', 'transactionCSVName', false)->shouldBeCalled();
+
+        $sut = $this->generateProphecySut();
+        $sut->generateReportDocuments($report->reveal());
+    }
+
+    public function HighAssetsReportTypeProvider()
+    {
+        return [
+            'Property and Affairs - High asserts' => [Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS],
+            'Combined - High assets' => [Report::TYPE_COMBINED_HIGH_ASSETS],
+        ];
     }
 
     public function testGetPdfBinaryContent()
