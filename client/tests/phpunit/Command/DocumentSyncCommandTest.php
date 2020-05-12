@@ -77,6 +77,11 @@ class DocumentSyncCommandTest extends KernelTestCase
             ->shouldBeCalled()
             ->willReturn(0);
 
+        $documentSyncService
+            ->getSyncErrorSubmissionIds()
+            ->shouldBeCalled()
+            ->willReturn([]);
+
         $kernel = static::bootKernel([ 'debug' => false ]);
         $application = new Application($kernel);
 
@@ -155,6 +160,11 @@ class DocumentSyncCommandTest extends KernelTestCase
 
        /** @var DocumentSyncService|ObjectProphecy $documentSyncService */
        $documentSyncService = self::prophesize(DocumentSyncService::class);
+       $documentSyncService
+           ->getSyncErrorSubmissionIds()
+           ->shouldBeCalled()
+           ->willReturn([1]);
+
        $documentSyncService
            ->setSubmissionsDocumentsToPermanentError()
            ->shouldBeCalled();
