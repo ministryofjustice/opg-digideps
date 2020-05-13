@@ -428,7 +428,7 @@ jobs:
           name: Run tests
           command: |
             docker-compose --project-name api-unit-tests up -d postgres
-            docker-compose --project-name api-unit-tests run --rm --env-file=api/docker/env/api.env \
+            docker run --rm --network api-unit-tests_default --env-file=api/docker/env/api.env \
             api:latest sh scripts/apiunittest.sh
 
   run-task:
