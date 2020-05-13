@@ -13,7 +13,6 @@ use Symfony\Component\Serializer\Serializer;
 
 class DocumentSyncCommand extends DaemonableCommand
 {
-    const FALLBACK_INTERVAL_MINUTES = '4.5';
     const FALLBACK_ROW_LIMITS = '100';
 
     protected static $defaultName = 'digideps:document-sync';
@@ -56,37 +55,36 @@ class DocumentSyncCommand extends DaemonableCommand
     {
         ini_set('memory_limit', '512M');
 
-        return $this->daemonize($input, $output, function() use ($output) {
-            if (!$this->isFeatureEnabled()) {
-                $output->writeln('Feature disabled, sleeping');
-                return;
-            }
+        if (!$this->isFeatureEnabled()) {
+            $output->writeln('Feature disabled, sleeping');
+            return 0;
+        }
 
-            /** @var QueuedDocumentData[] $documents */
-            $documents = $this->getQueuedDocumentsData();
+        /** @var QueuedDocumentData[] $documents */
+        $documents = $this->getQueuedDocumentsData();
 
-            $output->writeln(sprintf('%d documents to upload', count($documents)));
+        $output->writeln(sprintf('%d documents to upload', count($documents)));
 
-            foreach ($documents as $document) {
-                $this->documentSyncService->syncDocument($document);
-            }
+        foreach ($documents as $document) {
+            $this->documentSyncService->syncDocument($document);
+        }
 
-            if ($this->documentSyncService->getSyncErrorSubmissionIds()) {
-                $documentsUpdated = $this->documentSyncService->setSubmissionsDocumentsToPermanentError();
-                $output->writeln(sprintf('%d documents failed to sync', $documentsUpdated));
-            }
-        }, (int) $this->getSyncIntervalMinutes() * 60);
+        if (count($this->documentSyncService->getSyncErrorSubmissionIds()) > 0) {
+            $this->documentSyncService->setSubmissionsDocumentsToPermanentError();
+            $this->documentSyncService->setSyncErrorSubmissionIds([]);
+        }
+
+        if ($this->documentSyncService->getDocsNotSyncedCount() > 0) {
+            $output->writeln(sprintf('%d documents failed to sync', $this->documentSyncService->getDocsNotSyncedCount()));
+            $this->documentSyncService->setDocsNotSyncedCount(0);
+        }
+
+        return 0;
     }
 
     private function isFeatureEnabled(): bool
     {
         return $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC) === '1';
-    }
-
-    private function getSyncIntervalMinutes(): string
-    {
-        $minutes = $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_INTERVAL_MINUTES);
-        return $minutes ? $minutes : self::FALLBACK_INTERVAL_MINUTES;
     }
 
     private function getSyncRowLimit(): string

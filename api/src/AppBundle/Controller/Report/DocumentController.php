@@ -150,9 +150,7 @@ class DocumentController extends RestController
         $reportSubmissionIds = $data['submissionIds'];
         $errorMessage = $data['errorMessage'];
 
-        $count = $documentRepo->updateSupportingDocumentStatusByReportSubmissionIds($reportSubmissionIds, $errorMessage);
-
-        return json_encode($count);
+        return json_encode($documentRepo->updateSupportingDocumentStatusByReportSubmissionIds($reportSubmissionIds, $errorMessage));
     }
 
     /**

@@ -39,6 +39,9 @@ class DocumentSyncService
     /** @var int[] */
     private $syncErrorSubmissionIds;
 
+    /** @var int */
+    private $docsNotSyncedCount;
+
     public function __construct(
         S3Storage $storage,
         SiriusApiGatewayClient $siriusApiGatewayClient,
@@ -49,6 +52,7 @@ class DocumentSyncService
         $this->siriusApiGatewayClient = $siriusApiGatewayClient;
         $this->restClient = $restClient;
         $this->syncErrorSubmissionIds = [];
+        $this->docsNotSyncedCount = 0;
     }
 
     /**
@@ -60,11 +64,29 @@ class DocumentSyncService
     }
 
     /**
+     * @param int[] $syncErrorSubmissionIds
+     */
+    public function setSyncErrorSubmissionIds(array $syncErrorSubmissionIds): void
+    {
+        $this->syncErrorSubmissionIds = $syncErrorSubmissionIds;
+    }
+
+    /**
      * @param int $submissionId
      */
     public function addToSyncErrorSubmissionIds(int $submissionId)
     {
         $this->syncErrorSubmissionIds[] = $submissionId;
+    }
+
+    public function getDocsNotSyncedCount()
+    {
+        return $this->docsNotSyncedCount;
+    }
+
+    public function setDocsNotSyncedCount(int $count)
+    {
+        return $this->docsNotSyncedCount = $count;
     }
 
     /**
@@ -77,6 +99,7 @@ class DocumentSyncService
             return $this->syncReportDocument($documentData);
         } else {
             if (!$documentData->supportingDocumentCanBeSynced()) {
+                $this->docsNotSyncedCount++;
                 return $this->handleDocumentStatusUpdate($documentData, Document::SYNC_STATUS_QUEUED);
             }
 
@@ -196,7 +219,7 @@ class DocumentSyncService
 
     public function setSubmissionsDocumentsToPermanentError()
     {
-        $response = $this->restClient->apiCall(
+        $this->restClient->apiCall(
             'put',
             'document/update-related-statuses',
             json_encode(['submissionIds' => $this->getSyncErrorSubmissionIds(), 'errorMessage' => 'Report PDF failed to sync']),
@@ -204,10 +227,6 @@ class DocumentSyncService
             [],
             false
         );
-
-        $countOfDocumentsUpdated = json_decode((string) $response, true)['data'];
-
-        return $countOfDocumentsUpdated;
     }
 
     /**
@@ -275,7 +294,11 @@ class DocumentSyncService
         }
 
         if ($syncStatus === Document::SYNC_STATUS_PERMANENT_ERROR) {
-            $this->addToSyncErrorSubmissionIds($documentData->getReportSubmissionId());
+            if ($documentData->isReportPdf()) {
+                $this->addToSyncErrorSubmissionIds($documentData->getReportSubmissionId());
+            }
+
+            $this->docsNotSyncedCount++;
         }
 
         $this->handleDocumentStatusUpdate($documentData, $syncStatus, $errorMessage);

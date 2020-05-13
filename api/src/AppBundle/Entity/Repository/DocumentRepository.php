@@ -46,7 +46,7 @@ ndr_submit_date,
 report_submission_id,
 report_submission_uuid
 FROM (
-SELECT DENSE_RANK() OVER(ORDER BY d.id) AS dn,
+SELECT DENSE_RANK() OVER(ORDER BY d.is_report_pdf DESC, d.id) AS dn,
 coalesce(c1.case_number, c2.case_number) AS case_number,
 coalesce(rs1.id, rs2.id) AS report_submission_id,
 coalesce(rs1.opg_uuid, rs2.opg_uuid) AS report_submission_uuid,
@@ -125,15 +125,7 @@ AND is_report_pdf=false";
 
         $conn = $this->getEntityManager()->getConnection();
         $stmt = $conn->prepare($updateStatusQuery);
-        $stmt->execute();
-
-        $docsCountQuery = "
-SELECT COUNT(id)
-FROM document
-WHERE report_submission_id IN ($idsString)";
-
-        $res = $conn->query($docsCountQuery);
-        return $res->fetchColumn();
+        return $stmt->execute();
     }
 
 }

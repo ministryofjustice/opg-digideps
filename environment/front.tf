@@ -64,8 +64,26 @@ data "aws_iam_policy_document" "query_ssm" {
     ]
     resources = [
       aws_ssm_parameter.flag_document_sync.arn,
-      aws_ssm_parameter.document_sync_interval_minutes.arn,
       aws_ssm_parameter.document_sync_row_limit.arn
     ]
+  }
+}
+
+resource "aws_iam_role_policy" "ecs_scheduled_tasks" {
+  name   = "front-ecs-scheduled-task.${local.environment}"
+  policy = data.aws_iam_policy_document.ecs_scheduled_tasks.json
+  role   = aws_iam_role.front.id
+}
+
+data "aws_iam_policy_document" "ecs_scheduled_tasks" {
+  statement {
+    sid    = "AllowCloudwatchPassIAMRolesToECSTasks"
+    effect = "Allow"
+    actions = [
+      "iam:ListInstanceProfiles",
+      "iam:ListRoles",
+      "iam:PassRole"
+    ]
+    resources = ["*"]
   }
 }

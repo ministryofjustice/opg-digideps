@@ -55,11 +55,6 @@ class DocumentSyncCommandTest extends KernelTestCase
             ->willReturn('1');
 
         $parameterStoreService
-            ->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_INTERVAL_MINUTES)
-            ->shouldBeCalled()
-            ->willReturn('4.5');
-
-        $parameterStoreService
             ->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT)
             ->shouldBeCalled()
             ->willReturn('100');
@@ -76,6 +71,11 @@ class DocumentSyncCommandTest extends KernelTestCase
         $documentSyncService
             ->syncDocument($queuedDocumentData)
             ->shouldBeCalled();
+
+        $documentSyncService
+            ->getDocsNotSyncedCount()
+            ->shouldBeCalled()
+            ->willReturn(0);
 
         $documentSyncService
             ->getSyncErrorSubmissionIds()
@@ -107,11 +107,6 @@ class DocumentSyncCommandTest extends KernelTestCase
             ->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC)
             ->shouldBeCalled()
             ->willReturn('0');
-
-        $parameterStore
-            ->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_INTERVAL_MINUTES)
-            ->shouldBeCalled()
-            ->willReturn('4.5');
 
         /** @var RestClient|ObjectProphecy $restClient */
         $restClient = self::prophesize(RestClient::class);
@@ -152,11 +147,6 @@ class DocumentSyncCommandTest extends KernelTestCase
            ->willReturn('1');
 
        $parameterStore
-           ->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_INTERVAL_MINUTES)
-           ->shouldBeCalled()
-           ->willReturn('4.5');
-
-       $parameterStore
            ->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT)
            ->shouldBeCalled()
            ->willReturn('100');
@@ -173,12 +163,24 @@ class DocumentSyncCommandTest extends KernelTestCase
        $documentSyncService
            ->getSyncErrorSubmissionIds()
            ->shouldBeCalled()
-           ->willReturn([1, 2, 3]);
+           ->willReturn([1]);
 
        $documentSyncService
            ->setSubmissionsDocumentsToPermanentError()
+           ->shouldBeCalled();
+
+       $documentSyncService
+           ->getDocsNotSyncedCount()
            ->shouldBeCalled()
            ->willReturn(6);
+
+       $documentSyncService
+           ->setSyncErrorSubmissionIds([])
+           ->shouldBeCalled();
+
+       $documentSyncService
+           ->setDocsNotSyncedCount(0)
+           ->shouldBeCalled();
 
        $kernel = static::bootKernel([ 'debug' => false ]);
        $application = new Application($kernel);
