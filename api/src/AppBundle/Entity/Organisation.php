@@ -50,6 +50,7 @@ class Organisation implements OrganisationInterface
      * @JMS\Groups({"user-organisations"})
      *
      * @ORM\Column(name="is_activated", type="boolean", options={ "default": false}, nullable=false)
+     * @JMS\Groups({"organisation", "client-organisations"})
      */
     private $isActivated;
 
