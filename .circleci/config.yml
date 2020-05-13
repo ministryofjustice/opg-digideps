@@ -427,8 +427,10 @@ jobs:
       - run:
           name: Run tests
           command: |
-            docker run --rm --env-file=api/docker/env/api.env \
+            docker-compose --project-name api-unit-tests up -d postgres
+            docker-compose --project-name api-unit-tests docker run --rm --env-file=api/docker/env/api.env \
             api:latest sh scripts/apiunittest.sh
+            docker-compose --project-name api-unit-tests stop -d postgres
 
   run-task:
     executor: terraform/terraform
