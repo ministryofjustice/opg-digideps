@@ -78,3 +78,33 @@ resource "aws_service_discovery_private_dns_namespace" "private" {
   name = "${local.environment}.private"
   vpc  = data.aws_vpc.vpc.id
 }
+
+data "aws_iam_policy_document" "ecs_task_logs" {
+  statement {
+    effect    = "Allow"
+    resources = ["*"]
+
+    actions = [
+      "logs:DescribeLogGroups",
+      "logs:DescribeLogStreams"
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    resources = [
+      "${aws_cloudwatch_log_group.audit.arn}:log-stream:*",
+      aws_cloudwatch_log_group.audit.arn
+    ]
+
+    actions = [
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+  }
+}
+
+resource "aws_cloudwatch_log_group" "audit" {
+  name = "audit-${local.environment}"
+  tags = local.default_tags
+}
