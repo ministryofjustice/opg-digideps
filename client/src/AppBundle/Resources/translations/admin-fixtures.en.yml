@@ -5,5 +5,7 @@ courtOrders:
     label: Report type
   reportStatus:
     label: Report status
+  coDeputyEnabled:
+      label: Co-Deputy Enabled
   submit:
     label: Create

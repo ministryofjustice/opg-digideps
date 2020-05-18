@@ -14,12 +14,21 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Twig\Environment;
 
 /**
  * @Route("/admin/fixtures")
  */
 class FixtureController extends AbstractController
 {
+    /** @var Environment */
+    private $twig;
+
+    public function __construct(Environment $twig)
+    {
+        $this->twig = $twig;
+    }
+
     /**
      * @Route("/court-orders", name="admin_fixtures_court_orders")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
@@ -34,7 +43,8 @@ class FixtureController extends AbstractController
         $form = $this->createForm(CourtOrderFixtureType::class, null, [
             'deputyType' => $request->get('deputy-type', User::TYPE_LAY),
             'reportType' => $request->get('report-type', Report::TYPE_HEALTH_WELFARE),
-            'reportStatus' => $request->get('report-status', Report::STATUS_NOT_STARTED)
+            'reportStatus' => $request->get('report-status', Report::STATUS_NOT_STARTED),
+            'coDeputyEnabled' => $request->get('co-deputy-enabled', false),
         ]);
 
         $form->handleRequest($request);
@@ -43,20 +53,37 @@ class FixtureController extends AbstractController
             $courtDate = $request->get('court-date') ? new \DateTime($request->get('court-date')) : new \DateTime('2017-02-01');
             $deputyEmail = $request->query->get('deputy-email', sprintf('%s-deputy-%s@fixture.com', strtolower($submitted['deputyType']), mt_rand(1000, 9999)));
             $randomCaseNumber = str_pad(rand(1,99999999), 8, "0", STR_PAD_LEFT);
+            $caseNumber = $request->get('case-number', $randomCaseNumber);
 
-            $this->getRestClient()->post('v2/fixture/court-order', json_encode([
+            $response = $this->getRestClient()->post('v2/fixture/court-order', json_encode([
                 'deputyType' => $submitted['deputyType'],
                 'deputyEmail' => $deputyEmail,
-                'caseNumber' =>  $request->get('case-number', $randomCaseNumber),
+                'caseNumber' =>  $caseNumber,
                 'reportType' => $submitted['reportType'],
                 'reportStatus' => $submitted['reportStatus'],
-                'courtDate' => $courtDate->format('Y-m-d')
+                'courtDate' => $courtDate->format('Y-m-d'),
+                'coDeputyEnabled' => $submitted['coDeputyEnabled']
             ]));
 
-            $this->addFlash('notice', "Created deputy with email: $deputyEmail");
+            $deputies = $response['deputies'];
+
+            var_dump($response);
+            $this->addFlash('notice', $this->createUsersFlashMessage($deputies, $caseNumber));
         }
 
         return ['form' => $form->createView()];
+    }
+
+    /**
+     * @param []MissingDocument $missingDocuments
+     * @return string
+     */
+    public function createUsersFlashMessage(array $deputies, string $caseNumber)
+    {
+        return $this->twig->render(
+            'AppBundle:FlashMessages:fixture-user-created.html.twig',
+            ['deputies' => $deputies, 'caseNumber' => $caseNumber]
+        );
     }
 
     /**

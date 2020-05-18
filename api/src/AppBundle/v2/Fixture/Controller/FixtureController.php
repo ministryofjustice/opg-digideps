@@ -102,7 +102,7 @@ class FixtureController
 
         $this->em->flush();
 
-        return $this->buildSuccessResponse(['deputyEmail' => $deputy->getEmail()], 'Court order created', Response::HTTP_CREATED);
+        return $this->buildSuccessResponse(['deputyEmail' => $deputy->getEmail(), 'deputies' => $client->getUsers()], 'Court order created', Response::HTTP_CREATED);
     }
 
     /**
@@ -131,6 +131,7 @@ class FixtureController
             'deputyType' => $fromRequest['deputyType'],
             'email' => $fromRequest['deputyEmail'],
             'activated'=> 'true',
+            'coDeputyEnabled' => $fromRequest['coDeputyEnabled']
         ]);
 
         $this->em->persist($deputy);

@@ -1,0 +1,8 @@
+<p>Created deputies</p>
+
+<ul>
+    <li>Case number: {{ caseNumber }}</li>
+    {% for deputy in deputies %}
+        <li>{{ deputy.email }}</li>
+    {% endfor %}
+</ul>

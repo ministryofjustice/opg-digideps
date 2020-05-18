@@ -11,6 +11,7 @@
     {{ form_select(form.deputyType, 'courtOrders.deputyType') }}
     {{ form_select(form.reportType, 'courtOrders.reportType') }}
     {{ form_select(form.reportStatus, 'courtOrders.reportStatus') }}
+    {{ form_select(form.reportStatus, 'courtOrders.coDeputyEnabled') }}
     {{ form_submit(form.submit, 'courtOrders.submit') }}
     {{ form_end(form) }}
 {% endblock %}
