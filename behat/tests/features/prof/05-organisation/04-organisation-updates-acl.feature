@@ -63,7 +63,8 @@ Feature: Organisation deputyship updates
     And I should see the "client-11498120" region
     # Assert client associated with new org
     Then I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search"
+    And I search in admin for a client with the term "11498120"
+    Then I should see "Found 2 clients"
     # Assert old client has been discharged
     And I should see the "discharged-client-11498120" region
     And I should see the "client-11498120" region
