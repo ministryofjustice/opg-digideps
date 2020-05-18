@@ -87,3 +87,9 @@ data "aws_iam_policy_document" "ecs_scheduled_tasks" {
     resources = ["*"]
   }
 }
+
+resource "aws_iam_role_policy" "front_task_logs" {
+  name   = "front-task-logs.${local.environment}"
+  policy = data.aws_iam_policy_document.ecs_task_logs.json
+  role   = aws_iam_role.front.id
+}
