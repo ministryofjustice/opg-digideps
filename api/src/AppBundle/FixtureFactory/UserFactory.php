@@ -2,6 +2,7 @@
 
 namespace AppBundle\FixtureFactory;
 
+use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -83,6 +84,28 @@ class UserFactory
             default:
                 return 'ROLE_' . $roleName . '_NAMED';
         }
+    }
 
+    public function createCoDeputy(User $originalDeputy, Client $client, array $data)
+    {
+        $user2 = clone $originalDeputy;
+        $user2->setLastname($user2->getLastname() . '-2')
+            ->setEmail(
+                sprintf(
+                    '%s-deputy-%d@fixture.com',
+                    strtolower($data['deputyType']),
+                    mt_rand(1000, 99999)
+                )
+            )
+            ->addClient($client)
+            ->setActive($data['deputyType']);
+
+        if ($data['activated'] !== 'true') {
+            $user2->setActive(false);
+        } else {
+            $user2->setPassword($this->encoder->encodePassword($user2, 'Abcd1234'));
+        }
+
+        return $user2;
     }
 }

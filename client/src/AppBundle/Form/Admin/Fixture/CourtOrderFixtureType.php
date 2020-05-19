@@ -38,6 +38,10 @@ class CourtOrderFixtureType extends AbstractType
                 'choices' => ['Enabled' => true, 'Disabled' => false],
                 'data' => $options['coDeputyEnabled']
             ])
+            ->add('activated', ChoiceType::class, [
+                'choices' => ['Activated' => true, 'Not Activated' => false],
+                'data' => $options['activated']
+            ])
             ->add('submit', SubmitType::class);
     }
 
@@ -45,6 +49,6 @@ class CourtOrderFixtureType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'admin-fixtures'
-        ])->setRequired(['deputyType', 'reportType', 'reportStatus', 'coDeputyEnabled']);
+        ])->setRequired(['deputyType', 'reportType', 'reportStatus', 'coDeputyEnabled', 'activated']);
     }
 }

@@ -14,6 +14,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Serializer\SerializerInterface;
 use Twig\Environment;
 
 /**
@@ -24,9 +25,13 @@ class FixtureController extends AbstractController
     /** @var Environment */
     private $twig;
 
-    public function __construct(Environment $twig)
+    /** @var Serializer */
+    private $serializer;
+
+    public function __construct(Environment $twig, SerializerInterface $serializer)
     {
         $this->twig = $twig;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -45,6 +50,7 @@ class FixtureController extends AbstractController
             'reportType' => $request->get('report-type', Report::TYPE_HEALTH_WELFARE),
             'reportStatus' => $request->get('report-status', Report::STATUS_NOT_STARTED),
             'coDeputyEnabled' => $request->get('co-deputy-enabled', false),
+            'activated' => $request->get('activated', true),
         ]);
 
         $form->handleRequest($request);
@@ -65,13 +71,35 @@ class FixtureController extends AbstractController
                 'coDeputyEnabled' => $submitted['coDeputyEnabled']
             ]));
 
-            $deputies = $response['deputies'];
+            $query = ['query' => ['filter_by_ids' => implode(",", $response['deputyIds'])]];
+            $deputiesData = $this->getRestClient()->get('/user/get-all', 'array', [], $query);
+            $sanitizedDeputyData = $this->removeNullValues($deputiesData);
 
-            var_dump($response);
+            $deputies = $this->serializer->deserialize(json_encode($sanitizedDeputyData), 'AppBundle\Entity\User[]', 'json');
+
             $this->addFlash('notice', $this->createUsersFlashMessage($deputies, $caseNumber));
         }
 
         return ['form' => $form->createView()];
+    }
+
+    /**
+     * @TODO replace with https://symfony.com/doc/4.4/components/serializer.html#skipping-null-values
+     * when using Symfony 4+
+     */
+    private function removeNullValues(array $deputiesDataArray)
+    {
+        foreach ($deputiesDataArray as $index => $properties) {
+            foreach ($properties as $key => $property) {
+                if (is_null($property)) {
+                    unset($properties[$key]);
+                }
+            }
+
+            $deputiesDataArray[$index] = $properties;
+        }
+
+        return $deputiesDataArray;
     }
 
     /**

@@ -1,11 +1,13 @@
 courtOrders:
   deputyType:
-    label: Deputy role
+    label: Deputy Role
   reportType:
-    label: Report type
+    label: Report Type
   reportStatus:
-    label: Report status
+    label: Report Status
   coDeputyEnabled:
       label: Co-Deputy Enabled
+  activated:
+      label: Account Activated
   submit:
     label: Create

@@ -1,8 +1,8 @@
-<p>Created deputies</p>
+<p>Created fixture {{ deputies|length > 1 ? 'deputies' : 'deputy' }}:</p>
+<p>Case number: <strong>{{ caseNumber }}</strong></p>
 
 <ul>
-    <li>Case number: {{ caseNumber }}</li>
     {% for deputy in deputies %}
-        <li>{{ deputy.email }}</li>
+        <li>Email: <strong>{{ deputy.email }}</strong></li>
     {% endfor %}
 </ul>

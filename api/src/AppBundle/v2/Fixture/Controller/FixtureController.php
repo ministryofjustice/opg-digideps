@@ -100,9 +100,21 @@ class FixtureController
             $this->createOrgAndAttachParticipants($fromRequest, $deputy, $client);
         }
 
+        // If codeputy was enabled, add a secondary account
+        if ($fromRequest['coDeputyEnabled']) {
+            $coDeputy = $this->userFactory->createCoDeputy($deputy, $client, $fromRequest);
+            $this->em->persist($coDeputy);
+        }
+
         $this->em->flush();
 
-        return $this->buildSuccessResponse(['deputyEmail' => $deputy->getEmail(), 'deputies' => $client->getUsers()], 'Court order created', Response::HTTP_CREATED);
+        $deputyIds = [$deputy->getId()];
+
+        if (isset($coDeputy)) {
+            $deputyIds[] = $coDeputy->getId();
+        }
+
+        return $this->buildSuccessResponse(['deputyEmail' => $deputy->getEmail(), 'deputyIds' => $deputyIds], 'Court order created', Response::HTTP_CREATED);
     }
 
     /**
@@ -130,7 +142,7 @@ class FixtureController
             'id' => $fromRequest['deputyEmail'],
             'deputyType' => $fromRequest['deputyType'],
             'email' => $fromRequest['deputyEmail'],
-            'activated'=> 'true',
+            'activated'=> $fromRequest['activated'],
             'coDeputyEnabled' => $fromRequest['coDeputyEnabled']
         ]);
 
