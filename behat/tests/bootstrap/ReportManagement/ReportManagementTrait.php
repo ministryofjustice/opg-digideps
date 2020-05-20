@@ -3,6 +3,7 @@
 namespace DigidepsBehat\ReportManagement;
 
 use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Exception\ElementNotFoundException;
 
 trait ReportManagementTrait
 {
@@ -49,6 +50,22 @@ trait ReportManagementTrait
         $this->pressButton('manage_report_confirm[save]');
 
         $this->assertPageContainsText('OPG'.$type);
+    }
+
+    /**
+     * @When a case manager makes the following changes to the report:
+     */
+    public function aCaseManagerMakesTheFollowingChangesToTheReport(TableNode $table)
+    {
+        $this->aCaseManagerProposesToMakeTheFollowingChangesToTheReport($table);
+
+        try {
+            $this->selectOption('manage_report_confirm[confirm]', 'yes');
+        } catch (ElementNotFoundException $e) {
+
+        }
+
+        $this->pressButton('manage_report_confirm[save]');
     }
 
     /**
@@ -164,5 +181,39 @@ trait ReportManagementTrait
 
         $expectedDueDate = new \DateTime($adjustment);
         $this->iShouldSeeInTheRegion($expectedDueDate->format('j F Y'), "report-$startDate-to-$endDate-due-date");
+    }
+
+    /**
+     * @Given I visit the management page of the :startDate to :endDate report between :deputy and :client
+     */
+    public function iVisitTheManagementPageOfTheToReportBetweenAnd($startDate, $endDate, $deputy, $client)
+    {
+        $this->iHaveTheReportBetweenDeputyAndClient($startDate, $endDate, $deputy, $client);
+        $this->iVisitTheManagementPageOfTheReport();
+    }
+
+    /**
+     * @Given I visit the management page of the report
+     */
+    public function iVisitTheManagementPageOfTheReport()
+    {
+        $reportId = self::$currentReportCache['reportId'];
+
+        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
+        $this->visitAdminPath("/admin/report/$reportId/manage");
+    }
+
+    /**
+     * @Given a case manager closes the report
+     */
+    public function aCaseManagerClosesTheReport()
+    {
+        $reportId = self::$currentReportCache['reportId'];
+
+        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
+        $this->visitAdminPath("/admin/report/$reportId/manage");
+        $this->checkOption('manage_report_close[agreeCloseReport]');
+        $this->pressButton('manage_report_close[save]');
+        $this->pressButton('close_report_confirm[save]');
     }
 }

@@ -1,0 +1,24 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% trans_default_domain "admin-clients" %}
+{% set page = 'reportManage' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+    <p>{{ (page ~ '.closeReport.confirmMessage') | trans }}</p>
+    {{ form_start(form) }}
+    {{ form_submit(form.save, 'reportManage.closeReport.form.confirmSave', {
+        'buttonClass': 'behat-link-close-report-confirm govuk-button',
+    }) }}
+    {{ form_end(form) }}
+{% endblock %}
