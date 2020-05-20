@@ -10,11 +10,11 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version241 extends AbstractMigration
+final class Version236 extends AbstractMigration
 {
     public function getDescription() : string
     {
-        return '';
+        return 'Add client.deleted_at field';
     }
 
     public function up(Schema $schema) : void
