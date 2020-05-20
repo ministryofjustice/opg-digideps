@@ -198,7 +198,7 @@ class UserFixtures extends AbstractDataFixture
 
         // Create CasRec record for lay deputies
         if ($data['deputyType'] === 'LAY') {
-            $casRec = new CasRec([
+            $casRec = ([
                 'Case' => $data['id'],
                 'Surname' => $data['id'],
                 'Deputy No' => str_replace('-', '', $data['id']),

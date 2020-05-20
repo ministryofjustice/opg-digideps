@@ -42,10 +42,10 @@ class UserFactory
             ->setAddressCountry('GB')
             ->setRoleName($roleName);
 
-        if ($data['activated'] !== 'true') {
-            $user->setActive(false);
-        } else {
+        if ($data['activated'] === 'true' || $data['activated'] === true) {
             $user->setPassword($this->encoder->encodePassword($user, 'Abcd1234'));
+        } else {
+            $user->setActive(false);
         }
 
         return $user;
@@ -92,18 +92,18 @@ class UserFactory
         $user2->setLastname($user2->getLastname() . '-2')
             ->setEmail(
                 sprintf(
-                    '%s-deputy-%d@fixture.com',
+                    'co-%s-deputy-%d@fixture.com',
                     strtolower($data['deputyType']),
-                    mt_rand(1000, 99999)
+                    mt_rand(1000, 9999)
                 )
             )
             ->addClient($client)
             ->setActive($data['deputyType']);
 
-        if ($data['activated'] !== 'true') {
-            $user2->setActive(false);
-        } else {
+        if ($data['activated'] === 'true' || $data['activated'] === true) {
             $user2->setPassword($this->encoder->encodePassword($user2, 'Abcd1234'));
+        } else {
+            $user2->setActive(false);
         }
 
         return $user2;

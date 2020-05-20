@@ -12,6 +12,7 @@ use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
 use AppBundle\Factory\OrganisationFactory;
+use AppBundle\FixtureFactory\CasRecFactory;
 use AppBundle\FixtureFactory\ClientFactory;
 use AppBundle\FixtureFactory\ReportFactory;
 use AppBundle\FixtureFactory\UserFactory;
@@ -42,6 +43,7 @@ class FixtureController
     private $orgRepository;
     private $userRepository;
     private $ndrRepository;
+    private $casRecFactory;
 
     public function __construct(
         EntityManagerInterface $em,
@@ -54,7 +56,8 @@ class FixtureController
         UserRepository $deputyRepository,
         OrganisationRepository $organisationRepository,
         UserRepository $userRepository,
-        NdrRepository $ndrRepository
+        NdrRepository $ndrRepository,
+        CasRecFactory $casRecFactory
     ) {
         $this->em = $em;
         $this->clientFactory = $clientFactory;
@@ -67,6 +70,7 @@ class FixtureController
         $this->orgRepository = $organisationRepository;
         $this->userRepository = $userRepository;
         $this->ndrRepository = $ndrRepository;
+        $this->casRecFactory = $casRecFactory;
     }
 
     /**
@@ -100,18 +104,18 @@ class FixtureController
             $this->createOrgAndAttachParticipants($fromRequest, $deputy, $client);
         }
 
-        // If codeputy was enabled, add a secondary account
         if ($fromRequest['coDeputyEnabled']) {
+            $deputy->setCoDeputyClientConfirmed(true);
             $coDeputy = $this->userFactory->createCoDeputy($deputy, $client, $fromRequest);
             $this->em->persist($coDeputy);
         }
 
         $this->em->flush();
 
-        $deputyIds = [$deputy->getId()];
+        $deputyIds = ['originalDeputy' => $deputy->getId()];
 
         if (isset($coDeputy)) {
-            $deputyIds[] = $coDeputy->getId();
+            $deputyIds['coDeputy'] = $coDeputy->getId();
         }
 
         return $this->buildSuccessResponse(['deputyEmail' => $deputy->getEmail(), 'deputyIds' => $deputyIds], 'Court order created', Response::HTTP_CREATED);
@@ -351,5 +355,36 @@ class FixtureController
         $this->em->flush();
 
         return $this->buildSuccessResponse($fromRequest, 'User created', Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/createCasrec", methods={"POST"})
+     * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
+     */
+    public function createCasrec(Request $request)
+    {
+        $fromRequest = json_decode($request->getContent(), true);
+
+        $casRec = $this->casRecFactory->create($fromRequest);
+
+        $data = [
+            'caseNumber' => $casRec->getCaseNumber(),
+            'clientLastName' => $casRec->getClientLastname(),
+            'deputyLastName' => $casRec->getDeputySurname(),
+            'deputyPostCode' => $casRec->getDeputyPostCode()
+        ];
+
+        if ($fromRequest['createCoDeputy']) {
+            $coDeputy = $this->casRecFactory->createCoDeputy($casRec->getCaseNumber(), $fromRequest);
+            $this->em->persist($coDeputy);
+            $data['coDeputyLastName'] = $coDeputy->getDeputySurname();
+            $data['coDeputyPostCode'] = $coDeputy->getDeputyPostCode();
+        }
+
+        $this->em->persist($casRec);
+        $this->em->flush();
+
+
+        return $this->buildSuccessResponse($data, 'CasRec row created', Response::HTTP_OK);
     }
 }
