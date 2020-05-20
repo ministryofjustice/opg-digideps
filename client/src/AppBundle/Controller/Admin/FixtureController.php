@@ -290,9 +290,19 @@ class FixtureController extends AbstractController
                 'createCoDeputy' => $submitted['createCoDeputy'],
             ]), [], 'array');
 
-            $this->addFlash('notice', 'Created casrec case');
+            $this->addFlash('notice', $this->createCasRecFlashMessage($response));
         }
 
         return ['form' => $form->createView()];
+    }
+
+    /**
+     * @param array $deputies
+     * @param string $caseNumber
+     * @return string
+     */
+    public function createCasRecFlashMessage(array $data)
+    {
+        return $this->twig->render('AppBundle:FlashMessages:fixture-casrec-created.html.twig', $data);
     }
 }
