@@ -447,8 +447,6 @@ class MailFactoryTest extends TestCase
         $this->translator->trans('client.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
         $this->translator->trans('client.subject', [], 'email')->shouldBeCalled()->willReturn('A subject');
 
-        $this->intlService->getCountryNameByCountryCode('GB')->shouldBeCalled()->willReturn('United Kingdom');
-
         $client = $this->generateClient();
 
         $email = ($this->generateSUT())->createUpdateClientDetailsEmail($client);
@@ -475,12 +473,41 @@ class MailFactoryTest extends TestCase
     /**
      * @test
      */
-    public function createUpdateDeputyDetailsEmail()
+    public function createUpdateClientDetailsEmail_country_not_set()
     {
         $this->translator->trans('client.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
         $this->translator->trans('client.subject', [], 'email')->shouldBeCalled()->willReturn('A subject');
 
-        $this->intlService->getCountryNameByCountryCode('GB')->shouldBeCalled()->willReturn('United Kingdom');
+        $client = $this->generateClient()->setCountry(null);
+
+        $email = ($this->generateSUT())->createUpdateClientDetailsEmail($client);
+
+        $this->assertStaticEmailProperties($email);
+
+        self::assertEquals('updateAddress@digital.justice.gov.uk', $email->getToEmail());
+        self::assertEquals(MailFactory::CLIENT_DETAILS_CHANGE_TEMPLATE_ID, $email->getTemplate());
+
+        $expectedTemplateParams = [
+            'caseNumber' => '12345678',
+            'fullName' => 'Joanne Bloggs',
+            'address' => '10 Fake Road',
+            'address2' => 'Pretendville',
+            'address3' => 'Notrealingham',
+            'postcode' => 'A12 3BC',
+            'countryName' => 'Country not provided',
+            'phone' => '01215553333',
+        ];
+
+        self::assertEquals($expectedTemplateParams, $email->getParameters());
+    }
+
+    /**
+     * @test
+     */
+    public function createUpdateDeputyDetailsEmail()
+    {
+        $this->translator->trans('client.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+        $this->translator->trans('client.subject', [], 'email')->shouldBeCalled()->willReturn('A subject');
 
         $email = ($this->generateSUT())->createUpdateDeputyDetailsEmail($this->layDeputy);
 
@@ -505,6 +532,37 @@ class MailFactoryTest extends TestCase
         self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 
+    /**
+     * @test
+     */
+    public function createUpdateDeputyDetailsEmail_country_not_set()
+    {
+        $this->translator->trans('client.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+        $this->translator->trans('client.subject', [], 'email')->shouldBeCalled()->willReturn('A subject');
+
+        $email = ($this->generateSUT())->createUpdateDeputyDetailsEmail($this->layDeputy->setAddressCountry(null));
+
+        $this->assertStaticEmailProperties($email);
+
+        self::assertEquals('updateAddress@digital.justice.gov.uk', $email->getToEmail());
+        self::assertEquals(MailFactory::DEPUTY_DETAILS_CHANGE_TEMPLATE_ID, $email->getTemplate());
+
+        $expectedTemplateParams = [
+            'caseNumber' => '12345678',
+            'fullName' => 'Joe Bloggs',
+            'address' => '10 Fake Road',
+            'address2' => 'Pretendville',
+            'address3' => 'Notrealingham',
+            'postcode' => 'A12 3BC',
+            'countryName' => 'Country not provided',
+            'phone' => '01211234567',
+            'altPhoneNumber' => '01217654321',
+            'email' => 'user@digital.justice.gov.uk'
+        ];
+
+        self::assertEquals($expectedTemplateParams, $email->getParameters());
+    }
+
     private function assertStaticEmailProperties($email)
     {
         self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
@@ -517,7 +575,7 @@ class MailFactoryTest extends TestCase
             $this->translator->reveal(),
             $this->router->reveal(),
             $this->templating->reveal(),
-            $this->intlService->reveal(),
+            new IntlService(),
             $this->emailSendParams,
             $this->appBaseURLs
         );
