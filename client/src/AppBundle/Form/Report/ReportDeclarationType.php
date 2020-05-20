@@ -33,9 +33,8 @@ class ReportDeclarationType extends AbstractType
 
         $loggedInUser = $this->tokenStorage->getToken()->getUser();
 
-        $report = $builder->getData();
         if (!$loggedInUser->isLayDeputy()) {
-            $agreedBehalfChoices = ['not_deputy' => 'agreedBehalfDeputy.not_deputy'] + $agreedBehalfChoices;
+            $agreedBehalfChoices = $agreedBehalfChoices + ['not_deputy' => 'agreedBehalfDeputy.not_deputy'];
         }
 
         $builder
