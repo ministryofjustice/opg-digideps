@@ -45,7 +45,6 @@ resource "aws_ecs_service" "document_sync" {
   name                    = aws_ecs_task_definition.document_sync.family
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.document_sync.arn
-  desired_count           = 1
   launch_type             = "FARGATE"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
@@ -55,6 +54,29 @@ resource "aws_ecs_service" "document_sync" {
     security_groups  = [module.document_sync_service_security_group.id]
     subnets          = data.aws_subnet.private.*.id
     assign_public_ip = false
+  }
+}
+
+resource "aws_cloudwatch_event_rule" "document_sync_cron_rule" {
+  name                = "${aws_ecs_task_definition.document_sync.family}-schedule"
+  schedule_expression = "rate(5 minutes)"
+}
+
+resource "aws_cloudwatch_event_target" "document_sync_scheduled_task" {
+  target_id = "ScheduledDocumentSync"
+  rule      = aws_cloudwatch_event_rule.document_sync_cron_rule.name
+  arn       = aws_ecs_cluster.main.arn
+  role_arn  = data.aws_iam_role.events_task_runner.arn
+
+  ecs_target {
+    task_count          = 1
+    task_definition_arn = aws_ecs_task_definition.document_sync.arn
+    launch_type         = "FARGATE"
+    network_configuration {
+      subnets          = data.aws_subnet.private.*.id
+      assign_public_ip = true
+      security_groups  = [module.document_sync_service_security_group.id]
+    }
   }
 }
 
@@ -89,7 +111,8 @@ locals {
       { "name": "EMAIL_SEND_INTERNAL", "value": "${local.account.is_production == 1 ? "true" : "false"}" },
       { "name": "GA_DEFAULT", "value": "${local.account.ga_default}" },
       { "name": "GA_GDS", "value": "${local.account.ga_gds}" },
-      { "name": "FEATURE_FLAG_PREFIX", "value": "${local.feature_flag_prefix}" }
+      { "name": "FEATURE_FLAG_PREFIX", "value": "${local.feature_flag_prefix}" },
+      { "name": "PARAMETER_PREFIX", "value": "${local.parameter_prefix}" }
     ]
   }
 

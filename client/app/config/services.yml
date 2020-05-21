@@ -10,10 +10,12 @@ imports:
 
 services:
     AppBundle\Service\Redirector:
+        public: true
         class: AppBundle\Service\Redirector
         arguments: [ "@security.token_storage", "@security.authorization_checker", "@router", "@session", "%env%" ]
 
     AppBundle\Service\WkHtmlToPdfGenerator:
+        public: true
         arguments: [ "%wkhtmltopdf_address%", 30]
 
     wkhtmltopdf:
@@ -32,6 +34,7 @@ services:
                 allow_redirects: false
 
     AppBundle\Service\Client\Sirius\SiriusApiGatewayClient:
+        public: true
         class: AppBundle\Service\Client\Sirius\SiriusApiGatewayClient
         arguments:
             $httpClient: '@guzzle_api_gateway_client'
@@ -62,7 +65,11 @@ services:
         arguments: ["%ssm_client_params%"]
 
     AppBundle\Service\FeatureFlagService:
+        public: true
         arguments: ['@Aws\Ssm\SsmClient', '%env(FEATURE_FLAG_PREFIX)%']
+
+    AppBundle\Service\ParameterStoreService:
+        arguments: ['@Aws\Ssm\SsmClient', '%env(PARAMETER_PREFIX)%', '%env(FEATURE_FLAG_PREFIX)%']
 
     AppBundle\Serializer\SiriusDocumentUploadSerializer:
         autowire: true
@@ -81,3 +88,15 @@ services:
     AppBundle\Service\Availability\WkHtmlToPdfAvailability:
         arguments: ['@AppBundle\Service\WkHtmlToPdfGenerator']
         public: true
+
+    AppBundle\Service\Availability\NotifyAvailability:
+         public: true
+         arguments:
+             $notifyClient: '@Alphagov\Notifications\Client'
+
+    AppBundle\Service\DocumentSyncService:
+        public: true
+        arguments:
+            $storage: '@AppBundle\Service\File\Storage\S3Storage'
+            $siriusApiGatewayClient: '@AppBundle\Service\Client\Sirius\SiriusApiGatewayClient'
+            $restClient: '@AppBundle\Service\Client\RestClient'

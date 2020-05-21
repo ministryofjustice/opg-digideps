@@ -483,6 +483,14 @@ class ReportController extends RestController
             ]);
         }
 
+        if (array_key_exists('submitted', $data)) {
+            $report->setSubmitted($data['submitted']);
+        }
+
+        if (array_key_exists('unsubmit_date', $data)) {
+            $report->setUnSubmitDate($data);
+        }
+
         foreach ($this->updateHandlers as $updateHandler) {
             $updateHandler->handle($report, $data);
         }

@@ -7,7 +7,7 @@ use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\User;
-use AppBundle\Service\FeatureFlagService;
+use AppBundle\Service\ParameterStoreService;
 use Prophecy\Argument;
 
 class AdminReportSubmissionControllerTest extends AbstractControllerTestCase
@@ -27,8 +27,8 @@ class AdminReportSubmissionControllerTest extends AbstractControllerTestCase
                 'records' => ['placeholder']
             ]);
 
-        $this->injectProphecyService(FeatureFlagService::class, function ($service) {
-            $service->get(FeatureFlagService::FLAG_DOCUMENT_SYNC)->shouldBeCalled()->willReturn('1');
+        $this->injectProphecyService(ParameterStoreService::class, function ($service) {
+            $service->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC)->shouldBeCalled()->willReturn('1');
         });
 
         $this->mockLoggedInUser(['ROLE_ADMIN']);
@@ -193,8 +193,8 @@ class AdminReportSubmissionControllerTest extends AbstractControllerTestCase
         $button = $crawler->selectButton('Synchronise');
         self::assertNotNull($button->getNode(0));
 
-        $this->injectProphecyService(FeatureFlagService::class, function ($service) {
-            $service->get(FeatureFlagService::FLAG_DOCUMENT_SYNC)->shouldBeCalled()->willReturn('0');
+        $this->injectProphecyService(ParameterStoreService::class, function ($service) {
+            $service->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC)->shouldBeCalled()->willReturn('0');
         });
 
         $crawler = $this->client->request('GET', '/admin/documents/list');

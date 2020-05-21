@@ -124,9 +124,33 @@ class DocumentController extends RestController
             throw new UnauthorisedException('client secret not accepted.');
         }
 
+        $data = $this->deserializeBodyContent($request);
+
         $documentRepo = $em->getRepository(Document::class);
 
-        return json_encode($documentRepo->getQueuedDocumentsAndSetToInProgress());
+        return json_encode($documentRepo->getQueuedDocumentsAndSetToInProgress($data['row_limit']));
+    }
+
+    /**
+     * Get queued documents
+     *
+     * @Route("/document/update-related-statuses", methods={"PUT"})
+     *
+     * @return string
+     */
+    public function updateRelatedDocumentStatuses(Request $request, EntityManagerInterface $em): string
+    {
+        if (!$this->getAuthService()->isSecretValid($request)) {
+            throw new UnauthorisedException('client secret not accepted.');
+        }
+
+        $documentRepo = $em->getRepository(Document::class);
+
+        $data = json_decode($request->getContent(), true);
+        $reportSubmissionIds = $data['submissionIds'];
+        $errorMessage = $data['errorMessage'];
+
+        return json_encode($documentRepo->updateSupportingDocumentStatusByReportSubmissionIds($reportSubmissionIds, $errorMessage));
     }
 
     /**
@@ -159,6 +183,9 @@ class DocumentController extends RestController
                 $document->setSynchronisationError($errorMessage);
             } else {
                 $document->setSynchronisationError(null);
+            }
+
+            if ($data['syncStatus'] === Document::SYNC_STATUS_SUCCESS) {
                 $document->setSynchronisationTime(new DateTime());
             }
         }
