@@ -88,6 +88,10 @@ class ClientController extends AbstractController
      */
     private function getNamedDeputy(int $id, Client $client)
     {
+        if ($client->getDeletedAt() instanceof \DateTime) {
+            return null;
+        }
+
         $namedDeputy = null;
         if (!is_null($client->getNamedDeputy())) {
             $namedDeputy = $client->getNamedDeputy();
