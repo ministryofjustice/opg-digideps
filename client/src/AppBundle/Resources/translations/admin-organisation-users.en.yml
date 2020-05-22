@@ -3,6 +3,7 @@ addPage:
     pageTitle: Add a new user to %organisation%
     supportTitle: Organisations
     warning: "%user% will be able to see and report on all clients in the organisation."
+    informationBannerText: Any users you add will be able to see and edit all your organisation's reports
     summary:
         name: Name
         emailAddress: Email address

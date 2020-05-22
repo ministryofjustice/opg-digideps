@@ -6,8 +6,6 @@
 {% trans_default_domain translationDomain %}
 
 {% block htmlTitle %}{{ 'addPage.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'addPage.pageTitle' | trans }}{% endblock %}
-
 
 {% block breadcrumbs %}
     {{ macros.breadcrumbsSettings('settings-team-user') }}
@@ -16,8 +14,11 @@
 {% block supportTitleTop %}
     <span class="heading-secondary">{{ 'addPage.supportTitle' | trans }}</span>
 {% endblock %}
+{% block pageTitle %}{{ 'addPage.pageTitle' | trans }}{% endblock %}
 
 {% block pageContent %}
+    {{ macros.informationBanner('addPage.informationBannerText', 'org-team') }}
+
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {{ form_input(form.firstname,'form.firstname') }}

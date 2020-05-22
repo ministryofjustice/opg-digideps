@@ -14,7 +14,9 @@
 
 {% block pageContent %}
 
-    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+    {{ macros.informationBanner('addPage.informationBannerText', 'org-team') }}
+
+    {{ form_start(form, {attr: {novalidate: 'admin-organisation-users' }}) }}
 
     {% if user is defined and user.id %}
         {{ form_widget(form.email, { attr: { hidden: true }}) }}
@@ -45,14 +47,6 @@
                 </dd>
             </div>
         </dl>
-
-        <div class="govuk-warning-text">
-            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-            <strong class="govuk-warning-text__text">
-                <span class="govuk-warning-text__assistive">{{ 'warning' | trans({}, 'common' ) }}</span>
-                {{ (page ~ '.warning') | trans({ '%user%': user.fullName }) }}
-            </strong>
-        </div>
 
         {% do form.retrieve.setRendered %}
         {{ form_submit(form.confirm, 'form.confirm') }}
