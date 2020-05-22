@@ -84,24 +84,24 @@ class ClientController extends AbstractController
     /**
      * @param int $id
      * @param Client $client
-     * @return User|null
+     * @return \AppBundle\Entity\NamedDeputy|null
      */
     private function getNamedDeputy(int $id, Client $client)
     {
-        $namedDeputy = null;
         if (!is_null($client->getNamedDeputy())) {
-            $namedDeputy = $client->getNamedDeputy();
-        } else {
-            $clientWithUsers = $this->getRestClient()->get('client/' . $id . '/details', 'Client');
-
-            foreach ($clientWithUsers->getUsers() as $user) {
-                if ($user->isLayDeputy()) {
-                    $namedDeputy = $clientWithUsers->getUsers()[0];
-                    break;
-                }
-            }
+            return $client->getNamedDeputy();
         }
 
-        return $namedDeputy;
+        if ($client->getDeletedAt() instanceof \DateTime) {
+            return null;
+        }
+
+        $clientWithUsers = $this->getRestClient()->get('client/' . $id . '/details', 'Client');
+
+        foreach ($clientWithUsers->getUsers() as $user) {
+            if ($user->isLayDeputy()) {
+                return $clientWithUsers->getUsers()[0];
+            }
+        }
     }
 }
