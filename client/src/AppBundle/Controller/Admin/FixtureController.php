@@ -3,8 +3,10 @@
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
+use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
+use AppBundle\Form\Admin\Fixture\CasrecFixtureType;
 use AppBundle\Form\Admin\Fixture\CourtOrderFixtureType;
 use AppBundle\Service\Client\RestClient;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,12 +16,26 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Serializer\SerializerInterface;
+use Twig\Environment;
 
 /**
  * @Route("/admin/fixtures")
  */
 class FixtureController extends AbstractController
 {
+    /** @var Environment */
+    private $twig;
+
+    /** @var Serializer */
+    private $serializer;
+
+    public function __construct(Environment $twig, SerializerInterface $serializer)
+    {
+        $this->twig = $twig;
+        $this->serializer = $serializer;
+    }
+
     /**
      * @Route("/court-orders", name="admin_fixtures_court_orders")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
@@ -34,29 +50,73 @@ class FixtureController extends AbstractController
         $form = $this->createForm(CourtOrderFixtureType::class, null, [
             'deputyType' => $request->get('deputy-type', User::TYPE_LAY),
             'reportType' => $request->get('report-type', Report::TYPE_HEALTH_WELFARE),
-            'reportStatus' => $request->get('report-status', Report::STATUS_NOT_STARTED)
+            'reportStatus' => $request->get('report-status', Report::STATUS_NOT_STARTED),
+            'coDeputyEnabled' => $request->get('co-deputy-enabled', false),
+            'activated' => $request->get('activated', true),
         ]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $submitted = $form->getData();
             $courtDate = $request->get('court-date') ? new \DateTime($request->get('court-date')) : new \DateTime('2017-02-01');
-            $deputyEmail = $request->query->get('deputy-email', sprintf('%s-deputy-%s@fixture.com', strtolower($submitted['deputyType']), mt_rand(1000, 9999)));
+            $deputyEmail = $request->query->get('deputy-email', sprintf('original-%s-deputy-%s@fixture.com', strtolower($submitted['deputyType']), mt_rand(1000, 9999)));
             $randomCaseNumber = str_pad(rand(1,99999999), 8, "0", STR_PAD_LEFT);
+            $caseNumber = $request->get('case-number', $randomCaseNumber);
 
-            $this->getRestClient()->post('v2/fixture/court-order', json_encode([
+            $response = $this->getRestClient()->post('v2/fixture/court-order', json_encode([
                 'deputyType' => $submitted['deputyType'],
                 'deputyEmail' => $deputyEmail,
-                'caseNumber' =>  $request->get('case-number', $randomCaseNumber),
+                'caseNumber' =>  $caseNumber,
                 'reportType' => $submitted['reportType'],
                 'reportStatus' => $submitted['reportStatus'],
-                'courtDate' => $courtDate->format('Y-m-d')
+                'courtDate' => $courtDate->format('Y-m-d'),
+                'coDeputyEnabled' => $submitted['coDeputyEnabled'],
+                'activated' => $submitted['activated']
             ]));
 
-            $this->addFlash('notice', "Created deputy with email: $deputyEmail");
+            $query = ['query' => ['filter_by_ids' => implode(",", $response['deputyIds'])]];
+            $deputiesData = $this->getRestClient()->get('/user/get-all', 'array', [], $query);
+            $sanitizedDeputyData = $this->removeNullValues($deputiesData);
+
+            var_dump($sanitizedDeputyData);
+            $deputies = $this->serializer->deserialize(json_encode($sanitizedDeputyData), 'AppBundle\Entity\User[]', 'json');
+
+            $this->addFlash('notice', $this->createUsersFlashMessage(array_reverse($deputies), $caseNumber));
         }
 
         return ['form' => $form->createView()];
+    }
+
+    /**
+     * @TODO replace with https://symfony.com/doc/4.4/components/serializer.html#skipping-null-values
+     * when using Symfony 4+
+     */
+    private function removeNullValues(array $deputiesDataArray)
+    {
+        foreach ($deputiesDataArray as $index => $properties) {
+            foreach ($properties as $key => $property) {
+                if (is_null($property)) {
+                    unset($properties[$key]);
+                }
+            }
+
+            $deputiesDataArray[$index] = $properties;
+        }
+
+        return $deputiesDataArray;
+    }
+
+    /**
+     * @param array $deputies
+     * @param string $caseNumber
+     * @return string
+     */
+    public function createUsersFlashMessage(array $deputies, string $caseNumber)
+    {
+        return $this->twig->render(
+            'AppBundle:FlashMessages:fixture-user-created.html.twig',
+            ['deputies' => $deputies, 'caseNumber' => $caseNumber]
+        );
     }
 
     /**
@@ -127,8 +187,6 @@ class FixtureController extends AbstractController
             return new Response($response['message'], Response::HTTP_NOT_FOUND);
         }
     }
-
-
 
     /**
      * @Route("/createUser", methods={"GET"})
@@ -203,5 +261,48 @@ class FixtureController extends AbstractController
         $user = $restClient->get("user/get-one-by/email/$email", 'User');
 
         return new Response($user->getRegistrationToken());
+    }
+
+    /**
+     * @Route("/create-casrec", methods={"GET", "POST"})
+     * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
+     * @Template("AppBundle:Admin/Fixtures:casRec.html.twig")
+     */
+    public function createCasrec(Request $request, KernelInterface $kernel, RestClient $restClient)
+    {
+        if ($kernel->getEnvironment() === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
+        $form = $this->createForm(CasrecFixtureType::class, null, [
+            'deputyType' => $request->get('deputy-type', User::TYPE_LAY),
+            'reportType' => $request->get('report-type', 'OPG102'),
+            'createCoDeputy' => $request->get('create-co-deputy', false),
+        ]);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $submitted = $form->getData();
+
+            $response = $this->getRestClient()->post('v2/fixture/createCasrec', json_encode([
+                'deputyType' => $submitted['deputyType'],
+                'reportType' => $submitted['reportType'],
+                'createCoDeputy' => $submitted['createCoDeputy'],
+            ]), [], 'array');
+
+            $this->addFlash('notice', $this->createCasRecFlashMessage($response));
+        }
+
+        return ['form' => $form->createView()];
+    }
+
+    /**
+     * @param array $deputies
+     * @param string $caseNumber
+     * @return string
+     */
+    public function createCasRecFlashMessage(array $data)
+    {
+        return $this->twig->render('AppBundle:FlashMessages:fixture-casrec-created.html.twig', $data);
     }
 }
