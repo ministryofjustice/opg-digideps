@@ -8,6 +8,7 @@ use AppBundle\Entity\Traits\IsSoftDeleteableEntity;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Client
@@ -945,5 +946,17 @@ class Client
     public function setOrganisation(Organisation $organisation): void
     {
         $this->organisation = $organisation;
+    }
+
+    public function userBelongsToClientsOrganisation(User $user)
+    {
+        if ($this->getOrganisation() instanceof Organisation && $this->getOrganisation()->isActivated()) {
+            foreach ($user->getOrganisations() as $organisation) {
+                if ($organisation->getId() === $this->getOrganisation()->getId()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

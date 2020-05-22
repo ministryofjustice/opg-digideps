@@ -47,7 +47,7 @@ class Organisation implements OrganisationInterface
     /**
      * @var bool
      *
-     * @JMS\Groups({"user-organisations"})
+     * @JMS\Groups({"organisation", "user-organisations", "client-organisations"})
      *
      * @ORM\Column(name="is_activated", type="boolean", options={ "default": false}, nullable=false)
      */
