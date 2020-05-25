@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\User;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use AppBundle\Security\UserVoter;
@@ -125,6 +126,20 @@ class IndexController extends AbstractController
     }
 
     /**
+     * @Route("/user/{id}", name="admin_user_view", requirements={"id":"\d+"})
+     * @Security("has_role('ROLE_ADMIN')")
+     * @Template("AppBundle:Admin/Index:viewUser.html.twig")
+     */
+    public function viewAction($id)
+    {
+        try {
+            return ['user' => $this->getPopulatedUser($id)];
+        } catch (\Throwable $e) {
+            return $this->renderNotFound();
+        }
+    }
+
+    /**
      * @Route("/edit-user", name="admin_editUser", methods={"GET", "POST"})
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("AppBundle:Admin/Index:editUser.html.twig")
@@ -138,19 +153,10 @@ class IndexController extends AbstractController
         $filter = $request->get('filter');
 
         try {
-            /* @var EntityDir\User $user */
-            $user = $this->getRestClient()->get("user/{$filter}", "User", ["user-rolename"]);
-
-            /** @var array $groups */
-            $groups = ($user->isDeputyOrg()) ? ["user", "user-organisations"] : ["user", "user-clients", "client", "client-reports"];
-
-            /* @var EntityDir\User $user */
-            $user = $this->getRestClient()->get("user/{$filter}", "User", $groups);
-
+            /* @var User $user */
+            $user = $this->getPopulatedUser($filter);
         } catch (\Throwable $e) {
-            return $this->render('AppBundle:Admin/Index:error.html.twig', [
-                'error' => 'User not found',
-            ]);
+            return $this->renderNotFound();
         }
 
         if ($user->getRoleName() == EntityDir\User::ROLE_ADMIN && !$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
@@ -202,6 +208,31 @@ class IndexController extends AbstractController
         }
 
         return $view;
+    }
+
+    /**
+     * @param $id
+     * @return User
+     */
+    private function getPopulatedUser($id): User
+    {
+        /* @var User $user */
+        $user = $this->getRestClient()->get("user/{$id}", "User", ["user-rolename"]);
+
+        /** @var array $groups */
+        $groups = ($user->isDeputyOrg()) ? ["user", "user-organisations"] : ["user", "user-clients", "client", "client-reports"];
+
+        return $this->getRestClient()->get("user/{$id}", "User", $groups);
+    }
+
+    /**
+     * @return Response
+     */
+    private function renderNotFound(): Response
+    {
+        return $this->render('AppBundle:Admin/Index:error.html.twig', [
+            'error' => 'User not found',
+        ]);
     }
 
     /**
