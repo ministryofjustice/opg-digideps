@@ -17,7 +17,11 @@
 {% block pageTitle %}{{ 'addPage.pageTitle' | trans }}{% endblock %}
 
 {% block pageContent %}
-    {{ macros.informationBanner('addPage.informationBannerText', 'org-team') }}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-three-quarters">
+            {{ macros.informationBanner('addPage.informationBannerText', 'org-team') }}
+        </div>
+    </div>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 

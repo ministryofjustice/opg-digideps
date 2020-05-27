@@ -349,47 +349,74 @@ C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.
     </a>
 {% endmacro %}
 
+{#transDomain and successHeading are optional arguments to support passing in a pre-translated string#}
 {% macro successBanner(successText, transDomain, successHeading) %}
     <div class="moj-banner moj-banner--success">
         {{ _self.icon('success', 'moj-banner__icon') }}
         <div class="moj-banner__message">
             {% if successHeading is not null %}
                 <h2 class="govuk-heading-m">
-                    {{ successHeading | trans({}, transDomain)  }}
+                    {% if transDomain is not null %}
+                        {{ successHeading | trans({}, transDomain)  }}
+                    {% else %}
+                        {{ successHeading }}
+                    {% endif %}
                 </h2>
             {% endif %}
             <span class="moj-banner__assistive">Success</span>
-            {{ successText | trans({}, transDomain) | nl2br }}
+            {% if transDomain is not null %}
+                {{ successText | trans({}, transDomain) | nl2br  }}
+            {% else %}
+                {{ successText | nl2br  }}
+            {% endif %}
         </div>
     </div>
 {% endmacro %}
 
+{#transDomain and warningHeading are optional arguments to support passing in a pre-translated string#}
 {% macro warningBanner(warningText, transDomain, warningHeading) %}
     <div class="moj-banner moj-banner--warning">
         {{ _self.icon('warning', 'moj-banner__icon') }}
         <div class="moj-banner__message">
             {% if warningHeading is not null %}
                 <h2 class="govuk-heading-m">
-                    {{ warningHeading | trans({}, transDomain)  }}
+                    {% if transDomain is not null %}
+                        {{ warningHeading | trans({}, transDomain)  }}
+                    {% else %}
+                        {{ warningHeading }}
+                    {% endif %}
                 </h2>
             {% endif %}
             <span class="moj-banner__assistive">Warning</span>
-            {{ warningText | trans({}, transDomain) | nl2br  }}
+            {% if transDomain is not null %}
+                {{ warningText | trans({}, transDomain) | nl2br  }}
+            {% else %}
+                {{ warningText | nl2br  }}
+            {% endif %}
         </div>
     </div>
 {% endmacro %}
 
+{#transDomain and infoHeading are optional arguments to support passing in a pre-translated string#}
 {% macro informationBanner(infoText, transDomain, infoHeading) %}
     <div class="moj-banner">
         {{ _self.icon('information', 'moj-banner__icon') }}
         <div class="moj-banner__message">
-            {% if infoHeading is not null %}
+            {% if infoHeading is not null  %}
                 <h2 class="govuk-heading-m">
-                    {{ infoHeading | trans({}, transDomain)  }}
+                    {% if transDomain is not null %}
+                        {{ infoHeading | trans({}, transDomain)  }}
+                    {% else %}
+                        {{ infoHeading }}
+                    {% endif %}
                 </h2>
             {% endif %}
             <span class="moj-banner__assistive">information</span>
-            {{ infoText | trans({}, transDomain) | nl2br  }}
+            {% if transDomain is not null %}
+                {{ infoText | trans({}, transDomain) | nl2br  }}
+            {% else %}
+                {{ infoText | nl2br  }}
+            {% endif %}
         </div>
     </div>
 {% endmacro %}
