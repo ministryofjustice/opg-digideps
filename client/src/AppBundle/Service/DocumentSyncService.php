@@ -7,6 +7,7 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Model\Sirius\QueuedDocumentData;
+use AppBundle\Model\Sirius\SiriusApiError;
 use AppBundle\Model\Sirius\SiriusDocumentFile;
 use AppBundle\Model\Sirius\SiriusDocumentUpload;
 use AppBundle\Model\Sirius\SiriusReportPdfDocumentMetadata;
@@ -17,6 +18,7 @@ use AppBundle\Service\File\Storage\S3Storage;
 use Aws\S3\Exception\S3Exception;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\SerializerInterface;
 use Throwable;
 use function GuzzleHttp\Psr7\mimetype_from_filename;
 
@@ -36,6 +38,9 @@ class DocumentSyncService
     /** @var RestClient */
     private $restClient;
 
+    /** @var SiriusApiErrorTranslator */
+    private $errorTranslator;
+
     /** @var int[] */
     private $syncErrorSubmissionIds;
 
@@ -45,7 +50,8 @@ class DocumentSyncService
     public function __construct(
         S3Storage $storage,
         SiriusApiGatewayClient $siriusApiGatewayClient,
-        RestClient $restClient
+        RestClient $restClient,
+        SiriusApiErrorTranslator $errorTranslator
     )
     {
         $this->storage = $storage;
@@ -53,6 +59,7 @@ class DocumentSyncService
         $this->restClient = $restClient;
         $this->syncErrorSubmissionIds = [];
         $this->docsNotSyncedCount = 0;
+        $this->errorTranslator = $errorTranslator;
     }
 
     /**
@@ -287,8 +294,11 @@ class DocumentSyncService
 
             $errorMessage = sprintf('S3 error while syncing document: %s', $e->getMessage());
         } else {
-            $errorMessage = (method_exists($e, 'getResponse') && method_exists($e->getResponse(), 'getBody')) ?
-                (string) $e->getResponse()->getBody() : (string) $e->getMessage();
+            if (method_exists($e, 'getResponse') && method_exists($e->getResponse(), 'getBody')) {
+                $errorMessage = $this->errorTranslator->translateApiError($e->getResponse()->getBody());
+            } else {
+                $errorMessage = (string) $e->getMessage();
+            }
 
             $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
         }
@@ -302,38 +312,5 @@ class DocumentSyncService
         }
 
         $this->handleDocumentStatusUpdate($documentData, $syncStatus, $errorMessage);
-    }
-
-    public function translateApiError(?string $apiErrorCode)
-    {
-        $translations = [
-            'OPGDATA-API-FORBIDDEN' => 'Credentials used for integration lack correct permissions',
-            'OPGDATA-API-API_CONFIGURATION_ERROR' => 'Integration API internal error',
-            'OPGDATA-API-AUTHORIZER_CONFIGURATION_ERROR' => 'Integration API internal error',
-            'OPGDATA-API-AUTHORIZER_FAILURE' => 'Integration API internal error',
-            'OPGDATA-API-INVALIDREQUEST' => 'The body of the request is not valid',
-            'OPGDATA-API-BAD_REQUEST_PARAMETERS' => 'The parameters of the request are not valid',
-            'OPGDATA-API-SERVERERROR' => 'Integration API server error',
-            'OPGDATA-API-EXPIRED_TOKEN' => 'Auth token has expired',
-            'OPGDATA-API-INTEGRATION_FAILURE' => 'There was a problem syncing from the integration to Sirius',
-            'OPGDATA-API-INTEGRATION_TIMEOUT' => 'The sync process timed out while communicating with Sirius',
-            'OPGDATA-API-INVALID_API_KEY' => 'The API key used in the request is not valid',
-            'OPGDATA-API-INVALID_SIGNATURE' => 'The signature of the request is not valid',
-            'OPGDATA-API-MISSING_AUTHENTICATION_TOKEN' => 'Authentication token is missing from the request',
-            'OPGDATA-API-QUOTA_EXCEEDED' => 'API quota has been exceeded',
-            'OPGDATA-API-FILESIZELIMIT' => 'The size of the file exceeded the file size limit (6MB)',
-            'OPGDATA-API-NOTFOUND' => 'Invalid URL used during integration or the resource no longer exists',
-            'OPGDATA-API-THROTTLED' => 'Too many requests made - throttling in action',
-            'OPGDATA-API-UNAUTHORISED' => 'No user/auth provided during requests',
-            'OPGDATA-API-MEDIA' => 'Media type of the file is not supported',
-            'OPGDATA-API-WAF_FILTERED' => 'AWS WAF filtered this request and it was not sent to Sirius'
-        ];
-
-        if (is_null($apiErrorCode) || is_null($translations[$apiErrorCode])) {
-            return 'UNEXPECTED ERROR CODE: An unknown error occurred during document sync';
-        } else {
-            return sprintf('%s: %s', $apiErrorCode, $translations[$apiErrorCode]);
-        }
-
     }
 }
