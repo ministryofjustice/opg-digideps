@@ -295,7 +295,7 @@ class DocumentSyncService
             $errorMessage = sprintf('S3 error while syncing document: %s', $e->getMessage());
         } else {
             if (method_exists($e, 'getResponse') && method_exists($e->getResponse(), 'getBody')) {
-                $errorMessage = $this->errorTranslator->translateApiError($e->getResponse()->getBody());
+                $errorMessage = $this->errorTranslator->translateApiError((string) $e->getResponse()->getBody());
             } else {
                 $errorMessage = (string) $e->getMessage();
             }
