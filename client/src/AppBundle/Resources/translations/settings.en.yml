@@ -33,7 +33,7 @@ settings-page:
     team:
       title: User accounts
       description: View team members
-      admin-description: Add, edit and remove user accounts for your team members
+      admin-description: Add, edit and remove user accounts for your team members. Any users you add will be able to see and edit all your organisation's reports.
     organisation:
       title: User accounts
       description: View and edit members of your organisations
