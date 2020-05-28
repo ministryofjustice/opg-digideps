@@ -21,7 +21,7 @@ class SiriusApiErrorTranslator
 
     public function translateApiError(string $errorJson)
     {
-        $apiError = $this->serializeError($errorJson);
+        $apiError = $this->deserializeError($errorJson);
 
         $translations = [
             'OPGDATA-API-FORBIDDEN' => 'Credentials used for integration lack correct permissions',
@@ -57,7 +57,7 @@ class SiriusApiErrorTranslator
      * @param string $errorJson
      * @return SiriusApiError
      */
-    private function serializeError(string $errorJson): SiriusApiError
+    private function deserializeError(string $errorJson): SiriusApiError
     {
         $decodedJson = json_decode($errorJson, true)['errors'];
         return $this->serializer->deserialize(json_encode($decodedJson), 'AppBundle\Model\Sirius\SiriusApiError', 'json');
