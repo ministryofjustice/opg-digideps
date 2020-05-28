@@ -86,8 +86,6 @@
                 'formGroupClass': 'flush--bottom'
             }) }}
         </div>
-
-        {{ macros.notification('info', (page ~ '.form.confirmation.warning') | trans) }}
     {% endif %}
 
     {{ form_submit(form.save, 'reportManage.form.confirm') }}
