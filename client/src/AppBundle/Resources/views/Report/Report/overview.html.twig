@@ -282,7 +282,7 @@
     {% endif %}
     <div class="js-only">
         {% if report.isUnsubmitted %}
-            <div class="govuk-form-group">
+            <form class="govuk-form-group">
                 <fieldset class="govuk-fieldset">
                     <div class="govuk-checkboxes">
                         <div class="govuk-checkboxes__item">
@@ -293,7 +293,7 @@
                         </div>
                     </div>
                 </fieldset>
-            </div>
+            </form>
         {% endif %}
         <a id="{{ report.status.isReadyToSubmit ? 'edit-report-review' : 'edit-report-preview' }}"
            class="push--top behat-link-edit-report-review"

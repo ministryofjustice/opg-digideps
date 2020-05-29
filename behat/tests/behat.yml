@@ -103,6 +103,13 @@ default:
             contexts:
                 - DigidepsBehat\DocumentSynchronisation\DocumentSynchronisationFeatureContext
 
+        # features-v2
+        reporting-v2:
+            description: Coverage of reporting functionality - populating sections, previewing, and submitting
+            paths: [ "%paths.base%/features-v2/reporting" ]
+            contexts:
+                - DigidepsBehat\Reporting\ReportingFeatureContext
+
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
               goutte:
