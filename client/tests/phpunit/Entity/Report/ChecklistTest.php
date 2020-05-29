@@ -5,6 +5,7 @@ namespace Tests\AppBundle\Entity\Report;
 
 use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
+use DigidepsTests\Helpers\ValidatorTestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -45,9 +46,7 @@ class ChecklistTest extends KernelTestCase
     {
         return [
             'valid values' => [null, 'yes', 'no', 0],
-            '1 invalid value' => ['maybe', null, 'yes', 1],
-            '2 valid values' => ['yes', 'possibly', 'potentially', 2],
-            '3 valid values' => ['definitely', 'negative', 'nope', 3]
+            'invalid values' => ['definitely', 'negative', 'nope', 3]
         ];
     }
 }
