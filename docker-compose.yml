@@ -62,14 +62,6 @@ services:
             - wkhtmltopdf
             - router
             - localstack
-        volumes:
-            - ./client/app/config/security.yml:/var/www/app/config/security.yml
-            - ./client/app/config/config.yml:/var/www/app/config/config.yml
-            - ./client/app/config/services.yml:/var/www/app/config/services.yml
-            - ./client/app/config/services:/var/www/app/config/services
-            - ./client/src:/var/www/src:ro
-            - ./client/tests:/var/www/tests
-            - ./client/phpstan.neon:/var/www/phpstan.neon
         environment:
             VIRTUAL_HOST: www.digideps.local,digideps.local
             VIRTUAL_PROTO: https
@@ -92,14 +84,6 @@ services:
         depends_on:
             - api
             - redisadmin
-        volumes:
-            - ./client/app/config/security.yml:/var/www/app/config/security.yml
-            - ./client/app/config/config.yml:/var/www/app/config/config.yml
-            - ./client/app/config/services.yml:/var/www/app/config/services.yml
-            - ./client/app/config/services:/var/www/app/config/services
-            - ./client/src:/var/www/src:ro
-            - ./client/tests:/var/www/tests
-            - ./client/phpstan.neon:/var/www/phpstan.neon
         environment:
             VIRTUAL_HOST: admin.digideps.local
             VIRTUAL_PROTO: https
@@ -122,6 +106,13 @@ services:
         depends_on:
             - postgres
             - redisapi
+        volumes:
+            - ./api/app:/var/www/app
+            - ./api/scripts:/var/www/scripts
+            - ./api/src:/var/www/src:ro
+            - ./api/tests:/var/www/tests
+            - ./api/web:/var/www/web
+            - ./api/phpstan.neon:/var/www/phpstan.neon
         env_file:
             - ./api/docker/env/api.env
         restart: always
