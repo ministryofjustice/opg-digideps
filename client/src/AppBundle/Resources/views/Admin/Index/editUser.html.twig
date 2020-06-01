@@ -51,44 +51,6 @@
     {% endif %}
     {{ form_end(form) }}
 
-    {% if 'ROLE_LAY_DEPUTY' == user.roleName and numberOfClients > 0 %}
-        <h2 class="govuk-heading-m">{{ (page ~ '.clientTable.heading') | trans }}</h2>
-        <table class="width-two-thirds">
-            <thead>
-                <tr>
-                    <th>{{ (page ~ '.clientTable.header.client') | trans }}</th>
-                    <th class="numeric-small text--right">{{ (page ~ '.clientTable.header.caseNumber') | trans }}</th>
-                    <th class="numeric-small text--right">{{ (page ~ '.clientTable.header.reports') | trans }}</th>
-                </tr>
-
-            </thead>
-
-            {% for client in user.clients %}
-                <tr>
-                    <td>{{ client.firstname|title }} {{ client.lastname|title }}</td>
-                    <td class="numeric-small">{{ client.caseNumber|upper }}</td>
-                    <td class="numeric-small">{{ client.reports | length }}</td>
-                </tr>
-            {% endfor %}
-        </table>
-    {% elseif user.organisations is not empty %}
-        <table class="push--bottom">
-            <thead>
-                <tr>
-                    <th scope="col">{{ 'organisations' | trans({}, 'common') }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for organisation in user.organisations %}
-                    <tr>
-                        <td>
-                            <a class="govuk-link" href="{{ path('admin_organisation_view', { id: organisation.id }) }}">{{ organisation.name }}</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
     {% if action is defined %}
         {% if action == 'edit' %}
             {% if is_granted('delete-user', user) %}

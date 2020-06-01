@@ -387,6 +387,7 @@ trait UserTrait
     public function iEnableNdrForUser($action, $email)
     {
         $this->clickOnBehatLink('user-' . $email);
+        $this->clickLink('Edit user');
 
         strtolower($action) === 'enable' ?
             $this->checkOption('admin_ndrEnabled') :
