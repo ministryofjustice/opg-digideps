@@ -4,7 +4,10 @@
     "type": "project",
     "description": "The \"Symfony Standard Edition\" distribution",
     "autoload": {
-        "psr-0": { "": "src/" },
+        "psr-0": {
+            "": "src/",
+            "AppKernel": ""
+        },
         "psr-4": { "DigidepsTests\\": "tests/phpunit" }
     },
     "require": {

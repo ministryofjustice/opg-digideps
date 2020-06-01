@@ -53,6 +53,10 @@ class UserRepository extends AbstractEntityRepository
             ->orderBy('u.' . $order_by, $sort_order)
             ->groupBy('u.id');
 
+        if ($request->get('filter_by_ids')) {
+            $this->qb->where(sprintf('u.id IN (%s)', $request->get('filter_by_ids')));
+        }
+
         return $this->qb->getQuery()->getResult();
     }
 

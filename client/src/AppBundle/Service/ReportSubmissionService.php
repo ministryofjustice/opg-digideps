@@ -91,14 +91,17 @@ class ReportSubmissionService
     public function generateReportDocuments(ReportInterface $report)
     {
         $this->generateReportPdf($report);
-        $csvContent = $this->csvGenerator->generateTransactionsCsv($report);
 
-        $this->fileUploader->uploadFile(
-            $report,
-            $csvContent,
-            $report->createAttachmentName('DigiRepTransactions-%s_%s_%s.csv'),
-            false
-        );
+        if (in_array($report->getType(), Report::HIGH_ASSETS_REPORT_TYPES)) {
+            $csvContent = $this->csvGenerator->generateTransactionsCsv($report);
+
+            $this->fileUploader->uploadFile(
+                $report,
+                $csvContent,
+                $report->createAttachmentName('DigiRepTransactions-%s_%s_%s.csv'),
+                false
+            );
+        }
     }
 
     /**

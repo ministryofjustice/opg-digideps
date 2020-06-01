@@ -53,6 +53,11 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     const TYPE_COMBINED_HIGH_ASSETS = '102-4';
     const TYPE_COMBINED_LOW_ASSETS = '103-4';
 
+    const HIGH_ASSETS_REPORT_TYPES = [
+        self::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,
+        self::TYPE_COMBINED_HIGH_ASSETS,
+    ];
+
     /**
      * @JMS\Type("integer")
      * @JMS\Groups({"visits-care", "report-id"})
@@ -511,7 +516,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      *
      * @return Report
      */
-    public function setUnSubmitDate(\DateTime $unSubmitDate)
+    public function setUnSubmitDate(?\DateTime $unSubmitDate)
     {
         $this->unSubmitDate = $unSubmitDate;
 

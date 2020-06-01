@@ -181,7 +181,7 @@ class ClientController extends RestController
         /* @var $client EntityDir\Client */
         $client = $this->findEntityBy(EntityDir\Client::class, $id);
 
-        $this->getEntityManager()->remove($client);
+        $client->setDeletedAt(new \DateTime());
         $this->getEntityManager()->flush($client);
 
         return [];

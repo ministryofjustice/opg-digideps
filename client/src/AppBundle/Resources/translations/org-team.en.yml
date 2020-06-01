@@ -3,7 +3,7 @@ listPage:
   htmlTitle: Deputy report - user accounts | GOV.UK
   pageTitle: User accounts
   introPara: View team members
-  introParaAdmin: Add, edit and remove user accounts for your team members
+  introParaAdmin: Add, edit and remove user accounts for your team members. Any users you add will be able to see and edit all your organisation's reports.
   tableHeading: List of user accounts
   addUser: Add user account
   nameAndJob: Name and job
@@ -15,6 +15,7 @@ addPage:
   htmlTitle: Deputy report - add user account | GOV.UK
   pageTitle: Add user account
   supportTitle: User account
+  informationBannerText: Any users you add will be able to see and edit all your organisation's reports
 
 editPage:
   htmlTitle: Deputy report - edit user account | GOV.UK
