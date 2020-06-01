@@ -12,7 +12,7 @@ services:
       - ./client/src:/var/www/src:ro
       - ./client/tests:/var/www/tests
       - ./client/phpstan.neon:/var/www/phpstan.neon
-      -
+
   api:
     volumes:
       - ./api/app:/var/www/app

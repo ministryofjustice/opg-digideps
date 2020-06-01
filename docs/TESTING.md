@@ -15,7 +15,7 @@ You can run all tests via the docker container. Note that the first two commands
 docker-compose -f docker-compose.yml run --rm api sh scripts/reset_db_structure.sh
 docker-compose -f docker-compose.yml run --rm api sh scripts/reset_db_fixtures.sh
 docker-compose -f docker-compose.yml run --rm api sh scripts/apiunittest.sh
-docker-compose run --rm frontend bin/phpunit -c tests/phpunit
+docker-compose -f docker-compose.yml run --rm frontend bin/phpunit -c tests/phpunit
 ```
 
 ### Integration tests
