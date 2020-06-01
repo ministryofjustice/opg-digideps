@@ -137,7 +137,7 @@
             {% for user in organisation.users %}
                 <tr class="govuk-table__row behat-region-org-{{ user.fullName | behat_namify }}">
                     <td class="govuk-table__cell">
-                        <a class="govuk-link" href="{{ url('admin_editUser', { filter: user.id }) }}">
+                        <a class="govuk-link" href="{{ url('admin_user_view', { id: user.id }) }}">
                             {{ user.fullName }}
                         </a>
                     </td>

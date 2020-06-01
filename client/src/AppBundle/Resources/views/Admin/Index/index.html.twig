@@ -89,7 +89,7 @@
                 <tr class="behat-region-user-{{ user.email | behat_namify }}">
                     <td>
                         {% if user.roleName != 'ROLE_ADMIN' or is_granted('ROLE_ADMIN') %}
-                            <a href='{{ path('admin_editUser', { filter: user.id }) }}'
+                            <a href='{{ path('admin_user_view', { id: user.id }) }}'
                                class="behat-link-user-{{ user.email | behat_namify }} govuk-!-font-weight-bold">{{ fullName }}</a><br>
                         {% endif %}
                         <div class="govuk-caption-m">
