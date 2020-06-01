@@ -102,6 +102,11 @@ default:
             paths: [ "%paths.base%/features/v2/DocumentSynchronisation" ]
             contexts:
                 - DigidepsBehat\DocumentSynchronisation\DocumentSynchronisationFeatureContext
+        acl-v2:
+            description: Coverage of Access Control
+            paths: [ "%paths.base%/features-v2/acl" ]
+            contexts:
+                - DigidepsBehat\ACL\ACLfeatureContext
 
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:

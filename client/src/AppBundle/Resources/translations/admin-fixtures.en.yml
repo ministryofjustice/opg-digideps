@@ -1,3 +1,7 @@
+list:
+    links:
+        casRec: CasRec Fixtures
+        courtOrders: Court Orders Fixtures
 courtOrders:
     deputyType:
         label: Deputy Role
