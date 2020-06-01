@@ -51,7 +51,7 @@ class ReportChecklistTypeTest extends TypeTestCase
         return [
             'Yes' => ['yes', false],
             'No' => ['no', false],
-            'Null' => [null, false]
+            'Not Applicable' => ['na', false]
         ];
     }
 }

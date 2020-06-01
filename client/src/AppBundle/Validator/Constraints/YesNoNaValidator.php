@@ -25,7 +25,7 @@ class YesNoNaValidator extends ConstraintValidator
             throw new UnexpectedTypeException($value, 'string');
         }
 
-        if (!in_array($value, ['yes', 'no'])) {
+        if (!in_array($value, ['yes', 'no', 'na'])) {
             $this->context->buildViolation($constraint->message)
                 ->setParameter('{{ string }}', $value)
                 ->addViolation();
