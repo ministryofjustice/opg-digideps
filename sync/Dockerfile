@@ -15,7 +15,7 @@ ENV S3_S3V4 yes
 RUN apk update
 RUN apk add --no-cache postgresql python3-dev py-pip
 
-RUN pip3 install awscli
+RUN pip3 install awscli six
 
 RUN apk del py-pip
 
