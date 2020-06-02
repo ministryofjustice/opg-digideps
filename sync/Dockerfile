@@ -12,11 +12,9 @@ ENV S3_PREFIX **None**
 ENV S3_S3V4 yes
 
 # install pg_dump and s3
-RUN apk add --no-cache postgresql python py2-pip
+RUN apk add --no-cache postgresql python3 py3-pip
 
-RUN pip install awscli
-
-RUN apk del py2-pip
+RUN pip install awscli --ignore-installed six
 
 ADD backup.sh backup.sh
 ADD restore.sh restore.sh
