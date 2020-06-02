@@ -40,11 +40,6 @@ workflows:
           requires: [ apply environment ]
           filters: { branches: { ignore: [ master ] } }
 
-      - phpunit-coverage:
-          name: phpunit coverage
-          requires: [ api unit test ]
-          filters: { branches: { ignore: [ master ] } }
-
       - run-task:
           name: backup environment
           requires: [ api unit test, client unit test, integration test ]
@@ -433,6 +428,13 @@ jobs:
           command: |
             docker-compose -f docker-compose.yml --project-name api-unit-tests --env-file=api/docker/env/api.env up -d api
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
+      - merge-code-coverage-reports:
+          dir: ./api/tests/coverage
+          out: ./api/tests/coverage/merged.xml
+      - codecov/upload:
+          file: ./api/tests/coverage/merged.xml
+          flags: phpunit
+      - upload-to-coveralls
 
   run-task:
     executor: terraform/terraform
@@ -468,21 +470,6 @@ jobs:
       - run:
           name: Run task
           command: runner -task << parameters.task_name >> -timeout << parameters.timeout >>
-
-  phpunit-coverage:
-    docker:
-      - image: circleci/php:7.3-node
-    parallelism: 2
-    steps:
-      - attach_workspace:
-          at: ~/project/.
-      - merge-code-coverage-reports:
-          dir: ./api/tests/coverage
-          out: ./api/tests/coverage/merged.xml
-      - codecov/upload:
-          file: ./api/tests/coverage/merged.xml
-          flags: phpunit
-      - upload-to-coveralls
 
 commands:
   merge-code-coverage-reports:
