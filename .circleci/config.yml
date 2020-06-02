@@ -486,6 +486,7 @@ jobs:
       - codecov/upload:
           file: ./api/tests/coverage/merged.xml
           flags: phpunit
+      - upload-to-coveralls
 
 commands:
   merge-code-coverage-reports:
@@ -505,8 +506,17 @@ commands:
               chmod +x phpcov.phar
               sudo mv phpcov.phar /usr/local/bin/phpcov
             fi
+
+  upload-to-coveralls:
+    steps:
       - run:
-          name: Merge code coverage reports
+          name: Install coveralls upload tool
           command: |
-            mkdir -p "$(dirname -- "<< parameters.out >>")"
-            phpcov merge --clover "<< parameters.out >>" "<< parameters.dir >>"
+            wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.2.0/php-coveralls.phar
+            chmod +x php-coveralls.phar
+      - run:
+          name: Upload report - Coveralls
+          command: |
+            ./php-coveralls.phar -v \
+                --json_path .api/tests/coverage/coveralls-upload.json \
+                --coverage_clover .api/tests/coverage/merged.xml \
