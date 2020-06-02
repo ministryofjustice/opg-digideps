@@ -363,8 +363,7 @@ jobs:
           name: Archive docker images
           command: |
             docker tag ${AWS_REGISTRY}/digideps/client:${VERSION} client:latest
-            docker tag ${AWS_REGISTRY}/digideps/api:${VERSION} api:latest
-            docker save -o docker-images.tar client:latest api:latest
+            docker save -o docker-images.tar client:latest
       - persist_to_workspace:
           root: .
           paths:
@@ -416,9 +415,6 @@ jobs:
       - checkout
       - attach_workspace: { at: ~/project }
       - run:
-          name: Load docker images
-          command: docker load -i ~/project/docker-images.tar
-      - run:
           name: install aws cli
           command: |
             pip3 install awscli --upgrade --user
@@ -431,7 +427,7 @@ jobs:
           name: Run tests
           command: |
             docker-compose -f docker-compose.yml --project-name api-unit-tests --env-file=api/docker/env/api.env up -d api
-            docker run --network=api-unit-tests_default --rm api:latest --env-file=api/docker/env/api.env sh scripts/apiunittest.sh
+            docker-compose -f docker-compose.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
       - merge-code-coverage-reports:
           dir: ./api/tests/coverage
           out: ./api/tests/coverage/merged.xml
