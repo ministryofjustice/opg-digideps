@@ -514,5 +514,5 @@ commands:
           name: Upload report - Coveralls
           command: |
             ./php-coveralls.phar -v \
-                --json_path .api/tests/coverage/coveralls-upload.json \
-                --coverage_clover ./api/tests/coverage/merged.xml \
+                --json_path api/tests/coverage/coveralls-upload.json \
+                --coverage_clover api/tests/coverage/merged.xml \
