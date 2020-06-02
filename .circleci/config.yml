@@ -435,6 +435,7 @@ jobs:
       - run:
           name: Run tests
           command: |
+#             docker run --rm api:latest --project-name api-unit-tests sh scripts/apiunittest.sh
             docker-compose -f docker-compose.yml --project-name api-unit-tests --env-file=api/docker/env/api.env up -d api
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
 
@@ -519,4 +520,4 @@ commands:
           command: |
             ./php-coveralls.phar -v \
                 --json_path .api/tests/coverage/coveralls-upload.json \
-                --coverage_clover .api/tests/coverage/merged.xml \
+                --coverage_clover ./api/tests/coverage/merged.xml \
