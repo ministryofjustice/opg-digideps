@@ -368,8 +368,7 @@ jobs:
           name: Archive docker images
           command: |
             docker tag ${AWS_REGISTRY}/digideps/client:${VERSION} client:latest
-            docker tag ${AWS_REGISTRY}/digideps/api:${VERSION} api:latest
-            docker save -o docker-images.tar client:latest api:latest
+            docker save -o docker-images.tar client:latest
       - persist_to_workspace:
           root: .
           paths:
@@ -420,9 +419,6 @@ jobs:
       - setup_remote_docker
       - checkout
       - attach_workspace: { at: ~/project }
-      - run:
-          name: Load docker images
-          command: docker load -i ~/project/docker-images.tar
       - run:
           name: install aws cli
           command: |
