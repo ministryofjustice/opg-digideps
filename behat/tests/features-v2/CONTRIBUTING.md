@@ -1,6 +1,6 @@
 The aim of this test suite is two fold: to give us confidence that all mission critical features are functional, and to serve as a high level documentation to understand the features of the application. 
 
-It is therefore most useful to keep this test suite targeted towards the high level features of the application, as opposed to low level intricacies that might be better suited to unit tests. All tests should fall into a high level feature of the applications, such as `registration`, `report-submission`, and `report-review`. 
+It is therefore most useful to keep this test suite targeted towards the high level features of the application, as opposed to low level intricacies that might be better suited to unit tests. All tests should fall into a high level feature of the applications, such as `registration`, `reporting`, and `report-review`. 
 
 If you are about to write a behat test which does not fall into any of the directories in this folder, discuss with other developers about creating a new directory, and perhaps consider using unit tests instead.
 
@@ -12,7 +12,7 @@ Where possible, avoid any duplication of tests. This means only writing deputy t
 
 ##### Testing for different deputy types
 
-For example, suppose we add a new section to the report called `property`. If the section behaves the same for all deputy types, we would create the following inside the `report-submission/sections`:
+For example, suppose we add a new section to the report called `property`. If the section behaves the same for all deputy types, we would create the following inside the `reporting/sections`:
 
 ```$xslt
 property/

@@ -279,51 +279,51 @@
 
             {{ macros.notification('info', 'previewNoticeNotDue' | trans(transOptions)) }}
         </div>
-    {% else %}
-        <div class="js-only">
-            {% if report.isUnsubmitted %}
-                <div class="govuk-form-group">
-                    <fieldset class="govuk-fieldset">
-                        <div class="govuk-checkboxes">
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" name="confirmReview" type="checkbox" data-module="opg-button-toggler">
-                                <label class="govuk-label govuk-checkboxes__label" for="confirmReview">
-                                    {{ 'confirmSectionsReviewed' | trans() }}
-                                </label>
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
-            {% endif %}
-            <a id="{{ report.status.isReadyToSubmit ? 'edit-report-review' : 'edit-report-preview' }}"
-               class="push--top behat-link-edit-report-review"
-               href="{{ path('report_review', {'reportId': report.id}) }}"
-            >
-                <button
-                    class="govuk-button {{ report.isUnsubmitted ? 'govuk-button--disabled' : '' }}"
-                    aria-disabled="{{ report.isUnsubmitted ? 'true' : 'false' }}"
-                    {% if report.isUnsubmitted %}
-                        disabled="disabled"
-                    {% endif %}
-                    data-module="opg-toggleable-button"
-                >
-                    {{ 'options.previewReport' | trans() }}
-                </button>
-            </a>
-        </div>
-
-        {# Fallback for JS disabled browsers #}
-        <div class="js-hidden">
-            <a id="{{ report.status.isReadyToSubmit ? 'edit-report-review' : 'edit-report-preview' }}"
-               class="push--top behat-link-edit-report-review"
-               href="{{ path('report_review', {'reportId': report.id}) }}"
-            >
-                <button class="govuk-button">
-                    {{ 'options.previewReport' | trans() }}
-                </button>
-            </a>
-        </div>
-
-
     {% endif %}
+    <div class="js-only">
+        {% if report.isUnsubmitted %}
+            <form class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" name="confirmReview" type="checkbox" data-module="opg-button-toggler">
+                            <label class="govuk-label govuk-checkboxes__label" for="confirmReview">
+                                {{ 'confirmSectionsReviewed' | trans() }}
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        {% endif %}
+        <a id="{{ report.status.isReadyToSubmit ? 'edit-report-review' : 'edit-report-preview' }}"
+           class="push--top behat-link-edit-report-review"
+           href="{{ path('report_review', {'reportId': report.id}) }}"
+        >
+            <button
+                class="govuk-button {{ report.isUnsubmitted ? 'govuk-button--disabled' : '' }}"
+                aria-disabled="{{ report.isUnsubmitted ? 'true' : 'false' }}"
+                {% if report.isUnsubmitted %}
+                    disabled="disabled"
+                {% endif %}
+                data-module="opg-toggleable-button"
+            >
+                {{ 'options.previewReport' | trans() }}
+            </button>
+        </a>
+    </div>
+
+    {# Fallback for JS disabled browsers #}
+    <div class="js-hidden">
+        <a id="{{ report.status.isReadyToSubmit ? 'edit-report-review' : 'edit-report-preview' }}"
+           class="push--top behat-link-edit-report-review"
+           href="{{ path('report_review', {'reportId': report.id}) }}"
+        >
+            <button class="govuk-button">
+                {{ 'options.previewReport' | trans() }}
+            </button>
+        </a>
+    </div>
+
+
+
 {% endblock %}

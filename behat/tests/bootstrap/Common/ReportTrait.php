@@ -146,6 +146,24 @@ trait ReportTrait
     }
 
     /**
+     * @Given I am viewing the :startDate to :endDate report for :client
+     */
+    public function iAmViewingTheToReport($startDate, $endDate, $client)
+    {
+        $this->enterReport($client, $startDate, $endDate);
+
+        preg_match('/\/(ndr|report)\/(\d+)\//', $this->getSession()->getCurrentUrl(), $match);
+
+        self::$currentReportCache = [
+            'client' => $client,
+            'reportId' => $match[2],
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'reportType' => $match[1]
+        ];
+    }
+
+    /**
      * @Given the :section section on the report has been completed
      */
     public function theSectionOnTheReportHasBeenCompleted($section)
