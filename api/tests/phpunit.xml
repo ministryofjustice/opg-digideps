@@ -10,7 +10,7 @@
         stopOnWarning="true"
         backupGlobals="false"
         colors="true"
-        bootstrap="bootstrap.php"
+        bootstrap="./bootstrap.php"
         cacheTokens="false"
 >
     <testsuites>
