@@ -431,7 +431,7 @@ jobs:
           name: Run tests
           command: |
             docker-compose -f docker-compose.yml --project-name api-unit-tests --env-file=api/docker/env/api.env up -d api
-            docker run --project-name api-unit-tests --rm api:latest sh scripts/apiunittest.sh
+            docker run --network=api-unit-tests --rm api:latest sh scripts/apiunittest.sh
       - merge-code-coverage-reports:
           dir: ./api/tests/coverage
           out: ./api/tests/coverage/merged.xml
