@@ -435,7 +435,6 @@ jobs:
       - run:
           name: Run tests
           command: |
-#             docker run --rm api:latest --project-name api-unit-tests sh scripts/apiunittest.sh
             docker-compose -f docker-compose.yml --project-name api-unit-tests --env-file=api/docker/env/api.env up -d api
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
 
