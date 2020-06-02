@@ -40,6 +40,11 @@ workflows:
           requires: [ apply environment ]
           filters: { branches: { ignore: [ master ] } }
 
+      - phpunit-coverage:
+          name: phpunit coverage
+          requires: [ api unit test ]
+          filters: { branches: { ignore: [ master ] } }
+
       - run-task:
           name: backup environment
           requires: [ api unit test, client unit test, integration test ]
@@ -223,6 +228,9 @@ orbs:
           - run:
               name: Install Terraform
               command: sudo unzip terraform_${TF_VERSION}_linux_amd64.zip -d /bin
+
+  codecov: codecov/codecov@1.0.2
+
 jobs:
   lint:
     executor: terraform/terraform
@@ -464,3 +472,41 @@ jobs:
       - run:
           name: Run task
           command: runner -task << parameters.task_name >> -timeout << parameters.timeout >>
+
+  phpunit-coverage:
+    docker:
+      - image: circleci/php:7.3-node
+    parallelism: 2
+    steps:
+      - attach_workspace:
+          at: ~/project/.
+      - merge-code-coverage-reports:
+          dir: ./api/tests/coverage
+          out: ./api/tests/coverage/merged.xml
+      - codecov/upload:
+          file: ./api/tests/coverage/merged.xml
+          flags: phpunit
+
+commands:
+  merge-code-coverage-reports:
+    parameters:
+      dir:
+        description: Path to the directory containing the code coverage reports to merge.
+        type: string
+      out:
+        description: Path to output the merged code coverage report.
+        type: string
+    steps:
+      - run:
+          name: Download phpcov
+          command: |
+            if ! command -v phpcov; then
+              wget https://phar.phpunit.de/phpcov.phar
+              chmod +x phpcov.phar
+              sudo mv phpcov.phar /usr/local/bin/phpcov
+            fi
+      - run:
+          name: Merge code coverage reports
+          command: |
+            mkdir -p "$(dirname -- "<< parameters.out >>")"
+            phpcov merge --clover "<< parameters.out >>" "<< parameters.dir >>"

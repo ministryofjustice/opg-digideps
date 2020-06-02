@@ -7,6 +7,7 @@
 **/secrets.json
 **/.tmp.aws.config
 .phpunit.result.cache
+**/tests/coverage/
 
 # Common vendor folders
 .terraform/
@@ -24,4 +25,5 @@ terraform/to_import\.sh
 .certs
 
 **/terraform.output.json
+
 log/pact.log
