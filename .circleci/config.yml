@@ -411,6 +411,7 @@ jobs:
     docker:
       image: cimg/base:2020.01
     steps:
+      - setup_remote_docker
       - checkout
       - attach_workspace: { at: ~/project }
       - run:
