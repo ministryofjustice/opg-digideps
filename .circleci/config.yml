@@ -408,8 +408,8 @@ jobs:
           destination: Pact file
 
   api-unit-tests:
-    docker:
-      - image: circleci/python:3
+    machine:
+      - docker_layer_caching: true
     steps:
       - setup_remote_docker
       - checkout
@@ -426,8 +426,8 @@ jobs:
       - run:
           name: Run tests
           command: |
-            docker-compose -f docker-compose.yml --project-name api-unit-tests --env-file=api/docker/env/api.env up -d api
-            docker-compose -f docker-compose.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
+            docker-compose --project-name api-unit-tests --env-file=api/docker/env/api.env up -d api
+            docker-compose --project-name api-unit-tests exec api sh scripts/apiunittest.sh
       - merge-code-coverage-reports:
           dir: ./api/tests/coverage
           out: ./api/tests/coverage/merged.xml
