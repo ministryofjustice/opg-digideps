@@ -6,7 +6,6 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Model\Sirius\QueuedDocumentData;
 use AppBundle\Model\Sirius\SiriusDocumentFile;
 use AppBundle\Model\Sirius\SiriusDocumentUpload;
@@ -31,15 +30,17 @@ class DocumentSyncService
     /** @var S3Storage */
     private $storage;
 
-    /**
-     * @var SiriusApiGatewayClient
-     */
+    /** @var SiriusApiGatewayClient */
     private $siriusApiGatewayClient;
 
-    /**
-     * @var RestClient
-     */
+    /** @var RestClient */
     private $restClient;
+
+    /** @var int[] */
+    private $syncErrorSubmissionIds;
+
+    /** @var int */
+    private $docsNotSyncedCount;
 
     public function __construct(
         S3Storage $storage,
@@ -50,6 +51,42 @@ class DocumentSyncService
         $this->storage = $storage;
         $this->siriusApiGatewayClient = $siriusApiGatewayClient;
         $this->restClient = $restClient;
+        $this->syncErrorSubmissionIds = [];
+        $this->docsNotSyncedCount = 0;
+    }
+
+    /**
+     * @return array|int[]
+     */
+    public function getSyncErrorSubmissionIds()
+    {
+        return $this->syncErrorSubmissionIds;
+    }
+
+    /**
+     * @param int[] $syncErrorSubmissionIds
+     */
+    public function setSyncErrorSubmissionIds(array $syncErrorSubmissionIds): void
+    {
+        $this->syncErrorSubmissionIds = $syncErrorSubmissionIds;
+    }
+
+    /**
+     * @param int $submissionId
+     */
+    public function addToSyncErrorSubmissionIds(int $submissionId)
+    {
+        $this->syncErrorSubmissionIds[] = $submissionId;
+    }
+
+    public function getDocsNotSyncedCount()
+    {
+        return $this->docsNotSyncedCount;
+    }
+
+    public function setDocsNotSyncedCount(int $count)
+    {
+        return $this->docsNotSyncedCount = $count;
     }
 
     /**
@@ -62,6 +99,7 @@ class DocumentSyncService
             return $this->syncReportDocument($documentData);
         } else {
             if (!$documentData->supportingDocumentCanBeSynced()) {
+                $this->docsNotSyncedCount++;
                 return $this->handleDocumentStatusUpdate($documentData, Document::SYNC_STATUS_QUEUED);
             }
 
@@ -179,6 +217,18 @@ class DocumentSyncService
         }
     }
 
+    public function setSubmissionsDocumentsToPermanentError()
+    {
+        $this->restClient->apiCall(
+            'put',
+            'document/update-related-statuses',
+            json_encode(['submissionIds' => $this->getSyncErrorSubmissionIds(), 'errorMessage' => 'Report PDF failed to sync']),
+            'raw',
+            [],
+            false
+        );
+    }
+
     /**
      * @param QueuedDocumentData $documentData
      * @param string $status
@@ -241,6 +291,14 @@ class DocumentSyncService
                 (string) $e->getResponse()->getBody() : (string) $e->getMessage();
 
             $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
+        }
+
+        if ($syncStatus === Document::SYNC_STATUS_PERMANENT_ERROR) {
+            if ($documentData->isReportPdf()) {
+                $this->addToSyncErrorSubmissionIds($documentData->getReportSubmissionId());
+            }
+
+            $this->docsNotSyncedCount++;
         }
 
         $this->handleDocumentStatusUpdate($documentData, $syncStatus, $errorMessage);

@@ -1,0 +1,111 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% trans_default_domain "admin" %}
+{% set page = 'viewUser' %}
+
+{% set navSection = 'users' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ user.fullName }}{% endblock %}
+
+{% block actions %}
+    <a href="{{ path('admin_editUser', {'filter': user.id}) }}" role="button" data-module="govuk-button" class="govuk-button govuk-button--secondary">
+        {{ (page ~ '.summary.editUser') | trans }}
+    </a>
+{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="govuk-caption-xl">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsArray([
+        { href: url('admin_homepage'), text: 'Admin' },
+        { href: url('admin_homepage'), text: 'Users' },
+        { text: user.fullName }
+    ]) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {% if 'ROLE_LAY_DEPUTY' == user.roleName %}
+        {% set numberOfClients = user.clients | length %}
+        {% set firstClient = numberOfClients > 0 ? (user.clients | first) : null %}
+        {% set reports = firstClient ? firstClient.reports : [] %}
+        {% set reportsCount = reports | length %}
+    {% endif %}
+
+    <dl class="govuk-summary-list govuk-summary-list--no-border">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ (page ~ '.summary.email') | trans }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ user.email }}
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ (page ~ '.summary.postcode') | trans }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ user.addressPostcode }}
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ (page ~ '.summary.role') | trans }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ user.roleFullName }}
+            </dd>
+        </div>
+    </dl>
+
+    {% if 'ROLE_LAY_DEPUTY' == user.roleName and numberOfClients > 0 %}
+        <h2 class="govuk-heading-m">{{ (page ~ '.clientTable.heading') | trans }}</h2>
+        <table class="width-two-thirds">
+            <thead>
+            <tr>
+                <th>{{ (page ~ '.clientTable.header.client') | trans }}</th>
+                <th class="numeric-small text--right">{{ (page ~ '.clientTable.header.caseNumber') | trans }}</th>
+                <th class="numeric-small text--right">{{ (page ~ '.clientTable.header.reports') | trans }}</th>
+            </tr>
+
+            </thead>
+
+            {% for client in user.clients %}
+                <tr>
+                    <td>{{ client.firstname|title }} {{ client.lastname|title }}</td>
+                    <td class="numeric-small">{{ client.caseNumber|upper }}</td>
+                    <td class="numeric-small">{{ client.reports | length }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <h2 class="govuk-heading-m">{{ (page ~ '.organisationsTable.heading') | trans }}</h2>
+        {% if user.organisations is not empty %}
+            <table class="width-two-thirds">
+                <thead>
+                <tr>
+                    <th>{{ (page ~ '.organisationsTable.header.organisation') | trans }}</th>
+                    <th class="numeric-small text--right">{{ (page ~ '.organisationsTable.header.identifier') | trans }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for organisation in user.organisations %}
+                    <tr>
+                        <td>
+                            <a class="govuk-link" href="{{ path('admin_organisation_view', { id: organisation.id }) }}">{{ organisation.name }}</a>
+                        </td>
+                        <td class="numeric-small">{{ organisation.emailIdentifier }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            {{ (page ~ '.organisationsTable.noOrganisations') | trans }}
+        {% endif %}
+    {% endif %}
+{% endblock %}

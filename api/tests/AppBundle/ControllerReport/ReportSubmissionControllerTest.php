@@ -2,14 +2,11 @@
 
 namespace Tests\AppBundle\ControllerReport;
 
-use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\AppBundle\Controller\AbstractTestController;
 use AppBundle\TestHelpers\ReportSubmissionHelper;
-use AppBundle\TestHelpers\ReportTestHelper;
 
 class ReportSubmissionControllerTest extends AbstractTestController
 {

@@ -63,6 +63,26 @@ Feature: Organisation deputyship updates
     And I should see the "client-11498120" region
     # Assert client associated with new org
     Then I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    And I search in admin for a client with the term "11498120"
+    Then I should see "Found 2 clients"
+    # Assert old client has been discharged
+    And I should see the "discharged-client-11498120" region
+    And I should see the "client-11498120" region
+    And I should see the "discharged-client-11498120-discharged-on" region
+    # Assert discharged client still remains with old org
+    Then I click on "discharged-client-detail-11498120"
+    Then each text should be present in the corresponding region:
+      | PA OPG (publicguardian.gov.uk)                        | assigned-organisation |
+      | DEP1 SURNAME1              | named-deputy-fullname |
+      | Prof OPG                                   | deputy-details |
+      | ADD2                                  | deputy-details |
+      | ADD3                                  | deputy-details |
+      | ADD4                                  | deputy-details |
+      | ADD5                                  | deputy-details |
+      | SW1                                   | deputy-details |
+      | GB                                    | deputy-details |
+      | 10000000001                           | deputy-details |
+      | behat-prof1@publicguardian.gov.uk     | deputy-details |
     # Assert new organisation for new client
     When I visit the client page for "11498120"
     Then each text should be present in the corresponding region:

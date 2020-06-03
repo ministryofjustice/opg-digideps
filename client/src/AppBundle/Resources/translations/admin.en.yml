@@ -78,6 +78,27 @@ deleteConfirm:
   supportTitle: Users
   question: Are you sure that you want to delete <strong class="bold">%fullName%</strong>? This action cannot be undone.
 
+viewUser:
+  htmlTitle: Administration - Users
+  supportTitle: Users
+  summary:
+    email: Email
+    postcode: Postcode
+    role: Role
+    editUser: Edit user
+  clientTable:
+    heading: Clients and reports
+    header:
+      client: Client
+      caseNumber: Case number
+      reports: Number of reports
+  organisationsTable:
+    heading: Organisations
+    header:
+      organisation: Name
+      identifier: Email domain
+    noOrganisations: This user is not a member of any active organisations.
+
 editUser:
   htmlTitle: Administration - Users
   pageTitle: Edit user

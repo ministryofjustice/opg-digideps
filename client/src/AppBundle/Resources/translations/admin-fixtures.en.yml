@@ -1,9 +1,24 @@
 courtOrders:
-  deputyType:
-    label: Deputy role
-  reportType:
-    label: Report type
-  reportStatus:
-    label: Report status
-  submit:
-    label: Create
+    deputyType:
+        label: Deputy Role
+    reportType:
+        label: Report Type
+    reportStatus:
+        label: Report Status
+    coDeputyEnabled:
+        label: Co-Deputy Enabled
+    createCoDeputy:
+        label: Create Co-Deputy
+    activated:
+        label: Account Activated
+    submit:
+        label: Create
+casRec:
+    deputyType:
+        label: Deputy Role
+    reportType:
+        label: Report Type
+    createCoDeputy:
+        label: Create a Co-Deputy entry
+    submit:
+        label: Create

@@ -14,7 +14,7 @@ final class Version240 extends AbstractMigration
 {
     public function getDescription() : string
     {
-        return 'Attach all relevant lay based reports and NDRs to each lay based court order';
+        return 'Create court_order_address rows for all existing lay based court_order_deputys';
     }
 
     public function up(Schema $schema) : void
@@ -23,31 +23,18 @@ final class Version240 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql("
-update report r set court_order_id = 
-(
-	select MAX(co.id)
-	from court_order co
-	inner join court_order_deputy cod on cod.court_order_id = co.id
-	inner join dd_user u on u.id = cod.user_id
-	where r.court_order_id is null
-	and co.client_id = r.client_id
-	and u.role_name = 'ROLE_LAY_DEPUTY'
-	and u.active = true
-)         
-       ");
-
-        $this->addSql("
-update odr o set court_order_id = 
-(
-	select MAX(co.id)
-	from court_order co
-	inner join court_order_deputy cod on cod.court_order_id = co.id
-	inner join dd_user u on u.id = cod.user_id
-	where o.court_order_id is null
-	and co.client_id = o.client_id
-	and u.role_name = 'ROLE_LAY_DEPUTY'
-	and u.active = true
-)        
+insert into court_order_address (court_order_deputy_id, addressline1, addressline2, addressline3, postcode, country)
+select 
+  cod.id,
+  u.address1,
+  u.address2,
+  u.address3,
+  u.address_postcode,
+  u.address_country
+from court_order_deputy cod 
+inner join dd_user u on u.id = cod.user_id
+where u.role_name = 'ROLE_LAY_DEPUTY'
+and u.active = true        
        ");
     }
 
@@ -56,33 +43,16 @@ update odr o set court_order_id =
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
         $this->addSql("
-update report r set court_order_id = null
-where r.id in 
+delete from court_order_address where id in
 (
-	select r2.id
-	from report r2
-	inner join court_order co on co.client_id = r2.client_id
-	inner join court_order_deputy cod on cod.court_order_id = co.id
+	select coa.id
+	from court_order_address coa
+	inner join court_order_deputy cod on cod.id = coa.court_order_deputy_id
 	inner join dd_user u on u.id = cod.user_id
-	and co.client_id = r2.client_id
-	and u.role_name = 'ROLE_LAY_DEPUTY'
+	where u.role_name = 'ROLE_LAY_DEPUTY'
 	and u.active = true
 )
-        ");
-
-        $this->addSql("
-update odr o set court_order_id = null
-where o.id in 
-(
-	select o2.id
-	from odr o2
-	inner join court_order co on co.client_id = o2.client_id
-	inner join court_order_deputy cod on cod.court_order_id = co.id
-	inner join dd_user u on u.id = cod.user_id
-	and co.client_id = o2.client_id
-	and u.role_name = 'ROLE_LAY_DEPUTY'
-	and u.active = true
-)
+;
         ");
     }
 }

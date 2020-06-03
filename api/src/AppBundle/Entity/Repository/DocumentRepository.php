@@ -8,7 +8,6 @@ use PDO;
 
 class DocumentRepository extends AbstractEntityRepository
 {
-    const ROWS_LIMIT = 250;
     /**
      * Get soft-deleted documents
      *
@@ -26,10 +25,8 @@ class DocumentRepository extends AbstractEntityRepository
         return $records;
     }
 
-    public function getQueuedDocumentsAndSetToInProgress()
+    public function getQueuedDocumentsAndSetToInProgress(string $limit)
     {
-        $limit = self::ROWS_LIMIT;
-
         // Using DENSE_RANK here as we get multiple rows for the same document due to multiple report submissions. This
         // ensures any limit applied will not miss out submissions by chance
         $queuedDocumentsQuery = "
@@ -49,7 +46,7 @@ ndr_submit_date,
 report_submission_id,
 report_submission_uuid
 FROM (
-SELECT DENSE_RANK() OVER(ORDER BY d.id) AS dn,
+SELECT DENSE_RANK() OVER(ORDER BY d.is_report_pdf DESC, d.id) AS dn,
 coalesce(c1.case_number, c2.case_number) AS case_number,
 coalesce(rs1.id, rs2.id) AS report_submission_id,
 coalesce(rs1.opg_uuid, rs2.opg_uuid) AS report_submission_uuid,
@@ -113,4 +110,22 @@ WHERE dn < $limit;";
 
         return $queuedDocumentData;
     }
+
+
+    public function updateSupportingDocumentStatusByReportSubmissionIds(array $reportSubmissionIds, ?string $syncErrorMessage=null)
+    {
+        $idsString = implode(",", $reportSubmissionIds);
+        $status = Document::SYNC_STATUS_PERMANENT_ERROR;
+
+        $updateStatusQuery = "
+UPDATE document
+SET synchronisation_status = '$status', synchronisation_error = '$syncErrorMessage'
+WHERE report_submission_id IN ($idsString)
+AND is_report_pdf=false";
+
+        $conn = $this->getEntityManager()->getConnection();
+        $stmt = $conn->prepare($updateStatusQuery);
+        return $stmt->execute();
+    }
+
 }

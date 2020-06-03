@@ -7,7 +7,6 @@ use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Model\Sirius\QueuedDocumentData;
-use AppBundle\Model\Sirius\SiriusDocumentFile;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use AppBundle\Service\File\Storage\S3Storage;
@@ -40,25 +39,10 @@ class DocumentSyncServiceTest extends KernelTestCase
     private $serializer;
 
     /**@var DateTime */
-    private $reportSubmittedDate;
-
-    /**@var DateTime */
-    private $reportEndDate;
-
-    /**@var DateTime */
-    private $reportStartDate;
+    private $reportSubmittedDate, $reportEndDate, $reportStartDate;
 
     /** @var int */
-    private $reportSubmissionId;
-
-    /** @var string*/
-    private $reportPdfSubmissionUuid;
-
-    /** @var string */
-    private $fileContents;
-
-    /** @var string */
-    private $fileName;
+    private $reportSubmissionId, $reportPdfSubmissionUuid, $fileContents, $fileName;
 
     /** @var int */
     private $documentId;
@@ -238,7 +222,7 @@ class DocumentSyncServiceTest extends KernelTestCase
     }
 
     /** @test */
-    public function sendDocument_sync_failure_sirius()
+    public function sendDocument_sync_failure_sirius_report_pdf()
     {
         $reportPdfReportSubmission =
             (new ReportSubmission())
@@ -292,17 +276,19 @@ class DocumentSyncServiceTest extends KernelTestCase
                 false
             )
             ->shouldBeCalled()
-            ->willReturn($this->serializer->serialize(new Document(), 'json'));;
+            ->willReturn($this->serializer->serialize(new Document(), 'json'));
 
         $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
         $sut->syncDocument($queuedDocumentData);
+
+        self::assertContains($queuedDocumentData->getReportSubmissionId(), $sut->getSyncErrorSubmissionIds());
     }
 
     /**
      * @dataProvider s3ErrorProvider
      * @test
      */
-    public function sendReportDocument_sync_failure_s3(string $awsErrorCode, string $awsErrorMessage, string $syncStatus)
+    public function sendReportDocument_sync_failure_s3(string $awsErrorCode, string $awsErrorMessage, string $syncStatus, ?int $expectedSubmissionId)
     {
         $reportPdfReportSubmission =
             (new ReportSubmission())
@@ -343,14 +329,18 @@ class DocumentSyncServiceTest extends KernelTestCase
 
         $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
         $sut->syncDocument($queuedDocumentData);
+
+        if ($expectedSubmissionId) {
+            self::assertContains($expectedSubmissionId, $sut->getSyncErrorSubmissionIds());
+        }
     }
 
     public function s3ErrorProvider()
     {
         return [
-            'Missing key' => ['NoSuchKey', 'The specified key does not exist.', Document::SYNC_STATUS_PERMANENT_ERROR],
-            'Access denied (for deleted items not yet purged)' => ['AccessDenied', 'Access Denied', Document::SYNC_STATUS_PERMANENT_ERROR],
-            'Internal error' => ['InternalError', 'We encountered an internal error. Please try again.', Document::SYNC_STATUS_TEMPORARY_ERROR]
+            'Missing key' => ['NoSuchKey', 'The specified key does not exist.', Document::SYNC_STATUS_PERMANENT_ERROR, $this->reportSubmissionId],
+            'Access denied (for deleted items not yet purged)' => ['AccessDenied', 'Access Denied', Document::SYNC_STATUS_PERMANENT_ERROR, $this->reportSubmissionId],
+            'Internal error' => ['InternalError', 'We encountered an internal error. Please try again.', Document::SYNC_STATUS_TEMPORARY_ERROR, null]
         ];
     }
 
@@ -458,5 +448,58 @@ class DocumentSyncServiceTest extends KernelTestCase
 
         $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
         $sut->syncDocument($queuedDocumentData);
+    }
+
+    /** @test */
+    public function sendSupportingDocument_sync_failure()
+    {
+        $reportPdfReportSubmission =
+            (new ReportSubmission())
+                ->setId($this->reportSubmissionId)
+                ->setUuid($this->reportPdfSubmissionUuid);
+
+        $queuedDocumentData = (new QueuedDocumentData())
+            ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
+            ->setDocumentId(6789)
+            ->setReportSubmissionId($this->reportSubmissionId)
+            ->setReportSubmissions([$reportPdfReportSubmission])
+            ->setReportStartDate($this->reportStartDate)
+            ->setReportEndDate($this->reportEndDate)
+            ->setReportSubmitDate($this->reportSubmittedDate)
+            ->setStorageReference('storage-ref-here')
+            ->setFilename('bank-statement.pdf')
+            ->setIsReportPdf(false)
+            ->setCaseNumber('1234567T')
+            ->setNdrId(null);
+
+        $this->s3Storage->retrieve('storage-ref-here')->willReturn($this->fileContents);
+
+        $failureResponseBody = ['errors' => [0 => ['id' => 'ABC123', 'code' => 'OPGDATA-API-FORBIDDEN']]];
+        $failureResponse = new Response('403', [], json_encode($failureResponseBody));
+
+        $requestException = new RequestException('An error occurred', new Request('POST', '/report-submission/9876/update-uuid'), $failureResponse);
+
+        $this->siriusApiGatewayClient->sendSupportingDocument(Argument::cetera())
+            ->shouldBeCalled()
+            ->willThrow($requestException);
+
+        $this->restClient
+            ->apiCall('put',
+                'document/6789',
+                json_encode(
+                    ['syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR,
+                        'syncError' => $failureResponseBody
+                    ]),
+                'Report\\Document',
+                [],
+                false
+            )
+            ->shouldBeCalled()
+            ->willReturn($this->serializer->serialize(new Document(), 'json'));
+
+        $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
+        $sut->syncDocument($queuedDocumentData);
+
+        self::assertNotContains($queuedDocumentData->getReportSubmissionId(), $sut->getSyncErrorSubmissionIds());
     }
 }

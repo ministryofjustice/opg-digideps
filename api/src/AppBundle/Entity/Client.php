@@ -4,10 +4,12 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Traits\IsSoftDeleteableEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -22,9 +24,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *     options={"collate":"utf8_general_ci", "charset":"utf8"}
  *     )
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ClientRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
 class Client implements ClientInterface
 {
+    use IsSoftDeleteableEntity;
+
     /**
      * @var int
      *

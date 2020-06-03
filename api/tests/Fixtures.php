@@ -6,6 +6,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 
@@ -117,6 +118,29 @@ class Fixtures
         $this->em->persist($doc);
 
         return $doc;
+    }
+
+    /**
+     * @param Report|null $report
+     * @param User|null $user
+     * @return ReportSubmission
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function createReportSubmission(Report $report=null, User $user=null)
+    {
+        if (is_null($user)) {
+            $user = $this->createUser();
+        }
+
+        if (is_null($report)) {
+            $report = $this->createReport($this->createClient($user));
+        }
+
+        $submission = new ReportSubmission($report, $user);
+
+        $this->em->persist($submission);
+
+        return $submission;
     }
 
     public function createReport(

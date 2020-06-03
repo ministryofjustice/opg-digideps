@@ -29,3 +29,9 @@ resource "aws_iam_role_policy" "admin_query_ssm" {
   policy = data.aws_iam_policy_document.query_ssm.json
   role   = aws_iam_role.admin.id
 }
+
+resource "aws_iam_role_policy" "admin_task_logs" {
+  name   = "admin-task-logs.${local.environment}"
+  policy = data.aws_iam_policy_document.ecs_task_logs.json
+  role   = aws_iam_role.admin.id
+}

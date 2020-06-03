@@ -2,7 +2,7 @@ addPage:
     htmlTitle: Administration - Organisations
     pageTitle: Add a new user to %organisation%
     supportTitle: Organisations
-    warning: "%user% will be able to see and report on all clients in the organisation."
+    informationBannerText: '%user% will be able to see and report on all clients in the organisation.'
     summary:
         name: Name
         emailAddress: Email address

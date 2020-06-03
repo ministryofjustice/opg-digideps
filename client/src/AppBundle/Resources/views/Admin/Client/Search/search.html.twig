@@ -44,6 +44,7 @@
                     <th scope="col">{{ 'client' | trans({}, 'common') }}</th>
                     <th scope="col">{{ 'caseNumber' | trans({}, 'common') }}</th>
                     <th scope="col">{{ 'clientSearch.clientTable.activeFrom' | trans({}, 'admin-clients') }}</th>
+                    <th scope="col">{{ 'clientSearch.clientTable.discharged' | trans({}, 'admin-clients') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -68,6 +69,11 @@
                             <td class="behat-region-{{ discharged }}client-{{ client.caseNumber }}-active-from">
                                 {% if client.activeFrom is not null %}
                                     {{ client.activeFrom | date('j M Y') }}
+                                {% endif %}
+                            </td>
+                            <td class="behat-region-{{ discharged }}client-{{ client.caseNumber }}-discharged-on">
+                                {% if client.deletedAt is not null %}
+                                    {{ client.deletedAt | date('j M Y') }}
                                 {% endif %}
                             </td>
                         </tr>

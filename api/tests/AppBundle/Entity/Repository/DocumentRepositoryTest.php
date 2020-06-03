@@ -138,7 +138,7 @@ class DocumentRepositoryTest extends KernelTestCase
         $this->persistEntities();
 
         $documents = $this->documentRepository
-            ->getQueuedDocumentsAndSetToInProgress();
+            ->getQueuedDocumentsAndSetToInProgress('100');
 
         $reportPdf = $this->documentRepository->find($this->reportPdfDocument->getId());
         $supportingDocument = $this->documentRepository->find($this->supportingDocument->getId());
@@ -157,12 +157,12 @@ class DocumentRepositoryTest extends KernelTestCase
     /**
      * @test
      */
-    public function multipleReportSubmissionsAreReturned()
+    public function getQueuedDocumentsAndSetToInProgress_multipleReportSubmissionsAreReturned()
     {
         $this->persistEntities();
 
         $documents = $this->documentRepository
-            ->getQueuedDocumentsAndSetToInProgress();
+            ->getQueuedDocumentsAndSetToInProgress('100');
 
         $this->assertEquals(2, count($documents[$this->reportPdfDocument->getId()]['report_submissions']));
     }
@@ -170,12 +170,12 @@ class DocumentRepositoryTest extends KernelTestCase
     /**
      * @test
      */
-    public function supportsNdrs()
+    public function getQueuedDocumentsAndSetToInProgress_supportsNdrs()
     {
         $this->persistEntities();
 
         $documents = $this->documentRepository
-            ->getQueuedDocumentsAndSetToInProgress();
+            ->getQueuedDocumentsAndSetToInProgress('100');
 
         $this->assertDataMatchesEntity($documents, $this->ndrReportPdfDocument, $this->client, $this->ndrSubmission, $this->ndr);
         $this->assertEquals(1, count($documents[$this->ndrReportPdfDocument->getId()]['report_submissions']));
@@ -231,6 +231,39 @@ class DocumentRepositoryTest extends KernelTestCase
         }
 
     }
+
+    /** @test */
+    public function updateSupportingDocumentStatusByReportSubmissionIds()
+    {
+        $this->reportPdfDocument->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
+        $this->persistEntities();
+
+        $updatedDocumentsCount = $this->documentRepository
+            ->updateSupportingDocumentStatusByReportSubmissionIds(
+                [$this->reportSubmission->getId(), $this->additionalReportSubmission->getId()],
+                'An error message'
+            );
+
+        $this->refreshDocumentEntities();
+
+        $this->assertEquals(3, $updatedDocumentsCount);
+
+        foreach([$this->supportingDocument, $this->supportingDocumentAfterSubmission] as $doc) {
+            self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $doc->getSynchronisationStatus());
+            self::assertEquals('An error message', $doc->getSynchronisationError());
+        }
+
+        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $this->reportPdfDocument->getSynchronisationStatus());
+        self::assertEquals(null, $this->reportPdfDocument->getSynchronisationError());
+    }
+
+    private function refreshDocumentEntities()
+    {
+        $this->entityManager->refresh($this->reportPdfDocument);
+        $this->entityManager->refresh($this->supportingDocument);
+        $this->entityManager->refresh($this->supportingDocumentAfterSubmission);
+    }
+
 
     protected function tearDown(): void
     {

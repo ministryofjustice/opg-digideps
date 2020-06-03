@@ -14,7 +14,7 @@ final class Version239 extends AbstractMigration
 {
     public function getDescription() : string
     {
-        return 'Create court_order_address rows for all existing lay based court_order_deputys';
+        return 'Create court_order_deputy rows for all existing lay based court_orders';
     }
 
     public function up(Schema $schema) : void
@@ -23,18 +23,26 @@ final class Version239 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql("
-insert into court_order_address (court_order_deputy_id, addressline1, addressline2, addressline3, postcode, country)
-select 
-  cod.id,
-  u.address1,
-  u.address2,
-  u.address3,
-  u.address_postcode,
-  u.address_country
-from court_order_deputy cod 
-inner join dd_user u on u.id = cod.user_id
+insert into court_order_deputy (court_order_id, user_id, organisation_id, deputynumber, firstname, surname, email)
+select
+  co.id,
+  u.id,
+  null,
+  u.deputy_no,
+  u.firstname,
+  u.lastname,
+  u.email  
+from dd_user u
+inner join deputy_case dc on dc.user_id = u.id
+inner join court_order co on co.client_id = dc.client_id
+-- theoretically no Lay deputy will have a row in organisation_user but we will left join and filter just in case
+left join organisation_user ou on ou.user_id = u.id
+-- three filters to ensure we are only creating court_order_deputy rows for court_orders belonging to lay deputies
+-- this will also prevent creating duplicates for the non lay deputy court_orders that currently exist on prod
 where u.role_name = 'ROLE_LAY_DEPUTY'
-and u.active = true        
+and u.active = true
+and ou.organisation_id is null
+;        
        ");
     }
 
@@ -43,11 +51,10 @@ and u.active = true
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
         $this->addSql("
-delete from court_order_address where id in
+delete from court_order_deputy where id in
 (
-	select coa.id
-	from court_order_address coa
-	inner join court_order_deputy cod on cod.id = coa.court_order_deputy_id
+	select cod.id
+	from court_order_deputy cod
 	inner join dd_user u on u.id = cod.user_id
 	where u.role_name = 'ROLE_LAY_DEPUTY'
 	and u.active = true
