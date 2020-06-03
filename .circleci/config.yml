@@ -409,7 +409,7 @@ jobs:
 
   api-unit-tests:
     docker:
-      image: cimg/base:2020.01
+      - image: cimg/base:2020.01
     steps:
       - setup_remote_docker
       - checkout
