@@ -423,10 +423,8 @@ jobs:
           command: |
             docker-compose -f docker-compose.yml --project-name api-unit-tests --env-file=api/docker/env/api.env up -d api
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
-      - merge-code-coverage-reports:
-          dir: ./api/tests/coverage
-          out: ./api/tests/coverage/merged.xml
-      - copy-merged-cov-to-host
+      - copy-merged-cov-to-host:
+          dir: .
       - codecov/upload:
           file: ./merged.xml
           flags: phpunit
@@ -468,35 +466,16 @@ jobs:
           command: runner -task << parameters.task_name >> -timeout << parameters.timeout >>
 
 commands:
-  merge-code-coverage-reports:
+  copy-merged-cov-to-host:
     parameters:
       dir:
-        description: Path to the directory containing the code coverage reports to merge.
+        description: Path to the directory where the cov file will be copied to on the host machine.
         type: string
-      out:
-        description: Path to output the merged code coverage report.
-        type: string
-    steps:
-      - run:
-          name: Download phpcov
-          command: |
-            if ! command -v phpcov; then
-              wget https://phar.phpunit.de/phpcov.phar
-              chmod +x phpcov.phar
-              sudo mv phpcov.phar /usr/local/bin/phpcov
-            fi
-      - run:
-          name: Merge code coverage reports
-          command: |
-            mkdir -p "$(dirname -- "<< parameters.out >>")"
-            phpcov merge --clover "<< parameters.out >>" "<< parameters.dir >>"
-
-  copy-merged-cov-to-host:
     steps:
       - run:
           command: |
             docker create -ti --name dummy api-unit-tests_api bash
-            docker cp dummy:/var/www/api/tests/coverage/merged.xml merged.xml
+            docker cp dummy:/var/www/api/tests/coverage/merged.xml "<< parameters.out >>/merged.xml"
             docker rm -f dummy
 
   upload-to-coveralls:
@@ -510,5 +489,5 @@ commands:
           name: Upload report - Coveralls
           command: |
             ./php-coveralls.phar -v \
-                --json_path api/tests/coverage/coveralls-upload.json \
-                --coverage_clover api/tests/coverage/merged.xml \
+                --json_path ./coveralls-upload.json \
+                --coverage_clover ./merged.xml \
