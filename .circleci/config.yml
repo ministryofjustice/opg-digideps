@@ -474,7 +474,7 @@ commands:
     steps:
       - run:
           command: |
-            docker cp dummy:/var/www/api/tests/coverage/merged.xml "<< parameters.dir >>/merged.xml"
+            docker cp dummy:/var/www/tests/coverage/merged.xml "<< parameters.dir >>/merged.xml"
 
   upload-to-coveralls:
     steps:
