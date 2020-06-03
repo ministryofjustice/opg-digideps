@@ -426,8 +426,9 @@ jobs:
       - merge-code-coverage-reports:
           dir: ./api/tests/coverage
           out: ./api/tests/coverage/merged.xml
+      - copy-merged-cov-to-host
       - codecov/upload:
-          file: ./api/tests/coverage/merged.xml
+          file: ./merged.xml
           flags: phpunit
       - upload-to-coveralls
 
@@ -484,6 +485,19 @@ commands:
               chmod +x phpcov.phar
               sudo mv phpcov.phar /usr/local/bin/phpcov
             fi
+      - run:
+          name: Merge code coverage reports
+          command: |
+            mkdir -p "$(dirname -- "<< parameters.out >>")"
+            phpcov merge --clover "<< parameters.out >>" "<< parameters.dir >>"
+
+  copy-merged-cov-to-host:
+    steps:
+      - run:
+          command: |
+            docker create -ti --name dummy api-unit-tests_api bash
+            docker cp dummy:/var/www/api/tests/coverage/merged.xml merged.xml
+            docker rm -f dummy
 
   upload-to-coveralls:
     steps:
