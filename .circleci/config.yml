@@ -411,14 +411,8 @@ jobs:
     machine:
       docker_layer_caching: true
     steps:
-      - setup_remote_docker
       - checkout
       - attach_workspace: { at: ~/project }
-      - run:
-          name: install aws cli
-          command: |
-            pip3 install awscli --upgrade --user
-            aws --version
       - run:
           name: Set environment
           command: |
