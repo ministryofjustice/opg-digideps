@@ -96,6 +96,8 @@ services:
 
     AppBundle\Service\DocumentSyncService:
         public: true
+        autowire: true
+        autoconfigure: true
         arguments:
             $storage: '@AppBundle\Service\File\Storage\S3Storage'
             $siriusApiGatewayClient: '@AppBundle\Service\Client\Sirius\SiriusApiGatewayClient'

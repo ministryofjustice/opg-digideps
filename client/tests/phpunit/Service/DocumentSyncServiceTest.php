@@ -7,6 +7,7 @@ use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Model\Sirius\QueuedDocumentData;
+use AppBundle\Model\Sirius\SiriusApiError;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use AppBundle\Service\File\Storage\S3Storage;
@@ -23,6 +24,8 @@ use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class DocumentSyncServiceTest extends KernelTestCase
 {
@@ -35,17 +38,17 @@ class DocumentSyncServiceTest extends KernelTestCase
     /** @var RestClient|ObjectProphecy $restClient */
     private $restClient;
 
+    /** @var SiriusApiErrorTranslator|ObjectProphecy $restClient */
+    private $errorTranslator;
+
     /** @var Serializer $serializer */
     private $serializer;
 
-    /**@var DateTime */
+    /** @var DateTime */
     private $reportSubmittedDate, $reportEndDate, $reportStartDate;
 
     /** @var int */
-    private $reportSubmissionId, $reportPdfSubmissionUuid, $fileContents, $fileName;
-
-    /** @var int */
-    private $documentId;
+    private $reportSubmissionId, $reportPdfSubmissionUuid, $fileContents, $fileName, $documentId;
 
     public function setUp(): void
     {
@@ -57,6 +60,9 @@ class DocumentSyncServiceTest extends KernelTestCase
 
         /** @var RestClient|ObjectProphecy $restClient */
         $this->restClient = self::prophesize(RestClient::class);
+
+        /** @var SiriusApiErrorTranslator|ObjectProphecy $restClient */
+        $this->errorTranslator = self::prophesize(SiriusApiErrorTranslator::class);
 
         /** @var Serializer serializer */
         $this->serializer = (self::bootKernel(['debug' => false]))->getContainer()->get('jms_serializer');
@@ -137,7 +143,13 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->shouldBeCalled()
             ->willReturn(new Document());
 
-        $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
+        $sut = new DocumentSyncService(
+            $this->s3Storage->reveal(),
+            $this->siriusApiGatewayClient->reveal(),
+            $this->restClient->reveal(),
+            $this->errorTranslator->reveal()
+        );
+
         $sut->syncDocument($queuedDocumentData);
     }
 
@@ -217,7 +229,13 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->shouldBeCalled()
             ->willReturn(new Document());
 
-        $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
+        $sut = new DocumentSyncService(
+            $this->s3Storage->reveal(),
+            $this->siriusApiGatewayClient->reveal(),
+            $this->restClient->reveal(),
+            $this->errorTranslator->reveal()
+        );
+
         $sut->syncDocument($queuedDocumentData);
     }
 
@@ -264,12 +282,16 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->shouldBeCalled()
             ->willThrow($requestException);
 
+        $this->errorTranslator->translateApiError(json_encode($failureResponseBody))->willReturn(
+            'OPGDATA-API-FORBIDDEN: Credentials used for integration lack correct permissions'
+        );
+
         $this->restClient
             ->apiCall('put',
                 'document/6789',
                 json_encode(
                     ['syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR,
-                    'syncError' => $failureResponseBody
+                    'syncError' => 'OPGDATA-API-FORBIDDEN: Credentials used for integration lack correct permissions'
                     ]),
                 'Report\\Document',
                 [],
@@ -278,7 +300,13 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->shouldBeCalled()
             ->willReturn($this->serializer->serialize(new Document(), 'json'));
 
-        $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
+        $sut = new DocumentSyncService(
+            $this->s3Storage->reveal(),
+            $this->siriusApiGatewayClient->reveal(),
+            $this->restClient->reveal(),
+            $this->errorTranslator->reveal()
+        );
+
         $sut->syncDocument($queuedDocumentData);
 
         self::assertContains($queuedDocumentData->getReportSubmissionId(), $sut->getSyncErrorSubmissionIds());
@@ -327,7 +355,13 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->shouldBeCalled()
             ->willReturn($this->serializer->serialize(new Document(), 'json'));
 
-        $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
+        $sut = new DocumentSyncService(
+            $this->s3Storage->reveal(),
+            $this->siriusApiGatewayClient->reveal(),
+            $this->restClient->reveal(),
+            $this->errorTranslator->reveal()
+        );
+
         $sut->syncDocument($queuedDocumentData);
 
         if ($expectedSubmissionId) {
@@ -404,7 +438,13 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->shouldBeCalled()
             ->willReturn(new Document());
 
-        $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
+        $sut = new DocumentSyncService(
+            $this->s3Storage->reveal(),
+            $this->siriusApiGatewayClient->reveal(),
+            $this->restClient->reveal(),
+            $this->errorTranslator->reveal()
+        );
+
         $sut->syncDocument($queuedDocumentData);
     }
 
@@ -446,7 +486,13 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->shouldBeCalled()
             ->willReturn($this->serializer->serialize(new Document(), 'json'));
 
-        $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
+        $sut = new DocumentSyncService(
+            $this->s3Storage->reveal(),
+            $this->siriusApiGatewayClient->reveal(),
+            $this->restClient->reveal(),
+            $this->errorTranslator->reveal()
+        );
+
         $sut->syncDocument($queuedDocumentData);
     }
 
@@ -483,12 +529,16 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->shouldBeCalled()
             ->willThrow($requestException);
 
+        $this->errorTranslator->translateApiError(json_encode($failureResponseBody))->willReturn(
+            'OPGDATA-API-FORBIDDEN: Credentials used for integration lack correct permissions'
+        );
+
         $this->restClient
             ->apiCall('put',
                 'document/6789',
                 json_encode(
                     ['syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR,
-                        'syncError' => $failureResponseBody
+                        'syncError' => 'OPGDATA-API-FORBIDDEN: Credentials used for integration lack correct permissions'
                     ]),
                 'Report\\Document',
                 [],
@@ -497,7 +547,13 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->shouldBeCalled()
             ->willReturn($this->serializer->serialize(new Document(), 'json'));
 
-        $sut = new DocumentSyncService($this->s3Storage->reveal(), $this->siriusApiGatewayClient->reveal(), $this->restClient->reveal());
+        $sut = new DocumentSyncService(
+            $this->s3Storage->reveal(),
+            $this->siriusApiGatewayClient->reveal(),
+            $this->restClient->reveal(),
+            $this->errorTranslator->reveal()
+        );
+
         $sut->syncDocument($queuedDocumentData);
 
         self::assertNotContains($queuedDocumentData->getReportSubmissionId(), $sut->getSyncErrorSubmissionIds());
