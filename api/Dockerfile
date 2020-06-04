@@ -65,9 +65,7 @@ RUN if [[ "$USER_ID" != '' ]] && [[ "$GROUP_ID" != '' ]] ; then \
         && mkdir -p var/logs \
         && chown -R appuser var \
         && export USERNAME="appuser"; \
-
         else \
-
         mkdir -p var/cache \
         && mkdir -p var/logs \
         && chown -R www-data var \
