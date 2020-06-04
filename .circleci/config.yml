@@ -349,10 +349,14 @@ jobs:
           name: Push images
           command: docker-compose -f docker-compose.ci.yml push
       - run:
-          name: Check ECR Scan Results
+          name: Install ECR Scan Results Requirements
           working_directory: ~/project/ecs_helper/check_ecr_scan_results
           command: |
             sudo pip3 install -r requirements.txt
+      - run:
+          name: Check ECR Scan Results
+          working_directory: ~/project/ecs_helper/check_ecr_scan_results
+          command: |
             python3 aws_ecr_scan_results.py --search digideps --tag $VERSION
       - run:
           name: Archive docker images
