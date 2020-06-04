@@ -56,15 +56,25 @@ RUN openssl req -newkey rsa:4096 -x509 -nodes -keyout /etc/nginx/certs/app.key -
 
 ARG USER_ID
 ARG GROUP_ID
+ENV USERNAME=""
 
-RUN groupadd -f --gid $GROUP_ID admingroup
-RUN adduser --disabled-password --gecos '' --uid $USER_ID -G admingroup appuser
+RUN if [[ "$USER_ID" != '' ]] && [[ "$GROUP_ID" != '' ]] ; then \
+        groupadd -f --gid $GROUP_ID admingroup \
+        && adduser --disabled-password --gecos '' --uid $USER_ID -G admingroup appuser \
+        && mkdir -p var/cache \
+        && mkdir -p var/logs \
+        && chown -R appuser var \
+        && export USERNAME="appuser"; \
 
-RUN mkdir -p var/cache \
-  && mkdir -p var/logs \
-  && chown -R appuser var
+        else \
 
-USER appuser
+        mkdir -p var/cache \
+        && mkdir -p var/logs \
+        && chown -R www-data var \
+        && export USERNAME="www-data"; \
+    fi ;
+
+USER "$USERNAME"
 
 CMD confd -onetime -backend env \
   && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
