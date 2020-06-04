@@ -149,7 +149,7 @@ def main():
         description="Check ECR Scan results for all service container images.")
     parser.add_argument("--search",
                         default="",
-                        help="The root part oof the ECR repositry path, for example online-lpa")
+                        help="The root part of the ECR repository path, for example digideps")
     parser.add_argument("--tag",
                         default="latest",
                         help="Image tag to check scan results for.")
