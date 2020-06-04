@@ -54,11 +54,20 @@ RUN wget -q -O /usr/local/bin/waitforit https://github.com/maxcnunes/waitforit/r
 RUN mkdir -p /etc/nginx/certs
 RUN openssl req -newkey rsa:4096 -x509 -nodes -keyout /etc/nginx/certs/app.key -new -out /etc/nginx/certs/app.crt -subj "/C=GB/ST=GB/L=London/O=OPG/OU=Digital/CN=default" -sha256 -days "3650"
 
-RUN usermod -u 1000 www-data
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+#ARG HOME_DIR=/home/www-data
+# Change user ID & group ID & home directory & shell of www-data user.
+# We change home dir because some custom commands may use home dir
+# for caching (like composer, npm or yarn) or for another reason.
+#RUN mkdir ${HOME_DIR} \
+#    && chown -R ${USER_ID}:${GROUP_ID} ${HOME_DIR} \
+RUN usermod --uid ${USER_ID} --shell /bin/bash www-data \
+  && groupmod --gid ${GROUP_ID} www-data
 
 RUN mkdir -p var/cache \
   && mkdir -p var/logs \
-  && chown -R www-data var
+  && chown -R www-data:${GROUP_ID} var
 
 CMD confd -onetime -backend env \
   && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
@@ -85,4 +94,4 @@ COPY phpstan.neon .
 RUN su-exec www-data php -d memory_limit=2048M app/console cache:warmup
 
 # Check for security issues
-RUN php app/console security:check
+RUN su-exec www-data php app/console security:check
