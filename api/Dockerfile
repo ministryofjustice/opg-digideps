@@ -22,7 +22,7 @@ ENV TIMEOUT=20
 ENV PHP_EXT_DIR=/usr/lib/php7/modules
 
 # Install Postgres tools and command line client
-RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec postgresql-client php7-igbinary php7-pecl-redis php7-pdo_pgsql
+RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec postgresql-client php7-igbinary php7-pecl-redis php7-pdo_pgsql shadow
 RUN docker-php-ext-enable opcache $PHP_EXT_DIR/igbinary.so $PHP_EXT_DIR/redis.so $PHP_EXT_DIR/pdo_pgsql.so
 
 # Install Xdebug if directed to with build arg from docker-compose.yml
@@ -54,14 +54,22 @@ RUN wget -q -O /usr/local/bin/waitforit https://github.com/maxcnunes/waitforit/r
 RUN mkdir -p /etc/nginx/certs
 RUN openssl req -newkey rsa:4096 -x509 -nodes -keyout /etc/nginx/certs/app.key -new -out /etc/nginx/certs/app.crt -subj "/C=GB/ST=GB/L=London/O=OPG/OU=Digital/CN=default" -sha256 -days "3650"
 
+ARG USER_ID
+ARG GROUP_ID
+
+RUN groupadd -f --gid $GROUP_ID admingroup
+RUN adduser --disabled-password --gecos '' --uid $USER_ID -G admingroup appuser
+
 RUN mkdir -p var/cache \
   && mkdir -p var/logs \
-  && chown -R www-data var
+  && chown -R appuser var
+
+USER appuser
 
 CMD confd -onetime -backend env \
   && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
-  && su-exec www-data php app/console doctrine:migrations:migrate-lock --no-interaction \
-  && su-exec www-data php app/console doctrine:migrations:up-to-date \
+  && php app/console doctrine:migrations:migrate-lock --no-interaction \
+  && php app/console doctrine:migrations:up-to-date \
   && php-fpm -D \
   && nginx
 
@@ -80,7 +88,7 @@ COPY web web
 COPY phpstan.neon .
 
 # Prebuild cache
-RUN su-exec www-data php -d memory_limit=2048M app/console cache:warmup
+RUN php -d memory_limit=2048M app/console cache:warmup
 
 # Check for security issues
-RUN su-exec www-data php app/console security:check
+RUN php app/console security:check

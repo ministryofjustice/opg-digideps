@@ -101,6 +101,9 @@ services:
             context: ./api
             args:
                 REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=true in .env to install Xdebug
+                USER_ID: ${USER_ID}
+                GROUP_ID: ${GROUP_ID}
+        user: www-data
         ports:
             - 8090:443
         depends_on:
