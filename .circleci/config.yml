@@ -357,7 +357,7 @@ jobs:
           name: Check ECR Scan Results
           working_directory: ~/project/ecs_helper/check_ecr_scan_results
           command: |
-            python3 aws_ecr_scan_results.py --search digideps --tag $VERSION
+            python3 aws_ecr_scan_results.py --search digideps --tag $VERSION --post_to_slack False
       - run:
           name: Archive docker images
           command: |
