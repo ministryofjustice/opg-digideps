@@ -3,11 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Client;
-use AppBundle\Entity\CourtOrder;
-use AppBundle\Entity\CourtOrderDeputy;
-use AppBundle\Entity\CourtOrderDeputyAddress;
 use AppBundle\Entity\Ndr\Ndr;
-use AppBundle\Entity\Repository\CourtOrderRepository;
 use AppBundle\Entity\Repository\TeamRepository;
 use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\Team;
@@ -23,9 +19,6 @@ class UserService
     /** @var TeamRepository */
     private $teamRepository;
 
-    /** @var CourtOrderRepository  */
-    private $courtOrderRepository;
-
     /** @var EntityManagerInterface */
     private $em;
 
@@ -40,7 +33,6 @@ class UserService
     ) {
         $this->userRepository = $em->getRepository(User::class);
         $this->teamRepository = $em->getRepository(Team::class);
-        $this->courtOrderRepository = $em->getRepository(CourtOrder::class);
         $this->em = $em;
         $this->orgService = $orgService;
     }
@@ -142,13 +134,8 @@ class UserService
             return;
         }
 
-
         if ($updatedUser->getNdrEnabled() && !$this->clientHasExistingNdr($client)) {
-            $ndr = $this->createNdrForClient($client);
-
-            if (!$this->courtOrderExistsForCase($client->getCaseNumber())) {
-                $this->attachCaseToNewCourtOrder($updatedUser, $client, $ndr);
-            }
+            $this->createNdrForClient($client);
         }
     }
 
@@ -163,92 +150,10 @@ class UserService
 
     /**
      * @param Client $client
-     * @return Ndr
      */
     private function createNdrForClient(Client $client)
     {
         $ndr = new Ndr($client);
         $this->em->persist($ndr);
-
-        return $ndr;
-    }
-
-    /**
-     * @param string $caseNumber
-     * @return bool
-     */
-    private function courtOrderExistsForCase(string $caseNumber): bool
-    {
-        return null !== $this->courtOrderRepository->findOneBy(['caseNumber' => $caseNumber]);
-    }
-
-    /**
-     * @param User $updatedUser
-     * @param Client $client
-     * @param Ndr $ndr
-     */
-    private function attachCaseToNewCourtOrder(User $updatedUser, Client $client, Ndr $ndr): void
-    {
-        $courtOrder = $this->createCourtOrder($client, $ndr);
-        $courtOrderDeputy = $this->createCourtOrderDeputy($updatedUser, $courtOrder);
-        $this->createCourtOrderDeputyAddress($updatedUser, $courtOrderDeputy);
-
-        $ndr->setCourtOrder($courtOrder);
-    }
-
-    /**
-     * @param Client|null $client
-     * @param Ndr $ndr
-     * @return CourtOrder
-     */
-    private function createCourtOrder(?Client $client, Ndr $ndr): CourtOrder
-    {
-        $courtOrder = new CourtOrder();
-        $courtOrder
-            ->setCaseNumber($client->getCaseNumber())
-            ->setClient($client);
-
-        $this->em->persist($courtOrder);
-
-        return $courtOrder;
-    }
-
-    /**
-     * @param User $updatedUser
-     * @param CourtOrder $courtOrder
-     * @return CourtOrderDeputy
-     */
-    private function createCourtOrderDeputy(User $updatedUser, CourtOrder $courtOrder): CourtOrderDeputy
-    {
-        $courtOrderDeputy = new CourtOrderDeputy();
-        $courtOrderDeputy
-            ->setUser($updatedUser)
-            ->setCourtOrder($courtOrder)
-            ->setFirstname($updatedUser->getFirstname())
-            ->setSurname($updatedUser->getLastname())
-            ->setEmail($updatedUser->getEmail())
-            ->setDeputyNumber($updatedUser->getDeputyNo());
-
-        $this->em->persist($courtOrderDeputy);
-
-        return $courtOrderDeputy;
-    }
-
-    /**
-     * @param User $updatedUser
-     * @param CourtOrderDeputy $courtOrderDeputy
-     */
-    private function createCourtOrderDeputyAddress(User $updatedUser, CourtOrderDeputy $courtOrderDeputy): void
-    {
-        $courtOrderAddress = new CourtOrderDeputyAddress();
-        $courtOrderAddress
-            ->setDeputy($courtOrderDeputy)
-            ->setAddressLine1($updatedUser->getAddress1())
-            ->setAddressLine2($updatedUser->getAddress2())
-            ->setAddressLine3($updatedUser->getAddress3())
-            ->setPostcode($updatedUser->getAddressPostcode())
-            ->setCountry($updatedUser->getAddressCountry());
-
-        $this->em->persist($courtOrderAddress);
     }
 }
