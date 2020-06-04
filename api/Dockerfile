@@ -54,30 +54,16 @@ RUN wget -q -O /usr/local/bin/waitforit https://github.com/maxcnunes/waitforit/r
 RUN mkdir -p /etc/nginx/certs
 RUN openssl req -newkey rsa:4096 -x509 -nodes -keyout /etc/nginx/certs/app.key -new -out /etc/nginx/certs/app.crt -subj "/C=GB/ST=GB/L=London/O=OPG/OU=Digital/CN=default" -sha256 -days "3650"
 
-ARG USER_ID
-ARG GROUP_ID
-ENV USERNAME=""
+RUN usermod -u 1000 www-data
 
-RUN if [[ "$USER_ID" != '' ]] && [[ "$GROUP_ID" != '' ]] ; then \
-        groupadd -f --gid $GROUP_ID admingroup \
-        && adduser --disabled-password --gecos '' --uid $USER_ID -G admingroup appuser \
-        && mkdir -p var/cache \
-        && mkdir -p var/logs \
-        && chown -R appuser var \
-        && export USERNAME="appuser"; \
-        else \
-        mkdir -p var/cache \
-        && mkdir -p var/logs \
-        && chown -R www-data var \
-        && export USERNAME="www-data"; \
-    fi ;
-
-USER "$USERNAME"
+RUN mkdir -p var/cache \
+  && mkdir -p var/logs \
+  && chown -R www-data var
 
 CMD confd -onetime -backend env \
   && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
-  && php app/console doctrine:migrations:migrate-lock --no-interaction \
-  && php app/console doctrine:migrations:up-to-date \
+  && su-exec www-data php app/console doctrine:migrations:migrate-lock --no-interaction \
+  && su-exec www-data php app/console doctrine:migrations:up-to-date \
   && php-fpm -D \
   && nginx
 
@@ -96,7 +82,7 @@ COPY web web
 COPY phpstan.neon .
 
 # Prebuild cache
-RUN php -d memory_limit=2048M app/console cache:warmup
+RUN su-exec www-data php -d memory_limit=2048M app/console cache:warmup
 
 # Check for security issues
 RUN php app/console security:check
