@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Report;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -36,7 +37,7 @@ class CourtOrder
     /**
      * @var string
      * @Assert\Choice({CourtOrder::SUBTYPE_HW, CourtOrder::SUBTYPE_PFA})
-     * @ORM\Column(name="type", type="string", nullable=false, length=4)
+     * @ORM\Column(name="type", type="string", nullable=true, length=4)
      */
     private $type;
 
@@ -49,7 +50,7 @@ class CourtOrder
 
     /**
      * @var DateTime
-     * @ORM\Column(name="order_date", type="date", nullable=false)
+     * @ORM\Column(name="order_date", type="date", nullable=true)
      */
     private $orderDate;
 
@@ -71,6 +72,12 @@ class CourtOrder
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Report", mappedBy="courtOrder")
      */
     private $reports;
+
+    /**
+     * @var Ndr
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Ndr\Ndr", mappedBy="courtOrder", cascade={"persist", "remove"})
+     **/
+    private $ndr;
 
     /**
      * @var Collection<int, CourtOrderDeputy>
@@ -247,6 +254,25 @@ class CourtOrder
         if ($this->deputies->contains($deputy)) {
             $this->deputies->removeElement($deputy);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNdr()
+    {
+        return $this->ndr;
+    }
+
+    /**
+     * @param Ndr $ndr
+     * @return $this
+     */
+    public function setNdr(Ndr $ndr)
+    {
+        $this->ndr = $ndr;
 
         return $this;
     }

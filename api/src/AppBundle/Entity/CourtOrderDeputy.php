@@ -24,7 +24,7 @@ class CourtOrderDeputy
 
     /**
      * @var string
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $deputyNumber;
 
@@ -137,7 +137,7 @@ class CourtOrderDeputy
         return $this->addresses;
     }
 
-    public function setDeputyNumber(string $deputyNumber): CourtOrderDeputy
+    public function setDeputyNumber(?string $deputyNumber): CourtOrderDeputy
     {
         $this->deputyNumber = $deputyNumber;
 
