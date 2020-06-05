@@ -24,7 +24,7 @@ final class Version241 extends AbstractMigration
 
         $this->addSql("
 update report r set court_order_id = 
-(
+COALESCE((
 	select MAX(co.id)
 	from court_order co
 	inner join court_order_deputy cod on cod.court_order_id = co.id
@@ -33,12 +33,12 @@ update report r set court_order_id =
 	and co.client_id = r.client_id
 	and u.role_name = 'ROLE_LAY_DEPUTY'
 	and u.active = true
-)         
+), court_order_id)
        ");
 
         $this->addSql("
 update odr o set court_order_id = 
-(
+COALESCE((
 	select MAX(co.id)
 	from court_order co
 	inner join court_order_deputy cod on cod.court_order_id = co.id
@@ -47,7 +47,7 @@ update odr o set court_order_id =
 	and co.client_id = o.client_id
 	and u.role_name = 'ROLE_LAY_DEPUTY'
 	and u.active = true
-)        
+), court_order_id)
        ");
     }
 
