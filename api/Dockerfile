@@ -69,14 +69,7 @@ RUN openssl req -newkey rsa:4096 -x509 -nodes -keyout /etc/nginx/certs/app.key -
 
 RUN mkdir -p var/cache \
   && mkdir -p var/logs \
-  && chown -R www-data var
-
-CMD confd -onetime -backend env \
-  && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
-  && su-exec www-data php app/console doctrine:migrations:migrate-lock --no-interaction \
-  && su-exec www-data php app/console doctrine:migrations:up-to-date \
-  && php-fpm -D \
-  && nginx
+  && chown -R www-data:www-data var
 
 # See this page for directories required
 # https://symfony.com/doc/3.4/quick_tour/the_architecture.html
@@ -97,3 +90,10 @@ RUN su-exec www-data php -d memory_limit=2048M app/console cache:warmup
 
 # Check for security issues
 RUN su-exec www-data php app/console security:check
+
+CMD confd -onetime -backend env \
+  && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
+  && su-exec www-data php app/console doctrine:migrations:migrate-lock --no-interaction \
+  && su-exec www-data php app/console doctrine:migrations:up-to-date \
+  && php-fpm -D \
+  && nginx
