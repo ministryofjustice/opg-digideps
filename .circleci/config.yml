@@ -409,7 +409,7 @@ jobs:
 
   api-unit-tests:
     docker:
-      - image: cimg/base:2020.01
+      - image: circleci/php:7.4.6-cli
     steps:
       - setup_remote_docker
       - checkout
