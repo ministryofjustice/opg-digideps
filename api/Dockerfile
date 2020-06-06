@@ -1,4 +1,5 @@
 FROM composer AS composer
+
 WORKDIR /app
 
 # Make composer super fast
@@ -24,6 +25,17 @@ ENV PHP_EXT_DIR=/usr/lib/php7/modules
 # Install Postgres tools and command line client
 RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec postgresql-client php7-igbinary php7-pecl-redis php7-pdo_pgsql shadow
 RUN docker-php-ext-enable opcache $PHP_EXT_DIR/igbinary.so $PHP_EXT_DIR/redis.so $PHP_EXT_DIR/pdo_pgsql.so
+
+ARG USER_ID
+ARG GROUP_ID
+
+RUN echo $GROUP_ID
+RUN echo $USER_ID
+RUN echo 'blah'
+
+#RUN usermod --shell /bin/sh --uid $USER_ID --gid $GROUP_ID --non-unique www-data
+#RUN usermod --uid `id www-data` www-data
+#USER www-data
 
 # Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=false
@@ -66,6 +78,10 @@ RUN openssl req -newkey rsa:4096 -x509 -nodes -keyout /etc/nginx/certs/app.key -
 #  && groupmod --gid ${GROUP_ID} www-data
 
 #USER www-data
+
+#RUN mkdir -p var/cache \
+#  && mkdir -p var/logs \
+#  && chown -R www-data:www-data var
 
 RUN mkdir -p var/cache \
   && mkdir -p var/logs \
