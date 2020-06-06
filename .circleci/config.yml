@@ -489,4 +489,5 @@ commands:
           command: |
             ./php-coveralls.phar -v \
                 --json_path ./coveralls-upload.json \
-                --coverage_clover ./merged.xml \
+                --coverage_clover merged.xml \
+                --root_dir api
