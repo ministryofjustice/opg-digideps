@@ -109,7 +109,7 @@ RUN su-exec www-data php app/console security:check
 
 CMD confd -onetime -backend env \
   && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
-  && su-exec www-data php app/console doctrine:migrations:migrate-lock --no-interaction \
-  && su-exec www-data php app/console doctrine:migrations:up-to-date \
+  && su-exec www-data:www-data php app/console doctrine:migrations:migrate-lock --no-interaction \
+  && su-exec www-data:www-data php app/console doctrine:migrations:up-to-date \
   && php-fpm -D \
   && nginx

@@ -409,10 +409,8 @@ jobs:
           destination: Pact file
 
   api-unit-tests:
-    environment:
-      AWS_REGISTRY: 311462405659.dkr.ecr.eu-west-1.amazonaws.com
     docker:
-      - image: ${AWS_REGISTRY}/digideps/api:latest
+      - image: circleci/php:7.4.6-cli
     steps:
       - setup_remote_docker
       - checkout
