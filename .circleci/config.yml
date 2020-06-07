@@ -422,19 +422,14 @@ jobs:
       - run:
           name: Run tests
           command: |
-            echo 'Bringing api up...........'
-            echo `id`
-            echo `id -u www-data`
             docker-compose -f docker-compose.yml --project-name api-unit-tests up -d api
-            docker-compose -f docker-compose.yml --project-name api-unit-tests exec --user=root api chmod -R 777 var
+            docker-compose -f docker-compose.yml --project-name api-unit-tests exec api chmod -R 777 var
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
-            docker-compose -f docker-compose.yml --project-name api-unit-tests exec --user=root api chmod -R 777 merged.xml
       - copy-merged-cov-to-host:
           dir: .
       - codecov/upload:
           file: ./merged.xml
           flags: phpunit
-      - upload-to-coveralls
 
   run-task:
     executor: terraform/terraform
@@ -480,20 +475,5 @@ commands:
     steps:
       - run:
           command: |
+            docker-compose -f docker-compose.yml --project-name api-unit-tests exec api chmod -R 777 tests/coverage/merged.xml
             docker cp api-unit-tests_api_1:/var/www/tests/coverage/merged.xml "<< parameters.dir >>/merged.xml"
-
-
-  upload-to-coveralls:
-    steps:
-      - run:
-          name: Install coveralls upload tool
-          command: |
-            wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.2.0/php-coveralls.phar
-            chmod +x php-coveralls.phar
-      - run:
-          name: Upload report - Coveralls
-          command: |
-            ./php-coveralls.phar -v \
-                --json_path ./coveralls-upload.json \
-                --coverage_clover merged.xml \
-                --root_dir api
