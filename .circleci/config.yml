@@ -420,7 +420,7 @@ jobs:
       - run:
           name: Run tests
           command: |
-            USER_ID=`id -u` GROUP_ID=`id -g` docker-compose -f docker-compose.yml --project-name api-unit-tests --env-file=api/docker/env/api.env up -d api
+            USER_ID=`id -u` GROUP_ID=`id -g` docker-compose -f docker-compose.yml --project-name api-unit-tests up -d api
             USER_ID=`id -u` GROUP_ID=`id -g` docker-compose -f docker-compose.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
       - copy-merged-cov-to-host:
           dir: .
