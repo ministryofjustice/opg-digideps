@@ -1,10 +1,14 @@
 #!/bin/bash
 # exit on error
 set -e
+echo `id`
+echo `id -u var-www`
 
+echo 'Starting confd...........'
 # Generate config files so test bootstrap can address the DB
 confd -onetime -backend env
 
+echo 'Finished confd...........'
 # Export unit test DB config so it can be used in tests
 export PGHOST=${DATABASE_HOSTNAME:=postgres}
 export PGPASSWORD=${DATABASE_PASSWORD:=api}
