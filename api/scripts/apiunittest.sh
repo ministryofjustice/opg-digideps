@@ -6,8 +6,8 @@ echo `id -u var-www`
 
 rm -R var
 
-RUN mkdir -p var/cache \
-  && mkdir -p var/logs
+mkdir -p var/cache
+mkdir -p var/logs
 
 echo 'Starting confd...........'
 # Generate config files so test bootstrap can address the DB
