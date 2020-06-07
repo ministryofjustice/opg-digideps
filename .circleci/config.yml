@@ -423,9 +423,9 @@ jobs:
             echo 'Bringing api up...........'
             echo `id`
             echo `id -u www-data`
-            docker-compose exec --user=root php chmod -R 777 var/logs
-            docker-compose exec --user=root php chmod -R 777 var/cache
             docker-compose -f docker-compose.yml --project-name api-unit-tests up -d api
+            docker-compose -f docker-compose.yml --project-name api-unit-tests exec --user=root api chmod -R 777 var/logs
+            docker-compose -f docker-compose.yml --project-name api-unit-tests exec --user=root api chmod -R 777 var/cache
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec --user=1001:1002 api sh scripts/apiunittest.sh
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec --user=1001:1002 api sh scripts/upload_coverage_coveralls.sh
       - copy-merged-cov-to-host:
