@@ -102,6 +102,7 @@ class ComponentsExtension extends AbstractExtension
 
                     case 'needs-attention':
                     case 'unsubmitted':
+                    case 'not-matching':
                         return 'govuk-tag--red';
 
                     case 'done':
