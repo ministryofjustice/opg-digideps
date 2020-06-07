@@ -3,11 +3,13 @@
 set -e
 echo `id`
 echo `id -u var-www`
+echo $UID
 
 rm -R var
 
 mkdir -p var/cache
 mkdir -p var/logs
+chown -R 0:0 var
 
 echo 'Starting confd...........'
 # Generate config files so test bootstrap can address the DB
