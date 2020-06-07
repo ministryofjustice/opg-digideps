@@ -426,6 +426,7 @@ jobs:
             docker-compose -f docker-compose.yml --project-name api-unit-tests up -d api
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec --user=root api chmod -R 777 var
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
+            docker-compose -f docker-compose.yml --project-name api-unit-tests exec --user=root api chmod -R 777 merged.xml
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec api sh scripts/upload_coverage_coveralls.sh
       - copy-merged-cov-to-host:
           dir: .
