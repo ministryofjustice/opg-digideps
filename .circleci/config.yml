@@ -409,8 +409,7 @@ jobs:
           destination: Pact file
 
   api-unit-tests:
-    docker:
-      - image: circleci/php
+    machine: true
     steps:
       - checkout
       - attach_workspace: { at: ~/project }
@@ -428,7 +427,6 @@ jobs:
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec --user=root api chmod -R 777 var
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec --user=root api chmod -R 777 merged.xml
-            sh api/scripts/upload_coverage_coveralls.sh
       - copy-merged-cov-to-host:
           dir: .
       - codecov/upload:
