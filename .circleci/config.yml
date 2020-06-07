@@ -409,8 +409,10 @@ jobs:
           destination: Pact file
 
   api-unit-tests:
-    machine: true
+    docker:
+      image: circleci/php
     steps:
+      - setup_remote_docker
       - checkout
       - attach_workspace: { at: ~/project }
       - run:
