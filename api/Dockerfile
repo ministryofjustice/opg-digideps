@@ -87,6 +87,7 @@ RUN mkdir -p var/cache \
   && mkdir -p var/logs \
   && chown -R www-data:www-data var
 
+RUN id -u www-data
 # See this page for directories required
 # https://symfony.com/doc/3.4/quick_tour/the_architecture.html
 COPY docker/confd /etc/confd
