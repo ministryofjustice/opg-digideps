@@ -363,8 +363,7 @@ jobs:
           name: Archive docker images
           command: |
             docker tag ${AWS_REGISTRY}/digideps/client:${VERSION} client:latest
-            docker tag ${AWS_REGISTRY}/digideps/api:${VERSION} api:latest
-            docker save -o docker-images.tar client:latest api:latest
+            docker save -o docker-images.tar client:latest
       - persist_to_workspace:
           root: .
           paths:
@@ -426,7 +425,8 @@ jobs:
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec api chmod -R 777 var
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
       - copy-merged-cov-to-host:
-          dir: .
+          file_to_copy: tests/coverage/merged.xml
+          copy_to_dir: .
       - codecov/upload:
           file: ./merged.xml
           flags: phpunit
@@ -469,11 +469,14 @@ jobs:
 commands:
   copy-merged-cov-to-host:
     parameters:
-      dir:
+      file_to_copy:
+        description: Path to the file where the cov file will be copied from host machine.
+        type: string
+      copy_to_dir:
         description: Path to the directory where the cov file will be copied to on the host machine.
         type: string
     steps:
       - run:
           command: |
-            docker-compose -f docker-compose.yml --project-name api-unit-tests exec api chmod -R 777 tests/coverage/merged.xml
-            docker cp api-unit-tests_api_1:/var/www/tests/coverage/merged.xml "<< parameters.dir >>/merged.xml"
+            docker-compose -f docker-compose.yml --project-name api-unit-tests exec api chmod -R 777 "<< parameters.file_to_copy >>"
+            docker cp api-unit-tests_api_1:/var/www/tests/coverage/merged.xml "<< parameters.copy_to_dir >>/merged.xml"
