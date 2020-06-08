@@ -25,5 +25,6 @@ terraform/to_import\.sh
 .certs
 
 **/terraform.output.json
+log/pact.log
 
 log/pact.log
