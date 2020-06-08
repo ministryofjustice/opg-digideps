@@ -32,6 +32,11 @@ monolog:
        main:
            formatter: line_formatter
            channels: [ "!translation" ]
+           bubble: false
+       audit:
+           type: service
+           id: audit_handler
+           channels: [ "!translation" ]
 
 jms_serializer:
     metadata:

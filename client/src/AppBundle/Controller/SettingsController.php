@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\Redirector;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
@@ -14,6 +15,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SettingsController extends AbstractController
 {
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
     /**
      * @Route("/deputyship-details", name="account_settings")
      * @Route("/org/settings", name="org_settings")
@@ -82,6 +90,9 @@ class SettingsController extends AbstractController
      **/
     public function profileAction()
     {
+        $this->logger->notice('User Updated', ['event' => 'USER_UPDATED']);
+
+
         return [
             'user' => $this->getUser()
         ];

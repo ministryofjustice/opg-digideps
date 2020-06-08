@@ -1,0 +1,13 @@
+services:
+  Aws\CloudWatchLogs\CloudWatchLogsClient:
+    class: Aws\CloudWatchLogs\CloudWatchLogsClient
+    arguments:
+      - region: "eu-west-1"
+        version: "2014-03-28"
+
+  AppBundle\Service\Audit\AuditLogHandler:
+    autowire: false
+    class: AppBundle\Service\Audit\AuditLogHandler
+    arguments:
+      - '@Aws\CloudWatchLogs\CloudWatchLogsClient'
+      - 'audit-ddpb3349'
