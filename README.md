@@ -35,7 +35,7 @@ To develop with Terraform, you must have the following installed:
 - terraform-docs
 - jq
 - aws-vault for credentials handling (optional)
-- direnv (to set shell exports, see .envrc) (optional)
+- direnv (to set shell exports, see .envrc) (optional) a
 
 You can then use the make files in `environment` and `shared` to set up the environment.
 
