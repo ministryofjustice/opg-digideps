@@ -35,7 +35,7 @@ monolog:
            bubble: false
        audit:
            type: service
-           id: audit_handler
+           id: AppBundle\Service\Audit\AuditLogHandler
            channels: [ "!translation" ]
 
 jms_serializer:
