@@ -25,3 +25,6 @@ terraform/to_import\.sh
 
 **/terraform.output.json
 log/pact.log
+
+# Lambda specific
+*lambda*.zip
