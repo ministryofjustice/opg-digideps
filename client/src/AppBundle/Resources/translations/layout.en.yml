@@ -12,4 +12,5 @@ nav:
     adminStats: Analytics
     adminDocuments: Submissions
     serviceNotification: Notifications
+    adminFixtures: Fixtures
 emailSupport: Email support
