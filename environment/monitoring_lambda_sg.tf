@@ -1,6 +1,6 @@
-data "aws_vpc_endpoint" "secrets_endpoint" {
-  service_name = "com.amazonaws.eu-west-1.secretsmanager"
-  vpc_id       = data.aws_vpc.vpc.id
+data "aws_security_group" "secrets_endpoint" {
+  tags   = { Name = "secrets_endpoint" }
+  vpc_id = data.aws_vpc.vpc.id
 }
 
 locals {
@@ -17,7 +17,7 @@ locals {
       type        = "egress"
       protocol    = "tcp"
       target_type = "security_group_id"
-      target      = data.aws_vpc_endpoint.secrets_endpoint.id
+      target      = data.aws_security_group.secrets_endpoint.id
     }
   }
 }
