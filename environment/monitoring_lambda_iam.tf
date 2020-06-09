@@ -1,5 +1,5 @@
 resource "aws_iam_role" "monitoring_lambda_role" {
-  name_prefix        = "lambda-lpa-codes-${local.environment}-"
+  name_prefix        = "monitoring-${local.environment}-"
   assume_role_policy = data.aws_iam_policy_document.lambda_assume.json
   lifecycle {
     create_before_destroy = true
@@ -18,13 +18,13 @@ data "aws_iam_policy_document" "lambda_assume" {
   }
 }
 
-resource "aws_iam_role_policy" "lambda" {
+resource "aws_iam_role_policy" "monitoring_lambda" {
   name   = "monitoring-lambda-${local.environment}"
   role   = aws_iam_role.monitoring_lambda_role.id
-  policy = data.aws_iam_policy_document.lambda.json
+  policy = data.aws_iam_policy_document.monitoring_lambda.json
 }
 
-data "aws_iam_policy_document" "lambda" {
+data "aws_iam_policy_document" "monitoring_lambda" {
   statement {
     sid       = "allowLogging"
     effect    = "Allow"
@@ -35,7 +35,34 @@ data "aws_iam_policy_document" "lambda" {
       "logs:DescribeLogStreams"
     ]
   }
+
+  statement {
+    sid       = "allowGetDBSecret"
+    effect    = "Allow"
+    resources = [data.aws_secretsmanager_secret.database_password.arn]
+
+    actions = [
+      "secretsmanager:GetResourcePolicy",
+      "secretsmanager:GetSecretValue",
+      "secretsmanager:DescribeSecret",
+      "secretsmanager:ListSecretVersionIds"
+    ]
+  }
+
+  //  statement {
+  //    sid    = "allowDecrypt"
+  //    effect = "Allow"
+  //
+  //    actions = [
+  //      "kms:Decrypt",
+  //    ]
+  //
+  //    resources = [
+  //      data.aws_kms_alias.secretmanager.target_key_arn,
+  //    ]
+  //  }
 }
+
 
 resource "aws_iam_role_policy_attachment" "vpc_access_execution_role" {
   role       = aws_iam_role.monitoring_lambda_role.name

@@ -21,20 +21,12 @@ resource "aws_lambda_function" "monitoring" {
     variables = {
       LOGGER_LEVEL = "INFO"
       ENVIRONMENT  = local.environment
+      DB_ENDPOINT  = local.account.always_on ? aws_db_instance.api[0].endpoint : aws_rds_cluster.api[0].endpoint
+      DB_USER      = "digidepsmaster"
     }
   }
   tags = local.default_tags
 }
-
-//resource "aws_lambda_permission" "lambda_permission" {
-//  statement_id  = "AllowApiLPACodesGatewayInvoke-${var.environment}-${var.openapi_version}-${var.lambda_prefix}"
-//  action        = "lambda:InvokeFunction"
-//  function_name = aws_lambda_function.lambda_function.function_name
-//  principal     = "apigateway.amazonaws.com"
-//
-//  source_arn = "${var.rest_api.execution_arn}/*/*/*"
-//}
-
 
 resource "aws_lambda_layer_version" "monitoring_lambda_layer" {
   filename         = data.archive_file.monitoring_lambda_layer_zip.output_path

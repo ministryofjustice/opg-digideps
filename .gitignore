@@ -28,3 +28,6 @@ log/pact.log
 
 # Lambda specific
 *lambda*.zip
+!lambda/layers/monitoring/python/lib/python3.7/site-packages/psycopg2
+!lambda/layers/monitoring/python/lib/python3.7/site-packages/README.md
+lambda/layers/monitoring/python/lib/python3.7/site-packages/
