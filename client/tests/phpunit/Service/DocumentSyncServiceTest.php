@@ -390,16 +390,19 @@ class DocumentSyncServiceTest extends KernelTestCase
         string $expectedUuidUsedToSyncDoc
     )
     {
+        $document = (new Document())->setId(6789);
+
         $reportPdfReportSubmission =
             (new ReportSubmission())
                 ->setId($reportPdfSubmissionId)
-                ->setUuid($reportPdfUuid);
+                ->setUuid($reportPdfUuid)
+                ->setDocuments([$document]);
 
         $supportingDocSubmission = (new ReportSubmission())->setId($supportingDocSubmissionId);
 
         $queuedDocumentData = (new QueuedDocumentData())
             ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
-            ->setDocumentId(6789)
+            ->setDocumentId($document->getId())
             ->setReportSubmissionId($supportingDocSubmissionId)
             ->setReportSubmissions([$reportPdfReportSubmission, $supportingDocSubmission])
             ->setReportStartDate($this->reportStartDate)
@@ -499,10 +502,13 @@ class DocumentSyncServiceTest extends KernelTestCase
     /** @test */
     public function sendSupportingDocument_sync_failure()
     {
+        $document = (new Document())->setId(6789);
+
         $reportPdfReportSubmission =
             (new ReportSubmission())
                 ->setId($this->reportSubmissionId)
-                ->setUuid($this->reportPdfSubmissionUuid);
+                ->setUuid($this->reportPdfSubmissionUuid)
+                ->setDocuments([$document]);
 
         $queuedDocumentData = (new QueuedDocumentData())
             ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
