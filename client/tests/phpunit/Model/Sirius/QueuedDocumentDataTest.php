@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 
+use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Model\Sirius\QueuedDocumentData;
 use PHPUnit\Framework\TestCase;
@@ -34,13 +35,46 @@ class QueuedDocumentDataTest extends TestCase
     /** @test */
     public function getSyncedReportSubmission()
     {
-        $syncedReportPdfSubmission = (new ReportSubmission())->setUuid('abc');
-        $notSyncedReportPdfSubmission = new ReportSubmission();
+        $document = (new Document())->setId(1);
 
-        $syncedReportPdfDocument = (new QueuedDocumentData())->setIsReportPdf(true)->setReportSubmissions([$syncedReportPdfSubmission]);
-        $notSyncedReportPdfDocument = (new QueuedDocumentData())->setIsReportPdf(true)->setReportSubmissions([$notSyncedReportPdfSubmission]);
+        $syncedReportPdfSubmission = (new ReportSubmission())->setUuid('abc')->setDocuments([$document]);
+        $syncedReportPdfDocumentData = (new QueuedDocumentData())
+            ->setIsReportPdf(true)
+            ->setReportSubmissions([$syncedReportPdfSubmission])
+            ->setDocumentId($document->getId());;
 
-        self::assertEquals($syncedReportPdfSubmission, $syncedReportPdfDocument->getSyncedReportSubmission());
-        self::assertEquals(null, $notSyncedReportPdfDocument->getSyncedReportSubmission());
+        self::assertEquals($syncedReportPdfSubmission, $syncedReportPdfDocumentData->getSyncedReportSubmission());
+    }
+
+    /** @test */
+    public function getSyncedReportSubmission_not_synced_documents_return_null()
+    {
+        $document = (new Document())->setId(1);
+
+        $notSyncedReportPdfSubmission = (new ReportSubmission())->setUuid(null)->setDocuments([$document]);
+        $notSyncedReportPdfDocumentData = (new QueuedDocumentData())
+            ->setIsReportPdf(true)
+            ->setReportSubmissions([$notSyncedReportPdfSubmission])
+            ->setDocumentId($document->getId());
+
+        self::assertEquals(null, $notSyncedReportPdfDocumentData->getSyncedReportSubmission());
+    }
+
+    /** @test */
+    public function getSyncedReportSubmission_two_submissions_returns_submission_with_matching_document_id()
+    {
+        $document1 = (new Document())->setId(1);
+        $document2 = (new Document())->setId(2);
+        $document3 = (new Document())->setId(3);
+
+        $syncedReportPdfSubmission1 = (new ReportSubmission())->setUuid('abc-123')->setDocuments([$document1, $document2]);
+        $syncedReportPdfSubmission2 = (new ReportSubmission())->setUuid('def-345')->setDocuments([$document3]);
+
+        $syncedReportPdfDocumentData = (new QueuedDocumentData())
+            ->setIsReportPdf(true)
+            ->setReportSubmissions([$syncedReportPdfSubmission1, $syncedReportPdfSubmission2])
+            ->setDocumentId($document3->getId());
+
+        self::assertEquals($syncedReportPdfSubmission2, $syncedReportPdfDocumentData->getSyncedReportSubmission());
     }
 }
