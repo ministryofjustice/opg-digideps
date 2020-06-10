@@ -14,15 +14,16 @@ resource "aws_lambda_function" "monitoring" {
   depends_on       = [aws_cloudwatch_log_group.lambda]
   layers           = [aws_lambda_layer_version.monitoring_lambda_layer.arn]
   vpc_config {
-    security_group_ids = [module.api_service_security_group.id]
+    security_group_ids = [module.monitoring_lambda_security_group.id]
     subnet_ids         = data.aws_subnet.private.*.id
   }
   environment {
     variables = {
-      LOGGER_LEVEL = "INFO"
-      ENVIRONMENT  = local.environment
-      DB_ENDPOINT  = local.account.always_on ? aws_db_instance.api[0].endpoint : aws_rds_cluster.api[0].endpoint
-      DB_USER      = "digidepsmaster"
+      ENVIRONMENT = local.environment
+      DB_ENDPOINT = local.account.always_on ? aws_db_instance.api[0].endpoint : aws_rds_cluster.api[0].endpoint
+      DB_USER     = "digidepsmaster"
+      DB_PORT     = "5432"
+      DB_NAME     = "api"
     }
   }
   tags = local.default_tags
@@ -56,4 +57,17 @@ data "archive_file" "monitoring_lambda_layer_zip" {
   type        = "zip"
   source_dir  = "../lambda/layers/monitoring"
   output_path = "./monitoring_lambda_layer.zip"
+}
+
+resource "aws_cloudwatch_log_metric_filter" "monitoring_lambda" {
+  name           = "MonitorQueuedDocuments.${local.environment}"
+  pattern        = "{ $.eventType = \"Queued_Documents\" }"
+  log_group_name = aws_cloudwatch_log_group.lambda.name
+
+  metric_transformation {
+    name          = "QueuedGreaterThanHour.${local.environment}"
+    namespace     = "Monitoring"
+    value         = "$.count"
+    default_value = "0"
+  }
 }

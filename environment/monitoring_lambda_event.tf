@@ -10,7 +10,7 @@ resource "aws_cloudwatch_event_target" "monitoring_db_queries" {
   arn   = aws_lambda_function.monitoring.arn
   input = <<EOF
     {
-      "check_to_run": "queued_documents"
+      "check_name": "queued_documents"
     }
   EOF
 }

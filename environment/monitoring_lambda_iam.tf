@@ -37,6 +37,15 @@ data "aws_iam_policy_document" "monitoring_lambda" {
   }
 
   statement {
+    sid       = "allowMetrics"
+    effect    = "Allow"
+    resources = ["*"]
+    actions = [
+      "cloudwatch:PutMetricData"
+    ]
+  }
+
+  statement {
     sid       = "allowGetDBSecret"
     effect    = "Allow"
     resources = [data.aws_secretsmanager_secret.database_password.arn]
@@ -48,19 +57,6 @@ data "aws_iam_policy_document" "monitoring_lambda" {
       "secretsmanager:ListSecretVersionIds"
     ]
   }
-
-  //  statement {
-  //    sid    = "allowDecrypt"
-  //    effect = "Allow"
-  //
-  //    actions = [
-  //      "kms:Decrypt",
-  //    ]
-  //
-  //    resources = [
-  //      data.aws_kms_alias.secretmanager.target_key_arn,
-  //    ]
-  //  }
 }
 
 
