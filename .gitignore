@@ -32,3 +32,4 @@ log/pact.log
 !lambda_functions/layers/monitoring/python/lib/python3.7/site-packages/README.md
 lambda_functions/layers/monitoring/python/lib/python3.7/site-packages/
 *__pycache__*
+*venv*

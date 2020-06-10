@@ -266,8 +266,8 @@ jobs:
       - attach_workspace: { at: ~/project }
       - run:
           name: Extract lambda layers
-          working_directory:  ~/project/lambda
-          command: tar xvf ~/project/lambda/layer.tar
+          working_directory:  ~/project/lambda_functions
+          command: tar xvf ~/project/lambda_functions/layer.tar
       - run:
           name: Initialize
           command: terraform init
@@ -371,15 +371,15 @@ jobs:
       - run:
           name: install requirements for all lambda layers
           command: |
-            export LAYER_PATH=lambda/layers/monitoring/python/lib/python3.7/site-packages
-            pip3 install -r lambda/requirements/requirements.txt --target ./$LAYER_PATH/
-            cd lambda
+            export LAYER_PATH=lambda_functions/layers/monitoring/python/lib/python3.7/site-packages
+            pip3 install -r lambda_functions/requirements/requirements.txt --target ./$LAYER_PATH/
+            cd lambda_functions
             tar cvf layer.tar layers
       - persist_to_workspace:
           root: .
           paths:
             - ./docker-images.tar
-            - ./lambda/layer.tar
+            - ./lambda_functions/layer.tar
 
   client-unit-test:
     docker:
@@ -402,6 +402,16 @@ jobs:
           command: |
             ~/project/.circleci/set_env.sh >> $BASH_ENV
             ~/project/.circleci/set_env_pact.sh >> $BASH_ENV
+      - run:
+          name: Install lambda requirements for unit tests
+          working_directory: ~/project/lambda_functions/requirements
+          command: |
+            pip3 install -r requirements-dev.txt
+      - run:
+          name: Install lambda requirements for unit tests
+          working_directory: ~/project
+          command: |
+            python3 -m pytest
       - run:
           name: Run tests
           command: |

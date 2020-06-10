@@ -21,14 +21,9 @@ def lambda_handler(event, context):
 
         conn_string = f"dbname='{db}' port='{db_port}' user='{user}' password='{secret}' host='{host}'"
         conn = psycopg2.connect(conn_string)
-        response = checks["check_name"](conn)
-        log_message = {
-            "eventType": "Queued_Documents",
-            "count": str(response)
-        }
-        print(json.dumps(log_message))
+        response = checks[event["check_name"]](conn)
         status_code = 200
-        msg = str(event["check_name"]) + " count: " + str(response)
+        msg = str(response)
     else:
         status_code = 400
         msg = "Invalid JSON. The field 'check_name', is required"
@@ -54,13 +49,20 @@ def queued_documents(conn):
     conn.commit()
 
     records = cursor.fetchall()
-
+    number_of_documents = 0
     for i in records:
         number_of_documents = i[0]
 
     cursor.close()
 
-    return number_of_documents
+    log_message = {
+        "eventType": "Queued_Documents",
+        "count": str(number_of_documents)
+    }
+
+    print(json.dumps(log_message))
+
+    return log_message
 
 
 def get_secret():

@@ -1,16 +1,11 @@
-import json
+# import json
 import pytest
-import psycopg2
-import pytest_pgsql
-from pytest_dbfixtures import factories
 from lambda_functions.functions.monitoring.monitoring import (
-    queued_documents,
     get_secret
 )
 
 import boto3
-from aws_xray_sdk.core import xray_recorder
-from moto import (mock_secretsmanager, mock_rds)
+from moto import (mock_secretsmanager)
 
 
 @pytest.mark.parametrize(
@@ -19,10 +14,6 @@ from moto import (mock_secretsmanager, mock_rds)
 )
 @mock_secretsmanager
 def test_get_secret(secret_code, environment, region):
-    # Disable sampling for tests, see github issue:
-    # https://github.com/aws/aws-xray-sdk-python/issues/155
-    # xray_recorder.configure(sampling=False)
-
     session = boto3.session.Session()
     client = session.client(service_name="secretsmanager", region_name=region)
 

@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "monitoring_lambda" {
   statement {
     sid       = "allowLogging"
     effect    = "Allow"
-    resources = [aws_cloudwatch_log_group.lambda.arn]
+    resources = [aws_cloudwatch_log_group.monitoring_lambda.arn]
     actions = [
       "logs:CreateLogStream",
       "logs:PutLogEvents",
