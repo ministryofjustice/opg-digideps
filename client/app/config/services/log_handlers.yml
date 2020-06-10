@@ -10,4 +10,3 @@ services:
     class: AppBundle\Service\Audit\AuditLogHandler
     arguments:
       - '@Aws\CloudWatchLogs\CloudWatchLogsClient'
-      - 'audit-ddpb3349'

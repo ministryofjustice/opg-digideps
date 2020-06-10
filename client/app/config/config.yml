@@ -87,18 +87,6 @@ services:
     line_formatter:
         class: Monolog\Formatter\LineFormatter
 
-monolog:
-   handlers:
-       main:
-           type: stream
-           path: php://stderr
-           level: "%log_level%"
-           formatter: logstash_formatter
-           bubble: false
-       audit:
-           type: service
-           id: AppBundle\Service\Audit\AuditLogHandler
-
 sensio_framework_extra:
     router:
         annotations: false

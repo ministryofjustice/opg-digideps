@@ -30,13 +30,14 @@ services:
 monolog:
    handlers:
        main:
+           type: stream
+           path: php://stderr
+           level: warning
            formatter: line_formatter
-           channels: [ "!translation" ]
            bubble: false
        audit:
            type: service
            id: AppBundle\Service\Audit\AuditLogHandler
-           channels: [ "!translation" ]
 
 jms_serializer:
     metadata:

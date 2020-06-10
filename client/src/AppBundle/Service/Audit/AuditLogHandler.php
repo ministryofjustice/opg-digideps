@@ -17,6 +17,8 @@ class AuditLogHandler extends AbstractProcessingHandler
      */
     const EVENT_SIZE_LIMIT = 262118; // 262144 - reserved 26
 
+    const AUDIT_LOG_ENV_VAR = 'AUDIT_LOG_GROUP_NAME';
+
     /** @var CloudWatchLogsClient */
     private $client;
 
@@ -37,14 +39,13 @@ class AuditLogHandler extends AbstractProcessingHandler
 
     public function __construct(
         CloudWatchLogsClient $client,
-        string $group,
         $retention = 14,
         $level = Logger::NOTICE,
         $bubble = true,
         $createGroup = true
     ) {
         $this->client = $client;
-        $this->group = $group;
+        $this->group = getenv(self::AUDIT_LOG_ENV_VAR);
         $this->retention = $retention;
         $this->createGroup = $createGroup;
 
@@ -56,9 +57,13 @@ class AuditLogHandler extends AbstractProcessingHandler
      */
     protected function write(array $record): void
     {
-//        putenv('AWS_ACCESS_KEY_ID=');
-//        putenv('AWS_SECRET_ACCESS_KEY=');
-//        putenv('AWS_SESSION_TOKEN=');
+        putenv('AWS_ACCESS_KEY_ID=ASIATT3PESUZPEX67TNP');
+        putenv('AWS_SECRET_ACCESS_KEY=P9FPxHTMk4jZGNI0QGWTyhP3L0fL6rmZZ91Asi8y');
+        putenv('AWS_SESSION_TOKEN=FwoGZXIvYXdzEK///////////wEaDAoYC4OymJBI8Yj23iK7AdHpKcS4bfG2Ry96JRof7MVZ/+Z1rTdWdE+tI7nofGKNM29yo+6yZRnnuEBsqHuDsA9KomsEq8E+A4u3rIaJbOXGlG3RNcAUIFQck5YoRNbof/U7wz2RpP4gIfhLH27ojIPEZEeZuAAT5bnikW/8XXXJj+zCeW4tXQQ25OhOq4uJhbJx4Bla3w1aFsw/g8reBuyIk5SZFoNxTp64ccz6tyqX5BRlq5ECX39qkttacgW1L3pDXqJ+1o8ZWEMokZX+9gUyLdqreDCGAuDlU0LQjPHc5VDpjM1m0VN1meo7p/8Mh1hnxY3A8wiG72im71oVvA==');
+
+        if (!isset($record['context']['event'])) {
+            return;
+        }
 
         $this->stream = $record['context']['event'];
         $records = $this->formatRecords($record);
