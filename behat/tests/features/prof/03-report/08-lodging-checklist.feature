@@ -64,13 +64,6 @@ Feature: Admin report checklist
       | report_checklist_bondOrderMatchCasrec_0                |
       | report_checklist_bondOrderMatchCasrec_1                |
       | report_checklist_bondOrderMatchCasrec_2                |
-      | report_checklist_paymentsMatchCostCertificate_0        |
-      | report_checklist_paymentsMatchCostCertificate_1        |
-      | report_checklist_profCostsReasonableAndProportionate_0 |
-      | report_checklist_profCostsReasonableAndProportionate_1 |
-      | report_checklist_hasDeputyOverchargedFromPreviousEstimates_0 |
-      | report_checklist_hasDeputyOverchargedFromPreviousEstimates_1 |
-      | report_checklist_hasDeputyOverchargedFromPreviousEstimates_2 |
       | report_checklist_nextBillingEstimatesSatisfactory_0    |
       | report_checklist_nextBillingEstimatesSatisfactory_1    |
       | report_checklist_caseWorkerSatisified_0                |

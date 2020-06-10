@@ -87,7 +87,6 @@ class FixtureController extends AbstractController
             $deputiesData = $this->getRestClient()->get('/user/get-all', 'array', [], $query);
             $sanitizedDeputyData = $this->removeNullValues($deputiesData);
 
-            var_dump($sanitizedDeputyData);
             $deputies = $this->serializer->deserialize(json_encode($sanitizedDeputyData), 'AppBundle\Entity\User[]', 'json');
 
             $this->addFlash('notice', $this->createUsersFlashMessage(array_reverse($deputies), $caseNumber));
