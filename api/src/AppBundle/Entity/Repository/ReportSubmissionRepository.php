@@ -7,6 +7,7 @@ use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
+use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 
 class ReportSubmissionRepository extends EntityRepository
 {
@@ -138,6 +139,10 @@ class ReportSubmissionRepository extends EntityRepository
         $order = 'ASC'
     ) {
 
+        /** @var SoftDeleteableFilter $filter */
+        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter->disableForEntity(Client::class);
+
         $qb = $this->createQueryBuilder('rs');
         $qb
             ->leftJoin('rs.createdBy', 'cb')
@@ -159,6 +164,8 @@ class ReportSubmissionRepository extends EntityRepository
             ->setParameter(':fromDate', $this->determineCreatedFromDate($fromDate))
             ->setParameter(':toDate', $this->determineCreatedToDate($toDate))
             ->orderBy('rs.' . $orderBy, $order);
+
+        $this->_em->getFilters()->enable('softdeleteable');
 
         return $qbSelect->getQuery()->getResult();
     }
