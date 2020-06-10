@@ -49,7 +49,7 @@ def queued_documents(conn):
         """select count(*)
         from document
         where created_on < NOW() - INTERVAL '1 hour'
-        and synchronisation_status='PERMANENT_ERROR';"""
+        and synchronisation_status='QUEUED';"""
     )
     conn.commit()
 
