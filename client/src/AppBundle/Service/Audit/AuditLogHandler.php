@@ -10,15 +10,6 @@ use Monolog\Logger;
 
 class AuditLogHandler extends AbstractProcessingHandler
 {
-    /**
-     * Event size limit (https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/cloudwatch_limits_cwl.html)
-     *
-     * @var int
-     */
-    const EVENT_SIZE_LIMIT = 262118; // 262144 - reserved 26
-
-    const AUDIT_LOG_ENV_VAR = 'AUDIT_LOG_GROUP_NAME';
-
     /** @var CloudWatchLogsClient */
     private $client;
 
@@ -28,26 +19,16 @@ class AuditLogHandler extends AbstractProcessingHandler
     /** @var string */
     private $stream;
 
-    /** @var integer */
-    private $retention;
-
-    /** @var bool */
-    private $createGroup;
-
     /** @var bool */
     private $initialized = false;
 
-    public function __construct(
-        CloudWatchLogsClient $client,
-        $retention = 14,
-        $level = Logger::NOTICE,
-        $bubble = true,
-        $createGroup = true
-    ) {
+    /** @var string */
+    const AUDIT_LOG_ENV_VAR = 'AUDIT_LOG_GROUP_NAME';
+
+    public function __construct(CloudWatchLogsClient $client, $level = Logger::NOTICE, $bubble = true)
+    {
         $this->client = $client;
         $this->group = getenv(self::AUDIT_LOG_ENV_VAR);
-        $this->retention = $retention;
-        $this->createGroup = $createGroup;
 
         parent::__construct($level, $bubble);
     }
@@ -55,18 +36,14 @@ class AuditLogHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    protected function write(array $record): void
+    protected function write(array $entry): void
     {
-        putenv('AWS_ACCESS_KEY_ID=ASIATT3PESUZPEX67TNP');
-        putenv('AWS_SECRET_ACCESS_KEY=P9FPxHTMk4jZGNI0QGWTyhP3L0fL6rmZZ91Asi8y');
-        putenv('AWS_SESSION_TOKEN=FwoGZXIvYXdzEK///////////wEaDAoYC4OymJBI8Yj23iK7AdHpKcS4bfG2Ry96JRof7MVZ/+Z1rTdWdE+tI7nofGKNM29yo+6yZRnnuEBsqHuDsA9KomsEq8E+A4u3rIaJbOXGlG3RNcAUIFQck5YoRNbof/U7wz2RpP4gIfhLH27ojIPEZEeZuAAT5bnikW/8XXXJj+zCeW4tXQQ25OhOq4uJhbJx4Bla3w1aFsw/g8reBuyIk5SZFoNxTp64ccz6tyqX5BRlq5ECX39qkttacgW1L3pDXqJ+1o8ZWEMokZX+9gUyLdqreDCGAuDlU0LQjPHc5VDpjM1m0VN1meo7p/8Mh1hnxY3A8wiG72im71oVvA==');
-
-        if (!isset($record['context']['event'])) {
+        if (!$this->shallHandle($entry)) {
             return;
         }
 
-        $this->stream = $record['context']['event'];
-        $records = $this->formatRecords($record);
+        $this->stream = $entry['context']['event'];
+        $entry = $this->formatEntry($entry);
 
         if (false === $this->initialized) {
             $this->initialize();
@@ -74,123 +51,159 @@ class AuditLogHandler extends AbstractProcessingHandler
 
         // send items, retry once with a fresh sequence token
         try {
-            $this->send($records);
+            $this->send($entry);
         } catch (CloudWatchLogsException $e) {
             $this->refreshSequenceToken();
-            $this->send($records);
+            $this->send($entry);
         }
     }
 
-    private function formatRecords(array $entry): array
+    /**
+     * @param array $record
+     * @return bool
+     */
+    private function shallHandle(array $record): bool
     {
-        $entries = str_split($entry['formatted'], self::EVENT_SIZE_LIMIT);
-        $timestamp = $entry['datetime']->format('U.u') * 1000;
-        $records = [];
+        return
+            isset($record['context']['event']) &&
+            isset($record['formatted']) &&
+            isset($record['datetime']) &&
+            $record['datetime'] instanceof \DateTimeInterface;
+    }
 
-        foreach ($entries as $entry) {
-            $records[] = [
-                'message' => $entry,
-                'timestamp' => $timestamp
-            ];
-        }
-
-        return $records;
+    /**
+     * @param array $entry
+     * @return array
+     */
+    private function formatEntry(array $entry): array
+    {
+        return [
+            [
+                'message' => $entry['formatted'],
+                'timestamp' => $entry['datetime']->format('U.u') * 1000
+            ]
+        ];
     }
 
     private function initialize(): void
     {
-        if ($this->createGroup) {
-            $this->initializeGroup();
-        }
-
+        $this->initializeGroup();
         $this->refreshSequenceToken();
     }
 
     private function initializeGroup(): void
     {
-        // fetch existing groups
-        $existingGroups =
-            $this
-                ->client
-                ->describeLogGroups(['logGroupNamePrefix' => $this->group])
-                ->get('logGroups');
+        $existingGroups = $this->fetchExistingLogGroups();
+        $existingGroupsNames = $this->extractExistingGroupNames($existingGroups);
 
-        // extract existing groups names
-        $existingGroupsNames = array_map(
+        if (!in_array($this->group, $existingGroupsNames, true)) {
+            $this->createLogGroup();
+        }
+    }
+
+    /**
+     * @return array
+     */
+    private function fetchExistingLogGroups(): array
+    {
+        return $this
+            ->client
+            ->describeLogGroups(['logGroupNamePrefix' => $this->group])
+            ->get('logGroups');
+    }
+
+    /**
+     * @param array $existingGroups
+     * @return array
+     */
+    private function extractExistingGroupNames(array $existingGroups): array
+    {
+        return array_map(
             function ($group) {
                 return $group['logGroupName'];
             },
             $existingGroups
         );
-
-        // create group and set retention policy if not created yet
-        if (!in_array($this->group, $existingGroupsNames, true)) {
-            $createLogGroupArguments = ['logGroupName' => $this->group];
-
-            if (!empty($this->tags)) {
-                $createLogGroupArguments['tags'] = $this->tags;
-            }
-
-            $this
-                ->client
-                ->createLogGroup($createLogGroupArguments);
-
-            if ($this->retention !== null) {
-                $this
-                    ->client
-                    ->putRetentionPolicy(
-                        [
-                            'logGroupName' => $this->group,
-                            'retentionInDays' => $this->retention,
-                        ]
-                    );
-            }
-        }
     }
 
+    private function createLogGroup(): void
+    {
+        $this
+            ->client
+            ->createLogGroup(['logGroupName' => $this->group]);
+    }
 
     private function refreshSequenceToken(): void
     {
-        // fetch existing streams
-        $existingStreams =
-            $this
-                ->client
-                ->describeLogStreams(
-                    [
-                        'logGroupName' => $this->group,
-                        'logStreamNamePrefix' => $this->stream,
-                    ]
-                )->get('logStreams');
+        $existingStreams = $this->fetchExistingStreams();
+        $existingStreamsNames = $this->extractExistingStreamNames($existingStreams);
 
-        // extract existing streams names
-        $existingStreamsNames = array_map(
-            function ($stream) {
-
-                // set sequence token
-                if ($stream['logStreamName'] === $this->stream && isset($stream['uploadSequenceToken'])) {
-                    $this->sequenceToken = $stream['uploadSequenceToken'];
-                }
-
-                return $stream['logStreamName'];
-            },
-            $existingStreams
-        );
-
-        // create stream if not created
         if (!in_array($this->stream, $existingStreamsNames, true)) {
-            $this
-                ->client
-                ->createLogStream(
-                    [
-                        'logGroupName' => $this->group,
-                        'logStreamName' => $this->stream
-                    ]
-                );
+            $this->createLogStream();
+        } else {
+            $this->determineSequenceToken($existingStreams);
         }
 
         $this->initialized = true;
     }
 
+    /**
+     * @return array
+     */
+    private function fetchExistingStreams(): array
+    {
+        return $this
+            ->client
+            ->describeLogStreams(
+                [
+                    'logGroupName' => $this->group,
+                    'logStreamNamePrefix' => $this->stream,
+                ]
+            )->get('logStreams');
+    }
+
+    /**
+     * @param $existingStreams
+     * @return array
+     */
+    private function extractExistingStreamNames($existingStreams): array
+    {
+        return array_map(
+            function ($stream) {
+                return $stream['logStreamName'];
+            },
+            $existingStreams
+        );
+    }
+
+    private function createLogStream(): void
+    {
+        $this
+            ->client
+            ->createLogStream(
+                [
+                    'logGroupName' => $this->group,
+                    'logStreamName' => $this->stream
+                ]
+            );
+    }
+
+    /**
+     * @param array $existingStreams
+     */
+    private function determineSequenceToken(array $existingStreams): void
+    {
+        foreach ($existingStreams as $stream) {
+            if ($stream['logStreamName'] === $this->stream && isset($stream['uploadSequenceToken'])) {
+                $this->sequenceToken = $stream['uploadSequenceToken'];
+                break;
+            }
+        }
+    }
+
+    /**
+     * @param array $entry
+     */
     private function send(array $entry): void
     {
         $data = [
@@ -205,10 +218,14 @@ class AuditLogHandler extends AbstractProcessingHandler
 
         $response = $this->client->putLogEvents($data);
 
+        // Set this in memory in case the same request goes on to audit log something else - saves fetching it from AWS.
         $this->sequenceToken = $response->get('nextSequenceToken');
     }
 
-    protected function getDefaultFormatter()
+    /**
+     * @return JsonFormatter
+     */
+    protected function getDefaultFormatter(): JsonFormatter
     {
         return new JsonFormatter();
     }
