@@ -37,7 +37,7 @@
                     </div>
                 </div>
             {% endset %}
-            {{ macros.notification(report.isDue ? 'error' : 'notice', alertMessage) }}
+            {{ macros.notification(report.isDue and report.balanceMismatchExplanation is null ? 'error' : 'info', alertMessage) }}
         {% endif %}
     {% endif %}
 
