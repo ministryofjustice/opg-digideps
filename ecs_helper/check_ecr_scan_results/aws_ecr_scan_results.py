@@ -169,7 +169,7 @@ def main():
     work.recursive_check_make_report(args.tag)
     if args.slack_webhook is None:
         print("No slack webhook provided, skipping post of results to slack")
-    if args.post_to_slack and args.slack_webhook is not None:
+    if args.post_to_slack == "True" and args.slack_webhook is not None:
         work.post_to_slack(args.slack_webhook)
 
 
