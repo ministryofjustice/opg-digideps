@@ -21,8 +21,6 @@ output "Tasks" {
     reset_database          = module.reset_database.render
     restore                 = module.restore.render
     restore_from_production = module.restore_from_production.render
-    api_unit_test           = module.api_unit_test.render
-    client_unit_test        = module.client_unit_test.render
     integration_test        = module.integration_test.render
   }
 }

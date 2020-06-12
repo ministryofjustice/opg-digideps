@@ -58,14 +58,6 @@ locals {
       target_type = "security_group_id"
       target      = module.api_service_security_group.id
     }
-
-    api_unit_test = {
-      port        = 6379
-      type        = "ingress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = module.api_unit_test.security_group_id
-    }
   }
 }
 
@@ -113,13 +105,6 @@ locals {
       protocol    = "tcp"
       target_type = "security_group_id"
       target      = module.restore_from_production.security_group_id
-    }
-    api_unit_test = {
-      port        = 5432
-      type        = "ingress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = module.api_unit_test.security_group_id
     }
     integration_test = {
       port        = 5432
