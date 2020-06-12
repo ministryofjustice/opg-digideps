@@ -1,0 +1,33 @@
+version: '3.2'
+
+#docker-compose.override.yml is loaded and merged with docker-compose.yml by default when calling docker-compose up.
+#This file won't be merged when using docker-compose -f docker-compose.yml up (or using any other compose file).
+services:
+  admin:
+    volumes:
+      - ./client/app/config/security.yml:/var/www/app/config/security.yml
+      - ./client/app/config/config.yml:/var/www/app/config/config.yml
+      - ./client/app/config/services.yml:/var/www/app/config/services.yml
+      - ./client/app/config/services:/var/www/app/config/services
+      - ./client/src:/var/www/src:ro
+      - ./client/tests:/var/www/tests
+      - ./client/phpstan.neon:/var/www/phpstan.neon
+
+  api:
+    volumes:
+      - ./api/app:/var/www/app
+      - ./api/scripts:/var/www/scripts
+      - ./api/src:/var/www/src:ro
+      - ./api/tests:/var/www/tests
+      - ./api/web:/var/www/web
+      - ./api/phpstan.neon:/var/www/phpstan.neon
+
+  frontend:
+    volumes:
+      - ./client/app/config/security.yml:/var/www/app/config/security.yml
+      - ./client/app/config/config.yml:/var/www/app/config/config.yml
+      - ./client/app/config/services.yml:/var/www/app/config/services.yml
+      - ./client/app/config/services:/var/www/app/config/services
+      - ./client/src:/var/www/src:ro
+      - ./client/tests:/var/www/tests
+      - ./client/phpstan.neon:/var/www/phpstan.neon
