@@ -93,21 +93,22 @@ class ComponentsExtension extends AbstractExtension
                 switch ($status) {
                     case 'notStarted':
                     case 'not-started':
-                        return 'opg-tag--not-started';
+                        return 'govuk-tag--grey';
 
                     case 'notFinished':
                     case 'active':
                     case 'incomplete':
-                        return 'opg-tag--notice';
+                        return 'govuk-tag--yellow';
 
                     case 'needs-attention':
                     case 'unsubmitted':
-                        return 'opg-tag--warning';
+                    case 'not-matching':
+                        return 'govuk-tag--red';
 
                     case 'done':
                     case 'submitted':
                     case 'readyToSubmit':
-                        return 'opg-tag--success';
+                        return 'govuk-tag--green';
 
                     default:
                         return '';

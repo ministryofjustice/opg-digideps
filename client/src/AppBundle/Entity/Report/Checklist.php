@@ -5,6 +5,7 @@ namespace AppBundle\Entity\Report;
 use AppBundle\Entity\Report\Traits\HasReportTrait;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\Traits\ModifyAudit;
+use AppBundle\Validator\Constraints as AppAssert;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -202,7 +203,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.paymentsMatchCostCertificate.notBlank", groups={"submit-profDeputyCosts-checklist"})
+     * @AppAssert\YesNoNa(groups={"submit-profDeputyCosts-checklist"})
      */
     private $paymentsMatchCostCertificate;
 
@@ -211,7 +212,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.profCostsReasonableAndProportionate.notBlank", groups={"submit-profDeputyCosts-checklist"})
+     * @AppAssert\YesNoNa(groups={"submit-profDeputyCosts-checklist"})
      */
     private $profCostsReasonableAndProportionate;
 
@@ -220,7 +221,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.hasDeputyOverchargedFromPreviousEstimates.notBlank", groups={"submit-profDeputyCosts-checklist"})
+     * @AppAssert\YesNoNa(groups={"submit-profDeputyCosts-checklist"})
      */
     private $hasDeputyOverchargedFromPreviousEstimates;
 
