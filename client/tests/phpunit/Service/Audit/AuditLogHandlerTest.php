@@ -149,10 +149,13 @@ class AuditLogHandlerTest extends TestCase
      */
     private function getLogMessageInput(): array
     {
+        $dateTime = new \DateTime('2018-09-02 13:42:23');
+        $timezone = new \DateTimeZone(date_default_timezone_get());
+        $dateTime->setTimezone($timezone);
+
         return [
             'level' => Logger::NOTICE,
-            'formatted' => "{'foo': 'bar'}",
-            'datetime' => new \DateTime('2018-09-02 13:42:23'),
+            'datetime' => $dateTime,
             'context' => [
                 'event' => self::STREAM_NAME
             ]
@@ -354,13 +357,24 @@ class AuditLogHandlerTest extends TestCase
      */
     private function getExpectedMessageWithoutSequenceToken(): array
     {
+        $dateTime = new \DateTime('2018-09-02 13:42:23');
+        $timezone = new \DateTimeZone(date_default_timezone_get());
+        $dateTime->setTimezone($timezone);
+
+        $message =  [
+            'level' => Logger::NOTICE,
+            'datetime' => $dateTime,
+            'context' => [
+                'event' => self::STREAM_NAME
+            ]
+        ];
+
         return [
             'logGroupName' => self::LOG_GROUP_NAME,
             'logStreamName' => self::STREAM_NAME,
             'logEvents' => [
                 [
-                    'message' => '{"level":250,"formatted":"{\'foo\': \'bar\'}","datetime":{"date":"2018-09-02 13:42:23.000000","timezone_type":3,"timezone":"UTC"},"context":{"event":"DELETED_CLIENTS"}}
-',
+                    'message' => json_encode($message) . "\n",
                     'timestamp' => $this->getLogMessageInput()['datetime']->format('U.u') * 1000
                 ]
             ]
