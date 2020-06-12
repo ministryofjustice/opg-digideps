@@ -10,7 +10,7 @@
         stopOnWarning="true"
         backupGlobals="false"
         colors="true"
-        bootstrap="bootstrap.php"
+        bootstrap="./bootstrap.php"
         cacheTokens="false"
 >
     <testsuites>
@@ -20,14 +20,14 @@
     </testsuites>
     <php>
         <server name="KERNEL_DIR" value="../app" />
-        <ini name="memory_limit" value="1024M" />
+        <ini name="memory_limit" value="2048M" />
         <env name="SECRETS_FRONT_KEY" value="layDeputySecret" force="true" />
         <env name="SECRETS_ADMIN_KEY" value="adminSecret" force="true" />
     </php>
 
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">../../src</directory>
+            <directory suffix=".php">../src</directory>
         </whitelist>
     </filter>
 

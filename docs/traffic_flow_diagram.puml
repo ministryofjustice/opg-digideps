@@ -122,9 +122,7 @@
                 ECSService(backup_task,"backup",)
                 ECSService(restore_task,"restore",)
                 ECSService(reset_database_task,"reset_database",)
-                ECSService(api_unit_test_task,"api_unit_test",)
                 ECSService(integration_test_task,"integration_test",)
-                ECSService(client_unit_test_task,"client_unit_test",)
             }
         }
     }
@@ -157,9 +155,6 @@
     front_service -[#blue]|> nat
     admin_service -[#blue]|> nat
     document_sync_service -[#blue]|> nat
-
-    api_unit_test_task -[#green]-|> api_redis
-    api_unit_test_task -[#purple]--|> rds
 
     integration_test_task -[#blue]up-|> nat
     integration_test_task -[#purple]|> rds
