@@ -35,6 +35,7 @@ monolog:
            level: warning
            formatter: line_formatter
            bubble: false
+# uncomment to write to audit log in dev - mainly for verification and debugging
        audit:
            type: service
            id: AppBundle\Service\Audit\AuditLogHandler
