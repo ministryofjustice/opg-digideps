@@ -37,6 +37,15 @@ class FixtureController extends AbstractController
     }
 
     /**
+     * @Route("/list", name="admin_fixtures")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Template("AppBundle:Admin/Fixtures:index.html.twig")
+     */
+    public function fixtures(Request $request, KernelInterface $kernel)
+    {
+
+    }
+    /**
      * @Route("/court-orders", name="admin_fixtures_court_orders")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("AppBundle:Admin/Fixtures:courtOrders.html.twig")
@@ -78,7 +87,6 @@ class FixtureController extends AbstractController
             $deputiesData = $this->getRestClient()->get('/user/get-all', 'array', [], $query);
             $sanitizedDeputyData = $this->removeNullValues($deputiesData);
 
-            var_dump($sanitizedDeputyData);
             $deputies = $this->serializer->deserialize(json_encode($sanitizedDeputyData), 'AppBundle\Entity\User[]', 'json');
 
             $this->addFlash('notice', $this->createUsersFlashMessage(array_reverse($deputies), $caseNumber));
@@ -264,7 +272,7 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @Route("/create-casrec", methods={"GET", "POST"})
+     * @Route("/create-casrec", name="casrec_fixture", methods={"GET", "POST"})
      * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
      * @Template("AppBundle:Admin/Fixtures:casRec.html.twig")
      */

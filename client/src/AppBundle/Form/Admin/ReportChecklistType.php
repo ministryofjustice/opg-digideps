@@ -83,8 +83,8 @@ class ReportChecklistType extends AbstractType
 
         if ($this->report->hasSection('profDeputyCosts')) {
             $builder
-                ->add('paymentsMatchCostCertificate', FormTypes\ChoiceType::class, $yesNoOptions)
-                ->add('profCostsReasonableAndProportionate', FormTypes\ChoiceType::class, $yesNoOptions)
+                ->add('paymentsMatchCostCertificate', FormTypes\ChoiceType::class, $yesNoNaOptions)
+                ->add('profCostsReasonableAndProportionate', FormTypes\ChoiceType::class, $yesNoNaOptions)
                 ->add('hasDeputyOverchargedFromPreviousEstimates', FormTypes\ChoiceType::class, $yesNoNaOptions);
         }
 

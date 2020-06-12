@@ -111,6 +111,9 @@
                         <li class="moj-primary-navigation__item">
                             {{ _self.navLink('admin_metrics', 'nav.adminStats', navSection == 'metrics') }}
                         </li>
+                        <li class="moj-primary-navigation__item">
+                            {{ _self.navLink('admin_fixtures', 'nav.adminFixtures', navSection == 'fixtures') }}
+                        </li>
                     {% elseif is_granted('ROLE_AD') %}
                         <li class="moj-primary-navigation__item">
                             {{ _self.navLink('ad_homepage', 'nav.adArea', navSection == 'ad') }}

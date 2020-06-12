@@ -707,6 +707,7 @@ adminSetting:
   enabled.notBlank:  Please select either 'Yes' or 'No'
 
 checklist:
+  yesNoNa: Please select 'Yes', 'No' or 'Not Applicable'
   reportingPeriodAccurate:
     notBlank: Please select 'Yes' or 'No'
   contactDetailsUptoDate:
@@ -735,12 +736,6 @@ checklist:
     notBlank: Please choose an option
   bondOrderMatchCasrec:
     notBlank: Please choose an option
-  paymentsMatchCostCertificate:
-    notBlank: Please select 'Yes' or 'No'
-  profCostsReasonableAndProportionate:
-    notBlank: Please select 'Yes' or 'No'
-  hasDeputyOverchargedFromPreviousEstimates:
-    notBlank: Please select 'Yes' or 'No'
   nextBillingEstimatesSatisfactory:
     notBlank: Please select 'Yes' or 'No'
   futureSignificantDecisions:
