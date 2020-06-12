@@ -2,6 +2,8 @@
 
 namespace AppBundle\v2\Fixture\Controller;
 
+use AppBundle\Controller\RestController;
+use AppBundle\DataFixtures\DocumentSyncFixtures;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Ndr\NdrRepository;
@@ -11,11 +13,14 @@ use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
+use AppBundle\Exception\UnauthorisedException;
 use AppBundle\Factory\OrganisationFactory;
 use AppBundle\FixtureFactory\CasRecFactory;
 use AppBundle\FixtureFactory\ClientFactory;
 use AppBundle\FixtureFactory\ReportFactory;
 use AppBundle\FixtureFactory\UserFactory;
+use AppBundle\TestHelpers\DocumentHelpers;
+use AppBundle\TestHelpers\ReportSubmissionHelper;
 use AppBundle\v2\Controller\ControllerTrait;
 use AppBundle\v2\Fixture\ReportSection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -386,5 +391,39 @@ class FixtureController
 
 
         return $this->buildSuccessResponse($data, 'CasRec row created', Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/createDocumentSyncFixtures", methods={"GET"})
+     */
+    public function createDocumentSyncFixtures(Request $request)
+    {
+        try {
+            $reportSubmission = (new ReportSubmissionHelper())->generateAndPersistReportSubmission($this->em);
+
+            $documentHelper = new DocumentHelpers();
+
+            $reportPdf = $documentHelper->generateReportPdfDocument($reportSubmission->getReport());
+            $supportingDoc = $documentHelper->generateSupportingDocument($reportSubmission->getReport());
+
+            $reportSubmission->addDocument($reportPdf);
+            $reportSubmission->addDocument($supportingDoc);
+
+            $this->em->persist($reportPdf);
+            $this->em->persist($supportingDoc);
+            $this->em->persist($reportSubmission);
+
+            $this->em->flush();
+
+//        $data = [$reportPdf, $supportingDoc, $reportSubmission];
+
+//        [$reportPdf, $supportingDoc, $reportSubmission] = (new DocumentSyncFixtures())->doLoad($this->em);
+
+            return $this->buildSuccessResponse($data, 'CasRec row created', Response::HTTP_OK);
+        } catch (\Throwable $e) {
+            return $this->buildNotFoundResponse($e->getMessage());
+        }
+
+
     }
 }

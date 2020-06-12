@@ -12,6 +12,10 @@ trait DocumentSynchronisationTrait
     public function iAmOnSubmissionsPage()
     {
         $this->visitAdminPath('/admin/documents/list');
+
+        if ($this->getSession()->getStatusCode() > 299) {
+            throw new \Exception("There was an non successful response when accessing /admin/documents/list");
+        }
     }
 
     /**
@@ -54,6 +58,23 @@ trait DocumentSynchronisationTrait
         }
     }
 
+
+    /**
+     * @Then the document :filename should be synced
+     */
+    public function documentShouldBeSynced(string $fileName)
+    {
+        $reportPdfRow = $this->getSession()->getPage()->find('css', "table tr:contains('$fileName')");
+
+        if (is_null($reportPdfRow)) {
+            throw new \Exception("Cannot find a table row that contains the document with filename $fileName");
+        }
+
+        if (strpos($reportPdfRow->getHtml(), 'Success') === false) {
+            throw new \Exception("The document does not appear to be queued");
+        }
+    }
+
     /**
      * @When I attached a supporting document :imageName to the submitted report
      */
@@ -75,4 +96,41 @@ trait DocumentSynchronisationTrait
 
     }
 
+    /**
+     * @Given /^I run the document\-sync command$/
+     */
+    public function iRunTheDocumentSyncCommand()
+    {
+        $this->visitAdminPath('/admin/run-document-sync-command');
+
+        if ($this->getSession()->getStatusCode() > 299) {
+            throw new \Exception("There was an non successful response when running the document-sync command");
+        }
+
+        sleep(3);
+    }
+
+    /**
+     * @Given /^the report PDF document should be synced$/
+     */
+    public function theReportPDFDocumentShouldBeSynced()
+    {
+        $reportPdfRow = $this->getSession()->getPage()->find('css', 'table tr:contains("DigiRep-")');
+
+        if (is_null($reportPdfRow)) {
+            throw new \Exception("Cannot find a table row that contains the report PDF");
+        }
+
+        if (strpos($reportPdfRow->getHtml(), 'Success') === false) {
+            throw new \Exception("The document has not been synced");
+        }
+    }
+
+    /**
+     * @Given /^I print an env var$/
+     */
+    public function iPrintAnEnvVar()
+    {
+        print_r(getenv('SIRIUS_API_BASE_URI'));
+    }
 }

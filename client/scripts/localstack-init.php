@@ -22,7 +22,7 @@ do {
 $ssmClient = new SsmClient([
     'version'  => 'latest',
     'region'  => 'eu-west-1',
-    'endpoint'  => 'http://localstack:4583',
+    'endpoint'  => 'http://localstack:4566',
     'validate'  => false,
     'credentials'  => [
         'key' => 'FAKE_ID',

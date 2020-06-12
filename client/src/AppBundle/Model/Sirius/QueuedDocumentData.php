@@ -48,14 +48,20 @@ class QueuedDocumentData
     {
         foreach ($this->getReportSubmissions() as $submission) {
             if ($submission->getUuid()) {
-                foreach ($submission->getDocuments() as $document) {
-                    if ($this->getDocumentId() === $document->getId()) {
-                        return $submission;
-                    }
-                }
+                return $submission;
             }
         }
 
+//        foreach ($this->getReportSubmissions() as $submission) {
+//            if ($submission->getUuid()) {
+//                foreach ($submission->getDocuments() as $document) {
+//                    if ($this->getDocumentId() === $document->getId()) {
+//                        return $submission;
+//                    }
+//                }
+//            }
+//        }
+//
         return null;
     }
 

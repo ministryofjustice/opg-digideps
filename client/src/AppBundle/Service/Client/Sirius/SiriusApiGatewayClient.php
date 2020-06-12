@@ -118,6 +118,8 @@ class SiriusApiGatewayClient
     {
         $url = new Uri(sprintf('%s/%s/%s', $this->baseUrl, self::SIRIUS_API_GATEWAY_VERSION, $endpoint));
 
+        file_put_contents('php://stderr', print_r('URL is..........' . $url, TRUE));
+
         $request = new Request($method, $url, [
             'Accept' => $accept,
             'Content-type' => $contentType

@@ -23,6 +23,8 @@
         <ini name="memory_limit" value="2048M" />
         <env name="SECRETS_FRONT_KEY" value="layDeputySecret" force="true" />
         <env name="SECRETS_ADMIN_KEY" value="adminSecret" force="true" />
+        <env name="KERNEL_CLASS" value="AppKernel" />
+
     </php>
 
     <filter>

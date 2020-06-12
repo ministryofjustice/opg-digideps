@@ -39,7 +39,7 @@ class RequestSignerTest extends TestCase
         $signer = self::prophesize(SignatureV4Signer::class);
         $signer->signRequest($originalRequest, $credentials, $service)->shouldBeCalled()->willReturn($signedRequest);
 
-        $provider->getProvider()->shouldBeCalled()->willReturn($credentialsPromise);
+        $provider->getCredentials()->shouldBeCalled()->willReturn($credentialsPromise);
 
         $sut = new RequestSigner($provider->reveal(), $signer->reveal());
         $sut->signRequest($originalRequest, $service);

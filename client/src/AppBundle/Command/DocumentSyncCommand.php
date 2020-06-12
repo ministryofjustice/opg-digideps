@@ -67,7 +67,6 @@ class DocumentSyncCommand extends DaemonableCommand
 
         foreach ($documents as $document) {
             $this->documentSyncService->syncDocument($document);
-            var_dump($document);
         }
 
         if (count($this->documentSyncService->getSyncErrorSubmissionIds()) > 0) {
