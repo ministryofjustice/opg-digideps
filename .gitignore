@@ -25,3 +25,11 @@ terraform/to_import\.sh
 
 **/terraform.output.json
 log/pact.log
+
+# Lambda specific
+*lambda*.zip
+!lambda_functions/layers/monitoring/python/lib/python3.7/site-packages/psycopg2
+!lambda_functions/layers/monitoring/python/lib/python3.7/site-packages/README.md
+lambda_functions/layers/monitoring/python/lib/python3.7/site-packages/
+*__pycache__*
+*venv*
