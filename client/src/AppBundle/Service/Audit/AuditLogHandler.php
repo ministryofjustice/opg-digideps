@@ -25,10 +25,10 @@ class AuditLogHandler extends AbstractProcessingHandler
     /** @var string */
     const AUDIT_LOG_ENV_VAR = 'AUDIT_LOG_GROUP_NAME';
 
-    public function __construct(CloudWatchLogsClient $client, $level = Logger::NOTICE, $bubble = true)
+    public function __construct(CloudWatchLogsClient $client, $group, $level = Logger::NOTICE, $bubble = true)
     {
         $this->client = $client;
-        $this->group = getenv(self::AUDIT_LOG_ENV_VAR);
+        $this->group = $group;
 
         parent::__construct($level, $bubble);
     }
