@@ -1,8 +1,7 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Service\Client\AWS;
+namespace AppBundle\Service\Audit;
 
-use AppBundle\Service\Audit\AuditLogHandler;
 use Aws\CloudWatchLogs\CloudWatchLogsClient;
 use Aws\Result;
 use Monolog\Handler\AbstractProcessingHandler;
