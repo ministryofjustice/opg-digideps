@@ -212,7 +212,10 @@ class OrgService
 
             if (count($upload['added']['discharged_clients']) > 0) {
                 foreach ($upload['added']['discharged_clients'] as $caseNumber) {
-                    $this->auditLogger->notice('', $this->auditEvents->clientDischarged('CSV_UPLOAD', $caseNumber));
+                    $this->auditLogger->notice('', $this->auditEvents->clientDischarged(
+                        AuditEvents::CLIENT_DISCHARGED_CSV_TRIGGER,
+                        $caseNumber
+                    ));
                 }
             }
 

@@ -84,7 +84,11 @@ class ClientController extends AbstractController
         $client = $this->getRestClient()->get('v2/client/' . $id, 'Client');
         $this->getRestClient()->delete('client/' . $id . '/delete');
 
-        $logger->notice('', $auditEvents->clientDischarged('ADMIN_BUTTON', $client->getCaseNumber()));
+        $logger->notice('', $auditEvents->clientDischarged(
+            AuditEvents::CLIENT_DISCHARGED_ADMIN_TRIGGER,
+            $client->getCaseNumber(),
+            $this->getUser()->getEmail()
+        ));
 
         return $this->redirectToRoute('admin_client_search');
     }

@@ -16,4 +16,15 @@ class AuditEventsTest extends TestCase
             (new AuditEvents())->clientDischarged('ADMIN_BUTTON', '19348522')
         );
     }
+
+    /**
+     * @test
+     */
+    public function clientDischargedByUser(): void
+    {
+        $this->assertEquals(
+            ['event' => AuditEvents::CLIENT_DISCHARGED, 'trigger' => 'ADMIN_BUTTON', 'case_number' => '19348522', 'discharged_by' => 'me@test.com'],
+            (new AuditEvents())->clientDischarged('ADMIN_BUTTON', '19348522', 'me@test.com')
+        );
+    }
 }
