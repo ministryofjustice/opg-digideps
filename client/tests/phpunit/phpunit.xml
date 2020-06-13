@@ -48,8 +48,7 @@
 
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">../../src/AppBundle/Service</directory>
-            <file>../../src/AppBundle/Controller/AbstractController.php</file>
+            <directory suffix=".php">../../src</directory>
         </whitelist>
     </filter>
 

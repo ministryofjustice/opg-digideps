@@ -1,0 +1,29 @@
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+      api:
+        target: auto
+        flags:
+          - api
+      client:
+        target: auto
+        flags:
+          - client
+comment:
+  layout: "reach, diff, flags, files"
+  behavior: default
+  require_changes: false
+  require_base: yes
+  require_head: yes
+  branches: null
+flags:
+  api:
+    paths:
+      - api/src/AppBundle
+    carryforward: false
+  client:
+    paths:
+      - client/src/AppBundle
+    carryforward: true

@@ -421,9 +421,15 @@ jobs:
                 -e PACT_BROKER_HTTP_AUTH_USER \
                 -e PACT_CONSUMER_VERSION \
                 -e PACT_BROKER_BASE_URL \
-            client:latest bin/phpunit -c tests/phpunit
+            client:latest scripts/client-unit-tests.sh
             docker-compose exec pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
             docker-compose stop pact-mock
+      - copy-client-coverage-to-host:
+          file_to_copy: tests/phpunit/coverage/client-unit-tests.xml
+          copy_to_dir: .
+      - codecov/upload:
+          file: ./client-unit-tests.xml
+          flags: client
       - store_artifacts:
           path: pact.json
           destination: Pact file
@@ -445,12 +451,12 @@ jobs:
             docker-compose -f docker-compose.yml --project-name api-unit-tests up -d api
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec api chmod -R 777 var
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
-      - copy-merged-cov-to-host:
-          file_to_copy: tests/coverage/merged.xml
+      - copy-api-coverage-to-host:
+          file_to_copy: tests/coverage/api-unit-tests.xml
           copy_to_dir: .
       - codecov/upload:
-          file: ./merged.xml
-          flags: phpunit
+          file: ./api-unit-tests.xml
+          flags: api
 
   run-task:
     executor: terraform/terraform
@@ -488,7 +494,7 @@ jobs:
           command: runner -task << parameters.task_name >> -timeout << parameters.timeout >>
 
 commands:
-  copy-merged-cov-to-host:
+  copy-api-coverage-to-host:
     parameters:
       file_to_copy:
         description: Path to the file where the cov file will be copied from host machine.
@@ -500,4 +506,18 @@ commands:
       - run:
           command: |
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec api chmod -R 777 "<< parameters.file_to_copy >>"
-            docker cp api-unit-tests_api_1:/var/www/tests/coverage/merged.xml "<< parameters.copy_to_dir >>/merged.xml"
+            docker cp "api-unit-tests_api_1:/var/www/tests/coverage/<< parameters.file_to_copy >>" "<< parameters.copy_to_dir >>/<< parameters.file_to_copy >>"
+
+  copy-client-coverage-to-host:
+    parameters:
+      file_to_copy:
+        description: Path to the file where the cov file will be copied from host machine.
+        type: string
+      copy_to_dir:
+        description: Path to the directory where the cov file will be copied to on the host machine.
+        type: string
+    steps:
+      - run:
+          command: |
+            docker-compose -f docker-compose.yml exec frontend chmod -R 777 "<< parameters.file_to_copy >>"
+            docker cp "frontend_1:/var/www/tests/coverage/<< parameters.file_to_copy >>" "<< parameters.copy_to_dir >>/<< parameters.file_to_copy >>"
