@@ -15,13 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SettingsController extends AbstractController
 {
-    private $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
     /**
      * @Route("/deputyship-details", name="account_settings")
      * @Route("/org/settings", name="org_settings")
@@ -90,9 +83,6 @@ class SettingsController extends AbstractController
      **/
     public function profileAction()
     {
-        $this->logger->notice('User Updated', ['event' => 'USER_UPDATED']);
-
-
         return [
             'user' => $this->getUser()
         ];

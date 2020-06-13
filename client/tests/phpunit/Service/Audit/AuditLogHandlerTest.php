@@ -28,7 +28,7 @@ class AuditLogHandlerTest extends TestCase
             ->addMethods(['putLogEvents', 'createLogStream', 'describeLogStreams', 'createLogGroup', 'describeLogGroups'])
             ->getMock();
 
-        $this->sut = new AuditLogHandler($this->cloudWatchClient);
+        $this->sut = new AuditLogHandler($this->cloudWatchClient, self::LOG_GROUP_NAME);
     }
 
     /**
