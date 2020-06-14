@@ -4,11 +4,9 @@ namespace AppBundle\Service\Audit;
 
 use Aws\CloudWatchLogs\CloudWatchLogsClient;
 use Aws\CloudWatchLogs\Exception\CloudWatchLogsException;
-use Monolog\Formatter\JsonFormatter;
-use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
 
-class AuditLogHandler extends AbstractProcessingHandler
+class AwsAuditLogHandler extends AbstractAuditLogHandler
 {
     /** @var CloudWatchLogsClient */
     private $client;
@@ -59,19 +57,6 @@ class AuditLogHandler extends AbstractProcessingHandler
             $this->refreshSequenceToken();
             $this->send($entry);
         }
-    }
-
-    /**
-     * @param array $record
-     * @return bool
-     */
-    private function shallHandle(array $record): bool
-    {
-        return
-            isset($record['context']['event']) &&
-            isset($record['formatted']) &&
-            isset($record['datetime']) &&
-            $record['datetime'] instanceof \DateTimeInterface;
     }
 
     /**
@@ -223,13 +208,5 @@ class AuditLogHandler extends AbstractProcessingHandler
 
         // Set this in memory in case the same request goes on to audit log something else - saves fetching it from AWS.
         $this->sequenceToken = $response->get('nextSequenceToken');
-    }
-
-    /**
-     * @return JsonFormatter
-     */
-    protected function getDefaultFormatter(): JsonFormatter
-    {
-        return new JsonFormatter();
     }
 }

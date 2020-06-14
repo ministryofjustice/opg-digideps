@@ -10,8 +10,11 @@ services:
       - region: 'eu-west-1'
         version: 'latest'
 
-  AppBundle\Service\Audit\AuditLogHandler:
-    class: AppBundle\Service\Audit\AuditLogHandler
+  AppBundle\Service\Audit\AwsAuditLogHandler:
+    class: AppBundle\Service\Audit\AwsAuditLogHandler
     arguments:
       - '@Aws\CloudWatchLogs\CloudWatchLogsClient'
       - '%env(AUDIT_LOG_GROUP_NAME)%'
+
+  AppBundle\Service\Audit\LocalAuditLogHandler:
+    class: AppBundle\Service\Audit\LocalAuditLogHandler

@@ -36,10 +36,10 @@ monolog:
            formatter: line_formatter
            channels: [ "!translation" ]
            bubble: false
-# uncomment to write to audit log in dev - mainly for verification and debugging
        audit:
+           # writes audit logs to stderr for dev verification purposes
            type: service
-           id: AppBundle\Service\Audit\AuditLogHandler
+           id: AppBundle\Service\Audit\LocalAuditLogHandler
 
 jms_serializer:
     metadata:

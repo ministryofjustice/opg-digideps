@@ -9,9 +9,9 @@ use Monolog\Logger;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class AuditLogHandlerTest extends TestCase
+class AwsAuditLogHandlerTest extends TestCase
 {
-    /** @var AuditLogHandler */
+    /** @var AwsAuditLogHandler */
     private $sut;
 
     /** @var MockObject | CloudWatchLogsClient */
@@ -28,7 +28,7 @@ class AuditLogHandlerTest extends TestCase
             ->addMethods(['putLogEvents', 'createLogStream', 'describeLogStreams', 'createLogGroup', 'describeLogGroups'])
             ->getMock();
 
-        $this->sut = new AuditLogHandler($this->cloudWatchClient, self::LOG_GROUP_NAME);
+        $this->sut = new AwsAuditLogHandler($this->cloudWatchClient, self::LOG_GROUP_NAME);
     }
 
     /**
@@ -41,16 +41,15 @@ class AuditLogHandlerTest extends TestCase
 
     /**
      * @test
-     * @param array $record
      * @throws \Exception
      */
-    public function ignoresRecordsWithoutEventType(): void
+    public function ignoresRecordsWithoutEventName(): void
     {
         $record = [
             'level' => Logger::NOTICE,
             'message' => "Client Deleted",
             'datetime' => new \DateTime('2018-09-02 13:42:23'),
-            'context' => []
+            'context' => ['type' => 'audit']
         ];
 
         $this
@@ -63,14 +62,14 @@ class AuditLogHandlerTest extends TestCase
 
     /**
      * @test
-     * @param array $record
      * @throws \Exception
      */
-    public function ignoresRecordsWithoutDateTime(): void
+    public function ignoresRecordsWithoutEventType(): void
     {
         $record = [
             'level' => Logger::NOTICE,
             'message' => "Client Deleted",
+            'datetime' => new \DateTime('2018-09-02 13:42:23'),
             'context' => ['event' => self::STREAM_NAME]
         ];
 
@@ -156,15 +155,16 @@ class AuditLogHandlerTest extends TestCase
             'level' => Logger::NOTICE,
             'datetime' => $dateTime,
             'context' => [
-                'event' => self::STREAM_NAME
+                'event' => self::STREAM_NAME,
+                'type' => 'audit'
             ]
         ];
     }
 
     /**
-     * @return AuditLogHandlerTest
+     * @return AwsAuditLogHandlerTest
      */
-    private function ensureLogGroupWillExist(): AuditLogHandlerTest
+    private function ensureLogGroupWillExist(): AwsAuditLogHandlerTest
     {
         $this
             ->cloudWatchClient
@@ -183,9 +183,9 @@ class AuditLogHandlerTest extends TestCase
     }
 
     /**
-     * @return AuditLogHandlerTest
+     * @return AwsAuditLogHandlerTest
      */
-    private function ensureLogGroupWillNotExist(): AuditLogHandlerTest
+    private function ensureLogGroupWillNotExist(): AwsAuditLogHandlerTest
     {
         $this
             ->cloudWatchClient
@@ -201,9 +201,9 @@ class AuditLogHandlerTest extends TestCase
     }
 
     /**
-     * @return AuditLogHandlerTest
+     * @return AwsAuditLogHandlerTest
      */
-    private function assertLogGroupWillBeCreated(): AuditLogHandlerTest
+    private function assertLogGroupWillBeCreated(): AwsAuditLogHandlerTest
     {
         $this
             ->cloudWatchClient
@@ -215,9 +215,9 @@ class AuditLogHandlerTest extends TestCase
     }
 
     /**
-     * @return AuditLogHandlerTest
+     * @return AwsAuditLogHandlerTest
      */
-    private function assertLogGroupWillNotBeCreated(): AuditLogHandlerTest
+    private function assertLogGroupWillNotBeCreated(): AwsAuditLogHandlerTest
     {
         $this
             ->cloudWatchClient
@@ -228,9 +228,9 @@ class AuditLogHandlerTest extends TestCase
     }
 
     /**
-     * @return AuditLogHandlerTest
+     * @return AwsAuditLogHandlerTest
      */
-    private function ensureLogStreamWillExist(): AuditLogHandlerTest
+    private function ensureLogStreamWillExist(): AwsAuditLogHandlerTest
     {
         $this
             ->cloudWatchClient
@@ -248,9 +248,9 @@ class AuditLogHandlerTest extends TestCase
     }
 
     /**
-     * @return AuditLogHandlerTest
+     * @return AwsAuditLogHandlerTest
      */
-    private function ensureLogStreamWillNotExist(): AuditLogHandlerTest
+    private function ensureLogStreamWillNotExist(): AwsAuditLogHandlerTest
     {
         $this
             ->cloudWatchClient
@@ -265,9 +265,9 @@ class AuditLogHandlerTest extends TestCase
     }
 
     /**
-     * @return AuditLogHandlerTest
+     * @return AwsAuditLogHandlerTest
      */
-    private function assertLogStreamWillBeCreated(): AuditLogHandlerTest
+    private function assertLogStreamWillBeCreated(): AwsAuditLogHandlerTest
     {
         $this
             ->cloudWatchClient
@@ -282,9 +282,9 @@ class AuditLogHandlerTest extends TestCase
     }
 
     /**
-     * @return AuditLogHandlerTest
+     * @return AwsAuditLogHandlerTest
      */
-    private function assertLogStreamWillNotBeCreated(): AuditLogHandlerTest
+    private function assertLogStreamWillNotBeCreated(): AwsAuditLogHandlerTest
     {
         $this
             ->cloudWatchClient
@@ -364,7 +364,8 @@ class AuditLogHandlerTest extends TestCase
             'level' => Logger::NOTICE,
             'datetime' => $dateTime,
             'context' => [
-                'event' => self::STREAM_NAME
+                'event' => self::STREAM_NAME,
+                'type' => 'audit'
             ]
         ];
 

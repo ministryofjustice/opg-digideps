@@ -16,7 +16,6 @@ final class AuditEvents
     public function clientDischarged(string $trigger, string $caseNumber, string $dischargedBy = null): array
     {
         $event = [
-            'event' => AuditEvents::CLIENT_DISCHARGED,
             'trigger' => $trigger,
             'case_number' => $caseNumber
         ];
@@ -25,6 +24,18 @@ final class AuditEvents
             $event['discharged_by'] = $dischargedBy;
         }
 
-        return $event;
+        return $event + $this->baseEvent(AuditEvents::CLIENT_DISCHARGED);
+    }
+
+    /**
+     * @param string $eventName
+     * @return array
+     */
+    private function baseEvent(string $eventName): array
+    {
+        return [
+            'event' => $eventName,
+            'type' => 'audit'
+        ];
     }
 }

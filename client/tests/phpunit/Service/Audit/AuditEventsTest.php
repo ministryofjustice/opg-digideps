@@ -11,10 +11,16 @@ class AuditEventsTest extends TestCase
      */
     public function clientDischarged(): void
     {
-        $this->assertEquals(
-            ['event' => AuditEvents::CLIENT_DISCHARGED, 'trigger' => 'ADMIN_BUTTON', 'case_number' => '19348522'],
-            (new AuditEvents())->clientDischarged('ADMIN_BUTTON', '19348522')
-        );
+        $expected = [
+            'event' => AuditEvents::CLIENT_DISCHARGED,
+            'trigger' => 'ADMIN_BUTTON',
+            'case_number' => '19348522',
+            'type' => 'audit'
+        ];
+
+        $actual =  (new AuditEvents())->clientDischarged('ADMIN_BUTTON', '19348522');
+
+        $this->assertEquals($expected, $actual);
     }
 
     /**
@@ -22,9 +28,16 @@ class AuditEventsTest extends TestCase
      */
     public function clientDischargedByUser(): void
     {
-        $this->assertEquals(
-            ['event' => AuditEvents::CLIENT_DISCHARGED, 'trigger' => 'ADMIN_BUTTON', 'case_number' => '19348522', 'discharged_by' => 'me@test.com'],
-            (new AuditEvents())->clientDischarged('ADMIN_BUTTON', '19348522', 'me@test.com')
-        );
+        $expected = [
+            'event' => AuditEvents::CLIENT_DISCHARGED,
+            'trigger' => 'ADMIN_BUTTON',
+            'case_number' => '19348522',
+            'discharged_by' => 'me@test.com',
+            'type' => 'audit'
+        ];
+
+        $actual = (new AuditEvents())->clientDischarged('ADMIN_BUTTON', '19348522', 'me@test.com');
+
+        $this->assertEquals($expected, $actual);
     }
 }
