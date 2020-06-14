@@ -20,6 +20,12 @@ server {
     more_clear_headers X-Powered-By;
     more_clear_headers Server;
 
+    location /manage/elb {
+        access_log off;
+        return 200;
+        add_header Content-Type text/plain;
+    }
+
     location / {
         # try to serve file directly, fallback to app.php or app_dev.php
         try_files $uri /{{ getv "/opg/nginx/index" "app.php" }}$is_args$args;
