@@ -3,6 +3,8 @@ resource "aws_lb" "front" {
   internal           = false
   load_balancer_type = "application"
   subnets            = data.aws_subnet.public.*.id
+  idle_timeout       = 300
+
 
   security_groups = [module.front_elb_security_group.id, module.front_elb_security_group_route53_hc.id]
 
