@@ -25,7 +25,7 @@ class AwsAuditLogHandlerTest extends TestCase
         $this->cloudWatchClient = $this
             ->getMockBuilder(CloudWatchLogsClient::class)
             ->disableOriginalConstructor()
-            ->addMethods(['putLogEvents', 'createLogStream', 'describeLogStreams', 'createLogGroup', 'describeLogGroups'])
+            ->addMethods(['putLogEvents', 'createLogStream', 'describeLogStreams'])
             ->getMock();
 
         $this->sut = new AwsAuditLogHandler($this->cloudWatchClient, self::LOG_GROUP_NAME);
@@ -53,7 +53,6 @@ class AwsAuditLogHandlerTest extends TestCase
         ];
 
         $this
-            ->assertLogGroupWillNotBeCreated()
             ->assertLogStreamWillNotBeCreated()
             ->assertLogWillNotBePutOnAws();
 
@@ -74,7 +73,6 @@ class AwsAuditLogHandlerTest extends TestCase
         ];
 
         $this
-            ->assertLogGroupWillNotBeCreated()
             ->assertLogStreamWillNotBeCreated()
             ->assertLogWillNotBePutOnAws();
 
@@ -87,8 +85,6 @@ class AwsAuditLogHandlerTest extends TestCase
     public function sendsLogMessageWithoutSequenceTokenToNewLogStreamIfStreamDoesNotExistOnAws(): void
     {
         $this
-            ->ensureLogGroupWillExist()
-            ->assertLogGroupWillNotBeCreated()
             ->ensureLogStreamWillNotExist()
             ->assertLogStreamWillBeCreated()
             ->assertLogWillBePutOnAwsWithoutSequenceToken();
@@ -102,8 +98,6 @@ class AwsAuditLogHandlerTest extends TestCase
     public function sendsLogMessageWithSequenceTokenToExistingLogStreamIfStreamExistsOnAws(): void
     {
         $this
-            ->ensureLogGroupWillExist()
-            ->assertLogGroupWillNotBeCreated()
             ->ensureLogStreamWillExist()
             ->assertLogStreamWillNotBeCreated()
             ->assertLogWillBePutOnAwsWithSequenceToken();
@@ -117,27 +111,11 @@ class AwsAuditLogHandlerTest extends TestCase
     public function sequenceTokenIsStoredInMemoryForSubsequentWrites(): void
     {
         $this
-            ->ensureLogGroupWillExist()
-            ->assertLogGroupWillNotBeCreated()
             ->ensureLogStreamWillExist()
             ->assertLogStreamWillNotBeCreated()
             ->assertConsecutiveLogsWillBePutOnAws();
 
         $this->sut->handle($this->getLogMessageInput());
-        $this->sut->handle($this->getLogMessageInput());
-    }
-
-    /**
-     * @test
-     */
-    public function createsLogGroupInAwsIfNotAlreadyCreated(): void
-    {
-        $this
-            ->ensureLogGroupWillNotExist()
-            ->assertLogGroupWillBeCreated()
-            ->ensureLogStreamWillExist()
-            ->assertLogWillBePutOnAwsWithSequenceToken();
-
         $this->sut->handle($this->getLogMessageInput());
     }
 
@@ -159,72 +137,6 @@ class AwsAuditLogHandlerTest extends TestCase
                 'type' => 'audit'
             ]
         ];
-    }
-
-    /**
-     * @return AwsAuditLogHandlerTest
-     */
-    private function ensureLogGroupWillExist(): AwsAuditLogHandlerTest
-    {
-        $this
-            ->cloudWatchClient
-            ->expects($this->once())
-            ->method('describeLogGroups')
-            ->with(['logGroupNamePrefix' => self::LOG_GROUP_NAME])
-            ->willReturn(new Result([
-                'logGroups' => [
-                    [
-                        'logGroupName' => self::LOG_GROUP_NAME
-                    ]
-                ]
-            ]));
-
-        return $this;
-    }
-
-    /**
-     * @return AwsAuditLogHandlerTest
-     */
-    private function ensureLogGroupWillNotExist(): AwsAuditLogHandlerTest
-    {
-        $this
-            ->cloudWatchClient
-            ->method('describeLogGroups')
-            ->with(['logGroupNamePrefix' => self::LOG_GROUP_NAME])
-            ->willReturn(new Result([
-                'logGroups' => [
-                    []
-                ]
-            ]));
-
-        return $this;
-    }
-
-    /**
-     * @return AwsAuditLogHandlerTest
-     */
-    private function assertLogGroupWillBeCreated(): AwsAuditLogHandlerTest
-    {
-        $this
-            ->cloudWatchClient
-            ->expects($this->once())
-            ->method('createLogGroup')
-            ->with(['logGroupName' => self::LOG_GROUP_NAME]);
-
-        return $this;
-    }
-
-    /**
-     * @return AwsAuditLogHandlerTest
-     */
-    private function assertLogGroupWillNotBeCreated(): AwsAuditLogHandlerTest
-    {
-        $this
-            ->cloudWatchClient
-            ->expects($this->never())
-            ->method('createLogGroup');
-
-        return $this;
     }
 
     /**

@@ -17,6 +17,12 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
     /** @var string */
     private $stream;
 
+    /** @var string */
+    private $sequenceToken;
+
+    /** @var array */
+    private $existingStreams = [];
+
     /** @var bool */
     private $initialized = false;
 
@@ -54,7 +60,7 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         try {
             $this->send($entry);
         } catch (CloudWatchLogsException $e) {
-            $this->refreshSequenceToken();
+            $this->determineSequenceToken($refresh = true);
             $this->send($entry);
         }
     }
@@ -73,63 +79,16 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         ];
     }
 
+
     private function initialize(): void
     {
-        $this->initializeGroup();
-        $this->refreshSequenceToken();
-    }
-
-    private function initializeGroup(): void
-    {
-        $existingGroups = $this->fetchExistingLogGroups();
-        $existingGroupsNames = $this->extractExistingGroupNames($existingGroups);
-
-        if (!in_array($this->group, $existingGroupsNames, true)) {
-            $this->createLogGroup();
-        }
-    }
-
-    /**
-     * @return array
-     */
-    private function fetchExistingLogGroups(): array
-    {
-        return $this
-            ->client
-            ->describeLogGroups(['logGroupNamePrefix' => $this->group])
-            ->get('logGroups');
-    }
-
-    /**
-     * @param array $existingGroups
-     * @return array
-     */
-    private function extractExistingGroupNames(array $existingGroups): array
-    {
-        return array_map(
-            function ($group) {
-                return $group['logGroupName'];
-            },
-            $existingGroups
-        );
-    }
-
-    private function createLogGroup(): void
-    {
-        $this
-            ->client
-            ->createLogGroup(['logGroupName' => $this->group]);
-    }
-
-    private function refreshSequenceToken(): void
-    {
-        $existingStreams = $this->fetchExistingStreams();
-        $existingStreamsNames = $this->extractExistingStreamNames($existingStreams);
+        $this->existingStreams = $this->fetchExistingStreams();
+        $existingStreamsNames = $this->extractExistingStreamNames();
 
         if (!in_array($this->stream, $existingStreamsNames, true)) {
             $this->createLogStream();
         } else {
-            $this->determineSequenceToken($existingStreams);
+            $this->determineSequenceToken();
         }
 
         $this->initialized = true;
@@ -151,16 +110,15 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
     }
 
     /**
-     * @param $existingStreams
      * @return array
      */
-    private function extractExistingStreamNames($existingStreams): array
+    private function extractExistingStreamNames(): array
     {
         return array_map(
             function ($stream) {
                 return $stream['logStreamName'];
             },
-            $existingStreams
+            $this->existingStreams
         );
     }
 
@@ -177,11 +135,15 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
     }
 
     /**
-     * @param array $existingStreams
+     * @param bool $refresh
      */
-    private function determineSequenceToken(array $existingStreams): void
+    private function determineSequenceToken(bool $refresh = false): void
     {
-        foreach ($existingStreams as $stream) {
+        if ($refresh) {
+            $this->existingStreams = $this->fetchExistingStreams();
+        }
+
+        foreach ($this->existingStreams as $stream) {
             if ($stream['logStreamName'] === $this->stream && isset($stream['uploadSequenceToken'])) {
                 $this->sequenceToken = $stream['uploadSequenceToken'];
                 break;
