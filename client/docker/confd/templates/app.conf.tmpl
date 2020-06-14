@@ -22,7 +22,8 @@ server {
 
     location /manage/elb {
         access_log on;
-        return 200;
+        access_log /dev/stdout;
+        return 200 "status OK";
         add_header Content-Type text/plain;
     }
 

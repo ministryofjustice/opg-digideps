@@ -296,6 +296,9 @@ jobs:
           name: Docker login
           command: eval $(aws ecr get-login --region $AWS_REGION --no-include-email --profile digideps-ci)
       - run:
+          name: Docker pull
+          command: docker-compose pull
+      - run:
           name: Build images
           command: docker-compose -f docker-compose.ci.yml build --parallel
       - run:
