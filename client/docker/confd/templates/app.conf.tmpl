@@ -21,7 +21,7 @@ server {
     more_clear_headers Server;
 
     location /manage/elb {
-        access_log off;
+        access_log on;
         return 200;
         add_header Content-Type text/plain;
     }
