@@ -409,6 +409,7 @@ jobs:
           name: Install lambda requirements for unit tests
           working_directory: ~/project
           command: |
+            docker-compose up -d postgres
             python3 -m pytest
       - run:
           name: Run tests
