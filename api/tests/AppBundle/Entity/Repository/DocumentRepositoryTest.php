@@ -157,19 +157,6 @@ class DocumentRepositoryTest extends KernelTestCase
     /**
      * @test
      */
-    public function getQueuedDocumentsAndSetToInProgress_multipleReportSubmissionsAreReturned()
-    {
-        $this->persistEntities();
-
-        $documents = $this->documentRepository
-            ->getQueuedDocumentsAndSetToInProgress('100');
-
-        $this->assertEquals(2, count($documents[$this->reportPdfDocument->getId()]['report_submissions']));
-    }
-
-    /**
-     * @test
-     */
     public function getQueuedDocumentsAndSetToInProgress_supportsNdrs()
     {
         $this->persistEntities();
@@ -178,7 +165,6 @@ class DocumentRepositoryTest extends KernelTestCase
             ->getQueuedDocumentsAndSetToInProgress('100');
 
         $this->assertDataMatchesEntity($documents, $this->ndrReportPdfDocument, $this->client, $this->ndrSubmission, $this->ndr);
-        $this->assertEquals(1, count($documents[$this->ndrReportPdfDocument->getId()]['report_submissions']));
     }
 
     private function persistEntities()
@@ -224,6 +210,7 @@ class DocumentRepositoryTest extends KernelTestCase
         self::assertEquals($document->getStorageReference(), $documents[$docId]['storage_reference']);
         self::assertEquals($report->getStartDate()->format('Y-m-d'), $documents[$docId]['report_start_date']);
         self::assertEquals($report->getSubmitDate()->format('Y-m-d H:i:s'), $documents[$docId]['report_submit_date']);
+        self::assertEquals($submission->getUuid(), $documents[$docId]['report_submission_uuid']);
 
         if ($report instanceof Report) {
             self::assertEquals($report->getEndDate()->format('Y-m-d'), $documents[$docId]['report_end_date']);

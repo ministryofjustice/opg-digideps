@@ -19,7 +19,7 @@ trait DocumentSynchronisationTrait
     }
 
     /**
-     * @Then the documents should be queued
+     * @Then the report PDF document should be queued
      */
     public function documentsAreSetToQueued()
     {
@@ -29,16 +29,8 @@ trait DocumentSynchronisationTrait
             throw new \Exception("Cannot find a table row that contains the report PDF");
         }
 
-        $supportingDocRow = $this->getSession()->getPage()->find('css', 'table tr:contains("supporting-document.pdf")');
-
-        if (is_null($supportingDocRow)) {
-            throw new \Exception("Cannot find a table row that contains the supporting document");
-        }
-
-        foreach([$reportPdfRow, $supportingDocRow] as $row) {
-            if (strpos($row->getHtml(), 'Queued') === false) {
-                throw new \Exception("The document does not appear to be queued");
-            }
+        if (strpos($reportPdfRow->getHtml(), 'Queued') === false) {
+            throw new \Exception("The document does not appear to be queued");
         }
     }
 
@@ -89,11 +81,28 @@ trait DocumentSynchronisationTrait
             $this->clickLink('Attach documents');
         }
 
-        $this->attachFileToField('report_document_upload_files', $imageName);
-        $this->pressButton('Upload');
-        $this->clickLink('Continue to send documents');
-        $this->clickLink('Send documents');
+        $this->attachDocument($imageName);
+    }
 
+    /**
+     * @When I attached a supporting document :imageName to the completed report
+     */
+    public function iAttachedASupportingDocumentToTheCompletedReport(string $imageName)
+    {
+        $this->visit('/');
+
+        try {
+            $this->clickOnBehatLink('report-start');
+        } catch(\Throwable $e) {
+            $this->clickOnBehatLink('pa-report--open');
+        }
+
+        $this->clickOnBehatLink('edit-documents');
+        $this->clickOnBehatLink('edit');
+        $this->selectOption('document[wishToProvideDocumentation]','yes');
+        $this->clickOnBehatLink('save-and-continue');
+
+        $this->attachDocument($imageName);
     }
 
     /**
@@ -126,11 +135,9 @@ trait DocumentSynchronisationTrait
         }
     }
 
-    /**
-     * @Given /^I print an env var$/
-     */
-    public function iPrintAnEnvVar()
+    private function attachDocument(string $imageName)
     {
-        print_r(getenv('SIRIUS_API_BASE_URI'));
+        $this->attachFileToField('report_document_upload_files', $imageName);
+        $this->pressButton('Upload');
     }
 }

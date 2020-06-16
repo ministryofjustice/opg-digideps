@@ -218,7 +218,7 @@ class DocumentSyncService
         } else {
             return $this->siriusApiGatewayClient->sendSupportingDocument(
                 $this->buildUpload($documentData, $content),
-                $documentData->getSyncedReportSubmission()->getUuid(),
+                $documentData->getReportSubmissionUuid(),
                 $documentData->getCaseNumber()
             );
         }
@@ -296,7 +296,6 @@ class DocumentSyncService
         } else {
             if (method_exists($e, 'getResponse') && method_exists($e->getResponse(), 'getBody')) {
                 $errorMessage = $this->errorTranslator->translateApiError((string) $e->getResponse()->getBody());
-                $errorMessage = (string) $e->getResponse()->getBody();
             } else {
                 $errorMessage = (string) $e->getMessage();
             }

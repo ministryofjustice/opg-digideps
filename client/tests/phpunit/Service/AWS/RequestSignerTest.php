@@ -26,22 +26,20 @@ class RequestSignerTest extends TestCase
 
         $originalRequest = new Request('GET', 'some.url');
         $signedRequest = new Request('GET', 'some.url', $headers);
-        $credentials = new Credentials('aKey', 'aSecret', NULL);
+//
+//      These values are set in test.env to enable local testing
+        $credentials = new Credentials('fakeValue', 'fakeValue', 'fakeValue');
         $service = 'some-service';
 
         /** @var DefaultCredentialProvider&ObjectProphecy $provider */
-        $provider = self::prophesize(DefaultCredentialProvider::class);
-        $credentialsPromise = function() use ($credentials) {
-            return Promise\promise_for($credentials);
-        };
+        $provider = new DefaultCredentialProvider();
 
         /** @var SignatureV4Signer&ObjectProphecy $signer */
         $signer = self::prophesize(SignatureV4Signer::class);
         $signer->signRequest($originalRequest, $credentials, $service)->shouldBeCalled()->willReturn($signedRequest);
 
-        $provider->getCredentials()->shouldBeCalled()->willReturn($credentialsPromise);
 
-        $sut = new RequestSigner($provider->reveal(), $signer->reveal());
+        $sut = new RequestSigner($provider, $signer->reveal());
         $sut->signRequest($originalRequest, $service);
     }
 }

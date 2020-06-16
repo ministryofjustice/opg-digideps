@@ -25,6 +25,7 @@ class DocumentRepository extends AbstractEntityRepository
         return $records;
     }
 
+
     public function getQueuedDocumentsAndSetToInProgress(string $limit)
     {
         // Using DENSE_RANK here as we get multiple rows for the same document due to multiple report submissions. This
@@ -56,8 +57,8 @@ o.id AS ndr_id, o.start_date AS ndr_start_date, o.submit_date AS ndr_submit_date
 FROM document d
 LEFT JOIN report r ON r.id = d.report_id
 LEFT JOIN odr o ON o.id = d.ndr_id
-LEFT JOIN report_submission rs1 ON rs1.report_id = d.report_id
-LEFT JOIN report_submission rs2 ON rs2.ndr_id = d.ndr_id
+LEFT JOIN report_submission rs1 ON rs1.id = d.report_submission_id
+LEFT JOIN report_submission rs2 ON rs2.id = d.report_submission_id
 LEFT JOIN client c1 ON c1.id = r.client_id
 LEFT JOIN client c2 ON c2.id = o.client_id
 WHERE d.synchronisation_status = 'QUEUED') AS sub
@@ -67,12 +68,12 @@ WHERE dn < $limit;";
         $stmt = $conn->prepare($queuedDocumentsQuery);
         $stmt->execute();
 
-        $queuedDocumentData = [];
+        $queuedDocumentDatas = [];
 
         while($row = $stmt->fetch(PDO::FETCH_ASSOC))
         {
-            if (!isset($queuedDocumentData[$row['document_id']])) {
-                $queuedDocumentData[$row['document_id']] = [
+            if (!isset($queuedDocumentDatas[$row['document_id']])) {
+                $queuedDocumentDatas[$row['document_id']] = [
                     'document_id' => $row['document_id'],
                     'report_submission_id' => $row['document_report_submission_id'],
                     'ndr_id' => $row['ndr_id'],
@@ -83,20 +84,16 @@ WHERE dn < $limit;";
                     'report_start_date' => isset($row['report_start_date']) ? $row['report_start_date'] : (new DateTime($row['ndr_start_date']))->format('Y-m-d'),
                     'report_end_date' => $row['report_end_date'],
                     'report_submit_date' => isset($row['report_submit_date']) ? $row['report_submit_date'] : $row['ndr_submit_date'],
-                    'report_type' => $row['report_type']
+                    'report_type' => $row['report_type'],
+                    'report_submission_uuid' => $row['report_submission_uuid']
                 ];
             }
-
-            $queuedDocumentData[$row['document_id']]['report_submissions'][] = [
-                'id' => $row['report_submission_id'],
-                'uuid' => $row['report_submission_uuid']
-            ];
         }
 
-        // Set documents to in progress to ensure additional runs won't pick up the same documents
-        if (count($queuedDocumentData)) {
+        if (count($queuedDocumentDatas)) {
+            // Set documents to in progress to ensure additional runs won't pick up the same documents
             $ids = [];
-            foreach($queuedDocumentData as $data) {
+            foreach($queuedDocumentDatas as $data) {
                 $ids[] = $data['document_id'];
             }
 
@@ -108,7 +105,7 @@ WHERE dn < $limit;";
             $stmt->execute();
         }
 
-        return $queuedDocumentData;
+        return $queuedDocumentDatas;
     }
 
 

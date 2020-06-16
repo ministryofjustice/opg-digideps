@@ -380,53 +380,42 @@ class DocumentSyncServiceTest extends KernelTestCase
 
     /**
      * @test
-     * @dataProvider supportingDocumentProivder
      */
-    public function sendSupportingDocument_success(
-        int $reportPdfSubmissionId,
-        int $supportingDocSubmissionId,
-        int $expectedIdUsedForSync,
-        string $reportPdfUuid,
-        string $expectedUuidUsedToSyncDoc
-    )
+    public function sendSupportingDocument_success()
     {
         $document = (new Document())->setId(6789);
 
-        $reportPdfReportSubmission =
-            (new ReportSubmission())
-                ->setId($reportPdfSubmissionId)
-                ->setUuid($reportPdfUuid)
-                ->setDocuments([$document]);
-
-        $supportingDocSubmission = (new ReportSubmission())->setId($supportingDocSubmissionId);
+        $expectedUuidUsedToSyncDoc = 'report-pdf-submission-uuid';
+        $expectedSubmissionIdUsedForSync = 1234;
+        $expectedCaseRefUsedForSync = '1234567T';
 
         $queuedDocumentData = (new QueuedDocumentData())
             ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
             ->setDocumentId($document->getId())
-            ->setReportSubmissionId($supportingDocSubmissionId)
-            ->setReportSubmissions([$reportPdfReportSubmission, $supportingDocSubmission])
+            ->setReportSubmissionId($expectedSubmissionIdUsedForSync)
+            ->setReportSubmissionUuid($expectedUuidUsedToSyncDoc)
             ->setReportStartDate($this->reportStartDate)
             ->setReportEndDate($this->reportEndDate)
             ->setReportSubmitDate($this->reportSubmittedDate)
             ->setStorageReference('storage-ref-here')
             ->setFilename('bank-statement.pdf')
             ->setIsReportPdf(false)
-            ->setCaseNumber('1234567T')
+            ->setCaseNumber($expectedCaseRefUsedForSync)
             ->setNdrId(null);
 
         $this->s3Storage->retrieve('storage-ref-here')->willReturn($this->fileContents);
 
-        $successResponseBody = ['data' => ['type' => 'supportingDocument', 'id' => 'some-random-uuid']];
+        $successResponseBody = ['data' => ['type' => 'supportingDocument', 'id' => 'a-random-uuid']];
         $successResponse = new Response('200', [], json_encode($successResponseBody));
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusSupportingDocumentUpload(
-            $expectedIdUsedForSync,
+            $expectedSubmissionIdUsedForSync,
             'bank-statement.pdf',
             $this->fileContents
         );
 
         $this->siriusApiGatewayClient
-            ->sendSupportingDocument($siriusDocumentUpload, $expectedUuidUsedToSyncDoc, '1234567T')
+            ->sendSupportingDocument($siriusDocumentUpload, $expectedUuidUsedToSyncDoc, $expectedCaseRefUsedForSync)
             ->shouldBeCalled()
             ->willReturn($successResponse);
 
@@ -451,24 +440,14 @@ class DocumentSyncServiceTest extends KernelTestCase
         $sut->syncDocument($queuedDocumentData);
     }
 
-    public function supportingDocumentProivder()
-    {
-        return [
-            'Sent with report PDF' => [1234, 1234, 1234, 'report-pdf-uuid', 'report-pdf-uuid'],
-            'Sent after report PDF' => [1234, 4321, 4321, 'report-pdf-uuid', 'report-pdf-uuid']
-        ];
-    }
-
     /** @test */
     public function sendSupportingDocument_report_pdf_not_submitted()
     {
-        $supportingDocSubmission = (new ReportSubmission())->setId($this->reportSubmissionId);
-
         $queuedDocumentData = (new QueuedDocumentData())
             ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
             ->setDocumentId(6789)
             ->setReportSubmissionId($this->reportSubmissionId)
-            ->setReportSubmissions([$supportingDocSubmission])
+            ->setReportSubmissionUuid(null)
             ->setReportStartDate($this->reportStartDate)
             ->setReportEndDate($this->reportEndDate)
             ->setReportSubmitDate($this->reportSubmittedDate)
@@ -504,17 +483,11 @@ class DocumentSyncServiceTest extends KernelTestCase
     {
         $document = (new Document())->setId(6789);
 
-        $reportPdfReportSubmission =
-            (new ReportSubmission())
-                ->setId($this->reportSubmissionId)
-                ->setUuid($this->reportPdfSubmissionUuid)
-                ->setDocuments([$document]);
-
         $queuedDocumentData = (new QueuedDocumentData())
             ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
             ->setDocumentId(6789)
             ->setReportSubmissionId($this->reportSubmissionId)
-            ->setReportSubmissions([$reportPdfReportSubmission])
+            ->setReportSubmissionUuid('report-pdf-uuid')
             ->setReportStartDate($this->reportStartDate)
             ->setReportEndDate($this->reportEndDate)
             ->setReportSubmitDate($this->reportSubmittedDate)

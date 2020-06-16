@@ -13,19 +13,19 @@ use AppBundle\Entity\Report\ProfDeputyOtherCost;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\VisitsCare;
 use AppBundle\Entity\ReportInterface;
+use AppBundle\Service\File\FileUploader;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use AppBundle\TestHelpers\DocumentHelpers;
 
 class ReportSection
 {
+    /** @var EntityManagerInterface */
     private $em;
-    private $documentHelpers;
 
-    public function __construct(EntityManagerInterface $em, DocumentHelpers $documentHelpers)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
-        $this->documentHelpers = $documentHelpers;
     }
 
     public function completeReport(ReportInterface $report): void
@@ -146,11 +146,7 @@ class ReportSection
      */
     private function completeDocuments(ReportInterface $report): void
     {
-        $report->setWishToProvideDocumentation('yes');
-
-        $supportingDocument = $this->documentHelpers->generateSupportingDocument($report);
-
-        $report->addDocument($supportingDocument);
+        $report->setWishToProvideDocumentation('no');
     }
 
     /**
