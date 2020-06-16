@@ -9,10 +9,6 @@ services:
             - ./behat/tests:/var/www/tests
             - ./behat/snapshots:/tmp/html
         env_file: ./behat/test.env
-        environment:
-          AWS_ACCESS_KEY_ID: fakeValue
-          AWS_SECRET_ACCESS_KEY: fakeValue
-          AWS_SESSION_TOKEN: fakeValue
 
     npm:
         image: node:8-alpine

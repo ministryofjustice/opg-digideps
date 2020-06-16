@@ -116,7 +116,7 @@ trait DocumentSynchronisationTrait
             throw new \Exception("There was an non successful response when running the document-sync command");
         }
 
-        sleep(3);
+        sleep(2);
     }
 
     /**

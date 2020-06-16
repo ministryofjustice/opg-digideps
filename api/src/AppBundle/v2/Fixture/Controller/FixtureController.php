@@ -392,38 +392,4 @@ class FixtureController
 
         return $this->buildSuccessResponse($data, 'CasRec row created', Response::HTTP_OK);
     }
-
-    /**
-     * @Route("/createDocumentSyncFixtures", methods={"GET"})
-     */
-    public function createDocumentSyncFixtures(Request $request)
-    {
-        try {
-            $reportSubmission = (new ReportSubmissionHelper())->generateAndPersistReportSubmission($this->em);
-
-            $documentHelper = new DocumentHelpers();
-
-            $reportPdf = $documentHelper->generateReportPdfDocument($reportSubmission->getReport());
-            $supportingDoc = $documentHelper->generateSupportingDocument($reportSubmission->getReport());
-
-            $reportSubmission->addDocument($reportPdf);
-            $reportSubmission->addDocument($supportingDoc);
-
-            $this->em->persist($reportPdf);
-            $this->em->persist($supportingDoc);
-            $this->em->persist($reportSubmission);
-
-            $this->em->flush();
-
-//        $data = [$reportPdf, $supportingDoc, $reportSubmission];
-
-//        [$reportPdf, $supportingDoc, $reportSubmission] = (new DocumentSyncFixtures())->doLoad($this->em);
-
-            return $this->buildSuccessResponse($data, 'CasRec row created', Response::HTTP_OK);
-        } catch (\Throwable $e) {
-            return $this->buildNotFoundResponse($e->getMessage());
-        }
-
-
-    }
 }
