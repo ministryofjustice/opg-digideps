@@ -12,23 +12,21 @@ class QueuedDocumentDataTest extends TestCase
      * @dataProvider supportingDocumentProvider
      * @test
      */
-    public function supportingDocumentCanBeSynced(QueuedDocumentData $documentData1, QueuedDocumentData $documentData2, ?string $uuid, bool $expectedResult)
+    public function supportingDocumentCanBeSynced(?string $uuid, bool $expectedResult)
     {
-        $reportSubmission = (new ReportSubmission())->setUuid($uuid);
-        $documentData1->setReportSubmissions([$reportSubmission]);
-        $documentData2->setReportSubmissions([$reportSubmission]);
+        $supportingDocument = (new QueuedDocumentData())
+            ->setIsReportPdf(false)
+            ->setReportSubmissionUuid($uuid);
 
-        self::assertEquals($expectedResult, $documentData1->supportingDocumentCanBeSynced());
+        self::assertEquals($expectedResult, $supportingDocument->supportingDocumentCanBeSynced());
     }
 
     public function supportingDocumentProvider()
     {
-        $reportPdfDocument = (new QueuedDocumentData())->setIsReportPdf(true);
-        $supportingDocument = (new QueuedDocumentData())->setIsReportPdf(false);
 
         return [
-            'Can be synced' => [$supportingDocument, $reportPdfDocument, 'abc-123-def-456', true],
-            'Cannot be synced' => [$supportingDocument, $supportingDocument, null, false]
+            'Can be synced' => ['abc-123-def-456', true],
+            'Cannot be synced' => [null, false]
         ];
     }
 }
