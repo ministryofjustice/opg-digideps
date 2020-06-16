@@ -3,6 +3,8 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\ReportInterface;
+use AppBundle\Entity\SynchronisableInterface;
+use AppBundle\Entity\SynchronisableTrait;
 use AppBundle\Entity\Traits\ModifyAudit;
 use AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -15,9 +17,10 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Table(name="checklist")
  * @ORM\Entity()
  */
-class Checklist
+class Checklist implements SynchronisableInterface
 {
     use ModifyAudit;
+    use SynchronisableTrait;
 
     /**
      * @var int
@@ -311,6 +314,14 @@ class Checklist
      * @JMS\Groups({"report-checklist"})
      */
     private $buttonClicked;
+
+    /**
+     * @var string|null
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-submission"})
+     * @ORM\Column(name="opg_uuid", type="string", length=36, nullable=true)
+     */
+    private $uuid;
 
     /**
      * @param Report $report
@@ -911,6 +922,26 @@ class Checklist
     public function setButtonClicked($buttonClicked)
     {
         $this->buttonClicked = $buttonClicked;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUuid(): ?string
+    {
+        return $this->uuid;
+    }
+
+    /**
+     * @param string|null $uuid
+     *
+     * @return $this
+     */
+    public function setUuid(?string $uuid)
+    {
+        $this->uuid = $uuid;
+
         return $this;
     }
 }
