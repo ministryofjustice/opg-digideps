@@ -111,13 +111,10 @@ workflows:
           requires: [ apply master ]
           filters: { branches: { only: [ master ] } }
 
-      - run-task:
+      - api-unit-tests:
           name: api unit test
           requires: [ apply master ]
           filters: { branches: { only: [ master ] } }
-          task_name: api_unit_test
-          tf_workspace: master
-          timeout: 600
 
       - apply:
           name: apply training
