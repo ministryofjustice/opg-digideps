@@ -17,10 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  */
 class ManageController extends AbstractController
 {
-    public function __construct(
-    )
-    {
-    }
+    public function __construct(){}
 
     /**
      * @Route("/availability", methods={"GET"})
