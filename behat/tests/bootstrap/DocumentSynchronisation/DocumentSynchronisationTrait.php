@@ -68,44 +68,6 @@ trait DocumentSynchronisationTrait
     }
 
     /**
-     * @When I attached a supporting document :imageName to the submitted report
-     */
-    public function attachSupportingDocumentToSubmittedReport(string $imageName)
-    {
-        $this->visit('/');
-
-        try {
-            $this->clickLink('Attach documents');
-        } catch(\Throwable $e) {
-            $this->clickOnBehatLink('pa-report-open');
-            $this->clickLink('Attach documents');
-        }
-
-        $this->attachDocument($imageName);
-    }
-
-    /**
-     * @When I attached a supporting document :imageName to the completed report
-     */
-    public function iAttachedASupportingDocumentToTheCompletedReport(string $imageName)
-    {
-        $this->visit('/');
-
-        try {
-            $this->clickOnBehatLink('report-start');
-        } catch(\Throwable $e) {
-            $this->clickOnBehatLink('pa-report--open');
-        }
-
-        $this->clickOnBehatLink('edit-documents');
-        $this->clickOnBehatLink('edit');
-        $this->selectOption('document[wishToProvideDocumentation]','yes');
-        $this->clickOnBehatLink('save-and-continue');
-
-        $this->attachDocument($imageName);
-    }
-
-    /**
      * @Given /^I run the document\-sync command$/
      */
     public function iRunTheDocumentSyncCommand()
@@ -133,11 +95,5 @@ trait DocumentSynchronisationTrait
         if (strpos($reportPdfRow->getHtml(), 'Success') === false) {
             throw new \Exception("The document has not been synced");
         }
-    }
-
-    private function attachDocument(string $imageName)
-    {
-        $this->attachFileToField('report_document_upload_files', $imageName);
-        $this->pressButton('Upload');
     }
 }
