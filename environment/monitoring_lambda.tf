@@ -6,7 +6,7 @@ resource "aws_cloudwatch_log_group" "monitoring_lambda" {
 resource "aws_lambda_function" "monitoring" {
   filename         = data.archive_file.monitoring_lambda_zip.output_path
   source_code_hash = data.archive_file.monitoring_lambda_zip.output_base64sha256
-  function_name    = "monitoring-api-${local.environment}"
+  function_name    = "monitoring-${local.environment}"
   role             = aws_iam_role.monitoring_lambda_role.arn
   handler          = "monitoring.lambda_handler"
   runtime          = "python3.7"

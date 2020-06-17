@@ -66,7 +66,7 @@ def create_db(conn_string, db):
 
 def test_queued_documents():
     db = "api_test"
-    conn_string = "port='5432' user='api' password='api' host='localhost'"
+    conn_string = "port='5432' user='api' password='api' host='local.postgres'"
     create_db(conn_string, db)
     conn_string = conn_string + f" dbname='{db}'"
     conn = psycopg2.connect(conn_string)

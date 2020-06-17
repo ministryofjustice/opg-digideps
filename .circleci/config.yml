@@ -28,7 +28,7 @@ workflows:
           requires: [ reset environment ]
           filters: { branches: { ignore: [ master ] } }
           task_name: integration_test
-          timeout: 2100
+          timeout: 2400
 
       - client-unit-test:
           name: client unit test
@@ -298,8 +298,7 @@ jobs:
       AWS_CONFIG_FILE: ~/project/aws_config
       AWS_REGISTRY: 311462405659.dkr.ecr.eu-west-1.amazonaws.com
     steps:
-      - setup_remote_docker:
-          docker_layer_caching: true
+      - setup_remote_docker
       - aws-cli/install
       - add_ssh_keys:
           fingerprints:
@@ -383,13 +382,21 @@ jobs:
     docker:
       - image: circleci/python:3
     steps:
-      - setup_remote_docker:
-          docker_layer_caching: true
+      - setup_remote_docker
       - checkout
       - attach_workspace: { at: ~/project }
       - run:
           name: Load docker images
           command: docker load -i ~/project/docker-images.tar
+      - run:
+          name: Install lambda requirements for unit tests
+          working_directory: ~/project/lambda_functions
+          command: |
+            docker-compose up -d
+            sleep 5
+            docker-compose run pythontests python -m pytest
+            docker-compose down
+          background: true
       - run:
           name: install aws cli
           command: |
@@ -400,17 +407,6 @@ jobs:
           command: |
             ~/project/.circleci/set_env.sh >> $BASH_ENV
             ~/project/.circleci/set_env_pact.sh >> $BASH_ENV
-      - run:
-          name: Install lambda requirements for unit tests
-          working_directory: ~/project/lambda_functions/requirements
-          command: |
-            pip3 install -r requirements-dev.txt
-      - run:
-          name: Install lambda requirements for unit tests
-          working_directory: ~/project
-          command: |
-            docker-compose up -d postgres
-            python3 -m pytest
       - run:
           name: Run tests
           command: |
