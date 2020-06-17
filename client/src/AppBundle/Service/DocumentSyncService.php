@@ -212,7 +212,7 @@ class DocumentSyncService
             return $this->siriusApiGatewayClient->sendSupportingDocument(
                 $this->buildUpload($documentData, $content),
                 $documentData->getSyncedReportSubmission()->getUuid(),
-                $documentData->getCaseNumber()
+                strtoupper($documentData->getCaseNumber())
             );
         }
     }
