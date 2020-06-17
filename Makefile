@@ -43,6 +43,7 @@ up-app-build: ## Brings the app up and rebuilds containers
 	docker-compose up -d --build
 
 up-app-integration-tests: ## Brings the app up using test env vars (see test.env)
+	docker-compose build frontend api
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 
 client-unit-tests: prod-mode ## Run the client unit tests
@@ -54,11 +55,9 @@ api-unit-tests: reset-fixtures prod-mode ## Run the api unit tests
 	docker-compose -f docker-compose.yml run --rm api sh scripts/apiunittest.sh
 
 behat-tests: up-app-integration-tests reset-fixtures prod-mode
-	docker-compose build frontend api
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test
 
 behat-suite: up-app-integration-tests reset-fixtures prod-mode ## Pass in suite name as arg e.g. make behat-suite suite=<SUITE NAME>
-	docker-compose build frontend
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test --suite $(suite)
 
 reset-database: ## Resets the DB schema and runs migrations

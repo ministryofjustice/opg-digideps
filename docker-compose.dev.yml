@@ -30,10 +30,14 @@ services:
             - ./client/:/app
 
     frontend:
-        env_file: ./behat/test.env
+        env_file:
+            - ./behat/test.env
+            - .env
 
     admin:
-        env_file: ./behat/test.env
+        env_file:
+            - ./behat/test.env
+            - .env
 
     sirius-integration-api:
         image: muonsoft/openapi-mock

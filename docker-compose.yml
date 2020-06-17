@@ -26,11 +26,11 @@ services:
             - localstack
 
     localstack:
-        image: localstack/localstack:0.11.2
+        image: localstack/localstack:0.10.9
         ports:
-            - 4566:4566
+            - 4572:4572
         environment:
-            - SERVICES=s3,ssm,ec2,ecs,iam
+            - SERVICES=s3:4572,ssm:4583
             - DATA_DIR=/tmp/localstack/data
             - DEFAULT_REGION=eu-west-1
             - DEBUG=1
