@@ -93,7 +93,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setStorageReference('storage-ref-here')
             ->setFilename('test.pdf')
             ->setIsReportPdf(true)
-            ->setCaseNumber('1234567T')
+            ->setCaseNumber('1234567t')
             ->setNdrId(null);
 
         $this->s3Storage->retrieve('storage-ref-here')->shouldBeCalled()->willReturn($this->fileContents);
@@ -173,7 +173,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setStorageReference('storage-ref-here')
             ->setFilename('test.pdf')
             ->setIsReportPdf(true)
-            ->setCaseNumber('1234567T')
+            ->setCaseNumber('1234567t')
             ->setNdrId(123);
 
         $this->s3Storage->retrieve('storage-ref-here')->shouldBeCalled()->willReturn($this->fileContents);
@@ -240,7 +240,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setStorageReference('storage-ref-here')
             ->setFilename('test.pdf')
             ->setIsReportPdf(true)
-            ->setCaseNumber('1234567T')
+            ->setCaseNumber('1234567t')
             ->setNdrId(null);
 
         $this->s3Storage->retrieve('storage-ref-here')->willReturn($this->fileContents);
@@ -306,7 +306,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setStorageReference('storage-ref-here')
             ->setFilename('test.pdf')
             ->setIsReportPdf(true)
-            ->setCaseNumber('1234567T')
+            ->setCaseNumber('1234567t')
             ->setNdrId(null);
 
         $s3Exception = new S3Exception($awsErrorMessage, new Command('getObject'), ['code' => $awsErrorCode]);
@@ -374,7 +374,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setStorageReference('storage-ref-here')
             ->setFilename('bank-statement.pdf')
             ->setIsReportPdf(false)
-            ->setCaseNumber('1234567T')
+            ->setCaseNumber('1234567t')
             ->setNdrId(null);
 
         $this->s3Storage->retrieve('storage-ref-here')->willReturn($this->fileContents);
@@ -432,7 +432,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setStorageReference('storage-ref-here')
             ->setFilename('bank-statement.pdf')
             ->setIsReportPdf(false)
-            ->setCaseNumber('1234567T')
+            ->setCaseNumber('1234567t')
             ->setNdrId(null);
 
         $this->restClient
@@ -469,7 +469,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setStorageReference('storage-ref-here')
             ->setFilename('bank-statement.pdf')
             ->setIsReportPdf(false)
-            ->setCaseNumber('1234567T')
+            ->setCaseNumber('1234567t')
             ->setNdrId(null);
 
         $this->s3Storage->retrieve('storage-ref-here')->willReturn($this->fileContents);

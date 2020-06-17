@@ -207,7 +207,7 @@ class DocumentSyncService
     public function handleSiriusSync(QueuedDocumentData $documentData, string $content)
     {
         if($documentData->isReportPdf()) {
-            return $this->siriusApiGatewayClient->sendReportPdfDocument($this->buildUpload($documentData, $content), $documentData->getCaseNumber());
+            return $this->siriusApiGatewayClient->sendReportPdfDocument($this->buildUpload($documentData, $content), strtoupper($documentData->getCaseNumber()));
         } else {
             return $this->siriusApiGatewayClient->sendSupportingDocument(
                 $this->buildUpload($documentData, $content),
