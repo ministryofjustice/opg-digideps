@@ -205,7 +205,7 @@ orbs:
           - image: circleci/golang:1.12
         environment:
           TF_VERSION: 0.12.23
-          TF_SHA256SUM: 46bd906f8cb9bbb871905ecb23ae7344af8017d214d735fbb6d6c8e0feb20ff3
+          TF_SHA256SUM: 78fd53c0fffd657ee0ab5decac604b0dea2e6c0d4199a9f27db53f081d831a45
           TF_CLI_ARGS_plan: -input=false -lock=false
           TF_CLI_ARGS_apply: -input=false -auto-approve
           TF_CLI_ARGS_destroy: -input=false -auto-approve
