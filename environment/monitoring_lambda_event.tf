@@ -1,7 +1,7 @@
 resource "aws_cloudwatch_event_rule" "monitoring_db_queries" {
   name                = "monitor-rds-${local.environment}"
   description         = "Runs bespoke monitoring SQL statements against RDS DB"
-  schedule_expression = "rate(1 hour)"
+  schedule_expression = "rate(5 minutes)"
   tags                = local.default_tags
 }
 

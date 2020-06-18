@@ -15,7 +15,7 @@ data "aws_iam_policy_document" "integrations_assume_role" {
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = local.account.development ? [local.sirius_root] : [local.sirius_env_lambda]
+      identifiers = local.account.name == "development" ? [local.sirius_root] : [local.sirius_env_lambda]
     }
     actions = ["sts:AssumeRole"]
   }
@@ -26,7 +26,7 @@ data "aws_iam_policy_document" "integrations_s3_read" {
   statement {
     sid       = "AllowIntegrationsLambdaS3"
     effect    = "Allow"
-    resources = local.account.development ? ["arn:aws:s3:::pa-uploads-*"] : ["arn:aws:s3:::pa-uploads-${local.account.name}}"]
+    resources = local.account.name == "development" ? ["arn:aws:s3:::pa-uploads-*"] : ["arn:aws:s3:::pa-uploads-${local.account.name}}"]
     actions   = ["s3:GetObject"]
   }
 }

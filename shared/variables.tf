@@ -9,7 +9,6 @@ variable "accounts" {
       name              = string
       db_subnet_group   = string
       ec_subnet_group   = string
-      development       = bool
       sirius_account_id = string
     })
   )

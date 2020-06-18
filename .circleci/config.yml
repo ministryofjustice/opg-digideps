@@ -389,6 +389,15 @@ jobs:
           name: Load docker images
           command: docker load -i ~/project/docker-images.tar
       - run:
+          name: Install lambda requirements for unit tests
+          working_directory: ~/project/lambda_functions
+          command: |
+            docker-compose up -d
+            sleep 5
+            docker-compose run pythontests python -m pytest
+            docker-compose down
+          background: true
+      - run:
           name: install aws cli
           command: |
             pip3 install awscli --upgrade --user
@@ -398,16 +407,6 @@ jobs:
           command: |
             ~/project/.circleci/set_env.sh >> $BASH_ENV
             ~/project/.circleci/set_env_pact.sh >> $BASH_ENV
-      - run:
-          name: Install lambda requirements for unit tests
-          working_directory: ~/project/lambda_functions/requirements
-          command: |
-            pip3 install -r requirements-dev.txt
-      - run:
-          name: Install lambda requirements for unit tests
-          working_directory: ~/project
-          command: |
-            python3 -m pytest
       - run:
           name: Run tests
           command: |
