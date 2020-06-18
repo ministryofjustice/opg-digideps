@@ -369,9 +369,9 @@ class OrgServiceTest extends WebTestCase
         $this->pa->addFromCasrecRows($dataMove);
         self::$em->clear();
 
-        // check client 3 is now associated with deputy1
-        $this->assertCount(1, self::$fixtures->findNamedDeputyByNumber('00000001')->getClients());
-        $this->assertCount(2, self::$fixtures->findNamedDeputyByNumber('00000002')->getClients());
+        // check client 2 remains with deputy 1
+        $this->assertCount(2, self::$fixtures->findNamedDeputyByNumber('00000001')->getClients());
+        $this->assertCount(1, self::$fixtures->findNamedDeputyByNumber('00000002')->getClients());
         $this->assertCount(1, self::$fixtures->findNamedDeputyByNumber('00000003')->getClients());
 
         // check that report type changes are applied
@@ -492,9 +492,9 @@ class OrgServiceTest extends WebTestCase
         $this->pa->addFromCasrecRows($dataMove);
         self::$em->clear();
 
-        // check client 3 is now associated with deputy1
-        $this->assertCount(1, self::$fixtures->findNamedDeputyByNumber('00000001')->getClients());
-        $this->assertCount(2, self::$fixtures->findNamedDeputyByNumber('00000002')->getClients());
+        // check client 2 remains with deputy 1
+        $this->assertCount(2, self::$fixtures->findNamedDeputyByNumber('00000001')->getClients());
+        $this->assertCount(1, self::$fixtures->findNamedDeputyByNumber('00000002')->getClients());
 
         // check that report type changes are applied
         $data[0]['Corref'] = 'L3G';
@@ -636,11 +636,7 @@ class OrgServiceTest extends WebTestCase
         /** @var EntityDir\Client&ObjectProphecy $client */
         $client = $this->prophesize(EntityDir\Client::class);
         $client->hasDeputies()->shouldBeCalled()->willReturn(false);
-        $client->getId()->shouldBeCalled()->willReturn(525);
-        $client->getOrganisation()->shouldBeCalled()->willReturn(null);
         $client->getCurrentReport()->shouldBeCalled()->willReturn($report->reveal());
-        $client->setNamedDeputy(Argument::any())->shouldBeCalled();
-        $client->setOrganisation(Argument::any())->shouldBeCalled();
         $client->setCourtDate(Argument::any())->shouldBeCalled();
 
         // Ensure no client data is updated
@@ -650,6 +646,8 @@ class OrgServiceTest extends WebTestCase
         $client->setAddress(Argument::any())->shouldNotBeCalled();
         $client->setPhone(Argument::any())->shouldNotBeCalled();
         $client->setEmail(Argument::any())->shouldNotBeCalled();
+        $client->setOrganisation(Argument::any())->shouldNotBeCalled();
+        $client->setNamedDeputy(Argument::any())->shouldNotBeCalled();
 
         /** @var ClientRepository&ObjectProphecy $clientRepository */
         $clientRepository = self::prophesize(ClientRepository::class);
