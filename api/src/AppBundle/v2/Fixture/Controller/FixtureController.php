@@ -2,7 +2,6 @@
 
 namespace AppBundle\v2\Fixture\Controller;
 
-use AppBundle\Controller\RestController;
 use AppBundle\DataFixtures\DocumentSyncFixtures;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Ndr\Ndr;
@@ -13,14 +12,11 @@ use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
-use AppBundle\Exception\UnauthorisedException;
 use AppBundle\Factory\OrganisationFactory;
 use AppBundle\FixtureFactory\CasRecFactory;
 use AppBundle\FixtureFactory\ClientFactory;
 use AppBundle\FixtureFactory\ReportFactory;
 use AppBundle\FixtureFactory\UserFactory;
-use AppBundle\TestHelpers\DocumentHelpers;
-use AppBundle\TestHelpers\ReportSubmissionHelper;
 use AppBundle\v2\Controller\ControllerTrait;
 use AppBundle\v2\Fixture\ReportSection;
 use Doctrine\ORM\EntityManagerInterface;

@@ -1,8 +1,6 @@
 <?php declare(strict_types=1);
 
 
-use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Model\Sirius\QueuedDocumentData;
 use PHPUnit\Framework\TestCase;
 

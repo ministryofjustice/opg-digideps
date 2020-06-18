@@ -5,7 +5,6 @@ namespace AppBundle\v2\Fixture;
 use AppBundle\Entity\Ndr as Ndr;
 use AppBundle\Entity\Report\Action;
 use AppBundle\Entity\Report\BankAccount;
-use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Lifestyle;
 use AppBundle\Entity\Report\MentalCapacity;
 use AppBundle\Entity\Report\MoneyTransaction;
@@ -13,10 +12,8 @@ use AppBundle\Entity\Report\ProfDeputyOtherCost;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\VisitsCare;
 use AppBundle\Entity\ReportInterface;
-use AppBundle\Service\File\FileUploader;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use AppBundle\TestHelpers\DocumentHelpers;
 
 class ReportSection
 {

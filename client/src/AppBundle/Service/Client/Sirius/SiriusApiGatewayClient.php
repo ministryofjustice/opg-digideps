@@ -67,7 +67,6 @@ class SiriusApiGatewayClient
     {
         $reportJson = $this->serializer->serialize(['report' => ['data' => $upload]], 'json');
 
-        var_dump($reportJson);
         $signedRequest = $this->buildSignedRequest(
             sprintf(self::SIRIUS_REPORT_ENDPOINT, $caseRef),
             'POST',
