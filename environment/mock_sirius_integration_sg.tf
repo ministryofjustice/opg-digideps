@@ -8,6 +8,13 @@ locals {
       target_type = "security_group_id"
       target      = module.document_sync_service_security_group.id
     },
+    front = {
+      port        = 8080
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.front_service_security_group.id
+    }
   }
 }
 
