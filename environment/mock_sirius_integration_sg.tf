@@ -1,15 +1,13 @@
 locals {
   mock_sirius_integration_sg_rules = {
-    ecr  = local.common_sg_rules.ecr
     logs = local.common_sg_rules.logs
-    s3   = local.common_sg_rules.s3
-    front = {
-      port        = 443
+    document_sync = {
+      port        = 8080
+      type        = "ingress"
       protocol    = "tcp"
-      type        = "egress"
-      target_type = "cidr_block"
-      target      = "0.0.0.0/0"
-    }
+      target_type = "security_group_id"
+      target      = module.document_sync_service_security_group.id
+    },
   }
 }
 

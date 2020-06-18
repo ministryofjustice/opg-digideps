@@ -1,3 +1,26 @@
+locals {
+  mock_sirius_integration_service_fqdn = "mock-sirius-integration.${aws_service_discovery_private_dns_namespace.private.name}"
+}
+
+resource "aws_service_discovery_service" "mock_sirius_integration" {
+  name = "mock-sirius-integration"
+
+  dns_config {
+    namespace_id = aws_service_discovery_private_dns_namespace.private.id
+
+    dns_records {
+      ttl  = 10
+      type = "A"
+    }
+
+    routing_policy = "MULTIVALUE"
+  }
+
+  health_check_custom_config {
+    failure_threshold = 1
+  }
+}
+
 resource "aws_ecs_task_definition" "mock_sirius_integration" {
   family                   = "mock-sirius-integration-${local.environment}"
   requires_compatibilities = ["FARGATE"]
@@ -14,6 +37,7 @@ resource "aws_ecs_service" "mock_sirius_integration" {
   name                    = aws_ecs_task_definition.mock_sirius_integration.family
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.mock_sirius_integration.arn
+  desired_count           = local.account.task_count
   launch_type             = "FARGATE"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
@@ -22,7 +46,11 @@ resource "aws_ecs_service" "mock_sirius_integration" {
   network_configuration {
     security_groups  = [module.mock_sirius_integration_security_group.id]
     subnets          = data.aws_subnet.private.*.id
-    assign_public_ip = false
+    assign_public_ip = true
+  }
+
+  service_registries {
+    registry_arn = aws_service_discovery_service.mock_sirius_integration.arn
   }
 }
 
@@ -31,6 +59,11 @@ locals {
   {
     "name": "mock-sirius-integration",
     "image": "muonsoft/openapi-mock:latest",
+    "portMappings": [{
+          "containerPort": 8080,
+          "hostPort": 8080,
+          "protocol": "tcp"
+    }],
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
