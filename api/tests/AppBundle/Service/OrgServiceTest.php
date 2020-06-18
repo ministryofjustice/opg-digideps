@@ -638,6 +638,9 @@ class OrgServiceTest extends WebTestCase
         $client->hasDeputies()->shouldBeCalled()->willReturn(false);
         $client->getCurrentReport()->shouldBeCalled()->willReturn($report->reveal());
         $client->setCourtDate(Argument::any())->shouldBeCalled();
+        $client->getOrganisation()->shouldBeCalled();
+        $client->getNamedDeputy()->shouldBeCalled();
+        $client->setNamedDeputy(Argument::any())->shouldBeCalled();
 
         // Ensure no client data is updated
         $client->setCaseNumber(Argument::any())->shouldNotBeCalled();
@@ -647,7 +650,6 @@ class OrgServiceTest extends WebTestCase
         $client->setPhone(Argument::any())->shouldNotBeCalled();
         $client->setEmail(Argument::any())->shouldNotBeCalled();
         $client->setOrganisation(Argument::any())->shouldNotBeCalled();
-        $client->setNamedDeputy(Argument::any())->shouldNotBeCalled();
 
         /** @var ClientRepository&ObjectProphecy $clientRepository */
         $clientRepository = self::prophesize(ClientRepository::class);
