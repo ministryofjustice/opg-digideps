@@ -38,7 +38,7 @@ class ReportSubmissionController extends RestController
         'user-rolename',
         'user-teamname',
         'documents',
-        'document-synchronisation',
+        'synchronisation',
     ];
 
     /**
