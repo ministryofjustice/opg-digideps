@@ -2,10 +2,8 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\CsvUploader;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Twig\Environment;
@@ -26,16 +24,6 @@ class OrgService
      * @var SessionInterface
      */
     private $session;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $auditLogger;
-
-    /**
-     * @var AuditEvents
-     */
-    private $auditEvents;
 
     /**
      * @var bool
@@ -59,24 +47,12 @@ class OrgService
 
     /**
      * @param RestClient $restClient
-     * @param Environment $twig
-     * @param SessionInterface $session
-     * @param LoggerInterface $auditLogger
-     * @param AuditEvents $auditEvents
      */
-    public function __construct(
-        RestClient $restClient,
-        Environment $twig,
-        SessionInterface $session,
-        LoggerInterface $auditLogger,
-        AuditEvents $auditEvents
-    )
+    public function __construct(RestClient $restClient, Environment $twig, SessionInterface $session)
     {
         $this->restClient = $restClient;
         $this->twig = $twig;
         $this->session = $session;
-        $this->auditLogger = $auditLogger;
-        $this->auditEvents = $auditEvents;
     }
 
     /**
@@ -210,18 +186,10 @@ class OrgService
             /** @var array $upload */
             $upload = $this->restClient->post('org/bulk-add', $compressedChunk);
 
-            if (count($upload['added']['discharged_clients']) > 0) {
-                foreach ($upload['added']['discharged_clients'] as $caseNumber) {
-                    $this->auditLogger->notice('', $this->auditEvents->clientDischarged(
-                        AuditEvents::CLIENT_DISCHARGED_CSV_TRIGGER,
-                        $caseNumber
-                    ));
-                }
-            }
-
             $this->storeChunkOutput($upload);
             $this->logProgress($index + 1, $chunkCount);
         }
+
     }
 
     /**

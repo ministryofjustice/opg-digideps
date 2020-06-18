@@ -9,20 +9,18 @@ final class AuditEvents
     const CLIENT_DISCHARGED_CSV_TRIGGER = 'CSV_UPLOAD';
 
     /**
-     * @param $trigger
-     * @param $caseNumber
+     * @param string $trigger
+     * @param string $caseNumber
+     * @param string $dischargedBy
      * @return array
      */
-    public function clientDischarged(string $trigger, string $caseNumber, string $dischargedBy = null): array
+    public function clientDischarged(string $trigger, string $caseNumber, string $dischargedBy): array
     {
         $event = [
             'trigger' => $trigger,
-            'case_number' => $caseNumber
+            'case_number' => $caseNumber,
+            'discharged_by' => $dischargedBy
         ];
-
-        if (null !== $dischargedBy) {
-            $event['discharged_by'] = $dischargedBy;
-        }
 
         return $event + $this->baseEvent(AuditEvents::CLIENT_DISCHARGED);
     }

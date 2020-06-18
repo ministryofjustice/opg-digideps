@@ -12,27 +12,10 @@ class AuditEventsTest extends TestCase
     public function clientDischarged(): void
     {
         $expected = [
-            'event' => AuditEvents::CLIENT_DISCHARGED,
-            'trigger' => 'ADMIN_BUTTON',
-            'case_number' => '19348522',
-            'type' => 'audit'
-        ];
-
-        $actual =  (new AuditEvents())->clientDischarged('ADMIN_BUTTON', '19348522');
-
-        $this->assertEquals($expected, $actual);
-    }
-
-    /**
-     * @test
-     */
-    public function clientDischargedByUser(): void
-    {
-        $expected = [
-            'event' => AuditEvents::CLIENT_DISCHARGED,
             'trigger' => 'ADMIN_BUTTON',
             'case_number' => '19348522',
             'discharged_by' => 'me@test.com',
+            'event' => AuditEvents::CLIENT_DISCHARGED,
             'type' => 'audit'
         ];
 
