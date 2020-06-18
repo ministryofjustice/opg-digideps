@@ -61,4 +61,4 @@ Feature: Organisation deputyship updates
     # Assert same organisation
     Then I should see "PA OPG" in the "assigned-organisation" region
     # Assert new named deputy within same organisation
-    And I should see "behat-prof1@publicguardian.gov.uk" in the "deputy-details" region
+    And I should see "behat-pa1@publicguardian.gov.uk" in the "deputy-details" region
