@@ -3,6 +3,8 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Ndr\Ndr;
+use AppBundle\Entity\SynchronisableInterface;
+use AppBundle\Entity\SynchronisableTrait;
 use AppBundle\Entity\Traits\CreationAudit;
 use AppBundle\Entity\User;
 use DateTime;
@@ -19,15 +21,10 @@ use JMS\Serializer\Annotation as JMS;
  *     })
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\DocumentRepository")
  */
-class Document
+class Document implements SynchronisableInterface
 {
     use CreationAudit;
-
-    const SYNC_STATUS_QUEUED = 'QUEUED';
-    const SYNC_STATUS_IN_PROGRESS = 'IN_PROGRESS';
-    const SYNC_STATUS_SUCCESS = 'SUCCESS';
-    const SYNC_STATUS_TEMPORARY_ERROR = 'TEMPORARY_ERROR';
-    const SYNC_STATUS_PERMANENT_ERROR = 'PERMANENT_ERROR';
+    use SynchronisableTrait;
 
     /**
      * @var int
@@ -103,39 +100,6 @@ class Document
      * @ORM\JoinColumn(name="report_submission_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $reportSubmission;
-
-    /**
-     * @var string|null
-     * @JMS\Type("string")
-     * @JMS\Groups({"document-synchronisation"})
-     * @ORM\Column(name="synchronisation_status", type="string", options={"default": null}, nullable=true)
-     */
-    private $synchronisationStatus;
-
-    /**
-     * @var DateTime|null
-     * @JMS\Type("DateTime")
-     * @JMS\Groups({"document-synchronisation"})
-     * @ORM\Column(name="synchronisation_time", type="datetime", options={"default": null}, nullable=true)
-     */
-    private $synchronisationTime;
-
-    /**
-     * @var string|null
-     * @JMS\Type("string")
-     * @JMS\Groups({"document-synchronisation"})
-     * @ORM\Column(name="synchronisation_error", type="string", options={"default": null}, nullable=true)
-     */
-    private $synchronisationError;
-
-    /**
-     * @var User|null
-     * @JMS\Type("AppBundle\Entity\User")
-     * @JMS\Groups({"document-synchronisation"})
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
-     * @ORM\JoinColumn(name="synchronised_by", referencedColumnName="id", onDelete="SET NULL")
-     */
-    private $synchronisedBy;
 
     /**
      * Document constructor.
@@ -299,87 +263,5 @@ class Document
     private function isTransactionDocument()
     {
         return strpos($this->getFileName(), 'DigiRepTransactions') !== false;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getSynchronisationStatus(): ?string
-    {
-        return $this->synchronisationStatus;
-    }
-
-    /**
-     * @param string $status
-     * @return $this
-     */
-    public function setSynchronisationStatus(?string $status)
-    {
-        if (!in_array($status, array(
-            self::SYNC_STATUS_QUEUED,
-            self::SYNC_STATUS_IN_PROGRESS,
-            self::SYNC_STATUS_SUCCESS,
-            self::SYNC_STATUS_TEMPORARY_ERROR,
-            self::SYNC_STATUS_PERMANENT_ERROR,
-        ))) {
-            throw new \InvalidArgumentException('Invalid synchronisation status');
-        }
-
-        $this->synchronisationStatus = $status;
-        return $this;
-    }
-
-    /**
-     * @return DateTime|null
-     */
-    public function getSynchronisationTime(): ?DateTime
-    {
-        return $this->synchronisationTime;
-    }
-
-    /**
-     * @param DateTime $time
-     * @return $this
-     */
-    public function setSynchronisationTime(?DateTime $time)
-    {
-        $this->synchronisationTime = $time;
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getSynchronisationError(): ?string
-    {
-        return $this->synchronisationError;
-    }
-
-    /**
-     * @param string $error
-     * @return $this
-     */
-    public function setSynchronisationError(?string $error)
-    {
-        $this->synchronisationError = $error;
-        return $this;
-    }
-
-    /**
-     * @return User|null
-     */
-    public function getSynchronisedBy(): ?User
-    {
-        return $this->synchronisedBy;
-    }
-
-    /**
-     * @param User $user
-     * @return $this
-     */
-    public function setSynchronisedBy(?User $user)
-    {
-        $this->synchronisedBy = $user;
-        return $this;
     }
 }
