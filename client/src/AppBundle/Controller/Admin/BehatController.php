@@ -16,7 +16,7 @@ class BehatController extends AbstractController
 {
     /**
      * @Route("/admin/run-cache-clear-command")
-     * @Security("has_role('ROLE_SUPER_ADMIN', 'ROLE_AD')")
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
      */
     public function runCacheClearCommand(KernelInterface $kernel)
     {
