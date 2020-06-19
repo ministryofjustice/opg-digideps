@@ -8,4 +8,6 @@ Feature: Limiting access to fixture endpoints to super admins
     When I follow "Fixtures"
     Then I should be on "/admin/fixtures/list"
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I clear the cache
+    Then I go to "/"
     Then I should not see "Fixtures"
