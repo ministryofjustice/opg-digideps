@@ -8,13 +8,14 @@ resource "aws_lb_target_group" "front" {
   tags                 = local.default_tags
 
   health_check {
-    path     = "/manage/elb"
-    interval = 10
-    protocol = "HTTPS"
+    path                = "/manage/elb"
+    interval            = 30
+    timeout             = 10
+    unhealthy_threshold = 3
+    protocol            = "HTTPS"
   }
 
   lifecycle {
     create_before_destroy = true
   }
 }
-

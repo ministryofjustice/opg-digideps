@@ -171,7 +171,7 @@ class DocumentController extends RestController
         $document = $em->getRepository(Document::class)->find($id);
 
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['document-synchronisation', 'document-id'];
+            ? (array) $request->query->get('groups') : ['synchronisation', 'document-id'];
 
         $this->setJmsSerialiserGroups($serialisedGroups);
 

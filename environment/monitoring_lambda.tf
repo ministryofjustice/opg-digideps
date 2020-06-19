@@ -6,7 +6,7 @@ resource "aws_cloudwatch_log_group" "monitoring_lambda" {
 resource "aws_lambda_function" "monitoring" {
   filename         = data.archive_file.monitoring_lambda_zip.output_path
   source_code_hash = data.archive_file.monitoring_lambda_zip.output_base64sha256
-  function_name    = "monitoring-api-${local.environment}"
+  function_name    = "monitoring-${local.environment}"
   role             = aws_iam_role.monitoring_lambda_role.arn
   handler          = "monitoring.lambda_handler"
   runtime          = "python3.7"
@@ -57,17 +57,4 @@ data "archive_file" "monitoring_lambda_layer_zip" {
   type        = "zip"
   source_dir  = "../lambda_functions/layers/monitoring"
   output_path = "./monitoring_lambda_layer.zip"
-}
-
-resource "aws_cloudwatch_log_metric_filter" "monitoring_lambda" {
-  name           = "MonitorQueuedDocuments.${local.environment}"
-  pattern        = "{ $.eventType = \"Queued_Documents\" }"
-  log_group_name = aws_cloudwatch_log_group.monitoring_lambda.name
-
-  metric_transformation {
-    name          = "QueuedGreaterThanHour.${local.environment}"
-    namespace     = "Monitoring"
-    value         = "$.count"
-    default_value = "0"
-  }
 }
