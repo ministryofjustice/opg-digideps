@@ -26,6 +26,9 @@ locals {
       target      = "0.0.0.0/0"
     }
   }
+
+  document_sync_interval = local.environment == "production" ? "rate(5 minutes)" : "rate(24 hours)"
+
 }
 
 module "document_sync_service_security_group" {
@@ -66,7 +69,7 @@ resource "aws_ecs_service" "document_sync" {
 
 resource "aws_cloudwatch_event_rule" "document_sync_cron_rule" {
   name                = "${aws_ecs_task_definition.document_sync.family}-schedule"
-  schedule_expression = "rate(5 minutes)"
+  schedule_expression = local.document_sync_interval
 }
 
 resource "aws_cloudwatch_event_target" "document_sync_scheduled_task" {
