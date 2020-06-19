@@ -38,16 +38,17 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/list", name="admin_fixtures")
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_AD')")
      * @Template("AppBundle:Admin/Fixtures:index.html.twig")
      */
-    public function fixtures(Request $request, KernelInterface $kernel)
+    public function fixtures()
     {
-
+        return new Response();
     }
+
     /**
      * @Route("/court-orders", name="admin_fixtures_court_orders")
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_AD')")
      * @Template("AppBundle:Admin/Fixtures:courtOrders.html.twig")
      */
     public function courtOrdersAction(Request $request, KernelInterface $kernel)
@@ -273,7 +274,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/create-casrec", name="casrec_fixture", methods={"GET", "POST"})
-     * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
+     * @Security("has_role('ROLE_SUPER_ADMIN', 'ROLE_AD')")
      * @Template("AppBundle:Admin/Fixtures:casRec.html.twig")
      */
     public function createCasrec(Request $request, KernelInterface $kernel, RestClient $restClient)
