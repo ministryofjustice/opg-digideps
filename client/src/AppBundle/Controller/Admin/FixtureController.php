@@ -38,7 +38,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/list", name="admin_fixtures")
-     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_AD')")
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
      * @Template("AppBundle:Admin/Fixtures:index.html.twig")
      */
     public function fixtures()
