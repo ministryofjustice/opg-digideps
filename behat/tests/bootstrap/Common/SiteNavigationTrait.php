@@ -58,12 +58,4 @@ trait SiteNavigationTrait
     {
         $this->visitAdminPath("/admin/client/case-number/$caseNumber/details");
     }
-
-    /**
-     * @Given /^I clear the cache$/
-     */
-    public function iClearTheCache()
-    {
-        $this->visitAdminPath("/admin/run-cache-clear-command");
-    }
 }
