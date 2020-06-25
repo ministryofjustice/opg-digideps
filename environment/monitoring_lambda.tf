@@ -20,10 +20,11 @@ resource "aws_lambda_function" "monitoring" {
   environment {
     variables = {
       ENVIRONMENT = local.environment
-      DB_ENDPOINT = local.account.always_on ? aws_db_instance.api[0].endpoint : aws_rds_cluster.api[0].endpoint
-      DB_USER     = "digidepsmaster"
-      DB_PORT     = "5432"
-      DB_NAME     = "api"
+      DB_ENDPOINT = local.db.endpoint
+      DB_USER     = local.db.username
+      DB_PORT     = local.db.port
+      DB_NAME     = local.db.name
+      SECRET_NAME = data.aws_secretsmanager_secret.database_password.name
     }
   }
   tags = local.default_tags
