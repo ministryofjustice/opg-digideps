@@ -119,6 +119,11 @@
                             {{ _self.navLink('admin_homepage', 'nav.adminArea', navSection == 'users') }}
                         </li>
                     {% endif %}
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <li class="moj-primary-navigation__item">
+                            {{ _self.navLink('admin_fixtures', 'nav.adminFixtures', navSection == 'fixtures') }}
+                        </li>
+                    {% endif %}
                 </ul>
                 </nav>
             </div>

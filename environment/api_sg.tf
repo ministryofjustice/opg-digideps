@@ -38,6 +38,13 @@ locals {
       target_type = "security_group_id"
       target      = module.document_sync_service_security_group.id
     }
+    checklist_sync = {
+      port        = 443
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.checklist_sync_service_security_group.id
+    }
   }
 }
 
@@ -57,14 +64,6 @@ locals {
       protocol    = "tcp"
       target_type = "security_group_id"
       target      = module.api_service_security_group.id
-    }
-
-    api_unit_test = {
-      port        = 6379
-      type        = "ingress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = module.api_unit_test.security_group_id
     }
   }
 }
@@ -114,13 +113,6 @@ locals {
       target_type = "security_group_id"
       target      = module.restore_from_production.security_group_id
     }
-    api_unit_test = {
-      port        = 5432
-      type        = "ingress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = module.api_unit_test.security_group_id
-    }
     integration_test = {
       port        = 5432
       type        = "ingress"
@@ -134,6 +126,13 @@ locals {
       protocol    = "tcp"
       target_type = "security_group_id"
       target      = module.reset_database.security_group_id
+    }
+    monitoring_lambda = {
+      port        = 5432
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.monitoring_lambda_security_group.id
     }
   }
 }

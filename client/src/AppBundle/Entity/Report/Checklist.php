@@ -4,7 +4,10 @@ namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Report\Traits\HasReportTrait;
 use AppBundle\Entity\ReportInterface;
+use AppBundle\Entity\SynchronisableInterface;
+use AppBundle\Entity\SynchronisableTrait;
 use AppBundle\Entity\Traits\ModifyAudit;
+use AppBundle\Validator\Constraints as AppAssert;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -12,10 +15,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Checklist.
  *
  */
-class Checklist
+class Checklist implements SynchronisableInterface
 {
     use HasReportTrait;
     use ModifyAudit;
+    use SynchronisableTrait;
 
     /**
      * @var int
@@ -202,7 +206,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.paymentsMatchCostCertificate.notBlank", groups={"submit-profDeputyCosts-checklist"})
+     * @AppAssert\YesNoNa(groups={"submit-profDeputyCosts-checklist"})
      */
     private $paymentsMatchCostCertificate;
 
@@ -211,7 +215,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.profCostsReasonableAndProportionate.notBlank", groups={"submit-profDeputyCosts-checklist"})
+     * @AppAssert\YesNoNa(groups={"submit-profDeputyCosts-checklist"})
      */
     private $profCostsReasonableAndProportionate;
 
@@ -220,7 +224,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.hasDeputyOverchargedFromPreviousEstimates.notBlank", groups={"submit-profDeputyCosts-checklist"})
+     * @AppAssert\YesNoNa(groups={"submit-profDeputyCosts-checklist"})
      */
     private $hasDeputyOverchargedFromPreviousEstimates;
 
@@ -293,6 +297,12 @@ class Checklist
      * @JMS\Groups({"report-checklist"})
      */
     protected $buttonClicked;
+
+    /**
+     * @var string|null
+     * @JMS\Type("string")
+     */
+    private $uuid;
 
     /**
      * Checklist constructor.
@@ -906,6 +916,26 @@ class Checklist
     public function setButtonClicked($buttonClicked)
     {
         $this->buttonClicked = $buttonClicked;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUuid(): ?string
+    {
+        return $this->uuid;
+    }
+
+    /**
+     * @param string|null $uuid
+     *
+     * @return $this
+     */
+    public function setUuid(?string $uuid)
+    {
+        $this->uuid = $uuid;
+
         return $this;
     }
 }

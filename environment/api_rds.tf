@@ -3,29 +3,34 @@ data "aws_kms_key" "rds" {
 }
 
 resource "aws_db_instance" "api" {
-  count                   = local.account.always_on ? 1 : 0
-  name                    = "api"
-  identifier              = "api-${local.environment}"
-  instance_class          = "db.m3.medium"
-  allocated_storage       = "10"
-  availability_zone       = "eu-west-1a"
-  backup_retention_period = "14"
-  backup_window           = "00:00-00:30"
-  db_subnet_group_name    = local.account.db_subnet_group
-  engine                  = "postgres"
-  engine_version          = "9.6"
-  kms_key_id              = data.aws_kms_key.rds.arn
-  license_model           = "postgresql-license"
-  maintenance_window      = "sun:01:00-sun:01:30"
-  monitoring_interval     = "0"
-  option_group_name       = "default:postgres-9-6"
-  parameter_group_name    = "default.postgres9.6"
-  port                    = "5432"
-  skip_final_snapshot     = "true"
-  storage_encrypted       = "true"
-  storage_type            = "gp2"
-  username                = "digidepsmaster"
-  password                = data.aws_secretsmanager_secret_version.database_password.secret_string
+  count                      = local.account.always_on ? 1 : 0
+  name                       = "api"
+  identifier                 = "api-${local.environment}"
+  instance_class             = "db.m3.medium"
+  allocated_storage          = "10"
+  availability_zone          = "eu-west-1a"
+  backup_retention_period    = "14"
+  backup_window              = "00:00-00:30"
+  db_subnet_group_name       = local.account.db_subnet_group
+  engine                     = "postgres"
+  engine_version             = "9.6.11"
+  kms_key_id                 = data.aws_kms_key.rds.arn
+  license_model              = "postgresql-license"
+  maintenance_window         = "sun:01:00-sun:01:30"
+  monitoring_interval        = "0"
+  option_group_name          = "default:postgres-9-6"
+  parameter_group_name       = "default.postgres9.6"
+  port                       = "5432"
+  skip_final_snapshot        = false
+  storage_encrypted          = true
+  storage_type               = "gp2"
+  username                   = "digidepsmaster"
+  password                   = data.aws_secretsmanager_secret_version.database_password.secret_string
+  deletion_protection        = true
+  delete_automated_backups   = false
+  auto_minor_version_upgrade = false
+  final_snapshot_identifier  = "api-${local.environment}-final"
+
 
   vpc_security_group_ids = [module.api_rds_security_group.id]
 
@@ -37,8 +42,10 @@ resource "aws_db_instance" "api" {
   )
 
   lifecycle {
-    ignore_changes = [password]
+    ignore_changes  = [password]
+    prevent_destroy = true
   }
+
 }
 
 resource "aws_rds_cluster" "api" {

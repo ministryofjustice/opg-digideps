@@ -55,7 +55,7 @@ locals {
         "curl -f -k https://localhost:443/manage/elb || exit 1"
       ],
       "interval": 30,
-      "timeout": 5,
+      "timeout": 10,
       "retries": 3
     },
     "logConfiguration": {

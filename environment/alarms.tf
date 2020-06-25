@@ -48,6 +48,32 @@ resource "aws_cloudwatch_metric_alarm" "nginx_errors" {
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
 }
 
+resource "aws_cloudwatch_log_metric_filter" "queued_documents" {
+  name           = "MonitorQueuedDocuments.${local.environment}"
+  pattern        = "{ $.eventType = \"Queued_Documents\" }"
+  log_group_name = aws_cloudwatch_log_group.monitoring_lambda.name
+
+  metric_transformation {
+    name      = "QueuedGreaterThanHour.${local.environment}"
+    namespace = "DigiDeps/Error"
+    value     = "$.count"
+  }
+}
+
+//aws_cloudwatch_log_group.monitoring_lambda.name
+
+resource "aws_cloudwatch_metric_alarm" "queued_documents" {
+  alarm_name          = "QueuedDocsOver1Hr.${local.environment}"
+  statistic           = "Sum"
+  metric_name         = aws_cloudwatch_log_metric_filter.queued_documents.metric_transformation[0].name
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  threshold           = 1
+  period              = 1800
+  evaluation_periods  = 1
+  namespace           = aws_cloudwatch_log_metric_filter.queued_documents.metric_transformation[0].namespace
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+}
+
 data "aws_sns_topic" "availability-alert" {
   provider = aws.us-east-1
   name     = "availability-alert"

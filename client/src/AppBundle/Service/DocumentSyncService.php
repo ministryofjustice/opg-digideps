@@ -7,6 +7,7 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Model\Sirius\QueuedDocumentData;
+use AppBundle\Model\Sirius\SiriusApiError;
 use AppBundle\Model\Sirius\SiriusDocumentFile;
 use AppBundle\Model\Sirius\SiriusDocumentUpload;
 use AppBundle\Model\Sirius\SiriusReportPdfDocumentMetadata;
@@ -17,6 +18,7 @@ use AppBundle\Service\File\Storage\S3Storage;
 use Aws\S3\Exception\S3Exception;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\SerializerInterface;
 use Throwable;
 use function GuzzleHttp\Psr7\mimetype_from_filename;
 
@@ -36,6 +38,9 @@ class DocumentSyncService
     /** @var RestClient */
     private $restClient;
 
+    /** @var SiriusApiErrorTranslator */
+    private $errorTranslator;
+
     /** @var int[] */
     private $syncErrorSubmissionIds;
 
@@ -45,7 +50,8 @@ class DocumentSyncService
     public function __construct(
         S3Storage $storage,
         SiriusApiGatewayClient $siriusApiGatewayClient,
-        RestClient $restClient
+        RestClient $restClient,
+        SiriusApiErrorTranslator $errorTranslator
     )
     {
         $this->storage = $storage;
@@ -53,6 +59,7 @@ class DocumentSyncService
         $this->restClient = $restClient;
         $this->syncErrorSubmissionIds = [];
         $this->docsNotSyncedCount = 0;
+        $this->errorTranslator = $errorTranslator;
     }
 
     /**
@@ -207,12 +214,12 @@ class DocumentSyncService
     public function handleSiriusSync(QueuedDocumentData $documentData, string $content)
     {
         if($documentData->isReportPdf()) {
-            return $this->siriusApiGatewayClient->sendReportPdfDocument($this->buildUpload($documentData, $content), $documentData->getCaseNumber());
+            return $this->siriusApiGatewayClient->sendReportPdfDocument($this->buildUpload($documentData, $content), strtoupper($documentData->getCaseNumber()));
         } else {
             return $this->siriusApiGatewayClient->sendSupportingDocument(
                 $this->buildUpload($documentData, $content),
                 $documentData->getSyncedReportSubmission()->getUuid(),
-                $documentData->getCaseNumber()
+                strtoupper($documentData->getCaseNumber())
             );
         }
     }
@@ -287,8 +294,11 @@ class DocumentSyncService
 
             $errorMessage = sprintf('S3 error while syncing document: %s', $e->getMessage());
         } else {
-            $errorMessage = (method_exists($e, 'getResponse') && method_exists($e->getResponse(), 'getBody')) ?
-                (string) $e->getResponse()->getBody() : (string) $e->getMessage();
+            if (method_exists($e, 'getResponse') && method_exists($e->getResponse(), 'getBody')) {
+                $errorMessage = $this->errorTranslator->translateApiError((string) $e->getResponse()->getBody());
+            } else {
+                $errorMessage = (string) $e->getMessage();
+            }
 
             $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
         }

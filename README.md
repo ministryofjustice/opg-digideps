@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/ministryofjustice/opg-digideps/branch/master/graph/badge.svg?token=asprWvTRqh)](https://codecov.io/gh/ministryofjustice/opg-digideps)
+
 # Complete the deputy report
 
 This app is the [Complete the deputy report][service] service. It provides an online reporting service used by deputies to submit their reports, and the private area for case managers to review submitted reports.

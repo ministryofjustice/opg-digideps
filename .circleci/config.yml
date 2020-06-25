@@ -11,10 +11,11 @@ workflows:
           name: build pr
           filters: { branches: { ignore: [ master ] } }
 
-      - apply:
+      - terraform-command:
           name: apply environment
           requires: [ build pr, lint terraform ]
           filters: { branches: { ignore: [ master ] } }
+          tf_command: apply
 
       - run-task:
           name: reset environment
@@ -28,19 +29,17 @@ workflows:
           requires: [ reset environment ]
           filters: { branches: { ignore: [ master ] } }
           task_name: integration_test
-          timeout: 2100
+          timeout: 2400
 
       - client-unit-test:
           name: client unit test
           requires: [ apply environment ]
           filters: { branches: { ignore: [ master ] } }
 
-      - run-task:
+      - api-unit-tests:
           name: api unit test
           requires: [ apply environment ]
           filters: { branches: { ignore: [ master ] } }
-          task_name: api_unit_test
-          timeout: 600
 
       - run-task:
           name: backup environment
@@ -60,7 +59,7 @@ workflows:
           requires: [ restore environment ]
           filters: { branches: { ignore: [ master ] } }
 
-      - apply:
+      - terraform-command:
           name: destroy environment
           requires: [ approve destroy environment ]
           filters: { branches: { ignore: [ master ] } }
@@ -72,25 +71,43 @@ workflows:
           name: build master
           filters: { branches: { only: [ master ] } }
 
-      - apply:
+      - terraform-command:
           name: apply shared-development
           requires: [ build master ]
           filters: { branches: { only: [ master ] } }
           tf_tier: shared
           tf_workspace: development
+          tf_command: apply
 
-      - apply:
-          name: apply shared-preproduction
-          requires: [ build master ]
+      - terraform-command:
+          name: plan shared-preproduction
+          requires: [ apply shared-development ]
           filters: { branches: { only: [ master ] } }
           tf_tier: shared
           tf_workspace: preproduction
+          tf_command: plan
 
-      - apply:
+      - terraform-command:
+          name: plan preproduction
+          requires: [ apply shared-development ]
+          filters: { branches: { only: [ master ] } }
+          tf_workspace: preproduction
+          tf_command: plan
+
+      - terraform-command:
+          name: apply shared-preproduction
+          requires: [ plan shared-preproduction, plan preproduction ]
+          filters: { branches: { only: [ master ] } }
+          tf_tier: shared
+          tf_workspace: preproduction
+          tf_command: apply
+
+      - terraform-command:
           name: apply master
           requires: [ apply shared-preproduction ]
           filters: { branches: { only: [ master ] } }
           tf_workspace: master
+          tf_command: apply
 
       - run-task:
           name: reset master
@@ -113,51 +130,67 @@ workflows:
           requires: [ apply master ]
           filters: { branches: { only: [ master ] } }
 
-      - run-task:
+      - api-unit-tests:
           name: api unit test
           requires: [ apply master ]
           filters: { branches: { only: [ master ] } }
-          task_name: api_unit_test
-          tf_workspace: master
-          timeout: 600
 
-      - apply:
+      - terraform-command:
           name: apply training
           requires: [ apply shared-production ]
           filters: { branches: { only: [ master ] } }
           tf_workspace: training
+          tf_command: apply
 
-      - apply:
+      - terraform-command:
           name: apply preproduction
           requires: [ api unit test, client unit test, integration test ]
           filters: { branches: { only: [ master ] } }
           tf_workspace: preproduction
+          tf_command: apply
+
+      - terraform-command:
+          name: plan production
+          requires: [ apply preproduction ]
+          filters: { branches: { only: [ master ] } }
+          tf_workspace: production02
+          tf_command: plan
+
+      - terraform-command:
+          name: plan shared-production
+          requires: [ apply preproduction ]
+          filters: { branches: { only: [ master ] } }
+          tf_tier: shared
+          tf_workspace: production
+          tf_command: plan
 
       - slack/approval-notification:
           name: approve release to production notification
           message: "Production is ready for release and pending approval"
-          requires: [ apply preproduction ]
+          requires: [ plan shared-production, plan production ]
           filters: { branches: { only: [ master ] } }
 
       - approve:
           name: approve release to production
           type: approval
-          requires: [ apply preproduction ]
+          requires: [ plan shared-production, plan production ]
           filters: { branches: { only: [ master ] } }
 
-      - apply:
+      - terraform-command:
           name: apply shared-production
           requires: [ approve release to production ]
           filters: { branches: { only: [ master ] } }
           tf_tier: shared
           tf_workspace: production
+          tf_command: apply
 
-      - apply:
+      - terraform-command:
           name: apply production
           requires: [ apply shared-production ]
           filters: { branches: { only: [ master ] } }
-          tf_workspace: production02
           pact_tag: true
+          tf_workspace: production02
+          tf_command: apply
 
       - run-task:
           name: backup production
@@ -204,8 +237,8 @@ orbs:
         docker:
           - image: circleci/golang:1.12
         environment:
-          TF_VERSION: 0.12.20
-          TF_SHA256SUM: 46bd906f8cb9bbb871905ecb23ae7344af8017d214d735fbb6d6c8e0feb20ff3
+          TF_VERSION: 0.12.25
+          TF_SHA256SUM: e95daabd1985329f87e6d40ffe7b9b973ff0abc07a403f767e8658d64d733fb0
           TF_CLI_ARGS_plan: -input=false -lock=false
           TF_CLI_ARGS_apply: -input=false -auto-approve
           TF_CLI_ARGS_destroy: -input=false -auto-approve
@@ -225,6 +258,9 @@ orbs:
           - run:
               name: Install Terraform
               command: sudo unzip terraform_${TF_VERSION}_linux_amd64.zip -d /bin
+
+  codecov: codecov/codecov@1.0.2
+
 jobs:
   lint:
     executor: terraform/terraform
@@ -235,7 +271,7 @@ jobs:
           name: terraform lint
           command: terraform fmt -diff -check -recursive
 
-  apply:
+  terraform-command:
     executor: terraform/terraform
     parameters:
       tf_workspace:
@@ -248,7 +284,6 @@ jobs:
         type: string
       tf_command:
         description: terraform command
-        default: apply
         type: string
       pact_tag:
         description: whether to add environment tag to pact broker
@@ -265,13 +300,17 @@ jobs:
       - ecs_helper/install
       - attach_workspace: { at: ~/project }
       - run:
+          name: Extract lambda layers
+          working_directory:  ~/project/lambda_functions
+          command: tar xvf ~/project/lambda_functions/layer.tar
+      - run:
           name: Initialize
           command: terraform init
       - run:
           name: Set environment
           command: ~/project/.circleci/set_env.sh >> $BASH_ENV
       - run:
-          name: Apply
+          name: Run << parameters.tf_command >>
           command: terraform << parameters.tf_command >>
       - run:
           name: Output
@@ -349,14 +388,32 @@ jobs:
           name: Push images
           command: docker-compose -f docker-compose.ci.yml push
       - run:
+          name: Install ECR Scan Results Requirements
+          working_directory: ~/project/ecs_helper/check_ecr_scan_results
+          command: |
+            sudo pip3 install -r requirements.txt
+      - run:
+          name: Check ECR Scan Results
+          working_directory: ~/project/ecs_helper/check_ecr_scan_results
+          command: |
+            python3 aws_ecr_scan_results.py --search digideps --tag $VERSION --post_to_slack False
+      - run:
           name: Archive docker images
           command: |
             docker tag ${AWS_REGISTRY}/digideps/client:${VERSION} client:latest
             docker save -o docker-images.tar client:latest
+      - run:
+          name: install requirements for all lambda layers
+          command: |
+            export LAYER_PATH=lambda_functions/layers/monitoring/python/lib/python3.7/site-packages
+            pip3 install -r lambda_functions/requirements/requirements.txt --target ./$LAYER_PATH/
+            cd lambda_functions
+            tar cvf layer.tar layers
       - persist_to_workspace:
           root: .
           paths:
-          - ./docker-images.tar
+            - ./docker-images.tar
+            - ./lambda_functions/layer.tar
 
   client-unit-test:
     docker:
@@ -368,6 +425,15 @@ jobs:
       - run:
           name: Load docker images
           command: docker load -i ~/project/docker-images.tar
+      - run:
+          name: Install lambda requirements for unit tests
+          working_directory: ~/project/lambda_functions
+          command: |
+            docker-compose up -d
+            sleep 5
+            docker-compose run pythontests python -m pytest
+            docker-compose down
+          background: true
       - run:
           name: install aws cli
           command: |
@@ -395,6 +461,30 @@ jobs:
       - store_artifacts:
           path: pact.json
           destination: Pact file
+
+  api-unit-tests:
+    docker:
+      - image: circleci/php
+    steps:
+      - setup_remote_docker
+      - checkout
+      - attach_workspace: { at: ~/project }
+      - run:
+          name: Set environment
+          command: |
+            ~/project/.circleci/set_env.sh >> $BASH_ENV
+      - run:
+          name: Run tests
+          command: |
+            docker-compose -f docker-compose.yml --project-name api-unit-tests up -d api
+            docker-compose -f docker-compose.yml --project-name api-unit-tests exec api chmod -R 777 var
+            docker-compose -f docker-compose.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
+      - copy-merged-cov-to-host:
+          file_to_copy: tests/coverage/merged.xml
+          copy_to_dir: .
+      - codecov/upload:
+          file: ./merged.xml
+          flags: phpunit
 
   run-task:
     executor: terraform/terraform
@@ -430,3 +520,18 @@ jobs:
       - run:
           name: Run task
           command: runner -task << parameters.task_name >> -timeout << parameters.timeout >>
+
+commands:
+  copy-merged-cov-to-host:
+    parameters:
+      file_to_copy:
+        description: Path to the file where the cov file will be copied from host machine.
+        type: string
+      copy_to_dir:
+        description: Path to the directory where the cov file will be copied to on the host machine.
+        type: string
+    steps:
+      - run:
+          command: |
+            docker-compose -f docker-compose.yml --project-name api-unit-tests exec api chmod -R 777 "<< parameters.file_to_copy >>"
+            docker cp api-unit-tests_api_1:/var/www/tests/coverage/merged.xml "<< parameters.copy_to_dir >>/merged.xml"
