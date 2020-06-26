@@ -2,13 +2,15 @@
 
 namespace AppBundle\Command;
 
+use AppBundle\Model\Sirius\QueuedChecklistData;
 use AppBundle\Service\ChecklistSyncService;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\ParameterStoreService;
-use JMS\Serializer\Serializer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class ChecklistSyncCommand extends Command
 {
@@ -41,7 +43,7 @@ class ChecklistSyncCommand extends Command
     public function __construct(
         ChecklistSyncService $checklistSyncService,
         RestClient $restClient,
-        Serializer $serializer,
+        SerializerInterface $serializer,
         ParameterStoreService $parameterStore,
         $name = null
     )
@@ -61,11 +63,16 @@ class ChecklistSyncCommand extends Command
             return 0;
         }
 
+        /** @var QueuedChecklistData[] $checklists */
         $checklists = $this->getQueuedChecklistsData();
 
         $output->writeln(sprintf('%d checklists to upload', count($checklists)));
 
+        foreach ($checklists as $checklist) {
+            $this->checklistSyncService->sync($checklist);
+        }
 
+        return 0;
     }
 
     private function isFeatureEnabled(): bool
@@ -77,8 +84,8 @@ class ChecklistSyncCommand extends Command
     {
         $queuedDocumentData = $this->restClient->apiCall(
             'get',
-            sprintf('checklist/queued?row_limit=%s', $this->getSyncRowLimit()),
-            null,
+            'checklist/queued',
+            ['row_limit' => $this->getSyncRowLimit()],
             'array',
             [],
             false
