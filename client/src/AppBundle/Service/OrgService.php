@@ -38,8 +38,7 @@ class OrgService
         'added' => [
             'clients' => 0,
             'named_deputies' => 0,
-            'reports' => 0,
-            'discharged_clients' => 0,
+            'reports' => 0
         ],
     ];
 
@@ -164,11 +163,10 @@ class OrgService
         $flashBag->add(
             'notice',
 
-            sprintf('Added %d clients, %d named deputies and %d reports. %d clients discharged. Go to users tab to enable them',
+            sprintf('Added %d clients, %d named deputies and %d reports. Go to users tab to enable them',
                 $this->output['added']['clients'],
                 $this->output['added']['named_deputies'],
-                $this->output['added']['reports'],
-                $this->output['added']['discharged_clients']
+                $this->output['added']['reports']
             )
         );
     }
