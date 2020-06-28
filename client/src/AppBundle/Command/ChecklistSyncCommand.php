@@ -21,7 +21,7 @@ class ChecklistSyncCommand extends Command
     protected static $defaultName = 'digideps:checklist-sync';
 
     /** @var ChecklistSyncService */
-    private $checklistSyncService;
+    private $syncService;
 
     /** @var RestClient */
     private $restClient;
@@ -34,21 +34,21 @@ class ChecklistSyncCommand extends Command
 
     /**
      * ChecklistSyncCommand constructor.
-     * @param ChecklistSyncService $checklistSyncService
+     * @param ChecklistSyncService $syncService
      * @param RestClient $restClient
      * @param Serializer $serializer
      * @param ParameterStoreService $parameterStore
      * @param null $name
      */
     public function __construct(
-        ChecklistSyncService $checklistSyncService,
+        ChecklistSyncService $syncService,
         RestClient $restClient,
         SerializerInterface $serializer,
         ParameterStoreService $parameterStore,
         $name = null
     )
     {
-        $this->checklistSyncService = $checklistSyncService;
+        $this->syncService = $syncService;
         $this->restClient = $restClient;
         $this->serializer = $serializer;
         $this->parameterStore = $parameterStore;
@@ -56,6 +56,11 @@ class ChecklistSyncCommand extends Command
         parent::__construct($name);
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (!$this->isFeatureEnabled()) {
@@ -69,17 +74,33 @@ class ChecklistSyncCommand extends Command
         $output->writeln(sprintf('%d checklists to upload', count($checklists)));
 
         foreach ($checklists as $checklist) {
-            $this->checklistSyncService->sync($checklist);
+            $this->syncService->sync($checklist);
+        }
+
+        if (count($this->syncService->getSyncErrorSubmissionIds()) > 0) {
+            $this->syncService->setChecklistsToPermanentError();
+            $this->syncService->setSyncErrorSubmissionIds([]);
+        }
+
+        if ($this->syncService->getChecklistsNotSyncedCount() > 0) {
+            $output->writeln(sprintf('%d checklists failed to sync', $this->syncService->getChecklistsNotSyncedCount()));
+            $this->syncService->setChecklistsNotSyncedCount(0);
         }
 
         return 0;
     }
 
+    /**
+     * @return bool
+     */
     private function isFeatureEnabled(): bool
     {
         return $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC) === '1';
     }
 
+    /**
+     * @return array
+     */
     private function getQueuedChecklistsData(): array
     {
         $queuedDocumentData = $this->restClient->apiCall(
