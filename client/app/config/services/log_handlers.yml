@@ -1,0 +1,20 @@
+parameters:
+  # To avoid undefined variable errors at build time during clear-cache, we can define default values for env vars
+  # At runtime Symfony will fetch the actual value from the environment
+  env(AUDIT_LOG_GROUP_NAME): 'dummy-build-time-value-overridden-at-runtime'
+
+services:
+  Aws\CloudWatchLogs\CloudWatchLogsClient:
+    class: Aws\CloudWatchLogs\CloudWatchLogsClient
+    arguments:
+      - region: 'eu-west-1'
+        version: 'latest'
+
+  AppBundle\Service\Audit\AwsAuditLogHandler:
+    class: AppBundle\Service\Audit\AwsAuditLogHandler
+    arguments:
+      - '@Aws\CloudWatchLogs\CloudWatchLogsClient'
+      - '%env(AUDIT_LOG_GROUP_NAME)%'
+
+  AppBundle\Service\Audit\LocalAuditLogHandler:
+    class: AppBundle\Service\Audit\LocalAuditLogHandler
