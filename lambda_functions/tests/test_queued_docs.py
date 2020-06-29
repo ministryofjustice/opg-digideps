@@ -22,7 +22,7 @@ def test_get_secret(secret_code, environment, region):
 
     client.create_secret(Name=f"default/database-password", SecretString=secret_code)
 
-    assert get_secret() == secret_code
+    assert get_secret("default/database-password") == secret_code
 
 
 def setup_db(conn, no_of_queued):
