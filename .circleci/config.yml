@@ -426,7 +426,7 @@ jobs:
           root: .
           paths:
             - ./docker-images.tar
-            - ./lambda_functions/layer.targi
+            - ./lambda_functions/layer.tar
 
   client-unit-test:
     docker:
