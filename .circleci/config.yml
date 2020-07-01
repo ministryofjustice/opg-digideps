@@ -30,10 +30,7 @@ workflows:
           filters: { branches: { ignore: [ master ] } }
           custom_url_command: |
             if [[ -f /tmp/workspace/preview-url ]]; then
-              sed -i -e "s#https://digideps.local/#`cat https://BRANCHNAME.digideps.local/`#g" .pa11yci
-            fi
-            if [[ -f /tmp/workspace/preview-url ]]; then
-              sed -i -e "s#https://admin.digideps.local/#`cat https://admin.BRANCHNAME.digideps.local/`#g" .pa11yci
+              sed -i -e "s#ddpbXXXX#`cat `${CIRCLE_BRANCH//-}#g" .pa11yci
             fi
 
       - run-task:

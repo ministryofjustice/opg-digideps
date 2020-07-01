@@ -12,7 +12,7 @@
    },
    "urls":[
       {
-         "url":"https://digideps.local/login",
+         "url":"ddpbXXXX.complete-deputy-report.service.gov.uk",
          "actions":[
             "set field #login_email to bobby.blue@example.com",
             "set field #login_password to Abcd1234",
@@ -20,7 +20,7 @@
          ]
       },
       {
-         "url":"https://digideps.local/report/58/overview"
+         "url":"ddpbXXXX.complete-deputy-report.service.gov.uk"
       }
    ]
 }
