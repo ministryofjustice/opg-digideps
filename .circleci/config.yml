@@ -24,6 +24,18 @@ workflows:
           task_name: reset_database
           timeout: 180
 
+      - pa11yci/a11y-audit:
+          name: accessibility test
+          requires: [ apply environment ]
+          filters: { branches: { ignore: [ master ] } }
+          custom_url_command: |
+            if [[ -f /tmp/workspace/preview-url ]]; then
+              sed -i -e "s#https://digideps.local/#`cat https://BRANCHNAME.digideps.local/`#g" .pa11yci
+            fi
+            if [[ -f /tmp/workspace/preview-url ]]; then
+              sed -i -e "s#https://admin.digideps.local/#`cat https://admin.BRANCHNAME.digideps.local/`#g" .pa11yci
+            fi
+
       - run-task:
           name: integration test
           requires: [ reset environment ]
@@ -43,7 +55,7 @@ workflows:
 
       - run-task:
           name: backup environment
-          requires: [ api unit test, client unit test, integration test ]
+          requires: [ api unit test, client unit test, integration test, accessibility test ]
           filters: { branches: { ignore: [ master ] } }
           task_name: backup
 
@@ -211,6 +223,7 @@ workflows:
 orbs:
   aws-cli: circleci/aws-cli@0.1.13
   slack: circleci/slack@3.3.0
+  pa11yci: nebulab/pa11yci@1.0.0
   ecs_helper:
     commands:
       install:
@@ -413,7 +426,7 @@ jobs:
           root: .
           paths:
             - ./docker-images.tar
-            - ./lambda_functions/layer.tar
+            - ./lambda_functions/layer.targi
 
   client-unit-test:
     docker:
