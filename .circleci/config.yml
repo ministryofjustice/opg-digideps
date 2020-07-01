@@ -29,9 +29,7 @@ workflows:
           requires: [ apply environment ]
           filters: { branches: { ignore: [ master ] } }
           custom_url_command: |
-            if [[ -f /tmp/workspace/preview-url ]]; then
               sed -i -e "s#ddpbXXXX#`cat `${CIRCLE_BRANCH//-}#g" .pa11yci
-            fi
 
       - run-task:
           name: integration test
