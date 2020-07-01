@@ -1,0 +1,26 @@
+{
+   "defaults":{
+      "chromeLaunchConfig":{
+         "ignoreHTTPSErrors":false,
+         "args":[
+            "--ignore-certificate-errors"
+         ]
+      },
+      "hideElements":"svg",
+      "timeout":100000,
+      "wait":5000
+   },
+   "urls":[
+      {
+         "url":"https://digideps.local/login",
+         "actions":[
+            "set field #login_email to bobby.blue@example.com",
+            "set field #login_password to Abcd1234",
+            "click element #login_login"
+         ]
+      },
+      {
+         "url":"https://digideps.local/report/58/overview"
+      }
+   ]
+}
