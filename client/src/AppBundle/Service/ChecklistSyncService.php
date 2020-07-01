@@ -19,7 +19,7 @@ class ChecklistSyncService
      */
     public function getSyncErrorSubmissionIds(): array
     {
-
+        return [];
     }
 
     /**
@@ -35,7 +35,7 @@ class ChecklistSyncService
      */
     public function getChecklistsNotSyncedCount(): int
     {
-
+        return 0;
     }
 
     /**
