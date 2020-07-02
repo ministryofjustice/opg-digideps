@@ -29,7 +29,10 @@ class DocumentRepository extends AbstractEntityRepository
     public function getQueuedDocumentsAndSetToInProgress(string $limit)
     {
         // Using DENSE_RANK here as we get multiple rows for the same document due to multiple report submissions. This
-        // ensures any limit applied will not miss out submissions by chance
+        // ensures any limit applied will not miss out submissions by chance. Also to note, the report_submission_uuid
+        // returned will be related to the report submission that contains a report PDF that has been synced. This
+        // means additional docs submissions will use the existing submission UUID but re-submissions will have their
+        // own UUID (apologies to anyone in advance that needs to amend this statement).
         $queuedDocumentsQuery = "
 SELECT case_number,
 document_id,
@@ -47,22 +50,42 @@ ndr_submit_date,
 report_submission_id,
 report_submission_uuid
 FROM (
+SELECT
+ROW_NUMBER() OVER (PARTITION BY document_id order by report_submission_uuid, all_uuid asc) as rown,
+case_number,
+document_id,
+document_report_submission_id,
+is_report_pdf,
+filename,
+storage_reference,
+report_start_date,
+report_end_date,
+report_submit_date,
+report_type,
+ndr_id,
+ndr_start_date,
+ndr_submit_date,
+report_submission_id,
+coalesce(report_submission_uuid, all_uuid) as report_submission_uuid,
+all_uuid
+FROM (
 SELECT DENSE_RANK() OVER(ORDER BY d.is_report_pdf DESC, d.id) AS dn,
 coalesce(c1.case_number, c2.case_number) AS case_number,
-coalesce(rs1.id, rs2.id) AS report_submission_id,
-coalesce(rs1.opg_uuid, rs2.opg_uuid) AS report_submission_uuid,
+rs.id AS report_submission_id,
+rs.opg_uuid AS report_submission_uuid,
 d.id AS document_id, d.is_report_pdf, d.filename, d.storage_reference, d.report_submission_id AS document_report_submission_id,
 r.start_date AS report_start_date, r.end_date AS report_end_date, r.submit_date AS report_submit_date, r.type AS report_type,
-o.id AS ndr_id, o.start_date AS ndr_start_date, o.submit_date AS ndr_submit_date
+o.id AS ndr_id, o.start_date AS ndr_start_date, o.submit_date AS ndr_submit_date, rs2.opg_uuid as all_uuid
 FROM document d
+LEFT JOIN report_submission rs ON rs.id = d.report_submission_id
+LEFT JOIN report_submission rs2 on rs2.report_id = d.report_id
 LEFT JOIN report r ON r.id = d.report_id
 LEFT JOIN odr o ON o.id = d.ndr_id
-LEFT JOIN report_submission rs1 ON rs1.id = d.report_submission_id
-LEFT JOIN report_submission rs2 ON rs2.id = d.report_submission_id
 LEFT JOIN client c1 ON c1.id = r.client_id
 LEFT JOIN client c2 ON c2.id = o.client_id
-WHERE d.synchronisation_status = 'QUEUED') AS sub
-WHERE dn < $limit;";
+WHERE d.synchronisation_status = 'QUEUED'
+) AS sub WHERE dn < $limit) as sub2
+WHERE sub2.rown = 1;";
 
         $conn = $this->getEntityManager()->getConnection();
         $stmt = $conn->prepare($queuedDocumentsQuery);

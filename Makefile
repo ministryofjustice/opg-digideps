@@ -42,6 +42,12 @@ up-app-prod: up-app	prod-mode ## Brings the app up in dev mode
 up-app-build: ## Brings the app up and rebuilds containers
 	docker-compose up -d --build
 
+up-app-xdebug-client: ## Brings the app up, rebuilds containers and enabled xdebug in client
+	REQUIRE_XDEBUG_CLIENT=true docker-compose up -d --build
+
+up-app-xdebug-api: ## Brings the app up, rebuilds containers and enabled xdebug in client
+	REQUIRE_XDEBUG_API=true docker-compose up -d --build
+
 up-app-integration-tests: ## Brings the app up using test env vars (see test.env)
 	docker-compose build frontend api
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
@@ -72,7 +78,7 @@ prod-mode: ## Activates prod mode
 	  echo "$$c: prod mode enabled." ; \
 	done
 
-dev-mode: ## Activates prod mode
+dev-mode: ## Activates dev mode
 	for c in ${APP_CONTAINERS} ; do \
 	  docker-compose exec $$c rm -f /var/www/.enableProdMode ; \
 	  echo "$$c: dev mode enabled." ; \

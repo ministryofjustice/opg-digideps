@@ -74,7 +74,7 @@ class DocumentRepositoryTest extends KernelTestCase
             ->setUuid('abc-123-abc-123');
 
         $this->additionalReportSubmission = (new ReportSubmission($this->report, $this->user))
-            ->setUuid('def-456-def-456');
+            ->setUuid(null);
 
         $this->reportPdfDocument = (new Document($this->report))
             ->setReportSubmission($this->reportSubmission)
@@ -146,9 +146,8 @@ class DocumentRepositoryTest extends KernelTestCase
         $this->entityManager->refresh($reportPdf);
         $this->entityManager->refresh($supportingDocument);
 
-        $this->assertDataMatchesEntity($documents, $this->reportPdfDocument, $this->client, $this->reportSubmission, $this->report);
-        $this->assertDataMatchesEntity($documents, $this->supportingDocument, $this->client, $this->reportSubmission, $this->report);
-        $this->assertDataMatchesEntity($documents, $this->supportingDocumentAfterSubmission, $this->client, $this->additionalReportSubmission, $this->report);
+        $this->assertDataMatchesEntity($documents, $reportPdf, $this->client, $this->reportSubmission, $this->report);
+        $this->assertDataMatchesEntity($documents, $supportingDocument, $this->client, $this->reportSubmission, $this->report);
 
         self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $reportPdf->getSynchronisationStatus());
         self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $supportingDocument->getSynchronisationStatus());
@@ -169,7 +168,7 @@ class DocumentRepositoryTest extends KernelTestCase
 
     private function persistEntities()
     {
-        $this->user->setEmail(sprintf('test-user%s%s@test.com', $this->uniq, rand(0, 10000)));
+        $this->user->setEmail(sprintf('test-user%s%s@test.com', $this->uniq, rand(0, 100000)));
 
         $this->entityManager->persist($this->user);
         $this->entityManager->persist($this->client);
@@ -217,6 +216,24 @@ class DocumentRepositoryTest extends KernelTestCase
             self::assertEquals($report->getType(), $documents[$docId]['report_type']);
         }
 
+    }
+
+    /**
+     * @test
+     */
+    public function additionalDocumentsSubmissionsUseOriginalSubmissionUUID()
+    {
+        $this->persistEntities();
+
+        $documents = $this->documentRepository->getQueuedDocumentsAndSetToInProgress('100');
+
+        $reportPdf = $this->documentRepository->find($this->reportPdfDocument->getId());
+        $supportingDocumentAfterSubmission = $this->documentRepository->find($this->supportingDocumentAfterSubmission->getId());
+
+        $this->entityManager->refresh($reportPdf);
+        $this->entityManager->refresh($supportingDocumentAfterSubmission);
+
+        self::assertEquals($this->reportSubmission->getUuid(), $documents[$supportingDocumentAfterSubmission->getId()]['report_submission_uuid']);
     }
 
     /** @test */
