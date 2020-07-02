@@ -19,25 +19,25 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <div class="govuk-form-group {% if not form.hasCapacityChanged.vars.valid %}govuk-form-group--error{% endif %}">
-        {% set conditionalCapacityChanged %}
-            {{ form_input(form.hasCapacityChangedDetails, (page ~ '.form.hasCapacityChangedDetails'), {
-                'labelClass': 'required',
-                'labelParameters': transOptions,
-                'hintText' : (page ~ '.form.hasCapacityChangedDetails.hint') | trans(transOptions, translationDomain),
-                'labelRaw': true
+        <div class="govuk-form-group {% if not form.hasCapacityChanged.vars.valid %}govuk-form-group--error{% endif %}">
+            {% set conditionalCapacityChanged %}
+                {{ form_input(form.hasCapacityChangedDetails, (page ~ '.form.hasCapacityChangedDetails'), {
+                    'labelClass': 'required',
+                    'labelParameters': transOptions,
+                    'hintText' : (page ~ '.form.hasCapacityChangedDetails.hint') | trans(transOptions, translationDomain),
+                    'labelRaw': true
             }) }}
-        {% endset %}
+            {% endset %}
 
-        {{ form_checkbox_group(form.hasCapacityChanged, (page ~ '.form.hasCapacityChanged'), {
-            'useFormGroup': false,
-            'legendText' : (page ~ '.form.hasCapacityChanged.label' ~ append104) | trans(transOptions, translationDomain),
-            legend: {
-                isPageHeading: true,
-                caption: (page ~ '.supportTitle') | trans
-            },
-            'items': [{'conditional': conditionalCapacityChanged}]
-        }) }}
+            {{ form_checkbox_group(form.hasCapacityChanged, (page ~ '.form.hasCapacityChanged'), {
+                'useFormGroup': false,
+                'legendText' : (page ~ '.form.hasCapacityChanged.label' ~ append104) | trans(transOptions, translationDomain),
+                legend: {
+                    isPageHeading: true,
+                    caption: (page ~ '.supportTitle') | trans
+                },
+                'items': [{'conditional': conditionalCapacityChanged}]
+            }) }}
     </div>
 
     {{ macros.saveAndContinueButton(form.save) }}
