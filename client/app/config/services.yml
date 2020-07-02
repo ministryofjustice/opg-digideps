@@ -1,6 +1,7 @@
 imports:
     - { resource: services/defaults.yml }
     - { resource: services/file_uploads.yml }
+    - { resource: services/log_handlers.yml }
     - { resource: services/twig.yml }
     - { resource: services_mail.yml }
     - { resource: services_forms.yml }

@@ -12,7 +12,7 @@
 <div class="govuk-inset-text govuk-!-margin-top-2">
     <div class="behat-region-court-date">
         <strong>{{ 'courtOrderDate' | trans({}, 'common') }}:</strong>
-        {% if report.client.courtDate is not null %}
+        {% if report.client.courtDate is defined and report.client.courtDate is not null %}
             {{ report.client.courtDate | date("j M Y") }}
         {% else %}
             Not known
