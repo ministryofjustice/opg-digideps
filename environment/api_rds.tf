@@ -3,6 +3,7 @@ data "aws_kms_key" "rds" {
 }
 
 data "terraform_remote_state" "previous_workspace" {
+  count     = local.account.copy_version_from == "NA" ? 0 : 1
   backend   = "s3"
   workspace = local.account.copy_version_from
   config = {
@@ -10,13 +11,13 @@ data "terraform_remote_state" "previous_workspace" {
     key            = "opg-digi-deps-infrastructure/terraform.tfstate"
     encrypt        = true
     region         = "eu-west-1"
-    role_arn       = "arn:aws:iam::311462405659:role/operator"
+    role_arn       = "arn:aws:iam::311462405659:role/${var.DEFAULT_ROLE}"
     dynamodb_table = "remote_lock"
   }
 }
 
 locals {
-  engine_version = local.account.copy_version_from == "master" ? "9.6" : data.terraform_remote_state.previous_workspace.outputs["rds_version"]
+  engine_version = local.account.copy_version_from == "NA" ? "9.6" : data.terraform_remote_state.previous_workspace[0].outputs["db_engine_version"]
 }
 
 
@@ -46,7 +47,7 @@ resource "aws_db_instance" "api" {
   password                   = data.aws_secretsmanager_secret_version.database_password.secret_string
   deletion_protection        = true
   delete_automated_backups   = false
-  auto_minor_version_upgrade = local.environment == "master" ? true : false
+  auto_minor_version_upgrade = local.account.copy_version_from == "NA" ? true : false
   final_snapshot_identifier  = "api-${local.environment}-final"
 
 
@@ -60,8 +61,8 @@ resource "aws_db_instance" "api" {
   )
 
   lifecycle {
-    ignore_changes = [password]
-    //    prevent_destroy = true
+    ignore_changes  = [password]
+    prevent_destroy = true
   }
 
 }
@@ -147,8 +148,4 @@ resource "aws_route53_record" "api_postgres" {
   zone_id = aws_route53_zone.internal.id
   records = [local.db.endpoint]
   ttl     = 300
-}
-
-output "rds_version" {
-  value = aws_db_instance.api[0].engine_version
 }
