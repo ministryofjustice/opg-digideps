@@ -2,6 +2,24 @@ data "aws_kms_key" "rds" {
   key_id = "alias/aws/rds"
 }
 
+data "terraform_remote_state" "previous_workspace" {
+  backend   = "s3"
+  workspace = local.account.copy_version_from
+  config = {
+    bucket         = "opg.terraform.state"
+    key            = "opg-digi-deps-infrastructure/terraform.tfstate"
+    encrypt        = true
+    region         = "eu-west-1"
+    role_arn       = "arn:aws:iam::311462405659:role/operator"
+    dynamodb_table = "remote_lock"
+  }
+}
+
+locals {
+  engine_version = local.account.copy_version_from == "master" ? "9.6" : data.terraform_remote_state.previous_workspace.outputs["rds_version"]
+}
+
+
 resource "aws_db_instance" "api" {
   count                      = local.account.always_on ? 1 : 0
   name                       = "api"
@@ -13,10 +31,10 @@ resource "aws_db_instance" "api" {
   backup_window              = "00:00-00:30"
   db_subnet_group_name       = local.account.db_subnet_group
   engine                     = "postgres"
-  engine_version             = "9.6.11"
+  engine_version             = local.engine_version
   kms_key_id                 = data.aws_kms_key.rds.arn
   license_model              = "postgresql-license"
-  maintenance_window         = "sun:01:00-sun:01:30"
+  maintenance_window         = "sun:01:00-sun:02:30"
   monitoring_interval        = "0"
   option_group_name          = "default:postgres-9-6"
   parameter_group_name       = "default.postgres9.6"
@@ -28,7 +46,7 @@ resource "aws_db_instance" "api" {
   password                   = data.aws_secretsmanager_secret_version.database_password.secret_string
   deletion_protection        = true
   delete_automated_backups   = false
-  auto_minor_version_upgrade = false
+  auto_minor_version_upgrade = local.environment == "master" ? true : false
   final_snapshot_identifier  = "api-${local.environment}-final"
 
 
@@ -42,8 +60,8 @@ resource "aws_db_instance" "api" {
   )
 
   lifecycle {
-    ignore_changes  = [password]
-    prevent_destroy = true
+    ignore_changes = [password]
+    //    prevent_destroy = true
   }
 
 }
@@ -129,4 +147,8 @@ resource "aws_route53_record" "api_postgres" {
   zone_id = aws_route53_zone.internal.id
   records = [local.db.endpoint]
   ttl     = 300
+}
+
+output "rds_version" {
+  value = aws_db_instance.api[0].engine_version
 }

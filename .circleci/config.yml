@@ -208,6 +208,41 @@ workflows:
           tf_workspace: preproduction
           timeout: 600
 
+  scheduled_test_run:
+    triggers:
+      - schedule:
+          cron: "10,20,30,40,50,00 * * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - test-sched:
+          name: test schedule out
+          filters: { branches: { only: [ ddpb3489 ] } }
+#      - run-task:
+#          name: reset master
+#          requires: [ apply master ]
+#          filters: { branches: { only: [ master ] } }
+#          task_name: reset_database
+#          tf_workspace: master
+#          timeout: 180
+#      - run-task:
+#          name: integration test
+#          requires: [ reset master ]
+#          filters: { branches: { only: [ master ] } }
+#          task_name: integration_test
+#          tf_workspace: master
+#          timeout: 1800
+#      - client-unit-test:
+#          name: client unit test
+#          requires: [ apply master ]
+#          filters: { branches: { only: [ master ] } }
+#      - api-unit-tests:
+#          name: api unit test
+#          requires: [ apply master ]
+#          filters: { branches: { only: [ master ] } }
+
 orbs:
   aws-cli: circleci/aws-cli@0.1.13
   slack: circleci/slack@3.3.0
@@ -327,6 +362,20 @@ jobs:
             - run:
                 name: tag pact commit with v<x>_production
                 command: pact_tags
+
+  test-sched:
+    executor: terraform/terraform
+    steps:
+      - checkout:
+          path: ~/project
+      - attach_workspace: { at: ~/project }
+      - run:
+          name: check it works
+          command: |
+            pwd
+            ls -alt
+            echo "Im a scheduled job!"
+
   build:
     docker:
       - image: circleci/python:3
