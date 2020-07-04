@@ -39,6 +39,7 @@ document_id,
 document_report_submission_id,
 is_report_pdf,
 filename,
+report_submission_uuid,
 storage_reference,
 report_start_date,
 report_end_date,
@@ -46,12 +47,10 @@ report_submit_date,
 report_type,
 ndr_id,
 ndr_start_date,
-ndr_submit_date,
-report_submission_id,
-report_submission_uuid
+ndr_submit_date
 FROM (
 SELECT
-ROW_NUMBER() OVER (PARTITION BY document_id order by report_submission_uuid, all_uuid asc) as rown,
+ROW_NUMBER() OVER (PARTITION BY document_id order by all_report_submission_id desc) as rown,
 case_number,
 document_id,
 document_report_submission_id,
@@ -65,20 +64,28 @@ report_type,
 ndr_id,
 ndr_start_date,
 ndr_submit_date,
-report_submission_id,
-coalesce(report_submission_uuid, all_uuid) as report_submission_uuid,
-all_uuid
+coalesce(report_submission_uuid, all_uuid) as report_submission_uuid
 FROM (
 SELECT DENSE_RANK() OVER(ORDER BY d.is_report_pdf DESC, d.id) AS dn,
 coalesce(c1.case_number, c2.case_number) AS case_number,
-rs.id AS report_submission_id,
+rs2.opg_uuid as all_uuid,
 rs.opg_uuid AS report_submission_uuid,
-d.id AS document_id, d.is_report_pdf, d.filename, d.storage_reference, d.report_submission_id AS document_report_submission_id,
-r.start_date AS report_start_date, r.end_date AS report_end_date, r.submit_date AS report_submit_date, r.type AS report_type,
-o.id AS ndr_id, o.start_date AS ndr_start_date, o.submit_date AS ndr_submit_date, rs2.opg_uuid as all_uuid
+d.id AS document_id,
+d.is_report_pdf,
+d.filename,
+d.storage_reference,
+d.report_submission_id AS document_report_submission_id,
+rs2.id as all_report_submission_id,
+r.start_date AS report_start_date,
+r.end_date AS report_end_date,
+r.submit_date AS report_submit_date,
+r.type AS report_type,
+o.id AS ndr_id,
+o.start_date AS ndr_start_date,
+o.submit_date AS ndr_submit_date
 FROM document d
 LEFT JOIN report_submission rs ON rs.id = d.report_submission_id
-LEFT JOIN report_submission rs2 on rs2.report_id = d.report_id
+LEFT JOIN report_submission rs2 on rs2.report_id = d.report_id and d.created_on > rs2.created_on
 LEFT JOIN report r ON r.id = d.report_id
 LEFT JOIN odr o ON o.id = d.ndr_id
 LEFT JOIN client c1 ON c1.id = r.client_id
