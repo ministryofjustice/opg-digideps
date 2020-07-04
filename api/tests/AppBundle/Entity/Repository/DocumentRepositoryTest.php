@@ -82,12 +82,12 @@ class DocumentRepositoryTest extends KernelTestCase
             Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,
             $this->firstJuly,
             $this->firstJuly->add(new DateInterval('P364D')))
-        )->setSubmitDate($this->secondJulyEvening);
+        )->setSubmitDate($this->secondJulyPm);
 
         // Initial report PDF submission with supporting docs
         $this->reportSubmission = (new ReportSubmission($this->report, $this->user))
             ->setUuid('abc-123-abc-123')
-            ->setCreatedOn($this->secondJulyEvening);
+            ->setCreatedOn($this->secondJulyPm);
 
         $this->reportPdfDocument = (new Document($this->report))
             ->setReportSubmission($this->reportSubmission)
@@ -95,7 +95,7 @@ class DocumentRepositoryTest extends KernelTestCase
             ->setStorageReference('storage-ref-report.pdf')
             ->setIsReportPdf(true)
             ->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED)
-            ->setCreatedOn($this->secondJulyMorning);
+            ->setCreatedOn($this->secondJulyAm);
 
         $this->supportingDocument = (new Document($this->report))
             ->setReportSubmission($this->reportSubmission)
@@ -103,7 +103,7 @@ class DocumentRepositoryTest extends KernelTestCase
             ->setStorageReference('storage-ref-supporting.pdf')
             ->setIsReportPdf(false)
             ->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED)
-            ->setCreatedOn($this->secondJulyMorning);
+            ->setCreatedOn($this->secondJulyAm);
 
         $this->reportSubmission
             ->addDocument($this->reportPdfDocument)
@@ -112,7 +112,7 @@ class DocumentRepositoryTest extends KernelTestCase
         // Additional docs for submission
         $this->additionalReportSubmission = (new ReportSubmission($this->report, $this->user))
             ->setUuid(null)
-            ->setCreatedOn($this->thirdJulyEvening);
+            ->setCreatedOn($this->thirdJulyPm);
 
         $this->supportingDocumentAfterSubmission = (new Document($this->report))
             ->setReportSubmission($this->additionalReportSubmission)
@@ -120,7 +120,7 @@ class DocumentRepositoryTest extends KernelTestCase
             ->setStorageReference('storage-ref-supporting-additional.pdf')
             ->setIsReportPdf(false)
             ->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED)
-            ->setCreatedOn($this->thirdJulyMorning);
+            ->setCreatedOn($this->thirdJulyAm);
 
         $this->additionalReportSubmission
             ->addDocument($this->supportingDocumentAfterSubmission);
@@ -128,7 +128,7 @@ class DocumentRepositoryTest extends KernelTestCase
         // Resubmission
         $this->resubmittedReportSubmission = (new ReportSubmission($this->report, $this->user))
             ->setUuid('def-456-def-456')
-            ->setCreatedOn($this->fourthJulyEvening);
+            ->setCreatedOn($this->fourthJulyPm);
 
         $this->resubmitReportPdfDocument = (new Document($this->report))
             ->setReportSubmission($this->resubmittedReportSubmission)
@@ -136,7 +136,7 @@ class DocumentRepositoryTest extends KernelTestCase
             ->setStorageReference('storage-ref-resubmit-report.pdf')
             ->setIsReportPdf(true)
             ->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED)
-            ->setCreatedOn($this->fourthJulyMorning);
+            ->setCreatedOn($this->fourthJulyAm);
 
         $this->supportingDocumentWithResubmission = (new Document($this->report))
             ->setReportSubmission($this->resubmittedReportSubmission)
@@ -144,7 +144,7 @@ class DocumentRepositoryTest extends KernelTestCase
             ->setStorageReference('storage-ref-resubmit-supporting.pdf')
             ->setIsReportPdf(false)
             ->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED)
-            ->setCreatedOn($this->fourthJulyMorning);
+            ->setCreatedOn($this->fourthJulyAm);
 
         $this->resubmittedReportSubmission
             ->addDocument($this->resubmitReportPdfDocument)
@@ -153,7 +153,7 @@ class DocumentRepositoryTest extends KernelTestCase
         // Additional docs for resubmission
         $this->resubmittedReportAdditionalSubmission = (new ReportSubmission($this->report, $this->user))
             ->setUuid(null)
-            ->setCreatedOn($this->fifthJulyEvening);
+            ->setCreatedOn($this->fifthJulyPm);
 
         $this->supportingDocumentAfterResubmission = (new Document($this->report))
             ->setReportSubmission($this->resubmittedReportAdditionalSubmission)
@@ -161,15 +161,15 @@ class DocumentRepositoryTest extends KernelTestCase
             ->setStorageReference('storage-ref-supporting-additional-after-resub.pdf')
             ->setIsReportPdf(false)
             ->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED)
-            ->setCreatedOn($this->fifthJulyMorning);
+            ->setCreatedOn($this->fifthJulyAm);
 
         $this->resubmittedReportAdditionalSubmission
             ->addDocument($this->supportingDocumentAfterResubmission);
 
         // setup NDR documents
         $this->ndr = (new Ndr($this->client))
-            ->setStartDate($this->now)
-            ->setSubmitDate($this->secondJulyEvening);
+            ->setStartDate($this->firstJuly)
+            ->setSubmitDate($this->secondJulyPm);
 
         $this->ndrSubmission = (new ReportSubmission($this->ndr, $this->user))
             ->setUuid('cba-123-cba-123');
@@ -180,7 +180,7 @@ class DocumentRepositoryTest extends KernelTestCase
             ->setStorageReference('storage-ref-ndr-report.pdf')
             ->setIsReportPdf(true)
             ->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED)
-            ->setCreatedOn($this->secondJulyMorning);;
+            ->setCreatedOn($this->secondJulyAm);;
 
         $this->ndrSubmission
             ->addDocument($this->ndrReportPdfDocument);
@@ -227,6 +227,11 @@ class DocumentRepositoryTest extends KernelTestCase
             ->getQueuedDocumentsAndSetToInProgress('100');
 
         $this->assertDataMatchesEntity($documents, $this->ndrReportPdfDocument, $this->client, $this->ndrSubmission, $this->ndr);
+
+        $ndrReportPdfDocument = $this->documentRepository->find($this->ndrReportPdfDocument->getId());
+        $this->entityManager->refresh($ndrReportPdfDocument);
+
+        self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $ndrReportPdfDocument->getSynchronisationStatus());
     }
 
     /**
