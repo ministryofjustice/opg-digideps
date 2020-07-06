@@ -49,6 +49,12 @@ services:
             - php
             - scripts/localstack-init.php
 
+    pa11y:
+        build:
+            context: ./pa11y
+        depends_on:
+            - frontend
+
     frontend:
         build:
             context: ./client

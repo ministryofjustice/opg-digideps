@@ -3,7 +3,8 @@
       "chromeLaunchConfig":{
          "ignoreHTTPSErrors":false,
          "args":[
-            "--ignore-certificate-errors"
+            "--ignore-certificate-errors",
+            "--no-sandbox"
          ]
       },
       "hideElements":"svg",
@@ -13,15 +14,15 @@
    },
    "urls":[
       {
-         "url":"ddpbXXXX.complete-deputy-report.service.gov.uk",
-         "actions":[
+         "url": "https://digideps.local/login",
+         "actions": [
             "set field #login_email to bobby.blue@example.com",
             "set field #login_password to Abcd1234",
             "click element #login_login"
          ]
       },
       {
-         "url":"ddpbXXXX.complete-deputy-report.service.gov.uk"
+         "url": "https://digideps.local"
       }
    ]
 }

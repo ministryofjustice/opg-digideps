@@ -24,13 +24,6 @@ workflows:
           task_name: reset_database
           timeout: 180
 
-      - pa11yci/a11y-audit:
-          name: accessibility test
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ master ] } }
-          custom_url_command: |
-              sed -i -e "s#ddpbXXXX#`cat `${CIRCLE_BRANCH//-}#g" .pa11yci
-
       - run-task:
           name: integration test
           requires: [ reset environment ]
@@ -48,9 +41,15 @@ workflows:
           requires: [ apply environment ]
           filters: { branches: { ignore: [ master ] } }
 
+      - pa11y-ci:
+          name: accessibility test
+          requires: [ integration test ]
+          filters: { branches: { ignore: [ master ] } }
+          timeout: 300
+
       - run-task:
           name: backup environment
-          requires: [ api unit test, client unit test, integration test, accessibility test ]
+          requires: [ api unit test, client unit test, integration test ]
           filters: { branches: { ignore: [ master ] } }
           task_name: backup
 
@@ -218,7 +217,6 @@ workflows:
 orbs:
   aws-cli: circleci/aws-cli@0.1.13
   slack: circleci/slack@3.3.0
-  pa11yci: nebulab/pa11yci@1.0.0
   ecs_helper:
     commands:
       install:
@@ -493,6 +491,24 @@ jobs:
       - codecov/upload:
           file: ./merged.xml
           flags: phpunit
+
+  pa11y-ci:
+    docker:
+      - image: circleci/php
+    steps:
+      - setup_remote_docker
+      - checkout
+      - attach_workspace: { at: ~/project }
+      - run:
+          name: Set environment
+          command: |
+            ~/project/.circleci/set_env.sh >> $BASH_ENV
+      - run:
+          name: Run pa11y
+          command: |
+            docker-compose -f docker-compose.yml --project-name pa11y-ci up -d frontend
+            docker-compose -f docker-compose.yml --project-name pa11y-ci run pa11y pa11y-ci
+
 
   run-task:
     executor: terraform/terraform
