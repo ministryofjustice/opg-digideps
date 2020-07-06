@@ -24,7 +24,13 @@
             <input type="hidden" name="{{ element.vars.full_name }}" value="{{ element.vars.value }}" />
         {% endif %}
 
-        <div class="govuk-radios {{ classes ?: '' }}" data-module="govuk-radios">
+        {% set hasConditionals = false %}
+
+        {% for item in items %}
+            {% set hasConditionals = item.conditional is defined ? true : false %}
+        {% endfor %}
+
+        <div class="govuk-radios {{ classes ?: '' }}{% if element|length < 3 and hasConditionals == false %}govuk-radios--inline{% endif %}" data-module="govuk-radios">
 
         {% for key,choiceElement in element %}
 
