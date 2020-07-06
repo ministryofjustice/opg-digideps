@@ -11,6 +11,11 @@ workflows:
           name: build pr
           filters: { branches: { ignore: [ master ] } }
 
+      - pa11y-ci:
+          name: accessibility test
+          filters: { branches: { ignore: [ master ] } }
+          timeout: 300
+
       - terraform-command:
           name: apply environment
           requires: [ build pr, lint terraform ]
@@ -40,12 +45,6 @@ workflows:
           name: api unit test
           requires: [ apply environment ]
           filters: { branches: { ignore: [ master ] } }
-
-      - pa11y-ci:
-          name: accessibility test
-          requires: [ integration test ]
-          filters: { branches: { ignore: [ master ] } }
-          timeout: 300
 
       - run-task:
           name: backup environment
