@@ -5,6 +5,8 @@ namespace AppBundle\Controller\Admin\Client;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
+use AppBundle\Service\Audit\AuditEvents;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -72,11 +74,21 @@ class ClientController extends AbstractController
      * @Route("/{id}/discharge-confirm", name="admin_client_discharge_confirm", requirements={"id":"\d+"})
      * @Security("has_role('ROLE_SUPER_ADMIN')")
      * @param $id
+     * @param LoggerInterface $logger
+     * @param AuditEvents $auditEvents
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function dischargeConfirmAction($id)
+    public function dischargeConfirmAction($id, LoggerInterface $logger, AuditEvents $auditEvents)
     {
+        /** @var Client $client */
+        $client = $this->getRestClient()->get('v2/client/' . $id, 'Client');
         $this->getRestClient()->delete('client/' . $id . '/delete');
+
+        $logger->notice('', $auditEvents->clientDischarged(
+            AuditEvents::CLIENT_DISCHARGED_ADMIN_TRIGGER,
+            $client->getCaseNumber(),
+            $this->getUser()->getEmail()
+        ));
 
         return $this->redirectToRoute('admin_client_search');
     }

@@ -16,7 +16,7 @@
 
             {{ form_errors(form) }}
 
-            <div class="govuk-radios govuk-radios--small govuk-radios--inline">
+            <div class="govuk-radios govuk-radios--small{% if form|length < 3 %} govuk-radios--inline{% endif %}">
                 {%- for child in form %}
                     <div class="govuk-radios__item">
                         {{ form_widget(child, {'attr': {'class': 'govuk-radios__input'}}) }}

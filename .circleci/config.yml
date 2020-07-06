@@ -11,10 +11,11 @@ workflows:
           name: build pr
           filters: { branches: { ignore: [ master ] } }
 
-      - apply:
+      - terraform-command:
           name: apply environment
           requires: [ build pr, lint terraform ]
           filters: { branches: { ignore: [ master ] } }
+          tf_command: apply
 
       - run-task:
           name: reset environment
@@ -58,7 +59,7 @@ workflows:
           requires: [ restore environment ]
           filters: { branches: { ignore: [ master ] } }
 
-      - apply:
+      - terraform-command:
           name: destroy environment
           requires: [ approve destroy environment ]
           filters: { branches: { ignore: [ master ] } }
@@ -70,25 +71,43 @@ workflows:
           name: build master
           filters: { branches: { only: [ master ] } }
 
-      - apply:
+      - terraform-command:
           name: apply shared-development
           requires: [ build master ]
           filters: { branches: { only: [ master ] } }
           tf_tier: shared
           tf_workspace: development
+          tf_command: apply
 
-      - apply:
-          name: apply shared-preproduction
-          requires: [ build master ]
+      - terraform-command:
+          name: plan shared-preproduction
+          requires: [ apply shared-development ]
           filters: { branches: { only: [ master ] } }
           tf_tier: shared
           tf_workspace: preproduction
+          tf_command: plan
 
-      - apply:
+      - terraform-command:
+          name: plan preproduction
+          requires: [ apply shared-development ]
+          filters: { branches: { only: [ master ] } }
+          tf_workspace: preproduction
+          tf_command: plan
+
+      - terraform-command:
+          name: apply shared-preproduction
+          requires: [ plan shared-preproduction, plan preproduction ]
+          filters: { branches: { only: [ master ] } }
+          tf_tier: shared
+          tf_workspace: preproduction
+          tf_command: apply
+
+      - terraform-command:
           name: apply master
           requires: [ apply shared-preproduction ]
           filters: { branches: { only: [ master ] } }
           tf_workspace: master
+          tf_command: apply
 
       - run-task:
           name: reset master
@@ -116,43 +135,62 @@ workflows:
           requires: [ apply master ]
           filters: { branches: { only: [ master ] } }
 
-      - apply:
+      - terraform-command:
           name: apply training
           requires: [ apply shared-production ]
           filters: { branches: { only: [ master ] } }
           tf_workspace: training
+          tf_command: apply
 
-      - apply:
+      - terraform-command:
           name: apply preproduction
           requires: [ api unit test, client unit test, integration test ]
           filters: { branches: { only: [ master ] } }
           tf_workspace: preproduction
+          tf_command: apply
+
+      - terraform-command:
+          name: plan production
+          requires: [ apply preproduction ]
+          filters: { branches: { only: [ master ] } }
+          tf_workspace: production02
+          tf_command: plan
+
+      - terraform-command:
+          name: plan shared-production
+          requires: [ apply preproduction ]
+          filters: { branches: { only: [ master ] } }
+          tf_tier: shared
+          tf_workspace: production
+          tf_command: plan
 
       - slack/approval-notification:
           name: approve release to production notification
           message: "Production is ready for release and pending approval"
-          requires: [ apply preproduction ]
+          requires: [ plan shared-production, plan production ]
           filters: { branches: { only: [ master ] } }
 
       - approve:
           name: approve release to production
           type: approval
-          requires: [ apply preproduction ]
+          requires: [ plan shared-production, plan production ]
           filters: { branches: { only: [ master ] } }
 
-      - apply:
+      - terraform-command:
           name: apply shared-production
           requires: [ approve release to production ]
           filters: { branches: { only: [ master ] } }
           tf_tier: shared
           tf_workspace: production
+          tf_command: apply
 
-      - apply:
+      - terraform-command:
           name: apply production
           requires: [ apply shared-production ]
           filters: { branches: { only: [ master ] } }
-          tf_workspace: production02
           pact_tag: true
+          tf_workspace: production02
+          tf_command: apply
 
       - run-task:
           name: backup production
@@ -233,7 +271,7 @@ jobs:
           name: terraform lint
           command: terraform fmt -diff -check -recursive
 
-  apply:
+  terraform-command:
     executor: terraform/terraform
     parameters:
       tf_workspace:
@@ -246,7 +284,6 @@ jobs:
         type: string
       tf_command:
         description: terraform command
-        default: apply
         type: string
       pact_tag:
         description: whether to add environment tag to pact broker
@@ -273,7 +310,7 @@ jobs:
           name: Set environment
           command: ~/project/.circleci/set_env.sh >> $BASH_ENV
       - run:
-          name: Apply
+          name: Run << parameters.tf_command >>
           command: terraform << parameters.tf_command >>
       - run:
           name: Output
@@ -389,6 +426,15 @@ jobs:
           name: Load docker images
           command: docker load -i ~/project/docker-images.tar
       - run:
+          name: Install lambda requirements for unit tests
+          working_directory: ~/project/lambda_functions
+          command: |
+            docker-compose up -d
+            sleep 5
+            docker-compose run pythontests python -m pytest
+            docker-compose down
+          background: true
+      - run:
           name: install aws cli
           command: |
             pip3 install awscli --upgrade --user
@@ -398,16 +444,6 @@ jobs:
           command: |
             ~/project/.circleci/set_env.sh >> $BASH_ENV
             ~/project/.circleci/set_env_pact.sh >> $BASH_ENV
-      - run:
-          name: Install lambda requirements for unit tests
-          working_directory: ~/project/lambda_functions/requirements
-          command: |
-            pip3 install -r requirements-dev.txt
-      - run:
-          name: Install lambda requirements for unit tests
-          working_directory: ~/project
-          command: |
-            python3 -m pytest
       - run:
           name: Run tests
           command: |

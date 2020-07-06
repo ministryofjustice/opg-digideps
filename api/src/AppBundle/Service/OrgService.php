@@ -210,6 +210,11 @@ class OrgService
 
                 $client = $this->upsertClientFromCsv($row, $namedDeputy);
                 if ($client instanceof Client) {
+
+                    if (!$this->clientHasSwitchedOrganisation($client) && $this->clientHasNewNamedDeputy($client, $namedDeputy)) {
+                        $client->setNamedDeputy($namedDeputy);
+                    }
+
                     $report = $this->upsertReportFromCsv($row, $client);
 
                     $orderDto = $this->courtOrderAssembler->assemble($row);
@@ -271,16 +276,13 @@ class OrgService
     }
 
     /**
-     * @param array $row keys: Case, caseNumber, Forename, Surname, Client Adrs1...
-     * @param NamedDeputy $namedDeputy the named deputy the client is assigned to
-     *
+     * @param array $row
+     * @param NamedDeputy $namedDeputy
      * @return Client|null
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @throws \Exception
      */
     private function upsertClientFromCsv(array $row, NamedDeputy $namedDeputy)
     {
-        // find or create client
         $caseNumber = Client::padCaseNumber(strtolower($row['Case']));
 
         /** @var Client|null $client */
@@ -290,44 +292,22 @@ class OrgService
             throw new \RuntimeException('Case number already used');
         }
 
-        if ($client && $this->clientHasSwitchedOrganisation($client)) {
-            $csvDeputyNo = EntityDir\User::padDeputyNumber($row['Deputy No']);
-
-            if (is_null($client->getNamedDeputy())) {
-                throw new \RuntimeException('Can\'t determine if deputy has moved with client to new org');
-            } else if ($client->getNamedDeputy()->getDeputyNo() === $csvDeputyNo) {
-                $client->setOrganisation(null);
-            } else {
-                // discharge client and recreate new one
-                $this->dischargeClient($client);
-                unset($client);
-            }
-        }
-
-        if (isset($client)) {
-            $this->log('FOUND client in database with id: ' . $client->getId());
-            //$client->setUsers(new ArrayCollection());
-        } else {
-            $this->log('Creating client');
+        if (null === $client) {
             $client = new Client();
             $client = $this->upsertClientDetailsFromCsv($client, $row);
+            $client->setNamedDeputy($namedDeputy);
 
-            $caseNumber = Client::padCaseNumber(strtolower($row['Case']));
+            if (null !== $this->currentOrganisation) {
+                $this->attachClientToOrganisation($client);
+            }
+
             $this->added['clients'][] = $caseNumber;
         }
-
-        $this->log('Setting named deputy on client to deputy id:' . $namedDeputy->getId());
-        $client->setNamedDeputy($namedDeputy);
 
         // Updating court date to account for updates in casrec
         $client->setCourtDate(new DateTime($row['Made Date']));
 
-        if (null !== $this->currentOrganisation) {
-            $this->attachClientToOrganisation($client);
-        }
-
         $this->em->persist($client);
-
         $this->em->flush();
 
         return $client;
@@ -579,9 +559,15 @@ class OrgService
         return false;
     }
 
-    private function dischargeClient(Client $client)
+    /**
+     * @param Client $client
+     * @param NamedDeputy $namedDeputy
+     * @return bool
+     */
+    private function clientHasNewNamedDeputy(Client $client, NamedDeputy $namedDeputy): bool
     {
-        $this->added['discharged_clients'][] = $client->getCaseNumber();
-        $client->setDeletedAt(new DateTime());
+        return
+            null === $client->getNamedDeputy() ||
+            $client->getNamedDeputy()->getDeputyNo() !== $namedDeputy->getDeputyNo();
     }
 }
