@@ -13,7 +13,7 @@ workflows:
 
       - pa11y-ci:
           name: accessibility test
-          filters: { branches: { ignore: [ master ] } }s
+          filters: { branches: { ignore: [ master ] } }
 
       - terraform-command:
           name: apply environment
