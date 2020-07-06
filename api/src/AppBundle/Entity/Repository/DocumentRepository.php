@@ -98,12 +98,12 @@ WHERE sub2.rown = 1;";
         $stmt = $conn->prepare($queuedDocumentsQuery);
         $stmt->execute();
 
-        $queuedDocumentDataObjects = [];
+        $queuedDocumentData = [];
 
         while($row = $stmt->fetch(PDO::FETCH_ASSOC))
         {
-            if (!isset($queuedDocumentDataObjects[$row['document_id']])) {
-                $queuedDocumentDataObjects[$row['document_id']] = [
+            if (!isset($queuedDocumentData[$row['document_id']])) {
+                $queuedDocumentData[$row['document_id']] = [
                     'document_id' => $row['document_id'],
                     'report_submission_id' => $row['document_report_submission_id'],
                     'ndr_id' => $row['ndr_id'],
@@ -120,11 +120,11 @@ WHERE sub2.rown = 1;";
             }
         }
 
-        if (count($queuedDocumentDataObjects)) {
+        if (count($queuedDocumentData)) {
             // Set documents to in progress to ensure additional runs won't pick up the same documents
             $ids = [];
-            foreach($queuedDocumentDataObjects as $data) {
-                $ids[] = $data['document_id'];
+            foreach($queuedDocumentData as $queuedDocumentDatum) {
+                $ids[] = $queuedDocumentDatum['document_id'];
             }
 
             $idsString = implode(",", $ids);
@@ -135,7 +135,7 @@ WHERE sub2.rown = 1;";
             $stmt->execute();
         }
 
-        return $queuedDocumentDataObjects;
+        return $queuedDocumentData;
     }
 
 
