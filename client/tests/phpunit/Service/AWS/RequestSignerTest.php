@@ -27,8 +27,8 @@ class RequestSignerTest extends TestCase
         $originalRequest = new Request('GET', 'some.url');
         $signedRequest = new Request('GET', 'some.url', $headers);
 //
-//      These values are set in test.env to enable local testing
-        $credentials = new Credentials('fakeValue', 'fakeValue', 'fakeValue');
+//      These values are set in frontend.env to enable local testing
+        $credentials = new Credentials('aFakeSecretAccessKeyId', 'aFakeSecretAccessKey', 'fakeValue');
         $service = 'some-service';
 
         /** @var DefaultCredentialProvider&ObjectProphecy $provider */
