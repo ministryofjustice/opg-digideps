@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Report\Checklist;
+use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Repository\ChecklistRepository;
 use AppBundle\Exception\UnauthorisedException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,6 +28,6 @@ class ChecklistController extends RestController
         /** @var ChecklistRepository $checklistRepo */
         $checklistRepo = $em->getRepository(Checklist::class);
 
-        return json_encode($checklistRepo->getQueuedAndSetToInProgress($data['row_limit']));
+        return json_encode($checklistRepo->getQueuedAndSetToInProgress(intval($data['row_limit'])));
     }
 }

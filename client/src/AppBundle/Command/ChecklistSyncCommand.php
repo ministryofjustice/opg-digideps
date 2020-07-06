@@ -112,7 +112,7 @@ class ChecklistSyncCommand extends Command
             false
         );
 
-        return $this->serializer->deserialize($queuedDocumentData, 'AppBundle\Model\Sirius\QueuedChecklistData[]', 'json');
+        return $this->serializer->deserialize($queuedDocumentData, 'AppBundle\Entity\Checklist[]', 'json');
     }
 
     /**

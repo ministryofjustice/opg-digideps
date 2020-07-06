@@ -2,16 +2,49 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Report\Checklist;
 use AppBundle\Model\Sirius\QueuedChecklistData;
+use AppBundle\Model\Sirius\QueuedDocumentData;
+use AppBundle\Model\Sirius\SiriusDocumentFile;
+use AppBundle\Model\Sirius\SiriusDocumentUpload;
+use AppBundle\Model\Sirius\SiriusReportPdfDocumentMetadata;
+use AppBundle\Model\Sirius\SiriusSupportingDocumentMetadata;
+use function GuzzleHttp\Psr7\mimetype_from_filename;
 
 class ChecklistSyncService
 {
     /**
-     * @param QueuedChecklistData $checklistData
+     * @param Checklist $checklist
      */
-    public function sync(QueuedChecklistData $checklistData)
+    public function sync(Checklist $checklist)
     {
 
+    }
+
+    private function buildUpload(Checklist $checklist, string $content)
+    {
+        // Retrieve an array from api:
+        /**
+         * [
+         *   'checklist' => ['all checklist columns'],
+         *   'review-checklist' => ['all review-checklist columns]
+         * ]
+         *
+         * review-checklist will very often be null
+         * Then send that array to the ->render on the HTML twig template to create the content
+         * Send the string content to wkhtmltopdf to generate the file content
+         */
+
+
+//        $file = (new SiriusDocumentFile())
+//            ->setName($documentData->getFileName())
+//            ->setMimetype(mimetype_from_filename($documentData->getFileName()))
+//            ->setSource(base64_encode($content));
+
+//        return (new SiriusDocumentUpload())
+//            ->setType('checklists')
+//            ->setAttributes(null)
+//            ->setFile($file);
     }
 
     /**
