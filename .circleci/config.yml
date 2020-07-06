@@ -13,8 +13,7 @@ workflows:
 
       - pa11y-ci:
           name: accessibility test
-          filters: { branches: { ignore: [ master ] } }
-          timeout: 300
+          filters: { branches: { ignore: [ master ] } }s
 
       - terraform-command:
           name: apply environment
