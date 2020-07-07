@@ -491,8 +491,8 @@ jobs:
           flags: phpunit
 
   pa11y-ci:
-    docker:
-      - image: circleci/php
+    machine:
+      - image: circleci/classic:latest
     steps:
       - setup_remote_docker
       - checkout
