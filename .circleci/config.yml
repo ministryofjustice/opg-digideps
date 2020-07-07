@@ -492,7 +492,7 @@ jobs:
 
   pa11y-ci:
     machine:
-      - image: circleci/classic:latest
+      image: circleci/classic:latest
     steps:
       - setup_remote_docker
       - checkout
