@@ -503,7 +503,7 @@ jobs:
       - run:
           name: Run pa11y
           command: |
-            docker-compose -f docker-compose.yml up -d pa11y
+            docker-compose -f docker-compose.yml --project-name pa11y-ci up -d pa11y
             docker-compose -f docker-compose.yml --project-name pa11y-ci run pa11y pa11y-ci
 
 
