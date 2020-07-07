@@ -494,7 +494,6 @@ jobs:
     machine:
       image: circleci/classic:latest
     steps:
-      - setup_remote_docker
       - checkout
       - attach_workspace: { at: ~/project }
       - run:
