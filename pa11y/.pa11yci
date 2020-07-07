@@ -10,11 +10,12 @@
       "hideElements":"svg",
       "timeout":100000,
       "wait":5000,
-      "level": "none"
+      "level": "none",
+      "threshold": 1000
    },
    "urls":[
       {
-         "url": "https://digideps.local/login",
+         "url": "https://frontend/login",
          "actions": [
             "set field #login_email to bobby.blue@example.com",
             "set field #login_password to Abcd1234",
@@ -22,7 +23,7 @@
          ]
       },
       {
-         "url": "https://digideps.local"
+         "url": "https://frontend"
       }
    ]
 }
