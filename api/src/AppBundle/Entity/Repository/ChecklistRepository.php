@@ -15,18 +15,18 @@ class ChecklistRepository extends AbstractEntityRepository
     {
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT r.id FROM AppBundle\Entity\Report\Report r JOIN r.checklist c JOIN r.reportSubmissions rs WHERE c.synchronisationStatus = ?1 and rs.uuid IS NOT NULL')
+            ->createQuery('SELECT c.id as checklist_id, r.id as report_id FROM AppBundle\Entity\Report\Report r JOIN r.checklist c JOIN r.reportSubmissions rs WHERE c.synchronisationStatus = ?1 and rs.uuid IS NOT NULL')
             ->setParameter(1, SynchronisableInterface::SYNC_STATUS_QUEUED)
             ->setMaxResults($limit);
 
-        $checklists = $query->getArrayResult();
+        $result = $query->getArrayResult();
 
-        if (count($checklists)) {
+        if (count($result)) {
             $conn = $this->getEntityManager()->getConnection();
 
-            $ids = array_map(function($checklist) {
-                return $checklist['id'];
-            }, $checklists);
+            $ids = array_map(function($result) {
+                return $result['checklist_id'];
+            }, $result);
 
             $idsString = implode(",", $ids);
             $queryString = "UPDATE checklist SET synchronisation_status = 'IN_PROGRESS' WHERE id IN ($idsString)";
@@ -34,6 +34,6 @@ class ChecklistRepository extends AbstractEntityRepository
             $query->execute();
         }
 
-        return $checklists;
+        return array_column($result, 'report_id');
     }
 }

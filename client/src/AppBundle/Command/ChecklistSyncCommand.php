@@ -2,7 +2,9 @@
 
 namespace AppBundle\Command;
 
+use AppBundle\Entity\Report\Report;
 use AppBundle\Model\Sirius\QueuedChecklistData;
+use AppBundle\Service\ChecklistPdfGenerator;
 use AppBundle\Service\ChecklistSyncService;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\ParameterStoreService;
@@ -20,6 +22,9 @@ class ChecklistSyncCommand extends Command
     /** @var string */
     protected static $defaultName = 'digideps:checklist-sync';
 
+    /** @var ChecklistPdfGenerator */
+    private $pdfGenerator;
+
     /** @var ChecklistSyncService */
     private $syncService;
 
@@ -32,15 +37,19 @@ class ChecklistSyncCommand extends Command
     /** @var ParameterStoreService */
     private $parameterStore;
 
+    /** @var int */
+    private $notSyncedCount = 0;
+
     /**
-     * ChecklistSyncCommand constructor.
+     * @param ChecklistPdfGenerator $pdfGenerator
      * @param ChecklistSyncService $syncService
      * @param RestClient $restClient
-     * @param Serializer $serializer
+     * @param SerializerInterface $serializer
      * @param ParameterStoreService $parameterStore
      * @param null $name
      */
     public function __construct(
+        ChecklistPdfGenerator $pdfGenerator,
         ChecklistSyncService $syncService,
         RestClient $restClient,
         SerializerInterface $serializer,
@@ -48,6 +57,7 @@ class ChecklistSyncCommand extends Command
         $name = null
     )
     {
+        $this->pdfGenerator = $pdfGenerator;
         $this->syncService = $syncService;
         $this->restClient = $restClient;
         $this->serializer = $serializer;
@@ -68,23 +78,26 @@ class ChecklistSyncCommand extends Command
             return 0;
         }
 
-        /** @var array $checklists */
-        $checklists = $this->getQueuedChecklistsData();
+        /** @var array $reports */
+        $reports = $this->getReportsWithQueuedChecklists();
+        $output->writeln(sprintf('%d checklists to upload', count($reports)));
 
-        $output->writeln(sprintf('%d checklists to upload', count($checklists)));
+        /** @var Report $report */
+        foreach ($reports as $report) {
+            if (ChecklistPdfGenerator::FAILED_TO_GENERATE === ($content = $this->pdfGenerator->generate($report))) {
+                $this->notSyncedCount += 1;
+                continue;
+            }
 
-        foreach ($checklists as $checklist) {
-            $this->syncService->sync($checklist);
+            $queuedChecklistData = $this->buildChecklistData($report, $content);
+            if (ChecklistSyncService::FAILED_TO_SYNC === $this->syncService->sync($queuedChecklistData)) {
+                $this->notSyncedCount += 1;
+            }
         }
 
-        if (count($this->syncService->getSyncErrorSubmissionIds()) > 0) {
-            $this->syncService->setChecklistsToPermanentError();
-            $this->syncService->setSyncErrorSubmissionIds([]);
-        }
-
-        if ($this->syncService->getChecklistsNotSyncedCount() > 0) {
-            $output->writeln(sprintf('%d checklists failed to sync', $this->syncService->getChecklistsNotSyncedCount()));
-            $this->syncService->setChecklistsNotSyncedCount(0);
+        if ($this->notSyncedCount > 0) {
+            $output->writeln(sprintf('%d checklists failed to sync', $this->notSyncedCount));
+            $this->notSyncedCount = 0;
         }
 
         return 0;
@@ -101,9 +114,9 @@ class ChecklistSyncCommand extends Command
     /**
      * @return QueuedChecklistData[]
      */
-    private function getQueuedChecklistsData(): array
+    private function getReportsWithQueuedChecklists(): array
     {
-        $reports = $this->restClient->apiCall(
+        return $this->restClient->apiCall(
             'get',
             'checklist/queued',
             ['row_limit' => $this->getSyncRowLimit()],
@@ -111,13 +124,6 @@ class ChecklistSyncCommand extends Command
             [],
             false
         );
-
-        $queuedChecklists = [];
-        foreach ($reports as $report) {
-            $queuedChecklists[] = (new QueuedChecklistData())->setReport($report);
-        }
-
-        return $queuedChecklists;
     }
 
     /**
@@ -127,6 +133,22 @@ class ChecklistSyncCommand extends Command
     {
         $limit = $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_CHECKLIST_SYNC_ROW_LIMIT);
         return $limit ? $limit : self::FALLBACK_ROW_LIMITS;
+    }
+
+    /**
+     * @param Report $report
+     * @param $content
+     * @return QueuedChecklistData
+     */
+    protected function buildChecklistData(Report $report, $content): QueuedChecklistData
+    {
+        return (new QueuedChecklistData())
+            ->setChecklistId($report->getChecklist()->getId())
+            ->setCaseNumber($report->getClient()->getCaseNumber())
+            ->setChecklistFileContents($content)
+            ->setReportStartDate($report->getStartDate())
+            ->setReportEndDate($report->getEndDate())
+            ->setReportSubmissions($report->getReportSubmissions());
     }
 
     /**

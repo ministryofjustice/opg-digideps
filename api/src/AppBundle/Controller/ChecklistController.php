@@ -51,7 +51,8 @@ class ChecklistController extends RestController
             'report-period',
             'client-name',
             'document-sync',
-            'report-submission-uuid'
+            'report-submission-uuid',
+            'client-case-number'
         ]);
 
         return $reports;
