@@ -508,8 +508,7 @@ jobs:
             docker-compose --project-name pa11y-ci exec frontend touch /var/www/.enableProd
             docker-compose --project-name pa11y-ci exec admin touch /var/www/.enableProd
             docker-compose --project-name pa11y-ci exec api touch /var/www/.enableProd
-            docker-compose -f docker-compose.yml --project-name pa11y-ci run pa11y || echo "Pa11y found some errors"
-
+            docker-compose -f docker-compose.yml --project-name pa11y-ci run pa11y
 
   run-task:
     executor: terraform/terraform
