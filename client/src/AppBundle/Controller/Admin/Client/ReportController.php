@@ -212,8 +212,9 @@ class ReportController extends AbstractController
      */
     public function checklistSubmittedAction(int $id)
     {
-        $report = $this->getReport(intval($id), ['report-checklist', 'checklist-id']);
-        $this->getRestClient()->put('checklist/' . $report->getChecklist()->getId() . '/update-sync-status', ['syncStatus' => Checklist::SYNC_STATUS_QUEUED]);
+        $report = $this->getReport(intval($id), ['report-checklist']);
+        $report->getChecklist()->setSynchronisationStatus(Checklist::SYNC_STATUS_QUEUED);
+        $this->getRestClient()->put('report/' . $report->getId() . '/checked', $report->getChecklist(), ['synchronisation']);
 
         return ['report' => $report];
     }

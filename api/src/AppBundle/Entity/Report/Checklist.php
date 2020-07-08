@@ -15,7 +15,7 @@ use JMS\Serializer\Annotation as JMS;
  * Checklist.
  *
  * @ORM\Table(name="checklist")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ChecklistRepository")
+ * @ORM\Entity()
  */
 class Checklist implements SynchronisableInterface
 {

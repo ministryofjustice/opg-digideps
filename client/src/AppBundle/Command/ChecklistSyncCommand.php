@@ -118,7 +118,7 @@ class ChecklistSyncCommand extends Command
     {
         return $this->restClient->apiCall(
             'get',
-            'checklist/queued',
+            'report/all-with-queued-checklists',
             ['row_limit' => $this->getSyncRowLimit()],
             'Report\Report[]',
             [],

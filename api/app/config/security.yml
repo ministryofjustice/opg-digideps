@@ -88,8 +88,8 @@ security:
             pattern: ^/document/update-related-statuses
             security: false
             methods: [PUT]
-        queuedChecklists:
-            pattern: ^/checklist/queued
+        reportsWithQueuedChecklists:
+            pattern: ^/report/all-with-queued-checklists
             security: false
             methods: [GET]
         updateChecklist:

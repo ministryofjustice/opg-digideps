@@ -5,12 +5,16 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Organisation;
+use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Repository\ChecklistRepository;
 use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\Entity\User;
+use AppBundle\Exception\UnauthorisedException;
 use AppBundle\Service\ReportService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -35,6 +39,24 @@ class ReportController extends RestController
      * @var EntityManager
      */
     private $em;
+
+    /** @var array */
+    private $checklistGroups = [
+        'report-id',
+        'checklist',
+        'user-name',
+        'user-rolename',
+        'report-checklist',
+        'report-sections',
+        'prof-deputy-estimate-management-costs',
+        'checklist-information',
+        'report-client',
+        'report-period',
+        'client-name',
+        'document-sync',
+        'report-submission-uuid',
+        'client-case-number'
+    ];
 
     /**
      * @param array $updateHandlers
@@ -815,7 +837,8 @@ class ReportController extends RestController
             'next_billing_estimates_satisfactory' => 'setNextBillingEstimatesSatisfactory',
             'lodging_summary' => 'setLodgingSummary',
             'final_decision' => 'setFinalDecision',
-            'button_clicked' => 'setButtonClicked'
+            'button_clicked' => 'setButtonClicked',
+            'synchronisation_status' => 'setSynchronisationStatus',
         ]);
 
         return $checklist;
@@ -876,5 +899,33 @@ class ReportController extends RestController
         $this->persistAndFlush($checklist);
 
         return ['checklist' => $checklist->getId()];
+    }
+
+    /**
+     * @Route("/all-with-queued-checklists", methods={"GET"})
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getReportsWithQueuedChecklists(Request $request): array
+    {
+        if (!$this->getAuthService()->isSecretValid($request)) {
+            throw new UnauthorisedException('client secret not accepted.');
+        }
+
+        /** @var array $data */
+        $data = $this->deserializeBodyContent($request);
+
+        /** @var ChecklistRepository $checklistRepo */
+        $checklistRepo = $this->getEntityManager()->getRepository(Checklist::class);
+        $queuedReportIds = $checklistRepo->getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(intval($data['row_limit']));
+
+        $reports = [];
+        foreach ($queuedReportIds as $reportId) {
+            $reports[] = $this->findEntityBy(Report::class, $reportId);
+        }
+
+        $this->setJmsSerialiserGroups($this->checklistGroups);
+
+        return $reports;
     }
 }

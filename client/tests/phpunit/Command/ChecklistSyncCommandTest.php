@@ -2,7 +2,11 @@
 namespace App\Tests\Command;
 
 use AppBundle\Command\ChecklistSyncCommand;
+use AppBundle\Entity\Client;
+use AppBundle\Entity\Report\Checklist;
+use AppBundle\Entity\Report\Report;
 use AppBundle\Model\Sirius\QueuedChecklistData;
+use AppBundle\Service\ChecklistPdfGenerator;
 use AppBundle\Service\ChecklistSyncService;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\ParameterStoreService;
@@ -16,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ChecklistSyncCommandTest extends KernelTestCase
 {
     /** @var MockObject */
-    private $syncService, $parameterStore, $restClient;
+    private $syncService, $parameterStore, $restClient, $pdfGenerator;
 
     /** @var ContainerInterface */
     private $container;
@@ -29,12 +33,14 @@ class ChecklistSyncCommandTest extends KernelTestCase
         $this->syncService = $this->createMock(ChecklistSyncService::class);
         $this->parameterStore = $this->getMockBuilder(ParameterStoreService::class)->disableOriginalConstructor()->getMock();
         $this->restClient = $this->getMockBuilder(RestClient::class)->disableOriginalConstructor()->getMock();
+        $this->pdfGenerator = $this->getMockBuilder(ChecklistPdfGenerator::class)->disableOriginalConstructor()->getMock();
 
         $kernel = static::bootKernel([ 'debug' => false ]);
         $this->container = $kernel->getContainer();
         $this->container->set(ChecklistSyncService::class, $this->syncService);
         $this->container->set(RestClient::class, $this->restClient);
         $this->container->set(ParameterStoreService::class, $this->parameterStore);
+        $this->container->set(ChecklistPdfGenerator::class, $this->pdfGenerator);
         $application = new Application($kernel);
 
         $command = $application->find('digideps:checklist-sync');
@@ -55,13 +61,26 @@ class ChecklistSyncCommandTest extends KernelTestCase
     /**
      * @test
      */
+    public function doesNotAttemptToSyncFailedPdfGenerations()
+    {
+        $this
+            ->ensureFeatureIsEnabled()
+            ->ensureRestClientReturnsRows()
+            ->ensurePdfGenerationWillFail()
+            ->assertSyncServiceIsNotInvoked()
+            ->invokeTest();
+    }
+
+    /**
+     * @test
+     */
     public function fetchesAndSendsQueuedChecklistsToSyncService()
     {
         $this
             ->ensureFeatureIsEnabled()
             ->ensureRestClientReturnsRows()
+            ->ensurePdfGenerationWillSucceed()
             ->assertEachRowWillBeTransformedAndSentToSyncService()
-            ->assertStatusesWillNotBeSetToError()
             ->invokeTest();
     }
 
@@ -73,6 +92,7 @@ class ChecklistSyncCommandTest extends KernelTestCase
         $this
             ->ensureFeatureIsEnabled()
             ->ensureConfigurableRowLimitIsSetTo('30')
+            ->ensurePdfGenerationWillSucceed()
             ->assertChecklistsAreFetchedWithLimitOf('30')
             ->invokeTest();
     }
@@ -85,33 +105,8 @@ class ChecklistSyncCommandTest extends KernelTestCase
         $this
             ->ensureFeatureIsEnabled()
             ->ensureConfigurableRowLimitIsNotSet()
+            ->ensurePdfGenerationWillSucceed()
             ->assertChecklistsAreFetchedWithDefaultLimit()
-            ->invokeTest();
-    }
-
-    /**
-     * @test
-     */
-    public function updatesSyncStatusForFailedSyncs()
-    {
-        $this
-            ->ensureFeatureIsEnabled()
-            ->ensureRestClientReturnsRows()
-            ->ensureErrorsWillOccur()
-            ->assertStatusesWillBeUpdatedBySyncService()
-            ->invokeTest();
-    }
-
-    /**
-     * @test
-     */
-    public function resetsCountOfChecklistsNotSynched()
-    {
-        $this
-            ->ensureFeatureIsEnabled()
-            ->ensureRestClientReturnsRows()
-            ->ensureChecklistsAreNotSynched()
-            ->assertNotSynchedCountIsReset()
             ->invokeTest();
     }
 
@@ -129,6 +124,24 @@ class ChecklistSyncCommandTest extends KernelTestCase
         $this->parameterStore
             ->method('getFeatureFlag')
             ->willReturn('0');
+
+        return $this;
+    }
+
+    private function ensurePdfGenerationWillFail(): ChecklistSyncCommandTest
+    {
+        $this->pdfGenerator
+            ->method('generate')
+            ->willReturn(ChecklistPdfGenerator::FAILED_TO_GENERATE);
+
+        return $this;
+    }
+
+    private function ensurePdfGenerationWillSucceed(): ChecklistSyncCommandTest
+    {
+        $this->pdfGenerator
+            ->method('generate')
+            ->willReturn('file-contents');
 
         return $this;
     }
@@ -157,8 +170,11 @@ class ChecklistSyncCommandTest extends KernelTestCase
     {
         $this->restClient
             ->method('apiCall')
-            ->with('get', 'checklist/queued', ['row_limit' => '100'], 'array', [], false)
-            ->willReturn(json_encode([['checklist_id' => 4391], ['checklist_id' => 3904]]));
+            ->with('get', 'report/all-with-queued-checklists', ['row_limit' => '100'], 'Report\Report[]', [], false)
+            ->willReturn([
+                $this->buildReport(),
+                $this->buildReport()
+            ]);
 
         return $this;
     }
@@ -168,8 +184,11 @@ class ChecklistSyncCommandTest extends KernelTestCase
         $this->restClient
             ->expects($this->once())
             ->method('apiCall')
-            ->with('get', 'checklist/queued', ['row_limit' => $limit], 'array', [], false)
-            ->willReturn(json_encode([['checklist_id' => 4391], ['checklist_id' => 3904]]));
+            ->with('get', 'report/all-with-queued-checklists', ['row_limit' => $limit], 'Report\Report[]', [], false)
+            ->willReturn([
+                $this->buildReport(),
+                $this->buildReport()
+            ]);
 
         return $this;
     }
@@ -179,8 +198,11 @@ class ChecklistSyncCommandTest extends KernelTestCase
         $this->restClient
             ->expects($this->once())
             ->method('apiCall')
-            ->with('get', 'checklist/queued', ['row_limit' => ChecklistSyncCommand::FALLBACK_ROW_LIMITS], 'array', [], false)
-            ->willReturn(json_encode([['checklist_id' => 4391], ['checklist_id' => 3904]]));
+            ->with('get', 'report/all-with-queued-checklists', ['row_limit' => ChecklistSyncCommand::FALLBACK_ROW_LIMITS], 'Report\Report[]', [], false)
+            ->willReturn([
+                $this->buildReport(),
+                $this->buildReport()
+            ]);
 
         return $this;
     }
@@ -198,56 +220,6 @@ class ChecklistSyncCommandTest extends KernelTestCase
         return $this;
     }
 
-    private function assertStatusesWillNotBeSetToError(): ChecklistSyncCommandTest
-    {
-        $this->syncService
-            ->expects($this->never())
-            ->method('setChecklistsToPermanentError');
-
-        return $this;
-    }
-
-    private function ensureErrorsWillOccur(): ChecklistSyncCommandTest
-    {
-        $this->syncService
-            ->method('getSyncErrorSubmissionIds')
-            ->willReturn(['error-1', 'error-2']);
-
-        return $this;
-    }
-
-    private function ensureChecklistsAreNotSynched(): ChecklistSyncCommandTest
-    {
-        $this->syncService
-            ->method('getChecklistsNotSyncedCount')
-            ->willReturn(1);
-
-        return $this;
-    }
-
-    private function assertStatusesWillBeUpdatedBySyncService(): ChecklistSyncCommandTest
-    {
-        $this->syncService
-            ->expects($this->once())
-            ->method('setChecklistsToPermanentError');
-
-        $this->syncService
-            ->expects($this->once())
-            ->method('setSyncErrorSubmissionIds');
-
-        return $this;
-    }
-
-    private function assertNotSynchedCountIsReset(): ChecklistSyncCommandTest
-    {
-        $this->syncService
-            ->expects($this->once())
-            ->method('setChecklistsNotSyncedCount')
-            ->with(0);
-
-        return $this;
-    }
-
     private function assertSyncServiceIsNotInvoked(): ChecklistSyncCommandTest
     {
         $this->syncService
@@ -255,6 +227,22 @@ class ChecklistSyncCommandTest extends KernelTestCase
             ->method('sync');
 
         return $this;
+    }
+
+    private function buildReport()
+    {
+        $report = new Report();
+        $report->setStartDate(new \DateTime());
+        $report->setEndDate(new \DateTime());
+        $report->setReportSubmissions([]);
+        $checklist = new Checklist($report);
+        $report->setChecklist($checklist);
+        $checklist->setId(3923);
+        $client = new Client();
+        $client->setCaseNumber('case-number');
+        $report->setClient($client);
+
+        return $report;
     }
 
     private function invokeTest(): void
