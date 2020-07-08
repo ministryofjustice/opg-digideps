@@ -3,7 +3,6 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Report\Checklist;
-use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Repository\ChecklistRepository;
 use AppBundle\Exception\UnauthorisedException;
@@ -11,11 +10,15 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
+/**
+ * @Route("/checklist")
+ */
 class ChecklistController extends RestController
 {
     /**
-     * @Route("/checklist/queued", methods={"GET"})
+     * @Route("/queued", methods={"GET"})
      * @return array
      * @throws \Doctrine\DBAL\DBALException
      */
@@ -59,7 +62,7 @@ class ChecklistController extends RestController
     }
 
     /**
-     * @Route("/checklist/{id}", methods={"PUT"})
+     * @Route("/{id}", methods={"PUT"})
      */
     public function update(Request $request, int $id, EntityManagerInterface $em): Checklist
     {
@@ -94,10 +97,31 @@ class ChecklistController extends RestController
 
         $this->persistAndFlush($checklist);
 
-        $serialisedGroups = $request->query->has('groups') ?
-            (array) $request->query->get('groups') :
-            ['synchronisation', 'checklist-id'];
+        $serialisedGroups = ['checklist-id'];
+        $this->setJmsSerialiserGroups($serialisedGroups);
 
+        return $checklist;
+    }
+
+    /**
+     * @Route("/{id}/update-sync-status", methods={"PUT"})
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function updateSyncStatus(Request $request, int $id, EntityManagerInterface $em): Checklist
+    {
+        /** @var array $data */
+        $data = $this->deserializeBodyContent($request);
+
+        /** @var Checklist $checklist */
+        $checklist = $em->getRepository(Checklist::class)->find($id);
+
+        if (!empty($data['syncStatus'])) {
+            $checklist->setSynchronisationStatus($data['syncStatus']);
+        }
+
+        $this->persistAndFlush($checklist);
+
+        $serialisedGroups = ['checklist-id'];
         $this->setJmsSerialiserGroups($serialisedGroups);
 
         return $checklist;

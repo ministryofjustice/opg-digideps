@@ -93,7 +93,7 @@ security:
             security: false
             methods: [GET]
         updateChecklist:
-            pattern: ^/checklist/\d+
+            pattern: ^/checklist/\d+$
             security: false
             methods: [PUT]
         updateReportSubmissionUuid:
