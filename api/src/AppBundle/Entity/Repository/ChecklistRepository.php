@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity\Repository;
 
+use AppBundle\Entity\SynchronisableInterface;
+
 class ChecklistRepository extends AbstractEntityRepository
 {
     /**
@@ -9,16 +11,18 @@ class ChecklistRepository extends AbstractEntityRepository
      * @return array
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function getQueuedAndSetToInProgress(int $limit): array
+    public function getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(int $limit): array
     {
-        $conn = $this->getEntityManager()->getConnection();
-        $query = $conn->executeQuery(
-            "select c.*, rc.submitted_by as rc_submitted_by, rc.answers, rc.decision from checklist c inner join report r on r.id = c.report_id left join review_checklist rc on rc.report_id = r.id where c.synchronisation_status = 'QUEUED' limit $limit",
-        );
+        $query = $this
+            ->getEntityManager()
+            ->createQuery('SELECT r.id FROM AppBundle\Entity\Report\Report r JOIN r.checklist c JOIN r.reportSubmissions rs WHERE c.synchronisationStatus = ?1 and rs.uuid IS NOT NULL')
+            ->setParameter(1, SynchronisableInterface::SYNC_STATUS_QUEUED)
+            ->setMaxResults($limit);
 
-        $checklists = $query->fetchAll();
+        $checklists = $query->getArrayResult();
 
         if (count($checklists)) {
+            $conn = $this->getEntityManager()->getConnection();
 
             $ids = array_map(function($checklist) {
                 return $checklist['id'];

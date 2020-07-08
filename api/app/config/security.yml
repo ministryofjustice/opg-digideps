@@ -92,6 +92,10 @@ security:
             pattern: ^/checklist/queued
             security: false
             methods: [GET]
+        updateChecklist:
+            pattern: ^/checklist/\d+
+            security: false
+            methods: [PUT]
         updateReportSubmissionUuid:
             pattern: ^/report-submission/\d+/update-uuid
             security: false

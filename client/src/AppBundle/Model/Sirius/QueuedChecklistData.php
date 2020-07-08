@@ -2,26 +2,44 @@
 
 namespace AppBundle\Model\Sirius;
 
+use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Report\ReportSubmission;
+
 class QueuedChecklistData
 {
-    /** @var int */
-    private $checklistId;
+    /** @var Report */
+    private $report;
 
     /**
-     * @return int
+     * @return Report
      */
-    public function getChecklistId(): int
+    public function getReport(): Report
     {
-        return $this->checklistId;
+        return $this->report;
     }
 
     /**
-     * @param int $checklistId
+     * @param Report $report
      * @return QueuedChecklistData
      */
-    public function setChecklistId(int $checklistId): QueuedChecklistData
+    public function setReport(Report $report): QueuedChecklistData
     {
-        $this->checklistId = $checklistId;
+        $this->report = $report;
+
         return $this;
+    }
+
+    /**
+     * @return ReportSubmission|null
+     */
+    public function getSyncedReportSubmission(): ?ReportSubmission
+    {
+        foreach ($this->report->getReportSubmissions() as $submission) {
+            if ($submission->getUuid()) {
+                return $submission;
+            }
+        }
+
+        return null;
     }
 }

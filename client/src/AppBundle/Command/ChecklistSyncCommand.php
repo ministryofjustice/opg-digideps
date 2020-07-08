@@ -68,7 +68,7 @@ class ChecklistSyncCommand extends Command
             return 0;
         }
 
-        /** @var QueuedChecklistData[] $checklists */
+        /** @var array $checklists */
         $checklists = $this->getQueuedChecklistsData();
 
         $output->writeln(sprintf('%d checklists to upload', count($checklists)));
@@ -99,20 +99,25 @@ class ChecklistSyncCommand extends Command
     }
 
     /**
-     * @return array
+     * @return QueuedChecklistData[]
      */
     private function getQueuedChecklistsData(): array
     {
-        $queuedDocumentData = $this->restClient->apiCall(
+        $reports = $this->restClient->apiCall(
             'get',
             'checklist/queued',
             ['row_limit' => $this->getSyncRowLimit()],
-            'array',
+            'Report\Report[]',
             [],
             false
         );
 
-        return $this->serializer->deserialize($queuedDocumentData, 'AppBundle\Entity\Checklist[]', 'json');
+        $queuedChecklists = [];
+        foreach ($reports as $report) {
+            $queuedChecklists[] = (new QueuedChecklistData())->setReport($report);
+        }
+
+        return $queuedChecklists;
     }
 
     /**

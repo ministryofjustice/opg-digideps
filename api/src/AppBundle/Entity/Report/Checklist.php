@@ -26,7 +26,7 @@ class Checklist implements SynchronisableInterface
      * @var int
      *
      * @JMS\Type("integer")
-     * @JMS\Groups({"report-checklist"})
+     * @JMS\Groups({"report-checklist", "checklist-id"})
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -318,7 +318,7 @@ class Checklist implements SynchronisableInterface
     /**
      * @var string|null
      * @JMS\Type("string")
-     * @JMS\Groups({"report-submission"})
+     * @JMS\Groups({"report-submission", "report-checklist"})
      * @ORM\Column(name="opg_uuid", type="string", length=36, nullable=true)
      */
     private $uuid;

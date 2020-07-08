@@ -427,13 +427,20 @@ class Report implements ReportInterface
     /**
      * @var Checklist
      *
-     * // TODO "report" group is used by deputy side each time a report is loaded. Better to use a new one like report-checklist
-     *
-     * @JMS\Groups({"report"})
+     * @JMS\Groups({"report", "report-checklist"})
      * @JMS\Type("AppBundle\Entity\Report\Checklist")
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Checklist", mappedBy="report", cascade={"persist", "remove"})
      */
     private $checklist;
+
+    /**
+     * @var ReviewChecklist
+     *
+     * @JMS\Groups({"report", "report-checklist"})
+     * @JMS\Type("AppBundle\Entity\Report\ReviewChecklist")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\ReviewChecklist", mappedBy="report", cascade={"persist", "remove"})
+     */
+    private $reviewChecklist;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrder", inversedBy="reports", cascade={"persist"})
@@ -559,7 +566,7 @@ class Report implements ReportInterface
      * Get sections based on the report type
      *
      * @JMS\VirtualProperty
-     * @JMS\Groups({"report"})
+     * @JMS\Groups({"report", "report-sections"})
      * @JMS\Type("array")
      */
     public function getAvailableSections()
@@ -1184,6 +1191,22 @@ class Report implements ReportInterface
     public function setChecklist($checklist)
     {
         $this->checklist = $checklist;
+    }
+
+    /**
+     * @return ReviewChecklist
+     */
+    public function getReviewChecklist()
+    {
+        return $this->reviewChecklist;
+    }
+
+    /**
+     * @param ReviewChecklist $reviewChecklist
+     */
+    public function setReviewChecklist($reviewChecklist)
+    {
+        $this->reviewChecklist = $reviewChecklist;
     }
 
         /**

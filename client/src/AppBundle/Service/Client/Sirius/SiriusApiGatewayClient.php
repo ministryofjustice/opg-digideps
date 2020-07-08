@@ -14,6 +14,7 @@ class SiriusApiGatewayClient
     const SIRIUS_API_GATEWAY_VERSION = 'v1';
     const SIRIUS_REPORT_ENDPOINT = 'clients/%s/reports';
     const SIRIUS_SUPPORTING_DOCUMENTS_ENDPOINT = 'clients/%s/reports/%s/supportingdocuments';
+    const SIRIUS_CHECKLIST_POST_ENDPOINT = 'clients/%s/reports/%s/checklists';
 
     /** @var Client */
     private $httpClient;
@@ -94,6 +95,27 @@ class SiriusApiGatewayClient
             sprintf(self::SIRIUS_SUPPORTING_DOCUMENTS_ENDPOINT, $caseRef, $submissionUuid),
             'POST',
             $reportJson,
+            'application/vnd.opg-data.v1+json'
+        );
+
+        return $this->httpClient->send($signedRequest);
+    }
+
+    /**
+     * @param SiriusDocumentUpload $upload
+     * @param string $submissionUuid
+     * @param string $caseRef
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function sendChecklistPdf(SiriusDocumentUpload $upload, string $submissionUuid, string $caseRef)
+    {
+        $body = $this->serializer->serialize(['checklist' => ['data' => $upload]], 'json');
+
+        $signedRequest = $this->buildSignedRequest(
+            sprintf(self::SIRIUS_CHECKLIST_POST_ENDPOINT, $caseRef, $submissionUuid),
+            'POST',
+            $body,
             'application/vnd.opg-data.v1+json'
         );
 
