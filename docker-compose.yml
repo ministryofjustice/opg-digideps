@@ -54,6 +54,11 @@ services:
             context: ./pa11y
         depends_on:
             - frontend
+        networks:
+            default:
+                aliases:
+                    - www.digideps.local
+                    - digideps.local
 
     frontend:
         build:
