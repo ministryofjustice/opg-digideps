@@ -43,7 +43,7 @@ final class AuditEvents
             'case_number' => $caseNumber,
             'discharged_by' => $dischargedBy,
             'deputy_name' => $deputyName,
-            'discharged_on' => $this->clock->now()->format(DateTime::ATOM),
+            'discharged_on' => $this->clock->now(new DateTime())->format(DateTime::ATOM),
             'deputyship_start_date' => $deputyshipStartDate->format(DateTime::ATOM),
         ];
 

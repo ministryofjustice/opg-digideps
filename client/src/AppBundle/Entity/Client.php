@@ -253,6 +253,13 @@ class Client
      */
     private $archivedAt;
 
+    /**
+     * @var ArrayCollection<CourtOrder>
+     *
+     * @JMS\Type("AppBundle\Entity\CourtOrder")
+     */
+    private $courtOrders;
+
     public function __construct()
     {
         $this->users = [];
@@ -958,5 +965,24 @@ class Client
             }
         }
         return false;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getCourtOrders(): ArrayCollection
+    {
+        return $this->courtOrders;
+    }
+
+    /**
+     * @param ArrayCollection $courtOrders
+     * @return Client
+     */
+    public function setCourtOrders(ArrayCollection $courtOrders): self
+    {
+        $this->courtOrders = $courtOrders;
+
+        return $this;
     }
 }

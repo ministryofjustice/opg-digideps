@@ -4,8 +4,10 @@ namespace AppBundle\Controller\Admin\Client;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Client;
+use AppBundle\Entity\NamedDeputy;
 use AppBundle\Entity\User;
 use AppBundle\Service\Audit\AuditEvents;
+use DateTime;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -82,12 +84,16 @@ class ClientController extends AbstractController
     {
         /** @var Client $client */
         $client = $this->getRestClient()->get('v2/client/' . $id, 'Client');
+        $deputy = $this->getNamedDeputy($client->getId(), $client);
+
         $this->getRestClient()->delete('client/' . $id . '/delete');
 
         $logger->notice('', $auditEvents->clientDischarged(
             AuditEvents::CLIENT_DISCHARGED_ADMIN_TRIGGER,
             $client->getCaseNumber(),
-            $this->getUser()->getEmail()
+            $this->getUser()->getEmail(),
+            $deputy->getFullName(),
+            $this->getDeputyShipStartDate($client, $deputy)
         ));
 
         return $this->redirectToRoute('admin_client_search');
@@ -96,7 +102,7 @@ class ClientController extends AbstractController
     /**
      * @param int $id
      * @param Client $client
-     * @return \AppBundle\Entity\NamedDeputy|null
+     * @return NamedDeputy|User|null
      */
     private function getNamedDeputy(int $id, Client $client)
     {
@@ -115,5 +121,23 @@ class ClientController extends AbstractController
                 return $clientWithUsers->getUsers()[0];
             }
         }
+    }
+
+    /**
+     * @param Client $client
+     * @param User|NamedDeputy|null $deputy
+     * @return DateTime|null
+     */
+    private function getDeputyShipStartDate(Client $client, $deputy): ?DateTime
+    {
+        foreach($client->getCourtOrders() as $courtOrder) {
+            foreach($courtOrder->getDeputies() as $courtOrderDeputy) {
+                if ($courtOrderDeputy->getEmail() === $deputy->getEmail()) {
+                    return $courtOrder->getOrderDate();
+                }
+            }
+        }
+
+        return null;
     }
 }
