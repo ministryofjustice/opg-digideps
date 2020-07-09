@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Model\Sirius\QueuedChecklistData;
 use AppBundle\Model\Sirius\SiriusDocumentFile;
 use AppBundle\Model\Sirius\SiriusDocumentUpload;
@@ -25,6 +26,9 @@ class ChecklistSyncService
 
     /** @var int */
     const FAILED_TO_SYNC = -1;
+
+    /** @var string */
+    const PAPER_REPORT_UUID_FALLBACK = '99999999-9999-9999-9999-999999999999';
 
     /**
      * @param RestClient $restClient
@@ -65,16 +69,45 @@ class ChecklistSyncService
      */
     private function sendDocument(QueuedChecklistData $checklistData)
     {
-        if (null === $reportSubmission = $checklistData->getSyncedReportSubmission()) {
-            // Can't yet sync as Report has not been synced.
-            return;
-        }
+        $reportSubmission = $checklistData->getSyncedReportSubmission();
+        $reportSubmissionUuid = ($reportSubmission instanceof ReportSubmission) ?
+            $reportSubmission->getUuid() :
+            self::PAPER_REPORT_UUID_FALLBACK;
 
-        return $this->siriusApiGatewayClient->sendChecklistPdf(
+        return (null === $checklistData->getChecklistUuid()) ?
+            $this->postChecklist($checklistData, $reportSubmissionUuid) :
+            $this->putChecklist($checklistData, $reportSubmissionUuid);
+    }
+
+    /**
+     * @param QueuedChecklistData $checklistData
+     * @param string $reportSubmissionUuid
+     * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function postChecklist(QueuedChecklistData $checklistData, string $reportSubmissionUuid)
+    {
+        return $this->siriusApiGatewayClient->postChecklistPdf(
             $this->buildUpload($checklistData),
-            $reportSubmission->getUuid(),
+            $reportSubmissionUuid,
             strtoupper($checklistData->getCaseNumber())
         );
+    }
+
+    /**
+     * @param QueuedChecklistData $checklistData
+     * @param string $reportSubmissionUuid
+     * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function putChecklist(QueuedChecklistData $checklistData, string $reportSubmissionUuid)
+    {
+//        return $this->siriusApiGatewayClient->putChecklistPdf(
+//            $this->buildUpload($checklistData),
+//            $reportSubmissionUuid,
+//            strtoupper($checklistData->getCaseNumber())
+//            $checklistData->getChecklistUuid()
+//        );
     }
 
     /**

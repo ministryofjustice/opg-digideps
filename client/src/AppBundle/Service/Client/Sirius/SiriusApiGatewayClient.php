@@ -108,7 +108,7 @@ class SiriusApiGatewayClient
      * @return mixed|\Psr\Http\Message\ResponseInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function sendChecklistPdf(SiriusDocumentUpload $upload, string $submissionUuid, string $caseRef)
+    public function postChecklistPdf(SiriusDocumentUpload $upload, string $submissionUuid, string $caseRef)
     {
         $body = $this->serializer->serialize(['checklist' => ['data' => $upload]], 'json');
 

@@ -2,13 +2,15 @@
 
 namespace AppBundle\Model\Sirius;
 
-use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 
 class QueuedChecklistData
 {
     /** @var int */
     private $checklistId;
+
+    /** @var string */
+    private $checklistUuid;
 
     /** @var string */
     private $caseNumber;
@@ -40,6 +42,24 @@ class QueuedChecklistData
     public function setChecklistId(int $checklistId): QueuedChecklistData
     {
         $this->checklistId = $checklistId;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getChecklistUuid(): string
+    {
+        return $this->checklistUuid;
+    }
+
+    /**
+     * @param string $checklistUuid
+     * @return QueuedChecklistData
+     */
+    public function setChecklistUuid(string $checklistUuid): QueuedChecklistData
+    {
+        $this->checklistUuid = $checklistUuid;
         return $this;
     }
 

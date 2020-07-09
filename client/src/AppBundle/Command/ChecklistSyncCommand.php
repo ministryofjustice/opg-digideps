@@ -144,6 +144,7 @@ class ChecklistSyncCommand extends Command
     {
         return (new QueuedChecklistData())
             ->setChecklistId($report->getChecklist()->getId())
+            ->setChecklistUuid($report->getChecklist()->getUuid())
             ->setCaseNumber($report->getClient()->getCaseNumber())
             ->setChecklistFileContents($content)
             ->setReportStartDate($report->getStartDate())
