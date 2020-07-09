@@ -122,22 +122,4 @@ class ClientController extends AbstractController
             }
         }
     }
-
-    /**
-     * @param Client $client
-     * @param User|NamedDeputy|null $deputy
-     * @return DateTime|null
-     */
-    private function getDeputyShipStartDate(Client $client, $deputy): ?DateTime
-    {
-        foreach($client->getCourtOrders() as $courtOrder) {
-            foreach($courtOrder->getDeputies() as $courtOrderDeputy) {
-                if ($courtOrderDeputy->getEmail() === $deputy->getEmail()) {
-                    return $courtOrder->getOrderDate();
-                }
-            }
-        }
-
-        return null;
-    }
 }
