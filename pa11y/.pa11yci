@@ -13,7 +13,7 @@
    },
    "urls":[
       {
-         "url": "https://digideps.local/login",
+         "url": "https://frontend:8070/login",
          "actions": [
             "set field #login_email to bobby.blue@example.com",
             "set field #login_password to Abcd1234",
@@ -21,7 +21,7 @@
          ]
       },
       {
-         "url": "https://digideps.local"
+         "url": "https://frontend:8070"
       }
    ]
 }
