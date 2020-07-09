@@ -28,14 +28,17 @@ final class AuditEvents
      * @param string $trigger
      * @param string $caseNumber
      * @param string $dischargedBy
+     * @param string $deputyName
+     * @param DateTime|null $deputyshipStartDate
      * @return array
+     * @throws \Exception
      */
     public function clientDischarged(
         string $trigger,
         string $caseNumber,
         string $dischargedBy,
         string $deputyName,
-        DateTime $deputyshipStartDate
+        ?DateTime $deputyshipStartDate
     ): array
     {
         $event = [
@@ -44,7 +47,7 @@ final class AuditEvents
             'discharged_by' => $dischargedBy,
             'deputy_name' => $deputyName,
             'discharged_on' => $this->clock->now(new DateTime())->format(DateTime::ATOM),
-            'deputyship_start_date' => $deputyshipStartDate->format(DateTime::ATOM),
+            'deputyship_start_date' => $deputyshipStartDate ? $deputyshipStartDate->format(DateTime::ATOM) : null,
         ];
 
         return $event + $this->baseEvent(AuditEvents::CLIENT_DISCHARGED);
