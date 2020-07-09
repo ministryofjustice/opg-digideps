@@ -915,9 +915,9 @@ class ReportController extends RestController
         /** @var array $data */
         $data = $this->deserializeBodyContent($request);
 
-        /** @var ChecklistRepository $checklistRepo */
-        $checklistRepo = $this->getEntityManager()->getRepository(Checklist::class);
-        $queuedReportIds = $checklistRepo->getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(intval($data['row_limit']));
+        /** @var ReportRepository $reportRepo */
+        $reportRepo = $this->getEntityManager()->getRepository(Report::class);
+        $queuedReportIds = $reportRepo->getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(intval($data['row_limit']));
 
         $reports = [];
         foreach ($queuedReportIds as $reportId) {

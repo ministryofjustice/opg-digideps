@@ -159,8 +159,6 @@ class ReportRepositoryTest extends WebTestCase
     private function assertOnlyAlimitedNumberOfQueuedChecklistsAreReturned(): ReportRepositoryTest
     {
         $this->assertCount(self::QUERY_LIMIT, $this->queryResult);
-        $this->assertEquals(1, $this->queryResult[0]);
-        $this->assertEquals(2, $this->queryResult[1]);
 
         return $this;
     }
