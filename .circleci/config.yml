@@ -504,11 +504,12 @@ jobs:
       - run:
           name: Run pa11y
           command: |
-            docker-compose -f docker-compose.yml --project-name pa11y-ci up -d pa11y
-            docker-compose --project-name pa11y-ci exec frontend touch /var/www/.enableProdMode
-            docker-compose --project-name pa11y-ci exec admin touch /var/www/.enableProdMode
-            docker-compose --project-name pa11y-ci exec api touch /var/www/.enableProdMode
-            docker-compose -f docker-compose.yml --project-name pa11y-ci run pa11y pa11y-ci || echo "Pa11y found some errors"
+            docker-compose -f docker-compose.yml up -d pa11y
+            docker-compose exec frontend touch /var/www/.enableProdMode
+            docker-compose exec admin touch /var/www/.enableProdMode
+            docker-compose exec api touch /var/www/.enableProdMode
+            sleep 10
+            docker-compose -f docker-compose.yml run pa11y pa11y-ci || echo "Pa11y found some errors"
 
   run-task:
     executor: terraform/terraform
