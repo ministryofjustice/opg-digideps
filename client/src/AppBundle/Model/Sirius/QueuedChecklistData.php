@@ -158,6 +158,10 @@ class QueuedChecklistData
      */
     public function getSyncedReportSubmission(): ?ReportSubmission
     {
+        if (null === $this->getReportSubmissions()) {
+            return null;
+        }
+
         foreach ($this->getReportSubmissions() as $submission) {
             if ($submission->getUuid()) {
                 return $submission;

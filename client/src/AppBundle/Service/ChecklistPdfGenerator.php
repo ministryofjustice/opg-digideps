@@ -21,6 +21,8 @@ class ChecklistPdfGenerator
     /** @var int */
     const FAILED_TO_GENERATE = -1;
 
+    const TEMPLATE_FILE = 'AppBundle:Admin/Client/Report/Formatted:checklist_formatted_standalone.html.twig';
+
     /**
      * @param Environment $templating
      * @param WkHtmlToPdfGenerator $wkhtmltopdf
@@ -40,7 +42,7 @@ class ChecklistPdfGenerator
     public function generate(Report $report)
     {
         try {
-            $html = $this->templating->render('AppBundle:Admin/Client/Report/Formatted:checklist_formatted_standalone.html.twig', [
+            $html = $this->templating->render(self::TEMPLATE_FILE, [
                 'report' => $report,
                 'lodgingChecklist' => $report->getChecklist(),
                 'reviewChecklist' => $report->getReviewChecklist()

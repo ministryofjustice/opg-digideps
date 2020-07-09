@@ -136,6 +136,18 @@ class ChecklistSyncService
     }
 
     /**
+     * @param $e
+     * @return string
+     */
+    private function determineErrorMessage(\Throwable $e): string
+    {
+        return ($this->errorCanBeTranslated($e)) ?
+            $this->errorTranslator->translateApiError((string)$e->getResponse()->getBody()) :
+            substr($e->getMessage(), 0, 254);
+
+    }
+
+    /**
      * @param int $id
      * @param string $status
      * @param string|null $message
@@ -162,20 +174,6 @@ class ChecklistSyncService
             [],
             false
         );
-    }
-
-    /**
-     * @param $e
-     * @return string
-     */
-    private function determineErrorMessage(\Throwable $e): string
-    {
-        return ($this->errorCanBeTranslated($e)) ?
-            $this->errorTranslator->translateApiError((string)$e->getResponse()->getBody()) :
-            //(string)$e->getMessage();
-            // todo uncomment above
-            'Error has occurred sadly';
-
     }
 
     /**
