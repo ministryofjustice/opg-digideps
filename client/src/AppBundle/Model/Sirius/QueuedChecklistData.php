@@ -46,18 +46,18 @@ class QueuedChecklistData
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getChecklistUuid(): string
+    public function getChecklistUuid(): ?string
     {
         return $this->checklistUuid;
     }
 
     /**
-     * @param string $checklistUuid
+     * @param string|null $checklistUuid
      * @return QueuedChecklistData
      */
-    public function setChecklistUuid(string $checklistUuid): QueuedChecklistData
+    public function setChecklistUuid(?string $checklistUuid): QueuedChecklistData
     {
         $this->checklistUuid = $checklistUuid;
         return $this;
