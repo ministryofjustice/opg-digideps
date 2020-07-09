@@ -970,7 +970,7 @@ class Client
     /**
      * @return ArrayCollection
      */
-    public function getCourtOrders(): ArrayCollection
+    public function getCourtOrders(): ?ArrayCollection
     {
         return $this->courtOrders;
     }
@@ -984,5 +984,28 @@ class Client
         $this->courtOrders = $courtOrders;
 
         return $this;
+    }
+
+
+    /**
+     * @param User|NamedDeputy|null $deputy
+     * @return DateTime|null
+     */
+    public function getDeputyShipStartDate($deputy): ?DateTime
+    {
+        $deputyEmails = $deputy instanceof NamedDeputy ?
+            [$deputy->getEmail1(), $deputy->getEmail2(), $deputy->getEmail3()] : [$deputy->getEmail()];
+
+        if ($this->getCourtOrders() && count($this->getCourtOrders()) > 0) {
+            foreach($this->getCourtOrders() as $courtOrder) {
+                foreach($courtOrder->getDeputies() as $courtOrderDeputy) {
+                    if (in_array($courtOrderDeputy->getEmail(), $deputyEmails)) {
+                        return $courtOrder->getOrderDate();
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 }

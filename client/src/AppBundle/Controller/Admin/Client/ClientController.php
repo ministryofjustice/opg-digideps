@@ -93,7 +93,7 @@ class ClientController extends AbstractController
             $client->getCaseNumber(),
             $this->getUser()->getEmail(),
             $deputy->getFullName(),
-            $this->getDeputyShipStartDate($client, $deputy)
+            $client->getDeputyShipStartDate($deputy)
         ));
 
         return $this->redirectToRoute('admin_client_search');
