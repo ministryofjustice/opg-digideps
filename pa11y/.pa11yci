@@ -18,10 +18,12 @@
             "set field #login_email to bobby.blue@example.com",
             "set field #login_password to Abcd1234",
             "click element #login_login"
-         ]
+         ],
+         "screenCapture": "screenshots/login.png"
       },
       {
-         "url": "https://digideps.local"
+         "url": "https://digideps.local",
+         "screenCapture": "screenshots/index.png"
       }
    ]
 }
