@@ -6,6 +6,7 @@ use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Model\Sirius\QueuedChecklistData;
+use AppBundle\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
 use AppBundle\Model\Sirius\SiriusDocumentFile;
 use AppBundle\Model\Sirius\SiriusDocumentUpload;
 use AppBundle\Service\Client\RestClient;
@@ -130,7 +131,7 @@ class ChecklistSyncService
 
         return (new SiriusDocumentUpload())
             ->setType('checklists')
-            ->setAttributes(null)
+            ->setAttributes(new SiriusChecklistPdfDocumentMetadata())
             ->setFile($file);
     }
 
