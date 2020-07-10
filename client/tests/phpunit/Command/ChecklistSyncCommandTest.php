@@ -170,7 +170,7 @@ class ChecklistSyncCommandTest extends KernelTestCase
     {
         $this->restClient
             ->method('apiCall')
-            ->with('get', 'report/all-with-queued-checklists', ['row_limit' => '100'], 'Report\Report[]', [], false)
+            ->with('get', 'report/all-with-queued-checklists', ['row_limit' => '30'], 'Report\Report[]', [], false)
             ->willReturn([
                 $this->buildReport(),
                 $this->buildReport()
