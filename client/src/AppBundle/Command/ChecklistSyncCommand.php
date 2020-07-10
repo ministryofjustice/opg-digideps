@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 class ChecklistSyncCommand extends Command
 {
     /** @var string */
-    const FALLBACK_ROW_LIMITS = '100';
+    const FALLBACK_ROW_LIMITS = '30';
 
     /** @var string */
     protected static $defaultName = 'digideps:checklist-sync';
@@ -73,6 +73,8 @@ class ChecklistSyncCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        ini_set('memory_limit', '512M');
+
         if (!$this->isFeatureEnabled()) {
             $output->writeln('Feature disabled, sleeping');
             return 0;
