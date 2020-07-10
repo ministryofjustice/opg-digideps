@@ -12,7 +12,7 @@ class AuditEventsTest extends TestCase
      * @test
      * @dataProvider startDateProvider
      */
-    public function clientDischarged(?string $expectedStartDate, ?DateTime $startDate): void
+    public function clientDischarged(?string $expectedStartDate, ?DateTime $actualStartDate): void
     {
         $now = new DateTime();
         $fakeClock = new FakeClock($now);
@@ -33,7 +33,7 @@ class AuditEventsTest extends TestCase
             '19348522',
             'me@test.com',
             'Bjork Gudmundsdottir',
-            $startDate
+            $actualStartDate
         );
 
         $this->assertEquals($expected, $actual);
