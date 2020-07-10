@@ -20,6 +20,7 @@ class ClientControllerTest extends AbstractControllerTestCase
     public function setUp(): void
     {
         parent::setUp();
+
         $this->mockLoggedInUser(['ROLE_SUPER_ADMIN']);
         $this->now = new DateTime();
         $this->orderStartDate = new DateTime('-1 Day');
