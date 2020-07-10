@@ -511,6 +511,9 @@ jobs:
             sleep 10
             docker-compose -f docker-compose.yml run pa11y pa11y-ci || echo "Pa11y found some errors"
 
+            # The || operator ensures that if pa11y exits with an error code, we echo an informative message
+            # instead of failing the job and the pipeline too.
+
   run-task:
     executor: terraform/terraform
     parameters:

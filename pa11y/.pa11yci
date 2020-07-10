@@ -8,7 +8,7 @@
          ]
       },
       "hideElements":"svg",
-      "timeout":30000,
+      "timeout":60000,
       "wait":5000
    },
    "urls":[
