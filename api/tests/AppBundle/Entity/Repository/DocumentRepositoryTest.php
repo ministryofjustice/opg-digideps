@@ -228,8 +228,6 @@ class DocumentRepositoryTest extends KernelTestCase
         $documents = $this->documentRepository
             ->getQueuedDocumentsAndSetToInProgress('100');
 
-        print_r(json_encode($documents, JSON_PRETTY_PRINT));
-
         $reportPdf = $this->documentRepository->find($this->firstReportPdfDocument->getId());
         $supportingDocument = $this->documentRepository->find($this->firstSupportingDocument->getId());
 

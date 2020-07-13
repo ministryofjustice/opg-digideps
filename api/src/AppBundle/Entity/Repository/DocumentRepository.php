@@ -85,13 +85,15 @@ LIMIT $limit;";
             ];
 
 
-            $reportSubmissionIds[] = $row['report_submission_id'];
+            $reportIds[] = $row['report_id'];
+            $ndrIds[] = $row['ndr_id'];
         }
 
         if (count($documents) > 0) {
-            $idsString = implode(",", array_unique($reportSubmissionIds));
-
-            $getReportSubmissionsQuery = "SELECT * FROM report_submission WHERE id IN ($idsString) ORDER BY created_on ASC;";
+            $getReportSubmissionsQuery =  $this->buildReportSubmissionsQuery(
+                array_values(array_filter(array_unique($reportIds))),
+                array_values(array_filter(array_unique($ndrIds)))
+            );
 
             $submissionStmt = $conn->prepare($getReportSubmissionsQuery);
             $submissionStmt->execute();
@@ -203,6 +205,26 @@ AND is_report_pdf=false";
         }
 
         return $documents;
+    }
+
+    private function buildReportSubmissionsQuery(array $reportIds, array $ndrIds)
+    {
+        $reportIdsString = implode(",", $reportIds);
+        $ndrIdsString = implode(",", $ndrIds);
+
+        // Get all reports associated with submissions and then get all submissions
+
+        if (count($reportIds) > 0 && count($ndrIds) < 1) {
+            return "SELECT * FROM report_submission WHERE (report_id IN ($reportIdsString)) ORDER BY created_on ASC;";
+        }
+
+        if (count($ndrIds) > 0 && count($reportIds) < 1) {
+            return "SELECT * FROM report_submission WHERE (ndr_id IN ($ndrIdsString)) ORDER BY created_on ASC;";
+        }
+
+        if (count($reportIds) > 0 && count($ndrIds) > 0) {
+            return "SELECT * FROM report_submission WHERE (report_id IN ($reportIdsString)) OR (ndr_id IN ($ndrIdsString)) ORDER BY created_on ASC;";
+        }
     }
 
     /**
