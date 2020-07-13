@@ -8,6 +8,7 @@ use AppBundle\Entity\User;
 use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Logger;
 use AppBundle\Service\Time\ClockInterface;
+use AppBundle\Service\Time\DateTimeProvider;
 use DateTime;
 
 class ClientControllerTest extends AbstractControllerTestCase
@@ -44,8 +45,8 @@ class ClientControllerTest extends AbstractControllerTestCase
         $this->restClient->delete('client/5/delete')->shouldBeCalled();
         $this->restClient->get('client/5/details', 'Client')->shouldBeCalled()->willReturn($clientWithUsers);
 
-        $this->injectProphecyService(ClockInterface::class, function($clock) {
-            $clock->now()->willReturn($this->now);
+        $this->injectProphecyService(DateTimeProvider::class, function($dateTimeProvider) {
+            $dateTimeProvider->getDateTime()->willReturn($this->now);
         });
 
         $this->injectProphecyService(Logger::class, function($logger) {
