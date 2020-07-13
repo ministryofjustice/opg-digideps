@@ -2,7 +2,7 @@
 
 namespace AppBundle\Service\Audit;
 
-use AppBundle\Service\Time\ClockInterface;
+use AppBundle\Service\Time\DateTimeProvider;
 use DateTime;
 
 final class AuditEvents
@@ -12,16 +12,13 @@ final class AuditEvents
     const CLIENT_DISCHARGED_CSV_TRIGGER = 'CSV_UPLOAD';
 
     /**
-     * @var ClockInterface
+     * @var DateTimeProvider
      */
-    private $clock;
+    private $dateTimeProvider;
 
-    /**
-     * @param ClockInterface $clock
-     */
-    public function __construct(ClockInterface $clock)
+    public function __construct(DateTimeProvider $dateTimeProvider)
     {
-        $this->clock = $clock;
+        $this->dateTimeProvider = $dateTimeProvider;
     }
 
     /**
@@ -46,7 +43,7 @@ final class AuditEvents
             'case_number' => $caseNumber,
             'discharged_by' => $dischargedBy,
             'deputy_name' => $deputyName,
-            'discharged_on' => $this->clock->now(new DateTime())->format(DateTime::ATOM),
+            'discharged_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
             'deputyship_start_date' => $deputyshipStartDate ? $deputyshipStartDate->format(DateTime::ATOM) : null,
         ];
 

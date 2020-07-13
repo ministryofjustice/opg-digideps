@@ -103,11 +103,3 @@ services:
             $storage: '@AppBundle\Service\File\Storage\S3Storage'
             $siriusApiGatewayClient: '@AppBundle\Service\Client\Sirius\SiriusApiGatewayClient'
             $restClient: '@AppBundle\Service\Client\RestClient'
-
-    DateTime:
-        class: 'DateTime'
-
-    AppBundle\Service\Time\Clock:
-        class: 'AppBundle\Service\Time\Clock'
-
-    AppBundle\Service\Time\ClockInterface: '@AppBundle\Service\Time\Clock'

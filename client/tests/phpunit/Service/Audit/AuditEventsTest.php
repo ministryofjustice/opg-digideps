@@ -2,9 +2,11 @@
 
 namespace AppBundle\Service\Audit;
 
+use AppBundle\Service\Time\DateTimeProvider;
 use AppBundle\Service\Time\FakeClock;
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class AuditEventsTest extends TestCase
 {
@@ -15,7 +17,9 @@ class AuditEventsTest extends TestCase
     public function clientDischarged(?string $expectedStartDate, ?DateTime $actualStartDate): void
     {
         $now = new DateTime();
-        $fakeClock = new FakeClock($now);
+        /** @var ObjectProphecy|DateTimeProvider $dateTimeProvider */
+        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
 
         $expected = [
             'trigger' => 'ADMIN_BUTTON',
@@ -28,7 +32,7 @@ class AuditEventsTest extends TestCase
             'type' => 'audit'
         ];
 
-        $actual = (new AuditEvents($fakeClock))->clientDischarged(
+        $actual = (new AuditEvents($dateTimeProvider->reveal()))->clientDischarged(
             'ADMIN_BUTTON',
             '19348522',
             'me@test.com',
