@@ -5,11 +5,13 @@ namespace AppBundle\Service\Time;
 class DateTimeProvider
 {
     /**
-     * @param null $dateTime
+     * @param string|null $dateTime
      * @return \DateTime
+     * @throws \Exception
      */
-    public function getDateTime($dateTime = null)
+    public function getDateTime(?string $dateTime = null)
     {
+        $dateTime = is_null($dateTime) ? 'now' : $dateTime;
         return new \DateTime($dateTime);
     }
 }
