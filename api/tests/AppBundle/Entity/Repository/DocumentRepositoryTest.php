@@ -393,7 +393,7 @@ class DocumentRepositoryTest extends KernelTestCase
     private function refreshDocumentEntities()
     {
         $this->entityManager->refresh($this->firstReportPdfDocument);
-        $this->entityManager->refresh($this->supportingDocument);
+        $this->entityManager->refresh($this->firstSupportingDocument);
         $this->entityManager->refresh($this->supportingDocumentAfterSubmission);
     }
 

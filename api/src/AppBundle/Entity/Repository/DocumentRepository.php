@@ -133,26 +133,23 @@ LIMIT $limit;";
                 }
 
                 if (is_null($reportSubmission['opg_uuid']) && $reportSubmission['report_id'] === $lastReportId) {
-                    $reportSubmissions[$reportId][$key]['opg_uuid'] = $lastUuid;
+                    $reportSubmissions['reports'][$reportId][$key]['opg_uuid'] = $lastUuid;
                 }
             }
         }
 
         // Extract the uuids from the submissions and assign to the queued documents data array
         foreach ($documents as $docIndex => $document) {
-            foreach ($reportSubmissions['reports'] as $reportId => $groupedSubmissions) {
-                foreach ($groupedSubmissions as $submission)
-                if ($document['report_submission_id'] === $submission['id']) {
-                    $documents[$docIndex]['uuid'] = $submission['opg_uuid'];
+            if (is_null($document['report_submission_uuid'])) {
+                foreach ($reportSubmissions['reports'] as $reportId => $groupedSubmissions) {
+                    foreach ($groupedSubmissions as $submission) {
+                        if ($document['report_submission_id'] === $submission['id'] ) {
+                            $documents[$docIndex]['report_submission_uuid'] = $submission['opg_uuid'];
+                            break;
+                        }
+                    }
                 }
             }
-
-//            foreach ($reportSubmissions['ndrs'] as $reportId => $groupedSubmissions) {
-//                foreach ($groupedSubmissions as $submission)
-//                    if ($document['report_submission_id'] === $submission['id']) {
-//                        $documents[$docIndex]['uuid'] = $submission['opg_uuid'];
-//                    }
-//            }
         }
 
         if (count($documents)) {
