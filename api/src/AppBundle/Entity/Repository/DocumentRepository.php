@@ -88,21 +88,25 @@ LIMIT $limit;";
             $reportSubmissionIds[] = $row['report_submission_id'];
         }
 
-        $idsString = implode(",", array_unique($reportSubmissionIds));
+        if (count($documents) > 0) {
+            $idsString = implode(",", array_unique($reportSubmissionIds));
 
-        $getReportSubmissionsQuery = "SELECT * FROM report_submission WHERE id IN ($idsString) ORDER BY created_on ASC;";
+            $getReportSubmissionsQuery = "SELECT * FROM report_submission WHERE id IN ($idsString) ORDER BY created_on ASC;";
 
-        $submissionStmt = $conn->prepare($getReportSubmissionsQuery);
-        $submissionStmt->execute();
-        $results = $submissionStmt->fetchAll(PDO::FETCH_ASSOC);
+            $submissionStmt = $conn->prepare($getReportSubmissionsQuery);
+            $submissionStmt->execute();
+            $results = $submissionStmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $groupedSubmissions = $this->groupSubmissionsByReportId($results);
-        $groupedSubmissionsWithUuids = $this->assignUuidsToAdditionalDocumentSubmissions($groupedSubmissions);
-        $documentsWithUuids = $this->extractUuidsFromSubmissionsAndAssignToDocuments($documents, $groupedSubmissionsWithUuids);
+            $groupedSubmissions = $this->groupSubmissionsByReportId($results);
+            $groupedSubmissionsWithUuids = $this->assignUuidsToAdditionalDocumentSubmissions($groupedSubmissions);
+            $documentsWithUuids = $this->extractUuidsFromSubmissionsAndAssignToDocuments($documents, $groupedSubmissionsWithUuids);
 
-        $this->setQueuedDocumentsToInProgress($documentsWithUuids, $conn);
+            $this->setQueuedDocumentsToInProgress($documentsWithUuids, $conn);
 
-        return $documentsWithUuids;
+            return $documentsWithUuids;
+        }
+
+        return [];
     }
 
     public function updateSupportingDocumentStatusByReportSubmissionIds(array $reportSubmissionIds, ?string $syncErrorMessage=null)
