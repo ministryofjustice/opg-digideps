@@ -264,6 +264,7 @@ class DocumentRepositoryTest extends KernelTestCase
         $this->persistEntities();
 
         $documents = $this->documentRepository->getQueuedDocumentsAndSetToInProgress('100');
+        $f = 'test';
         self::assertEquals($this->firstReportSubmission->getUuid(), $documents[$this->supportingDocumentAfterSubmission->getId()]['report_submission_uuid']);
     }
 
