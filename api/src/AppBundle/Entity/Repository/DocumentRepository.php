@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Repository;
 
 use AppBundle\Entity\Report\Document;
 use DateTime;
+use Doctrine\DBAL\Connection;
 use PDO;
 
 class DocumentRepository extends AbstractEntityRepository
@@ -95,79 +96,13 @@ LIMIT $limit;";
         $submissionStmt->execute();
         $results = $submissionStmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $reportSubmissions = ['reports' => [], 'ndrs' => []];
+        $groupedSubmissions = $this->groupSubmissionsByReportId($results);
+        $groupedSubmissionsWithUuids = $this->assignUuidsToAdditionalDocumentSubmissions($groupedSubmissions);
+        $documentsWithUuids = $this->extractUuidsFromSubmissionsAndAssignToDocuments($documents, $groupedSubmissionsWithUuids);
 
-        foreach ($results as $row) {
-            if (!is_null($row['report_id'])) {
-                $reportSubmissions['reports'][$row['report_id']][] = [
-                    'id' => $row['id'],
-                    'opg_uuid' => $row['opg_uuid'],
-                    'created_on' => $row['created_on'],
-                    'report_id' => $row['report_id'],
-                    'ndr_id' => $row['ndr_id'],
-                ];
-            }
+        $this->setQueuedDocumentsToInProgress($documentsWithUuids, $conn);
 
-            if (!is_null($row['ndr_id'])) {
-                $reportSubmissions['ndrs'][$row['ndr_id']][] = [
-                    'id' => $row['id'],
-                    'opg_uuid' => $row['opg_uuid'],
-                    'created_on' => $row['created_on'],
-                    'report_id' => $row['report_id'],
-                    'ndr_id' => $row['ndr_id'],
-                ];
-            }
-        }
-
-
-        $lastUuid = null;
-        $lastReportId = null;
-
-        // Walk through the submissions grouped by report id to assign missing uuids to additional submissions
-        foreach ($reportSubmissions['reports'] as $reportId => $groupedSubmissions) {
-            foreach ($groupedSubmissions as $key => $reportSubmission) {
-                if (!is_null($reportSubmission['opg_uuid'])) {
-                    $lastUuid = $reportSubmission['opg_uuid'];
-                    $lastReportId = $reportSubmission['report_id'];
-                    continue;
-                }
-
-                if (is_null($reportSubmission['opg_uuid']) && $reportSubmission['report_id'] === $lastReportId) {
-                    $reportSubmissions['reports'][$reportId][$key]['opg_uuid'] = $lastUuid;
-                }
-            }
-        }
-
-        // Extract the uuids from the submissions and assign to the queued documents data array
-        foreach ($documents as $docIndex => $document) {
-            if (is_null($document['report_submission_uuid'])) {
-                foreach ($reportSubmissions['reports'] as $reportId => $groupedSubmissions) {
-                    foreach ($groupedSubmissions as $submission) {
-                        if ($document['report_submission_id'] === $submission['id'] ) {
-                            $documents[$docIndex]['report_submission_uuid'] = $submission['opg_uuid'];
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (count($documents)) {
-            // Set documents to in progress to ensure additional runs won't pick up the same documents
-            $ids = [];
-            foreach ($documents as $data) {
-                $ids[] = $data['document_id'];
-
-                $idsString = implode(",", $ids);
-
-                $updateStatusQuery = "UPDATE document SET synchronisation_status = 'IN_PROGRESS' WHERE id IN ($idsString)";
-                $stmt = $conn->prepare($updateStatusQuery);
-
-                $stmt->execute();
-            }
-        }
-
-        return $documents;
+        return $documentsWithUuids;
     }
 
     public function updateSupportingDocumentStatusByReportSubmissionIds(array $reportSubmissionIds, ?string $syncErrorMessage=null)
@@ -186,4 +121,106 @@ AND is_report_pdf=false";
         return $stmt->execute();
     }
 
+    private function groupSubmissionsByReportId(array $reportSubmissions)
+    {
+        $groupedReportSubmissions = ['reports' => [], 'ndrs' => []];
+
+        foreach ($reportSubmissions as $row) {
+            if (!is_null($row['report_id'])) {
+                $groupedReportSubmissions['reports'][$row['report_id']][] = [
+                    'id' => $row['id'],
+                    'opg_uuid' => $row['opg_uuid'],
+                    'created_on' => $row['created_on'],
+                    'report_id' => $row['report_id'],
+                    'ndr_id' => $row['ndr_id'],
+                ];
+            }
+
+            if (!is_null($row['ndr_id'])) {
+                $groupedReportSubmissions['ndrs'][$row['ndr_id']][] = [
+                    'id' => $row['id'],
+                    'opg_uuid' => $row['opg_uuid'],
+                    'created_on' => $row['created_on'],
+                    'report_id' => $row['report_id'],
+                    'ndr_id' => $row['ndr_id'],
+                ];
+            }
+        }
+
+        return $groupedReportSubmissions;
+    }
+
+    /**
+     * @param array $reportSubmissions
+     * @return array
+     */
+    private function assignUuidsToAdditionalDocumentSubmissions(array $reportSubmissions): array
+    {
+        $lastUuid = null;
+        $lastReportId = null;
+
+        // Walk through the submissions grouped by report id to assign missing uuids to additional submissions
+        foreach ($reportSubmissions['reports'] as $reportId => $groupedSubmissions) {
+            foreach ($groupedSubmissions as $key => $reportSubmission) {
+                if (!is_null($reportSubmission['opg_uuid'])) {
+                    $lastUuid = $reportSubmission['opg_uuid'];
+                    $lastReportId = $reportSubmission['report_id'];
+                    continue;
+                }
+
+                if (is_null($reportSubmission['opg_uuid']) && $reportSubmission['report_id'] === $lastReportId) {
+                    $reportSubmissions['reports'][$reportId][$key]['opg_uuid'] = $lastUuid;
+                }
+            }
+        }
+
+        return $reportSubmissions;
+    }
+
+    /**
+     * @param array $documents
+     * @param array $reportSubmissions
+     * @return array
+     */
+    private function extractUuidsFromSubmissionsAndAssignToDocuments(array $documents, array $reportSubmissions): array
+    {
+        // Extract the uuids from the submissions and assign to the queued documents data array
+        foreach ($documents as $docIndex => $document) {
+            if (is_null($document['report_submission_uuid'])) {
+                foreach ($reportSubmissions['reports'] as $reportId => $groupedSubmissions) {
+                    foreach ($groupedSubmissions as $submission) {
+                        if ($document['report_submission_id'] === $submission['id'] ) {
+                            $documents[$docIndex]['report_submission_uuid'] = $submission['opg_uuid'];
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $documents;
+    }
+
+    /**
+     * @param array $documents
+     * @param Connection $connection
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    private function setQueuedDocumentsToInProgress(array $documents, Connection $connection): void
+    {
+        if (count($documents)) {
+            // Set documents to in progress to ensure additional runs won't pick up the same documents
+            $ids = [];
+            foreach ($documents as $data) {
+                $ids[] = $data['document_id'];
+
+                $idsString = implode(",", $ids);
+
+                $updateStatusQuery = "UPDATE document SET synchronisation_status = 'IN_PROGRESS' WHERE id IN ($idsString)";
+                $stmt = $connection->prepare($updateStatusQuery);
+
+                $stmt->execute();
+            }
+        }
+    }
 }

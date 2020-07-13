@@ -27,7 +27,12 @@ class DocumentRepositoryTest extends KernelTestCase
     private $firstReport, $secondReport;
 
     /** @var ReportSubmission */
-    private $firstReportSubmission, $additionalReportSubmission, $ndrSubmission, $resubmittedReportSubmission, $resubmittedReportAdditionalSubmission, $secondReportSubmission;
+    private $firstReportSubmission,
+        $additionalReportSubmission,
+        $ndrSubmission,
+        $resubmittedReportSubmission,
+        $resubmittedReportAdditionalSubmission,
+        $secondReportSubmission;
 
     /** @var DocumentRepository */
     private $documentRepository;
@@ -211,6 +216,8 @@ class DocumentRepositoryTest extends KernelTestCase
 
         $this->documentRepository = $this->entityManager
             ->getRepository(Document::class);
+
+        $this->persistEntities();
     }
 
     /**
@@ -218,8 +225,6 @@ class DocumentRepositoryTest extends KernelTestCase
      */
     public function getQueuedDocumentsAndSetToInProgress()
     {
-        $this->persistEntities();
-
         $documents = $this->documentRepository
             ->getQueuedDocumentsAndSetToInProgress('100');
 
@@ -243,8 +248,6 @@ class DocumentRepositoryTest extends KernelTestCase
      */
     public function getQueuedDocumentsAndSetToInProgress_supportsNdrs()
     {
-        $this->persistEntities();
-
         $documents = $this->documentRepository
             ->getQueuedDocumentsAndSetToInProgress('100');
 
@@ -261,20 +264,16 @@ class DocumentRepositoryTest extends KernelTestCase
      */
     public function additionalDocumentsSubmissionsUseOriginalSubmissionUUID()
     {
-        $this->persistEntities();
-
         $documents = $this->documentRepository->getQueuedDocumentsAndSetToInProgress('100');
-        $f = 'test';
+
         self::assertEquals($this->firstReportSubmission->getUuid(), $documents[$this->supportingDocumentAfterSubmission->getId()]['report_submission_uuid']);
     }
 
     /**
      * @test
      */
-    public function ResubmissionsUseTheirOwnSubmissionUUID()
+    public function resubmissionsUseTheirOwnSubmissionUUID()
     {
-        $this->persistEntities();
-
         $documents = $this->documentRepository->getQueuedDocumentsAndSetToInProgress('100');
 
         $resubmitReportPdf = $this->documentRepository->find($this->resubmitReportPdfDocument->getId());
@@ -292,8 +291,6 @@ class DocumentRepositoryTest extends KernelTestCase
      */
     public function additionalDocsOnResubmissionsUseResubmissionUUID()
     {
-        $this->persistEntities();
-
         $documents = $this->documentRepository->getQueuedDocumentsAndSetToInProgress('100');
 
         self::assertEquals($this->resubmittedReportSubmission->getUuid(), $documents[$this->supportingDocumentAfterResubmission->getId()]['report_submission_uuid']);
@@ -322,6 +319,34 @@ class DocumentRepositoryTest extends KernelTestCase
 
         self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $this->firstReportPdfDocument->getSynchronisationStatus());
         self::assertEquals(null, $this->firstReportPdfDocument->getSynchronisationError());
+    }
+
+    /** @test */
+    public function supportsWhenDocumentsForMoreThanOneReportAreQueued()
+    {
+        $documents = $this->documentRepository
+            ->getQueuedDocumentsAndSetToInProgress('100');
+
+        $reportPdf = $this->documentRepository->find($this->secondReportPdfDocument->getId());
+        $supportingDocument = $this->documentRepository->find($this->secondSupportingDocument->getId());
+
+        $this->entityManager->refresh($reportPdf);
+        $this->entityManager->refresh($supportingDocument);
+
+        $this->assertDataMatchesEntity($documents, $reportPdf, $this->client, $this->secondReportSubmission, $this->secondReport);
+        $this->assertDataMatchesEntity($documents, $supportingDocument, $this->client, $this->secondReportSubmission, $this->secondReport);
+
+        self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $reportPdf->getSynchronisationStatus());
+        self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $supportingDocument->getSynchronisationStatus());
+    }
+
+    /** @test */
+    public function documentLimitsAreRespected()
+    {
+        $documents = $this->documentRepository
+            ->getQueuedDocumentsAndSetToInProgress('2');
+
+        self::assertEquals(2, count($documents));
     }
 
     private function persistEntities()
