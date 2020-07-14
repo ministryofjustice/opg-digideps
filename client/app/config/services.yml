@@ -103,3 +103,7 @@ services:
             $storage: '@AppBundle\Service\File\Storage\S3Storage'
             $siriusApiGatewayClient: '@AppBundle\Service\Client\Sirius\SiriusApiGatewayClient'
             $restClient: '@AppBundle\Service\Client\RestClient'
+
+    AppBundle\Controller\SettingsController:
+        autowire: true
+        autoconfigure: true

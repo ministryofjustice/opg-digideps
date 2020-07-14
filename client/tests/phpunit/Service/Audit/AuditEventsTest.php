@@ -2,7 +2,7 @@
 
 namespace AppBundle\Service\Audit;
 
-use AppBundle\Entity\User;
+
 use AppBundle\Service\Time\DateTimeProvider;
 use AppBundle\Service\Time\FakeClock;
 use DateTime;
@@ -29,7 +29,7 @@ class AuditEventsTest extends TestCase
             'deputy_name' => 'Bjork Gudmundsdottir',
             'discharged_on' => $now->format(DateTime::ATOM),
             'deputyship_start_date' => $expectedStartDate,
-            'event' => AuditEvents::CLIENT_DISCHARGED,
+            'event' => AuditEvents::EVENT_CLIENT_DISCHARGED,
             'type' => 'audit'
         ];
 
@@ -72,7 +72,7 @@ class AuditEventsTest extends TestCase
             'role_changed_to' => $changedTo,
             'changed_by' => $changedBy,
             'changed_on' => $now->format(DateTime::ATOM),
-            'event' => AuditEvents::ROLE_CHANGED,
+            'event' => AuditEvents::EVENT_ROLE_CHANGED,
             'type' => 'audit'
         ];
 

@@ -7,11 +7,12 @@ use DateTime;
 
 final class AuditEvents
 {
-    const CLIENT_DISCHARGED = 'CLIENT_DISCHARGED';
-    const CLIENT_DISCHARGED_ADMIN_TRIGGER = 'ADMIN_BUTTON';
-    const CLIENT_DISCHARGED_CSV_TRIGGER = 'CSV_UPLOAD';
-    const ROLE_CHANGED = 'ROLE_CHANGED';
-    const TRIGGER_ADMIN_BUTTON = null;
+    const EVENT_CLIENT_DISCHARGED = 'CLIENT_DISCHARGED';
+    const EVENT_ROLE_CHANGED = 'ROLE_CHANGED';
+
+    const TRIGGER_ADMIN_BUTTON = 'ADMIN_BUTTON';
+    const TRIGGER_CSV_UPLOAD = 'CSV_UPLOAD';
+    const TRIGGER_DEPUTY_USER = 'DEPUTY_USER';
 
     /**
      * @var DateTimeProvider
@@ -49,7 +50,7 @@ final class AuditEvents
             'deputyship_start_date' => $deputyshipStartDate ? $deputyshipStartDate->format(DateTime::ATOM) : null,
         ];
 
-        return $event + $this->baseEvent(AuditEvents::CLIENT_DISCHARGED);
+        return $event + $this->baseEvent(AuditEvents::EVENT_CLIENT_DISCHARGED);
     }
 
     /**
@@ -82,6 +83,6 @@ final class AuditEvents
             'changed_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
         ];
 
-        return $event + $this->baseEvent(AuditEvents::ROLE_CHANGED);
+        return $event + $this->baseEvent(AuditEvents::EVENT_ROLE_CHANGED);
     }
 }

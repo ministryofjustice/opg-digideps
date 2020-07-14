@@ -126,6 +126,8 @@ class UserController extends RestController
 
         $data = $this->deserializeBodyContent($request);
         $this->populateUser($requestedUser, $data);
+
+        // check if rolename in data - if so add audit log
         $this->userService->editUser($originalUser, $requestedUser);
 
         return ['id' => $requestedUser->getId()];

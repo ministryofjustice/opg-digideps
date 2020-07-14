@@ -140,23 +140,23 @@ class OrganisationController extends AbstractController
     {
         try {
             $organisation = $this->getRestClient()->get('v2/organisation/' . $orgId, 'Organisation');
-            $user = $organisation->getUserById($userId);
+            $userToEdit = $organisation->getUserById($userId);
         } catch (RestClientException $e) {
             throw $this->createNotFoundException('Organisation not found');
         }
 
-        if (!($user instanceof EntityDir\User)) {
+        if (!($userToEdit instanceof EntityDir\User)) {
             throw $this->createNotFoundException();
         }
 
         /** @var EntityDir\User */
         $currentUser = $this->getUser();
 
-        if ($currentUser->getId() === $user->getId()) {
+        if ($currentUser->getId() === $userToEdit->getId()) {
             throw $this->createNotFoundException();
         }
 
-        $this->denyAccessUnlessGranted('edit-user', $user);
+        $this->denyAccessUnlessGranted('edit-user', $userToEdit);
 
         if ($this->isGranted(EntityDir\User::ROLE_PA)) {
             $adminRole = EntityDir\User::ROLE_PA_ADMIN;
@@ -166,7 +166,7 @@ class OrganisationController extends AbstractController
             $memberRole = EntityDir\User::ROLE_PROF_TEAM_MEMBER;
         }
 
-        $form = $this->createForm(FormDir\Org\OrganisationMemberType::class, $user, [
+        $form = $this->createForm(FormDir\Org\OrganisationMemberType::class, $userToEdit, [
             'role_admin' => $adminRole,
             'role_member' => $memberRole,
         ]);
@@ -174,11 +174,12 @@ class OrganisationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $form->getData();
+            $editedUser = $form->getData();
 
             try {
-                $this->getRestClient()->put('user/' . $user->getId(), $user, ['org_team_add']);
+                $this->getRestClient()->put('user/' . $editedUser->getId(), $editedUser, ['org_team_add']);
 
+                // Add role change audit event here after checking if role has changed
                 $this->addFlash('notice', 'The user has been edited');
                 return $this->redirectToRoute('org_organisation_view', ['id' => $organisation->getId()]);
             } catch (\Throwable $e) {
