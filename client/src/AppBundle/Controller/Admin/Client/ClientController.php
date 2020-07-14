@@ -4,13 +4,13 @@ namespace AppBundle\Controller\Admin\Client;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Client;
+use AppBundle\Entity\NamedDeputy;
 use AppBundle\Entity\User;
 use AppBundle\Service\Audit\AuditEvents;
-use Psr\Log\LoggerInterface;
+use AppBundle\Service\Logger;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/admin/client")
@@ -74,20 +74,24 @@ class ClientController extends AbstractController
      * @Route("/{id}/discharge-confirm", name="admin_client_discharge_confirm", requirements={"id":"\d+"})
      * @Security("has_role('ROLE_SUPER_ADMIN')")
      * @param $id
-     * @param LoggerInterface $logger
+     * @param Logger $logger
      * @param AuditEvents $auditEvents
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function dischargeConfirmAction($id, LoggerInterface $logger, AuditEvents $auditEvents)
+    public function dischargeConfirmAction($id, Logger $logger, AuditEvents $auditEvents)
     {
         /** @var Client $client */
         $client = $this->getRestClient()->get('v2/client/' . $id, 'Client');
+        $deputy = $this->getNamedDeputy($client->getId(), $client);
+
         $this->getRestClient()->delete('client/' . $id . '/delete');
 
         $logger->notice('', $auditEvents->clientDischarged(
             AuditEvents::CLIENT_DISCHARGED_ADMIN_TRIGGER,
             $client->getCaseNumber(),
-            $this->getUser()->getEmail()
+            $this->getUser()->getEmail(),
+            $deputy->getFullName(),
+            $client->getCourtDate()
         ));
 
         return $this->redirectToRoute('admin_client_search');
@@ -96,7 +100,7 @@ class ClientController extends AbstractController
     /**
      * @param int $id
      * @param Client $client
-     * @return \AppBundle\Entity\NamedDeputy|null
+     * @return NamedDeputy|User|null
      */
     private function getNamedDeputy(int $id, Client $client)
     {
