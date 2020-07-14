@@ -361,12 +361,10 @@ class DocumentRepositoryTest extends KernelTestCase
             ->getQueuedDocumentsAndSetToInProgress('100');
 
         $additionalSupportingDoc = $this->documentRepository->find($this->supportingDocumentAfterSubmission->getId());
-
         $this->entityManager->refresh($additionalSupportingDoc);
 
-        $this->assertDataMatchesEntity($documents, $additionalSupportingDoc, $this->client, $this->firstReportSubmission, $this->firstReport);
-
         self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $additionalSupportingDoc->getSynchronisationStatus());
+        self::assertEquals($this->firstReportSubmission->getUuid(), $documents[$this->supportingDocumentAfterSubmission->getId()]['report_submission_uuid']);
     }
 
     private function persistEntities()
