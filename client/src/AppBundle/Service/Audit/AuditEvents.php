@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Service\Audit;
 
@@ -10,6 +10,8 @@ final class AuditEvents
     const CLIENT_DISCHARGED = 'CLIENT_DISCHARGED';
     const CLIENT_DISCHARGED_ADMIN_TRIGGER = 'ADMIN_BUTTON';
     const CLIENT_DISCHARGED_CSV_TRIGGER = 'CSV_UPLOAD';
+    const ROLE_CHANGED = 'ROLE_CHANGED';
+    const TRIGGER_ADMIN_BUTTON = null;
 
     /**
      * @var DateTimeProvider
@@ -60,5 +62,26 @@ final class AuditEvents
             'event' => $eventName,
             'type' => 'audit'
         ];
+    }
+
+    /**
+     * @param string $trigger
+     * @param string $changedFrom
+     * @param string $changedTo
+     * @param string $changedBy
+     * @return array
+     * @throws \Exception
+     */
+    public function roleChanged(string $trigger, string $changedFrom, string $changedTo, string $changedBy): array
+    {
+        $event = [
+            'trigger' => $trigger,
+            'role_changed_from' => $changedFrom,
+            'role_changed_to' => $changedTo,
+            'changed_by' => $changedBy,
+            'changed_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+        ];
+
+        return $event + $this->baseEvent(AuditEvents::ROLE_CHANGED);
     }
 }
