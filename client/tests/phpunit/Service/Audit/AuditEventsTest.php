@@ -59,7 +59,7 @@ class AuditEventsTest extends TestCase
      * @test
      * @dataProvider roleChangedProvider
      */
-    public function roleChanged(string $trigger, $changedFrom, $changedTo, $changedBy): void
+    public function roleChanged(string $trigger, $changedFrom, $changedTo, $changedBy, $userChanged): void
     {
         $now = new DateTime();
         /** @var ObjectProphecy|DateTimeProvider $dateTimeProvider */
@@ -71,6 +71,7 @@ class AuditEventsTest extends TestCase
             'role_changed_from' => $changedFrom,
             'role_changed_to' => $changedTo,
             'changed_by' => $changedBy,
+            'user_changed' => $userChanged,
             'changed_on' => $now->format(DateTime::ATOM),
             'event' => AuditEvents::EVENT_ROLE_CHANGED,
             'type' => 'audit'
@@ -80,7 +81,8 @@ class AuditEventsTest extends TestCase
             $trigger,
             $changedFrom,
             $changedTo,
-            $changedBy
+            $changedBy,
+            $userChanged
         );
 
         $this->assertEquals($expected, $actual);
@@ -89,8 +91,8 @@ class AuditEventsTest extends TestCase
     public function roleChangedProvider()
     {
         return [
-            'PA to LAY' => ['ADMIN_BUTTON', 'ROLE_PA', 'ROLE_LAY_DEPUTY', 'polly.jean.harvey@test.com'],
-            'PROF to PA' => ['ADMIN_BUTTON', 'ROLE_PROF', 'ROLE_PA', 't.amos@test.com'],
+            'PA to LAY' => ['ADMIN_BUTTON', 'ROLE_PA', 'ROLE_LAY_DEPUTY', 'polly.jean.harvey@test.com', 't.amos@test.com'],
+            'PROF to PA' => ['ADMIN_BUTTON', 'ROLE_PROF', 'ROLE_PA', 't.amos@test.com', 'polly.jean.harvey@test.com'],
         ];
     }
 }

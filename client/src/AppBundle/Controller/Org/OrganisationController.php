@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Controller\Org;
 
@@ -6,6 +6,9 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Audit\AuditEvents;
+use AppBundle\Service\Logger;
+use AppBundle\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -20,6 +23,18 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class OrganisationController extends AbstractController
 {
+    /** @var DateTimeProvider */
+    private $dateTimeProvider;
+
+    /** @var Logger */
+    private $logger;
+
+    public function __construct(DateTimeProvider $dateTimeProvider, Logger $logger)
+    {
+        $this->dateTimeProvider = $dateTimeProvider;
+        $this->logger = $logger;
+    }
+
     /**
      * @Route("", name="org_organisation_list")
      * @Template("AppBundle:Org/Organisation:list.html.twig")
@@ -171,16 +186,30 @@ class OrganisationController extends AbstractController
             'role_member' => $memberRole,
         ]);
 
+        $oldRole = $userToEdit->getRoleName();
         $form->handleRequest($request);
 
+        $a = '';
         if ($form->isSubmitted() && $form->isValid()) {
             $editedUser = $form->getData();
+            $newRole = $editedUser->getRoleName();
 
             try {
                 $this->getRestClient()->put('user/' . $editedUser->getId(), $editedUser, ['org_team_add']);
 
-                // Add role change audit event here after checking if role has changed
+                $event = (new AuditEvents($this->dateTimeProvider))
+                    ->roleChanged(
+                        AuditEvents::TRIGGER_DEPUTY_USER,
+                        $oldRole,
+                        $newRole,
+                        $currentUser->getEmail(),
+                        $editedUser->getEmail()
+                    );
+
+                $this->logger->notice('', $event);
+
                 $this->addFlash('notice', 'The user has been edited');
+
                 return $this->redirectToRoute('org_organisation_view', ['id' => $organisation->getId()]);
             } catch (\Throwable $e) {
                 switch ((int) $e->getCode()) {
@@ -198,7 +227,7 @@ class OrganisationController extends AbstractController
 
         return [
             'organisation' => $organisation,
-            'user' => $user,
+            'user' => $userToEdit,
             'form' => $form->createView()
         ];
     }

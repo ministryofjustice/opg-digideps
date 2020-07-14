@@ -161,6 +161,7 @@ class SettingsController extends AbstractController
                         AuditEvents::TRIGGER_DEPUTY_USER,
                         $oldRole,
                         $newRole,
+                        $user->getEmail(),
                         $user->getEmail()
                     );
 

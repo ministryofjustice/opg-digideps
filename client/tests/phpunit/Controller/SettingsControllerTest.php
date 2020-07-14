@@ -30,7 +30,11 @@ class SettingsControllerTest extends AbstractControllerTestCase
         $this->now = new DateTime();
         $this->orderStartDate = new DateTime('-1 Day');
     }
-    public function testDischargeConfirmAction(): void
+
+    /**
+     * @test
+     */
+    public function profileEditAction(): void
     {
         $this->restClient->put('user/1', $this->user, Argument::type('array'))->shouldBeCalled();
         $this->restClient->get('user/1', Argument::cetera())->shouldBeCalled()->willReturn($this->user);
@@ -46,6 +50,7 @@ class SettingsControllerTest extends AbstractControllerTestCase
                 'role_changed_to' => 'ROLE_PROF_TEAM_MEMBER',
                 'changed_by' => $this->user->getEmail(),
                 'changed_on' => $this->now->format(DateTime::ATOM),
+                'user_changed' => $this->user->getEmail(),
                 'event' => AuditEvents::EVENT_ROLE_CHANGED,
                 'type' => 'audit'
             ];

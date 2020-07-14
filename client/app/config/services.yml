@@ -107,3 +107,7 @@ services:
     AppBundle\Controller\SettingsController:
         autowire: true
         autoconfigure: true
+
+    AppBundle\Controller\Org\OrganisationController:
+        autowire: true
+        autoconfigure: true

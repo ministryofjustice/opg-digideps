@@ -73,7 +73,7 @@ final class AuditEvents
      * @return array
      * @throws \Exception
      */
-    public function roleChanged(string $trigger, string $changedFrom, string $changedTo, string $changedBy): array
+    public function roleChanged(string $trigger, string $changedFrom, string $changedTo, string $changedBy, string $userChanged): array
     {
         $event = [
             'trigger' => $trigger,
@@ -81,6 +81,7 @@ final class AuditEvents
             'role_changed_to' => $changedTo,
             'changed_by' => $changedBy,
             'changed_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            'user_changed' => $userChanged,
         ];
 
         return $event + $this->baseEvent(AuditEvents::EVENT_ROLE_CHANGED);
