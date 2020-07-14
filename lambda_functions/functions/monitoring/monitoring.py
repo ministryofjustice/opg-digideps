@@ -43,9 +43,11 @@ def queued_documents(conn):
     cursor = conn.cursor()
     cursor.execute(
         """select count(*)
-        from document
-        where created_on < NOW() - INTERVAL '1 hour'
-        and synchronisation_status='QUEUED';"""
+            from document d
+            inner join report_submission rs
+            on d.report_submission_id = rs.id
+            where rs.created_on < NOW() - INTERVAL '1 hour'
+            and d.synchronisation_status = 'QUEUED';"""
     )
     conn.commit()
 

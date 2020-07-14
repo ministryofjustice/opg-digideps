@@ -213,9 +213,51 @@ workflows:
           tf_workspace: preproduction
           timeout: 600
 
+  weekly_master_run:
+    triggers:
+      - schedule:
+          cron: "00 05 * * 0"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - build:
+          name: build master
+          filters: { branches: { only: [ master ] } }
+      - terraform-command:
+          name: apply master
+          requires: [ build master ]
+          filters: { branches: { only: [ master ] } }
+          tf_workspace: master
+          tf_command: apply
+      - run-task:
+          name: reset master
+          requires: [ apply master ]
+          filters: { branches: { only: [ master ] } }
+          task_name: reset_database
+          tf_workspace: master
+          timeout: 180
+      - client-unit-test:
+          name: client unit test
+          requires: [ apply master ]
+          filters: { branches: { only: [ master ] } }
+      - api-unit-tests:
+          name: api unit test
+          requires: [ apply master ]
+          filters: { branches: { only: [ master ] } }
+      - run-task:
+          name: integration test
+          requires: [ reset master ]
+          filters: { branches: { only: [ master ] } }
+          task_name: integration_test
+          tf_workspace: master
+          notify_slack: true
+          timeout: 1800
+
 orbs:
   aws-cli: circleci/aws-cli@0.1.13
-  slack: circleci/slack@3.3.0
+  slack: circleci/slack@3.4.2
   ecs_helper:
     commands:
       install:
@@ -332,6 +374,7 @@ jobs:
             - run:
                 name: tag pact commit with v<x>_production
                 command: pact_tags
+
   build:
     docker:
       - image: circleci/python:3
@@ -528,6 +571,10 @@ jobs:
         description: time the task will run for before timing out
         type: integer
         default: 120
+      notify_slack:
+        description: whether to notify specific task failure
+        type: boolean
+        default: false
     environment:
       WORKSPACE: << parameters.tf_workspace >>
     working_directory: ~/project/environment
@@ -548,6 +595,13 @@ jobs:
       - run:
           name: Run task
           command: runner -task << parameters.task_name >> -timeout << parameters.timeout >>
+      - when:
+          condition: << parameters.notify_slack >>
+          steps:
+            - slack/status:
+                channel: opg-digideps-team
+                failure_message: << parameters.task_name >> has failed.
+                success_message: << parameters.task_name >> has succeeded.
 
 commands:
   copy-merged-cov-to-host:

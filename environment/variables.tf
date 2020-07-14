@@ -26,6 +26,7 @@ variable "accounts" {
       state_source         = string
       elasticache_count    = number
       always_on            = bool
+      copy_version_from    = string
     })
   )
 }
