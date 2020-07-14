@@ -347,6 +347,28 @@ class DocumentRepositoryTest extends KernelTestCase
         self::assertEquals(2, count($documents));
     }
 
+    /** @test */
+    public function returnsAdditionalDocsWhenFirstBatchHaveSynced()
+    {
+        $this->firstReportPdfDocument->setSynchronisationStatus('SUCCESS');
+        $this->firstSupportingDocument->setSynchronisationStatus('SUCCESS');
+
+        $this->entityManager->persist($this->firstReportPdfDocument);
+        $this->entityManager->persist($this->firstSupportingDocument);
+        $this->entityManager->flush();
+
+        $documents = $this->documentRepository
+            ->getQueuedDocumentsAndSetToInProgress('100');
+
+        $additionalSupportingDoc = $this->documentRepository->find($this->supportingDocumentAfterSubmission->getId());
+
+        $this->entityManager->refresh($additionalSupportingDoc);
+
+        $this->assertDataMatchesEntity($documents, $additionalSupportingDoc, $this->client, $this->firstReportSubmission, $this->firstReport);
+
+        self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $additionalSupportingDoc->getSynchronisationStatus());
+    }
+
     private function persistEntities()
     {
         $this->user->setEmail(sprintf('test-user%s%s@test.com', $this->uniq, rand(0, 100000)));
