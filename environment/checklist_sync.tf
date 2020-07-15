@@ -85,7 +85,7 @@ locals {
   {
     "name": "checklist-sync",
     "image": "${local.images.client}",
-    "command": [ "sh", "scripts/checklistsync.sh", "-d" ],
+    "command": [ "sh", "scripts/checklistsync.sh" ],
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
