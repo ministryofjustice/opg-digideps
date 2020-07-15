@@ -100,11 +100,13 @@ class ChecklistSyncCommand extends Command
                 $output->writeln($response->getCode());
                 $output->writeln($response->getMessage());
                 $this->notSyncedCount += 1;
+            } else {
+                $output->writeln('not throwable');
             }
         }
 
         if ($this->notSyncedCount > 0) {
-            $output->writeln(sprintf('%d checklists failed to sync', $this->notSyncedCount));
+            $output->writeln(sprintf('%d checklists failed to syncsdcas', $this->notSyncedCount));
             $this->notSyncedCount = 0;
         }
 
