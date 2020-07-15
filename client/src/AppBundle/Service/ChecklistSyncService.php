@@ -54,6 +54,7 @@ class ChecklistSyncService
     public function sync(QueuedChecklistData $checklistData)
     {
         try {
+            print_r("DEBUG: About to start sync");
             $siriusResponse = $this->sendDocument($checklistData);
             $uuid = json_decode(strval($siriusResponse->getBody()), true)['data']['id'];
             $this->updateChecklist($checklistData->getChecklistId(), Checklist::SYNC_STATUS_SUCCESS, null, $uuid);

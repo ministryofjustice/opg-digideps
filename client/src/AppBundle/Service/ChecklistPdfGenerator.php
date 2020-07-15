@@ -18,9 +18,6 @@ class ChecklistPdfGenerator
     /** @var LoggerInterface */
     private $logger;
 
-    /** @var int */
-    const FAILED_TO_GENERATE = -1;
-
     const TEMPLATE_FILE = 'AppBundle:Admin/Client/Report/Formatted:checklist_formatted_standalone.html.twig';
 
     /**
@@ -35,9 +32,9 @@ class ChecklistPdfGenerator
         $this->logger = $logger;
     }
 
-    /***
+    /**
      * @param Report $report
-     * @return int|string
+     * @return bool|string
      */
     public function generate(Report $report)
     {
@@ -52,7 +49,7 @@ class ChecklistPdfGenerator
         } catch (Throwable $e) {
             // Repeat occurrences will cause an alert triggered by Cloudwatch.
             $this->logger->critical(sprintf('Unable to generate checklist PDF: %s: %s', $e->getCode(), $e->getMessage()));
-            return self::FAILED_TO_GENERATE;
+            return false;
         }
     }
 }
