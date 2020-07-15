@@ -8,12 +8,15 @@ use AppBundle\Entity\User;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use AppBundle\Security\UserVoter;
+use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\CsvUploader;
 use AppBundle\Service\DataImporter\CsvToArray;
+use AppBundle\Service\Logger;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSenderInterface;
 use AppBundle\Service\OrgService;
+use AppBundle\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Routing\Annotation\Route;
@@ -32,20 +35,24 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class IndexController extends AbstractController
 {
-    /**
-     * @var OrgService
-     */
+    /** @var OrgService */
     private $orgService;
 
-    /**
-     * @var UserVoter
-     */
+    /** @var UserVoter */
     private $userVoter;
 
-    public function __construct(OrgService $orgService, UserVoter $userVoter)
+    /** @var Logger */
+    private $logger;
+
+    /** @var DateTimeProvider */
+    private $dateTimeProvider;
+
+    public function __construct(OrgService $orgService, UserVoter $userVoter, Logger $logger, DateTimeProvider $dateTimeProvider)
     {
         $this->orgService = $orgService;
         $this->userVoter = $userVoter;
+        $this->logger = $logger;
+        $this->dateTimeProvider = $dateTimeProvider;
     }
 
     /**
@@ -166,7 +173,13 @@ class IndexController extends AbstractController
         }
 
         $form = $this->createForm(FormDir\Admin\EditUserType::class, $user, ['user' => $this->getUser()]);
+
+        $oldEmail = $user->getEmail();
+        $fullName = $user->getFullName();
+
         $form->handleRequest($request);
+
+        $newEmail = $user->getEmail();
 
         if ($form->isSubmitted() && $form->isValid()) {
             $updateUser = $form->getData();
@@ -174,6 +187,16 @@ class IndexController extends AbstractController
             try {
                 $this->getRestClient()->put('user/' . $user->getId(), $updateUser, ['admin_edit_user']);
 
+                $event = (new AuditEvents($this->dateTimeProvider))->userEmailChanged(
+                    AuditEvents::TRIGGER_ADMIN_USER_EDIT,
+                    $oldEmail,
+                    $newEmail,
+                    $fullName,
+                    $this->getUser()->getEmail(),
+                    $updateUser->getRoleName()
+                );
+
+                $this->logger->notice('', $event);
                 $this->addFlash('notice', 'Your changes were saved');
 
                 $this->redirectToRoute('admin_editUser', ['filter' => $user->getId()]);

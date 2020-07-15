@@ -73,7 +73,7 @@ class AuditEventsTest extends TestCase
             'full_name' => $name,
             'changed_on' => $now->format(DateTime::ATOM),
             'changed_by' => 'super-admin@email.com',
-            'subject_role' => 'LAY_DEPUTY',
+            'subject_role' => 'ROLE_LAY_DEPUTY',
             'event' => 'USER_EMAIL_CHANGED',
             'type' => 'audit'
         ];
@@ -84,7 +84,7 @@ class AuditEventsTest extends TestCase
             'you@test.com',
             $name,
             'super-admin@email.com',
-            'LAY_DEPUTY'
+            'ROLE_LAY_DEPUTY'
         );
 
         $this->assertEquals($expected, $actual);

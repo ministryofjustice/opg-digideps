@@ -7,9 +7,11 @@ use DateTime;
 
 final class AuditEvents
 {
+    const EVENT_USER_EMAIL_CHANGED = 'USER_EMAIL_CHANGED';
     const EVENT_CLIENT_DISCHARGED = 'CLIENT_DISCHARGED';
     const EVENT_ROLE_CHANGED = 'ROLE_CHANGED';
 
+    const TRIGGER_ADMIN_USER_EDIT = 'ADMIN_USER_EDIT';
     const TRIGGER_ADMIN_BUTTON = 'ADMIN_BUTTON';
     const TRIGGER_CSV_UPLOAD = 'CSV_UPLOAD';
     const TRIGGER_DEPUTY_USER = 'DEPUTY_USER';
@@ -72,7 +74,7 @@ final class AuditEvents
             'subject_role' => $subjectRole,
         ];
 
-        return $event + $this->baseEvent(AuditEvents::USER_EMAIL_CHANGED);
+        return $event + $this->baseEvent(AuditEvents::EVENT_USER_EMAIL_CHANGED);
     }
 
     /**
