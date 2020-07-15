@@ -66,7 +66,7 @@ class ChecklistSyncService
             $this->updateChecklist($checklistData->getChecklistId(), Checklist::SYNC_STATUS_SUCCESS, null, $uuid);
         } catch (Throwable $e) {
             $this->updateChecklist($checklistData->getChecklistId(), Checklist::SYNC_STATUS_PERMANENT_ERROR, $this->determineErrorMessage($e));
-            return self::FAILED_TO_SYNC;
+            return $e;
         }
     }
 

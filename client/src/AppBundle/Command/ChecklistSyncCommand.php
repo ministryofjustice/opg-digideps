@@ -94,7 +94,11 @@ class ChecklistSyncCommand extends Command
             }
 
             $queuedChecklistData = $this->buildChecklistData($report, $content);
-            if (ChecklistSyncService::FAILED_TO_SYNC === $this->syncService->sync($queuedChecklistData)) {
+            $response = $this->syncService->sync($queuedChecklistData);
+            if ($response instanceof \Throwable) {
+                $output->writeln(get_class($response));
+                $output->writeln($response->getCode());
+                $output->writeln($response->getMessage());
                 $this->notSyncedCount += 1;
             }
         }
