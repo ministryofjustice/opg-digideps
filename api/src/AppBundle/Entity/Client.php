@@ -1029,7 +1029,7 @@ class Client implements ClientInterface
     }
 
     /**
-     * @return ArrayCollection
+     * @return ArrayCollection<CourtOrder>
      */
     public function getCourtOrders(): iterable
     {

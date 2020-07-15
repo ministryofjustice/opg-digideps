@@ -30,16 +30,34 @@ def setup_db(conn, no_of_queued):
     cursor.execute("""
     CREATE TABLE document(
     id integer PRIMARY KEY,
+    report_submission_id int,
     created_on timestamp(0) without time zone,
     synchronisation_status character varying(255))
-    ;""")
+    """)
+    conn.commit()
+
+    cursor.execute("""
+        CREATE TABLE report_submission(
+        id integer PRIMARY KEY,
+        created_on timestamp(0) without time zone)
+        """)
+    conn.commit()
+
+    cursor.execute(
+        """
+        insert into report_submission
+        (id, created_on)
+        values (1,'20200101')
+        """
+    )
     conn.commit()
 
     for doc in range(no_of_queued):
         cursor.execute(
-            f"""insert into document
-            (id, created_on, synchronisation_status)
-            values ((select coalesce(max(id), 0)  + 1 + {doc} from document),'20200101','QUEUED');
+            f"""
+            insert into document
+            (id, report_submission_id, created_on, synchronisation_status)
+            values ((select coalesce(max(id), 0)  + 1 + {doc} from document), 1, '20200101','QUEUED')
             """
         )
         conn.commit()
