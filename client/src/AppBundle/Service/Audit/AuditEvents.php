@@ -53,6 +53,28 @@ final class AuditEvents
         return $event + $this->baseEvent(AuditEvents::EVENT_CLIENT_DISCHARGED);
     }
 
+    public function userEmailChanged(
+         string $trigger,
+         string $emailChangedFrom,
+         string $emailChangedTo,
+         string $fullName,
+         string $changedBy,
+         string $subjectRole
+    )
+    {
+        $event = [
+            'trigger' => $trigger,
+            'email_changed_from' => $emailChangedFrom,
+            'email_changed_to' => $emailChangedTo,
+            'full_name' => $fullName,
+            'changed_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            'changed_by' => $changedBy,
+            'subject_role' => $subjectRole,
+        ];
+
+        return $event + $this->baseEvent(AuditEvents::USER_EMAIL_CHANGED);
+    }
+
     /**
      * @param string $eventName
      * @return array
