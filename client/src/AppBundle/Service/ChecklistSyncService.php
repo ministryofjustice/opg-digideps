@@ -12,6 +12,7 @@ use AppBundle\Model\Sirius\SiriusDocumentUpload;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use function GuzzleHttp\Psr7\mimetype_from_filename;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
 class ChecklistSyncService
@@ -24,6 +25,9 @@ class ChecklistSyncService
 
     /** @var SiriusApiErrorTranslator */
     private $errorTranslator;
+
+    /** @var LoggerInterface */
+    private $logger;
 
     /** @var int */
     const FAILED_TO_SYNC = -1;
@@ -39,12 +43,14 @@ class ChecklistSyncService
     public function __construct(
         RestClient $restClient,
         SiriusApiGatewayClient $siriusApiGatewayClient,
-        SiriusApiErrorTranslator $errorTranslator
+        SiriusApiErrorTranslator $errorTranslator,
+        LoggerInterface $logger
     )
     {
         $this->restClient = $restClient;
         $this->siriusApiGatewayClient = $siriusApiGatewayClient;
         $this->errorTranslator = $errorTranslator;
+        $this->logger = $logger;
     }
 
     /**
@@ -54,7 +60,7 @@ class ChecklistSyncService
     public function sync(QueuedChecklistData $checklistData)
     {
         try {
-            print_r("DEBUG: About to start sync");
+            $this->logger->error('DEBUG: About to attempt sync');
             $siriusResponse = $this->sendDocument($checklistData);
             $uuid = json_decode(strval($siriusResponse->getBody()), true)['data']['id'];
             $this->updateChecklist($checklistData->getChecklistId(), Checklist::SYNC_STATUS_SUCCESS, null, $uuid);
