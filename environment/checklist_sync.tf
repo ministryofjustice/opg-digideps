@@ -18,6 +18,13 @@ locals {
       target_type = "cidr_block"
       target      = "0.0.0.0/0"
     }
+    pdf = {
+      port        = 80
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.wkhtmltopdf_security_group.id
+    }
   }
 }
 

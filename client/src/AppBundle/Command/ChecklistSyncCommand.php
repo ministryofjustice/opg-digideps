@@ -86,7 +86,14 @@ class ChecklistSyncCommand extends Command
 
         /** @var Report $report */
         foreach ($reports as $report) {
-            if (ChecklistPdfGenerator::FAILED_TO_GENERATE === ($content = $this->pdfGenerator->generate($report))) {
+
+            $content = $this->pdfGenerator->generate($report);
+
+            if (
+                ChecklistPdfGenerator::FAILED_TO_GENERATE === $content ||
+                false === $content
+            ) {
+                // todo Set status to error
                 $this->notSyncedCount += 1;
                 continue;
             }
