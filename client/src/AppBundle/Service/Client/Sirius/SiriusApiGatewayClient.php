@@ -66,7 +66,7 @@ class SiriusApiGatewayClient
      */
     public function sendReportPdfDocument(SiriusDocumentUpload $upload, string $caseRef)
     {
-        $reportJson = $this->serializer->serialize(['report' => ['data' => $upload]], 'json', ["json_encode_options" => JSON_FORCE_OBJECT]);
+        $reportJson = $this->serializer->serialize(['report' => ['data' => $upload]], 'json');
 
         $signedRequest = $this->buildSignedRequest(
             sprintf(self::SIRIUS_REPORT_ENDPOINT, $caseRef),
@@ -110,7 +110,7 @@ class SiriusApiGatewayClient
      */
     public function postChecklistPdf(SiriusDocumentUpload $upload, string $submissionUuid, string $caseRef)
     {
-        $body = $this->serializer->serialize(['checklist' => ['data' => $upload]], 'json');
+        $body = $this->serializer->serialize(['checklist' => ['data' => $upload]], 'json', ["json_encode_options" => JSON_FORCE_OBJECT]);
         print_r(sprintf("Sending in body: %s", $body));
 
         $signedRequest = $this->buildSignedRequest(
