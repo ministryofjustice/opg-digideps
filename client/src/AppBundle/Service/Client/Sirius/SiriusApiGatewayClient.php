@@ -111,6 +111,7 @@ class SiriusApiGatewayClient
     public function postChecklistPdf(SiriusDocumentUpload $upload, string $submissionUuid, string $caseRef)
     {
         $body = $this->serializer->serialize(['checklist' => ['data' => $upload]], 'json');
+        print_r(sprintf("Sending in body: %s", $body));
 
         $signedRequest = $this->buildSignedRequest(
             sprintf(self::SIRIUS_CHECKLIST_POST_ENDPOINT, $caseRef, $submissionUuid),
