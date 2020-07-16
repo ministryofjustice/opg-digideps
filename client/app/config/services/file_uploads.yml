@@ -42,7 +42,7 @@ services:
     public: true
     arguments:
       $config:
-        base_uri: 'http://wkhtmltopdf'
+        base_uri: '%wkhtmltopdf_address%'
         proxy: ""
         debug: false
         headers:

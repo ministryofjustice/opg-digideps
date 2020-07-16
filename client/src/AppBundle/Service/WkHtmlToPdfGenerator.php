@@ -89,6 +89,6 @@ class WkHtmlToPdfGenerator
 //
 //        curl_close($ch);
 
-        return $result;
+        //return $result;
     }
 }
