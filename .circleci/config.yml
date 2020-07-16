@@ -495,19 +495,11 @@ jobs:
       - run:
           name: Run tests
           command: |
-            docker-compose --project-name client-unit-tests up -d pact-mock
+            docker-compose --project-name client-unit-tests up -d --no-deps frontend pact-mock
             sleep 3
-            docker run --rm --project-name client-unit-tests \
-                --env-file=client/docker/env/frontend.env \
-                -e PACT_BROKER_HTTP_AUTH_PASSWORD \
-                -e PACT_BROKER_HTTP_AUTH_USER \
-                -e PACT_CONSUMER_VERSION \
-                -e PACT_BROKER_BASE_URL \
-            client:latest php bin/phpunit -c tests/phpunit --coverage-php tests/phpunit/coverage/client-unit-tests.cov
 
-            docker run --rm --project-name client-unit-tests client:latest php vendor/phpunit/phpcov/phpcov merge --clover "tests/phpunit/coverage/client-unit-tests.xml" "tests/phpunit/coverage"
+            docker-compose -f docker-compose.yml --project-name client-unit-tests exec frontend sh scripts/client-unit-tests.sh
 
-            docker-compose -f docker-compose.yml --project-name client-unit-tests exec pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
             docker-compose -f docker-compose.yml --project-name client-unit-tests stop pact-mock
       - copy-client-coverage-to-host:
           file_to_copy: tests/phpunit/coverage/client-unit-tests.xml
