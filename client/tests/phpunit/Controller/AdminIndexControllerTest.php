@@ -132,9 +132,9 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
                 'trigger' => 'ADMIN_USER_EDIT',
                 'email_changed_from' => 'p.bear@email.com',
                 'email_changed_to' => 'panda.bear@email.com',
-                'full_name' => $userDeputyUpdated->getFullName(),
                 'changed_on' => $this->now->format(DateTime::ATOM),
                 'changed_by' => 'logged-in-user@email.com',
+                'subject_full_name' => $userDeputyUpdated->getFullName(),
                 'subject_role' => 'ROLE_LAY_DEPUTY',
                 'event' => 'USER_EMAIL_CHANGED',
                 'type' => 'audit'
@@ -150,6 +150,43 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
             'admin[firstname]' => 'Panda',
             'admin[lastname]' => 'Bear',
             'admin[email]' => 'panda.bear@email.com',
+            'admin[addressPostcode]' => 'B31 2AB'
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function editUserAction_not_logged_when_email_remains_the_same(): void
+    {
+        $userDeputyJustRole = (new User())
+            ->setId(5)
+            ->setRoleName('ROLE_LAY_DEPUTY');
+
+        $userDeputyAllDetails = (clone $userDeputyJustRole)
+            ->setFirstname('Panda')
+            ->setLastname('Bear')
+            ->setEmail('p.bear@email.com')
+            ->setAddressPostcode('B31 2AB');
+
+        $userDeputyUpdated = (clone $userDeputyAllDetails)
+            ->setEmail('panda.bear@email.com');
+
+        $this->restClient->get(sprintf('user/%s', $userDeputyJustRole->getId()), Argument::cetera())->shouldBeCalled()->willReturn($userDeputyJustRole);
+        $this->restClient->get(sprintf('user/%s', $userDeputyAllDetails->getId()), Argument::cetera())->shouldBeCalled()->willReturn($userDeputyAllDetails);
+        $this->restClient->put(sprintf('user/%s', $userDeputyUpdated->getId()), Argument::cetera())->shouldBeCalled()->willReturn($userDeputyUpdated);
+
+        $this->injectProphecyService(Logger::class, function($logger) use($userDeputyUpdated) {
+            $logger->notice(Argument::cetera())->shouldNotBeCalled();
+        });
+
+        $crawler = $this->client->request('GET', sprintf("/admin/edit-user?filter=%s", $userDeputyJustRole->getId()));
+        $button = $crawler->selectButton('Update user');
+
+        $this->client->submit($button->form(), [
+            'admin[firstname]' => 'Panda',
+            'admin[lastname]' => 'Bear',
+            'admin[email]' => 'p.bear@email.com',
             'admin[addressPostcode]' => 'B31 2AB'
         ]);
     }

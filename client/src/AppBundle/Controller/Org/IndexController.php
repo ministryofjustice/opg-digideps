@@ -111,15 +111,18 @@ class IndexController extends AbstractController
             $clientUpdated->setId($client->getId());
             $this->getRestClient()->put('client/upsert', $clientUpdated, ['pa-edit']);
 
-            $event = (new AuditEvents($this->dateTimeProvider))->clientEmailChanged(
-                AuditEvents::TRIGGER_DEPUTY_USER_EDIT,
-                $oldEmail,
-                $newEmail,
-                $this->getUser()->getEmail(),
-                $clientUpdated->getFullName()
+            if ($oldEmail !== $newEmail) {
+                $event = (new AuditEvents($this->dateTimeProvider))->clientEmailChanged(
+                    AuditEvents::TRIGGER_DEPUTY_USER_EDIT,
+                    $oldEmail,
+                    $newEmail,
+                    $this->getUser()->getEmail(),
+                    $clientUpdated->getFullName()
                 );
 
-            $this->logger->notice('', $event);
+                $this->logger->notice('', $event);
+
+            }
 
             $this->addFlash('notice', 'The client details have been edited');
 

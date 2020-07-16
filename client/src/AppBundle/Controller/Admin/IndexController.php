@@ -187,16 +187,19 @@ class IndexController extends AbstractController
             try {
                 $this->getRestClient()->put('user/' . $user->getId(), $updateUser, ['admin_edit_user']);
 
-                $event = (new AuditEvents($this->dateTimeProvider))->userEmailChanged(
-                    AuditEvents::TRIGGER_ADMIN_USER_EDIT,
-                    $oldEmail,
-                    $newEmail,
-                    $fullName,
-                    $this->getUser()->getEmail(),
-                    $updateUser->getRoleName()
-                );
+                if ($oldEmail !== $newEmail) {
+                    $event = (new AuditEvents($this->dateTimeProvider))->userEmailChanged(
+                        AuditEvents::TRIGGER_ADMIN_USER_EDIT,
+                        $oldEmail,
+                        $newEmail,
+                        $this->getUser()->getEmail(),
+                        $fullName,
+                        $updateUser->getRoleName()
+                    );
 
-                $this->logger->notice('', $event);
+                    $this->logger->notice('', $event);
+                }
+
                 $this->addFlash('notice', 'Your changes were saved');
 
                 $this->redirectToRoute('admin_editUser', ['filter' => $user->getId()]);
