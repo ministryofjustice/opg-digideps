@@ -16,6 +16,7 @@ resource "aws_ecs_service" "admin" {
   task_definition         = aws_ecs_task_definition.admin.arn
   desired_count           = 1
   launch_type             = "FARGATE"
+  platform_version        = "1.3.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
   tags                    = local.default_tags
@@ -55,7 +56,7 @@ locals {
         "curl -f -k https://localhost:443/manage/elb || exit 1"
       ],
       "interval": 30,
-      "timeout": 5,
+      "timeout": 10,
       "retries": 3
     },
     "logConfiguration": {
@@ -74,6 +75,7 @@ locals {
     "environment": [
       { "name": "ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
       { "name": "API_URL", "value": "https://${local.api_service_fqdn}" },
+      { "name": "AUDIT_LOG_GROUP_NAME", "value": "audit-${local.environment}" },
       { "name": "EMAIL_SEND_INTERNAL", "value": "${local.account.is_production == 1 ? "true" : "false"}" },
       { "name": "FEATURE_FLAG_PREFIX", "value": "${local.feature_flag_prefix}" },
       { "name": "FILESCANNER_SSLVERIFY", "value": "False" },

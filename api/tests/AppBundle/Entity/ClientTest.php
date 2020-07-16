@@ -56,7 +56,7 @@ class ClientTest extends TestCase
             [new \DateTime('2016-02-29'), 2020, new \DateTime('2019-03-01')],
             [new \DateTime('2020-02-29'), 2020, new \DateTime('2020-02-29')],
             [new \DateTime('2020-02-29'), 2021, new \DateTime('2020-02-29')],
-            [new \DateTime('2020-02-29'), 2022, new \DateTime('2021-03-01')],
+            [new \DateTime('2020-02-29'), 2022, new \DateTime('2021-03-01')]
         ];
     }
 
@@ -91,6 +91,12 @@ class ClientTest extends TestCase
         );
     }
 
+    public function testGetExpectedStartDate_null_court_date()
+    {
+        $this->object->setCourtDate(null);
+        $this->assertEquals(null, $this->object->getExpectedReportStartDate(2020));
+    }
+
     /**
      * @dataProvider courtDateExpectedEndDateProvider
      */
@@ -101,5 +107,11 @@ class ClientTest extends TestCase
             $expected->format('d/m/Y'),
             $this->object->getExpectedReportEndDate($year)->format('d/m/Y')
         );
+    }
+
+    public function testGetExpectedEndDate_null_court_date()
+    {
+        $this->object->setCourtDate(null);
+        $this->assertEquals(null, $this->object->getExpectedReportEndDate(2020));
     }
 }

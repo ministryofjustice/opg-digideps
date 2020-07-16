@@ -5,10 +5,11 @@ variable "DEFAULT_ROLE" {
 variable "accounts" {
   type = map(
     object({
-      account_id      = string
-      name            = string
-      db_subnet_group = string
-      ec_subnet_group = string
+      account_id        = string
+      name              = string
+      db_subnet_group   = string
+      ec_subnet_group   = string
+      sirius_account_id = string
     })
   )
 }

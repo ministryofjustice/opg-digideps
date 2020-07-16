@@ -13,11 +13,12 @@ def lambda_handler(event, context):
 
     if "check_name" in event:
 
-        secret = get_secret()
         host = os.getenv("DB_ENDPOINT")
         user = os.getenv("DB_USER")
         db = os.getenv("DB_NAME")
         db_port = os.getenv("DB_PORT")
+        password_name = os.getenv("SECRET_NAME")
+        secret = get_secret(password_name)
 
         conn_string = f"dbname='{db}' port='{db_port}' user='{user}' password='{secret}' host='{host}'"
         conn = psycopg2.connect(conn_string)
@@ -42,9 +43,11 @@ def queued_documents(conn):
     cursor = conn.cursor()
     cursor.execute(
         """select count(*)
-        from document
-        where created_on < NOW() - INTERVAL '1 hour'
-        and synchronisation_status='QUEUED';"""
+            from document d
+            inner join report_submission rs
+            on d.report_submission_id = rs.id
+            where rs.created_on < NOW() - INTERVAL '1 hour'
+            and d.synchronisation_status = 'QUEUED';"""
     )
     conn.commit()
 
@@ -65,8 +68,7 @@ def queued_documents(conn):
     return log_message
 
 
-def get_secret():
-    secret_name = "default/database-password"
+def get_secret(secret_name):
     region_name = "eu-west-1"
 
     session = boto3.session.Session()

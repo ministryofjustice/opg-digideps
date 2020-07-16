@@ -17,35 +17,32 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  */
 class ManageController extends AbstractController
 {
-    /** @var array<ServiceAvailabilityAbstract> */
-    private $services = [];
+    public function __construct(){}
 
-    public function __construct(
+    /**
+     * @Route("/availability", methods={"GET"})
+     */
+    public function availabilityAction(
         ContainerInterface $container,
         ApiAvailability $apiAvailability,
         NotifyAvailability $notifyAvailability,
         RedisAvailability $redisAvailability
     )
     {
-        $this->services = [
+
+        $services = [
             $apiAvailability,
             $redisAvailability,
             $notifyAvailability
         ];
 
         if ($container->getParameter('env') !== 'admin') {
-            $this->services[] = $container->get(SiriusApiAvailability::class);
-            $this->services[] = $container->get(ClamAvAvailability::class);
-            $this->services[] = $container->get(WkHtmlToPdfAvailability::class);
+            $services[] = $container->get(SiriusApiAvailability::class);
+            $services[] = $container->get(ClamAvAvailability::class);
+            $services[] = $container->get(WkHtmlToPdfAvailability::class);
         }
-    }
 
-    /**
-     * @Route("/availability", methods={"GET"})
-     */
-    public function availabilityAction()
-    {
-        list($healthy, $services, $errors) = $this->servicesHealth();
+        list($healthy, $services, $errors) = $this->servicesHealth($services);
 
         $response = $this->render('AppBundle:Manage:availability.html.twig', [
             'services' => $services,
@@ -61,9 +58,18 @@ class ManageController extends AbstractController
     /**
      * @Route("/availability/pingdom", methods={"GET"})
      */
-    public function healthCheckXmlAction()
+    public function healthCheckXmlAction(
+        ApiAvailability $apiAvailability,
+        NotifyAvailability $notifyAvailability,
+        RedisAvailability $redisAvailability
+    )
     {
-        list($healthy, $services, $errors, $time) = $this->servicesHealth();
+        $services = [
+            $apiAvailability,
+            $redisAvailability,
+            $notifyAvailability
+        ];
+        list($healthy, $services, $errors, $time) = $this->servicesHealth($services);
 
         $response = $this->render('AppBundle:Manage:health-check.xml.twig', [
             'status' => $healthy ? 'OK' : 'ERRORS: ',
@@ -87,20 +93,20 @@ class ManageController extends AbstractController
     /**
      * @return array [true if healthy, services array, string with errors, time in secs]
      */
-    private function servicesHealth()
+    private function servicesHealth($services)
     {
         $start = microtime(true);
 
         $healthy = true;
         $errors = [];
 
-        foreach ($this->services as $service) {
+        foreach ($services as $service) {
             if (!$service->isHealthy()) {
                 $healthy = false;
                 $errors[] = $service->getErrors();
             }
         }
 
-        return [$healthy, $this->services, $errors, microtime(true) - $start];
+        return [$healthy, $services, $errors, microtime(true) - $start];
     }
 }

@@ -111,15 +111,17 @@
                         <li class="moj-primary-navigation__item">
                             {{ _self.navLink('admin_metrics', 'nav.adminStats', navSection == 'metrics') }}
                         </li>
-                        <li class="moj-primary-navigation__item">
-                            {{ _self.navLink('admin_fixtures', 'nav.adminFixtures', navSection == 'fixtures') }}
-                        </li>
                     {% elseif is_granted('ROLE_AD') %}
                         <li class="moj-primary-navigation__item">
                             {{ _self.navLink('ad_homepage', 'nav.adArea', navSection == 'ad') }}
                         </li>
                         <li class="moj-primary-navigation__item">
                             {{ _self.navLink('admin_homepage', 'nav.adminArea', navSection == 'users') }}
+                        </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <li class="moj-primary-navigation__item">
+                            {{ _self.navLink('admin_fixtures', 'nav.adminFixtures', navSection == 'fixtures') }}
                         </li>
                     {% endif %}
                 </ul>

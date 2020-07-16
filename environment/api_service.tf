@@ -39,6 +39,7 @@ resource "aws_ecs_service" "api" {
   task_definition         = aws_ecs_task_definition.api.arn
   desired_count           = local.account.task_count
   launch_type             = "FARGATE"
+  platform_version        = "1.3.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
   tags                    = local.default_tags
@@ -75,7 +76,7 @@ locals {
         "curl -f -k https://localhost:443/manage/elb || exit 1"
       ],
       "interval": 30,
-      "timeout": 5,
+      "timeout": 10,
       "retries": 3
     },
     "logConfiguration": {

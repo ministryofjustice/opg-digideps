@@ -919,6 +919,10 @@ class Client implements ClientInterface
      */
     public function getExpectedReportStartDate($year = NULL)
     {
+        if (is_null($this->getCourtDate())) {
+            return null;
+        }
+
         // Default year to current
         if (!isset($year)) {
             $year = date('Y');
@@ -1025,7 +1029,7 @@ class Client implements ClientInterface
     }
 
     /**
-     * @return ArrayCollection
+     * @return ArrayCollection<CourtOrder>
      */
     public function getCourtOrders(): iterable
     {

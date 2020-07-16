@@ -103,6 +103,10 @@
                     rectangle {
                         ECSService(document_sync_service,"document_sync",)
                     }
+
+                    rectangle {
+                        ECSService(checklist_sync_service,"checklist_sync",)
+                    }
                 }
 
                 rectangle {
@@ -147,6 +151,7 @@
     admin_service -[#green]right-|> admin_redis
 
     document_sync_service -[#blue]down-|> api_service
+    checklist_sync_service -[#blue]down-|> api_service
 
     front_service -[#red]|> pdf_service
     admin_service -[#red]-|> pdf_service
@@ -155,6 +160,7 @@
     front_service -[#blue]|> nat
     admin_service -[#blue]|> nat
     document_sync_service -[#blue]|> nat
+    checklist_sync_service -[#blue]|> nat
 
     integration_test_task -[#blue]up-|> nat
     integration_test_task -[#purple]|> rds
