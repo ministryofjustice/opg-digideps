@@ -495,7 +495,7 @@ jobs:
       - run:
           name: Run tests
           command: |
-            docker-compose --project-name client-unit-tests up -d --no-deps frontend pact-mock
+            docker-compose -f docker-compose.yml --project-name client-unit-tests up -d --no-deps frontend pact-mock
             sleep 3
 
             docker-compose -f docker-compose.yml --project-name client-unit-tests exec frontend sh scripts/client-unit-tests.sh
