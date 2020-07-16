@@ -102,7 +102,7 @@ class AuditEventsTest extends TestCase
         $dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
 
         $expected = [
-            'trigger' => 'ADMIN_USER_EDIT',
+            'trigger' => 'DEPUTY_USER_EDIT',
             'email_changed_from' => 'me@test.com',
             'email_changed_to' => 'you@test.com',
             'changed_on' => $now->format(DateTime::ATOM),
@@ -114,12 +114,11 @@ class AuditEventsTest extends TestCase
         ];
 
         $actual = (new AuditEvents($dateTimeProvider->reveal()))->clientEmailChanged(
-            'ADMIN_USER_EDIT',
+            'DEPUTY_USER_EDIT',
             'me@test.com',
             'you@test.com',
             'super-admin@email.com',
-            $name,
-            'ROLE_LAY_DEPUTY',
+            $name
         );
 
         $this->assertEquals($expected, $actual);

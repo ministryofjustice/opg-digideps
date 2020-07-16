@@ -16,6 +16,7 @@ final class AuditEvents
     const TRIGGER_ADMIN_BUTTON = 'ADMIN_BUTTON';
     const TRIGGER_CSV_UPLOAD = 'CSV_UPLOAD';
     const TRIGGER_DEPUTY_USER = 'DEPUTY_USER';
+    const TRIGGER_DEPUTY_USER_EDIT = 'DEPUTY_USER_EDIT';
 
     /**
      * @var DateTimeProvider
@@ -75,11 +76,10 @@ final class AuditEvents
         string $emailChangedFrom,
         string $emailChangedTo,
         string $changedBy,
-        string $subjectFullName,
-        string $subjectRole
+        string $subjectFullName
     )
     {
-        $event = $this->emailChangedBaseEvent($trigger, $emailChangedFrom, $emailChangedTo, $changedBy, $subjectFullName, $subjectRole);
+        $event = $this->emailChangedBaseEvent($trigger, $emailChangedFrom, $emailChangedTo, $changedBy, $subjectFullName, 'CLIENT');
 
         return $event + $this->baseEvent(AuditEvents::EVENT_CLIENT_EMAIL_CHANGED);
     }

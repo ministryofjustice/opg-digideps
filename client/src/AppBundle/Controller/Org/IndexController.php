@@ -8,6 +8,9 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Audit\AuditEvents;
+use AppBundle\Service\Logger;
+use AppBundle\Service\Time\DateTimeProvider;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\SubmitButton;
@@ -20,6 +23,18 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class IndexController extends AbstractController
 {
+    /** @var Logger */
+    private $logger;
+
+    /** @var DateTimeProvider */
+    private $dateTimeProvider;
+
+    public function __construct(Logger $logger, DateTimeProvider $dateTimeProvider)
+    {
+        $this->logger = $logger;
+        $this->dateTimeProvider = $dateTimeProvider;
+    }
+
     /**
      * @Route("/", name="org_dashboard")
      * @Template("AppBundle:Org/Index:dashboard.html.twig")
@@ -83,14 +98,28 @@ class IndexController extends AbstractController
             $this->generateUrl('report_declaration', ['reportId' => $client->getCurrentReport()->getId()]) :
             $this->generateUrl('report_overview', ['reportId'=>$client->getCurrentReport()->getId()]);
 
+        $oldEmail = $client->getEmail();
+
         $form = $this->createForm(FormDir\Org\ClientType::class, $client);
         $form->handleRequest($request);
+
+        $newEmail = $client->getEmail();
 
         // edit client form
         if ($form->isSubmitted() && $form->isValid()) {
             $clientUpdated = $form->getData();
             $clientUpdated->setId($client->getId());
             $this->getRestClient()->put('client/upsert', $clientUpdated, ['pa-edit']);
+
+            $event = (new AuditEvents($this->dateTimeProvider))->clientEmailChanged(
+                AuditEvents::TRIGGER_DEPUTY_USER_EDIT,
+                $oldEmail,
+                $newEmail,
+                $this->getUser()->getEmail(),
+                $clientUpdated->getFullName()
+                );
+
+            $this->logger->notice('', $event);
 
             $this->addFlash('notice', 'The client details have been edited');
 
