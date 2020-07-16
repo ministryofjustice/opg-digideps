@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Controller\Admin;
+namespace AppBundle\Controller\Org;
 
 
 use AppBundle\Controller\AbstractControllerTestCase;
@@ -14,7 +14,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Prophecy\Argument;
 
-class OrganisationControllerTest extends AbstractControllerTestCase
+class IndexControllerTest extends AbstractControllerTestCase
 {
     /** @var DateTime */
     private $now;
@@ -41,7 +41,7 @@ class OrganisationControllerTest extends AbstractControllerTestCase
     /**
      * @test
      */
-    public function editUserAction_user_email_changed_audit_log_created(): void
+    public function clientEditAction_client_email_changed_audit_log_created(): void
     {
         $report = (new Report())
             ->setId(4);
