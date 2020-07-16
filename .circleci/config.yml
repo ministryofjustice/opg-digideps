@@ -17,58 +17,58 @@ workflows:
           filters: { branches: { ignore: [ master ] } }
           tf_command: apply
 
-      - run-task:
-          name: reset environment
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: reset_database
-          timeout: 180
-
-      - run-task:
-          name: integration test
-          requires: [ reset environment ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: integration_test
-          timeout: 2400
-
-      - client-unit-test:
-          name: client unit test
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ master ] } }
-
-      - api-unit-tests:
-          name: api unit test
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ master ] } }
-
-      - pa11y-ci:
-          name: accessibility test
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ master ] } }
-
-      - run-task:
-          name: backup environment
-          requires: [ api unit test, client unit test, integration test ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: backup
-
-      - run-task:
-          name: restore environment
-          requires: [ backup environment ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: restore
-
-      - cleanup:
-          name: approve destroy environment
-          type: approval
-          requires: [ restore environment ]
-          filters: { branches: { ignore: [ master ] } }
-
-      - terraform-command:
-          name: destroy environment
-          requires: [ approve destroy environment ]
-          filters: { branches: { ignore: [ master ] } }
-          tf_command: destroy
+#      - run-task:
+#          name: reset environment
+#          requires: [ apply environment ]
+#          filters: { branches: { ignore: [ master ] } }
+#          task_name: reset_database
+#          timeout: 180
+#
+#      - run-task:
+#          name: integration test
+#          requires: [ reset environment ]
+#          filters: { branches: { ignore: [ master ] } }
+#          task_name: integration_test
+#          timeout: 2400
+#
+#      - client-unit-test:
+#          name: client unit test
+#          requires: [ apply environment ]
+#          filters: { branches: { ignore: [ master ] } }
+#
+#      - api-unit-tests:
+#          name: api unit test
+#          requires: [ apply environment ]
+#          filters: { branches: { ignore: [ master ] } }
+#
+#      - pa11y-ci:
+#          name: accessibility test
+#          requires: [ apply environment ]
+#          filters: { branches: { ignore: [ master ] } }
+#
+#      - run-task:
+#          name: backup environment
+#          requires: [ api unit test, client unit test, integration test ]
+#          filters: { branches: { ignore: [ master ] } }
+#          task_name: backup
+#
+#      - run-task:
+#          name: restore environment
+#          requires: [ backup environment ]
+#          filters: { branches: { ignore: [ master ] } }
+#          task_name: restore
+#
+#      - cleanup:
+#          name: approve destroy environment
+#          type: approval
+#          requires: [ restore environment ]
+#          filters: { branches: { ignore: [ master ] } }
+#
+#      - terraform-command:
+#          name: destroy environment
+#          requires: [ approve destroy environment ]
+#          filters: { branches: { ignore: [ master ] } }
+#          tf_command: destroy
 
   master:
     jobs:
