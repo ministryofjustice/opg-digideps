@@ -64,6 +64,7 @@ class WkHtmlToPdfGenerator
 
         $result = curl_exec($ch);
 
+        print_r(sprintf('URL is %s', $this->url));
         if($result === false)
         {
             print_r(sprintf('Curl error: ',curl_error($ch) ));
