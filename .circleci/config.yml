@@ -499,11 +499,11 @@ jobs:
             sleep 3
 
             docker-compose -f docker-compose.yml --project-name client-unit-tests exec frontend sh scripts/client-unit-tests.sh
+            docker-compose -f docker-compose.yml --project-name client-unit-tests exec frontend chmod -R 777 tests/phpunit/coverage/client-unit-tests.xml
+            docker cp "frontend_1:/var/www/tests/coverage/tests/phpunit/coverage/client-unit-tests.xml" "./tests/phpunit/coverage/client-unit-tests.xml"
 
+            docker-compose -f docker-compose.yml --project-name client-unit-tests exec pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
             docker-compose -f docker-compose.yml --project-name client-unit-tests stop pact-mock
-      - copy-client-coverage-to-host:
-          file_to_copy: tests/phpunit/coverage/client-unit-tests.xml
-          copy_to_dir: .
       - codecov/upload:
           file: ./client-unit-tests.xml
           flags: client
