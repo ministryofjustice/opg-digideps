@@ -17,7 +17,7 @@ services:
 
     AppBundle\Service\WkHtmlToPdfGenerator:
         public: true
-        arguments: [ "%wkhtmltopdf_address%", 30, "@guzzle_pdf_generator_client"]
+        arguments: [ "%wkhtmltopdf_address%", 30]
 
     wkhtmltopdf:
         alias: AppBundle\Service\WkHtmlToPdfGenerator

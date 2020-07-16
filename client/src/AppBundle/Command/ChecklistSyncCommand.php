@@ -89,8 +89,8 @@ class ChecklistSyncCommand extends Command
 
             if (false === ($content = $this->pdfGenerator->generate($report))) {
                 // todo Set status to error
-//                $output->writeln(sprintf('Failed to generate: %s', $content));
-//                $this->notSyncedCount += 1;
+                // todo Output failed PDF generation
+//              $this->notSyncedCount += 1;
                 continue;
             }
 
