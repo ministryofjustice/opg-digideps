@@ -89,8 +89,8 @@ class ChecklistSyncCommand extends Command
 
             if (false === ($content = $this->pdfGenerator->generate($report))) {
                 // todo Set status to error
-                $output->writeln(sprintf('Failed to generate: %s', $content));
-                $this->notSyncedCount += 1;
+//                $output->writeln(sprintf('Failed to generate: %s', $content));
+//                $this->notSyncedCount += 1;
                 continue;
             }
 
@@ -107,7 +107,7 @@ class ChecklistSyncCommand extends Command
         }
 
         if ($this->notSyncedCount > 0) {
-            $output->writeln(sprintf('%d checklists failed to syncsdcas', $this->notSyncedCount));
+            $output->writeln(sprintf('%d checklists failed to sync', $this->notSyncedCount));
             $this->notSyncedCount = 0;
         }
 

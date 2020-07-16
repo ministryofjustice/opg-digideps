@@ -45,9 +45,7 @@ class ChecklistPdfGenerator
                 'reviewChecklist' => $report->getReviewChecklist()
             ]);
 
-            $result = $this->wkhtmltopdf->getPdfFromHtml($html);
-            print_r('print_r also works');
-            $this->logger->error(sprintf('Result is %s', $result));
+            return $this->wkhtmltopdf->getPdfFromHtml($html);
 
         } catch (Throwable $e) {
             // Repeat occurrences will cause an alert triggered by Cloudwatch.
