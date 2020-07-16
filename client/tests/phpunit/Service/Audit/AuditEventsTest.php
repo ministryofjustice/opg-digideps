@@ -108,7 +108,7 @@ class AuditEventsTest extends TestCase
             'changed_on' => $now->format(DateTime::ATOM),
             'changed_by' => 'super-admin@email.com',
             'subject_full_name' => $name,
-            'subject_role' => 'ROLE_LAY_DEPUTY',
+            'subject_role' => 'CLIENT',
             'event' => 'CLIENT_EMAIL_CHANGED',
             'type' => 'audit'
         ];
