@@ -63,6 +63,12 @@ class WkHtmlToPdfGenerator
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
         $result = curl_exec($ch);
+
+        if($result === false)
+        {
+            print_r(sprintf('Curl error: ',curl_error($ch) ));
+        }
+
         curl_close($ch);
 
         return $result;
