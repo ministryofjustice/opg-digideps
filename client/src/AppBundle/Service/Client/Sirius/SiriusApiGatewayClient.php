@@ -66,7 +66,7 @@ class SiriusApiGatewayClient
      */
     public function sendReportPdfDocument(SiriusDocumentUpload $upload, string $caseRef)
     {
-        $reportJson = $this->serializer->serialize(['report' => ['data' => $upload]], 'json');
+        $reportJson = $this->serializer->serialize(['report' => ['data' => $upload]], 'json', ["json_encode_options" => JSON_FORCE_OBJECT]);
 
         $signedRequest = $this->buildSignedRequest(
             sprintf(self::SIRIUS_REPORT_ENDPOINT, $caseRef),
