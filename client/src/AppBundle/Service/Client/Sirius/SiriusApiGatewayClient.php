@@ -76,7 +76,7 @@ class SiriusApiGatewayClient
     {
         $reportJson = $this->serializer->serialize(['report' => ['data' => $upload]], 'json');
 
-        $this->logger->warning($reportJson);
+//        $this->logger->warning($reportJson);
 
         $signedRequest = $this->buildSignedRequest(
             sprintf(self::SIRIUS_REPORT_ENDPOINT, $caseRef),
@@ -101,8 +101,8 @@ class SiriusApiGatewayClient
     {
         $reportJson = $this->serializer->serialize(['supporting_document' => ['data' => $upload]], 'json');
 
-        $this->logger->warning("Syncing supporting document with UUID: $submissionUuid");
-        $this->logger->warning($reportJson);
+        $this->logger->warning("Syncing supporting document ID with UUID: $submissionUuid");
+//        $this->logger->warning($reportJson);
 
         $signedRequest = $this->buildSignedRequest(
             sprintf(self::SIRIUS_SUPPORTING_DOCUMENTS_ENDPOINT, $caseRef, $submissionUuid),

@@ -5,7 +5,10 @@ namespace AppBundle\Entity\Repository;
 use AppBundle\Entity\Report\Document;
 use DateTime;
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 class DocumentRepository extends AbstractEntityRepository
 {
@@ -36,7 +39,6 @@ d.filename as filename,
 d.storage_reference as storage_reference,
 d.report_id as report_id,
 d.ndr_id as ndr_id,
-d.created_on as document_created_on,
 r.start_date as report_start_date,
 r.end_date as report_end_date,
 r.submit_date as report_submit_date,
@@ -53,6 +55,7 @@ LEFT JOIN report_submission as rs on d.report_submission_id  = rs.id
 LEFT JOIN client as c1 on r.client_id = c1.id
 LEFT JOIN client as c2 on o.client_id = c2.id
 WHERE synchronisation_status='QUEUED'
+ORDER BY report_submission_id
 LIMIT $limit;";
 
         $conn = $this->getEntityManager()->getConnection();
@@ -61,7 +64,6 @@ LIMIT $limit;";
         $docStmt->execute();
 
         $documents = [];
-        $reportSubmissionIds = [];
 
         // Get all queued documents
         $results = $docStmt->fetchAll(PDO::FETCH_ASSOC);
@@ -97,11 +99,26 @@ LIMIT $limit;";
 
             $submissionStmt = $conn->prepare($getReportSubmissionsQuery);
             $submissionStmt->execute();
-            $results = $submissionStmt->fetchAll(PDO::FETCH_ASSOC);
+            $submissions = $submissionStmt->fetchAll(PDO::FETCH_ASSOC);
+            file_put_contents('php://stderr', print_r('$results are: ', TRUE));
+            file_put_contents('php://stderr', print_r($submissions, TRUE));
 
-            $groupedSubmissions = $this->groupSubmissionsByReportId($results);
+            $reportPdfFlaggedSubmissions = $this->flagSubmissionsContainingReportPdfs($submissions, $conn);
+            file_put_contents('php://stderr', print_r('$reportPdfFlaggedSubmissions are: ', TRUE));
+            file_put_contents('php://stderr', print_r($reportPdfFlaggedSubmissions, TRUE));
+
+            $groupedSubmissions = $this->groupSubmissionsByReportId($reportPdfFlaggedSubmissions);
+            file_put_contents('php://stderr', print_r('$groupedSubmissions are: ', TRUE));
+            file_put_contents('php://stderr', print_r($groupedSubmissions, TRUE));
+
             $groupedSubmissionsWithUuids = $this->assignUuidsToAdditionalDocumentSubmissions($groupedSubmissions);
+            file_put_contents('php://stderr', print_r('$groupedSubmissionsWithUuids are: ', TRUE));
+            file_put_contents('php://stderr', print_r($groupedSubmissionsWithUuids, TRUE));
+
             $documentsWithUuids = $this->extractUuidsFromSubmissionsAndAssignToDocuments($documents, $groupedSubmissionsWithUuids);
+            file_put_contents('php://stderr', print_r('$documentsWithUuids are: ', TRUE));
+            file_put_contents('php://stderr', print_r($documentsWithUuids, TRUE));
+
 
             $this->setQueuedDocumentsToInProgress($documentsWithUuids, $conn);
 
@@ -125,6 +142,32 @@ AND is_report_pdf=false";
         $conn = $this->getEntityManager()->getConnection();
         $stmt = $conn->prepare($updateStatusQuery);
         return $stmt->execute();
+    }
+
+    private function flagSubmissionsContainingReportPdfs(array $reportSubmissions, Connection $connection)
+    {
+        $submissionIds = array_map(function($submission) {
+            return $submission['id'];
+        }, $reportSubmissions);
+
+        $submissionIdStrings = implode(",", $submissionIds);
+
+        $stmt = $connection->prepare("SELECT * FROM document WHERE report_submission_id IN ($submissionIdStrings) ORDER BY created_on ASC");
+        $stmt->execute();
+        $documents = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($reportSubmissions as $i => $submission) {
+            foreach($documents as $document) {
+                if ($document['report_submission_id'] === $submission['id'] && $document['is_report_pdf']) {
+                    $reportSubmissions[$i]['contains_report_pdf'] = true;
+                    break;
+                } else {
+                    $reportSubmissions[$i]['contains_report_pdf'] = false;
+                }
+            }
+        }
+
+        return $reportSubmissions;
     }
 
     private function groupSubmissionsByReportId(array $reportSubmissions)
@@ -165,10 +208,29 @@ AND is_report_pdf=false";
         $lastUuid = null;
         $lastReportId = null;
 
+//[67] => [
+//        [0] => [
+//            [id] => 3,
+//            [opg_uuid] => 95CBd01A-cea4-CEdB-EaBF-bB709DB9B3cE
+//            [created_on] => 2020-07-17 17:32:48
+//            [report_id] => 67
+//            [ndr_id] =>
+//        ]
+//
+//[1] => [
+//        [id] => 4
+//        [opg_uuid] =>
+//        [created_on] => 2020-07-17 17:36:10
+//        [report_id] => 67
+//        [ndr_id] =>
+//    ]
+//]
+
         // Walk through the submissions grouped by report id to assign missing uuids to additional submissions
         foreach ($reportSubmissions['reports'] as $reportId => $groupedSubmissions) {
             foreach ($groupedSubmissions as $key => $reportSubmission) {
-                if (!is_null($reportSubmission['opg_uuid'])) {
+                // We only want to pass on UUIDs associated with a submission containing a report PDF to create correct folders in Sirius
+                if (!is_null($reportSubmission['opg_uuid']) && $reportSubmission['contains_report_pdf']) {
                     $lastUuid = $reportSubmission['opg_uuid'];
                     $lastReportId = $reportSubmission['report_id'];
                     continue;
@@ -211,8 +273,6 @@ AND is_report_pdf=false";
     {
         $reportIdsString = implode(",", $reportIds);
         $ndrIdsString = implode(",", $ndrIds);
-
-        // Get all reports associated with submissions and then get all submissions
 
         if (count($reportIds) > 0 && count($ndrIds) < 1) {
             return "SELECT * FROM report_submission WHERE (report_id IN ($reportIdsString)) ORDER BY created_on ASC;";
