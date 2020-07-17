@@ -182,6 +182,7 @@ AND is_report_pdf=false";
                     'created_on' => $row['created_on'],
                     'report_id' => $row['report_id'],
                     'ndr_id' => $row['ndr_id'],
+                    'contains_report_pdf' => $row['contains_report_pdf'],
                 ];
             }
 
@@ -192,6 +193,7 @@ AND is_report_pdf=false";
                     'created_on' => $row['created_on'],
                     'report_id' => $row['report_id'],
                     'ndr_id' => $row['ndr_id'],
+                    'contains_report_pdf' => $row['contains_report_pdf'],
                 ];
             }
         }
@@ -230,7 +232,7 @@ AND is_report_pdf=false";
         foreach ($reportSubmissions['reports'] as $reportId => $groupedSubmissions) {
             foreach ($groupedSubmissions as $key => $reportSubmission) {
                 // We only want to pass on UUIDs associated with a submission containing a report PDF to create correct folders in Sirius
-                if (!is_null($reportSubmission['opg_uuid']) && $reportSubmission['contains_report_pdf']) {
+                if (!is_null($reportSubmission['opg_uuid']) && $reportSubmission['contains_report_pdf'] === true) {
                     $lastUuid = $reportSubmission['opg_uuid'];
                     $lastReportId = $reportSubmission['report_id'];
                     continue;
