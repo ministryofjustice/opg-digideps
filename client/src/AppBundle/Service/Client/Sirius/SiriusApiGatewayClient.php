@@ -7,6 +7,7 @@ use AppBundle\Service\AWS\RequestSigner;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 
 class SiriusApiGatewayClient
@@ -26,24 +27,32 @@ class SiriusApiGatewayClient
 
     /** @var Serializer */
     private $serializer;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * @param Client $httpClient
      * @param RequestSigner $requestSigner
      * @param string $baseUrl
      * @param Serializer $serializer
+     * @param LoggerInterface $logger
      */
     public function __construct(
         Client $httpClient,
         RequestSigner $requestSigner,
         string $baseUrl,
-        Serializer $serializer
+        Serializer $serializer,
+        LoggerInterface $logger
     )
     {
         $this->httpClient = $httpClient;
         $this->requestSigner = $requestSigner;
         $this->baseUrl = $baseUrl;
         $this->serializer = $serializer;
+
+        $this->logger = $logger;
     }
 
     /**
@@ -67,6 +76,8 @@ class SiriusApiGatewayClient
     {
         $reportJson = $this->serializer->serialize(['report' => ['data' => $upload]], 'json');
 
+        $this->logger->warning($reportJson);
+
         $signedRequest = $this->buildSignedRequest(
             sprintf(self::SIRIUS_REPORT_ENDPOINT, $caseRef),
             'POST',
@@ -75,7 +86,7 @@ class SiriusApiGatewayClient
         );
 
         // Add second argument ['debug' => true] to see requests in action
-        return $this->httpClient->send($signedRequest, ['debug' => true]);
+        return $this->httpClient->send($signedRequest);
     }
 
     /**
@@ -90,6 +101,8 @@ class SiriusApiGatewayClient
     {
         $reportJson = $this->serializer->serialize(['supporting_document' => ['data' => $upload]], 'json');
 
+        $this->logger->warning($reportJson);
+
         $signedRequest = $this->buildSignedRequest(
             sprintf(self::SIRIUS_SUPPORTING_DOCUMENTS_ENDPOINT, $caseRef, $submissionUuid),
             'POST',
@@ -97,7 +110,7 @@ class SiriusApiGatewayClient
             'application/vnd.opg-data.v1+json'
         );
 
-        return $this->httpClient->send($signedRequest, ['debug' => true]);
+        return $this->httpClient->send($signedRequest);
     }
 
     /**
