@@ -156,6 +156,9 @@ AND is_report_pdf=false";
         $stmt->execute();
         $documents = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+        file_put_contents('php://stderr', print_r('All documents are: ', TRUE));
+        file_put_contents('php://stderr', print_r($documents, TRUE));
+
         foreach ($reportSubmissions as $i => $submission) {
             foreach($documents as $document) {
                 if ($document['report_submission_id'] === $submission['id'] && $document['is_report_pdf']) {
@@ -209,24 +212,6 @@ AND is_report_pdf=false";
     {
         $lastUuid = null;
         $lastReportId = null;
-
-//[67] => [
-//        [0] => [
-//            [id] => 3,
-//            [opg_uuid] => 95CBd01A-cea4-CEdB-EaBF-bB709DB9B3cE
-//            [created_on] => 2020-07-17 17:32:48
-//            [report_id] => 67
-//            [ndr_id] =>
-//        ]
-//
-//[1] => [
-//        [id] => 4
-//        [opg_uuid] =>
-//        [created_on] => 2020-07-17 17:36:10
-//        [report_id] => 67
-//        [ndr_id] =>
-//    ]
-//]
 
         // Walk through the submissions grouped by report id to assign missing uuids to additional submissions
         foreach ($reportSubmissions['reports'] as $reportId => $groupedSubmissions) {
