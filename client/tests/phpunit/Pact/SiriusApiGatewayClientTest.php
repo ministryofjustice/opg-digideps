@@ -17,6 +17,7 @@ use PhpPact\Consumer\Model\ProviderResponse;
 use PhpPact\Standalone\MockService\MockServerEnvConfig;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class SiriusDocumentsContractTest extends KernelTestCase
@@ -45,6 +46,9 @@ class SiriusDocumentsContractTest extends KernelTestCase
     /** @var string */
     private $fileContents;
 
+    /** @var LoggerInterface&ObjectProphecy */
+    private $logger;
+
     public function setUp(): void
     {
         $client = new GuzzleClient();
@@ -59,6 +63,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
         $this->reportPdfUuid = '33ea0382-cfc9-4776-9036-667eeb68fa4b';
         $this->expectedSupportingDocumentUuid = '9c0cb55e-718d-4ffb-9599-f3164e12dbdb';
         $this->signer = self::prophesize(RequestSigner::class);
+        $this->logger = self::prophesize(LoggerInterface::class);
         $this->fileName = 'test.pdf';
         $this->fileContents = 'fake_contents';
 
@@ -66,7 +71,8 @@ class SiriusDocumentsContractTest extends KernelTestCase
             $client,
             $this->signer->reveal(),
             'http://' . $baseUrl,
-            $serializer
+            $serializer,
+            $this->logger->reveal()
         );
     }
 
