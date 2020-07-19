@@ -6,13 +6,13 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Exception\PdfGenerationFailedException;
+use AppBundle\Exception\SiriusDocumentSyncFailedException;
 use AppBundle\Model\Sirius\QueuedChecklistData;
 use AppBundle\Service\ChecklistPdfGenerator;
 use AppBundle\Service\ChecklistSyncService;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\ParameterStoreService;
 use PHPUnit\Framework\MockObject\MockObject;
-use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -67,8 +67,8 @@ class ChecklistSyncCommandTest extends KernelTestCase
         $this
             ->ensureFeatureIsEnabled()
             ->ensureRestClientReturnsRows()
-            ->ensurePdfGenerationWillFail()
-            ->assertChecklistStatusWillBeUpdated()
+            ->ensurePdfGenerationWillFailWith(new PdfGenerationFailedException('Failed to generate PDF'))
+            ->assertChecklistStatusWillBeUpdatedWithError('Failed to generate PDF')
             ->invokeTest();
     }
 
@@ -80,7 +80,7 @@ class ChecklistSyncCommandTest extends KernelTestCase
         $this
             ->ensureFeatureIsEnabled()
             ->ensureRestClientReturnsRows()
-            ->ensurePdfGenerationWillFail()
+            ->ensurePdfGenerationWillFailWith(new PdfGenerationFailedException('Failed to generate PDF'))
             ->assertSyncServiceIsNotInvoked()
             ->invokeTest();
     }
@@ -124,6 +124,35 @@ class ChecklistSyncCommandTest extends KernelTestCase
             ->invokeTest();
     }
 
+    /**
+     * @test
+     */
+    public function updatesStatusAndUuidOfEachSuccessfullySyncedChecklist()
+    {
+        $this
+            ->ensureFeatureIsEnabled()
+            ->ensureConfigurableRowLimitIsNotSet()
+            ->ensurePdfGenerationWillSucceed()
+            ->assertChecklistsAreFetchedWithDefaultLimit()
+            ->assertChecklistStatusWillBeUpdatedWithSuccess()
+            ->invokeTest();
+    }
+
+    /**
+     * @test
+     */
+    public function updatesSyncStatusOnFailedDocumentSyncs()
+    {
+        $this
+            ->ensureFeatureIsEnabled()
+            ->ensureConfigurableRowLimitIsNotSet()
+            ->ensurePdfGenerationWillSucceed()
+            ->assertChecklistsAreFetchedWithDefaultLimit()
+            ->ensureSyncWillFailWith(new SiriusDocumentSyncFailedException('Failed to sync document'))
+            ->assertChecklistStatusWillBeUpdatedWithError('Failed to sync document')
+            ->invokeTest();
+    }
+
     private function ensureFeatureIsEnabled(): ChecklistSyncCommandTest
     {
         $this->parameterStore
@@ -142,11 +171,11 @@ class ChecklistSyncCommandTest extends KernelTestCase
         return $this;
     }
 
-    private function ensurePdfGenerationWillFail(): ChecklistSyncCommandTest
+    private function ensurePdfGenerationWillFailWith(\Throwable $e): ChecklistSyncCommandTest
     {
         $this->pdfGenerator
             ->method('generate')
-            ->willThrowException(new PdfGenerationFailedException('Failed to generate PDF'));
+            ->willThrowException($e);
 
         return $this;
     }
@@ -197,7 +226,7 @@ class ChecklistSyncCommandTest extends KernelTestCase
     private function assertChecklistsAreFetchedWithLimitOf(string $limit)
     {
         $this->restClient
-            ->expects($this->once())
+            ->expects($this->at(0))
             ->method('apiCall')
             ->with('get', 'report/all-with-queued-checklists', ['row_limit' => $limit], 'Report\Report[]', [], false)
             ->willReturn([
@@ -211,7 +240,7 @@ class ChecklistSyncCommandTest extends KernelTestCase
     private function assertChecklistsAreFetchedWithDefaultLimit()
     {
         $this->restClient
-            ->expects($this->once())
+            ->expects($this->at(0))
             ->method('apiCall')
             ->with('get', 'report/all-with-queued-checklists', ['row_limit' => ChecklistSyncCommand::FALLBACK_ROW_LIMITS], 'Report\Report[]', [], false)
             ->willReturn([
@@ -230,12 +259,27 @@ class ChecklistSyncCommandTest extends KernelTestCase
             ->withConsecutive(
                 [$this->isInstanceOf(QueuedChecklistData::class)],
                 [$this->isInstanceOf(QueuedChecklistData::class)]
-            );
+            )
+            ->willReturnOnConsecutiveCalls('uuid-1', 'uuid-2');
 
         return $this;
     }
 
-    private function assertChecklistStatusWillBeUpdated(): ChecklistSyncCommandTest
+    private function ensureSyncWillFailWith(\Throwable $e): ChecklistSyncCommandTest
+    {
+        $this->syncService
+            ->expects($this->exactly(2))
+            ->method('sync')
+            ->withConsecutive(
+                [$this->isInstanceOf(QueuedChecklistData::class)],
+                [$this->isInstanceOf(QueuedChecklistData::class)]
+            )
+            ->willThrowException($e);
+
+        return $this;
+    }
+
+    private function assertChecklistStatusWillBeUpdatedWithError($error): ChecklistSyncCommandTest
     {
         $this->restClient
             ->expects($this->at(1))
@@ -245,7 +289,26 @@ class ChecklistSyncCommandTest extends KernelTestCase
                 'checklist/3923',
                 json_encode([
                     'syncStatus' => Checklist::SYNC_STATUS_PERMANENT_ERROR,
-                    'syncError' => 'Failed to generate PDF'
+                    'syncError' => $error
+                ]),
+                'raw',
+                [],
+                false
+            );
+
+        return $this;
+    }
+
+    private function assertChecklistStatusWillBeUpdatedWithSuccess(): ChecklistSyncCommandTest
+    {
+        $this->restClient
+            ->expects($this->at(1))
+            ->method('apiCall')
+            ->with(
+                'put',
+                'checklist/3923',
+                json_encode([
+                    'syncStatus' => Checklist::SYNC_STATUS_SUCCESS
                 ]),
                 'raw',
                 [],

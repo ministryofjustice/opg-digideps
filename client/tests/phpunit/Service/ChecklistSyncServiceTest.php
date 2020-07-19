@@ -4,6 +4,8 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\ReportSubmission;
+use AppBundle\Exception\PdfGenerationFailedException;
+use AppBundle\Exception\SiriusDocumentSyncFailedException;
 use AppBundle\Model\Sirius\QueuedChecklistData;
 use AppBundle\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
 use AppBundle\Model\Sirius\SiriusDocumentFile;
@@ -23,6 +25,9 @@ class ChecklistSyncServiceTest extends TestCase
 
     /** @var QueuedChecklistData */
     private $dataInput;
+
+    /** @var string */
+    private $returnValue;
 
     public function setUp(): void
     {
@@ -69,25 +74,28 @@ class ChecklistSyncServiceTest extends TestCase
     /**
      * @test
      */
-    public function updatesChecklistAfterSuccessfulResponse()
+    public function returnsUuidAfterSuccessfulResponse()
     {
         $this
             ->buildChecklistDataInput()->withoutChecklistUuid()
             ->assertPostWillBeInvoked()
-            ->assertStatusAndUuidWillBeUpdatedOnChecklist()
-            ->invokeTest();
+            ->invokeTest()
+            ->assertUuidIsReturned();
     }
 
     /**
      * @test
      */
-    public function updatesChecklistAfterFailedResponse()
+    public function throwsExceptionAfterFailedResponse()
     {
+        $expectedException = new SiriusDocumentSyncFailedException('Failed to Sync document');
+
         $this
             ->buildChecklistDataInput()->withoutChecklistUuid()
             ->ensureFailedPostWillBeInvoked()
-            ->assertStatusAndErrorMessageWillBeUpdatedOnChecklist()
-            ->invokeTest();
+            ->expectExceptionObject($expectedException);
+
+        $this->invokeTest();
     }
 
     private function buildChecklistDataInput(): ChecklistSyncServiceTest
@@ -99,12 +107,6 @@ class ChecklistSyncServiceTest extends TestCase
             ->setReportStartDate(new \DateTime('2020-02-01'))
             ->setreportEndDate(new \DateTime('2021-02-01'));
 
-        return $this;
-    }
-
-    private function withChecklistUuid(): ChecklistSyncServiceTest
-    {
-        $this->dataInput->setChecklistUuid('checklist-uuid');
         return $this;
     }
 
@@ -175,7 +177,7 @@ class ChecklistSyncServiceTest extends TestCase
             ->siriusApiGatewayClient
             ->expects($this->once())
             ->method('postChecklistPdf')
-            ->willThrowException(new \Exception('An error occurred'));
+            ->willThrowException(new \Exception('Failed to Sync document'));
 
         return $this;
     }
@@ -197,56 +199,14 @@ class ChecklistSyncServiceTest extends TestCase
         return $expectedUploadObject;
     }
 
-    private function assertStatusAndUuidWillBeUpdatedOnChecklist(): ChecklistSyncServiceTest
+    private function assertUuidIsReturned()
     {
-        $expectedPayload = [
-            'syncStatus' => Checklist::SYNC_STATUS_SUCCESS,
-            'uuid' => 'returned-checklist-uuid'
-        ];
-
-        $this
-            ->restClient
-            ->expects($this->once())
-            ->method('apiCall')
-            ->with(
-                'put',
-                'checklist/231',
-                json_encode($expectedPayload),
-                'raw',
-                [],
-                false
-            );
-
-        return $this;
+        $this->assertEquals('returned-checklist-uuid', $this->returnValue);
     }
-
-    private function assertStatusAndErrorMessageWillBeUpdatedOnChecklist(): ChecklistSyncServiceTest
-    {
-        $expectedPayload = [
-            'syncStatus' => Checklist::SYNC_STATUS_PERMANENT_ERROR,
-            'syncError' => 'An error occurred'
-        ];
-
-        $this
-            ->restClient
-            ->expects($this->once())
-            ->method('apiCall')
-            ->with(
-                'put',
-                'checklist/231',
-                json_encode($expectedPayload),
-                'raw',
-                [],
-                false
-            );
-
-        return $this;
-    }
-
 
     private function invokeTest(): ChecklistSyncServiceTest
     {
-        $this->sut->sync($this->dataInput);
+        $this->returnValue = $this->sut->sync($this->dataInput);
         return $this;
     }
 

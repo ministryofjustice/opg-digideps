@@ -5,6 +5,7 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
+use AppBundle\Exception\SiriusDocumentSyncFailedException;
 use AppBundle\Model\Sirius\QueuedChecklistData;
 use AppBundle\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
 use AppBundle\Model\Sirius\SiriusDocumentFile;
@@ -49,17 +50,15 @@ class ChecklistSyncService
 
     /**
      * @param QueuedChecklistData $checklistData
-     * @return int
+     * @return mixed
      */
     public function sync(QueuedChecklistData $checklistData)
     {
         try {
             $siriusResponse = $this->sendDocument($checklistData);
-            $uuid = json_decode(strval($siriusResponse->getBody()), true)['data']['id'];
-            $this->updateChecklist($checklistData->getChecklistId(), Checklist::SYNC_STATUS_SUCCESS, null, $uuid);
+            return json_decode(strval($siriusResponse->getBody()), true)['data']['id'];
         } catch (Throwable $e) {
-            $this->updateChecklist($checklistData->getChecklistId(), Checklist::SYNC_STATUS_PERMANENT_ERROR, $this->determineErrorMessage($e));
-            return self::FAILED_TO_SYNC;
+            throw new SiriusDocumentSyncFailedException($this->determineErrorMessage($e));
         }
     }
 

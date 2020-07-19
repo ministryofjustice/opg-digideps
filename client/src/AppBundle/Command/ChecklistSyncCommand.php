@@ -5,6 +5,7 @@ namespace AppBundle\Command;
 use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Exception\PdfGenerationFailedException;
+use AppBundle\Exception\SiriusDocumentSyncFailedException;
 use AppBundle\Model\Sirius\QueuedChecklistData;
 use AppBundle\Service\ChecklistPdfGenerator;
 use AppBundle\Service\ChecklistSyncService;
@@ -91,14 +92,17 @@ class ChecklistSyncCommand extends Command
             try {
                 $content = $this->pdfGenerator->generate($report);
             } catch (PdfGenerationFailedException $e) {
-                $this->updateChecklist($report->getChecklist()->getId(), Checklist::SYNC_STATUS_PERMANENT_ERROR, $e->getMessage());
+                $this->updateChecklistWithError($report, $e);
                 $this->notSyncedCount += 1;
                 continue;
             }
 
-            $queuedChecklistData = $this->buildChecklistData($report, $content);
-
-            if (ChecklistSyncService::FAILED_TO_SYNC === $this->syncService->sync($queuedChecklistData)) {
+            try {
+                $queuedChecklistData = $this->buildChecklistData($report, $content);
+                $uuid = $this->syncService->sync($queuedChecklistData);
+                $this->updateChecklistWithSuccess($report, $uuid);
+            } catch (SiriusDocumentSyncFailedException $e) {
+                $this->updateChecklistWithError($report, $e);
                 $this->notSyncedCount += 1;
             }
         }
@@ -144,6 +148,49 @@ class ChecklistSyncCommand extends Command
     }
 
     /**
+     * @param Report $report
+     * @param $content
+     * @return QueuedChecklistData
+     */
+    protected function buildChecklistData(Report $report, $content): QueuedChecklistData
+    {
+        return (new QueuedChecklistData())
+            ->setChecklistId($report->getChecklist()->getId())
+            ->setChecklistUuid($report->getChecklist()->getUuid())
+            ->setCaseNumber($report->getClient()->getCaseNumber())
+            ->setChecklistFileContents($content)
+            ->setReportStartDate($report->getStartDate())
+            ->setReportEndDate($report->getEndDate())
+            ->setReportSubmissions($report->getReportSubmissions());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function configure(): void
+    {
+        $this->setDescription('Uploads queued checklists to Sirius and reports back the success');
+    }
+
+    /**
+     * @param Report $report
+     * @param $e
+     */
+    protected function updateChecklistWithError(Report $report, $e): void
+    {
+        $this->updateChecklist($report->getChecklist()->getId(), Checklist::SYNC_STATUS_PERMANENT_ERROR, $e->getMessage());
+    }
+
+    /**
+     * @param Report $report
+     * @param $uuid
+     */
+    protected function updateChecklistWithSuccess(Report $report, $uuid): void
+    {
+        $this->updateChecklist($report->getChecklist()->getId(), Checklist::SYNC_STATUS_SUCCESS, null, $uuid);
+    }
+
+    /**
      * @param int $id
      * @param string $status
      * @param string|null $message
@@ -170,30 +217,5 @@ class ChecklistSyncCommand extends Command
             [],
             false
         );
-    }
-
-    /**
-     * @param Report $report
-     * @param $content
-     * @return QueuedChecklistData
-     */
-    protected function buildChecklistData(Report $report, $content): QueuedChecklistData
-    {
-        return (new QueuedChecklistData())
-            ->setChecklistId($report->getChecklist()->getId())
-            ->setChecklistUuid($report->getChecklist()->getUuid())
-            ->setCaseNumber($report->getClient()->getCaseNumber())
-            ->setChecklistFileContents($content)
-            ->setReportStartDate($report->getStartDate())
-            ->setReportEndDate($report->getEndDate())
-            ->setReportSubmissions($report->getReportSubmissions());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function configure(): void
-    {
-        $this->setDescription('Uploads queued checklists to Sirius and reports back the success');
     }
 }
