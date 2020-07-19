@@ -128,7 +128,7 @@ LIMIT $limit;";
         return [];
     }
 
-    public function updateSupportingDocumentStatusByReportSubmissionIds(array $reportSubmissionIds, ?string $syncErrorMessage=null)
+    public function updateSupportingDocumentStatusByReportSubmissionIds(array $reportSubmissionIds, ?string $syncErrorMessage = null)
     {
         $idsString = implode(",", $reportSubmissionIds);
         $status = Document::SYNC_STATUS_PERMANENT_ERROR;
@@ -201,6 +201,19 @@ AND is_report_pdf=false";
             }
         }
 
+        // Flag resubmissions to handle UUIDs correctly
+        foreach ($groupedReportSubmissions['reports'] as $reportId => $submissions) {
+            $firstSubmissionDate = $submissions[0]['created_on'];
+
+            foreach($submissions as $i => $submission) {
+                if ($submission['contains_report_pdf'] && $submission['created_on'] > $firstSubmissionDate) {
+                    $groupedReportSubmissions['reports'][$reportId][$i]['is_resubmission'] = true;
+                } else {
+                    $groupedReportSubmissions['reports'][$reportId][$i]['is_resubmission'] = false;
+                }
+            }
+        }
+
         return $groupedReportSubmissions;
     }
 
@@ -223,7 +236,7 @@ AND is_report_pdf=false";
                     continue;
                 }
 
-                if (is_null($reportSubmission['opg_uuid']) && $reportSubmission['report_id'] === $lastReportId) {
+                if (is_null($reportSubmission['opg_uuid']) && $reportSubmission['report_id'] === $lastReportId && !$reportSubmission['is_resubmission']) {
                     $reportSubmissions['reports'][$reportId][$key]['opg_uuid'] = $lastUuid;
                 }
             }
