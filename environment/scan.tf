@@ -45,6 +45,7 @@ resource "aws_ecs_service" "scan" {
   task_definition         = aws_ecs_task_definition.scan.arn
   desired_count           = 2
   launch_type             = "FARGATE"
+  platform_version        = "1.3.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
 
