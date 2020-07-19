@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 
+use AppBundle\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
 use AppBundle\Service\AWS\RequestSigner;
 use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use DateTime;
@@ -256,7 +257,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
                 'checklist' => [
                     'data' => [
                         'type' => 'checklists',
-                        'attributes' => [],
+                        'attributes' => new SiriusChecklistPdfDocumentMetadata(),
                         'file' => [
                             'name' => $this->fileName,
                             'mimetype' => 'application/pdf',
@@ -265,6 +266,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
                     ]
                 ]
             ]);
+
 
         // Create your expected response from the provider.
         $response = new ProviderResponse();
@@ -276,7 +278,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
             ]);
 
         $this->builder
-            ->uponReceiving('A submitted checklist')
+            ->uponReceiving('A submitted checklist pdf')
             ->with($request)
             ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
     }
