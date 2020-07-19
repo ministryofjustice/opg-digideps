@@ -5,6 +5,7 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReviewChecklist;
+use AppBundle\Exception\PdfGenerationFailedException;
 use PHPStan\Testing\TestCase;
 use Psr\Log\LoggerInterface;
 use Twig\Environment;
@@ -34,7 +35,7 @@ class ChecklistPdfGeneratorTest extends TestCase
         $report = $this->buildReportInput();
 
         $this
-            ->assertHtmlWillBeGenerated($report)
+            ->ensureHtmlRenderWillSucceed($report)
             ->ensurePdfGenerationWillSucceed();
 
         $result = $this->sut->generate($report);
@@ -44,17 +45,32 @@ class ChecklistPdfGeneratorTest extends TestCase
     /**
      * @test
      */
-    public function catchesErrorsAndLogsThem()
+    public function throwsExceptionOnHtmlRenderError()
     {
         $report = $this->buildReportInput();
+        $expectedException = new PdfGenerationFailedException('Failed to render HTML');
 
         $this
-            ->assertHtmlWillBeGenerated($report)
-            ->ensurePdfGenerationWillFail()
-            ->assertErrorWillBeLogged();
+            ->ensureHtmlRenderWillFail($report)
+            ->expectExceptionObject($expectedException);
 
-        $result = $this->sut->generate($report);
-        $this->assertEquals(ChecklistPdfGenerator::FAILED_TO_GENERATE, $result);
+        $this->sut->generate($report);
+    }
+
+    /**
+     * @test
+     */
+    public function throwsExceptionOnHtmlToPdfError()
+    {
+        $report = $this->buildReportInput();
+        $expectedException = new PdfGenerationFailedException('Unable to generate PDF using wkhtmltopdf service');
+
+        $this
+            ->ensureHtmlRenderWillSucceed($report)
+            ->ensurePdfGenerationWillFail()
+            ->expectExceptionObject($expectedException);
+
+        $this->sut->generate($report);
     }
 
     /**
@@ -75,7 +91,7 @@ class ChecklistPdfGeneratorTest extends TestCase
      * @param Report $report
      * @return ChecklistPdfGeneratorTest
      */
-    private function assertHtmlWillBeGenerated(Report $report): ChecklistPdfGeneratorTest
+    private function ensureHtmlRenderWillSucceed(Report $report): ChecklistPdfGeneratorTest
     {
         $this
             ->templating
@@ -87,6 +103,22 @@ class ChecklistPdfGeneratorTest extends TestCase
                 'reviewChecklist' => $report->getReviewChecklist()
             ])
             ->willReturn('some-html');
+
+        return $this;
+    }
+
+    private function ensureHtmlRenderWillFail(Report $report): ChecklistPdfGeneratorTest
+    {
+        $this
+            ->templating
+            ->expects($this->once())
+            ->method('render')
+            ->with(ChecklistPdfGenerator::TEMPLATE_FILE, [
+                'report' => $report,
+                'lodgingChecklist' => $report->getChecklist(),
+                'reviewChecklist' => $report->getReviewChecklist()
+            ])
+            ->willThrowException(new \Exception('Failed to render HTML'));
 
         return $this;
     }
@@ -108,17 +140,7 @@ class ChecklistPdfGeneratorTest extends TestCase
             ->expects($this->once())
             ->method('getPdfFromHtml')
             ->with('some-html')
-            ->willThrowException(new \Exception('Failed to generate PDF'));
-
-        return $this;
-    }
-
-    private function assertErrorWillBeLogged(): ChecklistPdfGeneratorTest
-    {
-        $this
-            ->logger
-            ->expects($this->once())
-            ->method('critical');
+            ->willReturn(false);
 
         return $this;
     }

@@ -2,7 +2,9 @@
 
 namespace AppBundle\Command;
 
+use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Exception\PdfGenerationFailedException;
 use AppBundle\Model\Sirius\QueuedChecklistData;
 use AppBundle\Service\ChecklistPdfGenerator;
 use AppBundle\Service\ChecklistSyncService;
@@ -86,12 +88,16 @@ class ChecklistSyncCommand extends Command
 
         /** @var Report $report */
         foreach ($reports as $report) {
-            if (ChecklistPdfGenerator::FAILED_TO_GENERATE === ($content = $this->pdfGenerator->generate($report))) {
+            try {
+                $content = $this->pdfGenerator->generate($report);
+            } catch (PdfGenerationFailedException $e) {
+                $this->updateChecklist($report->getChecklist()->getId(), Checklist::SYNC_STATUS_PERMANENT_ERROR, $e->getMessage());
                 $this->notSyncedCount += 1;
                 continue;
             }
 
             $queuedChecklistData = $this->buildChecklistData($report, $content);
+
             if (ChecklistSyncService::FAILED_TO_SYNC === $this->syncService->sync($queuedChecklistData)) {
                 $this->notSyncedCount += 1;
             }
@@ -135,6 +141,35 @@ class ChecklistSyncCommand extends Command
     {
         $limit = $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_CHECKLIST_SYNC_ROW_LIMIT);
         return $limit ? $limit : self::FALLBACK_ROW_LIMITS;
+    }
+
+    /**
+     * @param int $id
+     * @param string $status
+     * @param string|null $message
+     * @param string|null $uuid
+     */
+    private function updateChecklist(int $id, string $status, string $message = null, string $uuid = null): void
+    {
+        $data = ['syncStatus' => $status];
+
+        if (null !== $message) {
+            $errorMessage = json_decode($message, true) ? json_decode($message, true) : $message;
+            $data['syncError'] = $errorMessage;
+        }
+
+        if (null !== $uuid) {
+            $data['uuid'] = $uuid;
+        }
+
+        $this->restClient->apiCall(
+            'put',
+            sprintf('checklist/%s', $id),
+            json_encode($data),
+            'raw',
+            [],
+            false
+        );
     }
 
     /**

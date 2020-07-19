@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Report\Report;
+use AppBundle\Exception\PdfGenerationFailedException;
 use Psr\Log\LoggerInterface;
 use Throwable;
 use Twig\Environment;
@@ -18,9 +19,6 @@ class ChecklistPdfGenerator
     /** @var LoggerInterface */
     private $logger;
 
-    /** @var int */
-    const FAILED_TO_GENERATE = -1;
-
     const TEMPLATE_FILE = 'AppBundle:Admin/Client/Report/Formatted:checklist_formatted_standalone.html.twig';
 
     /**
@@ -35,9 +33,9 @@ class ChecklistPdfGenerator
         $this->logger = $logger;
     }
 
-    /***
+    /**
      * @param Report $report
-     * @return int|string
+     * @return string
      */
     public function generate(Report $report)
     {
@@ -48,11 +46,13 @@ class ChecklistPdfGenerator
                 'reviewChecklist' => $report->getReviewChecklist()
             ]);
 
-            return $this->wkhtmltopdf->getPdfFromHtml($html);
+            if (false === ($pdf = $this->wkhtmltopdf->getPdfFromHtml($html))) {
+                throw new PdfGenerationFailedException('Unable to generate PDF using wkhtmltopdf service');
+            }
+
+            return $pdf;
         } catch (Throwable $e) {
-            // Repeat occurrences will cause an alert triggered by Cloudwatch.
-            $this->logger->critical(sprintf('Unable to generate checklist PDF: %s: %s', $e->getCode(), $e->getMessage()));
-            return self::FAILED_TO_GENERATE;
+            throw new PdfGenerationFailedException(sprintf('Unable to generate checklist PDF: %s: %s', $e->getCode(), $e->getMessage()));
         }
     }
 }

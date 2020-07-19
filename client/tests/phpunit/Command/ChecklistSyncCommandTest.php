@@ -5,6 +5,7 @@ use AppBundle\Command\ChecklistSyncCommand;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Exception\PdfGenerationFailedException;
 use AppBundle\Model\Sirius\QueuedChecklistData;
 use AppBundle\Service\ChecklistPdfGenerator;
 use AppBundle\Service\ChecklistSyncService;
@@ -55,6 +56,19 @@ class ChecklistSyncCommandTest extends KernelTestCase
         $this
             ->ensureFeatureIsDisabled()
             ->assertSyncServiceIsNotInvoked()
+            ->invokeTest();
+    }
+
+    /**
+     * @test
+     */
+    public function updatesSyncStatusOnFailedPdfGenerations()
+    {
+        $this
+            ->ensureFeatureIsEnabled()
+            ->ensureRestClientReturnsRows()
+            ->ensurePdfGenerationWillFail()
+            ->assertChecklistStatusWillBeUpdated()
             ->invokeTest();
     }
 
@@ -132,7 +146,7 @@ class ChecklistSyncCommandTest extends KernelTestCase
     {
         $this->pdfGenerator
             ->method('generate')
-            ->willReturn(ChecklistPdfGenerator::FAILED_TO_GENERATE);
+            ->willThrowException(new PdfGenerationFailedException('Failed to generate PDF'));
 
         return $this;
     }
@@ -169,6 +183,7 @@ class ChecklistSyncCommandTest extends KernelTestCase
     private function ensureRestClientReturnsRows(): ChecklistSyncCommandTest
     {
         $this->restClient
+            ->expects($this->at(0))
             ->method('apiCall')
             ->with('get', 'report/all-with-queued-checklists', ['row_limit' => '30'], 'Report\Report[]', [], false)
             ->willReturn([
@@ -215,6 +230,26 @@ class ChecklistSyncCommandTest extends KernelTestCase
             ->withConsecutive(
                 [$this->isInstanceOf(QueuedChecklistData::class)],
                 [$this->isInstanceOf(QueuedChecklistData::class)]
+            );
+
+        return $this;
+    }
+
+    private function assertChecklistStatusWillBeUpdated(): ChecklistSyncCommandTest
+    {
+        $this->restClient
+            ->expects($this->at(1))
+            ->method('apiCall')
+            ->with(
+                'put',
+                'checklist/3923',
+                json_encode([
+                    'syncStatus' => Checklist::SYNC_STATUS_PERMANENT_ERROR,
+                    'syncError' => 'Failed to generate PDF'
+                ]),
+                'raw',
+                [],
+                false
             );
 
         return $this;
