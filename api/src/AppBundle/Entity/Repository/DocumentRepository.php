@@ -100,25 +100,11 @@ LIMIT $limit;";
             $submissionStmt = $conn->prepare($getReportSubmissionsQuery);
             $submissionStmt->execute();
             $submissions = $submissionStmt->fetchAll(PDO::FETCH_ASSOC);
-            file_put_contents('php://stderr', print_r('$results are: ', TRUE));
-            file_put_contents('php://stderr', print_r($submissions, TRUE));
 
             $reportPdfFlaggedSubmissions = $this->flagSubmissionsContainingReportPdfs($submissions, $conn);
-            file_put_contents('php://stderr', print_r('$reportPdfFlaggedSubmissions are: ', TRUE));
-            file_put_contents('php://stderr', print_r($reportPdfFlaggedSubmissions, TRUE));
-
             $groupedSubmissions = $this->groupSubmissionsByReportId($reportPdfFlaggedSubmissions);
-            file_put_contents('php://stderr', print_r('$groupedSubmissions are: ', TRUE));
-            file_put_contents('php://stderr', print_r($groupedSubmissions, TRUE));
-
             $groupedSubmissionsWithUuids = $this->assignUuidsToAdditionalDocumentSubmissions($groupedSubmissions);
-            file_put_contents('php://stderr', print_r('$groupedSubmissionsWithUuids are: ', TRUE));
-            file_put_contents('php://stderr', print_r($groupedSubmissionsWithUuids, TRUE));
-
             $documentsWithUuids = $this->extractUuidsFromSubmissionsAndAssignToDocuments($documents, $groupedSubmissionsWithUuids);
-            file_put_contents('php://stderr', print_r('$documentsWithUuids are: ', TRUE));
-            file_put_contents('php://stderr', print_r($documentsWithUuids, TRUE));
-
 
             $this->setQueuedDocumentsToInProgress($documentsWithUuids, $conn);
 
