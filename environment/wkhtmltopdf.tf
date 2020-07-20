@@ -45,7 +45,7 @@ resource "aws_ecs_service" "wkhtmltopdf" {
   task_definition         = aws_ecs_task_definition.wkhtmltopdf.arn
   desired_count           = 1
   launch_type             = "FARGATE"
-  platform_version        = "1.3.0"
+  platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
 
