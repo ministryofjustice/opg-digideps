@@ -310,7 +310,6 @@ class OrgService
         $this->em->persist($client);
         $this->em->flush();
 
-        // add logging
         return $client;
     }
 
