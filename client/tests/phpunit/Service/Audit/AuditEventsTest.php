@@ -29,7 +29,7 @@ class AuditEventsTest extends TestCase
             'deputy_name' => 'Bjork Gudmundsdottir',
             'discharged_on' => $now->format(DateTime::ATOM),
             'deputyship_start_date' => $expectedStartDate,
-            'event' => AuditEvents::EVENT_CLIENT_DISCHARGED,
+            'event' => 'CLIENT_DISCHARGED',
             'type' => 'audit'
         ];
 
@@ -53,6 +53,83 @@ class AuditEventsTest extends TestCase
              ],
              'Null start date' => [null, null]
          ];
+    }
+
+    /**
+     * @test
+     * @dataProvider emailChangeProvider
+     */
+    public function userEmailChanged(string $name)
+    {
+        $now = new DateTime();
+        /** @var ObjectProphecy|DateTimeProvider $dateTimeProvider */
+        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
+
+        $expected = [
+            'trigger' => 'ADMIN_USER_EDIT',
+            'email_changed_from' => 'me@test.com',
+            'email_changed_to' => 'you@test.com',
+            'changed_on' => $now->format(DateTime::ATOM),
+            'changed_by' => 'super-admin@email.com',
+            'subject_full_name' => $name,
+            'subject_role' => 'ROLE_LAY_DEPUTY',
+            'event' => 'USER_EMAIL_CHANGED',
+            'type' => 'audit'
+        ];
+
+        $actual = (new AuditEvents($dateTimeProvider->reveal()))->userEmailChanged(
+            'ADMIN_USER_EDIT',
+            'me@test.com',
+            'you@test.com',
+            'super-admin@email.com',
+            $name,
+            'ROLE_LAY_DEPUTY'
+        );
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @test
+     * @dataProvider emailChangeProvider
+     */
+    public function clientEmailChanged(string $name)
+    {
+        $now = new DateTime();
+        /** @var ObjectProphecy|DateTimeProvider $dateTimeProvider */
+        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
+
+        $expected = [
+            'trigger' => 'DEPUTY_USER_EDIT',
+            'email_changed_from' => 'me@test.com',
+            'email_changed_to' => 'you@test.com',
+            'changed_on' => $now->format(DateTime::ATOM),
+            'changed_by' => 'super-admin@email.com',
+            'subject_full_name' => $name,
+            'subject_role' => 'CLIENT',
+            'event' => 'CLIENT_EMAIL_CHANGED',
+            'type' => 'audit'
+        ];
+
+        $actual = (new AuditEvents($dateTimeProvider->reveal()))->clientEmailChanged(
+            'DEPUTY_USER_EDIT',
+            'me@test.com',
+            'you@test.com',
+            'super-admin@email.com',
+            $name
+        );
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function emailChangeProvider()
+    {
+        return [
+            'Panda Bear' => ['Panda Bear'],
+            'Geologist' =>  ['Geologist']
+        ];
     }
 
     /**

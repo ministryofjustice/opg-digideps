@@ -386,10 +386,13 @@ class Client
 
     /**
      * @param Report $currentReport
+     * @return Client
      */
-    public function setCurrentReport($currentReport)
+    public function setCurrentReport($currentReport): self
     {
         $this->currentReport = $currentReport;
+
+        return $this;
     }
 
     /**
