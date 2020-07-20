@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Service\Audit;
 
@@ -7,9 +7,12 @@ use DateTime;
 
 final class AuditEvents
 {
-    const CLIENT_DISCHARGED = 'CLIENT_DISCHARGED';
-    const CLIENT_DISCHARGED_ADMIN_TRIGGER = 'ADMIN_BUTTON';
-    const CLIENT_DISCHARGED_CSV_TRIGGER = 'CSV_UPLOAD';
+    const EVENT_CLIENT_DISCHARGED = 'CLIENT_DISCHARGED';
+    const EVENT_ROLE_CHANGED = 'ROLE_CHANGED';
+
+    const TRIGGER_ADMIN_BUTTON = 'ADMIN_BUTTON';
+    const TRIGGER_CSV_UPLOAD = 'CSV_UPLOAD';
+    const TRIGGER_DEPUTY_USER = 'DEPUTY_USER';
 
     /**
      * @var DateTimeProvider
@@ -47,7 +50,7 @@ final class AuditEvents
             'deputyship_start_date' => $deputyshipStartDate ? $deputyshipStartDate->format(DateTime::ATOM) : null,
         ];
 
-        return $event + $this->baseEvent(AuditEvents::CLIENT_DISCHARGED);
+        return $event + $this->baseEvent(AuditEvents::EVENT_CLIENT_DISCHARGED);
     }
 
     /**
@@ -60,5 +63,27 @@ final class AuditEvents
             'event' => $eventName,
             'type' => 'audit'
         ];
+    }
+
+    /**
+     * @param string $trigger
+     * @param string $changedFrom
+     * @param string $changedTo
+     * @param string $changedBy
+     * @return array
+     * @throws \Exception
+     */
+    public function roleChanged(string $trigger, string $changedFrom, string $changedTo, string $changedBy, string $userChanged): array
+    {
+        $event = [
+            'trigger' => $trigger,
+            'role_changed_from' => $changedFrom,
+            'role_changed_to' => $changedTo,
+            'changed_by' => $changedBy,
+            'changed_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            'user_changed' => $userChanged,
+        ];
+
+        return $event + $this->baseEvent(AuditEvents::EVENT_ROLE_CHANGED);
     }
 }
