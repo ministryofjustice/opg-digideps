@@ -40,8 +40,9 @@ class IndexControllerTest extends AbstractControllerTestCase
 
     /**
      * @test
+     * @dataProvider emailAddressProvider
      */
-    public function clientEditAction_client_email_changed_audit_log_created(): void
+    public function clientEditAction_client_email_changed_audit_log_created(?string $oldEmail, ?string $newEmail, string $message): void
     {
         $report = (new Report())
             ->setId(4);
@@ -52,7 +53,7 @@ class IndexControllerTest extends AbstractControllerTestCase
             ->setId(5)
             ->setDateOfBirth(new DateTime('6 January 1978'))
             ->setPhone('01213541234')
-            ->setEmail('d.dibb@email.com')
+            ->setEmail($oldEmail)
             ->setAddress('Strawberry Jam Lane')
             ->setAddress2('California')
             ->setCounty('West Midlands')
@@ -60,7 +61,7 @@ class IndexControllerTest extends AbstractControllerTestCase
             ->setCurrentReport($report);
 
         $updatedClient = (clone $client)
-            ->setEmail('deakin.dibb@email.com');
+            ->setEmail($newEmail);
 
         $this->restClient->get(sprintf('client/%s', $client->getId()), Argument::cetera())->shouldBeCalled()->willReturn($client);
         $this->restClient->put('client/upsert', $updatedClient, ['pa-edit'])->shouldBeCalled();
@@ -69,11 +70,11 @@ class IndexControllerTest extends AbstractControllerTestCase
             $dateTimeProvider->getDateTime()->willReturn($this->now);
         });
 
-        $this->injectProphecyService(Logger::class, function($logger) use($client, $updatedClient) {
+        $this->injectProphecyService(Logger::class, function($logger) use($oldEmail, $newEmail, $message, $updatedClient) {
             $expectedEvent = [
                 'trigger' => 'DEPUTY_USER_EDIT',
-                'email_changed_from' => $client->getEmail(),
-                'email_changed_to' => $updatedClient->getEmail(),
+                'email_changed_from' => $oldEmail,
+                'email_changed_to' => $newEmail,
                 'changed_on' => $this->now->format(DateTime::ATOM),
                 'changed_by' => $this->loggedInProfAdminUser->getEmail(),
                 'subject_full_name' => $updatedClient->getFullName(),
@@ -82,7 +83,7 @@ class IndexControllerTest extends AbstractControllerTestCase
                 'type' => 'audit'
             ];
 
-            $logger->notice('', $expectedEvent)->shouldBeCalled();
+            $logger->notice($message, $expectedEvent)->shouldBeCalled();
         });
 
         $crawler = $this->client->request('GET', sprintf("/org/client/%s/edit", $client->getId()));
@@ -95,12 +96,21 @@ class IndexControllerTest extends AbstractControllerTestCase
             'org_client_edit[dateOfBirth][month]' => '1',
             'org_client_edit[dateOfBirth][year]' => '1978',
             'org_client_edit[phone]' => '01213541234',
-            'org_client_edit[email]' => 'deakin.dibb@email.com',
+            'org_client_edit[email]' => $newEmail,
             'org_client_edit[address]' => 'Strawberry Jam Lane',
             'org_client_edit[address2]' => 'California',
             'org_client_edit[county]' => 'West Midlands',
             'org_client_edit[postcode]' => 'B31 1AB',
         ]);
+    }
+
+    public function emailAddressProvider()
+    {
+        return [
+            'Email changed' => ['d.dibb@email.com', 'deakin.dibb@email.com', ''],
+            'Email added' => [null, 'deakin.dibb@email.com', ''],
+            'Email removed' => ['d.dibb@email.com', null, 'Client email address removed'],
+        ];
     }
 
     /**
@@ -148,71 +158,6 @@ class IndexControllerTest extends AbstractControllerTestCase
             'org_client_edit[dateOfBirth][year]' => '1978',
             'org_client_edit[phone]' => '01213541234',
             'org_client_edit[email]' => 'd.dibb@email.com',
-            'org_client_edit[address]' => 'Strawberry Jam Lane',
-            'org_client_edit[address2]' => 'New York',
-            'org_client_edit[county]' => 'West Midlands',
-            'org_client_edit[postcode]' => 'B31 1AB',
-        ]);
-    }
-
-    /**
-     * @test
-     */
-    public function clientEditAction_removing_email_address_is_logged(): void
-    {
-        $report = (new Report())
-            ->setId(4);
-
-        $client = (new Client())
-            ->setFirstname('Deakin')
-            ->setLastname('Dibb')
-            ->setId(5)
-            ->setDateOfBirth(new DateTime('6 January 1978'))
-            ->setPhone('01213541234')
-            ->setEmail('a@b.com')
-            ->setAddress('Strawberry Jam Lane')
-            ->setAddress2('California')
-            ->setCounty('West Midlands')
-            ->setPostcode('B31 1AB')
-            ->setCurrentReport($report);
-
-        $updatedClient = (clone $client)
-            ->setAddress2('New York')
-            ->setEmail(null);
-
-        // Super strange bug requires calling this here to ensure its populated on the entity during put assertion
-        $updatedClient->getFullName();
-
-        $this->restClient->get(sprintf('client/%s', $client->getId()), Argument::cetera())->shouldBeCalled()->willReturn($client);
-        $this->restClient->put('client/upsert', $updatedClient, ['pa-edit'])->shouldBeCalled();
-
-        $this->injectProphecyService(Logger::class, function($logger) use($client, $updatedClient) {
-            $expectedEvent = [
-                'trigger' => 'DEPUTY_USER_EDIT',
-                'email_changed_from' => $client->getEmail(),
-                'email_changed_to' => null,
-                'changed_on' => $this->now->format(DateTime::ATOM),
-                'changed_by' => $this->loggedInProfAdminUser->getEmail(),
-                'subject_full_name' => $updatedClient->getFullName(),
-                'subject_role' => 'CLIENT',
-                'event' => 'CLIENT_EMAIL_CHANGED',
-                'type' => 'audit'
-            ];
-
-            $logger->notice('Client email address removed', $expectedEvent)->shouldBeCalled();
-        });
-
-        $crawler = $this->client->request('GET', sprintf("/org/client/%s/edit", $client->getId()));
-        $button = $crawler->selectButton('Save client details');
-
-        $this->client->submit($button->form(), [
-            'org_client_edit[firstname]' => 'Deakin',
-            'org_client_edit[lastname]' => 'Dibb',
-            'org_client_edit[dateOfBirth][day]' => '6',
-            'org_client_edit[dateOfBirth][month]' => '1',
-            'org_client_edit[dateOfBirth][year]' => '1978',
-            'org_client_edit[phone]' => '01213541234',
-            'org_client_edit[email]' => '',
             'org_client_edit[address]' => 'Strawberry Jam Lane',
             'org_client_edit[address2]' => 'New York',
             'org_client_edit[county]' => 'West Midlands',

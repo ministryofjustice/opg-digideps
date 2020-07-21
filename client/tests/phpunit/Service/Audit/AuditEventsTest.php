@@ -59,7 +59,7 @@ class AuditEventsTest extends TestCase
      * @test
      * @dataProvider emailChangeProvider
      */
-    public function userEmailChanged(string $name)
+    public function userEmailChanged()
     {
         $now = new DateTime();
         /** @var ObjectProphecy|DateTimeProvider $dateTimeProvider */
@@ -72,7 +72,7 @@ class AuditEventsTest extends TestCase
             'email_changed_to' => 'you@test.com',
             'changed_on' => $now->format(DateTime::ATOM),
             'changed_by' => 'super-admin@email.com',
-            'subject_full_name' => $name,
+            'subject_full_name' => 'Panda Bear',
             'subject_role' => 'ROLE_LAY_DEPUTY',
             'event' => 'USER_EMAIL_CHANGED',
             'type' => 'audit'
@@ -83,7 +83,7 @@ class AuditEventsTest extends TestCase
             'me@test.com',
             'you@test.com',
             'super-admin@email.com',
-            $name,
+            'Panda Bear',
             'ROLE_LAY_DEPUTY'
         );
 
@@ -94,7 +94,7 @@ class AuditEventsTest extends TestCase
      * @test
      * @dataProvider emailChangeProvider
      */
-    public function clientEmailChanged(string $oldEmail, ?string $newEmail)
+    public function clientEmailChanged(?string $oldEmail, ?string $newEmail)
     {
         $now = new DateTime();
         /** @var ObjectProphecy|DateTimeProvider $dateTimeProvider */
@@ -128,7 +128,8 @@ class AuditEventsTest extends TestCase
     {
         return [
             'Email changed' => ['me@test.com', 'you@test.com'],
-            'Email removed' =>  ['me@test.com', null]
+            'Email removed' =>  ['me@test.com', null],
+            'Email added' => [null, 'you@test.com']
         ];
     }
 

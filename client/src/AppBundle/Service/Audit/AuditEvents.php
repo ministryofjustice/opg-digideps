@@ -81,7 +81,7 @@ final class AuditEvents
 
     public function clientEmailChanged(
         string $trigger,
-        string $emailChangedFrom,
+        ?string $emailChangedFrom,
         ?string $emailChangedTo,
         string $changedBy,
         string $subjectFullName
