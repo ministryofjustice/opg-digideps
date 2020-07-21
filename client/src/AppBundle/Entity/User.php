@@ -1201,10 +1201,13 @@ class User implements AdvancedUserInterface, DeputyInterface
 
     /**
      * @param ArrayCollection $organisations
+     * @return User
      */
-    public function setOrganisations($organisations)
+    public function setOrganisations($organisations): self
     {
         $this->organisations = $organisations;
+
+        return $this;
     }
 
     /**

@@ -4,16 +4,51 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Audit\AuditEvents;
+use AppBundle\Service\Logger;
+use AppBundle\Service\Mailer\MailFactory;
+use AppBundle\Service\Mailer\MailSender;
 use AppBundle\Service\Redirector;
+use AppBundle\Service\Time\DateTimeProvider;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class SettingsController extends AbstractController
 {
+    /** @var MailFactory */
+    private $mailFactory;
+
+    /** @var MailSender */
+    private $mailSender;
+
+    /** @var TranslatorInterface */
+    private $translator;
+
+    /** @var Logger */
+    private $logger;
+
+    /** @var DateTimeProvider */
+    private $dateTimeProvider;
+
+    public function __construct(
+        MailFactory $mailFactory,
+        MailSender $mailSender,
+        TranslatorInterface $translator,
+        Logger $logger,
+        DateTimeProvider $dateTimeProvider
+    ) {
+        $this->mailFactory = $mailFactory;
+        $this->mailSender = $mailSender;
+        $this->translator = $translator;
+        $this->logger = $logger;
+        $this->dateTimeProvider = $dateTimeProvider;
+    }
+
     /**
      * @Route("/deputyship-details", name="account_settings")
      * @Route("/org/settings", name="org_settings")
@@ -118,7 +153,18 @@ class SettingsController extends AbstractController
             $deputy = $form->getData();
 
             if ($form->has('removeAdmin') && !empty($form->get('removeAdmin')->getData())) {
+                $oldRole = $user->getRoleName();
                 $newRole = $this->determineNoAdminRole();
+
+                $event = (new AuditEvents($this->dateTimeProvider))
+                    ->roleChanged(
+                        AuditEvents::TRIGGER_DEPUTY_USER,
+                        $oldRole,
+                        $newRole,
+                        $user->getEmail(),
+                        $user->getEmail()
+                    );
+
                 $user->setRoleName($newRole);
 
                 $this->addFlash('notice', 'For security reasons you have been logged out because you have changed your admin rights. Please log in again below');
@@ -139,18 +185,21 @@ class SettingsController extends AbstractController
             try {
                 $this->getRestClient()->put('user/' . $user->getId(), $deputy, $jmsPutGroups);
 
+                if (isset($event, $oldRole, $newRole) && $oldRole !== $newRole) {
+                    $this->logger->notice('', $event);
+                }
+
                 if ($user->isLayDeputy()) {
                     $hydratedDeputy = $this->getUserWithData(['user-clients', 'client']);
 
-                    $updateDeputyDetailsEmail = $this->getMailFactory()->createUpdateDeputyDetailsEmail($hydratedDeputy);
-                    $this->getMailSender()->send($updateDeputyDetailsEmail, ['html']);
+                    $updateDeputyDetailsEmail = $this->mailFactory->createUpdateDeputyDetailsEmail($hydratedDeputy);
+                    $this->mailSender->send($updateDeputyDetailsEmail);
                 }
 
                 return $this->redirect($redirectRoute);
             } catch (\Throwable $e) {
-                $translator = $this->get('translator');
                 if ($e->getCode() == 422 && $form->get('email')) {
-                    $form->get('email')->addError(new FormError($translator->trans('user.email.alreadyUsed', [], 'validators')));
+                    $form->get('email')->addError(new FormError($this->translator->trans('user.email.alreadyUsed', [], 'validators')));
                 }
             }
         }
