@@ -3,72 +3,72 @@ version: 2.1
 workflows:
   pull_request:
     jobs:
-      - lint:
-          name: lint terraform
-          filters: { branches: { ignore: [ master ] } }
+#      - lint:
+#          name: lint terraform
+#          filters: { branches: { ignore: [ master ] } }
 
       - build:
           name: build pr
           filters: { branches: { ignore: [ master ] } }
 
-      - terraform-command:
-          name: apply environment
-          requires: [ build pr, lint terraform ]
-          filters: { branches: { ignore: [ master ] } }
-          tf_command: apply
-
-      - run-task:
-          name: reset environment
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: reset_database
-          timeout: 180
-
-      - run-task:
-          name: integration test
-          requires: [ reset environment ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: integration_test
-          timeout: 2400
-
-      - client-unit-test:
-          name: client unit test
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ master ] } }
-
-      - api-unit-tests:
-          name: api unit test
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ master ] } }
-
-      - pa11y-ci:
-          name: accessibility test
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ master ] } }
-
-      - run-task:
-          name: backup environment
-          requires: [ api unit test, client unit test, integration test ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: backup
-
-      - run-task:
-          name: restore environment
-          requires: [ backup environment ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: restore
-
-      - cleanup:
-          name: approve destroy environment
-          type: approval
-          requires: [ restore environment ]
-          filters: { branches: { ignore: [ master ] } }
-
-      - terraform-command:
-          name: destroy environment
-          requires: [ approve destroy environment ]
-          filters: { branches: { ignore: [ master ] } }
-          tf_command: destroy
+#      - terraform-command:
+#          name: apply environment
+#          requires: [ build pr, lint terraform ]
+#          filters: { branches: { ignore: [ master ] } }
+#          tf_command: apply
+#
+#      - run-task:
+#          name: reset environment
+#          requires: [ apply environment ]
+#          filters: { branches: { ignore: [ master ] } }
+#          task_name: reset_database
+#          timeout: 180
+#
+#      - run-task:
+#          name: integration test
+#          requires: [ reset environment ]
+#          filters: { branches: { ignore: [ master ] } }
+#          task_name: integration_test
+#          timeout: 2400
+#
+#      - client-unit-test:
+#          name: client unit test
+#          requires: [ apply environment ]
+#          filters: { branches: { ignore: [ master ] } }
+#
+#      - api-unit-tests:
+#          name: api unit test
+#          requires: [ apply environment ]
+#          filters: { branches: { ignore: [ master ] } }
+#
+#      - pa11y-ci:
+#          name: accessibility test
+#          requires: [ apply environment ]
+#          filters: { branches: { ignore: [ master ] } }
+#
+#      - run-task:
+#          name: backup environment
+#          requires: [ api unit test, client unit test, integration test ]
+#          filters: { branches: { ignore: [ master ] } }
+#          task_name: backup
+#
+#      - run-task:
+#          name: restore environment
+#          requires: [ backup environment ]
+#          filters: { branches: { ignore: [ master ] } }
+#          task_name: restore
+#
+#      - cleanup:
+#          name: approve destroy environment
+#          type: approval
+#          requires: [ restore environment ]
+#          filters: { branches: { ignore: [ master ] } }
+#
+#      - terraform-command:
+#          name: destroy environment
+#          requires: [ approve destroy environment ]
+#          filters: { branches: { ignore: [ master ] } }
+#          tf_command: destroy
 
   master:
     jobs:
@@ -412,26 +412,26 @@ jobs:
       - run:
           name: Build images
           command: docker-compose -f docker-compose.ci.yml build --parallel
-      - run:
-          name: List API packages
-          command: docker-compose -f docker-compose.ci.yml run --rm api apk list | sort
-      - run:
-          name: List client packages
-          command: docker-compose -f docker-compose.ci.yml run --rm client apk list | sort
-      - run:
-          name: Check updated PHP files for errors
-          command: |
-            MERGE_BASE_COMMIT=( $(git merge-base master HEAD) )
-            API_CHANGED_FILES=( $(git diff --relative=api --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) ) || [[ $? == 1 ]]
-            CLIENT_CHANGED_FILES=( $(git diff --relative=client --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) ) || [[ $? == 1 ]]
-
-            if [ -n "$API_CHANGED_FILES" ]; then
-                docker-compose -f docker-compose.ci.yml run --rm api php bin/phpstan analyse $API_CHANGED_FILES --memory-limit=0 --level=max
-            fi
-
-            if [ -n "$CLIENT_CHANGED_FILES" ]; then
-                docker-compose -f docker-compose.ci.yml run --rm client php bin/phpstan analyse $CLIENT_CHANGED_FILES --memory-limit=0 --level=max
-            fi
+#      - run:
+#          name: List API packages
+#          command: docker-compose -f docker-compose.ci.yml run --rm api apk list | sort
+#      - run:
+#          name: List client packages
+#          command: docker-compose -f docker-compose.ci.yml run --rm client apk list | sort
+#      - run:
+#          name: Check updated PHP files for errors
+#          command: |
+#            MERGE_BASE_COMMIT=( $(git merge-base master HEAD) )
+#            API_CHANGED_FILES=( $(git diff --relative=api --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) ) || [[ $? == 1 ]]
+#            CLIENT_CHANGED_FILES=( $(git diff --relative=client --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) ) || [[ $? == 1 ]]
+#
+#            if [ -n "$API_CHANGED_FILES" ]; then
+#                docker-compose -f docker-compose.ci.yml run --rm api php bin/phpstan analyse $API_CHANGED_FILES --memory-limit=0 --level=max
+#            fi
+#
+#            if [ -n "$CLIENT_CHANGED_FILES" ]; then
+#                docker-compose -f docker-compose.ci.yml run --rm client php bin/phpstan analyse $CLIENT_CHANGED_FILES --memory-limit=0 --level=max
+#            fi
       - run:
           name: Push images
           command: docker-compose -f docker-compose.ci.yml push
@@ -440,23 +440,23 @@ jobs:
           working_directory: ~/project/ecs_helper/check_ecr_scan_results
           command: |
             sudo pip3 install -r requirements.txt
-      - run:
-          name: Check ECR Scan Results
-          working_directory: ~/project/ecs_helper/check_ecr_scan_results
-          command: |
-            python3 aws_ecr_scan_results.py --search digideps --tag $VERSION --post_to_slack False
+#      - run:
+#          name: Check ECR Scan Results
+#          working_directory: ~/project/ecs_helper/check_ecr_scan_results
+#          command: |
+#            python3 aws_ecr_scan_results.py --search digideps --tag $VERSION --post_to_slack False
       - run:
           name: Archive docker images
           command: |
             docker tag ${AWS_REGISTRY}/digideps/client:${VERSION} client:latest
             docker save -o docker-images.tar client:latest
-      - run:
-          name: install requirements for all lambda layers
-          command: |
-            export LAYER_PATH=lambda_functions/layers/monitoring/python/lib/python3.7/site-packages
-            pip3 install -r lambda_functions/requirements/requirements.txt --target ./$LAYER_PATH/
-            cd lambda_functions
-            tar cvf layer.tar layers
+#      - run:
+#          name: install requirements for all lambda layers
+#          command: |
+#            export LAYER_PATH=lambda_functions/layers/monitoring/python/lib/python3.7/site-packages
+#            pip3 install -r lambda_functions/requirements/requirements.txt --target ./$LAYER_PATH/
+#            cd lambda_functions
+#            tar cvf layer.tar layers
       - persist_to_workspace:
           root: .
           paths:

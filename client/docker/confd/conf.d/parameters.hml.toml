@@ -5,7 +5,7 @@ keys = [
     "/opg/docker/tag",
     "/role",
     "/session",
-    "/ga",
+    "ga",
     "/secret",
     "/api",
     "/fixtures",
