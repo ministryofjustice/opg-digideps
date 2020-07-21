@@ -550,7 +550,7 @@ jobs:
             docker-compose -f docker-compose.yml up -d pa11y
             docker-compose exec frontend touch /var/www/.enableProdMode
             docker-compose exec admin touch /var/www/.enableProdMode
-            docker-compose docker-compose -f docker-compose.yml run --rm api sh scripts/reset_db_structure.sh
+            docker-compose -f docker-compose.yml run --rm api sh scripts/reset_db_structure.sh
             docker-compose -f docker-compose.yml run --rm api sh scripts/reset_db_fixtures.shdocker-compose
             sleep 10
             docker-compose -f docker-compose.yml run pa11y pa11y-ci || echo "Pa11y found some errors"
