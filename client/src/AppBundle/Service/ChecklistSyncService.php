@@ -102,12 +102,12 @@ class ChecklistSyncService
      */
     private function putChecklist(QueuedChecklistData $checklistData, string $reportSubmissionUuid)
     {
-//        return $this->siriusApiGatewayClient->putChecklistPdf(
-//            $this->buildUpload($checklistData),
-//            $reportSubmissionUuid,
-//            strtoupper($checklistData->getCaseNumber())
-//            $checklistData->getChecklistUuid()
-//        );
+        return $this->siriusApiGatewayClient->putChecklistPdf(
+            $this->buildUpload($checklistData),
+            $reportSubmissionUuid,
+            strtoupper($checklistData->getCaseNumber()),
+            $checklistData->getChecklistUuid()
+        );
     }
 
     /**
