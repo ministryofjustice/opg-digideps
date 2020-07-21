@@ -94,7 +94,7 @@ class AuditEventsTest extends TestCase
      * @test
      * @dataProvider emailChangeProvider
      */
-    public function clientEmailChanged(string $name)
+    public function clientEmailChanged(string $oldEmail, ?string $newEmail)
     {
         $now = new DateTime();
         /** @var ObjectProphecy|DateTimeProvider $dateTimeProvider */
@@ -103,11 +103,11 @@ class AuditEventsTest extends TestCase
 
         $expected = [
             'trigger' => 'DEPUTY_USER_EDIT',
-            'email_changed_from' => 'me@test.com',
-            'email_changed_to' => 'you@test.com',
+            'email_changed_from' => $oldEmail,
+            'email_changed_to' => $newEmail,
             'changed_on' => $now->format(DateTime::ATOM),
             'changed_by' => 'super-admin@email.com',
-            'subject_full_name' => $name,
+            'subject_full_name' => 'Panda Bear',
             'subject_role' => 'CLIENT',
             'event' => 'CLIENT_EMAIL_CHANGED',
             'type' => 'audit'
@@ -115,10 +115,10 @@ class AuditEventsTest extends TestCase
 
         $actual = (new AuditEvents($dateTimeProvider->reveal()))->clientEmailChanged(
             'DEPUTY_USER_EDIT',
-            'me@test.com',
-            'you@test.com',
+            $oldEmail,
+            $newEmail,
             'super-admin@email.com',
-            $name
+            'Panda Bear'
         );
 
         $this->assertEquals($expected, $actual);
@@ -127,8 +127,8 @@ class AuditEventsTest extends TestCase
     public function emailChangeProvider()
     {
         return [
-            'Panda Bear' => ['Panda Bear'],
-            'Geologist' =>  ['Geologist']
+            'Email changed' => ['me@test.com', 'you@test.com'],
+            'Email removed' =>  ['me@test.com', null]
         ];
     }
 
