@@ -362,9 +362,9 @@ jobs:
       - run:
           name: Output
           command: terraform output -json > terraform.output.json
-#      - run:
-#          name: Stabilize
-#          command: stabilizer
+      - run:
+          name: Stabilize
+          command: stabilizer
       - when:
           condition: << parameters.pact_tag >>
           steps:
