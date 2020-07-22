@@ -20,7 +20,7 @@ parameters:
     log_path: /var/log/app/application.log
     ga:
         default: {{ getv "/ga/default" }}
-        gds: ''
+        gds: {{ getv "/ga/gds" }}
     opg_docker_tag: {{ getv "/opg/docker/tag" }}
     email_params:
         {{ if eq (getv "/email/send/internal") "true" }}
