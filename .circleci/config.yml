@@ -421,6 +421,9 @@ jobs:
       - run:
           name: Check updated PHP files for errors
           command: |
+            CURRENT_BRANCH=( git rev-parse --abbrev-ref HEAD )
+            git checkout main
+            git checkout $CURRENT_BRANCH
             MERGE_BASE_COMMIT=( $(git merge-base main HEAD) )
             API_CHANGED_FILES=( $(git diff --relative=api --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) ) || [[ $? == 1 ]]
             CLIENT_CHANGED_FILES=( $(git diff --relative=client --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) ) || [[ $? == 1 ]]
