@@ -421,7 +421,7 @@ jobs:
       - run:
           name: Check updated PHP files for errors
           command: |
-            CURRENT_BRANCH=( git rev-parse --abbrev-ref HEAD )
+            CURRENT_BRANCH=( $(git rev-parse --abbrev-ref HEAD) )
             git checkout main
             git checkout $CURRENT_BRANCH
             MERGE_BASE_COMMIT=( $(git merge-base main HEAD) )
