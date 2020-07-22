@@ -5,81 +5,81 @@ workflows:
     jobs:
       - lint:
           name: lint terraform
-          filters: { branches: { ignore: [ master ] } }
+          filters: { branches: { ignore: [ main ] } }
 
       - build:
           name: build pr
-          filters: { branches: { ignore: [ master ] } }
+          filters: { branches: { ignore: [ main ] } }
 
       - terraform-command:
           name: apply environment
           requires: [ build pr, lint terraform ]
-          filters: { branches: { ignore: [ master ] } }
+          filters: { branches: { ignore: [ main ] } }
           tf_command: apply
 
       - run-task:
           name: reset environment
           requires: [ apply environment ]
-          filters: { branches: { ignore: [ master ] } }
+          filters: { branches: { ignore: [ main ] } }
           task_name: reset_database
           timeout: 180
 
       - run-task:
           name: integration test
           requires: [ reset environment ]
-          filters: { branches: { ignore: [ master ] } }
+          filters: { branches: { ignore: [ main ] } }
           task_name: integration_test
           timeout: 2400
 
       - client-unit-test:
           name: client unit test
           requires: [ apply environment ]
-          filters: { branches: { ignore: [ master ] } }
+          filters: { branches: { ignore: [ main ] } }
 
       - api-unit-tests:
           name: api unit test
           requires: [ apply environment ]
-          filters: { branches: { ignore: [ master ] } }
+          filters: { branches: { ignore: [ main ] } }
 
       - pa11y-ci:
           name: accessibility test
           requires: [ apply environment ]
-          filters: { branches: { ignore: [ master ] } }
+          filters: { branches: { ignore: [ main ] } }
 
       - run-task:
           name: backup environment
           requires: [ api unit test, client unit test, integration test ]
-          filters: { branches: { ignore: [ master ] } }
+          filters: { branches: { ignore: [ main ] } }
           task_name: backup
 
       - run-task:
           name: restore environment
           requires: [ backup environment ]
-          filters: { branches: { ignore: [ master ] } }
+          filters: { branches: { ignore: [ main ] } }
           task_name: restore
 
       - cleanup:
           name: approve destroy environment
           type: approval
           requires: [ restore environment ]
-          filters: { branches: { ignore: [ master ] } }
+          filters: { branches: { ignore: [ main ] } }
 
       - terraform-command:
           name: destroy environment
           requires: [ approve destroy environment ]
-          filters: { branches: { ignore: [ master ] } }
+          filters: { branches: { ignore: [ main ] } }
           tf_command: destroy
 
-  master:
+  main:
     jobs:
       - build:
-          name: build master
-          filters: { branches: { only: [ master ] } }
+          name: build main
+          filters: { branches: { only: [ main ] } }
 
       - terraform-command:
           name: apply shared-development
-          requires: [ build master ]
-          filters: { branches: { only: [ master ] } }
+          requires: [ build main ]
+          filters: { branches: { only: [ main ] } }
           tf_tier: shared
           tf_workspace: development
           tf_command: apply
@@ -87,7 +87,7 @@ workflows:
       - terraform-command:
           name: plan shared-preproduction
           requires: [ apply shared-development ]
-          filters: { branches: { only: [ master ] } }
+          filters: { branches: { only: [ main ] } }
           tf_tier: shared
           tf_workspace: preproduction
           tf_command: plan
@@ -95,76 +95,76 @@ workflows:
       - terraform-command:
           name: plan preproduction
           requires: [ apply shared-development ]
-          filters: { branches: { only: [ master ] } }
+          filters: { branches: { only: [ main ] } }
           tf_workspace: preproduction
           tf_command: plan
 
       - terraform-command:
           name: apply shared-preproduction
           requires: [ plan shared-preproduction, plan preproduction ]
-          filters: { branches: { only: [ master ] } }
+          filters: { branches: { only: [ main ] } }
           tf_tier: shared
           tf_workspace: preproduction
           tf_command: apply
 
       - terraform-command:
-          name: apply master
+          name: apply main
           requires: [ apply shared-preproduction ]
-          filters: { branches: { only: [ master ] } }
-          tf_workspace: master
+          filters: { branches: { only: [ main ] } }
+          tf_workspace: main
           tf_command: apply
 
       - run-task:
-          name: reset master
-          requires: [ apply master ]
-          filters: { branches: { only: [ master ] } }
+          name: reset main
+          requires: [ apply main ]
+          filters: { branches: { only: [ main ] } }
           task_name: reset_database
-          tf_workspace: master
+          tf_workspace: main
           timeout: 180
 
       - run-task:
           name: integration test
-          requires: [ reset master ]
-          filters: { branches: { only: [ master ] } }
+          requires: [ reset main ]
+          filters: { branches: { only: [ main ] } }
           task_name: integration_test
-          tf_workspace: master
+          tf_workspace: main
           timeout: 1800
 
       - client-unit-test:
           name: client unit test
-          requires: [ apply master ]
-          filters: { branches: { only: [ master ] } }
+          requires: [ apply main ]
+          filters: { branches: { only: [ main ] } }
 
       - api-unit-tests:
           name: api unit test
-          requires: [ apply master ]
-          filters: { branches: { only: [ master ] } }
+          requires: [ apply main ]
+          filters: { branches: { only: [ main ] } }
 
       - terraform-command:
           name: apply training
           requires: [ apply shared-production ]
-          filters: { branches: { only: [ master ] } }
+          filters: { branches: { only: [ main ] } }
           tf_workspace: training
           tf_command: apply
 
       - terraform-command:
           name: apply preproduction
           requires: [ api unit test, client unit test, integration test ]
-          filters: { branches: { only: [ master ] } }
+          filters: { branches: { only: [ main ] } }
           tf_workspace: preproduction
           tf_command: apply
 
       - terraform-command:
           name: plan production
           requires: [ apply preproduction ]
-          filters: { branches: { only: [ master ] } }
+          filters: { branches: { only: [ main ] } }
           tf_workspace: production02
           tf_command: plan
 
       - terraform-command:
           name: plan shared-production
           requires: [ apply preproduction ]
-          filters: { branches: { only: [ master ] } }
+          filters: { branches: { only: [ main ] } }
           tf_tier: shared
           tf_workspace: production
           tf_command: plan
@@ -173,18 +173,18 @@ workflows:
           name: approve release to production notification
           message: "Production is ready for release and pending approval"
           requires: [ plan shared-production, plan production ]
-          filters: { branches: { only: [ master ] } }
+          filters: { branches: { only: [ main ] } }
 
       - approve:
           name: approve release to production
           type: approval
           requires: [ plan shared-production, plan production ]
-          filters: { branches: { only: [ master ] } }
+          filters: { branches: { only: [ main ] } }
 
       - terraform-command:
           name: apply shared-production
           requires: [ approve release to production ]
-          filters: { branches: { only: [ master ] } }
+          filters: { branches: { only: [ main ] } }
           tf_tier: shared
           tf_workspace: production
           tf_command: apply
@@ -192,7 +192,7 @@ workflows:
       - terraform-command:
           name: apply production
           requires: [ apply shared-production ]
-          filters: { branches: { only: [ master ] } }
+          filters: { branches: { only: [ main ] } }
           pact_tag: true
           tf_workspace: production02
           tf_command: apply
@@ -200,7 +200,7 @@ workflows:
       - run-task:
           name: backup production
           requires: [ apply production ]
-          filters: { branches: { only: [ master ] } }
+          filters: { branches: { only: [ main ] } }
           task_name: backup
           tf_workspace: production02
           timeout: 600
@@ -208,50 +208,50 @@ workflows:
       - run-task:
           name: restore production to preproduction
           requires: [ backup production ]
-          filters: { branches: { only: [ master ] } }
+          filters: { branches: { only: [ main ] } }
           task_name: restore_from_production
           tf_workspace: preproduction
           timeout: 600
 
-  weekly_master_run:
+  weekly_main_run:
     triggers:
       - schedule:
           cron: "00 05 * * 0"
           filters:
             branches:
               only:
-                - master
+                - main
     jobs:
       - build:
-          name: build master
-          filters: { branches: { only: [ master ] } }
+          name: build main
+          filters: { branches: { only: [ main ] } }
       - terraform-command:
-          name: apply master
-          requires: [ build master ]
-          filters: { branches: { only: [ master ] } }
-          tf_workspace: master
+          name: apply main
+          requires: [ build main ]
+          filters: { branches: { only: [ main ] } }
+          tf_workspace: main
           tf_command: apply
       - run-task:
-          name: reset master
-          requires: [ apply master ]
-          filters: { branches: { only: [ master ] } }
+          name: reset main
+          requires: [ apply main ]
+          filters: { branches: { only: [ main ] } }
           task_name: reset_database
-          tf_workspace: master
+          tf_workspace: main
           timeout: 180
       - client-unit-test:
           name: client unit test
-          requires: [ apply master ]
-          filters: { branches: { only: [ master ] } }
+          requires: [ apply main ]
+          filters: { branches: { only: [ main ] } }
       - api-unit-tests:
           name: api unit test
-          requires: [ apply master ]
-          filters: { branches: { only: [ master ] } }
+          requires: [ apply main ]
+          filters: { branches: { only: [ main ] } }
       - run-task:
           name: integration test
-          requires: [ reset master ]
-          filters: { branches: { only: [ master ] } }
+          requires: [ reset main ]
+          filters: { branches: { only: [ main ] } }
           task_name: integration_test
-          tf_workspace: master
+          tf_workspace: main
           notify_slack: true
           timeout: 1800
 
@@ -421,7 +421,7 @@ jobs:
       - run:
           name: Check updated PHP files for errors
           command: |
-            MERGE_BASE_COMMIT=( $(git merge-base master HEAD) )
+            MERGE_BASE_COMMIT=( $(git merge-base main HEAD) )
             API_CHANGED_FILES=( $(git diff --relative=api --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) ) || [[ $? == 1 ]]
             CLIENT_CHANGED_FILES=( $(git diff --relative=client --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) ) || [[ $? == 1 ]]
 
