@@ -70,15 +70,15 @@ workflows:
           filters: { branches: { ignore: [ main ] } }
           tf_command: destroy
 
-  main:
+  master:
     jobs:
       - build:
-          name: build main
+          name: build master
           filters: { branches: { only: [ main ] } }
 
       - terraform-command:
           name: apply shared-development
-          requires: [ build main ]
+          requires: [ build master ]
           filters: { branches: { only: [ main ] } }
           tf_tier: shared
           tf_workspace: development
@@ -108,15 +108,15 @@ workflows:
           tf_command: apply
 
       - terraform-command:
-          name: apply main
+          name: apply master
           requires: [ apply shared-preproduction ]
           filters: { branches: { only: [ main ] } }
           tf_workspace: master
           tf_command: apply
 
       - run-task:
-          name: reset main
-          requires: [ apply main ]
+          name: reset master
+          requires: [ apply master ]
           filters: { branches: { only: [ main ] } }
           task_name: reset_database
           tf_workspace: master
@@ -124,7 +124,7 @@ workflows:
 
       - run-task:
           name: integration test
-          requires: [ reset main ]
+          requires: [ reset master ]
           filters: { branches: { only: [ main ] } }
           task_name: integration_test
           tf_workspace: master
@@ -132,12 +132,12 @@ workflows:
 
       - client-unit-test:
           name: client unit test
-          requires: [ apply main ]
+          requires: [ apply master ]
           filters: { branches: { only: [ main ] } }
 
       - api-unit-tests:
           name: api unit test
-          requires: [ apply main ]
+          requires: [ apply master ]
           filters: { branches: { only: [ main ] } }
 
       - terraform-command:
@@ -213,42 +213,42 @@ workflows:
           tf_workspace: preproduction
           timeout: 600
 
-  weekly_main_run:
+  weekly_master_run:
     triggers:
       - schedule:
           cron: "00 05 * * 0"
           filters:
             branches:
               only:
-                - main
+                - master
     jobs:
       - build:
-          name: build main
+          name: build master
           filters: { branches: { only: [ main ] } }
       - terraform-command:
-          name: apply main
-          requires: [ build main ]
+          name: apply master
+          requires: [ build master ]
           filters: { branches: { only: [ main ] } }
           tf_workspace: master
           tf_command: apply
       - run-task:
-          name: reset main
-          requires: [ apply main ]
+          name: reset master
+          requires: [ apply master ]
           filters: { branches: { only: [ main ] } }
           task_name: reset_database
           tf_workspace: master
           timeout: 180
       - client-unit-test:
           name: client unit test
-          requires: [ apply main ]
+          requires: [ apply master ]
           filters: { branches: { only: [ main ] } }
       - api-unit-tests:
           name: api unit test
-          requires: [ apply main ]
+          requires: [ apply master ]
           filters: { branches: { only: [ main ] } }
       - run-task:
           name: integration test
-          requires: [ reset main ]
+          requires: [ reset master ]
           filters: { branches: { only: [ main ] } }
           task_name: integration_test
           tf_workspace: master
