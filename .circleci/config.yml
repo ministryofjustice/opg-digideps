@@ -24,13 +24,6 @@ workflows:
           task_name: reset_database
           timeout: 180
 
-      - run-task:
-          name: integration test
-          requires: [ reset environment ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: integration_test
-          timeout: 2400
-
       - client-unit-test:
           name: client unit test
           requires: [ apply environment ]
@@ -41,9 +34,22 @@ workflows:
           requires: [ apply environment ]
           filters: { branches: { ignore: [ master ] } }
 
+      - approve:
+          name: approval for further testing
+          type: approval
+          requires: [ reset environment ]
+          filters: { branches: { ignore: [ master ] } }
+
+      - run-task:
+          name: integration test
+          requires: [ approval for further testing ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: integration_test
+          timeout: 2400
+
       - pa11y-ci:
           name: accessibility test
-          requires: [ apply environment ]
+          requires: [ approval for further testing ]
           filters: { branches: { ignore: [ master ] } }
 
       - run-task:
@@ -283,6 +289,7 @@ orbs:
       terraform:
         docker:
           - image: circleci/golang:1.12
+        resource_class: small
         environment:
           TF_VERSION: 0.12.25
           TF_SHA256SUM: e95daabd1985329f87e6d40ffe7b9b973ff0abc07a403f767e8658d64d733fb0
@@ -311,6 +318,7 @@ orbs:
 jobs:
   lint:
     executor: terraform/terraform
+    resource_class: small
     steps:
       - checkout
       - terraform/install
@@ -320,6 +328,7 @@ jobs:
 
   terraform-command:
     executor: terraform/terraform
+    resource_class: small
     parameters:
       tf_workspace:
         description: terraform workspace
@@ -378,6 +387,7 @@ jobs:
   build:
     docker:
       - image: circleci/python:3
+    resource_class: small
     environment:
       AWS_REGION: eu-west-1
       AWS_CONFIG_FILE: ~/project/aws_config
@@ -466,6 +476,7 @@ jobs:
   client-unit-test:
     docker:
       - image: circleci/python:3
+    resource_class: small
     steps:
       - setup_remote_docker
       - checkout
@@ -513,6 +524,7 @@ jobs:
   api-unit-tests:
     docker:
       - image: circleci/php
+    resource_class: small
     steps:
       - setup_remote_docker
       - checkout
@@ -537,6 +549,7 @@ jobs:
   pa11y-ci:
     machine:
       image: circleci/classic:latest
+    resource_class: small
     steps:
       - checkout
       - attach_workspace: { at: ~/project }
@@ -561,6 +574,7 @@ jobs:
 
   run-task:
     executor: terraform/terraform
+    resource_class: small
     parameters:
       tf_workspace:
         description: terraform workspace
