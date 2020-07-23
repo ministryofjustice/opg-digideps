@@ -20,6 +20,7 @@ You must have Docker installed.
 ```sh
 docker-compose run --rm api sh scripts/reset_db_structure.sh
 docker-compose run --rm api sh scripts/reset_db_fixtures.sh
+
 ```
 
 ## Traffic Flow Diagram
