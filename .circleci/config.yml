@@ -70,15 +70,15 @@ workflows:
           filters: { branches: { ignore: [ main ] } }
           tf_command: destroy
 
-  master:
+  integration:
     jobs:
       - build:
-          name: build master
+          name: build integration
           filters: { branches: { only: [ main ] } }
 
       - terraform-command:
           name: apply shared-development
-          requires: [ build master ]
+          requires: [ build integration ]
           filters: { branches: { only: [ main ] } }
           tf_tier: shared
           tf_workspace: development
@@ -108,36 +108,36 @@ workflows:
           tf_command: apply
 
       - terraform-command:
-          name: apply master
+          name: apply integration
           requires: [ apply shared-preproduction ]
           filters: { branches: { only: [ main ] } }
-          tf_workspace: master
+          tf_workspace: integration
           tf_command: apply
 
       - run-task:
-          name: reset master
-          requires: [ apply master ]
+          name: reset integration
+          requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
           task_name: reset_database
-          tf_workspace: master
+          tf_workspace: integration
           timeout: 180
 
       - run-task:
           name: integration test
-          requires: [ reset master ]
+          requires: [ reset integration ]
           filters: { branches: { only: [ main ] } }
           task_name: integration_test
-          tf_workspace: master
+          tf_workspace: integration
           timeout: 1800
 
       - client-unit-test:
           name: client unit test
-          requires: [ apply master ]
+          requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
 
       - api-unit-tests:
           name: api unit test
-          requires: [ apply master ]
+          requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
 
       - terraform-command:
@@ -213,45 +213,43 @@ workflows:
           tf_workspace: preproduction
           timeout: 600
 
-  weekly_master_run:
+  weekly_integration_run:
     triggers:
       - schedule:
           cron: "00 05 * * 0"
-          filters:
-            branches:
-              only:
-                - master
+          filters: { branches: { only: [ main ] } }
+
     jobs:
       - build:
-          name: build master
+          name: build integration
           filters: { branches: { only: [ main ] } }
       - terraform-command:
-          name: apply master
-          requires: [ build master ]
+          name: apply integration
+          requires: [ build integration ]
           filters: { branches: { only: [ main ] } }
-          tf_workspace: master
+          tf_workspace: integration
           tf_command: apply
       - run-task:
-          name: reset master
-          requires: [ apply master ]
+          name: reset integration
+          requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
           task_name: reset_database
-          tf_workspace: master
+          tf_workspace: integration
           timeout: 180
       - client-unit-test:
           name: client unit test
-          requires: [ apply master ]
+          requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
       - api-unit-tests:
           name: api unit test
-          requires: [ apply master ]
+          requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
       - run-task:
           name: integration test
-          requires: [ reset master ]
+          requires: [ reset integration ]
           filters: { branches: { only: [ main ] } }
           task_name: integration_test
-          tf_workspace: master
+          tf_workspace: integration
           notify_slack: true
           timeout: 1800
 
