@@ -170,7 +170,7 @@ workflows:
           tf_command: plan
 
       - slack/approval-notification:
-          name: approve release to production notification
+          name: release approval notification
           message: "Production is ready for release and pending approval"
           requires: [ plan shared-production, plan production ]
           filters: { branches: { only: [ main ] } }
