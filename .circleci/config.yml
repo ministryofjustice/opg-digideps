@@ -3,6 +3,12 @@ version: 2.1
 workflows:
   pull_request:
     jobs:
+      - lint:
+          name: lint terraform
+          filters: { branches: { ignore: [ main ] } }
+      - build:
+          name: build pr
+          filters: { branches: { ignore: [ main ] } }
       - jimtest:
           name: apply terraform
           what_am_i: terraform
@@ -18,13 +24,6 @@ workflows:
 
 
 #
-#      - lint:
-#          name: lint terraform
-#          filters: { branches: { ignore: [ master ] } }
-#
-#      - build:
-#          name: build pr
-#          filters: { branches: { ignore: [ master ] } }
 #
 #      - terraform-command:
 #          name: apply environment
@@ -331,19 +330,15 @@ orbs:
   codecov: codecov/codecov@1.0.2
 
 jobs:
-#  preconfig:
-#    executor: terraform/terraform
-#    resource_class: small
-#    steps:
-#      - checkout
-#      - run:
-#          name: cancel previous builds
-#          command: cancel_previous_builds.sh
-#        working_directory: ~/project/
-#      - terraform/install
-#      - run:
-#          name: terraform lint
-#          command: terraform fmt -diff -check -recursive
+  lint:
+    executor: terraform/terraform
+    resource_class: small
+    steps:
+      - checkout
+      - terraform/install
+      - run:
+          name: terraform lint
+          command: terraform fmt -diff -check -recursive
 
   terraform-command:
     executor: terraform/terraform
@@ -434,6 +429,16 @@ jobs:
           fingerprints:
             - 6f:4b:55:76:0e:cd:27:7d:ad:c3:28:38:53:69:5c:32
       - checkout
+      - run:
+          name: Cancel running builds
+          command: |
+            python cancel_redundant_builds.py \
+            --circle_project_username="${CIRCLE_PROJECT_USERNAME}" \
+            --circle_project_reponame="${CIRCLE_PROJECT_REPONAME}" \
+            --circle_branch="${CIRCLE_BRANCH}" \
+            --circle_builds_token="${CIRCLE_BUILDS_TOKEN}" \
+            --terms_to_ignore="apply, plan"
+          working_directory: ~/project/ecs_helper/cmd/circle_builds
       - run:
           name: Set environment
           command: ~/project/.circleci/set_env.sh >> $BASH_ENV
