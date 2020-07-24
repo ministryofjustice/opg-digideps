@@ -70,15 +70,15 @@ workflows:
           filters: { branches: { ignore: [ main ] } }
           tf_command: destroy
 
-  master:
+  integration:
     jobs:
       - build:
-          name: build master
+          name: build integration
           filters: { branches: { only: [ main ] } }
 
       - terraform-command:
           name: apply shared-development
-          requires: [ build master ]
+          requires: [ build integration ]
           filters: { branches: { only: [ main ] } }
           tf_tier: shared
           tf_workspace: development
@@ -108,36 +108,36 @@ workflows:
           tf_command: apply
 
       - terraform-command:
-          name: apply master
+          name: apply integration
           requires: [ apply shared-preproduction ]
           filters: { branches: { only: [ main ] } }
-          tf_workspace: master
+          tf_workspace: integration
           tf_command: apply
 
       - run-task:
-          name: reset master
-          requires: [ apply master ]
+          name: reset integration
+          requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
           task_name: reset_database
-          tf_workspace: master
+          tf_workspace: integration
           timeout: 180
 
       - run-task:
           name: integration test
-          requires: [ reset master ]
+          requires: [ reset integration ]
           filters: { branches: { only: [ main ] } }
           task_name: integration_test
-          tf_workspace: master
+          tf_workspace: integration
           timeout: 1800
 
       - client-unit-test:
           name: client unit test
-          requires: [ apply master ]
+          requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
 
       - api-unit-tests:
           name: api unit test
-          requires: [ apply master ]
+          requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
 
       - terraform-command:
@@ -170,7 +170,7 @@ workflows:
           tf_command: plan
 
       - slack/approval-notification:
-          name: approve release to production notification
+          name: release approval notification
           message: "Production is ready for release and pending approval"
           requires: [ plan shared-production, plan production ]
           filters: { branches: { only: [ main ] } }
@@ -213,51 +213,50 @@ workflows:
           tf_workspace: preproduction
           timeout: 600
 
-  weekly_master_run:
+  weekly_integration_run:
     triggers:
       - schedule:
           cron: "00 05 * * 0"
-          filters:
-            branches:
-              only:
-                - master
+          filters: { branches: { only: [ main ] } }
+
     jobs:
       - build:
-          name: build master
+          name: build integration
           filters: { branches: { only: [ main ] } }
       - terraform-command:
-          name: apply master
-          requires: [ build master ]
+          name: apply integration
+          requires: [ build integration ]
           filters: { branches: { only: [ main ] } }
-          tf_workspace: master
+          tf_workspace: integration
           tf_command: apply
       - run-task:
-          name: reset master
-          requires: [ apply master ]
+          name: reset integration
+          requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
           task_name: reset_database
-          tf_workspace: master
+          tf_workspace: integration
           timeout: 180
       - client-unit-test:
           name: client unit test
-          requires: [ apply master ]
+          requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
       - api-unit-tests:
           name: api unit test
-          requires: [ apply master ]
+          requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
       - run-task:
           name: integration test
-          requires: [ reset master ]
+          requires: [ reset integration ]
           filters: { branches: { only: [ main ] } }
           task_name: integration_test
-          tf_workspace: master
+          tf_workspace: integration
           notify_slack: true
           timeout: 1800
 
 orbs:
   aws-cli: circleci/aws-cli@0.1.13
   slack: circleci/slack@3.4.2
+  codecov: codecov/codecov@1.0.2
   ecs_helper:
     commands:
       install:
@@ -305,8 +304,6 @@ orbs:
           - run:
               name: Install Terraform
               command: sudo unzip terraform_${TF_VERSION}_linux_amd64.zip -d /bin
-
-  codecov: codecov/codecov@1.0.2
 
 jobs:
   lint:
@@ -421,9 +418,6 @@ jobs:
       - run:
           name: Check updated PHP files for errors
           command: |
-            CURRENT_BRANCH=( $(git rev-parse --abbrev-ref HEAD) )
-            git checkout main
-            git checkout $CURRENT_BRANCH
             MERGE_BASE_COMMIT=( $(git merge-base main HEAD) )
             API_CHANGED_FILES=( $(git diff --relative=api --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) ) || [[ $? == 1 ]]
             CLIENT_CHANGED_FILES=( $(git diff --relative=client --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) ) || [[ $? == 1 ]]
