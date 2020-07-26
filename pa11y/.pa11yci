@@ -8,7 +8,7 @@
          ]
       },
       "hideElements":"svg",
-      "timeout":60000,
+      "timeout":40000,
       "wait":5000
    },
    "urls":[
@@ -24,6 +24,19 @@
       {
          "url": "https://digideps.local",
          "screenCapture": "screenshots/index.png"
+      },
+      {
+         "url": "https://digideps.local/report/{id}/overview",
+         "actions": [
+            "navigate to https://digideps.local/login",
+            "set field #login_email to behat-prof1@publicguardian.gov.uk",
+            "set field #login_password to Abcd1234",
+            "click element #login_login",
+            "wait for path to be /org/",
+            "wait for element .behat-link-pa-report-open to be visible",
+            "click element .behat-link-pa-report-open"
+         ],
+         "screenCapture": "screenshots/report-overview.png"
       }
    ]
 }

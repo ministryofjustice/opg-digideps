@@ -57,7 +57,7 @@ class ClientControllerTest extends AbstractControllerTestCase
                 'deputy_name' => 'Bjork Gudmundsdottir',
                 'discharged_on' => $this->now->format(DateTime::ATOM),
                 'deputyship_start_date' => $this->orderStartDate->format(DateTime::ATOM),
-                'event' => AuditEvents::CLIENT_DISCHARGED,
+                'event' => AuditEvents::EVENT_CLIENT_DISCHARGED,
                 'type' => 'audit'
             ];
 
