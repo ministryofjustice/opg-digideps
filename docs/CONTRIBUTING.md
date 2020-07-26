@@ -46,7 +46,7 @@ JIRA issues should be moved to the "Acceptance" column and have a product manage
 
 ### Ready to merge
 
-If the product manager approves your work, they will move the JIRA issue to the "Ready for Release" column. At this point you should approve the destruction of the feature environment in CircleCI, and merge the branch into `master`.
+If the product manager approves your work, they will move the JIRA issue to the "Ready for Release" column. At this point you should approve the destruction of the feature environment in CircleCI, and merge the branch into `main`.
 
 After the pull request has completed, the changes are automatically tested and, if the tests pass, deployed to pre-production.
 
