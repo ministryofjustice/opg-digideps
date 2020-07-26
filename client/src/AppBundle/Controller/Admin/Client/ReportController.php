@@ -13,6 +13,7 @@ use AppBundle\Form\Admin\ReviewChecklistType;
 use AppBundle\Form\Admin\ReportChecklistType;
 use AppBundle\Form\Admin\ManageSubmittedReportType;
 use AppBundle\Form\Admin\ManageReportConfirmType;
+use AppBundle\Service\ParameterStoreService;
 use AppBundle\Service\ReportSubmissionService;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -210,13 +211,29 @@ class ReportController extends AbstractController
      * @Template("AppBundle:Admin/Client/Report:checklistSubmitted.html.twig")
      *
      */
-    public function checklistSubmittedAction(int $id)
+    public function checklistSubmittedAction(int $id, ParameterStoreService $parameterStore)
     {
         $report = $this->getReport(intval($id), ['report-checklist']);
+        $syncFeatureIsEnabled = false;
+
+        if ($parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC) === '1') {
+            $syncFeatureIsEnabled = true;
+            $this->queueChecklistForSyncing($report);
+        }
+
+        return [
+            'report' => $report,
+            'syncFeatureIsEnabled' => $syncFeatureIsEnabled
+        ];
+    }
+
+    /**
+     * @param Report $report
+     */
+    protected function queueChecklistForSyncing(Report $report): void
+    {
         $report->getChecklist()->setSynchronisationStatus(Checklist::SYNC_STATUS_QUEUED);
         $this->getRestClient()->put('report/' . $report->getId() . '/checked', $report->getChecklist(), ['synchronisation']);
-
-        return ['report' => $report];
     }
 
     /**
