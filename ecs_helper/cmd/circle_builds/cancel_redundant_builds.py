@@ -12,19 +12,26 @@ class CancelPreviousWorkflows:
     circle_project_reponame,
     circle_branch,
     circle_builds_token,
-    terms_to_ignore
+    terms_to_waitfor,
+    prod_job_terms
   ):
 
     self.circle_project_username = circle_project_username
     self.circle_project_reponame = circle_project_reponame
     self.circle_branch = circle_branch
     self.circle_builds_token = circle_builds_token
-    self.terms_to_ignore = terms_to_ignore.split(",")
+    self.terms_to_waitfor = terms_to_waitfor.split(",")
+    self.prod_job_terms = prod_job_terms.split(",")
     self.delay = 10
     if "CIRCLE_WORKFLOW_ID" in os.environ:
       self.current_workflow_id = os.environ["CIRCLE_WORKFLOW_ID"]
     else:
       self.current_workflow_id = "None"
+
+    for term in self.terms_to_waitfor:
+      print(f"Term to wait for: {term}")
+    for term in self.prod_job_terms:
+      print(f"Term to ignore: {term}")
 
   def get_running_jobs(self):
     running_jobs_url = f"https://circleci.com/api/v1.1/project/github/{self.circle_project_username}/{self.circle_project_reponame}/tree/{self.circle_branch}?circle-token={self.circle_builds_token}"
@@ -35,8 +42,9 @@ class CancelPreviousWorkflows:
       for job in running_jobs_json:
         if job['status'] == "queued" or job['status'] == "running":
           if job['workflows']['workflow_id'] != self.current_workflow_id:
-            running_jobs.append(job['workflows'])
-            print(f"Other Job: \"{job['workflows']['job_name']}\", Status: \"{job['status']}\"")
+            if any(prod_jobs_term not in job['workflows']['job_name'] for prod_jobs_term in self.prod_job_terms):
+              running_jobs.append(job['workflows'])
+              print(f"Other Job: \"{job['workflows']['job_name']}\", Status: \"{job['status']}\"")
       return running_jobs
     else:
       print(f"API call to circle failed with status code: {response.status_code}")
@@ -45,14 +53,14 @@ class CancelPreviousWorkflows:
   def tf_job_running(self, running_jobs):
     if len(running_jobs) > 0:
       for job in running_jobs:
-        if any(term_to_ignore in job['job_name'] for term_to_ignore in self.terms_to_ignore):
+        if any(term_to_ignore in job['job_name'] for term_to_ignore in self.terms_to_waitfor):
           print(f"Found terraform job \"{job['job_name']}\"")
-          return True
+          return True, job['job_name']
       print(f"Found non terraform job \"{job['job_name']}\"")
-      return False
+      return False, job['job_name']
     else:
       print("Found no jobs running")
-      return False
+      return False, "None"
 
   def cancel_workflows(self):
     workflow_ids = []
@@ -138,10 +146,16 @@ def main():
     help="Personal API token for circle.",
   )
   parser.add_argument(
-    "--terms_to_ignore",
+    "--terms_to_waitfor",
     default="term one, term two",
     help="Strings representing job names separated by commas to 'wait for'.",
   )
+  parser.add_argument(
+    "--prod_job_terms",
+    default="' production', 'shared-production'",
+    help="Production job names that you do not want to cancel.",
+  )
+
   args = parser.parse_args()
 
   cancel_workflows = CancelPreviousWorkflows(
@@ -149,7 +163,8 @@ def main():
     args.circle_project_reponame,
     args.circle_branch,
     args.circle_builds_token,
-    args.terms_to_ignore
+    args.terms_to_waitfor,
+    args.prod_job_terms
   )
 
   running_jobs = cancel_workflows.get_running_jobs()

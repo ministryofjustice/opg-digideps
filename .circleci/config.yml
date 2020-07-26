@@ -6,89 +6,75 @@ workflows:
       - lint:
           name: lint terraform
           filters: { branches: { ignore: [ main ] } }
+
       - build:
           name: build pr
           filters: { branches: { ignore: [ main ] } }
-      - jimtest:
-          name: apply terraform
-          what_am_i: terraform
-          filters: { branches: { ignore: [ main ] } }
-      - jimtest:
-          name: unit tests
-          requires: [ apply terraform ]
-          what_am_i: unit_tests
-          filters: { branches: { ignore: [ main ] } }
 
+      - terraform-command:
+          name: apply environment
+          requires: [ build pr, lint terraform ]
+          filters: { branches: { ignore: [ master ] } }
+          tf_command: apply
 
+      - run-task:
+          name: reset environment
+          requires: [ apply environment ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: reset_database
+          timeout: 180
 
+      - client-unit-test:
+          name: client unit test
+          requires: [ apply environment ]
+          filters: { branches: { ignore: [ master ] } }
 
+      - api-unit-tests:
+          name: api unit test
+          requires: [ apply environment ]
+          filters: { branches: { ignore: [ master ] } }
 
-#
-#
-#      - terraform-command:
-#          name: apply environment
-#          requires: [ build pr, lint terraform ]
-#          filters: { branches: { ignore: [ master ] } }
-#          tf_command: apply
-#
-#      - run-task:
-#          name: reset environment
-#          requires: [ apply environment ]
-#          filters: { branches: { ignore: [ master ] } }
-#          task_name: reset_database
-#          timeout: 180
-#
-#      - client-unit-test:
-#          name: client unit test
-#          requires: [ apply environment ]
-#          filters: { branches: { ignore: [ master ] } }
-#
-#      - api-unit-tests:
-#          name: api unit test
-#          requires: [ apply environment ]
-#          filters: { branches: { ignore: [ master ] } }
-#
-#      - approve:
-#          name: approval for further testing
-#          type: approval
-#          requires: [ reset environment ]
-#          filters: { branches: { ignore: [ master ] } }
-#
-#      - run-task:
-#          name: integration test
-#          requires: [ approval for further testing ]
-#          filters: { branches: { ignore: [ master ] } }
-#          task_name: integration_test
-#          timeout: 2400
-#
-#      - pa11y-ci:
-#          name: accessibility test
-#          requires: [ approval for further testing ]
-#          filters: { branches: { ignore: [ master ] } }
-#
-#      - run-task:
-#          name: backup environment
-#          requires: [ api unit test, client unit test, integration test ]
-#          filters: { branches: { ignore: [ master ] } }
-#          task_name: backup
-#
-#      - run-task:
-#          name: restore environment
-#          requires: [ backup environment ]
-#          filters: { branches: { ignore: [ master ] } }
-#          task_name: restore
-#
-#      - cleanup:
-#          name: approve destroy environment
-#          type: approval
-#          requires: [ restore environment ]
-#          filters: { branches: { ignore: [ master ] } }
-#
-#      - terraform-command:
-#          name: destroy environment
-#          requires: [ approve destroy environment ]
-#          filters: { branches: { ignore: [ master ] } }
-#          tf_command: destroy
+      - approve:
+          name: approval for further testing
+          type: approval
+          requires: [ reset environment ]
+          filters: { branches: { ignore: [ master ] } }
+
+      - run-task:
+          name: integration test
+          requires: [ approval for further testing ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: integration_test
+          timeout: 2400
+
+      - pa11y-ci:
+          name: accessibility test
+          requires: [ approval for further testing ]
+          filters: { branches: { ignore: [ master ] } }
+
+      - run-task:
+          name: backup environment
+          requires: [ api unit test, client unit test, integration test ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: backup
+
+      - run-task:
+          name: restore environment
+          requires: [ backup environment ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: restore
+
+      - cleanup:
+          name: approve destroy environment
+          type: approval
+          requires: [ restore environment ]
+          filters: { branches: { ignore: [ master ] } }
+
+      - terraform-command:
+          name: destroy environment
+          requires: [ approve destroy environment ]
+          filters: { branches: { ignore: [ master ] } }
+          tf_command: destroy
 
   master:
     jobs:
@@ -397,22 +383,6 @@ jobs:
             - run:
                 name: tag pact commit with v<x>_production
                 command: pact_tags
-  jimtest:
-    docker:
-      - image: circleci/python:3
-    resource_class: small
-    parameters:
-      what_am_i:
-        description: type of job
-        type: string
-        default: ""
-    environment:
-      WHAT_AM_I: << parameters.what_am_i >>
-    steps:
-      - run:
-          name: try a thing
-          command: for i in {1..20}; do echo "${WHAT_AM_I} number ${i}" && sleep 10; done
-
 
   build:
     docker:
@@ -437,7 +407,8 @@ jobs:
             --circle_project_reponame="${CIRCLE_PROJECT_REPONAME}" \
             --circle_branch="${CIRCLE_BRANCH}" \
             --circle_builds_token="${CIRCLE_BUILDS_TOKEN}" \
-            --terms_to_ignore="apply, plan"
+            --terms_to_waitfor="apply, plan" \
+            --prod_job_terms="' production', 'shared-production'"
           working_directory: ~/project/ecs_helper/cmd/circle_builds
       - run:
           name: Set environment
