@@ -404,8 +404,8 @@ jobs:
             --circle_project_reponame="${CIRCLE_PROJECT_REPONAME}" \
             --circle_branch="${CIRCLE_BRANCH}" \
             --circle_builds_token="${CIRCLE_BUILDS_TOKEN}" \
-            --terms_to_waitfor="apply, plan" \
-            --prod_job_terms="' production', 'shared-production'"
+            --terms_to_waitfor="apply,plan" \
+            --prod_job_terms=" production,shared-production"
           working_directory: ~/project/ecs_helper/cmd/circle_builds
       - run:
           name: Set environment

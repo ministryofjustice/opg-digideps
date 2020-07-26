@@ -55,17 +55,16 @@ class CancelPreviousWorkflows:
       for job in running_jobs:
         if any(term_to_ignore in job['job_name'] for term_to_ignore in self.terms_to_waitfor):
           print(f"Found terraform job \"{job['job_name']}\"")
-          return True, job['job_name']
+          return True
       print(f"Found non terraform job \"{job['job_name']}\"")
-      return False, job['job_name']
+      return False
     else:
       print("Found no jobs running")
-      return False, "None"
+      return False
 
   def cancel_workflows(self):
     workflow_ids = []
     running_jobs = self.get_running_jobs()
-    print(len(running_jobs))
     for job in running_jobs:
       print(f"Will attempt to cancel workflow: {job['workflow_id']}")
       workflow_ids.append(str(job['workflow_id']))
