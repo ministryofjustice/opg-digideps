@@ -10,7 +10,7 @@ Accepted
 
 DigiDeps uses a Postgres database to store persistent information. Since the project was first set up, we have been using an Amazon RDS hosted instance of Postgres for this. However, this hosting option lacks scalability so we have to pay for a full database host 24/7 for each environment.
 
-We have several environments which do not need to be highly available. This includes "ephemeral" development environments, the "master" environment used in CI, and the training environment. We do not need to run a database for these environments outside of working hours, and often inside of them too.
+We have several environments which do not need to be highly available. This includes "ephemeral" development environments, the "main" environment used in CI, and the training environment. We do not need to run a database for these environments outside of working hours, and often inside of them too.
 
 ## Decision
 

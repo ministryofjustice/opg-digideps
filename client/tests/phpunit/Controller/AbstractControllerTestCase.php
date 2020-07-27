@@ -57,8 +57,12 @@ abstract class AbstractControllerTestCase extends WebTestCase
     protected function mockLoggedInUser(array $roleNames, User $user = null): User
     {
         if (is_null($user)) {
-            $user = new User();
-            $user->setRoleName($roleNames[0]);
+            $user = (new User())
+                ->setFirstname('Test')
+                ->setLastname('User')
+                ->setRoleName($roleNames[0])
+                ->setEmail('logged-in-user@email.com')
+                ->setPhoneMain('01213214321');
         }
 
         if (is_null($user->getId())) {

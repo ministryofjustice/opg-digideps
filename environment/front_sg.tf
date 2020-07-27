@@ -1,9 +1,11 @@
 locals {
   front_sg_rules = {
-    ecr  = local.common_sg_rules.ecr
-    logs = local.common_sg_rules.logs
-    s3   = local.common_sg_rules.s3
-    ssm  = local.common_sg_rules.ssm
+    ecr     = local.common_sg_rules.ecr
+    logs    = local.common_sg_rules.logs
+    s3      = local.common_sg_rules.s3
+    ssm     = local.common_sg_rules.ssm
+    ecr_api = local.common_sg_rules.ecr_api
+    secrets = local.common_sg_rules.secrets
     cache = {
       port        = 6379
       type        = "egress"
@@ -105,7 +107,7 @@ resource "aws_security_group_rule" "front_elb_http_in" {
   from_port         = 80
   to_port           = 80
   security_group_id = module.front_elb_security_group.id
-  cidr_blocks       = local.front_whitelist
+  cidr_blocks       = local.front_allow_list
 }
 
 resource "aws_security_group_rule" "front_elb_https_in" {
@@ -114,7 +116,7 @@ resource "aws_security_group_rule" "front_elb_https_in" {
   from_port         = 443
   to_port           = 443
   security_group_id = module.front_elb_security_group.id
-  cidr_blocks       = local.front_whitelist
+  cidr_blocks       = local.front_allow_list
 }
 
 //No room for rules left in front_elb_security_group

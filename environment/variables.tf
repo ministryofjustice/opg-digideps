@@ -10,9 +10,9 @@ variable "accounts" {
   type = map(
     object({
       account_id           = string
-      admin_whitelist      = list(string)
+      admin_allow_list     = list(string)
       force_destroy_bucket = bool
-      front_whitelist      = list(string)
+      front_allow_list     = list(string)
       ga_default           = string
       ga_gds               = string
       subdomain_enabled    = bool
@@ -26,6 +26,7 @@ variable "accounts" {
       state_source         = string
       elasticache_count    = number
       always_on            = bool
+      copy_version_from    = string
     })
   )
 }
@@ -34,20 +35,20 @@ data "aws_ip_ranges" "route53_healthchecks_ips" {
   services = ["route53_healthchecks"]
 }
 
-module "whitelist" {
+module "allow_list" {
   source = "git@github.com:ministryofjustice/terraform-aws-moj-ip-whitelist.git"
 }
 
 locals {
-  default_whitelist = concat(module.whitelist.moj_sites, formatlist("%s/32", data.aws_nat_gateway.nat[*].public_ip))
+  default_allow_list = concat(module.allow_list.moj_sites, formatlist("%s/32", data.aws_nat_gateway.nat[*].public_ip))
 
   route53_healthchecker_ips = data.aws_ip_ranges.route53_healthchecks_ips.cidr_blocks
 
-  environment     = lower(terraform.workspace)
-  account         = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
-  subdomain       = local.account["subdomain_enabled"] ? local.environment : ""
-  front_whitelist = length(local.account["front_whitelist"]) > 0 ? local.account["front_whitelist"] : local.default_whitelist
-  admin_whitelist = length(local.account["admin_whitelist"]) > 0 ? local.account["admin_whitelist"] : local.default_whitelist
+  environment      = lower(terraform.workspace)
+  account          = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
+  subdomain        = local.account["subdomain_enabled"] ? local.environment : ""
+  front_allow_list = length(local.account["front_allow_list"]) > 0 ? local.account["front_allow_list"] : local.default_allow_list
+  admin_allow_list = length(local.account["admin_allow_list"]) > 0 ? local.account["admin_allow_list"] : local.default_allow_list
 }
 
 data "terraform_remote_state" "shared" {
