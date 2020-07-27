@@ -116,9 +116,9 @@ class CancelPreviousWorkflows:
     return self.get_running_jobs()
 
   @staticmethod
-  def failure():
-    print("No workflows to cancel from Circle API")
-    exit(1)
+  def exiting():
+    print("No workflows to cancel from Circle API. Continuing build")
+    exit(0)
 
 
 def main():
@@ -173,7 +173,7 @@ def main():
   if len(running_jobs) > 0:
     cancel_workflows.cancel_workflows()
   else:
-    cancel_workflows.failure()
+    cancel_workflows.exiting()
 
 
 if __name__ == "__main__":
