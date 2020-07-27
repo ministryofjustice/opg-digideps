@@ -114,21 +114,6 @@ LIMIT $limit;";
         return [];
     }
 
-//    private function sortDocumentsByReportPdfs(array $documents)
-//    {
-//        function sort($a, $b) {
-//            if($a['is_report_pdf'] === $b['is_report_pdf']) {
-//                return 0;
-//            }
-//
-//            return $a['is_report_pdf'] > $b['is_report_pdf'] ? -1 : 1;
-//        }
-//
-//        uasort($documents, 'sort');
-//
-//        return $documents;
-//    }
-
     public function updateSupportingDocumentStatusByReportSubmissionIds(array $reportSubmissionIds, ?string $syncErrorMessage = null)
     {
         $idsString = implode(",", $reportSubmissionIds);
