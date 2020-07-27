@@ -51,11 +51,6 @@ class DocumentRepositoryTest extends KernelTestCase
 
     }
 
-//    public static function setUpBeforeClass(): void
-//    {
-//
-//    }
-
     private function purgeDatabase()
     {
         $purger = new ORMPurger($this->entityManager);
@@ -232,6 +227,39 @@ class DocumentRepositoryTest extends KernelTestCase
             ->getQueuedDocumentsAndSetToInProgress('2');
 
         self::assertEquals(2, count($documents));
+    }
+
+    /** @test */
+    public function documentsAreOrderedByIsReportPdf()
+    {
+        [$client, $report, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
+
+        foreach(range(1, 5) as $index) {
+            $this->createAndSubmitAdditionalDocuments($report, $this->firstJulyPm);
+        }
+
+        [$client2, $report2, $reportPdfDoc2, $supportingDoc2, $reportSubmission2] = $this->createAndSubmitReportWithSupportingDoc($this->secondJulyAm);
+
+        $this->createAndSubmitAdditionalDocuments($report, $this->secondJulyPm);
+
+        $documents = $this->documentRepository
+            ->getQueuedDocumentsAndSetToInProgress('5');
+
+        $reportPdf1Returned = false;
+        $reportPdf2Returned = false;
+
+        foreach($documents as $document) {
+            if ($document['document_id'] === $reportPdfDoc->getId()) {
+                $reportPdf1Returned = true;
+            }
+
+            if ($document['document_id'] === $reportPdfDoc2->getId()) {
+                $reportPdf2Returned = true;
+            }
+        }
+
+        self::assertTrue($reportPdf1Returned, '$reportPdf1Returned was not returned');
+        self::assertTrue($reportPdf2Returned, '$reportPdf2Returned was not returned');
     }
 
     /**

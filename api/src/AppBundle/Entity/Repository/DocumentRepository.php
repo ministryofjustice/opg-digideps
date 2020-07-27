@@ -55,7 +55,7 @@ LEFT JOIN report_submission as rs on d.report_submission_id  = rs.id
 LEFT JOIN client as c1 on r.client_id = c1.id
 LEFT JOIN client as c2 on o.client_id = c2.id
 WHERE synchronisation_status='QUEUED'
-ORDER BY report_submission_id
+ORDER BY is_report_pdf DESC, report_submission_id ASC
 LIMIT $limit;";
 
         $conn = $this->getEntityManager()->getConnection();
@@ -114,6 +114,21 @@ LIMIT $limit;";
         return [];
     }
 
+//    private function sortDocumentsByReportPdfs(array $documents)
+//    {
+//        function sort($a, $b) {
+//            if($a['is_report_pdf'] === $b['is_report_pdf']) {
+//                return 0;
+//            }
+//
+//            return $a['is_report_pdf'] > $b['is_report_pdf'] ? -1 : 1;
+//        }
+//
+//        uasort($documents, 'sort');
+//
+//        return $documents;
+//    }
+
     public function updateSupportingDocumentStatusByReportSubmissionIds(array $reportSubmissionIds, ?string $syncErrorMessage = null)
     {
         $idsString = implode(",", $reportSubmissionIds);
@@ -141,9 +156,6 @@ AND is_report_pdf=false";
         $stmt = $connection->prepare("SELECT * FROM document WHERE report_submission_id IN ($submissionIdStrings) ORDER BY created_on ASC");
         $stmt->execute();
         $documents = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        file_put_contents('php://stderr', print_r('All documents are: ', TRUE));
-        file_put_contents('php://stderr', print_r($documents, TRUE));
 
         foreach ($reportSubmissions as $i => $submission) {
             foreach($documents as $document) {
