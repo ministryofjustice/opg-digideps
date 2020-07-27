@@ -557,7 +557,6 @@ jobs:
   pa11y-ci:
     machine:
       image: circleci/classic:latest
-    resource_class: small
     steps:
       - checkout
       - attach_workspace: { at: ~/project }
