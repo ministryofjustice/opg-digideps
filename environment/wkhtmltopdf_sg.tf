@@ -1,8 +1,9 @@
 locals {
   wkhtmltopdf_sg_rules = {
-    ecr  = local.common_sg_rules.ecr
-    logs = local.common_sg_rules.logs
-    s3   = local.common_sg_rules.s3
+    ecr     = local.common_sg_rules.ecr
+    logs    = local.common_sg_rules.logs
+    s3      = local.common_sg_rules.s3
+    ecr_api = local.common_sg_rules.ecr_api
     front = {
       port        = 80
       type        = "ingress"

@@ -18,6 +18,16 @@ data "aws_security_group" "ssm_endpoint" {
   vpc_id = data.aws_vpc.vpc.id
 }
 
+data "aws_security_group" "secrets_endpoint" {
+  tags   = { Name = "secrets_endpoint" }
+  vpc_id = data.aws_vpc.vpc.id
+}
+
+data "aws_security_group" "ecr_api_endpoint" {
+  tags   = { Name = "ecr_api_endpoint" }
+  vpc_id = data.aws_vpc.vpc.id
+}
+
 locals {
   common_sg_rules = {
     ecr = {
@@ -47,6 +57,20 @@ locals {
       protocol    = "tcp"
       target_type = "security_group_id"
       target      = data.aws_security_group.ssm_endpoint.id
+    }
+    secrets = {
+      port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = data.aws_security_group.secrets_endpoint.id
+    }
+    ecr_api = {
+      port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = data.aws_security_group.ecr_api_endpoint.id
     }
   }
 }

@@ -1,8 +1,11 @@
 locals {
   api_service_sg_rules = {
-    ecr  = local.common_sg_rules.ecr
-    logs = local.common_sg_rules.logs
-    s3   = local.common_sg_rules.s3
+    ecr     = local.common_sg_rules.ecr
+    logs    = local.common_sg_rules.logs
+    s3      = local.common_sg_rules.s3
+    ssm     = local.common_sg_rules.ssm
+    secret  = local.common_sg_rules.secrets
+    ecr_api = local.common_sg_rules.ecr_api
     cache = {
       port        = 6379
       type        = "egress"
