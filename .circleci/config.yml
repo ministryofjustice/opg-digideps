@@ -3,78 +3,78 @@ version: 2.1
 workflows:
   pull_request:
     jobs:
-#      - lint:
-#          name: lint terraform
-#          filters: { branches: { ignore: [ main ] } }
-#
-#      - build:
-#          name: build pr
-#          filters: { branches: { ignore: [ main ] } }
-#
-#      - terraform-command:
-#          name: apply environment
-#          requires: [ build pr, lint terraform ]
-#          filters: { branches: { ignore: [ main ] } }
-#          tf_command: apply
-#
-#      - run-task:
-#          name: reset environment
-#          requires: [ apply environment ]
-#          filters: { branches: { ignore: [ main ] } }
-#          task_name: reset_database
-#          timeout: 180
+      - lint:
+          name: lint terraform
+          filters: { branches: { ignore: [ main ] } }
+
+      - build:
+          name: build pr
+          filters: { branches: { ignore: [ main ] } }
+
+      - terraform-command:
+          name: apply environment
+          requires: [ build pr, lint terraform ]
+          filters: { branches: { ignore: [ main ] } }
+          tf_command: apply
+
+      - run-task:
+          name: reset environment
+          requires: [ apply environment ]
+          filters: { branches: { ignore: [ main ] } }
+          task_name: reset_database
+          timeout: 180
 
       - client-unit-test:
           name: client unit test
-#          requires: [ build pr ]
+          requires: [ apply environment ]
           filters: { branches: { ignore: [ main ] } }
 
       - api-unit-tests:
           name: api unit test
-#          requires: [ build pr ]
+          requires: [ apply environment ]
           filters: { branches: { ignore: [ main ] } }
 
-#      - approve:
-#          name: approval for further testing
-#          type: approval
-#          requires: [ reset environment ]
-#          filters: { branches: { ignore: [ master ] } }
-#
-#      - run-task:
-#          name: integration test
-#          requires: [ approval for further testing ]
-#          filters: { branches: { ignore: [ master ] } }
-#          task_name: integration_test
-#          timeout: 2400
-#
-#      - pa11y-ci:
-#          name: accessibility test
-#          requires: [ approval for further testing ]
-#          filters: { branches: { ignore: [ main ] } }
-#
-#      - run-task:
-#          name: backup environment
-#          requires: [ api unit test, client unit test, integration test ]
-#          filters: { branches: { ignore: [ main ] } }
-#          task_name: backup
-#
-#      - run-task:
-#          name: restore environment
-#          requires: [ backup environment ]
-#          filters: { branches: { ignore: [ main ] } }
-#          task_name: restore
-#
-#      - cleanup:
-#          name: approve destroy environment
-#          type: approval
-#          requires: [ restore environment ]
-#          filters: { branches: { ignore: [ main ] } }
-#
-#      - terraform-command:
-#          name: destroy environment
-#          requires: [ approve destroy environment ]
-#          filters: { branches: { ignore: [ main ] } }
-#          tf_command: destroy
+      - approve:
+          name: approval for further testing
+          type: approval
+          requires: [ reset environment ]
+          filters: { branches: { ignore: [ master ] } }
+
+      - run-task:
+          name: integration test
+          requires: [ approval for further testing ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: integration_test
+          timeout: 2400
+
+      - pa11y-ci:
+          name: accessibility test
+          requires: [ approval for further testing ]
+          filters: { branches: { ignore: [ main ] } }
+
+      - run-task:
+          name: backup environment
+          requires: [ api unit test, client unit test, integration test ]
+          filters: { branches: { ignore: [ main ] } }
+          task_name: backup
+
+      - run-task:
+          name: restore environment
+          requires: [ backup environment ]
+          filters: { branches: { ignore: [ main ] } }
+          task_name: restore
+
+      - cleanup:
+          name: approve destroy environment
+          type: approval
+          requires: [ restore environment ]
+          filters: { branches: { ignore: [ main ] } }
+
+      - terraform-command:
+          name: destroy environment
+          requires: [ approve destroy environment ]
+          filters: { branches: { ignore: [ main ] } }
+          tf_command: destroy
 
   integration:
     jobs:
