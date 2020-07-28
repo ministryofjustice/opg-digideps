@@ -26,4 +26,4 @@ flags:
   client:
     paths:
       - client/src/AppBundle
-    carryforward: true
+    carryforward: false
