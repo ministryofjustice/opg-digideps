@@ -41,10 +41,10 @@ workflows:
           requires: [ apply environment ]
           filters: { branches: { ignore: [ main ] } }
 
-      - pa11y-ci:
-          name: accessibility test
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ main ] } }
+#      - pa11y-ci:
+#          name: accessibility test
+#          requires: [ apply environment ]
+#          filters: { branches: { ignore: [ main ] } }
 
       - run-task:
           name: backup environment
