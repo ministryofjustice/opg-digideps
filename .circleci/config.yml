@@ -3,78 +3,78 @@ version: 2.1
 workflows:
   pull_request:
     jobs:
-      - lint:
-          name: lint terraform
-          filters: { branches: { ignore: [ main ] } }
-
-      - build:
-          name: build pr
-          filters: { branches: { ignore: [ main ] } }
-
-      - terraform-command:
-          name: apply environment
-          requires: [ build pr, lint terraform ]
-          filters: { branches: { ignore: [ main ] } }
-          tf_command: apply
-
-      - run-task:
-          name: reset environment
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ main ] } }
-          task_name: reset_database
-          timeout: 180
+#      - lint:
+#          name: lint terraform
+#          filters: { branches: { ignore: [ main ] } }
+#
+#      - build:
+#          name: build pr
+#          filters: { branches: { ignore: [ main ] } }
+#
+#      - terraform-command:
+#          name: apply environment
+#          requires: [ build pr, lint terraform ]
+#          filters: { branches: { ignore: [ main ] } }
+#          tf_command: apply
+#
+#      - run-task:
+#          name: reset environment
+#          requires: [ apply environment ]
+#          filters: { branches: { ignore: [ main ] } }
+#          task_name: reset_database
+#          timeout: 180
 
       - client-unit-test:
           name: client unit test
-          requires: [ apply environment ]
+#          requires: [ apply environment ]
           filters: { branches: { ignore: [ main ] } }
 
       - api-unit-tests:
           name: api unit test
-          requires: [ apply environment ]
+#          requires: [ apply environment ]
           filters: { branches: { ignore: [ main ] } }
 
-      - approve:
-          name: approval for further testing
-          type: approval
-          requires: [ reset environment ]
-          filters: { branches: { ignore: [ master ] } }
-
-      - run-task:
-          name: integration test
-          requires: [ approval for further testing ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: integration_test
-          timeout: 2400
-
-      - pa11y-ci:
-          name: accessibility test
-          requires: [ approval for further testing ]
-          filters: { branches: { ignore: [ main ] } }
-
-      - run-task:
-          name: backup environment
-          requires: [ api unit test, client unit test, integration test ]
-          filters: { branches: { ignore: [ main ] } }
-          task_name: backup
-
-      - run-task:
-          name: restore environment
-          requires: [ backup environment ]
-          filters: { branches: { ignore: [ main ] } }
-          task_name: restore
-
-      - cleanup:
-          name: approve destroy environment
-          type: approval
-          requires: [ restore environment ]
-          filters: { branches: { ignore: [ main ] } }
-
-      - terraform-command:
-          name: destroy environment
-          requires: [ approve destroy environment ]
-          filters: { branches: { ignore: [ main ] } }
-          tf_command: destroy
+#      - approve:
+#          name: approval for further testing
+#          type: approval
+#          requires: [ reset environment ]
+#          filters: { branches: { ignore: [ master ] } }
+#
+#      - run-task:
+#          name: integration test
+#          requires: [ approval for further testing ]
+#          filters: { branches: { ignore: [ master ] } }
+#          task_name: integration_test
+#          timeout: 2400
+#
+#      - pa11y-ci:
+#          name: accessibility test
+#          requires: [ approval for further testing ]
+#          filters: { branches: { ignore: [ main ] } }
+#
+#      - run-task:
+#          name: backup environment
+#          requires: [ api unit test, client unit test, integration test ]
+#          filters: { branches: { ignore: [ main ] } }
+#          task_name: backup
+#
+#      - run-task:
+#          name: restore environment
+#          requires: [ backup environment ]
+#          filters: { branches: { ignore: [ main ] } }
+#          task_name: restore
+#
+#      - cleanup:
+#          name: approve destroy environment
+#          type: approval
+#          requires: [ restore environment ]
+#          filters: { branches: { ignore: [ main ] } }
+#
+#      - terraform-command:
+#          name: destroy environment
+#          requires: [ approve destroy environment ]
+#          filters: { branches: { ignore: [ main ] } }
+#          tf_command: destroy
 
   integration:
     jobs:
@@ -224,7 +224,6 @@ workflows:
       - schedule:
           cron: "00 05 * * 0"
           filters: { branches: { only: [ main ] } }
-
     jobs:
       - build:
           name: build integration
@@ -262,7 +261,7 @@ workflows:
 orbs:
   aws-cli: circleci/aws-cli@0.1.13
   slack: circleci/slack@3.4.2
-  codecov: codecov/codecov@1.0.2
+  codecov: codecov/codecov@1.1.1
   ecs_helper:
     commands:
       install:
@@ -549,8 +548,8 @@ jobs:
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec api chmod -R 777 var
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
 
-            docker-compose -f docker-compose.yml --project-name api-unit-tests exec api chmod -R 777 tests/phpunit/coverage/api-unit-tests.xml
-            docker cp "api-unit-tests_api_1:/var/www/tests/phpunit/coverage/api-unit-tests.xml" "./api-unit-tests.xml"
+            docker-compose -f docker-compose.yml --project-name api-unit-tests exec api chmod -R 777 tests/coverage/api-unit-tests.xml
+            docker cp "api-unit-tests_api_1:/var/www/tests/coverage/api-unit-tests.xml" "./api-unit-tests.xml"
       - codecov/upload:
           file: ./api-unit-tests.xml
           flags: api
