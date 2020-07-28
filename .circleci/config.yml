@@ -26,12 +26,12 @@ workflows:
 
       - client-unit-test:
           name: client unit test
-          requires: [ build ]
+          requires: [ build pr ]
           filters: { branches: { ignore: [ main ] } }
 
       - api-unit-tests:
           name: api unit test
-          requires: [ build ]
+          requires: [ build pr ]
           filters: { branches: { ignore: [ main ] } }
 
 #      - approve:
