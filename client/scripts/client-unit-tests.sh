@@ -4,4 +4,4 @@ set -e
 
 php bin/phpunit -c tests/phpunit --coverage-php tests/phpunit/coverage/client-unit-tests.cov
 
-php vendor/phpunit/phpcov/phpcov merge --clover "tests/phpunit/coverage/client-unit-tests.xml" "tests/phpunit/coverage"
+php vendor/phpunit/phpcov/phpcov merge --clover "./tests/phpunit/coverage/client-unit-tests.xml" "./tests/phpunit/coverage"
