@@ -7,9 +7,9 @@ workflows:
 #          name: lint terraform
 #          filters: { branches: { ignore: [ main ] } }
 #
-      - build:
-          name: build pr
-          filters: { branches: { ignore: [ main ] } }
+#      - build:
+#          name: build pr
+#          filters: { branches: { ignore: [ main ] } }
 #
 #      - terraform-command:
 #          name: apply environment
@@ -26,12 +26,12 @@ workflows:
 
       - client-unit-test:
           name: client unit test
-          requires: [ build pr ]
+#          requires: [ build pr ]
           filters: { branches: { ignore: [ main ] } }
 
       - api-unit-tests:
           name: api unit test
-          requires: [ build pr ]
+#          requires: [ build pr ]
           filters: { branches: { ignore: [ main ] } }
 
 #      - approve:
@@ -488,9 +488,6 @@ jobs:
       - setup_remote_docker
       - checkout
       - attach_workspace: { at: ~/project }
-      - run:
-          name: Load docker images
-          command: docker load -i ~/project/docker-images.tar
       - run:
           name: Install lambda requirements for unit tests
           working_directory: ~/project/lambda_functions
