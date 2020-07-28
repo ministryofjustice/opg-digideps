@@ -1,9 +1,11 @@
 locals {
   admin_sg_rules = {
-    ecr  = local.common_sg_rules.ecr
-    logs = local.common_sg_rules.logs
-    s3   = local.common_sg_rules.s3
-    ssm  = local.common_sg_rules.ssm
+    ecr     = local.common_sg_rules.ecr
+    logs    = local.common_sg_rules.logs
+    s3      = local.common_sg_rules.s3
+    ssm     = local.common_sg_rules.ssm
+    ecr_api = local.common_sg_rules.ecr_api
+    secrets = local.common_sg_rules.secrets
     pdf = {
       port        = 80
       type        = "egress"
@@ -97,7 +99,7 @@ resource "aws_security_group_rule" "admin_whitelist" {
   from_port         = 443
   to_port           = 443
   security_group_id = module.admin_elb_security_group.id
-  cidr_blocks       = local.admin_whitelist
+  cidr_blocks       = local.admin_allow_list
 }
 
 //No room for rules left in admin_elb_security_group

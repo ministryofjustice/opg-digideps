@@ -1,8 +1,3 @@
-data "aws_security_group" "secrets_endpoint" {
-  tags   = { Name = "secrets_endpoint" }
-  vpc_id = data.aws_vpc.vpc.id
-}
-
 locals {
   monitoring_lambda_sg_rules = {
     rds = {
