@@ -54,7 +54,7 @@ parameters:
           homepage: /
           report_overview: /report/{reportId|}/overview
           client_home: /client/show
-    s3_bucket_name: pa-uploads.local
+    s3_bucket_name: pa-uploads-local
     s3_client_params:
       version: 'latest'
       region: 'eu-west-1'

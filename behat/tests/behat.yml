@@ -97,11 +97,12 @@ default:
             contexts:
                 - DigidepsBehat\UserManagement\UserManagementFeatureContext
 
-        document-synchronisation:
-            description: Coverage of document synchronisation features
-            paths: [ "%paths.base%/features/v2/DocumentSynchronisation" ]
+        report-synchronisation:
+            description: Coverage of report and document synchronisation features
+            paths: [ "%paths.base%/features-v2/report-syncing" ]
             contexts:
                 - DigidepsBehat\DocumentSynchronisation\DocumentSynchronisationFeatureContext
+
         acl-v2:
             description: Coverage of Access Control
             paths: [ "%paths.base%/features-v2/acl" ]

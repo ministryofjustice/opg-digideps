@@ -11,15 +11,22 @@ You must have Docker installed.
 ## Installation
 
 - Add `127.0.0.1 digideps.local admin.digideps.local api.digideps.local www.digideps.local` to `/etc/hosts`
-- Navigate to the root directory of this repository and run `docker-compose up -d`
+- Navigate to the root directory of this repository and run `make up-app`
 - Check `https://digideps.local/` (Deputy area) and `https://admin.digideps.local/` (Admin area). Your browser will warn you about a self-signed certificate.
 - Run `./generate_certs.sh` to populate your certs directory
 
 ### Reset the database
 
-```sh
-docker-compose run --rm api sh scripts/reset_db_structure.sh
-docker-compose run --rm api sh scripts/reset_db_fixtures.sh
+Recreate DB schema and run migrations:
+
+```shell script
+$ make reset-database
+```
+
+Wipe DB contents and re-run fixtures:
+
+```shell script
+$ make reset-fixtures
 ```
 
 ## Traffic Flow Diagram

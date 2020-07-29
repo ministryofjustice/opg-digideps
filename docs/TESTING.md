@@ -7,30 +7,41 @@ This application uses two main testing technologies:
 
 ## How to run the tests
 
+In order to run tests locally, create a .env file in the root of the repo and add the test key found in AWS secrets manager under the Digideps developer account:
+
+e.g.
+```shell script
+# .env
+
+NOTIFY_API_KEY=fakeKeyGetRealValueFromAWS-123abcabc-abc1-12bn-65pp-12344567abc12-8j11j8d-4532-856s-7d55
+```
+
 ### Unit tests
 
-You can run all tests via the docker container. Note that the first two commands sets up the database and only needs to be run once.
+Frontend and Admin:
 
-```sh
-docker-compose -f docker-compose.yml run --rm api sh scripts/reset_db_structure.sh
-docker-compose -f docker-compose.yml run --rm api sh scripts/reset_db_fixtures.sh
-docker-compose -f docker-compose.yml run --rm api sh scripts/apiunittest.sh
-docker-compose -f docker-compose.yml run --rm frontend bin/phpunit -c tests/phpunit
+```shell script
+$ make client-unit-tests
+```
+
+Api:
+
+```shell script
+$ make api-unit-tests
 ```
 
 ### Integration tests
 
-To run the entire test suite, reset the database and run the `test` image.
+Run all behat tests:
 
-```sh
-docker-compose run --rm api sh scripts/reset_db_fixtures.sh
-docker-compose -f docker-compose.dev.yml run --rm test
+```shell script
+$ make behat-tests
 ```
 
-You can supply additional commands to Behat to run individual suites or tags.
+Run a specific suite:
 
-```sh
-docker-compose -f docker-compose.dev.yml run --rm test --suite=admin
+```shell script
+$ make behat-suite suite=<NAME OF SUITE>
 ```
 
 ## PHPUnit
@@ -49,16 +60,11 @@ Our modern behat suites are designed to test one piece of application functional
 
 There are however 6 older suites which are much larger and have a lot of complicated dependent data. These cannot easily be broken down further, but are slowly being replaced with smaller suites to eventually be phased out.
 
-- `infra`: A basic set of tests which check the end-to-end application. This allows the tests to fail fast on a critical problems.
-- `admin`: Tests for the private administration part of the application.
-- `lay`: Tests for lay deputy user functionality. Also tests functionality used by all deputies.
-- `ndr`: Tests for the New Deputy Report, filled out by all new new deputies.
-- `prof`: Tests for professional deputy user functionality.
-- `pa`: Tests for public authority deputy user functionality.
+See behat/tests/behat.yml for suite descriptions.
 
 ## Emails in non-production environments
 
-Non-production environments don't send emails to avoid data leakage, confusion and embarassment. This is achieved with a GOV.UK Notify "test" key, which causes Notify to behave as usual but not send the email out. Test emails can then be inspected through Notify's [admin interface][govuk-notify].
+Non-production environments don't send emails to avoid data leakage, confusion and embarrassment. This is achieved with a GOV.UK Notify "test" key, which causes Notify to behave as usual but not send the email out. Test emails can then be inspected through Notify's [admin interface][govuk-notify].
 
 ## Database Sync
 
