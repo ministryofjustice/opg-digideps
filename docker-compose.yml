@@ -26,7 +26,7 @@ services:
             - localstack
 
     localstack:
-        image: localstack/localstack:0.9.1
+        image: localstack/localstack:0.10.9
         ports:
             - 4572:4572
         environment:

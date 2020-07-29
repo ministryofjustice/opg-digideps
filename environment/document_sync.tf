@@ -18,7 +18,17 @@ locals {
       target_type = "cidr_block"
       target      = "0.0.0.0/0"
     }
+    mock_sirius_integration = {
+      port        = 8080
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "0.0.0.0/0"
+    }
   }
+
+  document_sync_interval = local.environment == "production" ? "rate(5 minutes)" : "rate(24 hours)"
+
 }
 
 module "document_sync_service_security_group" {
@@ -46,7 +56,7 @@ resource "aws_ecs_service" "document_sync" {
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.document_sync.arn
   launch_type             = "FARGATE"
-  platform_version        = "1.3.0"
+  platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
   tags                    = local.default_tags
@@ -60,7 +70,7 @@ resource "aws_ecs_service" "document_sync" {
 
 resource "aws_cloudwatch_event_rule" "document_sync_cron_rule" {
   name                = "${aws_ecs_task_definition.document_sync.family}-schedule"
-  schedule_expression = "rate(5 minutes)"
+  schedule_expression = local.document_sync_interval
 }
 
 resource "aws_cloudwatch_event_target" "document_sync_scheduled_task" {
@@ -98,7 +108,7 @@ locals {
     "secrets": [
       { "name": "API_CLIENT_SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_api_client_secret.name}" },
       { "name": "SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_frontend_secret.name}" },
-      { "name": "SIRIUS_API_BASE_URI", "valueFrom": "${data.aws_ssm_parameter.sirius_api_base_uri.arn}" }
+      { "name": "SIRIUS_API_BASE_URI", "valueFrom": "${aws_ssm_parameter.sirius_api_base_uri.arn}" }
     ],
     "environment": [
       { "name": "API_URL", "value": "https://${local.api_service_fqdn}" },

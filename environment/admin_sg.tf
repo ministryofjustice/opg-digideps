@@ -1,9 +1,11 @@
 locals {
   admin_sg_rules = {
-    ecr  = local.common_sg_rules.ecr
-    logs = local.common_sg_rules.logs
-    s3   = local.common_sg_rules.s3
-    ssm  = local.common_sg_rules.ssm
+    ecr     = local.common_sg_rules.ecr
+    logs    = local.common_sg_rules.logs
+    s3      = local.common_sg_rules.s3
+    ssm     = local.common_sg_rules.ssm
+    ecr_api = local.common_sg_rules.ecr_api
+    secrets = local.common_sg_rules.secrets
     pdf = {
       port        = 80
       type        = "egress"
@@ -34,6 +36,13 @@ locals {
     }
     notify = {
       port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "0.0.0.0/0"
+    }
+    mock_sirius_integration = {
+      port        = 8080
       type        = "egress"
       protocol    = "tcp"
       target_type = "cidr_block"
