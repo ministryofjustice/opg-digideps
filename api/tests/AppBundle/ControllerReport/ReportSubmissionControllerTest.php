@@ -4,6 +4,7 @@ namespace Tests\AppBundle\ControllerReport;
 
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\ReportSubmission;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\AppBundle\Controller\AbstractTestController;
 use AppBundle\TestHelpers\ReportSubmissionHelper;
@@ -16,6 +17,8 @@ class ReportSubmissionControllerTest extends AbstractTestController
     private static $tokenSuperAdmin = null;
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
+    /** @var EntityManager|null */
+    private $em;
 
     public static function setUpBeforeClass(): void
     {
@@ -60,6 +63,9 @@ class ReportSubmissionControllerTest extends AbstractTestController
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
         }
+
+        $kernel = self::bootKernel();
+        $this->em = $kernel->getContainer()->get('em');
     }
 
     public function testGetAllWithFiltersGetOneArchive()
@@ -248,7 +254,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
      */
     public function updatePersistsUuidWhenProvided()
     {
-        $reportSubmission = (new ReportSubmissionHelper())->generateAndPersistReportSubmission();
+        $reportSubmission = (new ReportSubmissionHelper())->generateAndPersistReportSubmission($this->em);
 
         $uuid = '5a8b1a26-8296-4373-ae61-f8d0b250e773';
 
