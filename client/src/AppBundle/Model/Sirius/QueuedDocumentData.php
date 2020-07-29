@@ -44,20 +44,12 @@ class QueuedDocumentData
     /** @var int */
     private $reportSubmissionId;
 
-    public function getSyncedReportSubmission(): ?ReportSubmission
-    {
-        foreach ($this->getReportSubmissions() as $submission) {
-            if ($submission->getUuid()) {
-                return $submission;
-            }
-        }
-
-        return null;
-    }
+    /** @var string|null */
+    private $reportSubmissionUuid;
 
     public function supportingDocumentCanBeSynced()
     {
-        return !$this->isReportPdf() && $this->getSyncedReportSubmission();
+        return !$this->isReportPdf() && $this->getReportSubmissionUuid();
     }
 
     /**
@@ -284,6 +276,25 @@ class QueuedDocumentData
     public function setReportSubmissionId(int $reportSubmissionId): self
     {
         $this->reportSubmissionId = $reportSubmissionId;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getReportSubmissionUuid(): ?string
+    {
+        return $this->reportSubmissionUuid;
+    }
+
+    /**
+     * @param string|null $reportSubmissionUuid
+     * @return QueuedDocumentData
+     */
+    public function setReportSubmissionUuid(?string $reportSubmissionUuid): self
+    {
+        $this->reportSubmissionUuid = $reportSubmissionUuid;
 
         return $this;
     }
