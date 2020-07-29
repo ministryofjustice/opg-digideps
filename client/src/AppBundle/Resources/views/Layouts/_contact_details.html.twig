@@ -1,0 +1,38 @@
+<hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+<details class="govuk-details" data-module="govuk-details">
+    <summary class="govuk-details__summary">
+    <span class="govuk-details__summary-text">
+      Get help with completing the report
+    </span>
+    </summary>
+    <div class="govuk-details__text">
+        <ul class="govuk-list">
+            <li>Telephone</li>
+            {% if not app.user %}
+                {{ 'helplineGeneral' | trans({}, 'common') }}
+            {% elseif app.user and app.user.isDeputyPA() %}
+                {{ 'helplinePA' | trans({}, 'common') }}
+            {% elseif app.user and app.user.isDeputyProf() %}
+                {{ 'helplineProf' | trans({}, 'common') }}
+            {% else %}
+                {{ 'helpline' | trans({}, 'common') }}
+            {% endif %}
+        </ul>
+        <ul class="govuk-list">
+            <li>Email</li>
+            {% if not app.user %}
+                <li><a href="mailto:{{ 'layDeputySupportEmail' | trans({}, 'common') }}" title="{{ 'layDeputySupportEmail' | trans({}, 'common') }}">{{ 'layDeputySupportEmail' | trans({}, 'common') }}</a></li>
+            {% elseif app.user and app.user.isDeputyPA() %}
+                <li><a href="mailto:{{ 'paSupportEmail' | trans({}, 'common') }}" title="{{ 'paSupportEmail' | trans({}, 'common') }}">{{ 'paSupportEmail' | trans({}, 'common') }}</a></li>
+            {% elseif app.user and app.user.isDeputyProf() %}
+                <li><a href="mailto:{{ 'profSupportEmail' | trans({}, 'common') }}" title="{{ 'profSupportEmail' | trans({}, 'common') }}">{{ 'profSupportEmail' | trans({}, 'common') }}</a></li>
+            {% else %}
+                <li><a href="mailto:{{ 'layDeputySupportEmail' | trans({}, 'common') }}" title="{{ 'layDeputySupportEmail' | trans({}, 'common') }}">{{ 'layDeputySupportEmail' | trans({}, 'common') }}</a></li>
+            {% endif %}
+        </ul>
+        <ul class="govuk-list">
+            <li>Opening hours</li>
+            <li>Monday to Friday: 8am to 6pm (except public holidays)</li>
+        </ul>
+    </div>
+</details>
