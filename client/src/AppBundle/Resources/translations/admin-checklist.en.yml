@@ -231,6 +231,7 @@ checklistPage:
 checklistSubmittedPage:
   htmlTitle: Administration - Report checklist
   panelTitle: Checklist submitted
+  downloadText: Your PDF download should start automatically. <a href="%downloadLinkUrl%" class="%downloadLinkClassList%">Click here</a> to download it if it does not download automatically.
   toChecklistButtonText: Return to checklist
   toClientListButtonText: View client list
   manageReportLinkText: Manage this report

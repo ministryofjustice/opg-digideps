@@ -46,7 +46,7 @@ resource "aws_ssm_parameter" "checklist_sync_row_limit" {
 resource "aws_ssm_parameter" "flag_checklist_sync" {
   name  = "${local.feature_flag_prefix}checklist-sync"
   type  = "String"
-  value = "1"
+  value = "0"
 
   tags = local.default_tags
 
