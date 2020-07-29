@@ -18,6 +18,15 @@
                 </div>
             </div>
 
+            {% if syncFeatureIsEnabled == false %}
+                <p class="govuk-body govuk-!-padding-top-6 govuk-!-padding-bottom-1">
+                    {{ (page ~ '.downloadText') | trans({
+                        '%downloadLinkUrl%': path('admin_checklist_pdf', {'id': report.id}),
+                        '%downloadLinkClassList%': "behat-link-download-checklist-pdf"
+                    }) | raw }}
+                </p>
+            {% endif %}
+
             <p class="govuk-body govuk-!-padding-top-1 govuk-!-padding-bottom-6">
                 <a href="{{ path('admin_report_manage', {'id': report.id}) }}"
                    class="govkuk-link behat-link-manage">{{ (page ~ '.manageReportLinkText') | trans }}
@@ -32,4 +41,14 @@
             </a>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% if syncFeatureIsEnabled == false %}
+        <script>
+          window.location.href = "{{ path('admin_checklist_pdf', {'id': report.id}) }}";
+        </script>
+    {% endif %}
 {% endblock %}
