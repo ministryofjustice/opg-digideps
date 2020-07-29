@@ -120,7 +120,8 @@ class IndexController extends AbstractController
                     $clientUpdated->getFullName()
                 );
 
-                $this->logger->notice('', $event);
+                $message = is_null($newEmail) ? 'Client email address removed' : '';
+                $this->logger->notice($message, $event);
 
             }
 

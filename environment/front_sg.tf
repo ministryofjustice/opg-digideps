@@ -27,7 +27,7 @@ locals {
       target_type = "security_group_id"
       target      = module.wkhtmltopdf_security_group.id
     }
-    scan = {
+    scan_and_mock_sirius_integration = {
       port        = 8080
       type        = "egress"
       protocol    = "tcp"

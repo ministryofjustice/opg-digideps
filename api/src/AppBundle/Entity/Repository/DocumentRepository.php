@@ -4,7 +4,11 @@ namespace AppBundle\Entity\Repository;
 
 use AppBundle\Entity\Report\Document;
 use DateTime;
+use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 class DocumentRepository extends AbstractEntityRepository
 {
@@ -27,92 +31,90 @@ class DocumentRepository extends AbstractEntityRepository
 
     public function getQueuedDocumentsAndSetToInProgress(string $limit)
     {
-        // Using DENSE_RANK here as we get multiple rows for the same document due to multiple report submissions. This
-        // ensures any limit applied will not miss out submissions by chance
         $queuedDocumentsQuery = "
-SELECT case_number,
-document_id,
-document_report_submission_id,
-is_report_pdf,
-filename,
-storage_reference,
-report_start_date,
-report_end_date,
-report_submit_date,
-report_type,
-ndr_id,
-ndr_start_date,
-ndr_submit_date,
-report_submission_id,
-report_submission_uuid
-FROM (
-SELECT DENSE_RANK() OVER(ORDER BY d.is_report_pdf DESC, d.id) AS dn,
-coalesce(c1.case_number, c2.case_number) AS case_number,
-coalesce(rs1.id, rs2.id) AS report_submission_id,
-coalesce(rs1.opg_uuid, rs2.opg_uuid) AS report_submission_uuid,
-d.id AS document_id, d.is_report_pdf, d.filename, d.storage_reference, d.report_submission_id AS document_report_submission_id,
-r.start_date AS report_start_date, r.end_date AS report_end_date, r.submit_date AS report_submit_date, r.type AS report_type,
-o.id AS ndr_id, o.start_date AS ndr_start_date, o.submit_date AS ndr_submit_date
-FROM document d
-LEFT JOIN report r ON r.id = d.report_id
-LEFT JOIN odr o ON o.id = d.ndr_id
-LEFT JOIN report_submission rs1 ON rs1.report_id = d.report_id
-LEFT JOIN report_submission rs2 ON rs2.ndr_id = d.ndr_id
-LEFT JOIN client c1 ON c1.id = r.client_id
-LEFT JOIN client c2 ON c2.id = o.client_id
-WHERE d.synchronisation_status = 'QUEUED') AS sub
-WHERE dn < $limit;";
+SELECT d.id as document_id,
+d.report_submission_id as report_submission_id,
+d.is_report_pdf as is_report_pdf,
+d.filename as filename,
+d.storage_reference as storage_reference,
+d.report_id as report_id,
+d.ndr_id as ndr_id,
+r.start_date as report_start_date,
+r.end_date as report_end_date,
+r.submit_date as report_submit_date,
+r.type as report_type,
+rs.opg_uuid as opg_uuid,
+rs.created_on as report_submission_created_on,
+o.start_date as ndr_start_date,
+o.submit_date as ndr_submit_date,
+coalesce(c1.case_number, c2.case_number) AS case_number
+FROM document as d
+LEFT JOIN report as r on d.report_id = r.id
+LEFT JOIN odr as o on d.ndr_id = o.id
+LEFT JOIN report_submission as rs on d.report_submission_id  = rs.id
+LEFT JOIN client as c1 on r.client_id = c1.id
+LEFT JOIN client as c2 on o.client_id = c2.id
+WHERE synchronisation_status='QUEUED'
+ORDER BY is_report_pdf DESC, report_submission_id ASC
+LIMIT $limit;";
 
         $conn = $this->getEntityManager()->getConnection();
-        $stmt = $conn->prepare($queuedDocumentsQuery);
-        $stmt->execute();
 
-        $queuedDocumentData = [];
+        $docStmt = $conn->prepare($queuedDocumentsQuery);
+        $docStmt->execute();
 
-        while($row = $stmt->fetch(PDO::FETCH_ASSOC))
-        {
-            if (!isset($queuedDocumentData[$row['document_id']])) {
-                $queuedDocumentData[$row['document_id']] = [
-                    'document_id' => $row['document_id'],
-                    'report_submission_id' => $row['document_report_submission_id'],
-                    'ndr_id' => $row['ndr_id'],
-                    'case_number' => $row['case_number'],
-                    'is_report_pdf' => $row['is_report_pdf'],
-                    'filename' => $row['filename'],
-                    'storage_reference' => $row['storage_reference'],
-                    'report_start_date' => isset($row['report_start_date']) ? $row['report_start_date'] : (new DateTime($row['ndr_start_date']))->format('Y-m-d'),
-                    'report_end_date' => $row['report_end_date'],
-                    'report_submit_date' => isset($row['report_submit_date']) ? $row['report_submit_date'] : $row['ndr_submit_date'],
-                    'report_type' => $row['report_type']
-                ];
-            }
+        $documents = [];
 
-            $queuedDocumentData[$row['document_id']]['report_submissions'][] = [
-                'id' => $row['report_submission_id'],
-                'uuid' => $row['report_submission_uuid']
+        // Get all queued documents
+        $results = $docStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($results as $row) {
+            $documents[$row['document_id']] = [
+                'document_id' => $row['document_id'],
+                'document_created_on' => $row['document_created_on'],
+                'report_submission_id' => $row['report_submission_id'],
+                'ndr_id' => $row['ndr_id'],
+                'report_id' => $row['report_id'],
+                'report_start_date' => isset($row['report_start_date']) ? $row['report_start_date'] : (new DateTime($row['ndr_start_date']))->format('Y-m-d'),
+                'report_end_date' => $row['report_end_date'],
+                'report_submit_date' => isset($row['report_submit_date']) ? $row['report_submit_date'] : $row['ndr_submit_date'],
+                'report_type' => $row['report_type'],
+                'is_report_pdf' => $row['is_report_pdf'],
+                'filename' => $row['filename'],
+                'storage_reference' => $row['storage_reference'],
+                'report_submission_uuid' => $row['opg_uuid'],
+                'case_number' => $row['case_number']
             ];
+
+
+            $reportIds[] = $row['report_id'];
+            $ndrIds[] = $row['ndr_id'];
         }
 
-        // Set documents to in progress to ensure additional runs won't pick up the same documents
-        if (count($queuedDocumentData)) {
-            $ids = [];
-            foreach($queuedDocumentData as $data) {
-                $ids[] = $data['document_id'];
-            }
+        if (count($documents) > 0) {
+            $getReportSubmissionsQuery =  $this->buildReportSubmissionsQuery(
+                array_values(array_filter(array_unique($reportIds))),
+                array_values(array_filter(array_unique($ndrIds)))
+            );
 
-            $idsString = implode(",", $ids);
+            $submissionStmt = $conn->prepare($getReportSubmissionsQuery);
+            $submissionStmt->execute();
+            $submissions = $submissionStmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $updateStatusQuery = "UPDATE document SET synchronisation_status = 'IN_PROGRESS' WHERE id IN ($idsString)";
-            $stmt = $conn->prepare($updateStatusQuery);
+            $reportPdfFlaggedSubmissions = $this->flagSubmissionsContainingReportPdfs($submissions, $conn);
+            $groupedSubmissions = $this->groupSubmissionsByReportId($reportPdfFlaggedSubmissions);
+            $groupedSubmissionsWithUuids = $this->assignUuidsToAdditionalDocumentSubmissions($groupedSubmissions);
+            $documentsWithUuids = $this->extractUuidsFromSubmissionsAndAssignToDocuments($documents, $groupedSubmissionsWithUuids);
 
-            $stmt->execute();
+            $this->setQueuedDocumentsToInProgress($documentsWithUuids, $conn);
+
+            return $documentsWithUuids;
         }
 
-        return $queuedDocumentData;
+        return [];
     }
 
-
-    public function updateSupportingDocumentStatusByReportSubmissionIds(array $reportSubmissionIds, ?string $syncErrorMessage=null)
+    public function updateSupportingDocumentStatusByReportSubmissionIds(array $reportSubmissionIds, ?string $syncErrorMessage = null)
     {
         $idsString = implode(",", $reportSubmissionIds);
         $status = Document::SYNC_STATUS_PERMANENT_ERROR;
@@ -128,4 +130,166 @@ AND is_report_pdf=false";
         return $stmt->execute();
     }
 
+    private function flagSubmissionsContainingReportPdfs(array $reportSubmissions, Connection $connection)
+    {
+        $submissionIds = array_map(function($submission) {
+            return $submission['id'];
+        }, $reportSubmissions);
+
+        $submissionIdStrings = implode(",", $submissionIds);
+
+        $stmt = $connection->prepare("SELECT * FROM document WHERE report_submission_id IN ($submissionIdStrings) ORDER BY created_on ASC");
+        $stmt->execute();
+        $documents = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($reportSubmissions as $i => $submission) {
+            foreach($documents as $document) {
+                if ($document['report_submission_id'] === $submission['id'] && $document['is_report_pdf']) {
+                    $reportSubmissions[$i]['contains_report_pdf'] = true;
+                    break;
+                } else {
+                    $reportSubmissions[$i]['contains_report_pdf'] = false;
+                }
+            }
+        }
+
+        return $reportSubmissions;
+    }
+
+    private function groupSubmissionsByReportId(array $reportSubmissions)
+    {
+        $groupedReportSubmissions = ['reports' => [], 'ndrs' => []];
+
+        foreach ($reportSubmissions as $row) {
+            if (!is_null($row['report_id'])) {
+                $groupedReportSubmissions['reports'][$row['report_id']][] = [
+                    'id' => $row['id'],
+                    'opg_uuid' => $row['opg_uuid'],
+                    'created_on' => $row['created_on'],
+                    'report_id' => $row['report_id'],
+                    'ndr_id' => $row['ndr_id'],
+                    'contains_report_pdf' => $row['contains_report_pdf'],
+                ];
+            }
+
+            if (!is_null($row['ndr_id'])) {
+                $groupedReportSubmissions['ndrs'][$row['ndr_id']][] = [
+                    'id' => $row['id'],
+                    'opg_uuid' => $row['opg_uuid'],
+                    'created_on' => $row['created_on'],
+                    'report_id' => $row['report_id'],
+                    'ndr_id' => $row['ndr_id'],
+                    'contains_report_pdf' => $row['contains_report_pdf'],
+                ];
+            }
+        }
+
+        // Flag resubmissions to handle UUIDs correctly
+        foreach ($groupedReportSubmissions['reports'] as $reportId => $submissions) {
+            $firstSubmissionDate = $submissions[0]['created_on'];
+
+            foreach($submissions as $i => $submission) {
+                if ($submission['contains_report_pdf'] && $submission['created_on'] > $firstSubmissionDate) {
+                    $groupedReportSubmissions['reports'][$reportId][$i]['is_resubmission'] = true;
+                } else {
+                    $groupedReportSubmissions['reports'][$reportId][$i]['is_resubmission'] = false;
+                }
+            }
+        }
+
+        return $groupedReportSubmissions;
+    }
+
+    /**
+     * @param array $reportSubmissions
+     * @return array
+     */
+    private function assignUuidsToAdditionalDocumentSubmissions(array $reportSubmissions): array
+    {
+        $lastUuid = null;
+        $lastReportId = null;
+
+        // Walk through the submissions grouped by report id to assign missing uuids to additional submissions
+        foreach ($reportSubmissions['reports'] as $reportId => $groupedSubmissions) {
+            foreach ($groupedSubmissions as $key => $reportSubmission) {
+                // We only want to pass on UUIDs associated with a submission containing a report PDF to create correct folders in Sirius
+                if (!is_null($reportSubmission['opg_uuid']) && $reportSubmission['contains_report_pdf'] === true) {
+                    $lastUuid = $reportSubmission['opg_uuid'];
+                    $lastReportId = $reportSubmission['report_id'];
+                    continue;
+                }
+
+                if (is_null($reportSubmission['opg_uuid']) && $reportSubmission['report_id'] === $lastReportId && !$reportSubmission['is_resubmission']) {
+                    $reportSubmissions['reports'][$reportId][$key]['opg_uuid'] = $lastUuid;
+                }
+            }
+        }
+
+        return $reportSubmissions;
+    }
+
+    /**
+     * @param array $documents
+     * @param array $reportSubmissions
+     * @return array
+     */
+    private function extractUuidsFromSubmissionsAndAssignToDocuments(array $documents, array $reportSubmissions): array
+    {
+        // Extract the uuids from the submissions and assign to the queued documents data array
+        foreach ($documents as $docIndex => $document) {
+            if (is_null($document['report_submission_uuid'])) {
+                foreach ($reportSubmissions['reports'] as $reportId => $groupedSubmissions) {
+                    foreach ($groupedSubmissions as $submission) {
+                        if ($document['report_submission_id'] === $submission['id'] ) {
+                            $documents[$docIndex]['report_submission_uuid'] = $submission['opg_uuid'];
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $documents;
+    }
+
+    private function buildReportSubmissionsQuery(array $reportIds, array $ndrIds)
+    {
+        $reportIdsString = implode(",", $reportIds);
+        $ndrIdsString = implode(",", $ndrIds);
+
+        if (count($reportIds) > 0 && count($ndrIds) < 1) {
+            return "SELECT * FROM report_submission WHERE (report_id IN ($reportIdsString)) ORDER BY created_on ASC;";
+        }
+
+        if (count($ndrIds) > 0 && count($reportIds) < 1) {
+            return "SELECT * FROM report_submission WHERE (ndr_id IN ($ndrIdsString)) ORDER BY created_on ASC;";
+        }
+
+        if (count($reportIds) > 0 && count($ndrIds) > 0) {
+            return "SELECT * FROM report_submission WHERE (report_id IN ($reportIdsString)) OR (ndr_id IN ($ndrIdsString)) ORDER BY created_on ASC;";
+        }
+    }
+
+    /**
+     * @param array $documents
+     * @param Connection $connection
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    private function setQueuedDocumentsToInProgress(array $documents, Connection $connection): void
+    {
+        if (count($documents)) {
+            // Set documents to in progress to ensure additional runs won't pick up the same documents
+            $ids = [];
+            foreach ($documents as $data) {
+                $ids[] = $data['document_id'];
+
+                $idsString = implode(",", $ids);
+
+                $updateStatusQuery = "UPDATE document SET synchronisation_status = 'IN_PROGRESS' WHERE id IN ($idsString)";
+                $stmt = $connection->prepare($updateStatusQuery);
+
+                $stmt->execute();
+            }
+        }
+    }
 }

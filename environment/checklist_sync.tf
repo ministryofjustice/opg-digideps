@@ -18,6 +18,13 @@ locals {
       target_type = "cidr_block"
       target      = "0.0.0.0/0"
     }
+    mock_sirius_integration = {
+      port        = 8080
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "0.0.0.0/0"
+    }
   }
 }
 
@@ -98,7 +105,7 @@ locals {
     "secrets": [
       { "name": "API_CLIENT_SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_api_client_secret.name}" },
       { "name": "SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_frontend_secret.name}" },
-      { "name": "SIRIUS_API_BASE_URI", "valueFrom": "${data.aws_ssm_parameter.sirius_api_base_uri.arn}" }
+      { "name": "SIRIUS_API_BASE_URI", "valueFrom": "${aws_ssm_parameter.sirius_api_base_uri.arn}" }
     ],
     "environment": [
       { "name": "API_URL", "value": "https://${local.api_service_fqdn}" },
