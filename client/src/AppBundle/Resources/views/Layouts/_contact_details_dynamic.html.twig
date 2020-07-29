@@ -1,38 +1,45 @@
+{% set translationDomain = "common" %}
+{% trans_default_domain translationDomain %}
+
 <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 <details class="govuk-details" data-module="govuk-details">
     <summary class="govuk-details__summary">
     <span class="govuk-details__summary-text">
-      Get help with completing the report
+      {{ 'contactDetailsTitle' | trans }}
     </span>
     </summary>
     <div class="govuk-details__text">
         <ul class="govuk-list">
-            <li>Telephone</li>
-            {% if not app.user %}
-                {{ 'helplineGeneral' | trans({}, 'common') }}
-            {% elseif app.user and app.user.isDeputyPA() %}
-                {{ 'helplinePA' | trans({}, 'common') }}
-            {% elseif app.user and app.user.isDeputyProf() %}
-                {{ 'helplineProf' | trans({}, 'common') }}
-            {% else %}
-                {{ 'helpline' | trans({}, 'common') }}
-            {% endif %}
+            <li> {{ 'helplineTitle' | trans }}</li>
+            <li>
+                {% if not app.user %}
+                    {{ 'helplineGeneral' | trans }}
+                {% elseif app.user and app.user.isDeputyPA() %}
+                    {{ 'helplinePA' | trans }}
+                {% elseif app.user and app.user.isDeputyProf() %}
+                    {{ 'helplineProf' | trans }}
+                {% else %}
+                    {{ 'helpline' | trans }}
+                {% endif %}
+            </li>
         </ul>
         <ul class="govuk-list">
-            <li>Email</li>
-            {% if not app.user %}
-                <li><a href="mailto:{{ 'layDeputySupportEmail' | trans({}, 'common') }}" title="{{ 'layDeputySupportEmail' | trans({}, 'common') }}">{{ 'layDeputySupportEmail' | trans({}, 'common') }}</a></li>
-            {% elseif app.user and app.user.isDeputyPA() %}
-                <li><a href="mailto:{{ 'paSupportEmail' | trans({}, 'common') }}" title="{{ 'paSupportEmail' | trans({}, 'common') }}">{{ 'paSupportEmail' | trans({}, 'common') }}</a></li>
-            {% elseif app.user and app.user.isDeputyProf() %}
-                <li><a href="mailto:{{ 'profSupportEmail' | trans({}, 'common') }}" title="{{ 'profSupportEmail' | trans({}, 'common') }}">{{ 'profSupportEmail' | trans({}, 'common') }}</a></li>
-            {% else %}
-                <li><a href="mailto:{{ 'layDeputySupportEmail' | trans({}, 'common') }}" title="{{ 'layDeputySupportEmail' | trans({}, 'common') }}">{{ 'layDeputySupportEmail' | trans({}, 'common') }}</a></li>
-            {% endif %}
+            <li>{{ 'emailTitle' | trans }}</li>
+            <li>
+                {% if not app.user %}
+                    <a href="mailto:{{ 'layDeputySupportEmail' | trans }}" title="{{ 'layDeputySupportEmail' | trans }}">{{ 'layDeputySupportEmail' | trans }}</a>
+                {% elseif app.user and app.user.isDeputyPA() %}
+                    <a href="mailto:{{ 'paSupportEmail' | trans }}" title="{{ 'paSupportEmail' | trans }}">{{ 'paSupportEmail' | trans }}</a>
+                {% elseif app.user and app.user.isDeputyProf() %}
+                    <a href="mailto:{{ 'profSupportEmail' | trans }}" title="{{ 'profSupportEmail' | trans }}">{{ 'profSupportEmail' | trans }}</a>
+                {% else %}
+                    <a href="mailto:{{ 'layDeputySupportEmail' | trans }}" title="{{ 'layDeputySupportEmail' | trans }}">{{ 'layDeputySupportEmail' | trans }}</a>
+                {% endif %}
+            </li>
         </ul>
         <ul class="govuk-list">
-            <li>Opening hours</li>
-            <li>Monday to Friday: 8am to 6pm (except public holidays)</li>
+            <li>{{ 'openingHoursTitle' | trans }}</li>
+            <li>{{ 'openingHoursText' | trans }}</li>
         </ul>
     </div>
 </details>
