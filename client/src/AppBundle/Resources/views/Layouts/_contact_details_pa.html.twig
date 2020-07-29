@@ -2,7 +2,7 @@
 {% trans_default_domain translationDomain %}
 
 <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-<details class="govuk-details" data-module="govuk-details">
+<details class="govuk-details behat-region-contact-details" data-module="govuk-details">
     <summary class="govuk-details__summary">
     <span class="govuk-details__summary-text">
       {{ 'contactDetailsTitle' | trans }}
@@ -11,11 +11,11 @@
     <div class="govuk-details__text">
         <ul class="govuk-list">
             <li>{{ 'helplineTitle' | trans }}</li>
-            <li>{{ 'helplinePA' | trans({}, 'common') }}</li>
+            <li>{{ 'helplinePA' | trans }}</li>
         </ul>
         <ul class="govuk-list">
             <li>{{ 'emailTitle' | trans }}</li>
-            <li><a href="mailto:{{ 'paSupportEmail' | trans({}, 'common') }}" title="{{ 'paSupportEmail' | trans({}, 'common') }}">{{ 'paSupportEmail' | trans({}, 'common') }}</a></li>
+            <li><a href="mailto:{{ 'paSupportEmail' | trans }}" title="{{ 'paSupportEmail' | trans }}">{{ 'paSupportEmail' | trans }}</a></li>
         </ul>
         <ul class="govuk-list">
             <li>{{ 'openingHoursTitle' | trans }}</li>
