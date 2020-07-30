@@ -66,34 +66,7 @@ final class AuditEvents
          string $subjectRole
     )
     {
-        $event = $this->emailChangedBaseEvent($trigger, $emailChangedFrom, $emailChangedTo, $changedBy, $subjectFullName, $subjectRole);
-
-        return $event + $this->baseEvent(AuditEvents::EVENT_USER_EMAIL_CHANGED);
-    }
-
-    public function clientEmailChanged(
-        string $trigger,
-        string $emailChangedFrom,
-        string $emailChangedTo,
-        string $changedBy,
-        string $subjectFullName
-    )
-    {
-        $event = $this->emailChangedBaseEvent($trigger, $emailChangedFrom, $emailChangedTo, $changedBy, $subjectFullName, 'CLIENT');
-
-        return $event + $this->baseEvent(AuditEvents::EVENT_CLIENT_EMAIL_CHANGED);
-    }
-
-    private function emailChangedBaseEvent(
-        string $trigger,
-        string $emailChangedFrom,
-        string $emailChangedTo,
-        string $changedBy,
-        string $subjectFullName,
-        string $subjectRole
-    )
-    {
-        return [
+        $event = [
             'trigger' => $trigger,
             'email_changed_from' => $emailChangedFrom,
             'email_changed_to' => $emailChangedTo,
@@ -102,6 +75,29 @@ final class AuditEvents
             'subject_full_name' => $subjectFullName,
             'subject_role' => $subjectRole,
         ];
+
+        return $event + $this->baseEvent(AuditEvents::EVENT_USER_EMAIL_CHANGED);
+    }
+
+    public function clientEmailChanged(
+        string $trigger,
+        ?string $emailChangedFrom,
+        ?string $emailChangedTo,
+        string $changedBy,
+        string $subjectFullName
+    )
+    {
+        $event = [
+            'trigger' => $trigger,
+            'email_changed_from' => $emailChangedFrom,
+            'email_changed_to' => $emailChangedTo,
+            'changed_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            'changed_by' => $changedBy,
+            'subject_full_name' => $subjectFullName,
+            'subject_role' => 'CLIENT',
+        ];
+
+        return $event + $this->baseEvent(AuditEvents::EVENT_CLIENT_EMAIL_CHANGED);
     }
 
     /**

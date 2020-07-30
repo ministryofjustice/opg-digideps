@@ -70,8 +70,7 @@ class FixtureController extends AbstractController
             $submitted = $form->getData();
             $courtDate = $request->get('court-date') ? new \DateTime($request->get('court-date')) : new \DateTime('2017-02-01');
             $deputyEmail = $request->query->get('deputy-email', sprintf('original-%s-deputy-%s@fixture.com', strtolower($submitted['deputyType']), mt_rand(1000, 9999)));
-            $randomCaseNumber = str_pad(rand(1,99999999), 8, "0", STR_PAD_LEFT);
-            $caseNumber = $request->get('case-number', $randomCaseNumber);
+            $caseNumber = $request->get('case-number', $this->generateValidCaseNumber());
 
             $response = $this->getRestClient()->post('v2/fixture/court-order', json_encode([
                 'deputyType' => $submitted['deputyType'],
@@ -313,5 +312,29 @@ class FixtureController extends AbstractController
     public function createCasRecFlashMessage(array $data)
     {
         return $this->twig->render('AppBundle:FlashMessages:fixture-casrec-created.html.twig', $data);
+    }
+
+    /**
+     * Sirius has a modulus 11 validation check on case references (because casrec.) which we should adhere to
+     * to make sure integration tests create data thats in the correct format.
+     */
+    public function generateValidCaseNumber()
+    {
+        $ref = '';
+        $sum = 0;
+
+        foreach ([3, 4, 7, 5, 8, 2, 4] as $constant) {
+            $value = mt_rand(0, 9);
+            $ref .= $value;
+            $sum += $value * $constant;
+        }
+
+        $checkbit = (11 - ($sum % 11)) % 11;
+
+        if ($checkbit === 10) {
+            $checkbit = 'T';
+        }
+
+        return $ref . $checkbit;
     }
 }

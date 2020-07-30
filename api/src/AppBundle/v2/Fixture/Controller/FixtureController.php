@@ -2,6 +2,7 @@
 
 namespace AppBundle\v2\Fixture\Controller;
 
+use AppBundle\DataFixtures\DocumentSyncFixtures;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Ndr\NdrRepository;
