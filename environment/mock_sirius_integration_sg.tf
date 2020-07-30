@@ -29,13 +29,6 @@ locals {
       target_type = "security_group_id"
       target      = module.checklist_sync_service_security_group.id
     }
-    docker_hub = {
-      port        = 443
-      type        = "egress"
-      protocol    = "tcp"
-      target_type = "cidr_block"
-      target      = "0.0.0.0/0"
-    }
   }
 }
 
