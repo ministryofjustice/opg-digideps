@@ -564,6 +564,7 @@ jobs:
       - run:
           name: Run pa11y
           command: |
+            docker-compose down
             docker-compose -f docker-compose.yml up -d pa11y
             docker-compose exec frontend touch /var/www/.enableProdMode
             docker-compose exec admin touch /var/www/.enableProdMode
