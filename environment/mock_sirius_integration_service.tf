@@ -73,7 +73,7 @@ locals {
       }
     },
     "environment": [
-      { "name": "OPENAPI_MOCK_SPECIFICATION_URL", "value": "https://raw.githubusercontent.com/ministryofjustice/opg-data/master/docs/deputy-reporting-openapi-v1.yml" }
+      { "name": "OPENAPI_MOCK_SPECIFICATION_URL", "value": "https://raw.githubusercontent.com/ministryofjustice/opg-data-deputy-reporting/master/lambda_functions/v2/openapi/deputy-reporting-openapi.yml" }
     ]
   }
 EOF
