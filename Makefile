@@ -49,7 +49,8 @@ up-app-xdebug-api: ## Brings the app up, rebuilds containers and enabled xdebug 
 	REQUIRE_XDEBUG_API=true docker-compose up -d --build
 
 up-app-integration-tests: ## Brings the app up using test env vars (see test.env)
-	docker-compose build frontend api admin
+	docker-compose build frontend admin api
+
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 
 client-unit-tests: prod-mode ## Run the client unit tests

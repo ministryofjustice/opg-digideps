@@ -29,6 +29,13 @@ locals {
       target_type = "security_group_id"
       target      = module.checklist_sync_service_security_group.id
     }
+    registry_docker_io = {
+      port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "0.0.0.0/0"
+    }
   }
 }
 
