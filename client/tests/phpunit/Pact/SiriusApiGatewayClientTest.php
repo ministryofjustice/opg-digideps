@@ -197,7 +197,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
         // Create your expected request from the consumer.
         $request = (new ConsumerRequest())
             ->setMethod('POST')
-            ->setPath(sprintf('/v1/clients/%s/reports', $caseRef))
+            ->setPath(sprintf('/v2/clients/%s/reports', $caseRef))
             ->addHeader('Content-Type', 'application/json')
             ->setBody( [
                 'report' => [
@@ -241,7 +241,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
         // Create your expected request from the consumer.
         $request = (new ConsumerRequest())
             ->setMethod('POST')
-            ->setPath(sprintf('/v1/clients/%s/reports/%s/supportingdocuments', $caseRef, $reportPdfDocumentUuid))
+            ->setPath(sprintf('/v2/clients/%s/reports/%s/supportingdocuments', $caseRef, $reportPdfDocumentUuid))
             ->addHeader('Content-Type', 'application/json')
             ->setBody([
                 'supporting_document' => [
@@ -281,7 +281,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
         // Create your expected request from the consumer.
         $request = (new ConsumerRequest())
             ->setMethod('POST')
-            ->setPath(sprintf('/v1/clients/%s/reports/%s/checklists', $caseRef, $reportPdfDocumentUuid))
+            ->setPath(sprintf('/v2/clients/%s/reports/%s/checklists', $caseRef, $reportPdfDocumentUuid))
             ->addHeader('Content-Type', 'application/json')
             ->setBody([
                 'checklist' => [

@@ -12,7 +12,7 @@ use Symfony\Component\Serializer\Serializer;
 
 class SiriusApiGatewayClient
 {
-    const SIRIUS_API_GATEWAY_VERSION = 'v1';
+    const SIRIUS_API_GATEWAY_VERSION = 'v2';
     const SIRIUS_REPORT_ENDPOINT = 'clients/%s/reports';
     const SIRIUS_SUPPORTING_DOCUMENTS_ENDPOINT = 'clients/%s/reports/%s/supportingdocuments';
     const SIRIUS_CHECKLIST_POST_ENDPOINT = 'clients/%s/reports/%s/checklists';

@@ -71,7 +71,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
             $headers = array_merge($headers, $additionalHeaders);
         }
 
-        $url = sprintf("%s/%s/%s", $baseURL, 'v1', $endpoint);
+        $url = sprintf("%s/%s/%s", $baseURL, 'v2', $endpoint);
 
         return new Request($method, $url, $headers, $body);
     }
