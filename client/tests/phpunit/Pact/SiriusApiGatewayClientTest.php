@@ -320,7 +320,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
         // Create your expected request from the consumer.
         $request = (new ConsumerRequest())
             ->setMethod('PUT')
-            ->setPath(sprintf('/v1/clients/%s/reports/%s/checklists/%s', $caseRef, $reportPdfDocumentUuid, $checklistUuid))
+            ->setPath(sprintf('/v2/clients/%s/reports/%s/checklists/%s', $caseRef, $reportPdfDocumentUuid, $checklistUuid))
             ->addHeader('Content-Type', 'application/json')
             ->setBody([
                 'checklist' => [
