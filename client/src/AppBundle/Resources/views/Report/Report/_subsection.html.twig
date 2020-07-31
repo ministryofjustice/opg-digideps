@@ -50,7 +50,7 @@
 
     <a href="{{ linkToSubSection }}" class="opg-overview-section__link behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}">
         {% if subSection == 'balance' %}
-            {{ 'view' | trans({}, 'common') | capitalize }} <span class="govuk-visually-hidden">{{ (subSection ~ '.subSectionTitle') | trans }}
+            {{ 'view' | trans({}, 'common') | capitalize }} <span class="govuk-visually-hidden">{{ (subSection ~ '.subSectionTitle') | trans }}</span>
         {% else %}
             {% if state.state == 'not-started' %}
                 {{ 'start' | trans({}, 'common') | capitalize }} <span class="govuk-visually-hidden">{{ (subSection ~ '.subSectionTitle') | trans }}</span>
