@@ -19,11 +19,11 @@
 	        {{ 'startPage.pageSectionDescription' | trans(transOptions, translationDomain) }}
 	    </p>
 
-	    <details class="push--bottom">
-            <summary>
-                <span class="summary">{{ 'startPage.hiddenText01.summary' | trans(transOptions, translationDomain) }}</span>
+        <details class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">{{ 'startPage.hiddenText01.summary' | trans(transOptions, translationDomain) }}</span>
             </summary>
-            <div class="opg-indented-block">
+            <div class="govuk-details__text">
                 <p>{{ 'startPage.hiddenText01.content.para01' |trans(transOptions, translationDomain)|raw }}</p>
             </div>
         </details>
