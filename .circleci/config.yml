@@ -47,10 +47,10 @@ workflows:
           task_name: integration_test
           timeout: 2400
 
-      - pa11y-ci:
-          name: accessibility test
-          requires: [ approval for further testing ]
-          filters: { branches: { ignore: [ main ] } }
+#      - pa11y-ci:
+#          name: accessibility test
+#          requires: [ approval for further testing ]
+#          filters: { branches: { ignore: [ main ] } }
 
       - run-task:
           name: backup environment
