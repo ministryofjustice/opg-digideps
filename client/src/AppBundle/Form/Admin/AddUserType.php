@@ -38,6 +38,7 @@ class AddUserType extends AbstractType
 
         $loggedInUser = $this->tokenStorage->getToken()->getUser();
         if ($loggedInUser->getRoleName() === User::ROLE_SUPER_ADMIN) {
+            $deputyRoles[] = User::ROLE_LAY_DEPUTY;
             $staffRoles[] = User::ROLE_SUPER_ADMIN;
         }
 
