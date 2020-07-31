@@ -26,7 +26,6 @@ class AddUserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $deputyRoles = [
-            User::ROLE_LAY_DEPUTY,
             User::ROLE_PA_NAMED,
             User::ROLE_PA_ADMIN,
             User::ROLE_PA_TEAM_MEMBER,
