@@ -6,10 +6,26 @@ coverage:
         threshold: 50%
       api:
         target: auto
+        threshold: 50%
         flags:
           - api
       client:
         target: auto
+        threshold: 50%
+        flags:
+          - client
+    patch:
+      default:
+        target: auto
+        threshold: 50%
+      api:
+        target: auto
+        threshold: 50%
+        flags:
+          - api
+      client:
+        target: auto
+        threshold: 50%
         flags:
           - client
 comment:
