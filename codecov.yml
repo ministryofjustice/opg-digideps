@@ -3,6 +3,7 @@ coverage:
     project:
       default:
         target: auto
+        threshold: 50%
       api:
         target: auto
         flags:
