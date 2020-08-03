@@ -245,7 +245,7 @@ class AssetController extends AbstractController
             'data' => $dataFromUrl
         ]);
 
-        // crete and handle form
+        // create and handle form
         $form = $this->createForm(FormDir\Ndr\Asset\AssetTypeProperty::class, $asset, ['step' => $step]);
         $form->handleRequest($request);
 

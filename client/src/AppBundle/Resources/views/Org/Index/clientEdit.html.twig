@@ -32,11 +32,7 @@
         <legend class="govuk-heading-m">{{ 'form.contactHeading' | trans }}</legend>
         {{ form_input(form.phone, 'form.phone') }}
         {{ form_input(form.email, 'form.email') }}
-
-        {{ form_input(form.address, 'form.address') }}
-        {{ form_input(form.address2, 'form.address2') }}
-        {{ form_input(form.county, 'form.county') }}
-        {{ form_input(form.postcode, 'form.postcode', {'inputClass': 'govuk-!-width-one-quarter' }) }}
+        {{ macros.addressFields(form, translationDomain) }}
         {{ form_widget(form.id) }}
         {#{{ form_select(form.country, 'country') }}#}
     </fieldset>

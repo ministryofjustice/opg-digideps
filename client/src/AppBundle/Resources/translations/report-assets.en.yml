@@ -112,16 +112,17 @@ form:
     label: Valuation date
   property:
     address:
-      label: Address line 1
-      hint: ""
+      label: Building and street
+      context: line 1 of 2
     address2:
-      label: Address line 2
+      label: ' '
+      context: Building and street line 2 of 2
       hint: ""
     county:
       label: County
       hint: ""
     postcode:
-      label: "Postcode"
+      label: Postcode (optional)
       hint: ""
     occupants:
       label: "Who lives at this property?"

@@ -49,6 +49,14 @@ class Contact
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"contact"})
+     *
+     * @Assert\Length( max=200, maxMessage="contact.address.maxMessage")
+     */
+    private $address3;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"contact"})
      * @Assert\Length( max=200, maxMessage="contact.address.maxMessage")
      */
     private $county;
@@ -144,6 +152,7 @@ class Contact
 
         return $this;
     }
+
 
     public function getCounty()
     {

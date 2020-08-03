@@ -6,6 +6,7 @@
 {% trans_default_domain translationDomain %}
 {% set page = 'stepPageProperty' %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set subProperty = ".property" %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans(transOptions) }}{% endblock %}
@@ -23,10 +24,7 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' } }) }}
 
     {% if step == 1 %}
-        {{ form_input(form.address, 'form.property.address') }}
-        {{ form_input(form.address2, 'form.property.address2', {}) }}
-        {{ form_input(form.county, 'form.property.county') }}
-        {{ form_input(form.postcode, 'form.property.postcode', {'inputClass': 'govuk-!-width-one-quarter' }) }}
+        {{ macros.addressFields(form, translationDomain, subProperty) }}
     {% endif %}
 
     {% if step == 2 %}
