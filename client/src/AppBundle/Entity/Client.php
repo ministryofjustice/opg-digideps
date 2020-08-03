@@ -136,16 +136,6 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
-     *
-     * @var string
-     */
-    private $address3;
-
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"edit", "pa-edit"})
-     *
      * @Assert\Length(max=75, maxMessage="client.county.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
@@ -606,26 +596,6 @@ class Client
     public function setAddress2($address2)
     {
         $this->address2 = $address2;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddress3()
-    {
-        return $this->address3;
-    }
-
-    /**
-     * @param string $address3
-     *
-     * @return Client
-     */
-    public function setAddress3($address3)
-    {
-        $this->address3 = $address3;
 
         return $this;
     }
