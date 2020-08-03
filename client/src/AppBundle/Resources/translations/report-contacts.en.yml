@@ -86,10 +86,10 @@ form:
     label: County
     hint: ""
   postcode:
-    label: Postcode (optional)
+    label: Postcode
     hint: ""
   country:
-    label: Country (optional)
+    label: Country
     hint: ""
     defaultOption: Please select ...
   save:

@@ -5,7 +5,7 @@
 {% set translationDomain = "ndr-assets" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': ndr.client.firstname | e } %}
-{% set subProperty = ".property" %}
+{% set preFix = "form.property." %}
 
 {% block htmlTitle %}{{ 'stepPageProperty.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ 'stepPageProperty.pageTitle' | trans(transOptions) }}{% endblock %}
@@ -23,7 +23,7 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' } }) }}
 
     {% if step == 1 %}
-        {{ macros.addressFields(form, translationDomain, subProperty) }}
+        {{ macros.addressFields(form, translationDomain, preFix) }}
     {% endif %}
 
     {% if step == 2 %}

@@ -122,7 +122,7 @@ form:
       label: County
       hint: ""
     postcode:
-      label: Postcode (optional)
+      label: Postcode
       hint: ""
     occupants:
       label: "Who lives at this property?"
