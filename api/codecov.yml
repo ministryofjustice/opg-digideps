@@ -6,4 +6,5 @@ codecov:
   status:
     project:
       default:
+        target: 30%
         threshold: 90%  # if PR drops coverage by less than % percent, then successful.
