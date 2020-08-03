@@ -110,10 +110,11 @@
                             {{ 'yes' | trans({}, 'common') }}
                         {% else %}
                             {{ 'no' | trans({}, 'common') }}
-                            <br/><a class="js-return-html behat-link-send-activation-email"
+                            <br/>
+                            <a class="js-return-html behat-link-send-activation-email"
                                     href="{{ path('admin_send_activation_link', {'email': user.email}) }}">
-                            {{ (page ~ '.userTable.sendEmail') | trans }}
-                        </a>
+                                {{ (page ~ '.userTable.sendEmail') | trans }} <span class="govuk-visually-hidden"> to {{ fullName }}</span>
+                            </a>
                         {% endif %}
 
                     </td>
