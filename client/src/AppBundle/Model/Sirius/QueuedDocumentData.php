@@ -280,23 +280,4 @@ class QueuedDocumentData
 
         return $this;
     }
-
-    /**
-     * @return string|null
-     */
-    public function getS3Reference(): ?string
-    {
-        return $this->s3Reference;
-    }
-
-    /**
-     * @param string|null $s3Reference
-     * @return QueuedDocumentData
-     */
-    public function setS3Reference(?string $s3Reference): self
-    {
-        $this->s3Reference = $s3Reference;
-
-        return $this;
-    }
 }

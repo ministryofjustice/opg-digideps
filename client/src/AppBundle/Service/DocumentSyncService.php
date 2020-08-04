@@ -172,7 +172,7 @@ class DocumentSyncService
         $file = (new SiriusDocumentFile())
             ->setName($documentData->getFileName())
             ->setMimetype(mimetype_from_filename($documentData->getFileName()))
-            ->setS3Reference($documentData->getS3Reference());
+            ->setS3Reference($documentData->getStorageReference());
 
         return (new SiriusDocumentUpload())
             ->setType($type)

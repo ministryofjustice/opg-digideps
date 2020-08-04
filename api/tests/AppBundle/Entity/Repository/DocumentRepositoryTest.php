@@ -48,7 +48,6 @@ class DocumentRepositoryTest extends KernelTestCase
         $this->secondJulyPm = clone $this->secondJulyAm->add(new DateInterval('PT20H'));
         $this->thirdJulyAm = DateTime::createFromFormat('d/m/Y', '03/07/2020', new DateTimeZone('UTC'));
         $this->thirdJulyPm = clone $this->thirdJulyAm->add(new DateInterval('PT20H'));
-
     }
 
     private function purgeDatabase()

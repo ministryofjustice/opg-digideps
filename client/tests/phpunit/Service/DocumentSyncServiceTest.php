@@ -51,7 +51,7 @@ class DocumentSyncServiceTest extends KernelTestCase
     private $reportSubmissionId;
 
     /** @var string */
-    private  $reportPdfSubmissionUuid, $fileContents, $fileName, $s3Reference;
+    private $reportPdfSubmissionUuid, $fileName, $s3Reference;
 
     public function setUp(): void
     {
@@ -75,7 +75,6 @@ class DocumentSyncServiceTest extends KernelTestCase
         $this->reportSubmittedDate = new DateTime('2019-06-20');
         $this->reportSubmissionId = 9876;
         $this->reportPdfSubmissionUuid = '5a8b1a26-8296-4373-ae61-f8d0b250e123';
-        $this->fileContents = '%PDF-1.4\nfake_contents';
         $this->fileName = 'test.pdf';
         $this->s3Reference = 'dd_doc_98765_01234567890123';
     }
@@ -99,12 +98,11 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setReportStartDate($this->reportStartDate)
             ->setReportEndDate($this->reportEndDate)
             ->setReportSubmitDate($this->reportSubmittedDate)
-            ->setStorageReference('storage-ref-here')
             ->setFilename('test.pdf')
             ->setIsReportPdf(true)
             ->setCaseNumber('1234567t')
             ->setNdrId(null)
-            ->setS3Reference($this->s3Reference);
+            ->setStorageReference($this->s3Reference);
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusReportPdfDocumentUpload(
             $this->reportStartDate,
@@ -185,12 +183,11 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setReportStartDate($this->reportStartDate)
             ->setReportEndDate($this->reportEndDate)
             ->setReportSubmitDate($this->reportSubmittedDate)
-            ->setStorageReference('storage-ref-here')
             ->setFilename('test.pdf')
             ->setIsReportPdf(true)
             ->setCaseNumber('1234567t')
             ->setNdrId(123)
-            ->setS3Reference($this->s3Reference);
+            ->setStorageReference($this->s3Reference);
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusReportPdfDocumentUpload(
             $this->reportStartDate,
@@ -258,12 +255,11 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setReportStartDate($this->reportStartDate)
             ->setReportEndDate($this->reportEndDate)
             ->setReportSubmitDate($this->reportSubmittedDate)
-            ->setStorageReference('storage-ref-here')
             ->setFilename('test.pdf')
             ->setIsReportPdf(true)
             ->setCaseNumber('1234567t')
             ->setNdrId(null)
-            ->setS3Reference($this->s3Reference);
+            ->setStorageReference($this->s3Reference);
 
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusReportPdfDocumentUpload(
@@ -335,12 +331,11 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setReportStartDate($this->reportStartDate)
             ->setReportEndDate($this->reportEndDate)
             ->setReportSubmitDate($this->reportSubmittedDate)
-            ->setStorageReference('storage-ref-here')
             ->setFilename('bank-statement.pdf')
             ->setIsReportPdf(false)
             ->setCaseNumber('1234567t')
             ->setNdrId(null)
-            ->setS3Reference($this->s3Reference);
+            ->setStorageReference($this->s3Reference);
 
         $successResponseBody = ['data' => ['type' => 'supportingDocument', 'id' => 'a-random-uuid']];
         $successResponse = new Response('200', [], json_encode($successResponseBody));
@@ -389,12 +384,11 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setReportStartDate($this->reportStartDate)
             ->setReportEndDate($this->reportEndDate)
             ->setReportSubmitDate($this->reportSubmittedDate)
-            ->setStorageReference('storage-ref-here')
             ->setFilename('bank-statement.pdf')
             ->setIsReportPdf(false)
             ->setCaseNumber('1234567t')
             ->setNdrId(null)
-            ->setS3Reference($this->s3Reference);
+            ->setStorageReference($this->s3Reference);
 
         $this->restClient
             ->apiCall('put',
@@ -428,12 +422,11 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setReportStartDate($this->reportStartDate)
             ->setReportEndDate($this->reportEndDate)
             ->setReportSubmitDate($this->reportSubmittedDate)
-            ->setStorageReference('storage-ref-here')
             ->setFilename('bank-statement.pdf')
             ->setIsReportPdf(false)
             ->setCaseNumber('1234567t')
             ->setNdrId(null)
-            ->setS3Reference($this->s3Reference);;
+            ->setStorageReference($this->s3Reference);;
 
         $failureResponseBody = ['errors' => [0 => ['id' => 'ABC123', 'code' => 'OPGDATA-API-FORBIDDEN']]];
         $failureResponse = new Response('403', [], json_encode($failureResponseBody));
