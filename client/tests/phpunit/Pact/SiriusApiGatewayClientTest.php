@@ -25,7 +25,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class SiriusDocumentsContractTest extends KernelTestCase
 {
     /** @var string */
-    private $caseRef;
+    private $caseRef, $reportPdfUuid, $expectedSupportingDocumentUuid, $expectedChecklistPdfUuid, $fileName, $fileContents, $s3Reference;
 
     /** @var RequestSigner&ObjectProphecy */
     private $signer;
@@ -33,29 +33,11 @@ class SiriusDocumentsContractTest extends KernelTestCase
     /**  @var SiriusApiGatewayClient */
     private $sut;
 
-    /** @var string */
-    private $reportPdfUuid;
-
-    /** @var string */
-    private $expectedSupportingDocumentUuid;
-
-    /** @var string */
-    private $expectedChecklistPdfUuid;
-
     /** @var InteractionBuilder */
     private $builder;
 
-    /** @var string */
-    private $fileName;
-
-    /** @var string */
-    private $fileContents;
-
     /** @var LoggerInterface&ObjectProphecy */
     private $logger;
-
-    /** @var string */
-    private $s3Reference;
 
     public function setUp(): void
     {

@@ -8,44 +8,26 @@ use DateTime;
 
 class QueuedDocumentData
 {
-    /** @var string */
-    private $caseNumber;
-
     /** @var int */
-    private $documentId;
+    private $documentId, $reportSubmissionId;
+
+    /** @var int|null */
+    private $ndrId;
 
     /** @var bool */
     private $isReportPdf;
 
     /** @var string */
-    private $filename;
+    private $filename, $storageReference, $caseNumber;
 
-    /** @var string */
-    private $storageReference;
+    /** @var string|null */
+    private $reportType, $s3Reference, $reportSubmissionUuid;
 
     /** @var ReportSubmission[] */
     private $reportSubmissions;
 
-    /** @var int|null */
-    private $ndrId;
-
     /** @var DateTime|null */
-    private $reportStartDate;
-
-    /** @var DateTime|null */
-    private $reportEndDate;
-
-    /** @var DateTime|null */
-    private $reportSubmitDate;
-
-    /** @var string|null */
-    private $reportType;
-
-    /** @var int */
-    private $reportSubmissionId;
-
-    /** @var string|null */
-    private $reportSubmissionUuid;
+    private $reportStartDate, $reportEndDate, $reportSubmitDate;
 
     public function supportingDocumentCanBeSynced()
     {
@@ -295,6 +277,25 @@ class QueuedDocumentData
     public function setReportSubmissionUuid(?string $reportSubmissionUuid): self
     {
         $this->reportSubmissionUuid = $reportSubmissionUuid;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getS3Reference(): ?string
+    {
+        return $this->s3Reference;
+    }
+
+    /**
+     * @param string|null $s3Reference
+     * @return QueuedDocumentData
+     */
+    public function setS3Reference(?string $s3Reference): self
+    {
+        $this->s3Reference = $s3Reference;
 
         return $this;
     }
