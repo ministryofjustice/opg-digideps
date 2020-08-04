@@ -43,21 +43,21 @@ up-app-build: ## Brings the app up and rebuilds containers
 	docker-compose up -d --build
 
 up-app-xdebug-client: ## Brings the app up, rebuilds containers and enabled xdebug in client
-	REQUIRE_XDEBUG_CLIENT=true docker-compose up -d --build
+	REQUIRE_XDEBUG_FRONTEND=true docker-compose up -d --build
 
 up-app-xdebug-api: ## Brings the app up, rebuilds containers and enabled xdebug in client
 	REQUIRE_XDEBUG_API=true docker-compose up -d --build
 
 up-app-integration-tests: ## Brings the app up using test env vars (see test.env)
-	docker-compose build frontend admin api
+	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose build frontend admin api
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 
 client-unit-tests: prod-mode ## Run the client unit tests
-	docker-compose build frontend admin
+	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose build frontend admin
 	docker-compose -f docker-compose.yml run --rm frontend bin/phpunit -c tests/phpunit
 
 api-unit-tests: reset-fixtures prod-mode ## Run the api unit tests
-	docker-compose build api
+	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose build api
 	docker-compose -f docker-compose.yml run --rm api sh scripts/apiunittest.sh
 
 behat-tests: up-app-integration-tests reset-fixtures prod-mode
