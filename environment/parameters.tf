@@ -34,3 +34,27 @@ resource "aws_ssm_parameter" "flag_document_sync" {
     ignore_changes = [value]
   }
 }
+
+resource "aws_ssm_parameter" "checklist_sync_row_limit" {
+  name  = "${local.parameter_prefix}checklist-sync-row-limit"
+  type  = "String"
+  value = "30"
+
+  tags = local.default_tags
+
+  lifecycle {
+    ignore_changes = [value]
+  }
+}
+
+resource "aws_ssm_parameter" "flag_checklist_sync" {
+  name  = "${local.feature_flag_prefix}checklist-sync"
+  type  = "String"
+  value = "0"
+
+  tags = local.default_tags
+
+  lifecycle {
+    ignore_changes = [value]
+  }
+}

@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 
+use AppBundle\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
 use AppBundle\Service\AWS\RequestSigner;
 use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use DateTime;
@@ -37,6 +38,9 @@ class SiriusDocumentsContractTest extends KernelTestCase
     /** @var string */
     private $expectedSupportingDocumentUuid;
 
+    /** @var string */
+    private $expectedChecklistPdfUuid;
+
     /** @var InteractionBuilder */
     private $builder;
 
@@ -62,6 +66,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
         $this->caseRef = '1234567T';
         $this->reportPdfUuid = '33ea0382-cfc9-4776-9036-667eeb68fa4b';
         $this->expectedSupportingDocumentUuid = '9c0cb55e-718d-4ffb-9599-f3164e12dbdb';
+        $this->expectedChecklistPdfUuid = '9c0cb55e-718d-4ffb-9599-f3164e132ab5';
         $this->signer = self::prophesize(RequestSigner::class);
         $this->logger = self::prophesize(LoggerInterface::class);
         $this->fileName = 'test.pdf';
@@ -134,6 +139,30 @@ class SiriusDocumentsContractTest extends KernelTestCase
 
         self::assertStringContainsString(
             $this->reportPdfUuid,
+            $result->getBody()->getContents()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function postChecklistPdf()
+    {
+        $this->setUpChecklistPdfPactBuilder($this->caseRef, $this->reportPdfUuid);
+
+        $this->signer->signRequest(Argument::type(Request::class), 'execute-api')->willReturnArgument(0);
+
+        $upload = $siriusDocumentUpload = SiriusHelpers::generateSiriusChecklistPdfUpload(
+            $this->fileName,
+            $this->fileContents
+        );
+
+        $result = $this->sut->postChecklistPdf($upload, $this->reportPdfUuid, $this->caseRef);
+
+        $this->builder->verify();
+
+        self::assertStringContainsString(
+            $this->expectedChecklistPdfUuid,
             $result->getBody()->getContents()
         );
     }
@@ -217,6 +246,45 @@ class SiriusDocumentsContractTest extends KernelTestCase
 
         $this->builder
             ->uponReceiving('A submitted supporting document')
+            ->with($request)
+            ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
+    }
+
+    private function setUpChecklistPdfPactBuilder(string $caseRef, string $reportPdfDocumentUuid)
+    {
+        $matcher = new Matcher();
+
+        // Create your expected request from the consumer.
+        $request = (new ConsumerRequest())
+            ->setMethod('POST')
+            ->setPath(sprintf('/v2/clients/%s/reports/%s/checklists', $caseRef, $reportPdfDocumentUuid))
+            ->addHeader('Content-Type', 'application/json')
+            ->setBody([
+                'checklist' => [
+                    'data' => [
+                        'type' => 'checklists',
+                        'attributes' => new SiriusChecklistPdfDocumentMetadata(),
+                        'file' => [
+                            'name' => $this->fileName,
+                            'mimetype' => 'application/pdf',
+                            'source' => $matcher->regex(base64_encode($this->fileContents), '.+')
+                        ]
+                    ]
+                ]
+            ]);
+
+
+        // Create your expected response from the provider.
+        $response = new ProviderResponse();
+        $response
+            ->setStatus(201)
+            ->addHeader('Content-Type', 'application/json')
+            ->setBody([
+                'data' => ['id' => $matcher->uuid($this->expectedChecklistPdfUuid)]
+            ]);
+
+        $this->builder
+            ->uponReceiving('A submitted checklist pdf')
             ->with($request)
             ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
     }

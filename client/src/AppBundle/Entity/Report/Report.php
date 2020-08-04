@@ -334,6 +334,13 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     private $checklist;
 
     /**
+     * @var ReviewChecklist
+     *
+     * @JMS\Type("AppBundle\Entity\Report\ReviewChecklist")
+     **/
+    private $reviewChecklist;
+
+    /**
      * @var array
      *
      * @JMS\Type("array")
@@ -1144,6 +1151,22 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     {
         $this->checklist = $checklist;
         return $this;
+    }
+
+    /**
+     * @return ReviewChecklist
+     */
+    public function getReviewChecklist()
+    {
+        return $this->reviewChecklist;
+    }
+
+    /**
+     * @param ReviewChecklist $reviewChecklist
+     */
+    public function setReviewChecklist($reviewChecklist)
+    {
+        $this->reviewChecklist = $reviewChecklist;
     }
 
     /**

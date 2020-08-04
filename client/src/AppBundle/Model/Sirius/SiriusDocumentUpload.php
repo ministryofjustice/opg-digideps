@@ -35,18 +35,18 @@ class SiriusDocumentUpload
     }
 
     /**
-     * @return SiriusMetadataInterface
+     * @return SiriusMetadataInterface|null
      */
-    public function getAttributes(): SiriusMetadataInterface
+    public function getAttributes(): ?SiriusMetadataInterface
     {
         return $this->attributes;
     }
 
     /**
-     * @param SiriusMetadataInterface $attributes
+     * @param SiriusMetadataInterface|null $attributes
      * @return SiriusDocumentUpload
      */
-    public function setAttributes(SiriusMetadataInterface $attributes): self
+    public function setAttributes(?SiriusMetadataInterface $attributes): self
     {
         $this->attributes = $attributes;
 
