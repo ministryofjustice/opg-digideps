@@ -145,7 +145,6 @@ class Contact
         return $this;
     }
 
-
     public function getCounty()
     {
         return $this->county;

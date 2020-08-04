@@ -83,6 +83,7 @@ resource "aws_cloudwatch_event_target" "document_sync_scheduled_task" {
     task_count          = 1
     task_definition_arn = aws_ecs_task_definition.document_sync.arn
     launch_type         = "FARGATE"
+    platform_version    = "1.4.0"
     network_configuration {
       subnets          = data.aws_subnet.private.*.id
       assign_public_ip = true
