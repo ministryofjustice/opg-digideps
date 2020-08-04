@@ -190,4 +190,66 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
             'admin[addressPostcode]' => 'B31 2AB'
         ]);
     }
+
+    /**
+     * @test
+     */
+    public function deleteAction_audit_log_created(): void
+    {
+        $deputy = (new User())
+            ->setId(5)
+            ->setRoleName('ROLE_LAY_DEPUTY')
+            ->setFirstname('Roisin')
+            ->setLastname('Murphy')
+            ->setEmail('r.murphy@email.com');
+
+        $this->restClient->get(sprintf('user/%s', $deputy->getId()), Argument::cetera())->shouldBeCalled()->willReturn($deputy);
+        $this->restClient->delete(sprintf('user/%s', $deputy->getId()))->shouldBeCalled();
+
+        $this->injectProphecyService(Logger::class, function($logger) use($deputy) {
+            $expectedEvent = [
+                'trigger' => 'ADMIN_BUTTON',
+                'deleted_on' => $this->now->format(DateTime::ATOM),
+                'deleted_by' => 'logged-in-user@email.com',
+                'subject_full_name' => $deputy->getFullName(),
+                'subject_email' => $deputy->getEmail(),
+                'subject_role' => 'ROLE_LAY_DEPUTY',
+                'event' => 'DEPUTY_DELETED',
+                'type' => 'audit'
+            ];
+
+            $logger->notice('', $expectedEvent)->shouldBeCalled();
+        });
+
+        $crawler = $this->client->request('GET', sprintf("/admin/delete-confirm/%s", $deputy->getId()));
+        $deleteLink = $crawler->selectLink("Yes, I'm sure")->link();
+
+        $this->client->click($deleteLink);
+    }
+
+    /**
+     * @test
+     */
+    public function deleteAction_errors_logged(): void
+    {
+        $deputy = (new User())
+            ->setId(5)
+            ->setRoleName('ROLE_LAY_DEPUTY')
+            ->setFirstname('Roisin')
+            ->setLastname('Murphy')
+            ->setEmail('r.murphy@email.com');
+
+        $this->restClient->get(sprintf('user/%s', $deputy->getId()), Argument::cetera())->shouldBeCalled()->willReturn($deputy);
+        $this->restClient->delete(sprintf('user/%s', $deputy->getId()))->shouldBeCalled()->willThrow(new Exception('Something went wrong'));
+
+        $this->injectProphecyService(Logger::class, function($logger) {
+            $logger->notice(Argument::cetera())->shouldNotBeCalled();
+            $logger->warning('Error while deleting deputy: Something went wrong', ['deputy_email' => 'r.murphy@email.com'])->shouldBeCalled();
+        });
+
+        $crawler = $this->client->request('GET', sprintf("/admin/delete-confirm/%s", $deputy->getId()));
+        $deleteLink = $crawler->selectLink("Yes, I'm sure")->link();
+
+        $this->client->click($deleteLink);
+    }
 }

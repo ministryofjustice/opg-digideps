@@ -11,6 +11,7 @@ final class AuditEvents
     const EVENT_CLIENT_DISCHARGED = 'CLIENT_DISCHARGED';
     const EVENT_ROLE_CHANGED = 'ROLE_CHANGED';
     const EVENT_CLIENT_EMAIL_CHANGED = 'CLIENT_EMAIL_CHANGED';
+    const EVENT_DEPUTY_DELETED = 'DEPUTY_DELETED';
 
     const TRIGGER_ADMIN_USER_EDIT = 'ADMIN_USER_EDIT';
     const TRIGGER_ADMIN_BUTTON = 'ADMIN_BUTTON';
@@ -132,5 +133,28 @@ final class AuditEvents
         ];
 
         return $event + $this->baseEvent(AuditEvents::EVENT_ROLE_CHANGED);
+    }
+
+    /**
+     * @param string $trigger
+     * @param string $deletedBy
+     * @param string $subjectFullname
+     * @param string $subjectEmail
+     * @param string $subjectRole
+     * @return array|string[]
+     * @throws \Exception
+     */
+    public function deputyDeleted(string $trigger, string $deletedBy, string $subjectFullname, string $subjectEmail, string $subjectRole): array
+    {
+        $event = [
+            'trigger' => $trigger,
+            'deleted_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            'deleted_by' => $deletedBy,
+            'subject_full_name' => $subjectFullname,
+            'subject_email' => $subjectEmail,
+            'subject_role' => $subjectRole,
+        ];
+
+        return $event + $this->baseEvent(AuditEvents::EVENT_DEPUTY_DELETED);
     }
 }

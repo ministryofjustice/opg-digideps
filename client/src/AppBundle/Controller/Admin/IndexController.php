@@ -318,11 +318,26 @@ class IndexController extends AbstractController
      */
     public function deleteAction($id)
     {
-        $user = $this->getRestClient()->get("user/{$id}", 'User', ['user', 'client', 'client-reports', 'report']);
+        $deputy = $this->getRestClient()->get("user/{$id}", 'User', ['user', 'client', 'client-reports', 'report']);
 
-        $this->getRestClient()->delete('user/' . $id);
+        try {
+            $this->getRestClient()->delete('user/' . $id);
 
-        return $this->redirect($this->generateUrl('admin_homepage'));
+            $event = (new AuditEvents($this->dateTimeProvider))->deputyDeleted(
+                AuditEvents::TRIGGER_ADMIN_BUTTON,
+                $this->getUser()->getEmail(),
+                $deputy->getFullName(),
+                $deputy->getEmail(),
+                $deputy->getRoleName(),
+            );
+
+            $this->logger->notice('', $event);
+            return $this->redirect($this->generateUrl('admin_homepage'));
+        } catch (\Throwable $e) {
+            $this->logger->warning(
+                sprintf('Error while deleting deputy: %s', $e->getMessage()), ['deputy_email' => $deputy->getEmail()]
+            );
+        }
     }
 
     /**

@@ -173,4 +173,37 @@ class AuditEventsTest extends TestCase
             'PROF to PA' => ['ADMIN_BUTTON', 'ROLE_PROF', 'ROLE_PA', 't.amos@test.com', 'polly.jean.harvey@test.com'],
         ];
     }
+
+    /**
+     * @test
+     */
+    public function deputyDeleted(): void
+    {
+        $now = new DateTime();
+
+        /** @var ObjectProphecy|DateTimeProvider $dateTimeProvider */
+        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
+
+        $expected = [
+            'trigger' => 'ADMIN_BUTTON',
+            'deleted_on' => $now->format(DateTime::ATOM),
+            'deleted_by' => 'super-admin@email.com',
+            'subject_full_name' => 'Roisin Murphy',
+            'subject_email' => 'r.murphy@email.com',
+            'subject_role' => 'ROLE_LAY_DEPUTY',
+            'event' => 'DEPUTY_DELETED',
+            'type' => 'audit'
+        ];
+
+        $actual = (new AuditEvents($dateTimeProvider->reveal()))->deputyDeleted(
+            'ADMIN_BUTTON',
+            'super-admin@email.com',
+            'Roisin Murphy',
+            'r.murphy@email.com',
+            'ROLE_LAY_DEPUTY'
+        );
+
+        $this->assertEquals($expected, $actual);
+    }
 }
