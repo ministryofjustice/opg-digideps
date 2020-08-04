@@ -21,11 +21,11 @@
         <p>{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
         <p>{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
 
-        <details class="push--bottom">
-            <summary>
-                <span class="summary">{{ 'startPage.hiddenText01.summary' | trans(transOptions) }}</span>
+        <details class="push--bottom" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">{{ 'startPage.hiddenText01.summary' | trans(transOptions) }}</span>
             </summary>
-            <div class="opg-indented-block">
+            <div class="govuk-details__text">
                 <p>{{ 'startPage.hiddenText01.content.para01' |trans(transOptions) }}</p>
                 <ul class="govuk-list govuk-list--bullet">
                     <li>{{ 'startPage.hiddenText01.content.listItem01' | trans }}</li>
