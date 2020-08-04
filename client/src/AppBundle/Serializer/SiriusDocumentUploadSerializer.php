@@ -44,6 +44,14 @@ class SiriusDocumentUploadSerializer implements NormalizerInterface
             $data['attributes']['reporting_period_to'] = (new DateTime($data['attributes']['reporting_period_to']))->format('Y-m-d');
         }
 
+        if (is_null($data['file']['source'])) {
+            unset($data['file']['source']);
+        }
+
+        if (is_null($data['file']['s3_reference'])) {
+            unset($data['file']['s3_reference']);
+        }
+
         return $data;
     }
 
