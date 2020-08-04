@@ -251,5 +251,8 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
         $deleteLink = $crawler->selectLink("Yes, I'm sure")->link();
 
         $this->client->click($deleteLink);
+
+        $session = $this->client->getContainer()->get('session');
+        self::assertContains("There was a problem deleting the deputy - please try again later", $session->getBag('flashes')->peek('error'));
     }
 }

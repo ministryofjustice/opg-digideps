@@ -337,6 +337,9 @@ class IndexController extends AbstractController
             $this->logger->warning(
                 sprintf('Error while deleting deputy: %s', $e->getMessage()), ['deputy_email' => $deputy->getEmail()]
             );
+
+            $this->addFlash('error', 'There was a problem deleting the deputy - please try again later');
+            return $this->redirect($this->generateUrl('admin_homepage'));
         }
     }
 
