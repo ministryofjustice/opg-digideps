@@ -224,8 +224,8 @@ class AuditEventsTest extends TestCase
             'trigger' => 'ADMIN_BUTTON',
             'deleted_on' => $now->format(DateTime::ATOM),
             'deleted_by' => 'super-admin@email.com',
-            'subject_full_name' => 'Roisin Murphy',
-            'subject_email' => 'r.murphy@email.com',
+            'subject_full_name' => 'Robyn Konichiwa',
+            'subject_email' => 'r.konichiwa@email.com',
             'subject_role' => $role,
             'event' => 'ADMIN_DELETED',
             'type' => 'audit'
@@ -234,8 +234,8 @@ class AuditEventsTest extends TestCase
         $actual = (new AuditEvents($dateTimeProvider->reveal()))->userDeleted(
             'ADMIN_BUTTON',
             'super-admin@email.com',
-            'Roisin Murphy',
-            'r.murphy@email.com',
+            'Robyn Konichiwa',
+            'r.konichiwa@email.com',
             $role
         );
 
