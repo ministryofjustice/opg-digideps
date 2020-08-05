@@ -26,7 +26,7 @@ trait SynchronisableTrait
      * @var string|null
      * @JMS\Type("string")
      * @JMS\Groups({"synchronisation"})
-     * @ORM\Column(name="synchronisation_error", type="string", options={"default": null}, nullable=true)
+     * @ORM\Column(name="synchronisation_error", type="text", length=65535, options={"default": null}, nullable=true)
      */
     protected $synchronisationError;
 
