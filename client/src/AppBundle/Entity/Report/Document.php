@@ -77,7 +77,7 @@ class Document implements DocumentInterface, SynchronisableInterface
      *
      * @Assert\NotBlank(message="Please choose a file", groups={"document"})
      * @Assert\File(
-     *     maxSize = "5M",
+     *     maxSize = "15M",
      *     maxSizeMessage = "document.file.errors.maxSizeMessage",
      *     mimeTypes = {"application/pdf", "application/x-pdf", "image/png", "image/jpeg"},
      *     mimeTypesMessage = "document.file.errors.mimeTypesMessage",

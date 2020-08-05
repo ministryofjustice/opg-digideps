@@ -7,7 +7,7 @@ form:
     label: Attach a file
     hint: ""
   errors:
-    fileSize: "Your uploaded file exceeded the maximum size of 5M"
+    fileSize: "Your uploaded file exceeded the maximum size of 15M"
     risky: "Cannot upload file, risky content found inside. Technical details: %techDetails%"
     virusFound:  "Cannot upload file, virus found inside. Technical details: %techDetails%"
     generic: "Cannot upload file, please try again later. Technical details: %techDetails%"
@@ -28,7 +28,7 @@ attachPage:
   selectHeading: 1. Select the files
   selectHelp: Please select 'Choose files' below to find your files.
   selectHint1: You only need to upload documents if we have asked you to.
-  selectHint2: You can only upload PDF, JPG or PNG files, and they must be smaller than 5MB.
+  selectHint2: You can only upload PDF, JPG or PNG files, and they must be smaller than 15MB.
   uploadHeading: 2. Upload the files to your report
   noDocuments: No documents
   documentList: Attached documents

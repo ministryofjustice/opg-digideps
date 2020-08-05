@@ -1,5 +1,5 @@
 /* globals $ */
-var UPLOAD_LIMIT = 5
+var UPLOAD_LIMIT = 15
 
 module.exports = function (containerSelector) {
   // Show in progress message
@@ -10,7 +10,7 @@ module.exports = function (containerSelector) {
     }
   })
 
-  // Show an error if file is over 5mb
+  // Show an error if file is over 15mb
   $('#upload_form').on('submit', function (e) {
     e.preventDefault()
     var fileElement = $('#report_document_upload_files')
