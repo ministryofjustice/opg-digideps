@@ -1,3 +1,7 @@
+locals {
+  dev_bucket_arn = "arn:aws:s3:::pa-uploads-beth"
+}
+
 resource "aws_s3_bucket" "pa_uploads" {
   bucket        = "pa-uploads-${local.environment}"
   acl           = "private"
@@ -16,6 +20,19 @@ resource "aws_s3_bucket" "pa_uploads" {
 
     noncurrent_version_expiration {
       days = 10
+    }
+  }
+
+  replication_configuration {
+    role = aws_iam_role.replication.arn
+
+    rules {
+      status = "Enabled"
+
+      destination {
+        bucket        = local.dev_bucket_arn
+        storage_class = "STANDARD"
+      }
     }
   }
 
@@ -57,4 +74,69 @@ data "aws_iam_policy_document" "pa_uploads" {
       variable = "s3:x-amz-server-side-encryption"
     }
   }
+}
+
+resource "aws_iam_role" "replication" {
+  name = "replication-role"
+
+  assume_role_policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "s3.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+POLICY
+}
+
+resource "aws_iam_policy" "replication" {
+  name = "replication-policy"
+
+  policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:GetReplicationConfiguration",
+        "s3:ListBucket"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "${aws_s3_bucket.pa_uploads.arn}"
+      ]
+    },
+    {
+      "Action": [
+        "s3:GetObjectVersion",
+        "s3:GetObjectVersionAcl"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "${aws_s3_bucket.pa_uploads.arn}/*"
+      ]
+    },
+    {
+      "Action": [
+        "s3:ReplicateObject",
+        "s3:ReplicateDelete"
+      ],
+      "Effect": "Allow",
+      "Resource": "${local.dev_bucket_arn}/*"
+    }
+  ]
+}
+POLICY
+}
+
+resource "aws_iam_role_policy_attachment" "replication" {
+  role       = aws_iam_role.replication.name
+  policy_arn = aws_iam_policy.replication.arn
 }
