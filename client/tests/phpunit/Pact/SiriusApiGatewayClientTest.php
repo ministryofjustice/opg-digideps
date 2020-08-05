@@ -90,8 +90,8 @@ class SiriusDocumentsContractTest extends KernelTestCase
             'PF',
             $reportSubmissionId,
             $this->fileName,
-            $this->fileContents,
-            null
+            null,
+            $this->s3Reference
         );
 
         try {

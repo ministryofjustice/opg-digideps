@@ -63,12 +63,16 @@ class SiriusApiErrorTranslator
      */
     private function deserializeError(string $errorString)
     {
-        $decodedJson = json_decode($errorString, true)['errors'];
+        $decodedJson = json_decode($errorString, true)['body']['error'];
         return $this->serializer->deserialize(json_encode($decodedJson), 'AppBundle\Model\Sirius\SiriusApiError', 'json');
     }
 
     private function jsonIsInUnexpectedFormat(string $errorString)
     {
-        return is_null(json_decode($errorString, true)) || !array_key_exists('errors', json_decode($errorString, true));
+        $decodedJson = json_decode($errorString, true);
+
+        return is_null($decodedJson) ||
+        !array_key_exists('body', $decodedJson) ||
+        (array_key_exists('body', $decodedJson) && (!array_key_exists('error', $decodedJson['body'])));
     }
 }
