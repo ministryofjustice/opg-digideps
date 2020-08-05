@@ -69,6 +69,6 @@ class SiriusApiErrorTranslator
 
     private function jsonIsInUnexpectedFormat(string $errorString)
     {
-        return is_null(json_decode($errorString, true)) || is_null(json_decode($errorString, true)['errors']);
+        return is_null(json_decode($errorString, true)) || !array_key_exists('errors', json_decode($errorString, true));
     }
 }

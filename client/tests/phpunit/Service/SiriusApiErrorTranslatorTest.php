@@ -91,9 +91,9 @@ class SiriusApiErrorTranslatorTest extends KernelTestCase
     {
         $sut = new SiriusApiErrorTranslator($this->serializer);
 
-        $errorJson = '{"data":{"error":"Something went wrong"}}';
+        $errorJson = '{"data":{"errors":"Something went wrong"}}';
         $translation = $sut->translateApiError($errorJson);
-        $expectedError = '{"data":{"error":"Something went wrong"}}';
+        $expectedError = '{"data":{"errors":"Something went wrong"}}';
 
         self::assertEquals($expectedError, $translation);
     }
