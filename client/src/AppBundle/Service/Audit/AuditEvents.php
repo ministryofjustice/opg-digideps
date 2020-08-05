@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service\Audit;
 
+use AppBundle\Entity\User;
 use AppBundle\Service\Time\DateTimeProvider;
 use DateTime;
 
@@ -12,12 +13,14 @@ final class AuditEvents
     const EVENT_ROLE_CHANGED = 'ROLE_CHANGED';
     const EVENT_CLIENT_EMAIL_CHANGED = 'CLIENT_EMAIL_CHANGED';
     const EVENT_DEPUTY_DELETED = 'DEPUTY_DELETED';
+    const EVENT_ADMIN_DELETED = 'ADMIN_DELETED';
 
     const TRIGGER_ADMIN_USER_EDIT = 'ADMIN_USER_EDIT';
     const TRIGGER_ADMIN_BUTTON = 'ADMIN_BUTTON';
     const TRIGGER_CSV_UPLOAD = 'CSV_UPLOAD';
     const TRIGGER_DEPUTY_USER = 'DEPUTY_USER';
     const TRIGGER_DEPUTY_USER_EDIT = 'DEPUTY_USER_EDIT';
+
 
     /**
      * @var DateTimeProvider
@@ -144,7 +147,7 @@ final class AuditEvents
      * @return array|string[]
      * @throws \Exception
      */
-    public function deputyDeleted(string $trigger, string $deletedBy, string $subjectFullname, string $subjectEmail, string $subjectRole): array
+    public function userDeleted(string $trigger, string $deletedBy, string $subjectFullname, string $subjectEmail, string $subjectRole): array
     {
         $event = [
             'trigger' => $trigger,
@@ -155,6 +158,9 @@ final class AuditEvents
             'subject_role' => $subjectRole,
         ];
 
-        return $event + $this->baseEvent(AuditEvents::EVENT_DEPUTY_DELETED);
+        $eventType = in_array($subjectRole, [User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]) ?
+            AuditEvents::EVENT_ADMIN_DELETED : AuditEvents::EVENT_DEPUTY_DELETED;
+
+        return $event + $this->baseEvent($eventType);
     }
 }

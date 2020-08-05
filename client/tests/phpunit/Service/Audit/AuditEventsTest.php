@@ -3,6 +3,7 @@
 namespace AppBundle\Service\Audit;
 
 
+use AppBundle\Entity\User;
 use AppBundle\Service\Time\DateTimeProvider;
 use AppBundle\Service\Time\FakeClock;
 use DateTime;
@@ -177,7 +178,7 @@ class AuditEventsTest extends TestCase
     /**
      * @test
      */
-    public function deputyDeleted(): void
+    public function userDeleted_deputy(): void
     {
         $now = new DateTime();
 
@@ -196,7 +197,7 @@ class AuditEventsTest extends TestCase
             'type' => 'audit'
         ];
 
-        $actual = (new AuditEvents($dateTimeProvider->reveal()))->deputyDeleted(
+        $actual = (new AuditEvents($dateTimeProvider->reveal()))->userDeleted(
             'ADMIN_BUTTON',
             'super-admin@email.com',
             'Roisin Murphy',
@@ -205,5 +206,47 @@ class AuditEventsTest extends TestCase
         );
 
         $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @test
+     * @dataProvider adminRoleProvider
+     */
+    public function userDeleted_admin(string $role): void
+    {
+        $now = new DateTime();
+
+        /** @var ObjectProphecy|DateTimeProvider $dateTimeProvider */
+        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
+
+        $expected = [
+            'trigger' => 'ADMIN_BUTTON',
+            'deleted_on' => $now->format(DateTime::ATOM),
+            'deleted_by' => 'super-admin@email.com',
+            'subject_full_name' => 'Roisin Murphy',
+            'subject_email' => 'r.murphy@email.com',
+            'subject_role' => $role,
+            'event' => 'ADMIN_DELETED',
+            'type' => 'audit'
+        ];
+
+        $actual = (new AuditEvents($dateTimeProvider->reveal()))->userDeleted(
+            'ADMIN_BUTTON',
+            'super-admin@email.com',
+            'Roisin Murphy',
+            'r.murphy@email.com',
+            $role
+        );
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function adminRoleProvider()
+    {
+        return [
+            'admin' => [User::ROLE_ADMIN],
+            'super admin' => [User::ROLE_SUPER_ADMIN],
+        ];
     }
 }
