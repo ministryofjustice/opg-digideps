@@ -115,9 +115,6 @@ Feature: Admin report checklist
     Then I click on "submit-and-continue" in the "lodging-checklist" region
     And the form should be valid
     And the URL should match "/admin/report/\d+/checklist-submitted"
-    When I click on "download-checklist-pdf"
-    And the response status code should be 200
-    And the response should have the "Content-Type" header containing "application/pdf"
 
   @deputy @deputy-104
   Scenario: 104 Admin marked as submitted

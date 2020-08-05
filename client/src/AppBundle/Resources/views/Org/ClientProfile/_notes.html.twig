@@ -35,11 +35,11 @@
                     <tr>
                         <td class="width-half">
                             {% if note.content %}
-                                <details>
-                                    <summary>
-                                        <span class="summary">{{ note.title }}</span>
+                                <details class="govuk-details" data-module="govuk-details">
+                                    <summary class="govuk-details__summary">
+                                        <span class="govuk-details__summary-text">{{ note.title }}</span>
                                     </summary>
-                                    <div class="opg-indented-block dont-break-out">
+                                    <div class="govuk-details__text">
                                         {{ note.content }}
                                     </div>
                                 </details>

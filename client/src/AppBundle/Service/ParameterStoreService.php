@@ -12,7 +12,6 @@ class ParameterStoreService
 
     public const FLAG_CHECKLIST_SYNC = 'checklist-sync';
     public const PARAMETER_CHECKLIST_SYNC_ROW_LIMIT = 'checklist-sync-row-limit';
-    public const PARAMETER_CHECKLIST_SYNC_INTERVAL_MINUTES = 'checklist-sync-interval-minutes';
 
     /** @var SsmClient */
     private $ssmClient;

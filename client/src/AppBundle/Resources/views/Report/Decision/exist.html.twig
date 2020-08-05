@@ -45,11 +45,11 @@
         {# Reusing content from the start page #}
         {% set page = 'startPage' %}
 
-        <details class="push--bottom">
-            <summary>
-                <span class="summary">{{ (page ~ '.whatisdecisionSummary') | trans }}</span>
+    <details class="govuk-details" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">{{ (page ~ '.whatisdecisionSummary') | trans }}</span>
             </summary>
-            <div class="text opg-indented-block">
+            <div class="govuk-details__text">
                 <p>{{ (page ~ '.whatisdecisionPara1' ~ append104) | trans(transOptions) }}</p>
                 <p>{{ (page ~ '.whatisdecisionPara2' ~ append104) | trans(transOptions) }}</p>
                 <ul class="govuk-list govuk-list--bullet">

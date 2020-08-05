@@ -2,6 +2,7 @@
 
 namespace DigidepsTests\Helpers;
 
+use AppBundle\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
 use AppBundle\Model\Sirius\SiriusDocumentFile;
 use AppBundle\Model\Sirius\SiriusDocumentUpload;
 use AppBundle\Model\Sirius\SiriusReportPdfDocumentMetadata;
@@ -53,6 +54,19 @@ class SiriusHelpers extends KernelTestCase
         return (new SiriusDocumentUpload())
             ->setType('supportingdocuments')
             ->setAttributes($siriusSupportingDocumentMetadata)
+            ->setFile($file);
+    }
+
+    static public function generateSiriusChecklistPdfUpload(string $fileName, string $fileContents)
+    {
+        $file = (new SiriusDocumentFile())
+            ->setName($fileName)
+            ->setMimetype('application/pdf')
+            ->setSource(base64_encode($fileContents));
+
+        return (new SiriusDocumentUpload())
+            ->setType('checklists')
+            ->setAttributes(new SiriusChecklistPdfDocumentMetadata())
             ->setFile($file);
     }
 }
