@@ -76,20 +76,20 @@ form:
     label: Why did you ask this person to help you?
     hint: ""
   address:
-    label: Building and street
+    label: Address (optional)
     context: line 1 of 2
   address2:
     label: ' '
-    context: Building and street line 2 of 2
+    context: Address line 2 of 2 (optional)
     hint: ""
   county:
     label: County
     hint: ""
   postcode:
-    label: Postcode
+    label: Postcode (optional)
     hint: ""
   country:
-    label: Country
+    label: Country (optional)
     hint: ""
     defaultOption: Please select ...
   save:

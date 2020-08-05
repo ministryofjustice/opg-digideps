@@ -10,11 +10,11 @@ form:
   lastname:
       label: Last name
   address:
-      label: Building and street
+      label: Address
       context: line 1 of 2
   address2:
       label: ' '
-      context: Building and street line 2 of 2
+      context: Address line 2 of 2
       hint: ""
   county:
       label: County

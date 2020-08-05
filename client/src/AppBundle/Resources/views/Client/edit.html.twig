@@ -5,7 +5,7 @@
 {% set translationDomain = "client" %}
 {% trans_default_domain translationDomain %}
 {% set page = 'editClient' %}
-{% set preFix = "form." %}
+{% set preFix = "editClient." %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans({'%client%': client.firstname}) }}{% endblock %}
@@ -20,7 +20,6 @@
 
     {{ form_input(form.firstname, 'firstname') }}
     {{ form_input(form.lastname, 'lastname') }}
-
     {{ macros.addressFields(form, translationDomain, preFix) }}
     {{ form_input(form.phone, 'phone') }}
 

@@ -455,42 +455,80 @@ C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.
 {% macro addressFields(formObject, transDomain, preFix) %}
 
     <fieldset class="govuk-fieldset">
-        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-            <h1 class="govuk-fieldset__heading">
-                What is your address?
-            </h1>
-        </legend>
 
+        {% if formObject.address is defined %}
         <div class="govuk-form-group">
             {% set formAddressLabel = preFix ~ 'address.label' %}
             {% set formAddressContext = preFix ~ 'address.context' %}
             {{ formAddressLabel | trans({}, transDomain) }}<span class="govuk-visually-hidden">{{ formAddressContext | trans({}, transDomain) }}</span>
             {{ form_input(formObject.address, '') }}
         </div>
+        {% endif %}
 
+        {% if formObject.address1 is defined %}
         <div class="govuk-form-group">
+            {% set formAddress1Label = preFix ~ 'address1.label' %}
+            {% set formAddress1Context = preFix ~ 'address1.context' %}
+            {{ formAddress1Label | trans({}, transDomain) }}<span class="govuk-visually-hidden">{{ formAddress1Context | trans({}, transDomain) }}</span>
+            {{ form_input(formObject.address1, '') }}
+        </div>
+        {% endif %}
+
+        {% if formObject.address2 is defined %}
+        <div class="govuk-form-group">
+            {% set formAddress2Label = preFix ~ 'address2.label' %}
             {% set formAddress2Context = preFix ~ 'address2.context' %}
-            <span class="govuk-visually-hidden">{{ formAddress2Context | trans({}, transDomain) }}</span>
+            {{ formAddress2Label | trans({}, transDomain) }}<span class="govuk-visually-hidden">{{ formAddress2Context | trans({}, transDomain) }}</span>
             {{ form_input(formObject.address2, '') }}
         </div>
+        {% endif %}
 
+        {% if formObject.county is defined %}
         <div class="govuk-form-group">
             {% set formCountyLabel = preFix ~ 'county.label' %}
             {{ formCountyLabel | trans({}, transDomain) }}
             {{ form_input(formObject.county, '') }}
         </div>
+        {% endif %}
 
+        {% if formObject.address3 is defined %}
+        <div class="govuk-form-group">
+            {% set formAddress3Label = preFix ~ 'address3.label' %}
+            {% set formAddress3Context = preFix ~ 'address3.context' %}
+            {{ formAddress3Label | trans({}, transDomain) }}<span class="govuk-visually-hidden">{{ formAddress3Context | trans({}, transDomain) }}</span>
+            {{ form_input(formObject.address3, '') }}
+        </div>
+        {% endif %}
+
+        {% if formObject.postcode is defined %}
         <div class="govuk-form-group">
             {% set formPostcodeLabel = preFix ~ 'postcode.label' %}
             {{ formPostcodeLabel | trans({}, transDomain) }}
             {{ form_input(formObject.postcode, '') }}
         </div>
+        {% endif %}
+
+        {% if formObject.addressPostcode is defined %}
+        <div class="govuk-form-group">
+            {% set formaddressPostcodeLabel = preFix ~ 'addressPostcode.label' %}
+            {{ formaddressPostcodeLabel | trans({}, transDomain) }}
+            {{ form_input(formObject.addressPostcode, '') }}
+        </div>
+        {% endif %}
 
         {% if formObject.country is defined %}
         <div class="govuk-form-group">
             {% set formCountryLabel = preFix ~ 'country.label' %}
             {{ formCountryLabel | trans({}, transDomain) }}
             {{ form_input(formObject.country, '') }}
+        </div>
+        {% endif %}
+
+        {% if formObject.addressCountry is defined %}
+        <div class="govuk-form-group">
+            {% set formaddressCountryLabel = preFix ~ 'addressCountry.label' %}
+            {{ formaddressCountryLabel | trans({}, transDomain) }}
+            {{ form_input(formObject.addressCountry, '') }}
         </div>
         {% endif %}
 

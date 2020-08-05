@@ -112,11 +112,11 @@ form:
     label: Valuation date
   property:
     address:
-      label: Building and street
-      context: line 1 of 2
+      label: Address line 1
+      context: ""
     address2:
-      label: ' '
-      context: Building and street line 2 of 2
+      label: Address line 2
+      context: ""
       hint: ""
     county:
       label: County
