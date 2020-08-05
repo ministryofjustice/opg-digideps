@@ -75,13 +75,25 @@ class SiriusApiErrorTranslatorTest extends KernelTestCase
     }
 
     /** @test */
-    public function translateApiErrors_can_handle_unexpected_format()
+    public function translateApiErrors_can_handle_non_json()
     {
         $sut = new SiriusApiErrorTranslator($this->serializer);
 
         $errorJson = 'An error that is not JSON';
         $translation = $sut->translateApiError($errorJson);
         $expectedError = 'An error that is not JSON';
+
+        self::assertEquals($expectedError, $translation);
+    }
+
+    /** @test */
+    public function translateApiErrors_can_handle_json_in_unexpected_format()
+    {
+        $sut = new SiriusApiErrorTranslator($this->serializer);
+
+        $errorJson = '{"data":{"error":"Something went wrong"}}';
+        $translation = $sut->translateApiError($errorJson);
+        $expectedError = '{"data":{"error":"Something went wrong"}}';
 
         self::assertEquals($expectedError, $translation);
     }

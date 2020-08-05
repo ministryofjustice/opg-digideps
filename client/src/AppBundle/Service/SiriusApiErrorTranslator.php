@@ -21,7 +21,7 @@ class SiriusApiErrorTranslator
 
     public function translateApiError(string $errorString)
     {
-        if (is_null(json_decode($errorString, true))){
+        if ($this->jsonIsInUnexpectedFormat($errorString)){
             return $errorString;
         }
 
@@ -65,5 +65,10 @@ class SiriusApiErrorTranslator
     {
         $decodedJson = json_decode($errorString, true)['errors'];
         return $this->serializer->deserialize(json_encode($decodedJson), 'AppBundle\Model\Sirius\SiriusApiError', 'json');
+    }
+
+    private function jsonIsInUnexpectedFormat(string $errorString)
+    {
+        return is_null(json_decode($errorString, true)) || is_null(json_decode($errorString, true)['errors']);
     }
 }
