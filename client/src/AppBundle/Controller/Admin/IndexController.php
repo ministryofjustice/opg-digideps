@@ -323,7 +323,7 @@ class IndexController extends AbstractController
         try {
             $this->getRestClient()->delete('user/' . $id);
 
-            $event = (new AuditEvents($this->dateTimeProvider))->deputyDeleted(
+            $event = (new AuditEvents($this->dateTimeProvider))->userDeleted(
                 AuditEvents::TRIGGER_ADMIN_BUTTON,
                 $this->getUser()->getEmail(),
                 $user->getFullName(),
