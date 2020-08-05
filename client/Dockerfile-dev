@@ -1,0 +1,5 @@
+ARG AWS_REGISTRY
+ARG VERSION
+FROM $AWS_REGISTRY/digideps/client:$VERSION
+WORKDIR /var/www
+COPY docker/extra/robots.txt web/robots.txt

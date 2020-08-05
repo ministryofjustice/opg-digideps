@@ -9,11 +9,19 @@ workflows:
 
       - build:
           name: build pr
+          build_dev: true
           filters: { branches: { ignore: [ main ] } }
 
       - terraform-command:
           name: apply environment
           requires: [ build pr, lint terraform ]
+          filters: { branches: { ignore: [ main ] } }
+          tf_command: apply
+
+      - terraform-command:
+          name: apply development
+          requires: [ build pr, lint terraform ]
+          tf_workspace: development
           filters: { branches: { ignore: [ main ] } }
           tf_command: apply
 
@@ -393,6 +401,11 @@ jobs:
       AWS_REGION: eu-west-1
       AWS_CONFIG_FILE: ~/project/aws_config
       AWS_REGISTRY: 311462405659.dkr.ecr.eu-west-1.amazonaws.com
+    parameters:
+      build_dev:
+        description: whether to build the development client image
+        type: boolean
+        default: false
     steps:
       - setup_remote_docker
       - aws-cli/install
@@ -418,8 +431,9 @@ jobs:
           name: Set version
           command: |
             export VERSION=${TF_WORKSPACE}-${CIRCLE_SHA1:0:7}
-
+            export DEV_VERSION=development-${CIRCLE_SHA1:0:7}
             echo "export VERSION=${VERSION}" >> $BASH_ENV
+            echo "export DEV_VERSION=${DEV_VERSION}" >> $BASH_ENV
             echo "$VERSION" >> ~/project/VERSION
       - persist_to_workspace:
           root: .
@@ -457,6 +471,15 @@ jobs:
       - run:
           name: Push images
           command: docker-compose -f docker-compose.ci.yml push
+      - when:
+          condition: << parameters.build_dev >>
+          steps:
+            - run:
+                name: add robots.txt to frontend development
+                command: docker-compose -f docker-compose.ci.dev.yml build --build-arg AWS_REGISTRY=${AWS_REGISTRY} --build-arg VERSION=${VERSION}
+            - run:
+                name: Push image
+                command: docker-compose -f docker-compose.ci.dev.yml push
       - run:
           name: Install ECR Scan Results Requirements
           working_directory: ~/project/ecs_helper/check_ecr_scan_results

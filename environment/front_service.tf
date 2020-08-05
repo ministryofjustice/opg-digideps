@@ -90,7 +90,8 @@ locals {
       { "name": "SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.front_redis.fqdn}" },
       { "name": "SYMFONY_ENV", "value": "${local.account.symfony_env}" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
-      { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" }
+      { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" },
+      { "name": "ENVIRONMENT", "value": "${local.environment}" }
     ]
   }
 
