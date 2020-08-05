@@ -318,7 +318,7 @@ class IndexController extends AbstractController
      */
     public function deleteAction($id)
     {
-        $deputy = $this->getRestClient()->get("user/{$id}", 'User', ['user', 'client', 'client-reports', 'report']);
+        $user = $this->getRestClient()->get("user/{$id}", 'User', ['user', 'client', 'client-reports', 'report']);
 
         try {
             $this->getRestClient()->delete('user/' . $id);
@@ -326,16 +326,16 @@ class IndexController extends AbstractController
             $event = (new AuditEvents($this->dateTimeProvider))->deputyDeleted(
                 AuditEvents::TRIGGER_ADMIN_BUTTON,
                 $this->getUser()->getEmail(),
-                $deputy->getFullName(),
-                $deputy->getEmail(),
-                $deputy->getRoleName(),
+                $user->getFullName(),
+                $user->getEmail(),
+                $user->getRoleName(),
             );
 
             $this->logger->notice('', $event);
             return $this->redirect($this->generateUrl('admin_homepage'));
         } catch (\Throwable $e) {
             $this->logger->warning(
-                sprintf('Error while deleting deputy: %s', $e->getMessage()), ['deputy_email' => $deputy->getEmail()]
+                sprintf('Error while deleting deputy: %s', $e->getMessage()), ['deputy_email' => $user->getEmail()]
             );
 
             $this->addFlash('error', 'There was a problem deleting the deputy - please try again later');
