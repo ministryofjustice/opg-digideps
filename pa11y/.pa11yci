@@ -18,21 +18,9 @@
             "set field #login_email to bobby.blue@example.com",
             "set field #login_password to Abcd1234",
             "click element #login_login"
-         ]
+         ],
+         "screenCapture": "screenshots/login.png"
       },
-      {
-         "url": "https://digideps.local"
-      },
-      "https://digideps.local/report/58/overview",
-      "https://digideps.local/report/58/gifts",
-      {
-         "url": "https://digideps.local/report/58/gifts/exist",
-         "actions": [
-            "check field #yes_no_giftsExist_1",
-            "click element #yes_no_save"
-         ]
-      },
-      "https://digideps.local/report/58/prof-deputy-costs",
       {
          "url": "https://digideps.local",
          "screenCapture": "screenshots/index.png"
@@ -51,34 +39,60 @@
          "screenCapture": "screenshots/report-overview.png"
       },
       {
-         "url": "https://digideps.local/report/58/prof-deputy-costs/how-charged",
+         "url": "https://digideps.local/report/{id}/prof-deputy-costs/how-charged",
          "actions": [
             "check field #deputy_costs_profDeputyCostsHowCharged_0",
             "click element #deputy_costs_save"
-         ]
+         ],
+         "screenCapture": "screenshots/deputy-costs-how-charged.png"
       },
-      "https://digideps.local/report/58/prof-deputy-costs",
+      "https://digideps.local/report/{id}/prof-deputy-costs",
       {
          "url": "https://digideps.local/report/58/prof-deputy-costs/previous-received-exists",
          "actions": [
             "check field #yes_no_profDeputyCostsHasPrevious_1",
             "click element #yes_no_save"
-         ]
+         ],
+         "screenCapture": "screenshots/deputy-costs-previous-received-exists.png"
       },
       {
-         "url": "https://digideps.local/report/58/prof-deputy-costs/costs-received",
+         "url": "https://digideps.local/report/{id}/prof-deputy-costs/costs-received",
          "actions": [
             "set field #deputy_costs_received_profDeputyFixedCost to 100",
             "click element #deputy_costs_received_save"
-         ]
+         ],
+         "screenCapture": "screenshots/deputy-costs-costs-received.png"
       },
       {
-         "url": "https://digideps.local/report/58/prof-deputy-costs/breakdown",
+         "url": "https://digideps.local/report/{id}/prof-deputy-costs/breakdown",
          "actions": [
             "click element #deputy_other_costs_save"
-         ]
+         ],
+         "screenCapture": "screenshots/deputy-costs-breakdown.png"
       },
-      "https://digideps.local/report/58/review"
-
+      {
+         "url": "https://digideps.local/report/{id}/review",
+         "screenCapture": "screenshots/report-review2.png"
+      },
+      {
+         "url": "https://digideps.local/report/{id}/overview",
+         "screenCapture": "screenshots/report-overview.png"
+      },
+      {
+         "url": "https://digideps.local/report/{id}/gifts",
+         "screenCapture": "screenshots/gifts.png"
+      },
+      {
+         "url": "https://digideps.local/report/{id}/gifts/exist",
+         "actions": [
+            "check field #yes_no_giftsExist_1",
+            "click element #yes_no_save"
+         ],
+         "screenCapture": "screenshots/gifts-exist.png"
+      },
+      {
+         "url": "https://digideps.local/report/{id}/prof-deputy-costs",
+         "screenCapture": "screenshots/deputy-costs.png"
+      }
    ]
 }
