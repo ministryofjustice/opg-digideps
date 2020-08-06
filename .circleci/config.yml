@@ -24,22 +24,6 @@ workflows:
           task_name: reset_database
           timeout: 180
 
-      - run-task:
-          name: reset development
-          requires: [ lint terraform ]
-          filters: { branches: { ignore: [ main ] } }
-          task_name: reset_database
-          tf_workspace: development
-          timeout: 180
-
-      - run-task:
-          name: integration test development
-          requires: [ reset development ]
-          filters: { branches: { ignore: [ main ] } }
-          task_name: integration_test
-          tf_workspace: development
-          timeout: 3000
-
       - client-unit-test:
           name: client unit test
           requires: [ apply environment ]
@@ -111,6 +95,7 @@ workflows:
           tf_workspace: development
           tf_command: apply
 
+      # Notice no reset or restore over development so we can keep test data
       - terraform-command:
           name: apply development
           requires: [ apply shared-development ]
