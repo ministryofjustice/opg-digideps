@@ -228,7 +228,6 @@ workflows:
       - schedule:
           cron: "00 05 * * 0"
           filters: { branches: { only: [ main ] } }
-
     jobs:
       - build:
           name: build integration
@@ -266,7 +265,7 @@ workflows:
 orbs:
   aws-cli: circleci/aws-cli@0.1.13
   slack: circleci/slack@3.4.2
-  codecov: codecov/codecov@1.0.2
+  codecov: codecov/codecov@1.1.1
   ecs_helper:
     commands:
       install:
@@ -494,9 +493,6 @@ jobs:
       - checkout
       - attach_workspace: { at: ~/project }
       - run:
-          name: Load docker images
-          command: docker load -i ~/project/docker-images.tar
-      - run:
           name: Install lambda requirements for unit tests
           working_directory: ~/project/lambda_functions
           command: |
@@ -518,17 +514,18 @@ jobs:
       - run:
           name: Run tests
           command: |
-            docker-compose up -d pact-mock
+            docker-compose -f docker-compose.yml --project-name client-unit-tests up -d --no-deps frontend pact-mock
             sleep 3
-            docker run --rm --network=project_default \
-                --env-file=client/docker/env/frontend.env \
-                -e PACT_BROKER_HTTP_AUTH_PASSWORD \
-                -e PACT_BROKER_HTTP_AUTH_USER \
-                -e PACT_CONSUMER_VERSION \
-                -e PACT_BROKER_BASE_URL \
-            client:latest bin/phpunit -c tests/phpunit
-            docker-compose exec pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
-            docker-compose stop pact-mock
+
+            docker-compose -f docker-compose.yml --project-name client-unit-tests exec frontend sh scripts/client-unit-tests.sh
+            docker-compose -f docker-compose.yml --project-name client-unit-tests exec frontend chmod -R 777 tests/phpunit/coverage/client-unit-tests.xml
+            docker cp "client-unit-tests_frontend_1:/var/www/tests/phpunit/coverage/client-unit-tests.xml" "./client-unit-tests.xml"
+
+            docker-compose -f docker-compose.yml --project-name client-unit-tests exec pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
+            docker-compose -f docker-compose.yml --project-name client-unit-tests stop pact-mock
+      - codecov/upload:
+          file: ./client-unit-tests.xml
+          flags: client
       - store_artifacts:
           path: pact.json
           destination: Pact file
@@ -551,12 +548,12 @@ jobs:
             docker-compose -f docker-compose.yml --project-name api-unit-tests up -d api
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec api chmod -R 777 var
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
-      - copy-merged-cov-to-host:
-          file_to_copy: tests/coverage/merged.xml
-          copy_to_dir: .
+
+            docker-compose -f docker-compose.yml --project-name api-unit-tests exec api chmod -R 777 tests/coverage/api-unit-tests.xml
+            docker cp "api-unit-tests_api_1:/var/www/tests/coverage/api-unit-tests.xml" "./api-unit-tests.xml"
       - codecov/upload:
-          file: ./merged.xml
-          flags: phpunit
+          file: ./api-unit-tests.xml
+          flags: api
 
   pa11y-ci:
     machine:
@@ -571,6 +568,7 @@ jobs:
       - run:
           name: Run pa11y
           command: |
+            docker-compose down
             docker-compose -f docker-compose.yml up -d pa11y
             docker-compose exec frontend touch /var/www/.enableProdMode
             docker-compose exec admin touch /var/www/.enableProdMode
@@ -629,18 +627,3 @@ jobs:
                 channel: opg-digideps-team
                 failure_message: << parameters.task_name >> has failed.
                 success_message: << parameters.task_name >> has succeeded.
-
-commands:
-  copy-merged-cov-to-host:
-    parameters:
-      file_to_copy:
-        description: Path to the file where the cov file will be copied from host machine.
-        type: string
-      copy_to_dir:
-        description: Path to the directory where the cov file will be copied to on the host machine.
-        type: string
-    steps:
-      - run:
-          command: |
-            docker-compose -f docker-compose.yml --project-name api-unit-tests exec api chmod -R 777 "<< parameters.file_to_copy >>"
-            docker cp api-unit-tests_api_1:/var/www/tests/coverage/merged.xml "<< parameters.copy_to_dir >>/merged.xml"
