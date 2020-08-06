@@ -1,5 +1,7 @@
 locals {
-  dev_bucket_arn = "arn:aws:s3:::pa-uploads-beth"
+  dev_bucket_arn            = "arn:aws:s3:::pa-uploads-development"
+  bucket_replication_status = contains(["production02", "preproduction", "training"], local.environment) ? "Disabled" : "Enabled"
+  expiration_days           = contains(["production02", "preproduction", "training"], local.environment) ? 490 : 14
 }
 
 resource "aws_s3_bucket" "pa_uploads" {
@@ -15,7 +17,7 @@ resource "aws_s3_bucket" "pa_uploads" {
     enabled = true
 
     expiration {
-      days = 490
+      days = local.expiration_days
     }
 
     noncurrent_version_expiration {
@@ -27,7 +29,7 @@ resource "aws_s3_bucket" "pa_uploads" {
     role = aws_iam_role.replication.arn
 
     rules {
-      status = "Enabled"
+      status = local.bucket_replication_status
 
       destination {
         bucket        = local.dev_bucket_arn
