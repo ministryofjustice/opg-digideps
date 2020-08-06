@@ -1,7 +1,8 @@
 locals {
-  dev_bucket_arn            = "arn:aws:s3:::pa-uploads-development"
-  bucket_replication_status = contains(["production02", "preproduction", "training"], local.environment) ? "Disabled" : "Enabled"
-  expiration_days           = contains(["production02", "preproduction", "training"], local.environment) ? 490 : 14
+  dev_bucket_arn             = "arn:aws:s3:::pa-uploads-development"
+  non-replication_workspaces = ["production02", "preproduction", "training", "integration"]
+  bucket_replication_status  = contains(local.non-replication_workspaces, local.environment) ? "Disabled" : "Enabled"
+  expiration_days            = contains(local.non-replication_workspaces, local.environment) ? 490 : 14
 }
 
 resource "aws_s3_bucket" "pa_uploads" {
