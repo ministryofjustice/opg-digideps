@@ -11,6 +11,7 @@
 
 {% block pageContent %}
 
+    {% if environment == 'development' %}{{ macros.warningBanner('This is a non-production environment for training purposes. Do not use real data in this environment!') }}{% endif %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <div class="text">
