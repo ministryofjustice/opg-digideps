@@ -1,8 +1,8 @@
 locals {
   dev_bucket_arn             = "arn:aws:s3:::pa-uploads-development"
   non-replication_workspaces = ["production02", "preproduction", "training", "integration", "development"]
-  long_expiry_workspaces     = ["production02", "development"]
   bucket_replication_status  = contains(local.non-replication_workspaces, local.environment) ? "Disabled" : "Enabled"
+  long_expiry_workspaces     = ["production02", "development", "training"]
   expiration_days            = contains(local.long_expiry_workspaces, local.environment) ? 490 : 14
 }
 
