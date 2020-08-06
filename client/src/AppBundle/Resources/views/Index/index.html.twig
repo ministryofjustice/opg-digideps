@@ -11,7 +11,7 @@
 
 {% block pageContent %}
 
-    {% if environment == 'local' %}<h1 class="govuk-heading-m flush--top">{{ 'banner' |trans }}<h1>{% endif %}
+    {% if environment == 'development' %}{{ macros.warningBanner('This is a non-production environment for training purposes. Do not use real data in this environment!') }}{% endif %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <div class="text">

@@ -9,19 +9,11 @@ workflows:
 
       - build:
           name: build pr
-          build_dev: true
           filters: { branches: { ignore: [ main ] } }
 
       - terraform-command:
           name: apply environment
           requires: [ build pr, lint terraform ]
-          filters: { branches: { ignore: [ main ] } }
-          tf_command: apply
-
-      - terraform-command:
-          name: apply development
-          requires: [ build pr, lint terraform ]
-          tf_workspace: development
           filters: { branches: { ignore: [ main ] } }
           tf_command: apply
 
@@ -92,6 +84,7 @@ workflows:
     jobs:
       - build:
           name: build integration
+          build_dev: true
           filters: { branches: { only: [ main ] } }
 
       - terraform-command:
@@ -100,6 +93,13 @@ workflows:
           filters: { branches: { only: [ main ] } }
           tf_tier: shared
           tf_workspace: development
+          tf_command: apply
+
+      - terraform-command:
+          name: apply development
+          requires: [ apply shared-development ]
+          tf_workspace: development
+          filters: { branches: { ignore: [ main ] } }
           tf_command: apply
 
       - terraform-command:
