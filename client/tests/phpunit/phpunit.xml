@@ -9,28 +9,30 @@
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
-        stopOnError="true"
-        stopOnFailure="true"
-        stopOnRisky="true"
-        stopOnWarning="true"
+         stopOnError="true"
+         stopOnFailure="true"
+         stopOnRisky="true"
+         stopOnWarning="true"
 >
     <testsuites>
         <testsuite name="Client unit tests">
-            <directory>Command</directory>
-            <directory>Controller</directory>
-            <directory>Entity</directory>
-            <directory>EventListener</directory>
-            <directory>Form</directory>
-            <directory>Mapper</directory>
-            <directory>Resources</directory>
-            <directory>Resolver</directory>
-            <directory>Service</directory>
-            <directory>Transformer</directory>
-            <directory>Twig</directory>
-            <directory>Validator</directory>
+            <directory>./Command</directory>
+            <directory>./Controller</directory>
+            <directory>./Entity</directory>
+            <directory>./EventListener</directory>
+            <directory>./Form</directory>
+            <directory>./Mapper</directory>
+            <directory>./Model</directory>
+            <directory>./Resources</directory>
+            <directory>./Resolver</directory>
+            <directory>./Security</directory>
+            <directory>./Service</directory>
+            <directory>./Transformer</directory>
+            <directory>./Twig</directory>
+            <directory>./Validator</directory>
         </testsuite>
         <testsuite name="Pact contract tests">
-            <directory>Pact</directory>
+            <directory>./Pact</directory>
         </testsuite>
     </testsuites>
 
@@ -48,8 +50,7 @@
 
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">../../src/AppBundle/Service</directory>
-            <file>../../src/AppBundle/Controller/AbstractController.php</file>
+            <directory suffix=".php">../../src</directory>
         </whitelist>
     </filter>
 

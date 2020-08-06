@@ -7,13 +7,15 @@ use AppBundle\Service\AWS\RequestSigner;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 
 class SiriusApiGatewayClient
 {
-    const SIRIUS_API_GATEWAY_VERSION = 'v1';
+    const SIRIUS_API_GATEWAY_VERSION = 'v2';
     const SIRIUS_REPORT_ENDPOINT = 'clients/%s/reports';
     const SIRIUS_SUPPORTING_DOCUMENTS_ENDPOINT = 'clients/%s/reports/%s/supportingdocuments';
+    const SIRIUS_CHECKLIST_POST_ENDPOINT = 'clients/%s/reports/%s/checklists';
 
     /** @var Client */
     private $httpClient;
@@ -26,24 +28,32 @@ class SiriusApiGatewayClient
 
     /** @var Serializer */
     private $serializer;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * @param Client $httpClient
      * @param RequestSigner $requestSigner
      * @param string $baseUrl
      * @param Serializer $serializer
+     * @param LoggerInterface $logger
      */
     public function __construct(
         Client $httpClient,
         RequestSigner $requestSigner,
         string $baseUrl,
-        Serializer $serializer
+        Serializer $serializer,
+        LoggerInterface $logger
     )
     {
         $this->httpClient = $httpClient;
         $this->requestSigner = $requestSigner;
         $this->baseUrl = $baseUrl;
         $this->serializer = $serializer;
+
+        $this->logger = $logger;
     }
 
     /**
@@ -90,10 +100,33 @@ class SiriusApiGatewayClient
     {
         $reportJson = $this->serializer->serialize(['supporting_document' => ['data' => $upload]], 'json');
 
+        $this->logger->warning("Syncing supporting document ID with UUID: $submissionUuid");
+
         $signedRequest = $this->buildSignedRequest(
             sprintf(self::SIRIUS_SUPPORTING_DOCUMENTS_ENDPOINT, $caseRef, $submissionUuid),
             'POST',
             $reportJson,
+            'application/vnd.opg-data.v1+json'
+        );
+
+        return $this->httpClient->send($signedRequest);
+    }
+
+    /**
+     * @param SiriusDocumentUpload $upload
+     * @param string $submissionUuid
+     * @param string $caseRef
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function postChecklistPdf(SiriusDocumentUpload $upload, string $submissionUuid, string $caseRef)
+    {
+        $body = $this->serializer->serialize(['checklist' => ['data' => $upload]], 'json', ["json_encode_options" => JSON_FORCE_OBJECT]);
+
+        $signedRequest = $this->buildSignedRequest(
+            sprintf(self::SIRIUS_CHECKLIST_POST_ENDPOINT, $caseRef, $submissionUuid),
+            'POST',
+            $body,
             'application/vnd.opg-data.v1+json'
         );
 

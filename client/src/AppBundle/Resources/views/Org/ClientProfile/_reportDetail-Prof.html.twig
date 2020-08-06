@@ -46,19 +46,20 @@
             </dt>
             <dd class="push--bottom">
                 <span class="push--right">{{ report.startDate | date(" j F Y") }} to {{ report.endDate | date(" j F Y") }}</span>
-                <a href="{{ path('report_edit', {'reportId': report.id}) }}" class="right behat-link-edit-report-period">{{ 'edit' | trans }}</a>
+                <a href="{{ path('report_edit', {'reportId': report.id}) }}" class="right behat-link-edit-report-period">
+                    {{ 'edit' | trans }} <span class="govuk-visually-hidden">reporting period</span>
+                </a>
+
+                <details class="govuk-details govuk-!-padding-top-5" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">{{ 'overdueHelpTextHeader' | trans }}</span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        <p>{{ 'overdueHelpTextParagraph1' | trans }}</p>
+                        <p>{{ 'overdueHelpTextParagraph2' | trans }}</p>
+                    </div>
+                </details>
             </dd>
-
-            <details class="govuk-details" data-module="govuk-details">
-                <summary class="govuk-details__summary">
-                    <span class="govuk-details__summary-text">{{ 'overdueHelpTextHeader' | trans }}</span>
-                </summary>
-                <div class="govuk-details__text">
-                    <p>{{ 'overdueHelpTextParagraph1' | trans }}</p>
-                    <p>{{ 'overdueHelpTextParagraph2' | trans }}</p>
-                </div>
-            </details>
-
             <dt>
                 <strong class="govuk-!-font-weight-bold">{{ 'reportDueDate' | trans() }}</strong>
             </dt>

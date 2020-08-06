@@ -11,8 +11,8 @@ confd -onetime -backend env
 
 echo "Dropping $PGDATABASE database, user $PGUSER on $PGHOST"
 
-psql -c "DROP SCHEMA IF EXISTS public CASCADE; CREATE SCHEMA IF NOT EXISTS public;"
-
 # Apply migrations to rebuild database
+su-exec www-data php app/console doctrine:database:drop --force
+su-exec www-data php app/console doctrine:database:create
 su-exec www-data php app/console doctrine:migrations:status-check
 su-exec www-data php app/console doctrine:migrations:migrate --no-interaction -vvv

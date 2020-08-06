@@ -301,6 +301,7 @@ class Checklist implements SynchronisableInterface
     /**
      * @var string|null
      * @JMS\Type("string")
+     * @JMS\Groups({"report-checklist-uuid"})
      */
     private $uuid;
 

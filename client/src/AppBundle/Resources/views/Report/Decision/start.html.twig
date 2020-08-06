@@ -19,21 +19,21 @@
 
     <p class="text">{{ (page ~ '.description1') | trans(transOptions) }}</p>
 
-    <details>
-        <summary>
-            <span class="summary">{{ (page ~ '.whatisMentalCapacitySummary') | trans }}</span>
+    <details class="govuk-details" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">{{ (page ~ '.whatisMentalCapacitySummary') | trans }}</span>
         </summary>
-        <div class="text opg-indented-block">
+        <div class="govuk-details__text">
             <p>{{ (page ~ '.whatisMentalCapacityPara1') | trans(transOptions) }}</p>
             <p>{{ (page ~ '.whatisMentalCapacityPara2') | trans(transOptions)|raw }}</p>
         </div>
     </details>
 
-    <details {% if '104' in report.type %}class="push--bottom"{% endif %}>
-        <summary>
-            <span class="summary">{{ (page ~ '.whatisdecisionSummary') | trans }}</span>
+    <details class="govuk-details" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">{{ (page ~ '.whatisdecisionSummary') | trans }}</span>
         </summary>
-        <div class="text opg-indented-block">
+        <div class="govuk-details__text">
             <p>{{ (page ~ '.whatisdecisionPara1' ~ append104) | trans(transOptions) }}</p>
             <p>{{ (page ~ '.whatisdecisionPara2' ~ append104) | trans(transOptions) }}</p>
             <ul class="govuk-list govuk-list--bullet">

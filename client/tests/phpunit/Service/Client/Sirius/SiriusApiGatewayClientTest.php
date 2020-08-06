@@ -12,6 +12,7 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Serializer\Serializer;
 
@@ -32,12 +33,16 @@ class SiriusApiGatewayClientTest extends KernelTestCase
     /** @var Serializer */
     private $serializer;
 
+    /** @var LoggerInterface&ObjectProphecy */
+    private $logger;
+
     public function setUp(): void
     {
         $this->baseURL = 'test.com';
         $this->endpoint = 'an-endpoint';
         $this->httpClient = self::prophesize(Client::class);
         $this->requestSigner = self::prophesize(RequestSigner::class);
+        $this->logger = self::prophesize(LoggerInterface::class);
         $this->serializer = (self::bootKernel(['debug' => false]))->getContainer()->get('serializer');
 
     }
@@ -51,7 +56,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
         $this->requestSigner->signRequest($expectedRequest, 'execute-api')->shouldBeCalled()->willReturn($signedRequest);
         $this->httpClient->send($signedRequest)->shouldBeCalled()->willReturn(new Response());
 
-        $sut = new SiriusApiGatewayClient($this->httpClient->reveal(), $this->requestSigner->reveal(), $this->baseURL, $this->serializer);
+        $sut = new SiriusApiGatewayClient($this->httpClient->reveal(), $this->requestSigner->reveal(), $this->baseURL, $this->serializer, $this->logger->reveal());
         $sut->get($this->endpoint);
     }
 
@@ -66,7 +71,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
             $headers = array_merge($headers, $additionalHeaders);
         }
 
-        $url = sprintf("%s/%s/%s", $baseURL, 'v1', $endpoint);
+        $url = sprintf("%s/%s/%s", $baseURL, 'v2', $endpoint);
 
         return new Request($method, $url, $headers, $body);
     }

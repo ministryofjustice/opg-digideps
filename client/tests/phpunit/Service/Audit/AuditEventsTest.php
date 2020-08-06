@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service\Audit;
 
+
 use AppBundle\Service\Time\DateTimeProvider;
 use AppBundle\Service\Time\FakeClock;
 use DateTime;
@@ -28,7 +29,7 @@ class AuditEventsTest extends TestCase
             'deputy_name' => 'Bjork Gudmundsdottir',
             'discharged_on' => $now->format(DateTime::ATOM),
             'deputyship_start_date' => $expectedStartDate,
-            'event' => AuditEvents::CLIENT_DISCHARGED,
+            'event' => 'CLIENT_DISCHARGED',
             'type' => 'audit'
         ];
 
@@ -52,5 +53,124 @@ class AuditEventsTest extends TestCase
              ],
              'Null start date' => [null, null]
          ];
+    }
+
+    /**
+     * @test
+     * @dataProvider emailChangeProvider
+     */
+    public function userEmailChanged()
+    {
+        $now = new DateTime();
+        /** @var ObjectProphecy|DateTimeProvider $dateTimeProvider */
+        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
+
+        $expected = [
+            'trigger' => 'ADMIN_USER_EDIT',
+            'email_changed_from' => 'me@test.com',
+            'email_changed_to' => 'you@test.com',
+            'changed_on' => $now->format(DateTime::ATOM),
+            'changed_by' => 'super-admin@email.com',
+            'subject_full_name' => 'Panda Bear',
+            'subject_role' => 'ROLE_LAY_DEPUTY',
+            'event' => 'USER_EMAIL_CHANGED',
+            'type' => 'audit'
+        ];
+
+        $actual = (new AuditEvents($dateTimeProvider->reveal()))->userEmailChanged(
+            'ADMIN_USER_EDIT',
+            'me@test.com',
+            'you@test.com',
+            'super-admin@email.com',
+            'Panda Bear',
+            'ROLE_LAY_DEPUTY'
+        );
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @test
+     * @dataProvider emailChangeProvider
+     */
+    public function clientEmailChanged(?string $oldEmail, ?string $newEmail)
+    {
+        $now = new DateTime();
+        /** @var ObjectProphecy|DateTimeProvider $dateTimeProvider */
+        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
+
+        $expected = [
+            'trigger' => 'DEPUTY_USER_EDIT',
+            'email_changed_from' => $oldEmail,
+            'email_changed_to' => $newEmail,
+            'changed_on' => $now->format(DateTime::ATOM),
+            'changed_by' => 'super-admin@email.com',
+            'subject_full_name' => 'Panda Bear',
+            'subject_role' => 'CLIENT',
+            'event' => 'CLIENT_EMAIL_CHANGED',
+            'type' => 'audit'
+        ];
+
+        $actual = (new AuditEvents($dateTimeProvider->reveal()))->clientEmailChanged(
+            'DEPUTY_USER_EDIT',
+            $oldEmail,
+            $newEmail,
+            'super-admin@email.com',
+            'Panda Bear'
+        );
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function emailChangeProvider()
+    {
+        return [
+            'Email changed' => ['me@test.com', 'you@test.com'],
+            'Email removed' =>  ['me@test.com', null],
+            'Email added' => [null, 'you@test.com']
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider roleChangedProvider
+     */
+    public function roleChanged(string $trigger, $changedFrom, $changedTo, $changedBy, $userChanged): void
+    {
+        $now = new DateTime();
+        /** @var ObjectProphecy|DateTimeProvider $dateTimeProvider */
+        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
+
+        $expected = [
+            'trigger' => $trigger,
+            'role_changed_from' => $changedFrom,
+            'role_changed_to' => $changedTo,
+            'changed_by' => $changedBy,
+            'user_changed' => $userChanged,
+            'changed_on' => $now->format(DateTime::ATOM),
+            'event' => AuditEvents::EVENT_ROLE_CHANGED,
+            'type' => 'audit'
+        ];
+
+        $actual = (new AuditEvents($dateTimeProvider->reveal()))->roleChanged(
+            $trigger,
+            $changedFrom,
+            $changedTo,
+            $changedBy,
+            $userChanged
+        );
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function roleChangedProvider()
+    {
+        return [
+            'PA to LAY' => ['ADMIN_BUTTON', 'ROLE_PA', 'ROLE_LAY_DEPUTY', 'polly.jean.harvey@test.com', 't.amos@test.com'],
+            'PROF to PA' => ['ADMIN_BUTTON', 'ROLE_PROF', 'ROLE_PA', 't.amos@test.com', 'polly.jean.harvey@test.com'],
+        ];
     }
 }

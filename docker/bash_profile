@@ -121,7 +121,7 @@ dd-behat-run()
 
 dd-phpstan() {
   if [ "$1" = "" ]; then
-    MERGE_BASE_COMMIT=( $(git merge-base master HEAD) )
+    MERGE_BASE_COMMIT=( $(git merge-base main HEAD) )
     API_CHANGED_FILES=( $(git diff --relative=api --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) ) || [[ $? == 1 ]]
     CLIENT_CHANGED_FILES=( $(git diff --relative=client --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) ) || [[ $? == 1 ]]
 

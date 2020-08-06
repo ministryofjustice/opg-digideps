@@ -860,4 +860,26 @@ class ReportControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
     }
+
+    /** @test */
+    public function getQueuedDocumentsUsesSecretAuth(): void
+    {
+        $return = $this->assertJsonRequest('GET', '/report/all-with-queued-checklists', [
+            'mustFail' => true,
+            'ClientSecret' => 'WRONG CLIENT SECRET',
+            'assertCode' => 403,
+            'assertResponseCode' => 403,
+            'data' => ['row_limit' => 100]
+        ]);
+
+        $this->assertStringContainsString('client secret not accepted', $return['message']);
+
+        $return = $this->assertJsonRequest('GET', '/report/all-with-queued-checklists', [
+            'mustSucceed' => true,
+            'ClientSecret' => API_TOKEN_DEPUTY,
+            'data' => ['row_limit' => 100]
+        ]);
+
+        self::assertCount(0, $return['data']);
+    }
 }

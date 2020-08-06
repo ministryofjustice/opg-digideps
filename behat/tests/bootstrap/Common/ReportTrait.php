@@ -252,37 +252,85 @@ trait ReportTrait
             throw new \RuntimeException("Invalid status code: $actualCode");
         }
     }
+
     /**
      * @Given the report has been submitted
      */
     public function theReportHasBeenSubmitted()
     {
+        $this->theReportHasBeenCompleted();
+
+        $reportType = self::$currentReportCache['reportType'];
+        $reportId = self::$currentReportCache['reportId'];
+
+        $this->visit("$reportType/$reportId/overview");
+
+        $this->iSubmitTheReport();
+    }
+
+    /**
+     * @Given /^the report has been completed$/
+     */
+    public function theReportHasBeenCompleted()
+    {
         $reportType = self::$currentReportCache['reportType'];
 
         if ($reportType === 'ndr') {
-            $this->logInAndEnterReport();
-
-            $this->completeSections(implode(',', ['visits_care', 'expenses', 'income_benefits', 'bank_accounts', 'assets', 'debts', 'actions', 'other_info']), $reportType);
+            $this->completeNdr();
         } else {
-            $this->logInAndEnterReport();
+           $this->completeReport($reportType);
+        }
+    }
 
-            $sections = $this->getSession()->getPage()->findAll('xpath', "//a[contains(@id, 'edit-')]");
-            $sectionNames = [];
-            foreach ($sections as $section) {
-                $sectionId = $section->getAttribute('id');
-                $sectionNames[] = substr($sectionId, strpos($sectionId, "-") + 1);
-            }
+    /**
+     * @When I attached a supporting document :imageName to the submitted report
+     */
+    public function attachSupportingDocumentToSubmittedReport(string $imageName)
+    {
+        $this->visit('/');
 
-            if ($matches = array_keys($sectionNames, 'report-preview')) {
-                foreach ($matches as $index) {
-                    unset($sectionNames[$index]);
-                }
-            }
-
-            $this->completeSections(implode(',', $sectionNames), $reportType);
+        try {
+            $this->clickLink('Attach documents');
+        } catch(\Throwable $e) {
+            $this->clickOnBehatLink('pa-report-open');
+            $this->clickLink('Attach documents');
         }
 
+        $this->attachDocument($imageName);
+    }
+
+    /**
+     * @When I attached a supporting document :imageName to the completed report
+     */
+    public function iAttachedASupportingDocumentToTheCompletedReport(string $imageName)
+    {
+        $reportType = self::$currentReportCache['reportType'];
         $reportId = self::$currentReportCache['reportId'];
+
+        $this->visit("$reportType/$reportId/overview");
+
+        $this->clickOnBehatLink('edit-documents');
+        $this->clickOnBehatLink('edit');
+        $this->selectOption('document[wishToProvideDocumentation]','yes');
+        $this->clickOnBehatLink('save-and-continue');
+
+        $this->attachDocument($imageName);
+    }
+
+    private function attachDocument(string $imageName)
+    {
+        $this->attachFileToField('report_document_upload_files', $imageName);
+        $this->pressButton('Upload');
+    }
+
+    /**
+     * @Given /^I submit the report$/
+     */
+    public function iSubmitTheReport()
+    {
+        $reportType = self::$currentReportCache['reportType'];
+        $reportId = self::$currentReportCache['reportId'];
+
         $this->visit("$reportType/$reportId/overview");
 
         try {
@@ -324,5 +372,32 @@ trait ReportTrait
         $reportId = self::$currentReportCache['reportId'];
         $reportType = self::$currentReportCache['reportType'];
         $this->visit("$reportType/$reportId/overview");
+    }
+
+    private function completeReport(string $reportType)
+    {
+        $this->logInAndEnterReport();
+
+        $sections = $this->getSession()->getPage()->findAll('xpath', "//a[contains(@id, 'edit-')]");
+        $sectionNames = [];
+        foreach ($sections as $section) {
+            $sectionId = $section->getAttribute('id');
+            $sectionNames[] = substr($sectionId, strpos($sectionId, "-") + 1);
+        }
+
+        if ($matches = array_keys($sectionNames, 'report-preview')) {
+            foreach ($matches as $index) {
+                unset($sectionNames[$index]);
+            }
+        }
+
+        $this->completeSections(implode(',', $sectionNames), $reportType);
+    }
+
+    private function completeNdr()
+    {
+        $this->logInAndEnterReport();
+
+        $this->completeSections(implode(',', ['visits_care', 'expenses', 'income_benefits', 'bank_accounts', 'assets', 'debts', 'actions', 'other_info']), 'ndr');
     }
 }

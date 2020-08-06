@@ -3,6 +3,8 @@ version: '3.2'
 services:
     test:
         build: ./behat
+        depends_on:
+            - mock-sirius-integration
         volumes:
             - ./behat/tests:/var/www/tests
             - ./behat/snapshots:/tmp/html
@@ -26,3 +28,20 @@ services:
         image: composer
         volumes:
             - ./client/:/app
+
+    frontend:
+        env_file:
+            - ./behat/test.env
+            - .env
+
+    admin:
+        env_file:
+            - ./behat/test.env
+            - .env
+
+    mock-sirius-integration:
+        image: muonsoft/openapi-mock:latest
+        ports:
+            - 6060:8080
+        environment:
+            - OPENAPI_MOCK_SPECIFICATION_URL=https://raw.githubusercontent.com/ministryofjustice/opg-data-deputy-reporting/master/lambda_functions/v2/openapi/deputy-reporting-openapi.yml

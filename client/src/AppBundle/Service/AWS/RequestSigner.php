@@ -25,7 +25,7 @@ class RequestSigner
 
     public function signRequest(Request $request, string $service)
     {
-        $provider = $this->credentialProvider->getProvider();
-        return $this->signer->signRequest($request, $provider()->wait(), $service);
+        $credentials = $this->credentialProvider->getCredentials();
+        return $this->signer->signRequest($request, $credentials, $service);
     }
 }

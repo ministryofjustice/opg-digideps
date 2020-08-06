@@ -5,7 +5,6 @@ namespace AppBundle\v2\Fixture;
 use AppBundle\Entity\Ndr as Ndr;
 use AppBundle\Entity\Report\Action;
 use AppBundle\Entity\Report\BankAccount;
-use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Lifestyle;
 use AppBundle\Entity\Report\MentalCapacity;
 use AppBundle\Entity\Report\MoneyTransaction;
@@ -15,17 +14,15 @@ use AppBundle\Entity\Report\VisitsCare;
 use AppBundle\Entity\ReportInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use AppBundle\TestHelpers\DocumentHelpers;
 
 class ReportSection
 {
+    /** @var EntityManagerInterface */
     private $em;
-    private $documentHelpers;
 
-    public function __construct(EntityManagerInterface $em, DocumentHelpers $documentHelpers)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
-        $this->documentHelpers = $documentHelpers;
     }
 
     public function completeReport(ReportInterface $report): void
@@ -146,11 +143,7 @@ class ReportSection
      */
     private function completeDocuments(ReportInterface $report): void
     {
-        $report->setWishToProvideDocumentation('yes');
-
-        $supportingDocument = $this->documentHelpers->generateSupportingDocument($report);
-
-        $report->addDocument($supportingDocument);
+        $report->setWishToProvideDocumentation('no');
     }
 
     /**

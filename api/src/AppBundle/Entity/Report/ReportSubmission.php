@@ -104,7 +104,7 @@ class ReportSubmission
     /**
      * @var string|null
      * @JMS\Type("string")
-     * @JMS\Groups({"report-submission"})
+     * @JMS\Groups({"report-submission", "report-submission-uuid"})
      * @ORM\Column(name="opg_uuid", type="string", length=36, nullable=true)
      */
     private $uuid;
