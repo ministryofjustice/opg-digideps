@@ -8,7 +8,7 @@ Feature: As an admin user, in order to ensure correct report PDFs can always be 
 
   @deputy @download-reports
   Scenario: Super user can download a report that has been submitted
-    Given I am logged in to admin as "super-adminr@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "Abcd1234"
     When I visit the client page for "102"
     And I follow "Download"
     Then the response status code should be 200
