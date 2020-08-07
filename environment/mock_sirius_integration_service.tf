@@ -39,6 +39,7 @@ resource "aws_ecs_service" "mock_sirius_integration" {
   task_definition         = aws_ecs_task_definition.mock_sirius_integration.arn
   desired_count           = local.account.task_count
   launch_type             = "FARGATE"
+  platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
   tags                    = local.default_tags
@@ -73,7 +74,7 @@ locals {
       }
     },
     "environment": [
-      { "name": "OPENAPI_MOCK_SPECIFICATION_URL", "value": "https://raw.githubusercontent.com/ministryofjustice/opg-data/master/docs/deputy-reporting-openapi-v1.yml" }
+      { "name": "OPENAPI_MOCK_SPECIFICATION_URL", "value": "https://raw.githubusercontent.com/ministryofjustice/opg-data-deputy-reporting/master/lambda_functions/v2/openapi/deputy-reporting-openapi.yml" }
     ]
   }
 EOF
