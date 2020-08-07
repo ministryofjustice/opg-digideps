@@ -17,12 +17,15 @@
                     {{ report.client.fullName }} - {{ ('reportTitles.' ~ report.reportTitle) | trans({}, 'report') }}
                 </div>
             </div>
-            <p class="govuk-body govuk-!-padding-top-6 govuk-!-padding-bottom-1">
-                {{ (page ~ '.downloadText') | trans({
-                    '%downloadLinkUrl%': path('admin_checklist_pdf', {'id': report.id}),
-                    '%downloadLinkClassList%': "behat-link-download-checklist-pdf"
-                }) | raw }}
-            </p>
+
+            {% if syncFeatureIsEnabled == false %}
+                <p class="govuk-body govuk-!-padding-top-6 govuk-!-padding-bottom-1">
+                    {{ (page ~ '.downloadText') | trans({
+                        '%downloadLinkUrl%': path('admin_checklist_pdf', {'id': report.id}),
+                        '%downloadLinkClassList%': "behat-link-download-checklist-pdf"
+                    }) | raw }}
+                </p>
+            {% endif %}
 
             <p class="govuk-body govuk-!-padding-top-1 govuk-!-padding-bottom-6">
                 <a href="{{ path('admin_report_manage', {'id': report.id}) }}"
@@ -42,7 +45,10 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script>
-      window.location.href = "{{ path('admin_checklist_pdf', {'id': report.id}) }}";
-    </script>
+
+    {% if syncFeatureIsEnabled == false %}
+        <script>
+          window.location.href = "{{ path('admin_checklist_pdf', {'id': report.id}) }}";
+        </script>
+    {% endif %}
 {% endblock %}

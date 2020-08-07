@@ -189,8 +189,9 @@
                             <br />
                         {% endif %}
                         {% if enableManageLink %}
-                            <a href="{{ path('admin_report_manage', {'id': report.id}) }}"
-                               class="behat-link-manage">{{ 'manage' | trans({}, 'common') }}</a>
+                            <a href="{{ path('admin_report_manage', {'id': report.id}) }}" class="behat-link-manage">
+                                {{ 'manage' | trans({}, 'common') }} <span class="govuk-visually-hidden">{{ report.period | replace({' to ': '–'}) }} report</span>
+                            </a>
                             <br />
                         {% endif %}
                         {% if enableDownloadLink and is_granted('ROLE_SUPER_ADMIN') %}

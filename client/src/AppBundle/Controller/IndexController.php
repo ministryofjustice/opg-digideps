@@ -40,13 +40,18 @@ class IndexController extends AbstractController
      * @var TranslatorInterface
      */
     private $translator;
+    /**
+     * @var string
+     */
+    private $environment;
 
-    public function __construct(DeputyProvider $deputyProvider, EventDispatcherInterface $eventDispatcher, TokenStorageInterface $tokenStorage, TranslatorInterface $translator)
+    public function __construct(DeputyProvider $deputyProvider, EventDispatcherInterface $eventDispatcher, TokenStorageInterface $tokenStorage, TranslatorInterface $translator, string $environment)
     {
         $this->deputyProvider = $deputyProvider;
         $this->eventDispatcher = $eventDispatcher;
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
+        $this->environment = $environment;
     }
 
     /**
@@ -59,7 +64,9 @@ class IndexController extends AbstractController
         }
 
         // deputy homepage with links to register and login
-        return $this->render('AppBundle:Index:index.html.twig');
+        return $this->render('AppBundle:Index:index.html.twig', [
+                'environment' => $this->environment
+            ]);
     }
 
     /**
