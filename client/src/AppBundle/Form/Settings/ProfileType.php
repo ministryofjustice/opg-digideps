@@ -30,6 +30,10 @@ class ProfileType extends AbstractType
             ->add('phoneMain', FormTypes\TextType::class, ['required' => true])
             ->add('phoneAlternative', FormTypes\TextType::class);
 
+        if ($loggedInUser->getRoleName() === User::ROLE_LAY_DEPUTY) {
+            $builder->add('email', FormTypes\TextType::class);
+        }
+
         if ($loggedInUser->isDeputyOrg()) {
             $builder->add('jobTitle', FormTypes\TextType::class, ['required' => true]);
         }

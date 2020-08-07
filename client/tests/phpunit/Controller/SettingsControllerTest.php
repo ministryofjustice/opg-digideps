@@ -19,38 +19,35 @@ class SettingsControllerTest extends AbstractControllerTestCase
     /** @var DateTime */
     private $now, $orderStartDate;
 
-    /** @var User */
-    private $user;
-
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->user = $this->mockLoggedInUser(['ROLE_PROF_ADMIN']);
         $this->now = new DateTime();
-        $this->orderStartDate = new DateTime('-1 Day');
     }
 
     /**
      * @test
      */
-    public function profileEditAction(): void
+    public function profileEditAction_user_role_change_is_logged(): void
     {
-        $this->restClient->put('user/1', $this->user, Argument::type('array'))->shouldBeCalled();
-        $this->restClient->get('user/1', Argument::cetera())->shouldBeCalled()->willReturn($this->user);
+        $profAdminUser = $this->mockLoggedInUser(['ROLE_PROF_ADMIN']);
+
+        $this->restClient->put('user/1', $profAdminUser, Argument::type('array'))->shouldBeCalled();
+        $this->restClient->get('user/1', Argument::cetera())->shouldBeCalled()->willReturn($profAdminUser);
 
         $this->injectProphecyService(DateTimeProvider::class, function($dateTimeProvider) {
             $dateTimeProvider->getDateTime()->willReturn($this->now);
         });
 
-        $this->injectProphecyService(Logger::class, function($logger) {
+        $this->injectProphecyService(Logger::class, function($logger) use($profAdminUser) {
             $expectedEvent = [
                 'trigger' => 'DEPUTY_USER',
                 'role_changed_from' => 'ROLE_PROF_ADMIN',
                 'role_changed_to' => 'ROLE_PROF_TEAM_MEMBER',
-                'changed_by' => $this->user->getEmail(),
+                'changed_by' => $profAdminUser->getEmail(),
                 'changed_on' => $this->now->format(DateTime::ATOM),
-                'user_changed' => $this->user->getEmail(),
+                'user_changed' => $profAdminUser->getEmail(),
                 'event' => AuditEvents::EVENT_ROLE_CHANGED,
                 'type' => 'audit'
             ];
@@ -62,10 +59,51 @@ class SettingsControllerTest extends AbstractControllerTestCase
         $button = $crawler->selectButton('Save');
 
         $this->client->submit($button->form(), [
-            'profile[firstname]' => $this->user->getFirstname(),
-            'profile[lastname]' => $this->user->getLastname(),
-            'profile[phoneMain]' => $this->user->getPhoneMain(),
+            'profile[firstname]' => $profAdminUser->getFirstname(),
+            'profile[lastname]' => $profAdminUser->getLastname(),
+            'profile[phoneMain]' => $profAdminUser->getPhoneMain(),
             'profile[removeAdmin]' => 1,
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function profileEditAction_lay_deputy_change_email_is_logged(): void
+    {
+        $layDeputyUser = $this->mockLoggedInUser(['ROLE_LAY_DEPUTY']);
+
+        $this->restClient->put('user/1', $layDeputyUser, Argument::type('array'))->shouldBeCalled();
+        $this->restClient->get('user/1', Argument::cetera())->shouldBeCalled()->willReturn($layDeputyUser);
+
+        $this->injectProphecyService(DateTimeProvider::class, function($dateTimeProvider) {
+            $dateTimeProvider->getDateTime()->willReturn($this->now);
+        });
+
+        $this->injectProphecyService(Logger::class, function($logger) use($layDeputyUser) {
+            $expectedEvent = [
+                'trigger' => 'DEPUTY_USER',
+                'email_changed_from' => 'logged-in-user@email.com',
+                'email_changed_to' => 'i-have-changed@email.com',
+                'changed_on' => $this->now->format(DateTime::ATOM),
+                'changed_by' => 'i-have-changed@email.com',
+                'subject_full_name' => $layDeputyUser->getFullName(),
+                'subject_role' => 'ROLE_LAY_DEPUTY',
+                'event' => 'USER_EMAIL_CHANGED',
+                'type' => 'audit'
+            ];
+
+            $logger->notice('', $expectedEvent)->shouldBeCalled();
+        });
+
+        $crawler = $this->client->request('GET', "/org/settings/your-details/edit");
+        $button = $crawler->selectButton('Save');
+
+        $this->client->submit($button->form(), [
+            'profile[firstname]' => $layDeputyUser->getFirstname(),
+            'profile[lastname]' => $layDeputyUser->getLastname(),
+            'profile[addressCountry]' => $layDeputyUser->getAddressCountry(),
+            'profile[email]' => 'i-have-changed@email.com'
         ]);
     }
 }

@@ -132,7 +132,6 @@ class SettingsController extends AbstractController
      **/
     public function profileEditAction(Request $request)
     {
-        // Break out tio AuditLoggerService to take in entity before and after update and then decide if log should be sent
         $user = $this->getUserWithData();
 
         if ($this->isGranted(EntityDir\User::ROLE_ADMIN) || $this->isGranted(EntityDir\User::ROLE_AD)) {
@@ -148,6 +147,8 @@ class SettingsController extends AbstractController
             throw $this->createAccessDeniedException('User role not recognised');
         }
 
+        $oldEmail = $form->getData()->getEmail();
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -157,7 +158,7 @@ class SettingsController extends AbstractController
                 $oldRole = $user->getRoleName();
                 $newRole = $this->determineNoAdminRole();
 
-                $event = (new AuditEvents($this->dateTimeProvider))
+                $roleChangedEvent = (new AuditEvents($this->dateTimeProvider))
                     ->roleChanged(
                         AuditEvents::TRIGGER_DEPUTY_USER,
                         $oldRole,
@@ -172,6 +173,20 @@ class SettingsController extends AbstractController
 
                 $redirectRoute = $this->generateUrl('logout');
             } else {
+                $newEmail = $deputy->getEmail();
+
+                if ($oldEmail !== $newEmail) {
+                    $emailChangedEvent = (new AuditEvents($this->dateTimeProvider))
+                        ->userEmailChanged(
+                            AuditEvents::TRIGGER_DEPUTY_USER,
+                            $oldEmail,
+                            $newEmail,
+                            $newEmail,
+                            $deputy->getFullName(),
+                            $deputy->getRoleName()
+                        );
+                }
+
                 $this->addFlash('notice', 'Your account details have been updated');
 
                 if ('declaration' === $request->get('from') && null !== $request->get('rid')) {
@@ -186,8 +201,12 @@ class SettingsController extends AbstractController
             try {
                 $this->getRestClient()->put('user/' . $user->getId(), $deputy, $jmsPutGroups);
 
-                if (isset($event, $oldRole, $newRole) && $oldRole !== $newRole) {
-                    $this->logger->notice('', $event);
+                if (isset($emailChangedEvent, $oldEmail, $newEmail) && $oldEmail !== $newEmail) {
+                    $this->logger->notice('', $emailChangedEvent);
+                }
+
+                if (isset($roleChangedEvent, $oldRole, $newRole) && $oldRole !== $newRole) {
+                    $this->logger->notice('', $roleChangedEvent);
                 }
 
                 if ($user->isLayDeputy()) {
