@@ -132,6 +132,7 @@ class SettingsController extends AbstractController
      **/
     public function profileEditAction(Request $request)
     {
+        // Break out tio AuditLoggerService to take in entity before and after update and then decide if log should be sent
         $user = $this->getUserWithData();
 
         if ($this->isGranted(EntityDir\User::ROLE_ADMIN) || $this->isGranted(EntityDir\User::ROLE_AD)) {
