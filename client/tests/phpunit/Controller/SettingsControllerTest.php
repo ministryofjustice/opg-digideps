@@ -3,13 +3,8 @@
 namespace AppBundle\Controller;
 
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\User;
 use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Logger;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
-use AppBundle\Service\Time\ClockInterface;
 use AppBundle\Service\Time\DateTimeProvider;
 use DateTime;
 use Prophecy\Argument;
@@ -17,7 +12,7 @@ use Prophecy\Argument;
 class SettingsControllerTest extends AbstractControllerTestCase
 {
     /** @var DateTime */
-    private $now, $orderStartDate;
+    private $now;
 
     public function setUp(): void
     {

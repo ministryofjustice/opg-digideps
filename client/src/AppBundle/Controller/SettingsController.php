@@ -148,45 +148,22 @@ class SettingsController extends AbstractController
         }
 
         $oldEmail = $form->getData()->getEmail();
+        $oldRole = $user->getRoleName();
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $deputy = $form->getData();
+            $postEditDeputy = $form->getData();
+            $newEmail = $postEditDeputy->getEmail();
+            $newRole = $this->determineNoAdminRole();
 
             if ($form->has('removeAdmin') && !empty($form->get('removeAdmin')->getData())) {
-                $oldRole = $user->getRoleName();
-                $newRole = $this->determineNoAdminRole();
-
-                $roleChangedEvent = (new AuditEvents($this->dateTimeProvider))
-                    ->roleChanged(
-                        AuditEvents::TRIGGER_DEPUTY_USER,
-                        $oldRole,
-                        $newRole,
-                        $user->getEmail(),
-                        $user->getEmail()
-                    );
-
                 $user->setRoleName($newRole);
 
                 $this->addFlash('notice', 'For security reasons you have been logged out because you have changed your admin rights. Please log in again below');
 
                 $redirectRoute = $this->generateUrl('logout');
             } else {
-                $newEmail = $deputy->getEmail();
-
-                if ($oldEmail !== $newEmail) {
-                    $emailChangedEvent = (new AuditEvents($this->dateTimeProvider))
-                        ->userEmailChanged(
-                            AuditEvents::TRIGGER_DEPUTY_USER,
-                            $oldEmail,
-                            $newEmail,
-                            $newEmail,
-                            $deputy->getFullName(),
-                            $deputy->getRoleName()
-                        );
-                }
-
                 $this->addFlash('notice', 'Your account details have been updated');
 
                 if ('declaration' === $request->get('from') && null !== $request->get('rid')) {
@@ -199,13 +176,32 @@ class SettingsController extends AbstractController
             }
 
             try {
-                $this->getRestClient()->put('user/' . $user->getId(), $deputy, $jmsPutGroups);
+                $this->getRestClient()->put('user/' . $user->getId(), $postEditDeputy, $jmsPutGroups);
 
-                if (isset($emailChangedEvent, $oldEmail, $newEmail) && $oldEmail !== $newEmail) {
+                if ($oldEmail !== $newEmail) {
+                    $emailChangedEvent = (new AuditEvents($this->dateTimeProvider))
+                        ->userEmailChanged(
+                            AuditEvents::TRIGGER_DEPUTY_USER,
+                            $oldEmail,
+                            $postEditDeputy->getEmail(),
+                            $user->getEmail(),
+                            $postEditDeputy->getFullName(),
+                            $postEditDeputy->getRoleName()
+                        );
+
                     $this->logger->notice('', $emailChangedEvent);
                 }
 
-                if (isset($roleChangedEvent, $oldRole, $newRole) && $oldRole !== $newRole) {
+                if ($oldRole !== $newRole) {
+                    $roleChangedEvent = (new AuditEvents($this->dateTimeProvider))
+                        ->roleChanged(
+                            AuditEvents::TRIGGER_DEPUTY_USER,
+                            $oldRole,
+                            $newRole,
+                            $user->getEmail(),
+                            $user->getEmail()
+                        );
+
                     $this->logger->notice('', $roleChangedEvent);
                 }
 
