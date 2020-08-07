@@ -10,20 +10,6 @@
     </summary>
     <div class="govuk-details__text">
         <ul class="govuk-list">
-            <li> {{ 'helplineTitle' | trans }}</li>
-            <li>
-                {% if not app.user %}
-                    {{ 'helplineGeneral' | trans }}
-                {% elseif app.user and app.user.isDeputyPA() %}
-                    {{ 'helplinePA' | trans }}
-                {% elseif app.user and app.user.isDeputyProf() %}
-                    {{ 'helplineProf' | trans }}
-                {% else %}
-                    {{ 'helpline' | trans }}
-                {% endif %}
-            </li>
-        </ul>
-        <ul class="govuk-list">
             <li>{{ 'emailTitle' | trans }}</li>
             <li>
                 {% if not app.user %}
@@ -36,10 +22,6 @@
                     <a href="mailto:{{ 'layDeputySupportEmail' | trans }}" title="{{ 'layDeputySupportEmail' | trans }}">{{ 'layDeputySupportEmail' | trans }}</a>
                 {% endif %}
             </li>
-        </ul>
-        <ul class="govuk-list">
-            <li>{{ 'openingHoursTitle' | trans }}</li>
-            <li>{{ 'openingHoursText' | trans }}</li>
         </ul>
     </div>
 </details>
