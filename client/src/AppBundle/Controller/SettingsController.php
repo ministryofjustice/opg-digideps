@@ -192,7 +192,7 @@ class SettingsController extends AbstractController
                     $this->logger->notice('', $emailChangedEvent);
                 }
 
-                if ($oldRole !== $newRole) {
+                if ($newRole !== null && $oldRole !== $newRole) {
                     $roleChangedEvent = (new AuditEvents($this->dateTimeProvider))
                         ->roleChanged(
                             AuditEvents::TRIGGER_DEPUTY_USER,
