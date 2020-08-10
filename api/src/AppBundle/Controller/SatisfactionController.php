@@ -12,10 +12,11 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class SatisfactionController extends RestController
 {
-    private function addSatisfactionScore($score)
+    private function addSatisfactionScore($score,$comments)
     {
         $satisfaction = new Satisfaction();
         $satisfaction->setScore($score);
+        $satisfaction->setComments($comments);
 
         $this->persistAndFlush($satisfaction);
 
@@ -30,10 +31,11 @@ class SatisfactionController extends RestController
     {
         $data = $this->deserializeBodyContent($request, [
             'score' => 'notEmpty',
+            'comments' => 'notEmpty',
             'reportType' => 'notEmpty',
         ]);
 
-        $satisfaction = $this->addSatisfactionScore($data['score']);
+        $satisfaction = $this->addSatisfactionScore($data['score'],$data['comments']);
 
         $satisfaction->setReportType($data['reportType']);
         $satisfaction->setDeputyRole($this->getUser()->getRoleName());
@@ -49,10 +51,11 @@ class SatisfactionController extends RestController
     public function publicAdd(Request $request)
     {
         $data = $this->deserializeBodyContent($request, [
-            'score' => 'notEmpty'
+            'score' => 'notEmpty',
+            'comments' => 'notEmpty'
         ]);
 
-        $satisfaction = $this->addSatisfactionScore($data['score']);
+        $satisfaction = $this->addSatisfactionScore($data['score'],$data['comments']);
 
         return $satisfaction->getId();
     }
