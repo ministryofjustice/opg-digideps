@@ -4,7 +4,7 @@
 
 {% set translationDomain = "org-client-edit" %}
 {% trans_default_domain translationDomain %}
-{% set preFix = "form." %}
+{% set translationPrefix = "form." %}
 
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
@@ -33,7 +33,7 @@
         <legend class="govuk-heading-m">{{ 'form.contactHeading' | trans }}</legend>
         {{ form_input(form.phone, 'form.phone') }}
         {{ form_input(form.email, 'form.email') }}
-        {{ macros.addressFields(form, translationDomain, preFix) }}
+        {{ macros.addressFields(form, translationDomain, translationPrefix) }}
         {{ form_widget(form.id) }}
         {#{{ form_select(form.country, 'country') }}#}
     </fieldset>

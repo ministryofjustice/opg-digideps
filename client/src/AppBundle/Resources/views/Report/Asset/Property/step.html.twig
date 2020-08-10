@@ -6,7 +6,7 @@
 {% trans_default_domain translationDomain %}
 {% set page = 'stepPageProperty' %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
-{% set preFix = "form.property." %}
+{% set translationPrefix = "form.property." %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans(transOptions) }}{% endblock %}
@@ -24,7 +24,7 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' } }) }}
 
     {% if step == 1 %}
-        {{ macros.addressFields(form, translationDomain, preFix) }}
+        {{ macros.addressFields(form, translationDomain, translationPrefix) }}
     {% endif %}
 
     {% if step == 2 %}
