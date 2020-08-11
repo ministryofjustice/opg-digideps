@@ -33,7 +33,7 @@
                         </a>
                     </p>
                 {% else %}
-                    <a href="{{ path('report_review', {'reportId': report.id}) }}" id="preview-and-check-report>{{ 'options.previewReport' | trans() }}</a>
+                    <a href="{{ path('report_review', {'reportId': report.id}) }}" class="preview-and-check-report">{{ 'options.previewReport' | trans() }}</a>
                 {% endif %}
             </dd>
         </dl>
