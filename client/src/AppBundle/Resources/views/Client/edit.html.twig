@@ -5,6 +5,7 @@
 {% set translationDomain = "client" %}
 {% trans_default_domain translationDomain %}
 {% set page = 'editClient' %}
+{% set translationPrefix = "editClient." %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans({'%client%': client.firstname}) }}{% endblock %}
@@ -19,12 +20,7 @@
 
     {{ form_input(form.firstname, 'firstname') }}
     {{ form_input(form.lastname, 'lastname') }}
-
-    {{ form_input(form.address, 'address') }}
-    {{ form_input(form.address2, 'address2') }}
-    {{ form_input(form.county, 'county') }}
-    {{ form_input(form.postcode, 'postcode', {'inputClass': 'govuk-!-width-one-quarter' }) }}
-    {{ form_select(form.country, 'country') }}
+    {{ macros.addressFields(form, translationDomain, translationPrefix) }}
     {{ form_input(form.phone, 'phone') }}
 
     {{ form_widget(form.caseNumber, {'type': 'hidden'}) }}

@@ -113,15 +113,16 @@ form:
   property:
     address:
       label: Address line 1
-      hint: ""
+      context: ""
     address2:
       label: Address line 2
+      context: ""
       hint: ""
     county:
       label: County
       hint: ""
     postcode:
-      label: "Postcode"
+      label: Postcode
       hint: ""
     occupants:
       label: "Who lives at this property?"

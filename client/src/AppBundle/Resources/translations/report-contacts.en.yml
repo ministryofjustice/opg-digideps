@@ -67,29 +67,30 @@ deletePage:
 
 form:
   contactName:
-      label: Contact name
-      hint: ""
+    label: Contact name
+    hint: ""
   relationship:
-      label: Their relationship to %client%
-      hint: ""
+    label: Their relationship to %client%
+    hint: ""
   explanation:
-      label: Why did you ask this person to help you?
-      hint: ""
+    label: Why did you ask this person to help you?
+    hint: ""
   address:
-      label: Address (optional)
-      hint: ""
+    label: Address (optional)
+    context: line 1 of 2
   address2:
-      label: ' '
-      hint: ""
+    label: ' '
+    context: Address line 2 of 2 (optional)
+    hint: ""
   county:
-      label: ' '
-      hint: ""
+    label: County
+    hint: ""
   postcode:
-      label: Postcode (optional)
-      hint: ""
+    label: Postcode (optional)
+    hint: ""
   country:
-      label: Country (optional)
-      hint: ""
-      defaultOption: Please select ...
+    label: Country (optional)
+    hint: ""
+    defaultOption: Please select ...
   save:
-      label: Save and continue
+    label: Save and continue

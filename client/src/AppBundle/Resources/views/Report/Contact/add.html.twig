@@ -24,7 +24,6 @@
     <p class="text">{{ (page ~ '.pageSectionDescription') | trans(transOptions) }}</p>
 
     {% include 'AppBundle:Report/Contact:_form.html.twig' with {
-	    'translationDomain': translationDomain,
 	    'form': form
     } %}
 

@@ -18,6 +18,7 @@ resource "aws_cloudwatch_event_target" "cleanup" {
     task_count          = 1
     task_definition_arn = aws_ecs_task_definition.api.arn
     launch_type         = "FARGATE"
+    platform_version    = "1.4.0"
 
     network_configuration {
       security_groups  = [module.api_service_security_group.id]
