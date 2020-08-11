@@ -5,7 +5,10 @@ namespace AppBundle\Controller\Admin;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Form\Admin\ReportSubmissionDownloadFilterType;
+use AppBundle\Form\Admin\SatisfactionFilterType;
 use AppBundle\Form\Admin\StatPeriodType;
+use AppBundle\Mapper\ReportSatisfaction\ReportSatisfactionSummaryMapper;
+use AppBundle\Mapper\ReportSatisfaction\ReportSatisfactionSummaryQuery;
 use AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryMapper;
 use AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryQuery;
 use AppBundle\Transformer\ReportSubmission\ReportSubmissionBurFixedWidthTransformer;
@@ -36,6 +39,39 @@ class StatsController extends AbstractController
             try {
                 $reportSubmissionSummaries = $mapper->getBy($form->getData());
                 $downloadableData = $transformer->transform($reportSubmissionSummaries);
+
+                return $this->buildResponse($downloadableData);
+
+            } catch (\Throwable $e) {
+                throw new DisplayableException($e);
+            }
+        }
+
+        return [
+            'form' => $form->createView()
+        ];
+    }
+
+    /**
+     * @Route("/satisfaction", name="admin_satisfaction")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Template("AppBundle:Admin/Stats:satisfaction.html.twig")
+     * @param Request $request
+     * @return array|Response
+     */
+    public function satisfactionAction(Request $request, ReportSatisfactionSummaryMapper $mapper, ReportSubmissionBurFixedWidthTransformer $transformer)
+    {
+        $form = $this->createForm(SatisfactionFilterType::class , new ReportSatisfactionSummaryQuery());
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $reportSatisfactionSummaries = $mapper->getBy($form->getData());
+
+                file_put_contents('php://stderr', print_r(" THIS IS OUR SATISFACTION ACTION \n\n\n\n\n", TRUE));
+                file_put_contents('php://stderr', print_r($reportSatisfactionSummaries, TRUE));
+                file_put_contents('php://stderr', print_r(" THIS IS OUR SATISFACTION ACTION END \n\n\n\n\n", TRUE));
+                $downloadableData = $transformer->transform($reportSatisfactionSummaries);
 
                 return $this->buildResponse($downloadableData);
 

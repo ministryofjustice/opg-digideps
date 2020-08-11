@@ -1,7 +1,8 @@
 indexPage:
-    htmlTitle: Administration - Analytics
-    pageTitle: Analytics
+    htmlTitle: Administration - Analytics jim
+    pageTitle: Analytics - JIM
     downloadDAT: Download DAT file
+    downloadSatisfaction: Download satisfaction report
 
 form:
     title: Change reporting period

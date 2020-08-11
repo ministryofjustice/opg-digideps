@@ -6,6 +6,7 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\User;
+use AppBundle\Entity\Satisfaction;
 use Doctrine\ORM\EntityRepository;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 
@@ -137,7 +138,8 @@ class ReportSubmissionRepository extends EntityRepository
         \DateTime $toDate = null,
         $orderBy = 'createdOn',
         $order = 'ASC'
-    ) {
+    )
+    {
 
         /** @var SoftDeleteableFilter $filter */
         $filter = $this->_em->getFilters()->getFilter('softdeleteable');
@@ -150,8 +152,7 @@ class ReportSubmissionRepository extends EntityRepository
             ->leftJoin('r.client', 'c')
             ->leftJoin('rs.ndr', 'ndr')
             ->leftJoin('ndr.client', 'ndrClient')
-            ->leftJoin('rs.documents', 'documents')
-        ;
+            ->leftJoin('rs.documents', 'documents');
 
         $qbSelect = clone $qb;
         $qbSelect
@@ -168,6 +169,32 @@ class ReportSubmissionRepository extends EntityRepository
         $this->_em->getFilters()->enable('softdeleteable');
 
         return $qbSelect->getQuery()->getResult();
+    }
+
+    /**
+     * @param $offset
+     * @param $limit
+     * @param \DateTime $fromDate
+     * @param \DateTime $toDate
+     * @param string $orderBy default createdAt
+     * @param string $order default ASC
+     * @return array
+     */
+    public function findAllSatisfactionSubmissions(
+        \DateTime $fromDate = null,
+        \DateTime $toDate = null,
+        $orderBy = 'createdAt',
+        $order = 'ASC'
+    ) {
+        $entityManager = $this->getEntityManager(EntityDir\Satisfaction::class);
+        $query = $entityManager->createQuery(
+            'SELECT s.id, s.score, s.comments, s.deputyRole, s.reporttype, s.created
+             FROM AppBundle:Satisfaction s
+             WHERE s.created > :fromDate
+             AND s.created < :toDate')
+            ->setParameters(['fromDate' => $fromDate, 'toDate' => $toDate]);
+        return $query->getResult();
+
     }
 
     /**
