@@ -194,9 +194,9 @@
                             </a>
                             <br />
                         {% endif %}
-                        {% if enableDownloadLink %}
-{#                            <a href="{{ path('report_pdf', {'reportId': report.id}) }}"#}
-{#                               class="behat-link-download">{{ 'download' | trans({}, 'common') }}</a>#}
+                        {% if enableDownloadLink and is_granted('ROLE_SUPER_ADMIN') %}
+                            <a href="{{ path('report_pdf', {'reportId': report.id}) }}"
+                               class="behat-link-download">{{ 'download' | trans({}, 'common') }}</a>
                         {% endif %}
                     </td>
                 </tr>
