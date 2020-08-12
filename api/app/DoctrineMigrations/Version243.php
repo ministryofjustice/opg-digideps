@@ -24,10 +24,8 @@ final class Version243 extends AbstractMigration
 
         $this->addSql('ALTER TABLE document ALTER synchronisation_error TYPE TEXT');
         $this->addSql('ALTER TABLE document ALTER synchronisation_error DROP DEFAULT');
-        $this->addSql('ALTER TABLE document ALTER synchronisation_error TYPE TEXT');
         $this->addSql('ALTER TABLE checklist ALTER synchronisation_error TYPE TEXT');
         $this->addSql('ALTER TABLE checklist ALTER synchronisation_error DROP DEFAULT');
-        $this->addSql('ALTER TABLE checklist ALTER synchronisation_error TYPE TEXT');
     }
 
     public function down(Schema $schema) : void
