@@ -19,9 +19,13 @@ class SiriusApiErrorTranslator
         $this->serializer = $serializer;
     }
 
-    public function translateApiError(string $errorJson)
+    public function translateApiError(string $errorString)
     {
-        $apiError = $this->deserializeError($errorJson);
+        if ($this->jsonIsInUnexpectedFormat($errorString)){
+            return $errorString;
+        }
+
+        $apiError = $this->deserializeError($errorString);
 
         $translations = [
             'OPGDATA-API-FORBIDDEN' => 'Credentials used for integration lack correct permissions',
@@ -54,12 +58,21 @@ class SiriusApiErrorTranslator
     }
 
     /**
-     * @param string $errorJson
-     * @return SiriusApiError
+     * @param string $errorString
+     * @return SiriusApiError|string
      */
-    private function deserializeError(string $errorJson): SiriusApiError
+    private function deserializeError(string $errorString)
     {
-        $decodedJson = json_decode($errorJson, true)['errors'];
+        $decodedJson = json_decode($errorString, true)['body']['error'];
         return $this->serializer->deserialize(json_encode($decodedJson), 'AppBundle\Model\Sirius\SiriusApiError', 'json');
+    }
+
+    private function jsonIsInUnexpectedFormat(string $errorString)
+    {
+        $decodedJson = json_decode($errorString, true);
+
+        return is_null($decodedJson) ||
+        !array_key_exists('body', $decodedJson) ||
+        (array_key_exists('body', $decodedJson) && (!array_key_exists('error', $decodedJson['body'])));
     }
 }
