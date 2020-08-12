@@ -59,7 +59,7 @@
             "click element #edit-deputy_expenses",
             "click element #yes_no_paidForAnything_1",
             "click element .behat-link-save-and-continue",
-            "click element .opg-pagination__link opg-pagination__link--next",
+            "click element .opg-pagination__link--next",
             "click element .behat-link-start",
             "check field #yes_no_giftsExist_1",
             "click element #yes_no_save",
