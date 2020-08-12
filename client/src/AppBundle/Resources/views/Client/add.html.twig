@@ -1,4 +1,5 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
 {% set translationDomain = "registration" %}
 {% trans_default_domain translationDomain %}
@@ -47,12 +48,7 @@
     {% if client_validated %}
         <h3 class="govuk-heading-m">{{ 'form.editYourDetails.furtherDetailsNeeded' | trans({}, 'settings') }}</h3>
     {% endif %}
-
-    {{ form_input(form.address, 'address') }}
-    {{ form_input(form.address2, 'address2') }}
-    {{ form_input(form.county, 'county') }}
-    {{ form_input(form.postcode, 'postcode', {'inputClass': 'govuk-!-width-one-quarter' }) }}
-    {{ form_select(form.country, 'country') }}
+    {{ macros.addressFields(form, translationDomain) }}
     {{ form_input(form.phone, 'phone') }}
 
     {% if not client_validated %}

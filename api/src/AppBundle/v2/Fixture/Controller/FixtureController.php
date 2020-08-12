@@ -325,6 +325,26 @@ class FixtureController
     }
 
     /**
+     * Used for deleting users to clean up after tests
+     *
+     * @Route("/deleteUser", methods={"POST"})
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     */
+    public function deleteUser(Request $request)
+    {
+        $fromRequest = json_decode($request->getContent(), true);
+
+        $user = $this->em
+            ->getRepository(User::class)
+            ->findOneBy(array('email' => $fromRequest['email']));
+
+        $this->em->remove($user);
+        $this->em->flush();
+
+        return $this->buildSuccessResponse($fromRequest, 'User deleted', Response::HTTP_OK);
+    }
+
+    /**
      * @Route("/createClientAttachDeputy", methods={"POST"})
      * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
      */

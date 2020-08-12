@@ -135,6 +135,12 @@
         <main id="main-content" class="govuk-main-wrapper" role="main">
             {% block content %}{% endblock %}
         </main>
+
+        {% if env == 'front' %}
+            {% block contactDetails %}
+                {% include 'AppBundle:Layouts:_contact_details_dynamic.html.twig' %}
+            {% endblock %}
+        {% endif %}
     </div>
 
     <footer class="govuk-footer behat-region-footer" role="contentinfo">

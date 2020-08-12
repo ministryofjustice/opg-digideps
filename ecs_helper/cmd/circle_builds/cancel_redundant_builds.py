@@ -42,9 +42,12 @@ class CancelPreviousWorkflows:
       for job in running_jobs_json:
         if job['status'] == "queued" or job['status'] == "running":
           if job['workflows']['workflow_id'] != self.current_workflow_id:
-            if any(prod_jobs_term not in job['workflows']['job_name'] for prod_jobs_term in self.prod_job_terms):
+            if any(prod_jobs_term in job['workflows']['job_name'] for prod_jobs_term in self.prod_job_terms):
+              print(f"Ignoring job \"{job['workflows']['job_name']}\" as term matches from prod_job_terms")
+            else:
+              print(f"Appending job \"{job['workflows']['job_name']}\" with status Status: \"{job['status']}\" to list of running jobs")
               running_jobs.append(job['workflows'])
-              print(f"Other Job: \"{job['workflows']['job_name']}\", Status: \"{job['status']}\"")
+
       return running_jobs
     else:
       print(f"API call to circle failed with status code: {response.status_code}")

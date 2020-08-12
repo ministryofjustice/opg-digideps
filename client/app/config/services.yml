@@ -10,6 +10,14 @@ imports:
     - { resource: services_login.yml }
 
 services:
+    AppBundle\Controller\IndexController:
+        autowire: true
+        autoconfigure: true
+        public: true
+        class: AppBundle\Controller\IndexController
+        arguments:
+          $environment: '%env(ENVIRONMENT)%'
+
     AppBundle\Service\Redirector:
         public: true
         class: AppBundle\Service\Redirector

@@ -32,10 +32,13 @@ form:
         label: Last name
       address1:
         label: Address
+        context: line 1 of 3
       address2:
         label: " "
+        context: Address line 2 of 3
       address3:
         label: " "
+        context: Address line 3 of 3
       addressPostcode:
         label: Postcode
       addressCountry:
