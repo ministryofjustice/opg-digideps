@@ -80,6 +80,23 @@ trait UserTrait
         }
     }
 
+    /**
+     * it's assumed you are logged as an admin and you are on the admin homepage (with add user form).
+     *
+     * @Given I delete the following users:
+     */
+    public function deleteUsers(TableNode $table)
+    {
+        foreach ($table as $inputs) {
+            $email = $inputs['email'];
+            try {
+                $this->visitAdminPath("/admin/fixtures/deleteUser?email=$email");
+            } catch (\Throwable $e) {
+                throw new \Exception(sprintf('Error deleting user: %s', $e->getMessage()));
+            }
+        }
+    }
+
     private function assertValidRole(string $roleName): void
     {
         if (!in_array($roleName, ['ADMIN', 'AD', 'LAY', 'PA', 'PROF'])) {

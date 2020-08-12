@@ -29,10 +29,13 @@ form:
     label: Organisation name
   address1:
     label: Organisation address
+    context: line 1 of 3
   address2:
     label: ' '
+    context: Organisation address line 2 of 3
   address3:
     label: ' '
+    context: Organisation address line 3 of 3
   addressPostcode:
     label: Organisation postcode
   addressCountry:

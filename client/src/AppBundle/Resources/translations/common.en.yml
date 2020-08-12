@@ -126,17 +126,25 @@ search: Search
 clearSearch: Clear search
 sorryNoResultsFor: No reports found
 
+contactDetailsTitle: Get help with completing the report
+
 # Emails
+emailTitle: Email
 generalSupportEmail: customerservices@publicguardian.gov.uk
 layDeputySupportEmail: laydeputysupport@publicguardian.gov.uk
 paSupportEmail: opg.publicauthorityteam@publicguardian.gov.uk
 profSupportEmail: opg.pro@publicguardian.gov.uk
 
 # Helpline
+helplineTitle: Telephone
 helplineGeneral: 0300 456 0300
 helpline: 0115 934 2700
 helplinePA: 0115 934 2817
 helplineProf: 0115 934 2819
+
+# Opening Hours
+openingHoursTitle: Opening Hours
+openingHoursText: "Monday to Friday: 8am to 6pm (except public holidays)"
 
 # Validation and errors
 summaryHeading: There are some problems on this page

@@ -11,12 +11,6 @@
 
 {% block breadcrumbs %}{% endblock %}
 
-{% block helpline %}
-<div class="opg-helpline">
-    <h3>Helpline<br/>{{ 'helplinePA' | trans({}, 'common') }}</h3>
-</div>
-{% endblock %}
-
 {% block pageContent %}
 
     <div class="text">
@@ -65,4 +59,8 @@
 
     {{ form_end(form) }}
 
+{% endblock %}
+
+{% block contactDetails %}
+    {% include 'AppBundle:Layouts:_contact_details_pa.html.twig' %}
 {% endblock %}

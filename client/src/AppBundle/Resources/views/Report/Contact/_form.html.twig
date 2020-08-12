@@ -1,5 +1,9 @@
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
+{% set translationDomain = "report-contacts" %}
+{% trans_default_domain translationDomain %}
+{% set translationPrefix = "form." %}
+
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
@@ -9,11 +13,7 @@
         'labelText': 'form.relationship.label' | trans(transOptions, translationDomain)
     }) }}
     {{ form_input(form.explanation, 'form.explanation') }}
-    {{ form_input(form.address, 'form.address') }}
-    {{ form_input(form.address2, 'form.address2') }}
-    {{ form_input(form.county, 'form.county') }}
-    {{ form_input(form.postcode, 'form.postcode', {'inputClass': 'govuk-!-width-one-quarter' }) }}
-    {{ form_select(form.country, 'form.country') }}
+    {{ macros.addressFields(form, translationDomain, translationPrefix) }}
 
     {{ macros.saveAndContinueButton(form.save) }}
 

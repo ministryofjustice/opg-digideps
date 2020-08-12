@@ -11,20 +11,22 @@ form:
       label: Last name
   address:
       label: Address
+      context: line 1 of 2
   address2:
       label: ' '
+      context: Address line 2 of 2
+      hint: ""
   county:
-      label: ' '
+      label: County
+      hint: ""
   postcode:
       label: Postcode
+      hint: ""
   dateOfBirth:
       legend: Date of Birth
       hint: For example, 31 3 1955
   email:
       label: Email
-#  country:
-#      label: Country
-#      defaultOption: Please select
   phone:
       label: Phone number
   save:
