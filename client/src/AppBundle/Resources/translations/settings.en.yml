@@ -68,10 +68,13 @@ form:
         label: Last name
       address1:
         label: Address
+        context: 1 of 3
       address2:
         label: " "
+        context: Address 2 of 3
       address3:
         label: " "
+        context: Address 3 of 3
       addressPostcode:
         label: Postcode
       addressCountry:

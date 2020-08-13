@@ -222,6 +222,25 @@ class FixtureController extends AbstractController
     }
 
     /**
+     * @Route("/deleteUser", methods={"GET"})
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     */
+    public function deleteUser(Request $request, KernelInterface $kernel)
+    {
+        if ($kernel->getEnvironment() === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
+        $this
+            ->getRestClient()
+            ->post("v2/fixture/deleteUser", json_encode([
+                "email" => $request->query->get('email'),
+            ]));
+
+        return new Response();
+    }
+
+    /**
      * @Route("/createClientAttachDeputy", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
      */

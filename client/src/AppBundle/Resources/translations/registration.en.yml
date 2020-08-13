@@ -15,15 +15,21 @@ caseNumber:
     hint: You will find the case number on the first page of the court order (top right-hand corner)
 address:
     label: Address
+    context: line 1 of 2
 address2:
     label: ' '
+    context: Address line 2 of 2
+    hint: ""
 county:
-    label: ' '
+    label: County
+    hint: ""
 postcode:
     label: Postcode
+    hint: ""
 country:
     label: Country
-    defaultOption: Please select
+    hint: ""
+    defaultOption: Please select ...
 phone:
     label: Phone number
 save:
