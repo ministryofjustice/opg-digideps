@@ -26,13 +26,7 @@ class ReportSatisfactionSummaryMapper
      */
     public function getBy(ReportSatisfactionSummaryQuery $query)
     {
-
-        $resp = $this->restClient->get($this->generateApiUrl($query), 'Report\Satisfaction[]', ['satisfaction']);
-        file_put_contents('php://stderr', print_r(" THIS IS OUR MAPPER RESPONSE \n\n\n\n\n", TRUE));
-        file_put_contents('php://stderr', print_r($resp, TRUE));
-        file_put_contents('php://stderr', print_r(" THIS IS OUR MAPPER RESPONSE END \n\n\n\n\n", TRUE));
-        return $resp;
-
+        return $this->restClient->get($this->generateApiUrl($query), 'Report\Satisfaction[]', ['satisfaction']);
     }
 
     /**

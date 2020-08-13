@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
+use Nette\Utils\DateTime;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -165,7 +166,7 @@ class Satisfaction
     }
 
     /**
-     * @return datetime
+     * @return DateTime
      */
     public function getCreated(): Satisfaction
     {
@@ -173,10 +174,10 @@ class Satisfaction
     }
 
     /**
-     * @param datetime $created
+     * @param DateTime $created
      * @return Satisfaction
      */
-    public function setCreated(datetime $created): Satisfaction
+    public function setCreated(DateTime $created): Satisfaction
     {
         $this->created = $created;
         return $this;

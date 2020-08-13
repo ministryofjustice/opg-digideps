@@ -188,7 +188,7 @@ class ReportSubmissionRepository extends EntityRepository
     ) {
         $entityManager = $this->getEntityManager(EntityDir\Satisfaction::class);
         $query = $entityManager->createQuery(
-            'SELECT s.id, s.score, s.comments, s.deputyRole, s.reporttype, s.created
+            'SELECT s.id, s.score, s.comments, s.deputyrole, s.reporttype, s.created
              FROM AppBundle:Satisfaction s
              WHERE s.created > :fromDate
              AND s.created < :toDate')

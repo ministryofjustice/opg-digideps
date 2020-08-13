@@ -22,6 +22,10 @@ WORKDIR /app
 # Make composer super fast
 RUN composer global require hirak/prestissimo --no-plugins --no-scripts
 
+RUN apk update
+
+RUN apk add libpng libpng-dev libjpeg-turbo-dev libwebp-dev zlib-dev libxpm-dev gd && docker-php-ext-install gd
+
 # Install composer dependencies
 COPY composer.json .
 COPY composer.lock .
@@ -43,6 +47,9 @@ ENV PHP_EXT_DIR=/usr/lib/php7/modules
 RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec postgresql-client libzip-dev unzip php7-igbinary php7-pecl-redis
 RUN docker-php-ext-enable opcache $PHP_EXT_DIR/igbinary.so $PHP_EXT_DIR/redis.so
 RUN docker-php-ext-install pcntl zip
+
+# remove this =====
+RUN apk add libpng libpng-dev libjpeg-turbo-dev libwebp-dev zlib-dev libxpm-dev gd && docker-php-ext-install gd
 
 # Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=false

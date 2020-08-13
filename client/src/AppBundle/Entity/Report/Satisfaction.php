@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report;
 
+use DateTime;
 use JMS\Serializer\Annotation as JMS;
 
 class Satisfaction
@@ -32,12 +33,12 @@ class Satisfaction
     private $reporttype;
 
     /**
-     * @JMS\Type("datetime")
+     * @JMS\Type("string")
      */
     private $created;
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getId(): int
     {
@@ -55,7 +56,7 @@ class Satisfaction
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getScore(): int
     {
@@ -73,7 +74,7 @@ class Satisfaction
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getComments(): string
     {
@@ -100,11 +101,12 @@ class Satisfaction
 
     /**
      * @param string $deputyrole
-     * @return Satisfaction
+     * @return string
      */
-    public function setDeputyrole($deputyrole): Satisfaction
+    public function setDeputyrole($deputyrole): string
     {
         $this->deputyrole = $deputyrole;
+        return $this;
     }
 
     /**
@@ -117,15 +119,16 @@ class Satisfaction
 
     /**
      * @param string $reporttype
-     * @return Satisfaction
+     * @return string
      */
-    public function setReporttype($reporttype): Satisfaction
+    public function setReporttype($reporttype): string
     {
         $this->reporttype = $reporttype;
+        return $this;
     }
 
     /**
-     * @return datetime
+     * @return string
      */
     public function getCreated()
     {
@@ -133,12 +136,13 @@ class Satisfaction
     }
 
     /**
-     * @param datetime $created
+     * @param string $created
      * @return Satisfaction
      */
     public function setCreated($created): Satisfaction
     {
         $this->created = $created;
+        return $this;
     }
 
 }

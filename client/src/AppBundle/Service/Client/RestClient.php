@@ -218,13 +218,9 @@ class RestClient
             $options['query'] += $additionalQs;
         }
 
-        $another_resp = $this->apiCall('get', $endpoint, null, $expectedResponseType, $optionsOverride + [
-                'addAuthToken' => true,
-            ] + $options);
-        file_put_contents('php://stderr', print_r(" THIS IS OUR GET REST RESPONSE \n\n\n\n\n", TRUE));
-        file_put_contents('php://stderr', print_r($another_resp, TRUE));
-        file_put_contents('php://stderr', print_r(" THIS IS OUR GET REST RESPONSE END \n\n\n\n\n", TRUE));
-        return $another_resp;
+        return $this->apiCall('get', $endpoint, null, $expectedResponseType, $optionsOverride + [
+            'addAuthToken' => true,
+        ] + $options);
     }
 
     /**
@@ -309,12 +305,8 @@ class RestClient
             'addAuthToken' => $authenticated,
         ]);
 
-
-
         if ($expectedResponseType == 'raw') {
-
             return $response->getBody();
-
         }
 
         if ($expectedResponseType == 'response') {
@@ -326,8 +318,6 @@ class RestClient
         }
 
         $responseArray = $this->extractDataArray($response);
-
-//        file_put_contents('php://stderr', print_r($responseArray, TRUE));
         if ($expectedResponseType == 'array') {
             return $responseArray;
         } elseif (substr($expectedResponseType, -2) == '[]') {
@@ -379,12 +369,7 @@ class RestClient
         $start = microtime(true);
         try {
             $response = $this->client->$method($url, $options);
-            file_put_contents('php://stderr', print_r(" THIS IS OUR RESPO \n", TRUE));
-            file_put_contents('php://stderr', print_r((string)$response->getBody() . "\n", JSON_PRETTY_PRINT));
-            file_put_contents('php://stderr', print_r(" THIS IS OUR RESPO END \n", TRUE));
             $this->logRequest($url, $method, $start, $options, $response);
-
-
             return $response;
         } catch (RequestException $e) {
             // request exception contains a body, that gets decoded and passed to RestClientException
@@ -398,12 +383,8 @@ class RestClient
 
             try {
                 if ($response instanceof ResponseInterface) {
-                    file_put_contents('php://stderr', print_r(" THIS IS OUR PART OF RESPO INT ", TRUE));
-
                     $body = strval($response->getBody());
                     $data = $this->serialiser->deserialize($body, 'array', 'json');
-                    file_put_contents('php://stderr', print_r($data, TRUE));
-                    file_put_contents('php://stderr', print_r(" THIS IS OUR PART OF RESPO INT END ", TRUE));
                 }
             } catch (\Throwable $e) {
                 $this->logger->warning('RestClient |  ' . $url . ' | ' . $e->getMessage());
@@ -452,15 +433,8 @@ class RestClient
     {
         $fullClassName = (strpos($class, 'AppBundle') !== false) ? $class : 'AppBundle\\Entity\\' . $class;
 
-        file_put_contents('php://stderr', print_r(" THIS IS OUR CLASS \n\n\n\n\n", TRUE));
-        file_put_contents('php://stderr', print_r($fullClassName, TRUE));
-        file_put_contents('php://stderr', print_r(" THIS IS OUR CLASS END \n\n\n\n\n", TRUE));
-
         /** @var string */
         $data = json_encode($data);
-        file_put_contents('php://stderr', print_r(" THIS IS OUR DESERI \n\n\n\n\n", TRUE));
-        file_put_contents('php://stderr', print_r($data, TRUE));
-        file_put_contents('php://stderr', print_r(" THIS IS OUR DESERI END \n\n\n\n\n", TRUE));
         return $this->serialiser->deserialize($data, $fullClassName, 'json');
     }
 
@@ -475,9 +449,6 @@ class RestClient
         $expectedResponseType = substr($class, 0, -2);
         $ret = [];
         foreach ($data as $row) {
-            file_put_contents('php://stderr', print_r(" THIS IS OUR FOREACH \n\n\n\n\n", TRUE));
-            file_put_contents('php://stderr', print_r($row, TRUE));
-            file_put_contents('php://stderr', print_r(" THIS IS OUR FOREACH END \n\n\n\n\n", TRUE));
             $entity = $this->arrayToEntity($expectedResponseType, $row);
 
             if (!method_exists($entity, 'getId')) {

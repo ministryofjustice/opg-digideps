@@ -222,26 +222,25 @@ class ReportSubmissionController extends RestController
 
     /**
      * @Route("/satisfaction_data", name="satisfaction_data", methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
      */
     public function getSatisfactionData(Request $request)
     {
         /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
         $repo = $this->getRepository(EntityDir\Satisfaction::class);
 
-        $meresp = $repo->findAllSatisfactionSubmissions(
+        return $repo->findAllSatisfactionSubmissions(
             $this->convertDateArrayToDateTime($request->get('fromDate', [])),
             $this->convertDateArrayToDateTime($request->get('toDate', [])),
             $request->get('orderBy', 'createdAt'),
             $request->get('order', 'ASC')
         );
-//        file_put_contents('php://stderr', print_r($meresp, TRUE));
-        return $meresp;
     }
 
     /**
      * @param array $date
      * @return \DateTime|null
+     * @throws \Exception
      */
     private function convertDateArrayToDateTime(array $date)
     {
