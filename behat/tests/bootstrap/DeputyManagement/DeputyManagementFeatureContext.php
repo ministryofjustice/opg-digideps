@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace DigidepsBehat\UserManagement;
+namespace DigidepsBehat\DeputyManagement;
 
 use DigidepsBehat\Common\BaseFeatureContext;
 use DigidepsBehat\Common\LinksTrait;
 use DigidepsBehat\Common\RegionTrait;
 use DigidepsBehat\UserTrait;
 
-class UserManagementFeatureContext extends BaseFeatureContext
+class DeputyManagementFeatureContext extends BaseFeatureContext
 {
     use LinksTrait;
     use RegionTrait;

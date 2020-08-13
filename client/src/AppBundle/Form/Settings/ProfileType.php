@@ -28,11 +28,8 @@ class ProfileType extends AbstractType
             ->add('addressPostcode', FormTypes\TextType::class)
             ->add('addressCountry', FormTypes\CountryType::class, ['preferred_choices' => ['', 'GB'], 'placeholder' => 'Please select ...',])
             ->add('phoneMain', FormTypes\TextType::class, ['required' => true])
-            ->add('phoneAlternative', FormTypes\TextType::class);
-
-        if ($loggedInUser->getRoleName() === User::ROLE_LAY_DEPUTY) {
-            $builder->add('email', FormTypes\TextType::class);
-        }
+            ->add('phoneAlternative', FormTypes\TextType::class)
+            ->add('email', FormTypes\TextType::class);
 
         if ($loggedInUser->isDeputyOrg()) {
             $builder->add('jobTitle', FormTypes\TextType::class, ['required' => true]);
