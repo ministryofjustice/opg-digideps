@@ -11,6 +11,6 @@ class UserManagementFeatureContext extends BaseFeatureContext
 {
     use LinksTrait;
     use RegionTrait;
-    use DeputyManagementTrait;
+    use UserManagementTrait;
     use UserTrait;
 }

@@ -30,6 +30,16 @@ trait DeputyManagementTrait
     }
 
     /**
+     * Requires a logged in user to call
+     *
+     * @Given I view the lay deputy change password page
+     */
+    public function viewLayChangePasswordPage()
+    {
+        $this->visit('/deputyship-details/your-details/change-password');
+    }
+
+    /**
      * Requires a logged in admin user to call
      *
      * @Then the user :userEmail should be deleted
