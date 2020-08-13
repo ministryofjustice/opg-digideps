@@ -15,10 +15,6 @@ repos:
     rev: master
     hooks:
     -   id: git-secrets
--   repo: https://github.com/acsauk/php-strict-types-pre-commit-hook
-    rev: master
-    hooks:
-    -    id: php-strict-types
 -   repo: https://github.com/digitalpulp/pre-commit-php.git
     rev: 1.4.0
     hooks:
