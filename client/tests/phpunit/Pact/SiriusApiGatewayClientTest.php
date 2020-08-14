@@ -9,6 +9,7 @@ use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use DateTime;
 use DigidepsTests\Helpers\DocumentHelpers;
 use DigidepsTests\Helpers\SiriusHelpers;
+use Exception;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Request;
 use PhpPact\Consumer\InteractionBuilder;
@@ -20,6 +21,7 @@ use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Throwable;
 
 class SiriusDocumentsContractTest extends KernelTestCase
 {
@@ -53,6 +55,9 @@ class SiriusDocumentsContractTest extends KernelTestCase
     /** @var LoggerInterface&ObjectProphecy */
     private $logger;
 
+    /** @var string */
+    private $submitterEmail;
+
     public function setUp(): void
     {
         $client = new GuzzleClient();
@@ -71,6 +76,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
         $this->logger = self::prophesize(LoggerInterface::class);
         $this->fileName = 'test.pdf';
         $this->fileContents = 'fake_contents';
+        $this->submitterEmail = 'donald.draper@digital.justice.gov.uk';
 
         $this->sut = new SiriusApiGatewayClient(
             $client,
@@ -154,10 +160,20 @@ class SiriusDocumentsContractTest extends KernelTestCase
 
         $upload = $siriusDocumentUpload = SiriusHelpers::generateSiriusChecklistPdfUpload(
             $this->fileName,
-            $this->fileContents
+            $this->fileContents,
+            11112,
+            $this->submitterEmail,
+            new DateTime('2019-06-01'),
+            new DateTime('2020-05-31'),
+            2020,
+            'PF'
         );
 
-        $result = $this->sut->postChecklistPdf($upload, $this->reportPdfUuid, $this->caseRef);
+        try {
+            $result = $this->sut->postChecklistPdf($upload, $this->reportPdfUuid, $this->caseRef);
+        } catch (Throwable $e) {
+            $this->throwReadableFailureMessage($e);
+        }
 
         $this->builder->verify();
 
@@ -263,7 +279,14 @@ class SiriusDocumentsContractTest extends KernelTestCase
                 'checklist' => [
                     'data' => [
                         'type' => 'checklists',
-                        'attributes' => new SiriusChecklistPdfDocumentMetadata(),
+                        'attributes' => [
+                            "submission_id" => 11112,
+                            "submitter_email" => $this->submitterEmail,
+                            "reporting_period_from" => $matcher->dateISO8601('2019-06-01'),
+                            "reporting_period_to" => $matcher->dateISO8601('2020-05-31'),
+                            "year" => $matcher->integer(2020),
+                            "type" => $matcher->regex('PF', 'PF|HW|Combined')
+                        ],
                         'file' => [
                             'name' => $this->fileName,
                             'mimetype' => 'application/pdf',
@@ -284,8 +307,14 @@ class SiriusDocumentsContractTest extends KernelTestCase
             ]);
 
         $this->builder
-            ->uponReceiving('A submitted checklist pdf')
+            ->uponReceiving('A submitted checklist pdf  a')
             ->with($request)
             ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
+    }
+
+    private function throwReadableFailureMessage(Throwable $e)
+    {
+        $json = json_encode(json_decode((string) $e->getResponse()->getBody()), JSON_PRETTY_PRINT);
+        throw new Exception(sprintf('Pact test failed: %s', $json)) ;
     }
 }
