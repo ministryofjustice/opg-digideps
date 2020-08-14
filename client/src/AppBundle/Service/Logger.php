@@ -21,4 +21,9 @@ class Logger
     {
         $this->logger->notice($message, $context);
     }
+
+    public function warning(string $message, ?array $context)
+    {
+        $this->logger->warning($message, $context);
+    }
 }

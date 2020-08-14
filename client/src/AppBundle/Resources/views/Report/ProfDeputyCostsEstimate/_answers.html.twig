@@ -64,7 +64,7 @@
                 </dt>
                 <dd class="govuk-summary-list__value">
                     {% if 'yes' == report.profDeputyCostsEstimateHasMoreInfo %}
-                        {{ report.profDeputyCostsEstimateMoreInfoDetails | capitalize | trans }}
+                        {{ report.profDeputyCostsEstimateMoreInfoDetails | trans }}
                     {% else %}
                         {{ 'summaryPage.noMoreInfo' | trans }}
                     {% endif %}

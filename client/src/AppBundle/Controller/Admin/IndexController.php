@@ -320,9 +320,27 @@ class IndexController extends AbstractController
     {
         $user = $this->getRestClient()->get("user/{$id}", 'User', ['user', 'client', 'client-reports', 'report']);
 
-        $this->getRestClient()->delete('user/' . $id);
+        try {
+            $this->getRestClient()->delete('user/' . $id);
 
-        return $this->redirect($this->generateUrl('admin_homepage'));
+            $event = (new AuditEvents($this->dateTimeProvider))->userDeleted(
+                AuditEvents::TRIGGER_ADMIN_BUTTON,
+                $this->getUser()->getEmail(),
+                $user->getFullName(),
+                $user->getEmail(),
+                $user->getRoleName(),
+            );
+
+            $this->logger->notice('', $event);
+            return $this->redirect($this->generateUrl('admin_homepage'));
+        } catch (\Throwable $e) {
+            $this->logger->warning(
+                sprintf('Error while deleting deputy: %s', $e->getMessage()), ['deputy_email' => $user->getEmail()]
+            );
+
+            $this->addFlash('error', 'There was a problem deleting the deputy - please try again later');
+            return $this->redirect($this->generateUrl('admin_homepage'));
+        }
     }
 
     /**

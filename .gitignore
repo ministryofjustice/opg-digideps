@@ -7,7 +7,6 @@
 **/secrets.json
 **/.tmp.aws.config
 .phpunit.result.cache
-**/tests/coverage/
 
 # Common vendor folders
 .terraform/
@@ -34,3 +33,6 @@ log/pact.log
 lambda_functions/layers/monitoring/python/lib/python3.7/site-packages/
 *__pycache__*
 *venv*
+
+# Code coverage
+api/tests/coverage/
