@@ -378,12 +378,16 @@ class ReportController extends AbstractController
         $form = $this->createForm(FeedbackReportType::class, new FeedbackReport());
 
         $form->handleRequest($request);
+        $comments = $form->get('comments')->getData();
 
+        if (!isset($comments)) {
+            $comments = '';
+        }
         if ($form->isSubmitted() && $form->isValid()) {
             // Store in database
             $this->getRestClient()->post('satisfaction', [
                 'score' => $form->get('satisfactionLevel')->getData(),
-                'comments' => $form->get('comments')->getData(),
+                'comments' => $comments,
                 'reportType' => $report->getType()
             ]);
 

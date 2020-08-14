@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Mapper\ReportSatisfaction;
 
@@ -58,7 +58,7 @@ class ReportSatisfactionSummaryMapperTest extends TestCase
             ->restClient
             ->expects($this->once())
             ->method('get')
-            ->with('/report-submission/satisfaction_data?orderBy=id&order=DESC', $this->anything())
+            ->with('/satisfaction/satisfaction_data?orderBy=id&order=DESC', $this->anything())
             ->willReturn('returned-from-rest-client');
     }
 
@@ -77,7 +77,7 @@ class ReportSatisfactionSummaryMapperTest extends TestCase
      */
     private function buildExpectedUrl()
     {
-        return sprintf('/report-submission/satisfaction_data?%s', http_build_query([
+        return sprintf('/satisfaction/satisfaction_data?%s', http_build_query([
             'fromDate' => $this->query->getStartDate(),
             'toDate' => $this->query->getEndDate(),
             'orderBy' => $this->query->getOrderBy(),

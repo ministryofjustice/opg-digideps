@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Mapper\ReportSatisfaction;
 
@@ -10,7 +10,7 @@ class ReportSatisfactionSummaryMapper
     private $restClient;
 
     /** @var string */
-    const API_ENDPOINT = '/report-submission/satisfaction_data';
+    const API_ENDPOINT = '/satisfaction/satisfaction_data';
 
     /**
      * @param RestClient $restClient

@@ -48,9 +48,6 @@ RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec postgre
 RUN docker-php-ext-enable opcache $PHP_EXT_DIR/igbinary.so $PHP_EXT_DIR/redis.so
 RUN docker-php-ext-install pcntl zip
 
-# remove this =====
-RUN apk add libpng libpng-dev libjpeg-turbo-dev libwebp-dev zlib-dev libxpm-dev gd && docker-php-ext-install gd
-
 # Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=false
 RUN if [[ $REQUIRE_XDEBUG = "true" ]] ; then \

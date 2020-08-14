@@ -20,11 +20,11 @@
 
         {{ form_known_date(form.startDate, 'satisfactionPage.form.fromDate', {
             'hintText': 'satisfactionPage.form.fromDate.hint'
-        }) }}
+        }) }}<span class="govuk-visually-hidden">of satisfaction search period</span>
 
         {{ form_known_date(form.endDate, 'satisfactionPage.form.toDate', {
             'hintText': 'satisfactionPage.form.toDate.hint'
-        }) }}
+        }) }}<span class="govuk-visually-hidden">of satisfaction search period</span>
 
         <div class="govuk-form-group">
             {{ form_submit(form.submitAndDownload, (page ~ '.form.submitAndDownload'), {

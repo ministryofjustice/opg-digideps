@@ -1,19 +1,18 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
-use Nette\Utils\DateTime;
-use Symfony\Component\Validator\Constraints as Assert;
+use DateTime;
 
 /**
  * User satisfaction scores
  *
  * @ORM\Table(name="satisfaction")
  * @ORM\Entity()
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ReportSubmissionRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\SatisfactionRepository")
  */
 class Satisfaction
 {
@@ -120,10 +119,10 @@ class Satisfaction
     }
 
     /**
-     * @param string $comments
+     * @param string|null $comments
      * @return Satisfaction
      */
-    public function setComments(string $comments): Satisfaction
+    public function setComments(?string $comments): Satisfaction
     {
         $this->comments = $comments;
         return $this;
@@ -166,9 +165,9 @@ class Satisfaction
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
-    public function getCreated(): Satisfaction
+    public function getCreated(): \DateTime
     {
         return $this->created;
     }

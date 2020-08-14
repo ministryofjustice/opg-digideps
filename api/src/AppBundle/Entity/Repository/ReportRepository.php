@@ -115,7 +115,7 @@ class ReportRepository extends EntityRepository
         $qb->leftJoin('r.client', 'c')
             ->leftJoin('c.users', 'u')
             ->where('(r.submitted = false OR r.submitted is null) AND r.unSubmitDate IS NULL AND c.caseNumber IN (:caseNumbers) AND u.roleName = :roleName')
-            ->setParameter('caseNumbers',$caseNumbers, Connection::PARAM_STR_ARRAY)
+            ->setParameter('caseNumbers', $caseNumbers, Connection::PARAM_STR_ARRAY)
             ->setParameter('roleName', $role);
 
         return $qb->getQuery()->getResult();
@@ -144,7 +144,7 @@ class ReportRepository extends EntityRepository
                 ->select(($select === 'count') ? 'COUNT(DISTINCT r)' : 'r,c,o')
                 ->leftJoin('r.client', 'c')
                 ->leftJoin('c.organisation', 'o')
-                ->where('o.isActivated = true AND o.id in (' . implode(',',$orgIdsOrUserId) .')');
+                ->where('o.isActivated = true AND o.id in (' . implode(',', $orgIdsOrUserId) .')');
         }
 
         $qb

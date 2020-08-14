@@ -255,6 +255,8 @@ class RestClient
             $options['deserialise_groups'] = $jmsGroups;
         }
 
+        file_put_contents('php://stderr', print_r("ENDPOINT IS: \n\n", TRUE));
+        file_put_contents('php://stderr', print_r($mixed, TRUE));
         return $this->apiCall('post', $endpoint, $mixed, $expectedResponseType, $options);
     }
 

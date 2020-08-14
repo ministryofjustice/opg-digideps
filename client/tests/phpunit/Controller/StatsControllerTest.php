@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Controller;
 
@@ -44,8 +44,21 @@ class StatsControllerTest extends AbstractControllerTestCase
         self::assertEquals("4", $spreadsheet->getActiveSheet()->getCell('B3'));
         self::assertEquals("2020-08-01 00:00:00", $spreadsheet->getActiveSheet()->getCell('C3'));
         self::assertEquals("another comment", $spreadsheet->getActiveSheet()->getCell('D3'));
+        self::assertEquals("", $spreadsheet->getActiveSheet()->getCell('D4'));
         self::assertIsObject($spreadsheet);
     }
 
+    public function testCreateSatisfactionSpreadsheetTypeError(): void
+    {
+        $reportSatisfactionSummaries = [];
 
+        $satisfactionSummary = new Satisfaction();
+        $satisfactionSummary->setId(2);
+        $satisfactionSummary->setScore(4);
+
+        array_push($reportSatisfactionSummaries, $satisfactionSummary);
+
+        $this->expectException(\TypeError::class);
+        StatsController::createSatisfactionSpreadsheet($reportSatisfactionSummaries);
+    }
 }

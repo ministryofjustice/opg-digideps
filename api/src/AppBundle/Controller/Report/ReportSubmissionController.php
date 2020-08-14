@@ -6,7 +6,6 @@ use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Entity\Satisfaction;
 use AppBundle\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer;
 use InvalidArgumentException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -218,23 +217,6 @@ class ReportSubmissionController extends RestController
         );
 
         return $reportSubmissionSummaryTransformer->transform($ret);
-    }
-
-    /**
-     * @Route("/satisfaction_data", name="satisfaction_data", methods={"GET"})
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
-     */
-    public function getSatisfactionData(Request $request)
-    {
-        /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
-        $repo = $this->getRepository(EntityDir\Satisfaction::class);
-
-        return $repo->findAllSatisfactionSubmissions(
-            $this->convertDateArrayToDateTime($request->get('fromDate', [])),
-            $this->convertDateArrayToDateTime($request->get('toDate', [])),
-            $request->get('orderBy', 'createdAt'),
-            $request->get('order', 'ASC')
-        );
     }
 
     /**
