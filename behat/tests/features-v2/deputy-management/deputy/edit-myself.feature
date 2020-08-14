@@ -111,6 +111,8 @@ Feature: A deputy user edits their details
       | profile_email            | <new_email>    |
     And I press "profile_save"
     Then the form should be valid
+    When I am logged in as "<email>" with password "Abcd1234"
+    And I view the org deputy edit your details page
     And the following fields should have the corresponding values:
       | profile_firstname        | Max            |
       | profile_lastname         | Dennison       |
