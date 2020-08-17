@@ -192,11 +192,18 @@ class ChecklistSyncServiceTest extends TestCase
             ->setMimetype('application/pdf')
             ->setSource(base64_encode($this->dataInput->getChecklistFileContents()));
 
-        $expectedUploadObject = (new SiriusDocumentUpload())
+        $attributes = (new SiriusChecklistPdfDocumentMetadata())
+            ->setReportingPeriodFrom(new \DateTime('2020-02-01'))
+            ->setReportingPeriodTo(new \DateTime('2021-02-01'))
+            ->setSubmissionId(123)
+            ->setSubmitterEmail('a@b.com')
+            ->setType('PF')
+            ->setYear(2021);
+
+        return (new SiriusDocumentUpload())
             ->setType('checklists')
-            ->setAttributes(new SiriusChecklistPdfDocumentMetadata())
+            ->setAttributes($attributes)
             ->setFile($file);
-        return $expectedUploadObject;
     }
 
     private function assertUuidIsReturned()
