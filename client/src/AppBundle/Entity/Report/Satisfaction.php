@@ -33,7 +33,7 @@ class Satisfaction
     private $reporttype;
 
     /**
-     * @JMS\Type("string")
+     * @JMS\Type("DateTime")
      */
     private $created;
 
@@ -128,7 +128,7 @@ class Satisfaction
     }
 
     /**
-     * @return string
+     * @return DateTime
      */
     public function getCreated()
     {
@@ -136,7 +136,7 @@ class Satisfaction
     }
 
     /**
-     * @param string $created
+     * @param DateTime $created
      * @return Satisfaction
      */
     public function setCreated($created): Satisfaction
