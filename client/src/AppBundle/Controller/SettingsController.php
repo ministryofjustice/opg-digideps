@@ -147,24 +147,17 @@ class SettingsController extends AbstractController
             throw $this->createAccessDeniedException('User role not recognised');
         }
 
+        $oldEmail = $form->getData()->getEmail();
+        $oldRole = $user->getRoleName();
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $deputy = $form->getData();
+            $postEditDeputy = $form->getData();
+            $newEmail = $postEditDeputy->getEmail();
+            $newRole = $this->determineNoAdminRole();
 
             if ($form->has('removeAdmin') && !empty($form->get('removeAdmin')->getData())) {
-                $oldRole = $user->getRoleName();
-                $newRole = $this->determineNoAdminRole();
-
-                $event = (new AuditEvents($this->dateTimeProvider))
-                    ->roleChanged(
-                        AuditEvents::TRIGGER_DEPUTY_USER,
-                        $oldRole,
-                        $newRole,
-                        $user->getEmail(),
-                        $user->getEmail()
-                    );
-
                 $user->setRoleName($newRole);
 
                 $this->addFlash('notice', 'For security reasons you have been logged out because you have changed your admin rights. Please log in again below');
@@ -183,10 +176,33 @@ class SettingsController extends AbstractController
             }
 
             try {
-                $this->getRestClient()->put('user/' . $user->getId(), $deputy, $jmsPutGroups);
+                $this->getRestClient()->put('user/' . $user->getId(), $postEditDeputy, $jmsPutGroups);
 
-                if (isset($event, $oldRole, $newRole) && $oldRole !== $newRole) {
-                    $this->logger->notice('', $event);
+                if ($oldEmail !== $newEmail) {
+                    $emailChangedEvent = (new AuditEvents($this->dateTimeProvider))
+                        ->userEmailChanged(
+                            AuditEvents::TRIGGER_DEPUTY_USER,
+                            $oldEmail,
+                            $postEditDeputy->getEmail(),
+                            $user->getEmail(),
+                            $postEditDeputy->getFullName(),
+                            $postEditDeputy->getRoleName()
+                        );
+
+                    $this->logger->notice('', $emailChangedEvent);
+                }
+
+                if ($newRole !== null && $oldRole !== $newRole) {
+                    $roleChangedEvent = (new AuditEvents($this->dateTimeProvider))
+                        ->roleChanged(
+                            AuditEvents::TRIGGER_DEPUTY_USER,
+                            $oldRole,
+                            $newRole,
+                            $user->getEmail(),
+                            $user->getEmail()
+                        );
+
+                    $this->logger->notice('', $roleChangedEvent);
                 }
 
                 if ($user->isLayDeputy()) {
