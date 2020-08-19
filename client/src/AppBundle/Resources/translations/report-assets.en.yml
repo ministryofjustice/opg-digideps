@@ -7,7 +7,7 @@ startPage:
   startButton: Start assets
 
 existPage:
-  htmlTitle: "Deputy report - assets | GOV.UK"
+  htmlTitle: "Assets - Complete the deputy report | GOV.UK"
   supportTitle: Assets
   form:
     noAssetToAdd:
@@ -17,7 +17,7 @@ existPage:
       label: Save and continue
 
 typePage:
-  htmlTitle: "Add an asset - Complete the duty report | GOV.UK"
+  htmlTitle: "Add an asset - Complete the deputy report | GOV.UK"
   supportTitle: Assets
   pageTitle: Add an asset
   pageSectionDescription1: |
