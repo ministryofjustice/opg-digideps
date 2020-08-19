@@ -201,9 +201,17 @@ class ReportRepository extends EntityRepository
      */
     public function getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(int $limit): array
     {
+        $dql = <<<DQL
+SELECT c.id as checklist_id, r.id as report_id
+FROM AppBundle\Entity\Report\Report r
+JOIN r.checklist c
+JOIN r.reportSubmissions rs
+WHERE c.synchronisationStatus = ?1
+DQL;
+
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT c.id as checklist_id, r.id as report_id FROM AppBundle\Entity\Report\Report r JOIN r.checklist c JOIN r.reportSubmissions rs WHERE c.synchronisationStatus = ?1')
+            ->createQuery($dql)
             ->setParameter(1, SynchronisableInterface::SYNC_STATUS_QUEUED)
             ->setMaxResults($limit);
 

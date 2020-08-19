@@ -162,7 +162,8 @@ class ChecklistSyncCommand extends Command
             ->setReportStartDate($report->getStartDate())
             ->setReportEndDate($report->getEndDate())
             ->setReportSubmissions($report->getReportSubmissions())
-            ->setSubmitterEmail($report->getChecklist()->getSubmittedBy()->getEmail());
+            ->setSubmitterEmail($report->getChecklist()->getSubmittedBy()->getEmail())
+            ->setReportType($report->getType());
     }
 
     /**

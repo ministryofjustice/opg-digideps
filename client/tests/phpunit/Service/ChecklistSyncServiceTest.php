@@ -105,7 +105,9 @@ class ChecklistSyncServiceTest extends TestCase
             ->setChecklistId(231)
             ->setChecklistFileContents('file-contents')
             ->setReportStartDate(new \DateTime('2020-02-01'))
-            ->setreportEndDate(new \DateTime('2021-02-01'));
+            ->setreportEndDate(new \DateTime('2021-02-01'))
+            ->setReportType('PF')
+            ->setSubmitterEmail('a@b.com');
 
         return $this;
     }
@@ -195,7 +197,6 @@ class ChecklistSyncServiceTest extends TestCase
         $attributes = (new SiriusChecklistPdfDocumentMetadata())
             ->setReportingPeriodFrom(new \DateTime('2020-02-01'))
             ->setReportingPeriodTo(new \DateTime('2021-02-01'))
-            ->setSubmissionId(123)
             ->setSubmitterEmail('a@b.com')
             ->setType('PF')
             ->setYear(2021);

@@ -131,13 +131,11 @@ class ChecklistSyncService
         // Update api call to bring back submitted by and submission id
 
         $metadata = (new SiriusChecklistPdfDocumentMetadata())
-        ->setYear((int) $checklistData->getReportEndDate()->format('Y'))
-        ->setType($checklistData->getSyncedReportSubmission()->getReport()->getType())
-        ->setSubmitterEmail()
-        ->setSubmissionId()
-        ->setReportingPeriodFrom($checklistData->getReportStartDate())
-        ->setReportingPeriodTo($checklistData->getReportEndDate());
-        // Create metadata here
+            ->setYear((int) $checklistData->getReportEndDate()->format('Y'))
+            ->setType($checklistData->getReportType())
+            ->setSubmitterEmail($checklistData->getSubmitterEmail())
+            ->setReportingPeriodFrom($checklistData->getReportStartDate())
+            ->setReportingPeriodTo($checklistData->getReportEndDate());
 
         return (new SiriusDocumentUpload())
             ->setType('checklists')
