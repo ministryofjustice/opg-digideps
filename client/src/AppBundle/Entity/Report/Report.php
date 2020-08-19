@@ -53,6 +53,10 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     const TYPE_COMBINED_HIGH_ASSETS = '102-4';
     const TYPE_COMBINED_LOW_ASSETS = '103-4';
 
+    const TYPE_ABBREVIATION_HW = 'HW';
+    const TYPE_ABBREVIATION_PF = 'PF';
+    const TYPE_ABBREVIATION_COMBINED = 'Combined';
+
     const HIGH_ASSETS_REPORT_TYPES = [
         self::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,
         self::TYPE_COMBINED_HIGH_ASSETS,
@@ -1262,5 +1266,18 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         $this->reportSubmissions = $reportSubmissions;
 
         return $this;
+    }
+
+    public function determineReportType()
+    {
+        switch ($this->getType()) {
+            case self::TYPE_HEALTH_WELFARE:
+                return self::TYPE_ABBREVIATION_HW;
+            case self::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS:
+            case self::TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS:
+                return self::TYPE_ABBREVIATION_PF;
+            default:
+                return self::TYPE_ABBREVIATION_COMBINED;
+        }
     }
 }

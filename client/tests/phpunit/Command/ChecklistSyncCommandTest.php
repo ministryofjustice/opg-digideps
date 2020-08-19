@@ -336,7 +336,7 @@ class ChecklistSyncCommandTest extends KernelTestCase
             ->setStartDate(new \DateTime())
             ->setEndDate(new \DateTime())
             ->setReportSubmissions([])
-            ->setType('PF');
+            ->setType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS);
 
         $checklist = (new Checklist($report))->setSubmittedBy($user);
         $checklist->setId(3923);
