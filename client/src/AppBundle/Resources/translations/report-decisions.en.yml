@@ -44,7 +44,7 @@ startPage:
     You don't need to include small, day-to-day decisions like buying food or toiletries.
 
 mentalCapacity:
-  htmlTitle: "Deputy report - mental capacity | GOV.UK"
+  htmlTitle: "Mental capacity - Complete the deputy report | GOV.UK"
   supportTitle: Decisions
   form:
     hasCapacityChanged:
@@ -63,7 +63,7 @@ mentalCapacity:
       hint: For example, 12 2015
 
 existPage:
-  htmlTitle: "Deputy report - add decision | GOV.UK"
+  htmlTitle: "Add decision - Complete the deputy report | GOV.UK"
   supportTitle: Decisions
   form:
     hasDecisions:
@@ -74,7 +74,7 @@ existPage:
       hint: ""
 
 addAnotherPage:
-  htmlTitle: "Deputy report - add decision | GOV.UK"
+  htmlTitle: "Add decision - Complete the deputy report | GOV.UK"
   pageTitle: Decisions
   form:
     addAnother:
@@ -84,7 +84,7 @@ addAnotherPage:
       label: Continue
 
 addPage:
-  htmlTitle: "Deputy report - decisions | GOV.UK"
+  htmlTitle: "Add a decision - Complete the deputy report | GOV.UK"
   pageTitle: Add a decision
   supportTitle: Decisions
   pageSectionDescription: |
@@ -92,14 +92,14 @@ addPage:
     able to add more decisions later if you need to.
 
 editPage:
-  htmlTitle: "Deputy report - decisions | GOV.UK"
+  htmlTitle: "Decisions - Complete the deputy report | GOV.UK"
   supportTitle: Decisions
   pageTitle: Edit decision
 
 summaryPage:
   weAskAbout: |
     In this section, we ask about %client%'s mental capacity and the significant decisions you've made for %client% over the reporting period.
-  htmlTitle: "Deputy report - decisions | GOV.UK"
+  htmlTitle: "Decisions - Complete the deputy report | GOV.UK"
   pageTitle: Decisions
   capacityChangeDetails: Mental capacity changes details
   addButton: Add significant decision
