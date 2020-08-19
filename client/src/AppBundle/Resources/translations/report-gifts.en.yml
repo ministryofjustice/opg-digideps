@@ -1,5 +1,5 @@
 startPage:
-  htmlTitle: "Deputy report - gifts | GOV.UK"
+  htmlTitle: "Gifts - Complete the deputy report | GOV.UK"
   pageTitle: Gifts
   pageSectionDescription1: |
     Your court order will say if you can buy gifts or give gifts of money on %client%'s behalf.
@@ -46,7 +46,7 @@ addAnotherPage:
       label: The gift has been saved. Would you like to add another now?
       hint: If you prefer, you can come back to this section later to add more gifts
     save:
-       label: Continue
+      label: Continue
 
 addPage:
   htmlTitle: "Deputy report - gifts | GOV.UK"
@@ -93,4 +93,4 @@ form:
     label: Which bank account was the gift bought from? (optional)
     hint: ""
   save:
-      label: Save gift
+    label: Save gift

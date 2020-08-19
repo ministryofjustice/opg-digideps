@@ -1,5 +1,5 @@
 startPage:
-  htmlTitle: "Deputy report - decisions | GOV.UK"
+  htmlTitle: "Decisions - Complete the deputy report | GOV.UK"
   pageTitle: Decisions
   startButton: Start decisions
   description1: "Use this section to tell us about %client%'s mental capacity and the significant decisions you've made on %client%'s behalf."
@@ -56,11 +56,11 @@ mentalCapacity:
         changed: Changed
         stayedSame: Stayed the same
     hasCapacityChangedDetails:
-        label: "Please tell us more."
-        hint: "For example, %client% may be able to make some types of decisions but not others – or only make decisions at some times"
+      label: "Please tell us more."
+      hint: "For example, %client% may be able to make some types of decisions but not others – or only make decisions at some times"
     mentalAssessmentDate:
-        legend: "When was %client%'s mental capacity to make decisions last assessed by a professional (such as a psychiatrist or social worker)?"
-        hint: For example, 12 2015
+      legend: "When was %client%'s mental capacity to make decisions last assessed by a professional (such as a psychiatrist or social worker)?"
+      hint: For example, 12 2015
 
 existPage:
   htmlTitle: "Deputy report - add decision | GOV.UK"
@@ -81,7 +81,7 @@ addAnotherPage:
       label: The decision has been saved. Would you like to add another now?
       hint: If you prefer, you can come back to this section later to add more decisions
     save:
-       label: Continue
+      label: Continue
 
 addPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"
@@ -98,7 +98,7 @@ editPage:
 
 summaryPage:
   weAskAbout: |
-      In this section, we ask about %client%'s mental capacity and the significant decisions you've made for %client% over the reporting period.
+    In this section, we ask about %client%'s mental capacity and the significant decisions you've made for %client% over the reporting period.
   htmlTitle: "Deputy report - decisions | GOV.UK"
   pageTitle: Decisions
   capacityChangeDetails: Mental capacity changes details

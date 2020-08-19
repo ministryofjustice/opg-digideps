@@ -1,5 +1,5 @@
 startPage:
-  htmlTitle: "Deputy report - income and benefits | GOV.UK"
+  htmlTitle: "Income and benefits - Complete the deputy report | GOV.UK"
   pageTitle: Income and benefits
   pageSectionDescription: |
     As a deputy, it's important that you look after %client%'s financial affairs throughout the year and explain any decisions you've made.
@@ -13,8 +13,8 @@ startPage:
   startButton: Start income and benefits
 
 stepPage:
+  htmlTitle: "Income and benefits - Complete the deputy report | GOV.UK"
   supportTitle: Income and benefits
-  htmlTitle: "Deputy report - income and benefits | GOV.UK"
   pageTitle:
     stateBenefits: State benefits
     pensions: Pensions and other income
@@ -65,9 +65,9 @@ form:
     label: Does %client% receive any other regular income?
     hint: For example, private pension, dividends, wages or salary
   receiveOtherIncomeDetails:
-      label: Please tell us more about %client%'s other regular sources of income
-      hint: For example, what the sources of income are, the amount they pay and how often
-      labelSummaryPage: More about %client%'s other regular sources of income
+    label: Please tell us more about %client%'s other regular sources of income
+    hint: For example, what the sources of income are, the amount they pay and how often
+    labelSummaryPage: More about %client%'s other regular sources of income
   expectCompensationDamages:
     label: Are you expecting %client% to get any money from compensation awards or damages?
   expectCompensationDamagesDetails:
@@ -91,4 +91,3 @@ form:
         label: Sale of investment
       sale_of_property:
         label: Sale of property
-

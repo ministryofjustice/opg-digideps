@@ -1,5 +1,5 @@
 startPage:
-  htmlTitle: "Deputy report - assets | GOV.UK"
+  htmlTitle: "Assets - Complete the deputy report | GOV.UK"
   pageTitle: Assets
   pageSectionDescription: |
     Use this section to tell us about %client%'s assets. They may include property, vehicles,
@@ -17,7 +17,7 @@ existPage:
       label: Save and continue
 
 typePage:
-  htmlTitle: "Deputy report - assets | GOV.UK"
+  htmlTitle: "Add an asset - Complete the duty report | GOV.UK"
   supportTitle: Assets
   pageTitle: Add an asset
   pageSectionDescription1: |
@@ -46,7 +46,7 @@ addAnotherPage:
       label: The asset has been saved. Would you like to add another now?
       hint: If you prefer, you can come back to this section later to add more assets
     save:
-       label: Continue
+      label: Continue
 
 stepPageProperty:
   htmlTitle: "Deputy report - Property | GOV.UK"
@@ -158,4 +158,4 @@ form:
       label: What is the rental income each month?
       hint: ""
   save:
-      label: Save and continue
+    label: Save and continue

@@ -1,44 +1,44 @@
 addClient:
-    htmlTitle: "Deputy report - add your client's details | GOV.UK"
-    pageTitle: Add your client's details
-    pageTitleWithClient: Add %client%'s details
-    formHeading: Client's details
+  htmlTitle: "Add your client's details - Complete the deputy report | GOV.UK"
+  pageTitle: Add your client's details
+  pageTitleWithClient: Add %client%'s details
+  formHeading: Client's details
 courtDate:
-    legend: Court order date
-    hint: For example, 31 3 2015
+  legend: Court order date
+  hint: For example, 31 3 2015
 firstname:
-    label: First name
+  label: First name
 lastname:
-    label: Last name
+  label: Last name
 caseNumber:
-    label: Case number
-    hint: You will find the case number on the first page of the court order (top right-hand corner)
+  label: Case number
+  hint: You will find the case number on the first page of the court order (top right-hand corner)
 address:
-    label: Address
-    context: line 1 of 2
+  label: Address
+  context: line 1 of 2
 address2:
-    label: ' '
-    context: Address line 2 of 2
-    hint: ""
+  label: " "
+  context: Address line 2 of 2
+  hint: ""
 county:
-    label: County
-    hint: ""
+  label: County
+  hint: ""
 postcode:
-    label: Postcode
-    hint: ""
+  label: Postcode
+  hint: ""
 country:
-    label: Country
-    hint: ""
-    defaultOption: Please select ...
+  label: Country
+  hint: ""
+  defaultOption: Please select ...
 phone:
-    label: Phone number
+  label: Phone number
 save:
-    label: Save
+  label: Save
 saveAndContinue:
-    label: Save and continue
+  label: Save and continue
 createReport:
-    htmlTitle: "Deputy report - create a report | GOV.UK"
-    pageTitle: Create a report
+  htmlTitle: "Deputy report - create a report | GOV.UK"
+  pageTitle: Create a report
 form:
   newReportForm:
     addStartDate: "Add the report start date"

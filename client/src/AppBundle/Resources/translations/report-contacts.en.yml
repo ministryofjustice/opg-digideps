@@ -1,5 +1,5 @@
 startPage:
-  htmlTitle: "Deputy report - contacts | GOV.UK"
+  htmlTitle: "Contacts - Complete the deputy report | GOV.UK"
   pageTitle: Contacts
   pageSectionDescription1: |
     Please tell us about the people who helped you make significant decisions as a deputy. They might include friends or family, and professionals like a GP, solicitor, accountant or care worker.
@@ -31,7 +31,7 @@ addAnotherPage:
       label: The person has been saved. Would you like to add another now?
       hint: If you prefer, you can come back to this section later to add more people
     save:
-       label: Continue
+      label: Continue
 
 addPage:
   htmlTitle: "Deputy report - contacts | GOV.UK"
@@ -79,7 +79,7 @@ form:
     label: Address (optional)
     context: line 1 of 2
   address2:
-    label: ' '
+    label: " "
     context: Address line 2 of 2 (optional)
     hint: ""
   county:

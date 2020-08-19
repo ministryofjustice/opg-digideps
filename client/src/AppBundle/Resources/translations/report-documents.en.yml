@@ -1,4 +1,4 @@
-htmlTitle: Supporting documents | GOV.UK
+htmlTitle: Supporting documents - Complete the deputy report | GOV.UK
 pageTitle: Supporting documents
 
 form:
@@ -9,7 +9,7 @@ form:
   errors:
     fileSize: "Your uploaded file exceeded the maximum size of 5M"
     risky: "Cannot upload file, risky content found inside. Technical details: %techDetails%"
-    virusFound:  "Cannot upload file, virus found inside. Technical details: %techDetails%"
+    virusFound: "Cannot upload file, virus found inside. Technical details: %techDetails%"
     generic: "Cannot upload file, please try again later. Technical details: %techDetails%"
 
 removeDocument:
@@ -60,8 +60,8 @@ stepPage:
   pageTitle: Supporting documents
   backLink: Back
   form:
-      wishToUploadDocumentation:
-          label: Would you like to provide any supporting documents?
+    wishToUploadDocumentation:
+      label: Would you like to provide any supporting documents?
 
 summaryPage:
   htmlTitle: "Deputy report - supporting documents | GOV.UK"

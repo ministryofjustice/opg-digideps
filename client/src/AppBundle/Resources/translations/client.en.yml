@@ -1,5 +1,5 @@
 editClient:
-  htmlTitle: "Deputy report - Client's details | GOV.UK"
+  htmlTitle: "%client%'s details - Complete the deputy report | GOV.UK"
   pageTitle: "%client%'s details"
   pageSectionDescription: "You can update %client%'s details and your court order date below."
   lastLoggedIn: "Last signed in:"
@@ -7,7 +7,7 @@ editClient:
     label: Address
     context: line 1 of 2
   address2:
-    label: ' '
+    label: " "
     context: Address line 2 of 2
     hint: ""
   county:
@@ -22,7 +22,7 @@ editClient:
     defaultOption: Please select ...
 
 showClient:
-  htmlTitle: "Deputy report - Client's details | GOV.UK"
+  htmlTitle: "%client%'s details - Complete the deputy report | GOV.UK"
   pageTitle: "%client%'s details"
   clientTable:
     header:

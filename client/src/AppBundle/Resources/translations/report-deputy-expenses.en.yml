@@ -1,5 +1,5 @@
 startPage:
-  htmlTitle: "Deputy report - deputy expenses | GOV.UK"
+  htmlTitle: "Deputy expenses - Complete the deputy report | GOV.UK"
   pageTitle: Deputy expenses
   pageSectionDescription1: |
     Over the course of your deputyship, you can claim expenses for things you have to do to carry out your role, like phone calls, postage and travel costs.
@@ -44,7 +44,7 @@ addAnotherPage:
       label: The expense has been saved. Would you like to add another now?
       hint: If you prefer, you can come back to this section later to add more expenses
     save:
-       label: Continue
+      label: Continue
 
 addPage:
   htmlTitle: "Deputy report - deputy expenses | GOV.UK"
@@ -86,4 +86,4 @@ form:
     label: Which bank account was this paid from? (optional)
     hint: ""
   save:
-      label: Save expense
+    label: Save expense
