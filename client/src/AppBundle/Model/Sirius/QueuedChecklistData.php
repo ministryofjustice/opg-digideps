@@ -10,19 +10,10 @@ class QueuedChecklistData
     private $checklistId;
 
     /** @var string */
-    private $checklistUuid;
-
-    /** @var string */
-    private $caseNumber;
+    private $checklistUuid, $caseNumber, $checklistFileContents, $submitterEmail;
 
     /** @var \DateTime */
-    private $reportStartDate;
-
-    /** @var \DateTime */
-    private $reportEndDate;
-
-    /** @var string */
-    private $checklistFileContents;
+    private $reportStartDate, $reportEndDate;
 
     /** @var array|null */
     private $reportSubmissions;
@@ -169,5 +160,24 @@ class QueuedChecklistData
         }
 
         return null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubmitterEmail(): string
+    {
+        return $this->submitterEmail;
+    }
+
+    /**
+     * @param string $submitterEmail
+     * @return QueuedChecklistData
+     */
+    public function setSubmitterEmail(string $submitterEmail): self
+    {
+        $this->submitterEmail = $submitterEmail;
+
+        return $this;
     }
 }

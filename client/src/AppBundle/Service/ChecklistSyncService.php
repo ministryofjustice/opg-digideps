@@ -128,9 +128,20 @@ class ChecklistSyncService
             ->setMimetype(mimetype_from_filename($filename))
             ->setSource(base64_encode($checklistData->getChecklistFileContents()));
 
+        // Update api call to bring back submitted by and submission id
+
+        $metadata = (new SiriusChecklistPdfDocumentMetadata())
+        ->setYear((int) $checklistData->getReportEndDate()->format('Y'))
+        ->setType($checklistData->getSyncedReportSubmission()->getReport()->getType())
+        ->setSubmitterEmail()
+        ->setSubmissionId()
+        ->setReportingPeriodFrom($checklistData->getReportStartDate())
+        ->setReportingPeriodTo($checklistData->getReportEndDate());
+        // Create metadata here
+
         return (new SiriusDocumentUpload())
             ->setType('checklists')
-            ->setAttributes(new SiriusChecklistPdfDocumentMetadata())
+            ->setAttributes($metadata)
             ->setFile($file);
     }
 
