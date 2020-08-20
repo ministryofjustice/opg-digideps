@@ -30,12 +30,12 @@ startPage:
   startButton: Start actions
 
 stepPage:
-  htmlTitle: "Deputy report - actions you plan to take | GOV.UK"
+  htmlTitle: "Actions you plan to take - Complete the deputy report | GOV.UK"
   supportTitle: Actions you plan to take
   backLink: Back
 
 summaryPage:
-  htmlTitle: "Deputy report - actions you plan to take | GOV.UK"
+  htmlTitle: "Actions you plan to take - Complete the deputy report | GOV.UK"
   pageTitle: Actions you plan to take
   supportTitle: ""
   weAskAbout: |

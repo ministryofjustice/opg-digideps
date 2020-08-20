@@ -12,19 +12,19 @@ listPage:
   resendActivation: Resend activation
 
 addPage:
-  htmlTitle: Deputy report - add user account | GOV.UK
+  htmlTitle: Add user account - Complete the deputy report | GOV.UK
   pageTitle: Add user account
   supportTitle: User account
   informationBannerText: Any users you add will be able to see and edit all your organisation's reports
 
 editPage:
-  htmlTitle: Deputy report - edit user account | GOV.UK
+  htmlTitle: Edit user account - Complete the deputy report | GOV.UK
   pageTitle: Edit user account
   supportTitle: User account
   moreThanOneTeamNotification: This user is also a team member on other deputyships. Any changes you make will update their account across all deputyship teams.
 
 deletePage:
-  htmlTitle: "Client profile - remove user account | GOV.UK"
+  htmlTitle: "Remove user account - Complete the deputy report | GOV.UK"
   subject: user account
   summary:
     fullName: Name

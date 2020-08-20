@@ -64,7 +64,7 @@ summaryPage:
   totalValue: "Total value of assets: £%value%"
 
 deletePage:
-  htmlTitle: "New deputy report - remove asset | GOV.UK"
+  htmlTitle: "Remove asset - Complete the deputy report | GOV.UK"
   subject: asset
   summary:
     type: Type

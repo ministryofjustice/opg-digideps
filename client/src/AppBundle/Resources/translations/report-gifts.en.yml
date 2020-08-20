@@ -28,7 +28,7 @@ startPage:
   startButton: Start gifts
 
 existPage:
-  htmlTitle: "Deputy report - add gift | GOV.UK"
+  htmlTitle: "Add gift - Complete the deputy report | GOV.UK"
   supportTitle: Gifts
   form:
     giftsExist:
@@ -38,7 +38,7 @@ existPage:
       label: Save and continue
 
 addAnotherPage:
-  htmlTitle: "Deputy report - add gift | GOV.UK"
+  htmlTitle: "Add a gift - Complete the deputy report | GOV.UK"
   pageTitle: Add a gift
   supportTitle: Gifts
   form:
@@ -49,7 +49,7 @@ addAnotherPage:
       label: Continue
 
 addPage:
-  htmlTitle: "Deputy report - gifts | GOV.UK"
+  htmlTitle: "Add a gift - Complete the deputy report | GOV.UK"
   pageTitle: Add a gift
   supportTitle: Gifts
   pageSectionDescription: |
@@ -57,12 +57,12 @@ addPage:
     You can add one or more gifts and come back to complete the section later.
 
 editPage:
-  htmlTitle: "Deputy report - gifts | GOV.UK"
-  supportTitle: Gifts
+  htmlTitle: "Edit gift - Complete the deputy report | GOV.UK"
   pageTitle: Edit gift
+  supportTitle: Gifts
 
 summaryPage:
-  htmlTitle: "Deputy report - gifts | GOV.UK"
+  htmlTitle: "Gifts - Complete the deputy report | GOV.UK"
   pageTitle: Gifts
   pageSectionDescription: |
     In this section, we asked you about the gifts you have given on %client%'s behalf during this reporting period.
@@ -71,7 +71,7 @@ summaryPage:
   bankAccount: Bank account
 
 deletePage:
-  htmlTitle: "Deputy report - remove gift | GOV.UK"
+  htmlTitle: "Remove gift - Complete the deputy report | GOV.UK"
   subject: gift
   summary:
     explanation: Description of gift

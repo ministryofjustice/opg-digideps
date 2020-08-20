@@ -37,7 +37,7 @@ save:
 saveAndContinue:
   label: Save and continue
 createReport:
-  htmlTitle: "Deputy report - create a report | GOV.UK"
+  htmlTitle: "Create a report - Complete the deputy report | GOV.UK"
   pageTitle: Create a report
 form:
   newReportForm:

@@ -6,11 +6,11 @@ startPage:
   startButton: Start health and lifestyle
 
 stepPage:
-  htmlTitle: "Deputy report - Health and lifestyle | GOV.UK"
+  htmlTitle: "Health and lifestyle - Complete the deputy report | GOV.UK"
   supportTitle: Health and lifestyle
 
 summaryPage:
-  htmlTitle: "Deputy report - Health and lifestyle | GOV.UK"
+  htmlTitle: "Health and lifestyle - Complete the deputy report | GOV.UK"
   pageTitle: Health and lifestyle
   supportTitle: ""
   weAskAbout: In this section, we ask you about %client%'s care and contact with you and other people.

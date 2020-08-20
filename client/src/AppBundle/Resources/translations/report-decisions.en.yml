@@ -110,7 +110,7 @@ summaryPage:
   decisionTableColumnHeading3: If not, explain why; if yes, provide detail
 
 deletePage:
-  htmlTitle: "Deputy report - remove decision | GOV.UK"
+  htmlTitle: "Remove decision - Complete the deputy report | GOV.UK"
   subject: decision
   summary:
     description: Decision description

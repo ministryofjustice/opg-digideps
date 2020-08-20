@@ -6,7 +6,7 @@ startPage:
   startButton: Start contacts
 
 existPage:
-  htmlTitle: "Deputy report - add contact | GOV.UK"
+  htmlTitle: "Add contact - Complete the deputy report | GOV.UK"
   supportTitle: Contacts
   form:
     hasContacts:
@@ -24,7 +24,7 @@ existPage:
       label: Save and continue
 
 addAnotherPage:
-  htmlTitle: "Deputy report - add contact | GOV.UK"
+  htmlTitle: "Add contact - Complete the deputy report | GOV.UK"
   pageTitle: Contacts
   form:
     addAnother:
@@ -34,7 +34,7 @@ addAnotherPage:
       label: Continue
 
 addPage:
-  htmlTitle: "Deputy report - contacts | GOV.UK"
+  htmlTitle: "Add a contact - Complete the deputy report | GOV.UK"
   pageTitle: Add a contact
   supportTitle: Contacts
   pageSectionDescription: |
@@ -42,12 +42,12 @@ addPage:
     You'll be able to add more people later if you need to.
 
 editPage:
-  htmlTitle: "Deputy report - contacts | GOV.UK"
-  supportTitle: Contacts
+  htmlTitle: "Edit contact - Complete the deputy report | GOV.UK"
   pageTitle: Edit contact
+  supportTitle: Contacts
 
 summaryPage:
-  htmlTitle: "Deputy report - contacts | GOV.UK"
+  htmlTitle: "Contacts - Complete the deputy report | GOV.UK"
   pageTitle: Contacts
   addButton: Add a contact
   weAskAbout: |
@@ -58,7 +58,7 @@ summaryPage:
   reasonForContact: Reason for contact
 
 deletePage:
-  htmlTitle: "Deputy report - remove contact | GOV.UK"
+  htmlTitle: "Remove contact - Complete the deputy report | GOV.UK"
   subject: contact
   summary:
     contactName: Contact name

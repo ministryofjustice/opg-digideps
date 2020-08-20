@@ -29,17 +29,17 @@ typePage:
   backLink: Back
 
 addPage:
-  htmlTitle: "Deputy report - Assets | GOV.UK"
-  supportTitle: Assets
+  htmlTitle: "Add an asset: %assetTitle% - Complete the deputy report | GOV.UK"
   pageTitle: "Add an asset: %assetTitle%"
+  supportTitle: Assets
 
 editPage:
-  htmlTitle: "Deputy report - Assets | GOV.UK"
-  supportTitle: Assets
+  htmlTitle: "Edit %assetTitle% - Complete the deputy report | GOV.UK"
   pageTitle: Edit %assetTitle%
+  supportTitle: Assets
 
 addAnotherPage:
-  htmlTitle: "Deputy report - assets | GOV.UK"
+  htmlTitle: "Assets - Complete the deputy report | GOV.UK"
   pageTitle: Assets
   form:
     addAnother:
@@ -49,12 +49,12 @@ addAnotherPage:
       label: Continue
 
 stepPageProperty:
-  htmlTitle: "Deputy report - Property | GOV.UK"
-  supportTitle: Assets
+  htmlTitle: "Add an asset: property - Complete the deputy report | GOV.UK"
   pageTitle: "Add an asset: property"
+  supportTitle: Assets
 
 summaryPage:
-  htmlTitle: "Deputy report - assets | GOV.UK"
+  htmlTitle: "Assets - Complete the deputy report | GOV.UK"
   pageTitle: Assets
   supportTitle: ""
   weAskAbout: In this section, we ask you about %client%'s assets, including property, vehicles, valuables or investments.
@@ -64,7 +64,7 @@ summaryPage:
   totalValueOfAssets: Total value of assets
 
 deletePage:
-  htmlTitle: "Deputy report - remove asset | GOV.UK"
+  htmlTitle: "Remove asset - Complete the deputy report | GOV.UK"
   subject: asset
   summary:
     type: Type

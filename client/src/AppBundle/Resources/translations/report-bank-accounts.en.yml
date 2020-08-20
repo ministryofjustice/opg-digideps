@@ -1,5 +1,5 @@
 startPage:
-  htmlTitle: "Deputy report - Accounts | GOV.UK"
+  htmlTitle: "Accounts - Complete the deputy report | GOV.UK"
   pageTitle: Accounts
   pageSectionDescription1: |
     Use this section to tell us about all of %client%'s bank accounts, building society accounts,
@@ -36,7 +36,7 @@ addAnotherPage:
       label: Continue
 
 summaryPage:
-  htmlTitle: "Deputy report - Accounts | GOV.UK"
+  htmlTitle: "Accounts - Complete the deputy report | GOV.UK"
   pageTitle: Accounts
   weAskAbout: |
     In this section, we ask you about %client%'s bank accounts, building society accounts,
@@ -46,7 +46,7 @@ summaryPage:
   addBalance: Add balance
 
 deletePage:
-  htmlTitle: "Deputy report - remove account | GOV.UK"
+  htmlTitle: "Remove account - Complete the deputy report | GOV.UK"
   subject: account
   summary:
     bank: Bank or building society name

@@ -24,7 +24,7 @@ managementPage:
       hint: For example, give details of any regular payments to creditors or payment plans
 
 editPage:
-  htmlTitle: "New deputy report - debts | GOV.UK"
+  htmlTitle: "Tell us more about %client%'s debts - Complete the deputy report | GOV.UK"
   pageTitle: Tell us more about %client%'s debts.
   supportTitle: Debts
   pageHint: If %client% has a mortgage on a property, use the Assets section to tell us about it

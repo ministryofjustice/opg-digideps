@@ -26,7 +26,7 @@ startPage:
   startButton: Start deputy expenses
 
 existPage:
-  htmlTitle: "Deputy report - add deputy expense | GOV.UK"
+  htmlTitle: "Add deputy expense - Complete the deputy report | GOV.UK"
   supportTitle: Deputy expenses
   form:
     paidForAnything:
@@ -36,7 +36,7 @@ existPage:
       label: Save and continue
 
 addAnotherPage:
-  htmlTitle: "Deputy report - add deputy expense | GOV.UK"
+  htmlTitle: "Add an expense - Complete the deputy report | GOV.UK"
   pageTitle: Add an expense
   supportTitle: Deputy expenses
   form:
@@ -47,19 +47,19 @@ addAnotherPage:
       label: Continue
 
 addPage:
-  htmlTitle: "Deputy report - deputy expenses | GOV.UK"
+  htmlTitle: "Ann an expense - Complete the deputy report | GOV.UK"
   pageTitle: Add an expense
   supportTitle: Deputy expenses
   pageSectionDescription: |
     Tell us about an expense you've claimed for. You'll be able to add more expenses if you need to.
 
 editPage:
-  htmlTitle: "Deputy report - deputy expenses | GOV.UK"
-  supportTitle: Deputy expenses
+  htmlTitle: "Edit deputy expense - Complete the deputy report | GOV.UK"
   pageTitle: Edit deputy expense
+  supportTitle: Deputy expenses
 
 summaryPage:
-  htmlTitle: "Deputy report - deputy expenses | GOV.UK"
+  htmlTitle: "deputy expenses | GOV.UK"
   pageTitle: Deputy expenses
   pageSectionDescription: |
     In this section, we asked you to tell us about any expenses you've claimed for things you have
@@ -67,7 +67,7 @@ summaryPage:
   addButton: Add a deputy expense
 
 deletePage:
-  htmlTitle: "Deputy report - remove deputy expense | GOV.UK"
+  htmlTitle: "Remove deputy expense - Complete the deputy report | GOV.UK"
   subject: expense
   summary:
     explanation: Description of expense

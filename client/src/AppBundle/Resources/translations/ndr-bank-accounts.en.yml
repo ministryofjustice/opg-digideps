@@ -26,7 +26,7 @@ startPage:
   startButton: Start accounts
 
 stepPage:
-  htmlTitle: "Deputy report - Accounts | GOV.UK"
+  htmlTitle: "Accounts - Complete the deputy report | GOV.UK"
   pageTitle:
     add: Add an account
     edit: Edit an account
@@ -36,7 +36,7 @@ stepPage:
   backLink: Back
 
 addAnotherPage:
-  htmlTitle: "Deputy report - add another account | GOV.UK"
+  htmlTitle: "Add another account - Complete the deputy report | GOV.UK"
   pageTitle: Accounts
   form:
     addAnother:
@@ -46,14 +46,14 @@ addAnotherPage:
       label: Continue
 
 summaryPage:
-  htmlTitle: "Deputy report - Accounts | GOV.UK"
+  htmlTitle: "Accounts - Complete the deputy report | GOV.UK"
   pageTitle: Accounts
   weAskAbout: |
     In this section, we ask you about %client%'s bank accounts, building society
     accounts, savings accounts and ISAs.
 
 deletePage:
-  htmlTitle: "Deputy report - remove account | GOV.UK"
+  htmlTitle: "Remove account - Complete the deputy report | GOV.UK"
   subject: account
   summary:
     accountType: Account type
