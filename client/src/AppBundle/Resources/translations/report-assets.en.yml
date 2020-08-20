@@ -18,8 +18,8 @@ existPage:
 
 typePage:
   htmlTitle: "Add an asset - Complete the deputy report | GOV.UK"
-  supportTitle: Assets
   pageTitle: Add an asset
+  supportTitle: Assets
   pageSectionDescription1: |
     Please tell us a bit more about %client%'s assets. Add a type of asset, then we'll ask you
     for some details about it. You can come back and add more assets if you need to.

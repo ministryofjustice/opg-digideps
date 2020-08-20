@@ -19,8 +19,8 @@ existPage:
       label: Save and continue
 
 addAnotherPage:
-  htmlTitle: "Money transfers - Complete the deputy report | GOV.UK"
-  pageTitle: Money transfers
+  htmlTitle: "Add another money transfer - Complete the deputy report | GOV.UK"
+  pageTitle: Add another money transfer
   form:
     addAnother:
       label: The transfer has been saved. Would you like to add another now?

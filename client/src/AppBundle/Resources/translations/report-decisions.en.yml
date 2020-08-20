@@ -74,8 +74,8 @@ existPage:
       hint: ""
 
 addAnotherPage:
-  htmlTitle: "Add decision - Complete the deputy report | GOV.UK"
-  pageTitle: Decisions
+  htmlTitle: "Add another decision - Complete the deputy report | GOV.UK"
+  pageTitle: Add another decision
   form:
     addAnother:
       label: The decision has been saved. Would you like to add another now?
@@ -92,9 +92,9 @@ addPage:
     able to add more decisions later if you need to.
 
 editPage:
-  htmlTitle: "Decisions - Complete the deputy report | GOV.UK"
-  supportTitle: Decisions
+  htmlTitle: "Edit decision - Complete the deputy report | GOV.UK"
   pageTitle: Edit decision
+  supportTitle: Decisions
 
 summaryPage:
   weAskAbout: |

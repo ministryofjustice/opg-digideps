@@ -36,8 +36,8 @@ existPage:
       label: Save and continue
 
 addAnotherPage:
-  htmlTitle: "Add an expense - Complete the deputy report | GOV.UK"
-  pageTitle: Add an expense
+  htmlTitle: "Add another expense - Complete the deputy report | GOV.UK"
+  pageTitle: Add another expense
   supportTitle: Deputy expenses
   form:
     addAnother:
@@ -59,7 +59,7 @@ editPage:
   supportTitle: Deputy expenses
 
 summaryPage:
-  htmlTitle: "deputy expenses | GOV.UK"
+  htmlTitle: "Deputy expenses - Complete the deputy report | GOV.UK"
   pageTitle: Deputy expenses
   pageSectionDescription: |
     In this section, we asked you to tell us about any expenses you've claimed for things you have

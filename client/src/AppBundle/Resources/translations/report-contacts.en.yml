@@ -24,8 +24,8 @@ existPage:
       label: Save and continue
 
 addAnotherPage:
-  htmlTitle: "Add contact - Complete the deputy report | GOV.UK"
-  pageTitle: Contacts
+  htmlTitle: "Add another contact - Complete the deputy report | GOV.UK"
+  pageTitle: Add another contact
   form:
     addAnother:
       label: The person has been saved. Would you like to add another now?

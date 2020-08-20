@@ -29,8 +29,8 @@ feeExistPage:
       label: Save and continue
 
 editPage:
-  htmlTitle: "Deputy fees and expenses - Complete the deputy report | GOV.UK"
-  pageTitle: Deputy fees and expenses
+  htmlTitle: "Edit fees and expenses - Complete the deputy report | GOV.UK"
+  pageTitle: Edit fees and expenses
   pageSectionDescription: Please tell us about any fees or expenses you've claimed from the client's funds in line with the practice direction.
 
 otherExistPage:
@@ -47,8 +47,8 @@ otherAddPage:
   pageTitle: Add an expense
 
 otherAddAnotherPage:
-  htmlTitle: "Add an expense - Complete the deputy report | GOV.UK"
-  pageTitle: Add an expense
+  htmlTitle: "Add another expense - Complete the deputy report | GOV.UK"
+  pageTitle: Add another expense
   form:
     addAnother:
       label: The expense has been saved. Would you like to add another now?

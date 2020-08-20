@@ -98,8 +98,8 @@ addAnotherPage:
       save:
         label: Continue
   moneyOut:
-    htmlTitle: "Add a payment - Complete the deputy report | GOV.UK"
-    pageTitle: Add a payment
+    htmlTitle: "Add another payment - Complete the deputy report | GOV.UK"
+    pageTitle: Add another payment
     supportTitle: Money out
     form:
       addAnother:

@@ -38,8 +38,8 @@ existPage:
       label: Save and continue
 
 addAnotherPage:
-  htmlTitle: "Add a gift - Complete the deputy report | GOV.UK"
-  pageTitle: Add a gift
+  htmlTitle: "Add another gift - Complete the deputy report | GOV.UK"
+  pageTitle: Add another gift
   supportTitle: Gifts
   form:
     addAnother:
