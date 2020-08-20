@@ -15,7 +15,7 @@ startPage:
   startButton: Start deputy expenses
 
 existPage:
-  htmlTitle: "Deputy expense - Complete the deputy report | GOV.UK"
+  htmlTitle: "Add deputy expense - Complete the deputy report | GOV.UK"
   supportTitle: Deputy expenses
   form:
     paidForAnything:
