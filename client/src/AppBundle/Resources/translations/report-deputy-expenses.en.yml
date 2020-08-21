@@ -47,7 +47,7 @@ addAnotherPage:
       label: Continue
 
 addPage:
-  htmlTitle: "Ann an expense - Complete the deputy report | GOV.UK"
+  htmlTitle: "Add an expense - Complete the deputy report | GOV.UK"
   pageTitle: Add an expense
   supportTitle: Deputy expenses
   pageSectionDescription: |
