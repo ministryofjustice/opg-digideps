@@ -28,6 +28,7 @@ class SatisfactionControllerTest extends AbstractTestController
         $okayData = [
             'score'      => 4,
             'reportType' => '103',
+            'comments' => 'a comment'
         ];
 
         // assert Auth
@@ -43,7 +44,8 @@ class SatisfactionControllerTest extends AbstractTestController
         $this->assertJsonRequest('POST', '/satisfaction/public', [
             'mustSucceed' => true,
             'data' => [
-                'score' => 4
+                'score' => 4,
+                'comments' => 'a comment'
             ],
             'assertResponseCode' => 200,
         ]);
@@ -110,8 +112,8 @@ class SatisfactionControllerTest extends AbstractTestController
     public function getValidInputs()
     {
         return [
-            ['url' => '/satisfaction', 'data' => ['score' => 4, 'reportType' => 'foo']],
-            ['url' => '/satisfaction/public', 'data' => ['score' => 4]],
+            ['url' => '/satisfaction', 'data' => ['score' => 4, 'reportType' => 'foo', 'comments' => 'a comment']],
+            ['url' => '/satisfaction/public', 'data' => ['score' => 4, 'comments' => 'a comment']],
         ];
     }
 }

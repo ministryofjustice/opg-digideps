@@ -137,7 +137,8 @@ class ReportSubmissionRepository extends EntityRepository
         \DateTime $toDate = null,
         $orderBy = 'createdOn',
         $order = 'ASC'
-    ) {
+    )
+    {
 
         /** @var SoftDeleteableFilter $filter */
         $filter = $this->_em->getFilters()->getFilter('softdeleteable');
@@ -150,8 +151,7 @@ class ReportSubmissionRepository extends EntityRepository
             ->leftJoin('r.client', 'c')
             ->leftJoin('rs.ndr', 'ndr')
             ->leftJoin('ndr.client', 'ndrClient')
-            ->leftJoin('rs.documents', 'documents')
-        ;
+            ->leftJoin('rs.documents', 'documents');
 
         $qbSelect = clone $qb;
         $qbSelect

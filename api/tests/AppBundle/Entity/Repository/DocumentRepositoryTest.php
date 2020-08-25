@@ -212,7 +212,7 @@ class DocumentRepositoryTest extends KernelTestCase
         $this->assertDataMatchesEntity($documents, $reportPdfDoc2, $client2, $reportSubmission2, $report2);
         $this->assertDataMatchesEntity($documents, $supportingDoc2, $client2, $reportSubmission2, $report2);
 
-        foreach([$reportPdfDoc, $supportingDoc,$reportPdfDoc, $supportingDoc] as $doc) {
+        foreach([$reportPdfDoc, $supportingDoc, $reportPdfDoc, $supportingDoc] as $doc) {
             self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $doc->getSynchronisationStatus());
         }
     }
