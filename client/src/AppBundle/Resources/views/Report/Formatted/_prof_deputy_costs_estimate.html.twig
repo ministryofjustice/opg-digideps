@@ -79,9 +79,9 @@
                 <h3 class="label question bold">{{ 'moreInfo.form.profDeputyCostsEstimateHasMoreInfoSummary.yesno'|trans }}</h3>
                 <table class="checkboxes labelvalue inline">
                     <tr>
-                        <td class="value checkbox"{% if report.profDeputyCostsEstimateHasMoreInfo == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="value checkbox">{% if report.profDeputyCostsEstimateHasMoreInfo == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'yes' | trans({}, 'common') }}</td>
-                        <td class="value checkbox"{% if report.profDeputyCostsEstimateHasMoreInfo == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="value checkbox">{% if report.profDeputyCostsEstimateHasMoreInfo == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'no' | trans({}, 'common') }}</td>
                     </tr>
                 </table>

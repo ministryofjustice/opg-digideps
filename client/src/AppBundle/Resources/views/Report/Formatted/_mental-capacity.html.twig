@@ -7,9 +7,9 @@
 
         <table class="checkboxes labelvalue inline">
             <tr>
-                <td class="checkbox value"{% if mentalCapacity.hasCapacityChanged == 'changed' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                <td class="checkbox value">{% if mentalCapacity.hasCapacityChanged == 'changed' %}X{% else %}&nbsp;{% endif %}</td>
                 <td class="label">Changed</td>
-                <td class="checkbox value"{% if mentalCapacity.hasCapacityChanged == 'stayedSame' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                <td class="checkbox value">{% if mentalCapacity.hasCapacityChanged == 'stayedSame' %}X{% else %}&nbsp;{% endif %}</td>
                 <td class="label">Stayed the same</td>
             </tr>
         </table>

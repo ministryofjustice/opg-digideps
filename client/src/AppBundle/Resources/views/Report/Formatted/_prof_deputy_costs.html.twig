@@ -23,9 +23,9 @@
             <h3 class="label question bold">{{ 'previousReceivedExists.form.profDeputyCostsHasPrevious.label'|trans(transOptions) }}</h3>
             <table class="checkboxes labelvalue inline">
                 <tr>
-                    <td class="value checkbox"{% if report.profDeputyCostsHasPrevious == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                    <td class="value checkbox">{% if report.profDeputyCostsHasPrevious == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                     <td class="label">{{ 'yes' | trans({}, 'common') }}</td>
-                    <td class="value checkbox"{% if report.profDeputyCostsHasPrevious == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                    <td class="value checkbox">{% if report.profDeputyCostsHasPrevious == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                     <td class="label">{{ 'no' | trans({}, 'common') }}</td>
                 </tr>
             </table>
@@ -71,9 +71,9 @@
                 <h3 class="label question bold">{{ 'interimExists.form.profDeputyCostsHasInterim.label'|trans(transOptions) }}</h3>
                 <table class="checkboxes labelvalue inline">
                     <tr>
-                        <td class="value checkbox"{% if report.profDeputyCostsHasInterim == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="value checkbox">{% if report.profDeputyCostsHasInterim == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'yes' | trans({}, 'common') }}</td>
-                        <td class="value checkbox"{% if report.profDeputyCostsHasInterim == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="value checkbox">{% if report.profDeputyCostsHasInterim == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'no' | trans({}, 'common') }}</td>
                     </tr>
                 </table>

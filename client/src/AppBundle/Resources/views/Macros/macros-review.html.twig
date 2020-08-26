@@ -91,9 +91,9 @@
 
         <table class="checkboxes labelvalue inline">
             <tr>
-                <td class="value checkbox"{% if visitsCare.doesClientReceivePaidCare == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                <td class="value checkbox">{% if visitsCare.doesClientReceivePaidCare == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                 <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                <td class="value checkbox"{% if visitsCare.doesClientReceivePaidCare == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                <td class="value checkbox">{% if visitsCare.doesClientReceivePaidCare == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                 <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
             </tr>
         </table>
@@ -103,24 +103,24 @@
             <table class="checkboxes labelvalue">
                 <tr>
                     <td class="clean-cell">
-                        <span class="checkbox value"
-                            {% if visitsCare.doesClientReceivePaidCare == 'yes' and visitsCare.howIsCareFunded == 'client_pays_for_all' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}
+                        <span class="checkbox value">
+                            {% if visitsCare.doesClientReceivePaidCare == 'yes' and visitsCare.howIsCareFunded == 'client_pays_for_all' %}X{% else %}&nbsp;{% endif %}
                         </span>
                     </td>
                     <td class="label soft-half--bottom">{{ 'form.howIsCareFunded.choices.client_pays_for_all' | trans(transOptions, translationDomain) }}</td>
                 </tr>
                 <tr>
                     <td class="clean-cell">
-                        <span class="checkbox value"
-                            {% if visitsCare.doesClientReceivePaidCare == 'yes' and visitsCare.howIsCareFunded == 'client_gets_financial_help' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}
+                        <span class="checkbox value">
+                            {% if visitsCare.doesClientReceivePaidCare == 'yes' and visitsCare.howIsCareFunded == 'client_gets_financial_help' %}X{% else %}&nbsp;{% endif %}
                         </span>
                     </td>
                     <td class="label soft-half--bottom">{{ 'form.howIsCareFunded.choices.client_gets_financial_help' | trans(transOptions, translationDomain) }}</td>
                 </tr>
                 <tr>
                     <td class="clean-cell">
-                        <span class="checkbox value"
-                            {% if visitsCare.doesClientReceivePaidCare == 'yes' and visitsCare.howIsCareFunded == 'all_care_is_paid_by_someone_else' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}
+                        <span class="checkbox value">
+                            {% if visitsCare.doesClientReceivePaidCare == 'yes' and visitsCare.howIsCareFunded == 'all_care_is_paid_by_someone_else' %}X{% else %}&nbsp;{% endif %}
                         </span>
                     </td>
                     <td class="label hard--ends">{{ 'form.howIsCareFunded.choices.all_care_is_paid_by_someone_else' | trans(transOptions, translationDomain) }}</td>
@@ -153,9 +153,9 @@
 
         <table class="checkboxes labelvalue inline">
             <tr>
-                <td class="value checkbox"{% if report.paidForAnything == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                <td class="value checkbox">{% if report.paidForAnything == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                 <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                <td class="value checkbox"{% if report.paidForAnything == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                <td class="value checkbox">{% if report.paidForAnything == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                 <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
             </tr>
         </table>
@@ -191,9 +191,9 @@
 
             <table class="checkboxes labelvalue inline">
                 <tr>
-                    <td class="value checkbox"{% if param.answer == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                    <td class="value checkbox">{% if param.answer == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                     <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                    <td class="value checkbox"{% if param.answer == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                    <td class="value checkbox">{% if param.answer == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                     <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                 </tr>
             </table>

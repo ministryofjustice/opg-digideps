@@ -20,9 +20,9 @@
             <table class="checkboxes labelvalue inline">
                 <tbody>
                     <tr>
-                        <td class="checkbox value"{% if lodgingChecklist.reportingPeriodAccurate == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.reportingPeriodAccurate == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                        <td class="checkbox value"{% if lodgingChecklist.reportingPeriodAccurate == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.reportingPeriodAccurate == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                     </tr>
                 </tbody>
@@ -36,7 +36,7 @@
                 <table class="checkboxes labelvalue inline">
                     <tbody>
                         <tr>
-                            <td class="checkbox value"{% if lodgingChecklist.contactDetailsUptoDate == true %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.contactDetailsUptoDate == true %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
                         </tr>
                     </tbody>
@@ -47,7 +47,7 @@
                 <table class="checkboxes labelvalue inline">
                     <tbody>
                         <tr>
-                            <td class="checkbox value"{% if lodgingChecklist.deputyFullNameAccurateInCasrec == true %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.deputyFullNameAccurateInCasrec == true %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
                         </tr>
                     </tbody>
@@ -65,9 +65,9 @@
             <table class="checkboxes labelvalue inline">
                 <tbody>
                     <tr>
-                        <td class="checkbox value"{% if lodgingChecklist.decisionsSatisfactory == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.decisionsSatisfactory == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                        <td class="checkbox value"{% if lodgingChecklist.decisionsSatisfactory == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.decisionsSatisfactory == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                     </tr>
                 </tbody>
@@ -82,9 +82,9 @@
             <table class="checkboxes labelvalue inline">
                 <tbody>
                     <tr>
-                        <td class="checkbox value"{% if lodgingChecklist.consultationsSatisfactory == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.consultationsSatisfactory == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                        <td class="checkbox value"{% if lodgingChecklist.consultationsSatisfactory == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.consultationsSatisfactory == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                     </tr>
                 </tbody>
@@ -99,9 +99,9 @@
             <table class="checkboxes labelvalue inline">
                 <tbody>
                     <tr>
-                        <td class="checkbox value"{% if lodgingChecklist.careArrangements == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.careArrangements == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                        <td class="checkbox value"{% if lodgingChecklist.careArrangements == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.careArrangements == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                     </tr>
                 </tbody>
@@ -117,9 +117,9 @@
                 <table class="checkboxes labelvalue inline">
                     <tbody>
                         <tr>
-                            <td class="checkbox value"{% if lodgingChecklist.satisfiedWithHealthAndLifestyle == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.satisfiedWithHealthAndLifestyle == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if lodgingChecklist.satisfiedWithHealthAndLifestyle == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.satisfiedWithHealthAndLifestyle == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                         </tr>
                     </tbody>
@@ -137,11 +137,11 @@
                 <table class="checkboxes labelvalue inline">
                     <tbody>
                         <tr>
-                            <td class="checkbox value"{% if lodgingChecklist.assetsDeclaredAndManaged == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.assetsDeclaredAndManaged == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if lodgingChecklist.assetsDeclaredAndManaged == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.assetsDeclaredAndManaged == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if lodgingChecklist.assetsDeclaredAndManaged == 'na' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.assetsDeclaredAndManaged == 'na' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
                         </tr>
                     </tbody>
@@ -152,11 +152,11 @@
                 <table class="checkboxes labelvalue inline">
                     <tbody>
                         <tr>
-                            <td class="checkbox value"{% if lodgingChecklist.debtsManaged == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.debtsManaged == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if lodgingChecklist.debtsManaged == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.debtsManaged == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if lodgingChecklist.debtsManaged == 'na' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.debtsManaged == 'na' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
                         </tr>
                     </tbody>
@@ -173,11 +173,11 @@
                 <table class="checkboxes labelvalue inline">
                     <tbody>
                         <tr>
-                            <td class="checkbox value"{% if lodgingChecklist.openClosingBalancesMatch == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.openClosingBalancesMatch == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if lodgingChecklist.openClosingBalancesMatch == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.openClosingBalancesMatch == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if lodgingChecklist.openClosingBalancesMatch == 'na' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.openClosingBalancesMatch == 'na' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
                         </tr>
                     </tbody>
@@ -194,11 +194,11 @@
                 <table class="checkboxes labelvalue inline">
                     <tbody>
                         <tr>
-                            <td class="checkbox value"{% if lodgingChecklist.accountsBalance == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.accountsBalance == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if lodgingChecklist.accountsBalance == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.accountsBalance == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if lodgingChecklist.accountsBalance == 'na' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.accountsBalance == 'na' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
                         </tr>
                     </tbody>
@@ -209,11 +209,11 @@
                 <table class="checkboxes labelvalue inline">
                     <tbody>
                         <tr>
-                            <td class="checkbox value"{% if lodgingChecklist.moneyMovementsAcceptable == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.moneyMovementsAcceptable == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if lodgingChecklist.moneyMovementsAcceptable == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.moneyMovementsAcceptable == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if lodgingChecklist.moneyMovementsAcceptable == 'na' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.moneyMovementsAcceptable == 'na' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
                         </tr>
                     </tbody>
@@ -231,9 +231,9 @@
                 <table class="checkboxes labelvalue inline">
                     <tbody>
                     <tr>
-                        <td class="checkbox value"{% if lodgingChecklist.deputyChargeAllowedByCourt == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.deputyChargeAllowedByCourt == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                        <td class="checkbox value"{% if lodgingChecklist.deputyChargeAllowedByCourt == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.deputyChargeAllowedByCourt == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                     </tr>
                     </tbody>
@@ -244,11 +244,11 @@
                 <table class="checkboxes labelvalue inline">
                     <tbody>
                     <tr>
-                        <td class="checkbox value"{% if lodgingChecklist.satisfiedWithPaExpenses == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.satisfiedWithPaExpenses == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                        <td class="checkbox value"{% if lodgingChecklist.satisfiedWithPaExpenses == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.satisfiedWithPaExpenses == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                        <td class="checkbox value"{% if lodgingChecklist.satisfiedWithPaExpenses == 'na' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.satisfiedWithPaExpenses == 'na' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
                     </tr>
                     </tbody>
@@ -261,11 +261,11 @@
                 <table class="checkboxes labelvalue inline">
                     <tbody>
                         <tr>
-                            <td class="checkbox value"{% if lodgingChecklist.bondAdequate == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.bondAdequate == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if lodgingChecklist.bondAdequate == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.bondAdequate == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if lodgingChecklist.bondAdequate == 'na' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.bondAdequate == 'na' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
                         </tr>
                     </tbody>
@@ -276,11 +276,11 @@
                 <table class="checkboxes labelvalue inline">
                     <tbody>
                         <tr>
-                            <td class="checkbox value"{% if lodgingChecklist.bondOrderMatchCasrec == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.bondOrderMatchCasrec == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if lodgingChecklist.bondOrderMatchCasrec == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.bondOrderMatchCasrec == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if lodgingChecklist.bondOrderMatchCasrec == 'na' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if lodgingChecklist.bondOrderMatchCasrec == 'na' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
                         </tr>
                     </tbody>
@@ -298,9 +298,9 @@
             <table class="checkboxes labelvalue inline">
                 <tbody>
                     <tr>
-                        <td class="checkbox value"{% if lodgingChecklist.paymentsMatchCostCertificate == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.paymentsMatchCostCertificate == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                        <td class="checkbox value"{% if lodgingChecklist.paymentsMatchCostCertificate == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.paymentsMatchCostCertificate == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                     </tr>
                 </tbody>
@@ -311,9 +311,9 @@
             <table class="checkboxes labelvalue inline">
                 <tbody>
                     <tr>
-                        <td class="checkbox value"{% if lodgingChecklist.profCostsReasonableAndProportionate == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.profCostsReasonableAndProportionate == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                        <td class="checkbox value"{% if lodgingChecklist.profCostsReasonableAndProportionate == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.profCostsReasonableAndProportionate == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                     </tr>
                 </tbody>
@@ -324,11 +324,11 @@
             <table class="checkboxes labelvalue inline">
                 <tbody>
                     <tr>
-                        <td class="checkbox value"{% if lodgingChecklist.hasDeputyOverchargedFromPreviousEstimates == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.hasDeputyOverchargedFromPreviousEstimates == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                        <td class="checkbox value"{% if lodgingChecklist.hasDeputyOverchargedFromPreviousEstimates == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.hasDeputyOverchargedFromPreviousEstimates == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                        <td class="checkbox value"{% if lodgingChecklist.hasDeputyOverchargedFromPreviousEstimates == 'na' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.hasDeputyOverchargedFromPreviousEstimates == 'na' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
                     </tr>
                 </tbody>
@@ -345,9 +345,9 @@
             <table class="checkboxes labelvalue inline">
                 <tbody>
                     <tr>
-                        <td class="checkbox value"{% if lodgingChecklist.nextBillingEstimatesSatisfactory == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.nextBillingEstimatesSatisfactory == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                        <td class="checkbox value"{% if lodgingChecklist.nextBillingEstimatesSatisfactory == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.nextBillingEstimatesSatisfactory == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                     </tr>
                 </tbody>
@@ -374,11 +374,11 @@
             <table class="checkboxes labelvalue inline">
                 <tbody>
                     <tr>
-                        <td class="checkbox value"{% if lodgingChecklist.futureSignificantDecisions == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.futureSignificantDecisions == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                        <td class="checkbox value"{% if lodgingChecklist.futureSignificantDecisions == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.futureSignificantDecisions == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                        <td class="checkbox value"{% if lodgingChecklist.futureSignificantDecisions == 'na' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.futureSignificantDecisions == 'na' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
                     </tr>
                 </tbody>
@@ -389,11 +389,11 @@
             <table class="checkboxes labelvalue inline">
                 <tbody>
                     <tr>
-                        <td class="checkbox value"{% if lodgingChecklist.hasDeputyRaisedConcerns == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.hasDeputyRaisedConcerns == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                        <td class="checkbox value"{% if lodgingChecklist.hasDeputyRaisedConcerns == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.hasDeputyRaisedConcerns == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                        <td class="checkbox value"{% if lodgingChecklist.hasDeputyRaisedConcerns == 'na' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.hasDeputyRaisedConcerns == 'na' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
                     </tr>
                 </tbody>
@@ -408,11 +408,11 @@
             <table class="checkboxes labelvalue inline">
                 <tbody>
                     <tr>
-                        <td class="checkbox value"{% if lodgingChecklist.caseWorkerSatisified == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.caseWorkerSatisified == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                        <td class="checkbox value"{% if lodgingChecklist.caseWorkerSatisified == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.caseWorkerSatisified == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                        <td class="checkbox value"{% if lodgingChecklist.caseWorkerSatisified == 'na' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="checkbox value">{% if lodgingChecklist.caseWorkerSatisified == 'na' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
                     </tr>
                 </tbody>
@@ -432,32 +432,32 @@
                 <table class="checkboxes labelvalue">
                     <tr>
                         <td class="clean-cell">
-                            <span class="checkbox value"
-                                {% if lodgingChecklist.finalDecision == 'for-review' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}
+                            <span class="checkbox value">
+                                {% if lodgingChecklist.finalDecision == 'for-review' %}X{% else %}&nbsp;{% endif %}
                             </span>
                         </td>
                         <td class="label soft-half--bottom">{{ (page ~ '.form.finalDecision.options.forReview') | trans({}, 'admin-checklist') }}</td>
                     </tr>
                     <tr>
                         <td class="clean-cell">
-                            <span class="checkbox value"
-                                {% if lodgingChecklist.finalDecision == 'incomplete' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}
+                            <span class="checkbox value">
+                                {% if lodgingChecklist.finalDecision == 'incomplete' %}X{% else %}&nbsp;{% endif %}
                             </span>
                         </td>
                         <td class="label soft-half--bottom">{{ (page ~ '.form.finalDecision.options.incomplete') | trans({}, 'admin-checklist') }}</td>
                     </tr>
                     <tr>
                         <td class="clean-cell">
-                            <span class="checkbox value"
-                                {% if lodgingChecklist.finalDecision == 'further-casework-required' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}
+                            <span class="checkbox value">
+                                {% if lodgingChecklist.finalDecision == 'further-casework-required' %}X{% else %}&nbsp;{% endif %}
                             </span>
                         </td>
                         <td class="label soft-half--bottom">{{ (page ~ '.form.finalDecision.options.furtherCaseworkRequired') | trans({}, 'admin-checklist') }}</td>
                     </tr>
                     <tr>
                         <td class="clean-cell">
-                            <span class="checkbox value"
-                                {% if lodgingChecklist.finalDecision == 'satisfied' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}
+                            <span class="checkbox value">
+                                {% if lodgingChecklist.finalDecision == 'satisfied' %}X{% else %}&nbsp;{% endif %}
                             </span>
                         </td>
                         <td class="label soft-half--bottom">{{ (page ~ '.form.finalDecision.options.satisfied') | trans({}, 'admin-checklist') }}</td>
@@ -529,11 +529,11 @@
                     <table class="checkboxes labelvalue inline">
                         <tbody>
                         <tr>
-                            <td class="checkbox value"{% if answers.fullBankStatementsExist == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.fullBankStatementsExist == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if answers.fullBankStatementsExist == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.fullBankStatementsExist == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if answers.fullBankStatementsExist == 'na' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.fullBankStatementsExist == 'na' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
                         </tr>
                         </tbody>
@@ -545,11 +545,11 @@
                     <table class="checkboxes labelvalue inline">
                         <tbody>
                         <tr>
-                            <td class="checkbox value"{% if answers.anyLodgingConcerns == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.anyLodgingConcerns == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if answers.anyLodgingConcerns == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.anyLodgingConcerns == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if answers.anyLodgingConcerns == 'na' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.anyLodgingConcerns == 'na' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
                         </tr>
                         </tbody>
@@ -561,11 +561,11 @@
                     <table class="checkboxes labelvalue inline">
                         <tbody>
                         <tr>
-                            <td class="checkbox value"{% if answers.spendingAcceptable == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.spendingAcceptable == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if answers.spendingAcceptable == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.spendingAcceptable == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if answers.spendingAcceptable == 'na' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.spendingAcceptable == 'na' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
                         </tr>
                         </tbody>
@@ -575,11 +575,11 @@
                     <table class="checkboxes labelvalue inline">
                         <tbody>
                         <tr>
-                            <td class="checkbox value"{% if answers.expensesReasonable == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.expensesReasonable == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if answers.expensesReasonable == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.expensesReasonable == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if answers.expensesReasonable == 'na' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.expensesReasonable == 'na' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
                         </tr>
                         </tbody>
@@ -589,11 +589,11 @@
                     <table class="checkboxes labelvalue inline">
                         <tbody>
                         <tr>
-                            <td class="checkbox value"{% if answers.giftingReasonable == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.giftingReasonable == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if answers.giftingReasonable == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.giftingReasonable == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if answers.giftingReasonable == 'na' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.giftingReasonable == 'na' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
                         </tr>
                         </tbody>
@@ -603,11 +603,11 @@
                     <table class="checkboxes labelvalue inline">
                         <tbody>
                         <tr>
-                            <td class="checkbox value"{% if answers.debtManageable == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.debtManageable == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if answers.debtManageable == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.debtManageable == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if answers.debtManageable == 'na' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.debtManageable == 'na' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
                         </tr>
                         </tbody>
@@ -617,11 +617,11 @@
                     <table class="checkboxes labelvalue inline">
                         <tbody>
                         <tr>
-                            <td class="checkbox value"{% if answers.anySpendingConcerns == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.anySpendingConcerns == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if answers.anySpendingConcerns == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.anySpendingConcerns == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if answers.anySpendingConcerns == 'na' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.anySpendingConcerns == 'na' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
                         </tr>
                         </tbody>
@@ -633,9 +633,9 @@
                     <table class="checkboxes labelvalue inline">
                         <tbody>
                         <tr>
-                            <td class="checkbox value"{% if answers.needReferral == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.needReferral == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if answers.needReferral == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value">{% if answers.needReferral == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                         </tr>
                         </tbody>
@@ -647,24 +647,24 @@
                         <table class="checkboxes labelvalue">
                             <tr>
                                 <td class="clean-cell">
-                                <span class="checkbox value"
-                                    {% if reviewChecklist.decision == 'satisfied' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}
+                                <span class="checkbox value">
+                                    {% if reviewChecklist.decision == 'satisfied' %}X{% else %}&nbsp;{% endif %}
                                 </span>
                                 </td>
                                 <td class="label soft-half--bottom">{{ (page ~ '.form.finalDecision.fullReviewOptions.satisfied') | trans({}, 'admin-checklist') }}</td>
                             </tr>
                             <tr>
                                 <td class="clean-cell">
-                                <span class="checkbox value"
-                                    {% if reviewChecklist.decision == 'further-casework-required' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}
+                                <span class="checkbox value">
+                                    {% if reviewChecklist.decision == 'further-casework-required' %}X{% else %}&nbsp;{% endif %}
                                 </span>
                                 </td>
                                 <td class="label soft-half--bottom">{{ (page ~ '.form.finalDecision.fullReviewOptions.furtherCaseworkRequired') | trans({}, 'admin-checklist') }}</td>
                             </tr>
                             <tr>
                                 <td class="clean-cell">
-                                <span class="checkbox value"
-                                    {% if reviewChecklist.decision == 'escalate' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}
+                                <span class="checkbox value">
+                                    {% if reviewChecklist.decision == 'escalate' %}X{% else %}&nbsp;{% endif %}
                                 </span>
                                 </td>
                                 <td class="label soft-half--bottom">{{ (page ~ '.form.finalDecision.fullReviewOptions.escalate') | trans({}, 'admin-checklist') }}</td>
