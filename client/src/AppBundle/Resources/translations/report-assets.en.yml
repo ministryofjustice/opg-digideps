@@ -1,5 +1,5 @@
 startPage:
-  htmlTitle: "Deputy report - assets | GOV.UK"
+  htmlTitle: "Assets - Complete the deputy report | GOV.UK"
   pageTitle: Assets
   pageSectionDescription: |
     Use this section to tell us about %client%'s assets. They may include property, vehicles,
@@ -7,7 +7,7 @@ startPage:
   startButton: Start assets
 
 existPage:
-  htmlTitle: "Deputy report - assets | GOV.UK"
+  htmlTitle: "Assets - Complete the deputy report | GOV.UK"
   supportTitle: Assets
   form:
     noAssetToAdd:
@@ -17,9 +17,9 @@ existPage:
       label: Save and continue
 
 typePage:
-  htmlTitle: "Deputy report - assets | GOV.UK"
-  supportTitle: Assets
+  htmlTitle: "Add an asset - Complete the deputy report | GOV.UK"
   pageTitle: Add an asset
+  supportTitle: Assets
   pageSectionDescription1: |
     Please tell us a bit more about %client%'s assets. Add a type of asset, then we'll ask you
     for some details about it. You can come back and add more assets if you need to.
@@ -29,32 +29,32 @@ typePage:
   backLink: Back
 
 addPage:
-  htmlTitle: "Deputy report - Assets | GOV.UK"
-  supportTitle: Assets
+  htmlTitle: "Add an asset: %assetTitle% - Complete the deputy report | GOV.UK"
   pageTitle: "Add an asset: %assetTitle%"
+  supportTitle: Assets
 
 editPage:
-  htmlTitle: "Deputy report - Assets | GOV.UK"
-  supportTitle: Assets
+  htmlTitle: "Edit %assetTitle% - Complete the deputy report | GOV.UK"
   pageTitle: Edit %assetTitle%
+  supportTitle: Assets
 
 addAnotherPage:
-  htmlTitle: "Deputy report - assets | GOV.UK"
+  htmlTitle: "Assets - Complete the deputy report | GOV.UK"
   pageTitle: Assets
   form:
     addAnother:
       label: The asset has been saved. Would you like to add another now?
       hint: If you prefer, you can come back to this section later to add more assets
     save:
-       label: Continue
+      label: Continue
 
 stepPageProperty:
-  htmlTitle: "Deputy report - Property | GOV.UK"
-  supportTitle: Assets
+  htmlTitle: "Add an asset: property - Complete the deputy report | GOV.UK"
   pageTitle: "Add an asset: property"
+  supportTitle: Assets
 
 summaryPage:
-  htmlTitle: "Deputy report - assets | GOV.UK"
+  htmlTitle: "Assets - Complete the deputy report | GOV.UK"
   pageTitle: Assets
   supportTitle: ""
   weAskAbout: In this section, we ask you about %client%'s assets, including property, vehicles, valuables or investments.
@@ -64,7 +64,7 @@ summaryPage:
   totalValueOfAssets: Total value of assets
 
 deletePage:
-  htmlTitle: "Deputy report - remove asset | GOV.UK"
+  htmlTitle: "Remove asset - Complete the deputy report | GOV.UK"
   subject: asset
   summary:
     type: Type
@@ -158,4 +158,4 @@ form:
       label: What is the rental income each month?
       hint: ""
   save:
-      label: Save and continue
+    label: Save and continue

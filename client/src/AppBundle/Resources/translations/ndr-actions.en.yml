@@ -1,5 +1,5 @@
 startPage:
-  htmlTitle: "New deputy report - actions you plan to take | GOV.UK"
+  htmlTitle: "Actions you plan to take - Complete the deputy report | GOV.UK"
   pageTitle: Actions you plan to take
   pageSectionDescription1: |
     Use this section to tell us about any significant financial decisions you plan to
@@ -24,7 +24,7 @@ startPage:
   startButton: Start actions
 
 stepPage:
-  htmlTitle: "New deputy report - actions you plan to take | GOV.UK"
+  htmlTitle: "Actions you plan to take - Complete the deputy report | GOV.UK"
   supportTitle: Actions you plan to take
   gifts:
     pageTitle: Gifts
@@ -65,9 +65,8 @@ stepPage:
           para04: <a href="https://www.gov.uk/joint-property-ownership" target="_blank">Find out more</a>
   backLink: Back
 
-
 summaryPage:
-  htmlTitle: "New deputy report - actions you plan to take | GOV.UK"
+  htmlTitle: "Actions you plan to take - Complete the deputy report | GOV.UK"
   pageTitle: Actions you plan to take
   weAskAbout: |
     In this section, we ask you about significant financial decisions you're planning to make on

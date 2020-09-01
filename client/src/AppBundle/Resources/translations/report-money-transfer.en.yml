@@ -1,5 +1,5 @@
 startPage:
-  htmlTitle: "Deputy report - money transfers | GOV.UK"
+  htmlTitle: "Money transfers - Complete the deputy report | GOV.UK"
   pageTitle: Money transfers
   pageSectionDescription1: |
     Use this section to tell us about money you've transferred between %client%'s accounts.
@@ -9,7 +9,7 @@ startPage:
   startButton: Start money transfers
 
 existPage:
-  htmlTitle: "Deputy report - money transfers | GOV.UK"
+  htmlTitle: "Money transfers - Complete the deputy report | GOV.UK"
   supportTitle: Money transfers
   form:
     noTransfersToAdd:
@@ -19,28 +19,28 @@ existPage:
       label: Save and continue
 
 addAnotherPage:
-  htmlTitle: "Deputy report - add another transfer | GOV.UK"
-  pageTitle: Money transfers
+  htmlTitle: "Add another money transfer - Complete the deputy report | GOV.UK"
+  pageTitle: Add another money transfer
   form:
     addAnother:
       label: The transfer has been saved. Would you like to add another now?
       hint: If you prefer, you can come back to this section later to add more transfers
     save:
-       label: Continue
+      label: Continue
 
 stepPage:
-  htmlTitle: "Deputy report - Money transfer | GOV.UK"
-  supportTitle: Money transfers
+  htmlTitle: "Add a money transfer - Complete the deputy report | GOV.UK"
   pageTitle: Add a money transfer
+  supportTitle: Money transfers
 
 summaryPage:
-  htmlTitle: "Deputy report - money transfers | GOV.UK"
+  htmlTitle: "Money transfers - Complete the deputy report | GOV.UK"
   pageTitle: Money transfers
   weAskAbout: In this section, we ask you about money you've transferred between %client%'s accounts.
   addButton: Add a transfer
 
 deletePage:
-  htmlTitle: "Deputy report - remove money transfer | GOV.UK"
+  htmlTitle: "Remove money transfer - Complete the deputy report | GOV.UK"
   subject: transfer
   summary:
     accountFrom: Transferred from
@@ -48,13 +48,12 @@ deletePage:
     amount: Amount
 
 errorPage:
-  htmlTitle: "Deputy report - money transfers | GOV.UK"
+  htmlTitle: "Money transfers - Complete the deputy report | GOV.UK"
   pageTitle: Money transfers
   errors:
     atLeastTwoBankAccounts: You don't need to complete this section if you have fewer than two bank accounts.
   backToOverview: Back to overview page
   backToClientProfile: Back to client profile
-
 
 form:
   accountFrom:

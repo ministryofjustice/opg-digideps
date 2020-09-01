@@ -1,6 +1,6 @@
 startPage:
   moneyIn:
-    htmlTitle: "Deputy report - Money in | GOV.UK"
+    htmlTitle: "Money in - Complete the deputy report | GOV.UK"
     pageTitle: Money in
     pageSectionDescription1: |
       In this section, we ask you about money paid into %client%'s accounts between %startDate%
@@ -23,7 +23,7 @@ startPage:
       before you start this section.
     startButton: Start money in
   moneyOut:
-    htmlTitle: "Deputy report - Money out | GOV.UK"
+    htmlTitle: "Money out - Complete the deputy report | GOV.UK"
     pageTitle: Money out
     pageSectionDescription1: |
       In this section, we ask you about money paid out of %client%'s accounts between %startDate%
@@ -40,10 +40,10 @@ startPage:
       There are different sections for you to tell us about <a href="%moneyTransfersPath%">
       money transfers</a> between %client%'s accounts, your <a href="%deputyCostsPath%">
       deputy costs</a>, and <a href="%giftsPath%">gifts</a>.
-#    pageSectionDescription2-PROF: |
-#      There are different sections for you to tell us about <a href="%moneyTransfersPath%">
-#      money transfers</a> between %client%'s accounts, your <a href="%deputyCostsPath%">
-#      deputy costs</a>, and <a href="%giftsPath%">gifts</a>.
+    #    pageSectionDescription2-PROF: |
+    #      There are different sections for you to tell us about <a href="%moneyTransfersPath%">
+    #      money transfers</a> between %client%'s accounts, your <a href="%deputyCostsPath%">
+    #      deputy costs</a>, and <a href="%giftsPath%">gifts</a>.
     pageSectionDescription3: |
       Make sure you only enter each payment in one place, so we don't count it twice.
     totalOrIndividualHeading: |
@@ -58,10 +58,9 @@ startPage:
       bank accounts</a> before you start this section.
     startButton: Start money out
 
-
 stepPage:
   moneyIn:
-    htmlTitle: "Deputy report - Money in | GOV.UK"
+    htmlTitle: "Add an item of income - Complete the deputy report | GOV.UK"
     pageTitle: Add an item of income
     supportTitle: Money in
     pageSectionDescription:
@@ -70,7 +69,7 @@ stepPage:
         Don't include transfers between %client%'s accounts here. Enter them in the
         <a href="%moneyTransfersPath%">money transfers</a> section
   moneyOut:
-    htmlTitle: "Deputy report - Money out | GOV.UK"
+    htmlTitle: "Add a payment - Complete the deputy report | GOV.UK"
     pageTitle: Add a payment
     supportTitle: Money out
     pageSectionDescription:
@@ -89,7 +88,7 @@ stepPage:
 
 addAnotherPage:
   moneyIn:
-    htmlTitle: "Deputy report - Add another item of income | GOV.UK"
+    htmlTitle: "Add another item - Complete the deputy report | GOV.UK"
     pageTitle: Add another item
     supportTitle: Money in
     form:
@@ -97,27 +96,26 @@ addAnotherPage:
         label: The item has been saved. Would you like to add another now?
         hint: If you prefer, you can come back later to add more items
       save:
-         label: Continue
+        label: Continue
   moneyOut:
-    htmlTitle: "Deputy report - Add another payment | GOV.UK"
-    pageTitle: Add a payment
+    htmlTitle: "Add another payment - Complete the deputy report | GOV.UK"
+    pageTitle: Add another payment
     supportTitle: Money out
     form:
       addAnother:
         label: The payment has been saved. Would you like to add another now?
         hint: If you prefer, you can come back later to add more payments
       save:
-         label: Continue
-
+        label: Continue
 
 summaryPage:
   moneyIn:
-    htmlTitle: "Deputy report - Money in | GOV.UK"
+    htmlTitle: "Money in - Complete the deputy report | GOV.UK"
     pageTitle: Money in
     moreDetails: More details about this section
     totalValue: "Total money in: £%value%"
   moneyOut:
-    htmlTitle: "Deputy report - Money out | GOV.UK"
+    htmlTitle: "Money out - Complete the deputy report | GOV.UK"
     pageTitle: Money out
     moreDetails: More details about this section
     totalValue: "Total money out: £%value%"
@@ -149,8 +147,8 @@ form:
       transfers-out-to-other-accounts: Transfers from %client%'s account to other accounts
       moneyout-other: Other
   amount:
-      label: Amount
-      hint: ""
+    label: Amount
+    hint: ""
   description:
     mandatory:
       label: Description
@@ -196,7 +194,7 @@ form:
         label2ndStep: Personal Independence Payment
       severe-disablement-allowance:
         label: Severe Disablement Allowance
-        label2ndStep  : Severe Disablement Allowance
+        label2ndStep: Severe Disablement Allowance
       winter-fuel-cold-weather-payment:
         label: Winter Fuel/Cold Weather Payment
         label2ndStep: Winter Fuel/Cold Weather Payment
