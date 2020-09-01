@@ -101,7 +101,6 @@ $(document).ready(function () {
   if ($submitButtons !== null) {
     $submitButtons.forEach(function ($el) {
       $el.addEventListener('click', function ($e) {
-        this.classList.add('opg-submit-link--disabled')
         this.classList.add('opg-submit-link--disabled', 'govuk-button--disabled')
       })
     })
