@@ -53,6 +53,9 @@ up-app-integration-tests: ## Brings the app up using test env vars (see test.env
 
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 
+down-app: ### Tears down the app
+	docker-compose down -v --remove-orphans
+
 client-unit-tests: prod-mode ## Run the client unit tests
 	docker-compose build frontend admin
 	docker-compose -f docker-compose.yml run --rm frontend bin/phpunit -c tests/phpunit

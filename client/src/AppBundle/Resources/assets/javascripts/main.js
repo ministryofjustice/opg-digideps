@@ -95,6 +95,14 @@ $(document).ready(function () {
       new ButtonToggler().init($el)
     })
   }
+
+  // Error summaries
+  const $errorSummaries = document.querySelectorAll('#error-summary')
+  if ($errorSummaries !== null) {
+    $errorSummaries.forEach((ele) => {
+      ele.focus()
+    })
+  }
 })
 
 GOVUKFrontend.initAll()
