@@ -307,7 +307,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
             ]);
 
         $this->builder
-            ->uponReceiving('A submitted checklist pdf  a')
+            ->uponReceiving('A submitted checklist pdf')
             ->with($request)
             ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
     }

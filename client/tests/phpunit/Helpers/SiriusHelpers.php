@@ -73,7 +73,7 @@ class SiriusHelpers extends KernelTestCase
             ->setMimetype('application/pdf')
             ->setSource(base64_encode($fileContents));
 
-        $attributes =( new SiriusChecklistPdfDocumentMetadata())
+        $attributes = (new SiriusChecklistPdfDocumentMetadata())
             ->setSubmissionId($submissionId)
             ->setSubmitterEmail($submitterEmail)
             ->setReportingPeriodFrom($reportingPeriodFrom)
