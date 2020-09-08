@@ -26,7 +26,6 @@
 {% endblock %}
 
 {% block pageContent %}
-    {{ macros.informationBanner('reportIsReady', 'report-overview') }}
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {{ form_input(form.name, 'form.name', {
