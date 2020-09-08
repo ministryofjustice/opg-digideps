@@ -21,12 +21,12 @@ startPage:
         apply a high standard of care – this might mean involving other people, for example
         getting advice from relatives and professionals like doctors
       para03: |
-        OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on how to look after %client%'s financial affairs.
+        OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on how to look after %client%'s financial affairs.
       para03-104: |
-        OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a health and welfare deputy' (SD4)</a> booklet give detailed guidance on how to look after %client%'s health and welfare.
+        OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties">'How to be a health and welfare deputy' (SD4)</a> booklet give detailed guidance on how to look after %client%'s health and welfare.
       para03-4: |
-        OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a property and affairs deputy' (SD3)</a>
-        and <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a health and welfare deputy' (SD4)</a> booklets give detailed guidance on how to look after %client%'s property, finance, health and welfare.
+        OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties">'How to be a property and affairs deputy' (SD3)</a>
+        and <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties">'How to be a health and welfare deputy' (SD4)</a> booklets give detailed guidance on how to look after %client%'s property, finance, health and welfare.
   startButton: Start actions
 
 stepPage:
@@ -74,7 +74,7 @@ form:
           costs if there's a court hearing.
         para03: |
           If %client% has a small estate (low funds), you can apply to pay a smaller or no fee.
-        para04: <a href="https://www.gov.uk/joint-property-ownership/selling-when-an-owner-has-lost-mental-capacity" target="_blank">Find out more</a>
+        para04: <a href="https://www.gov.uk/joint-property-ownership/selling-when-an-owner-has-lost-mental-capacity">Find out more</a>
   doYouExpectFinancialDecisionsDetails:
     label: Please give us details about your decisions
     label-104: Please give us details of these changes
