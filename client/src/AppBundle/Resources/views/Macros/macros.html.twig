@@ -225,7 +225,7 @@
 {% macro relatedSections(report,section) %}
     {% set isOrgUser = app.user.isDeputyOrg() %}
 
-    <aside class="opg-related-items" role="complementary">
+    <div class="opg-related-items">
         <nav role="navigation">
             <ul class="govuk-list govuk-!-font-size-16">
                 <li>
@@ -263,7 +263,7 @@
                 {% endif %}
             </ul>
         </nav>
-    </aside>
+    </div>
 {% endmacro %}
 
 {# Question/Answer table header for summary pages #}
