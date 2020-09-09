@@ -224,7 +224,7 @@ class NdrController extends AbstractController
             // store PDF as a document
             $pdfBinaryContent = $this->getPdfBinaryContent($ndr);
 
-            $document = $fileUploader->uploadFile(
+            $document = $fileUploader->uploadFileAndPersistDocument(
                 $ndr,
                 $pdfBinaryContent,
                 $ndr->createAttachmentName('NdrRep-%s_%s.pdf'),

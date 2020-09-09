@@ -41,9 +41,8 @@ class S3FileUploader
     public function uploadFiles(array $files, Report $report): void
     {
         foreach ($files as $file) {
-            $document = $this->uploadFile($report, false, $file);
-            $reportType = $report instanceof Report ? 'report' : 'ndr';
-            $this->persistDocument($reportType, $report->getId(), $document);
+            [$body, $fileName] = $this->getFileBodyAndFileName($file);
+            $this->uploadFileAndPersistDocument($report, $body, $fileName, false, $file);
         }
     }
 
@@ -66,33 +65,34 @@ class S3FileUploader
      * Uploads a file into S3 + create and persist a Document entity using that reference
      *
      * @param ReportInterface $report
+     * @param string $body
+     * @param string $fileName
      * @param bool $isReportPdf
-     * @param UploadedFile $file
-     *
      * @return Document
      */
-    public function uploadFile(ReportInterface $report, bool $isReportPdf, UploadedFile $file)
+    public function uploadFileAndPersistDocument(ReportInterface $report, string $body, string $fileName, bool $isReportPdf)
     {
-        [$body, $fileName] = $this->getFileBodyAndFileName($file);
-
-        $reportId = $report->getId();
-        $storageReference = 'dd_doc_' . $reportId . '_' . str_replace('.', '', microtime(1));
+        $storageReference = 'dd_doc_' . $report->getId() . '_' . str_replace('.', '', microtime(1));
 
         $this->storage->store($storageReference, $body);
         $this->logger->debug("FileUploader : stored $storageReference, " . strlen($body) . ' bytes');
 
-        $document = new Document();
-        $document
+        $document = (new Document())
             ->setStorageReference($storageReference)
             ->setFileName($fileName)
             ->setIsReportPdf($isReportPdf);
+
+        $reportType = $report instanceof Report ? 'report' : 'ndr';
+        $response = $this->persistDocument($reportType, $report->getId(), $document);
+
+        $document->setId($response['id']);
 
         return $document;
     }
 
     private function persistDocument(string $reportType, int $reportId, Document $document)
     {
-        $this->restClient->post("/document/{$reportType}/{$reportId}", $document, ['document']);
+        return $this->restClient->post("/document/{$reportType}/{$reportId}", $document, ['document']);
     }
 
     /**

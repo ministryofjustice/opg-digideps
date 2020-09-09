@@ -35,7 +35,7 @@ class S3FileUploaderTest extends TestCase
         $this->restClient->shouldReceive('post')->once()->with('/document/report/1', \Mockery::type(Document::class), ['document']);
 
         $report = m::mock(Report::class, ['getId'=>1]);
-        $doc = $this->object->uploadFile($report, $fileContent, $fileName, false); /* @var $document Document */
+        $doc = $this->object->uploadFileAndPersistDocument($report, $fileContent, $fileName, false); /* @var $document Document */
 
         $this->assertStringMatchesFormat('dd_doc_1_%d', $doc->getStorageReference());
         $this->assertEquals($fileName, $doc->getFileName());

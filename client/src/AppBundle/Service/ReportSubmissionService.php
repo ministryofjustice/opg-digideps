@@ -94,7 +94,7 @@ class ReportSubmissionService
         if (in_array($report->getType(), Report::HIGH_ASSETS_REPORT_TYPES)) {
             $csvContent = $this->csvGenerator->generateTransactionsCsv($report);
 
-            $this->fileUploader->uploadFile(
+            $this->fileUploader->uploadFileAndPersistDocument(
                 $report,
                 $csvContent,
                 $report->createAttachmentName('DigiRepTransactions-%s_%s_%s.csv'),
@@ -111,7 +111,7 @@ class ReportSubmissionService
     private function generateReportPdf(ReportInterface $report)
     {
         // store PDF (with summary info) as a document
-        $this->fileUploader->uploadFile(
+        $this->fileUploader->uploadFileAndPersistDocument(
             $report,
             $this->getPdfBinaryContent($report, true),
             $report->createAttachmentName('DigiRep-%s_%s_%s.pdf'),

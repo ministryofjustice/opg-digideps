@@ -141,8 +141,8 @@ class ReportSubmissionServiceTest extends TestCase
 
         $this->pdfGenerator->getPdfFromHtml('PDF HTML CONTENT')->shouldBeCalled()->willReturn('PDF CONTENT');
 
-        $this->fileUploader->uploadFile($report, 'PDF CONTENT', 'reportFileName', true)->shouldBeCalled();
-        $this->fileUploader->uploadFile($report, Argument::type('string'), Argument::type('string'), false)->shouldNotBeCalled();
+        $this->fileUploader->uploadFileAndPersistDocument($report, 'PDF CONTENT', 'reportFileName', true)->shouldBeCalled();
+        $this->fileUploader->uploadFileAndPersistDocument($report, Argument::type('string'), Argument::type('string'), false)->shouldNotBeCalled();
 
         $sut = $this->generateProphecySut();
         $sut->generateReportDocuments($report->reveal());
@@ -176,8 +176,8 @@ class ReportSubmissionServiceTest extends TestCase
 
         $this->pdfGenerator->getPdfFromHtml('PDF HTML CONTENT')->shouldBeCalled()->willReturn('PDF CONTENT');
 
-        $this->fileUploader->uploadFile($report, 'PDF CONTENT', 'reportFileName', true)->shouldBeCalled();
-        $this->fileUploader->uploadFile($report, 'CSV CONTENT', 'transactionCSVName', false)->shouldBeCalled();
+        $this->fileUploader->uploadFileAndPersistDocument($report, 'PDF CONTENT', 'reportFileName', true)->shouldBeCalled();
+        $this->fileUploader->uploadFileAndPersistDocument($report, 'CSV CONTENT', 'transactionCSVName', false)->shouldBeCalled();
 
         $sut = $this->generateProphecySut();
         $sut->generateReportDocuments($report->reveal());
