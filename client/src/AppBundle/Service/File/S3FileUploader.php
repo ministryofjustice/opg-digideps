@@ -7,7 +7,6 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\Storage\StorageInterface;
-use FileNameFixer;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -83,7 +82,7 @@ class S3FileUploader
             ->setIsReportPdf($isReportPdf);
 
         $reportType = $report instanceof Report ? 'report' : 'ndr';
-        $response = $this->persistDocument($reportType, $report->getId(), $document);
+        $response = $this->persistDocument($reportType, intval($report->getId()), $document);
 
         $document->setId($response['id']);
 

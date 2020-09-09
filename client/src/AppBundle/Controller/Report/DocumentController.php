@@ -123,7 +123,7 @@ class DocumentController extends AbstractController
      * @Route("/report/{reportId}/documents/step/2", name="report_documents", defaults={"what"="new"})
      * @Template("AppBundle:Report/Document:step2.html.twig")
      */
-    public function step2Action(Request $request, MultiFileFormUploadVerifier $multiFileVerifier, $reportId)
+    public function step2Action(Request $request, MultiFileFormUploadVerifier $multiFileVerifier, $reportId, LoggerInterface $logger)
     {
         $report = $this->getReport($reportId, self::$jmsGroups);
         list($nextLink, $backLink) = $this->buildNavigationLinks($report);
@@ -153,6 +153,7 @@ class DocumentController extends AbstractController
                         $this->addFlash('notice', 'Files uploaded');
                         return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
                     } catch (\Throwable $e) {
+                        $logger->warning('Error uploading file: ' . $e->getMessage());
                         $form->get('files')->addError(new FormError('Cannot upload file, please try again later'));
                     }
                 }

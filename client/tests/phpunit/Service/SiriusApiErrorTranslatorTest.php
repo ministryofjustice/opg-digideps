@@ -69,8 +69,7 @@ class SiriusApiErrorTranslatorTest extends KernelTestCase
 
         $errorJson = '{"errors":{"id":"7d0bb9c2-76c5-4cd1-b7a4-6cc28acc197f","code":"AN UNEXPECTED CODE","title":"Request Too Long","detail":"","meta":{"x-ray":""}}}';
         $translation = $sut->translateApiError($errorJson);
-        $expectedError = 'UNEXPECTED ERROR CODE: An unknown error occurred during document sync';
 
-        self::assertEquals($expectedError, $translation);
+        self::assertEquals($errorJson, $translation);
     }
 }

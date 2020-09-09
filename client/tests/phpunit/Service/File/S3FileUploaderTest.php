@@ -28,6 +28,7 @@ class S3FileUploaderTest extends TestCase
 
     public function testuploadFile()
     {
+        $fileName = 'dd_fileuploadertest.pdf';
         $fileContent = 'testcontent';
 
         $this->storage->shouldReceive('store')->once()->with(\Mockery::pattern('/^dd_doc_1_\d+$/'), $fileContent);
