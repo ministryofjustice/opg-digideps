@@ -43,7 +43,7 @@ up-app-build: ## Brings the app up and rebuilds containers
 	docker-compose up -d --build
 
 up-app-xdebug-client: ## Brings the app up, rebuilds containers and enabled xdebug in client
-	REQUIRE_XDEBUG_CLIENT=true docker-compose up -d --build
+	REQUIRE_XDEBUG_FRONTEND=true docker-compose up -d --build
 
 up-app-xdebug-api: ## Brings the app up, rebuilds containers and enabled xdebug in client
 	REQUIRE_XDEBUG_API=true docker-compose up -d --build

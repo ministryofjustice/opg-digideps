@@ -7,6 +7,7 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\Storage\StorageInterface;
+use FileNameFixer;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -25,7 +26,6 @@ class S3FileUploader
     private $options;
     private $fileCheckers;
 
-
     /**
      * FileUploader constructor.
      */
@@ -42,7 +42,7 @@ class S3FileUploader
     {
         foreach ($files as $file) {
             [$body, $fileName] = $this->getFileBodyAndFileName($file);
-            $this->uploadFileAndPersistDocument($report, $body, $fileName, false, $file);
+            $this->uploadFileAndPersistDocument($report, $body, $fileName, false);
         }
     }
 
@@ -56,7 +56,7 @@ class S3FileUploader
         $body = file_get_contents($file->getPathname());
 
         /** @var string $fileName */
-        $fileName = $file->getClientOriginalName();
+        $fileName = FileNameFixer::removeWhiteSpaceBeforeFileExtension($file->getClientOriginalName());
 
         return [$body, $fileName];
     }
@@ -72,7 +72,7 @@ class S3FileUploader
      */
     public function uploadFileAndPersistDocument(ReportInterface $report, string $body, string $fileName, bool $isReportPdf)
     {
-        $storageReference = 'dd_doc_' . $report->getId() . '_' . str_replace('.', '', microtime(1));
+        $storageReference = 'dd_doc_' . $report->getId() . '_' . str_replace('.', '', microtime(true));
 
         $this->storage->store($storageReference, $body);
         $this->logger->debug("FileUploader : stored $storageReference, " . strlen($body) . ' bytes');
