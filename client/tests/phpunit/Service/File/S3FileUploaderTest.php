@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Service\File;
 
@@ -10,7 +10,7 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-class FileUploaderTest extends TestCase
+class S3FileUploaderTest extends TestCase
 {
     /**
      * @var S3FileUploader

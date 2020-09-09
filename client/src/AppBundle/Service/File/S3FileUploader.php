@@ -8,28 +8,23 @@ use AppBundle\Entity\ReportInterface;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\Storage\StorageInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class S3FileUploader
 {
-    /**
-     * @var StorageInterface
-     */
+    /** @var StorageInterface */
     private $storage;
 
-    /**
-     * @var RestClient
-     */
+    /** @var RestClient */
     private $restClient;
 
-    /**
-     * @var LoggerInterface
-     */
+    /** @var LoggerInterface */
     private $logger;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $options;
+    private $fileCheckers;
+
 
     /**
      * FileUploader constructor.
@@ -43,18 +38,43 @@ class S3FileUploader
         $this->options = [];
     }
 
+    public function uploadFiles(array $files, Report $report): void
+    {
+        foreach ($files as $file) {
+            $document = $this->uploadFile($report, false, $file);
+            $reportType = $report instanceof Report ? 'report' : 'ndr';
+            $this->persistDocument($reportType, $report->getId(), $document);
+        }
+    }
+
+    /**
+     * @param UploadedFile $file
+     * @return array
+     */
+    private function getFileBodyAndFileName(UploadedFile $file): array
+    {
+        /** @var string $body */
+        $body = file_get_contents($file->getPathname());
+
+        /** @var string $fileName */
+        $fileName = $file->getClientOriginalName();
+
+        return [$body, $fileName];
+    }
+
     /**
      * Uploads a file into S3 + create and persist a Document entity using that reference
      *
-     * @param ReportInterface $reportId
-     * @param string          $body
-     * @param string          $fileName
-     * @param bool            $isReportPdf
+     * @param ReportInterface $report
+     * @param bool $isReportPdf
+     * @param UploadedFile $file
      *
      * @return Document
      */
-    public function uploadFile(ReportInterface $report, $body, $fileName, $isReportPdf)
+    public function uploadFile(ReportInterface $report, bool $isReportPdf, UploadedFile $file)
     {
+        [$body, $fileName] = $this->getFileBodyAndFileName($file);
+
         $reportId = $report->getId();
         $storageReference = 'dd_doc_' . $reportId . '_' . str_replace('.', '', microtime(1));
 
@@ -67,11 +87,12 @@ class S3FileUploader
             ->setFileName($fileName)
             ->setIsReportPdf($isReportPdf);
 
-        $reportType = $report instanceof Report ? 'report' : 'ndr';
-        $ret = $this->restClient->post("/document/{$reportType}/{$reportId}", $document, ['document']);
-        $document->setId($ret['id']);
-
         return $document;
+    }
+
+    private function persistDocument(string $reportType, int $reportId, Document $document)
+    {
+        $this->restClient->post("/document/{$reportType}/{$reportId}", $document, ['document']);
     }
 
     /**

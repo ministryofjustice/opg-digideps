@@ -149,7 +149,7 @@ class DocumentController extends AbstractController
 
                 if ($verified) {
                     try {
-                        $this->uploadFiles($files, $report);
+                        $this->fileUploader->uploadFiles($files, $report);
                         $this->addFlash('notice', 'Files uploaded');
                         return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
                     } catch (\Throwable $e) {
@@ -192,32 +192,6 @@ class DocumentController extends AbstractController
         }
 
         return [$nextLink, $backLink];
-    }
-
-    /**
-     * @param array $files
-     * @param EntityDir\Report\Report $report
-     */
-    private function uploadFiles(array $files, EntityDir\Report\Report $report): void
-    {
-        foreach ($files as $file) {
-            $this->uploadFile($file, $report);
-        }
-    }
-
-    /**
-     * @param UploadedFile $file
-     * @param EntityDir\Report\Report $report
-     */
-    private function uploadFile(UploadedFile $file, EntityDir\Report\Report $report): void
-    {
-        /** @var string $body */
-        $body = file_get_contents($file->getPathname());
-
-        /** @var string $fileName */
-        $fileName = $file->getClientOriginalName();
-
-        $this->fileUploader->uploadFile($report, $body, $fileName, false);
     }
 
     /**
