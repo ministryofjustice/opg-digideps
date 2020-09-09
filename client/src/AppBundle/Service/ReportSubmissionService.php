@@ -8,7 +8,7 @@ use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
 use AppBundle\Exception\ReportSubmissionDocumentsNotDownloadableException;
 use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\File\FileUploader;
+use AppBundle\Service\File\S3FileUploader;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSenderInterface;
 use Psr\Log\LoggerInterface;
@@ -20,7 +20,7 @@ class ReportSubmissionService
     const MSG_NO_DOCUMENTS = 'No documents found for downloading';
 
     /**
-     * @var FileUploader
+     * @var S3FileUploader
      */
     private $fileUploader;
 
@@ -66,14 +66,13 @@ class ReportSubmissionService
     public function __construct(
         CsvGeneratorService $csvGenerator,
         Environment $templating,
-        FileUploader $fileUploader,
+        S3FileUploader $fileUploader,
         RestClient $restClient,
         LoggerInterface $logger,
         MailFactory $mailFactory,
         MailSenderInterface $mailSender,
         WkHtmlToPdfGenerator $wkhtmltopdf
-    )
-    {
+    ) {
         $this->fileUploader = $fileUploader;
         $this->restClient = $restClient;
         $this->mailSender = $mailSender;
@@ -185,7 +184,7 @@ class ReportSubmissionService
      */
     public function getReportSubmissionById(string $id)
     {
-        return $this->restClient->get( "report-submission/${id}", 'Report\\ReportSubmission');
+        return $this->restClient->get("report-submission/${id}", 'Report\\ReportSubmission');
     }
 
     /**

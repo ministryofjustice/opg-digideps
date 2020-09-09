@@ -13,7 +13,7 @@ use Psr\Log\LoggerInterface;
 class FileUploaderTest extends TestCase
 {
     /**
-     * @var FileUploader
+     * @var S3FileUploader
      */
     private $object;
 
@@ -23,7 +23,7 @@ class FileUploaderTest extends TestCase
         $this->restClient = m::mock(RestClient::class);
         $this->logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();
 
-        $this->object = new FileUploader($this->storage, $this->restClient, $this->logger);
+        $this->object = new S3FileUploader($this->storage, $this->restClient, $this->logger);
     }
 
     public function testuploadFile()

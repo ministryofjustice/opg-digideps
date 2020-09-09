@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Service\File;
 
@@ -9,7 +9,7 @@ use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\Storage\StorageInterface;
 use Psr\Log\LoggerInterface;
 
-class FileUploader
+class S3FileUploader
 {
     /**
      * @var StorageInterface
@@ -88,6 +88,5 @@ class FileUploader
 
         $this->storage->removeFromS3($storageReference);
         $this->logger->debug('FileUploader : Removed ' . $storageReference . ' completely from S3');
-
     }
 }

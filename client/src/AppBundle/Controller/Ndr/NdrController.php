@@ -9,7 +9,7 @@ use AppBundle\Exception\ReportNotSubmittedException;
 use AppBundle\Exception\ReportSubmittedException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
-use AppBundle\Service\File\FileUploader;
+use AppBundle\Service\File\S3FileUploader;
 use AppBundle\Service\NdrStatusService;
 use AppBundle\Service\Redirector;
 use AppBundle\Service\WkHtmlToPdfGenerator;
@@ -162,7 +162,8 @@ class NdrController extends AbstractController
         $response = new Response($pdfBinary);
         $response->headers->set('Content-Type', 'application/pdf');
 
-        $attachmentName = sprintf('DigiNdr-%s_%s.pdf',
+        $attachmentName = sprintf(
+            'DigiNdr-%s_%s.pdf',
             $ndr->getSubmitDate() instanceof \DateTime ? $ndr->getSubmitDate()->format('Y-m-d') : 'n-a-',
             $ndr->getClient()->getCaseNumber()
         );
@@ -189,7 +190,7 @@ class NdrController extends AbstractController
      * @Route("/ndr/{ndrId}/declaration", name="ndr_declaration")
      * @Template("AppBundle:Ndr/Ndr:declaration.html.twig")
      */
-    public function declarationAction(Request $request, $ndrId, FileUploader $fileUploader)
+    public function declarationAction(Request $request, $ndrId, S3FileUploader $fileUploader)
     {
         $client = $this->getFirstClient(self::$ndrGroupsForValidation);
 

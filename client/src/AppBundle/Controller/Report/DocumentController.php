@@ -9,7 +9,7 @@ use AppBundle\Entity\User;
 use AppBundle\Form as FormDir;
 use AppBundle\Security\DocumentVoter;
 use AppBundle\Service\DocumentService;
-use AppBundle\Service\File\FileUploader;
+use AppBundle\Service\File\S3FileUploader;
 use AppBundle\Service\File\Verifier\MultiFileFormUploadVerifier;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -31,10 +31,10 @@ class DocumentController extends AbstractController
         'documents-state',
     ];
 
-    /** @var FileUploader */
+    /** @var S3FileUploader */
     private $fileUploader;
 
-    public function __construct(FileUploader $fileUploader)
+    public function __construct(S3FileUploader $fileUploader)
     {
         $this->fileUploader = $fileUploader;
     }

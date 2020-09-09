@@ -10,7 +10,7 @@ use AppBundle\Entity\User;
 use AppBundle\Exception\ReportSubmissionDocumentsNotDownloadableException;
 use AppBundle\Model\Email;
 use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\File\FileUploader;
+use AppBundle\Service\File\S3FileUploader;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use AppBundle\TestHelpers\ReportTestHelper;
@@ -39,7 +39,7 @@ class ReportSubmissionServiceTest extends TestCase
     private $mockCsvGenerator;
     private $mockReport;
 
-    /** @var ObjectProphecy&FileUploader */
+    /** @var ObjectProphecy&S3FileUploader */
     private $fileUploader;
     /** @var ObjectProphecy&RestClient */
     private $restClient;
@@ -61,7 +61,7 @@ class ReportSubmissionServiceTest extends TestCase
      */
     public function setUp(): void
     {
-        $this->mockFileUploader = m::mock(FileUploader::class);
+        $this->mockFileUploader = m::mock(S3FileUploader::class);
         $this->mockRestClient = m::mock(RestClient::class);
         $this->mockMailSender = m::mock(MailSender::class);
         $this->mockMailFactory = m::mock(MailFactory::class);
@@ -72,7 +72,7 @@ class ReportSubmissionServiceTest extends TestCase
 
         $this->mockReport = m::mock(ReportInterface::class);
 
-        $this->fileUploader = self::prophesize(FileUploader::class);
+        $this->fileUploader = self::prophesize(S3FileUploader::class);
         $this->restClient = self::prophesize(RestClient::class);
         $this->mailSender = self::prophesize(MailSender::class);
         $this->mailFactory = self::prophesize(MailFactory::class);
@@ -385,5 +385,4 @@ class ReportSubmissionServiceTest extends TestCase
             'un-downloadable and missing docs' => [$unDownloadableAndMissingDocs],
         ];
     }
-
 }
