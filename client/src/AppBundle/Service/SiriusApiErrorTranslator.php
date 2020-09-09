@@ -1,8 +1,7 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types=1); declare(strict_types=1);
 
 
 namespace AppBundle\Service;
-
 
 use AppBundle\Model\Sirius\SiriusApiError;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -47,7 +46,7 @@ class SiriusApiErrorTranslator
         ];
 
         if (is_null($apiError->getCode()) || is_null($translations[$apiError->getCode()])) {
-            return 'UNEXPECTED ERROR CODE: An unknown error occurred during document sync';
+            return $errorJson;
         } else {
             return sprintf('%s: %s', $apiError->getCode(), $translations[$apiError->getCode()]);
         }
