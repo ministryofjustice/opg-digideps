@@ -20,7 +20,7 @@ repos:
     hooks:
     - id: php-cs-fixer
       files: \.(php)$
--   repo: https://github.com/acsauk/php-strict-types-pre-commit-hook
-    rev: main
-    hooks:
-    -    id: php-strict-types
+#-   repo: https://github.com/acsauk/php-strict-types-pre-commit-hook
+#    rev: main
+#    hooks:
+#    -    id: php-strict-types
