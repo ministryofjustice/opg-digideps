@@ -5,3 +5,4 @@ set -e
 confd -onetime -backend env
 
 su-exec www-data php app/console doctrine:fixtures:load --no-interaction
+su-exec www-data php app/console doctrine:fixtures:load --no-interaction --env=test

@@ -167,7 +167,8 @@ class DocumentController extends RestController
         }
 
         $data = $this->deserializeBodyContent($request);
-
+    
+        /** @var Document $document */
         $document = $em->getRepository(Document::class)->find($id);
 
         $serialisedGroups = $request->query->has('groups')
@@ -181,7 +182,11 @@ class DocumentController extends RestController
             if (in_array($data['syncStatus'], self::DOCUMENT_SYNC_ERROR_STATUSES)) {
                 $errorMessage = is_array($data['syncError']) ? json_encode($data['syncError']) : $data['syncError'];
                 $document->setSynchronisationError($errorMessage);
-                // If temp sync error status - increment counter by 1
+                
+                // If temp sync error status
+                if ($data["syncStatus"] === Document::SYNC_STATUS_TEMPORARY_ERROR) {
+                    $document->setSyncAttempts(1);
+                }
             } else {
                 $document->setSynchronisationError(null);
             }

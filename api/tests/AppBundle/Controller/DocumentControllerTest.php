@@ -238,7 +238,7 @@ class DocumentControllerTest extends AbstractTestController
     public function updateDocument_temp_errors_increases_sync_attempt_counter(): void
     {
         $url = sprintf('/document/%s', self::$document1->getId());
-
+    
         $response = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,

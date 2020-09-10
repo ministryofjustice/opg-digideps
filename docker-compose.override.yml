@@ -1,4 +1,4 @@
-version: '3.2'
+version: "3.2"
 
 #docker-compose.override.yml is loaded and merged with docker-compose.yml by default when calling docker-compose up.
 #This file won't be merged when using docker-compose -f docker-compose.yml up (or using any other compose file).
@@ -22,6 +22,7 @@ services:
       - ./api/tests:/var/www/tests
       - ./api/web:/var/www/web
       - ./api/phpstan.neon:/var/www/phpstan.neon
+      - ./api/var:/var/www/var
 
   frontend:
     volumes:
