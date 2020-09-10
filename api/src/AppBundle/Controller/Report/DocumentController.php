@@ -181,6 +181,7 @@ class DocumentController extends RestController
             if (in_array($data['syncStatus'], self::DOCUMENT_SYNC_ERROR_STATUSES)) {
                 $errorMessage = is_array($data['syncError']) ? json_encode($data['syncError']) : $data['syncError'];
                 $document->setSynchronisationError($errorMessage);
+                // If temp sync error status - increment counter by 1
             } else {
                 $document->setSynchronisationError(null);
             }

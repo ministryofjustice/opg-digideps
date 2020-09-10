@@ -232,6 +232,22 @@ class DocumentControllerTest extends AbstractTestController
         ];
     }
 
+    /**
+     * @test
+     */
+    public function updateDocument_temp_errors_increases_sync_attempt_counter(): void
+    {
+        $url = sprintf('/document/%s', self::$document1->getId());
+
+        $response = $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'ClientSecret' => API_TOKEN_DEPUTY,
+            'data' => ['syncStatus' => Document::SYNC_STATUS_TEMPORARY_ERROR, 'syncError' => 'Temp error occurred']
+        ]);
+
+        self::assertEquals(1, $response['data']['sync_attempts']);
+    }
+
     /** @test */
     public function updateRelatedStatuses_success(): void
     {
