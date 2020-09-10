@@ -3,6 +3,14 @@ coverage:
       project: off
       patch: off
 
+ignore:
+  - "api/src/AppBundle/DataFixtures/**/*"  # ignore folders and all its contents
+  - "api/src/AppBundle/FixtureFactory/**/*"
+  - "api/src/AppBundle/TestHelpers/**/*"
+  - "api/src/AppBundle/v2/Fixture/**/*"
+  - "client/src/AppBundle/Exception/**/*"
+  - "client/src/AppBundle/Resources/**/*"
+
 comment:
   layout: "reach, diff, flags, files"
   behavior: default
