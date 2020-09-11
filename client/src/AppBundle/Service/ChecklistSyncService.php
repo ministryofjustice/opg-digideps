@@ -41,8 +41,7 @@ class ChecklistSyncService
         RestClient $restClient,
         SiriusApiGatewayClient $siriusApiGatewayClient,
         SiriusApiErrorTranslator $errorTranslator
-    )
-    {
+    ) {
         $this->restClient = $restClient;
         $this->siriusApiGatewayClient = $siriusApiGatewayClient;
         $this->errorTranslator = $errorTranslator;
@@ -87,8 +86,10 @@ class ChecklistSyncService
      */
     private function postChecklist(QueuedChecklistData $checklistData, string $reportSubmissionUuid)
     {
+        $upload = $this->buildUpload($checklistData);
+
         return $this->siriusApiGatewayClient->postChecklistPdf(
-            $this->buildUpload($checklistData),
+            $upload,
             $reportSubmissionUuid,
             strtoupper($checklistData->getCaseNumber())
         );
@@ -117,7 +118,8 @@ class ChecklistSyncService
      */
     private function buildUpload(QueuedChecklistData $checklistData): SiriusDocumentUpload
     {
-        $filename = sprintf('checklist-%s-%s-%s.pdf',
+        $filename = sprintf(
+            'checklist-%s-%s-%s.pdf',
             $checklistData->getCaseNumber(),
             $checklistData->getReportStartDate()->format('Y'),
             $checklistData->getReportEndDate()->format('Y')
@@ -128,7 +130,8 @@ class ChecklistSyncService
             ->setMimetype(mimetype_from_filename($filename))
             ->setSource(base64_encode($checklistData->getChecklistFileContents()));
 
-        // Update api call to bring back submitted by and submission id
+        $submissionId = is_null($checklistData->getSyncedReportSubmission()) ?
+            null : $checklistData->getSyncedReportSubmission()->getId();
 
         $metadata = (new SiriusChecklistPdfDocumentMetadata())
             ->setYear((int) $checklistData->getReportEndDate()->format('Y'))
@@ -136,7 +139,7 @@ class ChecklistSyncService
             ->setSubmitterEmail($checklistData->getSubmitterEmail())
             ->setReportingPeriodFrom($checklistData->getReportStartDate())
             ->setReportingPeriodTo($checklistData->getReportEndDate())
-            ->setSubmissionId($checklistData->getSyncedReportSubmission()->getId());
+            ->setSubmissionId($submissionId);
 
         return (new SiriusDocumentUpload())
             ->setType('checklists')
@@ -153,7 +156,6 @@ class ChecklistSyncService
         return ($this->errorCanBeTranslated($e)) ?
             $this->errorTranslator->translateApiError((string)$e->getResponse()->getBody()) :
             substr($e->getMessage(), 0, 254);
-
     }
 
     /**

@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\ReportSubmission;
+use AppBundle\Entity\User;
 use AppBundle\Exception\PdfGenerationFailedException;
 use AppBundle\Exception\SiriusDocumentSyncFailedException;
 use AppBundle\Model\Sirius\QueuedChecklistData;
@@ -18,7 +19,9 @@ use PHPUnit\Framework\TestCase;
 class ChecklistSyncServiceTest extends TestCase
 {
     /** @var \PHPUnit_Framework_MockObject_MockObject */
-    private $restClient, $siriusApiGatewayClient, $errorTranslator;
+    private $restClient;
+    private $siriusApiGatewayClient;
+    private $errorTranslator;
 
     /** @var ChecklistSyncService */
     private $sut;
@@ -120,7 +123,12 @@ class ChecklistSyncServiceTest extends TestCase
 
     private function withReportSubmission(): ChecklistSyncServiceTest
     {
-        $this->dataInput->setReportSubmissions([(new ReportSubmission())->setUuid('rs-uuid')]);
+        $submission = (new ReportSubmission())
+            ->setId(1)
+            ->setCreatedBy((new User())->setEmail('a@b.com'))
+            ->setUuid('rs-uuid');
+
+        $this->dataInput->setReportSubmissions([$submission]);
         return $this;
     }
 
@@ -159,12 +167,17 @@ class ChecklistSyncServiceTest extends TestCase
 
     private function assertPostWillBeInvokedWithFallbackUuid(): ChecklistSyncServiceTest
     {
+        $expectedUploadObject = $this->buildExpectedUploadObject();
+        $expectedAttributes = $expectedUploadObject->getAttributes();
+
+        $expectedUploadObject->setAttributes($expectedAttributes->setSubmissionId(null));
+
         $this
             ->siriusApiGatewayClient
             ->expects($this->once())
             ->method('postChecklistPdf')
             ->with(
-                $this->equalTo($this->buildExpectedUploadObject()),
+                $this->equalTo($expectedUploadObject),
                 ChecklistSyncService::PAPER_REPORT_UUID_FALLBACK,
                 $this->dataInput->getCaseNumber()
             )
@@ -199,7 +212,8 @@ class ChecklistSyncServiceTest extends TestCase
             ->setReportingPeriodTo(new \DateTime('2021-02-01'))
             ->setSubmitterEmail('a@b.com')
             ->setType('PF')
-            ->setYear(2021);
+            ->setYear(2021)
+            ->setSubmissionId(1);
 
         return (new SiriusDocumentUpload())
             ->setType('checklists')

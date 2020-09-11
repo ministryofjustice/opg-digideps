@@ -7,27 +7,32 @@ use DateTime;
 class SiriusChecklistPdfDocumentMetadata implements SiriusMetadataInterface
 {
     /** @var int */
-    private $submissionId, $year;
+    private $year;
+
+    /** @var int|null */
+    private $submissionId;
 
     /** @var string */
-    private $submitterEmail, $type;
+    private $submitterEmail;
+    private $type;
 
     /** @var DateTime */
-    private $reportingPeriodFrom, $reportingPeriodTo;
+    private $reportingPeriodFrom;
+    private $reportingPeriodTo;
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getSubmissionId(): int
+    public function getSubmissionId(): ?int
     {
         return $this->submissionId;
     }
 
     /**
-     * @param int $submissionId
+     * @param int|null $submissionId
      * @return SiriusChecklistPdfDocumentMetadata
      */
-    public function setSubmissionId(int $submissionId): self
+    public function setSubmissionId(?int $submissionId): self
     {
         $this->submissionId = $submissionId;
         return $this;
@@ -122,5 +127,4 @@ class SiriusChecklistPdfDocumentMetadata implements SiriusMetadataInterface
         $this->reportingPeriodTo = $reportingPeriodTo;
         return $this;
     }
-
 }
