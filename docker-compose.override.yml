@@ -6,7 +6,7 @@ services:
   admin:
     volumes:
       - ./client/app:/var/www/app
-      - ./client/src:/var/www/src:ro
+      - ./client/src:/var/www/src
       - ./client/tests:/var/www/tests
       - ./client/phpstan.neon:/var/www/phpstan.neon
 
@@ -14,7 +14,7 @@ services:
     volumes:
       - ./api/app:/var/www/app
       - ./api/scripts:/var/www/scripts
-      - ./api/src:/var/www/src:ro
+      - ./api/src:/var/www/src
       - ./api/tests:/var/www/tests
       - ./api/web:/var/www/web
       - ./api/phpstan.neon:/var/www/phpstan.neon
@@ -22,6 +22,6 @@ services:
   frontend:
     volumes:
       - ./client/app:/var/www/app
-      - ./client/src:/var/www/src:ro
+      - ./client/src:/var/www/src
       - ./client/tests:/var/www/tests
       - ./client/phpstan.neon:/var/www/phpstan.neon

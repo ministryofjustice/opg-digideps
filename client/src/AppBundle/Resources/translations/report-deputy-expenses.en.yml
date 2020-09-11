@@ -1,5 +1,5 @@
 startPage:
-  htmlTitle: "Deputy report - deputy expenses | GOV.UK"
+  htmlTitle: "Deputy expenses - Complete the deputy report | GOV.UK"
   pageTitle: Deputy expenses
   pageSectionDescription1: |
     Over the course of your deputyship, you can claim expenses for things you have to do to carry out your role, like phone calls, postage and travel costs.
@@ -26,7 +26,7 @@ startPage:
   startButton: Start deputy expenses
 
 existPage:
-  htmlTitle: "Deputy report - add deputy expense | GOV.UK"
+  htmlTitle: "Add deputy expense - Complete the deputy report | GOV.UK"
   supportTitle: Deputy expenses
   form:
     paidForAnything:
@@ -36,30 +36,30 @@ existPage:
       label: Save and continue
 
 addAnotherPage:
-  htmlTitle: "Deputy report - add deputy expense | GOV.UK"
-  pageTitle: Add an expense
+  htmlTitle: "Add another expense - Complete the deputy report | GOV.UK"
+  pageTitle: Add another expense
   supportTitle: Deputy expenses
   form:
     addAnother:
       label: The expense has been saved. Would you like to add another now?
       hint: If you prefer, you can come back to this section later to add more expenses
     save:
-       label: Continue
+      label: Continue
 
 addPage:
-  htmlTitle: "Deputy report - deputy expenses | GOV.UK"
+  htmlTitle: "Add an expense - Complete the deputy report | GOV.UK"
   pageTitle: Add an expense
   supportTitle: Deputy expenses
   pageSectionDescription: |
     Tell us about an expense you've claimed for. You'll be able to add more expenses if you need to.
 
 editPage:
-  htmlTitle: "Deputy report - deputy expenses | GOV.UK"
-  supportTitle: Deputy expenses
+  htmlTitle: "Edit deputy expense - Complete the deputy report | GOV.UK"
   pageTitle: Edit deputy expense
+  supportTitle: Deputy expenses
 
 summaryPage:
-  htmlTitle: "Deputy report - deputy expenses | GOV.UK"
+  htmlTitle: "Deputy expenses - Complete the deputy report | GOV.UK"
   pageTitle: Deputy expenses
   pageSectionDescription: |
     In this section, we asked you to tell us about any expenses you've claimed for things you have
@@ -67,7 +67,7 @@ summaryPage:
   addButton: Add a deputy expense
 
 deletePage:
-  htmlTitle: "Deputy report - remove deputy expense | GOV.UK"
+  htmlTitle: "Remove deputy expense - Complete the deputy report | GOV.UK"
   subject: expense
   summary:
     explanation: Description of expense
@@ -86,4 +86,4 @@ form:
     label: Which bank account was this paid from? (optional)
     hint: ""
   save:
-      label: Save expense
+    label: Save expense

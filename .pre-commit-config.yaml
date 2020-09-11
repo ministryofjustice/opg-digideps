@@ -15,3 +15,12 @@ repos:
     rev: master
     hooks:
     -   id: git-secrets
+-   repo: https://github.com/digitalpulp/pre-commit-php.git
+    rev: 1.4.0
+    hooks:
+    - id: php-cs-fixer
+      files: \.(php)$
+#-   repo: https://github.com/acsauk/php-strict-types-pre-commit-hook
+#    rev: main
+#    hooks:
+#    -    id: php-strict-types

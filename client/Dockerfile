@@ -22,6 +22,10 @@ WORKDIR /app
 # Make composer super fast
 RUN composer global require hirak/prestissimo --no-plugins --no-scripts
 
+RUN apk update
+
+RUN apk add libpng libpng-dev libjpeg-turbo-dev libwebp-dev zlib-dev libxpm-dev gd && docker-php-ext-install gd
+
 # Install composer dependencies
 COPY composer.json .
 COPY composer.lock .

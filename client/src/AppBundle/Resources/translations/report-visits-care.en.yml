@@ -1,5 +1,5 @@
 startPage:
-  htmlTitle: "Deputy report - visits and care | GOV.UK"
+  htmlTitle: "Visits and care - Complete the deputy report | GOV.UK"
   pageTitle: Visits and care
   pageSectionDescription: |
     Use this section to tell us about %client%'s care and contact with you and other people.
@@ -8,12 +8,12 @@ startPage:
   startButton: Start visits and care
 
 stepPage:
-  htmlTitle: "Deputy report - visits and care | GOV.UK"
+  htmlTitle: "Visits and care - Complete the deputy report | GOV.UK"
   supportTitle: Visits and care
   backLink: Back
 
 summaryPage:
-  htmlTitle: "Deputy report - visits and care | GOV.UK"
+  htmlTitle: "Visits and care - Complete the deputy report | GOV.UK"
   pageTitle: Visits and care
   supportTitle: ""
   weAskAbout: In this section, we ask you about %client%'s care and contact with you and other people.
@@ -46,8 +46,8 @@ form:
       If %client% receives care from a private organisation or local social services, they may have
       a plan that sets out how %client%'s care needs will be met.
   whenWasCarePlanLastReviewed:
-      label: When was the care plan last reviewed?
-      hint: For example, 12 2015
+    label: When was the care plan last reviewed?
+    hint: For example, 12 2015
   choices:
     everyday: Every day
     once_a_week: At least once a week

@@ -49,7 +49,7 @@ workflows:
           requires: [ approval for further testing ]
           filters: { branches: { ignore: [ master ] } }
           task_name: integration_test
-          timeout: 2400
+          timeout: 2500
 
 #      - pa11y-ci:
 #          name: accessibility test
@@ -139,7 +139,7 @@ workflows:
           filters: { branches: { only: [ main ] } }
           task_name: reset_database
           tf_workspace: integration
-          timeout: 180
+          timeout: 250
 
       - run-task:
           name: integration test
@@ -147,7 +147,7 @@ workflows:
           filters: { branches: { only: [ main ] } }
           task_name: integration_test
           tf_workspace: integration
-          timeout: 1800
+          timeout: 2500
 
       - client-unit-test:
           name: client unit test
@@ -222,7 +222,7 @@ workflows:
           filters: { branches: { only: [ main ] } }
           task_name: backup
           tf_workspace: production02
-          timeout: 600
+          timeout: 700
 
       - run-task:
           name: restore production to preproduction
@@ -230,7 +230,7 @@ workflows:
           filters: { branches: { only: [ main ] } }
           task_name: restore_from_production
           tf_workspace: preproduction
-          timeout: 600
+          timeout: 700
 
   weekly_integration_run:
     triggers:
@@ -253,7 +253,7 @@ workflows:
           filters: { branches: { only: [ main ] } }
           task_name: reset_database
           tf_workspace: integration
-          timeout: 180
+          timeout: 250
       - client-unit-test:
           name: client unit test
           requires: [ apply integration ]
@@ -269,7 +269,7 @@ workflows:
           task_name: integration_test
           tf_workspace: integration
           notify_slack: true
-          timeout: 1800
+          timeout: 2500
 
 orbs:
   aws-cli: circleci/aws-cli@0.1.13

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Entity\Repository;
 
@@ -115,7 +115,7 @@ class ReportRepository extends EntityRepository
         $qb->leftJoin('r.client', 'c')
             ->leftJoin('c.users', 'u')
             ->where('(r.submitted = false OR r.submitted is null) AND r.unSubmitDate IS NULL AND c.caseNumber IN (:caseNumbers) AND u.roleName = :roleName')
-            ->setParameter('caseNumbers',$caseNumbers, Connection::PARAM_STR_ARRAY)
+            ->setParameter('caseNumbers', $caseNumbers, Connection::PARAM_STR_ARRAY)
             ->setParameter('roleName', $role);
 
         return $qb->getQuery()->getResult();
@@ -144,7 +144,7 @@ class ReportRepository extends EntityRepository
                 ->select(($select === 'count') ? 'COUNT(DISTINCT r)' : 'r,c,o')
                 ->leftJoin('r.client', 'c')
                 ->leftJoin('c.organisation', 'o')
-                ->where('o.isActivated = true AND o.id in (' . implode(',',$orgIdsOrUserId) .')');
+                ->where('o.isActivated = true AND o.id in (' . implode(',', $orgIdsOrUserId) .')');
         }
 
         $qb
@@ -161,12 +161,12 @@ class ReportRepository extends EntityRepository
             $qb->andWhere('r.reportStatusCached = :status AND r.endDate < :endOfToday')
                 ->setParameter('status', $status)
                 ->setParameter('endOfToday', $endOfToday);
-        } else if ($status === Report::STATUS_NOT_FINISHED) {
+        } elseif ($status === Report::STATUS_NOT_FINISHED) {
             $qb->andWhere('r.reportStatusCached = :status OR (r.reportStatusCached = :readyToSubmit AND r.endDate >= :endOfToday)')
                 ->setParameter('status', $status)
                 ->setParameter('readyToSubmit', Report::STATUS_READY_TO_SUBMIT)
                 ->setParameter('endOfToday', $endOfToday);
-        } else if ($status === Report::STATUS_NOT_STARTED) {
+        } elseif ($status === Report::STATUS_NOT_STARTED) {
             $qb->andWhere('r.reportStatusCached = :status')
                 ->setParameter('status', $status);
         }
@@ -220,7 +220,7 @@ DQL;
         if (count($result)) {
             $conn = $this->getEntityManager()->getConnection();
 
-            $ids = array_map(function($result) {
+            $ids = array_map(function ($result) {
                 return $result['checklist_id'];
             }, $result);
 

@@ -62,7 +62,10 @@ abstract class AbstractControllerTestCase extends WebTestCase
                 ->setLastname('User')
                 ->setRoleName($roleNames[0])
                 ->setEmail('logged-in-user@email.com')
-                ->setPhoneMain('01213214321');
+                ->setPhoneMain('01213214321')
+                ->setAddress1('1 Fake Road')
+                ->setAddressPostcode('B31 1PP')
+                ->setAddressCountry('GB');
         }
 
         if (is_null($user->getId())) {

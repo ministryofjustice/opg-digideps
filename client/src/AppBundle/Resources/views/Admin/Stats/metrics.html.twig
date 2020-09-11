@@ -57,6 +57,11 @@
       <a href="{{ path('admin_stats') }}" class="govuk-button govuk-button--secondary" data-module="govuk-button">
         {{ (page ~ '.downloadDAT') | trans }}
       </a>
+      {% if is_granted('ROLE_SUPER_ADMIN') %}
+      <a href="{{ path('admin_satisfaction') }}" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+        {{ (page ~ '.downloadSatisfaction') | trans }}
+      </a>
+      {% endif %}
     </div>
   </div>
 

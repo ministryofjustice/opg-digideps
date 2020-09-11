@@ -13,9 +13,9 @@ or ndr.actionPropertyBuy
 
                 <table class="checkboxes labelvalue inline">
                     <tr>
-                        <td class="value checkbox">{% if ndr.actionGiveGiftsToClient == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="value checkbox"{% if ndr.actionGiveGiftsToClient == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
                         <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                        <td class="value checkbox">{% if ndr.actionGiveGiftsToClient == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="value checkbox"{% if ndr.actionGiveGiftsToClient == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
                         <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                     </tr>
                 </table>
@@ -37,9 +37,9 @@ or ndr.actionPropertyBuy
                     <h3 class="label question bold flush--top">Are there plans for maintenance or alterations to any property owned by the client?</h3>
                     <table class="checkboxes labelvalue inline">
                         <tr>
-                            <td class="value checkbox">{% if ndr.actionPropertyMaintenance == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                            <td class="value checkbox"{% if ndr.actionPropertyMaintenance == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                            <td class="value checkbox">{% if ndr.actionPropertyMaintenance == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                            <td class="value checkbox"{% if ndr.actionPropertyMaintenance == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
                             <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                         </tr>
                     </table>
@@ -49,9 +49,9 @@ or ndr.actionPropertyBuy
                     <h3 class="label question bold">Are you planning to sell or rent any property owned by the client?</h3>
                     <table class="checkboxes labelvalue inline">
                         <tr>
-                            <td class="value checkbox">{% if ndr.actionPropertySellingRent == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                            <td class="value checkbox"{% if ndr.actionPropertySellingRent == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                            <td class="value checkbox">{% if ndr.actionPropertySellingRent == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                            <td class="value checkbox"{% if ndr.actionPropertySellingRent == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
                             <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                         </tr>
                     </table>
@@ -61,9 +61,9 @@ or ndr.actionPropertyBuy
                     <h3 class="label question bold">Are you planning to buy a property for the client?</h3>
                     <table class="checkboxes labelvalue inline">
                         <tr>
-                            <td class="value checkbox">{% if ndr.actionPropertyBuy == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                            <td class="value checkbox"{% if ndr.actionPropertyBuy == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                            <td class="value checkbox">{% if ndr.actionPropertyBuy == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                            <td class="value checkbox"{% if ndr.actionPropertyBuy == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
                             <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                         </tr>
                     </table>

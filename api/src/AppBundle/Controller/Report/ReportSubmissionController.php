@@ -222,6 +222,7 @@ class ReportSubmissionController extends RestController
     /**
      * @param array $date
      * @return \DateTime|null
+     * @throws \Exception
      */
     private function convertDateArrayToDateTime(array $date)
     {
