@@ -46,6 +46,7 @@ class ReportController extends RestController
         'checklist',
         'user-name',
         'user-rolename',
+        'user-email',
         'report-checklist',
         'report-sections',
         'prof-deputy-estimate-management-costs',
@@ -55,7 +56,8 @@ class ReportController extends RestController
         'client-name',
         'document-sync',
         'report-submission-uuid',
-        'client-case-number'
+        'client-case-number',
+        'report-submission-id'
     ];
 
     /**

@@ -135,7 +135,8 @@ class ChecklistSyncService
             ->setType($checklistData->getReportType())
             ->setSubmitterEmail($checklistData->getSubmitterEmail())
             ->setReportingPeriodFrom($checklistData->getReportStartDate())
-            ->setReportingPeriodTo($checklistData->getReportEndDate());
+            ->setReportingPeriodTo($checklistData->getReportEndDate())
+            ->setSubmissionId($checklistData->getSyncedReportSubmission()->getId());
 
         return (new SiriusDocumentUpload())
             ->setType('checklists')
