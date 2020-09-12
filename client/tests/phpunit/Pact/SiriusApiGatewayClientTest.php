@@ -2,7 +2,6 @@
 
 namespace AppBundle\Service;
 
-
 use AppBundle\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
 use AppBundle\Service\AWS\RequestSigner;
 use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
@@ -93,7 +92,6 @@ class SiriusDocumentsContractTest extends KernelTestCase
      */
     public function sendReportPdfDocument()
     {
-
         $this->setUpReportPdfPactBuilder($this->caseRef);
 
         $this->signer->signRequest(Argument::type(Request::class), 'execute-api')->willReturnArgument(0);
@@ -191,7 +189,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
             ->setMethod('POST')
             ->setPath(sprintf('/v2/clients/%s/reports', $caseRef))
             ->addHeader('Content-Type', 'application/json')
-            ->setBody( [
+            ->setBody([
                 'report' => [
                     'data'=> [
                         'type' => 'reports',
@@ -285,7 +283,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
                             "reporting_period_from" => $matcher->dateISO8601('2019-06-01'),
                             "reporting_period_to" => $matcher->dateISO8601('2020-05-31'),
                             "year" => $matcher->integer(2020),
-                            "type" => $matcher->regex('PF', 'PF|HW|Combined')
+                            "type" => $matcher->regex('PF', 'PF|HW|COMBINED')
                         ],
                         'file' => [
                             'name' => $this->fileName,
