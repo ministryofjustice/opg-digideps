@@ -238,14 +238,38 @@ class DocumentControllerTest extends AbstractTestController
     public function updateDocument_temp_errors_increases_sync_attempt_counter(): void
     {
         $url = sprintf('/document/%s', self::$document1->getId());
-    
+        
+        for ($i = 1; $i < 3; $i++) {
+            $response = $this->assertJsonRequest('PUT', $url, [
+                'mustSucceed' => true,
+                'ClientSecret' => API_TOKEN_DEPUTY,
+                'data' => ['syncStatus' => Document::SYNC_STATUS_TEMPORARY_ERROR, 'syncError' => 'Temp error occurred']
+            ]);
+            
+            self::assertEquals($i, $response['data']['sync_attempts']);
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function updateDocument_perm_error_returns_after_4_attempts(): void
+    {
+        $document = $this->repo->find(self::$document1->getId());
+        self::assertInstanceOf(Document::class, $document);
+        
+        $document->setSyncAttempts(3);
+        self::fixtures()->flush();
+
+        $url = sprintf('/document/%s', $document->getId());
         $response = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,
             'data' => ['syncStatus' => Document::SYNC_STATUS_TEMPORARY_ERROR, 'syncError' => 'Temp error occurred']
         ]);
-
-        self::assertEquals(1, $response['data']['sync_attempts']);
+        
+        self::assertEquals("Document failed to sync after 4 attempts", $response['data']['synchronisation_error']);
+        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $response['data']['synchronisation_status']);
     }
 
     /** @test */

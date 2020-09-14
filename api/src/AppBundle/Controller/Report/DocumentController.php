@@ -8,6 +8,7 @@ use AppBundle\Entity\Report\Document;
 use AppBundle\Exception\UnauthorisedException;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use PhpParser\Comment\Doc;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -185,7 +186,14 @@ class DocumentController extends RestController
                 
                 // If temp sync error status
                 if ($data["syncStatus"] === Document::SYNC_STATUS_TEMPORARY_ERROR) {
-                    $document->setSyncAttempts(1);
+                    $syncAttempts = $document->getSyncAttempts();
+                    $document->setSyncAttempts($syncAttempts + 1);
+                    
+                    $syncAttempts = $document->getSyncAttempts();
+                    if ($syncAttempts === 4) {
+                        $document->setSynchronisationError("Document failed to sync after 4 attempts");
+                        $document->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
+                    }
                 }
             } else {
                 $document->setSynchronisationError(null);
