@@ -86,6 +86,7 @@ class SiriusApiGatewayClient
 
         // Add second argument ['debug' => true] to see requests in action
         return $this->httpClient->send($signedRequest);
+
     }
 
     /**

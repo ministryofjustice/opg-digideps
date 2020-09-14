@@ -300,7 +300,12 @@ class DocumentSyncService
                 $errorMessage = (string) $e->getMessage();
             }
 
-            $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
+            if ($e->hasResponse()) {
+                $syncStatus = $e->getCode() > 399 && $e->getCode() < 500 ?
+                    Document::SYNC_STATUS_PERMANENT_ERROR : Document::SYNC_STATUS_TEMPORARY_ERROR;
+            } else {
+                $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
+            }
         }
 
         if ($syncStatus === Document::SYNC_STATUS_PERMANENT_ERROR) {
