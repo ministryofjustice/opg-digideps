@@ -17,15 +17,11 @@
 {% endblock %}
 
 {% block pageContent %}
-
     <p class="text">{{ (page ~ '.para01') | trans }}</p>
     {% include 'AppBundle:Report/Document:_list_submitted.html.twig'  with {
     'documents': report.submittedDocuments,
     'translationDomain': translationDomain,
     'page' : page,
     } %}
-
-    <a href="{{ nextLink }}" class="button behat-link-confirm-submit">{{ (page ~ '.submitButton') | trans }}</a>
-
+    <a href="{{ nextLink }}" class="button behat-link-confirm-submit" data-module="opg-toggleable-submit">{{ (page ~ '.submitButton') | trans }}</a>
 {% endblock %}
-
