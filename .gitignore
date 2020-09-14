@@ -7,6 +7,7 @@
 **/secrets.json
 **/.tmp.aws.config
 .phpunit.result.cache
+.php_cs.cache
 
 # Common vendor folders
 .terraform/
