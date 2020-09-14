@@ -105,9 +105,9 @@ class Document implements SynchronisableInterface
      * @var integer|null
      * @JMS\Type("integer")
      * @JMS\Groups({"synchronisation"})
-     * @ORM\Column(name="sync_attempts", type="integer", options={"default": 0}, nullable=true)
+     * @ORM\Column(name="sync_attempts", type="integer", nullable=false)
      */
-    protected $syncAttempts;
+    protected $syncAttempts = 0;
 
     /**
      * Document constructor.
