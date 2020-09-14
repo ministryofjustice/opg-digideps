@@ -27,7 +27,6 @@ variable "accounts" {
       elasticache_count    = number
       always_on            = bool
       copy_version_from    = string
-      scan_memory          = number
     })
   )
 }

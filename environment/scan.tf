@@ -32,7 +32,7 @@ resource "aws_ecs_task_definition" "scan" {
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 1024
-  memory                   = local.account.scan_memory
+  memory                   = 2048
   container_definitions    = "[${local.file_scanner_rest_container},${local.file_scanner_server_container}]"
   task_role_arn            = aws_iam_role.scan.arn
   execution_role_arn       = aws_iam_role.execution_role.arn

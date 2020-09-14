@@ -5,7 +5,7 @@ data "aws_lambda_function" "redeployer_lambda" {
 resource "aws_cloudwatch_event_rule" "redeploy_file_scanner" {
   name                = "redeploy-file-scanner-${local.environment}"
   description         = "Redeploy the file scanner to use latest virus definitions"
-  schedule_expression = "rate(12 hours)"
+  schedule_expression = "cron(0 1 * * ? *)"
   tags                = local.default_tags
 }
 
