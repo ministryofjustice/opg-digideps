@@ -5,6 +5,7 @@ use AppBundle\Command\ChecklistSyncCommand;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\User;
 use AppBundle\Exception\PdfGenerationFailedException;
 use AppBundle\Exception\SiriusDocumentSyncFailedException;
 use AppBundle\Model\Sirius\QueuedChecklistData;
@@ -329,17 +330,23 @@ class ChecklistSyncCommandTest extends KernelTestCase
 
     private function buildReport()
     {
-        $report = new Report();
-        $report->setStartDate(new \DateTime());
-        $report->setEndDate(new \DateTime());
-        $report->setReportSubmissions([]);
-        $checklist = new Checklist($report);
-        $report->setChecklist($checklist);
+        $user = (new User())->setEmail('test@test.com');
+
+        $report = (new Report())
+            ->setStartDate(new \DateTime())
+            ->setEndDate(new \DateTime())
+            ->setReportSubmissions([])
+            ->setType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS);
+
+        $checklist = (new Checklist($report))->setSubmittedBy($user);
         $checklist->setId(3923);
+
+        $report->setChecklist($checklist);
+
         $client = new Client();
         $client->setCaseNumber('case-number');
-        $report->setClient($client);
 
+        $report->setClient($client);
         return $report;
     }
 

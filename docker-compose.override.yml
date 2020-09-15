@@ -5,11 +5,7 @@ version: '3.2'
 services:
   admin:
     volumes:
-      - ./client/app/config/security.yml:/var/www/app/config/security.yml
-      - ./client/app/config/config.yml:/var/www/app/config/config.yml
-      - ./client/app/config/config_dev.yml:/var/www/app/config/config_dev.yml
-      - ./client/app/config/services.yml:/var/www/app/config/services.yml
-      - ./client/app/config/services:/var/www/app/config/services
+      - ./client/app:/var/www/app
       - ./client/src:/var/www/src
       - ./client/tests:/var/www/tests
       - ./client/phpstan.neon:/var/www/phpstan.neon
@@ -25,11 +21,7 @@ services:
 
   frontend:
     volumes:
-      - ./client/app/config/security.yml:/var/www/app/config/security.yml
-      - ./client/app/config/config.yml:/var/www/app/config/config.yml
-      - ./client/app/config/config_dev.yml:/var/www/app/config/config_dev.yml
-      - ./client/app/config/services.yml:/var/www/app/config/services.yml
-      - ./client/app/config/services:/var/www/app/config/services
+      - ./client/app:/var/www/app
       - ./client/src:/var/www/src
       - ./client/tests:/var/www/tests
       - ./client/phpstan.neon:/var/www/phpstan.neon

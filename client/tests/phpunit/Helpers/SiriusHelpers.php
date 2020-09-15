@@ -57,16 +57,33 @@ class SiriusHelpers extends KernelTestCase
             ->setFile($file);
     }
 
-    static public function generateSiriusChecklistPdfUpload(string $fileName, string $fileContents)
+    static public function generateSiriusChecklistPdfUpload(
+        string $fileName,
+        string $fileContents,
+        int $submissionId,
+        string $submitterEmail,
+        DateTime $reportingPeriodFrom,
+        DateTime $reportingPeriodTo,
+        int $year,
+        string $type
+    )
     {
         $file = (new SiriusDocumentFile())
             ->setName($fileName)
             ->setMimetype('application/pdf')
             ->setSource(base64_encode($fileContents));
 
+        $attributes = (new SiriusChecklistPdfDocumentMetadata())
+            ->setSubmissionId($submissionId)
+            ->setSubmitterEmail($submitterEmail)
+            ->setReportingPeriodFrom($reportingPeriodFrom)
+            ->setReportingPeriodTo($reportingPeriodTo)
+            ->setYear($year)
+            ->setType($type);
+
         return (new SiriusDocumentUpload())
             ->setType('checklists')
-            ->setAttributes(new SiriusChecklistPdfDocumentMetadata())
+            ->setAttributes($attributes)
             ->setFile($file);
     }
 }
