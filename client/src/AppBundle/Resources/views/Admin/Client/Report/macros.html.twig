@@ -9,9 +9,9 @@
         <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-hint">
                 <strong>{{ ('checklistPage.form.' ~ name ~ '.qid') | trans({}, form.vars.translation_domain) }}</strong>
-                <h4 class="govuk-fieldset__heading">
+                <h3 class="govuk-fieldset__heading">
                     {{ ('checklistPage.form.' ~ name ~ '.label') | trans({}, form.vars.translation_domain) }}
-                </h4>
+                </h3>
             </legend>
 
             {{ form_errors(form) }}
