@@ -2,7 +2,6 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Exception\SiriusDocumentSyncFailedException;
@@ -103,12 +102,12 @@ class ChecklistSyncService
      */
     private function putChecklist(QueuedChecklistData $checklistData, string $reportSubmissionUuid)
     {
-//        return $this->siriusApiGatewayClient->putChecklistPdf(
-//            $this->buildUpload($checklistData),
-//            $reportSubmissionUuid,
-//            strtoupper($checklistData->getCaseNumber())
-//            $checklistData->getChecklistUuid()
-//        );
+        return $this->siriusApiGatewayClient->putChecklistPdf(
+            $this->buildUpload($checklistData),
+            $reportSubmissionUuid,
+            strtoupper($checklistData->getCaseNumber()),
+            $checklistData->getChecklistUuid()
+        );
     }
 
     /**

@@ -10,10 +10,15 @@ class QueuedChecklistData
     private $checklistId;
 
     /** @var string */
-    private $checklistUuid, $caseNumber, $checklistFileContents, $submitterEmail, $reportType;
+    private $checklistUuid;
+    private $caseNumber;
+    private $checklistFileContents;
+    private $submitterEmail;
+    private $reportType;
 
     /** @var \DateTime */
-    private $reportStartDate, $reportEndDate;
+    private $reportStartDate;
+    private $reportEndDate;
 
     /** @var array|null */
     private $reportSubmissions;

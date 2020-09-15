@@ -12,7 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class SiriusHelpers extends KernelTestCase
 {
-    static public function generateSiriusReportPdfDocumentUpload(
+    public static function generateSiriusReportPdfDocumentUpload(
         DateTime $startDate,
         DateTime $endDate,
         DateTime $submittedDate,
@@ -20,8 +20,7 @@ class SiriusHelpers extends KernelTestCase
         int $submissionId,
         string $fileName,
         string $fileContents
-    )
-    {
+    ) {
         $siriusReportPdfDocumentMetadata = (new SiriusReportPdfDocumentMetadata())
             ->setReportingPeriodFrom($startDate)
             ->setReportingPeriodTo($endDate)
@@ -41,7 +40,7 @@ class SiriusHelpers extends KernelTestCase
             ->setFile($file);
     }
 
-    static public function generateSiriusSupportingDocumentUpload(int $submissionId, string $fileName, string $fileContents)
+    public static function generateSiriusSupportingDocumentUpload(int $submissionId, string $fileName, string $fileContents)
     {
         $siriusSupportingDocumentMetadata = (new SiriusSupportingDocumentMetadata())
             ->setSubmissionId($submissionId);
@@ -57,7 +56,7 @@ class SiriusHelpers extends KernelTestCase
             ->setFile($file);
     }
 
-    static public function generateSiriusChecklistPdfUpload(
+    public static function generateSiriusChecklistPdfUpload(
         string $fileName,
         string $fileContents,
         int $submissionId,
@@ -66,8 +65,7 @@ class SiriusHelpers extends KernelTestCase
         DateTime $reportingPeriodTo,
         int $year,
         string $type
-    )
-    {
+    ) {
         $file = (new SiriusDocumentFile())
             ->setName($fileName)
             ->setMimetype('application/pdf')

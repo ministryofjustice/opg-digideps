@@ -5,9 +5,9 @@ use AppBundle\Command\ChecklistSyncCommand;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\User;
 use AppBundle\Exception\PdfGenerationFailedException;
 use AppBundle\Exception\SiriusDocumentSyncFailedException;
+use AppBundle\Entity\User;
 use AppBundle\Model\Sirius\QueuedChecklistData;
 use AppBundle\Service\ChecklistPdfGenerator;
 use AppBundle\Service\ChecklistSyncService;
@@ -22,7 +22,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ChecklistSyncCommandTest extends KernelTestCase
 {
     /** @var MockObject */
-    private $syncService, $parameterStore, $restClient, $pdfGenerator;
+    private $syncService;
+    private $parameterStore;
+    private $restClient;
+    private $pdfGenerator;
 
     /** @var ContainerInterface */
     private $container;

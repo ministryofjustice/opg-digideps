@@ -71,7 +71,7 @@ class SiriusApiErrorTranslator
         $decodedJson = json_decode($errorString, true);
 
         return is_null($decodedJson) ||
-            !array_key_exists('body', $decodedJson) ||
-            (array_key_exists('body', $decodedJson) && (!array_key_exists('error', $decodedJson['body'])));
+        !array_key_exists('body', $decodedJson) ||
+        (array_key_exists('body', $decodedJson) && (!array_key_exists('error', $decodedJson['body'])));
     }
 }

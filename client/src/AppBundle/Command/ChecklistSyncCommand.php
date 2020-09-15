@@ -58,8 +58,7 @@ class ChecklistSyncCommand extends Command
         SerializerInterface $serializer,
         ParameterStoreService $parameterStore,
         $name = null
-    )
-    {
+    ) {
         $this->pdfGenerator = $pdfGenerator;
         $this->syncService = $syncService;
         $this->restClient = $restClient;

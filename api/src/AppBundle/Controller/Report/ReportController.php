@@ -883,7 +883,7 @@ class ReportController extends RestController
             ->getRepository(EntityDir\Report\ReviewChecklist::class)
             ->findOneBy([ 'report' => $report->getId() ]);
 
-        if (is_null($checklist))  {
+        if (is_null($checklist)) {
             $checklist = new EntityDir\Report\ReviewChecklist($report);
         }
 

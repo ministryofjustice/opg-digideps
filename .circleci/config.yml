@@ -34,6 +34,10 @@ workflows:
           requires: [ apply environment ]
           filters: { branches: { ignore: [ main ] } }
 
+#      - pa11y-ci:
+#          name: accessibility test
+#          requires: [ apply environment ]
+#          filters: { branches: { ignore: [ main ] } }
       - approve:
           name: approval for further testing
           type: approval
