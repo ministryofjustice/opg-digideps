@@ -1,5 +1,5 @@
 startPage:
-  htmlTitle: "New deputy report - actions you plan to take | GOV.UK"
+  htmlTitle: "Actions you plan to take - Complete the deputy report | GOV.UK"
   pageTitle: Actions you plan to take
   pageSectionDescription1: |
     Use this section to tell us about any significant financial decisions you plan to
@@ -20,11 +20,11 @@ startPage:
         apply a high standard of care – this might mean involving other people, for example
         getting advice from relatives and professionals like doctors
       para03: |
-        OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on how to look after %client%'s financial affairs.
+        OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on how to look after %client%'s financial affairs.
   startButton: Start actions
 
 stepPage:
-  htmlTitle: "New deputy report - actions you plan to take | GOV.UK"
+  htmlTitle: "Actions you plan to take - Complete the deputy report | GOV.UK"
   supportTitle: Actions you plan to take
   gifts:
     pageTitle: Gifts
@@ -46,7 +46,7 @@ stepPage:
           There are strict limits on gift-giving as a deputy. These rules help to look
           after %client%'s best interests.
         para03: |
-          OPG's <a href="https://www.gov.uk/government/publications/giving-gifts-a-guide-for-deputies-and-attorneys" target="_blank">'Giving gifts for someone else' (OPG2) booklet</a> gives detailed guidance on giving gifts as a deputy.
+          OPG's <a href="https://www.gov.uk/government/publications/giving-gifts-a-guide-for-deputies-and-attorneys">'Giving gifts for someone else' (OPG2) booklet</a> gives detailed guidance on giving gifts as a deputy.
   property:
     pageTitle: Property
     selling:
@@ -62,12 +62,11 @@ stepPage:
           para03: |
             You can also apply to pay less or no fee for an application to the court if the
             client has a small estate (low funds).
-          para04: <a href="https://www.gov.uk/joint-property-ownership" target="_blank">Find out more</a>
+          para04: <a href="https://www.gov.uk/joint-property-ownership">Find out more</a>
   backLink: Back
 
-
 summaryPage:
-  htmlTitle: "New deputy report - actions you plan to take | GOV.UK"
+  htmlTitle: "Actions you plan to take - Complete the deputy report | GOV.UK"
   pageTitle: Actions you plan to take
   weAskAbout: |
     In this section, we ask you about significant financial decisions you're planning to make on

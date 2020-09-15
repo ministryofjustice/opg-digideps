@@ -1,5 +1,5 @@
 addCoDeputy:
-  htmlTitle: Deputy report - Invite deputy | GOV.UK
+  htmlTitle: Invite deputy - Complete the deputy report | GOV.UK
   pageTitle: Invite deputy
   intro: |
     You can invite additional deputies to %clientFirstName%'s reports, all we need is their
@@ -7,7 +7,7 @@ addCoDeputy:
   submitButton: Send invitation
 
 reinviteDeputy:
-  htmlTitle: Deputy report - Reinvite deputy | GOV.UK
+  htmlTitle: Reinvite deputy - Complete the deputy report | GOV.UK
   pageTitle: Reinvite deputy
   intro: |
     Use the box below to resend an invitation to the original or alternative email address.
@@ -32,10 +32,13 @@ form:
         label: Last name
       address1:
         label: Address
+        context: line 1 of 3
       address2:
         label: " "
+        context: Address line 2 of 3
       address3:
         label: " "
+        context: Address line 3 of 3
       addressPostcode:
         label: Postcode
       addressCountry:
@@ -53,9 +56,9 @@ form:
         hint: You are currently an administrator on the Deputy Report Service.
 
 clientLastname:
-    label: Last name
+  label: Last name
 clientCaseNumber:
-    label: Case number
-    hint: You will find the case number on the first page of the court order (top right-hand corner)
+  label: Case number
+  hint: You will find the case number on the first page of the court order (top right-hand corner)
 saveAndContinue:
-    label: Save and continue
+  label: Save and continue

@@ -45,16 +45,18 @@ workflows:
           filters: { branches: { ignore: [ master ] } }
 
       - run-task:
-          name: integration test
+          name: reset environment for testing
           requires: [ approval for further testing ]
+          filters: { branches: { ignore: [ main ] } }
+          task_name: reset_database
+          timeout: 180
+
+      - run-task:
+          name: integration test
+          requires: [ reset environment for testing ]
           filters: { branches: { ignore: [ master ] } }
           task_name: integration_test
-          timeout: 2400
-
-#      - pa11y-ci:
-#          name: accessibility test
-#          requires: [ approval for further testing ]
-#          filters: { branches: { ignore: [ main ] } }
+          timeout: 2500
 
       - run-task:
           name: backup environment
@@ -84,6 +86,7 @@ workflows:
     jobs:
       - build:
           name: build integration
+          build_dev: true
           filters: { branches: { only: [ main ] } }
 
       - terraform-command:
@@ -92,6 +95,14 @@ workflows:
           filters: { branches: { only: [ main ] } }
           tf_tier: shared
           tf_workspace: development
+          tf_command: apply
+
+      # Notice, no 'reset' or 'restore' over development so we can keep test data
+      - terraform-command:
+          name: apply development
+          requires: [ apply shared-development ]
+          tf_workspace: development
+          filters: { branches: { only: [ main ] } }
           tf_command: apply
 
       - terraform-command:
@@ -130,7 +141,7 @@ workflows:
           filters: { branches: { only: [ main ] } }
           task_name: reset_database
           tf_workspace: integration
-          timeout: 180
+          timeout: 250
 
       - run-task:
           name: integration test
@@ -138,7 +149,7 @@ workflows:
           filters: { branches: { only: [ main ] } }
           task_name: integration_test
           tf_workspace: integration
-          timeout: 1800
+          timeout: 2500
 
       - client-unit-test:
           name: client unit test
@@ -213,7 +224,7 @@ workflows:
           filters: { branches: { only: [ main ] } }
           task_name: backup
           tf_workspace: production02
-          timeout: 600
+          timeout: 700
 
       - run-task:
           name: restore production to preproduction
@@ -221,14 +232,13 @@ workflows:
           filters: { branches: { only: [ main ] } }
           task_name: restore_from_production
           tf_workspace: preproduction
-          timeout: 600
+          timeout: 700
 
   weekly_integration_run:
     triggers:
       - schedule:
           cron: "00 05 * * 0"
           filters: { branches: { only: [ main ] } }
-
     jobs:
       - build:
           name: build integration
@@ -245,7 +255,7 @@ workflows:
           filters: { branches: { only: [ main ] } }
           task_name: reset_database
           tf_workspace: integration
-          timeout: 180
+          timeout: 250
       - client-unit-test:
           name: client unit test
           requires: [ apply integration ]
@@ -261,12 +271,12 @@ workflows:
           task_name: integration_test
           tf_workspace: integration
           notify_slack: true
-          timeout: 1800
+          timeout: 2500
 
 orbs:
   aws-cli: circleci/aws-cli@0.1.13
   slack: circleci/slack@3.4.2
-  codecov: codecov/codecov@1.0.2
+  codecov: codecov/codecov@1.1.1
   ecs_helper:
     commands:
       install:
@@ -393,6 +403,11 @@ jobs:
       AWS_REGION: eu-west-1
       AWS_CONFIG_FILE: ~/project/aws_config
       AWS_REGISTRY: 311462405659.dkr.ecr.eu-west-1.amazonaws.com
+    parameters:
+      build_dev:
+        description: whether to build the development client image
+        type: boolean
+        default: false
     steps:
       - setup_remote_docker
       - aws-cli/install
@@ -418,8 +433,9 @@ jobs:
           name: Set version
           command: |
             export VERSION=${TF_WORKSPACE}-${CIRCLE_SHA1:0:7}
-
+            export DEV_VERSION=development-${CIRCLE_SHA1:0:7}
             echo "export VERSION=${VERSION}" >> $BASH_ENV
+            echo "export DEV_VERSION=${DEV_VERSION}" >> $BASH_ENV
             echo "$VERSION" >> ~/project/VERSION
       - persist_to_workspace:
           root: .
@@ -457,6 +473,15 @@ jobs:
       - run:
           name: Push images
           command: docker-compose -f docker-compose.ci.yml push
+      - when:
+          condition: << parameters.build_dev >>
+          steps:
+            - run:
+                name: add robots.txt to frontend development
+                command: docker-compose -f docker-compose.ci.dev.yml build --build-arg AWS_REGISTRY=${AWS_REGISTRY} --build-arg VERSION=${VERSION}
+            - run:
+                name: Push image
+                command: docker-compose -f docker-compose.ci.dev.yml push
       - run:
           name: Install ECR Scan Results Requirements
           working_directory: ~/project/ecs_helper/check_ecr_scan_results
@@ -494,9 +519,6 @@ jobs:
       - checkout
       - attach_workspace: { at: ~/project }
       - run:
-          name: Load docker images
-          command: docker load -i ~/project/docker-images.tar
-      - run:
           name: Install lambda requirements for unit tests
           working_directory: ~/project/lambda_functions
           command: |
@@ -518,17 +540,18 @@ jobs:
       - run:
           name: Run tests
           command: |
-            docker-compose up -d pact-mock
+            docker-compose -f docker-compose.yml --project-name client-unit-tests up -d --no-deps frontend pact-mock
             sleep 3
-            docker run --rm --network=project_default \
-                --env-file=client/docker/env/frontend.env \
-                -e PACT_BROKER_HTTP_AUTH_PASSWORD \
-                -e PACT_BROKER_HTTP_AUTH_USER \
-                -e PACT_CONSUMER_VERSION \
-                -e PACT_BROKER_BASE_URL \
-            client:latest bin/phpunit -c tests/phpunit
-            docker-compose exec pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
-            docker-compose stop pact-mock
+
+            docker-compose -f docker-compose.yml --project-name client-unit-tests exec frontend sh scripts/client-unit-tests.sh
+            docker-compose -f docker-compose.yml --project-name client-unit-tests exec frontend chmod -R 777 tests/phpunit/coverage/client-unit-tests.xml
+            docker cp "client-unit-tests_frontend_1:/var/www/tests/phpunit/coverage/client-unit-tests.xml" "./client-unit-tests.xml"
+
+            docker-compose -f docker-compose.yml --project-name client-unit-tests exec pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
+            docker-compose -f docker-compose.yml --project-name client-unit-tests stop pact-mock
+      - codecov/upload:
+          file: ./client-unit-tests.xml
+          flags: client
       - store_artifacts:
           path: pact.json
           destination: Pact file
@@ -551,12 +574,12 @@ jobs:
             docker-compose -f docker-compose.yml --project-name api-unit-tests up -d api
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec api chmod -R 777 var
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
-      - copy-merged-cov-to-host:
-          file_to_copy: tests/coverage/merged.xml
-          copy_to_dir: .
+
+            docker-compose -f docker-compose.yml --project-name api-unit-tests exec api chmod -R 777 tests/coverage/api-unit-tests.xml
+            docker cp "api-unit-tests_api_1:/var/www/tests/coverage/api-unit-tests.xml" "./api-unit-tests.xml"
       - codecov/upload:
-          file: ./merged.xml
-          flags: phpunit
+          file: ./api-unit-tests.xml
+          flags: api
 
   pa11y-ci:
     machine:
@@ -571,6 +594,7 @@ jobs:
       - run:
           name: Run pa11y
           command: |
+            docker-compose down
             docker-compose -f docker-compose.yml up -d pa11y
             docker-compose exec frontend touch /var/www/.enableProdMode
             docker-compose exec admin touch /var/www/.enableProdMode
@@ -629,18 +653,3 @@ jobs:
                 channel: opg-digideps-team
                 failure_message: << parameters.task_name >> has failed.
                 success_message: << parameters.task_name >> has succeeded.
-
-commands:
-  copy-merged-cov-to-host:
-    parameters:
-      file_to_copy:
-        description: Path to the file where the cov file will be copied from host machine.
-        type: string
-      copy_to_dir:
-        description: Path to the directory where the cov file will be copied to on the host machine.
-        type: string
-    steps:
-      - run:
-          command: |
-            docker-compose -f docker-compose.yml --project-name api-unit-tests exec api chmod -R 777 "<< parameters.file_to_copy >>"
-            docker cp api-unit-tests_api_1:/var/www/tests/coverage/merged.xml "<< parameters.copy_to_dir >>/merged.xml"

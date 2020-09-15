@@ -1,0 +1,17 @@
+{% set translationDomain = "common" %}
+{% trans_default_domain translationDomain %}
+
+<hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+<details class="govuk-details behat-region-contact-details" data-module="govuk-details">
+    <summary class="govuk-details__summary">
+    <span class="govuk-details__summary-text">
+      {{ 'contactDetailsTitle' | trans }}
+    </span>
+    </summary>
+    <div class="govuk-details__text">
+        <ul class="govuk-list">
+            <li>{{ 'emailTitle' | trans }}</li>
+            <li><a href="mailto:{{ 'profSupportEmail' | trans({}, 'common') }}" title="{{ 'profSupportEmail' | trans({}, 'common') }}">{{ 'profSupportEmail' | trans({}, 'common') }}</a></li>
+        </ul>
+    </div>
+</details>

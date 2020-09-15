@@ -29,7 +29,9 @@
         "alphagov/notifications-php-client": "^2.1",
         "php-http/guzzle6-adapter": "^2.0",
         "sensio/framework-extra-bundle": "5.4.1",
-        "symfony/serializer": "3.4.38"
+        "symfony/serializer": "3.4.38",
+        "phpoffice/phpspreadsheet": "^1.14",
+        "ext-gd": "*"
     },
     "scripts": {
         "post-install-cmd": [
@@ -73,6 +75,7 @@
         "phpstan/phpstan-phpunit": "^0.12.0",
         "jangregor/phpstan-prophecy": "^0.6.2",
         "pact-foundation/pact-php": "^5.0",
-        "symfony/var-dumper": "^3.4"
+        "symfony/var-dumper": "^3.4",
+        "phpunit/phpcov": "6.0.1"
     }
 }

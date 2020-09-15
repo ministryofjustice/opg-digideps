@@ -1,0 +1,21 @@
+coverage:
+    status:
+      project: off
+      patch: off
+
+comment:
+  layout: "reach, diff, flags, files"
+  behavior: default
+  require_changes: false
+  require_base: yes
+  require_head: yes
+  branches: null
+flags:
+  api:
+    paths:
+      - api/src/AppBundle
+    carryforward: false
+  client:
+    paths:
+      - client/src/AppBundle
+    carryforward: false

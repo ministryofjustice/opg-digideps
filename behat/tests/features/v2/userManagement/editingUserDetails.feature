@@ -11,50 +11,6 @@ Feature: Editing Deputy and Client details
       | firstName | lastName | phone       | address     | address2  | county  | postCode | caseNumber | deputyEmail            |
       | Jory      | Dunkeld  | 01215552222 | 1 Fake Road | Fakeville | Faketon | B4 6HQ   | JD123456   |  hena.mercia@test.com  |
 
-  Scenario: Editing deputy details
-    Given I am logged in as "hena.mercia@test.com" with password "Abcd1234"
-    And I click on "user-account, profile-show, profile-edit"
-    Then I should be on "/deputyship-details/your-details/edit"
-    And the following fields should have the corresponding values:
-      | profile_firstname | Hena |
-      | profile_lastname | Mercia |
-      | profile_address1 | Victoria road |
-      | profile_address2 |  |
-      | profile_address3 |  |
-      | profile_addressPostcode | HA4 |
-      | profile_addressCountry | GB |
-      | profile_phoneMain | 07911111111111 |
-      | profile_phoneAlternative | |
-    When I fill in the following:
-      | profile_firstname |  |
-      | profile_lastname |  |
-      | profile_address1 | |
-      | profile_addressPostcode | |
-      | profile_addressCountry | |
-      | profile_phoneMain |   |
-    And I press "profile_save"
-    Then the following fields should have an error:
-      | profile_firstname |
-      | profile_lastname |
-      | profile_address1 |
-      | profile_addressPostcode |
-      | profile_addressCountry |
-      | profile_phoneMain |
-    When I press "profile_save"
-    Then the form should be invalid
-    When I fill in the following:
-      | profile_firstname | Paul |
-      | profile_lastname | Jamie |
-      | profile_address1 | 103 Petty France |
-      | profile_address2 | MOJDS |
-      | profile_address3 | London |
-      | profile_addressPostcode | SW1H 9AA |
-      | profile_addressCountry | GB |
-      | profile_phoneMain | 020 3334 3556 |
-      | profile_phoneAlternative | 020 1234 5679 |
-    And I press "profile_save"
-    Then the form should be valid
-
   Scenario: edit client details
     And I am logged in as "hena.mercia@test.com" with password "Abcd1234"
     And I click on "user-account, client-show, client-edit"

@@ -8,6 +8,8 @@ This app is the [Complete the deputy report][service] service. It provides an on
 
 You must have Docker installed.
 
+If developing the app then ensure you have [pre-commit](https://pre-commit.com/) installed to take advantage of the pre-commit [hooks](.pre-commit-config.yaml) we've added to the project to make PRs a more consistent and enjoyable experience.
+
 ## Installation
 
 - Add `127.0.0.1 digideps.local admin.digideps.local api.digideps.local www.digideps.local` to `/etc/hosts`

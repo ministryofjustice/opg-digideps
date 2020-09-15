@@ -22,6 +22,10 @@ WORKDIR /app
 # Make composer super fast
 RUN composer global require hirak/prestissimo --no-plugins --no-scripts
 
+RUN apk update
+
+RUN apk add libpng libpng-dev libjpeg-turbo-dev libwebp-dev zlib-dev libxpm-dev gd && docker-php-ext-install gd
+
 # Install composer dependencies
 COPY composer.json .
 COPY composer.lock .
@@ -51,6 +55,10 @@ RUN if [[ $REQUIRE_XDEBUG = "true" ]] ; then \
         docker-php-ext-enable $PHP_EXT_DIR/xdebug.so; \
     fi ;
 
+# Install pcov for faster coverage tooling
+RUN apk add --no-cache autoconf build-base
+RUN pecl install pcov && docker-php-ext-enable pcov
+
 # Route NGINX logs to stdout/stderr
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
   && ln -sf /dev/stderr /var/log/nginx/error.log
@@ -73,11 +81,6 @@ RUN mkdir -p var/cache \
   && mkdir -p var/logs \
   && chown -R www-data var
 
-CMD confd -onetime -backend env \
-  && waitforit -address=$API_URL/manage/availability -timeout=$TIMEOUT -insecure \
-  && php-fpm -D \
-  && nginx
-
 # See this page for directories required
 # https://symfony.com/doc/3.4/quick_tour/the_architecture.html
 COPY --from=composer /app/app app
@@ -93,8 +96,15 @@ COPY --from=webpack /app/web/images web/images
 COPY phpstan.neon .
 COPY docker/confd /etc/confd
 
+RUN chown -R www-data scripts
+
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
 # Check for security issues
 RUN su-exec www-data php app/console security:check
+
+CMD confd -onetime -backend env \
+  && waitforit -address=$API_URL/manage/availability -timeout=$TIMEOUT -insecure \
+  && php-fpm -D \
+  && nginx

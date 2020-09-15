@@ -1,6 +1,6 @@
 page:
-  pageSectionDescription:
-htmlTitle: Deputy report - set your password | GOV.UK
+    pageSectionDescription:
+htmlTitle: Set your password - Complete the deputy report | GOV.UK
 pageTitle: Set your password
 headerTitle: Step 1. Set your password
 email:
@@ -19,6 +19,6 @@ password:
 password_confirm:
     label: Confirm password
 terms_conditions:
-    label: I have read and understood the <a href="%link%" target="_blank">terms of use</a>
+    label: I have read and understood the <a href="%link%">terms of use</a>
 submit:
     label: Submit

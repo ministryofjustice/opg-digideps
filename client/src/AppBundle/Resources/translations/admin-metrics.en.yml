@@ -2,6 +2,7 @@ indexPage:
     htmlTitle: Administration - Analytics
     pageTitle: Analytics
     downloadDAT: Download DAT file
+    downloadSatisfaction: Download satisfaction report
 
 form:
     title: Change reporting period

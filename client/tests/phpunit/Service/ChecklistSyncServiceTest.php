@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\ReportSubmission;
+use AppBundle\Entity\User;
 use AppBundle\Exception\PdfGenerationFailedException;
 use AppBundle\Exception\SiriusDocumentSyncFailedException;
 use AppBundle\Model\Sirius\QueuedChecklistData;
@@ -18,7 +19,9 @@ use PHPUnit\Framework\TestCase;
 class ChecklistSyncServiceTest extends TestCase
 {
     /** @var \PHPUnit_Framework_MockObject_MockObject */
-    private $restClient, $siriusApiGatewayClient, $errorTranslator;
+    private $restClient;
+    private $siriusApiGatewayClient;
+    private $errorTranslator;
 
     /** @var ChecklistSyncService */
     private $sut;
@@ -63,13 +66,8 @@ class ChecklistSyncServiceTest extends TestCase
     /**
      * @test
      */
-    public function sendsActualReportUuidForReportsWithAsubmission()
+    public function postsActualReportUuidForReportsWithAsubmission()
     {
-        $this
-            ->buildChecklistDataInput()->withoutChecklistUuid()->withReportSubmission()
-            ->assertPostWillBeInvokedWithReportUuid()
-            ->invokeTest();
-
         $this
             ->buildChecklistDataInput()->withChecklistUuid()->withReportSubmission()
             ->assertPutWillBeInvokedWithReportUuid()
@@ -85,11 +83,6 @@ class ChecklistSyncServiceTest extends TestCase
             ->buildChecklistDataInput()->withoutChecklistUuid()->withoutReportSubmission()
             ->assertPostWillBeInvokedWithFallbackUuid()
             ->invokeTest();
-
-        $this
-            ->buildChecklistDataInput()->withChecklistUuid()->withoutReportSubmission()
-            ->assertPutWillBeInvokedWithFallbackUuid()
-            ->invokeTest();
     }
 
     /**
@@ -97,12 +90,6 @@ class ChecklistSyncServiceTest extends TestCase
      */
     public function returnsUuidAfterSuccessfulResponse()
     {
-        $this
-            ->buildChecklistDataInput()->withoutChecklistUuid()
-            ->assertPostWillBeInvoked()
-            ->invokeTest()
-            ->assertUuidIsReturned();
-
         $this
             ->buildChecklistDataInput()->withChecklistUuid()
             ->assertPutWillBeInvoked()
@@ -123,13 +110,6 @@ class ChecklistSyncServiceTest extends TestCase
             ->expectExceptionObject($expectedException);
 
         $this->invokeTest();
-
-        $this
-            ->buildChecklistDataInput()->withChecklistUuid()
-            ->ensureFailedPutWillBeInvoked()
-            ->expectExceptionObject($expectedException);
-
-        $this->invokeTest();
     }
 
     private function buildChecklistDataInput(): ChecklistSyncServiceTest
@@ -139,7 +119,9 @@ class ChecklistSyncServiceTest extends TestCase
             ->setChecklistId(231)
             ->setChecklistFileContents('file-contents')
             ->setReportStartDate(new \DateTime('2020-02-01'))
-            ->setreportEndDate(new \DateTime('2021-02-01'));
+            ->setreportEndDate(new \DateTime('2021-02-01'))
+            ->setReportType('PF')
+            ->setSubmitterEmail('a@b.com');
 
         return $this;
     }
@@ -158,7 +140,12 @@ class ChecklistSyncServiceTest extends TestCase
 
     private function withReportSubmission(): ChecklistSyncServiceTest
     {
-        $this->dataInput->setReportSubmissions([(new ReportSubmission())->setUuid('rs-uuid')]);
+        $submission = (new ReportSubmission())
+            ->setId(1)
+            ->setCreatedBy((new User())->setEmail('a@b.com'))
+            ->setUuid('rs-uuid');
+
+        $this->dataInput->setReportSubmissions([$submission]);
         return $this;
     }
 
@@ -225,12 +212,17 @@ class ChecklistSyncServiceTest extends TestCase
 
     private function assertPostWillBeInvokedWithFallbackUuid(): ChecklistSyncServiceTest
     {
+        $expectedUploadObject = $this->buildExpectedUploadObject();
+        $expectedAttributes = $expectedUploadObject->getAttributes();
+
+        $expectedUploadObject->setAttributes($expectedAttributes->setSubmissionId(null));
+
         $this
             ->siriusApiGatewayClient
             ->expects($this->once())
             ->method('postChecklistPdf')
             ->with(
-                $this->equalTo($this->buildExpectedUploadObject()),
+                $this->equalTo($expectedUploadObject),
                 ChecklistSyncService::PAPER_REPORT_UUID_FALLBACK,
                 $this->dataInput->getCaseNumber()
             )
@@ -288,11 +280,18 @@ class ChecklistSyncServiceTest extends TestCase
             ->setMimetype('application/pdf')
             ->setSource(base64_encode($this->dataInput->getChecklistFileContents()));
 
-        $expectedUploadObject = (new SiriusDocumentUpload())
+        $attributes = (new SiriusChecklistPdfDocumentMetadata())
+            ->setReportingPeriodFrom(new \DateTime('2020-02-01'))
+            ->setReportingPeriodTo(new \DateTime('2021-02-01'))
+            ->setSubmitterEmail('a@b.com')
+            ->setType('PF')
+            ->setYear(2021)
+            ->setSubmissionId(1);
+
+        return (new SiriusDocumentUpload())
             ->setType('checklists')
-            ->setAttributes(new SiriusChecklistPdfDocumentMetadata())
+            ->setAttributes($attributes)
             ->setFile($file);
-        return $expectedUploadObject;
     }
 
     private function assertUuidIsReturned()

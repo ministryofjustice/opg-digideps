@@ -37,7 +37,7 @@ resource "aws_ecs_service" "mock_sirius_integration" {
   name                    = aws_ecs_task_definition.mock_sirius_integration.family
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.mock_sirius_integration.arn
-  desired_count           = local.account.task_count
+  desired_count           = 1
   launch_type             = "FARGATE"
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true

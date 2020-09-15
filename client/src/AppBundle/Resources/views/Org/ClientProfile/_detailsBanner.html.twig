@@ -18,23 +18,6 @@
         </div>
     </div>
     {% endif %}
-    <div class="opg-helpline {% if showDetailsBanner %}opg-details-banner__helpline{% endif %} behat-region-helpline">
-        <h3>Helpline<br>
-            {% if not app.user %}
-                {{ 'helplineGeneral' | trans({}, 'common') }}<br/>
-                <a href="mailto:{{ 'layDeputySupportEmail' | trans({}, 'common') }}" title="{{ 'layDeputySupportEmail' | trans({}, 'common') }}">{{ 'emailSupport' | trans({}, 'layout') }}</a>
-            {% elseif app.user and app.user.isDeputyPA() %}
-                {{ 'helplinePA' | trans({}, 'common') }}<br/>
-                <a href="mailto:{{ 'paSupportEmail' | trans({}, 'common') }}" title="{{ 'paSupportEmail' | trans({}, 'common') }}">{{ 'emailSupport' | trans({}, 'layout') }}</a>
-            {% elseif app.user and app.user.isDeputyProf() %}
-                {{ 'helplineProf' | trans({}, 'common') }}<br/>
-                <a href="mailto:{{ 'profSupportEmail' | trans({}, 'common') }}" title="{{ 'profSupportEmail' | trans({}, 'common') }}">{{ 'emailSupport' | trans({}, 'layout') }}</a>
-            {% else %}
-                {{ 'helpline' | trans({}, 'common') }}<br/>
-                <a href="mailto:{{ 'layDeputySupportEmail' | trans({}, 'common') }}" title="{{ 'layDeputySupportEmail' | trans({}, 'common') }}">{{ 'emailSupport' | trans({}, 'layout') }}</a>
-            {% endif %}
-        </h3>
-    </div>
 {% if showDetailsBanner %}
 </div>
 {% endif %}

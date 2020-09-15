@@ -1,9 +1,9 @@
 addNote:
-  htmlTitle: Client profile - add note | GOV.UK
+  htmlTitle: Add note - Complete the deputy report | GOV.UK
   pageTitle: Add note
   supportTitle: "Client profile: %fullName%"
 editNote:
-  htmlTitle: Client profile - edit note | GOV.UK
+  htmlTitle: Edit note - Complete the deputy report | GOV.UK
   pageTitle: Edit note
   supportTitle: "Client profile: %fullName%"
 deletePage:

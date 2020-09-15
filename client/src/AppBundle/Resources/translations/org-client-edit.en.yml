@@ -1,4 +1,4 @@
-htmlTitle: "Edit client details | GOV.UK"
+htmlTitle: "Edit client details - Complete the deputy report | GOV.UK"
 pageTitle: Edit client details
 supportTitle: "Client profile: %fullName%"
 
@@ -6,26 +6,28 @@ form:
   nameHeading: Client name
   contactHeading: Contact details
   firstname:
-      label: First name
+    label: First name
   lastname:
-      label: Last name
+    label: Last name
   address:
-      label: Address
+    label: Address
+    context: line 1 of 2
   address2:
-      label: ' '
+    label: " "
+    context: Address line 2 of 2
+    hint: ""
   county:
-      label: ' '
+    label: County
+    hint: ""
   postcode:
-      label: Postcode
+    label: Postcode
+    hint: ""
   dateOfBirth:
-      legend: Date of Birth
-      hint: For example, 31 3 1955
+    legend: Date of Birth
+    hint: For example, 31 3 1955
   email:
-      label: Email
-#  country:
-#      label: Country
-#      defaultOption: Please select
+    label: Email
   phone:
-      label: Phone number
+    label: Phone number
   save:
-      label: Save client details
+    label: Save client details

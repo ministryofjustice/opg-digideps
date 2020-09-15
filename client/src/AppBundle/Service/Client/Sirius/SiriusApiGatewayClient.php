@@ -47,8 +47,7 @@ class SiriusApiGatewayClient
         string $baseUrl,
         Serializer $serializer,
         LoggerInterface $logger
-    )
-    {
+    ) {
         $this->httpClient = $httpClient;
         $this->requestSigner = $requestSigner;
         $this->baseUrl = $baseUrl;
@@ -174,8 +173,7 @@ class SiriusApiGatewayClient
         string $body='',
         string $accept='application/json',
         string $contentType='application/json'
-    )
-    {
+    ) {
         $url = new Uri(sprintf('%s/%s/%s', $this->baseUrl, self::SIRIUS_API_GATEWAY_VERSION, $endpoint));
 
         $request = new Request($method, $url, [

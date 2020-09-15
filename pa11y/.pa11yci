@@ -37,6 +37,62 @@
             "click element .behat-link-pa-report-open"
          ],
          "screenCapture": "screenshots/report-overview.png"
+      },
+      {
+         "url": "https://digideps.local/report/{id}/review (prof)",
+         "actions": [
+            "navigate to https://digideps.local/login",
+            "set field #login_email to behat-prof1@publicguardian.gov.uk",
+            "set field #login_password to Abcd1234",
+            "click element #login_login",
+            "wait for path to be /org/",
+            "click element .behat-link-pa-report-open",
+            "click element .behat-link-edit-prof_deputy_costs",
+            "click element .behat-link-start",
+            "check field #deputy_costs_profDeputyCostsHowCharged_0",
+            "click element #deputy_costs_save",
+            "check field #yes_no_profDeputyCostsHasPrevious_1",
+            "click element #yes_no_save",
+            "set field #deputy_costs_received_profDeputyFixedCost to 100",
+            "click element #deputy_costs_received_save",
+            "click element #deputy_other_costs_save",
+            "click element .behat-link-breadcrumbs-report-overview",
+            "click element #edit-gifts",
+            "click element .behat-link-start",
+            "check field #yes_no_giftsExist_1",
+            "click element #yes_no_save",
+            "click element .behat-link-breadcrumbs-report-overview",
+            "click element .preview-and-check-report"
+         ],
+         "screenCapture": "screenshots/preview-report.png"
+      },
+      {
+         "url": "https://digideps.local/report/{id}/review (lay)",
+         "actions": [
+            "navigate to https://digideps.local/login",
+            "set field #login_email to behat-lay-deputy-102@publicguardian.gov.uk",
+            "set field #login_password to Abcd1234",
+            "click element #login_login",
+            "set field #report_startDate_day to 01",
+            "set field #report_startDate_month to 01",
+            "set field #report_startDate_year to 2020",
+            "set field #report_endDate_day to 31",
+            "set field #report_endDate_month to 12",
+            "set field #report_endDate_year to 2020",
+            "click element #report_save",
+            "click element .behat-link-report-start",
+            "click element #edit-deputy_expenses",
+            "click element .behat-link-start",
+            "check field #yes_no_paidForAnything_1",
+            "click element .behat-link-save-and-continue",
+            "click element .opg-pagination__link--next",
+            "click element .behat-link-start",
+            "check field #yes_no_giftsExist_1",
+            "click element #yes_no_save",
+            "click element .behat-link-breadcrumbs-report-overview",
+            "click element #edit-report-preview"
+         ],
+         "screenCapture": "screenshots/preview-report-lay.png"
       }
    ]
 }

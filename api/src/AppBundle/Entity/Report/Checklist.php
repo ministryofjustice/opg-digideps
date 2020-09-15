@@ -318,7 +318,7 @@ class Checklist implements SynchronisableInterface
     /**
      * @var string|null
      * @JMS\Type("string")
-     * @JMS\Groups({"report-submission", "report-checklist"})
+     * @JMS\Groups({"report-submission", "report-checklist", "checklist-uuid"})
      * @ORM\Column(name="opg_uuid", type="string", length=36, nullable=true)
      */
     private $uuid;

@@ -52,11 +52,11 @@
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric">
                         <a class="govuk-link behat-link-edit" href="{{ url('admin_organisation_edit', { id: organisation.id }) }}">
-                            {{ 'edit' | trans({}, 'common') }}
+                            {{ 'edit' | trans({}, 'common') }} <span class="govuk-visually-hidden">{{ organisation.name }}</span>
                         </a>
                         {% if is_granted('ROLE_SUPER_ADMIN') %}
                             <a class="govuk-link govuk-!-margin-left-1 behat-link-delete" href="{{ url('admin_organisation_delete', { id: organisation.id }) }}">
-                                {{ 'remove' | trans({}, 'common') }}
+                                {{ 'remove' | trans({}, 'common') }} <span class="govuk-visually-hidden">{{ organisation.name }}</span>
                             </a>
                         {% endif %}
                     </td>

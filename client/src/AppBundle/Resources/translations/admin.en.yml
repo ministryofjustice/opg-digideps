@@ -141,6 +141,24 @@ statsPage:
     submitAndDownload:
       label: Download
 
+satisfactionPage:
+  htmlTitle: Administration - Download Satisfaction Results
+  pageTitle: Download Satisfaction Results
+  supportTitle: Analytics
+  DescriptionPara: Report of user's satisfaction results
+  pleaseWait: Please wait ...
+  dataGenerated: |
+    Data is being generated, Click here to <a href="%csvFile%">download</a>
+  form:
+    fromDate:
+      legend: Start date
+      hint: For example, 31 3 2015
+    toDate:
+      legend: End date
+      hint: For example, 31 3 2016
+    submitAndDownload:
+      label: Download
+
 upload:
   htmlTitle: Administration - Upload users
   pageTitle: Upload

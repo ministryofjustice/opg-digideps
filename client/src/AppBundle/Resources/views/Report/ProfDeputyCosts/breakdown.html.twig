@@ -8,7 +8,7 @@
 {% set page = 'breakdown' %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
-{% block pageTitle %}{{ (page ~ '.pageSectionDescription') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageSectionDescription') | trans(transOptions) }}{% endblock %}
 {% block supportTitleTop %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}

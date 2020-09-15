@@ -103,7 +103,7 @@ class IndexController extends AbstractController
         $form = $this->createForm(FormDir\Org\ClientType::class, $client);
         $form->handleRequest($request);
 
-        $newEmail = $client->getEmail();
+        $newEmail = empty($client->getEmail()) ? '' : $client->getEmail();
 
         // edit client form
         if ($form->isSubmitted() && $form->isValid()) {
@@ -120,7 +120,7 @@ class IndexController extends AbstractController
                     $clientUpdated->getFullName()
                 );
 
-                $message = is_null($newEmail) ? 'Client email address removed' : '';
+                $message = empty($newEmail) ? 'Client email address removed' : '';
                 $this->logger->notice($message, $event);
 
             }

@@ -2,13 +2,13 @@
 
 namespace AppBundle\Service;
 
-
 use AppBundle\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
 use AppBundle\Service\AWS\RequestSigner;
 use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use DateTime;
 use DigidepsTests\Helpers\DocumentHelpers;
 use DigidepsTests\Helpers\SiriusHelpers;
+use Exception;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Request;
 use PhpPact\Consumer\InteractionBuilder;
@@ -20,6 +20,7 @@ use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Throwable;
 
 class SiriusDocumentsContractTest extends KernelTestCase
 {
@@ -41,6 +42,9 @@ class SiriusDocumentsContractTest extends KernelTestCase
     /** @var string */
     private $checklistPdfUuid;
 
+    /** @var string */
+    private $expectedChecklistPdfUuid;
+
     /** @var InteractionBuilder */
     private $builder;
 
@@ -52,6 +56,9 @@ class SiriusDocumentsContractTest extends KernelTestCase
 
     /** @var LoggerInterface&ObjectProphecy */
     private $logger;
+
+    /** @var string */
+    private $submitterEmail;
 
     public function setUp(): void
     {
@@ -66,11 +73,13 @@ class SiriusDocumentsContractTest extends KernelTestCase
         $this->caseRef = '1234567T';
         $this->reportPdfUuid = '33ea0382-cfc9-4776-9036-667eeb68fa4b';
         $this->expectedSupportingDocumentUuid = '9c0cb55e-718d-4ffb-9599-f3164e12dbdb';
+        $this->expectedChecklistPdfUuid = '9c0cb55e-718d-4ffb-9599-f3164e132ab5';
         $this->checklistPdfUuid = '9c0cb55e-718d-4ffb-9599-f3164e132ab5';
         $this->signer = self::prophesize(RequestSigner::class);
         $this->logger = self::prophesize(LoggerInterface::class);
         $this->fileName = 'test.pdf';
         $this->fileContents = 'fake_contents';
+        $this->submitterEmail = 'donald.draper@digital.justice.gov.uk';
 
         $this->sut = new SiriusApiGatewayClient(
             $client,
@@ -87,7 +96,6 @@ class SiriusDocumentsContractTest extends KernelTestCase
      */
     public function sendReportPdfDocument()
     {
-
         $this->setUpReportPdfPactBuilder($this->caseRef);
 
         $this->signer->signRequest(Argument::type(Request::class), 'execute-api')->willReturnArgument(0);
@@ -154,10 +162,20 @@ class SiriusDocumentsContractTest extends KernelTestCase
 
         $upload = $siriusDocumentUpload = SiriusHelpers::generateSiriusChecklistPdfUpload(
             $this->fileName,
-            $this->fileContents
+            $this->fileContents,
+            11112,
+            $this->submitterEmail,
+            new DateTime('2019-06-01'),
+            new DateTime('2020-05-31'),
+            2020,
+            'PF'
         );
 
-        $result = $this->sut->postChecklistPdf($upload, $this->reportPdfUuid, $this->caseRef);
+        try {
+            $result = $this->sut->postChecklistPdf($upload, $this->reportPdfUuid, $this->caseRef);
+        } catch (Throwable $e) {
+            $this->throwReadableFailureMessage($e);
+        }
 
         $this->builder->verify();
 
@@ -178,7 +196,13 @@ class SiriusDocumentsContractTest extends KernelTestCase
 
         $upload = $siriusDocumentUpload = SiriusHelpers::generateSiriusChecklistPdfUpload(
             $this->fileName,
-            $this->fileContents
+            $this->fileContents,
+            11112,
+            $this->submitterEmail,
+            new DateTime('2019-06-01'),
+            new DateTime('2020-05-31'),
+            2020,
+            'PF'
         );
 
         $result = $this->sut->putChecklistPdf($upload, $this->reportPdfUuid, $this->caseRef, $this->checklistPdfUuid);
@@ -199,7 +223,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
             ->setMethod('POST')
             ->setPath(sprintf('/v2/clients/%s/reports', $caseRef))
             ->addHeader('Content-Type', 'application/json')
-            ->setBody( [
+            ->setBody([
                 'report' => [
                     'data'=> [
                         'type' => 'reports',
@@ -287,7 +311,14 @@ class SiriusDocumentsContractTest extends KernelTestCase
                 'checklist' => [
                     'data' => [
                         'type' => 'checklists',
-                        'attributes' => new SiriusChecklistPdfDocumentMetadata(),
+                        'attributes' => [
+                            "submission_id" => 11112,
+                            "submitter_email" => $this->submitterEmail,
+                            "reporting_period_from" => $matcher->dateISO8601('2019-06-01'),
+                            "reporting_period_to" => $matcher->dateISO8601('2020-05-31'),
+                            "year" => $matcher->integer(2020),
+                            "type" => $matcher->regex('PF', 'PF|HW|COMBINED')
+                        ],
                         'file' => [
                             'name' => $this->fileName,
                             'mimetype' => 'application/pdf',
@@ -304,13 +335,19 @@ class SiriusDocumentsContractTest extends KernelTestCase
             ->setStatus(201)
             ->addHeader('Content-Type', 'application/json')
             ->setBody([
-                'data' => ['id' => $matcher->uuid($this->checklistPdfUuid)]
+                'data' => ['id' => $matcher->uuid($this->expectedChecklistPdfUuid)]
             ]);
 
         $this->builder
             ->uponReceiving('A submitted checklist pdf')
             ->with($request)
             ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
+    }
+
+    private function throwReadableFailureMessage(Throwable $e)
+    {
+        $json = json_encode(json_decode((string) $e->getResponse()->getBody()), JSON_PRETTY_PRINT);
+        throw new Exception(sprintf('Pact test failed: %s', $json)) ;
     }
 
     private function setUpChecklistPdfPutPactBuilder(string $caseRef, string $reportPdfDocumentUuid, string $checklistUuid)
@@ -326,7 +363,14 @@ class SiriusDocumentsContractTest extends KernelTestCase
                 'checklist' => [
                     'data' => [
                         'type' => 'checklists',
-                        'attributes' => new SiriusChecklistPdfDocumentMetadata(),
+                        'attributes' => [
+                            "submission_id" => 11112,
+                            "submitter_email" => $this->submitterEmail,
+                            "reporting_period_from" => $matcher->dateISO8601('2019-06-01'),
+                            "reporting_period_to" => $matcher->dateISO8601('2020-05-31'),
+                            "year" => $matcher->integer(2020),
+                            "type" => $matcher->regex('PF', 'PF|HW|COMBINED')
+                        ],
                         'file' => [
                             'name' => $this->fileName,
                             'mimetype' => 'application/pdf',

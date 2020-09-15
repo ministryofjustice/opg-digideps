@@ -120,6 +120,14 @@ class Fixtures
         return $doc;
     }
 
+    public function createChecklist(Report $report)
+    {
+        $cl = new EntityDir\Report\Checklist($report);
+        $this->em->persist($cl);
+
+        return $cl;
+    }
+
     /**
      * @param Report|null $report
      * @param User|null $user

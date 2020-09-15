@@ -96,7 +96,7 @@ trait ReportUnsubmittedSections
      */
     public function isSectionFlaggedForAttention($sectionId)
     {
-        $sna = array_map('trim', explode(',',$this->getUnsubmittedSectionsList()));
+        $sna = array_map('trim', explode(',', $this->getUnsubmittedSectionsList()));
 
         return in_array($sectionId, $sna);
     }

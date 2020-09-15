@@ -1,5 +1,5 @@
 startPage:
-  htmlTitle: "Deputy report - Current fees and expenses | GOV.UK"
+  htmlTitle: "Current fees and expenses - Complete the deputy report | GOV.UK"
   pageTitle: Current fees and expenses
   pageSectionDescription1: |
     In cases where fixed costs have not been applied, professional deputy costs may include:
@@ -17,14 +17,14 @@ startPage:
   startButton: Start current fees and expenses
 
 existPage:
-  htmlTitle: "Deputy report - Current fees and expenses | GOV.UK"
+  htmlTitle: "Current fees and expenses - Complete the deputy report | GOV.UK"
   pageTitle: Current fees and expenses
   form:
     hasFees:
       label: During this reporting period, have you charged the client for any services?
 
 addTypePage:
-  htmlTitle: "Deputy report - Current fees and expenses | GOV.UK"
+  htmlTitle: "Add a charge - Complete the deputy report | GOV.UK"
   pageTitle: Add a charge
   supportTitle: Current fees and expenses
   form:
@@ -40,7 +40,7 @@ addTypePage:
       other-costs: Other costs
 
 addDetailsPage:
-  htmlTitle: "Deputy report - Current fees and expenses | GOV.UK"
+  htmlTitle: "Add a charge: - Complete the deputy report | GOV.UK"
   pageTitle: "Add a charge:"
   supportTitle: Current fees and expenses
   form:
@@ -56,7 +56,7 @@ addDetailsPage:
       label: What date was payment received?
 
 estCostsPage:
-  htmlTitle: "Deputy report - Current fees and expenses | GOV.UK"
+  htmlTitle: "Current fees and expenses - Complete the deputy report | GOV.UK"
   pageTitle: Current fees and expenses
   form:
     estimateCosts:
@@ -69,8 +69,8 @@ estCostsPage:
         for the SCCO.
 
 summaryPage:
-  htmlTitle: "Deputy report -  Current fees and expenses | GOV.UK"
-  pageTitle:  Current fees and expenses
+  htmlTitle: "Current fees and expenses - Complete the deputy report | GOV.UK"
+  pageTitle: Current fees and expenses
   pageSectionDescription: |
     In this section, we asked you to tell us about any fees or expenses you have charged in line
     with the practice direction.

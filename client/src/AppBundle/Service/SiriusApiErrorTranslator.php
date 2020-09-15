@@ -3,7 +3,6 @@
 
 namespace AppBundle\Service;
 
-
 use AppBundle\Model\Sirius\SiriusApiError;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -21,7 +20,7 @@ class SiriusApiErrorTranslator
 
     public function translateApiError(string $errorString)
     {
-        if ($this->jsonIsInUnexpectedFormat($errorString)){
+        if ($this->jsonIsInUnexpectedFormat($errorString)) {
             return $errorString;
         }
 
@@ -51,7 +50,7 @@ class SiriusApiErrorTranslator
         ];
 
         if (is_null($apiError->getCode()) || is_null($translations[$apiError->getCode()])) {
-            return 'UNEXPECTED ERROR CODE: An unknown error occurred during document sync';
+            return $errorString;
         } else {
             return sprintf('%s: %s', $apiError->getCode(), $translations[$apiError->getCode()]);
         }

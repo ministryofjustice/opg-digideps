@@ -33,7 +33,7 @@
                         </a>
                     </p>
                 {% else %}
-                    <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a>
+                    <a href="{{ path('report_review', {'reportId': report.id}) }}" class="preview-and-check-report">{{ 'options.previewReport' | trans() }}</a>
                 {% endif %}
             </dd>
         </dl>
@@ -46,7 +46,9 @@
             </dt>
             <dd class="push--bottom">
                 <span class="push--right">{{ report.startDate | date(" j F Y") }} to {{ report.endDate | date(" j F Y") }}</span>
-                <a href="{{ path('report_edit', {'reportId': report.id}) }}" class="right behat-link-edit-report-period">{{ 'edit' | trans }}</a>
+                <a href="{{ path('report_edit', {'reportId': report.id}) }}" class="right behat-link-edit-report-period">
+                    {{ 'edit' | trans }} <span class="govuk-visually-hidden">reporting period</span>
+                </a>
 
                 <details class="govuk-details govuk-!-padding-top-5" data-module="govuk-details">
                     <summary class="govuk-details__summary">

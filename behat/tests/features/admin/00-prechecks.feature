@@ -1,6 +1,8 @@
 Feature: admin / pre checks
 
-    @infra @reset-emails
-    Scenario: check app status
-        Given the admin area works properly
-        And the response status code should be 200
+  @infra
+  Scenario: check maintenance page checks
+    When I go to admin page "/manage/availability"
+    Then I should see "Api: OK"
+    And I should see "Redis: OK"
+    And I should see "Notify: OK"

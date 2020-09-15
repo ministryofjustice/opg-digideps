@@ -1,5 +1,5 @@
 startPage:
-  htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
+  htmlTitle: "Deputy costs estimates - Complete the deputy report | GOV.UK"
   pageTitle: Deputy costs estimates
   pageSectionDescription1: |
     Tell us about the costs that you and other fee earners expect to charge the client during
@@ -15,7 +15,7 @@ startPage:
   startButton: Start
 
 howCharged:
-  htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
+  htmlTitle: "Deputy costs estimates - Complete the deputy report | GOV.UK"
   supportTitle: Deputy costs estimates
   form:
     profDeputyCostsEstimateHowCharged:
@@ -26,7 +26,7 @@ howCharged:
       both: Both fixed and assessed costs
 
 breakdown:
-  htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
+  htmlTitle: "Deputy cost estimates - Complete the deputy report | GOV.UK"
   pageTitle: Deputy cost estimates
   pageSectionDescription: Of the amount for general management costs you expect to charge %client% next period, how much do you expect to charge for each of the following?
   pageHint: ""
@@ -49,7 +49,7 @@ breakdown:
         moreInformationLabelSummary: Details of other costs
 
 moreInfo:
-  htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
+  htmlTitle: "Deputy costs estimate - Complete the deputy report | GOV.UK"
   supportTitle: Deputy cost estimates
   pageHeader: More Information
   form:
@@ -64,8 +64,8 @@ moreInfo:
 totalEstimatedCosts: Total estimated costs
 
 summaryPage:
-  htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
-  pageTitle:  Deputy costs estimates
+  htmlTitle: "Deputy costs estimates - Complete the deputy report | GOV.UK"
+  pageTitle: Deputy costs estimates
   returnToClientProfile: Return to client profile
   weveListedYourAnswers: We've listed your saved answers below
   checkTheyreCorrect: Check they're correct and edit them where necessary.

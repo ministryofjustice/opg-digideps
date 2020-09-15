@@ -11,6 +11,7 @@
 
 {% block pageContent %}
 
+    {% if environment == 'development' %}{{ macros.warningBanner('This is a non-production environment for training purposes. Do not use real data in this environment!') }}{% endif %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <div class="text">
@@ -29,11 +30,11 @@
                         <a id="creat-account-button" class="button" href="{{ path('register') }}">{{ 'createaccount' | trans }}</a>
                     </p>
 
-                    <details class="push--bottom">
-                        <summary>
-                            <span class="summary">{{ 'whatyouneed' |trans }}</span>
+                    <details class="govuk-details" data-module="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">{{ 'whatyouneed' |trans }}</span>
                         </summary>
-                        <div class="opg-indented-block">
+                        <div class="govuk-details__text">
                             <ul class="govuk-list govuk-list--bullet">
                                 <li>{{ 'whatyouneedListItem1' | trans }}</li>
                                 <li>{{ 'whatyouneedListItem2' | trans }}</li>
@@ -57,20 +58,20 @@
 
             <div class="text push--top">
 
-                <details>
-                    <summary>
-                        <span class="summary">{{ 'whyWeNeed.summary' |trans }}</span>
+                <details class="govuk-details" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">{{ 'whyWeNeed.summary' |trans }}</span>
                     </summary>
-                    <div class="opg-indented-block">
+                    <div class="govuk-details__text">
                         <p>{{ 'whyWeNeed.para01' |trans }}</p>
                     </div>
                 </details>
 
-                <details>
-                    <summary>
-                        <span class="summary">{{ 'provideDetails.summary' |trans }}</span>
+                <details class="govuk-details" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">{{ 'provideDetails.summary' |trans }}</span>
                     </summary>
-                    <div class="opg-indented-block">
+                    <div class="govuk-details__text">
                         <p>{{ 'provideDetails.para01' |trans }}</p>
                         <ul class="govuk-list govuk-list--bullet">
                             <li>{{ 'provideDetails.listItem01' |trans }}</li>
@@ -86,20 +87,20 @@
                     </div>
                 </details>
 
-                <details>
-                    <summary>
-                        <span class="summary">{{ 'moreThanOne.summary' |trans }}</span>
+                <details class="govuk-details" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">{{ 'moreThanOne.summary' |trans }}</span>
                     </summary>
-                    <div class="opg-indented-block">
+                    <div class="govuk-details__text">
                         <p>{{ 'moreThanOne.para01' |trans }}</p>
                     </div>
                 </details>
 
-                <details>
-                    <summary>
-                        <span class="summary">{{ 'afterISubmit.summary' |trans }}</span>
+                <details class="govuk-details" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">{{ 'afterISubmit.summary' |trans }}</span>
                     </summary>
-                    <div class="opg-indented-block">
+                    <div class="govuk-details__text">
                         <p>{{ 'afterISubmit.para01' |trans }}</p>
                     </div>
                 </details>
@@ -107,44 +108,44 @@
             </div>
 
         </div>
-        <div class="column-third">
-            <aside class="opg-related-items" role="complementary">
+        <div class="govuk-grid-column-one-third">
+            <div class="opg-related-items">
                 <h2 id="related-items-title" class="govuk-heading-m">{{ 'relatedLinks.heading' |trans|raw }}</h2>
                 <nav role="navigation" aria-labelledby="related-items-title">
                     <ul class="govuk-list govuk-!-font-size-16">
                         <li>
-                            <a href="{{ 'relatedLinks.link01Src' |trans|raw }}" class="govuk-link" target="_blank">
+                            <a href="{{ 'relatedLinks.link01Src' |trans|raw }}" class="govuk-link">
                                 {{ 'relatedLinks.link01Text' |trans|raw }}
                             </a>
                         </li>
                         <li>
-                            <a href="{{ 'relatedLinks.link02Src' |trans|raw }}" class="govuk-link" target="_blank">
+                            <a href="{{ 'relatedLinks.link02Src' |trans|raw }}" class="govuk-link">
                                 {{ 'relatedLinks.link02Text' |trans|raw }}
                             </a>
                         </li>
                         <li>
-                            <a href="{{ 'relatedLinks.link03Src' |trans|raw }}" class="govuk-link" target="_blank">
+                            <a href="{{ 'relatedLinks.link03Src' |trans|raw }}" class="govuk-link">
                                 {{ 'relatedLinks.link03Text' |trans|raw }}
                             </a>
                         </li>
                         <li>
-                            <a href="{{ 'relatedLinks.link04Src' |trans|raw }}" class="govuk-link" target="_blank">
+                            <a href="{{ 'relatedLinks.link04Src' |trans|raw }}" class="govuk-link">
                                 {{ 'relatedLinks.link04Text' |trans|raw }}
                             </a>
                         </li>
                         <li>
-                            <a href="{{ 'relatedLinks.link05Src' |trans|raw }}" class="govuk-link" target="_blank">
+                            <a href="{{ 'relatedLinks.link05Src' |trans|raw }}" class="govuk-link">
                                 {{ 'relatedLinks.link05Text' |trans|raw }}
                             </a>
                         </li>
                         <li>
-                            <a href="{{ 'relatedLinks.link06Src' |trans|raw }}" class="govuk-link" target="_blank">
+                            <a href="{{ 'relatedLinks.link06Src' |trans|raw }}" class="govuk-link">
                                 {{ 'relatedLinks.link06Text' |trans|raw }}
                             </a>
                         </li>
                     </ul>
                 </nav>
-            </aside>
+            </div>
         </div>
     </div>
 
