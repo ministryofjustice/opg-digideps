@@ -57,7 +57,6 @@ RUN openssl req -newkey rsa:4096 -x509 -nodes -keyout /etc/nginx/certs/app.key -
 
 RUN mkdir -p var/cache \
   && mkdir -p var/logs \
-  && mkdir -p var/log/app \
   && chown -R www-data var
 
 # See this page for directories required
