@@ -17,7 +17,7 @@ startPage:
     summary: More about what you can and can't claim for
     content:
       para01: |
-        OPG'S <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties/" target="_blank">'How to be a deputy' (SD3) </a> booklet gives detailed guidance on what you can and can't claim for while carrying out your duties as a deputy.
+        OPG'S <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties/">'How to be a deputy' (SD3) </a> booklet gives detailed guidance on what you can and can't claim for while carrying out your duties as a deputy.
   accountLinksHeading: Link expenses to %client%'s bank accounts
   accountLinksPara1: |
     When you add an expense, you have the option to say which of %client%'s bank accounts it was paid from.
