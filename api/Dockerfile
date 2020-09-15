@@ -79,6 +79,8 @@ RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 # Check for security issues
 RUN su-exec www-data php app/console security:check
 
+RUN echo $DATABASE_HOSTNAME
+
 CMD confd -onetime -backend env \
   && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
   && su-exec www-data:www-data php app/console doctrine:migrations:migrate-lock --no-interaction \
