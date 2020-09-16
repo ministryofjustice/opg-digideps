@@ -168,7 +168,7 @@ class DocumentController extends RestController
         }
 
         $data = $this->deserializeBodyContent($request);
-    
+
         /** @var Document $document */
         $document = $em->getRepository(Document::class)->find($id);
 
@@ -183,14 +183,13 @@ class DocumentController extends RestController
             if (in_array($data['syncStatus'], self::DOCUMENT_SYNC_ERROR_STATUSES)) {
                 $errorMessage = is_array($data['syncError']) ? json_encode($data['syncError']) : $data['syncError'];
                 $document->setSynchronisationError($errorMessage);
-                
+
                 // If temp sync error status
                 if ($data["syncStatus"] === Document::SYNC_STATUS_TEMPORARY_ERROR) {
-                    $syncAttempts = $document->getSyncAttempts();
-                    $document->setSyncAttempts($syncAttempts + 1);
-                    
-                    $syncAttempts = $document->getSyncAttempts();
-                    if ($syncAttempts === 4) {
+                    $document->incrementSyncAttempts();
+                    $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
+
+                    if ($document->getSyncAttempts() === 4) {
                         $document->setSynchronisationError("Document failed to sync after 4 attempts");
                         $document->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
                     }

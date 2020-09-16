@@ -281,11 +281,9 @@ class Document implements SynchronisableInterface
         return $this->syncAttempts;
     }
 
-    /**
-     * @param int|null $syncAttempts
-     */
-    public function setSyncAttempts(?int $syncAttempts): void
+
+    public function incrementSyncAttempts(): void
     {
-        $this->syncAttempts = $syncAttempts;
+        $this->syncAttempts++;
     }
 }

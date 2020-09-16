@@ -2,7 +2,6 @@
 
 namespace Tests\AppBundle\Controller;
 
-
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
@@ -10,14 +9,16 @@ use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\Repository\DocumentRepository;
 use DateTime;
 
-
 class DocumentControllerTest extends AbstractTestController
 {
     /** @var Report */
-    private static $report1, $report2;
+    private static $report1;
+    private static $report2;
 
     /** @var Document */
-    private static $document1, $document2, $document3;
+    private static $document1;
+    private static $document2;
+    private static $document3;
 
     /** @var DocumentRepository */
     private $repo;
@@ -33,7 +34,8 @@ class DocumentControllerTest extends AbstractTestController
     private static $ndr1;
 
     /** @var ReportSubmission */
-    private static $reportSubmission1, $reportSubmission2;
+    private static $reportSubmission1;
+    private static $reportSubmission2;
 
 
     public static function setUpBeforeClass(): void
@@ -141,7 +143,6 @@ class DocumentControllerTest extends AbstractTestController
         $this->assertEquals(true, $document->isReportPdf());
 
         self::fixtures()->remove($document)->flush();
-
     }
 
     /** @test */
@@ -235,18 +236,19 @@ class DocumentControllerTest extends AbstractTestController
     /**
      * @test
      */
-    public function updateDocument_temp_errors_increases_sync_attempt_counter(): void
+    public function updateDocument_temp_errors_increases_sync_attempt_counter_and_sets_to_queued(): void
     {
         $url = sprintf('/document/%s', self::$document1->getId());
-        
+
         for ($i = 1; $i < 3; $i++) {
             $response = $this->assertJsonRequest('PUT', $url, [
                 'mustSucceed' => true,
                 'ClientSecret' => API_TOKEN_DEPUTY,
                 'data' => ['syncStatus' => Document::SYNC_STATUS_TEMPORARY_ERROR, 'syncError' => 'Temp error occurred']
             ]);
-            
+
             self::assertEquals($i, $response['data']['sync_attempts']);
+            self::assertEquals(Document::SYNC_STATUS_QUEUED, $response['data']['synchronisation_status']);
         }
     }
 
@@ -257,8 +259,11 @@ class DocumentControllerTest extends AbstractTestController
     {
         $document = $this->repo->find(self::$document1->getId());
         self::assertInstanceOf(Document::class, $document);
-        
-        $document->setSyncAttempts(3);
+
+        $document->incrementSyncAttempts();
+        $document->incrementSyncAttempts();
+        $document->incrementSyncAttempts();
+
         self::fixtures()->flush();
 
         $url = sprintf('/document/%s', $document->getId());
@@ -267,7 +272,7 @@ class DocumentControllerTest extends AbstractTestController
             'ClientSecret' => API_TOKEN_DEPUTY,
             'data' => ['syncStatus' => Document::SYNC_STATUS_TEMPORARY_ERROR, 'syncError' => 'Temp error occurred']
         ]);
-        
+
         self::assertEquals("Document failed to sync after 4 attempts", $response['data']['synchronisation_error']);
         self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $response['data']['synchronisation_status']);
     }
@@ -282,7 +287,8 @@ class DocumentControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,
             'data' => ['submissionIds' => [self::$reportSubmission1->getId(), self::$reportSubmission2->getId()], 'errorMessage' => 'An error message']
-        ]);
+        ]
+        );
 
         self::assertEquals('true', $response['data']);
     }
