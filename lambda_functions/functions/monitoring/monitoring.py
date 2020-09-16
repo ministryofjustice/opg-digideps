@@ -46,7 +46,7 @@ def queued_documents(conn):
             from document d
             inner join report_submission rs
             on d.report_submission_id = rs.id
-            where rs.created_on < NOW() - INTERVAL '1 hour'
+            where rs.created_on < NOW() - INTERVAL '2 hours'
             and d.synchronisation_status = 'QUEUED';"""
     )
     conn.commit()

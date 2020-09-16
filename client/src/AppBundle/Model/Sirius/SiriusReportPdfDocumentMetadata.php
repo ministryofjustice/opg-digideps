@@ -3,7 +3,6 @@
 
 namespace AppBundle\Model\Sirius;
 
-
 use DateTime;
 use JMS\Serializer\Annotation\Type;
 
@@ -11,20 +10,16 @@ class SiriusReportPdfDocumentMetadata implements SiriusMetadataInterface
 {
     /** @var DateTime */
     private $reportingPeriodFrom;
-
-    /** @var DateTime */
     private $reportingPeriodTo;
+    private $dateSubmitted;
 
     /** @var int */
     private $year;
 
-    /** @var DateTime */
-    private $dateSubmitted;
-
     /** @var string */
     private $type;
 
-    /** @var int */
+    /** @var int|null */
     private $submissionId;
 
     /**
@@ -123,18 +118,18 @@ class SiriusReportPdfDocumentMetadata implements SiriusMetadataInterface
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getSubmissionId(): int
+    public function getSubmissionId(): ?int
     {
         return $this->submissionId;
     }
 
     /**
-     * @param int $submissionId
+     * @param int|null $submissionId
      * @return SiriusReportPdfDocumentMetadata
      */
-    public function setSubmissionId(int $submissionId): self
+    public function setSubmissionId(?int $submissionId): self
     {
         $this->submissionId = $submissionId;
 

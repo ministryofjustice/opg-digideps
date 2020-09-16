@@ -58,8 +58,7 @@ class ChecklistSyncCommand extends Command
         SerializerInterface $serializer,
         ParameterStoreService $parameterStore,
         $name = null
-    )
-    {
+    ) {
         $this->pdfGenerator = $pdfGenerator;
         $this->syncService = $syncService;
         $this->restClient = $restClient;
@@ -161,7 +160,9 @@ class ChecklistSyncCommand extends Command
             ->setChecklistFileContents($content)
             ->setReportStartDate($report->getStartDate())
             ->setReportEndDate($report->getEndDate())
-            ->setReportSubmissions($report->getReportSubmissions());
+            ->setReportSubmissions($report->getReportSubmissions())
+            ->setSubmitterEmail($report->getChecklist()->getSubmittedBy()->getEmail())
+            ->setReportType($report->determineReportType());
     }
 
     /**

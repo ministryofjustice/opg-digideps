@@ -276,6 +276,7 @@ class Checklist implements SynchronisableInterface
      * Submitted by
      *
      * @JMS\Type("AppBundle\Entity\User")
+     * @JMS\Groups({"checklist-information"})
      * @var \AppBundle\Entity\User
      *
      */

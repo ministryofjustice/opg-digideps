@@ -399,7 +399,11 @@ class FormFieldsExtension extends AbstractExtension
         } else {
             $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
             // label is translated directly here
-            $labelText = $this->translator->trans($translationKey . '.label', $labelParams, $domain);
+            if ($translationKey != '') {
+                $labelText = $this->translator->trans($translationKey . '.label', $labelParams, $domain);
+            } else {
+                $labelText = "";
+            }
         }
 
         //inputPrefix

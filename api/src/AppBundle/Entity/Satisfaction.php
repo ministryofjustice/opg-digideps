@@ -1,17 +1,18 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Validator\Constraints as Assert;
+use DateTime;
 
 /**
  * User satisfaction scores
  *
  * @ORM\Table(name="satisfaction")
  * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\SatisfactionRepository")
  */
 class Satisfaction
 {
@@ -41,9 +42,18 @@ class Satisfaction
      * @JMS\Type("string")
      * @JMS\Groups({"satisfaction"})
      *
+     * @ORM\Column(type="string", name="comments", length=1200, nullable=true)
+     */
+    private $comments;
+
+    /**
+     * @var string
+     * @JMS\Type("string")
+     * @JMS\Groups({"satisfaction"})
+     *
      * @ORM\Column(type="string", name="deputy_role", length=50, nullable=true)
      */
-    private $deputyRole;
+    private $deputyrole;
 
     /**
      * @var string
@@ -52,7 +62,7 @@ class Satisfaction
      *
      * @ORM\Column(type="string", name="report_type", length=9, nullable=true)
      */
-    private $reportType;
+    private $reporttype;
 
     /**
      * @var \DateTime
@@ -62,7 +72,7 @@ class Satisfaction
      * @ORM\Column(name="created_at", type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
-    private $createdAt;
+    private $created;
 
     /**
      * @return int
@@ -103,36 +113,72 @@ class Satisfaction
     /**
      * @return string
      */
-    public function getDeputyRole(): ?string
+    public function getComments(): string
     {
-        return $this->deputyRole;
+        return $this->comments;
     }
 
     /**
-     * @param string $deputyRole
+     * @param string|null $comments
      * @return Satisfaction
      */
-    public function setDeputyRole(string $deputyRole): Satisfaction
+    public function setComments(?string $comments): Satisfaction
     {
-        $this->deputyRole = $deputyRole;
+        $this->comments = $comments;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getReportType(): ?string
+    public function getDeputyrole(): ?string
     {
-        return $this->reportType;
+        return $this->deputyrole;
     }
 
     /**
-     * @param string $reportType
+     * @param string $deputyrole
      * @return Satisfaction
      */
-    public function setReportType(string $reportType): Satisfaction
+    public function setDeputyrole(string $deputyrole): Satisfaction
     {
-        $this->reportType = $reportType;
+        $this->deputyrole = $deputyrole;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReporttype(): ?string
+    {
+        return $this->reporttype;
+    }
+
+    /**
+     * @param string $reporttype
+     * @return Satisfaction
+     */
+    public function setReporttype(string $reporttype): Satisfaction
+    {
+        $this->reporttype = $reporttype;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreated(): \DateTime
+    {
+        return $this->created;
+    }
+
+    /**
+     * @param DateTime $created
+     * @return Satisfaction
+     */
+    public function setCreated(DateTime $created): Satisfaction
+    {
+        $this->created = $created;
         return $this;
     }
 }

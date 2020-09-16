@@ -62,38 +62,21 @@ class SiriusApiErrorTranslatorTest extends KernelTestCase
 
     /**
      * @test
+     * @dataProvider unexpectedProvider
      */
-    public function translateApiErrors_unexpected_error_code()
+    public function translateApiErrors_unexpected_error_code(string $unexpectedErrorJson)
     {
         $sut = new SiriusApiErrorTranslator($this->serializer);
+        $translation = $sut->translateApiError($unexpectedErrorJson);
 
-        $errorJson = '{"body":{"error":{"id":"7d0bb9c2-76c5-4cd1-b7a4-6cc28acc197f","code":"AN UNEXPECTED CODE","title":"Request Too Long","detail":"","meta":{"x-ray":""}}}}';
-        $translation = $sut->translateApiError($errorJson);
-
-        self::assertEquals($errorJson, $translation);
+        self::assertEquals($unexpectedErrorJson, $translation);
     }
 
-    /** @test */
-    public function translateApiErrors_can_handle_non_json()
+    public function unexpectedProvider()
     {
-        $sut = new SiriusApiErrorTranslator($this->serializer);
-
-        $errorJson = 'An error that is not JSON';
-        $translation = $sut->translateApiError($errorJson);
-        $expectedError = 'An error that is not JSON';
-
-        self::assertEquals($expectedError, $translation);
-    }
-
-    /** @test */
-    public function translateApiErrors_can_handle_json_in_unexpected_format()
-    {
-        $sut = new SiriusApiErrorTranslator($this->serializer);
-
-        $errorJson = '{"data":{"errors":"Something went wrong"}}';
-        $translation = $sut->translateApiError($errorJson);
-        $expectedError = '{"data":{"errors":"Something went wrong"}}';
-
-        self::assertEquals($expectedError, $translation);
+        return [
+            'Unexpected code' => ['{"body":{"error":{"id":"7d0bb9c2-76c5-4cd1-b7a4-6cc28acc197f","code":"AN UNEXPECTED CODE","title":"Request Too Long","detail":"","meta":{"x-ray":""}}}}'],
+            'Unexpected format' => ['{"An error occurred"}'],
+        ];
     }
 }

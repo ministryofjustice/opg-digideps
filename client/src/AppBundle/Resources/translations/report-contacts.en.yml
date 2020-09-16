@@ -1,12 +1,12 @@
 startPage:
-  htmlTitle: "Deputy report - contacts | GOV.UK"
+  htmlTitle: "Contacts - Complete the deputy report | GOV.UK"
   pageTitle: Contacts
   pageSectionDescription1: |
     Please tell us about the people who helped you make significant decisions as a deputy. They might include friends or family, and professionals like a GP, solicitor, accountant or care worker.
   startButton: Start contacts
 
 existPage:
-  htmlTitle: "Deputy report - add contact | GOV.UK"
+  htmlTitle: "Add contact - Complete the deputy report | GOV.UK"
   supportTitle: Contacts
   form:
     hasContacts:
@@ -24,17 +24,17 @@ existPage:
       label: Save and continue
 
 addAnotherPage:
-  htmlTitle: "Deputy report - add contact | GOV.UK"
-  pageTitle: Contacts
+  htmlTitle: "Add another contact - Complete the deputy report | GOV.UK"
+  pageTitle: Add another contact
   form:
     addAnother:
       label: The person has been saved. Would you like to add another now?
       hint: If you prefer, you can come back to this section later to add more people
     save:
-       label: Continue
+      label: Continue
 
 addPage:
-  htmlTitle: "Deputy report - contacts | GOV.UK"
+  htmlTitle: "Add a contact - Complete the deputy report | GOV.UK"
   pageTitle: Add a contact
   supportTitle: Contacts
   pageSectionDescription: |
@@ -42,12 +42,12 @@ addPage:
     You'll be able to add more people later if you need to.
 
 editPage:
-  htmlTitle: "Deputy report - contacts | GOV.UK"
-  supportTitle: Contacts
+  htmlTitle: "Edit contact - Complete the deputy report | GOV.UK"
   pageTitle: Edit contact
+  supportTitle: Contacts
 
 summaryPage:
-  htmlTitle: "Deputy report - contacts | GOV.UK"
+  htmlTitle: "Contacts - Complete the deputy report | GOV.UK"
   pageTitle: Contacts
   addButton: Add a contact
   weAskAbout: |
@@ -58,7 +58,7 @@ summaryPage:
   reasonForContact: Reason for contact
 
 deletePage:
-  htmlTitle: "Deputy report - remove contact | GOV.UK"
+  htmlTitle: "Remove contact - Complete the deputy report | GOV.UK"
   subject: contact
   summary:
     contactName: Contact name
@@ -67,29 +67,30 @@ deletePage:
 
 form:
   contactName:
-      label: Contact name
-      hint: ""
+    label: Contact name
+    hint: ""
   relationship:
-      label: Their relationship to %client%
-      hint: ""
+    label: Their relationship to %client%
+    hint: ""
   explanation:
-      label: Why did you ask this person to help you?
-      hint: ""
+    label: Why did you ask this person to help you?
+    hint: ""
   address:
-      label: Address (optional)
-      hint: ""
+    label: Address (optional)
+    context: line 1 of 2
   address2:
-      label: ' '
-      hint: ""
+    label: " "
+    context: Address line 2 of 2 (optional)
+    hint: ""
   county:
-      label: ' '
-      hint: ""
+    label: County
+    hint: ""
   postcode:
-      label: Postcode (optional)
-      hint: ""
+    label: Postcode (optional)
+    hint: ""
   country:
-      label: Country (optional)
-      hint: ""
-      defaultOption: Please select ...
+    label: Country (optional)
+    hint: ""
+    defaultOption: Please select ...
   save:
-      label: Save and continue
+    label: Save and continue

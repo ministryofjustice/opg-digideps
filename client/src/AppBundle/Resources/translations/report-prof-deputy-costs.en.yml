@@ -1,5 +1,5 @@
 startPage:
-  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  htmlTitle: "Deputy costs - Complete the deputy report | GOV.UK"
   pageTitle: Deputy costs
   pageSectionDescription1: |
     Use this section to tell us how much %client% paid for your professional deputy services
@@ -15,7 +15,7 @@ startPage:
   startButton: Start
 
 howCharged:
-  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  htmlTitle: "Deputy costs - Complete the deputy report | GOV.UK"
   supportTitle: Deputy costs
   form:
     profDeputyCostsHow.label: "How did you charge for the services %client% paid you for in this reporting period?"
@@ -28,14 +28,14 @@ howCharged:
       both: Both fixed and assessed costs
 
 previousReceivedExists:
-  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  htmlTitle: "Deputy costs - Complete the deputy report | GOV.UK"
   supportTitle: Deputy costs
   form:
     profDeputyCostsHasPrevious:
       label: "Has %client% paid you in this reporting period for work carried out in a previous reporting period?"
 
 previousReceived:
-  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  htmlTitle: "Deputy costs - Complete the deputy report | GOV.UK"
   supportTitle: Deputy costs
   pageTitle: Costs for earlier reporting periods
   pageSectionDescription: |
@@ -56,7 +56,7 @@ previousReceived:
       label: Save and continue
 
 interimExists:
-  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  htmlTitle: "Deputy costs - Complete the deputy report | GOV.UK"
   supportTitle: Deputy costs
   pageTitle: Costs for this reporting period
   form:
@@ -64,7 +64,7 @@ interimExists:
       label: Have you charged in line with interim billing under Practice Direction 19B for the work you carried out in this reporting period?
 
 interim:
-  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  htmlTitle: "Deputy costs - Complete the deputy report | GOV.UK"
   supportTitle: Deputy costs
   pageTitle: Costs for this reporting period
   pageSectionDescription01: |
@@ -78,14 +78,14 @@ interim:
     amount.label: Amount paid
 
 fixedCost:
-  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  htmlTitle: "Deputy costs - Complete the deputy report | GOV.UK"
   supportTitle: Deputy costs
   pageTitle: Costs for this reporting period
   form:
     profDeputyFixedCost.label: "How much has %client% paid you in this reporting period for work carried out in this reporting period (including VAT)?"
 
 amountToScco:
-  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  htmlTitle: "Deputy costs - Complete the deputy report | GOV.UK"
   pageTitle: Costs for this reporting period
   supportTitle: Deputy costs
   form:
@@ -94,7 +94,7 @@ amountToScco:
     profDeputyCostsReasonBeyondEstimate.labelSummary: "Why are costs 20% or more than estimated in last reporting period?"
 
 breakdown:
-  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  htmlTitle: "Deputy costs - Complete the deputy report | GOV.UK"
   pageTitle: Costs for this reporting period
   supportTitle: Deputy costs
   pageSectionDescription: Breakdown of additional professional deputy costs (including VAT) %client% has paid you for in this reporting period.
@@ -119,7 +119,7 @@ breakdown:
         moreInformationLabelSummary: Details of other costs
 
 summaryPage:
-  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  htmlTitle: "Deputy costs - Complete the deputy report | GOV.UK"
   pageTitle:  Deputy costs
   returnToClientProfile: Return to client profile
   weveListedYourAnswers: We've listed your saved answers below
@@ -134,7 +134,7 @@ summaryPage:
     totalCosts: Total costs
 
 deletePage:
-  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  htmlTitle: "Deputy costs - Complete the deputy report | GOV.UK"
   subject: previous cost
   summary:
     startDate: Reporting period start date

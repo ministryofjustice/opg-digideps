@@ -57,11 +57,11 @@
 {% endif %}
 
 {% if form.address1 is defined %}
-    {{ form_input( form.address1, 'form.editYourDetails.controls.address1') }}
+    {{ form_input( form.address1, 'form.editYourDetails.controls.address1') }}<span class="govuk-visually-hidden">{{ 'form.editYourDetails.controls.address1.context' | trans({}, translationDomain) }}</span>
 
-    {{ form_input( form.address2, 'form.editYourDetails.controls.address2') }}
+    {{ form_input( form.address2, 'form.editYourDetails.controls.address2') }}<span class="govuk-visually-hidden">{{ 'form.editYourDetails.controls.address2.context' | trans({}, translationDomain) }}</span>
 
-    {{ form_input( form.address3, 'form.editYourDetails.controls.address3') }}
+    {{ form_input( form.address3, 'form.editYourDetails.controls.address3') }}<span class="govuk-visually-hidden">{{ 'form.editYourDetails.controls.address3.context' | trans({}, translationDomain) }}</span>
 
     {% if form.addressPostcode is defined %}
         {% if user.addressPostcode is empty or not client_validated %}

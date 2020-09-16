@@ -1,5 +1,5 @@
 startPage:
-  htmlTitle: "Deputy report - Accounts | GOV.UK"
+  htmlTitle: "Accounts - Complete the deputy report | GOV.UK"
   pageTitle: Accounts
   pageSectionDescription1: |
     An important part of your role as a deputy is to keep a record of
@@ -19,14 +19,14 @@ startPage:
       listItem04: letters and emails about your activities as a deputy
       para02: |
         You must include details of how you've managed %client%'s money in your
-        <a href="https://www.gov.uk/become-deputy/complete-your-annual-report" target="_blank">annual report</a>.
+        <a href="https://www.gov.uk/become-deputy/complete-your-annual-report">annual report</a>.
         This report falls due on the first anniversary of your court order.
       para03: |
-        OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on how to look after %client%'s financial affairs.
+        OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on how to look after %client%'s financial affairs.
   startButton: Start accounts
 
 stepPage:
-  htmlTitle: "Deputy report - Accounts | GOV.UK"
+  htmlTitle: "Accounts - Complete the deputy report | GOV.UK"
   pageTitle:
     add: Add an account
     edit: Edit an account
@@ -36,24 +36,24 @@ stepPage:
   backLink: Back
 
 addAnotherPage:
-  htmlTitle: "Deputy report - add another account | GOV.UK"
+  htmlTitle: "Add another account - Complete the deputy report | GOV.UK"
   pageTitle: Accounts
   form:
     addAnother:
       label: The account has been saved. Would you like to add another now?
       hint: If you prefer, you can come back to this section later to add more accounts
     save:
-       label: Continue
+      label: Continue
 
 summaryPage:
-  htmlTitle: "Deputy report - Accounts | GOV.UK"
+  htmlTitle: "Accounts - Complete the deputy report | GOV.UK"
   pageTitle: Accounts
   weAskAbout: |
     In this section, we ask you about %client%'s bank accounts, building society
     accounts, savings accounts and ISAs.
 
 deletePage:
-  htmlTitle: "Deputy report - remove account | GOV.UK"
+  htmlTitle: "Remove account - Complete the deputy report | GOV.UK"
   subject: account
   summary:
     accountType: Account type
@@ -62,15 +62,15 @@ deletePage:
 
 form:
   accountType:
-      label: What type of account is it?
-      choices:
-          current: Current account
-          savings: Savings account
-          isa: ISA
-          postoffice: Post Office account
-          cfo: Court Funds Office account
-          other: Other type of account
-          other_no_sortcode: Other type of account without sort code
+    label: What type of account is it?
+    choices:
+      current: Current account
+      savings: Savings account
+      isa: ISA
+      postoffice: Post Office account
+      cfo: Court Funds Office account
+      other: Other type of account
+      other_no_sortcode: Other type of account without sort code
   bank:
     label: Bank or building society name
   meta:
@@ -81,12 +81,12 @@ form:
   sortCode:
     legend: Sort code
   balanceOnCourtOrderDate:
-      label: How much was in the account on %cotDate%?
+    label: How much was in the account on %cotDate%?
   isJointAccount:
-      label: Is this a joint account?
-      hint: |
-        Joint accounts are often used by married couples or couples who live together. The money in
-        a joint account is owned by both account holders.
+    label: Is this a joint account?
+    hint: |
+      Joint accounts are often used by married couples or couples who live together. The money in
+      a joint account is owned by both account holders.
   save:
     label: Save and continue
   cancel:
