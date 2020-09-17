@@ -189,6 +189,7 @@
                     {% set nonLayAppend = '' %}
                 {% endif %}
 
+                {% if report.hasSection('balance') %}
                 <h3 class="label question bold">{{ (page ~ '.form.accountsBalance' ~ nonLayAppend ~ '.label') | trans({}, 'admin-checklist') }}</h3>
 
                 <table class="checkboxes labelvalue inline">
@@ -203,6 +204,7 @@
                         </tr>
                     </tbody>
                 </table>
+                {% endif %}
 
                 <h3 class="label question bold">{{ (page ~ '.form.moneyMovementsAcceptable.label') | trans({}, 'admin-checklist') }}</h3>
 
