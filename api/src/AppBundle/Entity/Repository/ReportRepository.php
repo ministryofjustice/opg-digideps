@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Entity\Repository;
 
@@ -161,12 +161,12 @@ class ReportRepository extends EntityRepository
             $qb->andWhere('r.reportStatusCached = :status AND r.endDate < :endOfToday')
                 ->setParameter('status', $status)
                 ->setParameter('endOfToday', $endOfToday);
-        } else if ($status === Report::STATUS_NOT_FINISHED) {
+        } elseif ($status === Report::STATUS_NOT_FINISHED) {
             $qb->andWhere('r.reportStatusCached = :status OR (r.reportStatusCached = :readyToSubmit AND r.endDate >= :endOfToday)')
                 ->setParameter('status', $status)
                 ->setParameter('readyToSubmit', Report::STATUS_READY_TO_SUBMIT)
                 ->setParameter('endOfToday', $endOfToday);
-        } else if ($status === Report::STATUS_NOT_STARTED) {
+        } elseif ($status === Report::STATUS_NOT_STARTED) {
             $qb->andWhere('r.reportStatusCached = :status')
                 ->setParameter('status', $status);
         }
@@ -201,9 +201,17 @@ class ReportRepository extends EntityRepository
      */
     public function getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(int $limit): array
     {
+        $dql = <<<DQL
+SELECT c.id as checklist_id, r.id as report_id
+FROM AppBundle\Entity\Report\Report r
+JOIN r.checklist c
+JOIN r.reportSubmissions rs
+WHERE c.synchronisationStatus = ?1
+DQL;
+
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT c.id as checklist_id, r.id as report_id FROM AppBundle\Entity\Report\Report r JOIN r.checklist c JOIN r.reportSubmissions rs WHERE c.synchronisationStatus = ?1')
+            ->createQuery($dql)
             ->setParameter(1, SynchronisableInterface::SYNC_STATUS_QUEUED)
             ->setMaxResults($limit);
 
@@ -212,7 +220,7 @@ class ReportRepository extends EntityRepository
         if (count($result)) {
             $conn = $this->getEntityManager()->getConnection();
 
-            $ids = array_map(function($result) {
+            $ids = array_map(function ($result) {
                 return $result['checklist_id'];
             }, $result);
 

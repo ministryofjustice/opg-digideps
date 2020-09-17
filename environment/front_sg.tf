@@ -27,12 +27,19 @@ locals {
       target_type = "security_group_id"
       target      = module.wkhtmltopdf_security_group.id
     }
-    scan_and_mock_sirius_integration = {
+    scan_integration = {
       port        = 8080
       type        = "egress"
       protocol    = "tcp"
       target_type = "security_group_id"
       target      = module.scan_security_group.id
+    }
+    mock_sirius_integration = {
+      port        = 8080
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.mock_sirius_integration_security_group.id
     }
     front_elb = {
       port        = 443

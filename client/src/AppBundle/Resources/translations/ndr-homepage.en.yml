@@ -1,5 +1,5 @@
 page:
-  htmlTitle: Deputy report - Your reports | GOV.UK
+  htmlTitle: Your reports - Complete the deputy report | GOV.UK
   pageTitle: Your reports
   addCoDeputy: Add new deputy
 
@@ -24,9 +24,7 @@ history:
     view: View
     attachDocuments: Attach documents
   ndr:
-   title: New deputy report
-   reportingPeriod: Start of deputyship
-   download: Download PDF
-   view: View
-
-
+    title: New deputy report
+    reportingPeriod: Start of deputyship
+    download: Download PDF
+    view: View

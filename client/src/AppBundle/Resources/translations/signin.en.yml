@@ -1,5 +1,5 @@
 signIn:
-  htmlTitle: "Deputy report - sign in | GOV.UK"
+  htmlTitle: "Sign in - Complete the deputy report | GOV.UK"
   pageTitle: Sign in
   pageTitleNewPassword: Sign in to your new account
   pageTitleUpdatedPassword: Sign in with your new password
@@ -21,11 +21,11 @@ bruteForceLocked: You've tried to sign in with the wrong password too many times
 
 signInForm:
   email:
-      label: Email address
-      hint: We sent your registration link to this email address.
+    label: Email address
+    hint: We sent your registration link to this email address.
   password:
-      label: Password
-      hint: ""
+    label: Password
+    hint: ""
   signin:
-      label: Sign in
-      invalidMessage: You've entered an invalid email or password. Please try again.
+    label: Sign in
+    invalidMessage: You've entered an invalid email or password. Please try again.

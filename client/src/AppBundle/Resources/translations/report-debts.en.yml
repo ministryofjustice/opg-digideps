@@ -1,5 +1,5 @@
 startPage:
-  htmlTitle: "Deputy report - debts | GOV.UK"
+  htmlTitle: "Debts - Complete the deputy report | GOV.UK"
   pageTitle: "Debts"
   pageSectionDescription: |
     Use this section to tell us about %client%'s debts, for example, overdue
@@ -7,7 +7,7 @@ startPage:
   startButton: Start debts
 
 existPage:
-  htmlTitle: "Deputy report - debts | GOV.UK"
+  htmlTitle: "Debts - Complete the deputy report | GOV.UK"
   supportTitle: Debts
   form:
     exist:
@@ -16,7 +16,7 @@ existPage:
       label: Save and continue
 
 managementPage:
-  htmlTitle: "Deputy report - debts | GOV.UK"
+  htmlTitle: "Debts - Complete the deputy report | GOV.UK"
   supportTitle: Debts
   pageTitle: How is the debt being managed or reduced?
   pageHint: For example, list any regular payments to creditors or payment plans in place
@@ -26,7 +26,7 @@ managementPage:
       hint: For example, give details of any regular payments to creditors or payment plans
 
 editPage:
-  htmlTitle: "Deputy report - debts | GOV.UK"
+  htmlTitle: "Debts - Complete the deputy report | GOV.UK"
   supportTitle: Debts
   pageTitle: Please tell us more about %client%'s debts.
   pageHint: If %client% has a mortgage on a property, use the Assets section to tell us about it

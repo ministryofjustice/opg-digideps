@@ -15,8 +15,8 @@ or ndr.getExpectCompensationDamages() %}
                     {% for st in ndr.stateBenefits %}
                         <tr>
                             <td class="clean-cell">
-                                <span class="checkbox value">
-                                    {{ st.present ? 'X' : '&nbsp;' }}
+                                <span class="checkbox value"
+                                    {{ st.present ? ' aria-label=”Selected”>X' : '>&nbsp;' }}
                                 </span>
                             </td>
                             <td class="label soft-half--bottom">{{ ('form.stateBenefits.entries.' ~ st.typeId ~ '.label') | trans({}, 'ndr-income-benefits') }}</td>
@@ -43,9 +43,9 @@ or ndr.getExpectCompensationDamages() %}
                 <h3 class="label question bold">Does the client receive a state pension?</h3>
                 <table class="checkboxes labelvalue inline">
                     <tr>
-                        <td class="value checkbox">{% if ndr.receiveStatePension == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="value checkbox"{% if ndr.receiveStatePension == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
                         <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                        <td class="value checkbox">{% if ndr.receiveStatePension == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="value checkbox"{% if ndr.receiveStatePension == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
                         <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                     </tr>
                 </table>
@@ -55,9 +55,9 @@ or ndr.getExpectCompensationDamages() %}
                 <h3 class="label question bold">Does the client receive any other regular income?</h3>
                 <table class="checkboxes labelvalue inline">
                     <tr>
-                        <td class="value checkbox">{% if ndr.receiveOtherIncome == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="value checkbox"{% if ndr.receiveOtherIncome == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
                         <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                        <td class="value checkbox">{% if ndr.receiveOtherIncome == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="value checkbox"{% if ndr.receiveOtherIncome == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
                         <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                     </tr>
                 </table>
@@ -78,9 +78,9 @@ or ndr.getExpectCompensationDamages() %}
                 <h3 class="label question bold">Are you expecting any compensation awards or damages to be paid to the client?</h3>
                 <table class="checkboxes labelvalue inline">
                     <tr>
-                        <td class="value checkbox">{% if ndr.expectCompensationDamages == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="value checkbox"{% if ndr.expectCompensationDamages == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
                         <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                        <td class="value checkbox">{% if ndr.expectCompensationDamages == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="value checkbox"{% if ndr.expectCompensationDamages == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
                         <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                     </tr>
                 </table>
@@ -102,8 +102,8 @@ or ndr.getExpectCompensationDamages() %}
                     {% for st in ndr.oneOff %}
                         <tr>
                             <td class="clean-cell">
-                                <span class="checkbox value">
-                                    {{ st.present ? 'X' : '&nbsp;' }}
+                                <span class="checkbox value"
+                                    {{ st.present ? ' aria-label=”Selected”>X' : '>&nbsp;' }}
                                 </span>
                             </td>
                             <td class="label soft-half--bottom">{{ ('form.oneOff.entries.' ~ st.typeId ~ '.label') | trans({}, 'ndr-income-benefits') }}</td>

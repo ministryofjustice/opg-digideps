@@ -95,6 +95,24 @@ $(document).ready(function () {
       new ButtonToggler().init($el)
     })
   }
+
+  const $submitButtons = document.querySelectorAll('[data-module="opg-toggleable-submit"]')
+
+  if ($submitButtons !== null) {
+    $submitButtons.forEach(function ($el) {
+      $el.addEventListener('click', function ($e) {
+        this.classList.add('opg-submit-link--disabled', 'govuk-button--disabled')
+      })
+    })
+  }
+
+  // Error summaries
+  const $errorSummaries = document.querySelectorAll('#error-summary')
+  if ($errorSummaries !== null) {
+    $errorSummaries.forEach((ele) => {
+      ele.focus()
+    })
+  }
 })
 
 GOVUKFrontend.initAll()

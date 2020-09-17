@@ -52,6 +52,9 @@ up-app-integration-tests: ## Brings the app up using test env vars (see test.env
 	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose build frontend admin api
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 
+down-app: ### Tears down the app
+	docker-compose down -v --remove-orphans
+
 client-unit-tests: prod-mode ## Run the client unit tests
 	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose build frontend admin
 	docker-compose -f docker-compose.yml run --rm frontend bin/phpunit -c tests/phpunit

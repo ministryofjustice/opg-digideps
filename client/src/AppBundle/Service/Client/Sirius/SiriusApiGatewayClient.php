@@ -16,6 +16,7 @@ class SiriusApiGatewayClient
     const SIRIUS_REPORT_ENDPOINT = 'clients/%s/reports';
     const SIRIUS_SUPPORTING_DOCUMENTS_ENDPOINT = 'clients/%s/reports/%s/supportingdocuments';
     const SIRIUS_CHECKLIST_POST_ENDPOINT = 'clients/%s/reports/%s/checklists';
+    const SIRIUS_CHECKLIST_PUT_ENDPOINT = 'clients/%s/reports/%s/checklists/%s';
 
     /** @var Client */
     private $httpClient;
@@ -46,8 +47,7 @@ class SiriusApiGatewayClient
         string $baseUrl,
         Serializer $serializer,
         LoggerInterface $logger
-    )
-    {
+    ) {
         $this->httpClient = $httpClient;
         $this->requestSigner = $requestSigner;
         $this->baseUrl = $baseUrl;
@@ -103,7 +103,7 @@ class SiriusApiGatewayClient
     {
         $reportJson = $this->serializer->serialize(['supporting_document' => ['data' => $upload]], 'json');
 
-        $this->logger->warning("Syncing supporting document with UUID: $submissionUuid");
+        $this->logger->warning("Syncing supporting document ID with UUID: $submissionUuid");
         $this->logger->warning($reportJson);
 
         $signedRequest = $this->buildSignedRequest(
@@ -138,6 +138,28 @@ class SiriusApiGatewayClient
     }
 
     /**
+     * @param SiriusDocumentUpload $upload
+     * @param string $submissionUuid
+     * @param string $caseRef
+     * @param string $checklistUuid
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function putChecklistPdf(SiriusDocumentUpload $upload, string $submissionUuid, string $caseRef, string $checklistUuid)
+    {
+        $body = $this->serializer->serialize(['checklist' => ['data' => $upload]], 'json', ["json_encode_options" => JSON_FORCE_OBJECT]);
+
+        $signedRequest = $this->buildSignedRequest(
+            sprintf(self::SIRIUS_CHECKLIST_PUT_ENDPOINT, $caseRef, $submissionUuid, $checklistUuid),
+            'PUT',
+            $body,
+            'application/vnd.opg-data.v1+json'
+        );
+
+        return $this->httpClient->send($signedRequest);
+    }
+
+    /**
      * @param string $endpoint
      * @param string $method
      * @param string $body
@@ -151,8 +173,7 @@ class SiriusApiGatewayClient
         string $body='',
         string $accept='application/json',
         string $contentType='application/json'
-    )
-    {
+    ) {
         $url = new Uri(sprintf('%s/%s/%s', $this->baseUrl, self::SIRIUS_API_GATEWAY_VERSION, $endpoint));
 
         $request = new Request($method, $url, [

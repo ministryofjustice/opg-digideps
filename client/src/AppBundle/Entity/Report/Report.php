@@ -53,6 +53,10 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     const TYPE_COMBINED_HIGH_ASSETS = '102-4';
     const TYPE_COMBINED_LOW_ASSETS = '103-4';
 
+    const TYPE_ABBREVIATION_HW = 'HW';
+    const TYPE_ABBREVIATION_PF = 'PF';
+    const TYPE_ABBREVIATION_COMBINED = 'COMBINED';
+
     const HIGH_ASSETS_REPORT_TYPES = [
         self::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,
         self::TYPE_COMBINED_HIGH_ASSETS,
@@ -566,10 +570,9 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
         $reportingPeriodInDays = $this->calculateReportingPeriod('%a');
         if (!empty($reportingPeriodInDays)) {
-
             $nextStart = clone $this->getStartDate();
             $nextStart = $nextStart->modify('+ ' . (intval($reportingPeriodInDays) + 1) . ' days');
-            $nextStart->setTime(0,0,0);
+            $nextStart->setTime(0, 0, 0);
 
             return $nextStart;
         }
@@ -593,7 +596,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
             $nextEnd = clone $this->getEndDate();
             $nextEnd = $nextEnd->modify('+ ' . (intval($reportingPeriodInDays) + 1) . ' days');
 
-            $nextEnd->setTime(0,0,0);
+            $nextEnd->setTime(0, 0, 0);
             return $nextEnd;
         }
         return null;
@@ -607,8 +610,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      */
     private function calculateReportingPeriod($format = '%a')
     {
-        if ($this->getStartDate() instanceof \DateTime && $this->getEndDate() instanceof \DateTime)
-        {
+        if ($this->getStartDate() instanceof \DateTime && $this->getEndDate() instanceof \DateTime) {
             // add one day because difference doesn't include end date itself
             return $this->getStartDate()->diff($this->getEndDate())->format($format);
         }
@@ -1072,7 +1074,8 @@ class Report implements ReportInterface, StartEndDateComparableInterface
             throw new \RuntimeException('Cannot create an attachment for a report with no end date');
         }
 
-        $attachmentName = sprintf($format,
+        $attachmentName = sprintf(
+            $format,
             $endDate->format('Y'),
             $submitDate instanceof \DateTime ? $submitDate->format('Y-m-d') : 'n-a-', //some old reports have no submission date
             $this->getClient()->getCaseNumber()
@@ -1130,7 +1133,8 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     {
         return (strpos($this->getType(), '-4') > 0) ?
             '-4' :
-            ($this->getType() === '104' || $this->getType() === '104-6' ?
+            (
+                $this->getType() === '104' || $this->getType() === '104-6' ?
                 '-104' : ''
             );
     }
@@ -1218,7 +1222,8 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      */
     public function canLinkToBankAccounts()
     {
-        return in_array($this->getType(),
+        return in_array(
+            $this->getType(),
             [
                 Report::TYPE_102,
                 Report::TYPE_102_4,
@@ -1262,5 +1267,18 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         $this->reportSubmissions = $reportSubmissions;
 
         return $this;
+    }
+
+    public function determineReportType()
+    {
+        switch ($this->getType()) {
+            case self::TYPE_HEALTH_WELFARE:
+                return self::TYPE_ABBREVIATION_HW;
+            case self::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS:
+            case self::TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS:
+                return self::TYPE_ABBREVIATION_PF;
+            default:
+                return self::TYPE_ABBREVIATION_COMBINED;
+        }
     }
 }

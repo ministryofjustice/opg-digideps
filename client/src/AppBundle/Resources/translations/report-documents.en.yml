@@ -1,4 +1,4 @@
-htmlTitle: Supporting documents | GOV.UK
+htmlTitle: Supporting documents - Complete the deputy report | GOV.UK
 pageTitle: Supporting documents
 
 form:
@@ -9,11 +9,11 @@ form:
   errors:
     fileSize: "Your uploaded file exceeded the maximum size of 15M"
     risky: "Cannot upload file, risky content found inside. Technical details: %techDetails%"
-    virusFound:  "Cannot upload file, virus found inside. Technical details: %techDetails%"
+    virusFound: "Cannot upload file, virus found inside. Technical details: %techDetails%"
     generic: "Cannot upload file, please try again later. Technical details: %techDetails%"
 
 removeDocument:
-  htmlTitle: Deputy report - supporting documents | GOV.UK
+  htmlTitle: Remove document - Complete the deputy report | GOV.UK
   pageTitle: Remove document
   supportTitle: "Supporting documents"
   question: Are you sure you want to remove this document?
@@ -43,7 +43,7 @@ attachPage:
     To stop uploading the file, just refresh the page.
 
 startPage:
-  htmlTitle: "Deputy report - supporting documents | GOV.UK"
+  htmlTitle: "Supporting documents - Complete the deputy report | GOV.UK"
   pageTitle: Supporting documents
   pageSectionDescription1: |
     Use this section to attach supporting documents to this deputy report. For example bank
@@ -56,15 +56,15 @@ startPage:
   startButton: Start
 
 stepPage:
-  htmlTitle: "Deputy report - suporting documents | GOV.UK"
+  htmlTitle: "Suporting documents - Complete the deputy report | GOV.UK"
   pageTitle: Supporting documents
   backLink: Back
   form:
-      wishToUploadDocumentation:
-          label: Would you like to provide any supporting documents?
+    wishToUploadDocumentation:
+      label: Would you like to provide any supporting documents?
 
 summaryPage:
-  htmlTitle: "Deputy report - supporting documents | GOV.UK"
+  htmlTitle: "Supporting documents - Complete the deputy report | GOV.UK"
   pageTitle: Supporting documents
   addButton: Attach more documents
   weAskAbout: In this section, we asked you to provide any supporting documents.
@@ -76,16 +76,16 @@ summaryPage:
   setNoAttemptWithDocuments: "Your answer could not be updated to 'No' because you have attached documents. Please remove all attached documents before changing your answer."
 
 deletePage:
-  htmlTitle: "Deputy report - remove supporting document | GOV.UK"
+  htmlTitle: "Remove supporting document - Complete the deputy report | GOV.UK"
   subject: document
   summary:
     fileName: File name
     createdOn: Date attached
 
 submitMoreDocumentsConfirm:
-  htmlTitle: "Deputy report - supporting documents | GOV.UK"
-  supportTitle: Attach documents
+  htmlTitle: "Send your documents to OPG - Complete the deputy report | GOV.UK"
   pageTitle: Send your documents to OPG
+  supportTitle: Attach documents
   para01: |
     Below are the documents you've attached but not yet sent to OPG. When you've finished
     attaching your documents, please click send to submit them to us.

@@ -12,17 +12,15 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class SiriusHelpers extends KernelTestCase
 {
-    static public function generateSiriusReportPdfDocumentUpload(
+    public static function generateSiriusReportPdfDocumentUpload(
         DateTime $startDate,
         DateTime $endDate,
         DateTime $submittedDate,
         string $orderType,
         int $submissionId,
         string $fileName,
-        ?string $fileContents,
-        ?string $s3Reference
-    )
-    {
+        string $fileContents
+    ) {
         $siriusReportPdfDocumentMetadata = (new SiriusReportPdfDocumentMetadata())
             ->setReportingPeriodFrom($startDate)
             ->setReportingPeriodTo($endDate)
@@ -49,7 +47,7 @@ class SiriusHelpers extends KernelTestCase
             ->setFile($file);
     }
 
-    static public function generateSiriusSupportingDocumentUpload(int $submissionId, string $fileName, ?string $fileContents, ?string $s3Reference)
+    public static function generateSiriusSupportingDocumentUpload(int $submissionId, string $fileName, ?string $fileContents,, ?string $s3Reference)
     {
         $siriusSupportingDocumentMetadata = (new SiriusSupportingDocumentMetadata())
             ->setSubmissionId($submissionId);
@@ -72,16 +70,32 @@ class SiriusHelpers extends KernelTestCase
             ->setFile($file);
     }
 
-    static public function generateSiriusChecklistPdfUpload(string $fileName, string $fileContents)
-    {
+    public static function generateSiriusChecklistPdfUpload(
+        string $fileName,
+        string $fileContents,
+        int $submissionId,
+        string $submitterEmail,
+        DateTime $reportingPeriodFrom,
+        DateTime $reportingPeriodTo,
+        int $year,
+        string $type
+    ) {
         $file = (new SiriusDocumentFile())
             ->setName($fileName)
             ->setMimetype('application/pdf')
             ->setSource(base64_encode($fileContents));
 
+        $attributes = (new SiriusChecklistPdfDocumentMetadata())
+            ->setSubmissionId($submissionId)
+            ->setSubmitterEmail($submitterEmail)
+            ->setReportingPeriodFrom($reportingPeriodFrom)
+            ->setReportingPeriodTo($reportingPeriodTo)
+            ->setYear($year)
+            ->setType($type);
+
         return (new SiriusDocumentUpload())
             ->setType('checklists')
-            ->setAttributes(new SiriusChecklistPdfDocumentMetadata())
+            ->setAttributes($attributes)
             ->setFile($file);
     }
 }
