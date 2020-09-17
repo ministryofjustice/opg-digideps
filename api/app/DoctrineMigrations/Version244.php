@@ -10,24 +10,26 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version243 extends AbstractMigration
+final class Version244 extends AbstractMigration
 {
     public function getDescription() : string
     {
-        return '';
+        return 'Increases the number of characters stored in sync errors';
     }
 
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-        $this->addSql('ALTER TABLE satisfaction ADD comments VARCHAR(1200) DEFAULT NULL');
+        $this->addSql('ALTER TABLE document ALTER synchronisation_error TYPE TEXT');
+        $this->addSql('ALTER TABLE checklist ALTER synchronisation_error TYPE TEXT');
     }
 
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-        $this->addSql('ALTER TABLE satisfaction DROP comments');
+        $this->addSql('ALTER TABLE document ALTER synchronisation_error TYPE VARCHAR(255)');
+        $this->addSql('ALTER TABLE checklist ALTER synchronisation_error TYPE VARCHAR(255)');
     }
 }
