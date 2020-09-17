@@ -2,17 +2,13 @@
 
 namespace AppBundle\Service;
 
-
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Model\Sirius\QueuedDocumentData;
-use AppBundle\Model\Sirius\SiriusApiError;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
 use AppBundle\Service\File\Storage\S3Storage;
-use Aws\Command;
-use Aws\S3\Exception\S3Exception;
 use DateTime;
 use DigidepsTests\Helpers\DocumentHelpers;
 use DigidepsTests\Helpers\SiriusHelpers;
@@ -24,8 +20,6 @@ use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class DocumentSyncServiceTest extends KernelTestCase
 {
@@ -45,13 +39,17 @@ class DocumentSyncServiceTest extends KernelTestCase
     private $serializer;
 
     /** @var DateTime */
-    private $reportSubmittedDate, $reportEndDate, $reportStartDate;
+    private $reportSubmittedDate;
+    private $reportEndDate;
+    private $reportStartDate;
 
     /** @var int */
     private $reportSubmissionId;
 
     /** @var string */
-    private $reportPdfSubmissionUuid, $fileName, $s3Reference;
+    private $reportPdfSubmissionUuid;
+    private $fileName;
+    private $s3Reference;
 
     public function setUp(): void
     {
@@ -111,7 +109,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             $expectedReportType,
             $this->reportSubmissionId,
             $this->fileName,
-           null,
+            null,
             $this->s3Reference
         );
 
@@ -123,7 +121,8 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->willReturn($successResponse);
 
         $this->restClient
-            ->apiCall('put',
+            ->apiCall(
+                'put',
                 'report-submission/9876/update-uuid',
                 json_encode(['uuid' => $this->reportPdfSubmissionUuid]),
                 'raw',
@@ -134,7 +133,8 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->willReturn(new SymfonyResponse('9876'));
 
         $this->restClient
-            ->apiCall('put',
+            ->apiCall(
+                'put',
                 'document/6789',
                 json_encode(['syncStatus' => Document::SYNC_STATUS_SUCCESS]),
                 'Report\\Document',
@@ -208,7 +208,8 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->willReturn($successResponse);
 
         $this->restClient
-            ->apiCall('put',
+            ->apiCall(
+                'put',
                 'report-submission/9876/update-uuid',
                 json_encode(['uuid' => $this->reportPdfSubmissionUuid]),
                 'raw',
@@ -219,7 +220,8 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->willReturn(new SymfonyResponse('9876'));
 
         $this->restClient
-            ->apiCall('put',
+            ->apiCall(
+                'put',
                 'document/6789',
                 json_encode(['syncStatus' => Document::SYNC_STATUS_SUCCESS]),
                 'Report\\Document',
@@ -271,7 +273,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->fileName,
             null,
             $this->s3Reference
-            );
+        );
 
         $failureResponseBody = ['errors' => [0 => ['id' => 'ABC123', 'code' => 'OPGDATA-API-FORBIDDEN']]];
         $failureResponse = new Response('403', [], json_encode($failureResponseBody));
@@ -287,12 +289,14 @@ class DocumentSyncServiceTest extends KernelTestCase
         );
 
         $this->restClient
-            ->apiCall('put',
+            ->apiCall(
+                'put',
                 'document/6789',
                 json_encode(
                     ['syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR,
                     'syncError' => 'OPGDATA-API-FORBIDDEN: Credentials used for integration lack correct permissions'
-                    ]),
+                    ]
+                ),
                 'Report\\Document',
                 [],
                 false
@@ -353,7 +357,8 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->willReturn($successResponse);
 
         $this->restClient
-            ->apiCall('put',
+            ->apiCall(
+                'put',
                 'document/6789',
                 json_encode(['syncStatus' => Document::SYNC_STATUS_SUCCESS]),
                 'Report\\Document',
@@ -391,7 +396,8 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setStorageReference($this->s3Reference);
 
         $this->restClient
-            ->apiCall('put',
+            ->apiCall(
+                'put',
                 'document/6789',
                 json_encode(['syncStatus' => Document::SYNC_STATUS_QUEUED]),
                 'Report\\Document',
@@ -426,7 +432,8 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setIsReportPdf(false)
             ->setCaseNumber('1234567t')
             ->setNdrId(null)
-            ->setStorageReference($this->s3Reference);;
+            ->setStorageReference($this->s3Reference);
+        ;
 
         $failureResponseBody = ['errors' => [0 => ['id' => 'ABC123', 'code' => 'OPGDATA-API-FORBIDDEN']]];
         $failureResponse = new Response('403', [], json_encode($failureResponseBody));
@@ -442,12 +449,14 @@ class DocumentSyncServiceTest extends KernelTestCase
         );
 
         $this->restClient
-            ->apiCall('put',
+            ->apiCall(
+                'put',
                 'document/6789',
                 json_encode(
                     ['syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR,
                         'syncError' => 'OPGDATA-API-FORBIDDEN: Credentials used for integration lack correct permissions'
-                    ]),
+                    ]
+                ),
                 'Report\\Document',
                 [],
                 false

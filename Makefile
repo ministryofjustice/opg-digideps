@@ -42,7 +42,7 @@ up-app-prod: up-app	prod-mode ## Brings the app up in dev mode
 up-app-build: ## Brings the app up and rebuilds containers
 	docker-compose up -d --build
 
-up-app-xdebug-client: ## Brings the app up, rebuilds containers and enabled xdebug in client
+up-app-xdebug-frontend: ## Brings the app up, rebuilds containers and enabled xdebug in client
 	REQUIRE_XDEBUG_FRONTEND=true docker-compose up -d --build
 
 up-app-xdebug-api: ## Brings the app up, rebuilds containers and enabled xdebug in client
@@ -70,10 +70,10 @@ behat-suite: up-app-integration-tests reset-fixtures prod-mode ## Pass in suite 
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test --suite $(suite)
 
 reset-database: ## Resets the DB schema and runs migrations
-	docker-compose -f docker-compose.yml run --rm api sh scripts/reset_db_structure.sh
+	docker-compose run --rm api sh scripts/reset_db_structure.sh
 
 reset-fixtures: ## Resets the DB contents and reloads fixtures
-	docker-compose -f docker-compose.yml run --rm api sh scripts/reset_db_fixtures.sh
+	docker-compose run --rm api sh scripts/reset_db_fixtures.sh
 
 prod-mode: ## Activates prod mode
 	for c in ${APP_CONTAINERS} ; do \
