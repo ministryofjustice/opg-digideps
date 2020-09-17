@@ -19,7 +19,8 @@ class SiriusHelpers extends KernelTestCase
         string $orderType,
         int $submissionId,
         string $fileName,
-        string $fileContents
+        ?string $fileContents,
+        ?string $s3Reference
     ) {
         $siriusReportPdfDocumentMetadata = (new SiriusReportPdfDocumentMetadata())
             ->setReportingPeriodFrom($startDate)
@@ -31,8 +32,15 @@ class SiriusHelpers extends KernelTestCase
 
         $file = (new SiriusDocumentFile())
             ->setName($fileName)
-            ->setMimetype('application/pdf')
-            ->setSource(base64_encode($fileContents));
+            ->setMimetype('application/pdf');
+
+        if (!is_null($fileContents)) {
+            $file->setSource(base64_encode($fileContents));
+        }
+
+        if (!is_null($s3Reference)) {
+            $file->setS3Reference($s3Reference);
+        }
 
         return (new SiriusDocumentUpload())
             ->setType('reports')
@@ -40,15 +48,22 @@ class SiriusHelpers extends KernelTestCase
             ->setFile($file);
     }
 
-    public static function generateSiriusSupportingDocumentUpload(int $submissionId, string $fileName, string $fileContents)
+    public static function generateSiriusSupportingDocumentUpload(int $submissionId, string $fileName, ?string $fileContents, ?string $s3Reference)
     {
         $siriusSupportingDocumentMetadata = (new SiriusSupportingDocumentMetadata())
             ->setSubmissionId($submissionId);
 
         $file = (new SiriusDocumentFile())
             ->setName($fileName)
-            ->setMimetype('application/pdf')
-            ->setSource(base64_encode($fileContents));
+            ->setMimetype('application/pdf');
+
+        if (!is_null($fileContents)) {
+            $file->setSource(base64_encode($fileContents));
+        }
+
+        if (!is_null($s3Reference)) {
+            $file->setS3Reference($s3Reference);
+        }
 
         return (new SiriusDocumentUpload())
             ->setType('supportingdocuments')

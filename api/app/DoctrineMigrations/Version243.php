@@ -21,7 +21,6 @@ final class Version243 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-
         $this->addSql('ALTER TABLE satisfaction ADD comments VARCHAR(1200) DEFAULT NULL');
     }
 
@@ -29,7 +28,6 @@ final class Version243 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-
         $this->addSql('ALTER TABLE satisfaction DROP comments');
     }
 }

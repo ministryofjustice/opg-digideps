@@ -26,6 +26,14 @@ class SiriusDocumentsContractTest extends KernelTestCase
 {
     /** @var string */
     private $caseRef;
+    private $reportPdfUuid;
+    private $expectedSupportingDocumentUuid;
+    private $checklistPdfUuid;
+    private $expectedChecklistPdfUuid;
+    private $fileName;
+    private $fileContents;
+    private $s3Reference;
+    private $submitterEmail;
 
     /** @var RequestSigner&ObjectProphecy */
     private $signer;
@@ -33,32 +41,11 @@ class SiriusDocumentsContractTest extends KernelTestCase
     /**  @var SiriusApiGatewayClient */
     private $sut;
 
-    /** @var string */
-    private $reportPdfUuid;
-
-    /** @var string */
-    private $expectedSupportingDocumentUuid;
-
-    /** @var string */
-    private $checklistPdfUuid;
-
-    /** @var string */
-    private $expectedChecklistPdfUuid;
-
     /** @var InteractionBuilder */
     private $builder;
 
-    /** @var string */
-    private $fileName;
-
-    /** @var string */
-    private $fileContents;
-
     /** @var LoggerInterface&ObjectProphecy */
     private $logger;
-
-    /** @var string */
-    private $submitterEmail;
 
     public function setUp(): void
     {
@@ -80,6 +67,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
         $this->fileName = 'test.pdf';
         $this->fileContents = 'fake_contents';
         $this->submitterEmail = 'donald.draper@digital.justice.gov.uk';
+        $this->s3Reference = 'dd_doc_98765_01234567890123';
 
         $this->sut = new SiriusApiGatewayClient(
             $client,
@@ -105,17 +93,22 @@ class SiriusDocumentsContractTest extends KernelTestCase
         $reportSubmittedDate = new DateTime('2019-06-20');
         $reportSubmissionId = 9876;
 
-        $upload = $siriusDocumentUpload = SiriusHelpers::generateSiriusReportPdfDocumentUpload(
+        $siriusDocumentUpload = SiriusHelpers::generateSiriusReportPdfDocumentUpload(
             $reportStartDate,
             $reportEndDate,
             $reportSubmittedDate,
             'PF',
             $reportSubmissionId,
             $this->fileName,
-            $this->fileContents
+            null,
+            $this->s3Reference
         );
 
-        $result = $this->sut->sendReportPdfDocument($upload, $this->caseRef);
+        try {
+            $result = $this->sut->sendReportPdfDocument($siriusDocumentUpload, $this->caseRef);
+        } catch (\Throwable $e) {
+            $this->throwReadableFailureMessage($e);
+        }
 
         $this->builder->verify();
 
@@ -138,10 +131,15 @@ class SiriusDocumentsContractTest extends KernelTestCase
         $upload = $siriusDocumentUpload = SiriusHelpers::generateSiriusSupportingDocumentUpload(
             9876,
             $this->fileName,
-            $this->fileContents
+            null,
+            $this->s3Reference
         );
 
-        $result = $this->sut->sendSupportingDocument($upload, $this->reportPdfUuid, $this->caseRef);
+        try {
+            $result = $this->sut->sendSupportingDocument($upload, $this->reportPdfUuid, $this->caseRef);
+        } catch (\Throwable $e) {
+            $this->throwReadableFailureMessage($e);
+        }
 
         $this->builder->verify();
 
@@ -173,7 +171,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
 
         try {
             $result = $this->sut->postChecklistPdf($upload, $this->reportPdfUuid, $this->caseRef);
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->throwReadableFailureMessage($e);
         }
 
@@ -238,7 +236,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
                         'file' => [
                             'name' => $this->fileName,
                             'mimetype' => 'application/pdf',
-                            'source' => $matcher->regex(base64_encode($this->fileContents), '.+')
+                            's3_reference' => $this->s3Reference
                         ]
                     ]
                 ]
@@ -277,7 +275,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
                         'file' => [
                             'name' => $this->fileName,
                             'mimetype' => 'application/pdf',
-                            'source' => $matcher->regex(base64_encode($this->fileContents), '.+')
+                            's3_reference' => $this->s3Reference
                         ]
                     ]
                 ]
@@ -344,7 +342,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
             ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
     }
 
-    private function throwReadableFailureMessage(Throwable $e)
+    private function throwReadableFailureMessage(\Throwable $e)
     {
         $json = json_encode(json_decode((string) $e->getResponse()->getBody()), JSON_PRETTY_PRINT);
         throw new Exception(sprintf('Pact test failed: %s', $json)) ;
