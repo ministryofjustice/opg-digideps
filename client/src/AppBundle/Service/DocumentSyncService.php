@@ -3,7 +3,6 @@
 
 namespace AppBundle\Service;
 
-
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Model\Sirius\QueuedDocumentData;
@@ -52,8 +51,7 @@ class DocumentSyncService
         SiriusApiGatewayClient $siriusApiGatewayClient,
         RestClient $restClient,
         SiriusApiErrorTranslator $errorTranslator
-    )
-    {
+    ) {
         $this->storage = $storage;
         $this->siriusApiGatewayClient = $siriusApiGatewayClient;
         $this->restClient = $restClient;
@@ -121,7 +119,7 @@ class DocumentSyncService
     public function syncReportDocument(QueuedDocumentData $documentData): ?Document
     {
         try {
-            $siriusResponse = $this->handleSiriusSync($documentData, $this->retrieveDocumentContentFromS3($documentData));
+            $siriusResponse = $this->handleSiriusSync($documentData);
 
             $data = json_decode(strval($siriusResponse->getBody()), true);
 
@@ -141,7 +139,7 @@ class DocumentSyncService
     public function syncSupportingDocument(QueuedDocumentData $documentData): ?Document
     {
         try {
-            $this->handleSiriusSync($documentData, $this->retrieveDocumentContentFromS3($documentData));
+            $this->handleSiriusSync($documentData);
             return $this->handleDocumentStatusUpdate($documentData, Document::SYNC_STATUS_SUCCESS);
         } catch (Throwable $e) {
             $this->handleSyncErrors($e, $documentData);
@@ -149,7 +147,7 @@ class DocumentSyncService
         }
     }
 
-    private function buildUpload(QueuedDocumentData $documentData, string $content)
+    private function buildUpload(QueuedDocumentData $documentData)
     {
         if ($documentData->isReportPdf()) {
             $siriusDocumentMetadata = (new SiriusReportPdfDocumentMetadata())
@@ -172,7 +170,7 @@ class DocumentSyncService
         $file = (new SiriusDocumentFile())
             ->setName($documentData->getFileName())
             ->setMimetype(mimetype_from_filename($documentData->getFileName()))
-            ->setSource(base64_encode($content));
+            ->setS3Reference($documentData->getStorageReference());
 
         return (new SiriusDocumentUpload())
             ->setType($type)
@@ -184,7 +182,7 @@ class DocumentSyncService
     {
         if ($documentData->getNdrId()) {
             return 'NDR';
-        } else if (in_array($documentData->getReportType(), [Report::TYPE_HEALTH_WELFARE, Report::TYPE_COMBINED_HIGH_ASSETS, Report::TYPE_COMBINED_LOW_ASSETS])) {
+        } elseif (in_array($documentData->getReportType(), [Report::TYPE_HEALTH_WELFARE, Report::TYPE_COMBINED_HIGH_ASSETS, Report::TYPE_COMBINED_LOW_ASSETS])) {
             return 'HW';
         } else {
             return 'PF';
@@ -207,17 +205,19 @@ class DocumentSyncService
 
     /**
      * @param QueuedDocumentData $documentData
-     * @param string $content
      * @return mixed|ResponseInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function handleSiriusSync(QueuedDocumentData $documentData, string $content)
+    public function handleSiriusSync(QueuedDocumentData $documentData)
     {
-        if($documentData->isReportPdf()) {
-            return $this->siriusApiGatewayClient->sendReportPdfDocument($this->buildUpload($documentData, $content), strtoupper($documentData->getCaseNumber()));
+        if ($documentData->isReportPdf()) {
+            return $this->siriusApiGatewayClient->sendReportPdfDocument(
+                $this->buildUpload($documentData),
+                strtoupper($documentData->getCaseNumber())
+            );
         } else {
             return $this->siriusApiGatewayClient->sendSupportingDocument(
-                $this->buildUpload($documentData, $content),
+                $this->buildUpload($documentData),
                 $documentData->getReportSubmissionUuid(),
                 strtoupper($documentData->getCaseNumber())
             );
@@ -288,24 +288,17 @@ class DocumentSyncService
      */
     private function handleSyncErrors(Throwable $e, QueuedDocumentData $documentData)
     {
-        if ($e instanceof S3Exception) {
-            $syncStatus = in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES) ?
-                Document::SYNC_STATUS_PERMANENT_ERROR : Document::SYNC_STATUS_TEMPORARY_ERROR;
-
-            $errorMessage = sprintf('S3 error while syncing document: %s', $e->getMessage());
+        if (method_exists($e, 'getResponse') && method_exists($e->getResponse(), 'getBody')) {
+            $errorMessage = $this->errorTranslator->translateApiError((string) $e->getResponse()->getBody());
         } else {
-            if (method_exists($e, 'getResponse') && method_exists($e->getResponse(), 'getBody')) {
-                $errorMessage = $this->errorTranslator->translateApiError((string) $e->getResponse()->getBody());
-            } else {
-                $errorMessage = (string) $e->getMessage();
-            }
+            $errorMessage = (string) $e->getMessage();
+        }
 
-            if (method_exists($e, 'getCode')) {
-                $syncStatus = $e->getCode() > 399 && $e->getCode() < 500 ?
-                    Document::SYNC_STATUS_PERMANENT_ERROR : Document::SYNC_STATUS_TEMPORARY_ERROR;
-            } else {
-                $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
-            }
+        if (method_exists($e, 'getCode')) {
+            $syncStatus = $e->getCode() > 399 && $e->getCode() < 500 ?
+                Document::SYNC_STATUS_PERMANENT_ERROR : Document::SYNC_STATUS_TEMPORARY_ERROR;
+        } else {
+            $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
         }
 
         if ($syncStatus === Document::SYNC_STATUS_PERMANENT_ERROR) {

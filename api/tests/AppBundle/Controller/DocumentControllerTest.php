@@ -208,28 +208,28 @@ class DocumentControllerTest extends AbstractTestController
      * @test
      * @dataProvider statusProvider
      */
-    public function updateDocument_not_success(string $status, ?string $error): void
+    public function updateDocument_not_success(string $providedStatus, string $expectedStatus, ?string $error): void
     {
         $url = sprintf('/document/%s', self::$document1->getId());
 
         $response = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,
-            'data' => ['syncStatus' => $status, 'syncError' => $error]
+            'data' => ['syncStatus' => $providedStatus, 'syncError' => $error]
         ]);
 
         self::assertEquals(self::$document1->getId(), $response['data']['id']);
-        self::assertEquals($status, $response['data']['synchronisation_status']);
+        self::assertEquals($expectedStatus, $response['data']['synchronisation_status']);
         self::assertEquals($error, $response['data']['synchronisation_error']);
     }
 
     public function statusProvider()
     {
         return [
-            'Permanent error' => [Document::SYNC_STATUS_PERMANENT_ERROR, 'Permanent error occurred'],
-            'Temporary error' => [Document::SYNC_STATUS_TEMPORARY_ERROR, 'Temporary error occurred'],
-            'In progress' => [Document::SYNC_STATUS_IN_PROGRESS, null],
-            'Queued' => [Document::SYNC_STATUS_QUEUED, null],
+            'Permanent error' => [Document::SYNC_STATUS_PERMANENT_ERROR, Document::SYNC_STATUS_PERMANENT_ERROR, 'Permanent error occurred'],
+            'Temporary error' => [Document::SYNC_STATUS_TEMPORARY_ERROR, Document::SYNC_STATUS_QUEUED, 'Temporary error occurred'],
+            'In progress' => [Document::SYNC_STATUS_IN_PROGRESS, Document::SYNC_STATUS_IN_PROGRESS, null],
+            'Queued' => [Document::SYNC_STATUS_QUEUED, Document::SYNC_STATUS_QUEUED, null],
         ];
     }
 

@@ -13,8 +13,11 @@ class SiriusDocumentFile
     /** @var string */
     private $mimetype;
 
-    /** @var string */
+    /** @var string|null */
     private $source;
+
+    /** @var string|null */
+    private $s3Reference;
 
     /**
      * @return string
@@ -55,25 +58,46 @@ class SiriusDocumentFile
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getSource(): string
+    public function getSource(): ?string
     {
         return $this->source;
     }
 
     /**
-     * @param string $source
+     * @param string|null $source
      * @return SiriusDocumentFile
      */
-    public function setSource(string $source): self
+    public function setSource(?string $source): self
     {
-        // Ensure string is base64
-        if(empty(base64_decode($source, true))) {
-            throw new InvalidArgumentException('Source must be base64 encoded');
+        if (!is_null($source)) {
+            // Ensure string is base64
+            if(empty(base64_decode($source, true))) {
+                throw new InvalidArgumentException('Source must be base64 encoded');
+            }
         }
 
         $this->source = $source;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getS3Reference(): ?string
+    {
+        return $this->s3Reference;
+    }
+
+    /**
+     * @param string|null $s3Reference
+     * @return SiriusDocumentFile
+     */
+    public function setS3Reference(?string $s3Reference): self
+    {
+        $this->s3Reference = $s3Reference;
 
         return $this;
     }
