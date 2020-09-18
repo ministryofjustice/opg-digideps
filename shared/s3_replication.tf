@@ -36,7 +36,7 @@ resource "aws_s3_bucket_public_access_block" "pa_uploads_branch_replication" {
 resource "aws_s3_bucket_policy" "pa_uploads_branch_replication" {
   count  = local.account.name == "development" ? 1 : 0
   bucket = aws_s3_bucket_public_access_block.pa_uploads_branch_replication[0].bucket
-  policy = data.aws_iam_policy_document.pa_uploads_branch_replication.json
+  policy = data.aws_iam_policy_document.pa_uploads_branch_replication[0].json
 }
 
 data "aws_iam_policy_document" "pa_uploads_branch_replication" {
