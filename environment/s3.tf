@@ -5,10 +5,6 @@ locals {
   expiration_days            = contains(local.long_expiry_workspaces, local.environment) ? 490 : 14
 }
 
-data "aws_s3_bucket" "replication_bucket" {
-  bucket = "pa-uploads-branch-replication"
-}
-
 resource "aws_s3_bucket" "pa_uploads" {
   bucket        = "pa-uploads-${local.environment}"
   acl           = "private"
@@ -37,7 +33,7 @@ resource "aws_s3_bucket" "pa_uploads" {
       status = local.bucket_replication_status
 
       destination {
-        bucket        = data.aws_s3_bucket.replication_bucket.arn
+        bucket        = data.terraform_remote_state.shared.outputs.development_replication_bucket_arn
         storage_class = "STANDARD"
       }
     }
@@ -136,7 +132,7 @@ resource "aws_iam_policy" "replication" {
         "s3:ReplicateDelete"
       ],
       "Effect": "Allow",
-      "Resource": "${data.aws_s3_bucket.replication_bucket.arn}/*"
+      "Resource": "${data.terraform_remote_state.shared.outputs.development_replication_bucket_arn}/*"
     }
   ]
 }
