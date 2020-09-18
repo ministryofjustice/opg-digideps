@@ -40,6 +40,7 @@ resource "aws_s3_bucket_policy" "pa_uploads_branch_replication" {
 }
 
 data "aws_iam_policy_document" "pa_uploads_branch_replication" {
+  count     = local.account.name == "development" ? 1 : 0
   policy_id = "PutObjPolicy"
 
   statement {
