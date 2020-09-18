@@ -6,7 +6,8 @@ locals {
 }
 
 data "aws_s3_bucket" "replication_bucket" {
-  bucket = "pa-uploads-branch-replication"
+  bucket   = "pa-uploads-branch-replication"
+  provider = aws.development
 }
 
 resource "aws_s3_bucket" "pa_uploads" {
