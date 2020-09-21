@@ -176,15 +176,6 @@ class Ndr implements ReportInterface
     private $submittedBy;
 
     /**
-     * @var CourtOrder
-     *
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\CourtOrder", inversedBy="ndr")
-     * @ORM\JoinColumn(name="court_order_id", referencedColumnName="id", onDelete="SET NULL")
-     */
-    private $courtOrder;
-
-
-    /**
      * Ndr constructor.
      *
      * @param Client $client
@@ -568,7 +559,6 @@ class Ndr implements ReportInterface
      */
     public function getFinancialSummary()
     {
-
         $accounts = [];
 
         /** @var BankAccount $ba */
@@ -636,25 +626,6 @@ class Ndr implements ReportInterface
     public function setSubmittedBy($submittedBy)
     {
         $this->submittedBy = $submittedBy;
-
-        return $this;
-    }
-
-    /**
-     * @return CourtOrder
-     */
-    public function getCourtOrder()
-    {
-        return $this->courtOrder;
-    }
-
-    /**
-     * @param CourtOrder $courtOrder
-     * @return $this
-     */
-    public function setCourtOrder(CourtOrder $courtOrder)
-    {
-        $this->courtOrder = $courtOrder;
 
         return $this;
     }

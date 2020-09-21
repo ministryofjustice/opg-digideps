@@ -248,11 +248,6 @@ class Client implements ClientInterface
     private $organisation;
 
     /**
-     * @ORM\OneToMany(targetEntity="CourtOrder", mappedBy="client")
-     */
-    private $courtOrders;
-
-    /**
      * Constructor.
      */
     public function __construct()
@@ -653,7 +648,7 @@ class Client implements ClientInterface
      */
     public function getCurrentReport()
     {
-        foreach($this->getReports() as $r) {
+        foreach ($this->getReports() as $r) {
             if (empty($r->getSubmitted()) && empty($r->getUnSubmitDate())) {
                 return $r;
             }
@@ -917,7 +912,7 @@ class Client implements ClientInterface
      * @JMS\Groups({"checklist-information"})
      * @return \DateTime|null
      */
-    public function getExpectedReportStartDate($year = NULL)
+    public function getExpectedReportStartDate($year = null)
     {
         if (is_null($this->getCourtDate())) {
             return null;
@@ -952,7 +947,7 @@ class Client implements ClientInterface
      *
      * @return \DateTime|null
      */
-    public function getExpectedReportEndDate($year = NULL)
+    public function getExpectedReportEndDate($year = null)
     {
         if (!($this->getExpectedReportStartDate($year) instanceof \DateTime)) {
             return null;
@@ -999,8 +994,7 @@ class Client implements ClientInterface
     {
         $reports = $this->getReports();
         $earliest = new \DateTime('now');
-        foreach ($reports as $report)
-        {
+        foreach ($reports as $report) {
             if ($report->getStartDate() < $earliest) {
                 $earliest = $report->getStartDate();
             }
@@ -1025,38 +1019,6 @@ class Client implements ClientInterface
     {
         $this->organisation = $organisation;
 
-        return $this;
-    }
-
-    /**
-     * @return ArrayCollection<CourtOrder>
-     */
-    public function getCourtOrders(): iterable
-    {
-        return $this->courtOrders;
-    }
-
-    /**
-     * @param CourtOrder $courtOrder
-     * @return $this
-     */
-    public function addCourtOrder(CourtOrder $courtOrder): Client
-    {
-        if (!$this->courtOrders->contains($courtOrder)) {
-            $this->courtOrders->add($courtOrder);
-        }
-        return $this;
-    }
-
-    /**
-     * @param CourtOrder $courtOrder
-     * @return $this
-     */
-    public function removeCourtOrder(CourtOrder $courtOrder): Client
-    {
-        if ($this->courtOrders->contains($courtOrder)) {
-            $this->courtOrders->removeElement($courtOrder);
-        }
         return $this;
     }
 
