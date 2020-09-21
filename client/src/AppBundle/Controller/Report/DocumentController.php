@@ -9,7 +9,7 @@ use AppBundle\Entity\User;
 use AppBundle\Form as FormDir;
 use AppBundle\Security\DocumentVoter;
 use AppBundle\Service\DocumentService;
-use AppBundle\Service\File\FileUploader;
+use AppBundle\Service\File\S3FileUploader;
 use AppBundle\Service\File\Verifier\MultiFileFormUploadVerifier;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -31,10 +31,10 @@ class DocumentController extends AbstractController
         'documents-state',
     ];
 
-    /** @var FileUploader */
+    /** @var S3FileUploader */
     private $fileUploader;
 
-    public function __construct(FileUploader $fileUploader)
+    public function __construct(S3FileUploader $fileUploader)
     {
         $this->fileUploader = $fileUploader;
     }
@@ -123,7 +123,7 @@ class DocumentController extends AbstractController
      * @Route("/report/{reportId}/documents/step/2", name="report_documents", defaults={"what"="new"})
      * @Template("AppBundle:Report/Document:step2.html.twig")
      */
-    public function step2Action(Request $request, MultiFileFormUploadVerifier $multiFileVerifier, $reportId)
+    public function step2Action(Request $request, MultiFileFormUploadVerifier $multiFileVerifier, $reportId, LoggerInterface $logger)
     {
         $report = $this->getReport($reportId, self::$jmsGroups);
         list($nextLink, $backLink) = $this->buildNavigationLinks($report);
@@ -149,10 +149,11 @@ class DocumentController extends AbstractController
 
                 if ($verified) {
                     try {
-                        $this->uploadFiles($files, $report);
+                        $this->fileUploader->uploadFiles($files, $report);
                         $this->addFlash('notice', 'Files uploaded');
                         return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
                     } catch (\Throwable $e) {
+                        $logger->warning('Error uploading file: ' . $e->getMessage());
                         $form->get('files')->addError(new FormError('Cannot upload file, please try again later'));
                     }
                 }
@@ -192,32 +193,6 @@ class DocumentController extends AbstractController
         }
 
         return [$nextLink, $backLink];
-    }
-
-    /**
-     * @param array $files
-     * @param EntityDir\Report\Report $report
-     */
-    private function uploadFiles(array $files, EntityDir\Report\Report $report): void
-    {
-        foreach ($files as $file) {
-            $this->uploadFile($file, $report);
-        }
-    }
-
-    /**
-     * @param UploadedFile $file
-     * @param EntityDir\Report\Report $report
-     */
-    private function uploadFile(UploadedFile $file, EntityDir\Report\Report $report): void
-    {
-        /** @var string $body */
-        $body = file_get_contents($file->getPathname());
-
-        /** @var string $fileName */
-        $fileName = $file->getClientOriginalName();
-
-        $this->fileUploader->uploadFile($report, $body, $fileName, false);
     }
 
     /**
