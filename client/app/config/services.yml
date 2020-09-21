@@ -39,7 +39,7 @@ services:
         class: GuzzleHttp\Client
         arguments:
             $config:
-                timeout: 10
+                timeout: 30
                 allow_redirects: false
 
     AppBundle\Service\Client\Sirius\SiriusApiGatewayClient:

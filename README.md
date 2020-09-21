@@ -90,7 +90,4 @@ _See [deployment documentation](docs/DEPLOYMENT.md)_
 
 The OPG Digideps Client is released under the MIT license, a copy of which can be found in [LICENSE](LICENSE).
 
-[repo-api]: https://github.com/ministryofjustice/opg-digi-deps-api
-[repo-infra]: https://github.com/ministryofjustice/digideps-infrastructure
-[repo-docker]: https://github.com/ministryofjustice/opg-digi-deps-docker
 [service]: https://complete-deputy-report.service.gov.uk/

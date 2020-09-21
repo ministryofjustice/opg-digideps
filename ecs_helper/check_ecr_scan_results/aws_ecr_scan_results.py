@@ -13,6 +13,7 @@ class ECRScanChecker:
     tag = ''
     report = ''
     report_limit = ''
+    major_sev_count = 0
 
     def __init__(self, report_limit, search_term):
         self.report_limit = int(report_limit)
@@ -92,15 +93,18 @@ class ECRScanChecker:
                     tag_exists = True
                     if findings["findings"] != []:
                         counts = findings["findingSeverityCounts"]
+                        if ("CRITICAL" in counts) or ("HIGH" in counts) or ("MEDIUM" in counts):
+                          self.major_sev_count += 1
                         title = "\n\n:warning: *AWS ECR Scan found results for {}:* \n".format(
                             image)
                         severity_counts = "Severity finding counts:\n{}\nDisplaying the first {} in order of severity\n\n".format(
                             counts, self.report_limit)
                         self.report = title + severity_counts
-
                         for finding in findings["findings"]:
                             cve = finding["name"]
-                            description = finding["description"]
+                            description = "No description available"
+                            if "description" in finding:
+                              description = finding["description"]
                             severity = finding["severity"]
                             link = finding["uri"]
                             result = "*Image:* {0} \n**Tag:* {1} \n*Severity:* {2} \n*CVE:* {3} \n*Description:* {4} \n*Link:* {5}\n\n".format(
@@ -125,14 +129,14 @@ class ECRScanChecker:
         return response
 
     def post_to_slack(self, slack_webhook):
-        if self.report != "":
-            branch_info = "*Github Branch:* {0}\n*CircleCI Job Link:* {1}\n\n".format(
+        if self.major_sev_count > 0:
+            branch_info = "*Images With Serious Issues:* {0}\n *Github Branch:* {1}\n*CircleCI Job Link:* {2}\n\n".format(
+                self.major_sev_count,
                 os.getenv('CIRCLE_BRANCH', ""),
                 os.getenv('CIRCLE_BUILD_URL', ""))
-            self.report += branch_info
-            print(self.report)
 
-            post_data = json.dumps({"text": self.report})
+            post_data = json.dumps({"text": branch_info})
+            print(post_data)
             response = requests.post(
                 slack_webhook, data=post_data,
                 headers={'Content-Type': 'application/json'}
@@ -168,9 +172,9 @@ def main():
     work.recursive_wait(args.tag)
     work.recursive_check_make_report(args.tag)
     if args.slack_webhook is None:
-        print("No slack webhook provided, skipping post of results to slack")
-    if args.post_to_slack == "True" and args.slack_webhook is not None:
-        work.post_to_slack(args.slack_webhook)
+      print("No slack webhook provided, skipping post of results to slack")
+      if args.post_to_slack == "True" and args.slack_webhook is not None:
+          work.post_to_slack(args.slack_webhook)
 
 
 if __name__ == "__main__":

@@ -1,3 +1,15 @@
+locals {
+  non-replication_workspaces = ["production02", "preproduction", "training", "integration", "development"]
+  bucket_replication_status  = contains(local.non-replication_workspaces, local.environment) ? "Disabled" : "Enabled"
+  long_expiry_workspaces     = ["production02", "development", "training"]
+  expiration_days            = contains(local.long_expiry_workspaces, local.environment) ? 490 : 14
+}
+
+data "aws_s3_bucket" "replication_bucket" {
+  bucket   = "pa-uploads-branch-replication"
+  provider = aws.development
+}
+
 resource "aws_s3_bucket" "pa_uploads" {
   bucket        = "pa-uploads-${local.environment}"
   acl           = "private"
@@ -11,11 +23,24 @@ resource "aws_s3_bucket" "pa_uploads" {
     enabled = true
 
     expiration {
-      days = 490
+      days = local.expiration_days
     }
 
     noncurrent_version_expiration {
       days = 10
+    }
+  }
+
+  replication_configuration {
+    role = aws_iam_role.replication.arn
+
+    rules {
+      status = local.bucket_replication_status
+
+      destination {
+        bucket        = data.aws_s3_bucket.replication_bucket.arn
+        storage_class = "STANDARD"
+      }
     }
   }
 
@@ -57,4 +82,69 @@ data "aws_iam_policy_document" "pa_uploads" {
       variable = "s3:x-amz-server-side-encryption"
     }
   }
+}
+
+resource "aws_iam_role" "replication" {
+  name = "replication-role.${local.environment}"
+
+  assume_role_policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "s3.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+POLICY
+}
+
+resource "aws_iam_policy" "replication" {
+  name = "replication-policy.${local.environment}"
+
+  policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:GetReplicationConfiguration",
+        "s3:ListBucket"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "${aws_s3_bucket.pa_uploads.arn}"
+      ]
+    },
+    {
+      "Action": [
+        "s3:GetObjectVersion",
+        "s3:GetObjectVersionAcl"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "${aws_s3_bucket.pa_uploads.arn}/*"
+      ]
+    },
+    {
+      "Action": [
+        "s3:ReplicateObject",
+        "s3:ReplicateDelete"
+      ],
+      "Effect": "Allow",
+      "Resource": "${data.aws_s3_bucket.replication_bucket.arn}/*"
+    }
+  ]
+}
+POLICY
+}
+
+resource "aws_iam_role_policy_attachment" "replication" {
+  role       = aws_iam_role.replication.name
+  policy_arn = aws_iam_policy.replication.arn
 }

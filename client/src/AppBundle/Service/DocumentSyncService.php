@@ -121,7 +121,7 @@ class DocumentSyncService
     public function syncReportDocument(QueuedDocumentData $documentData): ?Document
     {
         try {
-            $siriusResponse = $this->handleSiriusSync($documentData, $this->retrieveDocumentContentFromS3($documentData));
+            $siriusResponse = $this->handleSiriusSync($documentData);
 
             $data = json_decode(strval($siriusResponse->getBody()), true);
 
@@ -141,7 +141,7 @@ class DocumentSyncService
     public function syncSupportingDocument(QueuedDocumentData $documentData): ?Document
     {
         try {
-            $this->handleSiriusSync($documentData, $this->retrieveDocumentContentFromS3($documentData));
+            $this->handleSiriusSync($documentData);
             return $this->handleDocumentStatusUpdate($documentData, Document::SYNC_STATUS_SUCCESS);
         } catch (Throwable $e) {
             $this->handleSyncErrors($e, $documentData);
@@ -149,7 +149,7 @@ class DocumentSyncService
         }
     }
 
-    private function buildUpload(QueuedDocumentData $documentData, string $content)
+    private function buildUpload(QueuedDocumentData $documentData)
     {
         if ($documentData->isReportPdf()) {
             $siriusDocumentMetadata = (new SiriusReportPdfDocumentMetadata())
@@ -172,7 +172,7 @@ class DocumentSyncService
         $file = (new SiriusDocumentFile())
             ->setName($documentData->getFileName())
             ->setMimetype(mimetype_from_filename($documentData->getFileName()))
-            ->setSource(base64_encode($content));
+            ->setS3Reference($documentData->getStorageReference());
 
         return (new SiriusDocumentUpload())
             ->setType($type)
@@ -207,17 +207,19 @@ class DocumentSyncService
 
     /**
      * @param QueuedDocumentData $documentData
-     * @param string $content
      * @return mixed|ResponseInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function handleSiriusSync(QueuedDocumentData $documentData, string $content)
+    public function handleSiriusSync(QueuedDocumentData $documentData)
     {
         if($documentData->isReportPdf()) {
-            return $this->siriusApiGatewayClient->sendReportPdfDocument($this->buildUpload($documentData, $content), strtoupper($documentData->getCaseNumber()));
+            return $this->siriusApiGatewayClient->sendReportPdfDocument(
+                $this->buildUpload($documentData),
+                strtoupper($documentData->getCaseNumber())
+            );
         } else {
             return $this->siriusApiGatewayClient->sendSupportingDocument(
-                $this->buildUpload($documentData, $content),
+                $this->buildUpload($documentData),
                 $documentData->getReportSubmissionUuid(),
                 strtoupper($documentData->getCaseNumber())
             );
@@ -288,29 +290,18 @@ class DocumentSyncService
      */
     private function handleSyncErrors(Throwable $e, QueuedDocumentData $documentData)
     {
-        if ($e instanceof S3Exception) {
-            $syncStatus = in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES) ?
-                Document::SYNC_STATUS_PERMANENT_ERROR : Document::SYNC_STATUS_TEMPORARY_ERROR;
-
-            $errorMessage = sprintf('S3 error while syncing document: %s', $e->getMessage());
+        if (method_exists($e, 'getResponse') && method_exists($e->getResponse(), 'getBody')) {
+            $errorMessage = $this->errorTranslator->translateApiError((string) $e->getResponse()->getBody());
         } else {
-            if (method_exists($e, 'getResponse') && method_exists($e->getResponse(), 'getBody')) {
-                $errorMessage = $this->errorTranslator->translateApiError((string) $e->getResponse()->getBody());
-            } else {
-                $errorMessage = (string) $e->getMessage();
-            }
-
-            $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
+            $errorMessage = (string) $e->getMessage();
         }
 
-        if ($syncStatus === Document::SYNC_STATUS_PERMANENT_ERROR) {
-            if ($documentData->isReportPdf()) {
-                $this->addToSyncErrorSubmissionIds($documentData->getReportSubmissionId());
-            }
-
-            $this->docsNotSyncedCount++;
+        if ($documentData->isReportPdf()) {
+            $this->addToSyncErrorSubmissionIds($documentData->getReportSubmissionId());
         }
 
-        $this->handleDocumentStatusUpdate($documentData, $syncStatus, $errorMessage);
+        $this->docsNotSyncedCount++;
+
+        $this->handleDocumentStatusUpdate($documentData, Document::SYNC_STATUS_PERMANENT_ERROR, $errorMessage);
     }
 }

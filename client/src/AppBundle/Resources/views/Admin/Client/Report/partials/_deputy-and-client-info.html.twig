@@ -27,7 +27,7 @@
 
 {% set contents %}
     {# CLIENT DETAILS #}
-    <h4 class="govuk-heading-m">Client details</h4>
+    <h3 class="govuk-heading-m">Client details</h3>
 
     <dl class="govuk-summary-list">
         <div class="govuk-summary-list__row">
@@ -66,7 +66,7 @@
 
     {# DEPUTY DETAILS #}
     {% set deputy = report.submittedBy.isDeputyOrg and report.client.getNamedDeputy ? report.client.getNamedDeputy : report.submittedBy %}
-    <h4 class="govuk-heading-m">Deputy details</h4>
+    <h3 class="govuk-heading-m">Deputy details</h3>
 
     <dl class="govuk-summary-list">
         <div class="govuk-summary-list__row">

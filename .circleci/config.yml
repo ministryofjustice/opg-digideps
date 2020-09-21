@@ -45,16 +45,18 @@ workflows:
           filters: { branches: { ignore: [ master ] } }
 
       - run-task:
-          name: integration test
+          name: reset environment for testing
           requires: [ approval for further testing ]
+          filters: { branches: { ignore: [ main ] } }
+          task_name: reset_database
+          timeout: 180
+
+      - run-task:
+          name: integration test
+          requires: [ reset environment for testing ]
           filters: { branches: { ignore: [ master ] } }
           task_name: integration_test
           timeout: 2500
-
-#      - pa11y-ci:
-#          name: accessibility test
-#          requires: [ approval for further testing ]
-#          filters: { branches: { ignore: [ main ] } }
 
       - run-task:
           name: backup environment
@@ -95,7 +97,7 @@ workflows:
           tf_workspace: development
           tf_command: apply
 
-      # Notice no reset or restore over development so we can keep test data
+      # Notice, no 'reset' or 'restore' over development so we can keep test data
       - terraform-command:
           name: apply development
           requires: [ apply shared-development ]
@@ -489,7 +491,7 @@ jobs:
           name: Check ECR Scan Results
           working_directory: ~/project/ecs_helper/check_ecr_scan_results
           command: |
-            python3 aws_ecr_scan_results.py --search digideps --tag $VERSION --post_to_slack False
+            python3 aws_ecr_scan_results.py --search digideps --tag $VERSION --post_to_slack True
       - run:
           name: Archive docker images
           command: |
