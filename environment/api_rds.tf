@@ -28,7 +28,7 @@ resource "aws_db_instance" "api" {
   instance_class             = "db.m3.medium"
   allocated_storage          = "10"
   availability_zone          = "eu-west-1a"
-  backup_retention_period    = "14"
+  backup_retention_period    = local.account.backup_retention_period
   backup_window              = "00:00-00:30"
   db_subnet_group_name       = local.account.db_subnet_group
   engine                     = "postgres"
@@ -78,7 +78,7 @@ resource "aws_rds_cluster" "api" {
   master_username              = "digidepsmaster"
   master_password              = data.aws_secretsmanager_secret_version.database_password.secret_string
   skip_final_snapshot          = true
-  backup_retention_period      = 14
+  backup_retention_period      = local.account.backup_retention_period
   preferred_backup_window      = "07:00-09:00"
   db_subnet_group_name         = local.account.db_subnet_group
   kms_key_id                   = data.aws_kms_key.rds.arn
