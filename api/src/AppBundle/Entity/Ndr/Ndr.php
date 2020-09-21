@@ -4,7 +4,6 @@ namespace AppBundle\Entity\Ndr;
 
 use AppBundle\Entity\AssetInterface;
 use AppBundle\Entity\Client;
-use AppBundle\Entity\CourtOrder;
 use AppBundle\Entity\Ndr\Traits as NdrTraits;
 use AppBundle\Entity\ReportInterface;
 use DateTime;

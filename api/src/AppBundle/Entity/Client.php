@@ -256,7 +256,6 @@ class Client implements ClientInterface
         $this->reports = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->clientContacts = new ArrayCollection();
-        $this->courtOrders = new ArrayCollection();
     }
 
     /**

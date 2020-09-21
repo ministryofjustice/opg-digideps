@@ -3,7 +3,6 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Client;
-use AppBundle\Entity\CourtOrder;
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\ReportInterface;
