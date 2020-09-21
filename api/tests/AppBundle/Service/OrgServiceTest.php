@@ -170,15 +170,6 @@ class OrgServiceTest extends WebTestCase
      */
     private $teamRepository;
 
-    /** @var OrgCsvToCourtOrderDtoAssembler */
-    private $courtOrderAssembler;
-
-    /** @var OrgCsvToCourtOrderDeputyDtoAssembler */
-    private $courtOrderDeputyAssembler;
-
-    /** @var CourtOrderCreator|ObjectProphecy */
-    private $courtOrderCreator;
-
     public static function setUpBeforeClass(): void
     {
         self::$frameworkBundleClient = static::createClient(['environment' => 'test',
@@ -203,18 +194,9 @@ class OrgServiceTest extends WebTestCase
         $this->organisationRepository = $container->get('AppBundle\Entity\Repository\OrganisationRepository');
         $this->teamRepository = $container->get('AppBundle\Entity\Repository\TeamRepository');
         $this->namedDeputyRepository = $container->get('AppBundle\Entity\Repository\NamedDeputyRepository');
-        $this->courtOrderAssembler = $container->get('AppBundle\v2\Assembler\CourtOrder\OrgCsvToCourtOrderDtoAssembler');
-        $this->courtOrderDeputyAssembler = $container->get('AppBundle\v2\Assembler\CourtOrderDeputy\OrgCsvToCourtOrderDeputyDtoAssembler');
 
-        $this->courtOrderCreator = self::prophesize(CourtOrderCreator::class);
-        $this->courtOrderCreator
-            ->upsertCourtOrder(Argument::type(CourtOrderDto::class), Argument::type(EntityDir\Report\Report::class))
-            ->willReturn(new EntityDir\CourtOrder());
-        $this->courtOrderCreator
-            ->upsertCourtOrderDeputy(Argument::type(CourtOrderDeputyDto::class), Argument::type(EntityDir\CourtOrder::class), Argument::type(EntityDir\Organisation::class))
-            ->willReturn(new EntityDir\CourtOrderDeputy());
-
-        $this->pa = new OrgService(self::$em,
+        $this->pa = new OrgService(
+            self::$em,
             $this->logger,
             $this->userRepository,
             $this->reportRepository,
@@ -223,10 +205,7 @@ class OrgServiceTest extends WebTestCase
             $this->teamRepository,
             $this->namedDeputyRepository,
             new OrganisationFactory([]),
-            new NamedDeputyFactory(),
-            $this->courtOrderAssembler,
-            $this->courtOrderDeputyAssembler,
-            $this->courtOrderCreator->reveal()
+            new NamedDeputyFactory()
         );
 
         Fixtures::deleteReportsData(['dd_user', 'client']);
@@ -586,7 +565,8 @@ class OrgServiceTest extends WebTestCase
         /** @var NamedDeputyRepository&ObjectProphecy $namedDeputyRepository */
         $namedDeputyRepository = self::prophesize(NamedDeputyRepository::class);
 
-        $sut = new OrgService(self::$em,
+        $sut = new OrgService(
+            self::$em,
             $this->logger,
             $this->userRepository,
             $this->reportRepository,
@@ -595,10 +575,7 @@ class OrgServiceTest extends WebTestCase
             $this->teamRepository,
             $namedDeputyRepository->reveal(),
             $orgFactory->reveal(),
-            $namedDeputyFactory->reveal(),
-            $this->courtOrderAssembler,
-            $this->courtOrderDeputyAssembler,
-            $this->courtOrderCreator->reveal()
+            $namedDeputyFactory->reveal()
         );
 
         $sut->addFromCasrecRows([$row]);
@@ -665,10 +642,7 @@ class OrgServiceTest extends WebTestCase
             $this->teamRepository,
             $this->namedDeputyRepository,
             new OrganisationFactory([]),
-            new NamedDeputyFactory(),
-            $this->courtOrderAssembler,
-            $this->courtOrderDeputyAssembler,
-            $this->courtOrderCreator->reveal()
+            new NamedDeputyFactory()
         );
 
         $output = $sut->addFromCasrecRows([ $row ]);
@@ -709,10 +683,7 @@ class OrgServiceTest extends WebTestCase
             $this->teamRepository,
             $namedDeputyRepository->reveal(),
             new OrganisationFactory([]),
-            new NamedDeputyFactory(),
-            $this->courtOrderAssembler,
-            $this->courtOrderDeputyAssembler,
-            $this->courtOrderCreator->reveal()
+            new NamedDeputyFactory()
         );
 
         $this->assertEquals($namedDeputy, $sut->identifyNamedDeputy(self::$deputy1 + self::$client1));
