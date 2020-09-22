@@ -9,7 +9,8 @@ intro:
         navigateKeyboard: navigate most of the website using just a keyboard
         navigateSpeech: navigate most of the website using speech recognition software
         screenReader: listen to most of the website using a screen reader (including the most recent versions of JAWS, NVDA and VoiceOver)
-    para02: '<a href="https://mcmw.abilitynet.org.uk/" class="govuk-link">AbilityNet</a> has advice on making your device easier to use if you have a disability.'
+    para02: We’ve also made the service text as simple as possible to understand.
+    para03: '<a href="https://mcmw.abilitynet.org.uk/" class="govuk-link">AbilityNet</a> has advice on making your device easier to use if you have a disability.'
 
 cannotAccess:
     heading: What to do if you cannot access parts of this service
@@ -26,7 +27,7 @@ reportProblems:
 
 enforcementProcedure:
     heading: Enforcement procedure
-    para01: 'The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’). If you’re not happy with how we respond to your complaint, contact the <a href="https://www.equalityadvisoryservice.com/" class="govuk-link">Equality Advisory and Support Service (EASS)</a>.'
+    para01: 'The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’). If you’re not happy with how we respond to your complaint, <a href="https://www.equalityadvisoryservice.com/" class="govuk-link">contact the Equality Advisory and Support Service (EASS)</a>.'
 
 technicalInfo:
     heading: Technical information about this website’s accessibility
@@ -41,9 +42,12 @@ burden:
 
 outsideScope:
     heading: Content that’s not within the scope of the accessibility regulations
-    bullets:
-        pdfsDocs: PDFs and other documents
+    para01: The service lets you download a PDF of your completed report.
+    para02: The headers and footers on this PDF are not all the same on each page. This fails WCAG 2.0 AA success criteria 3.2.3 on consistent navigation.
+    para03: The default language of the PDF is not defined in the document catalog. This fails WCAG 2.0 PDF16.
 
 howTested:
     heading: How we tested this website
     para01: This service was last tested on 24th March 2020. The test was carried out by the Digital Accessibility Centre.
+
+lastUpdatedDate: 'Last updated: 22 September 2020'

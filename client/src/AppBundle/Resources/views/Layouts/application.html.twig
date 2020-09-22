@@ -127,12 +127,6 @@
 
 {% block footerSupportLinks %}
     <li class="govuk-footer__inline-list-item">
-        <a href="{{path('accessibility')}}" class="govuk-footer__link">
-            Accessibility
-        </a>
-    </li>
-
-    <li class="govuk-footer__inline-list-item">
         <a href="{{path('terms')}}" class="govuk-footer__link">
             Terms of use
         </a>
@@ -145,6 +139,11 @@
     <li class="govuk-footer__inline-list-item">
         <a href="{{ path('cookies') }}" class="govuk-footer__link">
             Cookies
+        </a>
+    </li>
+    <li class="govuk-footer__inline-list-item">
+        <a href="{{path('accessibility')}}" class="govuk-footer__link">
+            Accessibility
         </a>
     </li>
 {% endblock %}
