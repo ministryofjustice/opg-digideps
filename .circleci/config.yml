@@ -304,8 +304,8 @@ orbs:
           - image: circleci/golang:1.12
         resource_class: small
         environment:
-          TF_VERSION: 0.12.26
-          TF_SHA256SUM: 607bc802b1c6c2a5e62cc48640f38aaa64bef1501b46f0ae4829feb51594b257
+          TF_VERSION: 0.13.3
+          TF_SHA256SUM: 35c662be9d32d38815cde5fa4c9fa61a3b7f39952ecd50ebf92fd1b2ddd6109b
           TF_CLI_ARGS_plan: -input=false -lock=false
           TF_CLI_ARGS_apply: -input=false -auto-approve
           TF_CLI_ARGS_destroy: -input=false -auto-approve
