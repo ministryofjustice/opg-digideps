@@ -24,4 +24,6 @@ locals {
     owner                  = "OPG Supervision"
     infrastructure-support = "OPG WebOps: opgteam+digideps@digital.justice.gov.uk"
   }
+
+  s3_bucket = local.account.name == "production" ? "${local.account.name}02" : local.account.name
 }

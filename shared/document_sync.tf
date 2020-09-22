@@ -26,7 +26,7 @@ data "aws_iam_policy_document" "integrations_s3_read" {
   statement {
     sid       = "AllowIntegrationsLambdaS3"
     effect    = "Allow"
-    resources = local.account.name == "development" ? ["arn:aws:s3:::pa-uploads-*"] : ["arn:aws:s3:::pa-uploads-${local.account.name}", "arn:aws:s3:::pa-uploads-${local.account.name}/*"]
+    resources = local.account.name == "development" ? ["arn:aws:s3:::pa-uploads-*"] : ["arn:aws:s3:::pa-uploads-${local.s3_bucket}", "arn:aws:s3:::pa-uploads-${local.s3_bucket}/*"]
     actions   = ["s3:GetObject"]
   }
 }
