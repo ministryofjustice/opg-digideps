@@ -16,7 +16,6 @@ provider "aws" {
     role_arn     = "arn:aws:iam::${var.accounts[terraform.workspace].account_id}:role/${var.DEFAULT_ROLE}"
     session_name = "terraform-session"
   }
-  version = "2.70.0"
 }
 
 provider "aws" {
@@ -27,7 +26,6 @@ provider "aws" {
     role_arn     = "arn:aws:iam::311462405659:role/${var.DEFAULT_ROLE}"
     session_name = "terraform-session"
   }
-  version = "2.70.0"
 }
 
 provider "aws" {
@@ -38,5 +36,4 @@ provider "aws" {
     role_arn     = "arn:aws:iam::${local.account["account_id"]}:role/${var.DEFAULT_ROLE}"
     session_name = "terraform-session"
   }
-  version = "2.70.0"
 }
