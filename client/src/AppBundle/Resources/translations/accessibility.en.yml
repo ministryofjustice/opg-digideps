@@ -14,7 +14,7 @@ intro:
 
 cannotAccess:
     heading: What to do if you cannot access parts of this service
-    para01: 'If you cannot use this service, you can <a href="https://www.gov.uk/government/publications/deputy-annual-report-accounting-for-your-actions" class="govuk-link">complete your deputy report using a paper form</a>. If you need the form in a more accessible format, email <a href="mailto:digideps@digital.justice.gov.uk">digideps@digital.justice.gov.uk</a> and tell us what format you need.'
+    para01: 'If you cannot use this service, you can <a href="https://www.gov.uk/government/publications/deputy-annual-report-accounting-for-your-actions" class="govuk-link">complete your deputy report using a paper form</a>. If you need the form in a more accessible format, email <a href="mailto:customerservices@publicguardian.gov.uk">customerservices@publicguardian.gov.uk</a> and tell us what format you need.'
 
 reportProblems:
     heading: Reporting accessibility problems with this service
