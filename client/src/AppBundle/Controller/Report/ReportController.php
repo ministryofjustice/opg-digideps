@@ -186,7 +186,9 @@ class ReportController extends AbstractController
 
         $form = $formFactory->createNamed(
             'report',
-            ReportType::class, $report, [
+            ReportType::class,
+            $report,
+            [
                 'translation_domain' => 'registration',
                 'action'             => $this->generateUrl('report_create', ['clientId' => $clientId]) //TODO useless ?
             ]
@@ -196,7 +198,6 @@ class ReportController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getRestClient()->post('report', $form->getData());
-            $this->getRestClient()->post('v2/court-order', $client, ['client-id']);
             return $this->redirect($this->generateUrl('homepage'));
         }
 
@@ -239,7 +240,6 @@ class ReportController extends AbstractController
                     $activeReportId = $activeReport->getId();
                 }
             }
-
         } else { // Lay. keep the report Id
             $template = 'AppBundle:Report/Report:overview.html.twig';
         }
@@ -492,7 +492,8 @@ class ReportController extends AbstractController
         /** @var \DateTime $endDate */
         $endDate = $report->getEndDate();
 
-        $attachmentName = sprintf('DigiRep-%s_%s_%s.pdf',
+        $attachmentName = sprintf(
+            'DigiRep-%s_%s_%s.pdf',
             $endDate->format('Y'),
             $submitDate instanceof \DateTime ? $submitDate->format('Y-m-d') : 'n-a-', //some old reports have no submission date
             $report->getClient()->getCaseNumber()
@@ -530,7 +531,8 @@ class ReportController extends AbstractController
         /** @var \DateTime $endDate */
         $endDate = $report->getEndDate();
 
-        $attachmentName = sprintf('DigiRepTransactions-%s_%s_%s.csv',
+        $attachmentName = sprintf(
+            'DigiRepTransactions-%s_%s_%s.csv',
             $endDate->format('Y'),
             $submitDate instanceof \DateTime ? $submitDate->format('Y-m-d') : 'n-a-', //some old reports have no submission date
             $report->getClient()->getCaseNumber()
