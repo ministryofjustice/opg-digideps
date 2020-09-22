@@ -31,8 +31,8 @@ resource "aws_ecs_task_definition" "wkhtmltopdf" {
   family                   = "wkhtmltopdf-${local.environment}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = 512
-  memory                   = 1024
+  cpu                      = local.account.cpu_low
+  memory                   = local.account.memory_low
   container_definitions    = "[${local.wkhtmltopdf_container}]"
   task_role_arn            = aws_iam_role.wkhtmltopdf.arn
   execution_role_arn       = aws_iam_role.execution_role.arn

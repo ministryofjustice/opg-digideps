@@ -9,24 +9,32 @@ variable "OPG_DOCKER_TAG" {
 variable "accounts" {
   type = map(
     object({
-      account_id           = string
-      admin_allow_list     = list(string)
-      force_destroy_bucket = bool
-      front_allow_list     = list(string)
-      ga_default           = string
-      ga_gds               = string
-      subdomain_enabled    = bool
-      is_production        = number
-      secrets_prefix       = string
-      task_count           = number
-      symfony_env          = string
-      db_subnet_group      = string
-      ec_subnet_group      = string
-      sirius_api_account   = string
-      state_source         = string
-      elasticache_count    = number
-      always_on            = bool
-      copy_version_from    = string
+      account_id              = string
+      admin_allow_list        = list(string)
+      force_destroy_bucket    = bool
+      front_allow_list        = list(string)
+      ga_default              = string
+      ga_gds                  = string
+      subdomain_enabled       = bool
+      is_production           = number
+      secrets_prefix          = string
+      task_count              = number
+      scan_count              = number
+      symfony_env             = string
+      db_subnet_group         = string
+      ec_subnet_group         = string
+      sirius_api_account      = string
+      state_source            = string
+      elasticache_count       = number
+      always_on               = bool
+      copy_version_from       = string
+      cpu_low                 = number
+      cpu_medium              = number
+      cpu_high                = number
+      memory_low              = number
+      memory_medium           = number
+      memory_high             = number
+      backup_retention_period = number
     })
   )
 }
