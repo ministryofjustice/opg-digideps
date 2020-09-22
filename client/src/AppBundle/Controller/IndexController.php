@@ -249,6 +249,16 @@ class IndexController extends AbstractController
     }
 
     /**
+     * @Route("/accessibility", name="accessibility")
+     */
+    public function accessibilityAction(Request $request)
+    {
+        return $this->render('AppBundle:Index:accessibility.html.twig', [
+            'backlink' => $this->getRefererUrlSafe($request, ['accessibility'])
+        ]);
+    }
+
+    /**
      * @Route("/logout", name="logout")
      */
     public function logoutAction(Request $request)
@@ -274,7 +284,7 @@ class IndexController extends AbstractController
         if ($request->cookies->has('cookie_policy')) {
             $policy = json_decode($request->cookies->get('cookie_policy'));
             $form->get('usage')->setData($policy->usage);
-        } else if ($request->query->get('accept') === 'all') {
+        } elseif ($request->query->get('accept') === 'all') {
             $form->get('usage')->setData(true);
         }
 

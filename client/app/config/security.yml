@@ -113,6 +113,7 @@ security:
         - { path: ^/terms, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/privacy, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/cookies, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/accessibility, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/$ , roles: IS_AUTHENTICATED_ANONYMOUSLY }
         # all the rest needs authentication
         - { path: ^/ , roles: IS_AUTHENTICATED_FULLY }
