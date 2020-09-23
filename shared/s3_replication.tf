@@ -82,6 +82,10 @@ resource "aws_iam_role" "replication" {
   ]
 }
 POLICY
+  tags = merge(
+    local.default_tags,
+    { Name = "replication-role-${local.account.name}" },
+  )
 }
 
 resource "aws_iam_policy" "replication" {

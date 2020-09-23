@@ -75,6 +75,7 @@ resource "aws_ecs_service" "checklist_sync" {
 resource "aws_cloudwatch_event_rule" "checklist_sync_cron_rule" {
   name                = "${aws_ecs_task_definition.checklist_sync.family}-schedule"
   schedule_expression = "rate(5 minutes)"
+  tags                = local.default_tags
 }
 
 resource "aws_cloudwatch_event_target" "checklist_sync_scheduled_task" {

@@ -1,10 +1,12 @@
 resource "aws_route53_zone" "internal" {
   name    = "${local.environment}.internal"
-  comment = ""
+  comment = "Private Route53 Zone for ${local.environment}"
 
   vpc {
     vpc_id = data.aws_vpc.vpc.id
   }
+
+  tags = local.default_tags
 }
 
 resource "aws_route53_record" "front_redis" {

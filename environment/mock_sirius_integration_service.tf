@@ -19,6 +19,8 @@ resource "aws_service_discovery_service" "mock_sirius_integration" {
   health_check_custom_config {
     failure_threshold = 1
   }
+
+  tags = local.default_tags
 }
 
 resource "aws_ecs_task_definition" "mock_sirius_integration" {

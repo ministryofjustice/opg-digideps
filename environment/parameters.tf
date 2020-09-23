@@ -5,10 +5,13 @@ locals {
 }
 
 resource "aws_ssm_parameter" "sirius_api_base_uri" {
-  name      = "${local.parameter_prefix}sirius-api-base-uri"
-  type      = "String"
-  value     = local.sirius_api_base_uri_value
+  name  = "${local.parameter_prefix}sirius-api-base-uri"
+  type  = "String"
+  value = local.sirius_api_base_uri_value
+
   overwrite = true
+
+  tags = local.default_tags
 }
 
 resource "aws_ssm_parameter" "document_sync_row_limit" {

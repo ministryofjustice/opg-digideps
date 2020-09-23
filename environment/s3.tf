@@ -86,6 +86,7 @@ data "aws_iam_policy_document" "pa_uploads" {
 
 resource "aws_iam_role" "replication" {
   name = "replication-role.${local.environment}"
+  tags = local.default_tags
 
   assume_role_policy = <<POLICY
 {
