@@ -27,7 +27,6 @@ variable "accounts" {
       state_source            = string
       elasticache_count       = number
       always_on               = bool
-      copy_version_from       = string
       cpu_low                 = number
       cpu_medium              = number
       cpu_high                = number
@@ -35,6 +34,7 @@ variable "accounts" {
       memory_medium           = number
       memory_high             = number
       backup_retention_period = number
+      psql_engine_version     = string
     })
   )
 }
