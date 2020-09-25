@@ -6,6 +6,13 @@ resource "aws_acm_certificate" "wildcard" {
   lifecycle {
     create_before_destroy = true
   }
+
+  tags = merge(
+    local.default_tags,
+    {
+      "Name" = "wildcard-certificate-${local.environment}"
+    },
+  )
 }
 
 resource "aws_route53_record" "wildcard_validation" {

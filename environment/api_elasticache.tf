@@ -11,8 +11,8 @@ resource "aws_elasticache_replication_group" "api" {
   subnet_group_name             = local.account.ec_subnet_group
   security_group_ids            = [module.api_cache_security_group.id]
   apply_immediately             = true
-  tags = {
+  tags = merge({
     InstanceName = "api-${local.environment}"
     Stack        = local.environment
-  }
+  }, local.default_tags)
 }

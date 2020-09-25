@@ -21,6 +21,7 @@ resource "aws_cloudwatch_metric_alarm" "php_errors" {
   evaluation_periods  = 1
   namespace           = aws_cloudwatch_log_metric_filter.php_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  tags                = local.default_tags
 }
 
 resource "aws_cloudwatch_log_metric_filter" "nginx_errors" {
@@ -46,6 +47,7 @@ resource "aws_cloudwatch_metric_alarm" "nginx_errors" {
   evaluation_periods  = 1
   namespace           = aws_cloudwatch_log_metric_filter.nginx_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  tags                = local.default_tags
 }
 
 resource "aws_cloudwatch_log_metric_filter" "queued_documents" {
@@ -72,6 +74,7 @@ resource "aws_cloudwatch_metric_alarm" "queued_documents" {
   evaluation_periods  = 1
   namespace           = aws_cloudwatch_log_metric_filter.queued_documents.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  tags                = local.default_tags
 }
 
 data "aws_sns_topic" "availability-alert" {
@@ -104,6 +107,7 @@ resource "aws_cloudwatch_metric_alarm" "availability-front" {
   evaluation_periods  = 1
   namespace           = "AWS/Route53"
   alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
+  tags                = local.default_tags
 
   dimensions = {
     HealthCheckId = aws_route53_health_check.availability-front[0].id
@@ -135,6 +139,7 @@ resource "aws_cloudwatch_metric_alarm" "availability-admin" {
   evaluation_periods  = 1
   namespace           = "AWS/Route53"
   alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
+  tags                = local.default_tags
 
   dimensions = {
     HealthCheckId = aws_route53_health_check.availability-admin[0].id

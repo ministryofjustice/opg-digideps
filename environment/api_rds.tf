@@ -87,6 +87,7 @@ resource "aws_rds_cluster" "api" {
 resource "aws_cloudwatch_log_group" "api_cluster" {
   name              = "/aws/rds/cluster/api-${local.environment}/postgresql"
   retention_in_days = 180
+  tags              = local.default_tags
 }
 
 # resource "aws_rds_cluster_instance" "api" {

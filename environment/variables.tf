@@ -48,15 +48,26 @@ module "allow_list" {
 }
 
 locals {
+  project = "digideps"
+
   default_allow_list = concat(module.allow_list.moj_sites, formatlist("%s/32", data.aws_nat_gateway.nat[*].public_ip))
+  admin_allow_list   = length(local.account["admin_allow_list"]) > 0 ? local.account["admin_allow_list"] : local.default_allow_list
+  front_allow_list   = length(local.account["front_allow_list"]) > 0 ? local.account["front_allow_list"] : local.default_allow_list
 
   route53_healthchecker_ips = data.aws_ip_ranges.route53_healthchecks_ips.cidr_blocks
 
-  environment      = lower(terraform.workspace)
-  account          = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
-  subdomain        = local.account["subdomain_enabled"] ? local.environment : ""
-  front_allow_list = length(local.account["front_allow_list"]) > 0 ? local.account["front_allow_list"] : local.default_allow_list
-  admin_allow_list = length(local.account["admin_allow_list"]) > 0 ? local.account["admin_allow_list"] : local.default_allow_list
+  account     = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
+  environment = lower(terraform.workspace)
+  subdomain   = local.account["subdomain_enabled"] ? local.environment : ""
+
+  default_tags = {
+    business-unit          = "OPG"
+    application            = "Digideps"
+    environment-name       = local.environment
+    owner                  = "OPG Supervision"
+    infrastructure-support = "OPG WebOps: opgteam@digital.justice.gov.uk"
+    is-production          = local.account.is_production
+  }
 }
 
 data "terraform_remote_state" "shared" {
