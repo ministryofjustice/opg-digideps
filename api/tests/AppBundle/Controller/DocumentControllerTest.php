@@ -275,6 +275,7 @@ class DocumentControllerTest extends AbstractTestController
 
         self::assertEquals("Document failed to sync after 4 attempts", $response['data']['synchronisation_error']);
         self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $response['data']['synchronisation_status']);
+        self::assertEquals(0, $response['data']['sync_attempts']);
     }
 
     /** @test */

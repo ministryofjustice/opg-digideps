@@ -286,4 +286,9 @@ class Document implements SynchronisableInterface
     {
         $this->syncAttempts++;
     }
+
+    public function resetSyncAttempts(): void
+    {
+        $this->syncAttempts = 0;
+    }
 }

@@ -189,9 +189,10 @@ class DocumentController extends RestController
                     $document->incrementSyncAttempts();
                     $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
 
-                    if ($document->getSyncAttempts() === 4) {
+                    if ($document->getSyncAttempts() >= 4) {
                         $document->setSynchronisationError("Document failed to sync after 4 attempts");
                         $document->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
+                        $document->resetSyncAttempts();
                     }
                 }
             } else {
