@@ -25,8 +25,8 @@ class OrgDeputyShipUploaderTest extends TestCase
     public function uploadProvider()
     {
         return [
-            'Valid deputyships' => [$this->createOrgDeputyship(3, 0), 3, 0],
-            'Mix valid and invalid deputyships' => [$this->createOrgDeputyship(2, 1), 2, 1]
+            '3 Valid deputyships' => [$this->createOrgDeputyship(3, 0), 3, 0],
+            '2 valid, 1 invalid deputyships' => [$this->createOrgDeputyship(2, 1), 2, 1]
         ];
     }
 

@@ -5,25 +5,70 @@ namespace Tests\AppBundle\v2\Registration\Controller;
 
 use Faker\Factory;
 use Faker\Provider\en_GB\Address;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
+use Tests\AppBundle\Controller\AbstractTestController;
 
-class OrgDeputyshipControllerTest extends WebTestCase
+class OrgDeputyshipControllerTest extends AbstractTestController
 {
-    /** @test */
-    public function create()
+    private static $tokenAdmin = null;
+    private $headers = null;
+    /**
+     * {@inheritDoc}
+     */
+    public function setUp(): void
     {
-        $client = static::createClient();
-        $json = $this->generateOrgCsvJson();
-        $client->request('POST', '/org-deputyship/create', [], [], [], $this->generateOrgCsvJson());
+        if (null === self::$tokenAdmin) {
+            self::$tokenAdmin = $this->loginAsAdmin();
+        }
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->headers = ['CONTENT_TYPE' => 'application/json', 'HTTP_AuthToken' => self::$tokenAdmin];
     }
 
-    private function generateOrgCsvJson()
+    /**
+     * @test
+     * @dataProvider createProvider
+     */
+    public function create(string $orgDeputyshipJson, string $expectedContent)
+    {
+        $client = static::createClient(['environment' => 'test', 'debug' => false]);
+        $client->request('POST', '/v2/org-deputyships', [], [], $this->headers, $orgDeputyshipJson);
+
+        $this->assertEquals(Response::HTTP_CREATED, $client->getResponse()->getStatusCode());
+        $this->assertEquals($expectedContent, $client->getResponse()->getContent());
+    }
+
+    public function createProvider()
+    {
+        return [
+            '2 valid Org Deputyships' => [$this->generateOrgDeputyshipJson(2, 0), json_encode(['added' => 2, 'errors' => 0])],
+            '1 valid, 1 invalid Org Deputyships' => [$this->generateOrgDeputyshipJson(1, 1), json_encode(['added' => 1, 'errors' => 1])]
+        ];
+    }
+
+    private function generateOrgDeputyshipJson(int $validCount, int $invalidCount)
+    {
+        $deputyships = [];
+
+        if ($validCount > 0) {
+            foreach (range(1, $validCount) as $index) {
+                $deputyships[] = $this->generateValidOrgDeputyshipArray();
+            }
+        }
+
+        if ($invalidCount > 0) {
+            foreach (range(1, $invalidCount) as $index) {
+                $deputyships[] = $this->generateInvalidOrgDeputyshipArray();
+            }
+        }
+
+        return json_encode($deputyships);
+    }
+
+    private function generateValidOrgDeputyshipArray()
     {
         $faker = Factory::create();
 
-        return json_encode([
+        return [
             'Email'        => $faker->email,
             'Deputy No'    => $faker->randomNumber(8),
             'Dep Postcode' => Address::postcode(),
@@ -40,6 +85,14 @@ class OrgDeputyshipControllerTest extends WebTestCase
             'Surname'    => $faker->lastName,
             'Corref'     => 'A3',
             'Report Due' => $faker->dateTimeThisYear->format('d-M-Y'),
-        ]);
+        ];
+    }
+
+    private function generateInvalidOrgDeputyshipArray()
+    {
+        $invalid = $this->generateValidOrgDeputyshipArray();
+        $invalid['Email'] = '';
+
+        return $invalid;
     }
 }

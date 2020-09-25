@@ -34,8 +34,6 @@ class OrgController extends RestController
     {
         $maxRecords = 10000;
 
-        ini_set('memory_limit', '1024M');
-
         $data = CsvUploader::decompressData($request->getContent());
         $count = count($data);
 
