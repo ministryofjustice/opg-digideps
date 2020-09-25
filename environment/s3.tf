@@ -1,9 +1,13 @@
 locals {
-  dev_bucket_arn             = "arn:aws:s3:::pa-uploads-development"
   non-replication_workspaces = ["production02", "preproduction", "training", "integration", "development"]
   bucket_replication_status  = contains(local.non-replication_workspaces, local.environment) ? "Disabled" : "Enabled"
   long_expiry_workspaces     = ["production02", "development", "training"]
   expiration_days            = contains(local.long_expiry_workspaces, local.environment) ? 490 : 14
+}
+
+data "aws_s3_bucket" "replication_bucket" {
+  bucket   = "pa-uploads-branch-replication"
+  provider = aws.development
 }
 
 resource "aws_s3_bucket" "pa_uploads" {
@@ -34,7 +38,7 @@ resource "aws_s3_bucket" "pa_uploads" {
       status = local.bucket_replication_status
 
       destination {
-        bucket        = local.dev_bucket_arn
+        bucket        = data.aws_s3_bucket.replication_bucket.arn
         storage_class = "STANDARD"
       }
     }
@@ -82,6 +86,7 @@ data "aws_iam_policy_document" "pa_uploads" {
 
 resource "aws_iam_role" "replication" {
   name = "replication-role.${local.environment}"
+  tags = local.default_tags
 
   assume_role_policy = <<POLICY
 {
@@ -133,7 +138,7 @@ resource "aws_iam_policy" "replication" {
         "s3:ReplicateDelete"
       ],
       "Effect": "Allow",
-      "Resource": "${local.dev_bucket_arn}/*"
+      "Resource": "${data.aws_s3_bucket.replication_bucket.arn}/*"
     }
   ]
 }

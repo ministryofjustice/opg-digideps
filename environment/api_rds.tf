@@ -2,25 +2,6 @@ data "aws_kms_key" "rds" {
   key_id = "alias/aws/rds"
 }
 
-data "terraform_remote_state" "previous_workspace" {
-  count     = local.account.copy_version_from == "NonApplicable" ? 0 : 1
-  backend   = "s3"
-  workspace = local.account.copy_version_from
-  config = {
-    bucket         = "opg.terraform.state"
-    key            = "opg-digi-deps-infrastructure/terraform.tfstate"
-    encrypt        = true
-    region         = "eu-west-1"
-    role_arn       = "arn:aws:iam::311462405659:role/${var.DEFAULT_ROLE}"
-    dynamodb_table = "remote_lock"
-  }
-}
-
-locals {
-  engine_version = local.account.copy_version_from == "NonApplicable" ? "9.6" : data.terraform_remote_state.previous_workspace[0].outputs["db_engine_version"]
-}
-
-
 resource "aws_db_instance" "api" {
   count                      = local.account.always_on ? 1 : 0
   name                       = "api"
@@ -28,11 +9,11 @@ resource "aws_db_instance" "api" {
   instance_class             = "db.m3.medium"
   allocated_storage          = "10"
   availability_zone          = "eu-west-1a"
-  backup_retention_period    = "14"
+  backup_retention_period    = local.account.backup_retention_period
   backup_window              = "00:00-00:30"
   db_subnet_group_name       = local.account.db_subnet_group
   engine                     = "postgres"
-  engine_version             = local.engine_version
+  engine_version             = local.account.psql_engine_version
   kms_key_id                 = data.aws_kms_key.rds.arn
   license_model              = "postgresql-license"
   maintenance_window         = "sun:01:00-sun:02:30"
@@ -47,11 +28,9 @@ resource "aws_db_instance" "api" {
   password                   = data.aws_secretsmanager_secret_version.database_password.secret_string
   deletion_protection        = true
   delete_automated_backups   = false
-  auto_minor_version_upgrade = local.account.copy_version_from == "NonApplicable" ? true : false
+  auto_minor_version_upgrade = false
   final_snapshot_identifier  = "api-${local.environment}-final"
-
-
-  vpc_security_group_ids = [module.api_rds_security_group.id]
+  vpc_security_group_ids     = [module.api_rds_security_group.id]
 
   tags = merge(
     local.default_tags,
@@ -64,7 +43,6 @@ resource "aws_db_instance" "api" {
     ignore_changes  = [password]
     prevent_destroy = true
   }
-
 }
 
 resource "aws_rds_cluster" "api" {
@@ -72,13 +50,13 @@ resource "aws_rds_cluster" "api" {
   cluster_identifier           = "api-${local.environment}"
   engine                       = "aurora-postgresql"
   engine_mode                  = local.account.always_on ? "provisioned" : "serverless"
-  engine_version               = "10.7"
+  engine_version               = local.account.psql_engine_version
   availability_zones           = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
   database_name                = "api"
   master_username              = "digidepsmaster"
   master_password              = data.aws_secretsmanager_secret_version.database_password.secret_string
   skip_final_snapshot          = true
-  backup_retention_period      = 14
+  backup_retention_period      = local.account.backup_retention_period
   preferred_backup_window      = "07:00-09:00"
   db_subnet_group_name         = local.account.db_subnet_group
   kms_key_id                   = data.aws_kms_key.rds.arn
@@ -109,6 +87,7 @@ resource "aws_rds_cluster" "api" {
 resource "aws_cloudwatch_log_group" "api_cluster" {
   name              = "/aws/rds/cluster/api-${local.environment}/postgresql"
   retention_in_days = 180
+  tags              = local.default_tags
 }
 
 # resource "aws_rds_cluster_instance" "api" {

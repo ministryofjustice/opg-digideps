@@ -16,7 +16,6 @@ provider "aws" {
     role_arn     = "arn:aws:iam::${local.account["account_id"]}:role/${var.DEFAULT_ROLE}"
     session_name = "terraform-session"
   }
-  version = "2.70.0"
 }
 
 provider "aws" {
@@ -27,7 +26,6 @@ provider "aws" {
     role_arn     = "arn:aws:iam::311462405659:role/${var.DEFAULT_ROLE}"
     session_name = "terraform-session"
   }
-  version = "2.70.0"
 }
 
 # DD has it's public DNS in production, not management
@@ -39,7 +37,6 @@ provider "aws" {
     role_arn     = "arn:aws:iam::515688267891:role/${var.DEFAULT_ROLE}"
     session_name = "terraform-session"
   }
-  version = "2.70.0"
 }
 
 provider "aws" {
@@ -70,7 +67,6 @@ provider "aws" {
     role_arn     = "arn:aws:iam::515688267891:role/${var.DEFAULT_ROLE}"
     session_name = "terraform-session"
   }
-  version = "2.70.0"
 }
 
 provider "aws" {
@@ -81,5 +77,4 @@ provider "aws" {
     role_arn     = "arn:aws:iam::${local.account["account_id"]}:role/${var.DEFAULT_ROLE}"
     session_name = "terraform-session"
   }
-
 }

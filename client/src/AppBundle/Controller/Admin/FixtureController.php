@@ -253,8 +253,10 @@ class FixtureController extends AbstractController
         try {
             $this
                 ->getRestClient()
-                ->post("v2/fixture/createClientAttachDeputy",
-                    json_encode([
+                ->post(
+                    "v2/fixture/createClientAttachDeputy",
+                    json_encode(
+                        [
                         "firstName" => $request->query->get('firstName'),
                         "lastName" => $request->query->get('lastName'),
                         "phone" => $request->query->get('phone'),
@@ -266,7 +268,7 @@ class FixtureController extends AbstractController
                         "deputyEmail" => $request->query->get('deputyEmail')]
                     )
                 );
-        } catch(\Throwable $e) {
+        } catch (\Throwable $e) {
             throw $e;
         }
 
@@ -335,7 +337,7 @@ class FixtureController extends AbstractController
 
     /**
      * Sirius has a modulus 11 validation check on case references (because casrec.) which we should adhere to
-     * to make sure integration tests create data thats in the correct format.
+     * to make sure integration tests create data that is in the correct format.
      */
     public function generateValidCaseNumber()
     {

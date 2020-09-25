@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Service\File;
 
@@ -10,10 +10,10 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-class FileUploaderTest extends TestCase
+class S3FileUploaderTest extends TestCase
 {
     /**
-     * @var FileUploader
+     * @var S3FileUploader
      */
     private $object;
 
@@ -23,7 +23,7 @@ class FileUploaderTest extends TestCase
         $this->restClient = m::mock(RestClient::class);
         $this->logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();
 
-        $this->object = new FileUploader($this->storage, $this->restClient, $this->logger);
+        $this->object = new S3FileUploader($this->storage, $this->restClient, $this->logger);
     }
 
     public function testuploadFile()
@@ -35,7 +35,7 @@ class FileUploaderTest extends TestCase
         $this->restClient->shouldReceive('post')->once()->with('/document/report/1', \Mockery::type(Document::class), ['document']);
 
         $report = m::mock(Report::class, ['getId'=>1]);
-        $doc = $this->object->uploadFile($report, $fileContent, $fileName, false); /* @var $document Document */
+        $doc = $this->object->uploadFileAndPersistDocument($report, $fileContent, $fileName, false); /* @var $document Document */
 
         $this->assertStringMatchesFormat('dd_doc_1_%d', $doc->getStorageReference());
         $this->assertEquals($fileName, $doc->getFileName());

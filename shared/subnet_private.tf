@@ -22,6 +22,10 @@ resource "aws_route_table" "private" {
     cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.nat[count.index].id
   }
+  tags = merge(
+    local.default_tags,
+    { Name = "private-rt-${local.account.name}-${count.index}" },
+  )
 }
 
 resource "aws_elasticache_subnet_group" "private" {
@@ -32,4 +36,8 @@ resource "aws_elasticache_subnet_group" "private" {
 resource "aws_db_subnet_group" "private" {
   name       = local.account.db_subnet_group
   subnet_ids = aws_subnet.private[*].id
+  tags = merge(
+    local.default_tags,
+    { Name = "rds-subnet-group-${local.account.name}-${count.index}" },
+  )
 }

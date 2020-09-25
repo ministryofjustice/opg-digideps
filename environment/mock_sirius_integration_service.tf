@@ -19,14 +19,16 @@ resource "aws_service_discovery_service" "mock_sirius_integration" {
   health_check_custom_config {
     failure_threshold = 1
   }
+
+  tags = local.default_tags
 }
 
 resource "aws_ecs_task_definition" "mock_sirius_integration" {
   family                   = "mock-sirius-integration-${local.environment}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = 512
-  memory                   = 1024
+  cpu                      = local.account.cpu_low
+  memory                   = local.account.memory_low
   container_definitions    = "[${local.mock_sirius_integration_container}]"
   task_role_arn            = aws_iam_role.front.arn
   execution_role_arn       = aws_iam_role.execution_role.arn

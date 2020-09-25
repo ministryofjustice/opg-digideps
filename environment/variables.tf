@@ -9,24 +9,32 @@ variable "OPG_DOCKER_TAG" {
 variable "accounts" {
   type = map(
     object({
-      account_id           = string
-      admin_allow_list     = list(string)
-      force_destroy_bucket = bool
-      front_allow_list     = list(string)
-      ga_default           = string
-      ga_gds               = string
-      subdomain_enabled    = bool
-      is_production        = number
-      secrets_prefix       = string
-      task_count           = number
-      symfony_env          = string
-      db_subnet_group      = string
-      ec_subnet_group      = string
-      sirius_api_account   = string
-      state_source         = string
-      elasticache_count    = number
-      always_on            = bool
-      copy_version_from    = string
+      account_id              = string
+      admin_allow_list        = list(string)
+      force_destroy_bucket    = bool
+      front_allow_list        = list(string)
+      ga_default              = string
+      ga_gds                  = string
+      subdomain_enabled       = bool
+      is_production           = number
+      secrets_prefix          = string
+      task_count              = number
+      scan_count              = number
+      symfony_env             = string
+      db_subnet_group         = string
+      ec_subnet_group         = string
+      sirius_api_account      = string
+      state_source            = string
+      elasticache_count       = number
+      always_on               = bool
+      cpu_low                 = number
+      cpu_medium              = number
+      cpu_high                = number
+      memory_low              = number
+      memory_medium           = number
+      memory_high             = number
+      backup_retention_period = number
+      psql_engine_version     = string
     })
   )
 }
@@ -40,15 +48,26 @@ module "allow_list" {
 }
 
 locals {
+  project = "digideps"
+
   default_allow_list = concat(module.allow_list.moj_sites, formatlist("%s/32", data.aws_nat_gateway.nat[*].public_ip))
+  admin_allow_list   = length(local.account["admin_allow_list"]) > 0 ? local.account["admin_allow_list"] : local.default_allow_list
+  front_allow_list   = length(local.account["front_allow_list"]) > 0 ? local.account["front_allow_list"] : local.default_allow_list
 
   route53_healthchecker_ips = data.aws_ip_ranges.route53_healthchecks_ips.cidr_blocks
 
-  environment      = lower(terraform.workspace)
-  account          = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
-  subdomain        = local.account["subdomain_enabled"] ? local.environment : ""
-  front_allow_list = length(local.account["front_allow_list"]) > 0 ? local.account["front_allow_list"] : local.default_allow_list
-  admin_allow_list = length(local.account["admin_allow_list"]) > 0 ? local.account["admin_allow_list"] : local.default_allow_list
+  account     = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
+  environment = lower(terraform.workspace)
+  subdomain   = local.account["subdomain_enabled"] ? local.environment : ""
+
+  default_tags = {
+    business-unit          = "OPG"
+    application            = "Digideps"
+    environment-name       = local.environment
+    owner                  = "OPG Supervision"
+    infrastructure-support = "OPG WebOps: opgteam@digital.justice.gov.uk"
+    is-production          = local.account.is_production
+  }
 }
 
 data "terraform_remote_state" "shared" {
