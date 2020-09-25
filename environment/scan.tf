@@ -19,6 +19,8 @@ resource "aws_service_discovery_service" "scan" {
   health_check_custom_config {
     failure_threshold = 1
   }
+
+  tags = local.default_tags
 }
 
 resource "aws_iam_role" "scan" {
@@ -32,7 +34,7 @@ resource "aws_ecs_task_definition" "scan" {
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 1024
-  memory                   = 2048
+  memory                   = local.account.memory_high
   container_definitions    = "[${local.file_scanner_rest_container},${local.file_scanner_server_container}]"
   task_role_arn            = aws_iam_role.scan.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
@@ -43,7 +45,7 @@ resource "aws_ecs_service" "scan" {
   name                    = aws_ecs_task_definition.scan.family
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.scan.arn
-  desired_count           = 2
+  desired_count           = local.account.scan_count
   launch_type             = "FARGATE"
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true

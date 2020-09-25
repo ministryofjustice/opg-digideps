@@ -23,5 +23,8 @@ locals {
     environment-name       = terraform.workspace
     owner                  = "OPG Supervision"
     infrastructure-support = "OPG WebOps: opgteam+digideps@digital.justice.gov.uk"
+    is-production          = local.account.name == "production" ? true : false
   }
+
+  s3_bucket = local.account.name == "production" ? "${local.account.name}02" : local.account.name
 }

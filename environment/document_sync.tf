@@ -71,6 +71,7 @@ resource "aws_ecs_service" "document_sync" {
 resource "aws_cloudwatch_event_rule" "document_sync_cron_rule" {
   name                = "${aws_ecs_task_definition.document_sync.family}-schedule"
   schedule_expression = local.document_sync_interval
+  tags                = local.default_tags
 }
 
 resource "aws_cloudwatch_event_target" "document_sync_scheduled_task" {

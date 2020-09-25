@@ -145,7 +145,7 @@ class UserService
      */
     private function clientHasExistingNdr(Client $client)
     {
-        return (null !== $client->getNdr()) ? true : false;
+        return null !== $client->getNdr();
     }
 
     /**

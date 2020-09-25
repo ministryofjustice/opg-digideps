@@ -1,6 +1,7 @@
 locals {
   domain = "complete-deputy-report.service.gov.uk"
 }
+
 data "aws_route53_zone" "public" {
   name     = local.domain
   provider = aws.dns
