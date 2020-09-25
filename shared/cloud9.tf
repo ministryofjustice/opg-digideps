@@ -5,8 +5,5 @@ resource "aws_cloud9_environment_ec2" "shared" {
   description                 = "Shared Cloud9 instance to be used by all devs"
   subnet_id                   = aws_subnet.public[0].id
   owner_arn                   = "arn:aws:iam::${var.accounts[terraform.workspace].account_id}:assumed-role/operator/alex.saunders"
-  tags = merge(
-    local.default_tags,
-    { Name = "team-cloud9-env" },
-  )
+  tags                        = local.default_tags
 }
