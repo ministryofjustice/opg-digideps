@@ -38,6 +38,6 @@ resource "aws_db_subnet_group" "private" {
   subnet_ids = aws_subnet.private[*].id
   tags = merge(
     local.default_tags,
-    { Name = "rds-subnet-group-${local.account.name}-${count.index}" },
+    { Name = "rds-subnet-group-${local.account.name}" },
   )
 }
