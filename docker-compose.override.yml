@@ -22,7 +22,6 @@ services:
       - ./api/tests:/var/www/tests
       - ./api/web:/var/www/web
       - ./api/phpstan.neon:/var/www/phpstan.neon
-      - ./api/vendor/symfony:/var/www/vendor/symfony
 
   frontend:
     volumes:

@@ -4,6 +4,7 @@
 namespace AppBundle\v2\Registration\Controller;
 
 use AppBundle\v2\Controller\ControllerTrait;
+use AppBundle\v2\Registration\Assembler\CasRecToOrgDeputyshipDtoAssembler;
 use AppBundle\v2\Registration\Uploader\OrgDeputyshipUploader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,9 +20,20 @@ class OrgDeputyshipController extends AbstractController
     /** @var OrgDeputyshipUploader */
     private $orgDeputyshipUploader;
 
-    public function __construct(OrgDeputyshipUploader $orgDeputyshipUploader)
-    {
+    /**  @var CasRecToOrgDeputyshipDtoAssembler */
+    private $assembler;
+
+    /**
+     * OrgDeputyshipController constructor.
+     * @param OrgDeputyshipUploader $orgDeputyshipUploader
+     * @param CasRecToOrgDeputyshipDtoAssembler $assembler
+     */
+    public function __construct(
+        OrgDeputyshipUploader $orgDeputyshipUploader,
+        CasRecToOrgDeputyshipDtoAssembler $assembler
+    ) {
         $this->orgDeputyshipUploader = $orgDeputyshipUploader;
+        $this->assembler = $assembler;
     }
 
     /**
@@ -30,18 +42,10 @@ class OrgDeputyshipController extends AbstractController
      */
     public function create(Request $request)
     {
-        $deputyshipCount = ['added' => 0, 'errors' => 0];
+        $uploadResults = ['errors' => 0];
+        $added = ['clients' => [], 'discharged_clients' => [], 'named_deputies' => [], 'reports' => []];
+        $uploadResults['added'] = $added;
 
-        $orgDeputyshipData = json_decode($request->getContent(), true);
-
-        foreach ($orgDeputyshipData as $deputyshipDatum) {
-            if (empty($deputyshipDatum['Email'])) {
-                $deputyshipCount['errors']++;
-            } else {
-                $deputyshipCount['added']++;
-            }
-        }
-
-        return new JsonResponse($deputyshipCount, Response::HTTP_CREATED);
+        return new JsonResponse($uploadResults, Response::HTTP_CREATED);
     }
 }
