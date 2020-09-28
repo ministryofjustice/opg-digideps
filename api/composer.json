@@ -18,7 +18,7 @@
   },
   "require": {
     "php": ">=7.3.5",
-    "symfony/symfony": "^3.4.28",
+    "symfony/symfony": "^3.4",
     "doctrine/orm": "^2.6.3",
     "doctrine/doctrine-bundle": "^1.9.1",
     "symfony/monolog-bundle": "^3.0.0",

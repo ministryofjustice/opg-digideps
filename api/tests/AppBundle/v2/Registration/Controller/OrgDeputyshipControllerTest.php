@@ -3,15 +3,16 @@
 
 namespace Tests\AppBundle\v2\Registration\Controller;
 
-use Faker\Factory;
-use Faker\Provider\en_GB\Address;
+use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\AppBundle\Controller\AbstractTestController;
+use Tests\AppBundle\v2\Registration\TestHelpers\OrgDeputyshipTestHelper;
 
 class OrgDeputyshipControllerTest extends AbstractTestController
 {
     private static $tokenAdmin = null;
     private $headers = null;
+
     /**
      * {@inheritDoc}
      */
@@ -26,73 +27,23 @@ class OrgDeputyshipControllerTest extends AbstractTestController
 
     /**
      * @test
-     * @dataProvider createProvider
      */
-    public function create(string $orgDeputyshipJson, string $expectedContent)
+    public function create()
     {
         $client = static::createClient(['environment' => 'test', 'debug' => false]);
+
+        $orgDeputyshipJson = OrgDeputyshipTestHelper::generateOrgDeputyshipJson(2, 0);
         $client->request('POST', '/v2/org-deputyships', [], [], $this->headers, $orgDeputyshipJson);
 
         $this->assertEquals(Response::HTTP_CREATED, $client->getResponse()->getStatusCode());
-        $this->assertEquals($expectedContent, $client->getResponse()->getContent());
-    }
+        $this->assertJson($client->getResponse()->getContent());
 
-    public function createProvider()
-    {
-        return [
-            '2 valid Org Deputyships' => [$this->generateOrgDeputyshipJson(2, 0), json_encode(['added' => 2, 'errors' => 0])],
-            '1 valid, 1 invalid Org Deputyships' => [$this->generateOrgDeputyshipJson(1, 1), json_encode(['added' => 1, 'errors' => 1])]
-        ];
-    }
-
-    private function generateOrgDeputyshipJson(int $validCount, int $invalidCount)
-    {
-        $deputyships = [];
-
-        if ($validCount > 0) {
-            foreach (range(1, $validCount) as $index) {
-                $deputyships[] = $this->generateValidOrgDeputyshipArray();
-            }
-        }
-
-        if ($invalidCount > 0) {
-            foreach (range(1, $invalidCount) as $index) {
-                $deputyships[] = $this->generateInvalidOrgDeputyshipArray();
-            }
-        }
-
-        return json_encode($deputyships);
-    }
-
-    private function generateValidOrgDeputyshipArray()
-    {
-        $faker = Factory::create();
-
-        return [
-            'Email'        => $faker->email,
-            'Deputy No'    => $faker->randomNumber(8),
-            'Dep Postcode' => Address::postcode(),
-            'Dep Forename' => $faker->firstName,
-            'Dep Surname'  => $faker->lastName,
-            'Dep Type'     => $faker->randomElement([21,22,23,24,25,26,27,29,50,63]),
-            'Dep Adrs1'    => $faker->buildingNumber . ' ' . $faker->streetName,
-            'Dep Adrs2'    => Address::cityPrefix() . ' ' . $faker->city,
-            'Dep Adrs3'    => $faker->city,
-            'Dep Adrs4'    => Address::county(),
-            'Dep Adrs5'    => 'UK',
-            'Case'       => (string) $faker->randomNumber(8),
-            'Forename'   => $faker->firstName,
-            'Surname'    => $faker->lastName,
-            'Corref'     => 'A3',
-            'Report Due' => $faker->dateTimeThisYear->format('d-M-Y'),
-        ];
-    }
-
-    private function generateInvalidOrgDeputyshipArray()
-    {
-        $invalid = $this->generateValidOrgDeputyshipArray();
-        $invalid['Email'] = '';
-
-        return $invalid;
+        $decodedResponseContent = json_decode($client->getResponse()->getContent(), true);
+        $this->assertArrayHasKey('errors', $decodedResponseContent);
+        $this->assertArrayHasKey('added', $decodedResponseContent);
+        $this->assertArrayHasKey('clients', $decodedResponseContent['added']);
+        $this->assertArrayHasKey('discharged_clients', $decodedResponseContent['added']);
+        $this->assertArrayHasKey('named_deputies', $decodedResponseContent['added']);
+        $this->assertArrayHasKey('reports', $decodedResponseContent['added']);
     }
 }
