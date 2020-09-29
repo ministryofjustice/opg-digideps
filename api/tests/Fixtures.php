@@ -107,13 +107,15 @@ class Fixtures
      * @param mixed $report
      * @param string $filename
      *
+     * @param bool $isReportPdf
      * @return EntityDir\Report\Document
      * @throws \Doctrine\ORM\ORMException
      */
-    public function createDocument($report, string $filename)
+    public function createDocument($report, string $filename, bool $isReportPdf = true)
     {
         $doc = new EntityDir\Report\Document($report);
         $doc->setFileName($filename);
+        $doc->setIsReportPdf($isReportPdf);
 
         $this->em->persist($doc);
 
@@ -543,5 +545,10 @@ class Fixtures
     {
         $tables = array_merge(['document', 'casrec', 'deputy_case', 'report_submission', 'report', 'odr', 'dd_team'], $additionalTables);
         self::pgCommand('PGOPTIONS=\'--client-min-messages=warning\' psql -c "truncate table ' . implode(',', $tables) . '  RESTART IDENTITY cascade";');
+    }
+
+    public function refresh($entity)
+    {
+        $this->em->refresh($entity);
     }
 }

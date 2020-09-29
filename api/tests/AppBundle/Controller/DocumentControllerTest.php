@@ -64,7 +64,7 @@ class DocumentControllerTest extends AbstractTestController
         self::$ndr1 = self::fixtures()->createNdr(self::$client1);
 
         self::$document1 = self::fixtures()->createDocument(self::$report1, 'file_name.pdf');
-        self::$document2 = self::fixtures()->createDocument(self::$report1, 'another_file_name.pdf');
+        self::$document2 = self::fixtures()->createDocument(self::$report1, 'another_file_name.pdf', false);
         self::$document3 = self::fixtures()->createDocument(self::$report2, 'and_another_file_name.pdf');
 
         self::$reportSubmission1 = self::fixtures()->createReportSubmission(self::$report1);
@@ -276,6 +276,13 @@ class DocumentControllerTest extends AbstractTestController
         self::assertEquals("Document failed to sync after 4 attempts", $response['data']['synchronisation_error']);
         self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $response['data']['synchronisation_status']);
         self::assertEquals(0, $response['data']['sync_attempts']);
+
+        $supportingDocument = $this->repo->find(self::$document2->getId());
+
+        $this->fixtures()->refresh($supportingDocument);
+
+        self::assertEquals('Report PDF failed to sync', $supportingDocument->getSynchronisationError());
+        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $supportingDocument->getSynchronisationStatus());
     }
 
     /** @test */

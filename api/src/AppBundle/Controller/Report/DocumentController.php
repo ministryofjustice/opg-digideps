@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 class DocumentController extends RestController
 {
     const DOCUMENT_SYNC_ERROR_STATUSES = [Document::SYNC_STATUS_TEMPORARY_ERROR, Document::SYNC_STATUS_PERMANENT_ERROR];
+    const RETRIES_FAILED_MESSAGE = 'Document failed to sync after 4 attempts';
+    const REPORT_PDF_FAILED_MESSAGE = 'Report PDF failed to sync';
 
     private $sectionIds = [EntityDir\Report\Report::SECTION_DOCUMENTS];
 
@@ -170,7 +172,8 @@ class DocumentController extends RestController
         $data = $this->deserializeBodyContent($request);
 
         /** @var Document $document */
-        $document = $em->getRepository(Document::class)->find($id);
+        $documentRepository = $em->getRepository(Document::class);
+        $document = $documentRepository->find($id);
 
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['synchronisation', 'document-id'];
@@ -190,9 +193,13 @@ class DocumentController extends RestController
                     $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
 
                     if ($document->getSyncAttempts() >= 4) {
-                        $document->setSynchronisationError("Document failed to sync after 4 attempts");
+                        $document->setSynchronisationError(self::RETRIES_FAILED_MESSAGE);
                         $document->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
                         $document->resetSyncAttempts();
+                        $documentRepository->updateSupportingDocumentStatusByReportSubmissionIds(
+                            [$document->getReportSubmission()->getId()],
+                            self::REPORT_PDF_FAILED_MESSAGE
+                        );
                     }
                 }
             } else {
