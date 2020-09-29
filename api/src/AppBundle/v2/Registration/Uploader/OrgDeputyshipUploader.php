@@ -28,9 +28,18 @@ class OrgDeputyshipUploader
                 continue;
             }
 
-            $namedDeputy = ($em->getRepository(NamedDeputy::class))->findOrCreateByOrgDeputyshipDto($deputyshipDto);
+            $foundNamedDeputy = ($em->getRepository(NamedDeputy::class))->findOneBy(['email1' => $deputyshipDto->getEmail()]);
 
-            if ($namedDeputy instanceof NamedDeputy) {
+            if (is_null($foundNamedDeputy)) {
+                $namedDeputy = (new NamedDeputy())
+                    ->setEmail1($deputyshipDto->getEmail())
+                    ->setDeputyNo($deputyshipDto->getDeputyNumber())
+                    ->setFirstname($deputyshipDto->getFirstname())
+                    ->setLastname($deputyshipDto->getLastname());
+
+                $em->persist($namedDeputy);
+                $em->flush();
+
                 $added['named_deputies'][] = $namedDeputy->getId();
             }
 
