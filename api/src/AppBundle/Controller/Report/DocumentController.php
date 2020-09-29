@@ -187,20 +187,14 @@ class DocumentController extends RestController
                 $errorMessage = is_array($data['syncError']) ? json_encode($data['syncError']) : $data['syncError'];
                 $document->setSynchronisationError($errorMessage);
 
-                // If temp sync error status
                 if ($data["syncStatus"] === Document::SYNC_STATUS_TEMPORARY_ERROR) {
                     $document->incrementSyncAttempts();
                     $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
+                }
 
-                    if ($document->getSyncAttempts() >= 4) {
-                        $document->setSynchronisationError(self::RETRIES_FAILED_MESSAGE);
-                        $document->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
-                        $document->resetSyncAttempts();
-                        $documentRepository->updateSupportingDocumentStatusByReportSubmissionIds(
-                            [$document->getReportSubmission()->getId()],
-                            self::REPORT_PDF_FAILED_MESSAGE
-                        );
-                    }
+                if ($data['syncStatus'] === Document::SYNC_STATUS_PERMANENT_ERROR && $document->getSyncAttempts() >= 3) {
+                    $document->setSynchronisationError(self::RETRIES_FAILED_MESSAGE);
+                    $document->resetSyncAttempts();
                 }
             } else {
                 $document->setSynchronisationError(null);

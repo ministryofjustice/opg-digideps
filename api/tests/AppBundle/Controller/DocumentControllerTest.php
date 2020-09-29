@@ -263,6 +263,7 @@ class DocumentControllerTest extends AbstractTestController
         $document->incrementSyncAttempts();
         $document->incrementSyncAttempts();
         $document->incrementSyncAttempts();
+        $document->incrementSyncAttempts();
 
         self::fixtures()->flush();
 
@@ -270,19 +271,11 @@ class DocumentControllerTest extends AbstractTestController
         $response = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,
-            'data' => ['syncStatus' => Document::SYNC_STATUS_TEMPORARY_ERROR, 'syncError' => 'Temp error occurred']
+            'data' => ['syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR, 'syncError' => 'Temp error occurred']
         ]);
 
         self::assertEquals("Document failed to sync after 4 attempts", $response['data']['synchronisation_error']);
-        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $response['data']['synchronisation_status']);
         self::assertEquals(0, $response['data']['sync_attempts']);
-
-        $supportingDocument = $this->repo->find(self::$document2->getId());
-
-        $this->fixtures()->refresh($supportingDocument);
-
-        self::assertEquals('Report PDF failed to sync', $supportingDocument->getSynchronisationError());
-        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $supportingDocument->getSynchronisationStatus());
     }
 
     /** @test */

@@ -301,6 +301,10 @@ class DocumentSyncService
             $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
         }
 
+        if ($documentData->getDocumentSyncAttempts() >= 3) {
+            $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
+        }
+
         if ($syncStatus === Document::SYNC_STATUS_PERMANENT_ERROR) {
             if ($documentData->isReportPdf()) {
                 $this->addToSyncErrorSubmissionIds($documentData->getReportSubmissionId());

@@ -480,7 +480,7 @@ class DocumentSyncServiceTest extends KernelTestCase
      * @test
      * @dataProvider errorCodeProvider
      */
-    public function sendDocument_sync_failure_sirius_error_type_based_on_response_code(string $errorCode, string $expectedErrorType)
+    public function sendDocument_sync_failure_sirius_error_type_based_on_response_code(string $errorCode, string $expectedErrorType, int $syncAttempts)
     {
         $reportPdfReportSubmission =
             (new ReportSubmission())
@@ -499,7 +499,8 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setFilename('test.pdf')
             ->setIsReportPdf(true)
             ->setCaseNumber('1234567t')
-            ->setNdrId(null);
+            ->setNdrId(null)
+            ->setDocumentSyncAttempts($syncAttempts);
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusReportPdfDocumentUpload(
             $this->reportStartDate,
@@ -554,8 +555,9 @@ class DocumentSyncServiceTest extends KernelTestCase
     public function errorCodeProvider()
     {
         return [
-            '4XX error code' => ['400', Document::SYNC_STATUS_PERMANENT_ERROR],
-            '5XX error code' => ['500', Document::SYNC_STATUS_TEMPORARY_ERROR]
+            '4XX error code' => ['400', Document::SYNC_STATUS_PERMANENT_ERROR, 0],
+            '5XX error code' => ['500', Document::SYNC_STATUS_TEMPORARY_ERROR, 0],
+            '5XX error code - 4th attempt' => ['500', Document::SYNC_STATUS_PERMANENT_ERROR, 3]
         ];
     }
 }
