@@ -3,7 +3,9 @@
 namespace Tests\AppBundle\v2\Registration\TestHelpers;
 
 use AppBundle\Entity\NamedDeputy;
+use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Repository\NamedDeputyRepository;
+use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\v2\Registration\Assembler\CasRecToOrgDeputyshipDtoAssembler;
 use AppBundle\v2\Registration\DTO\OrgDeputyshipDto;
 use Faker\Factory;
@@ -120,7 +122,7 @@ class OrgDeputyshipTestHelper
         $faker = Factory::create();
 
         return [
-            'Email'        => $faker->email,
+            'Email'        => $faker->safeEmail,
             'Deputy No'    => (string) $faker->randomNumber(8),
             'Dep Postcode' => Address::postcode(),
             'Dep Forename' => $faker->firstName,
@@ -150,5 +152,10 @@ class OrgDeputyshipTestHelper
     public static function namedDeputyWasCreated(OrgDeputyshipDto $orgDeputyship, NamedDeputyRepository $namedDeputyRepository)
     {
         return $namedDeputyRepository->findOneBy(['email1' => $orgDeputyship->getEmail()]) instanceof NamedDeputy;
+    }
+
+    public static function organisationWasCreated(string $emailIdentifier, OrganisationRepository $org)
+    {
+        return $org->findOneBy(['emailIdentifier' => $emailIdentifier]) instanceof Organisation;
     }
 }

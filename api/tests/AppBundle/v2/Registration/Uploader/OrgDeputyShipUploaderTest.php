@@ -3,7 +3,9 @@
 namespace Tests\AppBundle\v2\Registration\Uploader;
 
 use AppBundle\Entity\NamedDeputy;
+use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Repository\NamedDeputyRepository;
+use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\v2\Registration\DTO\OrgDeputyshipDto;
 use AppBundle\v2\Registration\Uploader\OrgDeputyshipUploader;
 use Doctrine\ORM\EntityManager;
@@ -13,14 +15,14 @@ use Tests\AppBundle\v2\Registration\TestHelpers\OrgDeputyshipTestHelper;
 
 class OrgDeputyShipUploaderTest extends KernelTestCase
 {
+    /** @var OrgDeputyshipUploader */
+    private $sut;
+
     /** @var NamedDeputyRepository */
     private $namedDeputyRepository;
 
-    /** @var Serializer */
-    private $serializer;
-
-    /** @var EntityManager */
-    private $em;
+    /** @var OrganisationRepository */
+    private $orgRepository;
 
     public function setUp(): void
     {
@@ -29,7 +31,11 @@ class OrgDeputyShipUploaderTest extends KernelTestCase
 
         $this->em = $container->get('em');
         $this->namedDeputyRepository = $this->em->getRepository(NamedDeputy::class);
-        $this->serializer = $container->get('serializer');
+        $this->orgRepository = $this->em->getRepository(Organisation::class);
+
+        $orgFactory = $container->get('AppBundle\Factory\OrganisationFactory');
+
+        $this->sut = new OrgDeputyshipUploader($this->em, $orgFactory);
     }
     /**
      * @test
@@ -37,9 +43,7 @@ class OrgDeputyShipUploaderTest extends KernelTestCase
      */
     public function upload_provides_feedback_on_entities_processed(array $deputyships, int $expectedValid, int $expectedInvalid)
     {
-        $sut = new OrgDeputyshipUploader();
-
-        $actualUploadResults = $sut->upload($deputyships, $this->em);
+        $actualUploadResults = $this->sut->upload($deputyships);
 
         self::assertCount($expectedValid, $actualUploadResults['added']['clients']);
         self::assertCount($expectedValid, $actualUploadResults['added']['named_deputies']);
@@ -64,10 +68,9 @@ class OrgDeputyShipUploaderTest extends KernelTestCase
     /** @test  */
     public function upload_new_named_deputies_are_created()
     {
-        $sut = new OrgDeputyshipUploader();
         $deputyships = OrgDeputyshipTestHelper::generateOrgDeputyshipDtos(1, 0);
 
-        $sut->upload($deputyships, $this->em);
+        $this->sut->upload($deputyships);
 
         self::assertTrue(
             OrgDeputyshipTestHelper::namedDeputyWasCreated($deputyships[0], $this->namedDeputyRepository),
@@ -78,7 +81,6 @@ class OrgDeputyShipUploaderTest extends KernelTestCase
     /** @test */
     public function upload_existing_named_deputies_are_not_processed()
     {
-        $sut = new OrgDeputyshipUploader();
         $deputyships = OrgDeputyshipTestHelper::generateOrgDeputyshipDtos(1, 0);
 
         $namedDeputy = (new NamedDeputy())
@@ -90,14 +92,31 @@ class OrgDeputyShipUploaderTest extends KernelTestCase
         $this->em->persist($namedDeputy);
         $this->em->flush();
 
-        $actualUploadResults = $sut->upload($deputyships, $this->em);
+        $actualUploadResults = $this->sut->upload($deputyships);
 
         self::assertCount(0, $actualUploadResults['added']['named_deputies']);
         self::assertEquals(0, $actualUploadResults['errors']);
     }
 
+    /** @test */
+    public function upload_new_organisations_are_created()
+    {
+        $deputyships = OrgDeputyshipTestHelper::generateOrgDeputyshipDtos(1, 0);
+
+        $this->sut->upload($deputyships);
+
+        $domainArray = explode('@', $deputyships[0]->getEmail());
+
+        self::assertTrue(
+            OrgDeputyshipTestHelper::organisationWasCreated($domainArray[1], $this->orgRepository),
+            sprintf('Organisation with email identifier %s could not be found', $domainArray[1])
+        );
+    }
+
+    /** @test */
     public function upload_existing_organisations_are_not_processed()
     {
+        $deputyships = OrgDeputyshipTestHelper::generateOrgDeputyshipDtos(1, 0);
     }
 
     public function upload_existing_clients_are_updated()
