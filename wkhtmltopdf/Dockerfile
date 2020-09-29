@@ -3,7 +3,7 @@ FROM python:rc-slim-buster
 # Download and install wkhtmltopdf and bash (because executor can't use 'sh')
 RUN apt-get update \
     && apt-get -y install fontconfig libjpeg62-turbo libx11-6 libxcb1 libxext6 libxrender1 curl \
-    && apt-get upgrade \
+    && apt-get -y upgrade \
     && apt-get -y install cron wget xfonts-base xfonts-75dpi \
     && wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.stretch_amd64.deb \
     && dpkg -i wkhtmltox_0.12.6-1.stretch_amd64.deb
