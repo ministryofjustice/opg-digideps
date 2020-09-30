@@ -3,17 +3,12 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Client;
-use AppBundle\Entity\CourtOrder;
-use AppBundle\Entity\CourtOrderDeputy;
-use AppBundle\Entity\CourtOrderDeputyAddress;
 use AppBundle\Entity\Ndr\Ndr;
-use AppBundle\Entity\Repository\CourtOrderRepository;
 use AppBundle\Entity\Repository\TeamRepository;
 use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\Team;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 
 class UserService
 {
@@ -22,9 +17,6 @@ class UserService
 
     /** @var TeamRepository */
     private $teamRepository;
-
-    /** @var CourtOrderRepository  */
-    private $courtOrderRepository;
 
     /** @var EntityManagerInterface */
     private $em;
@@ -40,7 +32,6 @@ class UserService
     ) {
         $this->userRepository = $em->getRepository(User::class);
         $this->teamRepository = $em->getRepository(Team::class);
-        $this->courtOrderRepository = $em->getRepository(CourtOrder::class);
         $this->em = $em;
         $this->orgService = $orgService;
     }
@@ -98,7 +89,7 @@ class UserService
      */
     private function throwExceptionIfUpdatedEmailExists(User $originalUser, User $updatedUser)
     {
-        if ($originalUser->getEmail() != $updatedUser->getEmail()){
+        if ($originalUser->getEmail() != $updatedUser->getEmail()) {
             $this->exceptionIfEmailExist($updatedUser->getEmail());
         }
 
@@ -144,7 +135,7 @@ class UserService
 
 
         if ($updatedUser->getNdrEnabled() && !$this->clientHasExistingNdr($client)) {
-            $ndr = $this->createNdrForClient($client);
+            $this->createNdrForClient($client);
         }
     }
 

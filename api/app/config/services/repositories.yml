@@ -46,12 +46,6 @@ services:
     arguments:
       - AppBundle\Entity\CasRec
 
-  AppBundle\Entity\Repository\CourtOrderRepository:
-    class: AppBundle\Entity\CourtOrderRepository
-    factory: ["@doctrine.orm.entity_manager", getRepository]
-    arguments:
-      - AppBundle\Entity\CourtOrder
-
   AppBundle\Entity\Ndr\NdrRepository:
       class: AppBundle\Entity\Ndr\Ndr
       factory: ["@doctrine.orm.entity_manager", getRepository]

@@ -3,7 +3,6 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Client;
-use AppBundle\Entity\CourtOrder;
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\ReportInterface;
@@ -443,12 +442,6 @@ class Report implements ReportInterface
     private $reviewChecklist;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrder", inversedBy="reports", cascade={"persist"})
-     * @ORM\JoinColumn(name="court_order_id", referencedColumnName="id", onDelete="SET NULL")
-     */
-    private $courtOrder;
-
-    /**
      * Report constructor.
      *
      * @param Client $client
@@ -520,7 +513,7 @@ class Report implements ReportInterface
 
         // set sections as notStarted when a new report is created
         $statusCached = [];
-        foreach($this->getAvailableSections() as $sectionId) {
+        foreach ($this->getAvailableSections() as $sectionId) {
             $statusCached[$sectionId] = ['state' => ReportStatusService::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
         $this->setSectionStatusesCached($statusCached);
@@ -1209,47 +1202,28 @@ class Report implements ReportInterface
         $this->reviewChecklist = $reviewChecklist;
     }
 
-        /**
-         * Previous report data. Just return id and type for second api call to allo new JMS groups
-         *
-         * @JMS\VirtualProperty
-         * @JMS\SerializedName("previous_report_data")
-         * @JMS\Groups({"previous-report-data"})
-         * @JMS\Type("array")
-         *
-         * @return array
-         */
-        public function getPreviousReportData()
-        {
-            $previousReport = $this->getPreviousReport();
+    /**
+     * Previous report data. Just return id and type for second api call to allo new JMS groups
+     *
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("previous_report_data")
+     * @JMS\Groups({"previous-report-data"})
+     * @JMS\Type("array")
+     *
+     * @return array
+     */
+    public function getPreviousReportData()
+    {
+        $previousReport = $this->getPreviousReport();
 
-            if (empty($previousReport)) {
-                return [];
-            }
+        if (empty($previousReport)) {
+            return [];
+        }
 
-            return [
+        return [
                 'report-summary' => $previousReport->getReportSummary(),
                 'financial-summary' => $previousReport->getFinancialSummary()
             ];
-        }
-
-    /**
-     * @return CourtOrder
-     */
-    public function getCourtOrder(): CourtOrder
-    {
-        return $this->courtOrder;
-    }
-
-    /**
-     * @param CourtOrder $courtOrder
-     * @return Report
-     */
-    public function setCourtOrder(CourtOrder $courtOrder): Report
-    {
-        $this->courtOrder = $courtOrder;
-
-        return $this;
     }
 
     /**
@@ -1257,7 +1231,8 @@ class Report implements ReportInterface
      *
      * @return Ndr|Report|bool|mixed
      */
-    private function getPreviousReport() {
+    private function getPreviousReport()
+    {
         $clientReports = $this->getClient()->getReports();
 
         // ensure order is correct most recent first
@@ -1291,7 +1266,8 @@ class Report implements ReportInterface
      *
      * @return array
      */
-    public function getFinancialSummary() {
+    public function getFinancialSummary()
+    {
         $accounts = [];
         $openingBalanceTotal = 0;
         /** @var BankAccount $ba */
@@ -1320,7 +1296,8 @@ class Report implements ReportInterface
      *
      * @return array
      */
-    public function getReportSummary() {
+    public function getReportSummary()
+    {
         return [
             'type' => $this->getType(),
         ];
