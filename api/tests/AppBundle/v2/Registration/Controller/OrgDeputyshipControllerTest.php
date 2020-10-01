@@ -6,7 +6,7 @@ namespace Tests\AppBundle\v2\Registration\Controller;
 use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\AppBundle\Controller\AbstractTestController;
-use Tests\AppBundle\v2\Registration\TestHelpers\OrgDeputyshipTestHelper;
+use Tests\AppBundle\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
 
 class OrgDeputyshipControllerTest extends AbstractTestController
 {
@@ -32,7 +32,7 @@ class OrgDeputyshipControllerTest extends AbstractTestController
     {
         $client = static::createClient(['environment' => 'test', 'debug' => false]);
 
-        $orgDeputyshipJson = OrgDeputyshipTestHelper::generateOrgDeputyshipJson(2, 0);
+        $orgDeputyshipJson = OrgDeputyshipDTOTestHelper::generateCasRecOrgDeputyshipJson(2, 0);
         $client->request('POST', '/v2/org-deputyships', [], [], $this->headers, $orgDeputyshipJson);
 
         $this->assertEquals(Response::HTTP_CREATED, $client->getResponse()->getStatusCode());

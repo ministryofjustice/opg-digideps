@@ -210,7 +210,6 @@ class OrgService
 
                 $client = $this->upsertClientFromCsv($row, $namedDeputy);
                 if ($client instanceof Client) {
-
                     if (!$this->clientHasSwitchedOrganisation($client) && $this->clientHasNewNamedDeputy($client, $namedDeputy)) {
                         $client->setNamedDeputy($namedDeputy);
                     }
@@ -264,7 +263,9 @@ class OrgService
      */
     private function clientHasLayDeputy(Client $client)
     {
-        if (!$client->hasDeputies()) return false;
+        if (!$client->hasDeputies()) {
+            return false;
+        }
 
         foreach ($client->getUsers() as $user) {
             if ($user->isLayDeputy()) {
@@ -397,12 +398,17 @@ class OrgService
         }
 
         $this->log('Creating new report');
+
         $reportStartDate = ReportUtils::generateReportStartDateFromEndDate($reportEndDate);
         $report = new EntityDir\Report\Report($client, $reportType, $reportStartDate, $reportEndDate, true);
+
         $client->addReport($report);   //double link for testing reasons
+
         $this->added['reports'][] = $client->getCaseNumber() . '-' . $reportEndDate->format('Y-m-d');
+
         $this->em->persist($report);
         $this->em->flush();
+
         return $report;
     }
 
