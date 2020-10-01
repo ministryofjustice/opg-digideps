@@ -3,13 +3,32 @@
 
 namespace AppBundle\v2\Registration\Assembler;
 
+use AppBundle\Entity\CasRec;
+use AppBundle\Entity\User;
+use AppBundle\v2\Registration\Converter\ReportTypeConverter;
 use AppBundle\v2\Registration\DTO\OrgDeputyshipDto;
 use DateTime;
 
 class CasRecToOrgDeputyshipDtoAssembler
 {
+    /**
+     * @var ReportTypeConverter
+     */
+    private $converter;
+
+    public function __construct(ReportTypeConverter $converter)
+    {
+        $this->converter = $converter;
+    }
+
     public function assembleFromArray(array $data)
     {
+        $reportType = $this->converter->convertTypeofRepAndCorrefToReportType(
+            $data['Typeofrep'],
+            $data['Corref'],
+            User::$depTypeIdToRealm[$data['Dep Type']]
+        );
+
         return (new OrgDeputyshipDto())
             ->setDeputyEmail($data['Email'])
             ->setDeputyNumber($data['Deputy No'])
@@ -25,7 +44,8 @@ class CasRecToOrgDeputyshipDtoAssembler
             ->setClientAddress3($data['Client Adrs3'])
             ->setClientPostCode($data['Client Postcode'])
             ->setClientDateOfBirth(new DateTime($data['Client Date of Birth']))
-            ->setCourtDate(new DateTime($data['Made Date']));
+            ->setCourtDate(new DateTime($data['Made Date']))
+            ->setReportType($reportType);
 
 //        Case
 //        Forename

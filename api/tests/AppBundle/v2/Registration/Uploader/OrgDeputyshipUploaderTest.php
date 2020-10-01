@@ -154,7 +154,9 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     public function upload_existing_organisations_are_not_processed()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
-        OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($deputyships[0], $this->em);
+
+        $orgIdentifier = explode('@', $deputyships[0]->getDeputyEmail())[1];
+        OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($orgIdentifier, $this->em);
 
         $actualUploadResults = $this->sut->upload($deputyships);
 
@@ -236,7 +238,8 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $originalNamedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
         $originalNamedDeputy->setEmail1(sprintf('different.deputy@different-domain.com'));
 
-        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($deputyships[0], $this->em);
+        $orgIdentifier = explode('@', $deputyships[0]->getDeputyEmail())[1];
+        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($orgIdentifier, $this->em);
         $organisation->setEmailIdentifier('different-domain.com');
 
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
@@ -269,9 +272,9 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $orgIdentifier = explode('@', $deputyships[0]->getDeputyEmail())[1];
 
         $originalNamedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
-        $originalNamedDeputy ->setEmail1(sprintf('different.deputy@%s', $orgIdentifier));
+        $originalNamedDeputy->setEmail1(sprintf('different.deputy@%s', $orgIdentifier));
 
-        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($deputyships[0], $this->em);
+        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($orgIdentifier, $this->em);
         $organisation->setEmailIdentifier($orgIdentifier);
 
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
@@ -293,6 +296,22 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
                 $deputyships[0]->getCaseNumber(),
                 $deputyships[0]->getDeputyEmail()
             )
+        );
+    }
+
+    /** @test */
+    public function upload_reports_are_created_for_new_clients()
+    {
+        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+
+        $this->sut->upload($deputyships);
+
+        $caseNumber = $deputyships[0]->getCaseNumber();
+        $reportType = $deputyships[0]->getReportType();
+
+        self::assertTrue(
+            OrgDeputyshipDTOTestHelper::ClientHasAReportOfType($caseNumber, $reportType, $this->clientRepository),
+            sprintf('Client with case number "%s" did not have an associated report of type %s', $caseNumber, $reportType)
         );
     }
 

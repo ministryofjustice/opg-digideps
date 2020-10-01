@@ -116,7 +116,7 @@ class OrgDeputyshipDTOTestHelper
         return $deputyships;
     }
 
-    private static function generateValidCasRecOrgDeputyshipArray()
+    public static function generateValidCasRecOrgDeputyshipArray()
     {
         $faker = Factory::create();
         $courtOrderMadeDate = DateTimeImmutable::createFromMutable($faker->dateTimeThisYear);
@@ -148,7 +148,8 @@ class OrgDeputyshipDTOTestHelper
             'Client Adrs5' => null,
             'Client Postcode' => Address::postcode(),
             'Client Date of Birth' => $faker->dateTime->format('d-M-Y'),
-            'Made Date' => $courtOrderMadeDate->format('d-M-Y')
+            'Made Date' => $courtOrderMadeDate->format('d-M-Y'),
+            'Typeofrep' => $faker->randomElement(['OPG102', 'OPG103'])
         ];
 
 //        Case
@@ -235,6 +236,12 @@ class OrgDeputyshipDTOTestHelper
         return !($client->getNamedDeputy() === $namedDeputy);
     }
 
+    public static function clientHasAReportOfType(string $caseNumber, string $reportType, ClientRepository $clientRepo)
+    {
+        $client = $clientRepo->findOneBy(['caseNumber' => $caseNumber]);
+        return $client->getReports()->first()->getType() == $reportType;
+    }
+
     /**
      * @param OrgDeputyshipDto $dto
      * @param EntityManager $em
@@ -257,17 +264,15 @@ class OrgDeputyshipDTOTestHelper
     }
 
     /**
-     * @param OrgDeputyshipDto $dto
+     * @param string $emailIdentifier
      * @param EntityManager $em
      * @return Organisation
      */
-    public static function ensureOrgInUploadExists(OrgDeputyshipDto $dto, EntityManager $em)
+    public static function ensureOrgInUploadExists(string $orgIdentifier, EntityManager $em)
     {
-        $domainArray = explode('@', $dto->getDeputyEmail());
-
         $organisation = (new Organisation())
-            ->setName($domainArray[0])
-            ->setEmailIdentifier($domainArray[1])
+            ->setName('Your Organisation')
+            ->setEmailIdentifier($orgIdentifier)
             ->setIsActivated(false);
 
         $em->persist($organisation);

@@ -21,6 +21,8 @@ class OrgDeputyshipDto
     private $clientAddress2;
     private $clientAddress3;
     private $clientPostCode;
+    // Write test in assembler on working out reportType
+    private $reportType;
 
     /** @var DateTime */
     private $clientDateOfBirth;
@@ -310,5 +312,23 @@ class OrgDeputyshipDto
     {
         $this->deputyPostcode = $deputyPostcode;
         return $this;
+    }
+
+    /**
+     * @param string $reportType
+     * @return OrgDeputyshipDto
+     */
+    public function setReportType(string $reportType): self
+    {
+        $this->reportType = $reportType;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReportType(): string
+    {
+        return $this->reportType;
     }
 }
