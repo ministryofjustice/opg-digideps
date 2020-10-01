@@ -10,7 +10,7 @@ class NamedDeputyRepository extends EntityRepository
 {
     public function findOrCreateByOrgDeputyshipDto(OrgDeputyshipDto $dto)
     {
-        $found = $this->findOneBy(['email1' => $dto->getEmail()]);
+        $found = $this->findOneBy(['email1' => $dto->getDeputyEmail()]);
 
         if ($found) {
             return $found;

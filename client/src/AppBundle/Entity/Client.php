@@ -232,7 +232,7 @@ class Client
     private $unsubmittedReportsCount;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"checklist-information"})
@@ -240,7 +240,7 @@ class Client
     private $expectedReportStartDate;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"checklist-information"})
@@ -248,7 +248,7 @@ class Client
     private $expectedReportEndDate;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      */
     private $archivedAt;
@@ -541,7 +541,7 @@ class Client
     }
 
     /**
-     * @return \DateTime|null
+     * @return DateTime|null
      */
     public function getCourtDate()
     {
@@ -549,7 +549,7 @@ class Client
     }
 
     /**
-     * @param \DateTime|null $courtDate
+     * @param DateTime|null $courtDate
      *
      * @return Client
      */
@@ -902,7 +902,7 @@ class Client
     }
 
     /**
-     * @param \DateTime $expectedReportEndDate
+     * @param DateTime $expectedReportEndDate
      * @return $this
      */
     public function setExpectedReportEndDate($expectedReportEndDate)
@@ -920,7 +920,7 @@ class Client
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getActiveFrom()
     {
@@ -928,7 +928,7 @@ class Client
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getActiveTo()
     {

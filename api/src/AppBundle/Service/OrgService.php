@@ -372,12 +372,17 @@ class OrgService
         }
 
         $this->log('Creating new report');
+
         $reportStartDate = ReportUtils::generateReportStartDateFromEndDate($reportEndDate);
         $report = new EntityDir\Report\Report($client, $reportType, $reportStartDate, $reportEndDate, true);
+
         $client->addReport($report);   //double link for testing reasons
+
         $this->added['reports'][] = $client->getCaseNumber() . '-' . $reportEndDate->format('Y-m-d');
+
         $this->em->persist($report);
         $this->em->flush();
+
         return $report;
     }
 
