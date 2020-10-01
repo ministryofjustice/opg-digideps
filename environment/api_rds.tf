@@ -18,8 +18,8 @@ resource "aws_db_instance" "api" {
   license_model               = "postgresql-license"
   maintenance_window          = "sun:01:00-sun:02:30"
   monitoring_interval         = "0"
-  option_group_name           = "default:postgres-9-6"
-  parameter_group_name        = "default.postgres9.6"
+  option_group_name           = terraform.workspace == "production02" ? "default:postgres-9-6" : "default:postgres-10"
+  parameter_group_name        = terraform.workspace == "production02" ? "default.postgres9.6" : "default.postgres10"
   port                        = "5432"
   skip_final_snapshot         = false
   storage_encrypted           = true
