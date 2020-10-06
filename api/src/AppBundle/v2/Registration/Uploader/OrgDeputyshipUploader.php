@@ -93,33 +93,7 @@ class OrgDeputyshipUploader
             $client = ($this->em->getRepository(Client::class))->findOneBy(['caseNumber' => $deputyshipDto->getCaseNumber()]);
 
             if (is_null($client)) {
-                $client = new Client();
-
-                $client->setCaseNumber($deputyshipDto->getCaseNumber());
-                $client->setFirstname($deputyshipDto->getClientFirstname());
-                $client->setLastname($deputyshipDto->getClientLastname());
-
-                if (!empty($deputyshipDto->getClientAddress1())) {
-                    $client->setAddress($deputyshipDto->getClientAddress1());
-                }
-
-                if (!empty($deputyshipDto->getClientAddress2())) {
-                    $client->setAddress2($deputyshipDto->getClientAddress2());
-                }
-
-                if (!empty($deputyshipDto->getClientAddress3())) {
-                    $client->setCounty($deputyshipDto->getClientAddress3());
-                }
-
-                if (!empty($deputyshipDto->getClientPostCode())) {
-                    $client->setPostcode($deputyshipDto->getClientPostCode());
-                    $client->setCountry('GB'); //postcode given means a UK address is given
-                }
-
-                if (!empty($deputyshipDto->getClientDateOfBirth())) {
-                    $client->setDateOfBirth($deputyshipDto->getClientDateOfBirth());
-                }
-
+                $client = $this->clientAssembler->assembleFromOrgDeputyshipDto($deputyshipDto);
                 $client->setNamedDeputy($namedDeputy);
 
                 if (!is_null($this->currentOrganisation)) {
