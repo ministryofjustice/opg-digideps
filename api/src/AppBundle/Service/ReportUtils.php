@@ -2,6 +2,8 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\CasRec;
+
 class ReportUtils
 {
     /**
@@ -12,7 +14,7 @@ class ReportUtils
      *
      * @return \DateTime $reportStartDate
      */
-    public static function generateReportStartDateFromEndDate(\DateTime $reportEndDate)
+    public function generateReportStartDateFromEndDate(\DateTime $reportEndDate)
     {
         $reportStartDate = clone $reportEndDate;
 
@@ -34,10 +36,9 @@ class ReportUtils
      *
      * @return \DateTime|false
      */
-    public static function parseCsvDate($dateString, $century)
+    public function parseCsvDate($dateString, $century)
     {
         $sep = '-';
-        //$errorMessage = "Can't recognise format for date $dateString. expected d-M-Y or d-M-y e.g. 05-MAR-2005 or 05-MAR-05";
         $pieces = explode($sep, $dateString);
 
         // prefix century if needed
@@ -47,15 +48,18 @@ class ReportUtils
         // check format is d-M-Y
         if ((int) $pieces[0] < 1 || (int) $pieces[0] > 31 || strlen($pieces[1]) !== 3 || strlen($pieces[2]) !== 4) {
             return false;
-            //throw new \InvalidArgumentException($errorMessage);
         }
 
         $ret = \DateTime::createFromFormat('d-M-Y', implode($sep, $pieces));
         if (!$ret instanceof \DateTime) {
             return false;
-            //throw new \InvalidArgumentException($errorMessage);
         }
 
         return $ret;
+    }
+
+    public function convertTypeofRepAndCorrefToReportType(string $typeOfRep, string $corref, string $realm)
+    {
+        return CasRec::getTypeBasedOnTypeofRepAndCorref($typeOfRep, $corref, $realm);
     }
 }

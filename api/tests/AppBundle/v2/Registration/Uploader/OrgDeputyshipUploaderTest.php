@@ -5,9 +5,11 @@ namespace Tests\AppBundle\v2\Registration\Uploader;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\NamedDeputy;
 use AppBundle\Entity\Organisation;
+use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Repository\ClientRepository;
 use AppBundle\Entity\Repository\NamedDeputyRepository;
 use AppBundle\Entity\Repository\OrganisationRepository;
+use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\v2\Registration\DTO\OrgDeputyshipDto;
 use AppBundle\v2\Registration\Uploader\OrgDeputyshipUploader;
 use DateTime;
@@ -33,6 +35,9 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     /** @var ClientRepository */
     private $clientRepository;
 
+    /** @var ReportRepository */
+    private $reportRepository;
+
     public function setUp(): void
     {
         self::bootKernel();
@@ -42,10 +47,12 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $this->namedDeputyRepository = $this->em->getRepository(NamedDeputy::class);
         $this->orgRepository = $this->em->getRepository(Organisation::class);
         $this->clientRepository = $this->em->getRepository(Client::class);
+        $this->reportRepository = $this->em->getRepository(Report::class);
 
         $orgFactory = $container->get('AppBundle\Factory\OrganisationFactory');
+        $clientAssembler = $container->get('AppBundle\v2\Assembler\ClientAssembler');
 
-        $this->sut = new OrgDeputyshipUploader($this->em, $orgFactory);
+        $this->sut = new OrgDeputyshipUploader($this->em, $orgFactory, $clientAssembler);
 
         $this->purgeDatabase();
     }
@@ -71,12 +78,12 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     ) {
         $actualUploadResults = $this->sut->upload($deputyships);
 
-        self::assertCount($expectedClients, $actualUploadResults['added']['clients']);
-        self::assertCount($expectedDischargedClients, $actualUploadResults['added']['discharged_clients']);
-        self::assertCount($expectedNamedDeputies, $actualUploadResults['added']['named_deputies']);
-        self::assertCount($expectedReports, $actualUploadResults['added']['reports']);
-        self::assertCount($expectedOrganisations, $actualUploadResults['added']['organisations']);
-        self::assertEquals($expectedErrors, $actualUploadResults['errors']);
+        self::assertCount($expectedClients, $actualUploadResults['added']['clients'], 'clients count was unexpected');
+        self::assertCount($expectedDischargedClients, $actualUploadResults['added']['discharged_clients'], 'discharged_clients count was unexpected');
+        self::assertCount($expectedNamedDeputies, $actualUploadResults['added']['named_deputies'], 'named_deputies count was unexpected');
+        self::assertCount($expectedReports, $actualUploadResults['added']['reports'], 'reports count was unexpected');
+        self::assertCount($expectedOrganisations, $actualUploadResults['added']['organisations'], 'organisations count was unexpected');
+        self::assertEquals($expectedErrors, $actualUploadResults['errors'], 'errors count was unexpected');
     }
 
     // add extra field in array for orgs created
@@ -85,11 +92,11 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         return [
             '3 valid Org Deputyships' =>
                 [
-                    OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(3, 0), 3, 0, 3, 0, 3, 0
+                    OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(3, 0), 3, 0, 3, 3, 3, 0
                 ],
             '2 valid, 1 invalid Org Deputyships' =>
                 [
-                    OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(2, 1), 2, 0, 2, 0, 2, 1
+                    OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(2, 1), 2, 0, 2, 2, 2, 1
                 ]
         ];
     }
@@ -315,6 +322,36 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         );
     }
 
+    /** @test */
+    public function upload_existing_report_type_is_changed_if_type_is_different()
+    {
+        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+        $changedReportType = '102-5';
+        $deputyships[0]->setReportType($changedReportType);
+
+        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
+        $oldReportType = (OrgDeputyshipDTOTestHelper::ensureAReportExistsAndIsAssociatedWithClient($client, $this->em))->getType();
+
+        $this->sut->upload($deputyships);
+
+        $caseNumber = $deputyships[0]->getCaseNumber();
+
+        self::assertTrue(
+            OrgDeputyshipDTOTestHelper::reportTypeHasChanged($oldReportType, $client, $this->reportRepository),
+            sprintf(
+                'Report associated to Client with case number "%s" had report type %s after upload which is the same as %s',
+                $caseNumber,
+                $client->getReports()->first()->getType(),
+                $oldReportType
+            )
+        );
+    }
+
+    // Report
+    // Existing reports that have not been submitted have type changed if type in CSV is different
+    // Date format can be in DD-MMM-YYYY and DD/MM/YYYY
+
+    // Client
     // Handle existing case numbers - add error
 
     // Make sure 0s are respected in DTO object for client case number

@@ -5,10 +5,14 @@ namespace Tests\AppBundle\v2\Registration\TestHelpers;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\NamedDeputy;
 use AppBundle\Entity\Organisation;
+use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Repository\ClientRepository;
 use AppBundle\Entity\Repository\NamedDeputyRepository;
 use AppBundle\Entity\Repository\OrganisationRepository;
+use AppBundle\Entity\Repository\ReportRepository;
+use AppBundle\Service\ReportUtils;
 use AppBundle\v2\Registration\Assembler\CasRecToOrgDeputyshipDtoAssembler;
+use AppBundle\v2\Registration\Converter\ReportTypeConverter;
 use AppBundle\v2\Registration\DTO\OrgDeputyshipDto;
 use DateTime;
 use DateTimeImmutable;
@@ -47,7 +51,8 @@ class OrgDeputyshipDTOTestHelper
     {
         $json = self::generateCasRecOrgDeputyshipJson($validCount, $invalidCount);
         $dtos = [];
-        $assembler = new CasRecToOrgDeputyshipDtoAssembler();
+        $reportUtils = new ReportUtils();
+        $assembler = new CasRecToOrgDeputyshipDtoAssembler($reportUtils);
 
         foreach (json_decode($json, true) as $dtoArray) {
             $dtos[] = $assembler->assembleFromArray($dtoArray);
@@ -116,6 +121,10 @@ class OrgDeputyshipDTOTestHelper
         return $deputyships;
     }
 
+
+    /**
+     * @return array
+     */
     public static function generateValidCasRecOrgDeputyshipArray()
     {
         $faker = Factory::create();
@@ -128,7 +137,8 @@ class OrgDeputyshipDTOTestHelper
             'Dep Postcode' => Address::postcode(),
             'Dep Forename' => $faker->firstName,
             'Dep Surname'  => $faker->lastName,
-            'Dep Type'     => (string) $faker->randomElement([21,22,23,24,25,26,27,29,50,63]),
+            // Add 23 back in for PA tests
+            'Dep Type'     => (string) $faker->randomElement([21,22,24,25,26,27,29,50,63]),
             'Dep Adrs1'    => $faker->buildingNumber . ' ' . $faker->streetName,
             'Dep Adrs2'    => Address::cityPrefix() . ' ' . $faker->city,
             'Dep Adrs3'    => $faker->city,
@@ -149,7 +159,8 @@ class OrgDeputyshipDTOTestHelper
             'Client Postcode' => Address::postcode(),
             'Client Date of Birth' => $faker->dateTime->format('d-M-Y'),
             'Made Date' => $courtOrderMadeDate->format('d-M-Y'),
-            'Typeofrep' => $faker->randomElement(['OPG102', 'OPG103'])
+            'Typeofrep' => $faker->randomElement(['OPG102', 'OPG103']),
+            'Last Report Day' => '19-Jan-2021'
         ];
 
 //        Case
@@ -242,6 +253,12 @@ class OrgDeputyshipDTOTestHelper
         return $client->getReports()->first()->getType() == $reportType;
     }
 
+    public static function reportTypeHasChanged(string $oldReportType, Client $client, ReportRepository $reportRepo)
+    {
+        $report = $reportRepo->findOneBy(['client' => $client]);
+        return $report->getType() !== $oldReportType;
+    }
+
     /**
      * @param OrgDeputyshipDto $dto
      * @param EntityManager $em
@@ -293,5 +310,22 @@ class OrgDeputyshipDTOTestHelper
         $em->flush();
 
         return $client;
+    }
+
+    public static function ensureAReportExistsAndIsAssociatedWithClient(
+        Client $client,
+        EntityManager $em,
+        string $reportType = '103-5',
+        string $startDate = '01-11-2019',
+        string $endDate = '01-11-2019'
+    ) {
+        $report = new Report($client, $reportType, new DateTime($startDate), new DateTime($endDate));
+        $client->addReport($report);
+
+        $em->persist($report);
+        $em->persist($client);
+        $em->flush();
+
+        return $report;
     }
 }

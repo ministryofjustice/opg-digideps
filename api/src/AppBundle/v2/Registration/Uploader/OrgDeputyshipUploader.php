@@ -6,9 +6,11 @@ namespace AppBundle\v2\Registration\Uploader;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\NamedDeputy;
 use AppBundle\Entity\Organisation;
+use AppBundle\Entity\Report\Report;
 use AppBundle\Factory\OrganisationFactory;
 use AppBundle\Service\OrgService;
 use AppBundle\Service\ReportUtils;
+use AppBundle\v2\Assembler\ClientAssembler;
 use AppBundle\v2\Registration\DTO\OrgDeputyshipDto;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -23,16 +25,19 @@ class OrgDeputyshipUploader
     /** @var Organisation|null */
     private $currentOrganisation;
 
-    public function __construct(EntityManagerInterface $em, OrganisationFactory $orgFactory)
+    /** @var ClientAssembler */
+    private $clientAssembler;
+
+    public function __construct(EntityManagerInterface $em, OrganisationFactory $orgFactory, ClientAssembler $clientAssembler)
     {
         $this->em = $em;
         $this->orgFactory = $orgFactory;
+        $this->clientAssembler = $clientAssembler;
     }
 
     /**
      * @param OrgDeputyshipDto[] $deputyshipDtos
-     * @param EntityManagerInterface $em
-     * @return int[]
+     * @return array
      * @throws \Exception
      */
     public function upload(array $deputyshipDtos)
@@ -137,6 +142,29 @@ class OrgDeputyshipUploader
                 $this->em->persist($client);
                 $this->em->flush();
             }
+
+            $report = $client->getCurrentReport();
+
+            if ($report) {
+                if ($report->getType() != $deputyshipDto->getReportType() && !$report->getSubmitted() && empty($report->getUnSubmitDate())) {
+                    // Add audit logging for report type changing
+                    $report->setType($deputyshipDto->getReportType());
+                }
+            } else {
+                $report = new Report(
+                    $client,
+                    $deputyshipDto->getReportType(),
+                    $deputyshipDto->getReportStartDate(),
+                    $deputyshipDto->getReportEndDate()
+                );
+
+                $client->addReport($report);
+            }
+
+            $this->em->persist($report);
+            $this->em->flush();
+
+            $added['reports'][] = $client->getCaseNumber() . '-' . $deputyshipDto->getReportEndDate()->format('Y-m-d');
         }
 
         $uploadResults['added'] = $added;

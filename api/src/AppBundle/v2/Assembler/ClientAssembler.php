@@ -6,6 +6,7 @@ use AppBundle\v2\Assembler\Report\ReportAssemblerInterface;
 use AppBundle\v2\DTO\ClientDto;
 use AppBundle\v2\DTO\DtoPropertySetterTrait;
 use AppBundle\Entity\Client;
+use AppBundle\v2\Registration\DTO\OrgDeputyshipDto;
 
 class ClientAssembler
 {
@@ -36,7 +37,6 @@ class ClientAssembler
         OrganisationAssembler $organisationDtoAssembler,
         NamedDeputyAssembler $namedDeputyDtoAssembler
     ) {
-
         $this->reportDtoAssembler = $reportDtoAssembler;
         $this->ndrDtoAssembler = $ndrDtoAssembler;
         $this->organisationDtoAssembler = $organisationDtoAssembler;
@@ -100,7 +100,6 @@ class ClientAssembler
         $dtos = [];
 
         foreach ($reports as $report) {
-
             $dtos[] = $this->reportDtoAssembler->assembleFromArray($report);
         }
 
@@ -130,4 +129,35 @@ class ClientAssembler
         return $this->namedDeputyAssembler->assembleFromArray($namedDeputy);
     }
 
+    public function assembleFromOrgDeputyshipDto(OrgDeputyshipDto $dto)
+    {
+        $client = new Client();
+
+        $client->setCaseNumber($dto->getCaseNumber());
+        $client->setFirstname($dto->getClientFirstname());
+        $client->setLastname($dto->getClientLastname());
+
+        if (!empty($dto->getClientAddress1())) {
+            $client->setAddress($dto->getClientAddress1());
+        }
+
+        if (!empty($dto->getClientAddress2())) {
+            $client->setAddress2($dto->getClientAddress2());
+        }
+
+        if (!empty($dto->getClientAddress3())) {
+            $client->setCounty($dto->getClientAddress3());
+        }
+
+        if (!empty($dto->getClientPostCode())) {
+            $client->setPostcode($dto->getClientPostCode());
+            $client->setCountry('GB'); //postcode given means a UK address is given
+        }
+
+        if (!empty($dto->getClientDateOfBirth())) {
+            $client->setDateOfBirth($dto->getClientDateOfBirth());
+        }
+
+        return $client;
+    }
 }

@@ -27,6 +27,8 @@ class OrgDeputyshipDto
     /** @var DateTime */
     private $clientDateOfBirth;
     private $courtDate;
+    private $reportStartDate;
+    private $reportEndDate;
 
     /**
      * @return bool
@@ -330,5 +332,41 @@ class OrgDeputyshipDto
     public function getReportType(): string
     {
         return $this->reportType;
+    }
+
+    /**
+     * @param DateTime $reportStartDate
+     * @return OrgDeputyshipDto
+     */
+    public function setReportStartDate(DateTime $reportStartDate): self
+    {
+        $this->reportStartDate = $reportStartDate;
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getReportStartDate(): DateTime
+    {
+        return $this->reportStartDate;
+    }
+
+    /**
+     * @param DateTime $reportEndDate
+     * @return OrgDeputyshipDto
+     */
+    public function setReportEndDate(DateTime $reportEndDate): self
+    {
+        $this->reportEndDate = $reportEndDate;
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getReportEndDate(): DateTime
+    {
+        return $this->reportEndDate;
     }
 }

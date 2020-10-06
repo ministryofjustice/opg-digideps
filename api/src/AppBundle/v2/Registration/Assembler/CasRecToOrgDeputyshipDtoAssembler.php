@@ -3,31 +3,33 @@
 
 namespace AppBundle\v2\Registration\Assembler;
 
-use AppBundle\Entity\CasRec;
 use AppBundle\Entity\User;
-use AppBundle\v2\Registration\Converter\ReportTypeConverter;
+use AppBundle\Service\ReportUtils;
 use AppBundle\v2\Registration\DTO\OrgDeputyshipDto;
 use DateTime;
 
 class CasRecToOrgDeputyshipDtoAssembler
 {
     /**
-     * @var ReportTypeConverter
+     * @var ReportUtils
      */
-    private $converter;
+    private $reportUtils;
 
-    public function __construct(ReportTypeConverter $converter)
+    public function __construct(ReportUtils $reportUtils)
     {
-        $this->converter = $converter;
+        $this->reportUtils = $reportUtils;
     }
 
     public function assembleFromArray(array $data)
     {
-        $reportType = $this->converter->convertTypeofRepAndCorrefToReportType(
+        $reportType = $this->reportUtils->convertTypeofRepAndCorrefToReportType(
             $data['Typeofrep'],
             $data['Corref'],
             User::$depTypeIdToRealm[$data['Dep Type']]
         );
+
+        $reportEndDate = $this->reportUtils->parseCsvDate($data['Last Report Day'], '20');
+        $reportStartDate = $this->reportUtils->generateReportStartDateFromEndDate($reportEndDate);
 
         return (new OrgDeputyshipDto())
             ->setDeputyEmail($data['Email'])
@@ -45,7 +47,9 @@ class CasRecToOrgDeputyshipDtoAssembler
             ->setClientPostCode($data['Client Postcode'])
             ->setClientDateOfBirth(new DateTime($data['Client Date of Birth']))
             ->setCourtDate(new DateTime($data['Made Date']))
-            ->setReportType($reportType);
+            ->setReportType($reportType)
+            ->setReportStartDate($reportStartDate)
+            ->setReportEndDate($reportEndDate);
 
 //        Case
 //        Forename
