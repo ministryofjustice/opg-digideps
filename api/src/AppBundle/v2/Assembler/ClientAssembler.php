@@ -131,31 +131,18 @@ class ClientAssembler
 
     public function assembleFromOrgDeputyshipDto(OrgDeputyshipDto $dto)
     {
-        $client = new Client();
-
-        $client->setCaseNumber($dto->getCaseNumber());
-        $client->setFirstname($dto->getClientFirstname());
-        $client->setLastname($dto->getClientLastname());
-
-        if (!empty($dto->getClientAddress1())) {
-            $client->setAddress($dto->getClientAddress1());
-        }
-
-        if (!empty($dto->getClientAddress2())) {
-            $client->setAddress2($dto->getClientAddress2());
-        }
-
-        if (!empty($dto->getClientAddress3())) {
-            $client->setCounty($dto->getClientAddress3());
-        }
+        $client = (new Client())
+            ->setCaseNumber($dto->getCaseNumber())
+            ->setFirstname($dto->getClientFirstname())
+            ->setLastname($dto->getClientLastname())
+            ->setAddress($dto->getClientAddress1() ? $dto->getClientAddress1() : null)
+            ->setAddress2($dto->getClientAddress2() ? $dto->getClientAddress2(): null)
+            ->setCounty($dto->getClientCounty() ? $dto->getClientCounty() : null)
+            ->setDateOfBirth($dto->getClientDateOfBirth() ? $dto->getClientDateOfBirth() : null);
 
         if (!empty($dto->getClientPostCode())) {
             $client->setPostcode($dto->getClientPostCode());
             $client->setCountry('GB'); //postcode given means a UK address is given
-        }
-
-        if (!empty($dto->getClientDateOfBirth())) {
-            $client->setDateOfBirth($dto->getClientDateOfBirth());
         }
 
         return $client;

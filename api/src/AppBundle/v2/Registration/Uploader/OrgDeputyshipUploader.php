@@ -7,10 +7,12 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\NamedDeputy;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Repository\NamedDeputyRepository;
 use AppBundle\Factory\OrganisationFactory;
 use AppBundle\Service\OrgService;
 use AppBundle\Service\ReportUtils;
 use AppBundle\v2\Assembler\ClientAssembler;
+use AppBundle\v2\Assembler\NamedDeputyAssembler;
 use AppBundle\v2\Registration\DTO\OrgDeputyshipDto;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -28,11 +30,19 @@ class OrgDeputyshipUploader
     /** @var ClientAssembler */
     private $clientAssembler;
 
-    public function __construct(EntityManagerInterface $em, OrganisationFactory $orgFactory, ClientAssembler $clientAssembler)
-    {
+    /** @var NamedDeputyAssembler */
+    private $namedDeputyAssembler;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        OrganisationFactory $orgFactory,
+        ClientAssembler $clientAssembler,
+        NamedDeputyAssembler $namedDeputyAssembler
+    ) {
         $this->em = $em;
         $this->orgFactory = $orgFactory;
         $this->clientAssembler = $clientAssembler;
+        $this->namedDeputyAssembler = $namedDeputyAssembler;
     }
 
     /**
@@ -55,21 +65,15 @@ class OrgDeputyshipUploader
                 [
                     'email1' => $deputyshipDto->getDeputyEmail(),
                     'deputyNo' => $deputyshipDto->getDeputyNumber(),
-                    'firstname' => $deputyshipDto->getFirstname(),
-                    'lastname' => $deputyshipDto->getLastname(),
+                    'firstname' => $deputyshipDto->getDeputyFirstname(),
+                    'lastname' => $deputyshipDto->getDeputyLastname(),
                     'address1' => $deputyshipDto->getDeputyAddress1(),
                     'addressPostcode' => $deputyshipDto->getDeputyPostCode()
                 ]
             );
 
             if (is_null($namedDeputy)) {
-                $namedDeputy = (new NamedDeputy())
-                    ->setEmail1($deputyshipDto->getDeputyEmail())
-                    ->setDeputyNo($deputyshipDto->getDeputyNumber())
-                    ->setFirstname($deputyshipDto->getFirstname())
-                    ->setLastname($deputyshipDto->getLastname())
-                    ->setAddress1($deputyshipDto->getDeputyAddress1())
-                    ->setAddressPostcode($deputyshipDto->getDeputyPostcode());
+                $namedDeputy = $this->namedDeputyAssembler->assembleFromOrgDeputyshipDto($deputyshipDto);
 
                 $this->em->persist($namedDeputy);
                 $this->em->flush();
@@ -102,20 +106,16 @@ class OrgDeputyshipUploader
                 }
 
                 $added['clients'][] = $deputyshipDto->getCaseNumber();
-
-                $this->em->persist($client);
-                $this->em->flush();
             } else {
-                // Updating court date to account for updates in casrec
                 $client->setCourtDate($deputyshipDto->getCourtDate());
 
                 if ($client->getOrganisation() === $this->currentOrganisation) {
                     $client->setNamedDeputy($namedDeputy);
                 }
-
-                $this->em->persist($client);
-                $this->em->flush();
             }
+
+            $this->em->persist($client);
+            $this->em->flush();
 
             $report = $client->getCurrentReport();
 

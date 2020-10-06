@@ -139,7 +139,8 @@ class OrgDeputyshipDTOTestHelper
             'Dep Surname'  => $faker->lastName,
             // Add 23 back in for PA tests
             'Dep Type'     => (string) $faker->randomElement([21,22,24,25,26,27,29,50,63]),
-            'Dep Adrs1'    => $faker->buildingNumber . ' ' . $faker->streetName,
+            'DepAddr No'   => $faker->buildingNumber,
+            'Dep Adrs1'    => $faker->streetName,
             'Dep Adrs2'    => Address::cityPrefix() . ' ' . $faker->city,
             'Dep Adrs3'    => $faker->city,
             'Dep Adrs4'    => Address::county(),
@@ -153,7 +154,7 @@ class OrgDeputyshipDTOTestHelper
             'Surname'  => $faker->lastName,
             'Client Adrs1' => $faker->buildingNumber . ' ' . $faker->streetName,
             'Client Adrs2' => Address::cityPrefix() . ' ' . $faker->city,
-            'Client Adrs3' => $faker->city,
+            'Client Adrs3' => Address::county(),
             'Client Adrs4' => null,
             'Client Adrs5' => null,
             'Client Postcode' => Address::postcode(),
@@ -269,8 +270,8 @@ class OrgDeputyshipDTOTestHelper
         $namedDeputy = (new NamedDeputy())
             ->setEmail1($dto->getDeputyEmail())
             ->setDeputyNo($dto->getDeputyNumber())
-            ->setFirstname($dto->getFirstname())
-            ->setLastname($dto->getLastname())
+            ->setFirstname($dto->getDeputyFirstname())
+            ->setLastname($dto->getDeputyLastname())
             ->setAddress1($dto->getDeputyAddress1())
             ->setAddressPostcode($dto->getDeputyPostcode());
 

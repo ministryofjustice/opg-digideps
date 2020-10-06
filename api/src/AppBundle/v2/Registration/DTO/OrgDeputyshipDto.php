@@ -8,23 +8,31 @@ use DateTime;
 class OrgDeputyshipDto
 {
     /** @var string */
-    private $deputyEmail;
     private $deputyNumber;
-    private $firstname;
-    private $lastname;
+    private $deputyLastname;
+    private $deputyAddressNumber;
     private $deputyAddress1;
-    private $deputyPostcode;
+    private $deputyAddress2;
     private $caseNumber;
     private $clientFirstname;
     private $clientLastname;
     private $clientAddress1;
     private $clientAddress2;
-    private $clientAddress3;
+    private $clientCounty;
     private $clientPostCode;
     // Write test in assembler on working out reportType
     private $reportType;
 
-    /** @var DateTime */
+    /** @var string|null */
+    private $deputyEmail;
+    private $deputyAddress3;
+    private $deputyAddress4;
+    private $deputyAddress5;
+    private $deputyPostcode;
+    private $deputyFirstname;
+
+
+    /** @var DateTime|null */
     private $clientDateOfBirth;
     private $courtDate;
     private $reportStartDate;
@@ -47,10 +55,10 @@ class OrgDeputyshipDto
     }
 
     /**
-     * @param string $deputyEmail
+     * @param string|null $deputyEmail
      * @return OrgDeputyshipDto
      */
-    public function setDeputyEmail(string $deputyEmail): self
+    public function setDeputyEmail(?string $deputyEmail): self
     {
         $this->deputyEmail = $deputyEmail;
 
@@ -77,20 +85,20 @@ class OrgDeputyshipDto
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getFirstname(): string
+    public function getDeputyFirstname(): ?string
     {
-        return $this->firstname;
+        return $this->deputyFirstname;
     }
 
     /**
-     * @param string $firstname
+     * @param string|null $deputyFirstname
      * @return OrgDeputyshipDto
      */
-    public function setFirstname(string $firstname): self
+    public function setDeputyFirstname(?string $deputyFirstname): self
     {
-        $this->firstname = $firstname;
+        $this->deputyFirstname = $deputyFirstname;
 
         return $this;
     }
@@ -98,18 +106,18 @@ class OrgDeputyshipDto
     /**
      * @return string
      */
-    public function getLastname(): string
+    public function getDeputyLastname(): string
     {
-        return $this->lastname;
+        return $this->deputyLastname;
     }
 
     /**
-     * @param string $lastname
+     * @param string $deputyLastname
      * @return OrgDeputyshipDto
      */
-    public function setLastname(string $lastname): self
+    public function setDeputyLastname(string $deputyLastname): self
     {
-        $this->lastname = $lastname;
+        $this->deputyLastname = $deputyLastname;
 
         return $this;
     }
@@ -191,90 +199,90 @@ class OrgDeputyshipDto
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getClientAddress1(): string
+    public function getClientAddress1(): ?string
     {
         return $this->clientAddress1;
     }
 
     /**
-     * @param string $clientAddress1
+     * @param string|null $clientAddress1
      * @return OrgDeputyshipDto
      */
-    public function setClientAddress1(string $clientAddress1): self
+    public function setClientAddress1(?string $clientAddress1): self
     {
         $this->clientAddress1 = $clientAddress1;
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getClientAddress2(): string
+    public function getClientAddress2(): ?string
     {
         return $this->clientAddress2;
     }
 
     /**
-     * @param string $clientAddress2
+     * @param string|null $clientAddress2
      * @return OrgDeputyshipDto
      */
-    public function setClientAddress2(string $clientAddress2): self
+    public function setClientAddress2(?string $clientAddress2): self
     {
         $this->clientAddress2 = $clientAddress2;
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getClientAddress3(): string
+    public function getClientCounty(): ?string
     {
-        return $this->clientAddress3;
+        return $this->clientCounty;
     }
 
     /**
-     * @param string $clientAddress3
+     * @param string|null $clientCounty
      * @return OrgDeputyshipDto
      */
-    public function setClientAddress3(string $clientAddress3): self
+    public function setClientCounty(?string $clientCounty): self
     {
-        $this->clientAddress3 = $clientAddress3;
+        $this->clientCounty = $clientCounty;
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getClientPostCode(): string
+    public function getClientPostCode(): ?string
     {
         return $this->clientPostCode;
     }
 
     /**
-     * @param string $clientPostCode
+     * @param string|null $clientPostCode
      * @return OrgDeputyshipDto
      */
-    public function setClientPostCode(string $clientPostCode): self
+    public function setClientPostCode(?string $clientPostCode): self
     {
         $this->clientPostCode = $clientPostCode;
         return $this;
     }
 
     /**
-     * @return DateTime
+     * @return DateTime|null
      */
-    public function getClientDateOfBirth(): DateTime
+    public function getClientDateOfBirth(): ?DateTime
     {
         return $this->clientDateOfBirth;
     }
 
     /**
-     * @param DateTime $clientDateOfBirth
+     * @param DateTime|null $clientDateOfBirth
      * @return OrgDeputyshipDto
      */
-    public function setClientDateOfBirth(DateTime $clientDateOfBirth): self
+    public function setClientDateOfBirth(?DateTime $clientDateOfBirth): self
     {
         $this->clientDateOfBirth = $clientDateOfBirth;
         return $this;
@@ -317,6 +325,14 @@ class OrgDeputyshipDto
     }
 
     /**
+     * @return string
+     */
+    public function getReportType(): string
+    {
+        return $this->reportType;
+    }
+
+    /**
      * @param string $reportType
      * @return OrgDeputyshipDto
      */
@@ -327,11 +343,11 @@ class OrgDeputyshipDto
     }
 
     /**
-     * @return string
+     * @return DateTime
      */
-    public function getReportType(): string
+    public function getReportStartDate(): DateTime
     {
-        return $this->reportType;
+        return $this->reportStartDate;
     }
 
     /**
@@ -347,9 +363,9 @@ class OrgDeputyshipDto
     /**
      * @return DateTime
      */
-    public function getReportStartDate(): DateTime
+    public function getReportEndDate(): DateTime
     {
-        return $this->reportStartDate;
+        return $this->reportEndDate;
     }
 
     /**
@@ -363,10 +379,92 @@ class OrgDeputyshipDto
     }
 
     /**
-     * @return DateTime
+     * @return string
      */
-    public function getReportEndDate(): DateTime
+    public function getDeputyAddressNumber(): string
     {
-        return $this->reportEndDate;
+        return $this->deputyAddressNumber;
+    }
+
+    /**
+     * @param string $deputyAddressNumber
+     * @return OrgDeputyshipDto
+     */
+    public function setDeputyAddressNumber(string $deputyAddressNumber): OrgDeputyshipDto
+    {
+        $this->deputyAddressNumber = $deputyAddressNumber;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDeputyAddress2(): string
+    {
+        return $this->deputyAddress2;
+    }
+
+    /**
+     * @param string $deputyAddress2
+     * @return OrgDeputyshipDto
+     */
+    public function setDeputyAddress2(string $deputyAddress2): OrgDeputyshipDto
+    {
+        $this->deputyAddress2 = $deputyAddress2;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDeputyAddress3(): ?string
+    {
+        return $this->deputyAddress3;
+    }
+
+    /**
+     * @param string|null $deputyAddress3
+     * @return OrgDeputyshipDto
+     */
+    public function setDeputyAddress3(?string $deputyAddress3): OrgDeputyshipDto
+    {
+        $this->deputyAddress3 = $deputyAddress3;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDeputyAddress4(): ?string
+    {
+        return $this->deputyAddress4;
+    }
+
+    /**
+     * @param string|null $deputyAddress4
+     * @return OrgDeputyshipDto
+     */
+    public function setDeputyAddress4(?string $deputyAddress4): OrgDeputyshipDto
+    {
+        $this->deputyAddress4 = $deputyAddress4;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDeputyAddress5(): ?string
+    {
+        return $this->deputyAddress5;
+    }
+
+    /**
+     * @param string|null $deputyAddress5
+     * @return OrgDeputyshipDto
+     */
+    public function setDeputyAddress5(?string $deputyAddress5): OrgDeputyshipDto
+    {
+        $this->deputyAddress5 = $deputyAddress5;
+        return $this;
     }
 }
