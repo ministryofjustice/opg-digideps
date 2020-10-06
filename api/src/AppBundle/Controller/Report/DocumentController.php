@@ -8,6 +8,7 @@ use AppBundle\Entity\Report\Document;
 use AppBundle\Exception\UnauthorisedException;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use PhpParser\Comment\Doc;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 class DocumentController extends RestController
 {
     const DOCUMENT_SYNC_ERROR_STATUSES = [Document::SYNC_STATUS_TEMPORARY_ERROR, Document::SYNC_STATUS_PERMANENT_ERROR];
+    const RETRIES_FAILED_MESSAGE = 'Document failed to sync after 4 attempts';
+    const REPORT_PDF_FAILED_MESSAGE = 'Report PDF failed to sync';
 
     private $sectionIds = [EntityDir\Report\Report::SECTION_DOCUMENTS];
 
@@ -168,7 +171,9 @@ class DocumentController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-        $document = $em->getRepository(Document::class)->find($id);
+        /** @var Document $document */
+        $documentRepository = $em->getRepository(Document::class);
+        $document = $documentRepository->find($id);
 
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['synchronisation', 'document-id'];
@@ -181,6 +186,16 @@ class DocumentController extends RestController
             if (in_array($data['syncStatus'], self::DOCUMENT_SYNC_ERROR_STATUSES)) {
                 $errorMessage = is_array($data['syncError']) ? json_encode($data['syncError']) : $data['syncError'];
                 $document->setSynchronisationError($errorMessage);
+
+                if ($data["syncStatus"] === Document::SYNC_STATUS_TEMPORARY_ERROR) {
+                    $document->incrementSyncAttempts();
+                    $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
+                }
+
+                if ($data['syncStatus'] === Document::SYNC_STATUS_PERMANENT_ERROR && $document->getSyncAttempts() >= 3) {
+                    $document->setSynchronisationError(self::RETRIES_FAILED_MESSAGE);
+                    $document->resetSyncAttempts();
+                }
             } else {
                 $document->setSynchronisationError(null);
             }

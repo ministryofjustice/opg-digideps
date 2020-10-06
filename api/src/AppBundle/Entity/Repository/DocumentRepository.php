@@ -39,6 +39,7 @@ d.filename as filename,
 d.storage_reference as storage_reference,
 d.report_id as report_id,
 d.ndr_id as ndr_id,
+d.sync_attempts as document_sync_attempts,
 r.start_date as report_start_date,
 r.end_date as report_end_date,
 r.submit_date as report_submit_date,
@@ -83,7 +84,8 @@ LIMIT $limit;";
                 'filename' => $row['filename'],
                 'storage_reference' => $row['storage_reference'],
                 'report_submission_uuid' => $row['opg_uuid'],
-                'case_number' => $row['case_number']
+                'case_number' => $row['case_number'],
+                'document_sync_attempts' => $row['document_sync_attempts']
             ];
 
 
@@ -132,7 +134,7 @@ AND is_report_pdf=false";
 
     private function flagSubmissionsContainingReportPdfs(array $reportSubmissions, Connection $connection)
     {
-        $submissionIds = array_map(function($submission) {
+        $submissionIds = array_map(function ($submission) {
             return $submission['id'];
         }, $reportSubmissions);
 
@@ -143,7 +145,7 @@ AND is_report_pdf=false";
         $documents = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($reportSubmissions as $i => $submission) {
-            foreach($documents as $document) {
+            foreach ($documents as $document) {
                 if ($document['report_submission_id'] === $submission['id'] && $document['is_report_pdf']) {
                     $reportSubmissions[$i]['contains_report_pdf'] = true;
                     break;
@@ -188,7 +190,7 @@ AND is_report_pdf=false";
         foreach ($groupedReportSubmissions['reports'] as $reportId => $submissions) {
             $firstSubmissionDate = $submissions[0]['created_on'];
 
-            foreach($submissions as $i => $submission) {
+            foreach ($submissions as $i => $submission) {
                 if ($submission['contains_report_pdf'] && $submission['created_on'] > $firstSubmissionDate) {
                     $groupedReportSubmissions['reports'][$reportId][$i]['is_resubmission'] = true;
                 } else {
@@ -240,7 +242,7 @@ AND is_report_pdf=false";
             if (is_null($document['report_submission_uuid'])) {
                 foreach ($reportSubmissions['reports'] as $reportId => $groupedSubmissions) {
                     foreach ($groupedSubmissions as $submission) {
-                        if ($document['report_submission_id'] === $submission['id'] ) {
+                        if ($document['report_submission_id'] === $submission['id']) {
                             $documents[$docIndex]['report_submission_uuid'] = $submission['opg_uuid'];
                             break;
                         }

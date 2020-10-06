@@ -9,25 +9,33 @@ use DateTime;
 class QueuedDocumentData
 {
     /** @var int */
-    private $documentId, $reportSubmissionId;
+    private $documentId;
+    private $reportSubmissionId;
 
     /** @var int|null */
     private $ndrId;
+    private $documentSyncAttempts;
 
     /** @var bool */
     private $isReportPdf;
 
     /** @var string */
-    private $filename, $storageReference, $caseNumber;
+    private $filename;
+    private $storageReference;
+    private $caseNumber;
 
     /** @var string|null */
-    private $reportType, $s3Reference, $reportSubmissionUuid;
+    private $reportType;
+    private $s3Reference;
+    private $reportSubmissionUuid;
 
     /** @var ReportSubmission[] */
     private $reportSubmissions;
 
     /** @var DateTime|null */
-    private $reportStartDate, $reportEndDate, $reportSubmitDate;
+    private $reportStartDate;
+    private $reportEndDate;
+    private $reportSubmitDate;
 
     public function supportingDocumentCanBeSynced()
     {
@@ -277,6 +285,25 @@ class QueuedDocumentData
     public function setReportSubmissionUuid(?string $reportSubmissionUuid): self
     {
         $this->reportSubmissionUuid = $reportSubmissionUuid;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getDocumentSyncAttempts(): ?int
+    {
+        return $this->documentSyncAttempts;
+    }
+
+    /**
+     * @param int|null $documentSyncAttempts
+     * @return QueuedDocumentData
+     */
+    public function setDocumentSyncAttempts(?int $documentSyncAttempts): self
+    {
+        $this->documentSyncAttempts = $documentSyncAttempts;
 
         return $this;
     }
