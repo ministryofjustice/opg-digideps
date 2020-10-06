@@ -18,6 +18,17 @@ provider "aws" {
   }
 }
 
+// sandbox for now
+provider "aws" {
+  region = "eu-west-1"
+  alias  = "sandbox"
+
+  assume_role {
+    role_arn     = "arn:aws:iam::995199299616:role/${var.DEFAULT_ROLE}"
+    session_name = "terraform-session"
+  }
+}
+
 provider "aws" {
   region = "eu-west-1"
   alias  = "management"

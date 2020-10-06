@@ -56,9 +56,10 @@ locals {
 
   route53_healthchecker_ips = data.aws_ip_ranges.route53_healthchecks_ips.cidr_blocks
 
-  account     = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
-  environment = lower(terraform.workspace)
-  subdomain   = local.account["subdomain_enabled"] ? local.environment : ""
+  account           = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
+  environment       = lower(terraform.workspace)
+  subdomain         = local.account["subdomain_enabled"] ? local.environment : ""
+  backup_account_id = "995199299616"
 
   default_tags = {
     business-unit          = "OPG"
