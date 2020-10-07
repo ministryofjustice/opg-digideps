@@ -42,6 +42,24 @@ class OrgDeputyshipDTOTestHelper
         return base64_encode(gzcompress(json_encode($deputyships), 9));
     }
 
+    public static function generateCasRecOrgDeputyshipDecompressedJson(int $validCount, int $invalidCount)
+    {
+        $deputyships = [];
+
+        if ($validCount > 0) {
+            foreach (range(1, $validCount) as $index) {
+                $deputyships[] = self::generateValidCasRecOrgDeputyshipArray();
+            }
+        }
+
+        if ($invalidCount > 0) {
+            foreach (range(1, $invalidCount) as $index) {
+                $deputyships[] = self::generateInvalidOrgDeputyshipArray();
+            }
+        }
+
+        return json_encode($deputyships);
+    }
 
     /**
      * @param int $validCount
@@ -50,7 +68,7 @@ class OrgDeputyshipDTOTestHelper
      */
     public static function generateOrgDeputyshipDtos(int $validCount, int $invalidCount)
     {
-        $json = self::generateCasRecOrgDeputyshipCompressedJson($validCount, $invalidCount);
+        $json = self::generateCasRecOrgDeputyshipDecompressedJson($validCount, $invalidCount);
         $dtos = [];
         $reportUtils = new ReportUtils();
         $assembler = new CasRecToOrgDeputyshipDtoAssembler($reportUtils);
@@ -140,7 +158,7 @@ class OrgDeputyshipDTOTestHelper
         $reportDueDate = $courtOrderMadeDate->modify('12 months - 1 day');
 
         return [
-            'Email'        => sprintf('%s%s@%s.com', $faker->company, $faker->randomNumber(8), $faker->domainWord),
+            'Email'        => sprintf('%s@%s%s.com', $faker->userName, $faker->randomNumber(8), $faker->domainWord),
             'Deputy No'    => (string) $faker->randomNumber(8),
             'Dep Postcode' => Address::postcode(),
             'Dep Forename' => $faker->firstName,
