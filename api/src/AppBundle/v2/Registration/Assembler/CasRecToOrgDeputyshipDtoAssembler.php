@@ -39,8 +39,10 @@ class CasRecToOrgDeputyshipDtoAssembler
             User::$depTypeIdToRealm[$row['Dep Type']]
         );
 
+        $clientDateOfBirth = $this->reportUtils->parseCsvDate($row['Client Date of Birth'], '19');
         $reportEndDate = $this->reportUtils->parseCsvDate($row['Last Report Day'], '20');
         $reportStartDate = $this->reportUtils->generateReportStartDateFromEndDate($reportEndDate);
+        $caseNumber = $this->reportUtils->padCaseNumber(strtolower($row['Case']));
 
         return (new OrgDeputyshipDto())
             ->setDeputyEmail($row['Email'])
@@ -49,14 +51,14 @@ class CasRecToOrgDeputyshipDtoAssembler
             ->setDeputyLastname($row['Dep Surname'])
             ->setDeputyAddress1($row['Dep Adrs1'])
             ->setDeputyPostcode($row['Dep Postcode'])
-            ->setCaseNumber($row['Case'])
-            ->setClientFirstname($row['Forename'])
-            ->setClientLastname($row['Surname'])
+            ->setCaseNumber($caseNumber)
+            ->setClientFirstname(trim($row['Forename']))
+            ->setClientLastname(trim($row['Surname']))
             ->setClientAddress1($row['Client Adrs1'])
             ->setClientAddress2($row['Client Adrs2'])
             ->setClientCounty($row['Client Adrs3'])
             ->setClientPostCode($row['Client Postcode'])
-            ->setClientDateOfBirth(new DateTime($row['Client Date of Birth']))
+            ->setClientDateOfBirth($clientDateOfBirth)
             ->setCourtDate(new DateTime($row['Made Date']))
             ->setReportType($reportType)
             ->setReportStartDate($reportStartDate)

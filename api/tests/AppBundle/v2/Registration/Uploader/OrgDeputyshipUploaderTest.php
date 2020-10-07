@@ -317,7 +317,5 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     // Client
     // Handle existing case numbers - add error
 
-    // Make sure 0s are respected in DTO object for client case number
-
     // Make sure first and last names are trimmed for client name
 }

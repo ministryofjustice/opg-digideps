@@ -84,9 +84,6 @@ class OrgDeputyshipUploader
         return $uploadResults;
     }
 
-    // Finds existing deputyship
-    // Creates non-existent deputyship
-    // Adds deputy id to added array
     private function handleNamedDeputy(OrgDeputyshipDto $dto)
     {
         $namedDeputy = ($this->em->getRepository(NamedDeputy::class))->findOneBy(
@@ -112,9 +109,6 @@ class OrgDeputyshipUploader
         $this->namedDeputy = $namedDeputy;
     }
 
-    // Finds existing org
-    // Creates non-existent org
-    // Adds org id to added array
     private function handleOrganisation(OrgDeputyshipDto $dto)
     {
         $orgDomainIdentifier = explode('@', $dto->getDeputyEmail())[1];

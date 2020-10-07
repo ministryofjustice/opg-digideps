@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\CasRec;
+use AppBundle\Entity\Client;
 
 class ReportUtils
 {
@@ -61,5 +62,10 @@ class ReportUtils
     public function convertTypeofRepAndCorrefToReportType(string $typeOfRep, string $corref, string $realm)
     {
         return CasRec::getTypeBasedOnTypeofRepAndCorref($typeOfRep, $corref, $realm);
+    }
+
+    public function padCaseNumber(string $caseNumber)
+    {
+        return Client::padCaseNumber($caseNumber);
     }
 }
