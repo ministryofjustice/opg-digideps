@@ -32,6 +32,6 @@ class CasRecToOrgDeputyshipDtoAssemblerTest extends TestCase
             ->willReturn($now);
 
         $sut = new CasRecToOrgDeputyshipDtoAssembler($reportUtils->reveal());
-        $sut->assembleFromArray($casrecArray);
+        $sut->assembleSingleDtoFromArray($casrecArray);
     }
 }

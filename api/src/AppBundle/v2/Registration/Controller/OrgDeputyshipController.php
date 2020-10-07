@@ -18,7 +18,7 @@ class OrgDeputyshipController extends AbstractController
     use ControllerTrait;
 
     /** @var OrgDeputyshipUploader */
-    private $orgDeputyshipUploader;
+    private $uploader;
 
     /**  @var CasRecToOrgDeputyshipDtoAssembler */
     private $assembler;
@@ -26,13 +26,12 @@ class OrgDeputyshipController extends AbstractController
     /**
      * OrgDeputyshipController constructor.
      * @param OrgDeputyshipUploader $orgDeputyshipUploader
-     * @param CasRecToOrgDeputyshipDtoAssembler $assembler
      */
     public function __construct(
         OrgDeputyshipUploader $orgDeputyshipUploader,
         CasRecToOrgDeputyshipDtoAssembler $assembler
     ) {
-        $this->orgDeputyshipUploader = $orgDeputyshipUploader;
+        $this->uploader = $orgDeputyshipUploader;
         $this->assembler = $assembler;
     }
 
@@ -42,9 +41,10 @@ class OrgDeputyshipController extends AbstractController
      */
     public function create(Request $request)
     {
-        $uploadResults = ['errors' => 0];
-        $added = ['clients' => [], 'discharged_clients' => [], 'named_deputies' => [], 'reports' => []];
-        $uploadResults['added'] = $added;
+        $decodedRows = json_decode($request->getContent(), true);
+        $dtos = $this->assembler->assembleMultipleDtosFromArray($decodedRows);
+
+        $uploadResults = $this->uploader->upload($dtos);
 
         return new JsonResponse($uploadResults, Response::HTTP_CREATED);
     }

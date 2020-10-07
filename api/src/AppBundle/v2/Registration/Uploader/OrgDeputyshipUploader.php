@@ -66,6 +66,9 @@ class OrgDeputyshipUploader
         $uploadResults = ['errors' => 0];
 
         foreach ($deputyshipDtos as $deputyshipDto) {
+            // WRITE TESTS AROUND ANYTHING THAT COULD BREAK IN A TRY CATCH BLOCK (see if we can add to an errors array in OrgDeputyshipDto as part of ->valid())
+            //  - Email not being provided
+            //  -
             if (!$deputyshipDto->isValid()) {
                 $uploadResults['errors']++;
                 continue;
@@ -81,6 +84,9 @@ class OrgDeputyshipUploader
         return $uploadResults;
     }
 
+    // Finds existing deputyship
+    // Creates non-existent deputyship
+    // Adds deputy id to added array
     private function handleNamedDeputy(OrgDeputyshipDto $dto)
     {
         $namedDeputy = ($this->em->getRepository(NamedDeputy::class))->findOneBy(
@@ -106,6 +112,9 @@ class OrgDeputyshipUploader
         $this->namedDeputy = $namedDeputy;
     }
 
+    // Finds existing org
+    // Creates non-existent org
+    // Adds org id to added array
     private function handleOrganisation(OrgDeputyshipDto $dto)
     {
         $orgDomainIdentifier = explode('@', $dto->getDeputyEmail())[1];
@@ -122,6 +131,13 @@ class OrgDeputyshipUploader
         }
     }
 
+    // Finds existing client
+    // Creates non-existent client
+    // Assigns named deputy to client
+    // Assigns org to client
+    // Updates courtdate for existing clients
+    // Updates named deputy for existing client if in same org
+    // Adds case number for newly created to added array
     private function handleClient(OrgDeputyshipDto $dto): Client
     {
         $client = ($this->em->getRepository(Client::class))->findOneBy(['caseNumber' => $dto->getCaseNumber()]);
@@ -150,12 +166,17 @@ class OrgDeputyshipUploader
         return $this->client = $client;
     }
 
+    // Finds existing report
+    // Creates non-existent report
+    // Updates report type for existing report if report has not been submitted or is currently unsubmitted
+    // Adds report to client
+    // Adds case number and end date for newly created report to added array
     private function handleReport(OrgDeputyshipDto $dto)
     {
         $report = $this->client->getCurrentReport();
 
         if ($report) {
-            if ($report->getType() != $dto->getReportType() && !$report->getSubmitted() && empty($report->getUnSubmitDate())) {
+            if (!$report->getSubmitted() && empty($report->getUnSubmitDate())) {
                 // Add audit logging for report type changing
                 $report->setType($dto->getReportType());
             }

@@ -55,7 +55,7 @@ class OrgDeputyshipDTOTestHelper
         $assembler = new CasRecToOrgDeputyshipDtoAssembler($reportUtils);
 
         foreach (json_decode($json, true) as $dtoArray) {
-            $dtos[] = $assembler->assembleFromArray($dtoArray);
+            $dtos[] = $assembler->assembleSingleDtoFromArray($dtoArray);
         }
 
         return $dtos;

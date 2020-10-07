@@ -43,13 +43,16 @@ class OrgDeputyshipDto
      */
     public function isValid()
     {
-        return !empty($this->getDeputyEmail());
+        return !empty($this->getDeputyEmail()) &&
+            !empty($this->getCaseNumber()) &&
+            !empty($this->getReportType()) &&
+            !empty($this->getReportStartDate());
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getDeputyEmail(): string
+    public function getDeputyEmail(): ?string
     {
         return $this->deputyEmail;
     }

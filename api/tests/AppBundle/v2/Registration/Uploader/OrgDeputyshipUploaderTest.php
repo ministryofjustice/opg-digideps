@@ -64,44 +64,6 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $purger->purge();
     }
 
-    /**
-     * @test
-     * @dataProvider uploadProvider
-     */
-    public function upload_provides_feedback_on_entities_processed(
-        array $deputyships,
-        int $expectedClients,
-        int $expectedDischargedClients,
-        int $expectedNamedDeputies,
-        int $expectedReports,
-        int $expectedOrganisations,
-        int $expectedErrors
-    ) {
-        $actualUploadResults = $this->sut->upload($deputyships);
-
-        self::assertCount($expectedClients, $actualUploadResults['added']['clients'], 'clients count was unexpected');
-        self::assertCount($expectedDischargedClients, $actualUploadResults['added']['discharged_clients'], 'discharged_clients count was unexpected');
-        self::assertCount($expectedNamedDeputies, $actualUploadResults['added']['named_deputies'], 'named_deputies count was unexpected');
-        self::assertCount($expectedReports, $actualUploadResults['added']['reports'], 'reports count was unexpected');
-        self::assertCount($expectedOrganisations, $actualUploadResults['added']['organisations'], 'organisations count was unexpected');
-        self::assertEquals($expectedErrors, $actualUploadResults['errors'], 'errors count was unexpected');
-    }
-
-    // add extra field in array for orgs created
-    public function uploadProvider()
-    {
-        return [
-            '3 valid Org Deputyships' =>
-                [
-                    OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(3, 0), 3, 0, 3, 3, 3, 0
-                ],
-            '2 valid, 1 invalid Org Deputyships' =>
-                [
-                    OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(2, 1), 2, 0, 2, 2, 2, 1
-                ]
-        ];
-    }
-
     /** @test  */
     public function upload_new_named_deputies_are_created()
     {

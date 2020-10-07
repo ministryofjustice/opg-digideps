@@ -20,33 +20,44 @@ class CasRecToOrgDeputyshipDtoAssembler
         $this->reportUtils = $reportUtils;
     }
 
-    public function assembleFromArray(array $data)
+    public function assembleMultipleDtosFromArray(array $rows)
+    {
+        $dtos = [];
+
+        foreach ($rows as $row) {
+            $dtos[] = $this->assembleSingleDtoFromArray($row);
+        }
+
+        return $dtos;
+    }
+
+    public function assembleSingleDtoFromArray(array $row)
     {
         $reportType = $this->reportUtils->convertTypeofRepAndCorrefToReportType(
-            $data['Typeofrep'],
-            $data['Corref'],
-            User::$depTypeIdToRealm[$data['Dep Type']]
+            $row['Typeofrep'],
+            $row['Corref'],
+            User::$depTypeIdToRealm[$row['Dep Type']]
         );
 
-        $reportEndDate = $this->reportUtils->parseCsvDate($data['Last Report Day'], '20');
+        $reportEndDate = $this->reportUtils->parseCsvDate($row['Last Report Day'], '20');
         $reportStartDate = $this->reportUtils->generateReportStartDateFromEndDate($reportEndDate);
 
         return (new OrgDeputyshipDto())
-            ->setDeputyEmail($data['Email'])
-            ->setDeputyNumber($data['Deputy No'])
-            ->setDeputyFirstname($data['Dep Forename'])
-            ->setDeputyLastname($data['Dep Surname'])
-            ->setDeputyAddress1($data['Dep Adrs1'])
-            ->setDeputyPostcode($data['Dep Postcode'])
-            ->setCaseNumber($data['Case'])
-            ->setClientFirstname($data['Forename'])
-            ->setClientLastname($data['Surname'])
-            ->setClientAddress1($data['Client Adrs1'])
-            ->setClientAddress2($data['Client Adrs2'])
-            ->setClientCounty($data['Client Adrs3'])
-            ->setClientPostCode($data['Client Postcode'])
-            ->setClientDateOfBirth(new DateTime($data['Client Date of Birth']))
-            ->setCourtDate(new DateTime($data['Made Date']))
+            ->setDeputyEmail($row['Email'])
+            ->setDeputyNumber($row['Deputy No'])
+            ->setDeputyFirstname($row['Dep Forename'])
+            ->setDeputyLastname($row['Dep Surname'])
+            ->setDeputyAddress1($row['Dep Adrs1'])
+            ->setDeputyPostcode($row['Dep Postcode'])
+            ->setCaseNumber($row['Case'])
+            ->setClientFirstname($row['Forename'])
+            ->setClientLastname($row['Surname'])
+            ->setClientAddress1($row['Client Adrs1'])
+            ->setClientAddress2($row['Client Adrs2'])
+            ->setClientCounty($row['Client Adrs3'])
+            ->setClientPostCode($row['Client Postcode'])
+            ->setClientDateOfBirth(new DateTime($row['Client Date of Birth']))
+            ->setCourtDate(new DateTime($row['Made Date']))
             ->setReportType($reportType)
             ->setReportStartDate($reportStartDate)
             ->setReportEndDate($reportEndDate);
