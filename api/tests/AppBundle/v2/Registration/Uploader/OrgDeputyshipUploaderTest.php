@@ -86,7 +86,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $actualUploadResults = $this->sut->upload($deputyships);
 
         self::assertCount(0, $actualUploadResults['added']['named_deputies']);
-        self::assertEquals(0, $actualUploadResults['errors']);
+        self::assertTrue(empty($actualUploadResults['errors']));
     }
 
     /** @test */
@@ -102,7 +102,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $actualUploadResults = $this->sut->upload($deputyships);
 
         self::assertCount(1, $actualUploadResults['added']['named_deputies']);
-        self::assertEquals(0, $actualUploadResults['errors']);
+        self::assertTrue(empty($actualUploadResults['errors']));
     }
 
     /** @test */
@@ -131,7 +131,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $actualUploadResults = $this->sut->upload($deputyships);
 
         self::assertCount(0, $actualUploadResults['added']['organisations']);
-        self::assertEquals(0, $actualUploadResults['errors']);
+        self::assertTrue(empty($actualUploadResults['errors']));
     }
 
     /** @test */
@@ -310,12 +310,45 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         );
     }
 
-    // Report
-    // Existing reports that have not been submitted have type changed if type in CSV is different
-    // Date format can be in DD-MMM-YYYY and DD/MM/YYYY
+    /**
+     * @test
+     *@dataProvider errorProvider
+     */
+    public function upload_errors_are_added_to_error_array(OrgDeputyshipDto $dto, string $expectedErrorMessage)
+    {
+        $uploadResults = $this->sut->upload([$dto]);
 
-    // Client
-    // Handle existing case numbers - add error
+        $errorMessage = sprintf('Error for case "%s": %s', $dto->getCaseNumber(), $expectedErrorMessage);
 
-    // Make sure first and last names are trimmed for client name
+        self::assertTrue(
+            in_array($errorMessage, $uploadResults['errors']),
+            sprintf('Expected error message "%s" was not in the errors array', $errorMessage)
+        );
+    }
+
+    public function errorProvider()
+    {
+        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+
+        return [
+            'Missing deputy email' => [(clone($deputyships[0]))->setDeputyEmail(null), 'deputy email missing'],
+            'Missing deputy first name' => [(clone($deputyships[0]))->setDeputyFirstname(null), 'deputy first name missing']
+        ];
+    }
+
+    /** @test  */
+    public function upload_existing_clients_with_lay_deputies_throws_an_error()
+    {
+        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+        OrgDeputyshipDTOTestHelper::ensureClientInUploadExistsAndHasALayDeputy($deputyships[0], $this->em);
+
+        $uploadResults = $this->sut->upload($deputyships);
+
+        $errorMessage = sprintf('Error for case "%s": case number already used', $deputyships[0]->getCaseNumber());
+
+        self::assertTrue(
+            in_array($errorMessage, $uploadResults['errors']),
+            sprintf('Expected error message "%s" was not in the errors array', $errorMessage)
+        );
+    }
 }

@@ -13,6 +13,7 @@ use AppBundle\v2\Assembler\ClientAssembler;
 use AppBundle\v2\Assembler\NamedDeputyAssembler;
 use AppBundle\v2\Registration\DTO\OrgDeputyshipDto;
 use Doctrine\ORM\EntityManagerInterface;
+use RuntimeException;
 
 class OrgDeputyshipUploader
 {
@@ -63,21 +64,19 @@ class OrgDeputyshipUploader
      */
     public function upload(array $deputyshipDtos)
     {
-        $uploadResults = ['errors' => 0];
+        $uploadResults = ['errors' => []];
 
         foreach ($deputyshipDtos as $deputyshipDto) {
-            // WRITE TESTS AROUND ANYTHING THAT COULD BREAK IN A TRY CATCH BLOCK (see if we can add to an errors array in OrgDeputyshipDto as part of ->valid())
-            //  - Email not being provided
-            //  -
-            if (!$deputyshipDto->isValid()) {
-                $uploadResults['errors']++;
+            try {
+                $this->handleNamedDeputy($deputyshipDto);
+                $this->handleOrganisation($deputyshipDto);
+                $this->handleClient($deputyshipDto);
+                $this->handleReport($deputyshipDto);
+            } catch (\Throwable $e) {
+                $message = sprintf('Error for case "%s": %s', $deputyshipDto->getCaseNumber(), $e->getMessage());
+                $uploadResults['errors'][] = $message;
                 continue;
             }
-
-            $this->handleNamedDeputy($deputyshipDto);
-            $this->handleOrganisation($deputyshipDto);
-            $this->handleClient($deputyshipDto);
-            $this->handleReport($deputyshipDto);
         }
 
         $uploadResults['added'] = $this->added;
@@ -86,6 +85,14 @@ class OrgDeputyshipUploader
 
     private function handleNamedDeputy(OrgDeputyshipDto $dto)
     {
+        if (empty($dto->getDeputyEmail())) {
+            throw new RuntimeException('deputy email missing');
+        }
+
+        if (empty($dto->getDeputyFirstname())) {
+            throw new RuntimeException('deputy first name missing');
+        }
+
         $namedDeputy = ($this->em->getRepository(NamedDeputy::class))->findOneBy(
             [
                 'email1' => $dto->getDeputyEmail(),
@@ -125,16 +132,14 @@ class OrgDeputyshipUploader
         }
     }
 
-    // Finds existing client
-    // Creates non-existent client
-    // Assigns named deputy to client
-    // Assigns org to client
-    // Updates courtdate for existing clients
-    // Updates named deputy for existing client if in same org
-    // Adds case number for newly created to added array
     private function handleClient(OrgDeputyshipDto $dto): Client
     {
+        /** @var Client $client */
         $client = ($this->em->getRepository(Client::class))->findOneBy(['caseNumber' => $dto->getCaseNumber()]);
+
+        if ($client instanceof Client && $client->hasLayDeputy()) {
+            throw new RuntimeException('case number already used');
+        }
 
         if (is_null($client)) {
             $client = $this->clientAssembler->assembleFromOrgDeputyshipDto($dto);
@@ -160,11 +165,6 @@ class OrgDeputyshipUploader
         return $this->client = $client;
     }
 
-    // Finds existing report
-    // Creates non-existent report
-    // Updates report type for existing report if report has not been submitted or is currently unsubmitted
-    // Adds report to client
-    // Adds case number and end date for newly created report to added array
     private function handleReport(OrgDeputyshipDto $dto)
     {
         $report = $this->client->getCurrentReport();

@@ -981,6 +981,24 @@ class Client implements ClientInterface
     }
 
     /**
+     * @return bool
+     */
+    public function hasLayDeputy()
+    {
+        if (!$this->hasDeputies()) {
+            return false;
+        }
+
+        foreach ($this->getUsers() as $user) {
+            if ($user->isLayDeputy()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Get Active From date == earliest report start date for this client
      *
      * @JMS\VirtualProperty

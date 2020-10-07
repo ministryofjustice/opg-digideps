@@ -10,6 +10,7 @@ use AppBundle\Entity\Repository\ClientRepository;
 use AppBundle\Entity\Repository\NamedDeputyRepository;
 use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\Entity\Repository\ReportRepository;
+use AppBundle\Entity\User;
 use AppBundle\Service\ReportUtils;
 use AppBundle\v2\Registration\Assembler\CasRecToOrgDeputyshipDtoAssembler;
 use AppBundle\v2\Registration\Converter\ReportTypeConverter;
@@ -313,12 +314,36 @@ class OrgDeputyshipDTOTestHelper
         return $client;
     }
 
+    public static function ensureClientInUploadExistsAndHasALayDeputy(OrgDeputyshipDto $dto, EntityManager $em)
+    {
+        $faker = Factory::create();
+
+        $layDeputy = (new User())
+            ->setRoleName(User::ROLE_LAY_DEPUTY)
+            ->setFirstname($faker->firstName)
+            ->setLastname($faker->lastName)
+            ->setEmail($faker->email);
+
+        $client = (new Client())
+            ->setCaseNumber($dto->getCaseNumber())
+            ->setFirstname($dto->getClientFirstname())
+            ->setLastname($dto->getClientLastname())
+            ->setCourtDate(new DateTime())
+            ->addUser($layDeputy);
+
+        $em->persist($layDeputy);
+        $em->persist($client);
+        $em->flush();
+
+        return $client;
+    }
+
     public static function ensureAReportExistsAndIsAssociatedWithClient(
         Client $client,
         EntityManager $em,
         string $reportType = '103-5',
         string $startDate = '01-11-2019',
-        string $endDate = '01-11-2019'
+        string $endDate = '31-10-2020'
     ) {
         $report = new Report($client, $reportType, new DateTime($startDate), new DateTime($endDate));
         $client->addReport($report);

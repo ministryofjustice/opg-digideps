@@ -20,7 +20,6 @@ class OrgDeputyshipDto
     private $clientAddress2;
     private $clientCounty;
     private $clientPostCode;
-    // Write test in assembler on working out reportType
     private $reportType;
 
     /** @var string|null */
@@ -37,17 +36,6 @@ class OrgDeputyshipDto
     private $courtDate;
     private $reportStartDate;
     private $reportEndDate;
-
-    /**
-     * @return bool
-     */
-    public function isValid()
-    {
-        return !empty($this->getDeputyEmail()) &&
-            !empty($this->getCaseNumber()) &&
-            !empty($this->getReportType()) &&
-            !empty($this->getReportStartDate());
-    }
 
     /**
      * @return string|null
