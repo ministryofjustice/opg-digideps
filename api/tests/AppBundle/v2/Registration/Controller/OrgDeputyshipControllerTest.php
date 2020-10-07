@@ -77,7 +77,6 @@ class OrgDeputyshipControllerTest extends AbstractTestController
         self::assertCount($expectedErrors, $actualUploadResults['errors'], 'errors count was unexpected');
     }
 
-    // add extra field in array for orgs created
     public function uploadProvider()
     {
         return [

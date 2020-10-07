@@ -189,40 +189,6 @@ class OrgDeputyshipDTOTestHelper
             'Typeofrep' => $faker->randomElement(['OPG102', 'OPG103']),
             'Last Report Day' => '19-Jan-2021'
         ];
-
-//        Case
-//        Forename
-//        Surname
-//        Client Adrs1
-//        Client Adrs2
-//        Client Adrs3
-//        Client Adrs4
-//        Client Adrs5
-//        Client Postcode
-//        Client Date of Birth
-//        Dep Type
-//        Email
-//        Email2
-//        Email3
-//        Deputy No
-//        Dep Forename
-//        Dep Surname
-//        DepAddr No
-//        Dep Adrs1
-//        Dep Adrs2
-//        Dep Adrs3
-//        Dep Adrs4
-//        Dep Adrs5
-//        Dep Postcode
-//        Made Date
-//        Dig
-//        Digdate	Foreign	Corref
-//        Last Report Day
-//        Typeofrep
-//        Team
-//        Fee Payer
-//        Corres
-//        Sett Comp
     }
 
     private static function generateInvalidOrgDeputyshipArray()

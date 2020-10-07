@@ -255,8 +255,7 @@ class RestClient
             $options['deserialise_groups'] = $jmsGroups;
         }
 
-        $response = $this->apiCall('post', $endpoint, $mixed, $expectedResponseType, $options);
-        return $response;
+        return $this->apiCall('post', $endpoint, $mixed, $expectedResponseType, $options);
     }
 
     /**
