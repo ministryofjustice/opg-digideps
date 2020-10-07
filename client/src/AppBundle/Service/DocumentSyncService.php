@@ -3,7 +3,6 @@
 
 namespace AppBundle\Service;
 
-
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Model\Sirius\QueuedDocumentData;
@@ -52,8 +51,7 @@ class DocumentSyncService
         SiriusApiGatewayClient $siriusApiGatewayClient,
         RestClient $restClient,
         SiriusApiErrorTranslator $errorTranslator
-    )
-    {
+    ) {
         $this->storage = $storage;
         $this->siriusApiGatewayClient = $siriusApiGatewayClient;
         $this->restClient = $restClient;
@@ -184,7 +182,7 @@ class DocumentSyncService
     {
         if ($documentData->getNdrId()) {
             return 'NDR';
-        } else if (in_array($documentData->getReportType(), [Report::TYPE_HEALTH_WELFARE, Report::TYPE_COMBINED_HIGH_ASSETS, Report::TYPE_COMBINED_LOW_ASSETS])) {
+        } elseif (in_array($documentData->getReportType(), [Report::TYPE_HEALTH_WELFARE, Report::TYPE_COMBINED_HIGH_ASSETS, Report::TYPE_COMBINED_LOW_ASSETS])) {
             return 'HW';
         } else {
             return 'PF';
@@ -212,7 +210,7 @@ class DocumentSyncService
      */
     public function handleSiriusSync(QueuedDocumentData $documentData)
     {
-        if($documentData->isReportPdf()) {
+        if ($documentData->isReportPdf()) {
             return $this->siriusApiGatewayClient->sendReportPdfDocument(
                 $this->buildUpload($documentData),
                 strtoupper($documentData->getCaseNumber())
@@ -296,12 +294,25 @@ class DocumentSyncService
             $errorMessage = (string) $e->getMessage();
         }
 
-        if ($documentData->isReportPdf()) {
-            $this->addToSyncErrorSubmissionIds($documentData->getReportSubmissionId());
+        if (method_exists($e, 'getCode')) {
+            $syncStatus = $e->getCode() > 399 && $e->getCode() < 500 ?
+                Document::SYNC_STATUS_PERMANENT_ERROR : Document::SYNC_STATUS_TEMPORARY_ERROR;
+        } else {
+            $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
         }
 
-        $this->docsNotSyncedCount++;
+        if ($documentData->getDocumentSyncAttempts() >= 3) {
+            $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
+        }
 
-        $this->handleDocumentStatusUpdate($documentData, Document::SYNC_STATUS_PERMANENT_ERROR, $errorMessage);
+        if ($syncStatus === Document::SYNC_STATUS_PERMANENT_ERROR) {
+            if ($documentData->isReportPdf()) {
+                $this->addToSyncErrorSubmissionIds($documentData->getReportSubmissionId());
+            }
+
+            $this->docsNotSyncedCount++;
+        }
+
+        $this->handleDocumentStatusUpdate($documentData, $syncStatus, $errorMessage);
     }
 }

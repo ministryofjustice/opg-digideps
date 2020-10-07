@@ -14,3 +14,8 @@ su-exec www-data php app/console doctrine:database:drop --force --if-exists
 su-exec www-data php app/console doctrine:database:create
 su-exec www-data php app/console doctrine:migrations:status-check
 su-exec www-data php app/console doctrine:migrations:migrate --no-interaction -vvv
+
+su-exec www-data php app/console doctrine:database:drop --force --if-exists --env=test
+su-exec www-data php app/console doctrine:database:create --env=test
+su-exec www-data php app/console doctrine:migrations:status-check --env=test
+su-exec www-data php app/console doctrine:migrations:migrate --no-interaction -vvv --env=test

@@ -102,6 +102,14 @@ class Document implements SynchronisableInterface
     private $reportSubmission;
 
     /**
+     * @var integer|null
+     * @JMS\Type("integer")
+     * @JMS\Groups({"synchronisation"})
+     * @ORM\Column(name="sync_attempts", type="integer", nullable=false)
+     */
+    protected $syncAttempts = 0;
+
+    /**
      * Document constructor.
      *
      * Report is initially required, but will be set to null at submission time,
@@ -263,5 +271,24 @@ class Document implements SynchronisableInterface
     private function isTransactionDocument()
     {
         return strpos($this->getFileName(), 'DigiRepTransactions') !== false;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getSyncAttempts(): ?int
+    {
+        return $this->syncAttempts;
+    }
+
+
+    public function incrementSyncAttempts(): void
+    {
+        $this->syncAttempts++;
+    }
+
+    public function resetSyncAttempts(): void
+    {
+        $this->syncAttempts = 0;
     }
 }

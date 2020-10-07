@@ -475,4 +475,89 @@ class DocumentSyncServiceTest extends KernelTestCase
 
         self::assertNotContains($queuedDocumentData->getReportSubmissionId(), $sut->getSyncErrorSubmissionIds());
     }
+
+    /**
+     * @test
+     * @dataProvider errorCodeProvider
+     */
+    public function sendDocument_sync_failure_sirius_error_type_based_on_response_code(string $errorCode, string $expectedErrorType, int $syncAttempts)
+    {
+        $reportPdfReportSubmission =
+            (new ReportSubmission())
+                ->setId($this->reportSubmissionId)
+                ->setUuid($this->reportPdfSubmissionUuid);
+
+        $queuedDocumentData = (new QueuedDocumentData())
+            ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
+            ->setDocumentId(6789)
+            ->setReportSubmissionId($this->reportSubmissionId)
+            ->setReportSubmissions([$reportPdfReportSubmission])
+            ->setReportStartDate($this->reportStartDate)
+            ->setReportEndDate($this->reportEndDate)
+            ->setReportSubmitDate($this->reportSubmittedDate)
+            ->setStorageReference($this->s3Reference)
+            ->setFilename('test.pdf')
+            ->setIsReportPdf(true)
+            ->setCaseNumber('1234567t')
+            ->setNdrId(null)
+            ->setDocumentSyncAttempts($syncAttempts);
+
+        $siriusDocumentUpload = SiriusHelpers::generateSiriusReportPdfDocumentUpload(
+            $this->reportStartDate,
+            $this->reportEndDate,
+            $this->reportSubmittedDate,
+            'PF',
+            $this->reportSubmissionId,
+            $this->fileName,
+            null,
+            $this->s3Reference
+        );
+
+        $failureResponseBody = ['errors' => [0 => ['id' => 'ABC123', 'code' => 'OPGDATA-API-FORBIDDEN']]];
+        $failureResponse = new Response($errorCode, [], json_encode($failureResponseBody));
+
+        $requestException = new RequestException('An error occurred', new Request('POST', '/report-submission/9876/update-uuid'), $failureResponse);
+
+        $this->siriusApiGatewayClient->sendReportPdfDocument($siriusDocumentUpload, '1234567T')
+            ->shouldBeCalled()
+            ->willThrow($requestException);
+
+        $this->errorTranslator->translateApiError(json_encode($failureResponseBody))->willReturn(
+            'OPGDATA-API-FORBIDDEN: Credentials used for integration lack correct permissions'
+        );
+
+        $this->restClient
+            ->apiCall(
+                'put',
+                'document/6789',
+                json_encode(
+                    ['syncStatus' => $expectedErrorType,
+                        'syncError' => 'OPGDATA-API-FORBIDDEN: Credentials used for integration lack correct permissions'
+                    ]
+                ),
+                'Report\\Document',
+                [],
+                false
+            )
+            ->shouldBeCalled()
+            ->willReturn($this->serializer->serialize(new Document(), 'json'));
+
+        $sut = new DocumentSyncService(
+            $this->s3Storage->reveal(),
+            $this->siriusApiGatewayClient->reveal(),
+            $this->restClient->reveal(),
+            $this->errorTranslator->reveal()
+        );
+
+        $sut->syncDocument($queuedDocumentData);
+    }
+
+    public function errorCodeProvider()
+    {
+        return [
+            '4XX error code' => ['400', Document::SYNC_STATUS_PERMANENT_ERROR, 0],
+            '5XX error code' => ['500', Document::SYNC_STATUS_TEMPORARY_ERROR, 0],
+            '5XX error code - 4th attempt' => ['500', Document::SYNC_STATUS_PERMANENT_ERROR, 3]
+        ];
+    }
 }
