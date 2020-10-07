@@ -3,6 +3,7 @@
 
 namespace AppBundle\v2\Registration\Controller;
 
+use AppBundle\Service\DataCompression;
 use AppBundle\v2\Controller\ControllerTrait;
 use AppBundle\v2\Registration\Assembler\CasRecToOrgDeputyshipDtoAssembler;
 use AppBundle\v2\Registration\Uploader\OrgDeputyshipUploader;
@@ -15,6 +16,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class OrgDeputyshipController extends AbstractController
 {
+    const MAX_UPLOAD_BATCH_SIZE = 10000;
+
     use ControllerTrait;
 
     /** @var OrgDeputyshipUploader */
@@ -23,16 +26,21 @@ class OrgDeputyshipController extends AbstractController
     /**  @var CasRecToOrgDeputyshipDtoAssembler */
     private $assembler;
 
+    /** @var DataCompression */
+    private $dataCompression;
+
     /**
      * OrgDeputyshipController constructor.
      * @param OrgDeputyshipUploader $orgDeputyshipUploader
      */
     public function __construct(
         OrgDeputyshipUploader $orgDeputyshipUploader,
-        CasRecToOrgDeputyshipDtoAssembler $assembler
+        CasRecToOrgDeputyshipDtoAssembler $assembler,
+        DataCompression $dataCompression
     ) {
         $this->uploader = $orgDeputyshipUploader;
         $this->assembler = $assembler;
+        $this->dataCompression = $dataCompression;
     }
 
     /**
@@ -41,11 +49,18 @@ class OrgDeputyshipController extends AbstractController
      */
     public function create(Request $request)
     {
-        $decodedRows = json_decode($request->getContent(), true);
-        $dtos = $this->assembler->assembleMultipleDtosFromArray($decodedRows);
+        $decompressedData = $this->dataCompression->decompress($request->getContent());
+        $rowCount = count($decompressedData);
 
-        $uploadResults = $this->uploader->upload($dtos);
+        if (!$rowCount) {
+            throw new \RuntimeException('No records received from the API');
+        }
+        if ($rowCount > self::MAX_UPLOAD_BATCH_SIZE) {
+            throw new \RuntimeException(sprintf('Max %s records allowed in a single bulk insert', self::MAX_UPLOAD_BATCH_SIZE));
+        }
 
-        return new JsonResponse($uploadResults, Response::HTTP_CREATED);
+        $dtos = $this->assembler->assembleMultipleDtosFromArray($decompressedData);
+
+        return $this->uploader->upload($dtos);
     }
 }

@@ -38,17 +38,24 @@ class OrgService
         'added' => [
             'clients' => 0,
             'named_deputies' => 0,
-            'reports' => 0
+            'reports' => 0,
+            'organisations' => 0
         ],
     ];
 
     const CHUNK_SIZE = 50;
 
+    /** @var DataCompression */
+    private $dataCompression;
+
     /**
      * @param RestClient $restClient
      */
-    public function __construct(RestClient $restClient, Environment $twig, SessionInterface $session)
-    {
+    public function __construct(
+        RestClient $restClient,
+        Environment $twig,
+        SessionInterface $session
+    ) {
         $this->restClient = $restClient;
         $this->twig = $twig;
         $this->session = $session;
@@ -162,8 +169,8 @@ class OrgService
 
         $flashBag->add(
             'notice',
-
-            sprintf('Added %d clients, %d named deputies and %d reports. Go to users tab to enable them',
+            sprintf(
+                'Added %d clients, %d named deputies and %d reports. Go to users tab to enable them',
                 $this->output['added']['clients'],
                 $this->output['added']['named_deputies'],
                 $this->output['added']['reports']
@@ -182,12 +189,11 @@ class OrgService
             $compressedChunk = CsvUploader::compressData($chunk);
 
             /** @var array $upload */
-            $upload = $this->restClient->post('org/bulk-add', $compressedChunk);
+            $upload = $this->restClient->post('v2/org-deputyships', $compressedChunk);
 
             $this->storeChunkOutput($upload);
             $this->logProgress($index + 1, $chunkCount);
         }
-
     }
 
     /**
@@ -201,7 +207,7 @@ class OrgService
 
         $response = $this->generateStreamedResponse();
 
-        $response->setCallback(function() use ($chunks, $redirectUrl) {
+        $response->setCallback(function () use ($chunks, $redirectUrl) {
             $this->session->start();
 
             $this->processChunks($chunks);

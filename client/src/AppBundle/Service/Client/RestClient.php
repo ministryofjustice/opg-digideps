@@ -255,7 +255,8 @@ class RestClient
             $options['deserialise_groups'] = $jmsGroups;
         }
 
-        return $this->apiCall('post', $endpoint, $mixed, $expectedResponseType, $options);
+        $response = $this->apiCall('post', $endpoint, $mixed, $expectedResponseType, $options);
+        return $response;
     }
 
     /**
@@ -295,7 +296,6 @@ class RestClient
      */
     public function apiCall($method, $endpoint, $data, $expectedResponseType, $options = [], $authenticated = true)
     {
-
         if ($data) {
             $options['body'] = $this->toJson($data, $options);
         }

@@ -52,7 +52,7 @@ class OrgDeputyshipUploader
         $this->clientAssembler = $clientAssembler;
         $this->namedDeputyAssembler = $namedDeputyAssembler;
 
-        $this->added = ['clients' => [], 'discharged_clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
+        $this->added = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
         $this->namedDeputy = null;
         $this->client = null;
     }

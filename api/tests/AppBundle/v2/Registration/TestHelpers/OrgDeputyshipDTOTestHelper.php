@@ -23,7 +23,7 @@ use Faker\Provider\en_GB\Address;
 
 class OrgDeputyshipDTOTestHelper
 {
-    public static function generateCasRecOrgDeputyshipJson(int $validCount, int $invalidCount)
+    public static function generateCasRecOrgDeputyshipCompressedJson(int $validCount, int $invalidCount)
     {
         $deputyships = [];
 
@@ -39,7 +39,7 @@ class OrgDeputyshipDTOTestHelper
             }
         }
 
-        return json_encode($deputyships);
+        return base64_encode(gzcompress(json_encode($deputyships), 9));
     }
 
 
@@ -50,7 +50,7 @@ class OrgDeputyshipDTOTestHelper
      */
     public static function generateOrgDeputyshipDtos(int $validCount, int $invalidCount)
     {
-        $json = self::generateCasRecOrgDeputyshipJson($validCount, $invalidCount);
+        $json = self::generateCasRecOrgDeputyshipCompressedJson($validCount, $invalidCount);
         $dtos = [];
         $reportUtils = new ReportUtils();
         $assembler = new CasRecToOrgDeputyshipDtoAssembler($reportUtils);
@@ -64,16 +64,17 @@ class OrgDeputyshipDTOTestHelper
 
     /**
      * @param int $clients
+     * @param int $organisations
      * @param int $namedDeputies
      * @param int $reports
      * @param int $errors
      * @return false|string
      * @throws \Exception
      */
-    public static function generateOrgDeputyshipResponseJson(int $clients, int $discharged, int $namedDeputies, int $reports, int $errors)
+    public static function generateOrgDeputyshipResponseJson(int $clients, int $organisations, int $namedDeputies, int $reports, int $errors)
     {
         $result = ['errors' => $errors];
-        $added = ['clients' => [], 'discharged_clients' => [], 'named_deputies' => [], 'reports' => []];
+        $added = ['clients' => [], 'organisations' => [], 'named_deputies' => [], 'reports' => []];
 
         if ($clients > 0) {
             foreach (range(1, $clients) as $index) {
@@ -81,8 +82,8 @@ class OrgDeputyshipDTOTestHelper
             }
         }
 
-        if ($discharged > 0) {
-            foreach (range(1, $discharged) as $index) {
+        if ($organisations > 0) {
+            foreach (range(1, $organisations) as $index) {
                 $added['discharged_clients'] = random_int(10000000, 99999999);
             }
         }
@@ -96,6 +97,12 @@ class OrgDeputyshipDTOTestHelper
         if ($reports > 0) {
             foreach (range(1, $reports) as $index) {
                 $added['reports'] = random_int(10000000, 99999999);
+            }
+        }
+
+        if ($errors > 0) {
+            foreach (range(1, $errors) as $index) {
+                $result['errors'] = 'An error occurred';
             }
         }
 
@@ -133,7 +140,7 @@ class OrgDeputyshipDTOTestHelper
         $reportDueDate = $courtOrderMadeDate->modify('12 months - 1 day');
 
         return [
-            'Email'        => $faker->companyEmail,
+            'Email'        => sprintf('%s%s@%s.com', $faker->company, $faker->randomNumber(8), $faker->domainWord),
             'Deputy No'    => (string) $faker->randomNumber(8),
             'Dep Postcode' => Address::postcode(),
             'Dep Forename' => $faker->firstName,
