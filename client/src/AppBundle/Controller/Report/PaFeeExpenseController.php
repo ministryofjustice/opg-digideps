@@ -5,6 +5,9 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Client\Internal\ReportApi;
+use AppBundle\Service\Client\RestClient;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,15 +25,30 @@ class PaFeeExpenseController extends AbstractController
         'expenses', //second part uses same endpoints as deputy expenses
     ];
 
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ReportApi */
+    private $reportApi;
+
+    public function __construct(
+        RestClient $restClient,
+        ReportApi $reportApi
+    )
+    {
+        $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
+    }
+
     /**
      * @Route("", name="pa_fee_expense")
      * @Template("AppBundle:Report/PaFeeExpense:start.html.twig")
      *
      * @param int $reportId
      *
-     * @return array
+     * @return array|RedirectResponse
      */
-    public function startAction($reportId)
+    public function startAction(int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -46,8 +64,13 @@ class PaFeeExpenseController extends AbstractController
     /**
      * @Route("/fee-exist", name="pa_fee_expense_fee_exist")
      * @Template("AppBundle:Report/PaFeeExpense:feeExist.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function feeExistAction(Request $request, $reportId)
+    public function feeExistAction(Request $request, int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Report\PaFeeExistType::class, $report);
@@ -80,8 +103,13 @@ class PaFeeExpenseController extends AbstractController
     /**
      * @Route("/fee-edit", name="pa_fee_expense_fee_edit")
      * @Template("AppBundle:Report/PaFeeExpense:feeEdit.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function feeEditAction(Request $request, $reportId)
+    public function feeEditAction(Request $request, int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Report\FeesType::class, $report);
@@ -112,8 +140,13 @@ class PaFeeExpenseController extends AbstractController
     /**
      * @Route("/other/exist", name="pa_fee_expense_other_exist")
      * @Template("AppBundle:Report/PaFeeExpense:otherExist.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function otherExistAction(Request $request, $reportId)
+    public function otherExistAction(Request $request, int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class, $report, [ 'field' => 'paidForAnything', 'translation_domain' => 'report-pa-fee-expense']
@@ -152,8 +185,13 @@ class PaFeeExpenseController extends AbstractController
     /**
      * @Route("/other/add", name="pa_fee_expense_other_add")
      * @Template("AppBundle:Report/PaFeeExpense:otherAdd.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function otherAddAction(Request $request, $reportId)
+    public function otherAddAction(Request $request, int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $expense = new EntityDir\Report\Expense();
@@ -195,8 +233,13 @@ class PaFeeExpenseController extends AbstractController
     /**
      * @Route("/other/add-another", name="pa_fee_expense_add_another")
      * @Template("AppBundle:Report/PaFeeExpense:otherAddAnother.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function otherAddAnotherAction(Request $request, $reportId)
+    public function otherAddAnotherAction(Request $request, int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -223,11 +266,12 @@ class PaFeeExpenseController extends AbstractController
      * @Template("AppBundle:Report/PaFeeExpense:otherEdit.html.twig")
      *
      * @param Request $request
-     * @param $reportId
-     * @param $expenseId
-     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     * @param int $reportId
+     * @param int $expenseId
+     *
+     * @return array|RedirectResponse
      */
-    public function otherEditAction(Request $request, $reportId, $expenseId)
+    public function otherEditAction(Request $request, int $reportId, int $expenseId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $expense = $this->restClient->get('report/' . $report->getId() . '/expense/' . $expenseId, 'Report\Expense');
@@ -264,11 +308,12 @@ class PaFeeExpenseController extends AbstractController
      * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
      * @param Request $request
-     * @param $reportId
-     * @param $expenseId
-     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     * @param int $reportId
+     * @param int $expenseId
+     *
+     * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $reportId, $expenseId)
+    public function deleteAction(Request $request, int $reportId, int $expenseId)
     {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
@@ -308,9 +353,9 @@ class PaFeeExpenseController extends AbstractController
      *
      * @param int $reportId
      *
-     * @return array
+     * @return array|RedirectResponse
      */
-    public function summaryAction($reportId)
+    public function summaryAction(int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getPaFeesExpensesState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {

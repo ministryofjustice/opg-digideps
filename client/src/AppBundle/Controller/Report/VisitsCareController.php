@@ -6,7 +6,10 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 
+use AppBundle\Service\Client\Internal\ReportApi;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\StepRedirector;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,11 +21,31 @@ class VisitsCareController extends AbstractController
         'visits-care-state',
     ];
 
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ReportApi */
+    private $reportApi;
+
+    public function __construct(
+        RestClient $restClient,
+        ReportApi $reportApi
+    )
+    {
+        $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
+    }
+
     /**
      * @Route("/report/{reportId}/visits-care", name="visits_care")
      * @Template("AppBundle:Report/VisitsCare:start.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function startAction(Request $request, $reportId)
+    public function startAction(Request $request, int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getVisitsCareState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
@@ -37,8 +60,14 @@ class VisitsCareController extends AbstractController
     /**
      * @Route("/report/{reportId}/visits-care/step/{step}", name="visits_care_step")
      * @Template("AppBundle:Report/VisitsCare:step.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     * @param int $step
+     *
+     * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, $reportId, $step)
+    public function stepAction(Request $request, int $reportId, int $step)
     {
         $totalSteps = 4;
         if ($step < 1 || $step > $totalSteps) {
@@ -96,8 +125,13 @@ class VisitsCareController extends AbstractController
     /**
      * @Route("/report/{reportId}/visits-care/summary", name="visits_care_summary")
      * @Template("AppBundle:Report/VisitsCare:summary.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, $reportId)
+    public function summaryAction(Request $request, int $reportId)
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);

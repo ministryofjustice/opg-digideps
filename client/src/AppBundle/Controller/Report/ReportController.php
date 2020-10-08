@@ -14,9 +14,16 @@ use AppBundle\Form\FeedbackReportType;
 use AppBundle\Form\Report\ReportDeclarationType;
 use AppBundle\Form\Report\ReportType;
 use AppBundle\Model\FeedbackReport;
+use AppBundle\Service\Client\Internal\ClientApi;
+use AppBundle\Service\Client\Internal\ReportApi;
+use AppBundle\Service\Client\Internal\UserApi;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\CsvGeneratorService;
+use AppBundle\Service\Mailer\MailFactory;
+use AppBundle\Service\Mailer\MailSender;
 use AppBundle\Service\Redirector;
 use AppBundle\Service\ReportSubmissionService;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormFactory;
@@ -84,18 +91,56 @@ class ReportController extends AbstractController
         'unsubmitted-reports-count'
     ];
 
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ReportApi */
+    private $reportApi;
+
+    /** @var UserApi */
+    private $userApi;
+
+    /** @var ClientApi */
+    private $clientApi;
+
+    /** @var MailFactory */
+    private $mailFactory;
+
+    /** @var MailSender */
+    private $mailSender;
+
+    public function __construct(
+        RestClient $restClient,
+        ReportApi $reportApi,
+        UserApi $userApi,
+        ClientApi $clientApi,
+        MailFactory $mailFactory
+    )
+    {
+        $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
+        $this->userApi = $userApi;
+        $this->clientApi = $clientApi;
+        $this->mailFactory = $mailFactory;
+        $this->mailSender = $mailSender;
+    }
+
     /**
      * List of reports.
      *
      * @Route("/lay", name="lay_home")
      * //TODO we should add Security("has_role('ROLE_LAY_DEPUTY')") here, but not sure as not clear what "getCorrectRouteIfDifferent" does
      * @Template("AppBundle:Report/Report:index.html.twig")
+     *
+     * @param Redirector $redirector
+     *
+     * @return array|RedirectResponse
      */
     public function indexAction(Redirector $redirector)
     {
         // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
         // due to the way
-        $user = $this->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
+        $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
 
         // redirect if user has missing details or is on wrong page
         $route = $redirector->getCorrectRouteIfDifferent($user, 'lay_home');
@@ -124,8 +169,14 @@ class ReportController extends AbstractController
      *
      * @Route("/reports/edit/{reportId}", name="report_edit")
      * @Template("AppBundle:Report/Report:edit.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     *
+     * @return array|RedirectResponse
+     * @throws \Exception
      */
-    public function editAction(Request $request, $reportId)
+    public function editAction(Request $request, int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId);
         $client = $report->getClient();
@@ -138,7 +189,7 @@ class ReportController extends AbstractController
 
         $editReportDatesForm = $formFactory->createNamed('report_edit', ReportType::class, $report, [ 'translation_domain' => 'report']);
         $returnLink = $user->isDeputyOrg()
-            ? $this->generateClientProfileLink($report->getClient())
+            ? $this->clientApi->generateClientProfileLink($report->getClient())
             : $this->generateUrl('lay_home');
 
         $editReportDatesForm->handleRequest($request);
@@ -172,7 +223,7 @@ class ReportController extends AbstractController
     {
         $client = $this->restClient->get('client/' . $clientId, 'Client', ['client', 'client-reports', 'report-id']);
 
-        $existingReports = $this->getReportsIndexedById($client);
+        $existingReports = $this->reportApi->getReportsIndexedById($client);
 
         if (count($existingReports)) {
             throw $this->createAccessDeniedException('Client already has a report');
@@ -207,12 +258,17 @@ class ReportController extends AbstractController
     /**
      * @Route("/report/{reportId}/overview", name="report_overview")
      * @Template("AppBundle:Report/Report:overview.html.twig")
+     *
+     * @param Redirector $redirector
+     * @param int $reportId
+     *
+     * @return RedirectResponse|Response|null
      */
-    public function overviewAction(Redirector $redirector, $reportId)
+    public function overviewAction(Redirector $redirector, int $reportId)
     {
         $reportJmsGroup = ['status', 'balance', 'user', 'client', 'client-reports', 'balance-state'];
         // redirect if user has missing details or is on wrong page
-        $user = $this->getUserWithData();
+        $user = $this->userApi->getUserWithData();
 
         $route = $redirector->getCorrectRouteIfDifferent($user, 'report_overview');
         if (is_string($route)) {
@@ -261,6 +317,7 @@ class ReportController extends AbstractController
      *
      * @param User $user
      * @param int $clientId
+     *
      * @return Client
      */
     private function generateClient(User $user, int $clientId)
@@ -311,8 +368,14 @@ class ReportController extends AbstractController
     /**
      * @Route("/report/{reportId}/declaration", name="report_declaration")
      * @Template("AppBundle:Report/Report:declaration.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     * @param ReportSubmissionService $reportSubmissionService
+     *
+     * @return array|RedirectResponse
      */
-    public function declarationAction(Request $request, $reportId, ReportSubmissionService $reportSubmissionService)
+    public function declarationAction(Request $request, int $reportId, ReportSubmissionService $reportSubmissionService)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$reportGroupsAll);
 
@@ -358,8 +421,13 @@ class ReportController extends AbstractController
      *
      * @Route("/report/{reportId}/submitted", name="report_submit_confirmation")
      * @Template("AppBundle:Report/Report:submitConfirmation.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function submitConfirmationAction(Request $request, $reportId)
+    public function submitConfirmationAction(Request $request, int $reportId)
     {
         $report = $this->getReport($reportId, ['status']);
 
@@ -393,7 +461,7 @@ class ReportController extends AbstractController
 
             // Send notification email
             $feedbackEmail = $this->mailFactory->createPostSubmissionFeedbackEmail($form->getData(), $user);
-            $this->mailSender->send($feedbackEmail, ['html']);
+            $this->mailSender->send($feedbackEmail);
 
             return $this->redirect($this->generateUrl('report_submit_feedback', ['reportId' => $reportId]));
         }
@@ -407,10 +475,12 @@ class ReportController extends AbstractController
     /**
      * @Route("/report/{reportId}/submit_feedback", name="report_submit_feedback")
      * @Template("AppBundle:Report/Report:submitFeedback.html.twig")
+     * @param int $reportId
+     * @return array
      */
-    public function submitFeedbackAction($reportId)
+    public function submitFeedbackAction(int $reportId)
     {
-        $report = $this->getReport($reportId, self::$reportGroupsAll);
+        $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
 
         /** @var TranslatorInterface $translator */
         $translator = $this->get('translator');
@@ -431,11 +501,15 @@ class ReportController extends AbstractController
      *
      * @Route("/report/{reportId}/review", name="report_review")
      * @Template("AppBundle:Report/Report:review.html.twig")
+     *
+     * @param int $reportId
+     * @return array
+     *
+     * @throws \Exception
      */
-    public function reviewAction($reportId)
+    public function reviewAction(int $reportId)
     {
-        /** @var Report $report */
-        $report = $this->getReport($reportId, self::$reportGroupsAll);
+        $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
 
         // check status
         $status = $report->getStatus();
@@ -444,7 +518,7 @@ class ReportController extends AbstractController
         $user = $this->getUser();
 
         if ($user->isDeputyOrg()) {
-            $backLink = $this->generateClientProfileLink($report->getClient());
+            $backLink = $this->clientApi->generateClientProfileLink($report->getClient());
         } else {
             $backLink = $this->generateUrl('lay_home');
         }
@@ -462,14 +536,15 @@ class ReportController extends AbstractController
      * Used for active and archived report.
      *
      * @Route("/report/{reportId}/pdf-debug")
+     * @param int $reportId
+     * @return Response|null
      */
-    public function pdfDebugAction($reportId)
+    public function pdfDebugAction(int $reportId)
     {
         if (!$this->getParameter('kernel.debug')) {
             throw new DisplayableException('Route only visite in debug mode');
         }
-        /** @var Report $report */
-        $report = $this->getReport($reportId, self::$reportGroupsAll);
+        $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
 
         return $this->render('AppBundle:Report/Formatted:formatted_standalone.html.twig', [
             'report' => $report,
@@ -479,10 +554,15 @@ class ReportController extends AbstractController
 
     /**
      * @Route("/report/deputyreport-{reportId}.pdf", name="report_pdf")
+     *
+     * @param int $reportId
+     * @param ReportSubmissionService $reportSubmissionService
+     *
+     * @return Response
      */
-    public function pdfViewAction($reportId, ReportSubmissionService $reportSubmissionService)
+    public function pdfViewAction(int $reportId, ReportSubmissionService $reportSubmissionService)
     {
-        $report = $this->getReport($reportId, self::$reportGroupsAll);
+        $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
         $pdfBinary = $reportSubmissionService->getPdfBinaryContent($report);
 
         $response = new Response($pdfBinary);
@@ -511,10 +591,15 @@ class ReportController extends AbstractController
      * Generates Transactions CSV and returns as CSV file response
      *
      * @Route("/report/transactions-{reportId}.csv", name="report_transactions_csv")
+     *
+     * @param int $reportId
+     * @param CsvGeneratorService $csvGenerator
+     *
+     * @return Response
      */
-    public function transactionsCsvViewAction($reportId, CsvGeneratorService $csvGenerator)
+    public function transactionsCsvViewAction(int $reportId, CsvGeneratorService $csvGenerator)
     {
-        $report = $this->getReport($reportId, self::$reportGroupsAll);
+        $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
 
         // restrict access to only 102, 102-4 reports
         $reportType = $report->getType();
@@ -549,6 +634,7 @@ class ReportController extends AbstractController
     /**
      * @param DeputyInterface $deputy
      * @param Report $report
+     *
      * @return array
      */
     private function getAssociatedContactDetails(DeputyInterface $deputy, Report $report)
@@ -561,6 +647,7 @@ class ReportController extends AbstractController
 
     /**
      * @param Report $report
+     *
      * @return array
      */
     private function getClientContactDetails(Report $report)
@@ -584,6 +671,7 @@ class ReportController extends AbstractController
     /**
      * @param DeputyInterface $deputy
      * @param Report $report
+     *
      * @return array
      */
     private function getDeputyContactDetails(DeputyInterface $deputy, Report $report)

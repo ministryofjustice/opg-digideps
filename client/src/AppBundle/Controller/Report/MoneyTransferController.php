@@ -5,6 +5,8 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Client\Internal\ReportApi;
+use AppBundle\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\SubmitButton;
@@ -20,6 +22,21 @@ class MoneyTransferController extends AbstractController
         'money-transfer-state',
     ];
 
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ReportApi */
+    private $reportApi;
+
+    public function __construct(
+        RestClient $restClient,
+        ReportApi $reportApi
+    )
+    {
+        $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
+    }
+
     /**
      * @Route("/report/{reportId}/money-transfers", name="money_transfers")
      * @Template("AppBundle:Report/MoneyTransfer:start.html.twig")
@@ -28,7 +45,7 @@ class MoneyTransferController extends AbstractController
      *
      * @return array|Response|RedirectResponse
      */
-    public function startAction($reportId)
+    public function startAction(int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (!$report->enoughBankAccountForTransfers()) {
@@ -50,8 +67,13 @@ class MoneyTransferController extends AbstractController
     /**
      * @Route("/report/{reportId}/money-transfers/exist", name="money_transfers_exist")
      * @Template("AppBundle:Report/MoneyTransfer:exist.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function existAction(Request $request, $reportId)
+    public function existAction(Request $request, int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class, $report, [
@@ -87,8 +109,15 @@ class MoneyTransferController extends AbstractController
     /**
      * @Route("/report/{reportId}/money-transfers/step{step}/{transferId}", name="money_transfers_step", requirements={"step":"\d+"})
      * @Template("AppBundle:Report/MoneyTransfer:step.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     * @param int $step
+     * @param null $transferId
+     *
+     * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, $reportId, $step, $transferId = null)
+    public function stepAction(Request $request, int $reportId, int $step, $transferId = null)
     {
         $totalSteps = 2;
         if ($step < 1 || $step > $totalSteps) {
@@ -180,8 +209,13 @@ class MoneyTransferController extends AbstractController
     /**
      * @Route("/report/{reportId}/money-transfers/add_another", name="money_transfers_add_another")
      * @Template("AppBundle:Report/MoneyTransfer:addAnother.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function addAnotherAction(Request $request, $reportId)
+    public function addAnotherAction(Request $request, int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -211,7 +245,7 @@ class MoneyTransferController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function summaryAction($reportId)
+    public function summaryAction(int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getMoneyTransferState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
@@ -232,7 +266,7 @@ class MoneyTransferController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $reportId, $transferId)
+    public function deleteAction(Request $request, int $reportId, int $transferId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 

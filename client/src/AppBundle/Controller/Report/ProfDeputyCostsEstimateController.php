@@ -7,6 +7,9 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Form as FormDir;
 use AppBundle\Resolver\SubSectionRoute\ProfCostsEstimateSubSectionRouteResolver;
+use AppBundle\Service\Client\Internal\ReportApi;
+use AppBundle\Service\Client\RestClient;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormInterface;
@@ -27,12 +30,29 @@ class ProfDeputyCostsEstimateController extends AbstractController
         'prof-deputy-estimate-management-costs'
     ];
 
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ReportApi */
+    private $reportApi;
+
+    public function __construct(
+        RestClient $restClient,
+        ReportApi $reportApi
+    )
+    {
+        $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
+    }
+
     /**
      * @Route("", name="prof_deputy_costs_estimate")
      * @Template("AppBundle:Report/ProfDeputyCostsEstimate:start.html.twig")
      *
      * @param $reportId
-     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     * @param ProfCostsEstimateSubSectionRouteResolver $routeResolver
+     *
+     * @return array|RedirectResponse
      */
     public function startAction($reportId, ProfCostsEstimateSubSectionRouteResolver $routeResolver)
     {
@@ -54,7 +74,8 @@ class ProfDeputyCostsEstimateController extends AbstractController
      *
      * @param Request $request
      * @param $reportId
-     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @return array|RedirectResponse
      */
     public function howChargedAction(Request $request, $reportId)
     {
@@ -88,8 +109,11 @@ class ProfDeputyCostsEstimateController extends AbstractController
     /**
      * @Route("/breakdown", name="prof_deputy_costs_estimate_breakdown")
      * @Template("AppBundle:Report/ProfDeputyCostsEstimate:breakdown.html.twig")
+     * @param Request $request
+     * @param int $reportId
+     * @return array|RedirectResponse
      */
-    public function breakdownAction(Request $request, $reportId)
+    public function breakdownAction(Request $request, int $reportId)
     {
         $from = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -127,8 +151,11 @@ class ProfDeputyCostsEstimateController extends AbstractController
     /**
      * @Route("/more-info", name="prof_deputy_costs_estimate_more_info")
      * @Template("AppBundle:Report/ProfDeputyCostsEstimate:moreInfo.html.twig")
+     * @param Request $request
+     * @param int $reportId
+     * @return array|RedirectResponse
      */
-    public function moreInfoAction(Request $request, $reportId)
+    public function moreInfoAction(Request $request, int $reportId)
     {
         $from = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, ['prof-deputy-costs-estimate-more-info']);
@@ -159,9 +186,9 @@ class ProfDeputyCostsEstimateController extends AbstractController
      *
      * @param int $reportId
      *
-     * @return array
+     * @return array|RedirectResponse
      */
-    public function summaryAction($reportId)
+    public function summaryAction(int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -184,6 +211,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
      * without this list.
      *
      * @param EntityDir\Report\Report $report
+     *
      * @return array
      */
     private function generateDefaultEstimateCosts(EntityDir\Report\Report $report)
@@ -206,6 +234,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
     /**
      * @param $id
      * @param Report $report
+     *
      * @param array $groups
      */
     private function persistUpdate($id, Report $report, array $groups)
@@ -217,6 +246,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
      * @param Request $request
      * @param FormInterface $form
      * @param $originalHowChargedValue
+     *
      * @return string
      */
     private function determineNextRouteFromHowCharged(Request $request, FormInterface $form, $originalHowChargedValue)
@@ -235,6 +265,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
     /**
      * @param $originalHowChargedValue
      * @param $updatedHowCharged
+     *
      * @return bool
      */
     private function answerHasChangedFromFixedToNonFixed($originalHowChargedValue, $updatedHowCharged)

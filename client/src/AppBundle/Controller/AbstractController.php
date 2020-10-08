@@ -34,7 +34,7 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * @return Router
+     * @return object
      */
     public function getRouter()
     {

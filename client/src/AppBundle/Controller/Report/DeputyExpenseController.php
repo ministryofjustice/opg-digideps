@@ -5,6 +5,9 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Client\Internal\ReportApi;
+use AppBundle\Service\Client\RestClient;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,15 +20,30 @@ class DeputyExpenseController extends AbstractController
         'account'
     ];
 
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ReportApi */
+    private $reportApi;
+
+    public function __construct(
+        RestClient $restClient,
+        ReportApi $reportApi
+    )
+    {
+        $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
+    }
+
     /**
      * @Route("/report/{reportId}/deputy-expenses", name="deputy_expenses")
      * @Template("AppBundle:Report/DeputyExpense:start.html.twig")
      *
      * @param int $reportId
      *
-     * @return array
+     * @return array|RedirectResponse
      */
-    public function startAction($reportId)
+    public function startAction(int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -41,8 +59,13 @@ class DeputyExpenseController extends AbstractController
     /**
      * @Route("/report/{reportId}/deputy-expenses/exist", name="deputy_expenses_exist")
      * @Template("AppBundle:Report/DeputyExpense:exist.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function existAction(Request $request, $reportId)
+    public function existAction(Request $request, int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class, $report, [ 'field' => 'paidForAnything', 'translation_domain' => 'report-deputy-expenses']
@@ -76,8 +99,13 @@ class DeputyExpenseController extends AbstractController
     /**
      * @Route("/report/{reportId}/deputy-expenses/add", name="deputy_expenses_add")
      * @Template("AppBundle:Report/DeputyExpense:add.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function addAction(Request $request, $reportId)
+    public function addAction(Request $request, int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $expense = new EntityDir\Report\Expense();
@@ -114,8 +142,13 @@ class DeputyExpenseController extends AbstractController
     /**
      * @Route("/report/{reportId}/deputy-expenses/add_another", name="deputy_expenses_add_another")
      * @Template("AppBundle:Report/DeputyExpense:addAnother.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function addAnotherAction(Request $request, $reportId)
+    public function addAnotherAction(Request $request, int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -140,8 +173,14 @@ class DeputyExpenseController extends AbstractController
     /**
      * @Route("/report/{reportId}/deputy-expenses/edit/{expenseId}", name="deputy_expenses_edit")
      * @Template("AppBundle:Report/DeputyExpense:edit.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     * @param int $expenseId
+     *
+     * @return array|RedirectResponse
      */
-    public function editAction(Request $request, $reportId, $expenseId)
+    public function editAction(Request $request, int $reportId, int $expenseId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $expense = $this->restClient->get(
@@ -197,9 +236,9 @@ class DeputyExpenseController extends AbstractController
      *
      * @param int $reportId
      *
-     * @return array
+     * @return array|RedirectResponse
      */
-    public function summaryAction($reportId)
+    public function summaryAction(int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getExpensesState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
@@ -215,11 +254,12 @@ class DeputyExpenseController extends AbstractController
      * @Route("/report/{reportId}/deputy-expenses/{expenseId}/delete", name="deputy_expenses_delete")
      * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
-     * @param int $id
-     *
-     * @return RedirectResponse
+     * @param Request $request
+     * @param int $reportId
+     * @param int $expenseId
+     * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $reportId, $expenseId)
+    public function deleteAction(Request $request, int $reportId, int $expenseId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 

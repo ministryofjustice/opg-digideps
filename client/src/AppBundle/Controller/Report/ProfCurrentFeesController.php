@@ -6,6 +6,9 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Form\Report\ProfServiceFeeExistType;
+use AppBundle\Service\Client\Internal\ReportApi;
+use AppBundle\Service\Client\RestClient;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,15 +27,30 @@ class ProfCurrentFeesController extends AbstractController
         'report-prof-estimate-fees',
     ];
 
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ReportApi */
+    private $reportApi;
+
+    public function __construct(
+        RestClient $restClient,
+        ReportApi $reportApi
+    )
+    {
+        $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
+    }
+
     /**
      * @Route("", name="prof_current_fees")
      * @Template("AppBundle:Report/ProfCurrentFees:start.html.twig")
      *
      * @param int $reportId
      *
-     * @return array
+     * @return array|RedirectResponse
      */
-    public function startAction($reportId)
+    public function startAction(int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getProfCurrentFeesState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
@@ -48,9 +66,12 @@ class ProfCurrentFeesController extends AbstractController
      * @Route("/exist", name="prof_current_fees_exist")
      * @Template("AppBundle:Report/ProfCurrentFees:exist.html.twig")
      *
+     * @param Request $request
      * @param int $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function existAction(Request $request, $reportId)
+    public function existAction(Request $request, int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(ProfServiceFeeExistType::class, $report);
@@ -83,8 +104,16 @@ class ProfCurrentFeesController extends AbstractController
     /**
      * @Route("/step/{step}/{feeId}", name="current_service_fee_step", requirements={"step":"\d+"})
      * @Template("AppBundle:Report/ProfCurrentFees:step.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     * @param int $step
+     * @param null $feeId
+     *
+     * @return array|RedirectResponse
+     * @throws \Exception
      */
-    public function stepAction(Request $request, $reportId, $step, $feeId = null)
+    public function stepAction(Request $request, int $reportId, int $step, $feeId = null)
     {
         $totalSteps = 2;
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -203,11 +232,12 @@ class ProfCurrentFeesController extends AbstractController
      * @Route("/previous-estimates/fee/{feeId}", name="previous_estimates")
      * @Template("AppBundle:Report/ProfCurrentFees:previousEstimates.html.twig")
      *
+     * @param Request $request
      * @param int $reportId
      *
-     * @return array
+     * @return array|RedirectResponse
      */
-    public function previousEstimatesAction(Request $request, $reportId, $feeId = null)
+    public function previousEstimatesAction(Request $request, int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Report\ProfServicePreviousFeesEstimateType::class, $report);
@@ -246,9 +276,9 @@ class ProfCurrentFeesController extends AbstractController
      *
      * @param int $reportId
      *
-     * @return array
+     * @return array|RedirectResponse
      */
-    public function summaryAction($reportId)
+    public function summaryAction(int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getProfCurrentFeesState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
@@ -267,7 +297,7 @@ class ProfCurrentFeesController extends AbstractController
      * @param Request $request
      * @param $reportId
      * @param $feeId
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function deleteAction(Request $request, $reportId, $feeId)
     {

@@ -7,6 +7,8 @@ use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Entity\Report\MoneyTransaction;
 use AppBundle\Entity\Report\Status;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Client\Internal\ReportApi;
+use AppBundle\Service\Client\RestClient;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\SubmitButton;
@@ -22,11 +24,31 @@ class MoneyOutController extends AbstractController
         'account'
     ];
 
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ReportApi */
+    private $reportApi;
+
+    public function __construct(
+        RestClient $restClient,
+        ReportApi $reportApi
+    )
+    {
+        $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
+    }
+
     /**
      * @Route("/report/{reportId}/money-out", name="money_out")
      * @Template("AppBundle:Report/MoneyOut:start.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function startAction(Request $request, $reportId)
+    public function startAction(Request $request, int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getMoneyOutState()['state'] != Status::STATE_NOT_STARTED) {
@@ -41,8 +63,15 @@ class MoneyOutController extends AbstractController
     /**
      * @Route("/report/{reportId}/money-out/step{step}/{transactionId}", name="money_out_step", requirements={"step":"\d+"})
      * @Template("AppBundle:Report/MoneyOut:step.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     * @param int $step
+     * @param null $transactionId
+     *
+     * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, $reportId, $step, $transactionId = null)
+    public function stepAction(Request $request, int $reportId, int $step, $transactionId = null)
     {
         $totalSteps = 2;
         if ($step < 1 || $step > $totalSteps) {
@@ -140,8 +169,13 @@ class MoneyOutController extends AbstractController
     /**
      * @Route("/report/{reportId}/money-out/add_another", name="money_out_add_another")
      * @Template("AppBundle:Report/MoneyOut:addAnother.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function addAnotherAction(Request $request, $reportId)
+    public function addAnotherAction(Request $request, int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId);
 
@@ -165,13 +199,13 @@ class MoneyOutController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out/summary", name="money_out_summary")
+     * @Template("AppBundle:Report/MoneyOut:summary.html.twig")
      *
      * @param int $reportId
-     * @Template("AppBundle:Report/MoneyOut:summary.html.twig")
      *
      * @return array|RedirectResponse
      */
-    public function summaryAction($reportId)
+    public function summaryAction(int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getMoneyOutState()['state'] == Status::STATE_NOT_STARTED) {
@@ -192,7 +226,7 @@ class MoneyOutController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $reportId, $transactionId)
+    public function deleteAction(Request $request, int $reportId, int $transactionId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 

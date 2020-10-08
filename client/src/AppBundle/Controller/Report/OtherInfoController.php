@@ -6,6 +6,9 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 
+use AppBundle\Service\Client\Internal\ReportApi;
+use AppBundle\Service\Client\RestClient;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Form;
@@ -18,11 +21,31 @@ class OtherInfoController extends AbstractController
         'more-info-state',
     ];
 
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ReportApi */
+    private $reportApi;
+
+    public function __construct(
+        RestClient $restClient,
+        ReportApi $reportApi
+    )
+    {
+        $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
+    }
+
     /**
      * @Route("/report/{reportId}/any-other-info", name="other_info")
      * @Template("AppBundle:Report/OtherInfo:start.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function startAction(Request $request, $reportId)
+    public function startAction(Request $request, int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getOtherInfoState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
@@ -37,8 +60,14 @@ class OtherInfoController extends AbstractController
     /**
      * @Route("/report/{reportId}/any-other-info/step/{step}", name="other_info_step")
      * @Template("AppBundle:Report/OtherInfo:step.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     * @param int $step
+     *
+     * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, $reportId, $step)
+    public function stepAction(Request $request, int $reportId, int $step)
     {
         $totalSteps = 1; //only one step but convenient to reuse the "step" logic and keep things aligned/simple
         if ($step < 1 || $step > $totalSteps) {
@@ -82,8 +111,13 @@ class OtherInfoController extends AbstractController
     /**
      * @Route("/report/{reportId}/any-other-info/summary", name="other_info_summary")
      * @Template("AppBundle:Report/OtherInfo:summary.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, $reportId)
+    public function summaryAction(Request $request, int $reportId)
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
