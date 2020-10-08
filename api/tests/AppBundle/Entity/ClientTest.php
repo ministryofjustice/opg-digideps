@@ -1,8 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Tests\AppBundle\Entity;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\NamedDeputy;
+use AppBundle\Entity\Organisation;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -113,5 +115,59 @@ class ClientTest extends TestCase
     {
         $this->object->setCourtDate(null);
         $this->assertEquals(null, $this->object->getExpectedReportEndDate(2020));
+    }
+
+    /**
+     * @dataProvider deputyProvider
+     * @test
+     */
+    public function hasChangedNamedDeputy(?NamedDeputy $existingDeputy, NamedDeputy $deputyToCheck, bool $expectedResult)
+    {
+        $client = new Client();
+
+        if ($existingDeputy) {
+            $client->setNamedDeputy($existingDeputy);
+        }
+
+        self::assertEquals($expectedResult, $client->hasChangedNamedDeputy($deputyToCheck));
+    }
+
+    public function deputyProvider()
+    {
+        $existingDeputy = new NamedDeputy();
+        $newDeputy = new NamedDeputy();
+
+        return [
+            'Existing deputy' => [$existingDeputy, $existingDeputy, false],
+            'New deputy' => [$existingDeputy, $newDeputy, true],
+            'No deputy' => [null, $newDeputy, false],
+        ];
+    }
+
+    /**
+     * @dataProvider orgProvider
+     * @test
+     */
+    public function hasSwitchedOrganisation(?Organisation $existingOrg, Organisation $orgToCheck, bool $expectedResult)
+    {
+        $client = new Client();
+
+        if ($existingOrg) {
+            $client->setOrganisation($existingOrg);
+        }
+
+        self::assertEquals($expectedResult, $client->hasSwitchedOrganisation($orgToCheck));
+    }
+
+    public function orgProvider()
+    {
+        $existingOrg = new Organisation();
+        $newOrg = new Organisation();
+
+        return [
+            'Existing org' => [$existingOrg, $existingOrg, false],
+            'New org' => [$existingOrg, $newOrg, true],
+            'No org' => [null, $newOrg, false],
+        ];
     }
 }

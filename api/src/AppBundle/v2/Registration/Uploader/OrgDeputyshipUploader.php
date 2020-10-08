@@ -154,7 +154,7 @@ class OrgDeputyshipUploader
         } else {
             $client->setCourtDate($dto->getCourtDate());
 
-            if (!$client->hasSwitchedOrganisation($this->currentOrganisation) && $client->hasNewNamedDeputy($this->namedDeputy)) {
+            if (!$client->hasSwitchedOrganisation($this->currentOrganisation) && $client->hasChangedNamedDeputy($this->namedDeputy)) {
                 $client->setNamedDeputy($this->namedDeputy);
             }
         }
