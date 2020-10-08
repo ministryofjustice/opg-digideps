@@ -243,6 +243,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $originalNamedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
         $originalNamedDeputy->setEmail1(sprintf('different.deputy@%s', $orgIdentifier));
+        $originalNamedDeputy->setDeputyNo('abc123');
 
         $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($orgIdentifier, $this->em);
         $organisation->setEmailIdentifier($orgIdentifier);
