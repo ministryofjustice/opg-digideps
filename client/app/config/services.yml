@@ -113,6 +113,12 @@ services:
             $siriusApiGatewayClient: '@AppBundle\Service\Client\Sirius\SiriusApiGatewayClient'
             $restClient: '@AppBundle\Service\Client\RestClient'
 
+    AppBundle\Service\Client\InternalAPI\Client:
+        autowire: true
+        autoconfigure: true
+        arguments:
+            $restClient: '@AppBundle\Service\Client\RestClient'
+
     AppBundle\Controller\SettingsController:
         autowire: true
         autoconfigure: true

@@ -6,6 +6,8 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 
+use AppBundle\Service\Client\Internal\ReportApi;
+use AppBundle\Service\Client\RestClient;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -19,17 +21,32 @@ class DecisionController extends AbstractController
         'decision-status',
     ];
 
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ReportApi */
+    private $reportApi;
+
+    public function __construct(
+        RestClient $restClient,
+        ReportApi $reportApi
+    )
+    {
+        $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
+    }
+
     /**
      * @Route("/report/{reportId}/decisions", name="decisions")
      * @Template("AppBundle:Report/Decision:start.html.twig")
      *
      * @param int $reportId
      *
-     * @return array
+     * @return array|RedirectResponse
      */
     public function startAction($reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if ($report->getStatus()->getDecisionsState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
@@ -43,10 +60,15 @@ class DecisionController extends AbstractController
     /**
      * @Route("/report/{reportId}/decisions/mental-capacity", name="decisions_mental_capacity")
      * @Template("AppBundle:Report/Decision:mentalCapacity.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function mentalCapacityAction(Request $request, $reportId)
+    public function mentalCapacityAction(Request $request, int $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromSummaryPage = $request->get('from') == 'summary';
 
         $mc = $report->getMentalCapacity();
@@ -61,7 +83,7 @@ class DecisionController extends AbstractController
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->getRestClient()->put('report/' . $reportId . '/mental-capacity', $data, ['mental-capacity']);
+            $this->restClient->put('report/' . $reportId . '/mental-capacity', $data, ['mental-capacity']);
             if ($fromSummaryPage) {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
             }
@@ -83,7 +105,7 @@ class DecisionController extends AbstractController
      */
     public function mentalAssessmentAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromSummaryPage = $request->get('from') == 'summary';
 
         $mc = $report->getMentalCapacity();
@@ -99,7 +121,7 @@ class DecisionController extends AbstractController
 
             $data->setReport($report);
 
-            $this->getRestClient()->put('report/' . $reportId . '/mental-capacity', $data, ['mental-assessment-date']);
+            $this->restClient->put('report/' . $reportId . '/mental-capacity', $data, ['mental-assessment-date']);
             if ($fromSummaryPage) {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
             }
@@ -121,7 +143,7 @@ class DecisionController extends AbstractController
      */
     public function existAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Report\DecisionExistType::class, $report);
         $form->handleRequest($request);
 
@@ -130,9 +152,9 @@ class DecisionController extends AbstractController
                 case 'yes':
                     return $this->redirectToRoute('decisions_add', ['reportId' => $reportId, 'from'=>'decisions_exist']);
                 case 'no':
-                    $this->getRestClient()->put('report/' . $reportId, $report, ['reasonForNoDecisions']);
+                    $this->restClient->put('report/' . $reportId, $report, ['reasonForNoDecisions']);
                     foreach ($report->getDecisions() as $decision) {
-                        $this->getRestClient()->delete('/report/decision/' . $decision->getId());
+                        $this->restClient->delete('/report/decision/' . $decision->getId());
                     }
                     return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
             }
@@ -156,7 +178,7 @@ class DecisionController extends AbstractController
      */
     public function addAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $decision = new EntityDir\Report\Decision();
         $from = $request->get('from');
 
@@ -167,7 +189,7 @@ class DecisionController extends AbstractController
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->getRestClient()->post('report/decision', $data, ['decision', 'report-id']);
+            $this->restClient->post('report/decision', $data, ['decision', 'report-id']);
 
             return $this->redirect($this->generateUrl('decisions_add_another', ['reportId' => $reportId]));
         }
@@ -188,7 +210,7 @@ class DecisionController extends AbstractController
      */
     public function addAnotherAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-decisions']);
         $form->handleRequest($request);
@@ -214,8 +236,8 @@ class DecisionController extends AbstractController
      */
     public function editAction(Request $request, $reportId, $decisionId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $decision = $this->getRestClient()->get('report/decision/' . $decisionId, 'Report\\Decision');
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $decision = $this->restClient->get('report/decision/' . $decisionId, 'Report\\Decision');
         $decision->setReport($report);
 
         $form = $this->createForm(FormDir\Report\DecisionType::class, $decision);
@@ -225,7 +247,7 @@ class DecisionController extends AbstractController
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->getRestClient()->put('report/decision', $data, ['decision']);
+            $this->restClient->put('report/decision', $data, ['decision']);
 
             $request->getSession()->getFlashBag()->add('notice', 'Decision edited');
 
@@ -250,7 +272,7 @@ class DecisionController extends AbstractController
     public function summaryAction(Request $request, $reportId)
     {
         $fromPage = $request->get('from');
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if ($report->getStatus()->getDecisionsState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('decisions', ['reportId' => $reportId]);
@@ -277,7 +299,7 @@ class DecisionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getRestClient()->delete("/report/decision/{$decisionId}");
+            $this->restClient->delete("/report/decision/{$decisionId}");
 
             $request->getSession()->getFlashBag()->add(
                 'notice',
@@ -287,8 +309,8 @@ class DecisionController extends AbstractController
             return $this->redirect($this->generateUrl('decisions', ['reportId' => $reportId]));
         }
 
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $decision = $this->getRestClient()->get('report/decision/' . $decisionId, 'Report\\Decision');
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $decision = $this->restClient->get('report/decision/' . $decisionId, 'Report\\Decision');
 
         return [
             'translationDomain' => 'report-decisions',

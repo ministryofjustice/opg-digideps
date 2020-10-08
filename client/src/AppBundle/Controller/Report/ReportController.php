@@ -110,7 +110,7 @@ class ReportController extends AbstractController
         $client = array_shift($clients);
 
         //refresh client adding codeputes (another API call to avoid recursion with users)
-        $clientWithCoDeputies = $this->getRestClient()->get('client/' . $client->getId(), 'Client', ['client', 'client-users', 'user']);
+        $clientWithCoDeputies = $this->restClient->get('client/' . $client->getId(), 'Client', ['client', 'client-users', 'user']);
         $coDeputies = $clientWithCoDeputies->getCoDeputies();
 
         return [
@@ -127,7 +127,7 @@ class ReportController extends AbstractController
      */
     public function editAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId);
         $client = $report->getClient();
 
         /** @var FormFactory */
@@ -143,7 +143,7 @@ class ReportController extends AbstractController
 
         $editReportDatesForm->handleRequest($request);
         if ($editReportDatesForm->isSubmitted() && $editReportDatesForm->isValid()) {
-            $this->getRestClient()->put('report/' . $reportId, $report, ['startEndDates']);
+            $this->restClient->put('report/' . $reportId, $report, ['startEndDates']);
 
             return $this->redirect($returnLink);
         }
@@ -170,7 +170,7 @@ class ReportController extends AbstractController
      */
     public function createAction(Request $request, $clientId, $action = false)
     {
-        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'client-reports', 'report-id']);
+        $client = $this->restClient->get('client/' . $clientId, 'Client', ['client', 'client-reports', 'report-id']);
 
         $existingReports = $this->getReportsIndexedById($client);
 
@@ -197,7 +197,7 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getRestClient()->post('report', $form->getData());
+            $this->restClient->post('report', $form->getData());
             return $this->redirect($this->generateUrl('homepage'));
         }
 
@@ -220,7 +220,7 @@ class ReportController extends AbstractController
         }
 
         // get all the groups (needed by EntityDir\Report\Status
-        $clientId = $this->getReportIfNotSubmitted($reportId, $reportJmsGroup)->getClient()->getId();
+        $clientId = $this->reportApi->getReportIfNotSubmitted($reportId, $reportJmsGroup)->getClient()->getId();
 
         /** @var Client */
         $client = $this->generateClient($user, $clientId);
@@ -244,8 +244,8 @@ class ReportController extends AbstractController
             $template = 'AppBundle:Report/Report:overview.html.twig';
         }
 
-        $report = $this->getReportIfNotSubmitted($reportId, $reportJmsGroup);
-        $activeReport = $activeReportId ? $this->getReportIfNotSubmitted($activeReportId, $reportJmsGroup) : null;
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, $reportJmsGroup);
+        $activeReport = $activeReportId ? $this->reportApi->getReportIfNotSubmitted($activeReportId, $reportJmsGroup) : null;
 
         return $this->render($template, [
             'user' => $user,
@@ -268,14 +268,14 @@ class ReportController extends AbstractController
         $jms = $this->determineJmsGroups($user);
 
         /* Get client with all other JMS groups required */
-        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', $jms);
+        $client = $this->restClient->get('client/' . $clientId, 'Client', $jms);
 
         if ($user->isDeputyOrg()) {
             /*
             Separate call to get client Users as query taking too long for some profs with many deputies attached.
             We only need the user id for the add client contact permission check
              */
-            $clientWithUsers = $this->getRestClient()->get('client/' . $clientId, 'Client', ['user-id', 'client-users']);
+            $clientWithUsers = $this->restClient->get('client/' . $clientId, 'Client', ['user-id', 'client-users']);
             $client->setUsers($clientWithUsers->getUsers());
         }
 
@@ -314,7 +314,7 @@ class ReportController extends AbstractController
      */
     public function declarationAction(Request $request, $reportId, ReportSubmissionService $reportSubmissionService)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$reportGroupsAll);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$reportGroupsAll);
 
         /** @var TranslatorInterface $translator */
         $translator = $this->get('translator');
@@ -385,15 +385,15 @@ class ReportController extends AbstractController
         }
         if ($form->isSubmitted() && $form->isValid()) {
             // Store in database
-            $this->getRestClient()->post('satisfaction', [
+            $this->restClient->post('satisfaction', [
                 'score' => $form->get('satisfactionLevel')->getData(),
                 'comments' => $comments,
                 'reportType' => $report->getType()
             ]);
 
             // Send notification email
-            $feedbackEmail = $this->getMailFactory()->createPostSubmissionFeedbackEmail($form->getData(), $user);
-            $this->getMailSender()->send($feedbackEmail, ['html']);
+            $feedbackEmail = $this->mailFactory->createPostSubmissionFeedbackEmail($form->getData(), $user);
+            $this->mailSender->send($feedbackEmail, ['html']);
 
             return $this->redirect($this->generateUrl('report_submit_feedback', ['reportId' => $reportId]));
         }

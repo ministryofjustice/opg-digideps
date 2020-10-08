@@ -5,6 +5,8 @@ namespace AppBundle\Controller\Ndr;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Client\Internal\ReportApi;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\NdrStatusService;
 use AppBundle\Service\StepRedirector;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,12 +23,31 @@ class IncomeBenefitController extends AbstractController
     ];
 
     /**
+     * @var ReportApi
+     */
+    private $reportApi;
+
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    public function __construct(
+        ReportApi $reportApi,
+        RestClient $restClient
+    )
+    {
+        $this->reportApi = $reportApi;
+        $this->restClient = $restClient;
+    }
+
+    /**
      * @Route("/ndr/{ndrId}/income-benefits", name="ndr_income_benefits")
      * @Template("AppBundle:Ndr/IncomeBenefit:start.html.twig")
      */
     public function startAction(Request $request, $ndrId)
     {
-        $ndr = $this->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
+        $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if ($ndr->getStatusService()->getIncomeBenefitsState()['state'] != NdrStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('ndr_income_benefits_summary', ['ndrId' => $ndrId]);
         }
@@ -46,7 +67,7 @@ class IncomeBenefitController extends AbstractController
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('ndr_income_benefits_summary', ['ndrId' => $ndrId]);
         }
-        $ndr = $this->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
+        $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
 
@@ -72,7 +93,7 @@ class IncomeBenefitController extends AbstractController
                 5 => ['ndr-one-off'],
             ];
 
-            $this->getRestClient()->put('ndr/' . $ndrId, $data, $stepToJmsGroup[$step]);
+            $this->restClient->put('ndr/' . $ndrId, $data, $stepToJmsGroup[$step]);
 
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add(
@@ -101,7 +122,7 @@ class IncomeBenefitController extends AbstractController
     public function summaryAction(Request $request, $ndrId)
     {
         $fromPage = $request->get('from');
-        $ndr = $this->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
+        $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
 
         // not started -> go back to start page
         if ($ndr->getStatusService()->getIncomeBenefitsState()['state'] == NdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step' && $fromPage != 'last-step') {

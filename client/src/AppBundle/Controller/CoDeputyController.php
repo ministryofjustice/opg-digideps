@@ -5,6 +5,11 @@ namespace AppBundle\Controller;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Model\SelfRegisterData;
+use AppBundle\Service\Client\Internal\ClientApi;
+use AppBundle\Service\Client\Internal\UserApi;
+use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\Mailer\MailFactory;
+use AppBundle\Service\Mailer\MailSender;
 use AppBundle\Service\Redirector;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -14,12 +19,52 @@ use Symfony\Component\HttpFoundation\Request;
 class CoDeputyController extends AbstractController
 {
     /**
+     * @var ClientApi
+     */
+    private $clientApi;
+
+    /**
+     * @var UserApi
+     */
+    private $userApi;
+
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    /**
+     * @var MailFactory
+     */
+    private $mailFactory;
+
+    /**
+     * @var MailSender
+     */
+    private $mailSender;
+
+    public function __construct(
+        ClientApi $clientApi,
+        UserApi $userApi,
+        RestClient $restClient,
+        MailFactory $mailFactory,
+        MailSender $mailSender
+    )
+    {
+        $this->clientApi = $clientApi;
+        $this->userApi = $userApi;
+        $this->restClient = $restClient;
+        $this->mailFactory = $mailFactory;
+        $this->mailSender = $mailSender;
+    }
+
+    /**
      * @Route("/codeputy/verification", name="codep_verification")
      * @Template("AppBundle:CoDeputy:verification.html.twig")
      */
     public function verificationAction(Request $request, Redirector $redirector)
     {
-        $user = $this->getUserWithData(['user', 'user-clients', 'client']);
+        $user = $this->userApi->getUserWithData(['user', 'user-clients', 'client']);
 
         // redirect if user has missing details or is on wrong page
         if ($route = $redirector->getCorrectRouteIfDifferent($user, 'codep_verification')) {
@@ -52,9 +97,9 @@ class CoDeputyController extends AbstractController
 
                 // validate against casRec
                 try {
-                    $this->getRestClient()->apiCall('post', 'selfregister/verifycodeputy', $selfRegisterData, 'array', [], false);
+                    $this->restClient->apiCall('post', 'selfregister/verifycodeputy', $selfRegisterData, 'array', [], false);
                     $user->setCoDeputyClientConfirmed(true);
-                    $this->getRestClient()->put('user/' . $user->getId(), $user);
+                    $this->restClient->put('user/' . $user->getId(), $user);
                     return $this->redirect($this->generateUrl('homepage'));
                 } catch (\Throwable $e) {
                     $translator = $this->get('translator');
@@ -101,7 +146,7 @@ class CoDeputyController extends AbstractController
      */
     public function addAction(Request $request, Redirector $redirector)
     {
-        $loggedInUser = $this->getUserWithData(['user-clients', 'client']);
+        $loggedInUser = $this->userApi->getUserWithData(['user-clients', 'client']);
 
         // redirect if user has missing details or is on wrong page
         if ($route = $redirector->getCorrectRouteIfDifferent($loggedInUser, 'add_co_deputy')) {
@@ -120,13 +165,13 @@ class CoDeputyController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 /** @var EntityDir\User $invitedUser */
-                $invitedUser = $this->getRestClient()->post('codeputy/add', $form->getData(), ['codeputy'], 'User');
+                $invitedUser = $this->restClient->post('codeputy/add', $form->getData(), ['codeputy'], 'User');
 
                 // Regular deputies should become coDeputies via a CSV import, but at least for testing handle the change from non co-dep to co-dep here
-                $this->getRestClient()->put('user/' . $loggedInUser->getId(), ['co_deputy_client_confirmed' => true], []);
+                $this->restClient->put('user/' . $loggedInUser->getId(), ['co_deputy_client_confirmed' => true], []);
 
-                $invitationEmail = $this->getMailFactory()->createInvitationEmail($invitedUser, $loggedInUser->getFullName());
-                $this->getMailSender()->send($invitationEmail);
+                $invitationEmail = $this->mailFactory->createInvitationEmail($invitedUser, $loggedInUser->getFullName());
+                $this->mailSender->send($invitationEmail);
 
                 $request->getSession()->getFlashBag()->add('notice', 'Deputy invitation has been sent');
 
@@ -147,7 +192,7 @@ class CoDeputyController extends AbstractController
         return [
             'form' => $form->createView(),
             'backLink' => $backLink,
-            'client' => $this->getFirstClient()
+            'client' => $this->clientApi->getFirstClient()
         ];
     }
 
@@ -157,8 +202,8 @@ class CoDeputyController extends AbstractController
      **/
     public function resendActivationAction(Request $request, $email)
     {
-        $loggedInUser = $this->getUserWithData(['user-clients', 'client']);
-        $invitedUser = $this->getRestClient()->userRecreateToken($email, 'pass-reset');
+        $loggedInUser = $this->userApi->getUserWithData(['user-clients', 'client']);
+        $invitedUser = $this->restClient->userRecreateToken($email, 'pass-reset');
 
         $form = $this->createForm(FormDir\CoDeputyInviteType::class, $invitedUser);
 
@@ -171,10 +216,10 @@ class CoDeputyController extends AbstractController
             try {
                 //email was updated on the fly
                 if ($form->getData()->getEmail() != $email) {
-                    $this->getRestClient()->put('codeputy/' . $invitedUser->getId(), $form->getData(), []);
+                    $this->restClient->put('codeputy/' . $invitedUser->getId(), $form->getData(), []);
                 }
-                $invitationEmail = $this->getMailFactory()->createInvitationEmail($invitedUser, $loggedInUser->getFullName());
-                $this->getMailSender()->send($invitationEmail);
+                $invitationEmail = $this->mailFactory->createInvitationEmail($invitedUser, $loggedInUser->getFullName());
+                $this->mailSender->send($invitationEmail);
                 $request->getSession()->getFlashBag()->add('notice', 'Deputy invitation was re-sent');
 
                 return $this->redirect($backLink);

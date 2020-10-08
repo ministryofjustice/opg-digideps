@@ -5,11 +5,14 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
+use AppBundle\Service\Client\Internal\ClientApi;
+use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Form\ClientType;
+use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\Mailer\MailFactory;
+use AppBundle\Service\Mailer\MailSender;
 use AppBundle\Service\Redirector;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -17,13 +20,52 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ClientController extends AbstractController
 {
     /**
+     * @var UserApi
+     */
+    private $userApi;
+
+    /**
+     * @var ClientApi
+     */
+    private $clientApi;
+
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    /**
+     * @var MailSender
+     */
+    private $mailSender;
+
+    /**
+     * @var MailFactory
+     */
+    private $mailFactory;
+
+    public function __construct(
+        UserApi $userApi,
+        ClientApi $clientApi,
+        RestClient $restClient,
+        MailSender $mailSender,
+        MailFactory $mailFactory
+    ) {
+        $this->userApi = $userApi;
+        $this->clientApi = $clientApi;
+        $this->restClient = $restClient;
+        $this->mailSender = $mailSender;
+        $this->mailFactory = $mailFactory;
+    }
+
+    /**
      * @Route("/deputyship-details/your-client", name="client_show")
      * @Template("AppBundle:Client:show.html.twig")
      */
     public function showAction(Redirector $redirector)
     {
         // redirect if user has missing details or is on wrong page
-        $user = $this->getUserWithData();
+        $user = $this->userApi->getUserWithData(['user', 'user-clients', 'client']);
 
         $route = $redirector->getCorrectRouteIfDifferent($user, 'client_show');
 
@@ -31,7 +73,7 @@ class ClientController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        $client = $this->getFirstClient();
+        $client = $this->clientApi->getFirstClient($user);
 
         return [
             'client' => $client,
@@ -45,7 +87,8 @@ class ClientController extends AbstractController
     public function editAction(Request $request)
     {
         $from = $request->get('from');
-        $client = $this->getFirstClient();
+
+        $client = $this->clientApi->getFirstClient(null);
 
         if (is_null($client)) {
             /** @var User $user */
@@ -65,14 +108,14 @@ class ClientController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $clientUpdated = $form->getData();
             $clientUpdated->setId($client->getId());
-            $this->getRestClient()->put('client/upsert', $clientUpdated, ['edit']);
+            $this->restClient->put('client/upsert', $clientUpdated, ['edit']);
             $this->addFlash('notice', htmlentities($client->getFirstname()) . "'s data edited");
 
-            $user = $this->getUserWithData(['user-clients', 'client']);
+            $user = $this->userApi->getUserWithData(['user-clients', 'client']);
 
             if ($user->isLayDeputy()) {
-                $updateClientDetailsEmail = $this->getMailFactory()->createUpdateClientDetailsEmail($clientUpdated);
-                $this->getMailSender()->send($updateClientDetailsEmail, ['html']);
+                $updateClientDetailsEmail = $this->mailFactory->createUpdateClientDetailsEmail($clientUpdated);
+                $this->mailSender->send($updateClientDetailsEmail);
             }
 
             $activeReport = $client->getActiveReport();
@@ -97,7 +140,7 @@ class ClientController extends AbstractController
     public function addAction(Request $request, Redirector $redirector)
     {
         // redirect if user has missing details or is on wrong page
-        $user = $this->getUserWithData();
+        $user = $this->userApi->getUserWithData();
 
         $route = $redirector->getCorrectRouteIfDifferent($user, 'client_add');
 
@@ -105,10 +148,10 @@ class ClientController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        $client = $this->getFirstClient();
+        $client = $this->clientApi->getFirstClient($user);
         if (!empty($client)) {
             // update existing client
-            $client = $this->getRestClient()->get('client/' . $client->getId(), 'Client', ['client', 'report-id', 'current-report']);
+            $client = $this->restClient->get('client/' . $client->getId(), 'Client', ['client', 'report-id', 'current-report']);
             $method = 'put';
             $client_validated = true;
         } else {
@@ -124,10 +167,10 @@ class ClientController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 // validate against casRec
-                $this->getRestClient()->apiCall('post', 'casrec/verify', $client, 'array', []);
+                $this->restClient->apiCall('post', 'casrec/verify', $client, 'array', []);
 
                 // $method is set above to either post or put
-                $response =  $this->getRestClient()->$method('client/upsert', $form->getData());
+                $response =  $this->restClient->$method('client/upsert', $form->getData());
 
                 /** @var User $currentUser */
                 $currentUser = $this->getUser();

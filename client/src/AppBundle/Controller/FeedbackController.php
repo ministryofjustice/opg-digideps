@@ -3,16 +3,68 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Form\FeedbackType;
-use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\FormError;
+use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\Mailer\MailFactory;
+use AppBundle\Service\Mailer\MailSender;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RouterInterface;
 
-class FeedbackController extends AbstractController
+class FeedbackController
 {
+    /**
+     * @var MailFactory
+     */
+    private $mailFactory;
+
+    /**
+     * @var MailSender
+     */
+    private $mailSender;
+
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
+     * @var Translator
+     */
+    private $translator;
+
+    /**
+     * @var FormFactory
+     */
+    private $form;
+
+    public function __construct(
+        MailFactory $mailFactory,
+        MailSender $mailSender,
+        RestClient $restClient,
+        RouterInterface $router,
+        Translator $translator,
+        FormFactory $form
+    ) {
+        $this->mailFactory = $mailFactory;
+        $this->mailSender = $mailSender;
+        $this->restClient = $restClient;
+        $this->router = $router;
+        $this->translator = $translator;
+        $this->form = $form;
+    }
+
     /**
      * @Route("/feedback", name="feedback")
      * @Template("AppBundle:Feedback:index.html.twig")
+     * @param Request $request
+     * @return array|RedirectResponse
      */
     public function indexAction(Request $request)
     {
@@ -26,19 +78,20 @@ class FeedbackController extends AbstractController
             $comments = $form->get('comments')->getData();
 
             if ($score) {
-                $this->getRestClient()->post('satisfaction/public', [
+                $this->restClient->post('satisfaction/public', [
                     'score' => $score,
                     'comments' => $comments,
                 ]);
             }
 
             // Send notification email
-            $feedbackEmail = $this->getMailFactory()->createGeneralFeedbackEmail($form->getData());
-            $this->getMailSender()->send($feedbackEmail);
+            $feedbackEmail = $this->mailFactory->createGeneralFeedbackEmail($form->getData());
+            $this->mailSender->send($feedbackEmail);
 
-            $confirmation = $this->get('translator')->trans('collectionPage.confirmation', [], 'feedback');
+            $confirmation = $this->translator->trans('collectionPage.confirmation', [], 'feedback');
             $request->getSession()->getFlashBag()->add('notice', $confirmation);
-            return $this->redirectToRoute('feedback');
+
+            return new RedirectResponse($this->router->generate('feedback'));
         }
 
         return [

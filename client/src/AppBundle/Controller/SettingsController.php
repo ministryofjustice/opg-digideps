@@ -5,6 +5,8 @@ namespace AppBundle\Controller;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\Audit\AuditEvents;
+use AppBundle\Service\Client\Internal\UserApi;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Logger;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
@@ -35,18 +37,32 @@ class SettingsController extends AbstractController
     /** @var DateTimeProvider */
     private $dateTimeProvider;
 
+    /**
+     * @var UserApi
+     */
+    private $userApi;
+
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
     public function __construct(
         MailFactory $mailFactory,
         MailSender $mailSender,
         TranslatorInterface $translator,
         Logger $logger,
-        DateTimeProvider $dateTimeProvider
+        DateTimeProvider $dateTimeProvider,
+        UserApi $userApi,
+        RestClient $restClient
     ) {
         $this->mailFactory = $mailFactory;
         $this->mailSender = $mailSender;
         $this->translator = $translator;
         $this->logger = $logger;
         $this->dateTimeProvider = $dateTimeProvider;
+        $this->userApi = $userApi;
+        $this->restClient = $restClient;
     }
 
     /**
@@ -57,7 +73,7 @@ class SettingsController extends AbstractController
     public function indexAction(Redirector $redirector)
     {
         if ($this->getUser()->isDeputyOrg()) {
-            $user = $this->getUserWithData(['user-organisations', 'organisation']);
+            $user = $this->userApi->getUserWithData(['user-organisations', 'organisation']);
 
             return [
                 'hasOrganisations' => count($user->getOrganisations()),
@@ -65,7 +81,7 @@ class SettingsController extends AbstractController
         };
 
         // redirect if user has missing details or is on wrong page
-        $user = $this->getUserWithData(['user-clients', 'client', 'client-reports', 'report']);
+        $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report']);
         if ($route = $redirector->getCorrectRouteIfDifferent($user, 'account_settings')) {
             return $this->redirectToRoute($route);
         }
@@ -84,7 +100,7 @@ class SettingsController extends AbstractController
      */
     public function passwordEditAction(Request $request)
     {
-        $user = $this->getUserWithData();
+        $user = $this->userApi->getUserWithData();
 
         $form = $this->createForm(FormDir\ChangePasswordType::class, $user, [
             'mapped' => false,
@@ -94,7 +110,7 @@ class SettingsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $request->request->get('change_password')['plain_password']['first'];
-            $this->getRestClient()->put('user/' . $user->getId() . '/set-password', json_encode([
+            $this->restClient->put('user/' . $user->getId() . '/set-password', json_encode([
                 'password_plain' => $plainPassword,
             ]));
             $request->getSession()->set('login-context', 'password-update');
@@ -132,7 +148,7 @@ class SettingsController extends AbstractController
      **/
     public function profileEditAction(Request $request)
     {
-        $user = $this->getUserWithData();
+        $user = $this->userApi->getUserWithData();
 
         if ($this->isGranted(EntityDir\User::ROLE_ADMIN) || $this->isGranted(EntityDir\User::ROLE_AD)) {
             $form = $this->createForm(FormDir\User\UserDetailsBasicType::class, $user, []);
@@ -176,7 +192,7 @@ class SettingsController extends AbstractController
             }
 
             try {
-                $this->getRestClient()->put('user/' . $user->getId(), $postEditDeputy, $jmsPutGroups);
+                $this->restClient->put('user/' . $user->getId(), $postEditDeputy, $jmsPutGroups);
 
                 if ($oldEmail !== $newEmail) {
                     $emailChangedEvent = (new AuditEvents($this->dateTimeProvider))
@@ -206,7 +222,7 @@ class SettingsController extends AbstractController
                 }
 
                 if ($user->isLayDeputy()) {
-                    $hydratedDeputy = $this->getUserWithData(['user-clients', 'client']);
+                    $hydratedDeputy = $this->userApi->getUserWithData(['user-clients', 'client']);
 
                     $updateDeputyDetailsEmail = $this->mailFactory->createUpdateDeputyDetailsEmail($hydratedDeputy);
                     $this->mailSender->send($updateDeputyDetailsEmail);
@@ -242,6 +258,7 @@ class SettingsController extends AbstractController
         } elseif ($this->isGranted(EntityDir\User::ROLE_PROF_ADMIN)) {
             return EntityDir\User::ROLE_PROF_TEAM_MEMBER;
         }
-        $this->createAccessDeniedException('User role not recognised');
+
+        return $this->createAccessDeniedException('User role not recognised');
     }
 }

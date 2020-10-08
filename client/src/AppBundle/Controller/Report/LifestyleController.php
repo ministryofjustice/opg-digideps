@@ -23,7 +23,7 @@ class LifestyleController extends AbstractController
      */
     public function startAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getLifestyleState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('lifestyle_summary', ['reportId' => $reportId]);
         }
@@ -43,7 +43,7 @@ class LifestyleController extends AbstractController
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('lifestyle_summary', ['reportId' => $reportId]);
         }
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $lifestyle = $report->getLifestyle() ?: new EntityDir\Report\Lifestyle();
         $fromPage = $request->get('from');
 
@@ -66,9 +66,9 @@ class LifestyleController extends AbstractController
                 ->keepOnlyRelevantLifestyleData();
 
             if ($lifestyle->getId() == null) {
-                $this->getRestClient()->post('report/lifestyle', $data, ['lifestyle', 'report-id']);
+                $this->restClient->post('report/lifestyle', $data, ['lifestyle', 'report-id']);
             } else {
-                $this->getRestClient()->put('report/lifestyle/' . $lifestyle->getId(), $data, self::$jmsGroups);
+                $this->restClient->put('report/lifestyle/' . $lifestyle->getId(), $data, self::$jmsGroups);
             }
 
             if ($fromPage == 'summary') {
@@ -98,7 +98,7 @@ class LifestyleController extends AbstractController
     public function summaryAction(Request $request, $reportId)
     {
         $fromPage = $request->get('from');
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getLifestyleState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('lifestyle', ['reportId' => $reportId]);
         }

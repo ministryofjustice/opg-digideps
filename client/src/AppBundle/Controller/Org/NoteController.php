@@ -5,6 +5,8 @@ namespace AppBundle\Controller\Org;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Client\Internal\ClientApi;
+use AppBundle\Service\Client\RestClient;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,15 +21,35 @@ class NoteController extends AbstractController
     ];
 
     /**
+     * @var ClientApi
+     */
+    private $clientApi;
+
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    public function __construct(
+        ClientApi $clientApi,
+        RestClient $restClient
+    )
+    {
+        $this->clientApi = $clientApi;
+        $this->restClient = $restClient;
+    }
+
+    /**
      * @Route("add", name="add_note")
      * @Template("AppBundle:Org/ClientProfile:addNote.html.twig")
+     * @throws \Exception
      */
     public function addAction(Request $request)
     {
         $clientId = $request->get('clientId');
 
         /** @var $client EntityDir\Client */
-        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report', 'client-users', 'user']);
+        $client = $this->restClient->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report', 'client-users', 'user']);
 
         $this->denyAccessUnlessGranted('add-note', $client, 'Access denied');
 
@@ -46,23 +68,24 @@ class NoteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $note = $form->getData();
 
-            $this->getRestClient()->post('note/' . $client->getId(), $note, ['add_note']);
+            $this->restClient->post('note/' . $client->getId(), $note, ['add_note']);
             $request->getSession()->getFlashBag()->add('notice', 'The note has been added');
 
-            return $this->redirect($this->generateClientProfileLink($note->getClient()));
+            return $this->redirect($this->clientApi->generateClientProfileLink($note->getClient()));
         }
 
         return [
             'form'  => $form->createView(),
             'client' => $client,
             'report' => $report,
-            'backLink' => $this->generateClientProfileLink($note->getClient())
+            'backLink' => $this->clientApi->generateClientProfileLink($note->getClient())
         ];
     }
 
     /**
      * @Route("{noteId}/edit", name="edit_note")
      * @Template("AppBundle:Org/ClientProfile:editNote.html.twig")
+     * @throws \Exception
      */
     public function editAction(Request $request, $noteId)
     {
@@ -81,20 +104,20 @@ class NoteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $note = $form->getData();
 
-            $this->getRestClient()->put('note/' . $noteId, $note, ['add_note']);
+            $this->restClient->put('note/' . $noteId, $note, ['add_note']);
             $request->getSession()->getFlashBag()->add(
                 'notice',
                 'The note has been edited'
             );
 
-            return $this->redirect($this->generateClientProfileLink($note->getClient()));
+            return $this->redirect($this->clientApi->generateClientProfileLink($note->getClient()));
         }
 
         return [
             'report'  => $note->getClient()->getCurrentReport()->setClient($note->getClient()),
             'form'  => $form->createView(),
             'client' => $note->getClient(),
-            'backLink' => $this->generateClientProfileLink($note->getClient())
+            'backLink' => $this->clientApi->generateClientProfileLink($note->getClient())
         ];
     }
 
@@ -103,6 +126,13 @@ class NoteController extends AbstractController
      *
      * @Route("{noteId}/delete", name="delete_note")
      * @Template("AppBundle:Common:confirmDelete.html.twig")
+     *
+     * @param Request $request
+     * @param $noteId
+     * @param bool $confirmed
+     *
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Exception
      */
     public function deleteConfirmAction(Request $request, $noteId, $confirmed = false)
     {
@@ -121,7 +151,7 @@ class NoteController extends AbstractController
 
                 $this->denyAccessUnlessGranted('delete-note', $note, 'Access denied');
 
-                $this->getRestClient()->delete('note/' . $noteId);
+                $this->restClient->delete('note/' . $noteId);
 
                 $request->getSession()->getFlashBag()->add('notice', 'Note has been removed');
             } catch (\Throwable $e) {
@@ -130,7 +160,7 @@ class NoteController extends AbstractController
                 $request->getSession()->getFlashBag()->add('error', 'Note could not be removed');
             }
 
-            return $this->redirect($this->generateClientProfileLink($note->getClient()));
+            return $this->redirect($this->clientApi->generateClientProfileLink($note->getClient()));
         }
 
         return [
@@ -141,7 +171,7 @@ class NoteController extends AbstractController
                 ['label' => 'deletePage.summary.title', 'value' => $note->getTitle()],
                 ['label' => 'deletePage.summary.createdOn', 'value' => $note->getCreatedOn(), 'format' => 'date'],
             ],
-            'backLink' => $this->generateClientProfileLink($note->getClient()),
+            'backLink' => $this->clientApi->generateClientProfileLink($note->getClient()),
         ];
     }
 
@@ -153,7 +183,7 @@ class NoteController extends AbstractController
      */
     private function getNote($noteId)
     {
-        return $this->getRestClient()->get(
+        return $this->restClient->get(
             'note/' . $noteId,
             'Note',
             ['notes', 'client', 'client-users', 'current-report', 'report-id', 'note-client', 'user']

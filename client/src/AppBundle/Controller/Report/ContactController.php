@@ -6,6 +6,8 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 
+use AppBundle\Service\Client\Internal\ReportApi;
+use AppBundle\Service\Client\RestClient;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -18,17 +20,32 @@ class ContactController extends AbstractController
         'contact-status',
     ];
 
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ReportApi */
+    private $reportApi;
+
+    public function __construct(
+        RestClient $restClient,
+        ReportApi $reportApi
+    )
+    {
+        $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
+    }
+
     /**
      * @Route("/report/{reportId}/contacts", name="contacts")
      * @Template("AppBundle:Report/Contact:start.html.twig")
      *
      * @param int $reportId
      *
-     * @return array
+     * @return array|RedirectResponse
      */
-    public function startAction($reportId)
+    public function startAction(int $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if ($report->getStatus()->getContactsState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
@@ -42,10 +59,15 @@ class ContactController extends AbstractController
     /**
      * @Route("/report/{reportId}/contacts/exist", name="contacts_exist")
      * @Template("AppBundle:Report/Contact:exist.html.twig")
+     *
+     * @param Request $request
+     * @param $reportId
+     *
+     * @return array|RedirectResponse
      */
     public function existAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Report\ContactExistType::class, $report);
         $form->handleRequest($request);
 
@@ -54,9 +76,9 @@ class ContactController extends AbstractController
                 case 'yes':
                     return $this->redirectToRoute('contacts_add', ['reportId' => $reportId, 'from'=>'exist']);
                 case 'no':
-                    $this->getRestClient()->put('report/' . $reportId, $report, ['reasonForNoContacts', 'contacts']);
+                    $this->restClient->put('report/' . $reportId, $report, ['reasonForNoContacts', 'contacts']);
                     foreach ($report->getContacts() as $contact) {
-                        $this->getRestClient()->delete('/report/contact/' . $contact->getId());
+                        $this->restClient->delete('/report/contact/' . $contact->getId());
                     }
                     return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
             }
@@ -77,10 +99,15 @@ class ContactController extends AbstractController
     /**
      * @Route("/report/{reportId}/contacts/add", name="contacts_add")
      * @Template("AppBundle:Report/Contact:add.html.twig")
+     *
+     * @param Request $request
+     * @param $reportId
+     *
+     * @return array|RedirectResponse
      */
     public function addAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $contact = new EntityDir\Report\Contact();
 
         $form = $this->createForm(FormDir\Report\ContactType::class, $contact);
@@ -91,7 +118,7 @@ class ContactController extends AbstractController
             $data->setReport($report);
 
             // update contact. The API will also delete reason for no contact
-                $this->getRestClient()->post('report/contact', $data, ['contact', 'report-id']);
+                $this->restClient->post('report/contact', $data, ['contact', 'report-id']);
 
             return $this->redirect($this->generateUrl('contacts_add_another', ['reportId' => $reportId]));
         }
@@ -109,10 +136,15 @@ class ContactController extends AbstractController
     /**
      * @Route("/report/{reportId}/contacts/add_another", name="contacts_add_another")
      * @Template("AppBundle:Report/Contact:addAnother.html.twig")
+     *
+     * @param Request $request
+     * @param $reportId
+     *
+     * @return array|RedirectResponse
      */
     public function addAnotherAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-contacts']);
         $form->handleRequest($request);
@@ -135,11 +167,17 @@ class ContactController extends AbstractController
     /**
      * @Route("/report/{reportId}/contacts/edit/{contactId}", name="contacts_edit")
      * @Template("AppBundle:Report/Contact:edit.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     * @param int $contactId
+     *
+     * @return array|RedirectResponse
      */
-    public function editAction(Request $request, $reportId, $contactId)
+    public function editAction(Request $request, int $reportId, int $contactId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $contact = $this->getRestClient()->get('report/contact/' . $contactId, 'Report\\Contact');
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $contact = $this->restClient->get('report/contact/' . $contactId, 'Report\\Contact');
         $contact->setReport($report);
 
         $form = $this->createForm(FormDir\Report\ContactType::class, $contact);
@@ -151,7 +189,7 @@ class ContactController extends AbstractController
 
             $request->getSession()->getFlashBag()->add('notice', 'Contact edited');
 
-            $this->getRestClient()->put('report/contact', $data);
+            $this->restClient->put('report/contact', $data);
             return $this->redirect($this->generateUrl('contacts', ['reportId' => $reportId]));
         }
 
@@ -168,11 +206,11 @@ class ContactController extends AbstractController
      *
      * @param int $reportId
      *
-     * @return array
+     * @return array|RedirectResponse
      */
-    public function summaryAction($reportId)
+    public function summaryAction(int $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if ($report->getStatus()->getContactsState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('contacts', ['reportId' => $reportId]);
@@ -187,17 +225,19 @@ class ContactController extends AbstractController
      * @Route("/report/{reportId}/contacts/{contactId}/delete", name="contacts_delete")
      * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
-     * @param int $id
+     * @param Request $request
+     * @param int $reportId
+     * @param int $contactId
      *
-     * @return RedirectResponse
+     * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $reportId, $contactId)
+    public function deleteAction(Request $request, int $reportId, int $contactId)
     {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getRestClient()->delete("/report/contact/{$contactId}");
+            $this->restClient->delete("/report/contact/{$contactId}");
 
             $request->getSession()->getFlashBag()->add(
                 'notice',
@@ -207,8 +247,8 @@ class ContactController extends AbstractController
             return $this->redirect($this->generateUrl('contacts', ['reportId' => $reportId]));
         }
 
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $contact = $this->getRestClient()->get('report/contact/' . $contactId, 'Report\\Contact');
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $contact = $this->restClient->get('report/contact/' . $contactId, 'Report\\Contact');
 
         return [
             'translationDomain' => 'report-contacts',

@@ -3,16 +3,23 @@
 namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\AbstractController;
+use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
 use AppBundle\Exception\ReportNotSubmittableException;
 use AppBundle\Exception\ReportNotSubmittedException;
 use AppBundle\Exception\ReportSubmittedException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
+use AppBundle\Service\Client\Internal\ClientApi;
+use AppBundle\Service\Client\Internal\UserApi;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\S3FileUploader;
+use AppBundle\Service\Mailer\MailFactory;
+use AppBundle\Service\Mailer\MailSender;
 use AppBundle\Service\NdrStatusService;
 use AppBundle\Service\Redirector;
 use AppBundle\Service\WkHtmlToPdfGenerator;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,9 +54,46 @@ class NdrController extends AbstractController
     /** @var WkHtmlToPdfGenerator */
     private $htmlToPdf;
 
-    public function __construct(WkHtmlToPdfGenerator $wkHtmlToPdfGenerator)
+    /**
+     * @var UserApi
+     */
+    private $userApi;
+
+    /**
+     * @var ClientApi
+     */
+    private $clientApi;
+
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    /**
+     * @var MailFactory
+     */
+    private $mailFactory;
+
+    /**
+     * @var MailSender
+     */
+    private $mailSender;
+
+    public function __construct(
+        WkHtmlToPdfGenerator $wkHtmlToPdfGenerator,
+        UserApi $userApi,
+        ClientApi $clientApi,
+        RestClient $restClient,
+        MailFactory $mailFactory,
+        MailSender $mailSender
+    )
     {
         $this->htmlToPdf = $wkHtmlToPdfGenerator;
+        $this->userApi = $userApi;
+        $this->clientApi = $clientApi;
+        $this->restClient = $restClient;
+        $this->mailFactory = $mailFactory;
+        $this->mailSender = $mailSender;
     }
 
     /**
@@ -57,11 +101,13 @@ class NdrController extends AbstractController
      *
      * @Route("/ndr", name="ndr_index")
      * @Template("AppBundle:Ndr/Ndr:index.html.twig")
+     * @param Redirector $redirector
+     * @return array|RedirectResponse
      */
     public function indexAction(Redirector $redirector)
     {
         // redirect if user has missing details or is on wrong page
-        $user = $this->getUserWithData(array_merge(self::$ndrGroupsForValidation, ['status']));
+        $user = $this->userApi->getUserWithData(array_merge(self::$ndrGroupsForValidation, ['status']));
 
         $route = $redirector->getCorrectRouteIfDifferent($user, 'ndr_index');
 
@@ -86,18 +132,21 @@ class NdrController extends AbstractController
     /**
      * @Route("/ndr/{ndrId}/overview", name="ndr_overview")
      * @Template("AppBundle:Ndr/Ndr:overview.html.twig")
+     * @param Redirector $redirector
+     * @return array|RedirectResponse
      */
-    public function overviewAction($ndrId, Redirector $redirector)
+    public function overviewAction(Redirector $redirector)
     {
         // redirect if user has missing details or is on wrong page
-        $user = $this->getUserWithData();
+        $user = $this->userApi->getUserWithData();
         $route = $redirector->getCorrectRouteIfDifferent($user, 'ndr_overview');
 
         if (is_string($route)) {
             return $this->redirectToRoute($route);
         }
 
-        $client = $this->getFirstClient(self::$ndrGroupsForValidation);
+        $user = $this->userApi->getUserWithData(self::$ndrGroupsForValidation);
+        $client = $this->clientApi->getFirstClient($user);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
@@ -124,7 +173,8 @@ class NdrController extends AbstractController
      */
     public function reviewAction($ndrId)
     {
-        $client = $this->getFirstClient(self::$ndrGroupsForValidation);
+        $user = $this->userApi->getUserWithData(self::$ndrGroupsForValidation);
+        $client = $this->clientApi->getFirstClient($user);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
@@ -148,7 +198,8 @@ class NdrController extends AbstractController
      */
     public function pdfViewAction($ndrId)
     {
-        $client = $this->getFirstClient(self::$ndrGroupsForValidation);
+        $user = $this->userApi->getUserWithData(self::$ndrGroupsForValidation);
+        $client = $this->clientApi->getFirstClient($user);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
@@ -192,7 +243,8 @@ class NdrController extends AbstractController
      */
     public function declarationAction(Request $request, $ndrId, S3FileUploader $fileUploader)
     {
-        $client = $this->getFirstClient(self::$ndrGroupsForValidation);
+        $user = $this->userApi->getUserWithData(self::$ndrGroupsForValidation);
+        $client = $this->clientApi->getFirstClient($user);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
@@ -210,7 +262,7 @@ class NdrController extends AbstractController
             throw new ReportSubmittedException();
         }
 
-        $user = $this->getUserWithData(['user-clients', 'client']);
+        $user = $this->userApi->getUserWithData(['user-clients', 'client']);
         $clients = $user->getClients();
         $client = $clients[0];
 
@@ -231,14 +283,14 @@ class NdrController extends AbstractController
                 true
             );
 
-            $this->getRestClient()->put('ndr/' . $ndr->getId() . '/submit?documentId=' . $document->getId(), $ndr, ['submit']);
+            $this->restClient->put('ndr/' . $ndr->getId() . '/submit?documentId=' . $document->getId(), $ndr, ['submit']);
 
             /** @var User */
-            $user = $this->getUserWithData(['user-clients', 'report', 'client-reports']);
+            $user = $this->userApi->getUserWithData(['user-clients', 'report', 'client-reports']);
             $client = $user->getClients()[0];
 
-            $reportConfirmEmail = $this->getMailFactory()->createNdrSubmissionConfirmationEmail($user, $ndr, $client->getActiveReport());
-            $this->getMailSender()->send($reportConfirmEmail);
+            $reportConfirmEmail = $this->mailFactory->createNdrSubmissionConfirmationEmail($user, $ndr, $client->getActiveReport());
+            $this->mailSender->send($reportConfirmEmail);
 
             return $this->redirect($this->generateUrl('ndr_submit_confirmation', ['ndrId'=>$ndr->getId()]));
         }
@@ -258,7 +310,8 @@ class NdrController extends AbstractController
      */
     public function submitConfirmationAction(Request $request, $ndrId)
     {
-        $client = $this->getFirstClient(self::$ndrGroupsForValidation);
+        $user = $this->userApi->getUserWithData(self::$ndrGroupsForValidation);
+        $client = $this->clientApi->getFirstClient($user);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
@@ -287,7 +340,7 @@ class NdrController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Store in database
-            $this->getRestClient()->post('satisfaction', [
+            $this->restClient->post('satisfaction', [
                 'score' => $form->get('satisfactionLevel')->getData(),
                 'comments' => $comments,
                 'reportType' => $ndr->getType(),
@@ -297,8 +350,8 @@ class NdrController extends AbstractController
             $user = $this->getUser();
 
             // Send notification email
-            $feedbackEmail = $this->getMailFactory()->createPostSubmissionFeedbackEmail($form->getData(), $user);
-            $this->getMailSender()->send($feedbackEmail, ['html']);
+            $feedbackEmail = $this->mailFactory->createPostSubmissionFeedbackEmail($form->getData(), $user);
+            $this->mailSender->send($feedbackEmail);
 
             return $this->redirect($this->generateUrl('ndr_submit_feedback', ['ndrId' => $ndrId]));
         }
@@ -316,7 +369,7 @@ class NdrController extends AbstractController
      */
     public function submitFeedbackAction($ndrId)
     {
-        $client = $this->getFirstClient(self::$ndrGroupsForValidation);
+        $client = $this->clientApi->getFirstClient(self::$ndrGroupsForValidation);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
@@ -357,7 +410,7 @@ class NdrController extends AbstractController
         $clients = $user->getClients();
         $clientId = array_shift($clients)->getId();
 
-        return  $this->getRestClient()->get(
+        return  $this->restClient->get(
             'client/' . $clientId,
             'Client',
             ['client', 'client-users', 'user']

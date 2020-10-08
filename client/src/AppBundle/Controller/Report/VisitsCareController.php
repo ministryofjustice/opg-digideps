@@ -24,7 +24,7 @@ class VisitsCareController extends AbstractController
      */
     public function startAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getVisitsCareState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId]);
         }
@@ -44,7 +44,7 @@ class VisitsCareController extends AbstractController
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId]);
         }
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $visitsCare = $report->getVisitsCare() ?: new EntityDir\Report\VisitsCare();
         $fromPage = $request->get('from');
 
@@ -67,9 +67,9 @@ class VisitsCareController extends AbstractController
                 ->keepOnlyRelevantVisitsCareData();
 
             if ($visitsCare->getId() == null) {
-                $this->getRestClient()->post('report/visits-care', $data, ['visits-care', 'report-id']);
+                $this->restClient->post('report/visits-care', $data, ['visits-care', 'report-id']);
             } else {
-                $this->getRestClient()->put('report/visits-care/' . $visitsCare->getId(), $data, self::$jmsGroups);
+                $this->restClient->put('report/visits-care/' . $visitsCare->getId(), $data, self::$jmsGroups);
             }
 
             if ($fromPage == 'summary') {
@@ -100,7 +100,7 @@ class VisitsCareController extends AbstractController
     public function summaryAction(Request $request, $reportId)
     {
         $fromPage = $request->get('from');
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getVisitsCareState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('visits_care', ['reportId' => $reportId]);
         }

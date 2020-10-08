@@ -11,15 +11,13 @@ use AppBundle\Mapper\ReportSatisfaction\ReportSatisfactionSummaryMapper;
 use AppBundle\Mapper\ReportSatisfaction\ReportSatisfactionSummaryQuery;
 use AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryMapper;
 use AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryQuery;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Transformer\ReportSubmission\ReportSubmissionBurFixedWidthTransformer;
 use AppBundle\Transformer\ReportSubmission\SatisfactionTransformer;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
-use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -30,10 +28,26 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 class StatsController extends AbstractController
 {
     /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    public function __construct(
+        RestClient $restClient
+    )
+    {
+        $this->restClient = $restClient;
+    }
+
+    /**
      * @Route("", name="admin_stats")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("AppBundle:Admin/Stats:stats.html.twig")
+     *
      * @param Request $request
+     * @param ReportSubmissionSummaryMapper $mapper
+     * @param ReportSubmissionBurFixedWidthTransformer $transformer
+     *
      * @return array|Response
      */
     public function statsAction(Request $request, ReportSubmissionSummaryMapper $mapper, ReportSubmissionBurFixedWidthTransformer $transformer)
@@ -198,8 +212,8 @@ class StatsController extends AbstractController
         $metrics = ['satisfaction', 'reportsSubmitted', 'clients', 'registeredDeputies'];
 
         foreach ($metrics as $metric) {
-            $all = $this->getRestClient()->get('stats?metric=' . $metric . $append, 'array');
-            $byRole = $this->getRestClient()->get('stats?metric=' . $metric . '&dimension[]=deputyType' . $append, 'array');
+            $all = $this->restClient->get('stats?metric=' . $metric . $append, 'array');
+            $byRole = $this->restClient->get('stats?metric=' . $metric . '&dimension[]=deputyType' . $append, 'array');
 
             $stats[$metric] = array_merge(
                 ['all' => $all[0]['amount']],
@@ -215,6 +229,10 @@ class StatsController extends AbstractController
 
     /**
      * Map an array of metric responses to be addressible by deputyType
+     *
+     * @param array $result
+     *
+     * @return array
      */
     private function mapToDeputyType(array $result): array {
         $resultByDeputyType = [];

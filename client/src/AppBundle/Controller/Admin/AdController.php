@@ -5,6 +5,8 @@ namespace AppBundle\Controller\Admin;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Client\RestClient;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -15,6 +17,18 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AdController extends AbstractController
 {
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    public function __construct(
+        RestClient $restClient
+    )
+    {
+        $this->restClient = $restClient;
+    }
+
     /**
      * @Route("/", name="ad_homepage")
      * @Security("has_role('ROLE_AD')")
@@ -31,7 +45,7 @@ class AdController extends AbstractController
             'ad_managed' => true,
             'q' => $request->get('q'),
         ];
-        $users = $this->getRestClient()->get('user/get-all?' . http_build_query($filters), 'User[]');
+        $users = $this->restClient->get('user/get-all?' . http_build_query($filters), 'User[]');
 
         // form add
         $form = $this->createForm(FormDir\Ad\AddUserType::class, new EntityDir\User(), [
@@ -48,7 +62,7 @@ class AdController extends AbstractController
                     // set email (needed to recreate token before login)
                     $userToAdd->setEmail('ad' . $this->getUser()->getId() . '-' . time() . '@digital.justice.gov.uk');
                     $userToAdd->setAdManaged(true);
-                    $response = $this->getRestClient()->post('user', $userToAdd, ['ad_add_user'], 'User');
+                    $response = $this->restClient->post('user', $userToAdd, ['ad_add_user'], 'User');
                     $request->getSession()->getFlashBag()->add(
                         'notice',
                         'User added. '
@@ -84,7 +98,8 @@ class AdController extends AbstractController
         $filter = $request->get('filter');
 
         try {
-            $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'client', 'client-reports', 'report', 'ndr']);
+            $user = $this->restClient->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'client', 'client-reports',
+                'report', 'ndr']);
         } catch (\Throwable $e) {
             return $this->render('AppBundle:Admin/Ad:error.html.twig', [
                 'error' => 'User not found',
@@ -116,17 +131,17 @@ class AdController extends AbstractController
         // get user and check it's deputy and NDR
         try {
             /* @var $deputy EntityDir\User */
-            $deputy = $this->getRestClient()->get("user/get-one-by/user_id/{$deputyId}", 'User', ['user']);
+            $deputy = $this->restClient->get("user/get-one-by/user_id/{$deputyId}", 'User', ['user']);
             if ($deputy->getRoleName() != EntityDir\User::ROLE_LAY_DEPUTY) {
                 throw new \RuntimeException('User not a Lay deputy');
             }
 
             // flag as managed in order to retrieve it later
             $deputy->setAdManaged(true);
-            $this->getRestClient()->put('user/' . $deputy->getId(), $deputy, ['ad_managed']);
+            $this->restClient->put('user/' . $deputy->getId(), $deputy, ['ad_managed']);
 
             // recreate token needed for login
-            $deputy = $this->getRestClient()->userRecreateToken($deputy->getEmail(), 'activate');
+            $deputy = $this->restClient->userRecreateToken($deputy->getEmail(), 'activate');
 
             // redirect to deputy area
             $deputyBaseUrl = rtrim($this->container->getParameter('non_admin_host'), '/');

@@ -5,8 +5,11 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Client\Internal\ReportApi;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\StepRedirector;
 use AppBundle\Service\StringUtils;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,13 +21,33 @@ class BankAccountController extends AbstractController
         'account-state',
     ];
 
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ReportApi */
+    private $reportApi;
+
+    public function __construct(
+        RestClient $restClient,
+        ReportApi $reportApi
+    )
+    {
+        $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
+    }
+
     /**
      * @Route("/report/{reportId}/bank-accounts", name="bank_accounts")
      * @Template("AppBundle:Report/BankAccount:start.html.twig")
+     *
+     * @param Request $request
+     * @param $reportId
+     *
+     * @return array|RedirectResponse
      */
     public function startAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getBankAccountsState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
         }
@@ -37,6 +60,13 @@ class BankAccountController extends AbstractController
     /**
      * @Route("/report/{reportId}/bank-account/step{step}/{accountId}", name="bank_accounts_step", requirements={"step":"\d+"})
      * @Template("AppBundle:Report/BankAccount:step.html.twig")
+     *
+     * @param Request $request
+     * @param $reportId
+     * @param $step
+     * @param null $accountId
+     *
+     * @return array|RedirectResponse
      */
     public function stepAction(Request $request, $reportId, $step, $accountId = null)
     {
@@ -48,7 +78,7 @@ class BankAccountController extends AbstractController
         // common vars and data
         $dataFromUrl = $request->get('data') ?: [];
         $stepUrlData = $dataFromUrl;
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
         $stepRedirector = $this->stepRedirector()
@@ -59,7 +89,7 @@ class BankAccountController extends AbstractController
 
         // create (add mode) or load account (edit mode)
         if ($accountId) {
-            $account = $this->getRestClient()->get('report/account/' . $accountId, 'Report\\BankAccount');
+            $account = $this->restClient->get('report/account/' . $accountId, 'Report\\BankAccount');
         } else {
             $account = new EntityDir\Report\BankAccount();
             $account->setReport($report);
@@ -111,7 +141,7 @@ class BankAccountController extends AbstractController
             // last step: save
             if ($isLastStep) {
                 if ($accountId) {
-                    $this->getRestClient()->put('/account/' . $accountId, $account, self::$jmsGroups);
+                    $this->restClient->put('/account/' . $accountId, $account, self::$jmsGroups);
                     $request->getSession()->getFlashBag()->add(
                         'notice',
                         'Bank account edited'
@@ -119,7 +149,7 @@ class BankAccountController extends AbstractController
 
                     return $this->redirect($this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]));
                 } else {
-                    $this->getRestClient()->post('report/' . $reportId . '/account', $account, self::$jmsGroups);
+                    $this->restClient->post('report/' . $reportId . '/account', $account, self::$jmsGroups);
 
                     return $this->redirectToRoute('bank_accounts_add_another', ['reportId' => $reportId]);
                 }
@@ -146,10 +176,15 @@ class BankAccountController extends AbstractController
     /**
      * @Route("/report/{reportId}/bank-accounts/add_another", name="bank_accounts_add_another")
      * @Template("AppBundle:Report/BankAccount:add_another.html.twig")
+     *
+     * @param Request $request
+     * @param $reportId
+     *
+     * @return array|RedirectResponse
      */
     public function addAnotherAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId);
 
         $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-bank-accounts']);
         $form->handleRequest($request);
@@ -175,11 +210,11 @@ class BankAccountController extends AbstractController
      * @param int $reportId
      * @Template("AppBundle:Report/BankAccount:summary.html.twig")
      *
-     * @return array
+     * @return array|RedirectResponse
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getBankAccountsState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('bank_accounts', ['reportId' => $reportId]);
         }
@@ -193,16 +228,19 @@ class BankAccountController extends AbstractController
      * @Route("/report/{reportId}/bank-account/{accountId}/delete", name="bank_account_delete")
      * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
+     * @param Request $request
      * @param int $reportId
      * @param int $accountId
+     *
+     * @return array|RedirectResponse
      */
-    public function deleteConfirmAction(Request $request, $reportId, $accountId)
+    public function deleteConfirmAction(Request $request, int $reportId, int $accountId)
     {
         $translator = $this->get('translator');
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $summaryPageUrl = $this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]);
 
-        $dependentRecords = $this->getRestClient()->get("/account/{$accountId}/dependent-records", 'array');
+        $dependentRecords = $this->restClient->get("/account/{$accountId}/dependent-records", 'array');
         $bankAccount = $report->getBankAccountById($accountId);
 
         // if money transfer are added, always go to summary page with the error displayed
@@ -219,7 +257,7 @@ class BankAccountController extends AbstractController
         // delete the bank acount if the confirm button is pushed, or there are no payments. Then go back to summary page
         if ($form->isSubmitted() && $form->isValid()) {
             if ($report->getBankAccountById($accountId)) {
-                $this->getRestClient()->delete("/account/{$accountId}");
+                $this->restClient->delete("/account/{$accountId}");
             }
 
             $request->getSession()->getFlashBag()->add(

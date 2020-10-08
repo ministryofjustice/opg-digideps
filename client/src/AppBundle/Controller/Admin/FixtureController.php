@@ -30,10 +30,20 @@ class FixtureController extends AbstractController
     /** @var Serializer */
     private $serializer;
 
-    public function __construct(Environment $twig, SerializerInterface $serializer)
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    public function __construct(
+        Environment $twig,
+        SerializerInterface $serializer,
+        RestClient $restClient
+    )
     {
         $this->twig = $twig;
         $this->serializer = $serializer;
+        $this->restClient = $restClient;
     }
 
     /**
@@ -72,7 +82,7 @@ class FixtureController extends AbstractController
             $deputyEmail = $request->query->get('deputy-email', sprintf('original-%s-deputy-%s@fixture.com', strtolower($submitted['deputyType']), mt_rand(1000, 9999)));
             $caseNumber = $request->get('case-number', $this->generateValidCaseNumber());
 
-            $response = $this->getRestClient()->post('v2/fixture/court-order', json_encode([
+            $response = $this->restClient->post('v2/fixture/court-order', json_encode([
                 'deputyType' => $submitted['deputyType'],
                 'deputyEmail' => $deputyEmail,
                 'caseNumber' =>  $caseNumber,
@@ -84,7 +94,7 @@ class FixtureController extends AbstractController
             ]));
 
             $query = ['query' => ['filter_by_ids' => implode(",", $response['deputyIds'])]];
-            $deputiesData = $this->getRestClient()->get('/user/get-all', 'array', [], $query);
+            $deputiesData = $this->restClient->get('/user/get-all', 'array', [], $query);
             $sanitizedDeputyData = $this->removeNullValues($deputiesData);
 
             $deputies = $this->serializer->deserialize(json_encode($sanitizedDeputyData), 'AppBundle\Entity\User[]', 'json');
@@ -145,7 +155,7 @@ class FixtureController extends AbstractController
         $sections = $request->get('sections');
 
         $this
-            ->getRestClient()
+            ->restClient
             ->put("v2/fixture/complete-sections/$reportType/$reportId?sections=$sections", []);
 
         return new JsonResponse(['Report updated']);
@@ -162,7 +172,7 @@ class FixtureController extends AbstractController
         }
 
         $this
-            ->getRestClient()
+            ->restClient
             ->post("v2/fixture/createAdmin", json_encode([
                 "adminType" => $request->query->get('adminType'),
                 "email" => $request->query->get('email'),
@@ -186,7 +196,7 @@ class FixtureController extends AbstractController
 
         /** @var array $response */
         $response = json_decode($this
-            ->getRestClient()
+            ->restClient
             ->get("v2/fixture/getUserIDByEmail/$email", 'response')->getBody(), true);
 
         if ($response['success']) {
@@ -207,7 +217,7 @@ class FixtureController extends AbstractController
         }
 
         $this
-            ->getRestClient()
+            ->restClient
             ->post("v2/fixture/createUser", json_encode([
                 "ndr" => $request->query->get('ndr'),
                 "deputyType" => $request->query->get('deputyType'),
@@ -232,7 +242,7 @@ class FixtureController extends AbstractController
         }
 
         $this
-            ->getRestClient()
+            ->restClient
             ->post("v2/fixture/deleteUser", json_encode([
                 "email" => $request->query->get('email'),
             ]));
@@ -252,7 +262,7 @@ class FixtureController extends AbstractController
 
         try {
             $this
-                ->getRestClient()
+                ->restClient
                 ->post(
                     "v2/fixture/createClientAttachDeputy",
                     json_encode(
@@ -313,7 +323,7 @@ class FixtureController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $submitted = $form->getData();
 
-            $response = $this->getRestClient()->post('v2/fixture/createCasrec', json_encode([
+            $response = $this->restClient->post('v2/fixture/createCasrec', json_encode([
                 'deputyType' => $submitted['deputyType'],
                 'reportType' => $submitted['reportType'],
                 'createCoDeputy' => $submitted['createCoDeputy'],

@@ -32,7 +32,7 @@ class PaFeeExpenseController extends AbstractController
      */
     public function startAction($reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if ($report->getStatus()->getPaFeesExpensesState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('pa_fee_expense_summary', ['reportId' => $reportId]);
@@ -49,7 +49,7 @@ class PaFeeExpenseController extends AbstractController
      */
     public function feeExistAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Report\PaFeeExistType::class, $report);
         $form->handleRequest($request);
 
@@ -57,10 +57,10 @@ class PaFeeExpenseController extends AbstractController
             switch ($form['hasFees']->getData()) {
                 case 'yes':
                     $report->setReasonForNoFees(null);
-                    $this->getRestClient()->put('report/' . $reportId, $report, ['reasonForNoFees']);
+                    $this->restClient->put('report/' . $reportId, $report, ['reasonForNoFees']);
                     return $this->redirectToRoute('pa_fee_expense_fee_edit', ['reportId' => $reportId, 'from'=>'fee_exist']);
                 case 'no':
-                    $this->getRestClient()->put('report/' . $reportId, $report, ['reasonForNoFees']);
+                    $this->restClient->put('report/' . $reportId, $report, ['reasonForNoFees']);
                     // if 2nd seciont is complete, go to summary
                     $nextRoute = $report->isOtherFeesSectionComplete() ? 'pa_fee_expense_summary' : 'pa_fee_expense_other_exist';
                     return $this->redirectToRoute($nextRoute, ['reportId' => $reportId, 'from'=>'fee_exist']);
@@ -83,13 +83,13 @@ class PaFeeExpenseController extends AbstractController
      */
     public function feeEditAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Report\FeesType::class, $report);
         $form->handleRequest($request);
         $fromPage = $request->get('from');
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getRestClient()->put('report/' . $report->getId(), $form->getData(), ['fee']);
+            $this->restClient->put('report/' . $report->getId(), $form->getData(), ['fee']);
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Fee edited');
                 return $this->redirectToRoute('pa_fee_expense_summary', ['reportId' => $reportId]);
@@ -115,7 +115,7 @@ class PaFeeExpenseController extends AbstractController
      */
     public function otherExistAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class, $report, [ 'field' => 'paidForAnything', 'translation_domain' => 'report-pa-fee-expense']
                                  );
         $form->handleRequest($request);
@@ -129,7 +129,7 @@ class PaFeeExpenseController extends AbstractController
                     // it'd leave the data inconsistent
                     return $this->redirectToRoute('pa_fee_expense_other_add', ['reportId' => $reportId]);
                 case 'no':
-                    $this->getRestClient()->put('report/' . $reportId, $data, ['expenses-paid-anything']);
+                    $this->restClient->put('report/' . $reportId, $data, ['expenses-paid-anything']);
                     return $this->redirectToRoute('pa_fee_expense_summary', ['reportId' => $reportId]);
             }
         }
@@ -155,7 +155,7 @@ class PaFeeExpenseController extends AbstractController
      */
     public function otherAddAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $expense = new EntityDir\Report\Expense();
 
         $form = $this->createForm(
@@ -172,7 +172,7 @@ class PaFeeExpenseController extends AbstractController
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->getRestClient()->post('report/' . $report->getId() . '/expense', $data, ['expenses']);
+            $this->restClient->post('report/' . $report->getId() . '/expense', $data, ['expenses']);
 
             return $this->redirect($this->generateUrl('pa_fee_expense_add_another', ['reportId' => $reportId]));
         }
@@ -198,7 +198,7 @@ class PaFeeExpenseController extends AbstractController
      */
     public function otherAddAnotherAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-pa-fee-expense']);
         $form->handleRequest($request);
@@ -229,8 +229,8 @@ class PaFeeExpenseController extends AbstractController
      */
     public function otherEditAction(Request $request, $reportId, $expenseId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $expense = $this->getRestClient()->get('report/' . $report->getId() . '/expense/' . $expenseId, 'Report\Expense');
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $expense = $this->restClient->get('report/' . $report->getId() . '/expense/' . $expenseId, 'Report\Expense');
 
         $form = $this->createForm(
             FormDir\Report\DeputyExpenseType::class,
@@ -247,7 +247,7 @@ class PaFeeExpenseController extends AbstractController
             $data = $form->getData();
             $request->getSession()->getFlashBag()->add('notice', 'Expense edited');
 
-            $this->getRestClient()->put('report/' . $report->getId() . '/expense/' . $expense->getId(), $data, ['expenses']);
+            $this->restClient->put('report/' . $report->getId() . '/expense/' . $expense->getId(), $data, ['expenses']);
 
             return $this->redirect($this->generateUrl('pa_fee_expense', ['reportId' => $reportId]));
         }
@@ -273,12 +273,12 @@ class PaFeeExpenseController extends AbstractController
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
 
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+            $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-            $this->getRestClient()->delete('report/' . $report->getId() . '/expense/' . $expenseId);
+            $this->restClient->delete('report/' . $report->getId() . '/expense/' . $expenseId);
 
             $request->getSession()->getFlashBag()->add(
                 'notice',
@@ -288,7 +288,7 @@ class PaFeeExpenseController extends AbstractController
             return $this->redirect($this->generateUrl('pa_fee_expense', ['reportId' => $reportId]));
         }
 
-        $expense = $this->getRestClient()->get('report/' . $report->getId() . '/expense/' . $expenseId, 'Report\Expense');
+        $expense = $this->restClient->get('report/' . $report->getId() . '/expense/' . $expenseId, 'Report\Expense');
 
         return [
             'translationDomain' => 'report-pa-fee-expense',
@@ -312,7 +312,7 @@ class PaFeeExpenseController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getPaFeesExpensesState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('pa_fee_expense', ['reportId' => $reportId]));
         }

@@ -38,7 +38,7 @@ class ProfDeputyCostsController extends AbstractController
      */
     public function startAction($reportId, ProfCostsSubSectionRouteResolver $routeResolver)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $state = $report->getStatus()->getProfDeputyCostsState()['state'];
 
         if (null !== ($forwardRoute = $routeResolver->resolve($report, $state))) {
@@ -56,7 +56,7 @@ class ProfDeputyCostsController extends AbstractController
      */
     public function howChargedAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $from = $request->get('from');
 
         $form = $this->createForm(FormDir\Report\ProfDeputyCostHowType::class, $report);
@@ -65,7 +65,7 @@ class ProfDeputyCostsController extends AbstractController
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            $this->getRestClient()->put('report/' . $reportId, $data, ['deputyCostsHowCharged']);
+            $this->restClient->put('report/' . $reportId, $data, ['deputyCostsHowCharged']);
 
             if ($from === 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
@@ -92,7 +92,7 @@ class ProfDeputyCostsController extends AbstractController
     public function previousReceivedExists(Request $request, $reportId)
     {
         $from = $request->get('from', 'exist');
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class, $report, [
             'field' => 'profDeputyCostsHasPrevious',
             'translation_domain' => 'report-prof-deputy-costs'
@@ -109,7 +109,7 @@ class ProfDeputyCostsController extends AbstractController
                     return $this->redirectToRoute('prof_deputy_costs_previous_received', ['reportId' => $reportId, 'from'=>$from]);
                 case 'no':
                     // store and go to next route
-                    $this->getRestClient()->put('report/' . $reportId, $data, ['profDeputyCostsHasPrevious']);
+                    $this->restClient->put('report/' . $reportId, $data, ['profDeputyCostsHasPrevious']);
 
                     if ($from =='summary') {
                         $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
@@ -139,11 +139,11 @@ class ProfDeputyCostsController extends AbstractController
     public function previousReceived(Request $request, $reportId, $previousReceivedId = null)
     {
         $from = $request->get('from');
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         // create (add mode) or load transaction (edit mode)
         if ($previousReceivedId) {
-            $pr = $this->getRestClient()->get('/prof-deputy-previous-cost/' . $previousReceivedId, 'Report\\ProfDeputyPreviousCost');
+            $pr = $this->restClient->get('/prof-deputy-previous-cost/' . $previousReceivedId, 'Report\\ProfDeputyPreviousCost');
         } else {
             $pr = new EntityDir\Report\ProfDeputyPreviousCost();
         }
@@ -156,10 +156,10 @@ class ProfDeputyCostsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             if ($previousReceivedId) { // edit
-                $this->getRestClient()->put('/prof-deputy-previous-cost/' . $previousReceivedId, $pr, ['profDeputyPrevCosts']);
+                $this->restClient->put('/prof-deputy-previous-cost/' . $previousReceivedId, $pr, ['profDeputyPrevCosts']);
                 $request->getSession()->getFlashBag()->add('notice', 'Cost edited');
             } else {
-                $this->getRestClient()->post('/report/' . $reportId . '/prof-deputy-previous-cost', $pr, ['profDeputyPrevCosts']);
+                $this->restClient->post('/report/' . $reportId . '/prof-deputy-previous-cost', $pr, ['profDeputyPrevCosts']);
                 $request->getSession()->getFlashBag()->add('notice', 'Cost added');
             }
 
@@ -197,10 +197,10 @@ class ProfDeputyCostsController extends AbstractController
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
 
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getRestClient()->delete('report/' . $report->getId() . '/prof-deputy-previous-cost/' . $previousReceivedId);
+            $this->restClient->delete('report/' . $report->getId() . '/prof-deputy-previous-cost/' . $previousReceivedId);
 
             $request->getSession()->getFlashBag()->add(
                 'notice',
@@ -210,7 +210,7 @@ class ProfDeputyCostsController extends AbstractController
             return $this->redirect($this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]));
         }
 
-        $cost = $this->getRestClient()->get('/prof-deputy-previous-cost/' . $previousReceivedId, 'Report\ProfDeputyPreviousCost');
+        $cost = $this->restClient->get('/prof-deputy-previous-cost/' . $previousReceivedId, 'Report\ProfDeputyPreviousCost');
 
         return [
             'translationDomain' => 'report-prof-deputy-costs',
@@ -233,7 +233,7 @@ class ProfDeputyCostsController extends AbstractController
     public function interimExists(Request $request, $reportId)
     {
         $from = $request->get('from', 'exist');
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class, $report, [
                 'field' => 'profDeputyCostsHasInterim',
                 'translation_domain' => 'report-prof-deputy-costs'
@@ -246,7 +246,7 @@ class ProfDeputyCostsController extends AbstractController
             /* @var $data EntityDir\Report\Report */
 
             // store yes or no
-            $this->getRestClient()->put('report/' . $reportId, $data, ['profDeputyCostsHasInterim']);
+            $this->restClient->put('report/' . $reportId, $data, ['profDeputyCostsHasInterim']);
 
             // next route calculation
             switch ($data->getProfDeputyCostsHasInterim()) {
@@ -280,7 +280,7 @@ class ProfDeputyCostsController extends AbstractController
     public function interim(Request $request, $reportId)
     {
         $from = $request->get('from');
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         // fill missing interim with empty entities, in order for 3 subforms in total to appear
         for($i = count($report->getProfDeputyInterimCosts()); $i < 3; $i++) {
             $report->addProfDeputyInterimCosts(new EntityDir\Report\ProfDeputyInterimCost());
@@ -291,7 +291,7 @@ class ProfDeputyCostsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $this->getRestClient()->put('/report/' . $reportId, $report, ['profDeputyInterimCosts']);
+            $this->restClient->put('/report/' . $reportId, $report, ['profDeputyInterimCosts']);
 
             if ($from === 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
@@ -318,14 +318,14 @@ class ProfDeputyCostsController extends AbstractController
     {
         $from = $request->get('from');
         /** @var EntityDir\Report\Report $report */
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $form = $this->createForm(FormDir\Report\ProfDeputyFixedCostType::class, $report);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $this->getRestClient()->put('/report/' . $reportId, $report, ['profDeputyFixedCost']);
+            $this->restClient->put('/report/' . $reportId, $report, ['profDeputyFixedCost']);
 
             if ($from === 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
@@ -355,14 +355,14 @@ class ProfDeputyCostsController extends AbstractController
     public function amountToSccoAction(Request $request, $reportId)
     {
         $from = $request->get('from');
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $form = $this->createForm(FormDir\Report\ProfDeputyCostSccoType::class, $report);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $this->getRestClient()->put('/report/' . $reportId, $report, ['profDeputyCostsScco']);
+            $this->restClient->put('/report/' . $reportId, $report, ['profDeputyCostsScco']);
 
             if ($from === 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
@@ -389,7 +389,7 @@ class ProfDeputyCostsController extends AbstractController
     public function breakdown(Request $request, $reportId)
     {
         $from = $request->get('from');
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if (empty($report->getProfDeputyOtherCosts())) {
             // if none set generate other costs manually
@@ -402,7 +402,7 @@ class ProfDeputyCostsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getRestClient()->put('report/' . $report->getId(), $form->getData(), ['prof-deputy-other-costs']);
+            $this->restClient->put('report/' . $report->getId(), $form->getData(), ['prof-deputy-other-costs']);
 
             if ($from === 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
@@ -461,7 +461,7 @@ class ProfDeputyCostsController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getProfDeputyCostsState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('prof_deputy_costs', ['reportId' => $reportId]));
         }

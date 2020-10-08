@@ -4,9 +4,7 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Form as FormDir;
-use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use AppBundle\Service\Client\RestClient;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -15,6 +13,18 @@ use Symfony\Component\HttpFoundation\Request;
 class SettingController extends AbstractController
 {
     /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    public function __construct(
+        RestClient $restClient
+    )
+    {
+        $this->restClient = $restClient;
+    }
+
+    /**
      * @Route("/service-notification", name="admin_setting_service_notifications")
      * @Security("has_role('ROLE_ADMIN')")
      * @Template("AppBundle:Admin/Setting:serviceNotification.html.twig")
@@ -22,7 +32,7 @@ class SettingController extends AbstractController
     public function serviceNotificationAction(Request $request)
     {
         $endpoint = 'setting/service-notification';
-        $setting = $this->getRestClient()->get($endpoint, 'Setting');
+        $setting = $this->restClient->get($endpoint, 'Setting');
         $form = $this->createForm(
             FormDir\Admin\SettingType::class,
             $setting
@@ -33,7 +43,7 @@ class SettingController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $setting = $form->getData();
 
-            $this->getRestClient()->put($endpoint, $setting, ['setting']);
+            $this->restClient->put($endpoint, $setting, ['setting']);
             $request->getSession()->getFlashBag()->add(
                 'notice',
                 'The setting has been saved'

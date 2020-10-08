@@ -4,7 +4,10 @@ namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Client\Internal\ReportApi;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\NdrStatusService;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Form;
@@ -12,19 +15,43 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ActionController extends AbstractController
 {
+    /**
+     * @var ReportApi
+     */
+    private $reportApi;
+
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
     private static $jmsGroups = [
         'ndr-action-give-gifts',
         'ndr-action-property',
         'ndr-action-more-info',
     ];
 
+    public function __construct(
+        ReportApi $reportApi,
+        RestClient $restClient
+    )
+    {
+        $this->reportApi = $reportApi;
+        $this->restClient = $restClient;
+    }
+
     /**
      * @Route("/ndr/{ndrId}/actions", name="ndr_actions")
      * @Template("AppBundle:Ndr/Action:start.html.twig")
+     *
+     * @param Request $request
+     * @param $ndrId
+     *
+     * @return array|RedirectResponse
      */
     public function startAction(Request $request, $ndrId)
     {
-        $ndr = $this->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
+        $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if ($ndr->getStatusService()->getActionsState()['state'] != NdrStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('ndr_actions_summary', ['ndrId' => $ndrId]);
         }
@@ -44,7 +71,7 @@ class ActionController extends AbstractController
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('ndr_actions_summary', ['ndrId' => $ndrId]);
         }
-        $ndr = $this->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
+        $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
         $stepRedirector = $this->stepRedirector()
@@ -58,7 +85,7 @@ class ActionController extends AbstractController
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $this->getRestClient()->put('ndr/' . $ndrId, $data, ['action']);
+            $this->restClient->put('ndr/' . $ndrId, $data, ['action']);
 
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add(
@@ -87,7 +114,7 @@ class ActionController extends AbstractController
     public function summaryAction(Request $request, $ndrId)
     {
         $fromPage = $request->get('from');
-        $ndr = $this->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
+        $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if ($ndr->getStatusService()->getActionsState()['state'] == NdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('ndr_actions', ['ndrId' => $ndrId]);
         }

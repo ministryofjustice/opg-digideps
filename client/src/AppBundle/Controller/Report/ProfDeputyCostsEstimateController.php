@@ -36,7 +36,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
      */
     public function startAction($reportId, ProfCostsEstimateSubSectionRouteResolver $routeResolver)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $state = $report->getStatus()->getProfDeputyCostsEstimateState()['state'];
 
         if (null !== ($forwardRoute = $routeResolver->resolve($report, $state))) {
@@ -59,7 +59,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
     public function howChargedAction(Request $request, $reportId)
     {
         $from = $request->get('from');
-        $report = $this->getReportIfNotSubmitted($reportId, ['prof-deputy-costs-estimate-how-charged']);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, ['prof-deputy-costs-estimate-how-charged']);
         $currentHowChargedValue = $report->getProfDeputyCostsEstimateHowCharged();
 
         $form = $this->createForm(FormDir\Report\ProfDeputyCostsEstimateHowType::class, $report);
@@ -92,7 +92,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
     public function breakdownAction(Request $request, $reportId)
     {
         $from = $request->get('from');
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if (empty($report->getProfDeputyEstimateCosts())) {
             // if none set generate other costs manually
@@ -131,7 +131,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
     public function moreInfoAction(Request $request, $reportId)
     {
         $from = $request->get('from');
-        $report = $this->getReportIfNotSubmitted($reportId, ['prof-deputy-costs-estimate-more-info']);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, ['prof-deputy-costs-estimate-more-info']);
 
         $form = $this->createForm(FormDir\Report\ProfDeputyCostsEstimateMoreInfoType::class, $report);
         $form->handleRequest($request);
@@ -163,7 +163,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if ($report->getStatus()->getProfDeputyCostsEstimateState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('prof_deputy_costs_estimate', ['reportId' => $reportId]));
@@ -210,7 +210,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
      */
     private function persistUpdate($id, Report $report, array $groups)
     {
-        $this->getRestClient()->put('report/' . $id, $report, $groups);
+        $this->restClient->put('report/' . $id, $report, $groups);
     }
 
     /**
