@@ -48,8 +48,20 @@ parameters:
     ssm_client_params:
       version: 'latest'
       region: 'eu-west-1'
-  {{ if exists "/s3/localstack" }}
+  {{ if exists "/ssm/localstack" }}
       endpoint: 'http://localstack:4583'
+      validate: false
+      credentials:
+        key: 'FAKE_ID'
+        secret: 'FAKE_KEY'
+  {{ else }}
+      validate: true
+  {{ end }}
+    cloudwatch_logs_client_params:
+      version: 'latest'
+      region: 'eu-west-1'
+  {{ if exists "/cloudwatch/logs/localstack" }}
+      endpoint: 'http://localstack:4586'
       validate: false
       credentials:
         key: 'FAKE_ID'

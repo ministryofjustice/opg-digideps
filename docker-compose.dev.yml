@@ -4,6 +4,7 @@ services:
     test:
         build: ./behat
         depends_on:
+            - localstack-init
             - mock-sirius-integration
         volumes:
             - ./behat/tests:/var/www/tests
