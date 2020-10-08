@@ -154,7 +154,7 @@ class OrgDeputyshipUploader
         } else {
             $client->setCourtDate($dto->getCourtDate());
 
-            if (!$client->hasSwitchedOrganisation($this->currentOrganisation) && $client->hasChangedNamedDeputy($this->namedDeputy)) {
+            if (!$this->clientHasSwitchedOrganisation($client) && $this->clientHasNewNamedDeputy($client, $this->namedDeputy)) {
                 $client->setNamedDeputy($this->namedDeputy);
             }
         }
@@ -163,6 +163,37 @@ class OrgDeputyshipUploader
         $this->em->flush();
 
         $this->client = $client;
+    }
+
+    /**
+     * Returns true if clients organisation has changed
+     *
+     * @param Client $client
+     * @return bool
+     */
+    private function clientHasSwitchedOrganisation(Client $client)
+    {
+        if (
+            $client->getOrganisation() instanceof Organisation
+            && $this->currentOrganisation instanceof Organisation
+            && $client->getOrganisation()->getId() !== $this->currentOrganisation->getId()
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Client $client
+     * @param NamedDeputy $namedDeputy
+     * @return bool
+     */
+    private function clientHasNewNamedDeputy(Client $client, NamedDeputy $namedDeputy): bool
+    {
+        return
+            null === $client->getNamedDeputy() ||
+            $client->getNamedDeputy()->getDeputyNo() !== $namedDeputy->getDeputyNo();
     }
 
     private function handleReport(OrgDeputyshipDto $dto)

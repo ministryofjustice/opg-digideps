@@ -1051,22 +1051,4 @@ class Client implements ClientInterface
         }
         return false;
     }
-
-    /**
-     * @param Organisation $newOrganisation
-     * @return bool
-     */
-    public function hasSwitchedOrganisation(Organisation $newOrganisation):bool
-    {
-        return !is_null($this->getOrganisation()) && $this->getOrganisation() !== $newOrganisation;
-    }
-
-    /**
-     * @param NamedDeputy $newNamedDeputy
-     * @return bool
-     */
-    public function hasChangedNamedDeputy(NamedDeputy $newNamedDeputy): bool
-    {
-        return !is_null($this->getNamedDeputy()) && $this->getNamedDeputy() !== $newNamedDeputy;
-    }
 }
