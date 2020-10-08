@@ -132,7 +132,7 @@ class OrgDeputyshipUploader
         }
     }
 
-    private function handleClient(OrgDeputyshipDto $dto): Client
+    private function handleClient(OrgDeputyshipDto $dto)
     {
         /** @var Client $client */
         $client = ($this->em->getRepository(Client::class))->findOneBy(['caseNumber' => $dto->getCaseNumber()]);
@@ -154,7 +154,7 @@ class OrgDeputyshipUploader
         } else {
             $client->setCourtDate($dto->getCourtDate());
 
-            if ($client->getOrganisation() === $this->currentOrganisation) {
+            if (!$client->hasSwitchedOrganisation($this->currentOrganisation) && $client->hasNewNamedDeputy($this->namedDeputy)) {
                 $client->setNamedDeputy($this->namedDeputy);
             }
         }
@@ -162,7 +162,7 @@ class OrgDeputyshipUploader
         $this->em->persist($client);
         $this->em->flush();
 
-        return $this->client = $client;
+        $this->client = $client;
     }
 
     private function handleReport(OrgDeputyshipDto $dto)
