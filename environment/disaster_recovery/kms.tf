@@ -6,21 +6,21 @@ resource "aws_kms_key" "db_backup" {
 }
 
 data "aws_iam_policy_document" "kms_db_backup_key" {
-  statement {
-    sid    = "Enable KMS administration"
-    effect = "Allow"
-    principals {
-      type = "AWS"
-      identifiers = [
-        aws_iam_role.cross_acc_backup.arn
-      ]
-    }
-    resources = ["*"]
-    actions = [
-      "kms:CreateGrant",
-      "kms:DescribeKey"
-    ]
-  }
+  //  statement {
+  //    sid    = "Enable KMS administration"
+  //    effect = "Allow"
+  //    principals {
+  //      type = "AWS"
+  //      identifiers = [
+  //        aws_iam_role.cross_acc_backup.arn
+  //      ]
+  //    }
+  //    resources = ["*"]
+  //    actions = [
+  //      "kms:CreateGrant",
+  //      "kms:DescribeKey"
+  //    ]
+  //  }
 
   statement {
     sid    = "KMS admin"

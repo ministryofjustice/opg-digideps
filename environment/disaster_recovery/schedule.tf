@@ -2,6 +2,7 @@ resource "aws_cloudwatch_event_rule" "dr_backup" {
   name                = "dr-backup-${terraform.workspace}"
   description         = "Execute the disaster recovery backup for ${terraform.workspace}"
   schedule_expression = "cron(00 01 * * ? *)"
+  is_enabled          = false
 }
 
 resource "aws_cloudwatch_event_target" "dr_backup" {

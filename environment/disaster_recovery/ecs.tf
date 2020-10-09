@@ -46,10 +46,10 @@ locals {
         name  = "SOURCE_ACCOUNT",
         value = var.account.account_id
       },
-      {
-        name  = "BACKUP_ACCOUNT_ROLE",
-        value = aws_iam_role.cross_acc_backup.arn
-      },
+      //      {
+      //        name  = "BACKUP_ACCOUNT_ROLE",
+      //        value = aws_iam_role.cross_acc_backup.arn
+      //      },
       {
         name  = "DB_ID"
         value = "${var.db.name}-${var.environment}"
@@ -73,14 +73,14 @@ resource "aws_iam_role" "dr_backup" {
 }
 
 data "aws_iam_policy_document" "dr_backup" {
-  statement {
-    sid       = "allowAssumeAccess"
-    effect    = "Allow"
-    resources = [aws_iam_role.cross_acc_backup.arn]
-    actions = [
-      "sts:AssumeRole"
-    ]
-  }
+  //  statement {
+  //    sid       = "allowAssumeAccess"
+  //    effect    = "Allow"
+  //    resources = [aws_iam_role.cross_acc_backup.arn]
+  //    actions = [
+  //      "sts:AssumeRole"
+  //    ]
+  //  }
   statement {
     sid    = "allowKMSAccess"
     effect = "Allow"
@@ -120,29 +120,4 @@ resource "aws_iam_role_policy" "dr_backup" {
   name   = "dr-backup-task.${var.environment}"
   policy = data.aws_iam_policy_document.dr_backup.json
   role   = aws_iam_role.dr_backup.id
-}
-
-locals {
-  dr_backup_sg_rules = {
-    ecr     = var.common_sg_rules.ecr
-    logs    = var.common_sg_rules.logs
-    s3      = var.common_sg_rules.s3
-    ssm     = var.common_sg_rules.ssm
-    ecr_api = var.common_sg_rules.ecr_api
-    dr_backup = {
-      port        = 443
-      type        = "egress"
-      protocol    = "tcp"
-      target_type = "cidr_block"
-      target      = "0.0.0.0/0"
-    }
-  }
-}
-
-module "dr_backup_security_group" {
-  source = "../security_group"
-  rules  = local.dr_backup_sg_rules
-  name   = "dr-backup"
-  tags   = var.default_tags
-  vpc_id = var.aws_vpc_id
 }
