@@ -35,6 +35,7 @@ variable "accounts" {
       memory_high             = number
       backup_retention_period = number
       psql_engine_version     = string
+      dr_backup               = bool
     })
   )
 }
@@ -56,10 +57,11 @@ locals {
 
   route53_healthchecker_ips = data.aws_ip_ranges.route53_healthchecks_ips.cidr_blocks
 
-  account           = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
-  environment       = lower(terraform.workspace)
-  subdomain         = local.account["subdomain_enabled"] ? local.environment : ""
-  backup_account_id = "995199299616"
+  account     = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
+  environment = lower(terraform.workspace)
+  subdomain   = local.account["subdomain_enabled"] ? local.environment : ""
+  // Just preprod for now until proper account is set up. Off in all envs currently.
+  backup_account_id = "454262938596"
 
   default_tags = {
     business-unit          = "OPG"

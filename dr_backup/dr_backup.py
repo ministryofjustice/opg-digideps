@@ -3,17 +3,29 @@ import time
 import os
 
 
-def delete_snapshot(rds_client, id):
+def delete_snapshot(rds_client, id, cluster=True):
+    snapshot_type = "manual"
     try:
-        rds_client.describe_db_cluster_snapshots(
-            DBClusterSnapshotIdentifier=id,
-            SnapshotType='manual'
-        )
+        if cluster:
+            rds_client.describe_db_cluster_snapshots(
+                DBClusterSnapshotIdentifier=id,
+                SnapshotType=snapshot_type
+            )
+        else:
+            rds_client.describe_db_snapshots(
+                DBSnapshotIdentifier=id,
+                SnapshotType=snapshot_type
+            )
         print(f"Snapshot {id} exists, deleting...")
 
-        rds_client.delete_db_cluster_snapshot(
-            DBClusterSnapshotIdentifier=id
-        )
+        if cluster:
+            rds_client.delete_db_cluster_snapshot(
+                DBClusterSnapshotIdentifier=id
+            )
+        else:
+            rds_client.delete_db_snapshot(
+                DBSnapshotIdentifier=id
+            )
 
         exists = True
         secs = 0
@@ -22,10 +34,16 @@ def delete_snapshot(rds_client, id):
             secs += 10
             print(f"Deleting {id}, {secs} seconds elapsed")
             try:
-                rds_client.describe_db_cluster_snapshots(
-                    DBClusterSnapshotIdentifier=id,
-                    SnapshotType='manual'
-                )
+                if cluster:
+                    rds_client.describe_db_cluster_snapshots(
+                        DBClusterSnapshotIdentifier=id,
+                        SnapshotType=snapshot_type
+                    )
+                else:
+                    rds_client.describe_db_snapshots(
+                        DBSnapshotIdentifier=id,
+                        SnapshotType=snapshot_type
+                    )
             except:
                 exists = False
                 print("Finished deleting")
@@ -34,15 +52,25 @@ def delete_snapshot(rds_client, id):
         print(f"Snapshot {id} does not exist")
 
 
-def get_latest_snapshot(rds_client, cid):
-    automated_snapshots = rds_client.describe_db_cluster_snapshots(
-        DBClusterIdentifier=cid,
-        SnapshotType='automated'
-    )
+def get_latest_snapshot(rds_client, cid, cluster=True):
+    if cluster:
+        automated_snapshots = rds_client.describe_db_cluster_snapshots(
+            DBClusterIdentifier=cid,
+            SnapshotType='automated'
+        )
+    else:
+        automated_snapshots = rds_client.describe_db_snapshots(
+            DBIdentifier=cid,
+            SnapshotType='automated'
+        )
 
     snapshots = []
-    for snapshot in automated_snapshots["DBClusterSnapshots"]:
-        snapshots.append(str(snapshot["DBClusterSnapshotIdentifier"]))
+    if cluster:
+        for snapshot in automated_snapshots["DBClusterSnapshots"]:
+            snapshots.append(str(snapshot["DBClusterSnapshotIdentifier"]))
+    else:
+        for snapshot in automated_snapshots["DBSnapshots"]:
+            snapshots.append(str(snapshot["DBSnapshotIdentifier"]))
 
     snapshots.sort(reverse=True)
     snapshot_id = snapshots[0]
@@ -51,14 +79,24 @@ def get_latest_snapshot(rds_client, cid):
     return snapshot_id
 
 
-def get_snapshots_to_delete(rds_client, cid, keep_count):
-    manual_snapshots = rds_client.describe_db_cluster_snapshots(
-        DBClusterIdentifier=cid,
-        SnapshotType='manual'
-    )
+def get_snapshots_to_delete(rds_client, cid, keep_count, cluster=True):
+    if cluster:
+        manual_snapshots = rds_client.describe_db_cluster_snapshots(
+            DBClusterIdentifier=cid,
+            SnapshotType='manual'
+        )
+    else:
+        manual_snapshots = rds_client.describe_db_snapshots(
+            DBIdentifier=cid,
+            SnapshotType='manual'
+        )
     snapshots = []
-    for snapshot in manual_snapshots["DBClusterSnapshots"]:
-        snapshots.append(str(snapshot["DBClusterSnapshotIdentifier"]))
+    if cluster:
+        for snapshot in manual_snapshots["DBClusterSnapshots"]:
+            snapshots.append(str(snapshot["DBClusterSnapshotIdentifier"]))
+    else:
+        for snapshot in manual_snapshots["DBSnapshots"]:
+            snapshots.append(str(snapshot["DBSnapshotIdentifier"]))
 
     snapshots.sort(reverse=True)
     snapshots_to_delete = []
@@ -71,15 +109,21 @@ def get_snapshots_to_delete(rds_client, cid, keep_count):
     return snapshots_to_delete
 
 
-def wait_finish_copy(rds_client, target_snapshot_id):
+def wait_finish_copy(rds_client, target_snapshot_id, cluster=True):
     status = "none"
     secs = 0
     timeout = 3600
     while status != 'available' and secs < timeout:
-        manual_snapshot = rds_client.describe_db_cluster_snapshots(
-            SnapshotType='manual',
-            DBClusterSnapshotIdentifier=target_snapshot_id
-        )
+        if cluster:
+            manual_snapshot = rds_client.describe_db_cluster_snapshots(
+                SnapshotType='manual',
+                DBClusterSnapshotIdentifier=target_snapshot_id
+            )
+        else:
+            manual_snapshot = rds_client.describe_db_snapshots(
+                SnapshotType='manual',
+                DBSnapshotIdentifier=target_snapshot_id
+            )
         status = manual_snapshot["DBClusterSnapshots"][0]["Status"]
         secs += 10
         time.sleep(10)
@@ -91,13 +135,21 @@ def wait_finish_copy(rds_client, target_snapshot_id):
         return False
 
 
-def copy_latest_snapshot(rds_client, snapshot_id, target_snapshot_id, kms):
-    rds_client.copy_db_cluster_snapshot(
-        SourceDBClusterSnapshotIdentifier=snapshot_id,
-        TargetDBClusterSnapshotIdentifier=target_snapshot_id,
-        KmsKeyId=kms,
-        SourceRegion='eu-west-1'
-    )
+def copy_latest_snapshot(rds_client, snapshot_id, target_snapshot_id, kms, cluster=True):
+    if cluster:
+        rds_client.copy_db_cluster_snapshot(
+            SourceDBClusterSnapshotIdentifier=snapshot_id,
+            TargetDBClusterSnapshotIdentifier=target_snapshot_id,
+            KmsKeyId=kms,
+            SourceRegion='eu-west-1'
+        )
+    else:
+        rds_client.copy_db_snapshot(
+            SourceDBSnapshotIdentifier=snapshot_id,
+            TargetDBSnapshotIdentifier=target_snapshot_id,
+            KmsKeyId=kms,
+            SourceRegion='eu-west-1'
+        )
     print(f"Copying {snapshot_id} to {target_snapshot_id}...")
 
     if wait_finish_copy(rds_client, target_snapshot_id):
@@ -106,32 +158,52 @@ def copy_latest_snapshot(rds_client, snapshot_id, target_snapshot_id, kms):
         print(f"Copy timed out")
 
 
-def copy_individual_snapshot(rds_client, source_id, target_id, kms_id, region):
+def copy_individual_snapshot(rds_client, source_id, target_id, kms_id, region, cluster=True):
     print(f"Copying from {source_id} to {target_id}...")
-    rds_client.copy_db_cluster_snapshot(
-        SourceDBClusterSnapshotIdentifier=source_id,
-        TargetDBClusterSnapshotIdentifier=target_id,
-        KmsKeyId=kms_id,
-        SourceRegion=region
-    )
+    if cluster:
+        rds_client.copy_db_cluster_snapshot(
+            SourceDBClusterSnapshotIdentifier=source_id,
+            TargetDBClusterSnapshotIdentifier=target_id,
+            KmsKeyId=kms_id,
+            SourceRegion=region
+        )
+    else:
+        rds_client.copy_db_cluster_snapshot(
+            SourceDBSnapshotIdentifier=source_id,
+            TargetDBSnapshotIdentifier=target_id,
+            KmsKeyId=kms_id,
+            SourceRegion=region
+        )
     if wait_finish_copy(rds_client, target_id):
         print(f"Finished copying {target_id}")
     else:
         print(f"Copy timed out")
 
 
-def share_snapshot(rds_client, snapshot_id, account):
+def share_snapshot(rds_client, snapshot_id, account, cluster=True):
     print(f"Sharing snapshot {snapshot_id} with account {account}...")
-    rds_client.modify_db_cluster_snapshot_attribute(
-        AttributeName='restore',
-        DBClusterSnapshotIdentifier=snapshot_id,
-        ValuesToAdd=[
-            account
-        ],
-        ValuesToRemove=[
-            'all',
-        ],
-    )
+    if cluster:
+        rds_client.modify_db_cluster_snapshot_attribute(
+            AttributeName='restore',
+            DBClusterSnapshotIdentifier=snapshot_id,
+            ValuesToAdd=[
+                account
+            ],
+            ValuesToRemove=[
+                'all',
+            ],
+        )
+    else:
+        rds_client.modify_db_snapshot_attribute(
+            AttributeName='restore',
+            DBSnapshotIdentifier=snapshot_id,
+            ValuesToAdd=[
+                account
+            ],
+            ValuesToRemove=[
+                'all',
+            ],
+        )
     print(f"Snapshot {snapshot_id} shared with account {account}")
 
 
@@ -179,11 +251,11 @@ def main():
     shared_kms_key_id = f"arn:aws:kms:{aws_region}:{source_account}:key/{kms_key_id}"
     backup_account = os.environ["BACKUP_ACCOUNT"]
     backup_acc_role_arn = os.environ["BACKUP_ACCOUNT_ROLE"]
-    backups_to_keep = 0
+    backups_to_keep = 7200
 
     client = boto3.client('rds', region_name=aws_region)
 
-    print(cluster_id)
+    print(f"Database to backup {cluster_id}")
 
     snapshot_identifier = get_latest_snapshot(client, cluster_id)
     target_snapshot_identifier = snapshot_identifier.replace("rds:", "")

@@ -18,13 +18,12 @@ provider "aws" {
   }
 }
 
-// sandbox for now
 provider "aws" {
   region = "eu-west-1"
-  alias  = "sandbox"
+  alias  = "backup"
 
   assume_role {
-    role_arn     = "arn:aws:iam::995199299616:role/${var.DEFAULT_ROLE}"
+    role_arn     = "arn:aws:iam::${local.backup_account_id}:role/${var.DEFAULT_ROLE}"
     session_name = "terraform-session"
   }
 }

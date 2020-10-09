@@ -15,11 +15,11 @@ locals {
   repositories = [
     "api",
     "client",
+    "dr-backup",
     "file-scanner",
     "sync",
     "test",
-    "wkhtmltopdf",
-    "dr-backup"
+    "wkhtmltopdf"
   ]
 }
 

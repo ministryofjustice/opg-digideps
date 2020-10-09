@@ -1,0 +1,15 @@
+variable "default_tags" {}
+variable "default_role" {}
+variable "environment" {}
+variable "images" {}
+variable "execution_role" {}
+variable "backup_account_id" {}
+variable "aws_ecs_cluster_arn" {}
+variable "aws_subnet_ids" {}
+variable "account" {}
+variable "db" {}
+variable "common_sg_rules" {}
+variable "aws_vpc_id" {}
+variable "task_role_assume_policy" {}
+variable "log_retention" {}
+variable "task_runner_arn" {}
