@@ -101,7 +101,8 @@ locals {
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
       { "name": "DATABASE_HOSTNAME", "value": "${local.db.endpoint}" },
       { "name": "DATABASE_NAME", "value": "${local.db.name}" },
-      { "name": "DATABASE_USERNAME", "value": "${local.db.username}" }
+      { "name": "DATABASE_USERNAME", "value": "${local.db.username}" },
+      { "name": "NGINX_APP_NAME", "value": "api" }
     ]
   }
 
