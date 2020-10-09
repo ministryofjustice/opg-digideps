@@ -295,19 +295,6 @@ class Client implements ClientInterface
     }
 
     /**
-     * convert 7 into 00000007
-     * One Lay deputy has a case number starting with zeros
-     *
-     * @param string $caseNumber
-     *
-     * @return string
-     */
-    public static function padCaseNumber($caseNumber)
-    {
-        return str_pad($caseNumber, 8, '0', STR_PAD_LEFT);
-    }
-
-    /**
      * Set email.
      *
      * @param string $email

@@ -42,11 +42,12 @@ class CasRecToOrgDeputyshipDtoAssembler
         $clientDateOfBirth = $this->reportUtils->parseCsvDate($row['Client Date of Birth'], '19');
         $reportEndDate = $this->reportUtils->parseCsvDate($row['Last Report Day'], '20');
         $reportStartDate = $this->reportUtils->generateReportStartDateFromEndDate($reportEndDate);
-        $caseNumber = $this->reportUtils->padCaseNumber(strtolower($row['Case']));
+        $caseNumber = $this->reportUtils->padCasRecNumber(strtolower($row['Case']));
+        $deputyNumber = $this->reportUtils->padCasRecNumber(strtolower($row['Deputy No']));
 
         return (new OrgDeputyshipDto())
             ->setDeputyEmail($row['Email'])
-            ->setDeputyNumber($row['Deputy No'])
+            ->setDeputyNumber($deputyNumber)
             ->setDeputyFirstname($row['Dep Forename'])
             ->setDeputyLastname($row['Dep Surname'])
             ->setDeputyAddress1($row['Dep Adrs1'])

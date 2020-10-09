@@ -107,4 +107,29 @@ class ReportUtilsTest extends TestCase
 
         $this->assertEquals($expectedYmd, $actual ? $actual->format('Y-m-d'): $actual);
     }
+
+    /**
+     * @test
+     * @dataProvider numberProvider
+     */
+    public function padCasRecNumber(string $number, $expectedPaddedNumber)
+    {
+        $sut = new ReportUtils();
+        self::assertEquals($expectedPaddedNumber, $sut->padCasRecNumber($number));
+    }
+
+    public function numberProvider()
+    {
+        return [
+            '1 character' => ['1', '00000001'],
+            '2 character' => ['ab', '000000ab'],
+            '3 character' => ['1ab', '000001ab'],
+            '4 character' => ['87TY', '000087TY'],
+            '5 character' => ['12345', '00012345'],
+            '6 character' => ['123456', '00123456'],
+            '7 character' => ['1234567', '01234567'],
+            '8 character' => ['12345678', '12345678'],
+            '9 character' => ['123456789', '123456789'],
+        ];
+    }
 }

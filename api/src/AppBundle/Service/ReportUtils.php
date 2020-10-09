@@ -64,8 +64,8 @@ class ReportUtils
         return CasRec::getTypeBasedOnTypeofRepAndCorref($typeOfRep, $corref, $realm);
     }
 
-    public function padCaseNumber(string $caseNumber)
+    public function padCasRecNumber(string $number)
     {
-        return Client::padCaseNumber($caseNumber);
+        return str_pad($number, 8, '0', STR_PAD_LEFT);
     }
 }

@@ -19,7 +19,8 @@ class CasRecToOrgDeputyshipDtoAssemblerTest extends TestCase
         $casrecArray = OrgDeputyshipDTOTestHelper::generateValidCasRecOrgDeputyshipArray();
         $casrecArray['Forename'] = '   Roisin  ';
         $casrecArray['Surname'] = ' Murphy     ';
-        $casrecArray['Case'] = 'ABCD1234';
+        $casrecArray['Case'] = 'ABCD12';
+        $casrecArray['Deputy No'] = '1234567';
 
         $lastReportDate = new DateTime($casrecArray['Last Report Day']);
         $now = new DateTime();
@@ -38,9 +39,12 @@ class CasRecToOrgDeputyshipDtoAssemblerTest extends TestCase
         $reportUtils->generateReportStartDateFromEndDate($lastReportDate)
             ->shouldBeCalled()
             ->willReturn($now);
-        $reportUtils->padCaseNumber('abcd1234')
+        $reportUtils->padCasRecNumber('abcd12')
             ->shouldBeCalled()
-            ->willReturn('00000001');
+            ->willReturn('00abcd12');
+        $reportUtils->padCasRecNumber('1234567')
+            ->shouldBeCalled()
+            ->willReturn('01234567');
 
 
         $sut = new CasRecToOrgDeputyshipDtoAssembler($reportUtils->reveal());
