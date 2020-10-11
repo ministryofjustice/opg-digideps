@@ -15,3 +15,6 @@ services:
   wkhtmltopdf:
     image: ${AWS_REGISTRY}/digideps/wkhtmltopdf:${VERSION}
     build: ./wkhtmltopdf
+  drbackup:
+    image: ${AWS_REGISTRY}/digideps/dr-backup:${VERSION}
+    build: ./dr_backup
