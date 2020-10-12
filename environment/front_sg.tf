@@ -48,12 +48,19 @@ locals {
       target_type = "security_group_id"
       target      = module.front_elb_security_group.id
     }
+    internal = {
+      port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "10.172.0.0/16"
+    }
     notify = {
       port        = 443
       type        = "egress"
       protocol    = "tcp"
       target_type = "cidr_block"
-      target      = "0.0.0.0/0"
+      target      = "52.48.0.0/16, 52.218.0.0/16, 34.251.0.0/16, 52.208.0.0/16"
     }
   }
 }
