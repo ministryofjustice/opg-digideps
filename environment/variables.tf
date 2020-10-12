@@ -61,7 +61,7 @@ locals {
   environment = lower(terraform.workspace)
   subdomain   = local.account["subdomain_enabled"] ? local.environment : ""
   // Just preprod for now until proper account is set up. Off in all envs currently.
-  backup_account_id = "454262938596"
+  backup_account_id = "238302996107"
 
   default_tags = {
     business-unit          = "OPG"
