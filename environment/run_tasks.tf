@@ -43,7 +43,7 @@ locals {
     cpu       = 0,
     essential = true,
     image     = "${local.images.sync}"
-    command   = ["psql", "-c", "ANALYSE VERBOSE;"],
+    command   = ["sh", "./analyse.sh"],
     name      = "psql-analyse",
     logConfiguration = {
       logDriver = "awslogs",
@@ -55,8 +55,12 @@ locals {
     },
     environment = [
       {
-        name  = "POSTGRES_DB",
+        name  = "POSTGRES_DATABASE",
         value = local.db.name
+      },
+      {
+        name  = "POSTGRES_PORT",
+        value = "5432"
       },
       {
         name  = "POSTGRES_USER",
