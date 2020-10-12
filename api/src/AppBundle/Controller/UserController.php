@@ -7,10 +7,13 @@ use AppBundle\Entity\Repository\ClientRepository;
 use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
 use AppBundle\Security\UserVoter;
+use AppBundle\Service\Audit\AuditEvents;
+use AppBundle\Service\Time\DateTimeProvider;
 use AppBundle\Service\UserService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -55,6 +58,14 @@ class UserController extends RestController
      * @var SecurityHelper
      */
     private $securityHelper;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+    /**
+     * @var DateTimeProvider
+     */
+    private $dateTimeProvider;
 
     public function __construct(
         UserService $userService,
@@ -62,15 +73,18 @@ class UserController extends RestController
         UserRepository $userRepository,
         ClientRepository $clientRepository,
         UserVoter $userVoter,
-        SecurityHelper $securityHelper
-    )
-    {
+        SecurityHelper $securityHelper,
+        LoggerInterface $logger,
+        DateTimeProvider $dateTimeProvider
+    ) {
         $this->userService = $userService;
         $this->encoderFactory = $encoderFactory;
         $this->userRepository = $userRepository;
         $this->clientRepository = $clientRepository;
         $this->userVoter = $userVoter;
         $this->securityHelper = $securityHelper;
+        $this->logger = $logger;
+        $this->dateTimeProvider = $dateTimeProvider;
     }
 
     /**
@@ -129,6 +143,17 @@ class UserController extends RestController
 
         // check if rolename in data - if so add audit log
         $this->userService->editUser($originalUser, $requestedUser);
+
+        $event = (new AuditEvents($this->dateTimeProvider))->userEmailChanged(
+            AuditEvents::TRIGGER_ADMIN_USER_EDIT,
+            'test@test.com',
+            'test@test2.com',
+            $this->getUser()->getEmail(),
+            'A full name',
+            'Some role'
+        );
+
+        $this->logger->notice('', $event);
 
         return ['id' => $requestedUser->getId()];
     }

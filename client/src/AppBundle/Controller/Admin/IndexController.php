@@ -98,8 +98,7 @@ class IndexController extends AbstractController
         RestClient $restClient,
         MailFactory $mailFactory,
         MailSenderInterface $mailSender
-    )
-    {
+    ) {
         $form = $this->createForm(FormDir\Admin\AddUserType::class, new EntityDir\User());
 
         $form->handleRequest($request);
@@ -187,18 +186,18 @@ class IndexController extends AbstractController
             try {
                 $this->getRestClient()->put('user/' . $user->getId(), $updateUser, ['admin_edit_user']);
 
-                if ($oldEmail !== $newEmail) {
-                    $event = (new AuditEvents($this->dateTimeProvider))->userEmailChanged(
-                        AuditEvents::TRIGGER_ADMIN_USER_EDIT,
-                        $oldEmail,
-                        $newEmail,
-                        $this->getUser()->getEmail(),
-                        $fullName,
-                        $updateUser->getRoleName()
-                    );
-
-                    $this->logger->notice('', $event);
-                }
+//                if ($oldEmail !== $newEmail) {
+//                    $event = (new AuditEvents($this->dateTimeProvider))->userEmailChanged(
+//                        AuditEvents::TRIGGER_ADMIN_USER_EDIT,
+//                        $oldEmail,
+//                        $newEmail,
+//                        $this->getUser()->getEmail(),
+//                        $fullName,
+//                        $updateUser->getRoleName()
+//                    );
+//
+//                    $this->logger->notice('', $event);
+//                }
 
                 $this->addFlash('notice', 'Your changes were saved');
 
@@ -335,7 +334,8 @@ class IndexController extends AbstractController
             return $this->redirect($this->generateUrl('admin_homepage'));
         } catch (\Throwable $e) {
             $this->logger->warning(
-                sprintf('Error while deleting deputy: %s', $e->getMessage()), ['deputy_email' => $user->getEmail()]
+                sprintf('Error while deleting deputy: %s', $e->getMessage()),
+                ['deputy_email' => $user->getEmail()]
             );
 
             $this->addFlash('error', 'There was a problem deleting the deputy - please try again later');
@@ -367,7 +367,7 @@ class IndexController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('type')->getData() === 'lay') {
                 return new RedirectResponse($router->generate('casrec_upload'));
-            } else if ($form->get('type')->getData() === 'org') {
+            } elseif ($form->get('type')->getData() === 'org') {
                 return new RedirectResponse($router->generate('admin_org_upload'));
             }
         }
@@ -600,8 +600,7 @@ class IndexController extends AbstractController
         MailSenderInterface $mailSender,
         LoggerInterface $logger,
         RestClient $restClient
-    )
-    {
+    ) {
         try {
             $user = $restClient->userRecreateToken($email, 'pass-reset');
             $resetPasswordEmail = $mailFactory->createActivationEmail($user);
