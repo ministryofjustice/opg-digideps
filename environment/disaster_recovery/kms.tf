@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "kms_db_backup_key" {
     principals {
       type = "AWS"
       identifiers = [
-        "arn:aws:iam::248804316466:root"
+        "arn:aws:iam::${var.account.account_id}:root"
       ]
     }
     resources = ["*"]
