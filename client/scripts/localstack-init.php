@@ -1,11 +1,13 @@
 <?php
 
+use Aws\CloudWatchLogs\CloudWatchLogsClient;
 use Aws\Ssm\SsmClient;
 use GuzzleHttp\Client;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-function isLocalstackAvailable() {
+function isLocalstackAvailable()
+{
     try {
         $client = new Client();
         $response = $client->request('GET', 'http://localstack:8080');
@@ -63,4 +65,19 @@ $ssmClient->putParameter([
     'Type' => 'String',
     'Value' => '100',
     'Overwrite' => true
+]);
+
+$cloudwatchLogsClient = new CloudWatchLogsClient([
+    'version'  => 'latest',
+    'region'  => 'eu-west-1',
+    'endpoint'  => 'http://localstack:4586',
+    'validate'  => false,
+    'credentials'  => [
+        'key' => 'FAKE_ID',
+        'secret' => 'FAKE_KEY',
+    ],
+]);
+
+$cloudwatchLogsClient->createLogGroup([
+    'logGroupName' => 'audit-local'
 ]);
