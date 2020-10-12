@@ -60,7 +60,7 @@ def get_latest_snapshot(rds_client, cid, cluster=True):
         )
     else:
         automated_snapshots = rds_client.describe_db_snapshots(
-            DBIdentifier=cid,
+            DBInstanceIdentifier=cid,
             SnapshotType='automated'
         )
 
@@ -87,7 +87,7 @@ def get_snapshots_to_delete(rds_client, cid, keep_count, cluster=True):
         )
     else:
         manual_snapshots = rds_client.describe_db_snapshots(
-            DBIdentifier=cid,
+            DBInstanceIdentifier=cid,
             SnapshotType='manual'
         )
     snapshots = []
@@ -112,19 +112,21 @@ def get_snapshots_to_delete(rds_client, cid, keep_count, cluster=True):
 def wait_finish_copy(rds_client, target_snapshot_id, cluster=True):
     status = "none"
     secs = 0
-    timeout = 3600
+    timeout = 7200
     while status != 'available' and secs < timeout:
         if cluster:
             manual_snapshot = rds_client.describe_db_cluster_snapshots(
                 SnapshotType='manual',
                 DBClusterSnapshotIdentifier=target_snapshot_id
             )
+            status = manual_snapshot["DBClusterSnapshots"][0]["Status"]
         else:
             manual_snapshot = rds_client.describe_db_snapshots(
                 SnapshotType='manual',
                 DBSnapshotIdentifier=target_snapshot_id
             )
-        status = manual_snapshot["DBClusterSnapshots"][0]["Status"]
+            status = manual_snapshot["DBSnapshots"][0]["Status"]
+
         secs += 10
         time.sleep(10)
         print(f"Copying {target_snapshot_id}: {secs} seconds elapsed")
@@ -152,7 +154,7 @@ def copy_latest_snapshot(rds_client, snapshot_id, target_snapshot_id, kms, clust
         )
     print(f"Copying {snapshot_id} to {target_snapshot_id}...")
 
-    if wait_finish_copy(rds_client, target_snapshot_id):
+    if wait_finish_copy(rds_client, target_snapshot_id, cluster):
         print(f"Finished copying {target_snapshot_id}")
     else:
         print(f"Copy timed out")
@@ -168,13 +170,13 @@ def copy_individual_snapshot(rds_client, source_id, target_id, kms_id, region, c
             SourceRegion=region
         )
     else:
-        rds_client.copy_db_cluster_snapshot(
+        rds_client.copy_db_snapshot(
             SourceDBSnapshotIdentifier=source_id,
             TargetDBSnapshotIdentifier=target_id,
             KmsKeyId=kms_id,
             SourceRegion=region
         )
-    if wait_finish_copy(rds_client, target_id):
+    if wait_finish_copy(rds_client, target_id, cluster):
         print(f"Finished copying {target_id}")
     else:
         print(f"Copy timed out")
@@ -255,7 +257,7 @@ def main():
     backup_acc_role_arn = os.environ["BACKUP_ACCOUNT_ROLE"]
     cluster_bool = os.environ["CLUSTER"]
     cluster = str_to_bool(cluster_bool)
-    backups_to_keep = 7200
+    backups_to_keep = 7
 
     client = boto3.client('rds', region_name=aws_region)
 
@@ -263,7 +265,12 @@ def main():
 
     snapshot_identifier = get_latest_snapshot(client, cluster_id, cluster)
     target_snapshot_identifier = snapshot_identifier.replace("rds:", "")
-    shared_snapshot_identifier = f"arn:aws:rds:{aws_region}:{source_account}:cluster-snapshot:{target_snapshot_identifier}"
+
+    if cluster:
+        shared_snapshot_identifier = f"arn:aws:rds:{aws_region}:{source_account}:cluster-snapshot:{target_snapshot_identifier}"
+    else:
+        shared_snapshot_identifier = f"arn:aws:rds:{aws_region}:{source_account}:snapshot:{target_snapshot_identifier}"
+
     backup_snapshot_identifier = f"{target_snapshot_identifier}-bck"
 
     # Delete target if it exists

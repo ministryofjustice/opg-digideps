@@ -48,7 +48,7 @@ locals {
       },
       {
         name  = "BACKUP_ACCOUNT_ROLE",
-        value = "arn:aws:iam::238302996107:role/cross-acc-db-backup.digideps-integration"
+        value = "arn:aws:iam::${var.backup_account_id}:role/${var.cross_account_role_name}"
       },
       {
         name  = "DB_ID"
@@ -80,7 +80,7 @@ data "aws_iam_policy_document" "dr_backup" {
   statement {
     sid       = "allowAssumeAccess"
     effect    = "Allow"
-    resources = ["arn:aws:iam::238302996107:role/cross-acc-db-backup.digideps-integration"]
+    resources = ["arn:aws:iam::${var.backup_account_id}:role/${var.cross_account_role_name}"]
     actions = [
       "sts:AssumeRole"
     ]
