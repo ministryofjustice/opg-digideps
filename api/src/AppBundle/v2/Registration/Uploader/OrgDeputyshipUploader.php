@@ -64,6 +64,8 @@ class OrgDeputyshipUploader
      */
     public function upload(array $deputyshipDtos)
     {
+        $this->resetAdded();
+
         $uploadResults = ['errors' => []];
 
         foreach ($deputyshipDtos as $deputyshipDto) {
@@ -214,11 +216,16 @@ class OrgDeputyshipUploader
             );
 
             $this->client->addReport($report);
+
+            $this->added['reports'][] = $this->client->getCaseNumber() . '-' . $dto->getReportEndDate()->format('Y-m-d');
         }
 
         $this->em->persist($report);
         $this->em->flush();
+    }
 
-        $this->added['reports'][] = $this->client->getCaseNumber() . '-' . $dto->getReportEndDate()->format('Y-m-d');
+    private function resetAdded()
+    {
+        $this->added = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
     }
 }

@@ -94,6 +94,7 @@ class OrgDeputyshipDTOTestHelper
         $result = ['errors' => $errors];
         $added = ['clients' => [], 'organisations' => [], 'named_deputies' => [], 'reports' => []];
 
+
         if ($clients > 0) {
             foreach (range(1, $clients) as $index) {
                 $added['clients'] = random_int(10000000, 99999999);

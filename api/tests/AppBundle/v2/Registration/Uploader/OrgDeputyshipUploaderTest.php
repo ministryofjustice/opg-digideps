@@ -352,4 +352,30 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
             sprintf('Expected error message "%s" was not in the errors array', $errorMessage)
         );
     }
+
+    /** @test */
+    public function upload_uploading_the_same_dto_a_second_time_does_not_create_duplicates()
+    {
+        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+
+        $firstUploadResults = $this->sut->upload($deputyships);
+
+        foreach ($firstUploadResults['added'] as $result) {
+            self::assertCount(
+                1,
+                $result,
+                sprintf('Expecting 1, got %d', count($result))
+            );
+        }
+
+        $secondUploadResult = $this->sut->upload($deputyships);
+
+        foreach ($secondUploadResult['added'] as $result) {
+            self::assertCount(
+                0,
+                $result,
+                sprintf('Expecting 0, got %d', count($result))
+            );
+        }
+    }
 }
