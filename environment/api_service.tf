@@ -96,13 +96,14 @@ locals {
       { "name": "SECRETS_FRONT_KEY", "valueFrom": "${data.aws_secretsmanager_secret.front_api_client_secret.arn}" }
     ],
     "environment": [
-      { "name": "REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" },
-      { "name": "DATABASE_PORT", "value": "${local.db.port}" },
-      { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
+      { "name": "AUDIT_LOG_GROUP_NAME", "value": "audit-${local.environment}" },
       { "name": "DATABASE_HOSTNAME", "value": "${local.db.endpoint}" },
       { "name": "DATABASE_NAME", "value": "${local.db.name}" },
+      { "name": "DATABASE_PORT", "value": "${local.db.port}" },
       { "name": "DATABASE_USERNAME", "value": "${local.db.username}" },
-      { "name": "NGINX_APP_NAME", "value": "api" }
+      { "name": "NGINX_APP_NAME", "value": "api" },
+      { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
+      { "name": "REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" },
     ]
   }
 
