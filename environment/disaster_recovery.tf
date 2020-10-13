@@ -16,8 +16,5 @@ module "disaster_recovery_backup" {
   aws_vpc_id              = data.aws_vpc.vpc.id
   task_runner_arn         = data.aws_iam_role.events_task_runner.arn
   task_role_assume_policy = data.aws_iam_policy_document.task_role_assume_policy
-  providers = {
-    aws        = aws
-    aws.backup = aws.backup
-  }
+  cross_account_role_name = local.cross_account_role_name
 }

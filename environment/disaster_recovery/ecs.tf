@@ -46,13 +46,17 @@ locals {
         name  = "SOURCE_ACCOUNT",
         value = var.account.account_id
       },
-      //      {
-      //        name  = "BACKUP_ACCOUNT_ROLE",
-      //        value = aws_iam_role.cross_acc_backup.arn
-      //      },
+      {
+        name  = "BACKUP_ACCOUNT_ROLE",
+        value = "arn:aws:iam::${var.backup_account_id}:role/${var.cross_account_role_name}"
+      },
       {
         name  = "DB_ID"
         value = "${var.db.name}-${var.environment}"
+      },
+      {
+        name  = "CLUSTER"
+        value = tostring(var.account.always_on)
       },
     ]
   })
@@ -73,14 +77,14 @@ resource "aws_iam_role" "dr_backup" {
 }
 
 data "aws_iam_policy_document" "dr_backup" {
-  //  statement {
-  //    sid       = "allowAssumeAccess"
-  //    effect    = "Allow"
-  //    resources = [aws_iam_role.cross_acc_backup.arn]
-  //    actions = [
-  //      "sts:AssumeRole"
-  //    ]
-  //  }
+  statement {
+    sid       = "allowAssumeAccess"
+    effect    = "Allow"
+    resources = ["arn:aws:iam::${var.backup_account_id}:role/${var.cross_account_role_name}"]
+    actions = [
+      "sts:AssumeRole"
+    ]
+  }
   statement {
     sid    = "allowKMSAccess"
     effect = "Allow"

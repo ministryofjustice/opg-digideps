@@ -37,8 +37,7 @@ class UserController extends AbstractController
         DeputyProvider $deputyProvider,
         string $action,
         string $token
-    ): Response
-    {
+    ): Response {
         /** @var TranslatorInterface */
         $translator = $this->get('translator');
         $isActivatePage = 'activate' === $action;
@@ -48,7 +47,7 @@ class UserController extends AbstractController
             $user = $this->getRestClient()->loadUserByToken($token);
             /* @var $user EntityDir\User */
         } catch (\Throwable $e) {
-            return $this->renderError('This link is not working or has already been used');
+            return $this->renderError('This link is not working or has already been used', Response::HTTP_UNAUTHORIZED);
         }
 
         // token expired
@@ -72,9 +71,12 @@ class UserController extends AbstractController
         // define form and template that differs depending on the action (activate or password-reset)
         if ($isActivatePage) {
             $passwordMismatchMessage = $translator->trans('password.validation.passwordMismatch', [], 'user-activate');
-            $form = $this->createForm(FormDir\SetPasswordType::class, $user, [ 'passwordMismatchMessage' => $passwordMismatchMessage, 'showTermsAndConditions'  => $user->isDeputy()
+            $form = $this->createForm(
+                FormDir\SetPasswordType::class,
+                $user,
+                [ 'passwordMismatchMessage' => $passwordMismatchMessage, 'showTermsAndConditions'  => $user->isDeputy()
                                        ]
-                                     );
+            );
             $template = 'AppBundle:User:activate.html.twig';
         } else { // 'password-reset'
             $passwordMismatchMessage = $translator->trans('form.password.validation.passwordMismatch', [], 'password-reset');
@@ -299,7 +301,8 @@ class UserController extends AbstractController
 
                     case 422:
                         $form->addError(new FormError(
-                            $translator->trans('email.first.existingError', [], 'register')));
+                            $translator->trans('email.first.existingError', [], 'register')
+                        ));
                         break;
 
                     case 400:
