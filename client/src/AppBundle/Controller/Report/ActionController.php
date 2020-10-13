@@ -25,13 +25,18 @@ class ActionController extends AbstractController
     /** @var ReportApi */
     private $reportApi;
 
+    /** @var StepRedirector */
+    private $stepRedirector;
+
     public function __construct(
         RestClient $restClient,
-        ReportApi $reportApi
+        ReportApi $reportApi,
+        StepRedirector $stepRedirector
     )
     {
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
+        $this->stepRedirector = $stepRedirector;
     }
 
     /**
@@ -64,7 +69,7 @@ class ActionController extends AbstractController
         $action = $report->getAction() ?: new EntityDir\Report\Action();
         $fromPage = $request->get('from');
 
-        $stepRedirector = $this->stepRedirector()
+        $stepRedirector = $this->stepRedirector
             ->setRoutes('actions', 'actions_step', 'actions_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)

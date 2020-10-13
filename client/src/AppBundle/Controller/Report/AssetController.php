@@ -26,13 +26,18 @@ class AssetController extends AbstractController
     /** @var ReportApi */
     private $reportApi;
 
+    /** @var StepRedirector */
+    private $stepRedirector;
+
     public function __construct(
         RestClient $restClient,
-        ReportApi $reportApi
+        ReportApi $reportApi,
+        StepRedirector $stepRedirector
     )
     {
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
+        $this->stepRedirector = $stepRedirector;
     }
 
     /**
@@ -192,8 +197,13 @@ class AssetController extends AbstractController
     /**
      * @Route("/report/{reportId}/assets/add_another", name="assets_add_another")
      * @Template("AppBundle:Report/Asset:addAnother.html.twig")
+     *
+     * @param Request $request
+     * @param int $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function addAnotherAction(Request $request, $reportId)
+    public function addAnotherAction(Request $request, int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId);
 
@@ -233,7 +243,7 @@ class AssetController extends AbstractController
         $fromPage = $request->get('from');
 
 
-        $stepRedirector = $this->stepRedirector()
+        $stepRedirector = $this->stepRedirector
             ->setRoutes('assets_type', 'assets_property_step', 'assets_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)

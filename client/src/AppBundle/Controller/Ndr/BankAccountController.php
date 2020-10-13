@@ -8,6 +8,7 @@ use AppBundle\Form as FormDir;
 use AppBundle\Service\Client\Internal\ReportApi;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\NdrStatusService;
+use AppBundle\Service\StepRedirector;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -25,13 +26,20 @@ class BankAccountController extends AbstractController
      */
     private $restClient;
 
+    /**
+     * @var StepRedirector
+     */
+    private $stepRedirector;
+
     public function __construct(
         ReportApi $reportApi,
-        RestClient $restClient
+        RestClient $restClient,
+        StepRedirector $stepRedirector
     )
     {
         $this->reportApi = $reportApi;
         $this->restClient = $restClient;
+        $this->stepRedirector = $stepRedirector;
     }
 
     /**
@@ -74,7 +82,7 @@ class BankAccountController extends AbstractController
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
-        $stepRedirector = $this->stepRedirector()
+        $stepRedirector = $this->stepRedirector
             ->setRoutes('ndr_bank_accounts', 'ndr_bank_accounts_step', 'ndr_bank_accounts_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)

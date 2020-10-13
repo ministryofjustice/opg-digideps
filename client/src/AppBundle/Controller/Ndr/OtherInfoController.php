@@ -28,13 +28,21 @@ class OtherInfoController extends AbstractController
      */
     private $restClient;
 
+
+    /**
+     * @var StepRedirector
+     */
+    private $stepRedirector;
+
     public function __construct(
         ReportApi $reportApi,
-        RestClient $restClient
+        RestClient $restClient,
+        StepRedirector $stepRedirector
     )
     {
         $this->reportApi = $reportApi;
         $this->restClient = $restClient;
+        $this->stepRedirector = $stepRedirector;
     }
 
     /**
@@ -67,7 +75,7 @@ class OtherInfoController extends AbstractController
         $fromPage = $request->get('from');
 
 
-        $stepRedirector = $this->stepRedirector()
+        $stepRedirector = $this->stepRedirector
             ->setRoutes('ndr_other_info', 'ndr_other_info_step', 'ndr_other_info_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)

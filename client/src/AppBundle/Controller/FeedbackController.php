@@ -68,7 +68,7 @@ class FeedbackController
      */
     public function indexAction(Request $request)
     {
-        $form = $this->createForm(FeedbackType::class);
+        $form = $this->form->create(FeedbackType::class);
 
         $form->handleRequest($request);
 

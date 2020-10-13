@@ -11,6 +11,7 @@ use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use AppBundle\Service\Redirector;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
@@ -143,6 +144,12 @@ class CoDeputyController extends AbstractController
     /**
      * @Route("/codeputy/{clientId}/add", name="add_co_deputy")
      * @Template("AppBundle:CoDeputy:add.html.twig")
+     *
+     * @param Request $request
+     * @param Redirector $redirector
+     *
+     * @return array|RedirectResponse
+     * @throws \Throwable
      */
     public function addAction(Request $request, Redirector $redirector)
     {
@@ -189,17 +196,24 @@ class CoDeputyController extends AbstractController
             }
         }
 
+        $user = $this->userApi->getUserWithData(['user', 'user-clients', 'client']);
         return [
             'form' => $form->createView(),
             'backLink' => $backLink,
-            'client' => $this->clientApi->getFirstClient()
+            'client' => $this->clientApi->getFirstClient($user)
         ];
     }
 
     /**
      * @Route("/codeputy/re-invite/{email}", name="codep_resend_activation")
      * @Template("AppBundle:CoDeputy:resendActivation.html.twig")
-     **/
+     *
+     * @param Request $request
+     * @param $email
+     *
+     * @return array|RedirectResponse
+     * @throws \Throwable
+     */
     public function resendActivationAction(Request $request, $email)
     {
         $loggedInUser = $this->userApi->getUserWithData(['user-clients', 'client']);

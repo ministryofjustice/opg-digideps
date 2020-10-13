@@ -8,6 +8,8 @@ use AppBundle\Form as FormDir;
 use AppBundle\Service\Client\Internal\ReportApi;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\NdrStatusService;
+use AppBundle\Service\StepRedirector;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,20 +30,32 @@ class VisitsCareController extends AbstractController
      */
     private $restClient;
 
+    /**
+     * @var StepRedirector
+     */
+    private $stepRedirector;
+
     public function __construct(
         ReportApi $reportApi,
-        RestClient $restClient
+        RestClient $restClient,
+        StepRedirector $stepRedirector
     )
     {
         $this->reportApi = $reportApi;
         $this->restClient = $restClient;
+        $this->stepRedirector = $stepRedirector;
     }
 
     /**
      * @Route("/ndr/{ndrId}/visits-care", name="ndr_visits_care")
      * @Template("AppBundle:Ndr/VisitsCare:start.html.twig")
+     *
+     * @param Request $request
+     * @param int $ndrId
+     *
+     * @return array|RedirectResponse
      */
-    public function startAction(Request $request, $ndrId)
+    public function startAction(Request $request, int $ndrId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if ($ndr->getStatusService()->getVisitsCareState()['state'] != NdrStatusService::STATE_NOT_STARTED) {
@@ -56,8 +70,14 @@ class VisitsCareController extends AbstractController
     /**
      * @Route("/ndr/{ndrId}/visits-care/step/{step}", name="ndr_visits_care_step")
      * @Template("AppBundle:Ndr/VisitsCare:step.html.twig")
+     *
+     * @param Request $request
+     * @param int $ndrId
+     * @param int $step
+     *
+     * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, $ndrId, $step)
+    public function stepAction(Request $request, int $ndrId, int $step)
     {
         $totalSteps = 5;
         if ($step < 1 || $step > $totalSteps) {
@@ -68,7 +88,7 @@ class VisitsCareController extends AbstractController
         $fromPage = $request->get('from');
 
 
-        $stepRedirector = $this->stepRedirector()
+        $stepRedirector = $this->stepRedirector
             ->setRoutes('ndr_visits_care', 'ndr_visits_care_step', 'ndr_visits_care_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
@@ -115,8 +135,13 @@ class VisitsCareController extends AbstractController
     /**
      * @Route("/ndr/{ndrId}/visits-care/summary", name="ndr_visits_care_summary")
      * @Template("AppBundle:Ndr/VisitsCare:summary.html.twig")
+     *
+     * @param Request $request
+     * @param int $ndrId
+     *
+     * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, $ndrId)
+    public function summaryAction(Request $request, int $ndrId)
     {
         $fromPage = $request->get('from');
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);

@@ -9,6 +9,7 @@ use AppBundle\Entity\Report\Status;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\Client\Internal\ReportApi;
 use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\StepRedirector;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\SubmitButton;
@@ -30,13 +31,18 @@ class MoneyOutController extends AbstractController
     /** @var ReportApi */
     private $reportApi;
 
+    /** @var StepRedirector */
+    private $stepRedirector;
+
     public function __construct(
         RestClient $restClient,
-        ReportApi $reportApi
+        ReportApi $reportApi,
+        StepRedirector $stepRedirector
     )
     {
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
+        $this->stepRedirector = $stepRedirector;
     }
 
     /**
@@ -84,7 +90,7 @@ class MoneyOutController extends AbstractController
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
-        $stepRedirector = $this->stepRedirector()
+        $stepRedirector = $this->stepRedirector
             ->setRoutes('money_out', 'money_out_step', 'money_out_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)

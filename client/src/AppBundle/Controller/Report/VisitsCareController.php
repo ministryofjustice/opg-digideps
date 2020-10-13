@@ -27,13 +27,18 @@ class VisitsCareController extends AbstractController
     /** @var ReportApi */
     private $reportApi;
 
+    /** @var StepRedirector */
+    private $stepRedirector;
+
     public function __construct(
         RestClient $restClient,
-        ReportApi $reportApi
+        ReportApi $reportApi,
+        StepRedirector $stepRedirector
     )
     {
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
+        $this->stepRedirector = $stepRedirector;
     }
 
     /**
@@ -77,7 +82,7 @@ class VisitsCareController extends AbstractController
         $visitsCare = $report->getVisitsCare() ?: new EntityDir\Report\VisitsCare();
         $fromPage = $request->get('from');
 
-        $stepRedirector = $this->stepRedirector()
+        $stepRedirector = $this->stepRedirector
             ->setRoutes('visits_care', 'visits_care_step', 'visits_care_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)

@@ -10,15 +10,6 @@ use Symfony\Component\Routing\Router;
 abstract class AbstractController extends Controller
 {
     /**
-     * @return object
-     */
-    protected function stepRedirector()
-    {
-        /** @var StepRedirector */
-        return $this->get(StepRedirector::class);
-    }
-
-    /**
      * @param string $description
      * @param int $statusCode
      * @return Response

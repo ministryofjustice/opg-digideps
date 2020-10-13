@@ -7,6 +7,7 @@ use AppBundle\Form as FormDir;
 use AppBundle\Service\Client\Internal\ReportApi;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\NdrStatusService;
+use AppBundle\Service\StepRedirector;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -25,6 +26,11 @@ class ActionController extends AbstractController
      */
     private $restClient;
 
+    /**
+     * @var StepRedirector
+     */
+    private $stepRedirector;
+
     private static $jmsGroups = [
         'ndr-action-give-gifts',
         'ndr-action-property',
@@ -33,11 +39,13 @@ class ActionController extends AbstractController
 
     public function __construct(
         ReportApi $reportApi,
-        RestClient $restClient
+        RestClient $restClient,
+        StepRedirector $stepRedirector
     )
     {
         $this->reportApi = $reportApi;
         $this->restClient = $restClient;
+        $this->stepRedirector = $stepRedirector;
     }
 
     /**
@@ -74,7 +82,7 @@ class ActionController extends AbstractController
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
-        $stepRedirector = $this->stepRedirector()
+        $stepRedirector = $this->stepRedirector
             ->setRoutes('ndr_actions', 'ndr_actions_step', 'ndr_actions_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)

@@ -14,6 +14,7 @@ use AppBundle\Service\Mailer\MailSender;
 use AppBundle\Service\Redirector;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -83,12 +84,17 @@ class ClientController extends AbstractController
     /**
      * @Route("/deputyship-details/your-client/edit", name="client_edit")
      * @Template("AppBundle:Client:edit.html.twig")
+     *
+     * @param Request $request
+     *
+     * @return array|RedirectResponse
      */
     public function editAction(Request $request)
     {
         $from = $request->get('from');
 
-        $client = $this->clientApi->getFirstClient(null);
+        $user = $this->userApi->getUserWithData(['user', 'user-clients', 'client']);
+        $client = $this->clientApi->getFirstClient($user);
 
         if (is_null($client)) {
             /** @var User $user */

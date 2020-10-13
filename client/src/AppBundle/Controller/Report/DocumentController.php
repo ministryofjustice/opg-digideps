@@ -46,17 +46,22 @@ class DocumentController extends AbstractController
     /** @var ClientApi */
     private $clientApi;
 
+    /** @var StepRedirector */
+    private $stepRedirector;
+
     public function __construct(
         RestClient $restClient,
         ReportApi $reportApi,
         S3FileUploader $fileUploader,
-        ClientApi $clientApi
+        ClientApi $clientApi,
+        StepRedirector $stepRedirector
     )
     {
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
         $this->fileUploader = $fileUploader;
         $this->clientApi = $clientApi;
+        $this->stepRedirector = $stepRedirector;
     }
 
     /**
@@ -106,7 +111,7 @@ class DocumentController extends AbstractController
 
         $fromPage = $request->get('from');
 
-        $stepRedirector = $this->stepRedirector()
+        $stepRedirector = $this->stepRedirector
             ->setRoutes('documents', 'report_documents', 'report_documents_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)

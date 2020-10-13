@@ -32,13 +32,20 @@ class IncomeBenefitController extends AbstractController
      */
     private $restClient;
 
+    /**
+     * @var StepRedirector
+     */
+    private $stepRedirector;
+
     public function __construct(
         ReportApi $reportApi,
-        RestClient $restClient
+        RestClient $restClient,
+        StepRedirector $stepRedirector
     )
     {
         $this->reportApi = $reportApi;
         $this->restClient = $restClient;
+        $this->stepRedirector = $stepRedirector;
     }
 
     /**
@@ -71,7 +78,7 @@ class IncomeBenefitController extends AbstractController
         $fromPage = $request->get('from');
 
 
-        $stepRedirector = $this->stepRedirector()
+        $stepRedirector = $this->stepRedirector
             ->setRoutes('ndr_income_benefits', 'ndr_income_benefits_step', 'ndr_income_benefits_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
