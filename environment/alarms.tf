@@ -21,6 +21,7 @@ resource "aws_cloudwatch_metric_alarm" "php_critical_errors" {
   evaluation_periods  = 1
   namespace           = aws_cloudwatch_log_metric_filter.php_critical_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  actions_enabled     = local.account.alarms_active
   tags                = local.default_tags
 }
 
@@ -47,6 +48,7 @@ resource "aws_cloudwatch_metric_alarm" "php_errors" {
   evaluation_periods  = 1
   namespace           = aws_cloudwatch_log_metric_filter.php_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  actions_enabled     = local.account.alarms_active
   tags                = local.default_tags
 }
 
@@ -75,6 +77,7 @@ resource "aws_cloudwatch_metric_alarm" "queued_documents" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.queued_documents.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  actions_enabled     = local.account.alarms_active
   tags                = local.default_tags
 }
 
@@ -108,6 +111,7 @@ resource "aws_cloudwatch_metric_alarm" "availability-front" {
   evaluation_periods  = 1
   namespace           = "AWS/Route53"
   alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
+  actions_enabled     = local.account.alarms_active
   tags                = local.default_tags
 
   dimensions = {
@@ -140,6 +144,7 @@ resource "aws_cloudwatch_metric_alarm" "availability-admin" {
   evaluation_periods  = 1
   namespace           = "AWS/Route53"
   alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
+  actions_enabled     = local.account.alarms_active
   tags                = local.default_tags
 
   dimensions = {
@@ -171,6 +176,7 @@ resource "aws_cloudwatch_metric_alarm" "frontend_5xx_errors" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.frontend_5xx_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  actions_enabled     = local.account.alarms_active
   tags                = local.default_tags
 }
 
@@ -198,6 +204,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_5xx_errors" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.admin_5xx_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  actions_enabled     = local.account.alarms_active
   tags                = local.default_tags
 }
 
@@ -225,12 +232,13 @@ resource "aws_cloudwatch_metric_alarm" "api_5xx_errors" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.api_5xx_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  actions_enabled     = local.account.alarms_active
   tags                = local.default_tags
 }
 
 
 resource "aws_cloudwatch_metric_alarm" "frontend_alb_5xx_errors" {
-  actions_enabled     = true
+  actions_enabled     = local.account.alarms_active
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
   alarm_description   = "Number of 5XX Errors returned to Public Users from the ${local.environment} Frontend ALB."
   alarm_name          = "FrontendALB5XXErrors.${local.environment}"
@@ -249,7 +257,7 @@ resource "aws_cloudwatch_metric_alarm" "frontend_alb_5xx_errors" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "admin_alb_5xx_errors" {
-  actions_enabled     = true
+  actions_enabled     = local.account.alarms_active
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
   alarm_description   = "Number of 5XX Errors returned to Internal Users from the ${local.environment} Admin ALB."
   alarm_name          = "AdminALB5XXErrors.${local.environment}"
@@ -268,7 +276,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_5xx_errors" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "frontend_alb_average_response_time" {
-  actions_enabled           = true
+  actions_enabled           = local.account.alarms_active
   alarm_actions             = [data.aws_sns_topic.alerts.arn]
   alarm_description         = "Response Time for Frontend ALB in ${local.environment}"
   alarm_name                = "FrontendALBAverageResponseTime.${local.environment}"
@@ -296,7 +304,7 @@ resource "aws_cloudwatch_metric_alarm" "frontend_alb_average_response_time" {
   }
 
   metric_query {
-    expression  = "ANOMALY_DETECTION_BAND(m1, 1)"
+    expression  = "ANOMALY_DETECTION_BAND(m1, 2)"
     id          = "ad1"
     label       = "TargetResponseTime (expected)"
     return_data = true
@@ -304,7 +312,7 @@ resource "aws_cloudwatch_metric_alarm" "frontend_alb_average_response_time" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
-  actions_enabled           = true
+  actions_enabled           = local.account.alarms_active
   alarm_actions             = [data.aws_sns_topic.alerts.arn]
   alarm_description         = "Response Time for Admin ALB in ${local.environment}"
   alarm_name                = "AdminALBAverageResponseTime.${local.environment}"
@@ -332,7 +340,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
   }
 
   metric_query {
-    expression  = "ANOMALY_DETECTION_BAND(m1, 1)"
+    expression  = "ANOMALY_DETECTION_BAND(m1, 2)"
     id          = "ad1"
     label       = "TargetResponseTime (expected)"
     return_data = true

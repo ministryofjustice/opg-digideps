@@ -35,6 +35,7 @@ variable "accounts" {
       memory_high             = number
       backup_retention_period = number
       psql_engine_version     = string
+      alarms_active           = bool
       dr_backup               = bool
     })
   )
