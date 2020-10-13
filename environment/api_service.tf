@@ -103,7 +103,7 @@ locals {
       { "name": "DATABASE_USERNAME", "value": "${local.db.username}" },
       { "name": "NGINX_APP_NAME", "value": "api" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
-      { "name": "REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" },
+      { "name": "REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" }
     ]
   }
 
