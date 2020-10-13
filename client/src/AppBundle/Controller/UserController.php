@@ -22,7 +22,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Translation\TranslatorInterface;
-use TheSeer\fDOM\CSS\Translator;
 
 class UserController extends AbstractController
 {
