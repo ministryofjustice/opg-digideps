@@ -45,7 +45,7 @@ class DecisionController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function startAction($reportId)
+    public function startAction(int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 

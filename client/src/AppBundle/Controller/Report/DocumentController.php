@@ -14,6 +14,7 @@ use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\DocumentService;
 use AppBundle\Service\File\S3FileUploader;
 use AppBundle\Service\File\Verifier\MultiFileFormUploadVerifier;
+use AppBundle\Service\StepRedirector;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Annotation\Route;

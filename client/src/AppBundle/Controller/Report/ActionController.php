@@ -6,6 +6,7 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 
+use AppBundle\Service\Client\Internal\ReportApi;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\StepRedirector;
 use Symfony\Component\Routing\Annotation\Route;
