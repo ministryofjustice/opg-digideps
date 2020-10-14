@@ -425,7 +425,7 @@ class UserController extends RestController
      */
     private function populateUser(User $user, array $data)
     {
-        // Cannot easily(*) use JSM deserialising with already constructed objects.
+        // Cannot easily(*) use JSM deserialising with already constructed objects.                                                                                                                                                             +
         // Also. It'd be possible to differentiate when a NULL value is intentional or not
         // (*) see options here https://github.com/schmittjoh/serializer/issues/79
         // http://jmsyst.com/libs/serializer/master/event_system
