@@ -113,6 +113,7 @@ services:
             - postgres
             - redisapi
             - localstack
+            - localstack-init
         env_file:
             - ./api/docker/env/api.env
         restart: always
