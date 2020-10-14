@@ -37,7 +37,7 @@ class UserListener
     {
         $changes = $args->getEntityChangeSet();
 
-        if (array_key_exists('email', $changes)) {
+        if ($this->canLogEmailChange($changes)) {
             $this->logEvents[] = [
                 'trigger' => 'ADMIN_USER_EDIT',
                 'email_changed_from' => $changes['email'][0],
@@ -59,5 +59,10 @@ class UserListener
         }
 
         $this->logEvents = [];
+    }
+
+    private function canLogEmailChange(array $changes)
+    {
+        return array_key_exists('email', $changes) &&  $this->security->getUser() instanceof User;
     }
 }

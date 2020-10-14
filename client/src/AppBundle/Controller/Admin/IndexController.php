@@ -173,34 +173,14 @@ class IndexController extends AbstractController
 
         $form = $this->createForm(FormDir\Admin\EditUserType::class, $user, ['user' => $this->getUser()]);
 
-        $oldEmail = $user->getEmail();
-        $fullName = $user->getFullName();
-
         $form->handleRequest($request);
-
-        $newEmail = $user->getEmail();
 
         if ($form->isSubmitted() && $form->isValid()) {
             $updateUser = $form->getData();
 
             try {
                 $this->getRestClient()->put('user/' . $user->getId(), $updateUser, ['admin_edit_user']);
-
-//                if ($oldEmail !== $newEmail) {
-//                    $event = (new AuditEvents($this->dateTimeProvider))->userEmailChanged(
-//                        AuditEvents::TRIGGER_ADMIN_USER_EDIT,
-//                        $oldEmail,
-//                        $newEmail,
-//                        $this->getUser()->getEmail(),
-//                        $fullName,
-//                        $updateUser->getRoleName()
-//                    );
-//
-//                    $this->logger->notice('', $event);
-//                }
-
                 $this->addFlash('notice', 'Your changes were saved');
-
                 $this->redirectToRoute('admin_editUser', ['filter' => $user->getId()]);
             } catch (\Throwable $e) {
                 /** @var Translator $translator */
