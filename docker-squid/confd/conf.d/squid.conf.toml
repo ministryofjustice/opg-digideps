@@ -1,0 +1,9 @@
+[template]
+ src   = "squid.conf.tmpl"
+ dest  = "/etc/squid/squid.conf"
+ keys  = [
+  "/allowed/cidrs",
+  "/squid/shutdownlifetime",
+  "/squid/blockall",
+  "/squid/port"
+ ]

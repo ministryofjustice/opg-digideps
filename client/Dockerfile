@@ -42,6 +42,8 @@ EXPOSE 80
 EXPOSE 443
 ENV TIMEOUT=60
 ENV PHP_EXT_DIR=/usr/lib/php7/modules
+ENV HTTP_PROXY=http://squid.ddpb3663b.private:3128
+ENV HTTPS_PROXY=$HTTP_PROXY
 
 # Install core PHP extensions
 RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec postgresql-client libzip-dev unzip php7-igbinary php7-pecl-redis

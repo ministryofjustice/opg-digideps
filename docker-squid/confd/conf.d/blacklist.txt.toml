@@ -1,0 +1,6 @@
+[template]
+ src   = "blacklist.txt.tmpl"
+ dest  = "/etc/squid/blacklist.txt"
+ keys  = [
+  "/squid/blacklist"
+ ]

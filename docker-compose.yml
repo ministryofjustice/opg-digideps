@@ -182,3 +182,26 @@ services:
             - Complete the deputy report
             - --provider
             - OPG Data
+
+    squid:
+        build:
+          context: ./docker-squid
+        ports:
+            - 3128:3128
+        depends_on:
+            - api
+            - redisfront
+            - wkhtmltopdf
+            - router
+            - localstack
+        environment:
+          SQUID_WHITELIST: "api.notifications.service.gov.uk,google.com,10.0.0.0/8,172.0.0.0/8,192.168.0.0/16,admin"
+          SQUID_BLOCKALL: "true"
+          SQUID_SHUTDOWNLIFETIME:
+          AWS_REGIONS: "eu-west-1"
+          ALLOWED_CIDRS: "0.0.0.0/0"
+        restart: always
+        networks:
+            default:
+                aliases:
+                    - squid
