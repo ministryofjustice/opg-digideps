@@ -14,6 +14,7 @@ use AppBundle\Service\Logger;
 use AppBundle\Service\Time\DateTimeProvider;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,15 +34,20 @@ class IndexController extends AbstractController
     /** @var RestClient */
     private $restClient;
 
+    /** @var FormFactoryInterface */
+    private $form;
+
     public function __construct(
         Logger $logger,
         DateTimeProvider $dateTimeProvider,
-        RestClient $restClient
+        RestClient $restClient,
+        FormFactoryInterface $form
     )
     {
         $this->logger = $logger;
         $this->dateTimeProvider = $dateTimeProvider;
-        $this->$restClient = $restClient;
+        $this->restClient = $restClient;
+        $this->form = $form;
     }
 
     /**
@@ -109,7 +115,7 @@ class IndexController extends AbstractController
 
         $oldEmail = $client->getEmail();
 
-        $form = $this->createForm(FormDir\Org\ClientType::class, $client);
+        $form = $this->form->create(FormDir\Org\ClientType::class, $client);
         $form->handleRequest($request);
 
         $newEmail = empty($client->getEmail()) ? '' : $client->getEmail();

@@ -170,7 +170,7 @@ class DocumentController extends AbstractController
     public function step2Action(Request $request, MultiFileFormUploadVerifier $multiFileVerifier, int $reportId,
                                 LoggerInterface $logger)
     {
-        $report = $this->getReport($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
         list($nextLink, $backLink) = $this->buildNavigationLinks($report);
 
         $formAction = $this->generateUrl('report_documents', ['reportId'=>$reportId]);
