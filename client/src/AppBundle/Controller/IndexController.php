@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -43,7 +43,7 @@ class IndexController extends AbstractController
     /** @var RestClient */
     private $restClient;
 
-    /** @var Router  */
+    /** @var RouterInterface  */
     private $router;
 
     public function __construct(
@@ -52,7 +52,7 @@ class IndexController extends AbstractController
         EventDispatcherInterface $eventDispatcher,
         TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator,
-        Router $router,
+        RouterInterface $router,
         string $environment
     )
     {
