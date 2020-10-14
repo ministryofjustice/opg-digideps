@@ -19,3 +19,7 @@ output "security_group_id" {
 output "name" {
   value = var.name
 }
+
+output "task_definition_arn" {
+  value = aws_ecs_task_definition.task.arn
+}

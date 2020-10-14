@@ -3,77 +3,76 @@ version: 2.1
 workflows:
   pull_request:
     jobs:
-      - lint:
-          name: lint terraform
-          filters: { branches: { ignore: [ main ] } }
-
-      - build:
-          name: build pr
-          filters: { branches: { ignore: [ main ] } }
+#      - lint:
+#          name: lint terraform
+#          filters: { branches: { ignore: [ main ] } }
+#
+#      - build:
+#          name: build pr
+#          filters: { branches: { ignore: [ main ] } }
 
       - terraform-command:
           name: apply environment
-          requires: [ build pr, lint terraform ]
           filters: { branches: { ignore: [ main ] } }
           tf_command: apply
 
-      - run-task:
-          name: reset environment
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ main ] } }
-          task_name: reset_database
-          timeout: 180
-
-      - client-unit-test:
-          name: client unit test
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ main ] } }
-
-      - api-unit-tests:
-          name: api unit test
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ main ] } }
+#      - run-task:
+#          name: reset environment
+#          requires: [ apply environment ]
+#          filters: { branches: { ignore: [ main ] } }
+#          task_name: reset_database
+#          timeout: 180
+#
+#      - client-unit-test:
+#          name: client unit test
+#          requires: [ apply environment ]
+#          filters: { branches: { ignore: [ main ] } }
+#
+#      - api-unit-tests:
+#          name: api unit test
+#          requires: [ apply environment ]
+#          filters: { branches: { ignore: [ main ] } }
 
 #      - pa11y-ci:
 #          name: accessibility test
 #          requires: [ apply environment ]
 #          filters: { branches: { ignore: [ main ] } }
-      - approve:
-          name: approval for further testing
-          type: approval
-          requires: [ reset environment ]
-          filters: { branches: { ignore: [ master ] } }
+#      - approve:
+#          name: approval for further testing
+#          type: approval
+#          requires: [ reset environment ]
+#          filters: { branches: { ignore: [ master ] } }
 
       - run-task:
           name: reset environment for testing
-          requires: [ approval for further testing ]
+          requires: [ apply environment ]
           filters: { branches: { ignore: [ main ] } }
           task_name: reset_database
           timeout: 180
 
-      - run-task:
-          name: integration test
-          requires: [ reset environment for testing ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: integration_test
-          timeout: 2500
+#      - run-task:
+#          name: integration test
+#          requires: [ reset environment for testing ]
+#          filters: { branches: { ignore: [ master ] } }
+#          task_name: integration_test
+#          timeout: 2500
 
-      - run-task:
-          name: backup environment
-          requires: [ api unit test, client unit test, integration test ]
-          filters: { branches: { ignore: [ main ] } }
-          task_name: backup
-
-      - run-task:
-          name: restore environment
-          requires: [ backup environment ]
-          filters: { branches: { ignore: [ main ] } }
-          task_name: restore
-
+#      - run-task:
+#          name: backup environment
+#          requires: [ api unit test, client unit test, integration test ]
+#          filters: { branches: { ignore: [ main ] } }
+#          task_name: backup
+#
+#      - run-task:
+#          name: restore environment
+#          requires: [ backup environment ]
+#          filters: { branches: { ignore: [ main ] } }
+#          task_name: restore
+#
       - cleanup:
           name: approve destroy environment
           type: approval
-          requires: [ restore environment ]
+          requires: [ reset environment for testing ]
           filters: { branches: { ignore: [ main ] } }
 
       - terraform-command:
@@ -277,6 +276,16 @@ orbs:
   aws-cli: circleci/aws-cli@0.1.13
   slack: circleci/slack@3.4.2
   codecov: codecov/codecov@1.1.1
+  dockerhub_helper:
+    orbs:
+      docker: circleci/docker@1.4.0
+    commands:
+      dockerhub_login:
+        steps:
+          - docker/install-docker-credential-helper
+          - docker/check:
+              docker-password: DOCKER_ACCESS_TOKEN
+              docker-username: DOCKER_USER
   ecs_helper:
     commands:
       install:
@@ -302,6 +311,9 @@ orbs:
       terraform:
         docker:
           - image: circleci/golang:1.12
+            auth:
+              username: $DOCKER_USER
+              password: $DOCKER_ACCESS_TOKEN
         resource_class: small
         environment:
           TF_VERSION: 0.13.3
@@ -366,10 +378,10 @@ jobs:
       - terraform/install
       - ecs_helper/install
       - attach_workspace: { at: ~/project }
-      - run:
-          name: Extract lambda layers
-          working_directory:  ~/project/lambda_functions
-          command: tar xvf ~/project/lambda_functions/layer.tar
+#      - run:
+#          name: Extract lambda layers
+#          working_directory:  ~/project/lambda_functions
+#          command: tar xvf ~/project/lambda_functions/layer.tar
       - run:
           name: Initialize
           command: terraform init
@@ -398,6 +410,9 @@ jobs:
   build:
     docker:
       - image: circleci/python:3
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
     resource_class: small
     environment:
       AWS_REGION: eu-west-1
@@ -409,6 +424,7 @@ jobs:
         type: boolean
         default: false
     steps:
+      - dockerhub_helper/dockerhub_login
       - setup_remote_docker
       - aws-cli/install
       - add_ssh_keys:
@@ -513,8 +529,12 @@ jobs:
   client-unit-test:
     docker:
       - image: circleci/python:3
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
     resource_class: small
     steps:
+      - dockerhub_helper/dockerhub_login
       - setup_remote_docker
       - checkout
       - attach_workspace: { at: ~/project }
@@ -559,8 +579,12 @@ jobs:
   api-unit-tests:
     docker:
       - image: circleci/php
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
     resource_class: small
     steps:
+      - dockerhub_helper/dockerhub_login
       - setup_remote_docker
       - checkout
       - attach_workspace: { at: ~/project }
@@ -585,6 +609,7 @@ jobs:
     machine:
       image: circleci/classic:latest
     steps:
+      - dockerhub_helper/dockerhub_login
       - checkout
       - attach_workspace: { at: ~/project }
       - run:
