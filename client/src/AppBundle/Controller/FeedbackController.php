@@ -6,7 +6,7 @@ use AppBundle\Form\FeedbackType;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +35,7 @@ class FeedbackController
     private $router;
 
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     private $translator;
 
@@ -49,7 +49,7 @@ class FeedbackController
         MailSender $mailSender,
         RestClient $restClient,
         RouterInterface $router,
-        Translator $translator,
+        TranslatorInterface $translator,
         FormFactory $form
     ) {
         $this->mailFactory = $mailFactory;

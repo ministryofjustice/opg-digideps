@@ -23,23 +23,4 @@ abstract class AbstractController extends Controller
 
         return new Response($text, $statusCode);
     }
-
-    /**
-     * @return object
-     */
-    public function getRouter()
-    {
-        /** @var Router */
-        return $this->get('router');
-    }
-
-    /**
-     * @param string $route
-     *
-     * @return bool
-     */
-    protected function routeExists(string $route)
-    {
-        return $this->getRouter()->getRouteCollection()->get($route) ? true : false;
-    }
 }

@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class DeputyExpenseController extends AbstractController
 {
@@ -129,14 +130,22 @@ class DeputyExpenseController extends AbstractController
             return $this->redirect($this->generateUrl('deputy_expenses_add_another', ['reportId' => $reportId]));
         }
 
-        $backLinkRoute = 'deputy_expenses_' . $request->get('from');
-        $backLink = $this->routeExists($backLinkRoute) ? $this->generateUrl($backLinkRoute, ['reportId'=>$reportId]) : '';
+        try {
+            $backLinkRoute = 'deputy_expenses_' . $request->get('from');
+            $backLink = $this->generateUrl($backLinkRoute, ['reportId'=>$reportId]);
 
-        return [
-            'backLink' => $backLink,
-            'form' => $form->createView(),
-            'report' => $report,
-        ];
+            return [
+                'backLink' => $backLink,
+                'form' => $form->createView(),
+                'report' => $report,
+            ];
+        } catch (RouteNotFoundException $e) {
+            return [
+                'backLink' => null,
+                'form' => $form->createView(),
+                'report' => $report,
+            ];
+        }
     }
 
     /**

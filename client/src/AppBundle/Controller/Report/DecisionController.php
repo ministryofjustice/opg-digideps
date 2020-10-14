@@ -12,6 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class DecisionController extends AbstractController
 {
@@ -210,13 +211,22 @@ class DecisionController extends AbstractController
         }
 
         //TODO use $backLinkRoute logic and align to other controllers
-        $backLink = $this->routeExists($from) ? $this->generateUrl($from, ['reportId'=>$reportId]) : '';
+        try {
+            $backLink = $this->generateUrl($from, ['reportId'=>$reportId]);
 
-        return [
-            'backLink' => $backLink,
-            'form' => $form->createView(),
-            'report' => $report,
-        ];
+            return [
+                'backLink' => $backLink,
+                'form' => $form->createView(),
+                'report' => $report,
+            ];
+        } catch (RouteNotFoundException $e) {
+            return [
+                'backLink' => null,
+                'form' => $form->createView(),
+                'report' => $report,
+            ];
+        }
+
     }
 
     /**

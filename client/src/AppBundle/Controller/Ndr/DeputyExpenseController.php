@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class DeputyExpenseController extends AbstractController
 {
@@ -97,8 +98,13 @@ class DeputyExpenseController extends AbstractController
     /**
      * @Route("/ndr/{ndrId}/deputy-expenses/add", name="ndr_deputy_expenses_add")
      * @Template("AppBundle:Ndr/DeputyExpense:add.html.twig")
+     *
+     * @param Request $request
+     * @param int $ndrId
+     *
+     * @return array|RedirectResponse
      */
-    public function addAction(Request $request, $ndrId)
+    public function addAction(Request $request, int $ndrId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $expense = new EntityDir\Ndr\Expense();
@@ -115,15 +121,22 @@ class DeputyExpenseController extends AbstractController
             return $this->redirect($this->generateUrl('ndr_deputy_expenses_add_another', ['ndrId' => $ndrId]));
         }
 
-        $backLinkRoute = 'ndr_deputy_expenses_' . $request->get('from');
-        $backLink = $this->routeExists($backLinkRoute) ? $this->generateUrl($backLinkRoute, ['ndrId'=>$ndrId]) : '';
+        try {
+            $backLinkRoute = 'ndr_deputy_expenses_' . $request->get('from');
+            $backLink = $this->generateUrl($backLinkRoute,  ['ndrId'=>$ndrId]);
 
-
-        return [
-            'backLink' => $backLink,
-            'form' => $form->createView(),
-            'ndr' => $ndr,
-        ];
+            return [
+                'backLink' => $backLink,
+                'form' => $form->createView(),
+                'ndr' => $ndr,
+            ];
+        } catch (RouteNotFoundException $e) {
+            return [
+                'backLink' => null,
+                'form' => $form->createView(),
+                'ndr' => $ndr,
+            ];
+        }
     }
 
     /**
