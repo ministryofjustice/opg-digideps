@@ -126,7 +126,7 @@ class ReportSubmissionController extends AbstractController
 
         if (!empty($reportSubmissionIds)) {
             try {
-                [$retrievedDocuments] = $this->documentDownloader->retrieveDocumentsFromS3ByReportSubmissionIds($request, $reportSubmissionIds);
+                [$retrievedDocuments, $missingDocuments] = $this->documentDownloader->retrieveDocumentsFromS3ByReportSubmissionIds($request, $reportSubmissionIds);
                 $downloadLocation = $this->documentDownloader->zipDownloadedDocuments($retrievedDocuments);
             } catch(Throwable $e) {
                 $this->addFlash('error', 'There was an error downloading the requested documents: ' . $e->getMessage());
@@ -143,7 +143,7 @@ class ReportSubmissionController extends AbstractController
      * @Route("/documents/{submissionId}/{documentId}/download", name="admin_document_download", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      */
-    public function downloadIndividualDocument(int $submissionId, $documentId): Response
+    public function downloadIndividualDocument(int $submissionId, int $documentId): Response
     {
         $client = $this->restClient;
 

@@ -196,11 +196,10 @@ class CoDeputyController extends AbstractController
             }
         }
 
-        $user = $this->userApi->getUserWithData(['user', 'user-clients', 'client']);
         return [
             'form' => $form->createView(),
             'backLink' => $backLink,
-            'client' => $this->clientApi->getFirstClient($user)
+            'client' => $this->clientApi->getFirstClient()
         ];
     }
 

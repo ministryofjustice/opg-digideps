@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\RouterInterface;
 
 class DeputyExpenseController extends AbstractController
 {
@@ -20,23 +21,24 @@ class DeputyExpenseController extends AbstractController
         'ndr-expenses',
     ];
 
-    /**
-     * @var ReportApi
-     */
+    /** @var ReportApi */
     private $reportApi;
 
-    /**
-     * @var RestClient
-     */
+    /** @var RestClient */
     private $restClient;
+
+    /** @var RouterInterface */
+    private $router;
 
     public function __construct(
         ReportApi $reportApi,
-        RestClient $restClient
+        RestClient $restClient,
+        RouterInterface $router
     )
     {
         $this->reportApi = $reportApi;
         $this->restClient = $restClient;
+        $this->router = $router;
     }
 
     /**
@@ -123,7 +125,7 @@ class DeputyExpenseController extends AbstractController
 
         try {
             $backLinkRoute = 'ndr_deputy_expenses_' . $request->get('from');
-            $backLink = $this->generateUrl($backLinkRoute,  ['ndrId'=>$ndrId]);
+            $backLink = $this->router->generate($backLinkRoute,  ['ndrId'=>$ndrId]);
 
             return [
                 'backLink' => $backLink,

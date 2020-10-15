@@ -225,9 +225,9 @@ class UserController extends AbstractController
      */
     public function detailsAction(Request $request, Redirector $redirector)
     {
-        $user = $this->userApi->getUserWithData(['user', 'user-clients', 'client']);
+        $user = $this->userApi->getUserWithData();
 
-        $client_validated = $this->clientApi->getFirstClient($user) instanceof EntityDir\Client &&
+        $client_validated = $this->clientApi->getFirstClient() instanceof EntityDir\Client &&
             !$user->isDeputyOrg();
 
         list($formType, $jmsPutGroups) = $this->getFormAndJmsGroupBasedOnUserRole($user);

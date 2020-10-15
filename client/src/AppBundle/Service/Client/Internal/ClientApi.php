@@ -11,37 +11,36 @@ use Symfony\Component\Routing\RouterInterface;
 
 class ClientApi
 {
-    /**
-     * @var RestClient
-     */
+    /** @var RestClient */
     private $restClient;
 
-    /**
-     * @var RouterInterface
-     */
+    /** @var RouterInterface */
     private $router;
 
-    /**
-     * @var LoggerInterface
-     */
+    /** @var LoggerInterface */
     private $logger;
+
+    /** @var UserApi */
+    private $userApi;
 
     public function __construct(
         RestClient $restClient,
         RouterInterface $router,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        UserApi $userApi
     ) {
         $this->restClient = $restClient;
         $this->router = $router;
         $this->logger = $logger;
+        $this->userApi = $userApi;
     }
 
     /**
-     * @param User $user
      * @return Client|null
      */
-    public function getFirstClient(User $user)
+    public function getFirstClient($groups = ['user', 'user-clients', 'client'])
     {
+        $user = $this->userApi->getUserWithData($groups);
         $clients = $user->getClients();
 
         return (is_array($clients) && !empty($clients[0]) && $clients[0] instanceof Client) ? $clients[0] : null;

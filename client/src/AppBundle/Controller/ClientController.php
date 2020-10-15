@@ -18,47 +18,43 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ClientController extends AbstractController
 {
-    /**
-     * @var UserApi
-     */
+    /** @var UserApi */
     private $userApi;
 
-    /**
-     * @var ClientApi
-     */
+    /** @var ClientApi */
     private $clientApi;
 
-    /**
-     * @var RestClient
-     */
+    /** @var RestClient */
     private $restClient;
 
-    /**
-     * @var MailSender
-     */
+    /** @var MailSender */
     private $mailSender;
 
-    /**
-     * @var MailFactory
-     */
+    /** @var MailFactory */
     private $mailFactory;
+
+    /** @var RouterInterface */
+    private $router;
 
     public function __construct(
         UserApi $userApi,
         ClientApi $clientApi,
         RestClient $restClient,
         MailSender $mailSender,
-        MailFactory $mailFactory
+        MailFactory $mailFactory,
+        RouterInterface $router
     ) {
         $this->userApi = $userApi;
         $this->clientApi = $clientApi;
         $this->restClient = $restClient;
         $this->mailSender = $mailSender;
         $this->mailFactory = $mailFactory;
+        $this->router = $router;
     }
 
     /**
@@ -68,7 +64,7 @@ class ClientController extends AbstractController
     public function showAction(Redirector $redirector)
     {
         // redirect if user has missing details or is on wrong page
-        $user = $this->userApi->getUserWithData(['user', 'user-clients', 'client']);
+        $user = $this->userApi->getUserWithData();
 
         $route = $redirector->getCorrectRouteIfDifferent($user, 'client_show');
 
@@ -76,7 +72,7 @@ class ClientController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        $client = $this->clientApi->getFirstClient($user);
+        $client = $this->clientApi->getFirstClient();
 
         return [
             'client' => $client,
@@ -94,9 +90,7 @@ class ClientController extends AbstractController
     public function editAction(Request $request)
     {
         $from = $request->get('from');
-
-        $user = $this->userApi->getUserWithData(['user', 'user-clients', 'client']);
-        $client = $this->clientApi->getFirstClient($user);
+        $client = $this->clientApi->getFirstClient();
 
         if (is_null($client)) {
             /** @var User $user */
@@ -148,7 +142,7 @@ class ClientController extends AbstractController
     public function addAction(Request $request, Redirector $redirector)
     {
         // redirect if user has missing details or is on wrong page
-        $user = $this->userApi->getUserWithData(['user', 'user-clients', 'client']);
+        $user = $this->userApi->getUserWithData();
 
         $route = $redirector->getCorrectRouteIfDifferent($user, 'client_add');
 
@@ -156,7 +150,7 @@ class ClientController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        $client = $this->clientApi->getFirstClient($user);
+        $client = $this->clientApi->getFirstClient();
         if (!empty($client)) {
             // update existing client
             $client = $this->restClient->get('client/' . $client->getId(), 'Client', ['client', 'report-id', 'current-report']);

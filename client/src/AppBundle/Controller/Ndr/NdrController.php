@@ -137,15 +137,14 @@ class NdrController extends AbstractController
     public function overviewAction(Redirector $redirector)
     {
         // redirect if user has missing details or is on wrong page
-        $user = $this->userApi->getUserWithData(['user', 'user-clients', 'client']);
+        $user = $this->userApi->getUserWithData();
         $route = $redirector->getCorrectRouteIfDifferent($user, 'ndr_overview');
 
         if (is_string($route)) {
             return $this->redirectToRoute($route);
         }
 
-        $user = $this->userApi->getUserWithData(self::$ndrGroupsForValidation);
-        $client = $this->clientApi->getFirstClient($user);
+        $client = $this->clientApi->getFirstClient(self::$ndrGroupsForValidation);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
@@ -172,8 +171,7 @@ class NdrController extends AbstractController
      */
     public function reviewAction($ndrId)
     {
-        $user = $this->userApi->getUserWithData(self::$ndrGroupsForValidation);
-        $client = $this->clientApi->getFirstClient($user);
+        $client = $this->clientApi->getFirstClient(self::$ndrGroupsForValidation);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
@@ -197,8 +195,7 @@ class NdrController extends AbstractController
      */
     public function pdfViewAction($ndrId)
     {
-        $user = $this->userApi->getUserWithData(self::$ndrGroupsForValidation);
-        $client = $this->clientApi->getFirstClient($user);
+        $client = $this->clientApi->getFirstClient(self::$ndrGroupsForValidation);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
@@ -248,8 +245,7 @@ class NdrController extends AbstractController
      */
     public function declarationAction(Request $request, $ndrId, S3FileUploader $fileUploader)
     {
-        $user = $this->userApi->getUserWithData(self::$ndrGroupsForValidation);
-        $client = $this->clientApi->getFirstClient($user);
+        $client = $this->clientApi->getFirstClient(self::$ndrGroupsForValidation);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
@@ -315,8 +311,7 @@ class NdrController extends AbstractController
      */
     public function submitConfirmationAction(Request $request, $ndrId)
     {
-        $user = $this->userApi->getUserWithData(self::$ndrGroupsForValidation);
-        $client = $this->clientApi->getFirstClient($user);
+        $client = $this->clientApi->getFirstClient(self::$ndrGroupsForValidation);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
@@ -374,8 +369,7 @@ class NdrController extends AbstractController
      */
     public function submitFeedbackAction($ndrId)
     {
-        $user = $this->userApi->getUserWithData(self::$ndrGroupsForValidation);
-        $client = $this->clientApi->getFirstClient($user);
+        $client = $this->clientApi->getFirstClient(self::$ndrGroupsForValidation);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
