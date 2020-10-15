@@ -56,7 +56,7 @@ locals {
       },
       {
         name  = "CLUSTER"
-        value = tostring(var.account.always_on)
+        value = var.account.always_on ? "false" : "true"
       },
     ]
   })
