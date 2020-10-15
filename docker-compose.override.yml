@@ -34,3 +34,7 @@ services:
       - ./client/src:/var/www/src
       - ./client/tests:/var/www/tests
       - ./client/phpstan.neon:/var/www/phpstan.neon
+
+  localstack-init:
+    volumes:
+      - ./client/scripts:/var/www/scripts

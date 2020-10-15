@@ -41,8 +41,6 @@ services:
     # https://github.com/localstack/localstack/issues/1184
     localstack-init:
         build: ./client
-        volumes:
-            - ./client/scripts:/var/www/scripts
         depends_on:
             - localstack
         command:
