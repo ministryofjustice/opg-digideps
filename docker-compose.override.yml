@@ -3,6 +3,20 @@ version: "3.2"
 #docker-compose.override.yml is loaded and merged with docker-compose.yml by default when calling docker-compose up.
 #This file won't be merged when using docker-compose -f docker-compose.yml up (or using any other compose file).
 services:
+  router:
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./.certs:/etc/nginx/certs
+      - ./docker/router/my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
+
+  aws:
+    volumes:
+      - .:/app
+
+  localstack:
+    volumes:
+      - ./docker/localstack-s3-init.sh:/docker-entrypoint-initaws.d/s3-init.sh
+
   admin:
     volumes:
       - ./client/app/config/security.yml:/var/www/app/config/security.yml
@@ -38,3 +52,7 @@ services:
   localstack-init:
     volumes:
       - ./client/scripts:/var/www/scripts
+
+  wkhtmltopdf:
+    volumes:
+      - ./wkhtmltopdf/app.py:/app.py

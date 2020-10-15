@@ -4,6 +4,7 @@
 namespace AppBundle\EventListener;
 
 use AppBundle\Entity\User;
+use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Time\DateTimeProvider;
 use DateTime;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -39,14 +40,14 @@ class UserListener
 
         if ($this->canLogEmailChange($changes)) {
             $this->logEvents[] = [
-                'trigger' => 'ADMIN_USER_EDIT',
+                'trigger' => AuditEvents::TRIGGER_ADMIN_USER_EDIT,
                 'email_changed_from' => $changes['email'][0],
                 'email_changed_to' => $changes['email'][1],
                 'changed_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
                 'changed_by' => $this->security->getUser()->getEmail(),
                 'subject_full_name' => $user->getFullName(),
                 'subject_role' => $user->getRoleName(),
-                'event' => 'USER_EMAIL_CHANGED',
+                'event' => AuditEvents::EVENT_USER_EMAIL_CHANGED,
                 'type' => 'audit'
             ];
         }

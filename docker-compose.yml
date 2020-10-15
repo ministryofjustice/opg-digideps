@@ -1,5 +1,6 @@
 version: '3.2'
 
+## Define all volumes in docker-compose.override.yml so this file can be used in CI
 services:
     router:
         image: jwilder/nginx-proxy
@@ -9,10 +10,6 @@ services:
             - admin
             - localstack
         restart: always
-        volumes:
-            - /var/run/docker.sock:/tmp/docker.sock:ro
-            - ./.certs:/etc/nginx/certs
-            - ./docker/router/my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
 
     aws:
         image: infrastructureascode/aws-cli
@@ -20,8 +17,6 @@ services:
             - AWS_ACCESS_KEY_ID=foo
             - AWS_SECRET_ACCESS_KEY=bar
         working_dir: /app
-        volumes:
-            - .:/app
         depends_on:
             - localstack
 
@@ -34,8 +29,6 @@ services:
             - DATA_DIR=/tmp/localstack/data
             - DEFAULT_REGION=eu-west-1
             - DEBUG=1
-        volumes:
-            - ./docker/localstack-s3-init.sh:/docker-entrypoint-initaws.d/s3-init.sh
 
     # Need to populate localstack SSM from PHP to ensure parameters are accessible from client
     # https://github.com/localstack/localstack/issues/1184
@@ -119,8 +112,6 @@ services:
 
     wkhtmltopdf:
         build: ./wkhtmltopdf
-        volumes:
-            - ./wkhtmltopdf/app.py:/app.py
         restart: always
 
     postgres:
