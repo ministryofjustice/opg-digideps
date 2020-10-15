@@ -12,8 +12,8 @@ locals {
       port        = 80
       type        = "egress"
       protocol    = "tcp"
-      target_type = "cidr_block"
-      target      = "0.0.0.0/0"
+      target_type = "security_group_id"
+      target      = module.scan_security_group.id
     }
     front = {
       port        = 8080
