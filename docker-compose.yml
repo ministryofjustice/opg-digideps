@@ -112,8 +112,6 @@ services:
         depends_on:
             - postgres
             - redisapi
-            - localstack
-            - localstack-init
         env_file:
             - ./api/docker/env/api.env
         restart: always
