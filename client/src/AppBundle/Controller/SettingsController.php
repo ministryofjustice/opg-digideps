@@ -78,7 +78,7 @@ class SettingsController extends AbstractController
             return [
                 'hasOrganisations' => count($user->getOrganisations()),
             ];
-        };
+        }
 
         // redirect if user has missing details or is on wrong page
         $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report']);

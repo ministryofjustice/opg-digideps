@@ -8,7 +8,6 @@ use AppBundle\Form as FormDir;
 
 use AppBundle\Service\Client\Internal\ReportApi;
 use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\Redirector;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -216,7 +215,7 @@ class GiftController extends AbstractController
      *
      * @param int $reportId
      *
-     * @return array
+     * @return array|RedirectResponse
      */
     public function summaryAction($reportId)
     {

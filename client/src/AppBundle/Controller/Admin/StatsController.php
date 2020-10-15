@@ -13,7 +13,6 @@ use AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryMapper;
 use AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryQuery;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Transformer\ReportSubmission\ReportSubmissionBurFixedWidthTransformer;
-use AppBundle\Transformer\ReportSubmission\SatisfactionTransformer;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\Fill;

@@ -109,8 +109,10 @@ class ProfDeputyCostsEstimateController extends AbstractController
     /**
      * @Route("/breakdown", name="prof_deputy_costs_estimate_breakdown")
      * @Template("AppBundle:Report/ProfDeputyCostsEstimate:breakdown.html.twig")
+     *
      * @param Request $request
      * @param int $reportId
+     *
      * @return array|RedirectResponse
      */
     public function breakdownAction(Request $request, int $reportId)

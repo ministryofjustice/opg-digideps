@@ -30,6 +30,10 @@ class SearchController extends AbstractController
      * @Route("/search", name="admin_client_search")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("AppBundle:Admin/Client/Search:search.html.twig")
+     *
+     * @param Request $request
+     *
+     * @return array|string
      */
     public function searchAction(Request $request)
     {

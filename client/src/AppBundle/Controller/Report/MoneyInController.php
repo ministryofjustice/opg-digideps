@@ -31,6 +31,9 @@ class MoneyInController extends AbstractController
     /** @var ReportApi */
     private $reportApi;
 
+    /** @var StepRedirector */
+    private $stepRedirector;
+
     public function __construct(
         RestClient $restClient,
         ReportApi $reportApi,

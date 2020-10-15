@@ -9,6 +9,7 @@ use AppBundle\Service\Client\Internal\ReportApi;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\NdrStatusService;
 use AppBundle\Service\StepRedirector;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,8 +52,12 @@ class IncomeBenefitController extends AbstractController
     /**
      * @Route("/ndr/{ndrId}/income-benefits", name="ndr_income_benefits")
      * @Template("AppBundle:Ndr/IncomeBenefit:start.html.twig")
+     *
+     * @param int $ndrId
+     *
+     * @return array|RedirectResponse
      */
-    public function startAction(Request $request, $ndrId)
+    public function startAction(int $ndrId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if ($ndr->getStatusService()->getIncomeBenefitsState()['state'] != NdrStatusService::STATE_NOT_STARTED) {

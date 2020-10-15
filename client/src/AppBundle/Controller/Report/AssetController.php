@@ -355,7 +355,7 @@ class AssetController extends AbstractController
      *
      * @param int $reportId
      *
-     * @return array
+     * @return array|RedirectResponse
      */
     public function summaryAction($reportId)
     {
@@ -373,9 +373,13 @@ class AssetController extends AbstractController
      * @Route("/report/{reportId}/assets/{assetId}/delete", name="asset_delete")
      * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
-     * @return RedirectResponse
+     * @param Request $request
+     * @param int $reportId
+     * @param int $assetId
+     *
+     * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $reportId, $assetId)
+    public function deleteAction(Request $request, int $reportId, int $assetId)
     {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);

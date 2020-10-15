@@ -3,7 +3,6 @@
 namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
 use AppBundle\Exception\ReportNotSubmittableException;
 use AppBundle\Exception\ReportNotSubmittedException;
@@ -171,7 +170,7 @@ class NdrController extends AbstractController
      * @Route("/ndr/{ndrId}/review", name="ndr_review")
      * @Template("AppBundle:Ndr/Ndr:review.html.twig")
      */
-    public function reviewAction($ndrId)
+    public function reviewAction()
     {
         $user = $this->userApi->getUserWithData(self::$ndrGroupsForValidation);
         $client = $this->clientApi->getFirstClient($user);
@@ -196,7 +195,7 @@ class NdrController extends AbstractController
     /**
      * @Route("/ndr/{ndrId}/deputyndr.pdf", name="ndr_pdf")
      */
-    public function pdfViewAction($ndrId)
+    public function pdfViewAction()
     {
         $user = $this->userApi->getUserWithData(self::$ndrGroupsForValidation);
         $client = $this->clientApi->getFirstClient($user);
@@ -240,8 +239,14 @@ class NdrController extends AbstractController
     /**
      * @Route("/ndr/{ndrId}/declaration", name="ndr_declaration")
      * @Template("AppBundle:Ndr/Ndr:declaration.html.twig")
+     *
+     * @param Request $request
+     * @param S3FileUploader $fileUploader
+     *
+     * @return array|RedirectResponse
+     * @throws \Exception
      */
-    public function declarationAction(Request $request, $ndrId, S3FileUploader $fileUploader)
+    public function declarationAction(Request $request, S3FileUploader $fileUploader)
     {
         $user = $this->userApi->getUserWithData(self::$ndrGroupsForValidation);
         $client = $this->clientApi->getFirstClient($user);
@@ -369,7 +374,8 @@ class NdrController extends AbstractController
      */
     public function submitFeedbackAction($ndrId)
     {
-        $client = $this->clientApi->getFirstClient(self::$ndrGroupsForValidation);
+        $user = $this->userApi->getUserWithData(self::$ndrGroupsForValidation);
+        $client = $this->clientApi->getFirstClient($user);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();

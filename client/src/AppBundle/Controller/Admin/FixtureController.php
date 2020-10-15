@@ -3,7 +3,6 @@
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Form\Admin\Fixture\CasrecFixtureType;
@@ -307,8 +306,13 @@ class FixtureController extends AbstractController
      * @Route("/create-casrec", name="casrec_fixture", methods={"GET", "POST"})
      * @Security("has_role('ROLE_SUPER_ADMIN')")
      * @Template("AppBundle:Admin/Fixtures:casRec.html.twig")
+     *
+     * @param Request $request
+     * @param KernelInterface $kernel
+     *
+     * @return array
      */
-    public function createCasrec(Request $request, KernelInterface $kernel, RestClient $restClient)
+    public function createCasrec(Request $request, KernelInterface $kernel)
     {
         if ($kernel->getEnvironment() === 'prod') {
             throw $this->createNotFoundException();

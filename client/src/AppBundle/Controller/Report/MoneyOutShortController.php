@@ -125,7 +125,6 @@ class MoneyOutShortController extends AbstractController
             switch ($data->getMoneyTransactionsShortOutExist()) {
                 case 'yes':
                     return $this->redirectToRoute('money_out_short_add', ['reportId' => $reportId, 'from'=>'exist']);
-                    break;
                 case 'no':
                     return $this->redirectToRoute('money_out_short_summary', ['reportId' => $reportId]);
             }

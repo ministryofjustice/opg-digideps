@@ -8,6 +8,8 @@ use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\Client\RestClient;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -34,6 +36,10 @@ class AdController extends AbstractController
      * @Route("/", name="ad_homepage")
      * @Security("has_role('ROLE_AD')")
      * @Template("AppBundle:Admin/Ad:index.html.twig")
+     *
+     * @param Request $request
+     *
+     * @return array|RedirectResponse
      */
     public function indexAction(Request $request)
     {
@@ -92,6 +98,8 @@ class AdController extends AbstractController
      * @Template("AppBundle:Admin/Ad:viewUser.html.twig")
      *
      * @param Request $request
+     *
+     * @return array|Response|null
      */
     public function viewUserAction(Request $request)
     {
@@ -123,9 +131,12 @@ class AdController extends AbstractController
     /**
      * @Route("/login-as-deputy/{deputyId}", name="ad_deputy_login_redirect")
      * @Security("has_role('ROLE_AD')")
-     * @param Request $request
+     *
+     * @param int $deputyId
+     *
+     * @return RedirectResponse|Response|null
      */
-    public function adLoginAsDeputyAction(Request $request, $deputyId)
+    public function adLoginAsDeputyAction(int $deputyId)
     {
         $adUser = $this->getUser();
 

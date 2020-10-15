@@ -110,7 +110,7 @@ class AssetController extends AbstractController
      */
     public function typeAction(Request $request, $ndrId)
     {
-        $ndr = $this->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
+        $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Ndr\Asset\AssetTypeTitle::class, new EntityDir\Ndr\AssetOther(), [
         ]);
         $form->handleRequest($request);

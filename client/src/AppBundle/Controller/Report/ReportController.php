@@ -23,6 +23,7 @@ use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use AppBundle\Service\Redirector;
 use AppBundle\Service\ReportSubmissionService;
+use DateTime;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -114,7 +115,8 @@ class ReportController extends AbstractController
         ReportApi $reportApi,
         UserApi $userApi,
         ClientApi $clientApi,
-        MailFactory $mailFactory
+        MailFactory $mailFactory,
+        MailSender $mailSender
     )
     {
         $this->restClient = $restClient;
@@ -218,8 +220,13 @@ class ReportController extends AbstractController
      *   requirements={ "action" = "(create|add)"}
      * )
      * @Template("AppBundle:Report/Report:create.html.twig")
+     *
+     * @param Request $request
+     * @param int $clientId
+     * 
+     * @return array|RedirectResponse
      */
-    public function createAction(Request $request, $clientId, $action = false)
+    public function createAction(Request $request, int $clientId)
     {
         $client = $this->restClient->get('client/' . $clientId, 'Client', ['client', 'client-reports', 'report-id']);
 
@@ -392,7 +399,7 @@ class ReportController extends AbstractController
         $deputy = $report->getClient()->getNamedDeputy();
 
         if (is_null($deputy)) {
-            $deputy = $this->getUserWithData();
+            $deputy = $this->userApi->getUserWithData();
         }
 
         $form = $this->createForm(ReportDeclarationType::class, $report);
@@ -401,7 +408,7 @@ class ReportController extends AbstractController
             /** @var User $currentUser */
             $currentUser = $this->getUser();
 
-            $report->setSubmitted(true)->setSubmitDate(new \DateTime());
+            $report->setSubmitted(true)->setSubmitDate(new DateTime());
             $reportSubmissionService->generateReportDocuments($report);
             $reportSubmissionService->submit($report, $currentUser);
 
@@ -429,7 +436,7 @@ class ReportController extends AbstractController
      */
     public function submitConfirmationAction(Request $request, int $reportId)
     {
-        $report = $this->getReport($reportId, ['status']);
+        $report = $this->reportApi->getReport($reportId, ['status']);
 
         /** @var TranslatorInterface $translator */
         $translator = $this->get('translator');
@@ -569,13 +576,13 @@ class ReportController extends AbstractController
         $response->headers->set('Content-Type', 'application/pdf');
 
         $submitDate = $report->getSubmitDate();
-        /** @var \DateTime $endDate */
+        /** @var DateTime $endDate */
         $endDate = $report->getEndDate();
 
         $attachmentName = sprintf(
             'DigiRep-%s_%s_%s.pdf',
             $endDate->format('Y'),
-            $submitDate instanceof \DateTime ? $submitDate->format('Y-m-d') : 'n-a-', //some old reports have no submission date
+            $submitDate instanceof DateTime ? $submitDate->format('Y-m-d') : 'n-a-', //some old reports have no submission date
             $report->getClient()->getCaseNumber()
         );
 
@@ -613,13 +620,13 @@ class ReportController extends AbstractController
         $response->headers->set('Content-Type', 'text/csv');
 
         $submitDate = $report->getSubmitDate();
-        /** @var \DateTime $endDate */
+        /** @var DateTime $endDate */
         $endDate = $report->getEndDate();
 
         $attachmentName = sprintf(
             'DigiRepTransactions-%s_%s_%s.csv',
             $endDate->format('Y'),
-            $submitDate instanceof \DateTime ? $submitDate->format('Y-m-d') : 'n-a-', //some old reports have no submission date
+            $submitDate instanceof DateTime ? $submitDate->format('Y-m-d') : 'n-a-', //some old reports have no submission date
             $report->getClient()->getCaseNumber()
         );
 

@@ -16,7 +16,6 @@ use AppBundle\Service\File\S3FileUploader;
 use AppBundle\Service\File\Verifier\MultiFileFormUploadVerifier;
 use AppBundle\Service\StepRedirector;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
@@ -378,7 +377,7 @@ class DocumentController extends AbstractController
      */
     public function submitMoreConfirmAction(Request $request, int $reportId)
     {
-        $report = $this->getReport($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
 
         $fromPage = $request->get('from');
 
@@ -407,7 +406,7 @@ class DocumentController extends AbstractController
      */
     public function submitMoreConfirmedAction(Request $request, int $reportId)
     {
-        $report = $this->getReport($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
 
         // submit the report to generate the submission entry only
         $this->restClient->put('report/' . $report->getId() . '/submit-documents', $report, ['submit']);

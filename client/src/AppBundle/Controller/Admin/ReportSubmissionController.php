@@ -126,7 +126,7 @@ class ReportSubmissionController extends AbstractController
 
         if (!empty($reportSubmissionIds)) {
             try {
-                [$retrievedDocuments, $missingDocuments] = $this->documentDownloader->retrieveDocumentsFromS3ByReportSubmissionIds($request, $reportSubmissionIds);
+                [$retrievedDocuments] = $this->documentDownloader->retrieveDocumentsFromS3ByReportSubmissionIds($request, $reportSubmissionIds);
                 $downloadLocation = $this->documentDownloader->zipDownloadedDocuments($retrievedDocuments);
             } catch(Throwable $e) {
                 $this->addFlash('error', 'There was an error downloading the requested documents: ' . $e->getMessage());

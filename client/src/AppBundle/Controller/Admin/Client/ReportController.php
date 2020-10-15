@@ -13,6 +13,7 @@ use AppBundle\Form\Admin\ReviewChecklistType;
 use AppBundle\Form\Admin\ReportChecklistType;
 use AppBundle\Form\Admin\ManageSubmittedReportType;
 use AppBundle\Form\Admin\ManageReportConfirmType;
+use AppBundle\Service\Client\Internal\ReportApi;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\ParameterStoreService;
 use AppBundle\Service\ReportSubmissionService;
@@ -90,11 +91,16 @@ class ReportController extends AbstractController
     /** @var RestClient */
     private $restClient;
 
+    /** @var ReportApi */
+    private $reportApi;
+
     public function __construct(
-        RestClient $restClient
+        RestClient $restClient,
+        ReportApi $reportApi
     )
     {
         $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
     }
 
     /**
@@ -109,7 +115,7 @@ class ReportController extends AbstractController
      */
     public function checklistAction(Request $request, $id)
     {
-        $report = $this->getReport(
+        $report = $this->reportApi->getReport(
             intval($id),
             array_merge(
                 self::$reportGroupsAll,
@@ -224,7 +230,7 @@ class ReportController extends AbstractController
      */
     public function checklistSubmittedAction(int $id, ParameterStoreService $parameterStore)
     {
-        $report = $this->getReport(intval($id), ['report-checklist']);
+        $report = $this->reportApi->getReport(intval($id), ['report-checklist']);
         $syncFeatureIsEnabled = false;
 
         if ($parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC) === '1') {
@@ -258,7 +264,7 @@ class ReportController extends AbstractController
      */
     public function checklistPDFViewAction(int $id, ReportSubmissionService $reportSubmissionService)
     {
-        $report = $this->getReport(intval($id), array_merge(self::$reportGroupsAll, ['report-checklist', 'checklist-information', 'user']));
+        $report = $this->reportApi->getReport(intval($id), array_merge(self::$reportGroupsAll, ['report-checklist', 'checklist-information', 'user']));
 
         $pdfBinary = $reportSubmissionService->getChecklistPdfBinaryContent($report);
         $response = new Response($pdfBinary);
@@ -295,7 +301,7 @@ class ReportController extends AbstractController
      */
     public function manageAction(Request $request, $id)
     {
-        $report = $this->getReport(intval($id), ['report-checklist', 'action']);
+        $report = $this->reportApi->getReport(intval($id), ['report-checklist', 'action']);
 
         $formClass = ($report->isSubmitted()) ?  ManageSubmittedReportType::class : ManageActiveReportType::class;
         $form = $this->createForm($formClass, $report);
@@ -411,7 +417,7 @@ class ReportController extends AbstractController
      */
     public function manageConfirmAction(Request $request, $id)
     {
-        $report = $this->getReport(intval($id), ['report-checklist', 'action']);
+        $report = $this->reportApi->getReport(intval($id), ['report-checklist', 'action']);
 
         $sessionData = $request->getSession()->get('report-management-changes');
         if (null === $sessionData || !$this->sufficientDataInSession($sessionData)) {
@@ -501,7 +507,7 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $report = $this->getReport(intval($id));
+            $report = $this->reportApi->getReport(intval($id));
             $report->setSubmitted(true);
             $report->setUnSubmitDate(null);
             $this->restClient->put('report/' . $id, $report, ['submitted', 'unsubmit_date']);

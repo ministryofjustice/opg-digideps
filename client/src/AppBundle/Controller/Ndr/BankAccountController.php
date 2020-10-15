@@ -47,8 +47,12 @@ class BankAccountController extends AbstractController
     /**
      * @Route("/ndr/{ndrId}/bank-accounts", name="ndr_bank_accounts")
      * @Template("AppBundle:Ndr/BankAccount:start.html.twig")
+     *
+     * @param int $ndrId
+     *
+     * @return array|RedirectResponse
      */
-    public function startAction(Request $request, $ndrId)
+    public function startAction(int $ndrId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if ($ndr->getStatusService()->getBankAccountsState()['state'] != NdrStatusService::STATE_NOT_STARTED) {

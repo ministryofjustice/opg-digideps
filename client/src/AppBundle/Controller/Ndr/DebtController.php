@@ -3,7 +3,6 @@
 namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\Client\Internal\ReportApi;
 use AppBundle\Service\Client\RestClient;
@@ -128,7 +127,7 @@ class DebtController extends AbstractController
      */
     public function managementAction(Request $request, $ndrId)
     {
-        $ndr = $this->reportaApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
+        $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Ndr\Debt\DebtManagementType::class, $ndr);
 
         $form->handleRequest($request);
