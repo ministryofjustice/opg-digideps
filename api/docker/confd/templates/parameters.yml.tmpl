@@ -3,6 +3,18 @@
 
 # This file is a "template" of what your parameters.yml file should look like
 parameters:
+    cloudwatch_logs_client_params:
+       version: 'latest'
+       region: 'eu-west-1'
+{{ if exists "/cloudwatch/logs/localstack" }}
+       endpoint: 'http://localstack:4586'
+       validate: false
+       credentials:
+           key: 'FAKE_ID'
+           secret: 'FAKE_KEY'
+{{ else }}
+       validate: true
+{{ end }}
     database_driver: pdo_pgsql
     database_host: {{ getv "/database/hostname" }}
     database_port: {{ getv "/database/port" }}
@@ -18,15 +30,3 @@ parameters:
 {{ end }}
     log_level: warning
     log_path: /var/log/app/application.log
-    cloudwatch_logs_client_params:
-       version: 'latest'
-       region: 'eu-west-1'
-{{ if exists "/cloudwatch/logs/localstack" }}
-       endpoint: 'http://localstack:4586'
-       validate: false
-       credentials:
-           key: 'FAKE_ID'
-           secret: 'FAKE_KEY'
-{{ else }}
-       validate: true
-{{ end }}

@@ -47,6 +47,9 @@ services:
             - php
             - scripts/localstack-init.php
 
+    wait-for-it:
+        build: ./wait_for_it
+
 #    pa11y:
 #        build:
 #            context: ./pa11y
