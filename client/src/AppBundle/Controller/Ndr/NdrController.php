@@ -137,7 +137,7 @@ class NdrController extends AbstractController
     public function overviewAction(Redirector $redirector)
     {
         // redirect if user has missing details or is on wrong page
-        $user = $this->userApi->getUserWithData();
+        $user = $this->userApi->getUserWithData(['user', 'user-clients', 'client']);
         $route = $redirector->getCorrectRouteIfDifferent($user, 'ndr_overview');
 
         if (is_string($route)) {
@@ -170,7 +170,7 @@ class NdrController extends AbstractController
      * @Route("/ndr/{ndrId}/review", name="ndr_review")
      * @Template("AppBundle:Ndr/Ndr:review.html.twig")
      */
-    public function reviewAction()
+    public function reviewAction($ndrId)
     {
         $user = $this->userApi->getUserWithData(self::$ndrGroupsForValidation);
         $client = $this->clientApi->getFirstClient($user);
@@ -195,7 +195,7 @@ class NdrController extends AbstractController
     /**
      * @Route("/ndr/{ndrId}/deputyndr.pdf", name="ndr_pdf")
      */
-    public function pdfViewAction()
+    public function pdfViewAction($ndrId)
     {
         $user = $this->userApi->getUserWithData(self::$ndrGroupsForValidation);
         $client = $this->clientApi->getFirstClient($user);
@@ -246,7 +246,7 @@ class NdrController extends AbstractController
      * @return array|RedirectResponse
      * @throws \Exception
      */
-    public function declarationAction(Request $request, S3FileUploader $fileUploader)
+    public function declarationAction(Request $request, $ndrId, S3FileUploader $fileUploader)
     {
         $user = $this->userApi->getUserWithData(self::$ndrGroupsForValidation);
         $client = $this->clientApi->getFirstClient($user);

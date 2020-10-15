@@ -69,11 +69,11 @@ class DocumentController extends AbstractController
      * @Template("AppBundle:Report/Document:start.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function startAction(Request $request, int $reportId)
+    public function startAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -98,11 +98,11 @@ class DocumentController extends AbstractController
      * @Template("AppBundle:Report/Document:step1.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function step1Action(Request $request, int $reportId)
+    public function step1Action(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -160,13 +160,13 @@ class DocumentController extends AbstractController
      *
      * @param Request $request
      * @param MultiFileFormUploadVerifier $multiFileVerifier
-     * @param int $reportId
+     * @param $reportId
      * @param LoggerInterface $logger
      *
      * @return array|RedirectResponse
      * @throws \Exception
      */
-    public function step2Action(Request $request, MultiFileFormUploadVerifier $multiFileVerifier, int $reportId,
+    public function step2Action(Request $request, MultiFileFormUploadVerifier $multiFileVerifier, $reportId,
                                 LoggerInterface $logger)
     {
         $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
@@ -244,11 +244,11 @@ class DocumentController extends AbstractController
      * @Template("AppBundle:Report/Document:summary.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, int $reportId)
+    public function summaryAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDocumentsState()['state']) {
@@ -272,11 +272,11 @@ class DocumentController extends AbstractController
      * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
      * @param Request $request
-     * @param int $documentId
+     * @param $documentId
      *
      * @return array|RedirectResponse|Response
      */
-    public function deleteConfirmAction(Request $request, int $documentId)
+    public function deleteConfirmAction(Request $request, $documentId)
     {
         $document = $this->getDocument($documentId);
 
@@ -316,11 +316,11 @@ class DocumentController extends AbstractController
      * Removes a document, adds a flash message and redirects to page
      *
      * @param Request $request
-     * @param int $documentId
+     * @param $documentId
      *
      * @return RedirectResponse
      */
-    public function deleteDocument(Request $request, int $documentId)
+    public function deleteDocument(Request $request, $documentId)
     {
         $document = $this->getDocument($documentId);
 
@@ -371,11 +371,11 @@ class DocumentController extends AbstractController
      * @Template("AppBundle:Report/Document:submitMoreDocumentsConfirm.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array
      */
-    public function submitMoreConfirmAction(Request $request, int $reportId)
+    public function submitMoreConfirmAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
 
@@ -399,12 +399,12 @@ class DocumentController extends AbstractController
      * @Template("AppBundle:Report/Document:submitMoreDocumentsConfirmed.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return RedirectResponse
      * @throws \Exception
      */
-    public function submitMoreConfirmedAction(Request $request, int $reportId)
+    public function submitMoreConfirmedAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
 

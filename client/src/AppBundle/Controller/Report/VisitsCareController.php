@@ -46,11 +46,11 @@ class VisitsCareController extends AbstractController
      * @Template("AppBundle:Report/VisitsCare:start.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function startAction(Request $request, int $reportId)
+    public function startAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getVisitsCareState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
@@ -67,12 +67,12 @@ class VisitsCareController extends AbstractController
      * @Template("AppBundle:Report/VisitsCare:step.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
-     * @param int $step
+     * @param $reportId
+     * @param $step
      *
      * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, int $reportId, int $step)
+    public function stepAction(Request $request, $reportId, $step)
     {
         $totalSteps = 4;
         if ($step < 1 || $step > $totalSteps) {
@@ -132,11 +132,11 @@ class VisitsCareController extends AbstractController
      * @Template("AppBundle:Report/VisitsCare:summary.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, int $reportId)
+    public function summaryAction(Request $request, $reportId)
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);

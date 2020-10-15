@@ -40,11 +40,11 @@ class ContactController extends AbstractController
      * @Route("/report/{reportId}/contacts", name="contacts")
      * @Template("AppBundle:Report/Contact:start.html.twig")
      *
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function startAction(int $reportId)
+    public function startAction($reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -179,12 +179,12 @@ class ContactController extends AbstractController
      * @Template("AppBundle:Report/Contact:edit.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      * @param int $contactId
      *
      * @return array|RedirectResponse
      */
-    public function editAction(Request $request, int $reportId, int $contactId)
+    public function editAction(Request $request, $reportId, int $contactId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $contact = $this->restClient->get('report/contact/' . $contactId, 'Report\\Contact');
@@ -214,11 +214,11 @@ class ContactController extends AbstractController
      * @Route("/report/{reportId}/contacts/summary", name="contacts_summary")
      * @Template("AppBundle:Report/Contact:summary.html.twig")
      *
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function summaryAction(int $reportId)
+    public function summaryAction($reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -236,12 +236,12 @@ class ContactController extends AbstractController
      * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      * @param int $contactId
      *
      * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, int $reportId, int $contactId)
+    public function deleteAction(Request $request, $reportId, int $contactId)
     {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);

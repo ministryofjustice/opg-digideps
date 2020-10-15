@@ -46,11 +46,11 @@ class OtherInfoController extends AbstractController
      * @Template("AppBundle:Report/OtherInfo:start.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function startAction(Request $request, int $reportId)
+    public function startAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getOtherInfoState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
@@ -67,12 +67,12 @@ class OtherInfoController extends AbstractController
      * @Template("AppBundle:Report/OtherInfo:step.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
-     * @param int $step
+     * @param $reportId
+     * @param $step
      *
      * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, int $reportId, int $step)
+    public function stepAction(Request $request, $reportId, $step)
     {
         $totalSteps = 1; //only one step but convenient to reuse the "step" logic and keep things aligned/simple
         if ($step < 1 || $step > $totalSteps) {
@@ -118,11 +118,11 @@ class OtherInfoController extends AbstractController
      * @Template("AppBundle:Report/OtherInfo:summary.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, int $reportId)
+    public function summaryAction(Request $request, $reportId)
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);

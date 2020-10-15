@@ -132,11 +132,11 @@ class AdController extends AbstractController
      * @Route("/login-as-deputy/{deputyId}", name="ad_deputy_login_redirect")
      * @Security("has_role('ROLE_AD')")
      *
-     * @param int $deputyId
+     * @param $deputyId
      *
      * @return RedirectResponse|Response|null
      */
-    public function adLoginAsDeputyAction(int $deputyId)
+    public function adLoginAsDeputyAction($deputyId)
     {
         $adUser = $this->getUser();
 

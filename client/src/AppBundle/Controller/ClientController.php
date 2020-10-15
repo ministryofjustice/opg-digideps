@@ -148,7 +148,7 @@ class ClientController extends AbstractController
     public function addAction(Request $request, Redirector $redirector)
     {
         // redirect if user has missing details or is on wrong page
-        $user = $this->userApi->getUserWithData();
+        $user = $this->userApi->getUserWithData(['user', 'user-clients', 'client']);
 
         $route = $redirector->getCorrectRouteIfDifferent($user, 'client_add');
 

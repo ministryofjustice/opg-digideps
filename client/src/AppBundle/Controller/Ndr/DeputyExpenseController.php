@@ -43,7 +43,7 @@ class DeputyExpenseController extends AbstractController
      * @Route("/ndr/{ndrId}/deputy-expenses", name="ndr_deputy_expenses")
      * @Template("AppBundle:Ndr/DeputyExpense:start.html.twig")
      *
-     * @param int $ndrId
+     * @param $ndrId
      *
      * @return array|RedirectResponse
      */
@@ -100,11 +100,11 @@ class DeputyExpenseController extends AbstractController
      * @Template("AppBundle:Ndr/DeputyExpense:add.html.twig")
      *
      * @param Request $request
-     * @param int $ndrId
+     * @param $ndrId
      *
      * @return array|RedirectResponse
      */
-    public function addAction(Request $request, int $ndrId)
+    public function addAction(Request $request, $ndrId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $expense = new EntityDir\Ndr\Expense();
@@ -197,7 +197,7 @@ class DeputyExpenseController extends AbstractController
      * @Route("/ndr/{ndrId}/deputy-expenses/summary", name="ndr_deputy_expenses_summary")
      * @Template("AppBundle:Ndr/DeputyExpense:summary.html.twig")
      *
-     * @param int $ndrId
+     * @param $ndrId
      *
      * @return array|RedirectResponse
      */

@@ -53,11 +53,11 @@ class IncomeBenefitController extends AbstractController
      * @Route("/ndr/{ndrId}/income-benefits", name="ndr_income_benefits")
      * @Template("AppBundle:Ndr/IncomeBenefit:start.html.twig")
      *
-     * @param int $ndrId
+     * @param $ndrId
      *
      * @return array|RedirectResponse
      */
-    public function startAction(int $ndrId)
+    public function startAction($ndrId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if ($ndr->getStatusService()->getIncomeBenefitsState()['state'] != NdrStatusService::STATE_NOT_STARTED) {

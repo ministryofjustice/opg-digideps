@@ -143,7 +143,7 @@ class ReportSubmissionController extends AbstractController
      * @Route("/documents/{submissionId}/{documentId}/download", name="admin_document_download", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      */
-    public function downloadIndividualDocument(int $submissionId, int $documentId): Response
+    public function downloadIndividualDocument(int $submissionId, $documentId): Response
     {
         $client = $this->restClient;
 

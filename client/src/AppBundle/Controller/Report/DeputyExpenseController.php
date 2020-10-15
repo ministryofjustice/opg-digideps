@@ -40,11 +40,11 @@ class DeputyExpenseController extends AbstractController
      * @Route("/report/{reportId}/deputy-expenses", name="deputy_expenses")
      * @Template("AppBundle:Report/DeputyExpense:start.html.twig")
      *
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function startAction(int $reportId)
+    public function startAction($reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -62,11 +62,11 @@ class DeputyExpenseController extends AbstractController
      * @Template("AppBundle:Report/DeputyExpense:exist.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function existAction(Request $request, int $reportId)
+    public function existAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class, $report, [ 'field' => 'paidForAnything', 'translation_domain' => 'report-deputy-expenses']
@@ -102,11 +102,11 @@ class DeputyExpenseController extends AbstractController
      * @Template("AppBundle:Report/DeputyExpense:add.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function addAction(Request $request, int $reportId)
+    public function addAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $expense = new EntityDir\Report\Expense();
@@ -153,11 +153,11 @@ class DeputyExpenseController extends AbstractController
      * @Template("AppBundle:Report/DeputyExpense:addAnother.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function addAnotherAction(Request $request, int $reportId)
+    public function addAnotherAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -184,12 +184,12 @@ class DeputyExpenseController extends AbstractController
      * @Template("AppBundle:Report/DeputyExpense:edit.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
-     * @param int $expenseId
+     * @param $reportId
+     * @param $expenseId
      *
      * @return array|RedirectResponse
      */
-    public function editAction(Request $request, int $reportId, int $expenseId)
+    public function editAction(Request $request, $reportId, $expenseId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $expense = $this->restClient->get(
@@ -243,11 +243,11 @@ class DeputyExpenseController extends AbstractController
      * @Route("/report/{reportId}/deputy-expenses/summary", name="deputy_expenses_summary")
      * @Template("AppBundle:Report/DeputyExpense:summary.html.twig")
      *
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function summaryAction(int $reportId)
+    public function summaryAction($reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getExpensesState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
@@ -264,11 +264,11 @@ class DeputyExpenseController extends AbstractController
      * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
-     * @param int $expenseId
+     * @param $reportId
+     * @param $expenseId
      * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, int $reportId, int $expenseId)
+    public function deleteAction(Request $request, $reportId, $expenseId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 

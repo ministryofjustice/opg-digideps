@@ -173,12 +173,12 @@ class ReportController extends AbstractController
      * @Template("AppBundle:Report/Report:edit.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      * @throws \Exception
      */
-    public function editAction(Request $request, int $reportId)
+    public function editAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId);
         $client = $report->getClient();
@@ -222,11 +222,11 @@ class ReportController extends AbstractController
      * @Template("AppBundle:Report/Report:create.html.twig")
      *
      * @param Request $request
-     * @param int $clientId
-     * 
+     * @param $clientId
+     *
      * @return array|RedirectResponse
      */
-    public function createAction(Request $request, int $clientId)
+    public function createAction(Request $request, $clientId)
     {
         $client = $this->restClient->get('client/' . $clientId, 'Client', ['client', 'client-reports', 'report-id']);
 
@@ -267,11 +267,11 @@ class ReportController extends AbstractController
      * @Template("AppBundle:Report/Report:overview.html.twig")
      *
      * @param Redirector $redirector
-     * @param int $reportId
+     * @param $reportId
      *
      * @return RedirectResponse|Response|null
      */
-    public function overviewAction(Redirector $redirector, int $reportId)
+    public function overviewAction(Redirector $redirector, $reportId)
     {
         $reportJmsGroup = ['status', 'balance', 'user', 'client', 'client-reports', 'balance-state'];
         // redirect if user has missing details or is on wrong page
@@ -323,11 +323,11 @@ class ReportController extends AbstractController
      * the list. Its needed for a permissions check on add client contact (logged in user has to be associated)
      *
      * @param User $user
-     * @param int $clientId
+     * @param $clientId
      *
      * @return Client
      */
-    private function generateClient(User $user, int $clientId)
+    private function generateClient(User $user, $clientId)
     {
         $jms = $this->determineJmsGroups($user);
 
@@ -377,12 +377,12 @@ class ReportController extends AbstractController
      * @Template("AppBundle:Report/Report:declaration.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      * @param ReportSubmissionService $reportSubmissionService
      *
      * @return array|RedirectResponse
      */
-    public function declarationAction(Request $request, int $reportId, ReportSubmissionService $reportSubmissionService)
+    public function declarationAction(Request $request, $reportId, ReportSubmissionService $reportSubmissionService)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$reportGroupsAll);
 
@@ -430,11 +430,11 @@ class ReportController extends AbstractController
      * @Template("AppBundle:Report/Report:submitConfirmation.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function submitConfirmationAction(Request $request, int $reportId)
+    public function submitConfirmationAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReport($reportId, ['status']);
 
@@ -482,10 +482,10 @@ class ReportController extends AbstractController
     /**
      * @Route("/report/{reportId}/submit_feedback", name="report_submit_feedback")
      * @Template("AppBundle:Report/Report:submitFeedback.html.twig")
-     * @param int $reportId
+     * @param $reportId
      * @return array
      */
-    public function submitFeedbackAction(int $reportId)
+    public function submitFeedbackAction($reportId)
     {
         $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
 
@@ -509,12 +509,12 @@ class ReportController extends AbstractController
      * @Route("/report/{reportId}/review", name="report_review")
      * @Template("AppBundle:Report/Report:review.html.twig")
      *
-     * @param int $reportId
+     * @param $reportId
      * @return array
      *
      * @throws \Exception
      */
-    public function reviewAction(int $reportId)
+    public function reviewAction($reportId)
     {
         $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
 
@@ -543,10 +543,10 @@ class ReportController extends AbstractController
      * Used for active and archived report.
      *
      * @Route("/report/{reportId}/pdf-debug")
-     * @param int $reportId
+     * @param $reportId
      * @return Response|null
      */
-    public function pdfDebugAction(int $reportId)
+    public function pdfDebugAction($reportId)
     {
         if (!$this->getParameter('kernel.debug')) {
             throw new DisplayableException('Route only visite in debug mode');
@@ -562,12 +562,12 @@ class ReportController extends AbstractController
     /**
      * @Route("/report/deputyreport-{reportId}.pdf", name="report_pdf")
      *
-     * @param int $reportId
+     * @param $reportId
      * @param ReportSubmissionService $reportSubmissionService
      *
      * @return Response
      */
-    public function pdfViewAction(int $reportId, ReportSubmissionService $reportSubmissionService)
+    public function pdfViewAction($reportId, ReportSubmissionService $reportSubmissionService)
     {
         $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
         $pdfBinary = $reportSubmissionService->getPdfBinaryContent($report);
@@ -599,12 +599,12 @@ class ReportController extends AbstractController
      *
      * @Route("/report/transactions-{reportId}.csv", name="report_transactions_csv")
      *
-     * @param int $reportId
+     * @param $reportId
      * @param CsvGeneratorService $csvGenerator
      *
      * @return Response
      */
-    public function transactionsCsvViewAction(int $reportId, CsvGeneratorService $csvGenerator)
+    public function transactionsCsvViewAction($reportId, CsvGeneratorService $csvGenerator)
     {
         $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
 

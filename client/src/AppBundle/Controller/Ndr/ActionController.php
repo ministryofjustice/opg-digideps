@@ -52,11 +52,11 @@ class ActionController extends AbstractController
      * @Template("AppBundle:Ndr/Action:start.html.twig")
      *
      * @param Request $request
-     * @param int $ndrId
+     * @param $ndrId
      *
      * @return array|RedirectResponse
      */
-    public function startAction(int $ndrId)
+    public function startAction($ndrId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if ($ndr->getStatusService()->getActionsState()['state'] != NdrStatusService::STATE_NOT_STARTED) {

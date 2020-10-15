@@ -41,11 +41,11 @@ class DebtController extends AbstractController
      * @Template("AppBundle:Report/Debt:start.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function startAction(Request $request, int $reportId)
+    public function startAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getDebtsState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
@@ -62,11 +62,11 @@ class DebtController extends AbstractController
      * @Template("AppBundle:Report/Debt:exist.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function existAction(Request $request, int $reportId)
+    public function existAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class, $report, [ 'field' => 'hasDebts', 'translation_domain' => 'report-debts']
@@ -102,11 +102,11 @@ class DebtController extends AbstractController
      * @Template("AppBundle:Report/Debt:edit.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function editAction(Request $request, int $reportId)
+    public function editAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Report\Debt\DebtsType::class, $report);
@@ -146,11 +146,11 @@ class DebtController extends AbstractController
      * @Template("AppBundle:Report/Debt:management.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      * @return array|RedirectResponse
      *
      */
-    public function managementAction(Request $request, int $reportId)
+    public function managementAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Report\Debt\DebtManagementType::class, $report);
@@ -188,11 +188,11 @@ class DebtController extends AbstractController
      * @Template("AppBundle:Report/Debt:summary.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, int $reportId)
+    public function summaryAction(Request $request, $reportId)
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);

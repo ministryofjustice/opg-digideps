@@ -50,11 +50,11 @@ class MoneyOutController extends AbstractController
      * @Template("AppBundle:Report/MoneyOut:start.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function startAction(Request $request, int $reportId)
+    public function startAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getMoneyOutState()['state'] != Status::STATE_NOT_STARTED) {
@@ -71,13 +71,13 @@ class MoneyOutController extends AbstractController
      * @Template("AppBundle:Report/MoneyOut:step.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
-     * @param int $step
+     * @param $reportId
+     * @param $step
      * @param null $transactionId
      *
      * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, int $reportId, int $step, $transactionId = null)
+    public function stepAction(Request $request, $reportId, $step, $transactionId = null)
     {
         $totalSteps = 2;
         if ($step < 1 || $step > $totalSteps) {
@@ -177,11 +177,11 @@ class MoneyOutController extends AbstractController
      * @Template("AppBundle:Report/MoneyOut:addAnother.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function addAnotherAction(Request $request, int $reportId)
+    public function addAnotherAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId);
 
@@ -207,11 +207,11 @@ class MoneyOutController extends AbstractController
      * @Route("/report/{reportId}/money-out/summary", name="money_out_summary")
      * @Template("AppBundle:Report/MoneyOut:summary.html.twig")
      *
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function summaryAction(int $reportId)
+    public function summaryAction($reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getMoneyOutState()['state'] == Status::STATE_NOT_STARTED) {
@@ -227,12 +227,12 @@ class MoneyOutController extends AbstractController
      * @Route("/report/{reportId}/money-out/{transactionId}/delete", name="money_out_delete")
      * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
-     * @param int $reportId
-     * @param int $transactionId
+     * @param $reportId
+     * @param $transactionId
      *
      * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, int $reportId, int $transactionId)
+    public function deleteAction(Request $request, $reportId, $transactionId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 

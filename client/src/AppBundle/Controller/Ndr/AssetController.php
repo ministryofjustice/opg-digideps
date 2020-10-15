@@ -49,10 +49,10 @@ class AssetController extends AbstractController
      * @Route("/ndr/{ndrId}/assets", name="ndr_assets")
      * @Template("AppBundle:Ndr/Asset:start.html.twig")
      *
-     * @param int $ndrId
+     * @param $ndrId
      * @return array|RedirectResponse
      */
-    public function startAction(int $ndrId)
+    public function startAction($ndrId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if ($ndr->getStatusService()->getAssetsState()['state'] != NdrStatusService::STATE_NOT_STARTED) {
@@ -349,7 +349,7 @@ class AssetController extends AbstractController
      * @Route("/ndr/{ndrId}/assets/summary", name="ndr_assets_summary")
      * @Template("AppBundle:Ndr/Asset:summary.html.twig")
      *
-     * @param int $ndrId
+     * @param $ndrId
      *
      * @return array|RedirectResponse
      */

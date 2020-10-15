@@ -45,7 +45,7 @@ class AssetController extends AbstractController
      * @Route("/report/{reportId}/assets", name="assets")
      * @Template("AppBundle:Report/Asset:start.html.twig")
      *
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
@@ -200,11 +200,11 @@ class AssetController extends AbstractController
      * @Template("AppBundle:Report/Asset:addAnother.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function addAnotherAction(Request $request, int $reportId)
+    public function addAnotherAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId);
 
@@ -353,7 +353,7 @@ class AssetController extends AbstractController
      * @Route("/report/{reportId}/assets/summary", name="assets_summary")
      * @Template("AppBundle:Report/Asset:summary.html.twig")
      *
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
@@ -374,12 +374,12 @@ class AssetController extends AbstractController
      * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
-     * @param int $assetId
+     * @param $reportId
+     * @param $assetId
      *
      * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, int $reportId, int $assetId)
+    public function deleteAction(Request $request, $reportId, $assetId)
     {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);

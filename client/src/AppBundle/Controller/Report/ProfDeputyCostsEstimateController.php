@@ -111,11 +111,11 @@ class ProfDeputyCostsEstimateController extends AbstractController
      * @Template("AppBundle:Report/ProfDeputyCostsEstimate:breakdown.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function breakdownAction(Request $request, int $reportId)
+    public function breakdownAction(Request $request, $reportId)
     {
         $from = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -154,10 +154,10 @@ class ProfDeputyCostsEstimateController extends AbstractController
      * @Route("/more-info", name="prof_deputy_costs_estimate_more_info")
      * @Template("AppBundle:Report/ProfDeputyCostsEstimate:moreInfo.html.twig")
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      * @return array|RedirectResponse
      */
-    public function moreInfoAction(Request $request, int $reportId)
+    public function moreInfoAction(Request $request, $reportId)
     {
         $from = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, ['prof-deputy-costs-estimate-more-info']);
@@ -186,11 +186,11 @@ class ProfDeputyCostsEstimateController extends AbstractController
      * @Route("/summary", name="prof_deputy_costs_estimate_summary")
      * @Template("AppBundle:Report/ProfDeputyCostsEstimate:summary.html.twig")
      *
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function summaryAction(int $reportId)
+    public function summaryAction($reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 

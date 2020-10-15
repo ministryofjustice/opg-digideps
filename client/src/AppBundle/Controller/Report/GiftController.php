@@ -41,11 +41,11 @@ class GiftController extends AbstractController
      * @Route("/report/{reportId}/gifts", name="gifts")
      * @Template("AppBundle:Report/Gift:start.html.twig")
      *
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function startAction(int $reportId)
+    public function startAction($reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -63,11 +63,11 @@ class GiftController extends AbstractController
      * @Template("AppBundle:Report/Gift:exist.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function existAction(Request $request, int $reportId)
+    public function existAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class, $report, [ 'field' => 'giftsExist', 'translation_domain' => 'report-gifts']
@@ -103,11 +103,11 @@ class GiftController extends AbstractController
      * @Template("AppBundle:Report/Gift:add.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function addAction(Request $request, int $reportId)
+    public function addAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $gift = new EntityDir\Report\Gift();
@@ -158,12 +158,12 @@ class GiftController extends AbstractController
      * @Template("AppBundle:Report/Gift:edit.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
-     * @param int $giftId
+     * @param $reportId
+     * @param $giftId
      *
      * @return array|RedirectResponse
      */
-    public function editAction(Request $request, int $reportId, int $giftId)
+    public function editAction(Request $request, $reportId, $giftId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $gift = $this->restClient->get(
@@ -213,7 +213,7 @@ class GiftController extends AbstractController
      * @Route("/report/{reportId}/gifts/summary", name="gifts_summary")
      * @Template("AppBundle:Report/Gift:summary.html.twig")
      *
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
@@ -234,12 +234,12 @@ class GiftController extends AbstractController
      * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
-     * @param int $giftId
+     * @param $reportId
+     * @param $giftId
      *
      * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, int $reportId, int $giftId)
+    public function deleteAction(Request $request, $reportId, $giftId)
     {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);

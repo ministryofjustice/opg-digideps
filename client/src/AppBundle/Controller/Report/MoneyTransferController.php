@@ -47,11 +47,11 @@ class MoneyTransferController extends AbstractController
      * @Route("/report/{reportId}/money-transfers", name="money_transfers")
      * @Template("AppBundle:Report/MoneyTransfer:start.html.twig")
      *
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|Response|RedirectResponse
      */
-    public function startAction(int $reportId)
+    public function startAction($reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (!$report->enoughBankAccountForTransfers()) {
@@ -75,11 +75,11 @@ class MoneyTransferController extends AbstractController
      * @Template("AppBundle:Report/MoneyTransfer:exist.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function existAction(Request $request, int $reportId)
+    public function existAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class, $report, [
@@ -117,13 +117,13 @@ class MoneyTransferController extends AbstractController
      * @Template("AppBundle:Report/MoneyTransfer:step.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
-     * @param int $step
+     * @param $reportId
+     * @param $step
      * @param null $transferId
      *
      * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, int $reportId, int $step, $transferId = null)
+    public function stepAction(Request $request, $reportId, $step, $transferId = null)
     {
         $totalSteps = 2;
         if ($step < 1 || $step > $totalSteps) {
@@ -217,11 +217,11 @@ class MoneyTransferController extends AbstractController
      * @Template("AppBundle:Report/MoneyTransfer:addAnother.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function addAnotherAction(Request $request, int $reportId)
+    public function addAnotherAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -247,11 +247,11 @@ class MoneyTransferController extends AbstractController
      * @Route("/report/{reportId}/money-transfers/summary", name="money_transfers_summary")
      * @Template("AppBundle:Report/MoneyTransfer:summary.html.twig")
      *
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function summaryAction(int $reportId)
+    public function summaryAction($reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getMoneyTransferState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
@@ -267,12 +267,12 @@ class MoneyTransferController extends AbstractController
      * @Route("/report/{reportId}/money-transfers/{transferId}/delete", name="money_transfers_delete")
      * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
-     * @param int $reportId
+     * @param $reportId
      * @param int $transferId
      *
      * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, int $reportId, int $transferId)
+    public function deleteAction(Request $request, $reportId, int $transferId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 

@@ -212,7 +212,7 @@ class BankAccountController extends AbstractController
     /**
      * @Route("/report/{reportId}/bank-accounts/summary", name="bank_accounts_summary")
      *
-     * @param int $reportId
+     * @param $reportId
      * @Template("AppBundle:Report/BankAccount:summary.html.twig")
      *
      * @return array|RedirectResponse
@@ -234,12 +234,12 @@ class BankAccountController extends AbstractController
      * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
-     * @param int $accountId
+     * @param $reportId
+     * @param $accountId
      *
      * @return array|RedirectResponse
      */
-    public function deleteConfirmAction(Request $request, int $reportId, int $accountId)
+    public function deleteConfirmAction(Request $request, $reportId, $accountId)
     {
         $translator = $this->get('translator');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);

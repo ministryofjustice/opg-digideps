@@ -48,11 +48,11 @@ class BankAccountController extends AbstractController
      * @Route("/ndr/{ndrId}/bank-accounts", name="ndr_bank_accounts")
      * @Template("AppBundle:Ndr/BankAccount:start.html.twig")
      *
-     * @param int $ndrId
+     * @param $ndrId
      *
      * @return array|RedirectResponse
      */
-    public function startAction(int $ndrId)
+    public function startAction($ndrId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if ($ndr->getStatusService()->getBankAccountsState()['state'] != NdrStatusService::STATE_NOT_STARTED) {
@@ -193,7 +193,7 @@ class BankAccountController extends AbstractController
     /**
      * @Route("/ndr/{ndrId}/bank-accounts/summary", name="ndr_bank_accounts_summary")
      *
-     * @param int $ndrId
+     * @param $ndrId
      * @Template("AppBundle:Ndr/BankAccount:summary.html.twig")
      *
      * @return array|RedirectResponse
@@ -215,8 +215,8 @@ class BankAccountController extends AbstractController
      * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
      * @param Request $request
-     * @param int $ndrId
-     * @param int $accountId
+     * @param $ndrId
+     * @param $accountId
      *
      * @return array|RedirectResponse
      */

@@ -51,12 +51,12 @@ class ProfDeputyCostsController extends AbstractController
      * @Route("", name="prof_deputy_costs")
      * @Template("AppBundle:Report/ProfDeputyCosts:start.html.twig")
      *
-     * @param int $reportId
+     * @param $reportId
      * @param ProfCostsSubSectionRouteResolver $routeResolver
      *
      * @return array|RedirectResponse
      */
-    public function startAction(int $reportId, ProfCostsSubSectionRouteResolver $routeResolver)
+    public function startAction($reportId, ProfCostsSubSectionRouteResolver $routeResolver)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $state = $report->getStatus()->getProfDeputyCostsState()['state'];
@@ -75,11 +75,11 @@ class ProfDeputyCostsController extends AbstractController
      * @Template("AppBundle:Report/ProfDeputyCosts:howCharged.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function howChargedAction(Request $request, int $reportId)
+    public function howChargedAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $from = $request->get('from');
@@ -114,10 +114,10 @@ class ProfDeputyCostsController extends AbstractController
      * @Route("/previous-received-exists", name="prof_deputy_costs_previous_received_exists")
      * @Template("AppBundle:Report/ProfDeputyCosts:previousReceivedExists.html.twig")
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      * @return array|RedirectResponse
      */
-    public function previousReceivedExists(Request $request, int $reportId)
+    public function previousReceivedExists(Request $request, $reportId)
     {
         $from = $request->get('from', 'exist');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -165,12 +165,12 @@ class ProfDeputyCostsController extends AbstractController
      * @Template("AppBundle:Report/ProfDeputyCosts:previousReceived.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      * @param null $previousReceivedId
      *
      * @return array|RedirectResponse
      */
-    public function previousReceived(Request $request, int $reportId, $previousReceivedId = null)
+    public function previousReceived(Request $request, $reportId, $previousReceivedId = null)
     {
         $from = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -222,12 +222,12 @@ class ProfDeputyCostsController extends AbstractController
      * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      * @param int $previousReceivedId
      *
      * @return array|RedirectResponse
      */
-    public function previousCostDelete(Request $request, int $reportId, int $previousReceivedId)
+    public function previousCostDelete(Request $request, $reportId, int $previousReceivedId)
     {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
@@ -266,11 +266,11 @@ class ProfDeputyCostsController extends AbstractController
      * @Template("AppBundle:Report/ProfDeputyCosts:interimExists.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function interimExists(Request $request, int $reportId)
+    public function interimExists(Request $request, $reportId)
     {
         $from = $request->get('from', 'exist');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -318,11 +318,11 @@ class ProfDeputyCostsController extends AbstractController
      * @Template("AppBundle:Report/ProfDeputyCosts:interim.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function interim(Request $request, int $reportId)
+    public function interim(Request $request, $reportId)
     {
         $from = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -360,11 +360,11 @@ class ProfDeputyCostsController extends AbstractController
      * @Template("AppBundle:Report/ProfDeputyCosts:fixedCost.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function fixedCostAction(Request $request, int $reportId)
+    public function fixedCostAction(Request $request, $reportId)
     {
         $from = $request->get('from');
         /** @var EntityDir\Report\Report $report */
@@ -403,11 +403,11 @@ class ProfDeputyCostsController extends AbstractController
      * @Template("AppBundle:Report/ProfDeputyCosts:amountToScco.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function amountToSccoAction(Request $request, int $reportId)
+    public function amountToSccoAction(Request $request, $reportId)
     {
         $from = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -442,11 +442,11 @@ class ProfDeputyCostsController extends AbstractController
      * @Template("AppBundle:Report/ProfDeputyCosts:breakdown.html.twig")
      *
      * @param Request $request
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function breakdown(Request $request, int $reportId)
+    public function breakdown(Request $request, $reportId)
     {
         $from = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -515,11 +515,11 @@ class ProfDeputyCostsController extends AbstractController
      * @Route("/summary", name="prof_deputy_costs_summary")
      * @Template("AppBundle:Report/ProfDeputyCosts:summary.html.twig")
      *
-     * @param int $reportId
+     * @param $reportId
      *
      * @return array|RedirectResponse
      */
-    public function summaryAction(int $reportId)
+    public function summaryAction($reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getProfDeputyCostsState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
