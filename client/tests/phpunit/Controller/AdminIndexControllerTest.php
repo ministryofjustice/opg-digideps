@@ -58,18 +58,6 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
 
         $this->restClient->userRecreateToken($emailAddress, 'pass-reset')->shouldBeCalled()->willReturn(new User());
 
-        $this->injectProphecyService(MailFactory::class, function ($mailFactory) {
-            $mailFactory->createActivationEmail(new User())->shouldBeCalled()->willReturn(new Email());
-        });
-
-        $this->injectProphecyService(MailSender::class, function ($mailSender) {
-            $mailSender->send(new Email())->shouldBeCalled()->willReturn(true);
-        });
-
-        $this->injectProphecyService(LoggerInterface::class, function ($logger) {
-            $logger->log(Argument::cetera())->shouldNotBeCalled();
-        }, ['logger']);
-
         $this->client->request('GET', "/admin/send-activation-link/{$emailAddress}");
 
         /** @var Response $response */
