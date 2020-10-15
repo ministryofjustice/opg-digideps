@@ -304,7 +304,7 @@ resource "aws_cloudwatch_metric_alarm" "frontend_alb_average_response_time" {
   }
 
   metric_query {
-    expression  = "ANOMALY_DETECTION_BAND(m1, 2)"
+    expression  = "ANOMALY_DETECTION_BAND(m1, 6)"
     id          = "ad1"
     label       = "TargetResponseTime (expected)"
     return_data = true
@@ -340,7 +340,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
   }
 
   metric_query {
-    expression  = "ANOMALY_DETECTION_BAND(m1, 2)"
+    expression  = "ANOMALY_DETECTION_BAND(m1, 6)"
     id          = "ad1"
     label       = "TargetResponseTime (expected)"
     return_data = true
