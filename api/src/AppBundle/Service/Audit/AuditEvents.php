@@ -60,6 +60,16 @@ final class AuditEvents
         return $event + $this->baseEvent(AuditEvents::EVENT_CLIENT_DISCHARGED);
     }
 
+    /**
+     * @param string $trigger
+     * @param string $emailChangedFrom
+     * @param string $emailChangedTo
+     * @param string $changedBy
+     * @param string $subjectFullName
+     * @param string $subjectRole
+     * @return array|string[]
+     * @throws \Exception
+     */
     public function userEmailChanged(
         string $trigger,
         string $emailChangedFrom,
@@ -67,7 +77,7 @@ final class AuditEvents
         string $changedBy,
         string $subjectFullName,
         string $subjectRole
-    ) {
+    ): array {
         $event = [
             'trigger' => $trigger,
             'email_changed_from' => $emailChangedFrom,
@@ -81,13 +91,22 @@ final class AuditEvents
         return $event + $this->baseEvent(AuditEvents::EVENT_USER_EMAIL_CHANGED);
     }
 
+    /**
+     * @param string $trigger
+     * @param string|null $emailChangedFrom
+     * @param string|null $emailChangedTo
+     * @param string $changedBy
+     * @param string $subjectFullName
+     * @return array|string[]
+     * @throws \Exception
+     */
     public function clientEmailChanged(
         string $trigger,
         ?string $emailChangedFrom,
         ?string $emailChangedTo,
         string $changedBy,
         string $subjectFullName
-    ) {
+    ): array {
         $event = [
             'trigger' => $trigger,
             'email_changed_from' => $emailChangedFrom,
