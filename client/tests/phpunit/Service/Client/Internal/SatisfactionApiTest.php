@@ -15,44 +15,56 @@ use Prophecy\Prophecy\ObjectProphecy;
 
 class SatisfactionApiTest extends TestCase
 {
+    /** @var \Faker\Generator */
+    private $faker;
+
+    /** @var RestClient&ObjectProphecy */
+    private $restClient;
+
+    /** @var MailFactory&ObjectProphecy */
+    private $mailFactory;
+
+    /** @var MailSender&ObjectProphecy */
+    private $mailSender;
+
+    /**  @var SatisfactionApi */
+    private $sut;
+
+    public function setUp(): void
+    {
+        $this->faker = Factory::create('en_UK');
+        $this->restClient = self::prophesize(RestClient::class);
+        $this->mailFactory = self::prophesize(MailFactory::class);
+        $this->mailSender = self::prophesize(MailSender::class);
+        $this->sut = new SatisfactionApi($this->restClient->reveal(), $this->mailFactory->reveal(), $this->mailSender->reveal());
+    }
+
     /**
      * @test
      */
     public function create()
     {
-        $faker = Factory::create('en_UK');
+        $score = $this->faker->randomElement([1,2,3,4,5]);
+        $comments = $this->faker->realText();
 
-        /** @var RestClient&ObjectProphecy $restClient */
-        $restClient = self::prophesize(RestClient::class);
-        $restClient->post(
+        $this->restClient->post(
             'satisfaction/public',
-            ['score' => 5, 'comment' => 'Wonderful app made by wonderful people']
+            ['satisfactionLevel' => $score, 'comments' => $comments]
         )->shouldBeCalled();
 
-        /** @var MailFactory&ObjectProphecy $mailFactory */
-        $mailFactory = self::prophesize(MailFactory::class);
-
         $formData = [
-            'comments' => $faker->realText(),
-            'name' => $faker->name,
-            'phone' => $faker->phoneNumber,
-            'page' => $faker->url,
-            'email' => $faker->email,
-            'satisfactionLevel' => $faker->randomElement([1,2,3,4,5])
+            'comments' => $comments,
+            'name' => $this->faker->name,
+            'phone' => $this->faker->phoneNumber,
+            'page' => $this->faker->url,
+            'email' => $this->faker->email,
+            'satisfactionLevel' => $score
         ];
 
         $email = new Email();
-        $mailFactory->createGeneralFeedbackEmail($formData)->shouldBeCalled()->willReturn($email);
+        $this->mailFactory->createGeneralFeedbackEmail($formData)->shouldBeCalled()->willReturn($email);
+        $this->mailSender->send($email)->shouldBeCalled();
 
-        /** @var MailSender&ObjectProphecy $mailSender */
-        $mailSender = self::prophesize(MailSender::class);
-        $mailSender->send($email)->shouldBeCalled();
-
-        $sut = new SatisfactionApi();
-        $sut->create();
-//        $this->getRestClient()->post('satisfaction/public', [
-//            'score' => $score,
-//            'comments' => $comments,
-//        ]);
+        $this->sut->create($formData);
     }
 }

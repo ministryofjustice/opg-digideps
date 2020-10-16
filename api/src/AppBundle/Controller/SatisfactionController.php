@@ -8,7 +8,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity as EntityDir;
 
-
 /**
  * @Route("/satisfaction")
  */
@@ -70,11 +69,11 @@ class SatisfactionController extends RestController
     public function publicAdd(Request $request)
     {
         $data = $this->deserializeBodyContent($request, [
-            'score' => 'notEmpty',
+            'satisfactionLevel' => 'notEmpty',
             'comments' => 'notEmpty'
         ]);
 
-        $satisfaction = $this->addSatisfactionScore($data['score'], $data['comments']);
+        $satisfaction = $this->addSatisfactionScore($data['satisfactionLevel'], $data['comments']);
 
         return $satisfaction->getId();
     }

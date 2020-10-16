@@ -25,6 +25,7 @@ class FeedbackController extends AbstractController
             $score = $form->get('satisfactionLevel')->getData();
             $comments = $form->get('comments')->getData();
 
+            // Replace with SatisfactionApi
             if ($score) {
                 $this->getRestClient()->post('satisfaction/public', [
                     'score' => $score,
