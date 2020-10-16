@@ -29,7 +29,7 @@ resource "aws_db_instance" "api" {
   auto_minor_version_upgrade  = false
   final_snapshot_identifier   = "api-${local.environment}-final"
   vpc_security_group_ids      = [module.api_rds_security_group.id]
-  allow_major_version_upgrade = terraform.workspace == "production02" ? false : true
+  allow_major_version_upgrade = true
 
   tags = merge(
     local.default_tags,
