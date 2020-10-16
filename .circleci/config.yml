@@ -17,13 +17,6 @@ workflows:
           filters: { branches: { ignore: [ main ] } }
           tf_command: apply
 
-      - run-task:
-          name: reset environment
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ main ] } }
-          task_name: reset_database
-          timeout: 180
-
       - client-unit-test:
           name: client unit test
           requires: [ apply environment ]
@@ -41,7 +34,7 @@ workflows:
       - approve:
           name: approval for further testing
           type: approval
-          requires: [ reset environment ]
+          requires: [ api unit test, client unit test, apply environment ]
           filters: { branches: { ignore: [ master ] } }
 
       - run-task:
