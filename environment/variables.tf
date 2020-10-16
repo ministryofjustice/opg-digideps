@@ -37,6 +37,8 @@ variable "accounts" {
       psql_engine_version     = string
       alarms_active           = bool
       dr_backup               = bool
+      ecs_scale_min           = number
+      ecs_scale_max           = number
     })
   )
 }
