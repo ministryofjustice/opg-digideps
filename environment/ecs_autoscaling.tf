@@ -8,16 +8,6 @@ module "front_ecs_autoscaling" {
   ecs_task_autoscaling_maximum     = local.account.ecs_scale_max
 }
 
-module "admin_ecs_autoscaling" {
-  source                           = "./ecs_autoscaling"
-  environment                      = local.environment
-  aws_ecs_cluster_name             = aws_ecs_cluster.main.name
-  aws_ecs_service_name             = aws_ecs_service.admin.name
-  ecs_autoscaling_service_role_arn = data.aws_iam_role.ecs_autoscaling_service_role.arn
-  ecs_task_autoscaling_minimum     = local.account.ecs_scale_min
-  ecs_task_autoscaling_maximum     = local.account.ecs_scale_max
-}
-
 module "api_ecs_autoscaling" {
   source                           = "./ecs_autoscaling"
   environment                      = local.environment
