@@ -85,6 +85,9 @@ class OrgDeputyshipUploader
         return $uploadResults;
     }
 
+    /**
+     * @param OrgDeputyshipDto $dto
+     */
     private function handleNamedDeputy(OrgDeputyshipDto $dto)
     {
         if (empty($dto->getDeputyEmail())) {
@@ -118,6 +121,9 @@ class OrgDeputyshipUploader
         $this->namedDeputy = $namedDeputy;
     }
 
+    /**
+     * @param OrgDeputyshipDto $dto
+     */
     private function handleOrganisation(OrgDeputyshipDto $dto)
     {
         $orgDomainIdentifier = explode('@', $dto->getDeputyEmail())[1];
@@ -134,6 +140,9 @@ class OrgDeputyshipUploader
         }
     }
 
+    /**
+     * @param OrgDeputyshipDto $dto
+     */
     private function handleClient(OrgDeputyshipDto $dto)
     {
         /** @var Client $client */
