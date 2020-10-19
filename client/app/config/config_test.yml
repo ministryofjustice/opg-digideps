@@ -7,3 +7,8 @@ framework:
 services:
     Alphagov\Notifications\Client:
         alias: AppBundle\Service\Mailer\NotifyClientMock
+
+    AppBundle\Service\Mailer\MailSender:
+        arguments:
+            $logger: '@logger'
+            $notifyClient: 'AppBundle\Service\Mailer\NotifyClientMock'
