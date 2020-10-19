@@ -281,8 +281,8 @@ resource "aws_cloudwatch_metric_alarm" "frontend_alb_average_response_time" {
   alarm_description         = "Response Time for Frontend ALB in ${local.environment}"
   alarm_name                = "FrontendALBAverageResponseTime.${local.environment}"
   comparison_operator       = "GreaterThanUpperThreshold"
-  datapoints_to_alarm       = 5
-  evaluation_periods        = 5
+  datapoints_to_alarm       = 3
+  evaluation_periods        = 60
   insufficient_data_actions = []
   treat_missing_data        = "notBreaching"
   threshold_metric_id       = "ad1"
@@ -304,7 +304,7 @@ resource "aws_cloudwatch_metric_alarm" "frontend_alb_average_response_time" {
   }
 
   metric_query {
-    expression  = "ANOMALY_DETECTION_BAND(m1, 2)"
+    expression  = "ANOMALY_DETECTION_BAND(m1, 6)"
     id          = "ad1"
     label       = "TargetResponseTime (expected)"
     return_data = true
@@ -317,8 +317,8 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
   alarm_description         = "Response Time for Admin ALB in ${local.environment}"
   alarm_name                = "AdminALBAverageResponseTime.${local.environment}"
   comparison_operator       = "GreaterThanUpperThreshold"
-  datapoints_to_alarm       = 5
-  evaluation_periods        = 5
+  datapoints_to_alarm       = 3
+  evaluation_periods        = 60
   insufficient_data_actions = []
   treat_missing_data        = "notBreaching"
   threshold_metric_id       = "ad1"
@@ -340,7 +340,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
   }
 
   metric_query {
-    expression  = "ANOMALY_DETECTION_BAND(m1, 2)"
+    expression  = "ANOMALY_DETECTION_BAND(m1, 6)"
     id          = "ad1"
     label       = "TargetResponseTime (expected)"
     return_data = true
