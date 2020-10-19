@@ -33,6 +33,14 @@ resource "aws_s3_bucket" "pa_uploads" {
     }
   }
 
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "aws:kms"
+      }
+    }
+  }
+
   replication_configuration {
     role = aws_iam_role.replication.arn
 
