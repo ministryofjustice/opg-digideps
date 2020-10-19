@@ -11,7 +11,7 @@ module "api_aurora" {
   cluster_identifier     = "api"
   db_subnet_group_name   = local.account.db_subnet_group
   deletion_protection    = local.account.deletion_protection ? true : false
-  database_name          = "opgcoreapi"
+  database_name          = "api"
   master_username        = "digidepsmaster"
   master_password        = data.aws_secretsmanager_secret_version.database_password.secret_string
   instance_count         = local.account.aurora_instance_count
@@ -90,3 +90,5 @@ resource "aws_route53_record" "api_postgres" {
   records = [local.db.endpoint]
   ttl     = 300
 }
+
+data "aws_caller_identity" "current" {}

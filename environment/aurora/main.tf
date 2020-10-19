@@ -1,5 +1,5 @@
 resource "aws_rds_cluster" "cluster" {
-  count                           = 0
+  count                           = var.aurora_serverless ? 0 : 1
   apply_immediately               = var.apply_immediately
   availability_zones              = var.availability_zones
   backup_retention_period         = var.backup_retention_period
@@ -27,7 +27,7 @@ resource "aws_rds_cluster" "cluster" {
 }
 
 resource "aws_rds_cluster_instance" "cluster_instances" {
-  count                           = 0
+  count                           = var.aurora_serverless ? 0 : var.instance_count
   auto_minor_version_upgrade      = var.auto_minor_version_upgrade
   db_subnet_group_name            = var.db_subnet_group_name
   depends_on                      = [aws_rds_cluster.cluster]
