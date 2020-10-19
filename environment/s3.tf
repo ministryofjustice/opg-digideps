@@ -1,3 +1,5 @@
+//Add encryption on next commit
+
 locals {
   non-replication_workspaces = ["production02", "preproduction", "training", "integration", "development"]
   bucket_replication_status  = contains(local.non-replication_workspaces, local.environment) ? "Disabled" : "Enabled"
