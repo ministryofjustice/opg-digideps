@@ -32,11 +32,11 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
     {
         $this->restClient->post('user', Argument::any(), ['admin_add_user'], 'User')->shouldBeCalled()->willReturn(new User());
 
-        $this->injectProphecyService(MailFactory::class, function($mailFactory) {
+        $this->injectProphecyService(MailFactory::class, function ($mailFactory) {
             $mailFactory->createActivationEmail(new User())->shouldBeCalled()->willReturn(new Email());
         });
 
-        $this->injectProphecyService(MailSender::class, function($mailSender) {
+        $this->injectProphecyService(MailSender::class, function ($mailSender) {
             $mailSender->send(new Email())->shouldBeCalled()->willReturn(true);
         });
 
@@ -104,96 +104,6 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
     /**
      * @test
      */
-    public function editUserAction_user_email_changed_audit_log_created(): void
-    {
-        $userDeputyJustRole = (new User())
-            ->setId(5)
-            ->setRoleName('ROLE_LAY_DEPUTY');
-
-        $userDeputyAllDetails = (clone $userDeputyJustRole)
-            ->setFirstname('Panda')
-            ->setLastname('Bear')
-            ->setEmail('p.bear@email.com')
-            ->setAddressPostcode('B31 2AB');
-
-        $userDeputyUpdated = (clone $userDeputyAllDetails)
-            ->setEmail('panda.bear@email.com');
-
-        $this->restClient->get(sprintf('user/%s', $userDeputyJustRole->getId()), Argument::cetera())->shouldBeCalled()->willReturn($userDeputyJustRole);
-        $this->restClient->get(sprintf('user/%s', $userDeputyAllDetails->getId()), Argument::cetera())->shouldBeCalled()->willReturn($userDeputyAllDetails);
-        $this->restClient->put(sprintf('user/%s', $userDeputyUpdated->getId()), Argument::cetera())->shouldBeCalled()->willReturn($userDeputyUpdated);
-
-        $this->injectProphecyService(DateTimeProvider::class, function($dateTimeProvider) {
-            $dateTimeProvider->getDateTime()->willReturn($this->now);
-        });
-
-        $this->injectProphecyService(Logger::class, function($logger) use($userDeputyUpdated) {
-            $expectedEvent = [
-                'trigger' => 'ADMIN_USER_EDIT',
-                'email_changed_from' => 'p.bear@email.com',
-                'email_changed_to' => 'panda.bear@email.com',
-                'changed_on' => $this->now->format(DateTime::ATOM),
-                'changed_by' => 'logged-in-user@email.com',
-                'subject_full_name' => $userDeputyUpdated->getFullName(),
-                'subject_role' => 'ROLE_LAY_DEPUTY',
-                'event' => 'USER_EMAIL_CHANGED',
-                'type' => 'audit'
-            ];
-
-            $logger->notice('', $expectedEvent)->shouldBeCalled();
-        });
-
-        $crawler = $this->client->request('GET', sprintf("/admin/edit-user?filter=%s", $userDeputyJustRole->getId()));
-        $button = $crawler->selectButton('Update user');
-
-        $this->client->submit($button->form(), [
-            'admin[firstname]' => 'Panda',
-            'admin[lastname]' => 'Bear',
-            'admin[email]' => 'panda.bear@email.com',
-            'admin[addressPostcode]' => 'B31 2AB'
-        ]);
-    }
-
-    /**
-     * @test
-     */
-    public function editUserAction_not_logged_when_email_remains_the_same(): void
-    {
-        $userDeputyJustRole = (new User())
-            ->setId(5)
-            ->setRoleName('ROLE_LAY_DEPUTY');
-
-        $userDeputyAllDetails = (clone $userDeputyJustRole)
-            ->setFirstname('Panda')
-            ->setLastname('Bear')
-            ->setEmail('p.bear@email.com')
-            ->setAddressPostcode('B31 2AB');
-
-        $userDeputyUpdated = (clone $userDeputyAllDetails)
-            ->setEmail('panda.bear@email.com');
-
-        $this->restClient->get(sprintf('user/%s', $userDeputyJustRole->getId()), Argument::cetera())->shouldBeCalled()->willReturn($userDeputyJustRole);
-        $this->restClient->get(sprintf('user/%s', $userDeputyAllDetails->getId()), Argument::cetera())->shouldBeCalled()->willReturn($userDeputyAllDetails);
-        $this->restClient->put(sprintf('user/%s', $userDeputyUpdated->getId()), Argument::cetera())->shouldBeCalled()->willReturn($userDeputyUpdated);
-
-        $this->injectProphecyService(Logger::class, function($logger) use($userDeputyUpdated) {
-            $logger->notice(Argument::cetera())->shouldNotBeCalled();
-        });
-
-        $crawler = $this->client->request('GET', sprintf("/admin/edit-user?filter=%s", $userDeputyJustRole->getId()));
-        $button = $crawler->selectButton('Update user');
-
-        $this->client->submit($button->form(), [
-            'admin[firstname]' => 'Panda',
-            'admin[lastname]' => 'Bear',
-            'admin[email]' => 'p.bear@email.com',
-            'admin[addressPostcode]' => 'B31 2AB'
-        ]);
-    }
-
-    /**
-     * @test
-     */
     public function deleteAction_audit_log_created(): void
     {
         $deputy = (new User())
@@ -206,7 +116,7 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
         $this->restClient->get(sprintf('user/%s', $deputy->getId()), Argument::cetera())->shouldBeCalled()->willReturn($deputy);
         $this->restClient->delete(sprintf('user/%s', $deputy->getId()))->shouldBeCalled();
 
-        $this->injectProphecyService(Logger::class, function($logger) use($deputy) {
+        $this->injectProphecyService(Logger::class, function ($logger) use ($deputy) {
             $expectedEvent = [
                 'trigger' => 'ADMIN_BUTTON',
                 'deleted_on' => $this->now->format(DateTime::ATOM),
@@ -242,7 +152,7 @@ class AdminIndexControllerTest extends AbstractControllerTestCase
         $this->restClient->get(sprintf('user/%s', $deputy->getId()), Argument::cetera())->shouldBeCalled()->willReturn($deputy);
         $this->restClient->delete(sprintf('user/%s', $deputy->getId()))->shouldBeCalled()->willThrow(new Exception('Something went wrong'));
 
-        $this->injectProphecyService(Logger::class, function($logger) {
+        $this->injectProphecyService(Logger::class, function ($logger) {
             $logger->notice(Argument::cetera())->shouldNotBeCalled();
             $logger->warning('Error while deleting deputy: Something went wrong', ['deputy_email' => 'r.murphy@email.com'])->shouldBeCalled();
         });

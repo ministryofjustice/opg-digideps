@@ -4,3 +4,17 @@ imports:
 jms_serializer:
     metadata:
         debug: true
+
+monolog:
+    handlers:
+        main:
+            type: stream
+            path: php://stderr
+            level: warning
+            formatter: line_formatter
+            channels: [ "!translation" ]
+            bubble: false
+        audit:
+            # writes audit logs to stderr for dev verification purposes
+            type: service
+            id: AppBundle\Service\Audit\LocalAuditLogHandler
