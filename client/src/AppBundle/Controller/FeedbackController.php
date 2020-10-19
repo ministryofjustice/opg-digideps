@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Controller;
 
@@ -14,7 +14,7 @@ class FeedbackController extends AbstractController
      * @Route("/feedback", name="feedback")
      * @Template("AppBundle:Feedback:index.html.twig")
      */
-    public function indexAction(Request $request)
+    public function create(Request $request)
     {
         $form = $this->createForm(FeedbackType::class);
 
