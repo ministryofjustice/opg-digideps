@@ -407,7 +407,7 @@ jobs:
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
-    resource_class: small
+    resource_class: large
     environment:
       AWS_REGION: eu-west-1
       AWS_CONFIG_FILE: ~/project/aws_config
