@@ -3,6 +3,7 @@
 namespace AppBundle\EventListener;
 
 use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\Client\RestClientInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
@@ -27,7 +28,7 @@ class LogoutListener implements LogoutSuccessHandlerInterface
      */
     private $restClient;
 
-    public function __construct(TokenStorageInterface $tokenStorage, RestClient $restClient, RouterInterface $router)
+    public function __construct(TokenStorageInterface $tokenStorage, RestClientInterface $restClient, RouterInterface $router)
     {
         $this->tokenStorage = $tokenStorage;
         $this->restClient = $restClient;

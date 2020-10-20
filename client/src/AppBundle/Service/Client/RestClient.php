@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  * Connects to RESTful Server (API)
  * Perform login and logout exchanging and persist token into the given storage.
  */
-class RestClient
+class RestClient implements RestClientInterface
 {
     const HTTP_CODE_AUTHTOKEN_EXPIRED = 419;
 
@@ -295,7 +295,6 @@ class RestClient
      */
     public function apiCall($method, $endpoint, $data, $expectedResponseType, $options = [], $authenticated = true)
     {
-
         if ($data) {
             $options['body'] = $this->toJson($data, $options);
         }

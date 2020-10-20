@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\User;
 use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\Client\RestClientInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -22,7 +23,7 @@ class DeputyProvider implements UserProviderInterface
      */
     private $logger;
 
-    public function __construct(RestClient $restClient, LoggerInterface $logger)
+    public function __construct(RestClientInterface $restClient, LoggerInterface $logger)
     {
         $this->restClient = $restClient;
         $this->logger = $logger;
@@ -41,7 +42,7 @@ class DeputyProvider implements UserProviderInterface
             $user = $this->restClient->login($credentials);
 
             // set logged user ID to the restClient (for future requests in this lifespan. e.g. set password on user activation)
-          $this->restClient->setLoggedUserId($user->getId());
+            $this->restClient->setLoggedUserId($user->getId());
 
             return $user;
         } catch (\Throwable $e) {

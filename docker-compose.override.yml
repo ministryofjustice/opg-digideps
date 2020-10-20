@@ -22,6 +22,7 @@ services:
       - ./client/app/config/security.yml:/var/www/app/config/security.yml
       - ./client/app/config/config.yml:/var/www/app/config/config.yml
       - ./client/app/config/config_dev.yml:/var/www/app/config/config_dev.yml
+      - ./client/app/config/config_test.yml:/var/www/app/config/config_test.yml
       - ./client/app/config/services.yml:/var/www/app/config/services.yml
       - ./client/app/config/services:/var/www/app/config/services
       - ./client/src:/var/www/src
@@ -43,6 +44,7 @@ services:
       - ./client/app/config/security.yml:/var/www/app/config/security.yml
       - ./client/app/config/config.yml:/var/www/app/config/config.yml
       - ./client/app/config/config_dev.yml:/var/www/app/config/config_dev.yml
+      - ./client/app/config/config_test.yml:/var/www/app/config/config_test.yml
       - ./client/app/config/services.yml:/var/www/app/config/services.yml
       - ./client/app/config/services:/var/www/app/config/services
       - ./client/src:/var/www/src

@@ -34,8 +34,7 @@ class NotifyClientMock extends Client
             throw new NotifyException('Intentional mock exception');
         } else {
             try {
-                parent::sendEmail($emailAddress, $templateId, $personalisation, $reference, $emailReplyToId);
-                $this->sentMails[] = $templateId;
+                $this->sentMails[$templateId] = $personalisation;
             } catch (Throwable $e) {
                 $this->logger->warning('Mocked email, but received Notify error: ' . $e->getMessage());
             }

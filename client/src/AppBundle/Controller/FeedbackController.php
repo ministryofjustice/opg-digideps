@@ -3,6 +3,9 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Form\FeedbackType;
+use AppBundle\Service\Client\Internal\SatisfactionApi;
+use AppBundle\Service\Mailer\MailFactory;
+use AppBundle\Service\Mailer\MailSender;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
@@ -10,6 +13,26 @@ use Symfony\Component\HttpFoundation\Request;
 
 class FeedbackController extends AbstractController
 {
+    /**
+     * @var SatisfactionApi
+     */
+    private $satisfactionApi;
+    /**
+     * @var MailSender
+     */
+    private $mailSender;
+    /**
+     * @var MailFactory
+     */
+    private $mailFactory;
+
+    public function __construct(SatisfactionApi $satisfactionApi, MailSender $mailSender, MailFactory $mailFactory)
+    {
+        $this->satisfactionApi = $satisfactionApi;
+        $this->mailSender = $mailSender;
+        $this->mailFactory = $mailFactory;
+    }
+
     /**
      * @Route("/feedback", name="feedback")
      * @Template("AppBundle:Feedback:index.html.twig")
@@ -21,21 +44,12 @@ class FeedbackController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Store in database
-            $score = $form->get('satisfactionLevel')->getData();
-            $comments = $form->get('comments')->getData();
+            if ($form->get('satisfactionLevel')->getData()) {
+                $this->satisfactionApi->create($form->getData());
 
-            // Replace with SatisfactionApi
-            if ($score) {
-                $this->getRestClient()->post('satisfaction/public', [
-                    'score' => $score,
-                    'comments' => $comments,
-                ]);
+                $feedbackEmail = $this->mailFactory->createGeneralFeedbackEmail($form->getData());
+                $this->mailSender->send($feedbackEmail);
             }
-
-            // Send notification email
-            $feedbackEmail = $this->getMailFactory()->createGeneralFeedbackEmail($form->getData());
-            $this->getMailSender()->send($feedbackEmail);
 
             $confirmation = $this->get('translator')->trans('collectionPage.confirmation', [], 'feedback');
             $request->getSession()->getFlashBag()->add('notice', $confirmation);
