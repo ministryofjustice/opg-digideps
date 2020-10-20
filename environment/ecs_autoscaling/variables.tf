@@ -14,7 +14,7 @@ variable "ecs_autoscaling_service_role_arn" {
 }
 
 variable "environment" {
-  description = "Name of the environment instance of the online LPA service."
+  description = "Name of the environment instance of the online Digideps service."
   type        = string
 }
 

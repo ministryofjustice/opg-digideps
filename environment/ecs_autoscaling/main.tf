@@ -56,6 +56,6 @@ resource "aws_cloudwatch_metric_alarm" "max_scaling_reached" {
   insufficient_data_actions = []
   dimensions = {
     ServiceName = var.aws_ecs_service_name
-    ClusterName = "${var.environment}-online-lpa"
+    ClusterName = var.aws_ecs_cluster_name
   }
 }
