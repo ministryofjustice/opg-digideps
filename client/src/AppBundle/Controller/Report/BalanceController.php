@@ -4,6 +4,9 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Client\Internal\ReportApi;
+use AppBundle\Service\Client\RestClient;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,23 +34,38 @@ class BalanceController extends AbstractController
         'balance-state',
     ];
 
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ReportApi */
+    private $reportApi;
+
+    public function __construct(
+        RestClient $restClient,
+        ReportApi $reportApi
+    )
+    {
+        $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
+    }
+
     /**
      * @Route("/report/{reportId}/balance", name="balance")
      *
-     * @param int $reportId
+     * @param $reportId
      * @Template("AppBundle:Report/Balance:balance.html.twig")
      *
-     * @return array
+     * @return array|RedirectResponse
      */
     public function balanceAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Report\ReasonForBalanceType::class, $report);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $this->getRestClient()->put('report/' . $reportId, $data, ['balance_mismatch_explanation']);
+            $this->restClient->put('report/' . $reportId, $data, ['balance_mismatch_explanation']);
 
 //            $request->getSession()->getFlashBag()->add(
 //                'notice',

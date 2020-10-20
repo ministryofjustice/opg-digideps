@@ -8,11 +8,14 @@ use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\User;
 use AppBundle\Form as FormDir;
 use AppBundle\Security\DocumentVoter;
+use AppBundle\Service\Client\Internal\ClientApi;
+use AppBundle\Service\Client\Internal\ReportApi;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\DocumentService;
 use AppBundle\Service\File\S3FileUploader;
 use AppBundle\Service\File\Verifier\MultiFileFormUploadVerifier;
+use AppBundle\Service\StepRedirector;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
@@ -34,18 +37,45 @@ class DocumentController extends AbstractController
     /** @var S3FileUploader */
     private $fileUploader;
 
-    public function __construct(S3FileUploader $fileUploader)
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ReportApi */
+    private $reportApi;
+
+    /** @var ClientApi */
+    private $clientApi;
+
+    /** @var StepRedirector */
+    private $stepRedirector;
+
+    public function __construct(
+        RestClient $restClient,
+        ReportApi $reportApi,
+        S3FileUploader $fileUploader,
+        ClientApi $clientApi,
+        StepRedirector $stepRedirector
+    )
     {
+        $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
         $this->fileUploader = $fileUploader;
+        $this->clientApi = $clientApi;
+        $this->stepRedirector = $stepRedirector;
     }
 
     /**
      * @Route("/report/{reportId}/documents", name="documents")
      * @Template("AppBundle:Report/Document:start.html.twig")
+     *
+     * @param Request $request
+     * @param $reportId
+     *
+     * @return array|RedirectResponse
      */
     public function startAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if ($report->getStatus()->getDocumentsState()['state'] !== EntityDir\Report\Status::STATE_NOT_STARTED) {
             $referer = $request->headers->get('referer');
@@ -66,17 +96,22 @@ class DocumentController extends AbstractController
      * @Route("/report/{reportId}/documents/step", name="documents_stepzero")
      * @Route("/report/{reportId}/documents/step/1", name="documents_step")
      * @Template("AppBundle:Report/Document:step1.html.twig")
+     *
+     * @param Request $request
+     * @param $reportId
+     *
+     * @return array|RedirectResponse
      */
     public function step1Action(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $step = 1;
         $totalSteps = 3;
 
         $fromPage = $request->get('from');
 
-        $stepRedirector = $this->stepRedirector()
+        $stepRedirector = $this->stepRedirector
             ->setRoutes('documents', 'report_documents', 'report_documents_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)
@@ -101,7 +136,7 @@ class DocumentController extends AbstractController
 
                     $this->addFlash('error', $translatedMessage);
                 } else {
-                    $this->getRestClient()->put('report/' . $reportId, $data, ['report','wish-to-provide-documentation']);
+                    $this->restClient->put('report/' . $reportId, $data, ['report','wish-to-provide-documentation']);
                 }
             }
 
@@ -122,10 +157,19 @@ class DocumentController extends AbstractController
     /**
      * @Route("/report/{reportId}/documents/step/2", name="report_documents", defaults={"what"="new"})
      * @Template("AppBundle:Report/Document:step2.html.twig")
+     *
+     * @param Request $request
+     * @param MultiFileFormUploadVerifier $multiFileVerifier
+     * @param $reportId
+     * @param LoggerInterface $logger
+     *
+     * @return array|RedirectResponse
+     * @throws \Exception
      */
-    public function step2Action(Request $request, MultiFileFormUploadVerifier $multiFileVerifier, $reportId, LoggerInterface $logger)
+    public function step2Action(Request $request, MultiFileFormUploadVerifier $multiFileVerifier, $reportId,
+                                LoggerInterface $logger)
     {
-        $report = $this->getReport($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
         list($nextLink, $backLink) = $this->buildNavigationLinks($report);
 
         $formAction = $this->generateUrl('report_documents', ['reportId'=>$reportId]);
@@ -186,7 +230,7 @@ class DocumentController extends AbstractController
             $user = $this->getUser();
 
             if ($user->isDeputyOrg()) {
-                $backLink = $this->generateClientProfileLink($report->getClient());
+                $backLink = $this->clientApi->generateClientProfileLink($report->getClient());
             } else {
                 $backLink = $this->generateUrl('homepage');
             }
@@ -198,10 +242,15 @@ class DocumentController extends AbstractController
     /**
      * @Route("/report/{reportId}/documents/summary", name="report_documents_summary")
      * @Template("AppBundle:Report/Document:summary.html.twig")
+     *
+     * @param Request $request
+     * @param $reportId
+     *
+     * @return array|RedirectResponse
      */
     public function summaryAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDocumentsState()['state']) {
             return $this->redirectToRoute('documents', ['reportId' => $report->getId()]);
         }
@@ -221,6 +270,11 @@ class DocumentController extends AbstractController
      *
      * @Route("/documents/{documentId}/delete", name="delete_document")
      * @Template("AppBundle:Common:confirmDelete.html.twig")
+     *
+     * @param Request $request
+     * @param $documentId
+     *
+     * @return array|RedirectResponse|Response
      */
     public function deleteConfirmAction(Request $request, $documentId)
     {
@@ -260,6 +314,9 @@ class DocumentController extends AbstractController
 
     /**
      * Removes a document, adds a flash message and redirects to page
+     *
+     * @param Request $request
+     * @param $documentId
      *
      * @return RedirectResponse
      */
@@ -312,10 +369,15 @@ class DocumentController extends AbstractController
      *
      * @Route("/report/{reportId}/documents/submit-more", name="report_documents_submit_more")
      * @Template("AppBundle:Report/Document:submitMoreDocumentsConfirm.html.twig")
+     *
+     * @param Request $request
+     * @param $reportId
+     *
+     * @return array
      */
     public function submitMoreConfirmAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
 
         $fromPage = $request->get('from');
 
@@ -335,13 +397,19 @@ class DocumentController extends AbstractController
      *
      * @Route("/report/{reportId}/documents/confirm-submit-more", name="report_documents_submit_more_confirmed")
      * @Template("AppBundle:Report/Document:submitMoreDocumentsConfirmed.html.twig")
+     *
+     * @param Request $request
+     * @param $reportId
+     *
+     * @return RedirectResponse
+     * @throws \Exception
      */
     public function submitMoreConfirmedAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
 
         // submit the report to generate the submission entry only
-        $this->getRestClient()->put('report/' . $report->getId() . '/submit-documents', $report, ['submit']);
+        $this->restClient->put('report/' . $report->getId() . '/submit-documents', $report, ['submit']);
 
         $this->addFlash('notice', 'The documents attached for your ' . $report->getPeriod() . ' report have been sent to OPG');
 
@@ -349,7 +417,7 @@ class DocumentController extends AbstractController
         $user = $this->getUser();
 
         if ($user->isDeputyOrg()) {
-            return $this->redirect($this->generateClientProfileLink($report->getClient()));
+            return $this->redirect($this->clientApi->generateClientProfileLink($report->getClient()));
         } else {
             return $this->redirectToRoute('homepage');
         }
@@ -363,7 +431,7 @@ class DocumentController extends AbstractController
      */
     private function getDocument(string $documentId)
     {
-        return $this->getRestClient()->get(
+        return $this->restClient->get(
             'document/' . $documentId,
             'Report\Document',
             ['documents', 'status', 'document-storage-reference', 'document-report-submission', 'document-report', 'report', 'report-client', 'client', 'client-users', 'user-id', 'client-organisations']

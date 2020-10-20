@@ -7,6 +7,7 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\NamedDeputy;
 use AppBundle\Entity\User;
 use AppBundle\Service\Audit\AuditEvents;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Logger;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -17,6 +18,16 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  */
 class ClientController extends AbstractController
 {
+    /** @var RestClient */
+    private $restClient;
+
+    public function __construct(
+        RestClient $restClient
+    )
+    {
+        $this->restClient = $restClient;
+    }
+
     /**
      * @Route("/{id}/details", name="admin_client_details", requirements={"id":"\d+"})
      * //TODO define Security group (AD to remove?)
@@ -29,7 +40,7 @@ class ClientController extends AbstractController
      */
     public function detailsAction($id)
     {
-        $client = $this->getRestClient()->get('v2/client/' . $id, 'Client');
+        $client = $this->restClient->get('v2/client/' . $id, 'Client');
 
         return [
             'client'      => $client,
@@ -46,7 +57,7 @@ class ClientController extends AbstractController
      */
     public function detailsByCaseNumberAction($caseNumber)
     {
-        $client = $this->getRestClient()->get('v2/client/case-number/' . $caseNumber, 'Client');
+        $client = $this->restClient->get('v2/client/case-number/' . $caseNumber, 'Client');
 
         return $this->redirectToRoute('admin_client_details', ['id' => $client->getId()]);
     }
@@ -62,7 +73,7 @@ class ClientController extends AbstractController
      */
     public function dischargeAction($id)
     {
-        $client = $this->getRestClient()->get('v2/client/' . $id, 'Client');
+        $client = $this->restClient->get('v2/client/' . $id, 'Client');
 
         return [
             'client' => $client,
@@ -73,18 +84,21 @@ class ClientController extends AbstractController
     /**
      * @Route("/{id}/discharge-confirm", name="admin_client_discharge_confirm", requirements={"id":"\d+"})
      * @Security("has_role('ROLE_SUPER_ADMIN')")
+     *
      * @param $id
      * @param Logger $logger
      * @param AuditEvents $auditEvents
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Exception
      */
     public function dischargeConfirmAction($id, Logger $logger, AuditEvents $auditEvents)
     {
         /** @var Client $client */
-        $client = $this->getRestClient()->get('v2/client/' . $id, 'Client');
+        $client = $this->restClient->get('v2/client/' . $id, 'Client');
         $deputy = $this->getNamedDeputy($client->getId(), $client);
 
-        $this->getRestClient()->delete('client/' . $id . '/delete');
+        $this->restClient->delete('client/' . $id . '/delete');
 
         $logger->notice('', $auditEvents->clientDischarged(
             AuditEvents::TRIGGER_ADMIN_BUTTON,
@@ -112,7 +126,7 @@ class ClientController extends AbstractController
             return null;
         }
 
-        $clientWithUsers = $this->getRestClient()->get('client/' . $id . '/details', 'Client');
+        $clientWithUsers = $this->restClient->get('client/' . $id . '/details', 'Client');
 
         foreach ($clientWithUsers->getUsers() as $user) {
             if ($user->isLayDeputy()) {

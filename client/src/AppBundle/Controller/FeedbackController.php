@@ -8,38 +8,57 @@ use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\FormError;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RouterInterface;
 
 class FeedbackController extends AbstractController
 {
-    /**
-     * @var SatisfactionApi
-     */
+    /** @var SatisfactionApi */
     private $satisfactionApi;
-    /**
-     * @var MailSender
-     */
+
+    /** @var MailSender */
     private $mailSender;
-    /**
-     * @var MailFactory
-     */
+
+    /** @var MailFactory */
     private $mailFactory;
 
-    public function __construct(SatisfactionApi $satisfactionApi, MailSender $mailSender, MailFactory $mailFactory)
-    {
-        $this->satisfactionApi = $satisfactionApi;
-        $this->mailSender = $mailSender;
+    /** @var RouterInterface */
+    private $router;
+
+    /** @var TranslatorInterface */
+    private $translator;
+
+    /** @var FormFactoryInterface  */
+    private $form;
+
+    public function __construct(
+        SatisfactionApi $satisfactionApi,
+        MailFactory $mailFactory,
+        MailSender $mailSender,
+        RouterInterface $router,
+        TranslatorInterface $translator,
+        FormFactoryInterface $form
+    ) {
         $this->mailFactory = $mailFactory;
+        $this->mailSender = $mailSender;
+        $this->router = $router;
+        $this->translator = $translator;
+        $this->form = $form;
+        $this->satisfactionApi = $satisfactionApi;
     }
 
     /**
      * @Route("/feedback", name="feedback")
      * @Template("AppBundle:Feedback:index.html.twig")
+     * @param Request $request
+     * @return array|RedirectResponse
      */
     public function create(Request $request)
     {
-        $form = $this->createForm(FeedbackType::class);
+        $form = $this->form->create(FeedbackType::class);
 
         $form->handleRequest($request);
 
@@ -51,9 +70,10 @@ class FeedbackController extends AbstractController
                 $this->mailSender->send($feedbackEmail);
             }
 
-            $confirmation = $this->get('translator')->trans('collectionPage.confirmation', [], 'feedback');
+            $confirmation = $this->translator->trans('collectionPage.confirmation', [], 'feedback');
             $request->getSession()->getFlashBag()->add('notice', $confirmation);
-            return $this->redirectToRoute('feedback');
+
+            return new RedirectResponse($this->router->generate('feedback'));
         }
 
         return [

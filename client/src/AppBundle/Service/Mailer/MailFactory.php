@@ -89,7 +89,7 @@ class MailFactory
      *
      * @return string calculated route
      */
-    private function generateAbsoluteLink($area, $routeName, array $params = [])
+    private function generateAbsoluteLink(string $area, string $routeName, array $params = [])
     {
         switch ($area) {
             case self::AREA_DEPUTY:
