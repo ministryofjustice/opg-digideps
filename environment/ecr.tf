@@ -9,15 +9,17 @@ locals {
     sync         = "${data.aws_ecr_repository.images["sync"].repository_url}:${var.OPG_DOCKER_TAG}"
     test         = "${data.aws_ecr_repository.images["test"].repository_url}:${var.OPG_DOCKER_TAG}"
     wkhtmltopdf  = "${data.aws_ecr_repository.images["wkhtmltopdf"].repository_url}:${var.OPG_DOCKER_TAG}"
+    drbackup     = "${data.aws_ecr_repository.images["dr-backup"].repository_url}:${var.OPG_DOCKER_TAG}"
   }
 
   repositories = [
     "api",
     "client",
+    "dr-backup",
     "file-scanner",
     "sync",
     "test",
-    "wkhtmltopdf",
+    "wkhtmltopdf"
   ]
 }
 

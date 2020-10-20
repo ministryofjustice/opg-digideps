@@ -87,9 +87,9 @@ class IndexControllerTest extends AbstractControllerTestCase
         });
 
         $crawler = $this->client->request('GET', sprintf("/org/client/%s/edit", $client->getId()));
-        $button = $crawler->selectButton('Save client details');
+        $form = $crawler->selectButton('Save client details')->form();
 
-        $this->client->submit($button->form(), [
+        $this->client->submit($form, [
             'org_client_edit[firstname]' => 'Deakin',
             'org_client_edit[lastname]' => 'Dibb',
             'org_client_edit[dateOfBirth][day]' => '6',

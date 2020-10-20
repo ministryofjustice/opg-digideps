@@ -7,7 +7,11 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\Audit\AuditEvents;
+use AppBundle\Service\Client\Internal\UserApi;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Logger;
+use AppBundle\Service\Mailer\MailFactory;
+use AppBundle\Service\Mailer\MailSender;
 use AppBundle\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,10 +33,41 @@ class OrganisationController extends AbstractController
     /** @var Logger */
     private $logger;
 
-    public function __construct(DateTimeProvider $dateTimeProvider, Logger $logger)
+    /**
+     * @var UserApi
+     */
+    private $userApi;
+
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    /**
+     * @var MailFactory
+     */
+    private $mailFactory;
+
+    /**
+     * @var MailSender
+     */
+    private $mailSender;
+
+    public function __construct(
+        DateTimeProvider $dateTimeProvider,
+        Logger $logger,
+        UserApi $userApi,
+        RestClient $restClient,
+        MailFactory $mailFactory,
+        MailSender $mailSender
+    )
     {
         $this->dateTimeProvider = $dateTimeProvider;
         $this->logger = $logger;
+        $this->userApi = $userApi;
+        $this->restClient = $restClient;
+        $this->mailFactory = $mailFactory;
+        $this->mailSender = $mailSender;
     }
 
     /**
@@ -41,7 +76,7 @@ class OrganisationController extends AbstractController
      */
     public function listAction(Request $request)
     {
-        $user = $this->getUserWithData(['user-organisations', 'organisation']);
+        $user = $this->userApi->getUserWithData(['user-organisations', 'organisation']);
 
         if (count($user->getOrganisations()) === 0) {
             throw $this->createNotFoundException();
@@ -62,7 +97,7 @@ class OrganisationController extends AbstractController
     public function viewAction(Request $request, string $id)
     {
         try {
-            $organisation = $this->getRestClient()->get('v2/organisation/' . $id, 'Organisation');
+            $organisation = $this->restClient->get('v2/organisation/' . $id, 'Organisation');
         } catch (RestClientException $e) {
             throw $this->createNotFoundException('Organisation not found');
         }
@@ -81,7 +116,7 @@ class OrganisationController extends AbstractController
         $this->denyAccessUnlessGranted('add-user');
 
         try {
-            $organisation = $this->getRestClient()->get('v2/organisation/' . $id, 'Organisation');
+            $organisation = $this->restClient->get('v2/organisation/' . $id, 'Organisation');
         } catch (AccessDeniedException $e) {
             throw ($e);
         } catch (RestClientException $e) {
@@ -107,22 +142,23 @@ class OrganisationController extends AbstractController
 
             try {
                 $email = $form->getData()->getEmail();
-                $existingUser = $this->getRestClient()->get('user/get-team-names-by-email/' . $email, 'User');
+                $existingUser = $this->restClient->get('user/get-team-names-by-email/' . $email, 'User');
 
                 if ($existingUser->getId()) {
                     // existing users just get added to the organisation
-                    $this->getRestClient()->put('v2/organisation/' . $organisation->getId() . '/user/' . $existingUser->getId(), '');
+                    $this->restClient->put('v2/organisation/' . $organisation->getId() . '/user/' . $existingUser->getId(),
+                        '');
                 } else {
                     /** @var EntityDir\User $user */
                     $user = $form->getData();
 
                     /** @var EntityDir\User $user */
-                    $user = $this->getRestClient()->post('user', $user, ['org_team_add'], 'User');
+                    $user = $this->restClient->post('user', $user, ['org_team_add'], 'User');
 
-                    $invitationEmail = $this->getMailFactory()->createInvitationEmail($user);
-                    $this->getMailSender()->send($invitationEmail);
+                    $invitationEmail = $this->mailFactory->createInvitationEmail($user);
+                    $this->mailSender->send($invitationEmail);
 
-                    $this->getRestClient()->put('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId(), '');
+                    $this->restClient->put('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId(), '');
                 }
 
                 return $this->redirectToRoute('org_organisation_view', ['id' => $organisation->getId()]);
@@ -154,7 +190,7 @@ class OrganisationController extends AbstractController
     public function editAction(Request $request, int $orgId, int $userId)
     {
         try {
-            $organisation = $this->getRestClient()->get('v2/organisation/' . $orgId, 'Organisation');
+            $organisation = $this->restClient->get('v2/organisation/' . $orgId, 'Organisation');
             $userToEdit = $organisation->getUserById($userId);
         } catch (RestClientException $e) {
             throw $this->createNotFoundException('Organisation not found');
@@ -195,7 +231,7 @@ class OrganisationController extends AbstractController
             $newRole = $editedUser->getRoleName();
 
             try {
-                $this->getRestClient()->put('user/' . $editedUser->getId(), $editedUser, ['org_team_add']);
+                $this->restClient->put('user/' . $editedUser->getId(), $editedUser, ['org_team_add']);
 
                 $event = (new AuditEvents($this->dateTimeProvider))
                     ->roleChanged(
@@ -239,7 +275,7 @@ class OrganisationController extends AbstractController
     public function deleteConfirmAction(Request $request, int $orgId, int $userId)
     {
         try {
-            $organisation = $this->getRestClient()->get('v2/organisation/' . $orgId, 'Organisation');
+            $organisation = $this->restClient->get('v2/organisation/' . $orgId, 'Organisation');
             $user = $organisation->getUserById($userId);
         } catch (RestClientException $e) {
             throw $this->createNotFoundException('Organisation not found');
@@ -256,7 +292,7 @@ class OrganisationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->getRestClient()->delete('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId());
+                $this->restClient->delete('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId());
 
                 $this->addFlash('notice', 'User account removed from organisation');
             } catch (\Throwable $e) {
@@ -293,7 +329,7 @@ class OrganisationController extends AbstractController
     public function resendActivationEmailAction(Request $request, int $orgId, int $userId)
     {
         try {
-            $organisation = $this->getRestClient()->get('v2/organisation/' . $orgId, 'Organisation');
+            $organisation = $this->restClient->get('v2/organisation/' . $orgId, 'Organisation');
             $user = $organisation->getUserById($userId);
         } catch (RestClientException $e) {
             throw $this->createNotFoundException('Organisation not found');
@@ -301,10 +337,10 @@ class OrganisationController extends AbstractController
 
         try {
             /* @var $user EntityDir\User */
-            $user = $this->getRestClient()->userRecreateToken($user->getEmail(), 'pass-reset');
+            $user = $this->restClient->userRecreateToken($user->getEmail(), 'pass-reset');
 
-            $invitationEmail = $this->getMailFactory()->createInvitationEmail($user);
-            $this->getMailSender()->send($invitationEmail);
+            $invitationEmail = $this->mailFactory->createInvitationEmail($user);
+            $this->mailSender->send($invitationEmail);
 
             $this->addFlash(
                 'notice',

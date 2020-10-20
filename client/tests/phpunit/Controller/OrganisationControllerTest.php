@@ -48,17 +48,6 @@ class OrganisationControllerTest extends AbstractControllerTestCase
         $this->restClient->post('user', Argument::any(), ['org_team_add'], 'User')->shouldBeCalled()->willReturn($user);
         $this->restClient->put('v2/organisation/14/user/21', '')->shouldBeCalled()->willReturn($user);
 
-        $mailSender = $this->injectProphecyService(MailSender::class);
-        $mailSender
-            ->send(Argument::that(function ($email) use ($emailAddress) {
-                return $email instanceof Email
-                    && $email->getToEmail() === $emailAddress
-                    && $email->getTemplate() === MailFactory::INVITATION_ORG_TEMPLATE_ID
-                    && strpos($email->getParameters()['link'], "user/activate/invitation-token") !== false;
-            }))
-            ->shouldBeCalled()
-            ->willReturn(true);
-
         $crawler = $this->client->request('GET', "/org/settings/organisation/14/add-user");
         $button = $crawler->selectButton('Save');
 
@@ -89,10 +78,6 @@ class OrganisationControllerTest extends AbstractControllerTestCase
         $this->restClient->get('v2/organisation/14', 'Organisation')->shouldBeCalled()->willReturn($organisation);
         $this->restClient->get("user/get-team-names-by-email/existing@mailbox.example", 'User')->shouldBeCalled()->willReturn($user);
         $this->restClient->put('v2/organisation/14/user/21', '')->shouldBeCalled()->willReturn($user);
-
-        $this->injectProphecyService(MailSender::class, function($mailSender) {
-            $mailSender->send(Argument::cetera())->shouldNotBeCalled();
-        });
 
         $crawler = $this->client->request('GET', "/org/settings/organisation/14/add-user");
         $button = $crawler->selectButton('Save');
@@ -125,17 +110,6 @@ class OrganisationControllerTest extends AbstractControllerTestCase
 
         $this->restClient->get('v2/organisation/14', 'Organisation')->shouldBeCalled()->willReturn($organisation);
         $this->restClient->userRecreateToken($emailAddress, 'pass-reset')->shouldBeCalled()->willReturn($invitedUser);
-
-        $mailSender = $this->injectProphecyService(MailSender::class);
-        $mailSender
-            ->send(Argument::that(function ($email) use ($emailAddress) {
-                return $email instanceof Email
-                    && $email->getToEmail() === $emailAddress
-                    && $email->getTemplate() === MailFactory::INVITATION_ORG_TEMPLATE_ID
-                    && strpos($email->getParameters()['link'], "user/activate/invitation-token") !== false;
-            }))
-            ->shouldBeCalled()
-            ->willReturn(true);
 
         $this->client->request('GET', "/org/settings/organisation/14/send-activation-link/17");
         $this->client->followRedirect();

@@ -16,6 +16,8 @@ keys = [
     "/smtp",
     "/s3/bucketname",
     "/s3/localstack",
+    "/ssm/localstack",
+    "/cloudwatch/logs/localstack",
     "/filescanner/url",
     "/filescanner/sslverify",
     "/wkhtmltopdf/address"

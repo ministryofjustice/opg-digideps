@@ -45,8 +45,8 @@ locals {
       port        = 8080
       type        = "egress"
       protocol    = "tcp"
-      target_type = "cidr_block"
-      target      = "0.0.0.0/0"
+      target_type = "security_group_id"
+      target      = module.mock_sirius_integration_security_group.id
     }
   }
 }

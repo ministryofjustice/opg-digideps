@@ -18,8 +18,6 @@ resource "aws_db_instance" "api" {
   license_model               = "postgresql-license"
   maintenance_window          = "sun:01:00-sun:02:30"
   monitoring_interval         = "0"
-  option_group_name           = terraform.workspace == "production02" ? "default:postgres-9-6" : "default:postgres-10"
-  parameter_group_name        = terraform.workspace == "production02" ? "default.postgres9.6" : "default.postgres10"
   port                        = "5432"
   skip_final_snapshot         = false
   storage_encrypted           = true
@@ -31,7 +29,7 @@ resource "aws_db_instance" "api" {
   auto_minor_version_upgrade  = false
   final_snapshot_identifier   = "api-${local.environment}-final"
   vpc_security_group_ids      = [module.api_rds_security_group.id]
-  allow_major_version_upgrade = terraform.workspace == "production02" ? false : true
+  allow_major_version_upgrade = true
 
   tags = merge(
     local.default_tags,

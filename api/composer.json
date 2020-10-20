@@ -19,6 +19,7 @@
   "require": {
     "php": ">=7.3.5",
     "symfony/symfony": "^3.4",
+    "aws/aws-sdk-php": "^3.100.9",
     "doctrine/orm": "^2.6.3",
     "doctrine/doctrine-bundle": "^1.9.1",
     "symfony/monolog-bundle": "^3.0.0",
@@ -58,7 +59,8 @@
     ]
   },
   "config": {
-    "bin-dir": "bin"
+    "bin-dir": "bin",
+    "sort-packages": true
   },
   "minimum-stability": "stable",
   "extra": {

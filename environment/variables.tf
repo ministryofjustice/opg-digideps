@@ -35,6 +35,8 @@ variable "accounts" {
       memory_high             = number
       backup_retention_period = number
       psql_engine_version     = string
+      alarms_active           = bool
+      dr_backup               = bool
     })
   )
 }
@@ -56,9 +58,11 @@ locals {
 
   route53_healthchecker_ips = data.aws_ip_ranges.route53_healthchecks_ips.cidr_blocks
 
-  account     = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
-  environment = lower(terraform.workspace)
-  subdomain   = local.account["subdomain_enabled"] ? local.environment : ""
+  account                 = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
+  environment             = lower(terraform.workspace)
+  subdomain               = local.account["subdomain_enabled"] ? local.environment : ""
+  backup_account_id       = "238302996107"
+  cross_account_role_name = "cross-acc-db-backup.digideps-production"
 
   default_tags = {
     business-unit          = "OPG"

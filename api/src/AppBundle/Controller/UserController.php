@@ -7,10 +7,13 @@ use AppBundle\Entity\Repository\ClientRepository;
 use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
 use AppBundle\Security\UserVoter;
+use AppBundle\Service\Audit\AuditEvents;
+use AppBundle\Service\Time\DateTimeProvider;
 use AppBundle\Service\UserService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -63,8 +66,7 @@ class UserController extends RestController
         ClientRepository $clientRepository,
         UserVoter $userVoter,
         SecurityHelper $securityHelper
-    )
-    {
+    ) {
         $this->userService = $userService;
         $this->encoderFactory = $encoderFactory;
         $this->userRepository = $userRepository;
@@ -400,7 +402,7 @@ class UserController extends RestController
      */
     private function populateUser(User $user, array $data)
     {
-        // Cannot easily(*) use JSM deserialising with already constructed objects.
+        // Cannot easily(*) use JSM deserialising with already constructed objects.                                                                                                                                                             +
         // Also. It'd be possible to differentiate when a NULL value is intentional or not
         // (*) see options here https://github.com/schmittjoh/serializer/issues/79
         // http://jmsyst.com/libs/serializer/master/event_system

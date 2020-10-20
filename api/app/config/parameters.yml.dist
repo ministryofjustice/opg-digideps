@@ -143,3 +143,8 @@ parameters:
 
     log_level: warning
     log_path: /var/log/app/application.log
+
+    cloudwatch_logs_client_params:
+        version: 'latest'
+        region: 'eu-west-1'
+        validate: true
