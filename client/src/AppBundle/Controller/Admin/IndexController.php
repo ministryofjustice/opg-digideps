@@ -201,7 +201,7 @@ class IndexController extends AbstractController
             $updateUser = $form->getData();
 
             try {
-                $this->resetClient->put('user/' . $user->getId(), $updateUser, ['admin_edit_user']);
+                $this->restClient->put('user/' . $user->getId(), $updateUser, ['admin_edit_user']);
                 $this->addFlash('notice', 'Your changes were saved');
                 $this->redirectToRoute('admin_editUser', ['filter' => $user->getId()]);
             } catch (\Throwable $e) {
