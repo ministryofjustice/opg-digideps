@@ -23,3 +23,4 @@ variable "timeout_delete" { default = "90m" }
 variable "skip_final_snapshot" {}
 variable "storage_encrypted" { default = true }
 variable "vpc_security_group_ids" {}
+variable "replication_source_identifier" {}

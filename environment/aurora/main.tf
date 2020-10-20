@@ -16,12 +16,14 @@ resource "aws_rds_cluster" "cluster" {
   master_password                 = var.master_password
   preferred_backup_window         = "05:15-05:45"
   preferred_maintenance_window    = "mon:05:50-mon:06:20"
+  replication_source_identifier   = var.replication_source_identifier
   skip_final_snapshot             = var.skip_final_snapshot
   storage_encrypted               = var.storage_encrypted
   vpc_security_group_ids          = var.vpc_security_group_ids
   tags                            = var.tags
 
   lifecycle {
+    ignore_changes  = [replication_source_identifier]
     prevent_destroy = true
   }
 }

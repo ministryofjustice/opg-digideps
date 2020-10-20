@@ -2,24 +2,26 @@ data "aws_kms_key" "rds" {
   key_id = "alias/aws/rds"
 }
 
-
 module "api_aurora" {
-  source                 = "./aurora"
-  aurora_serverless      = local.account.aurora_serverless
-  account_id             = data.aws_caller_identity.current.account_id
-  apply_immediately      = local.account.deletion_protection ? false : true
-  cluster_identifier     = "api"
-  db_subnet_group_name   = local.account.db_subnet_group
-  deletion_protection    = local.account.deletion_protection ? true : false
-  database_name          = "api"
-  master_username        = "digidepsmaster"
-  master_password        = data.aws_secretsmanager_secret_version.database_password.secret_string
-  instance_count         = local.account.aurora_instance_count
-  instance_class         = local.account.name == "development" ? "db.t3.medium" : "db.r5.2xlarge"
-  kms_key_id             = data.aws_kms_key.rds.arn
-  skip_final_snapshot    = local.account.deletion_protection ? false : true
-  vpc_security_group_ids = [module.api_rds_security_group.id]
-  tags                   = local.default_tags
+  source                        = "./aurora"
+  count                         = terraform.workspace == "production02" ? 0 : 1
+  aurora_serverless             = local.account.aurora_serverless
+  account_id                    = data.aws_caller_identity.current.account_id
+  apply_immediately             = local.account.deletion_protection ? false : true
+  cluster_identifier            = "api"
+  db_subnet_group_name          = local.account.db_subnet_group
+  deletion_protection           = local.account.deletion_protection ? true : false
+  database_name                 = "api"
+  engine_version                = local.account.psql_engine_version
+  master_username               = "digidepsmaster"
+  master_password               = data.aws_secretsmanager_secret_version.database_password.secret_string
+  instance_count                = local.account.aurora_instance_count
+  instance_class                = local.account.name == "development" ? "db.t3.medium" : "db.r5.2xlarge"
+  kms_key_id                    = data.aws_kms_key.rds.arn
+  replication_source_identifier = local.account.always_on ? aws_db_instance.api[0].arn : ""
+  skip_final_snapshot           = local.account.deletion_protection ? false : true
+  vpc_security_group_ids        = [module.api_rds_security_group.id]
+  tags                          = local.default_tags
 }
 
 resource "aws_db_instance" "api" {
@@ -76,10 +78,10 @@ data "aws_iam_role" "enhanced_monitoring" {
 
 locals {
   db = {
-    endpoint = local.account.always_on ? aws_db_instance.api[0].address : module.api_aurora.endpoint
-    port     = local.account.always_on ? aws_db_instance.api[0].port : module.api_aurora.port
-    name     = local.account.always_on ? aws_db_instance.api[0].name : module.api_aurora.name
-    username = local.account.always_on ? aws_db_instance.api[0].username : module.api_aurora.master_username
+    endpoint = local.account.always_on ? aws_db_instance.api[0].address : module.api_aurora[0].endpoint
+    port     = local.account.always_on ? aws_db_instance.api[0].port : module.api_aurora[0].port
+    name     = local.account.always_on ? aws_db_instance.api[0].name : module.api_aurora[0].name
+    username = local.account.always_on ? aws_db_instance.api[0].username : module.api_aurora[0].master_username
   }
 }
 
