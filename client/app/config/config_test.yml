@@ -7,9 +7,6 @@ framework:
         handler_id: ~
         storage_id: session.storage.mock_file
 
-web_profiler:
-    toolbar: false
-
 services:
     AppBundle\Service\Client\RestClientMock:
         class: AppBundle\Service\Client\RestClientMock

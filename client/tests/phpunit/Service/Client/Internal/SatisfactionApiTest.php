@@ -34,9 +34,7 @@ class SatisfactionApiTest extends TestCase
     {
         $this->faker = Factory::create('en_UK');
         $this->restClient = self::prophesize(RestClient::class);
-        $this->mailFactory = self::prophesize(MailFactory::class);
-        $this->mailSender = self::prophesize(MailSender::class);
-        $this->sut = new SatisfactionApi($this->restClient->reveal(), $this->mailFactory->reveal(), $this->mailSender->reveal());
+        $this->sut = new SatisfactionApi($this->restClient->reveal());
     }
 
     /**
@@ -49,7 +47,7 @@ class SatisfactionApiTest extends TestCase
 
         $this->restClient->post(
             'satisfaction/public',
-            ['satisfactionLevel' => $score, 'comments' => $comments]
+            ['score' => $score, 'comments' => $comments]
         )->shouldBeCalled();
 
         $formData = [
@@ -60,10 +58,6 @@ class SatisfactionApiTest extends TestCase
             'email' => $this->faker->email,
             'satisfactionLevel' => $score
         ];
-
-        $email = new Email();
-        $this->mailFactory->createGeneralFeedbackEmail($formData)->shouldBeCalled()->willReturn($email);
-        $this->mailSender->send($email)->shouldBeCalled();
 
         $this->sut->create($formData);
     }

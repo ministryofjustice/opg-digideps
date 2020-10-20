@@ -1,8 +1,9 @@
 imports:
-    - { resource: config_test.yml }
+    - { resource: config_prod.yml }
 
 framework:
     test: ~
     session:
-       storage_id: session.storage.mock_file
+        handler_id: ~
+        storage_id: session.storage.mock_file
     csrf_protection: false

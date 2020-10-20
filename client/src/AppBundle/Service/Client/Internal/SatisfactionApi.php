@@ -19,11 +19,14 @@ class SatisfactionApi
         $this->restClient = $restClient;
     }
 
-    public function create(array $formResponse)
+    /**
+     * @param array $formResponse
+     */
+    public function create(array $formResponse): void
     {
         $this->restClient->post(
             self::CREATE_PUBLIC_ENDPOINT,
-            ['satisfactionLevel' => $formResponse['satisfactionLevel'], 'comments' => $formResponse['comments']]
+            ['score' => $formResponse['satisfactionLevel'], 'comments' => $formResponse['comments']]
         );
     }
 }

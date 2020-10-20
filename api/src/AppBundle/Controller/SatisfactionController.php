@@ -13,10 +13,10 @@ use AppBundle\Entity as EntityDir;
  */
 class SatisfactionController extends RestController
 {
-    private function addSatisfactionScore($score, $comments)
+    private function addSatisfactionScore($satisfactionLevel, $comments)
     {
         $satisfaction = new Satisfaction();
-        $satisfaction->setScore($score);
+        $satisfaction->setScore($satisfactionLevel);
         $satisfaction->setComments($comments);
 
         $this->persistAndFlush($satisfaction);
@@ -69,11 +69,11 @@ class SatisfactionController extends RestController
     public function publicAdd(Request $request)
     {
         $data = $this->deserializeBodyContent($request, [
-            'satisfactionLevel' => 'notEmpty',
+            'score' => 'notEmpty',
             'comments' => 'notEmpty'
         ]);
 
-        $satisfaction = $this->addSatisfactionScore($data['satisfactionLevel'], $data['comments']);
+        $satisfaction = $this->addSatisfactionScore($data['score'], $data['comments']);
 
         return $satisfaction->getId();
     }

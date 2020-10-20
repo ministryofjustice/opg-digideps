@@ -31,17 +31,17 @@ class RestClient implements RestClientInterface
      *
      * @var array
      */
-    private static $availableOptions = ['addAuthToken', 'addClientSecret', 'deserialise_groups'];
+    protected static $availableOptions = ['addAuthToken', 'addClientSecret', 'deserialise_groups'];
 
     /**
      * @var ClientInterface
      */
-    private $client;
+    protected $client;
 
     /**
      * @var SerializerInterface
      */
-    private $serialiser;
+    protected $serialiser;
 
     /**
      * Used to keep the user auth token.
@@ -49,42 +49,42 @@ class RestClient implements RestClientInterface
      *
      * @var TokenStorageInterface
      */
-    private $tokenStorage;
+    protected $tokenStorage;
 
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    protected $logger;
 
     /**
      * @var string
      */
-    private $clientSecret;
+    protected $clientSecret;
 
     /**
      * @var array
      */
-    private $history;
+    protected $history;
 
     /**
      * @var bool
      */
-    private $saveHistory;
+    protected $saveHistory;
 
     /**
      * @var ContainerInterface
      */
-    private $container;
+    protected $container;
 
     /**
      * @var int
      */
-    private $userId;
+    protected $userId;
 
     /**
      * @var int set at the class level for the next request
      */
-    private $timeout = 0;
+    protected $timeout = 0;
 
     /**
      * Header name holding auth token, returned at login time and re-sent at each requests.
