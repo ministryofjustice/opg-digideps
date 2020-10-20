@@ -15,6 +15,10 @@ class BehatController extends AbstractController
 {
     /**
      * @Route("/admin/run-document-sync-command")
+     *
+     * @param KernelInterface $kernel
+     * @return Response
+     * @throws \Exception
      */
     public function runDocumentSyncCommand(KernelInterface $kernel)
     {

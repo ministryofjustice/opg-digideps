@@ -7,6 +7,9 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Form as FormDir;
 use AppBundle\Resolver\SubSectionRoute\ProfCostsEstimateSubSectionRouteResolver;
+use AppBundle\Service\Client\Internal\ReportApi;
+use AppBundle\Service\Client\RestClient;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormInterface;
@@ -27,16 +30,33 @@ class ProfDeputyCostsEstimateController extends AbstractController
         'prof-deputy-estimate-management-costs'
     ];
 
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ReportApi */
+    private $reportApi;
+
+    public function __construct(
+        RestClient $restClient,
+        ReportApi $reportApi
+    )
+    {
+        $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
+    }
+
     /**
      * @Route("", name="prof_deputy_costs_estimate")
      * @Template("AppBundle:Report/ProfDeputyCostsEstimate:start.html.twig")
      *
      * @param $reportId
-     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     * @param ProfCostsEstimateSubSectionRouteResolver $routeResolver
+     *
+     * @return array|RedirectResponse
      */
     public function startAction($reportId, ProfCostsEstimateSubSectionRouteResolver $routeResolver)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $state = $report->getStatus()->getProfDeputyCostsEstimateState()['state'];
 
         if (null !== ($forwardRoute = $routeResolver->resolve($report, $state))) {
@@ -54,12 +74,13 @@ class ProfDeputyCostsEstimateController extends AbstractController
      *
      * @param Request $request
      * @param $reportId
-     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @return array|RedirectResponse
      */
     public function howChargedAction(Request $request, $reportId)
     {
         $from = $request->get('from');
-        $report = $this->getReportIfNotSubmitted($reportId, ['prof-deputy-costs-estimate-how-charged']);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, ['prof-deputy-costs-estimate-how-charged']);
         $currentHowChargedValue = $report->getProfDeputyCostsEstimateHowCharged();
 
         $form = $this->createForm(FormDir\Report\ProfDeputyCostsEstimateHowType::class, $report);
@@ -88,11 +109,16 @@ class ProfDeputyCostsEstimateController extends AbstractController
     /**
      * @Route("/breakdown", name="prof_deputy_costs_estimate_breakdown")
      * @Template("AppBundle:Report/ProfDeputyCostsEstimate:breakdown.html.twig")
+     *
+     * @param Request $request
+     * @param $reportId
+     *
+     * @return array|RedirectResponse
      */
     public function breakdownAction(Request $request, $reportId)
     {
         $from = $request->get('from');
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if (empty($report->getProfDeputyEstimateCosts())) {
             // if none set generate other costs manually
@@ -127,11 +153,14 @@ class ProfDeputyCostsEstimateController extends AbstractController
     /**
      * @Route("/more-info", name="prof_deputy_costs_estimate_more_info")
      * @Template("AppBundle:Report/ProfDeputyCostsEstimate:moreInfo.html.twig")
+     * @param Request $request
+     * @param $reportId
+     * @return array|RedirectResponse
      */
     public function moreInfoAction(Request $request, $reportId)
     {
         $from = $request->get('from');
-        $report = $this->getReportIfNotSubmitted($reportId, ['prof-deputy-costs-estimate-more-info']);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, ['prof-deputy-costs-estimate-more-info']);
 
         $form = $this->createForm(FormDir\Report\ProfDeputyCostsEstimateMoreInfoType::class, $report);
         $form->handleRequest($request);
@@ -157,13 +186,13 @@ class ProfDeputyCostsEstimateController extends AbstractController
      * @Route("/summary", name="prof_deputy_costs_estimate_summary")
      * @Template("AppBundle:Report/ProfDeputyCostsEstimate:summary.html.twig")
      *
-     * @param int $reportId
+     * @param $reportId
      *
-     * @return array
+     * @return array|RedirectResponse
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if ($report->getStatus()->getProfDeputyCostsEstimateState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('prof_deputy_costs_estimate', ['reportId' => $reportId]));
@@ -184,6 +213,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
      * without this list.
      *
      * @param EntityDir\Report\Report $report
+     *
      * @return array
      */
     private function generateDefaultEstimateCosts(EntityDir\Report\Report $report)
@@ -206,17 +236,19 @@ class ProfDeputyCostsEstimateController extends AbstractController
     /**
      * @param $id
      * @param Report $report
+     *
      * @param array $groups
      */
     private function persistUpdate($id, Report $report, array $groups)
     {
-        $this->getRestClient()->put('report/' . $id, $report, $groups);
+        $this->restClient->put('report/' . $id, $report, $groups);
     }
 
     /**
      * @param Request $request
      * @param FormInterface $form
      * @param $originalHowChargedValue
+     *
      * @return string
      */
     private function determineNextRouteFromHowCharged(Request $request, FormInterface $form, $originalHowChargedValue)
@@ -235,6 +267,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
     /**
      * @param $originalHowChargedValue
      * @param $updatedHowCharged
+     *
      * @return bool
      */
     private function answerHasChangedFromFixedToNonFixed($originalHowChargedValue, $updatedHowCharged)
