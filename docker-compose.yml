@@ -29,7 +29,9 @@ services:
     localstack:
         image: localstack/localstack:0.10.9
         ports:
-            - "4566-4599:4566-4599"
+            - "4572:4572"
+            - "4583:4583"
+            - "4586:4586"
         environment:
             - SERVICES=s3:4572,ssm:4583,logs:4586
             - DATA_DIR=/tmp/localstack/data

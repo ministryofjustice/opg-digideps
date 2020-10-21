@@ -33,14 +33,14 @@ lint-terraform:
 
 # DOCKER TASKS
 up-app: ## Brings the app up
-	docker-compose up -d
+	docker-compose up -d --remove-orphans
 
 up-app-debug: up-app enable-debug ## Brings the app up in dev mode with debugging enabled
 
 up-app-no-debug: up-app	disable-debug ## Brings the app up in dev mode with debugging disabled
 
 up-app-build: ## Brings the app up and rebuilds containers
-	docker-compose up -d --build
+	COMPOSE_HTTP_TIMEOUT=90 docker-compose up -d --build --remove-orphans
 
 up-app-xdebug-frontend: ## Brings the app up, rebuilds containers and enabled xdebug in client
 	REQUIRE_XDEBUG_FRONTEND=true docker-compose up -d --build
@@ -57,7 +57,7 @@ down-app: ### Tears down the app
 
 client-unit-tests: disable-debug ## Run the client unit tests
 	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose build frontend admin
-	docker-compose -f docker-compose.yml run --rm frontend bin/phpunit -c tests/phpunit
+	docker-compose -f docker-compose.yml run -e SYMFONY_ENV=unit_test --rm frontend bin/phpunit -c tests/phpunit
 
 api-unit-tests: reset-fixtures disable-debug ## Run the api unit tests
 	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose build api

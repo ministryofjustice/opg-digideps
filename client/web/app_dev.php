@@ -27,8 +27,6 @@ if (file_exists(__DIR__ . '/../.enableDebug')) {
     $kernel = new AppKernel('dev', false);
 }
 
-$kernel = new AppKernel('dev', $debug);
-
 $kernel->loadClassCache();
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
