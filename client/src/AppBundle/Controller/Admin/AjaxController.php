@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
+use AppBundle\Service\Client\RestClient;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,15 +16,30 @@ use Symfony\Component\HttpFoundation\Request;
 class AjaxController extends AbstractController
 {
     /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    public function __construct(
+        RestClient $restClient
+    )
+    {
+        $this->restClient = $restClient;
+    }
+
+    /**
      * @Route("/casrec-delete-by-source/{source}", name="casrec_delete_by_source_ajax")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     *
+     * @param $source
+     * @return JsonResponse
      */
-    public function deleteUsersBySourceAjaxAction(Request $request, $source)
+    public function deleteUsersBySourceAjaxAction($source)
     {
         try {
-            $before = $this->getRestClient()->get('casrec/count', 'array');
-            $this->getRestClient()->delete('casrec/delete-by-source/'.$source);
-            $after = $this->getRestClient()->get('casrec/count', 'array');
+            $before = $this->restClient->get('casrec/count', 'array');
+            $this->restClient->delete('casrec/delete-by-source/'.$source);
+            $after = $this->restClient->get('casrec/count', 'array');
 
             return new JsonResponse(['before'=>$before, 'after'=>$after]);
         } catch (\Throwable $e) {
@@ -34,6 +50,9 @@ class AjaxController extends AbstractController
     /**
      * @Route("/casrec-add", name="casrec_add_ajax")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
     public function uploadUsersAjaxAction(Request $request)
     {
@@ -44,7 +63,7 @@ class AjaxController extends AbstractController
         try {
             $compressedData = $redis->get($chunkId);
             if ($compressedData) {
-                $ret = $this->getRestClient()->setTimeout(600)->post('v2/lay-deputyship/upload', $compressedData);
+                $ret = $this->restClient->setTimeout(600)->post('v2/lay-deputyship/upload', $compressedData);
                 $redis->del($chunkId); //cleanup for next execution
             } else {
                 $ret['added'] = 0;

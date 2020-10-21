@@ -4,10 +4,12 @@ namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Client\Internal\ReportApi;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\NdrStatusService;
+use AppBundle\Service\StepRedirector;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 
 class OtherInfoController extends AbstractController
@@ -17,12 +19,39 @@ class OtherInfoController extends AbstractController
     ];
 
     /**
+     * @var ReportApi
+     */
+    private $reportApi;
+
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+
+    /**
+     * @var StepRedirector
+     */
+    private $stepRedirector;
+
+    public function __construct(
+        ReportApi $reportApi,
+        RestClient $restClient,
+        StepRedirector $stepRedirector
+    )
+    {
+        $this->reportApi = $reportApi;
+        $this->restClient = $restClient;
+        $this->stepRedirector = $stepRedirector;
+    }
+
+    /**
      * @Route("/ndr/{ndrId}/any-other-info", name="ndr_other_info")
      * @Template("AppBundle:Ndr/OtherInfo:start.html.twig")
      */
     public function startAction(Request $request, $ndrId)
     {
-        $ndr = $this->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
+        $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if ($ndr->getStatusService()->getOtherInfoState()['state'] != NdrStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('ndr_other_info_summary', ['ndrId' => $ndrId]);
         }
@@ -42,11 +71,11 @@ class OtherInfoController extends AbstractController
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('ndr_other_info_summary', ['ndrId' => $ndrId]);
         }
-        $ndr = $this->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
+        $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
 
-        $stepRedirector = $this->stepRedirector()
+        $stepRedirector = $this->stepRedirector
             ->setRoutes('ndr_other_info', 'ndr_other_info_step', 'ndr_other_info_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
@@ -57,7 +86,7 @@ class OtherInfoController extends AbstractController
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $this->getRestClient()->put('ndr/' . $ndrId, $data, ['more-info']);
+            $this->restClient->put('ndr/' . $ndrId, $data, ['more-info']);
 
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add(
@@ -84,7 +113,7 @@ class OtherInfoController extends AbstractController
     public function summaryAction(Request $request, $ndrId)
     {
         $fromPage = $request->get('from');
-        $ndr = $this->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
+        $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if ($ndr->getStatusService()->getOtherInfoState()['state'] == NdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('ndr_other_info', ['ndrId' => $ndrId]);
         }

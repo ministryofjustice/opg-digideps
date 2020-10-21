@@ -3,9 +3,11 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\DeputyProvider;
 use AppBundle\Service\Redirector;
 use AppBundle\Service\StringUtils;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -13,6 +15,8 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -21,41 +25,51 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class IndexController extends AbstractController
 {
-    /**
-     * @var DeputyProvider
-     */
+    /** @var DeputyProvider */
     private $deputyProvider;
 
-    /**
-     * @var EventDispatcherInterface
-     */
+    /** @var EventDispatcherInterface */
     private $eventDispatcher;
 
-    /**
-     * @var TokenStorageInterface
-     */
+    /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /**
-     * @var TranslatorInterface
-     */
+    /** @var TranslatorInterface */
     private $translator;
-    /**
-     * @var string
-     */
+
+    /** @var string  */
     private $environment;
 
-    public function __construct(DeputyProvider $deputyProvider, EventDispatcherInterface $eventDispatcher, TokenStorageInterface $tokenStorage, TranslatorInterface $translator, string $environment)
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var RouterInterface  */
+    private $router;
+
+    public function __construct(
+        RestClient $restClient,
+        DeputyProvider $deputyProvider,
+        EventDispatcherInterface $eventDispatcher,
+        TokenStorageInterface $tokenStorage,
+        TranslatorInterface $translator,
+        RouterInterface $router,
+        string $environment
+    )
     {
         $this->deputyProvider = $deputyProvider;
         $this->eventDispatcher = $eventDispatcher;
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
         $this->environment = $environment;
+        $this->restClient = $restClient;
+        $this->router = $router;
     }
 
     /**
      * @Route("/", name="homepage")
+     *
+     * @param Redirector $redirector
+     * @return RedirectResponse|Response|null
      */
     public function indexAction(Redirector $redirector)
     {
@@ -72,6 +86,9 @@ class IndexController extends AbstractController
     /**
      * @Route("login", name="login")
      * @Template("AppBundle:Index:login.html.twig")
+     *
+     * @param Request $request
+     * @return Response|null
      */
     public function loginAction(Request $request)
     {
@@ -127,7 +144,7 @@ class IndexController extends AbstractController
             ], 'signin');
         }
 
-        $snSetting = $this->getRestClient()->get('setting/service-notification', 'Setting', [], ['addAuthToken'=>false]);
+        $snSetting = $this->restClient->get('setting/service-notification', 'Setting', [], ['addAuthToken'=>false]);
 
         return $this->render('AppBundle:Index:login.html.twig', [
                 'form' => $form->createView(),
@@ -138,6 +155,15 @@ class IndexController extends AbstractController
 
     /**
      * @Route("login-ad/{userToken}/{adId}/{adFirstname}/{adLastname}", name="ad_login")
+     *
+     * @param Request $request
+     * @param $userToken
+     * @param $adId
+     * @param $adFirstname
+     * @param $adLastname
+     *
+     * @return Response
+     * @throws \Throwable
      */
     public function adLoginAction(Request $request, $userToken, $adId, $adFirstname, $adLastname)
     {
@@ -161,9 +187,11 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @param array   $credentials see RestClient::login()
+     * @param array $credentials see RestClient::login()
      * @param Request $request
-     * @param array   $sessionVars
+     * @param array $sessionVars
+     *
+     * @throws \Throwable
      */
     private function logUserIn($credentials, Request $request, array $sessionVars)
     {
@@ -197,6 +225,10 @@ class IndexController extends AbstractController
 
     /**
      * @Route("error-503", name="error-503")
+     *
+     * @param Request $request
+     *
+     * @return Response|null
      */
     public function error503(Request $request)
     {
@@ -308,5 +340,36 @@ class IndexController extends AbstractController
         return $this->render('AppBundle:Index:cookies.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * Get referer, only if matching an existing route
+     *
+     * @param  Request $request
+     * @param  array   $excludedRoutes
+     * @return string|null  referer URL, null if not existing or inside the $excludedRoutes
+     */
+    protected function getRefererUrlSafe(Request $request, array $excludedRoutes = [])
+    {
+        $referer = $request->headers->get('referer');
+
+        if (!is_string($referer)) return null;
+
+        $refererUrlPath = parse_url($referer, \PHP_URL_PATH);
+
+        if (!$refererUrlPath) return null;
+
+        try {
+            $routeParams = $this->router->match($refererUrlPath);
+        } catch (ResourceNotFoundException $e) {
+            return null;
+        }
+        $routeName = $routeParams['_route'];
+        if (in_array($routeName, $excludedRoutes)) {
+            return null;
+        }
+        unset($routeParams['_route']);
+
+        return $this->router->generate($routeName, $routeParams);
     }
 }
