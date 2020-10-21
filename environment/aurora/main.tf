@@ -39,7 +39,7 @@ resource "aws_rds_cluster_instance" "cluster_instances" {
   identifier                      = "${var.cluster_identifier}-${terraform.workspace}-${count.index}"
   instance_class                  = var.instance_class
   monitoring_interval             = 30
-  monitoring_role_arn             = "arn:aws:iam::${var.account_id}:role/rds-monitoring-role"
+  monitoring_role_arn             = "arn:aws:iam::${var.account_id}:role/rds-enhanced-monitoring"
   performance_insights_enabled    = true
   performance_insights_kms_key_id = var.kms_key_id
   publicly_accessible             = var.publicly_accessible
