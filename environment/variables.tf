@@ -9,6 +9,7 @@ variable "OPG_DOCKER_TAG" {
 variable "accounts" {
   type = map(
     object({
+      name                    = string
       account_id              = string
       admin_allow_list        = list(string)
       force_destroy_bucket    = bool
@@ -39,6 +40,9 @@ variable "accounts" {
       dr_backup               = bool
       ecs_scale_min           = number
       ecs_scale_max           = number
+      aurora_instance_count   = number
+      aurora_serverless       = bool
+      deletion_protection     = bool
     })
   )
 }
