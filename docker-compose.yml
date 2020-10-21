@@ -10,6 +10,10 @@ services:
             - admin
             - localstack
         restart: always
+        volumes:
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+            - ./.certs:/etc/nginx/certs
+            - ./docker/router/my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
 
     aws:
         image: infrastructureascode/aws-cli
@@ -19,6 +23,8 @@ services:
         working_dir: /app
         depends_on:
             - localstack
+        volumes:
+            - .:/app
 
     localstack:
         image: localstack/localstack:0.10.9
@@ -39,6 +45,8 @@ services:
         command:
             - php
             - scripts/localstack-init.php
+        volumes:
+            - ./client/scripts:/var/www/scripts
 
     wait-for-it:
         build: ./wait_for_it

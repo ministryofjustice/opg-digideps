@@ -22,7 +22,7 @@ class FeedbackControllerTest extends WebTestCase
 
     public function setUp(): void
     {
-        $this->symfonyClient = static::createClient(['environment' => 'test', 'debug' => false]);
+        $this->symfonyClient = static::createClient(['environment' => 'unit_test', 'debug' => false]);
         $this->symfonyClient->disableReboot();
         $this->notifyClient = $this->symfonyClient->getContainer()->get('Alphagov\Notifications\Client');
     }
