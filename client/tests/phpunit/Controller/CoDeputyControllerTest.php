@@ -47,17 +47,6 @@ class CoDeputyControllerTest extends AbstractControllerTestCase
                 ->willReturn(false);
         }, ['redirector_service']);
 
-        $mailSender = $this->injectProphecyService(MailSender::class);
-        $mailSender
-            ->send(Argument::that(function ($email) use ($emailAddress) {
-                return $email instanceof Email
-                && $email->getToEmail() === $emailAddress
-                && $email->getTemplate() === MailFactory::INVITATION_LAY_TEMPLATE_ID
-                && strpos($email->getParameters()['link'], "user/activate/invitation-token") !== false;
-            }))
-            ->shouldBeCalled()
-            ->willReturn(true);
-
         $crawler = $this->client->request('GET', '/codeputy/25/add');
         $button = $crawler->selectButton('Send invitation');
 
@@ -91,17 +80,6 @@ class CoDeputyControllerTest extends AbstractControllerTestCase
             ->userRecreateToken($emailAddress, 'pass-reset')
             ->shouldBeCalled()
             ->willReturn($invitedUser);
-
-        $mailSender = $this->injectProphecyService(MailSender::class);
-        $mailSender
-            ->send(Argument::that(function ($email) use ($emailAddress) {
-                return $email instanceof Email
-                && $email->getToEmail() === $emailAddress
-                && $email->getTemplate() === MailFactory::INVITATION_LAY_TEMPLATE_ID
-                && strpos($email->getParameters()['link'], "user/activate/invitation-token") !== false;
-            }))
-            ->shouldBeCalled()
-            ->willReturn(true);
 
         $crawler = $this->client->request('GET', "/codeputy/re-invite/$emailAddress");
         $button = $crawler->selectButton('Resend invitation');

@@ -3,8 +3,9 @@
 namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Client\Internal\ReportApi;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\NdrStatusService;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -15,12 +16,31 @@ class DebtController extends AbstractController
     private static $jmsGroups = ['ndr-debt', 'ndr-debt-management'];
 
     /**
+     * @var ReportApi
+     */
+    private $reportApi;
+
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    public function __construct(
+        ReportApi $reportApi,
+        RestClient $restClient
+    )
+    {
+        $this->reportApi = $reportApi;
+        $this->restClient = $restClient;
+    }
+
+    /**
      * @Route("/ndr/{ndrId}/debts", name="ndr_debts")
      * @Template("AppBundle:Ndr/Debt:start.html.twig")
      */
     public function startAction(Request $request, $ndrId)
     {
-        $ndr = $this->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
+        $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if ($ndr->getStatusService()->getDebtsState()['state'] != NdrStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('ndr_debts_summary', ['ndrId' => $ndr->getId()]);
         }
@@ -36,13 +56,13 @@ class DebtController extends AbstractController
      */
     public function existAction(Request $request, $ndrId)
     {
-        $ndr = $this->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
+        $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class, $ndr, [ 'field' => 'hasDebts', 'translation_domain' => 'ndr-debts']
                                  );
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getRestClient()->put('ndr/' . $ndrId, $ndr, ['debt']);
+            $this->restClient->put('ndr/' . $ndrId, $ndr, ['debt']);
 
             if ($ndr->getHasDebts() == 'yes') {
                 return $this->redirectToRoute('ndr_debts_edit', ['ndrId' => $ndrId]);
@@ -71,13 +91,13 @@ class DebtController extends AbstractController
      */
     public function editAction(Request $request, $ndrId)
     {
-        $ndr = $this->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
+        $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Ndr\Debt\DebtsType::class, $ndr);
         $form->handleRequest($request);
         $fromPage = $request->get('from');
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getRestClient()->put('ndr/' . $ndr->getId(), $form->getData(), ['debt']);
+            $this->restClient->put('ndr/' . $ndr->getId(), $form->getData(), ['debt']);
 
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Debt edited');
@@ -107,7 +127,7 @@ class DebtController extends AbstractController
      */
     public function managementAction(Request $request, $ndrId)
     {
-        $ndr = $this->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
+        $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Ndr\Debt\DebtManagementType::class, $ndr);
 
         $form->handleRequest($request);
@@ -115,7 +135,7 @@ class DebtController extends AbstractController
         $fromSummaryPage = $request->get('from') == 'summary';
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getRestClient()->put('ndr/' . $ndr->getId(), $form->getData(), ['ndr-debt-management']);
+            $this->restClient->put('ndr/' . $ndr->getId(), $form->getData(), ['ndr-debt-management']);
 
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
@@ -146,7 +166,7 @@ class DebtController extends AbstractController
     public function summaryAction(Request $request, $ndrId)
     {
         $fromPage = $request->get('from');
-        $ndr = $this->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
+        $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if ($ndr->getStatusService()->getDebtsState()['state'] == NdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('ndr_debts', ['ndrId' => $ndrId]);
         }
