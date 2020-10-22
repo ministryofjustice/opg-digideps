@@ -24,6 +24,21 @@ class ProfTestUserFixtures extends AbstractDataFixture
     private $namedDeputyRepository;
 
     /**
+     * @var ReportUtils
+     */
+    private $reportUtils;
+
+    /**
+     * @var OrganisationRepository
+     */
+    private $orgRepository;
+
+    /**
+     * @var OrganisationFactory
+     */
+    private $orgFactory;
+
+    /**
      * @var OrgService
      */
     private $orgService;
@@ -490,11 +505,15 @@ class ProfTestUserFixtures extends AbstractDataFixture
         ]
     ];
 
-    public function __construct(OrgService $orgService, OrganisationRepository $orgRepository, OrganisationFactory $orgFactory)
+
+
+
+    public function __construct(OrgService $orgService, OrganisationRepository $orgRepository, OrganisationFactory $orgFactory, ReportUtils $reportUtils)
     {
         $this->orgService = $orgService;
         $this->orgRepository = $orgRepository;
         $this->orgFactory = $orgFactory;
+        $this->reportUtils = $reportUtils;
     }
 
     /**
@@ -554,17 +573,14 @@ class ProfTestUserFixtures extends AbstractDataFixture
             }
             if (isset($data['additionalClients'])) {
                 // add dummy clients for pagination tests
-                for($i=1; $i<=$data['additionalClients']; $i++) {
+                for ($i=1; $i<=$data['additionalClients']; $i++) {
                     $client = $this->createClient($this->generateTestClientData($i), $data, $user, $manager, $organisation);
                     $user->addClient($client);
                     $organisation->addClient($client);
                     $client->setOrganisation($organisation);
                 }
             }
-
         }
-
-
     }
 
     private function generateTestClientData($iterator)
@@ -623,7 +639,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
         } else {
             $type = CasRec::getTypeBasedOnTypeofRepAndCorref($clientData['reportType'], $clientData['reportVariation'], CasRec::REALM_PROF);
             $endDate = \DateTime::createFromFormat('d/m/Y', $clientData['lastReportDate']);
-            $startDate = ReportUtils::generateReportStartDateFromEndDate($endDate);
+            $startDate = $this->reportUtils->generateReportStartDateFromEndDate($endDate);
             $report = new Report($client, $type, $startDate, $endDate);
 
             $manager->persist($report);
