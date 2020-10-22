@@ -9,6 +9,7 @@ variable "accounts" {
       name              = string
       db_subnet_group   = string
       ec_subnet_group   = string
+      environments      = set(string)
       sirius_account_id = string
     })
   )
