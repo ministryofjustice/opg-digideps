@@ -17,6 +17,10 @@ workflows:
           filters: { branches: { ignore: [ main ] } }
           tf_command: apply
 
+      - add-to-metrics:
+          name: add to metrics
+          requires: [ apply environment ]
+
       - client-unit-test:
           name: client unit test
           requires: [ apply environment ]
