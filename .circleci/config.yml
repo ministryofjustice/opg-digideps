@@ -3,10 +3,6 @@ version: 2.1
 workflows:
   pull_request:
     jobs:
-      - add-to-metrics:
-          name: add to metrics
-          filters: { branches: { ignore: [ main ] } }
-
       - lint:
           name: lint terraform
           filters: { branches: { ignore: [ main ] } }
