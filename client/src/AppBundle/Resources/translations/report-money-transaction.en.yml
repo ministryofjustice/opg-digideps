@@ -9,7 +9,7 @@ startPage:
       Transfers between %client%'s accounts should be entered in the
       <a href="%moneyTransfersPath%">money transfers</a> section.
     pageSectionDescription3: |
-      Make sure you only enter each payment in one place, so we don't count it twice.
+      Make sure you only enter each payment in one place, so we do not count it twice.
     totalOrIndividualHeading: |
       Enter a total amount or individual amounts for each type of income
     totalOrIndividualPara: |
@@ -45,7 +45,7 @@ startPage:
     #      money transfers</a> between %client%'s accounts, your <a href="%deputyCostsPath%">
     #      deputy costs</a>, and <a href="%giftsPath%">gifts</a>.
     pageSectionDescription3: |
-      Make sure you only enter each payment in one place, so we don't count it twice.
+      Make sure you only enter each payment in one place, so we do not count it twice.
     totalOrIndividualHeading: |
       Enter a total amount or individual amounts for each type of payment
     totalOrIndividualPara: |
@@ -66,7 +66,7 @@ stepPage:
     pageSectionDescription:
       step1: You can add one or more items and come back to complete the section later.
       transferWarning: |
-        Don't include transfers between %client%'s accounts here. Enter them in the
+        Do not include transfers between %client%'s accounts here. Enter them in the
         <a href="%moneyTransfersPath%">money transfers</a> section
   moneyOut:
     htmlTitle: "Add a payment - Complete the deputy report | GOV.UK"
