@@ -619,14 +619,14 @@ jobs:
       - run:
           name: PUT release time to OPG metrics
           command: |
-            EPOCH=$(date +'%s')
+            EPOCH_MILLISECONDS=$(date +%s%3N)
 
             curl --location --request PUT ${METRICS_ENDPOINT} \
             --header 'Content-Type: application/json' \
               --data-raw "{
                 \"records\": [
                   {
-                    \"data\": \"{'Dimensions': dimensions, 'Project': 'complete-the-deputy-report', 'MeasureName': 'release', 'MeasureValue': '1.0', 'MeasureValueType': 'DOUBLE', 'Time': '${EPOCH}'}\",
+                    \"data\": \"{'Dimensions': dimensions, 'Project': 'complete-the-deputy-report', 'MeasureName': 'release', 'MeasureValue': '1.0', 'MeasureValueType': 'DOUBLE', 'Time': '${EPOCH_MILLISECONDS}'}\",
                     \"partition-key\": \"some key\"
                   }
                 ]
