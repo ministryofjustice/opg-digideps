@@ -15,9 +15,9 @@
 {% block pageContent %}
 
     <div class="text">
-        <p class="text">{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
-        <p class="text">{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
-        <p class="text">{{ 'startPage.pageSectionDescription3' | trans(transOptions)|raw }}</p>
+        <p class="govuk-body">{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ 'startPage.pageSectionDescription3' | trans(transOptions)|raw }}</p>
     </div>
 
     {{ macros.startSectionButton(path('ndr_other_info_step', { 'ndrId': ndr.id, 'step': 1 }), 'startPage.startButton' | trans ) }}

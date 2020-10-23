@@ -33,7 +33,7 @@
         <p class="govuk-!-font-size-19 govuk-!-font-weight-bold text">
             {{ 'form.stateBenefits.label' | trans(transOptions) }}
         </p>
-        <p class="text">
+        <p class="govuk-body">
             {{ 'form.stateBenefits.hint' | trans(transOptions) }}
         </p>
         {% include 'AppBundle:Ndr/IncomeBenefit:_checkboxes_list.html.twig' with {
@@ -126,7 +126,7 @@
         <p class="govuk-!-font-size-19 govuk-!-font-weight-bold text">
             {{ 'form.oneOff.label' | trans(transOptions) }}
         </p>
-        <p class="text">
+        <p class="govuk-body">
             {{ 'form.oneOff.hint' | trans(transOptions) }}
         </p>
         {% include 'AppBundle:Ndr/IncomeBenefit:_checkboxes_list.html.twig' with {
@@ -140,4 +140,3 @@
     {{ form_end(form) }}
 
 {% endblock %}
-

@@ -17,7 +17,7 @@
 
 {% block pageContent %}
 
-    <p class="text">{{ (page ~ '.description1') | trans(transOptions) }}</p>
+    <p class="govuk-body">{{ (page ~ '.description1') | trans(transOptions) }}</p>
 
     <details class="govuk-details" data-module="govuk-details">
         <summary class="govuk-details__summary">
@@ -51,7 +51,7 @@
     </details>
 
     {% if '104' not in report.type %}
-        <p class="text">{{ (page ~ '.description2') | trans }}</p>
+        <p class="govuk-body">{{ (page ~ '.description2') | trans }}</p>
     {% endif %}
 
     {{ macros.startSectionButton(path('decisions_mental_capacity', { 'reportId': report.id}), (page ~ '.startButton') | trans) }}

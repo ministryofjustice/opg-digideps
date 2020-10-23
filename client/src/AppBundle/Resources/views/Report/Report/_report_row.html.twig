@@ -11,7 +11,7 @@
             <strong class="govuk-!-font-weight-bold">{{ 'dueDate' | trans({}, 'common') }}: </strong>
             {{ report.dueDate | date("j F Y") }}
         </p>
-        <p class="text flush--bottom">
+        <p class="text flush--bottom govuk-body">
             {% block bottomLeftContent %}
             {% endblock %}
             {#{{ bottomLeftContent | raw }}#}

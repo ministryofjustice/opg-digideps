@@ -20,9 +20,9 @@
         <tbody class="govuk-table__body">
             {% for type, detail in contactDetails %}
                 <tr class="govuk-table__row behat-region-{{ type }}-contact">
-                    <td class="govuk-table__cell">
+                    <th scope="row" class="govuk-table__header">
                         {{ detail.name }}
-                    </td>
+                    </th>
                     <td class="govuk-table__cell">
                         {% for part in detail.address %}
                             {{ part }}<br>

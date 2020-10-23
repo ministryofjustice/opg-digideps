@@ -23,7 +23,7 @@
 
             {# Check answers text #}
             <p class="govuk-body"><strong>{{ 'weHaveListed' | trans(transOptions, 'common') }}</strong></p>
-            <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+            <p class="govuk-body">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
 
             {# Missing questions alerts #}
             {% if status.moneyOutShortState.state != 'done' and comingFromLastStep%}
