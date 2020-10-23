@@ -13,8 +13,8 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <p><strong>{{ (page ~ '.weveListedYourAnswers') | trans }}</strong></p>
-        <p>{{ (page ~ '.checkTheyreCorrect') | trans }}</p>
+        <p class="govuk-body"><strong>{{ (page ~ '.weveListedYourAnswers') | trans }}</strong></p>
+        <p class="govuk-body">{{ (page ~ '.checkTheyreCorrect') | trans }}</p>
     </div>
     <div class="govuk-grid-column-one-third">
         {{ macros.relatedSections(report, 'profDeputyCosts') }}

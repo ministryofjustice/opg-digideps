@@ -18,9 +18,9 @@
 {% block pageContent %}
 
     <div class="text">
-        <p>{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
-        <p>{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
-        <p>{{ 'startPage.pageSectionDescription3' | trans({
+        <p class="govuk-body">{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ 'startPage.pageSectionDescription3' | trans({
         	'%startDate%': report.startDate | date("j F Y"),
         	'%endDate%': report.endDate | date("j F Y")
         	},translationDomain) }}
@@ -31,16 +31,16 @@
                 <span class="govuk-details__summary-text">{{ 'startPage.hiddenText01.summary' |trans }}</span>
             </summary>
             <div class="govuk-details__text">
-                <p>{{ 'startPage.hiddenText01.content.para01' |trans|raw }}</p>
+                <p class="govuk-body">{{ 'startPage.hiddenText01.content.para01' |trans|raw }}</p>
             </div>
         </details>
 
         <h3 class="govuk-heading-s">{{ 'startPage.totalOrIndividualHeading' | trans(transOptions) }}</h3>
-        <p>{{ 'startPage.totalOrIndividualPara' | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ 'startPage.totalOrIndividualPara' | trans(transOptions) }}</p>
 
         {% if report.bankAccounts is empty and report.canLinkToBankAccounts %}
             <h3 class="govuk-heading-s">{{ 'startPage.accountLinksHeading' | trans(transOptions) }}</h3>
-            <p>{{ 'startPage.accountLinksPara1' | trans(transOptions) | raw }}</p>
+            <p class="govuk-body">{{ 'startPage.accountLinksPara1' | trans(transOptions) | raw }}</p>
         {% endif %}
 
     </div>

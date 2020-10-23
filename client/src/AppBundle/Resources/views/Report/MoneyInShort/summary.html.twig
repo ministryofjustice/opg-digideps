@@ -19,11 +19,11 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             {# Introduction text #}
-            <p>{{ 'summaryPage.moneyIn.weAskAbout' | trans(transOptions) }}</p>
+            <p class="govuk-body">{{ 'summaryPage.moneyIn.weAskAbout' | trans(transOptions) }}</p>
 
             {# Check answers text #}
-            <p><strong>{{ 'weHaveListed' | trans(transOptions, 'common') }}</strong></p>
-            <p>{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+            <p class="govuk-body"><strong>{{ 'weHaveListed' | trans(transOptions, 'common') }}</strong></p>
+            <p class="govuk-body">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
 
             {# Missing questions alerts #}
             {% if status.moneyInShortState.state != 'done' and comingFromLastStep%}
@@ -49,6 +49,3 @@
     } %}
 
 {% endblock %}
-
-
-

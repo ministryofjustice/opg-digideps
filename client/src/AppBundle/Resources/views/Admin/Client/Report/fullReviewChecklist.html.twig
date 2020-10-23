@@ -20,7 +20,7 @@
         {% if report.deputyDocuments is defined and (report.deputyDocuments is not empty) %}
             {% include 'AppBundle:Admin/Client/Report/partials:_document-summary.html.twig' %}
         {% else %}
-            <p>{{ (page ~ '.noDocuments') | trans }}</p>
+            <p class="govuk-body">{{ (page ~ '.noDocuments') | trans }}</p>
         {% endif %}
 
         <h3 class="govuk-heading-m" id="anchor-full-review-lodgingConcerns">{{ (page ~ '.heading.fullReview.lodgingConcerns') | trans }}</h3>

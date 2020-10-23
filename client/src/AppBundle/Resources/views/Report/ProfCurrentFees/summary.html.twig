@@ -25,7 +25,7 @@
         <div class="govuk-grid-column-two-thirds">
             {# Introduction text #}
             <div class="text">
-                <p>{{ (page ~ '.pageSectionDescription') | trans }}</p>
+                <p class="govuk-body">{{ (page ~ '.pageSectionDescription') | trans }}</p>
             </div>
 
             {# Check answers text #}
@@ -241,7 +241,7 @@
                     {% endif %}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a 
+                    <a
                         href="{{ path('previous_estimates', { 'reportId': report.id, 'from': 'summary' }) }}"
                         class="behat-link-edit-fee govuk-link">
                         {{ 'edit' | trans({}, 'common') }}
@@ -257,7 +257,7 @@
                         {{ report.profFeesEstimateSccoReason | nl2br }}
                     </dd>
                     <dd class="govuk-summary-list__actions">
-                        <a 
+                        <a
                             href="{{ path('previous_estimates', { 'reportId': report.id, 'from': 'summary' }) }}"
                             class="behat-link-edit-fee govuk-link">
                             {{ 'edit' | trans({}, 'common') }}

@@ -13,8 +13,8 @@
     {{ macros.notification('success', 'page.thankYouForsubmitting' | trans({'%reportName%': ''})) }}
 
     <div class="text push--top">
-        <p>{{ 'page.yourReportWillBeSent' | trans }}</p>
-        <p>{{ 'page.weWillSendReminder' | trans }}</p>
+        <p class="govuk-body">{{ 'page.yourReportWillBeSent' | trans }}</p>
+        <p class="govuk-body">{{ 'page.weWillSendReminder' | trans }}</p>
     </div>
 
     <a href="{{ path('ndr_review', {'ndrId': ndr.id}) }}" class="behat-link-download-report">

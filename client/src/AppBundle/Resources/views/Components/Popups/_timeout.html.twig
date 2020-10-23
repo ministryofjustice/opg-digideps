@@ -6,12 +6,12 @@
     <div class="opg-session-timeout__dialog">
         <h1 class="govuk-heading-l">{{ 'component.title' | trans }}</h1>
 
-        <p>{{ 'component.firstLine' | trans({
+        <p class="govuk-body">{{ 'component.firstLine' | trans({
         '%inactiveFor%': (session_popup_show_after / 60) | round(2, 'floor'),
         '%loggedOutIn%': ((session_expires_seconds - session_popup_show_after) / 60) | round(2, 'floor')
         }) }}</p>
 
-        <p>{{ 'component.secondLine' | trans }}</p>
+        <p class="govuk-body">{{ 'component.secondLine' | trans }}</p>
 
         <form name="session-timeout-form" action="/logout">
             <button type="button" name="continue" class="govuk-button" data-js="ok-button" data-module="govuk-button">{{ 'ok' | trans({}, 'common' ) }}</button>

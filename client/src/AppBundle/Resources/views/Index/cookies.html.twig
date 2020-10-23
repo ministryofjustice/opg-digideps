@@ -12,12 +12,12 @@
         <div class="govuk-grid-column-two-thirds">
             {{ form_start(form) }}
 
-            <p>{{ 'intro.para01' | trans }}</p>
-            <p>{{ 'intro.para02' | trans }}</p>
+            <p class="govuk-body">{{ 'intro.para01' | trans }}</p>
+            <p class="govuk-body">{{ 'intro.para02' | trans }}</p>
 
             <h2 class="govuk-heading-l">{{ 'form.title' | trans }}</h2>
 
-            <p>{{ 'form.intro' | trans }}</p>
+            <p class="govuk-body">{{ 'form.intro' | trans }}</p>
 
             <h3 class="govuk-heading-m">{{ 'form.usage.label' | trans }}</h3>
 
@@ -34,7 +34,7 @@
 
             <h3 class="govuk-heading-m">{{ 'form.necessary.label' | trans }}</h3>
 
-            <p>{{ 'form.necessary.description' | trans }}</p>
+            <p class="govuk-body">{{ 'form.necessary.description' | trans }}</p>
 
             {{ form_submit(form.confirm, 'form.confirm') }}
 

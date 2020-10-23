@@ -17,7 +17,7 @@
             <div class="text">
                 <p class="govuk-body-l">{{ 'intro.lede' |trans }}</p>
                 {{ macros.notification('info', 'intro.para01' |trans) }}
-                <p>{{ 'intro.para02' |trans }}</p>
+                <p class="govuk-body">{{ 'intro.para02' |trans }}</p>
             </div>
 
             <div class="govuk-grid-row push--top">
@@ -26,7 +26,7 @@
                 </div>
                 <div class="column-half">
 
-                    <p>
+                    <p class="govuk-body">
                         <a id="creat-account-button" class="button" href="{{ path('register') }}">{{ 'createaccount' | trans }}</a>
                     </p>
 
@@ -50,7 +50,7 @@
                     <h2 class="govuk-heading-m flush--top">{{ 'ialready' |trans }}</h2>
                 </div>
                 <div class="column-half">
-                    <p>
+                    <p class="govuk-body">
                         <a href="{{ path('login') }}" class="button">{{ 'signin' |trans }}</a>
                     </p>
                 </div>
@@ -63,7 +63,7 @@
                         <span class="govuk-details__summary-text">{{ 'whyWeNeed.summary' |trans }}</span>
                     </summary>
                     <div class="govuk-details__text">
-                        <p>{{ 'whyWeNeed.para01' |trans }}</p>
+                        <p class="govuk-body">{{ 'whyWeNeed.para01' |trans }}</p>
                     </div>
                 </details>
 
@@ -72,13 +72,13 @@
                         <span class="govuk-details__summary-text">{{ 'provideDetails.summary' |trans }}</span>
                     </summary>
                     <div class="govuk-details__text">
-                        <p>{{ 'provideDetails.para01' |trans }}</p>
+                        <p class="govuk-body">{{ 'provideDetails.para01' |trans }}</p>
                         <ul class="govuk-list govuk-list--bullet">
                             <li>{{ 'provideDetails.listItem01' |trans }}</li>
                             <li>{{ 'provideDetails.listItem02' |trans }}</li>
                             <li>{{ 'provideDetails.listItem03' |trans }}</li>
                         </ul>
-                        <p>{{ 'provideDetails.para02' |trans }}</p>
+                        <p class="govuk-body">{{ 'provideDetails.para02' |trans }}</p>
                         <ul class="govuk-list govuk-list--bullet">
                             <li>{{ 'provideDetails.listItem04' |trans }}</li>
                             <li>{{ 'provideDetails.listItem05' |trans }}</li>
@@ -92,7 +92,7 @@
                         <span class="govuk-details__summary-text">{{ 'moreThanOne.summary' |trans }}</span>
                     </summary>
                     <div class="govuk-details__text">
-                        <p>{{ 'moreThanOne.para01' |trans }}</p>
+                        <p class="govuk-body">{{ 'moreThanOne.para01' |trans }}</p>
                     </div>
                 </details>
 
@@ -101,7 +101,7 @@
                         <span class="govuk-details__summary-text">{{ 'afterISubmit.summary' |trans }}</span>
                     </summary>
                     <div class="govuk-details__text">
-                        <p>{{ 'afterISubmit.para01' |trans }}</p>
+                        <p class="govuk-body">{{ 'afterISubmit.para01' |trans }}</p>
                     </div>
                 </details>
 

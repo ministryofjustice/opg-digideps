@@ -15,8 +15,8 @@
 {% block pageContent %}
 
     <div class="text">
-        <p>{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
-        <p>{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
     </div>
 
     {{ macros.startSectionButton(path('money_transfers_exist', { 'reportId': report.id}), 'startPage.startButton' | trans) }}

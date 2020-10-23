@@ -20,7 +20,7 @@
 
     <h2 class="govuk-heading-m">{{ (page ~ '.selectHeading') | trans }}</h2>
 
-    <p>{{ (page ~ '.selectHelp') | trans }}</p>
+    <p class="govuk-body">{{ (page ~ '.selectHelp') | trans }}</p>
 
     <div class="govuk-inset-text">
         <div class="govuk-grid-row">
@@ -48,8 +48,8 @@
     {{ form_submit(form.save, '', {'buttonClass': 'behat-link-attach-file js-uploading', 'labelText': 'form.submitButton' | trans}) }}
 
     {% set alertMessage %}
-        <p>{{ (page ~ '.pleaseWait') | trans }}</p>
-        <p>{{ (page ~ '.uploadHint') | trans }}</p>
+        <p class="govuk-body">{{ (page ~ '.pleaseWait') | trans }}</p>
+        <p class="govuk-body">{{ (page ~ '.uploadHint') | trans }}</p>
     {% endset %}
     <div id="upload-progress" class="hidden">
         {{ macros.notification('loader', alertMessage) }}

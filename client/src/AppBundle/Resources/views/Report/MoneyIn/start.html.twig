@@ -21,16 +21,16 @@
 {% block pageContent %}
 
     <div class="text">
-        <p>{{ 'startPage.moneyIn.pageSectionDescription1' | trans(transOptions) }}</p>
-        <p>{{ 'startPage.moneyIn.pageSectionDescription2' | trans(transOptions) | raw }}</p>
-        <p>{{ 'startPage.moneyIn.pageSectionDescription3' | trans }}</p>
+        <p class="govuk-body">{{ 'startPage.moneyIn.pageSectionDescription1' | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ 'startPage.moneyIn.pageSectionDescription2' | trans(transOptions) | raw }}</p>
+        <p class="govuk-body">{{ 'startPage.moneyIn.pageSectionDescription3' | trans }}</p>
 
         <h3 class="govuk-heading-s">{{ 'startPage.moneyIn.totalOrIndividualHeading' | trans }}</h3>
-        <p>{{ 'startPage.moneyIn.totalOrIndividualPara' | trans }}</p>
+        <p class="govuk-body">{{ 'startPage.moneyIn.totalOrIndividualPara' | trans }}</p>
 
         {% if report.bankAccounts is empty and report.canLinkToBankAccounts %}
             <h3 class="govuk-heading-s">{{ 'startPage.moneyIn.accountLinksHeading' | trans(transOptions) }}</h3>
-            <p>{{ 'startPage.moneyIn.accountLinksPara1' | trans(transOptions) | raw }}</p>
+            <p class="govuk-body">{{ 'startPage.moneyIn.accountLinksPara1' | trans(transOptions) | raw }}</p>
         {% endif %}
     </div>
 
