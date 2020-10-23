@@ -37,7 +37,7 @@ differenceTable:
 
 download-transactions: |
   <a id="transactionsCsv" href="%transactionsCsvPath%" class="behat-link-download-transactions">Download a copy of your transactions (csv)</a>
-   to import into your workflow.
+   to import into a spreadsheet.
 
 moreInfo:
   heading: More information
