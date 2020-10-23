@@ -16,7 +16,7 @@ module "api_aurora" {
   master_username               = "digidepsmaster"
   master_password               = data.aws_secretsmanager_secret_version.database_password.secret_string
   instance_count                = local.account.aurora_instance_count
-  instance_class                = local.account.name == "development" ? "db.t3.medium" : "db.r5.2xlarge"
+  instance_class                = "db.t3.medium"
   kms_key_id                    = data.aws_kms_key.rds.arn
   replication_source_identifier = local.account.always_on ? aws_db_instance.api[0].arn : ""
   skip_final_snapshot           = local.account.deletion_protection ? false : true
