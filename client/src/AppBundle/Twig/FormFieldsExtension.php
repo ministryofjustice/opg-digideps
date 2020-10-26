@@ -116,7 +116,7 @@ class FormFieldsExtension extends AbstractExtension
             }
         }
 
-         //generate input field html using variables supplied
+        //generate input field html using variables supplied
         echo $env->render('AppBundle:Components/Form:_checkboxgroup.html.twig', [
             'classes' => isset($vars['classes']) ? $vars['classes'] : null,
             'disabled' => isset($vars['disabled']) ? $vars['disabled'] : false,
@@ -389,7 +389,8 @@ class FormFieldsExtension extends AbstractExtension
         //sort hintList text translation
         $hintListArray = null;
         if (!empty($vars['hasHintList'])) {
-            $hintListTextTrans = $this->translator->trans($translationKey . '.hintList', [], $domain);
+            $hintListParams = isset($vars['hintListParameters']) ? $vars['hintListParameters'] : [];
+            $hintListTextTrans = $this->translator->trans($translationKey . '.hintList', $hintListParams, $domain);
             $hintListArray = array_filter(explode("\n", $hintListTextTrans));
         }
 
