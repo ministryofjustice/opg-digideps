@@ -617,7 +617,7 @@ jobs:
           command: |
             EPOCH_MILLISECONDS=$(date +%s%3N)
 
-            curl --location --request PUT ${METRICS_ENDPOINT} \
+            curl --max-time 30 --location --request PUT ${METRICS_ENDPOINT} \
             --header 'Content-Type: application/json' \
               --data-raw "{
                 \"records\": [
