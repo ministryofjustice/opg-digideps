@@ -83,7 +83,7 @@ form:
     context: Address line 2 of 2 (optional)
     hint: ""
   county:
-    label: County
+    label: County (optional)
     hint: ""
   postcode:
     label: Postcode (optional)
