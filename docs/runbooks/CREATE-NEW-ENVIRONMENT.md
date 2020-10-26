@@ -1,4 +1,4 @@
-# Create new environment
+# Create New Environment
 
 There are many reasons you may wish to create a new environment. All of our PRs create branch based environments
 that are removed on merge of the code. For normal purposes this should be how you test and deploy your code.
