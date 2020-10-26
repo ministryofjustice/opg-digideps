@@ -35,6 +35,7 @@ class NotifyClientMock extends Client
         } else {
             try {
                 $this->sentMails[$templateId] = $personalisation;
+                parent::sendEmail($emailAddress, $templateId, $personalisation, $reference, $emailReplyToId);
             } catch (Throwable $e) {
                 $this->logger->warning('Mocked email, but received Notify error: ' . $e->getMessage());
             }
