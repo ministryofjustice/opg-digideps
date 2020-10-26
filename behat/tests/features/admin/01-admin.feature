@@ -88,7 +88,7 @@ Feature: admin / admin
     And I fill in "admin_endDate_month" with "12"
     And I fill in "admin_endDate_year" with "2018"
     And I click on "submit-and-download"
-    Then I should see "Check the end date: it can't be before the start date"
+    Then I should see "Check the end date: it cannot be before the start date"
 
   Scenario: Can access metrics and set a period
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
