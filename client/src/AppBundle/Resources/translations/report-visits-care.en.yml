@@ -32,7 +32,7 @@ form:
         how you make sure others are looking after %client%'s needs when you're not there
   doesClientReceivePaidCare:
     label: Does %client% receive care that is paid for?
-    hint: This includes private residential care or home visits from a care worker - but not help from unpaid carers such as family and friends
+    hint: This includes private residential care or home visits from a care worker, but not help from unpaid carers such as family and friends
   howIsCareFunded:
     label: How is the care funded?
     hint: ""
