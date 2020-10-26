@@ -138,7 +138,7 @@ form:
       household-bills: Household bills and expenses
       accommodation: Accommodation costs, such as mortgage or rent
       care-and-medical: Care or medical bill
-      client-expenses: Client's personal expenses
+      client-expenses: "%client%'s personal expenses"
       fees: OPG and other professional fees
       major-purchases: Major purchase, such as property or investment
       debt-and-charges: Tax or charge
