@@ -20,9 +20,9 @@ You need composer [installed](https://getcomposer.org/doc/00-intro.md)
 
 4) Run an update on the specific dependency e.g `php composer update monolog/monolog`
 
-5) Create a PR and check the all the integration tests still work
+5) Create a PR and check that all the integration tests still work
 
-6) If anything is broken then rerun them locally and use the logs and searching to work out what is wrong.
+6) If anything is broken then rerun them locally and use the logs to work out what is wrong.
 It's usually another dependency that needs changing or sometimes you may have something newly deprecated
 in your code that needs tweaking.
 
