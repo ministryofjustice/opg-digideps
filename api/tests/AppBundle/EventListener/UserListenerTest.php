@@ -4,6 +4,7 @@ namespace Tests\AppBundle\EventListener;
 
 use AppBundle\Entity\User;
 use AppBundle\EventListener\UserListener;
+use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Time\DateTimeProvider;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -24,7 +25,7 @@ class UserListenerTest extends TestCase
     private $loggedInUser;
 
     /** @var array */
-    private $expectedLogEvent;
+    private $expectedAuditLog;
 
     /** @var ObjectProphecy|EntityManager */
     private $em;
@@ -35,8 +36,8 @@ class UserListenerTest extends TestCase
     /** @var ObjectProphecy|Security  */
     private $security;
 
-    /** @var ObjectProphecy|DateTimeProvider */
-    private $dateProvider;
+    /** @var AuditEvents */
+    private $auditEvents;
 
     public function setUp(): void
     {
@@ -52,7 +53,7 @@ class UserListenerTest extends TestCase
         $this->loggedInUser = (new User())
             ->setEmail('logged-in-user@email.com');
 
-        $this->expectedLogEvent = [
+        $this->expectedAuditLog = [
             'trigger' => 'ADMIN_USER_EDIT',
             'email_changed_from' => 'p.bear@email.com',
             'email_changed_to' => 'panda.bear@email.com',
@@ -67,7 +68,8 @@ class UserListenerTest extends TestCase
         $this->em = self::prophesize(EntityManager::class);
         $this->logger = self::prophesize(LoggerInterface::class);
         $this->security = self::prophesize(Security::class);
-        $this->dateProvider = self::prophesize(DateTimeProvider::class);
+
+        $this->auditEvents = new AuditEvents(new DateTimeProvider($this->now));
     }
 
     /** @test */
@@ -77,12 +79,11 @@ class UserListenerTest extends TestCase
         $preUpdateEvent = new PreUpdateEventArgs($this->originalUser, $this->em->reveal(), $changeSet);
 
         $this->security->getUser()->willReturn($this->loggedInUser);
-        $this->dateProvider->getDateTime()->willReturn($this->now);
 
-        $sut = new UserListener($this->security->reveal(), $this->dateProvider->reveal(), $this->logger->reveal());
+        $sut = new UserListener($this->security->reveal(), $this->logger->reveal(), $this->auditEvents);
         $sut->preUpdate($this->originalUser, $preUpdateEvent);
 
-        self::assertEquals($this->expectedLogEvent, $sut->logEvents[0], 'Expected the event in logEvents to match the expected event but it doesn\'t');
+        self::assertEquals($this->expectedAuditLog, $sut->logEvents[0], 'Expected the event in logEvents to match the expected event but it doesn\'t');
     }
 
     /** @test */
@@ -92,9 +93,8 @@ class UserListenerTest extends TestCase
         $preUpdateEvent = new PreUpdateEventArgs($this->originalUser, $this->em->reveal(), $changeSet);
 
         $this->security->getUser()->willReturn($this->loggedInUser);
-        $this->dateProvider->getDateTime()->willReturn($this->now);
 
-        $sut = new UserListener($this->security->reveal(), $this->dateProvider->reveal(), $this->logger->reveal());
+        $sut = new UserListener($this->security->reveal(), $this->logger->reveal(), $this->auditEvents);
         $sut->preUpdate($this->originalUser, $preUpdateEvent);
 
         self::assertEquals([], $sut->logEvents, 'Expected $sut->logEvents to be empty but it wasn\'t');
@@ -107,9 +107,8 @@ class UserListenerTest extends TestCase
         $preUpdateEvent = new PreUpdateEventArgs($this->originalUser, $this->em->reveal(), $changeSet);
 
         $this->security->getUser()->willReturn(null);
-        $this->dateProvider->getDateTime()->willReturn($this->now);
 
-        $sut = new UserListener($this->security->reveal(), $this->dateProvider->reveal(), $this->logger->reveal());
+        $sut = new UserListener($this->security->reveal(), $this->logger->reveal(), $this->auditEvents);
         $sut->preUpdate($this->originalUser, $preUpdateEvent);
 
         self::assertEquals([], $sut->logEvents, 'Expected $sut->logEvents to be empty but it wasn\'t');
@@ -121,11 +120,11 @@ class UserListenerTest extends TestCase
         $updatedUser = (clone $this->originalUser)->setEmail('panda.bear@email.com');
         $postUpdateEvent = new LifecycleEventArgs($updatedUser, $this->em->reveal());
 
-        $this->logger->notice('', $this->expectedLogEvent)->shouldBeCalled();
+        $this->logger->notice('', $this->expectedAuditLog)->shouldBeCalled();
 
-        $sut = new UserListener($this->security->reveal(), $this->dateProvider->reveal(), $this->logger->reveal());
+        $sut = new UserListener($this->security->reveal(), $this->logger->reveal(), $this->auditEvents);
 
-        $sut->logEvents[] = $this->expectedLogEvent;
+        $sut->logEvents[] = $this->expectedAuditLog;
         $sut->postUpdate($updatedUser, $postUpdateEvent);
 
         self::assertEquals([], $sut->logEvents);
