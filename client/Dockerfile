@@ -16,7 +16,7 @@ RUN npm audit --production
 # Build assets
 RUN NODE_ENV=production npm run build
 
-FROM composer AS composer
+FROM composer:1.10.16 AS composer
 WORKDIR /app
 
 # Make composer super fast
