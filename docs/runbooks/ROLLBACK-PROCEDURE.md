@@ -20,9 +20,9 @@ This will deploy the previous version of the application whilst you revert the c
 
 ##### Step 2: Checkout a new branch and revert the commit
 
-All of our commits are squashed merged so it will be one commit to revert for the problematic issue.
+All of our commits are squashed at merge so it will be one commit to revert for the problematic issue.
 - Checkout main branch and check it's up to date `git checkout main && git pull origin main`
-- Checkout your ticket and append revert: `git checkout DDPB-0000revert`
+- Checkout your ticket and append revert: `git checkout -b DDPB-XXXXrevert`
 - Find the commit with `git log`
 - Revert the commit with `git revert <commit hash>`
 - Push to your new branch and create a PR
