@@ -1,10 +1,12 @@
 startPage:
   htmlTitle: "Visits and care - Complete the deputy report | GOV.UK"
   pageTitle: Visits and care
-  pageSectionDescription: |
+  pageSectionDescriptionPf: |
     Use this section to tell us about %client%'s care and contact with you and other people.
     We ask about this because it's OPG's responsibility to make sure you're looking after
     %client%'s best interests, which includes making health and welfare decisions.
+  pageSectionDescriptionHw: |
+      Use this section to tell us about %client%'s care and contact with you and other people.
   startButton: Start visits and care
 
 stepPage:
