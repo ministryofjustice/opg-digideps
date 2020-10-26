@@ -1,5 +1,7 @@
 resource "aws_secretsmanager_secret" "slack_webhook_url" {
-  name = "slack-webhook-url"
+  name        = "slack-webhook-url"
+  description = "URL of webhook for Slack Integration"
+  tags        = local.default_tags
 }
 
 data "aws_secretsmanager_secret_version" "slack_webhook_url" {
