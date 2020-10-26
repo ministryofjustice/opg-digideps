@@ -311,7 +311,7 @@ orbs:
         resource_class: small
         environment:
           TF_VERSION: 0.13.5
-          TF_SHA256SUM: 03f7b636638c587c3b03a4b3d1d4cab77c872ad5f7e55405ddaf38dfb94e0e89
+          TF_SHA256SUM: f7b7a7b1bfbf5d78151cfe3d1d463140b5fd6a354e71a7de2b5644e652ca5147
           TF_CLI_ARGS_plan: -input=false -lock=false
           TF_CLI_ARGS_apply: -input=false -auto-approve
           TF_CLI_ARGS_destroy: -input=false -auto-approve
