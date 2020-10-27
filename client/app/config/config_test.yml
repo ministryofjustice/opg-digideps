@@ -1,5 +1,5 @@
 imports:
-    - { resource: config_prod.yml }
+    - { resource: config.yml }
 
 framework:
     test: ~
@@ -7,3 +7,11 @@ framework:
 services:
     Alphagov\Notifications\Client:
         alias: AppBundle\Service\Mailer\NotifyClientMock
+
+    AppBundle\Service\Mailer\NotifyClientMock:
+        class: AppBundle\Service\Mailer\NotifyClientMock
+        arguments:
+            $config:
+                httpClient: '@Http\Adapter\Guzzle6\Client'
+                apiKey: '%env(NOTIFY_API_KEY)%'
+            $logger: '@logger'

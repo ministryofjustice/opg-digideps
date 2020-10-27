@@ -23,10 +23,11 @@ abstract class AbstractControllerTestCase extends WebTestCase
 
     public function setUp(): void
     {
-        $this->client = static::createClient(['environment' => 'unittest', 'debug' => false]);
+        $this->client = static::createClient(['environment' => 'unit_test_old', 'debug' => false]);
         $this->client->disableReboot();
 
-        $this->restClient = $this->injectProphecyService(RestClient::class, function() {}, ['rest_client']);
+        $this->restClient = $this->injectProphecyService(RestClient::class, function () {
+        }, ['rest_client']);
     }
 
     /**
@@ -79,7 +80,7 @@ abstract class AbstractControllerTestCase extends WebTestCase
         $token = new UsernamePasswordToken($user, 'password', 'mock', $roles);
 
         // Mock token storage to return our fake token
-        $this->injectProphecyService(TokenStorage::class, function($tokenStorage) use ($token) {
+        $this->injectProphecyService(TokenStorage::class, function ($tokenStorage) use ($token) {
             $tokenStorage->getToken()->willReturn($token);
             $tokenStorage->setToken(Argument::cetera())->willReturn();
         }, ['security.token_storage']);

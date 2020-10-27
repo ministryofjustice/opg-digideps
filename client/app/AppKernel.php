@@ -28,7 +28,7 @@ class AppKernel extends Kernel
             new Snc\RedisBundle\SncRedisBundle()
         ];
 
-        if (in_array($this->getEnvironment(), ['dev', 'test'])) {
+        if (in_array($this->getEnvironment(), ['dev', 'dev_with_debug', 'test'])) {
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
