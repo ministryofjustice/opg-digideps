@@ -77,7 +77,7 @@ class DocumentService
 
             return $s3Result && $endpointResult;
         } catch (Throwable $e) {
-            $message = "can't delete $documentId, ref $storageRef. Error: " . $e->getMessage();
+            $message = "cannot delete $documentId, ref $storageRef. Error: " . $e->getMessage();
             $this->log('error', $message);
 
             // rethrow exception to be caught by controller
@@ -95,7 +95,7 @@ class DocumentService
     {
         $ref = $document->getStorageReference();
         if (!$ref) {
-            $this->log('notice', 'empty file reference for document ' . $document->getId() . ", can't delete");
+            $this->log('notice', 'empty file reference for document ' . $document->getId() . ", cannot delete");
             throw new \Exception('Document could not be removed. No Reference.');
         }
 
@@ -153,7 +153,7 @@ class DocumentService
                 $retrievedDocument->setReportSubmission($reportSubmission);
 
                 $retrievedDocuments[] = $retrievedDocument;
-            } catch(FileNotFoundException $e) {
+            } catch (FileNotFoundException $e) {
                 $missingDocument = new MissingDocument();
                 $missingDocument->setFileName($document->getFileName());
                 $missingDocument->setReportSubmission($reportSubmission);

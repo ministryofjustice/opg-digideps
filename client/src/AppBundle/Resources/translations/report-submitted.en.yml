@@ -15,7 +15,7 @@ page:
   feedback:
     title: Give us your feedback
     limit: (Limit is 1200 characters)
-    disclaimer: Please don't include any personal or financial information, for example your National Insurance or credit card numbers.
+    disclaimer: Please do not include any personal or financial information, for example your National Insurance or credit card numbers.
 thanksForFeedback:
   thankYou: Thank you
   more: If you want to give us more detailed feedback, use [linkStart]this form[linkEnd] to contact us

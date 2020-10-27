@@ -41,7 +41,7 @@ startPage:
   whatisdecisionListItem6-4: "taking holidays or frequent day trips"
   whatisdecisionListItem7-4: "making gifts on %client%'s behalf"
   description2: |
-    You don't need to include small, day-to-day decisions like buying food or toiletries.
+    You do not need to include small, day-to-day decisions like buying food or toiletries.
 
 mentalCapacity:
   htmlTitle: "Mental capacity - Complete the deputy report | GOV.UK"
@@ -129,7 +129,7 @@ form:
     hint: ""
     defaultOption: Please select...
   clientInvolvedDetails:
-    label: If yes, tell us how you involved %client% in the decision. If no, tell us why you couldn't.
+    label: If yes, tell us how you involved %client% in the decision. If no, tell us why you could not.
     hint: ""
   save:
     label: Save and continue

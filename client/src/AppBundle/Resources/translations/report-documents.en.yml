@@ -25,11 +25,11 @@ attachPage:
   pageTitle: Upload documents
   supportingDocuments: Supporting documents
   step1Heading: Would you like to provide any supporting documents?
-  selectHeading: 1. Select the files
+  selectHeading: 1. Select the documents
   selectHelp: Please select 'Choose files' below to find your files.
   selectHint1: You only need to upload documents if we have asked you to.
   selectHint2: You can only upload PDF, JPG or PNG files, and they must be smaller than 15MB.
-  uploadHeading: 2. Upload the files to your report
+  uploadHeading: 2. Upload the documents to your report
   noDocuments: No documents
   documentList: Attached documents
   documentListPrevious: Previously submitted documents
