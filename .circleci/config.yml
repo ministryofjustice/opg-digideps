@@ -211,6 +211,10 @@ workflows:
           tf_workspace: production02
           tf_command: apply
 
+      - add-to-metrics:
+          name: add to metrics
+          requires: [ apply production ]
+
       - run-task:
           name: backup production
           requires: [ apply production ]
@@ -310,8 +314,8 @@ orbs:
               password: $DOCKER_ACCESS_TOKEN
         resource_class: small
         environment:
-          TF_VERSION: 0.13.3
-          TF_SHA256SUM: 35c662be9d32d38815cde5fa4c9fa61a3b7f39952ecd50ebf92fd1b2ddd6109b
+          TF_VERSION: 0.13.5
+          TF_SHA256SUM: f7b7a7b1bfbf5d78151cfe3d1d463140b5fd6a354e71a7de2b5644e652ca5147
           TF_CLI_ARGS_plan: -input=false -lock=false
           TF_CLI_ARGS_apply: -input=false -auto-approve
           TF_CLI_ARGS_destroy: -input=false -auto-approve
@@ -602,6 +606,27 @@ jobs:
       - codecov/upload:
           file: ./api-unit-tests.xml
           flags: api
+
+  add-to-metrics:
+    docker:
+      - image: cimg/base:2020.10
+    resource_class: small
+    steps:
+      - run:
+          name: PUT release time to OPG metrics
+          command: |
+            EPOCH_MILLISECONDS=$(date +%s%3N)
+
+            curl --max-time 30 --location --request PUT ${METRICS_ENDPOINT} \
+            --header 'Content-Type: application/json' \
+              --data-raw "{
+                \"records\": [
+                  {
+                    \"data\": \"{'Dimensions': dimensions, 'Project': 'complete-the-deputy-report', 'MeasureName': 'release', 'MeasureValue': '1.0', 'MeasureValueType': 'DOUBLE', 'Time': '${EPOCH_MILLISECONDS}'}\",
+                    \"partition-key\": \"some key\"
+                  }
+                ]
+              }"
 
   pa11y-ci:
     machine:

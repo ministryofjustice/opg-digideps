@@ -91,3 +91,7 @@ _See [deployment documentation](docs/DEPLOYMENT.md)_
 The OPG Digideps Client is released under the MIT license, a copy of which can be found in [LICENSE](LICENSE).
 
 [service]: https://complete-deputy-report.service.gov.uk/
+
+## Runbook
+
+Our runbook, incident response process and other OPG technical guidance can be found [here](https://ministryofjustice.github.io/opg-technical-guidance/#opg-technical-guidance)
