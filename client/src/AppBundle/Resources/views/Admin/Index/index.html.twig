@@ -62,9 +62,9 @@
             <div class="govuk-grid-column-one-half">
                 <h2 id="users-list-title" class="govuk-heading-m flush--ends">{{ (page ~ '.userTable.heading') | trans }}</h2>
                 {% if users | length  == filters.limit %}
-                    <p class="text">{{ (page ~ '.userTable.resultsLimited') | trans|raw }}</p>
+                    <p class="govuk-body">{{ (page ~ '.userTable.resultsLimited') | trans|raw }}</p>
                 {% else %}
-                    <p>{{ (page ~ '.userTable.results') | trans({'%numberOfUsers%': users | length }) | raw }}</p>
+                    <p class="govuk-body">{{ (page ~ '.userTable.results') | trans({'%numberOfUsers%': users | length }) | raw }}</p>
                 {% endif %}
             </div>
         </div>

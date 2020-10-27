@@ -8,7 +8,7 @@
 
 {% block pageContent %}
 
-    <p class="text">{{ 'subtitle' | trans({'%tokenExpireHours%': tokenExpireHours})}}</p>
+    <p class="govuk-body">{{ 'subtitle' | trans({'%tokenExpireHours%': tokenExpireHours})}}</p>
 
     <a href="{{ path('activation_link_send', {'token': token}) }}" class="behat-link-ask-us-to-send-new-link">{{ 'sendLink' | trans }}</a>
 

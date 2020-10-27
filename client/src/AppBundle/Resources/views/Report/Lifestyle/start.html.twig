@@ -14,9 +14,11 @@
 
 {% block pageContent %}
 
-    <p class="text">
-        {{ 'startPage.pageSectionDescription' | trans(transOptions, translationDomain) }}
-    </p>
+    <div class="text">
+        <p class="govuk-body">
+            {{ 'startPage.pageSectionDescription' | trans(transOptions, translationDomain) }}
+        </p>
+    </div>
 
     {{ macros.startSectionButton(path('lifestyle_step', { 'reportId': report.id, 'step': 1 }), 'startPage.startButton' | trans ) }}
 

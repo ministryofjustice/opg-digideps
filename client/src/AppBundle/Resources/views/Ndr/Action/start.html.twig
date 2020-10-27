@@ -15,22 +15,22 @@
 {% block pageContent %}
 
 	<div class="text">
-	    <p>{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
-	    <p>{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
+	    <p class="govuk-body">{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
+	    <p class="govuk-body">{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
 
         <details class="govuk-details" data-module="govuk-details">
             <summary class="govuk-details__summary">
                 <span class="govuk-details__summary-text">{{ 'startPage.hiddenText01.summary' | trans(transOptions) }}</span>
             </summary>
             <div class="govuk-details__text">
-                <p>{{ 'startPage.hiddenText01.content.para01' |trans(transOptions) }}</p>
-                <p>{{ 'startPage.hiddenText01.content.para02' |trans(transOptions)|raw }}</p>
+                <p class="govuk-body">{{ 'startPage.hiddenText01.content.para01' |trans(transOptions) }}</p>
+                <p class="govuk-body">{{ 'startPage.hiddenText01.content.para02' |trans(transOptions)|raw }}</p>
                 <ul class="govuk-list govuk-list--bullet">
                     <li>{{ 'startPage.hiddenText01.content.listItem01' | trans(transOptions) }}</li>
                     <li>{{ 'startPage.hiddenText01.content.listItem02' | trans(transOptions) }}</li>
                     <li>{{ 'startPage.hiddenText01.content.listItem03' | trans(transOptions) }}</li>
                 </ul>
-                <p>{{ 'startPage.hiddenText01.content.para03' |trans(transOptions)|raw }}</p>
+                <p class="govuk-body">{{ 'startPage.hiddenText01.content.para03' |trans(transOptions)|raw }}</p>
             </div>
         </details>
 	</div>

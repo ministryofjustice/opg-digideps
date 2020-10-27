@@ -15,7 +15,7 @@
     <h2 class="form-title govuk-heading-m" id="users-list-title">
         Existing assisted Lay deputy sessions.
     </h2>
-    <p class="text"></p>
+    <p class="govuk-body"></p>
     {% if (users | length) == 0 %}
         No assisted Lay deputy session started.
         Find lay deputy using the form above,
@@ -104,7 +104,7 @@
     <h2 class="form-title govuk-heading-m" id="users-add-form">
         Create assisted Lay Deputy user
     </h2>
-    <p class="text">
+    <p class="govuk-body">
         This user will be managed uniquely from this AD area.
     No email nor activation email will be created. After the user is created,
         it'll be immediately possible to login on the deputy area and complete the deputy reports on behalf of the user
@@ -114,7 +114,7 @@
     {{ form_input(form.lastname,'addUserForm.lastname') }}
     {{ form_select(form.roleName,'addUserForm.roleName') }}
     {{ form_checkbox(form.ndrEnabled, 'addUserForm.ndrEnabled') }}
-    <p class="text">Other user details, client details, NDR and annual reports will be editable from the deputy area</p>
+    <p class="govuk-body">Other user details, client details, NDR and annual reports will be editable from the deputy area</p>
     {{ form_submit(form.save,'addUserForm.submit', {'buttonClass': 'behat-link-save'}) }}
     {{ form_end(form) }}
 

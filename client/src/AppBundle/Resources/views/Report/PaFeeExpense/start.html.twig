@@ -15,7 +15,7 @@
 {% block pageContent %}
 
     <div class="text">
-        <p>{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
         <ul class="govuk-list govuk-list--bullet">
         	<li>{{ 'startPage.listItem01' | trans(transOptions) }}</li>
         	<li>{{ 'startPage.listItem02' | trans(transOptions) }}</li>
@@ -25,7 +25,7 @@
         	<li>{{ 'startPage.listItem06' | trans(transOptions) }}</li>
         	<li>{{ 'startPage.listItem07' | trans(transOptions) }}</li>
         </ul>
-        <p>{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
     </div>
 
     {{ macros.startSectionButton(path('pa_fee_expense_fee_exist', { 'reportId': report.id}), 'startPage.startButton' | trans) }}

@@ -125,7 +125,6 @@ class DocumentServiceTest extends TestCase
             ->willReturn(true);
 
         $this->object->removeDocumentFromS3($document);
-
     }
 
     public function testRemoveDocumentWithS3Failure(): void
@@ -148,7 +147,6 @@ class DocumentServiceTest extends TestCase
         $this->expectException(Exception::class);
 
         $this->object->removeDocumentFromS3($document);
-
     }
 
     public function testRetrieveDocumentsFromS3ByReportSubmission(): void
@@ -351,9 +349,9 @@ class DocumentServiceTest extends TestCase
 
         $renderedTwig = $sut->render('missing-documents.html.twig', ['missingDocuments' => $missingDocuments]);
 
-        self::assertStringContainsString('<p>The following documents could not be downloaded:</p>', $renderedTwig);
+        self::assertStringContainsString('The following documents could not be downloaded:', $renderedTwig);
 
-        foreach($missingDocuments as $index => $missingDocument) {
+        foreach ($missingDocuments as $index => $missingDocument) {
             $caseNumber = $missingDocumentCaseNumbers[$index];
             $fileName = $missingDocument->getFileName();
 

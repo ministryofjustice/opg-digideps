@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block pageContent %}
-    <p class="text">{{ (page ~ '.para01') | trans }}</p>
+    <p class="govuk-body">{{ (page ~ '.para01') | trans }}</p>
     {% include 'AppBundle:Report/Document:_list_submitted.html.twig'  with {
     'documents': report.submittedDocuments,
     'translationDomain': translationDomain,

@@ -13,7 +13,7 @@
 
 {% block pageContent %}
     <div class="text">
-        <p>{{ (page ~ '.reportSubmissionsPara') | trans }}</p>
+        <p class="govuk-body">{{ (page ~ '.reportSubmissionsPara') | trans }}</p>
 
 
         {{ form_start(form, {attr: {class: 'search', novalidate: 'novalidate' }}) }}

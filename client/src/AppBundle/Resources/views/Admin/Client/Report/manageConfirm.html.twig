@@ -12,12 +12,12 @@
 
 {% block pageContent %}
     <p class="flush--bottom">{{ 'client' | trans({}, 'common') }}: <span class="govuk-!-font-weight-bold">{{ report.client.fullName }}</span></p>
-    <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="govuk-!-font-weight-bold">{{ report.client.caseNumber }}</span></p>
+    <p class="govuk-body">{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="govuk-!-font-weight-bold">{{ report.client.caseNumber }}</span></p>
 
     {% if report.isSubmitted %}
-        <p>{{ (page ~ '.form.confirmation.submittedGuidance') | trans }}</p>
+        <p class="govuk-body">{{ (page ~ '.form.confirmation.submittedGuidance') | trans }}</p>
     {% else %}
-        <p>{{ (page ~ '.form.confirmation.activeGuidance') | trans }}</p>
+        <p class="govuk-body">{{ (page ~ '.form.confirmation.activeGuidance') | trans }}</p>
     {% endif %}
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-form' }}) }}

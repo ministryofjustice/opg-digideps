@@ -23,7 +23,7 @@
         {% endif %}
         <div>
             {% if reportActive %}
-                <p>
+                <p class="govuk-body">
                     <strong class="govuk-!-font-weight-bold">Due date: </strong>
                     {{ reportActive.dueDate | date("j F Y") }}
                 </p>
@@ -50,9 +50,3 @@
         </div>
     </div>
 {% endif %}
-
-
-
-
-
-
