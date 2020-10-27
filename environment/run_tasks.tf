@@ -42,7 +42,7 @@ locals {
   psql_analyse = jsonencode({
     cpu       = 0,
     essential = true,
-    image     = "${local.images.sync}"
+    image     = local.images.sync,
     command   = ["sh", "./analyse.sh"],
     name      = "psql-analyse",
     logConfiguration = {
