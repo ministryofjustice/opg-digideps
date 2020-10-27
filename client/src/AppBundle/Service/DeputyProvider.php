@@ -41,7 +41,7 @@ class DeputyProvider implements UserProviderInterface
             $user = $this->restClient->login($credentials);
 
             // set logged user ID to the restClient (for future requests in this lifespan. e.g. set password on user activation)
-          $this->restClient->setLoggedUserId($user->getId());
+            $this->restClient->setLoggedUserId($user->getId());
 
             return $user;
         } catch (\Throwable $e) {
@@ -52,7 +52,7 @@ class DeputyProvider implements UserProviderInterface
                 throw $e;
             }
 
-            throw new UsernameNotFoundException("We don't recognise your email address or password - please try again.", $e->getCode());
+            throw new UsernameNotFoundException("We do not recognise your email address or password - please try again.", $e->getCode());
         }
     }
 

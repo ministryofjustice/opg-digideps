@@ -15,7 +15,7 @@ password:
         at least 1 lowercase letter
         at least 1 number
     validation:
-        passwordMismatch: The passwords you entered don't match.
+        passwordMismatch: The passwords you entered do not match.
 password_confirm:
     label: Confirm password
 terms_conditions:

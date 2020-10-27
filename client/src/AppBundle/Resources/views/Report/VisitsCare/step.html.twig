@@ -34,7 +34,9 @@
 
             <div id="how-often-contact-client-wrapper" class="opg-indented-block js-hidden">
                 {{ form_input(form.howOftenDoYouContactClient, 'form.howOftenDoYouContactClient', {
-                    'labelParameters': transOptions
+                    'labelParameters': transOptions,
+                    'hintListParameters': transOptions,
+                    'hasHintList': true
                 }) }}
             </div>
         </div>

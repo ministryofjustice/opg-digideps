@@ -5,7 +5,8 @@ Feature: Limiting access to fixture endpoints to super admins
 
   Scenario: Super admin can access fixture endpoints in navigation bar
     Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "Abcd1234"
+    Then I should see "Fixtures" in the "navbar" region
     When I follow "Fixtures"
-    Then I should be on "/admin/fixtures/list"
+    Then I should be on "/admin/fixtures/"
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     Then I should not see "Fixtures" in the "navbar" region
