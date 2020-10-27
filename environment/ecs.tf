@@ -109,3 +109,7 @@ resource "aws_cloudwatch_log_group" "audit" {
   name = "audit-${local.environment}"
   tags = local.default_tags
 }
+
+data "aws_iam_role" "ecs_autoscaling_service_role" {
+  name = "AWSServiceRoleForApplicationAutoScaling_ECSService"
+}

@@ -18,6 +18,11 @@ use Doctrine\Common\Persistence\ObjectManager;
 class PATestUserFixtures extends AbstractDataFixture
 {
     /**
+     * @var ReportUtils
+     */
+    private $reportUtils;
+
+    /**
      * @var NamedDeputyRepository
      */
     private $namedDeputyRepository;
@@ -26,6 +31,16 @@ class PATestUserFixtures extends AbstractDataFixture
      * @var OrgService
      */
     private $orgService;
+
+    /**
+     * @var OrganisationRepository
+     */
+    private $orgRepository;
+
+    /**
+     * @var OrganisationFactory
+     */
+    private $orgFactory;
 
     private $userData = [
         // CSV replacement fixtures for behat
@@ -152,11 +167,12 @@ class PATestUserFixtures extends AbstractDataFixture
 
     ];
 
-    public function __construct(OrgService $orgService, OrganisationRepository $orgRepository, OrganisationFactory $orgFactory)
+    public function __construct(OrgService $orgService, OrganisationRepository $orgRepository, OrganisationFactory $orgFactory, ReportUtils $reportUtils)
     {
         $this->orgService = $orgService;
         $this->orgRepository = $orgRepository;
         $this->orgFactory = $orgFactory;
+        $this->reportUtils = $reportUtils;
     }
 
     public function doLoad(ObjectManager $manager)
@@ -173,7 +189,6 @@ class PATestUserFixtures extends AbstractDataFixture
 
     private function addUser($data, $manager)
     {
-
         $team = new Team($data['Email'] . ' Team');
         $manager->persist($team);
 
@@ -213,14 +228,13 @@ class PATestUserFixtures extends AbstractDataFixture
             }
             if (isset($data['additionalClients'])) {
                 // add dummy clients for pagination tests
-                for($i=1; $i<=$data['additionalClients']; $i++) {
+                for ($i=1; $i<=$data['additionalClients']; $i++) {
                     $client = $this->createClient($this->generateTestClientData($i), $data, $user, $manager);
                     $user->addClient($client);
                     $organisation->addClient($client);
                     $client->setOrganisation($organisation);
                 }
             }
-
         }
     }
 
@@ -277,7 +291,7 @@ class PATestUserFixtures extends AbstractDataFixture
         } else {
             $type = CasRec::getTypeBasedOnTypeofRepAndCorref($clientData['reportType'], $clientData['reportVariation'], CasRec::REALM_PA);
             $endDate = \DateTime::createFromFormat('d/m/Y', $clientData['lastReportDate']);
-            $startDate = ReportUtils::generateReportStartDateFromEndDate($endDate);
+            $startDate = $this->reportUtils->generateReportStartDateFromEndDate($endDate);
             $report = new Report($client, $type, $startDate, $endDate);
 
             $manager->persist($report);
