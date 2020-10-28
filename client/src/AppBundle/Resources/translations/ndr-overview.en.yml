@@ -9,7 +9,7 @@ heading:
   finances: ""
   finishYourReport: ""
 
-cantSubmitUntilComplete: You can't submit your report until it's complete
+cantSubmitUntilComplete: You cannot submit your report until it's complete
 
 dueDate: "Due date"
 
@@ -28,7 +28,7 @@ options:
   previewReport: "Preview report"
 
 guidanceNotice: |
-  You don't have to fill in all the sections in one go. You can complete the report in any
+  You do not have to fill in all the sections in one go. You can complete the report in any
   order you want, save it and return to it.
 
 previewNotice: |

@@ -48,8 +48,9 @@
         {% embed 'AppBundle:Report/Report:_report_row.html.twig' %}
             {% block bottomLeftContent %}
               {{ (page ~ '.editReportingPeriodPara') | trans(transOptions, translationDomain) }}
-              <a class="govuk-link behat-link-report-edit-period" href="{{ path('report_edit', {'reportId': report.id}) }}"
-                >{{ (page ~ '.editReportingPeriodLink') | trans({}, translationDomain) }}</a>
+              <a class="govuk-link behat-link-report-edit-period" href="{{ path('report_edit', {'reportId': report.id}) }}">
+                  {{ (page ~ '.editReportingPeriodLink') | trans({}, translationDomain) }}
+              </a>
             {% endblock %}
         {% endembed %}
     {% endif %}

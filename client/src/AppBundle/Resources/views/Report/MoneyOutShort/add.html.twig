@@ -21,8 +21,8 @@
 {% block pageContent %}
 
     <p class="govuk-heading-s">{{ 'addPage.moneyOut.pageSectionDescription1' | trans(transOptions) }}</p>
-    <p class="text">{{ 'addPage.moneyOut.pageSectionDescription2' | trans(transOptions) }}</p>
-    <p class="text">{{ 'addPage.moneyOut.pageSectionDescription3' | trans(transOptions) }}</p>
+    <p class="govuk-body">{{ 'addPage.moneyOut.pageSectionDescription2' | trans(transOptions) }}</p>
+    <p class="govuk-body">{{ 'addPage.moneyOut.pageSectionDescription3' | trans(transOptions) }}</p>
 
     {% include 'AppBundle:Report/MoneyOutShort:_form.html.twig' with {
     'translationDomain': translationDomain,

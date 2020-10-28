@@ -12,19 +12,40 @@ workflows:
           filters: { branches: { ignore: [ main ] } }
 
       - terraform-command:
+          name: plan shared development
+          requires: [lint terraform ]
+          filters: { branches: { ignore: [ main ] } }
+          tf_apply: false
+          tf_command: plan
+          tf_tier: shared
+          tf_workspace: development
+
+      - terraform-command:
+          name: plan pr environment
+          requires: [lint terraform ]
+          filters: { branches: { ignore: [ main ] } }
+          tf_apply: false
+          tf_command: plan
+          tf_tier: environment
+
+      - terraform-command:
           name: apply environment
-          requires: [ build pr, lint terraform ]
+          requires: [
+            build pr,
+            plan shared development,
+            plan pr environment
+             ]
           filters: { branches: { ignore: [ main ] } }
           tf_command: apply
 
       - client-unit-test:
           name: client unit test
-          requires: [ apply environment ]
+          requires: [ build pr ]
           filters: { branches: { ignore: [ main ] } }
 
       - api-unit-tests:
           name: api unit test
-          requires: [ apply environment ]
+          requires: [ build pr ]
           filters: { branches: { ignore: [ main ] } }
 
 #      - pa11y-ci:
@@ -53,7 +74,7 @@ workflows:
 
       - run-task:
           name: backup environment
-          requires: [ api unit test, client unit test, integration test ]
+          requires: [ integration test ]
           filters: { branches: { ignore: [ main ] } }
           task_name: backup
 
@@ -211,6 +232,10 @@ workflows:
           tf_workspace: production02
           tf_command: apply
 
+      - add-to-metrics:
+          name: add to metrics
+          requires: [ apply production ]
+
       - run-task:
           name: backup production
           requires: [ apply production ]
@@ -310,8 +335,8 @@ orbs:
               password: $DOCKER_ACCESS_TOKEN
         resource_class: small
         environment:
-          TF_VERSION: 0.13.3
-          TF_SHA256SUM: 35c662be9d32d38815cde5fa4c9fa61a3b7f39952ecd50ebf92fd1b2ddd6109b
+          TF_VERSION: 0.13.5
+          TF_SHA256SUM: f7b7a7b1bfbf5d78151cfe3d1d463140b5fd6a354e71a7de2b5644e652ca5147
           TF_CLI_ARGS_plan: -input=false -lock=false
           TF_CLI_ARGS_apply: -input=false -auto-approve
           TF_CLI_ARGS_destroy: -input=false -auto-approve
@@ -358,6 +383,10 @@ jobs:
       tf_command:
         description: terraform command
         type: string
+      tf_apply:
+        description: whether this is a terraform apply
+        default: true
+        type: boolean
       pact_tag:
         description: whether to add environment tag to pact broker
         default: false
@@ -372,10 +401,13 @@ jobs:
       - terraform/install
       - ecs_helper/install
       - attach_workspace: { at: ~/project }
-      - run:
-          name: Extract lambda layers
-          working_directory:  ~/project/lambda_functions
-          command: tar xvf ~/project/lambda_functions/layer.tar
+      - when:
+          condition: << parameters.tf_apply >>
+          steps:
+            - run:
+                name: Extract lambda layers
+                working_directory:  ~/project/lambda_functions
+                command: tar xvf ~/project/lambda_functions/layer.tar
       - run:
           name: Initialize
           command: terraform init
@@ -385,12 +417,15 @@ jobs:
       - run:
           name: Run << parameters.tf_command >>
           command: terraform << parameters.tf_command >>
-      - run:
-          name: Output
-          command: terraform output -json > terraform.output.json
-      - run:
-          name: Stabilize
-          command: stabilizer
+      - when:
+          condition: << parameters.tf_apply >>
+          steps:
+            - run:
+                name: Output
+                command: terraform output -json > terraform.output.json
+            - run:
+                name: Stabilize
+                command: stabilizer
       - when:
           condition: << parameters.pact_tag >>
           steps:
@@ -602,6 +637,27 @@ jobs:
       - codecov/upload:
           file: ./api-unit-tests.xml
           flags: api
+
+  add-to-metrics:
+    docker:
+      - image: cimg/base:2020.10
+    resource_class: small
+    steps:
+      - run:
+          name: PUT release time to OPG metrics
+          command: |
+            EPOCH_MILLISECONDS=$(date +%s%3N)
+
+            curl --max-time 30 --location --request PUT ${METRICS_ENDPOINT} \
+            --header 'Content-Type: application/json' \
+              --data-raw "{
+                \"records\": [
+                  {
+                    \"data\": \"{'Dimensions': dimensions, 'Project': 'complete-the-deputy-report', 'MeasureName': 'release', 'MeasureValue': '1.0', 'MeasureValueType': 'DOUBLE', 'Time': '${EPOCH_MILLISECONDS}'}\",
+                    \"partition-key\": \"some key\"
+                  }
+                ]
+              }"
 
   pa11y-ci:
     machine:

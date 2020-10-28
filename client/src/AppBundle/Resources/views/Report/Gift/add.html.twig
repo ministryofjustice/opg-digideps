@@ -20,7 +20,7 @@
 
 {% block pageContent %}
 
-    <p class="text">{{ 'addPage.pageSectionDescription' | trans(transOptions) }}</p>
+    <p class="govuk-body">{{ 'addPage.pageSectionDescription' | trans(transOptions) }}</p>
 
     {% include 'AppBundle:Report/Gift:_form.html.twig' with {
 	    'translationDomain': translationDomain,

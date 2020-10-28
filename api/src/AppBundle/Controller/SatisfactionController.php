@@ -8,16 +8,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity as EntityDir;
 
-
 /**
  * @Route("/satisfaction")
  */
 class SatisfactionController extends RestController
 {
-    private function addSatisfactionScore($score, $comments)
+    private function addSatisfactionScore($satisfactionLevel, $comments)
     {
         $satisfaction = new Satisfaction();
-        $satisfaction->setScore($score);
+        $satisfaction->setScore($satisfactionLevel);
         $satisfaction->setComments($comments);
 
         $this->persistAndFlush($satisfaction);

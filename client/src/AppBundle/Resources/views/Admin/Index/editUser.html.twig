@@ -34,7 +34,7 @@
     {% endif %}
 
     {% if 'ROLE_LAY_DEPUTY' == user.roleName and reportsCount > 0 %}
-        <p class="text">{{ 'editUserForm.reportsExist' | trans }}</p>
+        <p class="govuk-body">{{ 'editUserForm.reportsExist' | trans }}</p>
     {% endif %}
 
     {{ form_submit(form.save, 'editUserForm.submit', {'buttonClass': 'behat-link-save'}) }}

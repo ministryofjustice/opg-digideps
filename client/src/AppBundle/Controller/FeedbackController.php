@@ -1,13 +1,13 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Controller;
 
 use AppBundle\Form\FeedbackType;
-use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\Client\Internal\SatisfactionApi;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -16,50 +16,38 @@ use Symfony\Component\Routing\RouterInterface;
 
 class FeedbackController extends AbstractController
 {
-    /**
-     * @var MailFactory
-     */
-    private $mailFactory;
+    /** @var SatisfactionApi */
+    private $satisfactionApi;
 
-    /**
-     * @var MailSender
-     */
+    /** @var MailSender */
     private $mailSender;
 
-    /**
-     * @var RestClient
-     */
-    private $restClient;
+    /** @var MailFactory */
+    private $mailFactory;
 
-    /**
-     * @var RouterInterface
-     */
+    /** @var RouterInterface */
     private $router;
 
-    /**
-     * @var TranslatorInterface
-     */
+    /** @var TranslatorInterface */
     private $translator;
 
-    /**
-     * @var FormFactoryInterface
-     */
+    /** @var FormFactoryInterface  */
     private $form;
 
     public function __construct(
+        SatisfactionApi $satisfactionApi,
         MailFactory $mailFactory,
         MailSender $mailSender,
-        RestClient $restClient,
         RouterInterface $router,
         TranslatorInterface $translator,
         FormFactoryInterface $form
     ) {
         $this->mailFactory = $mailFactory;
         $this->mailSender = $mailSender;
-        $this->restClient = $restClient;
         $this->router = $router;
         $this->translator = $translator;
         $this->form = $form;
+        $this->satisfactionApi = $satisfactionApi;
     }
 
     /**
@@ -68,27 +56,19 @@ class FeedbackController extends AbstractController
      * @param Request $request
      * @return array|RedirectResponse
      */
-    public function indexAction(Request $request)
+    public function create(Request $request)
     {
         $form = $this->form->create(FeedbackType::class);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Store in database
-            $score = $form->get('satisfactionLevel')->getData();
-            $comments = $form->get('comments')->getData();
+            if ($form->get('satisfactionLevel')->getData()) {
+                $this->satisfactionApi->create($form->getData());
 
-            if ($score) {
-                $this->restClient->post('satisfaction/public', [
-                    'score' => $score,
-                    'comments' => $comments,
-                ]);
+                $feedbackEmail = $this->mailFactory->createGeneralFeedbackEmail($form->getData());
+                $this->mailSender->send($feedbackEmail);
             }
-
-            // Send notification email
-            $feedbackEmail = $this->mailFactory->createGeneralFeedbackEmail($form->getData());
-            $this->mailSender->send($feedbackEmail);
 
             $confirmation = $this->translator->trans('collectionPage.confirmation', [], 'feedback');
             $request->getSession()->getFlashBag()->add('notice', $confirmation);

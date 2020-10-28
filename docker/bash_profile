@@ -45,23 +45,23 @@ dd-psql-export() {
   fi
 }
 
-dd-mode-prod()
+dd-enable-debug()
 {
     containers=(frontend api admin)
     for i in "${containers[@]}"
     do
-      dd-exec $i touch /var/www/.enableProdMode
-      echo "$i: prod mode enabled."
+      dd-exec $i touch /var/www/.enableDebug
+      echo "$i: debug mode enabled."
     done
 }
 
-dd-mode-dev()
+dd-disable-debug()
 {
     containers=(frontend api admin)
     for i in "${containers[@]}"
     do
-       dd-exec $i rm -f /var/www/.enableProdMode
-       echo "$i: dev mode."
+       dd-exec $i rm -f /var/www/.enableDebug
+       echo "$i: debug mode disabled."
     done
 }
 
@@ -104,7 +104,7 @@ dd-db-reset()
 #
 dd-behat-run()
 {
-    dd-mode-prod
+    dd-disable-debug
 
     # Reset attached resources if doing full run
     if [ "$1" = "" ]; then
@@ -116,7 +116,7 @@ dd-behat-run()
     time docker-compose -f $DD_DOCKER_DIR/docker-compose.dev.yml run --rm test $@
 
     # Re-enable dev mode
-    dd-mode-dev
+    dd-enable-debug
 }
 
 dd-phpstan() {

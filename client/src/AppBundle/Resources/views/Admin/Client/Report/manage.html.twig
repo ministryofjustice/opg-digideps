@@ -12,7 +12,7 @@
 {% block pageContent %}
 
     <p class="flush--bottom">{{ 'client' | trans({}, 'common') }}: <span class="govuk-!-font-weight-bold">{{ report.client.fullName }}</span></p>
-    <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="govuk-!-font-weight-bold">{{ report.client.caseNumber }}</span></p>
+    <p class="govuk-body">{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="govuk-!-font-weight-bold">{{ report.client.caseNumber }}</span></p>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-form' }}) }}
 
@@ -42,7 +42,7 @@
     {% endif %}
 
     <p class="govuk-heading-s flush--ends">{{  'reportManage.currentDueDate' | trans }}</p>
-    <p>
+    <p class="govuk-body">
         {{ report.dueDate | date("j F Y") }}
         {% set dueDateDiffDays = report.dueDateDiffDays  %}
         {% if dueDateDiffDays < 0 %}

@@ -9,6 +9,9 @@ services:
             timeout: 20
             allow_redirects: false
 
+    AppBundle\Service\Client\RestClientInterface:
+        alias: AppBundle\Service\Client\RestClient
+
     AppBundle\Service\Client\RestClient:
         public: true
         arguments:

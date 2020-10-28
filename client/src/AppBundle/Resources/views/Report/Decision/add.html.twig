@@ -21,7 +21,7 @@
 
 {% block pageContent %}
 
-    <p class="text">{{ (page ~ '.pageSectionDescription') | trans(transOptions) }}</p>
+    <p class="govuk-body">{{ (page ~ '.pageSectionDescription') | trans(transOptions) }}</p>
 
     {% include 'AppBundle:Report/Decision:_form.html.twig' with {
 	    'translationDomain': translationDomain,

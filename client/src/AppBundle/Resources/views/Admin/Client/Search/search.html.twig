@@ -31,7 +31,7 @@
 
         <h2 id="client-list-title" class="govuk-heading-m flush--ends">{{ (page ~ '.clientTable.heading') | trans }}</h2>
         {% if clients | length  == filters.limit %}
-            <p class="text">{{ (page ~ '.clientTable.resultsLimited') | trans|raw }}</p>
+            <p class="govuk-body">{{ (page ~ '.clientTable.resultsLimited') | trans|raw }}</p>
         {% else %}
             <p class="behat-region-client-search-count">{{ (page ~ '.clientTable.results') | trans({'%numberOfClients%': clients | length }) | raw }}</p>
         {% endif %}

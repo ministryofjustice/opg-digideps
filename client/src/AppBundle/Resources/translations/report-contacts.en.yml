@@ -18,7 +18,7 @@ existPage:
         accountant or family member. For example, you may have asked a care worker to provide
         updates on %client%'s wellbeing, or an accountant to prepare accounts for the deputy report.
     reasonForNoContacts:
-      label: Please explain why you didn't need anyone to help you
+      label: Please explain why you did not need anyone to help you
       hint: ""
     save:
       label: Save and continue
@@ -83,7 +83,7 @@ form:
     context: Address line 2 of 2 (optional)
     hint: ""
   county:
-    label: County
+    label: County (optional)
     hint: ""
   postcode:
     label: Postcode (optional)

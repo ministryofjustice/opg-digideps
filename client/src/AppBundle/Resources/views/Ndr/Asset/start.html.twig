@@ -15,7 +15,7 @@
 {% block pageContent %}
 
     <div class="text">
-        <p>{{ 'startPage.pageSectionDescription' | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ 'startPage.pageSectionDescription' | trans(transOptions) }}</p>
     </div>
 
     {{ macros.startSectionButton(path('ndr_assets_exist', { 'ndrId': ndr.id}), 'startPage.startButton' | trans ) }}

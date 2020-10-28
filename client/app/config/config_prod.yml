@@ -1,10 +1,6 @@
 imports:
     - { resource: config.yml }
 
-#framework:
-#    validation:
-#        cache: apc
-
 jms_serializer:
   metadata:
     # not clear if loaded (buggy library ?)

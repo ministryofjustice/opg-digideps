@@ -39,21 +39,20 @@ class FixtureController extends AbstractController
         Environment $twig,
         SerializerInterface $serializer,
         RestClient $restClient
-    )
-    {
+    ) {
         $this->twig = $twig;
         $this->serializer = $serializer;
         $this->restClient = $restClient;
     }
 
     /**
-     * @Route("/list", name="admin_fixtures")
+     * @Route("/", name="admin_fixtures")
      * @Security("has_role('ROLE_SUPER_ADMIN')")
      * @Template("AppBundle:Admin/Fixtures:index.html.twig")
      */
     public function fixtures()
     {
-        return new Response();
+        return [];
     }
 
     /**

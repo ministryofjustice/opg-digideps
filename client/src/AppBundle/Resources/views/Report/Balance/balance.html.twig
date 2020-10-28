@@ -62,9 +62,9 @@
     <h3 class="govuk-heading-m">{{ 'moreInfo.heading' | trans }}</h3>
 
     <div class="text">
-        <p>{{ 'moreInfo.para1' | trans(transOptions) | raw }}</p>
-        <p>{{ 'moreInfo.para2' | trans }}</p>
-        <p>{{ 'moreInfo.para3' | trans }}</p>
+        <p class="govuk-body">{{ 'moreInfo.para1' | trans(transOptions) | raw }}</p>
+        <p class="govuk-body">{{ 'moreInfo.para2' | trans }}</p>
+        <p class="govuk-body">{{ 'moreInfo.para3' | trans }}</p>
 
         {% if readyToBalance and not report.isTotalsMatch %}
 
@@ -75,7 +75,7 @@
                     <span class="govuk-details__summary-text">{{ 'moreInfo.whatToDo.title' | trans }}</span>
                 </summary>
                 <div class="govuk-details__text">
-                    <p>{{ 'moreInfo.whatToDo.para1' | trans }}</p>
+                    <p class="govuk-body">{{ 'moreInfo.whatToDo.para1' | trans }}</p>
                     <ul class="govuk-list govuk-list--bullet">
                         <li>{{ 'moreInfo.whatToDo.listItem1' | trans }}</li>
                         <li>{{ ('moreInfo.whatToDo.listItem2' ~ app.user.getRoleForTrans) | trans }}</li>
@@ -95,8 +95,8 @@
         <h3 class="govuk-heading-m" id="cantFindTheProblem">{{ 'cantFind.heading' | trans }}</h3>
 
         <div class="text">
-            <p>{{ 'cantFind.para1' | trans }}</p>
-            <p>{{ 'cantFind.para2' | trans }}</p>
+            <p class="govuk-body">{{ 'cantFind.para1' | trans }}</p>
+            <p class="govuk-body">{{ 'cantFind.para2' | trans }}</p>
         </div>
 
         {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}

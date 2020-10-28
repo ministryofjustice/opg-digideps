@@ -1,7 +1,7 @@
 default:
     footer:
         needhelp: Need help?
-        automated: This is an automated email so please don't reply to this address.
+        automated: This is an automated email so please do not reply to this address.
         toContactUs: |
             To contact us, email the Office of the Public Guardian at <a style="word-wrap:
             break-word;" href="mailto:deputyshipservice@publicguardian.gov.uk">

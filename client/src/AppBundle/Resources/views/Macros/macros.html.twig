@@ -144,7 +144,7 @@
 {% macro saveAndAddAnotherSaveButton(button) %}
     {{ form_submit(button, '', {
         'labelText': 'saveAndAddAnother' | trans({}, 'common'),
-        'buttonClass': 'behat-link-save-and-add-another govuk-button govuk-button--secondary',
+        'buttonClass': 'govuk-button govuk-button--secondary behat-link-save-and-add-another',
     }) }}
 {% endmacro %}
 
@@ -167,55 +167,55 @@
             <div class="opg-alert opg-alert--notice">
                 {{ _self.icon('notification', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
-                    {{ message | raw }}
+                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | raw }}</p>
                 </div>
             </div>
         {% elseif alertType == 'success' %}
             <div class="opg-alert opg-alert--success">
                 {{ _self.icon('tick', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
-                    {{ message | raw }}
+                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | raw }}</p>
                 </div>
             </div>
         {% elseif alertType == 'error' %}
             <div class="opg-alert opg-alert--error">
                 {{ _self.icon('cross', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
-                    {{ message | raw }}
+                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | raw }}</p>
                 </div>
             </div>
         {% elseif alertType == 'info' %}
             <div class="opg-alert opg-alert--info">
                 {{ _self.icon('information', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
-                    {{ message | raw }}
+                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | raw }}</p>
                 </div>
             </div>
         {% elseif alertType == 'important' %}
             <div class="opg-alert opg-alert--important">
                 {{ _self.icon('important-small', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
-                    {{ message | raw }}
+                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | raw }}</p>
                 </div>
             </div>
         {% elseif alertType == 'loader' %}
             <div class="opg-alert opg-alert--info">
                 {{ _self.icon('loader', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
-                    {{ message | raw }}
+                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | raw }}</p>
                 </div>
             </div>
         {% else %}
             <div class="opg-alert">
                 <div class="behat-region-alert-message opg-alert__message">
-                    {{ message | raw }}
+                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | raw }}</p>
                 </div>
             </div>
         {% endif %}
     {% else %}
         <div class="opg-alert">
             <div class="behat-region-alert-message opg-alert__message">
-                <p>{{ message | raw }}</p>
+                <p class="govuk-body govuk-!-margin-bottom-0">{{ message | raw }}</p>
             </div>
         </div>
     {% endif %}
@@ -264,21 +264,6 @@
             </ul>
         </nav>
     </div>
-{% endmacro %}
-
-{# Question/Answer table header for summary pages #}
-{% macro summaryTableHeaderQA(hideEditLink) %}
-    <thead>
-        <tr>
-            <th>{{ 'question' | trans({}, 'common') }}</th>
-            <th>{{ 'answer' | trans({}, 'common') }}</th>
-            {% if not hideEditLink %}
-                <th>
-                    <span class="govuk-visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                </th>
-            {% endif %}
-        </tr>
-    </thead>
 {% endmacro %}
 
 {# Question/Answer header for summary lists #}

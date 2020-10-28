@@ -13,7 +13,7 @@ startPage:
   hiddenText01:
     summary: Making decisions on %client%'s behalf
     content:
-      para01: Your court order tells you what you can and can't do on %client%'s behalf.
+      para01: Your court order tells you what you can and cannot do on %client%'s behalf.
       para02: "When you're making a decision or planning future actions as a deputy, you must:"
       listItem01: make sure it's in %client%'s best interests
       listItem02: consider what %client% has done in the past

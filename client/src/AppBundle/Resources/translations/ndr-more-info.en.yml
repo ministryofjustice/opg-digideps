@@ -2,7 +2,7 @@ startPage:
   htmlTitle: "Any other information - Complete the deputy report | GOV.UK"
   pageTitle: Any other information
   pageSectionDescription1: |
-    You can use this section to give us information that isn't covered elsewhere in this report.
+    You can use this section to give us information that is not covered elsewhere in this report.
   pageSectionDescription2: |
     You can also raise concerns about your deputyship and get help from the Office of the Public Guardian (OPG).
   pageSectionDescription3: |
@@ -24,6 +24,6 @@ form:
   save:
     label: Save
   actionMoreInfo:
-    label: Is there anything you'd like to tell us that you haven't covered elsewhere in your new deputy report?
+    label: Is there anything you'd like to tell us that you have not covered elsewhere in your new deputy report?
   actionMoreInfoDetails:
     label: Please give us details of any further information, concerns or questions you may have about your deputyship

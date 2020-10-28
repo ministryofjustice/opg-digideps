@@ -14,8 +14,12 @@
 
 {% block pageContent %}
 
-    <p class="text">
-        {{ 'startPage.pageSectionDescription' | trans(transOptions, translationDomain) }}
+    <p class="govuk-body">
+        {%
+            set descriptionKey = (report.determineReportType == 'PF') ?
+                'startPage.pageSectionDescriptionPf' : 'startPage.pageSectionDescriptionHw'
+        %}
+        {{ descriptionKey | trans(transOptions, translationDomain) }}
     </p>
 
     {{ macros.startSectionButton(path('visits_care_step', { 'reportId': report.id, 'step': 1 }), 'startPage.startButton' | trans) }}
