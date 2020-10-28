@@ -276,73 +276,43 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_5xx_errors" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "frontend_alb_average_response_time" {
-  actions_enabled           = local.account.alarms_active
-  alarm_actions             = [data.aws_sns_topic.alerts.arn]
-  alarm_description         = "Response Time for Frontend ALB in ${local.environment}"
-  alarm_name                = "FrontendALBAverageResponseTime.${local.environment}"
-  comparison_operator       = "GreaterThanUpperThreshold"
-  datapoints_to_alarm       = 5
-  evaluation_periods        = 5
+  actions_enabled     = local.account.alarms_active
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  alarm_description   = "Response Time for Frontend ALB in ${local.environment}"
+  alarm_name          = "FrontendALBAverageResponseTime.${local.environment}"
+  comparison_operator = "GreaterThanThreshold"
+  dimensions = {
+    "LoadBalancer" = trimprefix(split(":", aws_lb.front.arn)[5], "loadbalancer/")
+  }
+  datapoints_to_alarm       = 3
+  evaluation_periods        = 3
+  threshold                 = 1
+  period                    = 60
+  namespace                 = "AWS/ApplicationELB"
+  metric_name               = "TargetResponseTime"
+  statistic                 = "Average"
   insufficient_data_actions = []
   treat_missing_data        = "notBreaching"
-  threshold_metric_id       = "ad1"
   tags                      = local.default_tags
-
-  metric_query {
-    id          = "m1"
-    return_data = true
-
-    metric {
-      dimensions = {
-        "LoadBalancer" = trimprefix(split(":", aws_lb.front.arn)[5], "loadbalancer/")
-      }
-      metric_name = "TargetResponseTime"
-      namespace   = "AWS/ApplicationELB"
-      period      = 60
-      stat        = "Average"
-    }
-  }
-
-  metric_query {
-    expression  = "ANOMALY_DETECTION_BAND(m1, 2)"
-    id          = "ad1"
-    label       = "TargetResponseTime (expected)"
-    return_data = true
-  }
 }
 
 resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
-  actions_enabled           = local.account.alarms_active
-  alarm_actions             = [data.aws_sns_topic.alerts.arn]
-  alarm_description         = "Response Time for Admin ALB in ${local.environment}"
-  alarm_name                = "AdminALBAverageResponseTime.${local.environment}"
-  comparison_operator       = "GreaterThanUpperThreshold"
-  datapoints_to_alarm       = 5
-  evaluation_periods        = 5
+  actions_enabled     = local.account.alarms_active
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  alarm_description   = "Response Time for Admin ALB in ${local.environment}"
+  alarm_name          = "AdminALBAverageResponseTime.${local.environment}"
+  comparison_operator = "GreaterThanThreshold"
+  dimensions = {
+    "LoadBalancer" = trimprefix(split(":", aws_lb.admin.arn)[5], "loadbalancer/")
+  }
+  datapoints_to_alarm       = 3
+  evaluation_periods        = 3
+  threshold                 = 1
+  period                    = 60
+  namespace                 = "AWS/ApplicationELB"
+  metric_name               = "TargetResponseTime"
+  statistic                 = "Average"
   insufficient_data_actions = []
   treat_missing_data        = "notBreaching"
-  threshold_metric_id       = "ad1"
   tags                      = local.default_tags
-
-  metric_query {
-    id          = "m1"
-    return_data = true
-
-    metric {
-      dimensions = {
-        "LoadBalancer" = trimprefix(split(":", aws_lb.admin.arn)[5], "loadbalancer/")
-      }
-      metric_name = "TargetResponseTime"
-      namespace   = "AWS/ApplicationELB"
-      period      = 60
-      stat        = "Average"
-    }
-  }
-
-  metric_query {
-    expression  = "ANOMALY_DETECTION_BAND(m1, 2)"
-    id          = "ad1"
-    label       = "TargetResponseTime (expected)"
-    return_data = true
-  }
 }

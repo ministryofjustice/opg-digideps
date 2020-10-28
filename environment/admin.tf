@@ -18,7 +18,7 @@ data "aws_iam_policy_document" "admin_s3" {
       "s3:GetObject",
     ]
     resources = [
-      "${aws_s3_bucket.pa_uploads.arn}",
+      aws_s3_bucket.pa_uploads.arn,
       "${aws_s3_bucket.pa_uploads.arn}/*",
     ]
   }
