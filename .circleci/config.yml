@@ -211,10 +211,6 @@ workflows:
           tf_workspace: production02
           tf_command: apply
 
-      - add-to-metrics:
-          name: add to metrics
-          requires: [ apply production ]
-
       - run-task:
           name: backup production
           requires: [ apply production ]
@@ -606,27 +602,6 @@ jobs:
       - codecov/upload:
           file: ./api-unit-tests.xml
           flags: api
-
-  add-to-metrics:
-    docker:
-      - image: cimg/base:2020.10
-    resource_class: small
-    steps:
-      - run:
-          name: PUT release time to OPG metrics
-          command: |
-            EPOCH_MILLISECONDS=$(date +%s%3N)
-
-            curl --max-time 30 --location --request PUT ${METRICS_ENDPOINT} \
-            --header 'Content-Type: application/json' \
-              --data-raw "{
-                \"records\": [
-                  {
-                    \"data\": \"{'Dimensions': dimensions, 'Project': 'complete-the-deputy-report', 'MeasureName': 'release', 'MeasureValue': '1.0', 'MeasureValueType': 'DOUBLE', 'Time': '${EPOCH_MILLISECONDS}'}\",
-                    \"partition-key\": \"some key\"
-                  }
-                ]
-              }"
 
   pa11y-ci:
     machine:
