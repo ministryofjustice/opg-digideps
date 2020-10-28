@@ -22,3 +22,5 @@ services:
     rest_client:
         alias: AppBundle\Service\Client\RestClient
         public: true
+
+    AppBundle\Service\Client\RestClientInterface: '@AppBundle\Service\Client\RestClient'

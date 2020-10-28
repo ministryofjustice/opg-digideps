@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Event\UserUpdatedEvent;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Client\Internal\UserApi;
@@ -12,6 +13,7 @@ use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use AppBundle\Service\Redirector;
 use AppBundle\Service\Time\DateTimeProvider;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
@@ -47,6 +49,9 @@ class SettingsController extends AbstractController
      */
     private $restClient;
 
+    /** @var EventDispatcherInterface */
+    private $eventDispatcher;
+
     public function __construct(
         MailFactory $mailFactory,
         MailSender $mailSender,
@@ -54,7 +59,8 @@ class SettingsController extends AbstractController
         Logger $logger,
         DateTimeProvider $dateTimeProvider,
         UserApi $userApi,
-        RestClient $restClient
+        RestClient $restClient,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->mailFactory = $mailFactory;
         $this->mailSender = $mailSender;
@@ -63,6 +69,7 @@ class SettingsController extends AbstractController
         $this->dateTimeProvider = $dateTimeProvider;
         $this->userApi = $userApi;
         $this->restClient = $restClient;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -184,7 +191,7 @@ class SettingsController extends AbstractController
 
                 if ('declaration' === $request->get('from') && null !== $request->get('rid')) {
                     $redirectRoute = $this->generateUrl('report_declaration', ['reportId' => $request->get('rid')]);
-                } else if ($user->isDeputyPA() || $user->isDeputyProf()) {
+                } elseif ($user->isDeputyPA() || $user->isDeputyProf()) {
                     $redirectRoute = $this->generateUrl('org_profile_show');
                 } else {
                     $redirectRoute = $this->generateUrl('user_show');
@@ -194,39 +201,43 @@ class SettingsController extends AbstractController
             try {
                 $this->restClient->put('user/' . $user->getId(), $postEditDeputy, $jmsPutGroups);
 
-                if ($oldEmail !== $newEmail) {
-                    $emailChangedEvent = (new AuditEvents($this->dateTimeProvider))
-                        ->userEmailChanged(
-                            AuditEvents::TRIGGER_DEPUTY_USER,
-                            $oldEmail,
-                            $postEditDeputy->getEmail(),
-                            $user->getEmail(),
-                            $postEditDeputy->getFullName(),
-                            $postEditDeputy->getRoleName()
-                        );
-
-                    $this->logger->notice('', $emailChangedEvent);
-                }
-
-                if ($newRole !== null && $oldRole !== $newRole) {
-                    $roleChangedEvent = (new AuditEvents($this->dateTimeProvider))
-                        ->roleChanged(
-                            AuditEvents::TRIGGER_DEPUTY_USER,
-                            $oldRole,
-                            $newRole,
-                            $user->getEmail(),
-                            $user->getEmail()
-                        );
-
-                    $this->logger->notice('', $roleChangedEvent);
-                }
-
-                if ($user->isLayDeputy()) {
-                    $hydratedDeputy = $this->userApi->getUserWithData(['user-clients', 'client']);
-
-                    $updateDeputyDetailsEmail = $this->mailFactory->createUpdateDeputyDetailsEmail($hydratedDeputy);
-                    $this->mailSender->send($updateDeputyDetailsEmail);
-                }
+                $userUpdatedEvent = new UserUpdatedEvent($preUpdateUser, $postUpdateUser);
+                // Send UserUpdateEvent with old and new user
+                $this->eventDispatcher->dispatch($userUpdatedEvent, UserUpdatedEvent::NAME);
+//
+//                if ($oldEmail !== $newEmail) {
+//                    $emailChangedEvent = (new AuditEvents($this->dateTimeProvider))
+//                        ->userEmailChanged(
+//                            AuditEvents::TRIGGER_DEPUTY_USER,
+//                            $oldEmail,
+//                            $postEditDeputy->getEmail(),
+//                            $user->getEmail(),
+//                            $postEditDeputy->getFullName(),
+//                            $postEditDeputy->getRoleName()
+//                        );
+//
+//                    $this->logger->notice('', $emailChangedEvent);
+//                }
+//
+//                if ($newRole !== null && $oldRole !== $newRole) {
+//                    $roleChangedEvent = (new AuditEvents($this->dateTimeProvider))
+//                        ->roleChanged(
+//                            AuditEvents::TRIGGER_DEPUTY_USER,
+//                            $oldRole,
+//                            $newRole,
+//                            $user->getEmail(),
+//                            $user->getEmail()
+//                        );
+//
+//                    $this->logger->notice('', $roleChangedEvent);
+//                }
+//
+//                if ($user->isLayDeputy()) {
+//                    $hydratedDeputy = $this->userApi->getUserWithData(['user-clients', 'client']);
+//
+//                    $updateDeputyDetailsEmail = $this->mailFactory->createUpdateDeputyDetailsEmail($hydratedDeputy);
+//                    $this->mailSender->send($updateDeputyDetailsEmail);
+//                }
 
                 return $this->redirect($redirectRoute);
             } catch (\Throwable $e) {

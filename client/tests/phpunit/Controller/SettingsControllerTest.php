@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-
 use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Logger;
 use AppBundle\Service\Time\DateTimeProvider;
@@ -31,11 +30,11 @@ class SettingsControllerTest extends AbstractControllerTestCase
         $this->restClient->put('user/1', $profAdminUser, Argument::type('array'))->shouldBeCalled();
         $this->restClient->get('user/1', Argument::cetera())->shouldBeCalled()->willReturn($profAdminUser);
 
-        $this->injectProphecyService(DateTimeProvider::class, function($dateTimeProvider) {
+        $this->injectProphecyService(DateTimeProvider::class, function ($dateTimeProvider) {
             $dateTimeProvider->getDateTime()->willReturn($this->now);
         });
 
-        $this->injectProphecyService(Logger::class, function($logger) use($profAdminUser) {
+        $this->injectProphecyService(Logger::class, function ($logger) use ($profAdminUser) {
             $expectedEvent = [
                 'trigger' => 'DEPUTY_USER',
                 'role_changed_from' => 'ROLE_PROF_ADMIN',
@@ -59,6 +58,34 @@ class SettingsControllerTest extends AbstractControllerTestCase
             'profile[phoneMain]' => $profAdminUser->getPhoneMain(),
             'profile[removeAdmin]' => 1,
         ]);
+
+//        $crawler = $this->symfonyClient->request('GET', "/feedback");
+//        $button = $crawler->selectButton('Send feedback');
+//
+//        $comment = 'I love it';
+//        $name = 'Sufjan Stevens';
+//        $email = 's.stevens@ashmatic-kitty.org';
+//        $phone = '001555123456';
+//        $satisfactionLevel = '4';
+//
+//        $formValues = [
+//            'feedback[specificPage]' => '1',
+//            'feedback[comments]' => $comment,
+//            'feedback[name]' => $name,
+//            'feedback[email]' => $email,
+//            'feedback[phone]' => $phone,
+//            'feedback[satisfactionLevel]' => $satisfactionLevel,
+//        ];
+//
+//        $this->symfonyClient->submit($button->form(), $formValues);
+//
+//
+//        self::assertEquals(302, $this->symfonyClient->getResponse()->getStatusCode());
+//        $this->assertEmailIsSent(
+//            MailFactory::GENERAL_FEEDBACK_TEMPLATE_ID,
+//            [$comment, $name, $email, $phone, $satisfactionLevel],
+//            $this->notifyClient->getSentEmails()
+//        );
     }
 
     /**
@@ -71,11 +98,11 @@ class SettingsControllerTest extends AbstractControllerTestCase
         $this->restClient->put('user/1', $layDeputyUser, Argument::type('array'))->shouldBeCalled();
         $this->restClient->get('user/1', Argument::cetera())->shouldBeCalled()->willReturn($layDeputyUser);
 
-        $this->injectProphecyService(DateTimeProvider::class, function($dateTimeProvider) {
+        $this->injectProphecyService(DateTimeProvider::class, function ($dateTimeProvider) {
             $dateTimeProvider->getDateTime()->willReturn($this->now);
         });
 
-        $this->injectProphecyService(Logger::class, function($logger) use($layDeputyUser) {
+        $this->injectProphecyService(Logger::class, function ($logger) use ($layDeputyUser) {
             $expectedEvent = [
                 'trigger' => 'DEPUTY_USER',
                 'email_changed_from' => 'logged-in-user@email.com',
