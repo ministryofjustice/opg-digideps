@@ -70,6 +70,8 @@ class OrgDeputyshipUploader
 
         foreach ($deputyshipDtos as $deputyshipDto) {
             try {
+                $this->canHandleDto($deputyshipDto);
+
                 $this->handleNamedDeputy($deputyshipDto);
                 $this->handleOrganisation($deputyshipDto);
                 $this->handleClient($deputyshipDto);
@@ -236,5 +238,27 @@ class OrgDeputyshipUploader
     private function resetAdded()
     {
         $this->added = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
+    }
+
+    private function canHandleDto(OrgDeputyshipDto $dto)
+    {
+        $missingDataTypes = [];
+
+        if (is_null($dto->getReportStartDate())) {
+            $errors[] = 'Report Start Date';
+        }
+
+        if (is_null($dto->getReportEndDate())) {
+            $errors[] = 'Report End Date';
+        }
+
+        if (is_null($dto->getCourtDate())) {
+            $errors[] = 'Court Date';
+        }
+
+        if (!empty($missingDataTypes)) {
+            $errorMessage = sprintf('Missing required data to upload case: %s', implode(",", $missingDataTypes));
+            throw new RuntimeException($errorMessage);
+        }
     }
 }

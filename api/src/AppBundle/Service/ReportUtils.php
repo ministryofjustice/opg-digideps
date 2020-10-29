@@ -11,11 +11,11 @@ class ReportUtils
      * Generates and returns the report start date from a given end date.
      * -365 days + 1 if note a leap day (otherwise we get 2nd March)
      *
-     * @param \DateTime $reportEndDate
+     * @param \DateTime|null $reportEndDate
      *
      * @return \DateTime $reportStartDate
      */
-    public function generateReportStartDateFromEndDate(\DateTime $reportEndDate)
+    public function generateReportStartDateFromEndDate(?\DateTime $reportEndDate)
     {
         $reportStartDate = clone $reportEndDate;
 

@@ -41,7 +41,7 @@ class CasRecToOrgDeputyshipDtoAssembler
 
         $clientDateOfBirth = $this->reportUtils->parseCsvDate($row['Client Date of Birth'], '19');
         $reportEndDate = $this->reportUtils->parseCsvDate($row['Last Report Day'], '20');
-        $reportStartDate = $this->reportUtils->generateReportStartDateFromEndDate($reportEndDate);
+        $reportStartDate = $reportEndDate ? $this->reportUtils->generateReportStartDateFromEndDate($reportEndDate) : null;
         $caseNumber = $this->reportUtils->padCasRecNumber(strtolower($row['Case']));
         $deputyNumber = $this->reportUtils->padCasRecNumber(strtolower($row['Deputy No']));
 
