@@ -334,9 +334,9 @@ class OrgDeputyshipDto
     }
 
     /**
-     * @return DateTime
+     * @return DateTime|null
      */
-    public function getReportStartDate(): DateTime
+    public function getReportStartDate(): ?DateTime
     {
         return $this->reportStartDate;
     }
@@ -352,9 +352,9 @@ class OrgDeputyshipDto
     }
 
     /**
-     * @return DateTime
+     * @return DateTime|null
      */
-    public function getReportEndDate(): DateTime
+    public function getReportEndDate(): ?DateTime
     {
         return $this->reportEndDate;
     }

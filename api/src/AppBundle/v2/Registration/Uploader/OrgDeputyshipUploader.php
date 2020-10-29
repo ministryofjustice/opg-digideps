@@ -92,18 +92,11 @@ class OrgDeputyshipUploader
      */
     private function handleNamedDeputy(OrgDeputyshipDto $dto)
     {
-        if (empty($dto->getDeputyEmail())) {
-            throw new RuntimeException('deputy email missing');
-        }
-
-        if (empty($dto->getDeputyFirstname())) {
-            throw new RuntimeException('deputy first name missing');
-        }
-
         $namedDeputy = ($this->em->getRepository(NamedDeputy::class))->findOneBy(
             [
                 'email1' => $dto->getDeputyEmail(),
                 'deputyNo' => $dto->getDeputyNumber(),
+                // We accept blank firstnames for trust corps
                 'firstname' => $dto->getDeputyFirstname(),
                 'lastname' => $dto->getDeputyLastname(),
                 'address1' => $dto->getDeputyAddress1(),
@@ -253,6 +246,10 @@ class OrgDeputyshipUploader
 
         if (is_null($dto->getCourtDate())) {
             $errors[] = 'Court Date';
+        }
+
+        if (is_null($dto->getDeputyEmail())) {
+            $errors[] = 'Deputy Email';
         }
 
         if (!empty($missingDataTypes)) {
