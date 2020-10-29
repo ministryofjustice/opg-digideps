@@ -128,8 +128,7 @@ class OrgDeputyshipUploader
      */
     private function handleOrganisation(OrgDeputyshipDto $dto)
     {
-        $orgDomainIdentifier = explode('@', $dto->getDeputyEmail())[1];
-        $this->currentOrganisation = $foundOrganisation = ($this->em->getRepository(Organisation::class))->findOneBy(['emailIdentifier' => $orgDomainIdentifier]);
+        $this->currentOrganisation = $foundOrganisation = ($this->em->getRepository(Organisation::class))->findByEmailIdentifier($dto->getDeputyEmail());
 
         if (is_null($foundOrganisation)) {
             $organisation = $this->orgFactory->createFromFullEmail(OrgService::DEFAULT_ORG_NAME, $dto->getDeputyEmail());
