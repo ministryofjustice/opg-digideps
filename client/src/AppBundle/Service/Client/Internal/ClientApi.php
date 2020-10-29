@@ -6,6 +6,7 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\Client\RestClientInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -24,7 +25,7 @@ class ClientApi
     private $userApi;
 
     public function __construct(
-        RestClient $restClient,
+        RestClientInterface $restClient,
         RouterInterface $router,
         LoggerInterface $logger,
         UserApi $userApi
@@ -74,5 +75,4 @@ class ClientApi
 
         throw new \Exception('Unable to generate client profile link.');
     }
-
 }

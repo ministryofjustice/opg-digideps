@@ -199,7 +199,7 @@ class SettingsController extends AbstractController
             }
 
             try {
-                $this->restClient->put('user/' . $user->getId(), $postEditDeputy, $jmsPutGroups);
+                $this->userApi->put($user->getId(), $postEditDeputy, $jmsPutGroups);
 
                 $userUpdatedEvent = new UserUpdatedEvent($preUpdateUser, $postUpdateUser);
                 // Send UserUpdateEvent with old and new user

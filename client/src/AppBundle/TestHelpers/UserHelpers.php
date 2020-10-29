@@ -5,11 +5,24 @@ namespace AppBundle\TestHelpers;
 
 use AppBundle\Entity\User;
 use Faker;
+use Symfony\Component\Serializer\Serializer;
 
 class UserHelpers
 {
-    public static function createUser()
+    /** @var Serializer */
+    private $serializer;
+
+    public function __construct(Serializer $serializer)
     {
+        $this->serializer = $serializer;
+    }
+
+    public function createUser(?array $data)
+    {
+        if (!empty($data)) {
+            $this->serializer->deserialize($data, User::class, 'array');
+        }
+
         $faker = Faker\Factory::create();
 
         return (new User())

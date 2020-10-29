@@ -4,11 +4,14 @@ namespace AppBundle\Service\Client\Internal;
 
 use AppBundle\Entity\User;
 use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\Client\RestClientInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class UserApi {
+class UserApi
+{
+    private const USER_ENDPOINT = 'user/';
     /**
-     * @var RestClient
+     * @var RestClientInterface
      */
     private $restClient;
 
@@ -18,7 +21,7 @@ class UserApi {
     private $tokenStorage;
 
     public function __construct(
-        RestClient $restClient,
+        RestClientInterface $restClient,
         TokenStorageInterface $tokenStorage
     ) {
         $this->restClient = $restClient;
@@ -39,6 +42,25 @@ class UserApi {
         /** @var User */
         $user = $this->tokenStorage->getToken()->getUser();
 
-        return $this->restClient->get('user/' . $user->getId(), 'User', $jmsGroups);
+        return $this->restClient->get(
+            sprintf('%s/%s', self::USER_ENDPOINT, $user->getId()),
+            'User',
+            $jmsGroups
+        );
+    }
+
+    /**
+     * @param string $userId
+     * @param array $userData
+     * @param array $jmsGroups
+     * @return mixed
+     */
+    public function put(string $userId, array $userData, $jmsGroups = [])
+    {
+        return $this->restClient->put(
+            sprintf('%s/%s', self::USER_ENDPOINT, $userId),
+            $userData,
+            $jmsGroups
+        );
     }
 }

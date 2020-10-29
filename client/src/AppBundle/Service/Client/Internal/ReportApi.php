@@ -11,7 +11,8 @@ use AppBundle\Exception\RestClientException;
 use AppBundle\Service\Client\RestClient;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class ReportApi {
+class ReportApi
+{
     /**
      * @var RestClient
      */

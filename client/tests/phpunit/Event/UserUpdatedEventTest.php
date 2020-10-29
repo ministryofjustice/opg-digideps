@@ -4,12 +4,14 @@ namespace AppBundle\Event;
 
 use AppBundle\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Serializer\Serializer;
 
 class UserUpdatedEventTest extends TestCase
 {
     /** @test */
     public function event_is_initialised_correctly()
     {
+        $serializer = new Serializer();
         $preUpdateUser = UserHelpers::createUser();
         $postUpdateUser = UserHelpers::createUser();
         $currentUser = UserHelpers::createUser();
