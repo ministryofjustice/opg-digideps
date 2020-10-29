@@ -70,8 +70,7 @@ class OrgDeputyshipUploader
 
         foreach ($deputyshipDtos as $deputyshipDto) {
             try {
-                $this->canHandleDto($deputyshipDto);
-
+                $this->handleDtoErrors($deputyshipDto);
                 $this->handleNamedDeputy($deputyshipDto);
                 $this->handleOrganisation($deputyshipDto);
                 $this->handleClient($deputyshipDto);
@@ -232,28 +231,28 @@ class OrgDeputyshipUploader
         $this->added = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
     }
 
-    private function canHandleDto(OrgDeputyshipDto $dto)
+    private function handleDtoErrors(OrgDeputyshipDto $dto)
     {
         $missingDataTypes = [];
 
-        if (is_null($dto->getReportStartDate())) {
-            $errors[] = 'Report Start Date';
+        if (empty($dto->getReportStartDate())) {
+            $missingDataTypes[] = 'Report Start Date';
         }
 
-        if (is_null($dto->getReportEndDate())) {
-            $errors[] = 'Report End Date';
+        if (empty($dto->getReportEndDate())) {
+            $missingDataTypes[] = 'Report End Date';
         }
 
-        if (is_null($dto->getCourtDate())) {
-            $errors[] = 'Court Date';
+        if (empty($dto->getCourtDate())) {
+            $missingDataTypes[] = 'Court Date';
         }
 
-        if (is_null($dto->getDeputyEmail())) {
-            $errors[] = 'Deputy Email';
+        if (empty($dto->getDeputyEmail())) {
+            $missingDataTypes[] = 'Deputy Email';
         }
 
         if (!empty($missingDataTypes)) {
-            $errorMessage = sprintf('Missing required data to upload case: %s', implode(",", $missingDataTypes));
+            $errorMessage = sprintf('Missing data to upload row: %s', implode(", ", $missingDataTypes));
             throw new RuntimeException($errorMessage);
         }
     }
