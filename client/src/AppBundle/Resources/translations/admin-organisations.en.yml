@@ -23,8 +23,8 @@ viewPage:
     pageTitle: Edit organisation
     supportTitle: Organisations
     addMember: Add user
-    noMembers: This organisation doesn't have any members
-    noClients: This organisation doesn't have any clients
+    noMembers: This organisation does not have any members
+    noClients: This organisation does not have any clients
     summary:
         emailDomain: Email domain
         users: Users

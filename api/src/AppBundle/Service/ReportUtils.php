@@ -11,11 +11,11 @@ class ReportUtils
      * Generates and returns the report start date from a given end date.
      * -365 days + 1 if note a leap day (otherwise we get 2nd March)
      *
-     * @param \DateTime $reportEndDate
+     * @param \DateTime|null $reportEndDate
      *
      * @return \DateTime $reportStartDate
      */
-    public function generateReportStartDateFromEndDate(\DateTime $reportEndDate)
+    public function generateReportStartDateFromEndDate(?\DateTime $reportEndDate)
     {
         $reportStartDate = clone $reportEndDate;
 
@@ -35,7 +35,7 @@ class ReportUtils
      * @param string $dateString e.g. 16-Dec-2014
      * @param string $century    e.g. 20/19 Prefix added to 2-digits year
      *
-     * @return \DateTime|false
+     * @return \DateTime|null
      */
     public function parseCsvDate($dateString, $century)
     {
@@ -48,12 +48,12 @@ class ReportUtils
         }
         // check format is d-M-Y
         if ((int) $pieces[0] < 1 || (int) $pieces[0] > 31 || strlen($pieces[1]) !== 3 || strlen($pieces[2]) !== 4) {
-            return false;
+            return null;
         }
 
         $ret = \DateTime::createFromFormat('d-M-Y', implode($sep, $pieces));
         if (!$ret instanceof \DateTime) {
-            return false;
+            return null;
         }
 
         return $ret;

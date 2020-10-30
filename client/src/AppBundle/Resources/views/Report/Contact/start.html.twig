@@ -16,7 +16,7 @@
 {% block pageContent %}
 
     <div class="text">
-        <p>{{ (page ~ '.pageSectionDescription1') | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ (page ~ '.pageSectionDescription1') | trans(transOptions) }}</p>
     </div>
 
     {{ macros.startSectionButton(path('contacts_exist', { 'reportId': report.id}), (page ~ '.startButton') | trans ) }}

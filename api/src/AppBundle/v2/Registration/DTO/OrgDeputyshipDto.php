@@ -141,10 +141,10 @@ class OrgDeputyshipDto
     }
 
     /**
-     * @param DateTime $courtDate
+     * @param DateTime|null $courtDate
      * @return OrgDeputyshipDto
      */
-    public function setCourtDate(DateTime $courtDate): self
+    public function setCourtDate(?DateTime $courtDate): self
     {
         $this->courtDate = $courtDate;
 
@@ -334,36 +334,36 @@ class OrgDeputyshipDto
     }
 
     /**
-     * @return DateTime
+     * @return DateTime|null
      */
-    public function getReportStartDate(): DateTime
+    public function getReportStartDate(): ?DateTime
     {
         return $this->reportStartDate;
     }
 
     /**
-     * @param DateTime $reportStartDate
+     * @param DateTime|null $reportStartDate
      * @return OrgDeputyshipDto
      */
-    public function setReportStartDate(DateTime $reportStartDate): self
+    public function setReportStartDate(?DateTime $reportStartDate): self
     {
         $this->reportStartDate = $reportStartDate;
         return $this;
     }
 
     /**
-     * @return DateTime
+     * @return DateTime|null
      */
-    public function getReportEndDate(): DateTime
+    public function getReportEndDate(): ?DateTime
     {
         return $this->reportEndDate;
     }
 
     /**
-     * @param DateTime $reportEndDate
+     * @param DateTime|null $reportEndDate
      * @return OrgDeputyshipDto
      */
-    public function setReportEndDate(DateTime $reportEndDate): self
+    public function setReportEndDate(?DateTime $reportEndDate): self
     {
         $this->reportEndDate = $reportEndDate;
         return $this;

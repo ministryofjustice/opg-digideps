@@ -16,7 +16,7 @@
 
 {% block pageContent %}
 
-    <p class="text">{{ (page ~ '.intro') | trans(transOptions) }}</p>
+    <p class="govuk-body">{{ (page ~ '.intro') | trans(transOptions) }}</p>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 

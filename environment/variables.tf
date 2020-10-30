@@ -43,6 +43,7 @@ variable "accounts" {
       aurora_instance_count   = number
       aurora_serverless       = bool
       deletion_protection     = bool
+      aurora_enabled          = bool
     })
   )
 }

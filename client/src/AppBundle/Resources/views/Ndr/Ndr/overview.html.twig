@@ -28,8 +28,8 @@
                         </p>
                     </li>
                 {% else %}
-                    <li>Report status:
-                        <strong>{{ ('status.' ~ ndrStatus.status) | trans() }}</strong>
+                    <li>
+                        <p class="govuk-body">Report status: <strong>{{ ('status.' ~ ndrStatus.status) | trans() }}</strong></p>
                     </li>
                 {% endif %}
             </ul>
@@ -46,7 +46,7 @@
     <ul id="overview-sections" class="push--bottom">
 
         <li>
-            <h2 class="opg-overview-section__divider">Health and welfare</h2>
+            <h2 class="govuk-heading-m opg-overview-section__divider">Health and welfare</h2>
             {% include 'AppBundle:Ndr/Ndr:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'visits_care',
@@ -60,7 +60,7 @@
 
 
         <li>
-            <h2 class="opg-overview-section__divider">{{ client.firstname }}'s property and finances</h2>
+            <h2 class="govuk-heading-m opg-overview-section__divider">{{ client.firstname }}'s property and finances</h2>
             {% include 'AppBundle:Ndr/Ndr:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'deputy_expenses',
@@ -109,7 +109,7 @@
         </li>
 
         <li>
-            <h2 class="opg-overview-section__divider">Other information</h2>
+            <h2 class="govuk-heading-m opg-overview-section__divider">Other information</h2>
             {% include 'AppBundle:Ndr/Ndr:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'actions',

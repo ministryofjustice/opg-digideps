@@ -1,6 +1,7 @@
 <?php
 
 use Aws\CloudWatchLogs\CloudWatchLogsClient;
+use Aws\S3\S3Client;
 use Aws\Ssm\SsmClient;
 use GuzzleHttp\Client;
 
@@ -78,6 +79,38 @@ $cloudwatchLogsClient = new CloudWatchLogsClient([
     ],
 ]);
 
-$cloudwatchLogsClient->createLogGroup([
-    'logGroupName' => 'audit-local'
+$logsResult = $cloudwatchLogsClient->describeLogGroups(['logGroupNamePrefix' => 'audit-local',]);
+
+if (empty($logsResult->get('logGroups'))) {
+    $cloudwatchLogsClient->createLogGroup([
+        'logGroupName' => 'audit-local'
+    ]);
+}
+
+$s3Client = new S3Client([
+    'version'  => 'latest',
+    'region'  => 'eu-west-1',
+    'endpoint'  => 'http://localstack:4572',
+    'validate'  => false,
+    'use_path_style_endpoint' => true,
+    'credentials'  => [
+        'key' => 'FAKE_ID',
+        'secret' => 'FAKE_KEY',
+    ],
 ]);
+
+$s3Result = $s3Client->listBuckets(['logGroupNamePrefix' => 'audit-local',]);
+
+if (empty($s3Result->get('Buckets'))) {
+    $s3Client->createBucket([
+        'Bucket' => 'pa-uploads-local'
+    ]);
+
+    $s3Client->putBucketVersioning([
+        'Bucket' => 'pa-uploads-local',
+        'VersioningConfiguration' => [
+            'MFADelete' => 'Disabled',
+            'Status' => 'Enabled',
+        ],
+    ]);
+}

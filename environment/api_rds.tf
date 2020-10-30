@@ -78,10 +78,10 @@ data "aws_iam_role" "enhanced_monitoring" {
 
 locals {
   db = {
-    endpoint = local.account.always_on ? aws_db_instance.api[0].address : module.api_aurora[0].endpoint
-    port     = local.account.always_on ? aws_db_instance.api[0].port : module.api_aurora[0].port
-    name     = local.account.always_on ? aws_db_instance.api[0].name : module.api_aurora[0].name
-    username = local.account.always_on ? aws_db_instance.api[0].username : module.api_aurora[0].master_username
+    endpoint = local.account.aurora_enabled ? module.api_aurora[0].endpoint : aws_db_instance.api[0].address
+    port     = local.account.aurora_enabled ? module.api_aurora[0].port : aws_db_instance.api[0].port
+    name     = local.account.aurora_enabled ? module.api_aurora[0].name : aws_db_instance.api[0].name
+    username = local.account.aurora_enabled ? module.api_aurora[0].master_username : aws_db_instance.api[0].username
   }
 }
 

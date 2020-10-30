@@ -21,9 +21,12 @@ Debug::enable();
 
 require_once __DIR__ . '/../app/AppKernel.php';
 
-$kernel = file_exists(__DIR__ . '/../.enableProdMode')
-    ? new AppKernel('test', false)
-    : new AppKernel('dev', true);
+if (file_exists(__DIR__ . '/../.enableDebug')) {
+    $kernel = new AppKernel('dev_with_debug', true);
+} else {
+    $kernel = new AppKernel('dev', false);
+}
+
 $kernel->loadClassCache();
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);

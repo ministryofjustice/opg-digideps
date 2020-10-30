@@ -18,9 +18,9 @@
 
 {% block pageContent %}
     {% if not organisation.getIsDomainIdentifier %}
-    <p>{{ 'viewPage.introPublicDomain' | trans }}</p>
+    <p class="govuk-body">{{ 'viewPage.introPublicDomain' | trans }}</p>
     {% else %}
-    <p>{{ 'viewPage.intro' | trans }}</p>
+    <p class="govuk-body">{{ 'viewPage.intro' | trans }}</p>
     {% endif %}
     <table class="govuk-table">
         <caption class="govuk-table__caption">

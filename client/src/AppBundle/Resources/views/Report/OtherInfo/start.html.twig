@@ -14,15 +14,15 @@
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
 {% block pageContent %}
-    <p class="text">
+    <p class="govuk-body">
         {{ 'startPage.pageSectionDescription1' | trans(transOptions) }}
     </p>
 
-    <p class="text">
+    <p class="govuk-body">
         {{ 'startPage.pageSectionDescription2' | trans(transOptions) }}
     </p>
 
-    <p class="text">
+    <p class="govuk-body">
         {{ ('startPage.pageSectionDescription3' ~ append104) | trans(transOptions)|raw }}
     </p>
 

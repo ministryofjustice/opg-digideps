@@ -1,0 +1,24 @@
+imports:
+    - { resource: config_test.yml }
+
+framework:
+    test: ~
+    session:
+        handler_id: ~
+        storage_id: session.storage.mock_file
+
+services:
+    AppBundle\Service\Client\RestClientMock:
+        class: AppBundle\Service\Client\RestClientMock
+
+    Alphagov\Notifications\Client:
+        alias: AppBundle\Service\Mailer\NotifyClientMock
+
+    AppBundle\Service\Client\RestClientInterface:
+        alias: AppBundle\Service\Client\RestClientMock
+
+    AppBundle\Service\Mailer\MailSender:
+        class: AppBundle\Service\Mailer\MailSender
+        arguments:
+            $logger: '@logger'
+            $notifyClient: '@AppBundle\Service\Mailer\NotifyClientMock'

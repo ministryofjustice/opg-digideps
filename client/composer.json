@@ -77,6 +77,8 @@
         "jangregor/phpstan-prophecy": "^0.6.2",
         "pact-foundation/pact-php": "^5.0",
         "symfony/var-dumper": "^3.4",
-        "phpunit/phpcov": "6.0.1"
+        "phpunit/phpcov": "6.0.1",
+        "fzaninotto/faker": "^1.9"
+
     }
 }

@@ -7,24 +7,24 @@ user:
   email:
     invalid: This email is not valid
     notBlank: Enter an email address
-    maxLength: The email can't be longer than {{ limit }} characters
+    maxLength: The email cannot be longer than {{ limit }} characters
     doesNotMatch: Email does not match
-    invalidDomain: "Email doesn't match the organisation domain: @creatorDomain"
+    invalidDomain: "Email does not match the organisation domain: @creatorDomain"
     alreadyUsed: Email address already in use in the system
   firstname:
     notBlank: Enter your first name
     notBlankOtherUser: Enter the first name
     minLength: The first name must be at least {{ limit }} letters long
-    maxLength: The first name can't be longer than {{ limit }} letters
+    maxLength: The first name cannot be longer than {{ limit }} letters
   lastname:
     notBlank: Enter your last name
     notBlankOtherUser: Enter the last name
     minLength: The last name must be at least {{ limit }} letters long
-    maxLength: The last name can't be longer than {{ limit }} letters
+    maxLength: The last name cannot be longer than {{ limit }} letters
   password:
-      notBlank: "You can't leave this blank: please enter a password"
+      notBlank: "You cannot leave this blank: please enter a password"
       minLength: The password must have at least {{ limit }} letters
-      maxLength: The password can't be longer than {{ limit }} letters
+      maxLength: The password cannot be longer than {{ limit }} letters
       noLowerCaseChars: The password must have at least one lowercase letter
       noUpperCaseChars: The password must have at least one capital letter
       noNumber: The password must have at least one number
@@ -39,7 +39,7 @@ user:
       notBlankPa: Please choose if user has admin rights or not
   address1:
     notBlank: Enter your address
-    maxLength: The address name can't be longer than {{ limit }} letters
+    maxLength: The address name cannot be longer than {{ limit }} letters
   address2:
     notBlank: Enter your address
   address3:
@@ -47,29 +47,29 @@ user:
   addressPostcode:
     notBlank: Enter your postcode
     minLength: The postcode must be at least {{ limit }} letters long
-    maxLength: The postcode can't be longer than {{ limit }} letters
+    maxLength: The postcode cannot be longer than {{ limit }} letters
   addressCountry:
     notBlank: Enter your country
   jobTitle:
     notBlank: Enter your job title
     notBlankOtherUser: Enter the job title
-    maxMessage: The job title can't be longer than {{ limit }} letters
+    maxMessage: The job title cannot be longer than {{ limit }} letters
   phoneMain:
     notBlank: Enter your phone number
     notBlankOtherUser: Enter the phone number
   paTeamName:
-    maxMessage: The team name can't be longer than {{ limit }} letters
+    maxMessage: The team name cannot be longer than {{ limit }} letters
   agreeTermsUse:
     notBlank: You must agree to these terms of use to continue
 client:
     firstname:
         notBlank: Enter the client's first name
         minMessage: The first name must be at least {{ limit }} letters long
-        maxMessage: The first name can't be longer than {{ limit }} letters
+        maxMessage: The first name cannot be longer than {{ limit }} letters
     lastname:
         notBlank: Enter the client's last name
         minMessage: The last name must be at least {{ limit }} letters long
-        maxMessage: The last name can't be longer than {{ limit }} letters
+        maxMessage: The last name cannot be longer than {{ limit }} letters
     caseNumber:
         notBlank: Enter your case number
         exactMessage1:  The case number should be 8 characters long.
@@ -80,18 +80,18 @@ client:
         lessThan: Court Date cannot be in the future
     address:
         notBlank: Enter the client's address
-        maxMessage: The address can't be longer than {{ limit }} letters
+        maxMessage: The address cannot be longer than {{ limit }} letters
     county:
-        maxMessage: The county can't be longer than {{ limit }} letters
+        maxMessage: The county cannot be longer than {{ limit }} letters
     postcode:
         notBlank: Enter the client's postcode
         minMessage: The postcode must be at least {{ limit }} letters long
-        maxMessage: The postcode can't be longer than {{ limit }} letters
+        maxMessage: The postcode cannot be longer than {{ limit }} letters
     # Pa only
     email:
         invalid: This email is not valid
         #notBlank: Enter an email address
-        maxLength: The email can't be longer than {{ limit }} characters
+        maxLength: The email cannot be longer than {{ limit }} characters
     dateOfBirth:
        lessThan: Date of birth cannot be in the future
 
@@ -102,8 +102,8 @@ report:
     endDate:
         notBlank: Enter the date when your reporting period ends
         invalidMessage: "Enter a valid date in this format: DD/MM/YYYY"
-        beforeStart: "Check the end date: it can't be before the start date"
-        greaterThan12Months: "Check the end date: your reporting period can't be more than 12 months"
+        beforeStart: "Check the end date: it cannot be before the start date"
+        greaterThan12Months: "Check the end date: your reporting period cannot be more than 12 months"
     dueDate:
         notBlank: Enter the new due date
         invalidMessage: "Enter a valid date in this format: DD/MM/YYYY"
@@ -151,15 +151,15 @@ contact:
     name:
         notBlank: Enter the person's first and last name
         minMessage: The name must be at least {{ limit }} letters long
-        maxMessage: The name can't be longer than {{ limit }} letters
+        maxMessage: The name cannot be longer than {{ limit }} letters
     address:
-        maxMessage: The address can't be longer than {{ limit }} letters
+        maxMessage: The address cannot be longer than {{ limit }} letters
     postcode:
-        maxMessage: The postcode can't be longer than {{ limit }} letters
+        maxMessage: The postcode cannot be longer than {{ limit }} letters
     relationship:
         notBlank: Enter the person's relationship to the client
         minMessage: This description is too short
-        maxMessage: The description can't be longer than {{ limit }} letters
+        maxMessage: The description cannot be longer than {{ limit }} letters
     explanation:
         notBlank: Please add an explanation
         length: Please explain in a few words why you asked this person to help you
@@ -168,12 +168,12 @@ contact:
     reasonForNoContacts:
         notBlank: Enter an explanation
     phone:
-        maxMessage: The phone number can't be longer than {{ limit }} numbers
+        maxMessage: The phone number cannot be longer than {{ limit }} numbers
     addAnother.notBlank: Please specify if you want to add another person
 decision:
     noDecisionChoice.notBlank: Please select either 'Yes' or 'No'
     reasonForNoDecisions.notBlank: |
-      Explain why you haven't had to make any significant decisions for the client
+      Explain why you have not had to make any significant decisions for the client
     addAnother.notBlank: Please specify if you want to add another decision
     description:
         notBlank: Enter some details about this decision
@@ -181,7 +181,7 @@ decision:
     clientInvolvedBoolean:
         notBlank: Please select either 'Yes' or 'No'
     clientInvolvedDetails:
-        notBlank: Tell us how you involved the client or why you couldn't
+        notBlank: Tell us how you involved the client or why you could not
         length: This description must be at least {{ limit }} letters long
 
 document:
@@ -192,7 +192,7 @@ document:
       alreadyPresent: "You have already uploaded a file with this name. Please rename your file before uploading again."
       maxDocumentsPerReport: "You have reached the maximum number of attachments for this report"
       invalidName: "Your file has an invalid name"
-      maxMessage: "The file name can't be longer than 255 letters"
+      maxMessage: "The file name cannot be longer than 255 letters"
       fileSize: "Your uploaded file exceeded the maximum size of 15M"
       risky: "Unfortunately, our antivirus check found a problem with this file and we are unable to upload it. Please choose another file"
       virusFound:  "Unfortunately, our antivirus check found a problem with this file and we are unable to upload it. Please choose another file"
@@ -204,17 +204,17 @@ clientContact:
     firstname:
         notBlank: Enter the contact's first name
         minMessage: The first name must be at least {{ limit }} letters long
-        maxMessage: The first name can't be longer than {{ limit }} letters
+        maxMessage: The first name cannot be longer than {{ limit }} letters
     lastname:
         notBlank: Enter the contact's last name
         minMessage: The last name must be at least {{ limit }} letters long
-        maxMessage: The last name can't be longer than {{ limit }} letters
+        maxMessage: The last name cannot be longer than {{ limit }} letters
     email:
         invalid: This email is not valid
-        maxLength: The email can't be longer than {{ limit }} characters
+        maxLength: The email cannot be longer than {{ limit }} characters
         minMessage: The email must be at least {{ limit }} letters long
     postcode:
-      maxMessage: The postcode can't be longer than {{ limit }} letters
+      maxMessage: The postcode cannot be longer than {{ limit }} letters
 
 # currently a subsection of decisions
 mentalCapacity:
@@ -230,10 +230,10 @@ account:
     bank:
         notBlank: Enter the bank or building society name
         minMessage: The bank or building society name must be at least {{ limit }} letters long
-        maxMessage: The bank or building society name can't be longer than {{ limit }} letters
+        maxMessage: The bank or building society name cannot be longer than {{ limit }} letters
     accountType:
           notBlank: Choose an account type
-          maxMessage: The account type can't be longer than {{ limit }} letters
+          maxMessage: The account type cannot be longer than {{ limit }} letters
     sortCode:
         notBlank: Enter the sort code
         type: The sort code should only contain numbers
@@ -309,7 +309,7 @@ transfer:
         notBlank: Please select the account you transferred money from
     accountTo:
         notBlank: Please select the account you transferred money to
-        sameAsFromAccount: You can't transfer to and from the same account
+        sameAsFromAccount: You cannot transfer to and from the same account
     amount:
           notBlank: Enter the amount transferred
           notNumeric: Please use numbers only to enter the amount
@@ -324,7 +324,7 @@ asset:
     addAnother.notBlank: Please specify if you want to add another asset
     title:
         notBlank: Choose the type of asset from the list
-        maxMessage: The asset name can't be longer than {{ limit }} letters
+        maxMessage: The asset name cannot be longer than {{ limit }} letters
     value:
         notBlank: Enter the value of this asset
         type: Enter a valid amount for this asset
@@ -340,17 +340,17 @@ asset:
     property:
         address:
             notBlank: Enter the address
-            maxMessage: The address can't be longer than 200 letters
+            maxMessage: The address cannot be longer than 200 letters
         address2:
-            maxMessage: The address can't be longer than 200 letters
+            maxMessage: The address cannot be longer than 200 letters
         county:
-            maxMessage: The county can't be longer than 75 letters
+            maxMessage: The county cannot be longer than 75 letters
         postcode:
             notBlank: Enter the postcode
-            maxMessage: The postcode can't be longer than {{ limit }} letters
+            maxMessage: The postcode cannot be longer than {{ limit }} letters
         occupants:
             notBlank: Tell us who lives at the property
-            maxMessage: Your answer can't be longer than 500 letters
+            maxMessage: Your answer cannot be longer than 500 letters
         owned:
             notBlank: You must say whether the property is fully or part-owned
         ownedPercentage:
@@ -389,7 +389,7 @@ debt:
 
 fee:
     reasonForNoFees:
-       notBlank: Explain why you haven't charged any fees for your services
+       notBlank: Explain why you have not charged any fees for your services
     noFeesChoice.notBlank: Please select either 'Yes' or 'No'
     mustHaveAtLeastOneFee: Enter at least one fee
     amount:
@@ -573,10 +573,10 @@ ndr:
       bank:
           notBlank: Enter the bank or building society name
           minMessage: The bank or building society name must be at least {{ limit }} letters long
-          maxMessage: The bank or building society name can't be longer than {{ limit }} letters
+          maxMessage: The bank or building society name cannot be longer than {{ limit }} letters
       accountType:
             notBlank: Choose a type of account
-            maxMessage: The account type can't be longer than {{ limit }} letters
+            maxMessage: The account type cannot be longer than {{ limit }} letters
       sortCode:
           notBlank: Enter the sort code
           type: The sort code should only contain numbers
@@ -608,7 +608,7 @@ ndr:
       addAnother.notBlank: Please specify if you want to add another asset
       title:
           notBlank: Choose the type of asset from the list
-          maxMessage: The asset name can't be longer than {{ limit }} letters
+          maxMessage: The asset name cannot be longer than {{ limit }} letters
       value:
           notBlank: Enter the value of this asset
           type: The value of the asset must be in numbers
@@ -624,17 +624,17 @@ ndr:
       property:
           address:
               notBlank: Give us the address of the client's property
-              maxMessage: The address can't be longer than 200 letters
+              maxMessage: The address cannot be longer than 200 letters
           address2:
-              maxMessage: The address can't be longer than 200 letters
+              maxMessage: The address cannot be longer than 200 letters
           county:
-              maxMessage: The county can't be longer than 75 letters
+              maxMessage: The county cannot be longer than 75 letters
           postcode:
               notBlank: Enter the postcode of the client's property
-              maxMessage: The postcode can't be longer than {{ limit }} characters
+              maxMessage: The postcode cannot be longer than {{ limit }} characters
           occupants:
               notBlank: Give us more information about who lives at the property
-              maxMessage: Your answer can't be longer than 500 letters
+              maxMessage: Your answer cannot be longer than 500 letters
           owned:
               notBlank: Select an option
           ownedPercentage:
@@ -698,7 +698,7 @@ note:
   form:
     title:
       notBlank: Please enter a title
-      maxLength: The title can't be longer than {{ limit }} letters
+      maxLength: The title cannot be longer than {{ limit }} letters
 
     #expenses: # shared with 102/103 expenses, contact developer to customise them for Ndr
 
@@ -756,16 +756,16 @@ checklist:
 organisation:
   name:
     notBlank: Please enter an organisation name
-    maxLength: Organisation name can't be longer than {{ limit }} characters
+    maxLength: Organisation name cannot be longer than {{ limit }} characters
   emailIdentifierType:
     notBlank: Please select an email identifier
   emailAddress:
     notBlank: Please enter an email address
-    maxLength: Email address can't be longer than {{ limit }} characters
+    maxLength: Email address cannot be longer than {{ limit }} characters
     invalid: Please enter a valid email address
   emailDomain:
     notBlank: Please enter an email domain
-    maxLength: Email domain can't be longer than {{ limit }} characters
+    maxLength: Email domain cannot be longer than {{ limit }} characters
     invalid: Please enter a valid email domain
   isActivated:
     notBlank: Please select whether the organisation should be activated
@@ -778,7 +778,7 @@ common:
     notBlank: Please select either 'Yes' or 'No'
   genericPhone:
     minLength: "Check the phone number: it must have at least {{ limit }} numbers"
-    maxLength: "Check the phone number: it can't be more than {{ limit }} numbers long"
+    maxLength: "Check the phone number: it cannot be more than {{ limit }} numbers long"
 sendEmail:
     toEmail:
         notBlank: Please supply recipient's email (toEmail)

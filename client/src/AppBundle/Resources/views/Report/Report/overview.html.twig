@@ -34,7 +34,7 @@
     <ul id="overview-sections" class="push--bottom">
 
         <li>
-            <h2 class="opg-overview-section__divider">{{ 'heading.decisionsContacts' | trans() }}</h2>
+            <h2 class="govuk-heading-m opg-overview-section__divider">{{ 'heading.decisionsContacts' | trans() }}</h2>
             {% if report.hasSection('decisions') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
@@ -61,7 +61,7 @@
         </li>
 
         <li>
-            <h2 class="opg-overview-section__divider">{{ 'heading.healthAndWelfare' | trans(transOptions) }}</h2>
+            <h2 class="govuk-heading-m opg-overview-section__divider">{{ 'heading.healthAndWelfare' | trans(transOptions) }}</h2>
             {% if report.hasSection('visitsCare') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
@@ -87,7 +87,7 @@
         </li>
         {% if report.hasSection('deputyExpenses') or report.hasSection('bankAccounts') %}
             <li>
-                <h2 class="opg-overview-section__divider">{{ 'heading.propFinance' | trans(transOptions) }}</h2>
+                <h2 class="govuk-heading-m opg-overview-section__divider">{{ 'heading.propFinance' | trans(transOptions) }}</h2>
 
                 {% if report.hasSection('bankAccounts') %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
@@ -231,7 +231,7 @@
 
 
         <li>
-            <h2 class="opg-overview-section__divider">{{ 'heading.other' | trans() }}</h2>
+            <h2 class="govuk-heading-m opg-overview-section__divider">{{ 'heading.other' | trans() }}</h2>
             {% if report.hasSection('actions') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
@@ -257,7 +257,7 @@
             {% endif %}
 
         <li>
-            <h2 class="opg-overview-section__divider">{{ 'heading.caseDocuments' | trans() }}</h2>
+            <h2 class="govuk-heading-m opg-overview-section__divider">{{ 'heading.caseDocuments' | trans() }}</h2>
             {% if report.hasSection('documents') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
