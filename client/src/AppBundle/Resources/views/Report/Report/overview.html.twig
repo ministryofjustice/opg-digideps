@@ -315,7 +315,7 @@
     {# Fallback for JS disabled browsers #}
     <div class="js-hidden">
         <a id="{{ report.status.isReadyToSubmit ? 'edit-report-review' : 'edit-report-preview' }}"
-           class="push--top behat-link-edit-report-review"
+           class="push--top"
            href="{{ path('report_review', {'reportId': report.id}) }}"
         >
             <button class="govuk-button">
