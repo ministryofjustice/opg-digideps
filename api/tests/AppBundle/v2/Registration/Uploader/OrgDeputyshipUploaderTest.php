@@ -315,16 +315,19 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
      * @test
      *@dataProvider errorProvider
      */
-    public function upload_errors_are_added_to_error_array(OrgDeputyshipDto $dto, string $expectedErrorMessage)
+    public function upload_errors_are_added_to_error_array(OrgDeputyshipDto $dto, array $expectedErrorStrings)
     {
         $uploadResults = $this->sut->upload([$dto]);
 
-        $errorMessage = sprintf('Error for case "%s": %s', $dto->getCaseNumber(), $expectedErrorMessage);
-
-        self::assertTrue(
-            in_array($errorMessage, $uploadResults['errors']),
-            sprintf('Expected error message "%s" was not in the errors array', $errorMessage)
-        );
+        foreach ($expectedErrorStrings as $expectedErrorString) {
+            foreach ($uploadResults['errors'] as $actualError) {
+                self::assertStringContainsString(
+                    $expectedErrorString,
+                    $actualError,
+                    sprintf('Expected error string "%s" was not in the errors array', $expectedErrorString)
+                );
+            }
+        }
     }
 
     public function errorProvider()
@@ -332,8 +335,14 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
 
         return [
-            'Missing deputy email' => [(clone($deputyships[0]))->setDeputyEmail(null), 'deputy email missing'],
-            'Missing deputy first name' => [(clone($deputyships[0]))->setDeputyFirstname(null), 'deputy first name missing']
+            'Missing deputy email' => [(clone($deputyships[0]))->setDeputyEmail(null), ['Deputy Email']],
+            'Missing start date' => [(clone($deputyships[0]))->setReportStartDate(null), ['Report Start Date']],
+            'Missing end date' => [(clone($deputyships[0]))->setReportEndDate(null), ['Report End Date']],
+            'Missing court date' => [(clone($deputyships[0]))->setCourtDate(null), ['Court Date']],
+            'All missing' => [
+                (clone($deputyships[0]))->setDeputyEmail(null)->setReportStartDate(null)->setReportEndDate(null)->setCourtDate(null),
+                ['Report Start Date', 'Report End Date', 'Court Date', 'Deputy Email']
+            ],
         ];
     }
 
