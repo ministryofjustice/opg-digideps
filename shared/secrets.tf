@@ -20,7 +20,17 @@ module "environment_secrets" {
     "database-password",
     "front-api-client-secret",
     "front-frontend-secret",
-    "front-notify-api-key",
+    "front-notify-api-key"
+  ]
+  tags = local.default_tags
+}
+
+module "development_environment_secrets" {
+  count = local.account.name == "development" ? 1 : 0
+
+  source      = "./environment_secrets"
+  environment = local.account.name
+  secrets = [
     "browserstack-username",
     "browserstack-access-key"
   ]
