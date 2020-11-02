@@ -3,17 +3,23 @@ version: 2.1
 workflows:
   pull_request:
     jobs:
+      - cross-browser-test:
+          name: cross browser test
+          filters: { branches: { ignore: [ main ] } }
+
       - lint:
           name: lint terraform
           filters: { branches: { ignore: [ main ] } }
+          requires: [ cross-browser-test]
 
       - build:
           name: build pr
           filters: { branches: { ignore: [ main ] } }
+          requires: [ cross-browser-test]
 
       - terraform-command:
           name: plan shared development
-          requires: [lint terraform ]
+          requires: [ lint terraform ]
           filters: { branches: { ignore: [ main ] } }
           tf_apply: false
           tf_command: plan
@@ -22,7 +28,7 @@ workflows:
 
       - terraform-command:
           name: plan pr environment
-          requires: [lint terraform ]
+          requires: [ lint terraform ]
           filters: { branches: { ignore: [ main ] } }
           tf_apply: false
           tf_command: plan
@@ -637,6 +643,37 @@ jobs:
       - codecov/upload:
           file: ./api-unit-tests.xml
           flags: api
+
+  cross-browser-test:
+    docker:
+      - image: cimg/base:2020.10
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    steps:
+      - dockerhub_helper/dockerhub_login
+      - setup_remote_docker
+      - checkout
+      - attach_workspace: { at: ~/project }
+      - run:
+          name: Set environment
+          command: |
+            ~/project/.circleci/set_env.sh >> $BASH_ENV
+      - run:
+          name: Run tests
+          command: |
+            docker-compose up -d --build --remove-orphans
+            docker-compose run --rm api sh scripts/reset_db_structure_local.sh
+            docker-compose run --rm api sh scripts/reset_db_fixtures_local.sh
+
+            ./BrowserStackLocal --daemon "start" --key $BROWSERSTACK_KEY
+
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml run test --profile cross-browser-chrome --suite chrome
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml run test --profile cross-browser-ie11 --suite ie11
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml run test --profile cross-browser-android --suite android
+
+            ./BrowserStackLocal --daemon "stop" --key $BROWSERSTACK_KEY
 
   add-to-metrics:
     docker:
