@@ -10,12 +10,12 @@ workflows:
       - lint:
           name: lint terraform
           filters: { branches: { ignore: [ main ] } }
-          requires: [ cross-browser-test]
+          requires: [ cross browser test]
 
       - build:
           name: build pr
           filters: { branches: { ignore: [ main ] } }
-          requires: [ cross-browser-test]
+          requires: [ cross browser test]
 
       - terraform-command:
           name: plan shared development
