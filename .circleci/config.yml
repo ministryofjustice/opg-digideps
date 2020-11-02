@@ -238,10 +238,6 @@ workflows:
           tf_workspace: production02
           tf_command: apply
 
-      - add-to-metrics:
-          name: add to metrics
-          requires: [ apply production ]
-
       - run-task:
           name: backup production
           requires: [ apply production ]
