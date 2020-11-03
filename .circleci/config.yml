@@ -676,9 +676,9 @@ jobs:
 
             ./BrowserStackLocal --daemon "start" --key $BROWSERSTACK_KEY
 
-            docker-compose -f docker-compose.yml -f docker-compose.dev.yml run test --profile cross-browser-chrome --suite chrome
-            docker-compose -f docker-compose.yml -f docker-compose.dev.yml run test --profile cross-browser-ie11 --suite ie11
-            docker-compose -f docker-compose.yml -f docker-compose.dev.yml run test --profile cross-browser-android --suite android
+            docker-compose -f ../docker-compose.yml -f ../docker-compose.dev.yml run test --profile cross-browser-chrome --suite chrome
+            docker-compose -f ../docker-compose.yml -f ../docker-compose.dev.yml run test --profile cross-browser-ie11 --suite ie11
+            docker-compose -f ../docker-compose.yml -f ../docker-compose.dev.yml run test --profile cross-browser-android --suite android
 
             ./BrowserStackLocal --daemon "stop" --key $BROWSERSTACK_KEY
 
