@@ -23,15 +23,8 @@ services:
         autoconfigure: true
         arguments:
             $security: '@Symfony\Component\Security\Core\Security'
+            $dateTimeProvider: '@AppBundle\Service\Time\DateTimeProvider'
             $logger: '@logger'
-            $auditEvents: '@AppBundle\Service\Audit\AuditEvents'
         tags:
             - { name: doctrine.orm.entity_listener, event: preUpdate, entity: AppBundle\Entity\User }
             - { name: doctrine.orm.entity_listener, event: postUpdate, entity: AppBundle\Entity\User }
-
-    AppBundle\EventListener\ClientListener:
-        autowire: true
-        autoconfigure: true
-        tags:
-            - { name: doctrine.orm.entity_listener, event: preUpdate, entity: AppBundle\Entity\Client }
-            - { name: doctrine.orm.entity_listener, event: postUpdate, entity: AppBundle\Entity\Client }

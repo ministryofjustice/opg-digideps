@@ -20,17 +20,18 @@ class UserListener
     /** @var array */
     public $logEvents = [];
 
-    /** @var LoggerInterface */
+    /** @var DateTimeProvider */
+    private $dateTimeProvider;
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
 
-    /** @var AuditEvents */
-    private $auditEvents;
-
-    public function __construct(Security $security, LoggerInterface $logger, AuditEvents $auditEvents)
+    public function __construct(Security $security, DateTimeProvider $dateTimeProvider, LoggerInterface $logger)
     {
         $this->security = $security;
+        $this->dateTimeProvider = $dateTimeProvider;
         $this->logger = $logger;
-        $this->auditEvents = $auditEvents;
     }
 
     public function preUpdate(User $user, PreUpdateEventArgs $args)
@@ -38,14 +39,17 @@ class UserListener
         $changes = $args->getEntityChangeSet();
 
         if ($this->canLogEmailChange($changes)) {
-            $this->logEvents[] = $this->auditEvents->userEmailChanged(
-                AuditEvents::TRIGGER_ADMIN_USER_EDIT,
-                $changes['email'][0],
-                $changes['email'][1],
-                $this->security->getUser()->getEmail(),
-                $user->getFullName(),
-                $user->getRoleName()
-            );
+            $this->logEvents[] = [
+                'trigger' => AuditEvents::TRIGGER_ADMIN_USER_EDIT,
+                'email_changed_from' => $changes['email'][0],
+                'email_changed_to' => $changes['email'][1],
+                'changed_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+                'changed_by' => $this->security->getUser()->getEmail(),
+                'subject_full_name' => $user->getFullName(),
+                'subject_role' => $user->getRoleName(),
+                'event' => AuditEvents::EVENT_USER_EMAIL_CHANGED,
+                'type' => 'audit'
+            ];
         }
     }
 
