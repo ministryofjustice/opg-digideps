@@ -669,7 +669,7 @@ jobs:
       - run:
           name: Run tests
           command: |
-            docker-compose up -d --build --remove-orphans
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build --remove-orphans
             docker-compose run --rm api sh scripts/reset_db_structure_local.sh
             docker-compose run --rm api sh scripts/reset_db_fixtures_local.sh
 
