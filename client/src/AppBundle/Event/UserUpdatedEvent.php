@@ -19,6 +19,10 @@ class UserUpdatedEvent extends Event
     private $preUpdateRoleName;
     private $postUpdateRoleName;
 
+    /** @var User */
+    private $postUpdateUser;
+    private $preUpdateUser;
+
     public function __construct(User $preUpdateUser, User $postUpdateUser, User $currentUser, string $trigger)
     {
         $this->initialise($preUpdateUser, $postUpdateUser, $currentUser, $trigger);
@@ -26,13 +30,15 @@ class UserUpdatedEvent extends Event
 
     private function initialise(User $preUpdateUser, User $postUpdateUser, User $currentUser, string $trigger)
     {
-        $this->setCurrentUserEmail($currentUser->getEmail());
-        $this->setPostUpdateEmail($postUpdateUser->getEmail());
-        $this->setPostUpdateFullName($postUpdateUser->getFullName());
-        $this->setPostUpdateRoleName($postUpdateUser->getRoleName());
-        $this->setPreUpdateEmail($preUpdateUser->getEmail());
-        $this->setPreUpdateRoleName($preUpdateUser->getRoleName());
-        $this->setTrigger($trigger);
+        $this->setCurrentUserEmail($currentUser->getEmail())
+            ->setPostUpdateEmail($postUpdateUser->getEmail())
+            ->setPostUpdateFullName($postUpdateUser->getFullName())
+            ->setPostUpdateRoleName($postUpdateUser->getRoleName())
+            ->setPreUpdateEmail($preUpdateUser->getEmail())
+            ->setPreUpdateRoleName($preUpdateUser->getRoleName())
+            ->setTrigger($trigger)
+            ->setPreUpdateUser($preUpdateUser)
+            ->setPostUpdateUser($postUpdateUser);
     }
 
     /**
@@ -158,6 +164,42 @@ class UserUpdatedEvent extends Event
     public function setPostUpdateRoleName(string $postUpdateRoleName): UserUpdatedEvent
     {
         $this->postUpdateRoleName = $postUpdateRoleName;
+        return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function getPostUpdateUser(): User
+    {
+        return $this->postUpdateUser;
+    }
+
+    /**
+     * @param User $postUpdateUser
+     * @return UserUpdatedEvent
+     */
+    public function setPostUpdateUser(User $postUpdateUser): UserUpdatedEvent
+    {
+        $this->postUpdateUser = $postUpdateUser;
+        return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function getPreUpdateUser()
+    {
+        return $this->preUpdateUser;
+    }
+
+    /**
+     * @param mixed $preUpdateUser
+     * @return UserUpdatedEvent
+     */
+    public function setPreUpdateUser($preUpdateUser)
+    {
+        $this->preUpdateUser = $preUpdateUser;
         return $this;
     }
 }

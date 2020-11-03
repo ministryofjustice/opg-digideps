@@ -5,30 +5,50 @@ namespace AppBundle\TestHelpers;
 
 use AppBundle\Entity\User;
 use Faker;
-use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class UserHelpers
 {
     /** @var Serializer */
     private $serializer;
 
-    public function __construct(Serializer $serializer)
+    public function __construct(SerializerInterface $serializer)
     {
         $this->serializer = $serializer;
+        $this->faker = Faker\Factory::create();
     }
 
-    public function createUser(?array $data)
+    /**
+     * @param array|null $data
+     * @return User|array|object
+     */
+    public function createUser(?array $data = null)
     {
         if (!empty($data)) {
-            $this->serializer->deserialize($data, User::class, 'array');
+            return $this->serializer->deserialize(json_encode($data), User::class, 'json');
         }
 
-        $faker = Faker\Factory::create();
-
         return (new User())
-            ->setFirstname($faker->firstName)
-            ->setLastname($faker->lastName)
-            ->setRoleName($faker->jobTitle)
-            ->setEmail($faker->safeEmail);
+            ->setId(1)
+            ->setFirstname($this->faker->firstName)
+            ->setLastname($this->faker->lastName)
+            ->setRoleName($this->faker->jobTitle)
+            ->setEmail($this->faker->safeEmail);
+    }
+
+    /**
+     * @return User|array|object
+     */
+    public function createProfAdminUser(?int $id = null)
+    {
+        return $this->createUser(
+            [
+                'id' => $id ? $id : 1,
+                'firstname' => $this->faker->firstName,
+                'lastname' => $this->faker->lastName,
+                'role_name' => User::ROLE_PROF_ADMIN,
+                'email' => $this->faker->safeEmail,
+            ]
+        );
     }
 }

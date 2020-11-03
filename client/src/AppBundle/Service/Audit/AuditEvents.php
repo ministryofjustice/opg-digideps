@@ -47,8 +47,7 @@ final class AuditEvents
         string $dischargedBy,
         string $deputyName,
         ?DateTime $deputyshipStartDate
-    ): array
-    {
+    ): array {
         $event = [
             'trigger' => $trigger,
             'case_number' => $caseNumber,
@@ -62,14 +61,13 @@ final class AuditEvents
     }
 
     public function userEmailChanged(
-         string $trigger,
-         string $emailChangedFrom,
-         string $emailChangedTo,
-         string $changedBy,
-         string $subjectFullName,
-         string $subjectRole
-    )
-    {
+        string $trigger,
+        string $emailChangedFrom,
+        string $emailChangedTo,
+        string $changedBy,
+        string $subjectFullName,
+        string $subjectRole
+    ) {
         $event = [
             'trigger' => $trigger,
             'email_changed_from' => $emailChangedFrom,
@@ -89,8 +87,7 @@ final class AuditEvents
         ?string $emailChangedTo,
         string $changedBy,
         string $subjectFullName
-    )
-    {
+    ) {
         $event = [
             'trigger' => $trigger,
             'email_changed_from' => $emailChangedFrom,
@@ -120,19 +117,20 @@ final class AuditEvents
      * @param string $trigger
      * @param string $changedFrom
      * @param string $changedTo
-     * @param string $changedBy
+     * @param string $changedByEmail
+     * @param string $userChangedEmail
      * @return array
      * @throws \Exception
      */
-    public function roleChanged(string $trigger, string $changedFrom, string $changedTo, string $changedBy, string $userChanged): array
+    public function roleChanged(string $trigger, string $changedFrom, string $changedTo, string $changedByEmail, string $userChangedEmail): array
     {
         $event = [
             'trigger' => $trigger,
             'role_changed_from' => $changedFrom,
             'role_changed_to' => $changedTo,
-            'changed_by' => $changedBy,
+            'changed_by' => $changedByEmail,
             'changed_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
-            'user_changed' => $userChanged,
+            'user_changed' => $userChangedEmail,
         ];
 
         return $event + $this->baseEvent(AuditEvents::EVENT_ROLE_CHANGED);
