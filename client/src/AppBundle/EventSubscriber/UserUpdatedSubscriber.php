@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 
-namespace AppBundle\EventListener;
+namespace AppBundle\EventSubscriber;
 
 use AppBundle\Entity\User;
 use AppBundle\Event\UserUpdatedEvent;
@@ -12,7 +12,7 @@ use AppBundle\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class UserUpdatedListener implements EventSubscriberInterface
+class UserUpdatedSubscriber implements EventSubscriberInterface
 {
     /** @var DateTimeProvider */
     private $dateTimeProvider;

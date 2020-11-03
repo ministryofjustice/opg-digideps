@@ -4,7 +4,7 @@ namespace Tests\AppBundle\EventListener;
 
 use AppBundle\Entity\User;
 use AppBundle\Event\UserUpdatedEvent;
-use AppBundle\EventListener\UserUpdatedListener;
+use AppBundle\EventSubscriber\UserUpdatedSubscriber;
 use AppBundle\Model\Email;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
@@ -45,7 +45,7 @@ class UserUpdatedListenerTest extends KernelTestCase
         $this->mailFactory = self::prophesize(MailFactory::class);
         $this->mailSender = self::prophesize(MailSender::class);
 
-        $this->sut = new UserUpdatedListener(
+        $this->sut = new UserUpdatedSubscriber(
             $this->dateTimeProvider->reveal(),
             $this->logger->reveal(),
             $this->mailFactory->reveal(),
@@ -61,7 +61,7 @@ class UserUpdatedListenerTest extends KernelTestCase
                 UserUpdatedEvent::NAME => 'auditLog',
                 UserUpdatedEvent::NAME => 'sendEmail'
             ],
-            UserUpdatedListener::getSubscribedEvents()
+            UserUpdatedSubscriber::getSubscribedEvents()
         );
     }
 
