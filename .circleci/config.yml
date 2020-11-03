@@ -659,13 +659,13 @@ jobs:
             ~/project/.circleci/set_env.sh >> $BASH_ENV
       - run:
           name: Get secrets
+          working_directory: ~/project
           command: |
             chmod 755 ecs_helper/cmd/get_secrets/get_secrets.sh
             ./ecs_helper/cmd/get_secrets/get_secrets.sh
             echo "BROWSERSTACK_USERNAME=$BROWSERSTACK_USERNAME" >> behat/.env
             echo "BROWSERSTACK_KEY=$BROWSERSTACK_KEY" >> behat/.env
             echo "export BROWSERSTACK_KEY=$BROWSERSTACK_KEY" >> $BASH_ENV
-          working_directory: ~/project
       - run:
           name: Run tests
           command: |
