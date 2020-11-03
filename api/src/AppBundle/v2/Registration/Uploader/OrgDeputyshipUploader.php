@@ -70,6 +70,7 @@ class OrgDeputyshipUploader
 
         foreach ($deputyshipDtos as $deputyshipDto) {
             try {
+                $this->handleDtoErrors($deputyshipDto);
                 $this->handleNamedDeputy($deputyshipDto);
                 $this->handleOrganisation($deputyshipDto);
                 $this->handleClient($deputyshipDto);
@@ -90,18 +91,11 @@ class OrgDeputyshipUploader
      */
     private function handleNamedDeputy(OrgDeputyshipDto $dto)
     {
-        if (empty($dto->getDeputyEmail())) {
-            throw new RuntimeException('deputy email missing');
-        }
-
-        if (empty($dto->getDeputyFirstname())) {
-            throw new RuntimeException('deputy first name missing');
-        }
-
         $namedDeputy = ($this->em->getRepository(NamedDeputy::class))->findOneBy(
             [
                 'email1' => $dto->getDeputyEmail(),
                 'deputyNo' => $dto->getDeputyNumber(),
+                // We accept blank firstnames for trust corps
                 'firstname' => $dto->getDeputyFirstname(),
                 'lastname' => $dto->getDeputyLastname(),
                 'address1' => $dto->getDeputyAddress1(),
@@ -126,8 +120,7 @@ class OrgDeputyshipUploader
      */
     private function handleOrganisation(OrgDeputyshipDto $dto)
     {
-        $orgDomainIdentifier = explode('@', $dto->getDeputyEmail())[1];
-        $this->currentOrganisation = $foundOrganisation = ($this->em->getRepository(Organisation::class))->findOneBy(['emailIdentifier' => $orgDomainIdentifier]);
+        $this->currentOrganisation = $foundOrganisation = ($this->em->getRepository(Organisation::class))->findByEmailIdentifier($dto->getDeputyEmail());
 
         if (is_null($foundOrganisation)) {
             $organisation = $this->orgFactory->createFromFullEmail(OrgService::DEFAULT_ORG_NAME, $dto->getDeputyEmail());
@@ -236,5 +229,31 @@ class OrgDeputyshipUploader
     private function resetAdded()
     {
         $this->added = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
+    }
+
+    private function handleDtoErrors(OrgDeputyshipDto $dto)
+    {
+        $missingDataTypes = [];
+
+        if (empty($dto->getReportStartDate())) {
+            $missingDataTypes[] = 'Report Start Date';
+        }
+
+        if (empty($dto->getReportEndDate())) {
+            $missingDataTypes[] = 'Report End Date';
+        }
+
+        if (empty($dto->getCourtDate())) {
+            $missingDataTypes[] = 'Court Date';
+        }
+
+        if (empty($dto->getDeputyEmail())) {
+            $missingDataTypes[] = 'Deputy Email';
+        }
+
+        if (!empty($missingDataTypes)) {
+            $errorMessage = sprintf('Missing data to upload row: %s', implode(", ", $missingDataTypes));
+            throw new RuntimeException($errorMessage);
+        }
     }
 }
