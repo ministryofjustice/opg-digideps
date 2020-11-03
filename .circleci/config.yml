@@ -668,6 +668,7 @@ jobs:
             echo "export BROWSERSTACK_KEY=$BROWSERSTACK_KEY" >> $BASH_ENV
       - run:
           name: Run tests
+          working_directory: ~/project/behat
           command: |
             docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build --remove-orphans
             docker-compose run --rm api sh scripts/reset_db_structure_local.sh
