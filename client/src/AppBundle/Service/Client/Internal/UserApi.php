@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class UserApi
 {
-    private const USER_ENDPOINT = 'user/';
+    private const USER_ENDPOINT = 'user';
     /**
      * @var RestClientInterface
      */
