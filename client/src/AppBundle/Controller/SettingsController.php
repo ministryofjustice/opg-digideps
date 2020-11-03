@@ -155,33 +155,29 @@ class SettingsController extends AbstractController
      **/
     public function profileEditAction(Request $request)
     {
-        $user = $this->userApi->getUserWithData();
+        $preUpdateDeputy = $this->userApi->getUserWithData(['user-clients', 'client']);
 
         if ($this->isGranted(EntityDir\User::ROLE_ADMIN) || $this->isGranted(EntityDir\User::ROLE_AD)) {
-            $form = $this->createForm(FormDir\User\UserDetailsBasicType::class, $user, []);
+            $form = $this->createForm(FormDir\User\UserDetailsBasicType::class, $preUpdateDeputy, []);
             $jmsPutGroups = ['user_details_basic'];
         } elseif ($this->isGranted(EntityDir\User::ROLE_LAY_DEPUTY)) {
-            $form = $this->createForm(FormDir\Settings\ProfileType::class, $user, ['validation_groups' => ['user_details_full']]);
+            $form = $this->createForm(FormDir\Settings\ProfileType::class, $preUpdateDeputy, ['validation_groups' => ['user_details_full']]);
             $jmsPutGroups = ['user_details_full'];
         } elseif ($this->isGranted(EntityDir\User::ROLE_ORG)) {
-            $form = $this->createForm(FormDir\Settings\ProfileType::class, $user, ['validation_groups' => ['user_details_org', 'profile_org']]);
+            $form = $this->createForm(FormDir\Settings\ProfileType::class, $preUpdateDeputy, ['validation_groups' => ['user_details_org', 'profile_org']]);
             $jmsPutGroups = ['user_details_org', 'profile_org'];
         } else {
             throw $this->createAccessDeniedException('User role not recognised');
         }
 
-        $oldEmail = $form->getData()->getEmail();
-        $oldRole = $user->getRoleName();
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $postEditDeputy = $form->getData();
-            $newEmail = $postEditDeputy->getEmail();
+            $postUpdateDeputy = $form->getData();
             $newRole = $this->determineNoAdminRole();
 
             if ($form->has('removeAdmin') && !empty($form->get('removeAdmin')->getData())) {
-                $user->setRoleName($newRole);
+                $preUpdateDeputy->setRoleName($newRole);
 
                 $this->addFlash('notice', 'For security reasons you have been logged out because you have changed your admin rights. Please log in again below');
 
@@ -191,7 +187,7 @@ class SettingsController extends AbstractController
 
                 if ('declaration' === $request->get('from') && null !== $request->get('rid')) {
                     $redirectRoute = $this->generateUrl('report_declaration', ['reportId' => $request->get('rid')]);
-                } elseif ($user->isDeputyPA() || $user->isDeputyProf()) {
+                } elseif ($preUpdateDeputy->isDeputyPA() || $preUpdateDeputy->isDeputyProf()) {
                     $redirectRoute = $this->generateUrl('org_profile_show');
                 } else {
                     $redirectRoute = $this->generateUrl('user_show');
@@ -199,45 +195,16 @@ class SettingsController extends AbstractController
             }
 
             try {
-                $this->userApi->put($user->getId(), $postEditDeputy, $jmsPutGroups);
+                $this->userApi->put($preUpdateDeputy->getId(), $postUpdateDeputy, $jmsPutGroups);
 
-                $userUpdatedEvent = new UserUpdatedEvent($preUpdateUser, $postUpdateUser);
-                // Send UserUpdateEvent with old and new user
+                $userUpdatedEvent = new UserUpdatedEvent(
+                    $preUpdateDeputy,
+                    $postUpdateDeputy,
+                    $postUpdateDeputy,
+                    AuditEvents::TRIGGER_DEPUTY_USER_EDIT_SELF
+                );
+
                 $this->eventDispatcher->dispatch($userUpdatedEvent, UserUpdatedEvent::NAME);
-//
-//                if ($oldEmail !== $newEmail) {
-//                    $emailChangedEvent = (new AuditEvents($this->dateTimeProvider))
-//                        ->userEmailChanged(
-//                            AuditEvents::TRIGGER_DEPUTY_USER,
-//                            $oldEmail,
-//                            $postEditDeputy->getEmail(),
-//                            $user->getEmail(),
-//                            $postEditDeputy->getFullName(),
-//                            $postEditDeputy->getRoleName()
-//                        );
-//
-//                    $this->logger->notice('', $emailChangedEvent);
-//                }
-//
-//                if ($newRole !== null && $oldRole !== $newRole) {
-//                    $roleChangedEvent = (new AuditEvents($this->dateTimeProvider))
-//                        ->roleChanged(
-//                            AuditEvents::TRIGGER_DEPUTY_USER,
-//                            $oldRole,
-//                            $newRole,
-//                            $user->getEmail(),
-//                            $user->getEmail()
-//                        );
-//
-//                    $this->logger->notice('', $roleChangedEvent);
-//                }
-//
-//                if ($user->isLayDeputy()) {
-//                    $hydratedDeputy = $this->userApi->getUserWithData(['user-clients', 'client']);
-//
-//                    $updateDeputyDetailsEmail = $this->mailFactory->createUpdateDeputyDetailsEmail($hydratedDeputy);
-//                    $this->mailSender->send($updateDeputyDetailsEmail);
-//                }
 
                 return $this->redirect($redirectRoute);
             } catch (\Throwable $e) {
@@ -248,7 +215,7 @@ class SettingsController extends AbstractController
         }
 
         return [
-            'user'   => $user,
+            'user'   => $preUpdateDeputy,
             'form'   => $form->createView(),
             'client_validated' => false // to allow change of name/postcode/email
         ];
