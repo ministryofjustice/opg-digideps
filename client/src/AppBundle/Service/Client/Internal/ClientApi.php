@@ -75,4 +75,9 @@ class ClientApi
 
         throw new \Exception('Unable to generate client profile link.');
     }
+
+    public function getWithUsers(int $clientId)
+    {
+        return $this->restClient->get(sprintf('client/%s/details', $clientId), 'Client');
+    }
 }

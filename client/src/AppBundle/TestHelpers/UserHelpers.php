@@ -5,49 +5,46 @@ namespace AppBundle\TestHelpers;
 
 use AppBundle\Entity\User;
 use Faker;
-use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class UserHelpers
+class UserHelpers extends KernelTestCase
 {
-    /** @var Serializer */
-    private $serializer;
-
-    public function __construct(SerializerInterface $serializer)
-    {
-        $this->serializer = $serializer;
-        $this->faker = Faker\Factory::create();
-    }
-
     /**
      * @param array|null $data
      * @return User|array|object
      */
-    public function createUser(?array $data = null)
+    public static function createUser(?array $data = null)
     {
+        $container = (self::bootKernel())->getContainer();
+        $serializer = $container->get('serializer');
+        $faker = Faker\Factory::create();
+
         if (!empty($data)) {
-            return $this->serializer->deserialize(json_encode($data), User::class, 'json');
+            return $serializer->deserialize(json_encode($data), User::class, 'json');
         }
 
         return (new User())
             ->setId(1)
-            ->setFirstname($this->faker->firstName)
-            ->setLastname($this->faker->lastName)
-            ->setRoleName($this->faker->jobTitle)
-            ->setEmail($this->faker->safeEmail);
+            ->setFirstname($faker->firstName)
+            ->setLastname($faker->lastName)
+            ->setRoleName($faker->jobTitle)
+            ->setEmail($faker->safeEmail);
     }
 
     /**
      * @return User|array|object
      */
-    public function createProfAdminUser(?int $id = null)
+    public static function createProfAdminUser(?int $id = null)
     {
-        return $this->createUser(
+        $faker = Faker\Factory::create();
+
+        return self::createUser(
             [
                 'id' => $id ? $id : 1,
-                'firstname' => $this->faker->firstName,
-                'lastname' => $this->faker->lastName,
+                'firstname' => $faker->firstName,
+                'lastname' => $faker->lastName,
                 'role_name' => User::ROLE_PROF_ADMIN,
-                'email' => $this->faker->safeEmail,
+                'email' => $faker->safeEmail,
             ]
         );
     }

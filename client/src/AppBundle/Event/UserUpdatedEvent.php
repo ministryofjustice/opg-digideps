@@ -25,11 +25,6 @@ class UserUpdatedEvent extends Event
 
     public function __construct(User $preUpdateUser, User $postUpdateUser, User $currentUser, string $trigger)
     {
-        $this->initialise($preUpdateUser, $postUpdateUser, $currentUser, $trigger);
-    }
-
-    private function initialise(User $preUpdateUser, User $postUpdateUser, User $currentUser, string $trigger)
-    {
         $this->setCurrentUserEmail($currentUser->getEmail())
             ->setPostUpdateEmail($postUpdateUser->getEmail())
             ->setPostUpdateFullName($postUpdateUser->getFullName())

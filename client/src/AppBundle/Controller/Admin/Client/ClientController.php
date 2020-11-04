@@ -6,9 +6,12 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\NamedDeputy;
 use AppBundle\Entity\User;
+use AppBundle\Event\ClientDeletedEvent;
 use AppBundle\Service\Audit\AuditEvents;
+use AppBundle\Service\Client\Internal\ClientApi;
 use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\Logger;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -21,11 +24,20 @@ class ClientController extends AbstractController
     /** @var RestClient */
     private $restClient;
 
+    /** @var ClientApi */
+    private $clientApi;
+
+    /** @var EventDispatcherInterface */
+    private $eventDispatcher;
+
     public function __construct(
-        RestClient $restClient
-    )
-    {
+        RestClient $restClient,
+        ClientApi $clientApi,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->restClient = $restClient;
+        $this->clientApi = $clientApi;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -86,47 +98,43 @@ class ClientController extends AbstractController
      * @Security("has_role('ROLE_SUPER_ADMIN')")
      *
      * @param $id
-     * @param Logger $logger
      * @param AuditEvents $auditEvents
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Exception
      */
-    public function dischargeConfirmAction($id, Logger $logger, AuditEvents $auditEvents)
+    public function dischargeConfirmAction($id)
     {
-        /** @var Client $client */
-        $client = $this->restClient->get('v2/client/' . $id, 'Client');
-        $deputy = $this->getNamedDeputy($client->getId(), $client);
+        $clientWithUsers = $this->clientApi->getWithUsers($id);
+        $deputy = $this->getNamedDeputy($clientWithUsers);
 
         $this->restClient->delete('client/' . $id . '/delete');
 
-        $logger->notice('', $auditEvents->clientDischarged(
-            AuditEvents::TRIGGER_ADMIN_BUTTON,
-            $client->getCaseNumber(),
-            $this->getUser()->getEmail(),
-            $deputy->getFullName(),
-            $client->getCourtDate()
-        ));
+        $clientDeletedEvent = new ClientDeletedEvent(
+            $clientWithUsers,
+            $this->getUser(),
+            $deputy,
+            AuditEvents::TRIGGER_ADMIN_BUTTON
+        );
+
+        $this->eventDispatcher->dispatch($clientDeletedEvent, ClientDeletedEvent::NAME);
 
         return $this->redirectToRoute('admin_client_search');
     }
 
     /**
-     * @param int $id
      * @param Client $client
      * @return NamedDeputy|User|null
      */
-    private function getNamedDeputy(int $id, Client $client)
+    private function getNamedDeputy(Client $clientWithUsers)
     {
-        if (!is_null($client->getNamedDeputy())) {
-            return $client->getNamedDeputy();
+        if (!is_null($clientWithUsers->getNamedDeputy())) {
+            return $clientWithUsers->getNamedDeputy();
         }
 
-        if ($client->getDeletedAt() instanceof \DateTime) {
+        if ($clientWithUsers->getDeletedAt() instanceof \DateTime) {
             return null;
         }
-
-        $clientWithUsers = $this->restClient->get('client/' . $id . '/details', 'Client');
 
         foreach ($clientWithUsers->getUsers() as $user) {
             if ($user->isLayDeputy()) {
