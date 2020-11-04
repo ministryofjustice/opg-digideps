@@ -216,7 +216,6 @@ class SettingsController extends AbstractController
      *
      * @throws AccessDeniedException
      * @return string
-     *
      */
     private function determineNoAdminRole()
     {

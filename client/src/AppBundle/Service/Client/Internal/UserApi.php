@@ -3,29 +3,33 @@
 namespace AppBundle\Service\Client\Internal;
 
 use AppBundle\Entity\User;
+use AppBundle\Event\UserUpdatedEvent;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\RestClientInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class UserApi
 {
     private const USER_ENDPOINT = 'user';
-    /**
-     * @var RestClientInterface
-     */
+
+    /**  @var RestClientInterface */
     private $restClient;
 
-    /**
-     * @var TokenStorageInterface
-     */
+    /** @var TokenStorageInterface */
     private $tokenStorage;
+
+    /** @var EventDispatcherInterface */
+    private $eventDispatcher;
 
     public function __construct(
         RestClientInterface $restClient,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->restClient = $restClient;
         $this->tokenStorage = $tokenStorage;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -50,17 +54,29 @@ class UserApi
     }
 
     /**
-     * @param string $userId
-     * @param array $userData
+     * @param User $preUpdateUser
+     * @param User $postUpdateUser
      * @param array $jmsGroups
+     * @param string $trigger
      * @return mixed
      */
-    public function put(string $userId, array $userData, $jmsGroups = [])
+    public function update(User $preUpdateUser, User $postUpdateUser, $jmsGroups = [], string $trigger)
     {
-        return $this->restClient->put(
-            sprintf('%s/%s', self::USER_ENDPOINT, $userId),
-            $userData,
+        $response = $this->restClient->put(
+            sprintf('%s/%s', self::USER_ENDPOINT, $preUpdateUser->getId()),
+            $postUpdateUser,
             $jmsGroups
         );
+
+        $userUpdatedEvent = new UserUpdatedEvent(
+            $preUpdateUser,
+            $postUpdateUser,
+            $this->tokenStorage->getToken()->getUser(),
+            $trigger
+        );
+
+        $this->eventDispatcher->dispatch($userUpdatedEvent, UserUpdatedEvent::NAME);
+
+        return $response;
     }
 }
