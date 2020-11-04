@@ -11,21 +11,25 @@ class ClientDeletedEvent extends Event
 {
     const NAME = 'client.deleted';
 
+    /** @var User */
+    private $currentUser;
+
+    /** @var Client */
+    private $clientWithUsers;
+
     /** @var string */
     private $trigger;
-    private $caseNumber;
-    private $dischargedByEmail;
-    private $dischargedDeputyName;
 
-    /** @var \DateTime */
-    private $deputyshipStartDate;
-
-    public function __construct(Client $client, User $currentUser, User $deputy, string $trigger)
+    /**
+     * ClientDeletedEvent constructor.
+     * @param Client $clientWithUsers
+     * @param User $currentUser
+     * @param string $trigger
+     */
+    public function __construct(Client $clientWithUsers, User $currentUser, string $trigger)
     {
-        $this->setCaseNumber($client->getCaseNumber());
-        $this->setDeputyshipStartDate($client->getCourtDate());
-        $this->setDischargedByEmail($currentUser->getEmail());
-        $this->setDischargedDeputyName($deputy->getFullName());
+        $this->setClientWithUsers($clientWithUsers);
+        $this->setCurrentUser($currentUser);
         $this->setTrigger($trigger);
     }
 
@@ -48,74 +52,38 @@ class ClientDeletedEvent extends Event
     }
 
     /**
-     * @return string
+     * @return Client
      */
-    public function getCaseNumber(): string
+    public function getClientWithUsers(): Client
     {
-        return $this->caseNumber;
+        return $this->clientWithUsers;
     }
 
     /**
-     * @param string $caseNumber
+     * @param Client $clientWithUsers
      * @return ClientDeletedEvent
      */
-    public function setCaseNumber(string $caseNumber): ClientDeletedEvent
+    public function setClientWithUsers(Client $clientWithUsers): ClientDeletedEvent
     {
-        $this->caseNumber = $caseNumber;
+        $this->clientWithUsers = $clientWithUsers;
         return $this;
     }
 
     /**
-     * @return string
+     * @return User
      */
-    public function getDischargedByEmail(): string
+    public function getCurrentUser(): User
     {
-        return $this->dischargedByEmail;
+        return $this->currentUser;
     }
 
     /**
-     * @param string $dischargedByEmail
+     * @param User $currentUser
      * @return ClientDeletedEvent
      */
-    public function setDischargedByEmail(string $dischargedByEmail): ClientDeletedEvent
+    public function setCurrentUser(User $currentUser): ClientDeletedEvent
     {
-        $this->dischargedByEmail = $dischargedByEmail;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDischargedDeputyName(): string
-    {
-        return $this->dischargedDeputyName;
-    }
-
-    /**
-     * @param string $dischargedDeputyName
-     * @return ClientDeletedEvent
-     */
-    public function setDischargedDeputyName(string $dischargedDeputyName): ClientDeletedEvent
-    {
-        $this->dischargedDeputyName = $dischargedDeputyName;
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getDeputyshipStartDate(): \DateTime
-    {
-        return $this->deputyshipStartDate;
-    }
-
-    /**
-     * @param \DateTime $deputyshipStartDate
-     * @return ClientDeletedEvent
-     */
-    public function setDeputyshipStartDate(\DateTime $deputyshipStartDate): ClientDeletedEvent
-    {
-        $this->deputyshipStartDate = $deputyshipStartDate;
+        $this->currentUser = $currentUser;
         return $this;
     }
 }

@@ -962,4 +962,24 @@ class Client
         }
         return false;
     }
+
+    /**
+     * @return NamedDeputy|User|null
+     */
+    public function getDeputy()
+    {
+        if (!is_null($this->getNamedDeputy())) {
+            return $this->getNamedDeputy();
+        }
+
+        if ($this->getDeletedAt() instanceof \DateTime) {
+            return null;
+        }
+
+        foreach ($this->getUsers() as $user) {
+            if ($user->isLayDeputy()) {
+                return $this->getUsers()[0];
+            }
+        }
+    }
 }

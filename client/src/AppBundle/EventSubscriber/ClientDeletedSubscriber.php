@@ -31,12 +31,15 @@ class ClientDeletedSubscriber implements EventSubscriberInterface
 
     public function logEvent(ClientDeletedEvent $event)
     {
+        $clientsDeputy = $event->getClientWithUsers()->getDeputy();
+        $clientsDeputyName = (is_null($clientsDeputy) ? '' : $clientsDeputy->getFullName());
+
         $this->logger->notice('', $this->auditEvents->clientDischarged(
             $event->getTrigger(),
-            $event->getCaseNumber(),
-            $event->getDischargedByEmail(),
-            $event->getDischargedDeputyName(),
-            $event->getDeputyshipStartDate()
+            $event->getClientWithUsers()->getCaseNumber(),
+            $event->getCurrentUser()->getEmail(),
+            $clientsDeputyName,
+            $event->getClientWithUsers()->getCourtDate()
         ));
     }
 }

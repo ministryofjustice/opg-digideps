@@ -3,15 +3,9 @@
 namespace AppBundle\Controller\Admin\Client;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\Client;
-use AppBundle\Entity\NamedDeputy;
-use AppBundle\Entity\User;
-use AppBundle\Event\ClientDeletedEvent;
 use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Client\Internal\ClientApi;
 use AppBundle\Service\Client\RestClient;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -27,17 +21,12 @@ class ClientController extends AbstractController
     /** @var ClientApi */
     private $clientApi;
 
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-
     public function __construct(
         RestClient $restClient,
-        ClientApi $clientApi,
-        EventDispatcherInterface $eventDispatcher
+        ClientApi $clientApi
     ) {
         $this->restClient = $restClient;
         $this->clientApi = $clientApi;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -105,41 +94,7 @@ class ClientController extends AbstractController
      */
     public function dischargeConfirmAction($id)
     {
-        $clientWithUsers = $this->clientApi->getWithUsers($id);
-        $deputy = $this->getNamedDeputy($clientWithUsers);
-
-        $this->restClient->delete('client/' . $id . '/delete');
-
-        $clientDeletedEvent = new ClientDeletedEvent(
-            $clientWithUsers,
-            $this->getUser(),
-            $deputy,
-            AuditEvents::TRIGGER_ADMIN_BUTTON
-        );
-
-        $this->eventDispatcher->dispatch($clientDeletedEvent, ClientDeletedEvent::NAME);
-
+        $this->clientApi->delete($id, AuditEvents::TRIGGER_ADMIN_BUTTON);
         return $this->redirectToRoute('admin_client_search');
-    }
-
-    /**
-     * @param Client $client
-     * @return NamedDeputy|User|null
-     */
-    private function getNamedDeputy(Client $clientWithUsers)
-    {
-        if (!is_null($clientWithUsers->getNamedDeputy())) {
-            return $clientWithUsers->getNamedDeputy();
-        }
-
-        if ($clientWithUsers->getDeletedAt() instanceof \DateTime) {
-            return null;
-        }
-
-        foreach ($clientWithUsers->getUsers() as $user) {
-            if ($user->isLayDeputy()) {
-                return $clientWithUsers->getUsers()[0];
-            }
-        }
     }
 }

@@ -5,10 +5,16 @@ namespace AppBundle\Service\Client\Internal;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
+use AppBundle\Event\ClientDeletedEvent;
+use AppBundle\Event\ClientUpdatedEvent;
+use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\RestClientInterface;
+use AppBundle\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ClientApi
 {
@@ -24,16 +30,31 @@ class ClientApi
     /** @var UserApi */
     private $userApi;
 
+    /** @var DateTimeProvider */
+    private $dateTimeProvider;
+
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
+    /** @var EventDispatcherInterface */
+    private $eventDispatcher;
+
     public function __construct(
         RestClientInterface $restClient,
         RouterInterface $router,
         LoggerInterface $logger,
-        UserApi $userApi
+        UserApi $userApi,
+        DateTimeProvider $dateTimeProvider,
+        TokenStorageInterface $tokenStorage,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->restClient = $restClient;
         $this->router = $router;
         $this->logger = $logger;
         $this->userApi = $userApi;
+        $this->dateTimeProvider = $dateTimeProvider;
+        $this->tokenStorage = $tokenStorage;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -76,8 +97,37 @@ class ClientApi
         throw new \Exception('Unable to generate client profile link.');
     }
 
+    /**
+     * @param int $clientId
+     * @return Client
+     */
     public function getWithUsers(int $clientId)
     {
         return $this->restClient->get(sprintf('client/%s/details', $clientId), 'Client');
+    }
+
+    /**
+     * @param int $id
+     */
+    public function delete(int $id, string $trigger)
+    {
+        $clientWithUsers = $this->getWithUsers($id);
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+
+        $clientDeletedEvent = new ClientDeletedEvent($clientWithUsers, $currentUser, $trigger);
+
+        $this->restClient->delete('client/' . $id . '/delete');
+
+        $this->eventDispatcher->dispatch($clientDeletedEvent, ClientDeletedEvent::NAME);
+    }
+
+    public function update(Client $preUpdateClient, Client $postUpdateClient, string $trigger)
+    {
+        $this->restClient->put('client/upsert', $postUpdateClient, ['pa-edit']);
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+
+        $clientUpdatedEvent = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $currentUser, $trigger);
+
+        $this->eventDispatcher->dispatch($clientUpdatedEvent, ClientUpdatedEvent::NAME);
     }
 }
