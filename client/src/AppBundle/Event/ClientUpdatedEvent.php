@@ -13,10 +13,11 @@ class ClientUpdatedEvent extends Event
 
     /** @var Client */
     private $preUpdateClient;
-    /** @var Client */
     private $postUpdateClient;
+
     /** @var User */
     private $changedBy;
+
     /** @var string */
     private $trigger;
 

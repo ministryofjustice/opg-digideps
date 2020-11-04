@@ -26,8 +26,12 @@ class UserUpdatedSubscriber implements EventSubscriberInterface
     /** @var MailSender */
     private $mailSender;
 
-    public function __construct(DateTimeProvider $dateTimeProvider, LoggerInterface $logger, MailFactory $mailFactory, MailSender $mailSender)
-    {
+    public function __construct(
+        DateTimeProvider $dateTimeProvider,
+        LoggerInterface $logger,
+        MailFactory $mailFactory,
+        MailSender $mailSender
+    ) {
         $this->dateTimeProvider = $dateTimeProvider;
         $this->logger = $logger;
         $this->mailFactory = $mailFactory;
