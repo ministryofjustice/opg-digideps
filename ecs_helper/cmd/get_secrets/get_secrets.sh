@@ -9,10 +9,10 @@ then
   export AWS_SECRET_ACCESS_KEY=$(echo "${SECRET_STRING}" | awk -F' ' '{print $2}' 2>/dev/null)
   export AWS_SESSION_TOKEN=$(echo "${SECRET_STRING}" | awk -F' ' '{print $1}' 2>/dev/null)
   export BROWSERSTACK_USERNAME=$(aws secretsmanager get-secret-value \
-  --secret-id browserstack-username \
+  --secret-id development/browserstack-username \
   --region eu-west-1 | jq -r '.SecretString' 2>/dev/null)
   export BROWSERSTACK_KEY=$(aws secretsmanager get-secret-value \
-  --secret-id browserstack-access-key \
+  --secret-id development/browserstack-access-key \
   --region eu-west-1 | jq -r '.SecretString' 2>/dev/null)
   if [[ -z "${BROWSERSTACK_USERNAME}" ]]
   then
