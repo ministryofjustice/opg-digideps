@@ -3,8 +3,8 @@
 namespace AppBundle\Service\Client\Internal;
 
 use AppBundle\Entity\User;
+use AppBundle\Event\UserDeletedEvent;
 use AppBundle\Event\UserUpdatedEvent;
-use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\RestClientInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -30,6 +30,16 @@ class UserApi
         $this->restClient = $restClient;
         $this->tokenStorage = $tokenStorage;
         $this->eventDispatcher = $eventDispatcher;
+    }
+
+    /**
+     * @param int $id
+     * @param array $jmsGroups
+     * @return User
+     */
+    public function get(int $id, array $jmsGroups = [])
+    {
+        return $this->restClient->get(sprintf("%s/%s", self::USER_ENDPOINT, $id), 'User', $jmsGroups);
     }
 
     /**
@@ -78,5 +88,13 @@ class UserApi
         $this->eventDispatcher->dispatch($userUpdatedEvent, UserUpdatedEvent::NAME);
 
         return $response;
+    }
+
+    public function delete(User $userToDelete, string $trigger)
+    {
+        $this->restClient->delete(sprintf('%s/%s', self::USER_ENDPOINT, $userToDelete->getId()));
+
+        $userDeletedEvent = new UserDeletedEvent($userToDelete, $trigger);
+        $this->eventDispatcher->dispatch($userDeletedEvent, UserDeletedEvent::NAME);
     }
 }

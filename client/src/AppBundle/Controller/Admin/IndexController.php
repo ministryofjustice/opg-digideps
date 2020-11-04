@@ -9,6 +9,7 @@ use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use AppBundle\Security\UserVoter;
 use AppBundle\Service\Audit\AuditEvents;
+use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\CsvUploader;
 use AppBundle\Service\DataImporter\CsvToArray;
@@ -47,24 +48,26 @@ class IndexController extends AbstractController
     /** @var DateTimeProvider */
     private $dateTimeProvider;
 
-    /**
-     * @var RestClient
-     */
+    /** @var RestClient */
     private $restClient;
+
+    /** @var UserApi */
+    private $userApi;
 
     public function __construct(
         OrgService $orgService,
         UserVoter $userVoter,
         Logger $logger,
         DateTimeProvider $dateTimeProvider,
-        RestClient $restClient
-    )
-    {
+        RestClient $restClient,
+        UserApi $userApi
+    ) {
         $this->orgService = $orgService;
         $this->userVoter = $userVoter;
         $this->logger = $logger;
         $this->dateTimeProvider = $dateTimeProvider;
         $this->restClient = $restClient;
+        $this->userApi = $userApi;
     }
 
     /**
@@ -319,20 +322,10 @@ class IndexController extends AbstractController
      */
     public function deleteAction($id)
     {
-        $user = $this->restClient->get("user/{$id}", 'User', ['user', 'client', 'client-reports', 'report']);
+        $user = $this->userApi->get($id, ['user', 'client', 'client-reports', 'report']);
 
         try {
-            $this->restClient->delete('user/' . $id);
-
-            $event = (new AuditEvents($this->dateTimeProvider))->userDeleted(
-                AuditEvents::TRIGGER_ADMIN_BUTTON,
-                $this->getUser()->getEmail(),
-                $user->getFullName(),
-                $user->getEmail(),
-                $user->getRoleName(),
-            );
-
-            $this->logger->notice('', $event);
+            $this->userApi->delete($user, AuditEvents::TRIGGER_ADMIN_BUTTON);
             return $this->redirect($this->generateUrl('admin_homepage'));
         } catch (\Throwable $e) {
             $this->logger->warning(
