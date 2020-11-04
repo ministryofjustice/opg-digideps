@@ -48,11 +48,11 @@ class UserUpdatedSubscriber implements EventSubscriberInterface
             $emailChangedEvent = (new AuditEvents($this->dateTimeProvider))
                 ->userEmailChanged(
                     $event->getTrigger(),
-                    $event->getPreUpdateEmail(),
-                    $event->getPostUpdateEmail(),
-                    $event->getCurrentUserEmail(),
-                    $event->getPostUpdateFullName(),
-                    $event->getPostUpdateRoleName()
+                    $event->getPreUpdateUser()->getEmail(),
+                    $event->getPostUpdateUser()->getEmail(),
+                    $event->getCurrentUser()->getEmail(),
+                    $event->getPostUpdateUser()->getFullName(),
+                    $event->getPostUpdateUser()->getRoleName()
                 );
 
             $this->logger->notice('', $emailChangedEvent);
@@ -62,10 +62,10 @@ class UserUpdatedSubscriber implements EventSubscriberInterface
             $roleChangedEvent = (new AuditEvents($this->dateTimeProvider))
                 ->roleChanged(
                     $event->getTrigger(),
-                    $event->getPreUpdateRoleName(),
-                    $event->getPostUpdateRoleName(),
-                    $event->getCurrentUserEmail(),
-                    $event->getPostUpdateEmail()
+                    $event->getPreUpdateUser()->getRoleName(),
+                    $event->getPostUpdateUser()->getRoleName(),
+                    $event->getCurrentUser()->getEmail(),
+                    $event->getPostUpdateUser()->getEmail()
                 );
 
             $this->logger->notice('', $roleChangedEvent);
@@ -86,12 +86,12 @@ class UserUpdatedSubscriber implements EventSubscriberInterface
      */
     private function emailHasChanged(UserUpdatedEvent $event)
     {
-        return $event->getPreUpdateEmail() !== $event->getPostUpdateEmail();
+        return $event->getPreUpdateUser()->getEmail() !== $event->getPostUpdateUser()->getEmail();
     }
 
     private function roleHasChanged(UserUpdatedEvent $event)
     {
-        return $event->getPreUpdateRoleName() !== $event->getPostUpdateRoleName();
+        return $event->getPreUpdateUser()->getRoleName() !== $event->getPostUpdateUser()->getRoleName();
     }
 
     private function userDetailsHaveChanged(UserUpdatedEvent $event)

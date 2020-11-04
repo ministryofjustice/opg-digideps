@@ -15,7 +15,7 @@ use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class UserUpdatedListenerTest extends KernelTestCase
+class UserUpdatedSubscriberTest extends KernelTestCase
 {
     /** @var UserHelpers */
     private $userHelpers;

@@ -60,8 +60,7 @@ class OrganisationController extends AbstractController
         RestClient $restClient,
         MailFactory $mailFactory,
         MailSender $mailSender
-    )
-    {
+    ) {
         $this->dateTimeProvider = $dateTimeProvider;
         $this->logger = $logger;
         $this->userApi = $userApi;
@@ -139,15 +138,16 @@ class OrganisationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             try {
                 $email = $form->getData()->getEmail();
                 $existingUser = $this->restClient->get('user/get-team-names-by-email/' . $email, 'User');
 
                 if ($existingUser->getId()) {
                     // existing users just get added to the organisation
-                    $this->restClient->put('v2/organisation/' . $organisation->getId() . '/user/' . $existingUser->getId(),
-                        '');
+                    $this->restClient->put(
+                        'v2/organisation/' . $organisation->getId() . '/user/' . $existingUser->getId(),
+                        ''
+                    );
                 } else {
                     /** @var EntityDir\User $user */
                     $user = $form->getData();
@@ -222,28 +222,13 @@ class OrganisationController extends AbstractController
             'role_member' => $memberRole,
         ]);
 
-        $oldRole = $userToEdit->getRoleName();
         $form->handleRequest($request);
 
-        $a = '';
         if ($form->isSubmitted() && $form->isValid()) {
             $editedUser = $form->getData();
-            $newRole = $editedUser->getRoleName();
 
             try {
-                $this->restClient->put('user/' . $editedUser->getId(), $editedUser, ['org_team_add']);
-
-                $event = (new AuditEvents($this->dateTimeProvider))
-                    ->roleChanged(
-                        AuditEvents::TRIGGER_DEPUTY_USER,
-                        $oldRole,
-                        $newRole,
-                        $currentUser->getEmail(),
-                        $editedUser->getEmail()
-                    );
-
-                $this->logger->notice('', $event);
-
+                $this->userApi->update($userToEdit, $editedUser, ['org_team_add'], AuditEvents::TRIGGER_DEPUTY_USER);
                 $this->addFlash('notice', 'The user has been edited');
 
                 return $this->redirectToRoute('org_organisation_view', ['id' => $organisation->getId()]);
@@ -296,9 +281,7 @@ class OrganisationController extends AbstractController
 
                 $this->addFlash('notice', 'User account removed from organisation');
             } catch (\Throwable $e) {
-                /** @var LoggerInterface */
-                $logger = $this->get('logger');
-                $logger->debug($e->getMessage());
+                $this->logger->debug($e->getMessage());
 
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
                     $this->addFlash(
