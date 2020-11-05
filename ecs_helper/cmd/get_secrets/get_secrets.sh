@@ -1,3 +1,4 @@
+#!/bin/sh
 if [ $(aws --version 2>&1 | grep -c "aws-cli") -ne 0 ]
 then
   export SECRET_STRING=$(aws sts assume-role \
