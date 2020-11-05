@@ -9,9 +9,9 @@ use DateTime;
 final class AuditEvents
 {
     const EVENT_USER_EMAIL_CHANGED = 'USER_EMAIL_CHANGED';
-    const EVENT_USER_DELETED = 'USER_DELETED';
     const EVENT_ROLE_CHANGED = 'ROLE_CHANGED';
     const EVENT_CLIENT_EMAIL_CHANGED = 'CLIENT_EMAIL_CHANGED';
+    const EVENT_USER_DELETED = 'USER_DELETED';
     const EVENT_DEPUTY_DELETED = 'DEPUTY_DELETED';
     const EVENT_ADMIN_DELETED = 'ADMIN_DELETED';
 
@@ -56,7 +56,7 @@ final class AuditEvents
             'deputyship_start_date' => $deputyshipStartDate ? $deputyshipStartDate->format(DateTime::ATOM) : null,
         ];
 
-        return $event + $this->baseEvent(AuditEvents::EVENT_CLIENT_DISCHARGED);
+        return $event + $this->baseEvent(AuditEvents::EVENT_USER_DELETED);
     }
 
     public function userEmailChanged(

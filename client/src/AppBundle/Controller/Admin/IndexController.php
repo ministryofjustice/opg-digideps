@@ -17,7 +17,6 @@ use AppBundle\Service\Logger;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSenderInterface;
 use AppBundle\Service\OrgService;
-use AppBundle\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Routing\Annotation\Route;
@@ -45,9 +44,6 @@ class IndexController extends AbstractController
     /** @var Logger */
     private $logger;
 
-    /** @var DateTimeProvider */
-    private $dateTimeProvider;
-
     /** @var RestClient */
     private $restClient;
 
@@ -58,14 +54,12 @@ class IndexController extends AbstractController
         OrgService $orgService,
         UserVoter $userVoter,
         Logger $logger,
-        DateTimeProvider $dateTimeProvider,
         RestClient $restClient,
         UserApi $userApi
     ) {
         $this->orgService = $orgService;
         $this->userVoter = $userVoter;
         $this->logger = $logger;
-        $this->dateTimeProvider = $dateTimeProvider;
         $this->restClient = $restClient;
         $this->userApi = $userApi;
     }
