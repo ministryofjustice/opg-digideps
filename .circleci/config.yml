@@ -668,21 +668,20 @@ jobs:
       - run:
           name: Run tests
           command: |
-            docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build --remove-orphans
-            docker-compose -f docker-compose.yml -f docker-compose.dev.yml rm -fsv postgres
-            docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d postgres
-            docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm wait-for-it -address postgres:5432 --timeout=30 -debug
-            docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm api sh scripts/reset_db_structure_local.sh
-            docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm api sh scripts/reset_db_fixtures_local.sh
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml --project-name cross-browser up -d --build --remove-orphans
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml --project-name cross-browser rm -fsv postgres
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml --project-name cross-browser up -d postgres
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml --project-name cross-browser run --rm wait-for-it -address postgres:5432 --timeout=30 -debug
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml --project-name cross-browser run --rm api sh scripts/reset_db_structure_local.sh
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml --project-name cross-browser run --rm api sh scripts/reset_db_fixtures_local.sh
 
             ./behat/BrowserStackLocal --daemon "start" --key $BROWSERSTACK_KEY
 
-            docker cp "./behat/tests" "project_test_1:/var/www/tests"
-            docker cp "./behat/snapshots" "project_test_1:/tmp/html"
+            docker cp "./behat/tests" "cross-browser_1:/var/www/tests"
 
-            docker-compose -f docker-compose.yml -f docker-compose.dev.yml run test --profile cross-browser-chrome --suite chrome
-            docker-compose -f docker-compose.yml -f docker-compose.dev.yml run test --profile cross-browser-ie11 --suite ie11
-            docker-compose -f docker-compose.yml -f docker-compose.dev.yml run test --profile cross-browser-android --suite android
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml --project-name cross-browser run test --profile cross-browser-chrome --suite chrome
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml --project-name cross-browser run test --profile cross-browser-ie11 --suite ie11
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml --project-name cross-browser run test --profile cross-browser-android --suite android
 
             ./behat/BrowserStackLocal --daemon "stop" --key $BROWSERSTACK_KEY
 
