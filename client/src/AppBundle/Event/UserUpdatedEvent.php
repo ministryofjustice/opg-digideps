@@ -4,7 +4,7 @@
 namespace AppBundle\Event;
 
 use AppBundle\Entity\User;
-use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\Event;
 
 class UserUpdatedEvent extends Event
 {

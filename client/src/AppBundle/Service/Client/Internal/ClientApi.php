@@ -18,6 +18,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class ClientApi
 {
+    public const CLIENT_ENDPOINT = 'client';
+
     /** @var RestClient */
     private $restClient;
 
@@ -58,11 +60,12 @@ class ClientApi
     }
 
     /**
+     * @param string[] $jmsGroups
      * @return Client|null
      */
-    public function getFirstClient($groups = ['user', 'user-clients', 'client'])
+    public function getFirstClient($jmsGroups = ['user', 'user-clients', 'client'])
     {
-        $user = $this->userApi->getUserWithData($groups);
+        $user = $this->userApi->getUserWithData($jmsGroups);
         $clients = $user->getClients();
 
         return (is_array($clients) && !empty($clients[0]) && $clients[0] instanceof Client) ? $clients[0] : null;
@@ -73,14 +76,18 @@ class ClientApi
      * So we need to make another API call with the correct JMS groups
      * thus ensuring the client is retrieved with the current report.
      *
-     * @param  Client     $client
-     * @throws \Exception
+     * @param Client $client
      * @return string
+     * @throws \Exception
      */
     public function generateClientProfileLink(Client $client)
     {
         /** @var Client $client */
-        $client = $this->restClient->get('client/' . $client->getId(), 'Client', ['client', 'report-id', 'current-report']);
+        $client = $this->restClient->get(
+            sprintf('%s/%s', self::CLIENT_ENDPOINT, $client->getId()),
+            'Client',
+            ['client', 'report-id', 'current-report']
+        );
 
         $report = $client->getCurrentReport();
 
@@ -103,11 +110,29 @@ class ClientApi
      */
     public function getWithUsers(int $clientId)
     {
-        return $this->restClient->get(sprintf('client/%s/details', $clientId), 'Client');
+        return $this->restClient->get(
+            sprintf('%s/%s/details', self::CLIENT_ENDPOINT, $clientId),
+            'Client',
+            [
+                'client',
+                'client-users',
+                'user',
+                'client-reports',
+                'client-ndr',
+                'ndr',
+                'report',
+                'status',
+                'client-named-deputy',
+                'named-deputy',
+                'client-organisations',
+                'organisation'
+            ]
+        );
     }
 
     /**
      * @param int $id
+     * @param string $trigger
      */
     public function delete(int $id, string $trigger)
     {
@@ -116,18 +141,32 @@ class ClientApi
 
         $clientDeletedEvent = new ClientDeletedEvent($clientWithUsers, $currentUser, $trigger);
 
-        $this->restClient->delete('client/' . $id . '/delete');
+        $this->restClient->delete(sprintf('%s/%s/delete', self::CLIENT_ENDPOINT, $id));
 
         $this->eventDispatcher->dispatch($clientDeletedEvent, ClientDeletedEvent::NAME);
     }
 
+    /**
+     * @param Client $preUpdateClient
+     * @param Client $postUpdateClient
+     * @param string $trigger
+     */
     public function update(Client $preUpdateClient, Client $postUpdateClient, string $trigger)
     {
-        $this->restClient->put('client/upsert', $postUpdateClient, ['pa-edit']);
+        $this->restClient->put(sprintf('%s/upsert', self::CLIENT_ENDPOINT), $postUpdateClient, ['pa-edit']);
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
         $clientUpdatedEvent = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $currentUser, $trigger);
 
         $this->eventDispatcher->dispatch($clientUpdatedEvent, ClientUpdatedEvent::NAME);
+    }
+
+    /**
+     * @param string $caseNumber
+     * @return Client
+     */
+    public function getByCaseNumber(string $caseNumber)
+    {
+        return $this->restClient->get(sprintf('v2/%s/case-number/%s', self::CLIENT_ENDPOINT, $caseNumber), 'Client');
     }
 }

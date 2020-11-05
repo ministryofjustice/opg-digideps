@@ -4,13 +4,10 @@
 namespace Tests\AppBundle\EventListener;
 
 use AppBundle\Entity\User;
-use AppBundle\Event\ClientUpdatedEvent;
 use AppBundle\Event\UserDeletedEvent;
-use AppBundle\EventSubscriber\ClientUpdatedSubscriber;
 use AppBundle\EventSubscriber\UserDeletedSubscriber;
 use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Time\DateTimeProvider;
-use AppBundle\TestHelpers\ClientHelpers;
 use AppBundle\TestHelpers\UserHelpers;
 use DateTime;
 use PHPUnit\Framework\TestCase;

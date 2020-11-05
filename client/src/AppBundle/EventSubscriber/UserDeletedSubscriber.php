@@ -7,7 +7,6 @@ use AppBundle\Event\UserDeletedEvent;
 use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class UserDeletedSubscriber implements EventSubscriberInterface

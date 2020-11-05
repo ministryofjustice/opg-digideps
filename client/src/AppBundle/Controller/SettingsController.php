@@ -157,13 +157,13 @@ class SettingsController extends AbstractController
         $preUpdateDeputy = $this->userApi->getUserWithData(['user-clients', 'client']);
 
         if ($this->isGranted(EntityDir\User::ROLE_ADMIN) || $this->isGranted(EntityDir\User::ROLE_AD)) {
-            $form = $this->createForm(FormDir\User\UserDetailsBasicType::class, $preUpdateDeputy, []);
+            $form = $this->createForm(FormDir\User\UserDetailsBasicType::class, clone $preUpdateDeputy, []);
             $jmsPutGroups = ['user_details_basic'];
         } elseif ($this->isGranted(EntityDir\User::ROLE_LAY_DEPUTY)) {
-            $form = $this->createForm(FormDir\Settings\ProfileType::class, $preUpdateDeputy, ['validation_groups' => ['user_details_full']]);
+            $form = $this->createForm(FormDir\Settings\ProfileType::class, clone $preUpdateDeputy, ['validation_groups' => ['user_details_full']]);
             $jmsPutGroups = ['user_details_full'];
         } elseif ($this->isGranted(EntityDir\User::ROLE_ORG)) {
-            $form = $this->createForm(FormDir\Settings\ProfileType::class, $preUpdateDeputy, ['validation_groups' => ['user_details_org', 'profile_org']]);
+            $form = $this->createForm(FormDir\Settings\ProfileType::class, clone $preUpdateDeputy, ['validation_groups' => ['user_details_org', 'profile_org']]);
             $jmsPutGroups = ['user_details_org', 'profile_org'];
         } else {
             throw $this->createAccessDeniedException('User role not recognised');

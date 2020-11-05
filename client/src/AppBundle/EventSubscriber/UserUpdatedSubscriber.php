@@ -78,7 +78,7 @@ class UserUpdatedSubscriber implements EventSubscriberInterface
 
     public function sendEmail(UserUpdatedEvent $event)
     {
-        if ($event->getPostUpdateRoleName() === User::ROLE_LAY_DEPUTY && $this->userDetailsHaveChanged($event)) {
+        if ($event->getPostUpdateUser()->getRoleName() === User::ROLE_LAY_DEPUTY && $this->userDetailsHaveChanged($event)) {
             $updateDeputyDetailsEmail = $this->mailFactory->createUpdateDeputyDetailsEmail($event->getPostUpdateUser());
             $this->mailSender->send($updateDeputyDetailsEmail);
         }

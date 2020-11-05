@@ -6,6 +6,7 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Client\Internal\ClientApi;
 use AppBundle\Service\Client\RestClient;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -41,11 +42,11 @@ class ClientController extends AbstractController
      */
     public function detailsAction($id)
     {
-        $client = $this->restClient->get('v2/client/' . $id, 'Client');
+        $client = $this->clientApi->getWithUsers($id);
 
         return [
             'client'      => $client,
-            'namedDeputy' => $this->getNamedDeputy($id, $client)
+            'namedDeputy' => $client->getDeputy()
         ];
     }
 
@@ -54,11 +55,11 @@ class ClientController extends AbstractController
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @param string $caseNumber
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
-    public function detailsByCaseNumberAction($caseNumber)
+    public function detailsByCaseNumberAction(string $caseNumber)
     {
-        $client = $this->restClient->get('v2/client/case-number/' . $caseNumber, 'Client');
+        $client = $this->clientApi->getByCaseNumber($caseNumber);
 
         return $this->redirectToRoute('admin_client_details', ['id' => $client->getId()]);
     }
@@ -74,11 +75,11 @@ class ClientController extends AbstractController
      */
     public function dischargeAction($id)
     {
-        $client = $this->restClient->get('v2/client/' . $id, 'Client');
+        $client = $this->clientApi->getWithUsers($id);
 
         return [
             'client' => $client,
-            'namedDeputy' => $this->getNamedDeputy($id, $client)
+            'namedDeputy' => $client->getDeputy()
         ];
     }
 
@@ -89,7 +90,7 @@ class ClientController extends AbstractController
      * @param $id
      * @param AuditEvents $auditEvents
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      * @throws \Exception
      */
     public function dischargeConfirmAction($id)

@@ -217,7 +217,7 @@ class OrganisationController extends AbstractController
             $memberRole = EntityDir\User::ROLE_PROF_TEAM_MEMBER;
         }
 
-        $form = $this->createForm(FormDir\Org\OrganisationMemberType::class, $userToEdit, [
+        $form = $this->createForm(FormDir\Org\OrganisationMemberType::class, clone $userToEdit, [
             'role_admin' => $adminRole,
             'role_member' => $memberRole,
         ]);

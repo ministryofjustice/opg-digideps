@@ -85,7 +85,7 @@ class UserApi
             $trigger
         );
 
-        $this->eventDispatcher->dispatch($userUpdatedEvent, UserUpdatedEvent::NAME);
+        $this->eventDispatcher->dispatch(UserUpdatedEvent::NAME, $userUpdatedEvent);
 
         return $response;
     }
@@ -98,6 +98,6 @@ class UserApi
         $deletedBy = $this->tokenStorage->getToken()->getUser();
 
         $userDeletedEvent = new UserDeletedEvent($userToDelete, $deletedBy, $trigger);
-        $this->eventDispatcher->dispatch($userDeletedEvent, UserDeletedEvent::NAME);
+        $this->eventDispatcher->dispatch(UserDeletedEvent::NAME, $userDeletedEvent);
     }
 }
