@@ -4,10 +4,8 @@ namespace AppBundle\Service\Client\Internal;
 
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\User;
 use AppBundle\Event\ClientDeletedEvent;
 use AppBundle\Event\ClientUpdatedEvent;
-use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\RestClientInterface;
 use AppBundle\Service\Time\DateTimeProvider;
@@ -143,7 +141,7 @@ class ClientApi
 
         $this->restClient->delete(sprintf('%s/%s/delete', self::CLIENT_ENDPOINT, $id));
 
-        $this->eventDispatcher->dispatch($clientDeletedEvent, ClientDeletedEvent::NAME);
+        $this->eventDispatcher->dispatch(ClientDeletedEvent::NAME, $clientDeletedEvent);
     }
 
     /**
@@ -158,7 +156,7 @@ class ClientApi
 
         $clientUpdatedEvent = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $currentUser, $trigger);
 
-        $this->eventDispatcher->dispatch($clientUpdatedEvent, ClientUpdatedEvent::NAME);
+        $this->eventDispatcher->dispatch(ClientUpdatedEvent::NAME, $clientUpdatedEvent);
     }
 
     /**
