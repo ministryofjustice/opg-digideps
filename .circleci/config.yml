@@ -661,9 +661,8 @@ jobs:
           name: Get secrets
           command: |
             chmod 755 ecs_helper/cmd/get_secrets/get_secrets.sh
-            source ./ecs_helper/cmd/get_secrets/get_secrets.sh
-            touch .env behat/.env
-            echo "export BROWSERSTACK_USERNAME=$BROWSERSTACK_USERNAME" >> $BASH_ENV
+            ./ecs_helper/cmd/get_secrets/get_secrets.sh
+            touch .env
             echo "export BROWSERSTACK_KEY=$BROWSERSTACK_KEY" >> $BASH_ENV
       - run:
           name: Run tests
