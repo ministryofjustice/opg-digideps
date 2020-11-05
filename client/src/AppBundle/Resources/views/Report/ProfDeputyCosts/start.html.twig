@@ -20,15 +20,15 @@
 {% block pageContent %}
 
     <div class="text behat-region-start-page">
-        <p>{{ (page ~ '.pageSectionDescription1') | trans(transOptions) }}</p>
-        <p>{{ (page ~ '.pageSectionDescription2') | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ (page ~ '.pageSectionDescription1') | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ (page ~ '.pageSectionDescription2') | trans(transOptions) }}</p>
         <ul class="govuk-list govuk-list--bullet">
             <li>{{ (page ~ '.listItem01') | trans }}</li>
             <li>{{ (page ~ '.listItem02') | trans }}</li>
         </ul>
-        <p>{{ (page ~ '.pageSectionDescription3') | trans }}</p>
-        <p>{{ (page ~ '.pageSectionDescription4') | trans }}</p>
-        <p>{{ (page ~ '.pageSectionDescription5') | trans }}</p>
+        <p class="govuk-body">{{ (page ~ '.pageSectionDescription3') | trans }}</p>
+        <p class="govuk-body">{{ (page ~ '.pageSectionDescription4') | trans }}</p>
+        <p class="govuk-body">{{ (page ~ '.pageSectionDescription5') | trans }}</p>
     </div>
 
     {{ macros.startSectionButton(path('prof_deputy_costs_how_charged', { 'reportId': report.id}), (page ~ '.startButton') | trans ) }}

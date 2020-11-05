@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Admin\Client;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Form\Admin\SearchClientType;
+use AppBundle\Service\Client\RestClient;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -15,10 +16,24 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class SearchController extends AbstractController
 {
+    /** @var RestClient */
+    private $restClient;
+
+    public function __construct(
+        RestClient $restClient
+    )
+    {
+        $this->restClient = $restClient;
+    }
+
     /**
      * @Route("/search", name="admin_client_search")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("AppBundle:Admin/Client/Search:search.html.twig")
+     *
+     * @param Request $request
+     *
+     * @return array|string
      */
     public function searchAction(Request $request)
     {
@@ -35,7 +50,7 @@ class SearchController extends AbstractController
             $filters = $form->getData() + $this->getDefaultFilters($request);
         }
 
-        $clients = $this->getRestClient()->get('client/get-all?' . http_build_query($filters), 'Client[]');
+        $clients = $this->restClient->get('client/get-all?' . http_build_query($filters), 'Client[]');
 
         return $this->buildViewParams($form, $clients, $filters);
     }

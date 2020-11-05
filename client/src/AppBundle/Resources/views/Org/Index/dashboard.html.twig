@@ -14,8 +14,8 @@
             <span class="govuk-details__summary-text">{{ 'overdueHelpTextHeader' | trans }}</span>
         </summary>
         <div class="govuk-details__text">
-            <p>{{ 'overdueHelpTextParagraph1' | trans }}</p>
-            <p>{{ 'overdueHelpTextParagraph2' | trans }}</p>
+            <p class="govuk-body">{{ 'overdueHelpTextParagraph1' | trans }}</p>
+            <p class="govuk-body">{{ 'overdueHelpTextParagraph2' | trans }}</p>
         </div>
     </details>
 
@@ -135,7 +135,7 @@
         </tbody>
     </table>
     {% if reports |length == 0 %}
-        <p>{{ 'sorryNoResultsFor' | trans({}, 'common') }}</p>
+        <p class="govuk-body">{{ 'sorryNoResultsFor' | trans({}, 'common') }}</p>
         <hr>
     {% endif %}
 

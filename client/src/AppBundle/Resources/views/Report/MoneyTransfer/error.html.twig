@@ -15,7 +15,7 @@
 {% block pageContent %}
 
     <div class="text">
-        <p>{{ ('errorPage.errors.' ~ error) | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ ('errorPage.errors.' ~ error) | trans(transOptions) }}</p>
     </div>
 
     <a href="{{ path('report_overview', { 'reportId': report.id}) }}">

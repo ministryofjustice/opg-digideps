@@ -3,7 +3,7 @@ htmlTitle-ORG: "Client profile - Complete the deputy report | GOV.UK"
 report: "report"
 pageTitle: "The deputy report"
 pageSectionDescription: "Your report:"
-submitWhenReady: "You can't submit your report until it's complete"
+submitWhenReady: "You cannot submit your report until it's complete"
 reportingPeriod: "Reporting period"
 edit: "Edit"
 dueDate: "Due date"
@@ -39,7 +39,7 @@ options:
   reviewReport: Review report
 
 guidanceNotice: |
-  You don't have to fill in all the sections in one go. You can complete the report in any
+  You do not have to fill in all the sections in one go. You can complete the report in any
   order you want, save it and return to it.
 
 incompleteNoticeHeading: More information needed
@@ -55,7 +55,7 @@ unsubmittedConfirm:
     save.label: Review report
 
 previewNoticeNotDue: |
-  You may preview your report at anytime. You can't submit your report until %date%.
+  You may preview your report at anytime. You cannot submit your report until %date%.
 
 previewNotice: |
   You may preview your report at anytime. When all sections are complete you will be able to submit the report to us.

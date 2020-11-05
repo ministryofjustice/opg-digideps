@@ -6,6 +6,9 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\Mailer\MailFactory;
+use AppBundle\Service\Mailer\MailSender;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
@@ -18,12 +21,38 @@ use Symfony\Component\HttpFoundation\Response;
 class TeamController extends AbstractController
 {
     /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    /**
+     * @var MailFactory
+     */
+    private $mailFactory;
+
+    /**
+     * @var MailSender
+     */
+    private $mailSender;
+
+    public function __construct(
+        RestClient $restClient,
+        MailFactory $mailFactory,
+        MailSender $mailSender
+    )
+    {
+        $this->restClient = $restClient;
+        $this->mailFactory = $mailFactory;
+        $this->mailSender = $mailSender;
+    }
+
+    /**
      * @Route("", name="org_team")
      * @Template("AppBundle:Org/Team:list.html.twig")
      */
     public function listAction(Request $request)
     {
-        $teamMembers = $this->getRestClient()->get('team/members', 'User[]', ['user-list']);
+        $teamMembers = $this->restClient->get('team/members', 'User[]', ['user-list']);
 
         return [
             'teamMembers' => $teamMembers
@@ -38,7 +67,7 @@ class TeamController extends AbstractController
     {
         $this->denyAccessUnlessGranted('add-user', null, 'Access denied');
 
-        $team = $this->getRestClient()->get(
+        $team = $this->restClient->get(
             'user/' . $this->getUser()->getId() . '/team',
             'Team',
             ['team', 'team-users']
@@ -61,14 +90,14 @@ class TeamController extends AbstractController
         if ($form->isSubmitted()
             && $this->getUser()->isProfNamedOrAdmin()
             && ($email = $form->getData()->getEmail())
-            && ($userInfo = $this->getRestClient()->get('user/get-team-names-by-email/' . $email, 'User'))
+            && ($userInfo = $this->restClient->get('user/get-team-names-by-email/' . $email, 'User'))
             && $userInfo->getTeamNames() !== null
             && count($userInfo->getTeamNames()) > 0
         ) {
             if ($userInfo->isDeputyPa()) {
                 throw new \RuntimeException('User already belonging to a PA team', 422);
             }
-            $this->getRestClient()->put('team/add-to-team/' . $userInfo->getId(), []);
+            $this->restClient->put('team/add-to-team/' . $userInfo->getId(), []);
             $request->getSession()->getFlashBag()->add('notice', 'The user has been added to the team'); // @biggs change if needed
             return $this->redirectToRoute('org_team');
         }
@@ -93,11 +122,11 @@ class TeamController extends AbstractController
 
 
                 // if the above doesn't apply: continue adding the user
-                $user = $this->getRestClient()->post('user', $user, ['org_team_add'], 'User');
+                $user = $this->restClient->post('user', $user, ['org_team_add'], 'User');
                 $request->getSession()->getFlashBag()->add('notice', 'The user has been added');
 
-                $invitationEmail = $this->getMailFactory()->createInvitationEmail($user);
-                $this->getMailSender()->send($invitationEmail, ['text', 'html']);
+                $invitationEmail = $this->mailFactory->createInvitationEmail($user);
+                $this->mailSender->send($invitationEmail, ['text', 'html']);
 
                 return $this->redirectToRoute('org_team');
             } catch (\Throwable $e) {
@@ -123,7 +152,7 @@ class TeamController extends AbstractController
      */
     public function editAction(Request $request, $id)
     {
-        $user = $this->getRestClient()->get('team/member/' . $id, 'User');
+        $user = $this->restClient->get('team/member/' . $id, 'User');
 
         $this->denyAccessUnlessGranted('edit-user', $user, 'Access denied');
 
@@ -131,7 +160,7 @@ class TeamController extends AbstractController
             throw $this->createNotFoundException('User cannot edit their own account at this URL');
         }
 
-        $team = $this->getRestClient()->get(
+        $team = $this->restClient->get(
             'user/' . $this->getUser()->getId() . '/team',
             'Team',
             ['team', 'team-users']
@@ -149,7 +178,7 @@ class TeamController extends AbstractController
             $user = $form->getData();
 
             try {
-                $this->getRestClient()->put('user/' . $id, $user, ['org_team_add'], 'User');
+                $this->restClient->put('user/' . $id, $user, ['org_team_add']);
 
                 if ($id == $this->getUser()->getId() && ($user->getRoles() != $this->getUser()->getRoles())) {
                     $request->getSession()->getFlashBag()->add('notice', 'For security reasons you have been logged out because you have changed your admin rights. Please log in again below');
@@ -192,12 +221,12 @@ class TeamController extends AbstractController
     {
         try {
             /* @var $user EntityDir\User */
-            $user = $this->getRestClient()->get('team/member/' . $id, 'User');
+            $user = $this->restClient->get('team/member/' . $id, 'User');
 
-            $user = $this->getRestClient()->userRecreateToken($user->getEmail(), 'pass-reset');
+            $user = $this->restClient->userRecreateToken($user->getEmail(), 'pass-reset');
 
-            $invitationEmail = $this->getMailFactory()->createInvitationEmail($user);
-            $this->getMailSender()->send($invitationEmail, ['text', 'html']);
+            $invitationEmail = $this->mailFactory->createInvitationEmail($user);
+            $this->mailSender->send($invitationEmail);
 
             $request->getSession()->getFlashBag()->add(
                 'notice',
@@ -227,13 +256,13 @@ class TeamController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $userToRemove = $this->getRestClient()->get('team/member/' . $id, 'User');
+                $userToRemove = $this->restClient->get('team/member/' . $id, 'User');
 
                 $this->denyAccessUnlessGranted('delete-user', $userToRemove, 'Access denied');
 
                 // delete the user from all the teams the logged user belongs to.
                 // Also removes the user if (after the operation) won't belong to any team any longer
-                $this->getRestClient()->delete('/team/delete-membership/' . $userToRemove->getId());
+                $this->restClient->delete('/team/delete-membership/' . $userToRemove->getId());
 
                 $request->getSession()->getFlashBag()->add('notice', 'User account removed');
             } catch (\Throwable $e) {
@@ -251,7 +280,7 @@ class TeamController extends AbstractController
         }
 
         // The rest call ensures that only team members get returned and permission checks work as expected
-        $user = $this->getRestClient()->get('team/member/' . $id, 'User');
+        $user = $this->restClient->get('team/member/' . $id, 'User');
 
         $this->denyAccessUnlessGranted('delete-user', $user, 'Access denied');
 

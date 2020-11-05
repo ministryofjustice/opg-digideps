@@ -6,15 +6,20 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model\SelfRegisterData;
+use AppBundle\Service\Client\Internal\ClientApi;
+use AppBundle\Service\Client\Internal\UserApi;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\DeputyProvider;
+use AppBundle\Service\Mailer\MailFactory;
+use AppBundle\Service\Mailer\MailSender;
 use AppBundle\Service\Redirector;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -22,6 +27,45 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class UserController extends AbstractController
 {
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    /**
+     * @var MailFactory
+     */
+    private $mailFactory;
+
+    /**
+     * @var MailSender
+     */
+    private $mailSender;
+
+    /**
+     * @var UserApi
+     */
+    private $userApi;
+
+    /**
+     * @var ClientApi
+     */
+    private $clientApi;
+
+    public function __construct(
+        RestClient $restClient,
+        MailFactory $mailFactory,
+        MailSender $mailSender,
+        UserApi $userApi,
+        ClientApi $clientApi
+    ) {
+        $this->restClient = $restClient;
+        $this->mailFactory = $mailFactory;
+        $this->mailSender = $mailSender;
+        $this->userApi = $userApi;
+        $this->clientApi = $clientApi;
+    }
+
     /**
      * Landing page to let the user access the app and selecting a password.
      *
@@ -44,7 +88,7 @@ class UserController extends AbstractController
 
         // check $token is correct
         try {
-            $user = $this->getRestClient()->loadUserByToken($token);
+            $user = $this->restClient->loadUserByToken($token);
             /* @var $user EntityDir\User */
         } catch (\Throwable $e) {
             return $this->renderError('This link is not working or has already been used', $e->getCode());
@@ -100,7 +144,7 @@ class UserController extends AbstractController
             ]);
 
             // set password for user
-            $this->getRestClient()->put('user/' . $user->getId() . '/set-password', $data);
+            $this->restClient->put('user/' . $user->getId() . '/set-password', $data);
 
             // log in
             $clientToken = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
@@ -138,15 +182,15 @@ class UserController extends AbstractController
     public function activateLinkSendAction(string $token): Response
     {
         // check $token is correct
-        $user = $this->getRestClient()->loadUserByToken($token);
+        $user = $this->restClient->loadUserByToken($token);
         /* @var $user EntityDir\User */
 
         // recreate token
         // the endpoint will also send the activation email
-        $this->getRestClient()->userRecreateToken($user->getEmail(), 'activate');
+        $this->restClient->userRecreateToken($user->getEmail(), 'activate');
 
-        $activationEmail = $this->getMailFactory()->createActivationEmail($user);
-        $this->getMailSender()->send($activationEmail);
+        $activationEmail = $this->mailFactory->createActivationEmail($user);
+        $this->mailSender->send($activationEmail);
 
         return $this->redirect($this->generateUrl('activation_link_sent', ['token' => $token]));
     }
@@ -172,22 +216,26 @@ class UserController extends AbstractController
      * - Lay
      * - PA
      *
+     * @param Request $request
+     * @param Redirector $redirector
+     *
      * @return array<mixed>|Response
      * @Route("/user/details", name="user_details")
      * @Template("AppBundle:User:details.html.twig")
      */
     public function detailsAction(Request $request, Redirector $redirector)
     {
-        $user = $this->getUserWithData();
+        $user = $this->userApi->getUserWithData();
 
-        $client_validated = $this->getFirstClient() instanceof EntityDir\Client && !$user->isDeputyOrg();
+        $client_validated = $this->clientApi->getFirstClient() instanceof EntityDir\Client &&
+            !$user->isDeputyOrg();
 
         list($formType, $jmsPutGroups) = $this->getFormAndJmsGroupBasedOnUserRole($user);
         $form = $this->createForm($formType, $user);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getRestClient()->put('user/' . $user->getId(), $form->getData(), $jmsPutGroups);
+            $this->restClient->put('user/' . $user->getId(), $form->getData(), $jmsPutGroups);
 
             // lay deputies are redirected to adding a client (Step.3)
             if ($user->isLayDeputy()) {
@@ -226,13 +274,13 @@ class UserController extends AbstractController
             $logger->warning('Reset password request for : ' . $emailAddress);
 
             try {
-                $user = $this->getRestClient()->userRecreateToken($user->getEmail(), 'pass-reset');
+                $user = $this->restClient->userRecreateToken($user->getEmail(), 'pass-reset');
 
                 $logger->warning('Sending reset email to ' . $disguisedEmail);
 
-                $resetPasswordEmail = $this->getMailFactory()->createResetPasswordEmail($user);
+                $resetPasswordEmail = $this->mailFactory->createResetPasswordEmail($user);
 
-                $this->getMailSender()->send($resetPasswordEmail);
+                $this->mailSender->send($resetPasswordEmail);
                 $logger->warning('Email sent to ' . $disguisedEmail);
             } catch (RestClientException $e) {
                 $logger->warning('Email ' . $emailAddress . ' not found');
@@ -277,9 +325,9 @@ class UserController extends AbstractController
             $data = $form->getData();
 
             try {
-                $user = $this->getRestClient()->registerUser($data);
-                $activationEmail = $this->getMailFactory()->createActivationEmail($user);
-                $this->getMailSender()->send($activationEmail);
+                $user = $this->restClient->registerUser($data);
+                $activationEmail = $this->mailFactory->createActivationEmail($user);
+                $this->mailSender->send($activationEmail);
 
                 $bodyText = $translator->trans('thankyou.body', [], 'register');
                 $email = $data->getEmail();
@@ -342,12 +390,12 @@ class UserController extends AbstractController
      */
     public function agreeTermsUseAction(Request $request, string $token): Response
     {
-        $user = $this->getRestClient()->loadUserByToken($token);
+        $user = $this->restClient->loadUserByToken($token);
 
         $form = $this->createForm(FormDir\User\AgreeTermsType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getRestClient()->agreeTermsUse($token);
+            $this->restClient->agreeTermsUse($token);
 
             return $this->redirectToRoute('user_activate', ['token' => $token, 'action' => 'activate']);
         }

@@ -12,26 +12,40 @@ workflows:
           filters: { branches: { ignore: [ main ] } }
 
       - terraform-command:
+          name: plan shared development
+          requires: [lint terraform ]
+          filters: { branches: { ignore: [ main ] } }
+          tf_apply: false
+          tf_command: plan
+          tf_tier: shared
+          tf_workspace: development
+
+      - terraform-command:
+          name: plan pr environment
+          requires: [lint terraform ]
+          filters: { branches: { ignore: [ main ] } }
+          tf_apply: false
+          tf_command: plan
+          tf_tier: environment
+
+      - terraform-command:
           name: apply environment
-          requires: [ build pr, lint terraform ]
+          requires: [
+            build pr,
+            plan shared development,
+            plan pr environment
+             ]
           filters: { branches: { ignore: [ main ] } }
           tf_command: apply
 
-      - run-task:
-          name: reset environment
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ main ] } }
-          task_name: reset_database
-          timeout: 180
-
       - client-unit-test:
           name: client unit test
-          requires: [ apply environment ]
+          requires: [ build pr ]
           filters: { branches: { ignore: [ main ] } }
 
       - api-unit-tests:
           name: api unit test
-          requires: [ apply environment ]
+          requires: [ build pr ]
           filters: { branches: { ignore: [ main ] } }
 
 #      - pa11y-ci:
@@ -41,7 +55,7 @@ workflows:
       - approve:
           name: approval for further testing
           type: approval
-          requires: [ reset environment ]
+          requires: [ api unit test, client unit test, apply environment ]
           filters: { branches: { ignore: [ master ] } }
 
       - run-task:
@@ -60,7 +74,7 @@ workflows:
 
       - run-task:
           name: backup environment
-          requires: [ api unit test, client unit test, integration test ]
+          requires: [ integration test ]
           filters: { branches: { ignore: [ main ] } }
           task_name: backup
 
@@ -317,8 +331,8 @@ orbs:
               password: $DOCKER_ACCESS_TOKEN
         resource_class: small
         environment:
-          TF_VERSION: 0.13.3
-          TF_SHA256SUM: 35c662be9d32d38815cde5fa4c9fa61a3b7f39952ecd50ebf92fd1b2ddd6109b
+          TF_VERSION: 0.13.5
+          TF_SHA256SUM: f7b7a7b1bfbf5d78151cfe3d1d463140b5fd6a354e71a7de2b5644e652ca5147
           TF_CLI_ARGS_plan: -input=false -lock=false
           TF_CLI_ARGS_apply: -input=false -auto-approve
           TF_CLI_ARGS_destroy: -input=false -auto-approve
@@ -365,6 +379,10 @@ jobs:
       tf_command:
         description: terraform command
         type: string
+      tf_apply:
+        description: whether this is a terraform apply
+        default: true
+        type: boolean
       pact_tag:
         description: whether to add environment tag to pact broker
         default: false
@@ -379,10 +397,13 @@ jobs:
       - terraform/install
       - ecs_helper/install
       - attach_workspace: { at: ~/project }
-      - run:
-          name: Extract lambda layers
-          working_directory:  ~/project/lambda_functions
-          command: tar xvf ~/project/lambda_functions/layer.tar
+      - when:
+          condition: << parameters.tf_apply >>
+          steps:
+            - run:
+                name: Extract lambda layers
+                working_directory:  ~/project/lambda_functions
+                command: tar xvf ~/project/lambda_functions/layer.tar
       - run:
           name: Initialize
           command: terraform init
@@ -392,12 +413,15 @@ jobs:
       - run:
           name: Run << parameters.tf_command >>
           command: terraform << parameters.tf_command >>
-      - run:
-          name: Output
-          command: terraform output -json > terraform.output.json
-      - run:
-          name: Stabilize
-          command: stabilizer
+      - when:
+          condition: << parameters.tf_apply >>
+          steps:
+            - run:
+                name: Output
+                command: terraform output -json > terraform.output.json
+            - run:
+                name: Stabilize
+                command: stabilizer
       - when:
           condition: << parameters.pact_tag >>
           steps:
@@ -598,6 +622,10 @@ jobs:
           command: |
             docker-compose -f docker-compose.yml --project-name api-unit-tests up -d api
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec api chmod -R 777 var
+            docker-compose -f docker-compose.yml --project-name api-unit-tests up -d localstack
+            docker-compose -f docker-compose.yml --project-name api-unit-tests run --rm wait-for-it -address localstack:4583 --timeout=20 -debug
+            docker-compose -f docker-compose.yml --project-name api-unit-tests run --rm wait-for-it -address localstack:4586 --timeout=20 -debug
+            docker-compose -f docker-compose.yml --project-name api-unit-tests up -d localstack-init
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
 
             docker-compose -f docker-compose.yml --project-name api-unit-tests exec api chmod -R 777 tests/coverage/api-unit-tests.xml

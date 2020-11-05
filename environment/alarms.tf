@@ -16,9 +16,10 @@ resource "aws_cloudwatch_metric_alarm" "php_critical_errors" {
   statistic           = "Sum"
   metric_name         = aws_cloudwatch_log_metric_filter.php_critical_errors.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  threshold           = 3
-  period              = 3600
-  evaluation_periods  = 1
+  datapoints_to_alarm = 5
+  evaluation_periods  = 5
+  threshold           = 1
+  period              = 60
   namespace           = aws_cloudwatch_log_metric_filter.php_critical_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
   actions_enabled     = local.account.alarms_active
@@ -43,9 +44,10 @@ resource "aws_cloudwatch_metric_alarm" "php_errors" {
   statistic           = "Sum"
   metric_name         = aws_cloudwatch_log_metric_filter.php_errors.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  threshold           = 3
-  period              = 3600
-  evaluation_periods  = 1
+  datapoints_to_alarm = 5
+  evaluation_periods  = 5
+  threshold           = 1
+  period              = 60
   namespace           = aws_cloudwatch_log_metric_filter.php_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
   actions_enabled     = local.account.alarms_active
@@ -63,8 +65,6 @@ resource "aws_cloudwatch_log_metric_filter" "queued_documents" {
     value     = "$.count"
   }
 }
-
-//aws_cloudwatch_log_group.monitoring_lambda.name
 
 resource "aws_cloudwatch_metric_alarm" "queued_documents" {
   alarm_name          = "QueuedDocsOver1Hr.${local.environment}"
@@ -87,7 +87,6 @@ data "aws_sns_topic" "availability-alert" {
 }
 
 resource "aws_route53_health_check" "availability-front" {
-  count             = local.account.always_on ? 1 : 0
   fqdn              = aws_route53_record.front.fqdn
   resource_path     = "/manage/availability"
   port              = 443
@@ -99,28 +98,26 @@ resource "aws_route53_health_check" "availability-front" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "availability-front" {
-  count               = local.account.always_on ? 1 : 0
   provider            = aws.us-east-1
   alarm_name          = "${local.environment}-availability-front"
   statistic           = "Minimum"
   metric_name         = "HealthCheckStatus"
   comparison_operator = "LessThanThreshold"
-  datapoints_to_alarm = 1
+  datapoints_to_alarm = 2
   threshold           = 1
-  period              = 3600
-  evaluation_periods  = 1
+  period              = 60
+  evaluation_periods  = 5
   namespace           = "AWS/Route53"
   alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
   actions_enabled     = local.account.alarms_active
   tags                = local.default_tags
 
   dimensions = {
-    HealthCheckId = aws_route53_health_check.availability-front[0].id
+    HealthCheckId = aws_route53_health_check.availability-front.id
   }
 }
 
 resource "aws_route53_health_check" "availability-admin" {
-  count             = local.account.always_on ? 1 : 0
   fqdn              = aws_route53_record.admin.fqdn
   resource_path     = "/manage/availability"
   port              = 443
@@ -132,23 +129,22 @@ resource "aws_route53_health_check" "availability-admin" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "availability-admin" {
-  count               = local.account.always_on ? 1 : 0
   provider            = aws.us-east-1
   alarm_name          = "${local.environment}-availability-admin"
   statistic           = "Minimum"
   metric_name         = "HealthCheckStatus"
   comparison_operator = "LessThanThreshold"
-  datapoints_to_alarm = 1
+  datapoints_to_alarm = 2
   threshold           = 1
-  period              = 3600
-  evaluation_periods  = 1
+  period              = 60
+  evaluation_periods  = 5
   namespace           = "AWS/Route53"
   alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
   actions_enabled     = local.account.alarms_active
   tags                = local.default_tags
 
   dimensions = {
-    HealthCheckId = aws_route53_health_check.availability-admin[0].id
+    HealthCheckId = aws_route53_health_check.availability-admin.id
   }
 }
 
@@ -170,9 +166,10 @@ resource "aws_cloudwatch_metric_alarm" "frontend_5xx_errors" {
   statistic           = "Sum"
   metric_name         = aws_cloudwatch_log_metric_filter.frontend_5xx_errors.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  threshold           = 3
-  period              = 3600
-  evaluation_periods  = 1
+  datapoints_to_alarm = 5
+  evaluation_periods  = 5
+  threshold           = 1
+  period              = 60
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.frontend_5xx_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
@@ -198,9 +195,10 @@ resource "aws_cloudwatch_metric_alarm" "admin_5xx_errors" {
   statistic           = "Sum"
   metric_name         = aws_cloudwatch_log_metric_filter.admin_5xx_errors.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  threshold           = 3
-  period              = 3600
-  evaluation_periods  = 1
+  datapoints_to_alarm = 5
+  evaluation_periods  = 5
+  threshold           = 1
+  period              = 60
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.admin_5xx_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
@@ -226,9 +224,10 @@ resource "aws_cloudwatch_metric_alarm" "api_5xx_errors" {
   statistic           = "Sum"
   metric_name         = aws_cloudwatch_log_metric_filter.api_5xx_errors.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  threshold           = 3
-  period              = 3600
-  evaluation_periods  = 1
+  datapoints_to_alarm = 5
+  evaluation_periods  = 5
+  threshold           = 1
+  period              = 60
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.api_5xx_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
@@ -246,14 +245,15 @@ resource "aws_cloudwatch_metric_alarm" "frontend_alb_5xx_errors" {
   dimensions = {
     "LoadBalancer" = trimprefix(split(":", aws_lb.front.arn)[5], "loadbalancer/")
   }
-  evaluation_periods = 1
-  metric_name        = "HTTPCode_Target_5XX_Count"
-  namespace          = "AWS/ApplicationELB"
-  period             = 3600
-  statistic          = "Sum"
-  tags               = local.default_tags
-  threshold          = 3
-  treat_missing_data = "notBreaching"
+  datapoints_to_alarm = 5
+  evaluation_periods  = 5
+  threshold           = 1
+  period              = 60
+  metric_name         = "HTTPCode_Target_5XX_Count"
+  namespace           = "AWS/ApplicationELB"
+  statistic           = "Sum"
+  tags                = local.default_tags
+  treat_missing_data  = "notBreaching"
 }
 
 resource "aws_cloudwatch_metric_alarm" "admin_alb_5xx_errors" {
@@ -276,73 +276,43 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_5xx_errors" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "frontend_alb_average_response_time" {
-  actions_enabled           = local.account.alarms_active
-  alarm_actions             = [data.aws_sns_topic.alerts.arn]
-  alarm_description         = "Response Time for Frontend ALB in ${local.environment}"
-  alarm_name                = "FrontendALBAverageResponseTime.${local.environment}"
-  comparison_operator       = "GreaterThanUpperThreshold"
+  actions_enabled     = local.account.alarms_active
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  alarm_description   = "Response Time for Frontend ALB in ${local.environment}"
+  alarm_name          = "FrontendALBAverageResponseTime.${local.environment}"
+  comparison_operator = "GreaterThanThreshold"
+  dimensions = {
+    "LoadBalancer" = trimprefix(split(":", aws_lb.front.arn)[5], "loadbalancer/")
+  }
   datapoints_to_alarm       = 3
-  evaluation_periods        = 60
+  evaluation_periods        = 3
+  threshold                 = 1
+  period                    = 60
+  namespace                 = "AWS/ApplicationELB"
+  metric_name               = "TargetResponseTime"
+  statistic                 = "Average"
   insufficient_data_actions = []
   treat_missing_data        = "notBreaching"
-  threshold_metric_id       = "ad1"
   tags                      = local.default_tags
-
-  metric_query {
-    id          = "m1"
-    return_data = true
-
-    metric {
-      dimensions = {
-        "LoadBalancer" = trimprefix(split(":", aws_lb.front.arn)[5], "loadbalancer/")
-      }
-      metric_name = "TargetResponseTime"
-      namespace   = "AWS/ApplicationELB"
-      period      = 60
-      stat        = "Average"
-    }
-  }
-
-  metric_query {
-    expression  = "ANOMALY_DETECTION_BAND(m1, 2)"
-    id          = "ad1"
-    label       = "TargetResponseTime (expected)"
-    return_data = true
-  }
 }
 
 resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
-  actions_enabled           = local.account.alarms_active
-  alarm_actions             = [data.aws_sns_topic.alerts.arn]
-  alarm_description         = "Response Time for Admin ALB in ${local.environment}"
-  alarm_name                = "AdminALBAverageResponseTime.${local.environment}"
-  comparison_operator       = "GreaterThanUpperThreshold"
+  actions_enabled     = local.account.alarms_active
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  alarm_description   = "Response Time for Admin ALB in ${local.environment}"
+  alarm_name          = "AdminALBAverageResponseTime.${local.environment}"
+  comparison_operator = "GreaterThanThreshold"
+  dimensions = {
+    "LoadBalancer" = trimprefix(split(":", aws_lb.admin.arn)[5], "loadbalancer/")
+  }
   datapoints_to_alarm       = 3
-  evaluation_periods        = 60
+  evaluation_periods        = 3
+  threshold                 = 1
+  period                    = 60
+  namespace                 = "AWS/ApplicationELB"
+  metric_name               = "TargetResponseTime"
+  statistic                 = "Average"
   insufficient_data_actions = []
   treat_missing_data        = "notBreaching"
-  threshold_metric_id       = "ad1"
   tags                      = local.default_tags
-
-  metric_query {
-    id          = "m1"
-    return_data = true
-
-    metric {
-      dimensions = {
-        "LoadBalancer" = trimprefix(split(":", aws_lb.admin.arn)[5], "loadbalancer/")
-      }
-      metric_name = "TargetResponseTime"
-      namespace   = "AWS/ApplicationELB"
-      period      = 60
-      stat        = "Average"
-    }
-  }
-
-  metric_query {
-    expression  = "ANOMALY_DETECTION_BAND(m1, 2)"
-    id          = "ad1"
-    label       = "TargetResponseTime (expected)"
-    return_data = true
-  }
 }

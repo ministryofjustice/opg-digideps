@@ -51,7 +51,7 @@ errorPage:
   htmlTitle: "Money transfers - Complete the deputy report | GOV.UK"
   pageTitle: Money transfers
   errors:
-    atLeastTwoBankAccounts: You don't need to complete this section if you have fewer than two bank accounts.
+    atLeastTwoBankAccounts: You do not need to complete this section if you have fewer than two bank accounts.
   backToOverview: Back to overview page
   backToClientProfile: Back to client profile
 

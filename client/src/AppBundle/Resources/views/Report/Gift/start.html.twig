@@ -18,15 +18,15 @@
 {% block pageContent %}
 
 	<div class="text">
-        <p>{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
-        <p>{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
 
         <details class="push--bottom" data-module="govuk-details">
             <summary class="govuk-details__summary">
                 <span class="govuk-details__summary-text">{{ 'startPage.hiddenText01.summary' | trans(transOptions) }}</span>
             </summary>
             <div class="govuk-details__text">
-                <p>{{ 'startPage.hiddenText01.content.para01' |trans(transOptions) }}</p>
+                <p class="govuk-body">{{ 'startPage.hiddenText01.content.para01' |trans(transOptions) }}</p>
                 <ul class="govuk-list govuk-list--bullet">
                     <li>{{ 'startPage.hiddenText01.content.listItem01' | trans }}</li>
                     <li>{{ 'startPage.hiddenText01.content.listItem02' | trans }}</li>
@@ -34,14 +34,14 @@
                     <li>{{ 'startPage.hiddenText01.content.listItem04' | trans(transOptions) }}</li>
                     <li>{{ 'startPage.hiddenText01.content.listItem05' | trans(transOptions) }}</li>
                 </ul>
-                <p>{{ 'startPage.hiddenText01.content.para02' |trans(transOptions)|raw }}</p>
-                <p>{{ 'startPage.hiddenText01.content.para03' |trans(transOptions)|raw }}</p>
+                <p class="govuk-body">{{ 'startPage.hiddenText01.content.para02' |trans(transOptions)|raw }}</p>
+                <p class="govuk-body">{{ 'startPage.hiddenText01.content.para03' |trans(transOptions)|raw }}</p>
             </div>
         </details>
 
         {% if report.bankAccounts is empty and report.canLinkToBankAccounts %}
             <h3 class="govuk-heading-s">{{ 'startPage.accountLinksHeading' | trans(transOptions) }}</h3>
-            <p>{{ 'startPage.accountLinksPara1' | trans(transOptions) | raw }}</p>
+            <p class="govuk-body">{{ 'startPage.accountLinksPara1' | trans(transOptions) | raw }}</p>
         {% endif %}
     </div>
 

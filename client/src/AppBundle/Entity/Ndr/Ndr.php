@@ -490,7 +490,7 @@ class Ndr implements ReportInterface
                 $title = isset($titleToGroupOverride[$asset->getTitle()]) ?
                     $titleToGroupOverride[$asset->getTitle()] : $asset->getTitle();
             } else {
-                throw new \RuntimeException('Couldn\'t identify assset type');
+                throw new \RuntimeException('Could not identify assset type');
             }
 
             // add asset into "items" and sum total
@@ -567,7 +567,8 @@ class Ndr implements ReportInterface
      */
     public function createAttachmentName($format)
     {
-        $attachmentName = sprintf($format,
+        $attachmentName = sprintf(
+            $format,
             is_null($this->getSubmitDate()) ? 'n-a-' : $this->getSubmitDate()->format('Y-m-d'),
             $this->getClient()->getCaseNumber()
         );

@@ -3,11 +3,18 @@ version: "3.2"
 #docker-compose.override.yml is loaded and merged with docker-compose.yml by default when calling docker-compose up.
 #This file won't be merged when using docker-compose -f docker-compose.yml up (or using any other compose file).
 services:
+  localstack:
+    volumes:
+      - ./docker/localstack-s3-init.sh:/docker-entrypoint-initaws.d/s3-init.sh
+
   admin:
     volumes:
       - ./client/app/config/security.yml:/var/www/app/config/security.yml
       - ./client/app/config/config.yml:/var/www/app/config/config.yml
       - ./client/app/config/config_dev.yml:/var/www/app/config/config_dev.yml
+      - ./client/app/config/config_dev_with_debug.yml:/var/www/app/config/config_dev_with_debug.yml
+      - ./client/app/config/config_unit_test.yml:/var/www/app/config/config_unit_test.yml
+      - ./client/app/config/config_prod.yml:/var/www/app/config/config_prod.yml
       - ./client/app/config/services.yml:/var/www/app/config/services.yml
       - ./client/app/config/services:/var/www/app/config/services
       - ./client/src:/var/www/src
@@ -29,8 +36,15 @@ services:
       - ./client/app/config/security.yml:/var/www/app/config/security.yml
       - ./client/app/config/config.yml:/var/www/app/config/config.yml
       - ./client/app/config/config_dev.yml:/var/www/app/config/config_dev.yml
+      - ./client/app/config/config_dev_with_debug.yml:/var/www/app/config/config_dev_with_debug.yml
+      - ./client/app/config/config_unit_test.yml:/var/www/app/config/config_unit_test.yml
+      - ./client/app/config/config_prod.yml:/var/www/app/config/config_prod.yml
       - ./client/app/config/services.yml:/var/www/app/config/services.yml
       - ./client/app/config/services:/var/www/app/config/services
       - ./client/src:/var/www/src
       - ./client/tests:/var/www/tests
       - ./client/phpstan.neon:/var/www/phpstan.neon
+
+  wkhtmltopdf:
+    volumes:
+      - ./wkhtmltopdf/app.py:/app.py

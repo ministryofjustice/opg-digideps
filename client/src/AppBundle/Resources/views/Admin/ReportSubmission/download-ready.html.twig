@@ -11,6 +11,6 @@
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}
-    <p>{{ 'page.description'| trans  }}</p>
+    <p class="govuk-body">{{ 'page.description'| trans  }}</p>
     <a href={{ path(downloadRoute, {'reportSubmissionIds': reportSubmissionIds}) }}>Click here to download Documents</a>
 {% endblock %}

@@ -21,12 +21,12 @@
         <div class="govuk-grid-column-two-thirds">
             {# Introduction text #}
             <div class="text">
-                <p>{{ (page ~ '.weAskAbout') | trans(transOptions) }}</p>
+                <p class="govuk-body">{{ (page ~ '.weAskAbout') | trans(transOptions) }}</p>
             </div>
 
             {# Check answers text #}
             <h2 class="govuk-heading-s">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
-            <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+            <p class="govuk-body">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
         </div>
         <div class="column-third">
             {{ macros.relatedSections(report, 'assets') }}

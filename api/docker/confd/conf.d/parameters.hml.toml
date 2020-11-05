@@ -11,5 +11,6 @@ keys = [
     "/redis",
     "/url",
     "/fixtures",
-    "/secrets"
+    "/secrets",
+    "/cloudwatch/logs/localstack",
 ]

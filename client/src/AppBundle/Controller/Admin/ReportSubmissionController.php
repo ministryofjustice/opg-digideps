@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\DocumentDownloader;
 use AppBundle\Service\File\Storage\S3Storage;
 use AppBundle\Service\ParameterStoreService;
@@ -41,11 +42,22 @@ class ReportSubmissionController extends AbstractController
      */
     private $translator;
 
-    public function __construct(DocumentDownloader $documentDownloader, S3Storage $s3Storage, TranslatorInterface $translator)
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    public function __construct(
+        DocumentDownloader $documentDownloader,
+        S3Storage $s3Storage,
+        TranslatorInterface $translator,
+        RestClient $restClient
+    )
     {
         $this->documentDownloader = $documentDownloader;
         $this->s3Storage = $s3Storage;
         $this->translator = $translator;
+        $this->restClient = $restClient;
     }
 
     /**
@@ -66,9 +78,9 @@ class ReportSubmissionController extends AbstractController
         }
 
         $currentFilters = self::getFiltersFromRequest($request);
-        $ret = $this->getRestClient()->get('/report-submission?' . http_build_query($currentFilters), 'array');
+        $ret = $this->restClient->get('/report-submission?' . http_build_query($currentFilters), 'array');
 
-        $records = $this->getRestClient()->arrayToEntities(EntityDir\Report\ReportSubmission::class . '[]', $ret['records']);
+        $records = $this->restClient->arrayToEntities(EntityDir\Report\ReportSubmission::class . '[]', $ret['records']);
 
         $nOfdownloadableSubmissions = count(array_filter($records, function ($s) {
             return $s->isDownloadable();
@@ -133,7 +145,7 @@ class ReportSubmissionController extends AbstractController
      */
     public function downloadIndividualDocument(int $submissionId, int $documentId): Response
     {
-        $client = $this->getRestClient();
+        $client = $this->restClient;
 
         /** @var EntityDir\Report\ReportSubmission $submission */
         $submission = $client->get("report-submission/{$submissionId}", 'Report\\ReportSubmission');
@@ -226,7 +238,7 @@ class ReportSubmissionController extends AbstractController
 
                 case self::ACTION_SYNCHRONISE:
                     foreach ($checkedBoxes as $reportSubmissionId) {
-                        $this->getRestClient()->put("report-submission/{$reportSubmissionId}/queue-documents", []);
+                        $this->restClient->put("report-submission/{$reportSubmissionId}/queue-documents", []);
                     }
             }
         }
@@ -241,7 +253,7 @@ class ReportSubmissionController extends AbstractController
     private function processArchive($checkedBoxes): void
     {
         foreach ($checkedBoxes as $reportSubmissionId) {
-            $this->getRestClient()->put("report-submission/{$reportSubmissionId}", ['archive'=>true]);
+            $this->restClient->put("report-submission/{$reportSubmissionId}", ['archive'=>true]);
         }
     }
 

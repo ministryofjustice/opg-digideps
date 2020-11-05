@@ -1,4 +1,4 @@
-FROM composer AS composer
+FROM composer:1.10.16 AS composer
 
 WORKDIR /app
 
@@ -57,7 +57,9 @@ RUN openssl req -newkey rsa:4096 -x509 -nodes -keyout /etc/nginx/certs/app.key -
 
 RUN mkdir -p var/cache \
   && mkdir -p var/logs \
-  && chown -R www-data var
+  && mkdir -p /var/log/app \
+  && chown -R www-data var \
+  && chown -R www-data /var/log/app
 
 # See this page for directories required
 # https://symfony.com/doc/3.4/quick_tour/the_architecture.html

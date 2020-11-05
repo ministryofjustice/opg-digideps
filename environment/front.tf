@@ -25,7 +25,7 @@ data "aws_iam_policy_document" "front_s3" {
       "s3:PutObjectTagging",
     ]
     resources = [
-      "${aws_s3_bucket.pa_uploads.arn}",
+      aws_s3_bucket.pa_uploads.arn,
       "${aws_s3_bucket.pa_uploads.arn}/*",
     ]
   }

@@ -28,7 +28,7 @@ postcode:
   label: "Your post code"
   hint: ""
   matchingError: |
-    You haven't entered a post code we recognise. Do you live in the UK?
+    You have not entered a post code we recognise. Do you live in the UK?
     If you have a UK post code, please enter it.
     If you continue to have problems, please call the helpline to make sure
     we have a correct record of your details.
@@ -51,7 +51,7 @@ thankyou:
   pageDescription2: |
     You'll need to use this link within 48 hours, or enter your details again.
   pageDescription3: |
-    If you haven't received the email within a few minutes, please check your spam,
+    If you have not received the email within a few minutes, please check your spam,
     bulk or junk email folder - it may have been mistakenly blocked by your email system.
   pageDescription4: |
     If you've already activated your account, you can <a href="%link%">sign in</a>.

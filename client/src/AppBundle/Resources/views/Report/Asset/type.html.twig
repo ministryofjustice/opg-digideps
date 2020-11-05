@@ -22,8 +22,8 @@
 {% block pageContent %}
 
     <div class="text">
-        <p>{{ (page ~ '.pageSectionDescription1') | trans(transOptions) }}</p>
-        <p>{{ (page ~ '.pageSectionDescription2') | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ (page ~ '.pageSectionDescription1') | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ (page ~ '.pageSectionDescription2') | trans(transOptions) }}</p>
     </div>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}

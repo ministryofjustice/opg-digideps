@@ -14,6 +14,9 @@ class NotifyClientMock extends Client
      */
     private $logger;
 
+    /** @var array */
+    private $sentMails = [];
+
     public function __construct(array $config, LoggerInterface $logger)
     {
         $this->logger = $logger;
@@ -25,12 +28,13 @@ class NotifyClientMock extends Client
         }
     }
 
-    public function sendEmail($emailAddress, $templateId, array $personalisation = array(), $reference = '', $emailReplyToId = NULL)
+    public function sendEmail($emailAddress, $templateId, array $personalisation = array(), $reference = '', $emailReplyToId = null)
     {
         if ($emailAddress === 'break@publicguardian.gov.uk') {
             throw new NotifyException('Intentional mock exception');
         } else {
             try {
+                $this->sentMails[$templateId] = $personalisation;
                 parent::sendEmail($emailAddress, $templateId, $personalisation, $reference, $emailReplyToId);
             } catch (Throwable $e) {
                 $this->logger->warning('Mocked email, but received Notify error: ' . $e->getMessage());
@@ -38,5 +42,10 @@ class NotifyClientMock extends Client
 
             return [];
         }
+    }
+
+    public function getSentEmails()
+    {
+        return $this->sentMails;
     }
 }

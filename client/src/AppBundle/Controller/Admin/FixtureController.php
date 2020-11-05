@@ -3,7 +3,6 @@
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Form\Admin\Fixture\CasrecFixtureType;
@@ -16,6 +15,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Twig\Environment;
 
@@ -30,20 +30,29 @@ class FixtureController extends AbstractController
     /** @var Serializer */
     private $serializer;
 
-    public function __construct(Environment $twig, SerializerInterface $serializer)
-    {
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    public function __construct(
+        Environment $twig,
+        SerializerInterface $serializer,
+        RestClient $restClient
+    ) {
         $this->twig = $twig;
         $this->serializer = $serializer;
+        $this->restClient = $restClient;
     }
 
     /**
-     * @Route("/list", name="admin_fixtures")
+     * @Route("/", name="admin_fixtures")
      * @Security("has_role('ROLE_SUPER_ADMIN')")
      * @Template("AppBundle:Admin/Fixtures:index.html.twig")
      */
     public function fixtures()
     {
-        return new Response();
+        return [];
     }
 
     /**
@@ -72,7 +81,7 @@ class FixtureController extends AbstractController
             $deputyEmail = $request->query->get('deputy-email', sprintf('original-%s-deputy-%s@fixture.com', strtolower($submitted['deputyType']), mt_rand(1000, 9999)));
             $caseNumber = $request->get('case-number', $this->generateValidCaseNumber());
 
-            $response = $this->getRestClient()->post('v2/fixture/court-order', json_encode([
+            $response = $this->restClient->post('v2/fixture/court-order', json_encode([
                 'deputyType' => $submitted['deputyType'],
                 'deputyEmail' => $deputyEmail,
                 'caseNumber' =>  $caseNumber,
@@ -84,7 +93,7 @@ class FixtureController extends AbstractController
             ]));
 
             $query = ['query' => ['filter_by_ids' => implode(",", $response['deputyIds'])]];
-            $deputiesData = $this->getRestClient()->get('/user/get-all', 'array', [], $query);
+            $deputiesData = $this->restClient->get('/user/get-all', 'array', [], $query);
             $sanitizedDeputyData = $this->removeNullValues($deputiesData);
 
             $deputies = $this->serializer->deserialize(json_encode($sanitizedDeputyData), 'AppBundle\Entity\User[]', 'json');
@@ -145,7 +154,7 @@ class FixtureController extends AbstractController
         $sections = $request->get('sections');
 
         $this
-            ->getRestClient()
+            ->restClient
             ->put("v2/fixture/complete-sections/$reportType/$reportId?sections=$sections", []);
 
         return new JsonResponse(['Report updated']);
@@ -162,7 +171,7 @@ class FixtureController extends AbstractController
         }
 
         $this
-            ->getRestClient()
+            ->restClient
             ->post("v2/fixture/createAdmin", json_encode([
                 "adminType" => $request->query->get('adminType'),
                 "email" => $request->query->get('email'),
@@ -186,7 +195,7 @@ class FixtureController extends AbstractController
 
         /** @var array $response */
         $response = json_decode($this
-            ->getRestClient()
+            ->restClient
             ->get("v2/fixture/getUserIDByEmail/$email", 'response')->getBody(), true);
 
         if ($response['success']) {
@@ -207,7 +216,7 @@ class FixtureController extends AbstractController
         }
 
         $this
-            ->getRestClient()
+            ->restClient
             ->post("v2/fixture/createUser", json_encode([
                 "ndr" => $request->query->get('ndr'),
                 "deputyType" => $request->query->get('deputyType'),
@@ -232,7 +241,7 @@ class FixtureController extends AbstractController
         }
 
         $this
-            ->getRestClient()
+            ->restClient
             ->post("v2/fixture/deleteUser", json_encode([
                 "email" => $request->query->get('email'),
             ]));
@@ -252,7 +261,7 @@ class FixtureController extends AbstractController
 
         try {
             $this
-                ->getRestClient()
+                ->restClient
                 ->post(
                     "v2/fixture/createClientAttachDeputy",
                     json_encode(
@@ -296,8 +305,13 @@ class FixtureController extends AbstractController
      * @Route("/create-casrec", name="casrec_fixture", methods={"GET", "POST"})
      * @Security("has_role('ROLE_SUPER_ADMIN')")
      * @Template("AppBundle:Admin/Fixtures:casRec.html.twig")
+     *
+     * @param Request $request
+     * @param KernelInterface $kernel
+     *
+     * @return array
      */
-    public function createCasrec(Request $request, KernelInterface $kernel, RestClient $restClient)
+    public function createCasrec(Request $request, KernelInterface $kernel)
     {
         if ($kernel->getEnvironment() === 'prod') {
             throw $this->createNotFoundException();
@@ -313,7 +327,7 @@ class FixtureController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $submitted = $form->getData();
 
-            $response = $this->getRestClient()->post('v2/fixture/createCasrec', json_encode([
+            $response = $this->restClient->post('v2/fixture/createCasrec', json_encode([
                 'deputyType' => $submitted['deputyType'],
                 'reportType' => $submitted['reportType'],
                 'createCoDeputy' => $submitted['createCoDeputy'],

@@ -17,7 +17,7 @@
 
 {% block pageContent %}
     {# Introduction text #}
-    <p class="text">
+    <p class="govuk-body">
         {% if app.user.hasRoleOrgNamed() or app.user.hasRoleOrgAdmin() %}
             {{ 'listPage.introParaAdmin' | trans }}
         {% else %}

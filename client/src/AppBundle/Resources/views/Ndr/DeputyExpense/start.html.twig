@@ -15,16 +15,16 @@
 {% block pageContent %}
 
     <div class="text">
-        <p>{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
-        <p>{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
-        <p>{{ 'startPage.pageSectionDescription3' | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ 'startPage.pageSectionDescription3' | trans(transOptions) }}</p>
 
         <details class="govuk-details" data-module="govuk-details">
             <summary class="govuk-details__summary">
                 <span class="govuk-details__summary-text">{{ 'startPage.hiddenText01.summary' |trans }}</span>
             </summary>
             <div class="govuk-details__text">
-                <p>{{ 'startPage.hiddenText01.content.para01' |trans|raw }}</p>
+                <p class="govuk-body">{{ 'startPage.hiddenText01.content.para01' |trans|raw }}</p>
             </div>
         </details>
 

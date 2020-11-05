@@ -26,7 +26,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             {# Introduction text #}
-            <p>{{ 'startPage.moneyIn.pageSectionDescription1' | trans(transOptions) }}</p>
+            <p class="govuk-body">{{ 'startPage.moneyIn.pageSectionDescription1' | trans(transOptions) }}</p>
 
             {# More details (from the start page) #}
             <details class="govuk-details" data-module="govuk-details">
@@ -34,16 +34,16 @@
                     <span class="govuk-details__summary-text">{{ 'summaryPage.moneyIn.moreDetails' |trans }}</span>
                 </summary>
                 <div class="govuk-details__text">
-                    <p>{{ 'startPage.moneyIn.pageSectionDescription2' | trans(transOptions) | raw }}</p>
-                    <p>{{ 'startPage.moneyIn.pageSectionDescription3' | trans }}</p>
-                    <p><strong>{{ 'startPage.moneyIn.totalOrIndividualHeading' | trans }}</strong></p>
-                    <p>{{ 'startPage.moneyIn.totalOrIndividualPara' | trans }}</p>
+                    <p class="govuk-body">{{ 'startPage.moneyIn.pageSectionDescription2' | trans(transOptions) | raw }}</p>
+                    <p class="govuk-body">{{ 'startPage.moneyIn.pageSectionDescription3' | trans }}</p>
+                    <p class="govuk-body"><strong>{{ 'startPage.moneyIn.totalOrIndividualHeading' | trans }}</strong></p>
+                    <p class="govuk-body">{{ 'startPage.moneyIn.totalOrIndividualPara' | trans }}</p>
                 </div>
             </details>
 
             {# Check answers text #}
-            <p><strong>{{ 'weHaveListed' | trans(transOptions, 'common') }}</strong></p>
-            <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+            <p class="govuk-body"><strong>{{ 'weHaveListed' | trans(transOptions, 'common') }}</strong></p>
+            <p class="govuk-body">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
         </div>
         <div class="govuk-grid-column-one-third">
             {{ macros.relatedSections(report, 'moneyIn') }}

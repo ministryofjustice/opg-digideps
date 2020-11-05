@@ -24,6 +24,7 @@ services:
                 apiKey: '%env(NOTIFY_API_KEY)%'
 
     AppBundle\Service\Mailer\NotifyClientMock:
+        class: AppBundle\Service\Mailer\NotifyClientMock
         arguments:
             $config:
                 httpClient: '@Http\Adapter\Guzzle6\Client'

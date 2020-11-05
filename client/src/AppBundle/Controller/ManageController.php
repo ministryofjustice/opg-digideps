@@ -9,6 +9,7 @@ use AppBundle\Service\Availability\RedisAvailability;
 use AppBundle\Service\Availability\SiriusApiAvailability;
 use AppBundle\Service\Availability\WkHtmlToPdfAvailability;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
@@ -21,6 +22,13 @@ class ManageController extends AbstractController
 
     /**
      * @Route("/availability", methods={"GET"})
+     *
+     * @param ContainerInterface $container
+     * @param ApiAvailability $apiAvailability
+     * @param NotifyAvailability $notifyAvailability
+     * @param RedisAvailability $redisAvailability
+     *
+     * @return Response|null
      */
     public function availabilityAction(
         ContainerInterface $container,
@@ -57,6 +65,12 @@ class ManageController extends AbstractController
 
     /**
      * @Route("/availability/pingdom", methods={"GET"})
+     *
+     * @param ApiAvailability $apiAvailability
+     * @param NotifyAvailability $notifyAvailability
+     * @param RedisAvailability $redisAvailability
+     *
+     * @return Response|null
      */
     public function healthCheckXmlAction(
         ApiAvailability $apiAvailability,
