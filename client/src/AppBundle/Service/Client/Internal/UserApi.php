@@ -94,7 +94,10 @@ class UserApi
     {
         $this->restClient->delete(sprintf('%s/%s', self::USER_ENDPOINT, $userToDelete->getId()));
 
-        $userDeletedEvent = new UserDeletedEvent($userToDelete, $trigger);
+        /** @var User */
+        $deletedBy = $this->tokenStorage->getToken()->getUser();
+
+        $userDeletedEvent = new UserDeletedEvent($userToDelete, $deletedBy, $trigger);
         $this->eventDispatcher->dispatch($userDeletedEvent, UserDeletedEvent::NAME);
     }
 }
