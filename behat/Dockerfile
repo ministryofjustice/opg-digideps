@@ -17,7 +17,6 @@ WORKDIR /var/www
 
 # Install dependencies
 RUN apk add --no-cache postgresql-client libzip-dev unzip
-RUN apk add --no-cache bash
 
 RUN mkdir -p /tmp/html
 RUN mkdir -p /tmp/sql

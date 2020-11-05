@@ -1,4 +1,3 @@
-#!/bin/bash
 if [ $(aws --version 2>&1 | grep -c "aws-cli") -ne 0 ]
 then
   export SECRET_STRING=$(aws sts assume-role \
@@ -15,8 +14,6 @@ then
   export BROWSERSTACK_KEY=$(aws secretsmanager get-secret-value \
   --secret-id development/browserstack-access-key \
   --region eu-west-1 | jq -r '.SecretString' 2>/dev/null)
-  echo "BROWSERSTACK_USERNAME$BROWSERSTACK_USERNAME" >> ~/project/behat/.env
-  echo "BROWSERSTACK_KEY=$BROWSERSTACK_KEY" >> ~/project/behat/.env
   if [[ -z "${BROWSERSTACK_USERNAME}" ]]
   then
     echo "Error setting env var BROWSERSTACK_USERNAME"
