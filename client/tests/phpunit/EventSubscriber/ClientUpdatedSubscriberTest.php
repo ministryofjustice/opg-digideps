@@ -11,6 +11,7 @@ use AppBundle\TestHelpers\ClientHelpers;
 use AppBundle\TestHelpers\UserHelpers;
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 
 class ClientUpdatedSubscriberTest extends TestCase
@@ -54,7 +55,6 @@ class ClientUpdatedSubscriberTest extends TestCase
             'event' => AuditEvents::EVENT_CLIENT_EMAIL_CHANGED,
             'type' => 'audit'
         ];
-        ;
 
         $logger->notice($expectedLogMessage, $expectedEvent)->shouldBeCalled();
         $sut->logEvent($event);
@@ -66,7 +66,26 @@ class ClientUpdatedSubscriberTest extends TestCase
 
         return [
             'Email changed' => [clone $postUpdateClient, ''],
-            'Email removed' => [(clone $postUpdateClient)->setEmail(null), 'Client email address removed']
+            'Email removed' => [(clone $postUpdateClient)->setEmail(null), 'Client email address removed'],
         ];
+    }
+
+    /** @test */
+    public function logEvent_only_logs_on_email_change()
+    {
+        $logger = self::prophesize(LoggerInterface::class);
+        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
+
+        $sut = new ClientUpdatedSubscriber($logger->reveal(), $dateTimeProvider->reveal());
+
+        $preUpdateClient = ClientHelpers::createClient();
+        $postUpdateClient = (ClientHelpers::createClient())->setEmail($preUpdateClient->getEmail());
+        $changedBy = UserHelpers::createUser();
+        $trigger = 'A_TRIGGER';
+
+        $event = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $changedBy, $trigger);
+
+        $logger->notice(Argument::cetera())->shouldNotBeCalled();
+        $sut->logEvent($event);
     }
 }

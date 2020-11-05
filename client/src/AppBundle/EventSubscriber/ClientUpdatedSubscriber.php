@@ -4,6 +4,7 @@
 namespace AppBundle\EventSubscriber;
 
 use AppBundle\Event\ClientUpdatedEvent;
+use AppBundle\Event\UserUpdatedEvent;
 use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
@@ -32,15 +33,26 @@ class ClientUpdatedSubscriber implements EventSubscriberInterface
 
     public function logEvent(ClientUpdatedEvent $clientUpdatedEvent)
     {
-        $event = (new AuditEvents($this->dateTimeProvider))->clientEmailChanged(
-            $clientUpdatedEvent->getTrigger(),
-            $clientUpdatedEvent->getPreUpdateClient()->getEmail(),
-            $clientUpdatedEvent->getPostUpdateClient()->getEmail(),
-            $clientUpdatedEvent->getChangedBy()->getEmail(),
-            $clientUpdatedEvent->getPostUpdateClient()->getFullName(),
-        );
+        if ($this->emailHasChanged($clientUpdatedEvent)) {
+            $event = (new AuditEvents($this->dateTimeProvider))->clientEmailChanged(
+                $clientUpdatedEvent->getTrigger(),
+                $clientUpdatedEvent->getPreUpdateClient()->getEmail(),
+                $clientUpdatedEvent->getPostUpdateClient()->getEmail(),
+                $clientUpdatedEvent->getChangedBy()->getEmail(),
+                $clientUpdatedEvent->getPostUpdateClient()->getFullName(),
+            );
 
-        $message = empty($clientUpdatedEvent->getPostUpdateClient()->getEmail()) ? 'Client email address removed' : '';
-        $this->logger->notice($message, $event);
+            $message = empty($clientUpdatedEvent->getPostUpdateClient()->getEmail()) ? 'Client email address removed' : '';
+            $this->logger->notice($message, $event);
+        }
+    }
+
+    /**
+     * @param ClientUpdatedEvent $event
+     * @return bool
+     */
+    private function emailHasChanged(ClientUpdatedEvent $event)
+    {
+        return $event->getPreUpdateClient()->getEmail() !== $event->getPostUpdateClient()->getEmail();
     }
 }
