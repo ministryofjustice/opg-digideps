@@ -17,7 +17,7 @@ class ClientUpdatedSubscriber implements EventSubscriberInterface
     /** @var LoggerInterface */
     private $logger;
 
-    public function __construct(DateTimeProvider $dateTimeProvider, LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, DateTimeProvider $dateTimeProvider)
     {
         $this->dateTimeProvider = $dateTimeProvider;
         $this->logger = $logger;

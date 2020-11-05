@@ -5,6 +5,7 @@ namespace AppBundle\EventSubscriber;
 
 use AppBundle\Event\ClientDeletedEvent;
 use AppBundle\Service\Audit\AuditEvents;
+use AppBundle\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -13,13 +14,13 @@ class ClientDeletedSubscriber implements EventSubscriberInterface
     /** @var LoggerInterface */
     private $logger;
 
-    /** @var AuditEvents */
-    private $auditEvents;
+    /** @var DateTimeProvider */
+    private $dateTimeProvider;
 
-    public function __construct(LoggerInterface $logger, AuditEvents $auditEvents)
+    public function __construct(LoggerInterface $logger, DateTimeProvider $dateTimeProvider)
     {
         $this->logger = $logger;
-        $this->auditEvents = $auditEvents;
+        $this->dateTimeProvider = $dateTimeProvider;
     }
 
     public static function getSubscribedEvents()
@@ -34,7 +35,7 @@ class ClientDeletedSubscriber implements EventSubscriberInterface
         $clientsDeputy = $event->getClientWithUsers()->getDeputy();
         $clientsDeputyName = (is_null($clientsDeputy) ? '' : $clientsDeputy->getFullName());
 
-        $this->logger->notice('', $this->auditEvents->clientDischarged(
+        $this->logger->notice('', (new AuditEvents($this->dateTimeProvider))->clientDischarged(
             $event->getTrigger(),
             $event->getClientWithUsers()->getCaseNumber(),
             $event->getCurrentUser()->getEmail(),

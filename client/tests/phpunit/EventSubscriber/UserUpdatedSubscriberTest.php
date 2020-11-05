@@ -12,6 +12,7 @@ use AppBundle\Service\Time\DateTimeProvider;
 use AppBundle\TestHelpers\UserHelpers;
 use DateTime;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -20,16 +21,16 @@ class UserUpdatedSubscriberTest extends KernelTestCase
     /** @var UserHelpers */
     private $userHelpers;
 
-    /** @var \Prophecy\Prophecy\ObjectProphecy */
+    /** @var ObjectProphecy */
     private $dateTimeProvider;
 
-    /** @var \Prophecy\Prophecy\ObjectProphecy */
+    /** @var ObjectProphecy */
     private $logger;
 
-    /** @var \Prophecy\Prophecy\ObjectProphecy */
+    /** @var ObjectProphecy */
     private $mailFactory;
 
-    /** @var \Prophecy\Prophecy\ObjectProphecy */
+    /** @var ObjectProphecy */
     private $mailSender;
 
     /** @var UserUpdatedListener */

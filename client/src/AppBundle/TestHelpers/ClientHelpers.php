@@ -10,20 +10,18 @@ use Faker;
 class ClientHelpers
 {
     /**
-     * @var Faker\Generator
+     * @return Client
      */
-    private $faker;
-
-    public function __construct()
+    public static function createClient(): Client
     {
-        $this->faker = Faker\Factory::create();
-    }
+        $faker = Faker\Factory::create();
 
-    public static function createClient()
-    {
         return (new Client())
             ->setCaseNumber(self::createValidCaseNumber())
-            ->setCourtDate(new DateTime());
+            ->setCourtDate(new DateTime())
+            ->setEmail($faker->safeEmail)
+            ->setFirstname($faker->firstName)
+            ->setLastname($faker->lastName);
     }
 
     /**

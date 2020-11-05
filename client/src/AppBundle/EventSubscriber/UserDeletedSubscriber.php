@@ -12,18 +12,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class UserDeletedSubscriber implements EventSubscriberInterface
 {
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-
     /** @var DateTimeProvider */
     private $dateTimeProvider;
 
     /** @var LoggerInterface */
     private $logger;
 
-    public function __construct(EventDispatcherInterface $eventDispatcher, DateTimeProvider $dateTimeProvider, LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, DateTimeProvider $dateTimeProvider)
     {
-        $this->eventDispatcher = $eventDispatcher;
         $this->dateTimeProvider = $dateTimeProvider;
         $this->logger = $logger;
     }
@@ -38,7 +34,7 @@ class UserDeletedSubscriber implements EventSubscriberInterface
     public function logEvent(UserDeletedEvent $event)
     {
         $event = (new AuditEvents($this->dateTimeProvider))->userDeleted(
-            AuditEvents::TRIGGER_ADMIN_BUTTON,
+            $event->getTrigger(),
             $event->getDeletedBy()->getEmail(),
             $event->getDeletedUser()->getFullName(),
             $event->getDeletedUser()->getEmail(),

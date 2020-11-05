@@ -277,10 +277,13 @@ class Client
 
     /**
      * @param NamedDeputy $namedDeputy
+     * @return Client
      */
-    public function setNamedDeputy(NamedDeputy $namedDeputy)
+    public function setNamedDeputy(NamedDeputy $namedDeputy): self
     {
         $this->namedDeputy = $namedDeputy;
+
+        return $this;
     }
 
     /**

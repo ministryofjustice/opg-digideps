@@ -9,7 +9,7 @@ use DateTime;
 final class AuditEvents
 {
     const EVENT_USER_EMAIL_CHANGED = 'USER_EMAIL_CHANGED';
-    const EVENT_CLIENT_DISCHARGED = 'CLIENT_DISCHARGED';
+    const EVENT_USER_DELETED = 'USER_DELETED';
     const EVENT_ROLE_CHANGED = 'ROLE_CHANGED';
     const EVENT_CLIENT_EMAIL_CHANGED = 'CLIENT_EMAIL_CHANGED';
     const EVENT_DEPUTY_DELETED = 'DEPUTY_DELETED';
@@ -20,7 +20,6 @@ final class AuditEvents
     const TRIGGER_CSV_UPLOAD = 'CSV_UPLOAD';
     const TRIGGER_DEPUTY_USER_EDIT_SELF = 'DEPUTY_USER_EDIT_SELF';
     const TRIGGER_DEPUTY_USER_EDIT = 'DEPUTY_USER_EDIT';
-
 
     /**
      * @var DateTimeProvider
@@ -85,7 +84,7 @@ final class AuditEvents
         string $trigger,
         ?string $emailChangedFrom,
         ?string $emailChangedTo,
-        string $changedBy,
+        string $changedByEmail,
         string $subjectFullName
     ) {
         $event = [
@@ -93,7 +92,7 @@ final class AuditEvents
             'email_changed_from' => $emailChangedFrom,
             'email_changed_to' => $emailChangedTo,
             'changed_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
-            'changed_by' => $changedBy,
+            'changed_by' => $changedByEmail,
             'subject_full_name' => $subjectFullName,
             'subject_role' => 'CLIENT',
         ];
@@ -139,19 +138,19 @@ final class AuditEvents
     /**
      * @param string $trigger
      * @param string $deletedBy
-     * @param string $subjectFullname
+     * @param string $subjectFullName
      * @param string $subjectEmail
      * @param string $subjectRole
      * @return array|string[]
      * @throws \Exception
      */
-    public function userDeleted(string $trigger, string $deletedBy, string $subjectFullname, string $subjectEmail, string $subjectRole): array
+    public function userDeleted(string $trigger, string $deletedBy, string $subjectFullName, string $subjectEmail, string $subjectRole): array
     {
         $event = [
             'trigger' => $trigger,
             'deleted_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
             'deleted_by' => $deletedBy,
-            'subject_full_name' => $subjectFullname,
+            'subject_full_name' => $subjectFullName,
             'subject_email' => $subjectEmail,
             'subject_role' => $subjectRole,
         ];
