@@ -13,3 +13,7 @@ output "nlb_arn" {
 output "nlb_hostname" {
   value = aws_lb.main.dns_name
 }
+
+output "squid_fqdn" {
+  value = local.squid_service_fqdn
+}

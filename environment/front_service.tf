@@ -92,7 +92,9 @@ locals {
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
       { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" },
       { "name": "ENVIRONMENT", "value": "${local.environment}" },
-      { "name": "NGINX_APP_NAME", "value": "frontend" }
+      { "name": "NGINX_APP_NAME", "value": "frontend" },
+      { "name": "HTTP_PROXY", "value": "${module.squid.squid_fqdn}" },
+      { "name": "HTTPS_PROXY", "value": "${module.squid.squid_fqdn}" }
     ]
   }
 

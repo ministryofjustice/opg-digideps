@@ -117,8 +117,7 @@ class ReportController extends AbstractController
         ClientApi $clientApi,
         MailFactory $mailFactory,
         MailSender $mailSender
-    )
-    {
+    ) {
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
         $this->userApi = $userApi;
@@ -142,6 +141,11 @@ class ReportController extends AbstractController
     {
         // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
         // due to the way
+
+        $url = 'http://google.com';
+        $result = get_headers($url, 1);
+        var_dump($result);
+
         $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
 
         // redirect if user has missing details or is on wrong page

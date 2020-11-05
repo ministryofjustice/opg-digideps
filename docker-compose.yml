@@ -10,6 +10,9 @@ services:
             - admin
             - localstack
         restart: always
+#        environment:
+#          DEFAULT_HOST: localhost
+#          CERT_NAME: digideps.local.crt
         volumes:
             - /var/run/docker.sock:/tmp/docker.sock:ro
             - ./.certs:/etc/nginx/certs
@@ -76,6 +79,9 @@ services:
             VIRTUAL_HOST: www.digideps.local,digideps.local
             VIRTUAL_PROTO: https
             VIRTUAL_PORT: 443
+            HTTP_PROXY: http://squid:3128
+            HTTPS_PROXY: http://squid:3128
+#            NO_PROXY: 10.0.0.0/8,172.0.0.0/8,192.168.0.0/16,127.0.0.0/8,api
         env_file:
             - ./client/docker/env/frontend.env
         restart: always
@@ -197,7 +203,7 @@ services:
             - router
             - localstack
         environment:
-          SQUID_WHITELIST: "api.notifications.service.gov.uk,google.com,10.0.0.0/8,172.0.0.0/8,192.168.0.0/16,admin"
+          SQUID_WHITELIST: "api.notifications.service.gov.uk,admin,frontend,squid,api"
           SQUID_BLOCKALL: "true"
           SQUID_SHUTDOWNLIFETIME:
           AWS_REGIONS: "eu-west-1"

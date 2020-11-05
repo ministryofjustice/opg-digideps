@@ -11,7 +11,7 @@ module "squid" {
   desired_count = 1
 
   url_block_all     = false
-  whitelist_url     = "api.notifications.service.gov.uk"
+  whitelist_url     = "api.notifications.service.gov.uk,${local.api_service_fqdn},${local.scan_service_fqdn}"
   default_tags      = local.default_tags
   cluster           = aws_ecs_cluster.main
   service_discovery = aws_service_discovery_private_dns_namespace.private
