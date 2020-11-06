@@ -21,7 +21,17 @@ class ClientHelpers
             ->setCourtDate(new DateTime())
             ->setEmail($faker->safeEmail)
             ->setFirstname($faker->firstName)
-            ->setLastname($faker->lastName);
+            ->setLastname($faker->lastName)
+            ->setId(1);
+    }
+
+    /**
+     * @return Client
+     */
+    public static function createClientWithUsers(): Client
+    {
+        $user = UserHelpers::createUser();
+        return (self::createClient())->addUser($user);
     }
 
     /**

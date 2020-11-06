@@ -5,7 +5,7 @@ namespace AppBundle\Event;
 
 use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
-use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\Event;
 
 class ClientDeletedEvent extends Event
 {
