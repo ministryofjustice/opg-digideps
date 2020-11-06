@@ -228,7 +228,7 @@ class OrganisationController extends AbstractController
             $editedUser = $form->getData();
 
             try {
-                $this->userApi->update($userToEdit, $editedUser, ['org_team_add'], AuditEvents::TRIGGER_DEPUTY_USER);
+                $this->userApi->update($userToEdit, $editedUser, AuditEvents::TRIGGER_DEPUTY_USER, ['org_team_add']);
                 $this->addFlash('notice', 'The user has been edited');
 
                 return $this->redirectToRoute('org_organisation_view', ['id' => $organisation->getId()]);

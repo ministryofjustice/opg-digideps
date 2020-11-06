@@ -70,7 +70,7 @@ class UserApi
      * @param string $trigger
      * @return mixed
      */
-    public function update(User $preUpdateUser, User $postUpdateUser, $jmsGroups = [], string $trigger)
+    public function update(User $preUpdateUser, User $postUpdateUser, string $trigger, $jmsGroups = [])
     {
         $response = $this->restClient->put(
             sprintf('%s/%s', self::USER_ENDPOINT, $preUpdateUser->getId()),

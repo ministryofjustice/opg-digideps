@@ -194,7 +194,7 @@ class SettingsController extends AbstractController
             }
 
             try {
-                $this->userApi->update($preUpdateDeputy, $postUpdateDeputy, $jmsPutGroups, AuditEvents::TRIGGER_DEPUTY_USER_EDIT_SELF);
+                $this->userApi->update($preUpdateDeputy, $postUpdateDeputy, AuditEvents::TRIGGER_DEPUTY_USER_EDIT_SELF, $jmsPutGroups);
                 return $this->redirect($redirectRoute);
             } catch (\Throwable $e) {
                 if ($e->getCode() == 422 && $form->get('email')) {
