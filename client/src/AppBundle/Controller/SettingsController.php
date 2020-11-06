@@ -176,7 +176,7 @@ class SettingsController extends AbstractController
             $newRole = $this->determineNoAdminRole();
 
             if ($form->has('removeAdmin') && !empty($form->get('removeAdmin')->getData())) {
-                $preUpdateDeputy->setRoleName($newRole);
+                $postUpdateDeputy->setRoleName($newRole);
 
                 $this->addFlash('notice', 'For security reasons you have been logged out because you have changed your admin rights. Please log in again below');
 
@@ -186,7 +186,7 @@ class SettingsController extends AbstractController
 
                 if ('declaration' === $request->get('from') && null !== $request->get('rid')) {
                     $redirectRoute = $this->generateUrl('report_declaration', ['reportId' => $request->get('rid')]);
-                } elseif ($preUpdateDeputy->isDeputyPA() || $preUpdateDeputy->isDeputyProf()) {
+                } elseif ($postUpdateDeputy->isDeputyPA() || $postUpdateDeputy->isDeputyProf()) {
                     $redirectRoute = $this->generateUrl('org_profile_show');
                 } else {
                     $redirectRoute = $this->generateUrl('user_show');
