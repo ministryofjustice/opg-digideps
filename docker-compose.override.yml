@@ -48,3 +48,8 @@ services:
   wkhtmltopdf:
     volumes:
       - ./wkhtmltopdf/app.py:/app.py
+
+  test:
+    volumes:
+      - ./behat/tests:/var/www/tests
+      - ./behat/snapshots:/tmp/html

@@ -677,7 +677,7 @@ jobs:
 
             ./behat/BrowserStackLocal --daemon "start" --key $BROWSERSTACK_KEY
 
-            docker cp "./behat/tests" "cross-browser_1:/var/www/tests"
+            docker cp "./behat/tests" "cross-browser_test_1:/var/www/tests"
 
             docker-compose -f docker-compose.yml -f docker-compose.dev.yml --project-name cross-browser run test --profile cross-browser-chrome --suite chrome
             docker-compose -f docker-compose.yml -f docker-compose.dev.yml --project-name cross-browser run test --profile cross-browser-ie11 --suite ie11
