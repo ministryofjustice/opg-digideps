@@ -16,7 +16,12 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class ClientApi
 {
-    public const CLIENT_ENDPOINT = 'client';
+    private const GET_CLIENT_BY_ID = 'client/%s';
+    private const DELETE_CLIENT_BY_ID = 'client/%s/delete';
+    private const UPDATE_CLIENT = 'client/upsert';
+
+    private const GET_CLIENT_WITH_USERS_ENDPOINT_V2 = 'v2/client/%s';
+    private const GET_CLIENT_BY_CASE_NUMBER_V2 = 'v2/client/case-number/%s';
 
     /** @var RestClient */
     private $restClient;
@@ -82,7 +87,7 @@ class ClientApi
     {
         /** @var Client $client */
         $client = $this->restClient->get(
-            sprintf('%s/%s', self::CLIENT_ENDPOINT, $client->getId()),
+            sprintf(self::GET_CLIENT_BY_ID, $client->getId()),
             'Client',
             ['client', 'report-id', 'current-report']
         );
@@ -109,7 +114,7 @@ class ClientApi
     public function getWithUsers(int $clientId)
     {
         return $this->restClient->get(
-            sprintf('%s/%s/details', self::CLIENT_ENDPOINT, $clientId),
+            sprintf(self::GET_CLIENT_WITH_USERS_ENDPOINT_V2, $clientId),
             'Client',
             [
                 'client',
@@ -139,7 +144,7 @@ class ClientApi
 
         $clientDeletedEvent = new ClientDeletedEvent($clientWithUsers, $currentUser, $trigger);
 
-        $this->restClient->delete(sprintf('%s/%s/delete', self::CLIENT_ENDPOINT, $id));
+        $this->restClient->delete(sprintf(self::DELETE_CLIENT_BY_ID, $id));
 
         $this->eventDispatcher->dispatch(ClientDeletedEvent::NAME, $clientDeletedEvent);
     }
@@ -151,7 +156,7 @@ class ClientApi
      */
     public function update(Client $preUpdateClient, Client $postUpdateClient, string $trigger)
     {
-        $this->restClient->put(sprintf('%s/upsert', self::CLIENT_ENDPOINT), $postUpdateClient, ['pa-edit']);
+        $this->restClient->put(self::UPDATE_CLIENT, $postUpdateClient, ['pa-edit']);
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
         $clientUpdatedEvent = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $currentUser, $trigger);
@@ -165,6 +170,6 @@ class ClientApi
      */
     public function getByCaseNumber(string $caseNumber)
     {
-        return $this->restClient->get(sprintf('v2/%s/case-number/%s', self::CLIENT_ENDPOINT, $caseNumber), 'Client');
+        return $this->restClient->get(sprintf(self::GET_CLIENT_BY_CASE_NUMBER_V2, $caseNumber), 'Client');
     }
 }

@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class UserApi
 {
-    private const USER_ENDPOINT = 'user';
+    private const USER_ENDPOINT_BY_ID = 'user/%s';
 
     /**  @var RestClientInterface */
     private $restClient;
@@ -39,7 +39,7 @@ class UserApi
      */
     public function get(int $id, array $jmsGroups = [])
     {
-        return $this->restClient->get(sprintf("%s/%s", self::USER_ENDPOINT, $id), 'User', $jmsGroups);
+        return $this->restClient->get(sprintf(self::USER_ENDPOINT_BY_ID, $id), 'User', $jmsGroups);
     }
 
     /**
@@ -57,7 +57,7 @@ class UserApi
         $user = $this->tokenStorage->getToken()->getUser();
 
         return $this->restClient->get(
-            sprintf('%s/%s', self::USER_ENDPOINT, $user->getId()),
+            sprintf(self::USER_ENDPOINT_BY_ID, $user->getId()),
             'User',
             $jmsGroups
         );
@@ -73,7 +73,7 @@ class UserApi
     public function update(User $preUpdateUser, User $postUpdateUser, string $trigger, $jmsGroups = [])
     {
         $response = $this->restClient->put(
-            sprintf('%s/%s', self::USER_ENDPOINT, $preUpdateUser->getId()),
+            sprintf(self::USER_ENDPOINT_BY_ID, $preUpdateUser->getId()),
             $postUpdateUser,
             $jmsGroups
         );
@@ -92,7 +92,7 @@ class UserApi
 
     public function delete(User $userToDelete, string $trigger)
     {
-        $this->restClient->delete(sprintf('%s/%s', self::USER_ENDPOINT, $userToDelete->getId()));
+        $this->restClient->delete(sprintf(self::USER_ENDPOINT_BY_ID, $userToDelete->getId()));
 
         /** @var User */
         $deletedBy = $this->tokenStorage->getToken()->getUser();

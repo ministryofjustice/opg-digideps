@@ -13,14 +13,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ReportApi
 {
+    private const REPORT_ENDPOINT_BY_ID = 'report/%s';
+    private const NDR_ENDPOINT_BY_ID = 'ndr/%s';
+
     /**
      * @var RestClient
      */
     private $restClient;
 
-    public function __construct(
-        RestClient $restClient
-    ) {
+    public function __construct(RestClient $restClient)
+    {
         $this->restClient = $restClient;
     }
 
@@ -62,7 +64,11 @@ class ReportApi
         sort($groups); // helps HTTP caching
 
         try {
-            $report = $this->restClient->get("report/{$reportId}", 'Report\\Report', $groups);
+            $report = $this->restClient->get(
+                sprintf(self::REPORT_ENDPOINT_BY_ID, $reportId),
+                'Report\\Report',
+                $groups
+            );
         } catch (RestClientException $e) {
             if ($e->getStatusCode() === 403 || $e->getStatusCode() === 404) {
                 throw new NotFoundHttpException($e->getData()['message']);
@@ -112,7 +118,7 @@ class ReportApi
         $groups[] = 'client';
         $groups = array_unique($groups);
 
-        return $this->restClient->get("ndr/{$ndrId}", 'Ndr\Ndr', $groups);
+        return $this->restClient->get(sprintf(self::NDR_ENDPOINT_BY_ID, $ndrId), 'Ndr\Ndr', $groups);
     }
 
     /**
