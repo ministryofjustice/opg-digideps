@@ -48,6 +48,7 @@ class ClientController
      */
     public function getByIdAction(int $id): JsonResponse
     {
+        // testr
         if (null === ($data = $this->repository->getArrayById($id))) {
             throw new NotFoundHttpException(sprintf('Client id %s not found', $id));
         }
