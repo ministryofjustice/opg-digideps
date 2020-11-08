@@ -29,7 +29,7 @@ class AuditEventsTest extends TestCase
             'deputy_name' => 'Bjork Gudmundsdottir',
             'discharged_on' => $now->format(DateTime::ATOM),
             'deputyship_start_date' => $expectedStartDate,
-            'event' => 'USER_DELETED',
+            'event' => 'CLIENT_DELETED',
             'type' => 'audit'
         ];
 
