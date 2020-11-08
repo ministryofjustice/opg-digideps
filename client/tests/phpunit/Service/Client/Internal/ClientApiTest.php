@@ -87,7 +87,7 @@ class ClientApiTest extends TestCase
         $clientWithUsers = ClientHelpers::createClientWithUsers();
         $currentUser = UserHelpers::createUser();
 
-        $this->restClient->get(sprintf('client/%s/details', $clientWithUsers->getId()), Argument::cetera())
+        $this->restClient->get(sprintf('v2/client/%s', $clientWithUsers->getId()), Argument::cetera())
             ->shouldBeCalled()
             ->willReturn($clientWithUsers);
 
