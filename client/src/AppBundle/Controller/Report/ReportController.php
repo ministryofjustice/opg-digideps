@@ -117,8 +117,7 @@ class ReportController extends AbstractController
         ClientApi $clientApi,
         MailFactory $mailFactory,
         MailSender $mailSender
-    )
-    {
+    ) {
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
         $this->userApi = $userApi;
@@ -161,6 +160,7 @@ class ReportController extends AbstractController
         $coDeputies = $clientWithCoDeputies->getCoDeputies();
 
         return [
+            'user' => $user,
             'client' => $client,
             'coDeputies' => $coDeputies,
         ];

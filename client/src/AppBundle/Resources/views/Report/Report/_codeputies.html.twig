@@ -30,7 +30,8 @@
     <tbody class="govuk-table__body">
         {% for deputy in coDeputies %}
             <tr class="govuk-table__row">
-                {% if deputy.coDeputyClientConfirmed %}
+{#                accounting for deputies created manually by case managers without codeputy flag set#}
+                {% if (deputy.coDeputyClientConfirmed) or (user.email == deputy.email) %}
                     <td class="govuk-table__cell">
                         {{ deputy.firstname }} {{ deputy.lastname }}
                     </td>
