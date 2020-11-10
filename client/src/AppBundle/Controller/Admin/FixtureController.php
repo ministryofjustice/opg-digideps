@@ -74,6 +74,8 @@ class FixtureController extends AbstractController
             'reportStatus' => $request->get('report-status', Report::STATUS_NOT_STARTED),
             'coDeputyEnabled' => $request->get('co-deputy-enabled', false),
             'activated' => $request->get('activated', true),
+            'orgSizeClients' => $request->get('orgSizeClients', 1),
+            'orgSizeUsers' => $request->get('orgSizeUsers', 1)
         ]);
 
         $form->handleRequest($request);
@@ -91,7 +93,9 @@ class FixtureController extends AbstractController
                 'reportStatus' => $submitted['reportStatus'],
                 'courtDate' => $courtDate->format('Y-m-d'),
                 'coDeputyEnabled' => $submitted['coDeputyEnabled'],
-                'activated' => $submitted['activated']
+                'activated' => $submitted['activated'],
+                'orgSizeClients' => $submitted['orgSizeClients'],
+                'orgSizeUsers' => $submitted['orgSizeUsers'],
             ]));
 
             $query = ['query' => ['filter_by_ids' => implode(",", $response['deputyIds'])]];
