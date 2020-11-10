@@ -20,7 +20,7 @@ class ClientApi
     private const DELETE_CLIENT_BY_ID = 'client/%s/delete';
     private const UPDATE_CLIENT = 'client/upsert';
 
-    private const GET_CLIENT_WITH_USERS_ENDPOINT_V2 = 'v2/client/%s';
+    private const GET_CLIENT_BY_ID_V2 = 'v2/client/%s';
     private const GET_CLIENT_BY_CASE_NUMBER_V2 = 'v2/client/case-number/%s';
 
     /** @var RestClient */
@@ -111,10 +111,36 @@ class ClientApi
      * @param int $clientId
      * @return Client
      */
-    public function getWithUsers(int $clientId)
+    public function getWithUsers(int $clientId, array $includes = [])
     {
         return $this->restClient->get(
-            sprintf(self::GET_CLIENT_WITH_USERS_ENDPOINT_V2, $clientId),
+            sprintf(self::GET_CLIENT_BY_ID, $clientId),
+            'Client',
+            [
+                'client',
+                'client-users',
+                'user',
+                'client-reports',
+                'client-ndr',
+                'ndr',
+                'report',
+                'status',
+                'client-named-deputy',
+                'named-deputy',
+                'client-organisations',
+                'organisation'
+            ]
+        );
+    }
+
+    /**
+     * @param int $clientId
+     * @return Client
+     */
+    public function getWithUsersV2(int $clientId, array $includes = [])
+    {
+        return $this->restClient->get(
+            sprintf(self::GET_CLIENT_BY_ID_V2, $clientId),
             'Client',
             [
                 'client',
@@ -139,7 +165,7 @@ class ClientApi
      */
     public function delete(int $id, string $trigger)
     {
-        $clientWithUsers = $this->getWithUsers($id);
+        $clientWithUsers = $this->getWithUsersV2($id);
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
         $clientDeletedEvent = new ClientDeletedEvent($clientWithUsers, $currentUser, $trigger);

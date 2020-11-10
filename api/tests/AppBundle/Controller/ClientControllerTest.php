@@ -201,8 +201,6 @@ class ClientControllerTest extends AbstractTestController
     {
         $url = '/client/' . self::$client1->getId();
         $this->assertEndpointNeedsAuth('GET', $url);
-
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
     }
 
     public function testfindByIdAcl()
@@ -257,7 +255,6 @@ class ClientControllerTest extends AbstractTestController
         $this->assertInstanceOf('AppBundle\Entity\Client', $client);
         $this->assertEquals(1, count($client->getUsers()));
         $this->assertInstanceOf(\DateTime::class, $client->getArchivedAt());
-
     }
 
     public function testDetailsAction()

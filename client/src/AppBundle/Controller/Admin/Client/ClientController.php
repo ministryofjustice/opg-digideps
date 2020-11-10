@@ -75,7 +75,7 @@ class ClientController extends AbstractController
      */
     public function dischargeAction($id)
     {
-        $client = $this->clientApi->getWithUsers($id);
+        $client = $this->clientApi->getWithUsersV2($id);
 
         return [
             'client' => $client,
