@@ -90,6 +90,17 @@ class FixtureController
 
         if (null === $deputy = $this->deputyRepository->findOneBy(['email' => strtolower($fromRequest['deputyEmail'])])) {
             $deputy = $this->createDeputy($fromRequest);
+            $deputyCasRec = $this->casRecFactory->create(
+                [
+                    'caseNumber' => $client->getCaseNumber(),
+                    'clientLastName' => $client->getLastname(),
+                    'deputyPostCode' => $deputy->getAddressPostcode(),
+                    'deputyLastName' => $deputy->getLastname(),
+                    'reportType' => $fromRequest['reportType']
+                ]
+            );
+
+            $this->em->persist($deputyCasRec);
         }
 
         if (strtolower($fromRequest['reportType']) === 'ndr') {
@@ -108,6 +119,18 @@ class FixtureController
         if ($fromRequest['coDeputyEnabled']) {
             $deputy->setCoDeputyClientConfirmed(true);
             $coDeputy = $this->userFactory->createCoDeputy($deputy, $client, $fromRequest);
+
+            $coDeputyCasRec = $this->casRecFactory->create(
+                [
+                    'caseNumber' => $client->getCaseNumber(),
+                    'clientLastName' => $client->getLastname(),
+                    'deputyPostCode' => $coDeputy->getAddressPostcode(),
+                    'deputyLastName' => $coDeputy->getLastname(),
+                    'reportType' => $fromRequest['reportType']
+                ]
+            );
+
+            $this->em->persist($coDeputyCasRec);
             $this->em->persist($coDeputy);
         }
 
@@ -195,7 +218,7 @@ class FixtureController
      */
     private function createOrgAndAttachParticipants($fromRequest, User $deputy, Client $client): void
     {
-        $uniqueOrgNameSegment = (preg_match('/\d+/', $fromRequest['deputyEmail'], $matches)) ? $matches[0] : rand(0,9999);
+        $uniqueOrgNameSegment = (preg_match('/\d+/', $fromRequest['deputyEmail'], $matches)) ? $matches[0] : rand(0, 9999);
         $orgName = sprintf('Org %s Ltd', $uniqueOrgNameSegment);
 
         if (null === ($organisation = $this->orgRepository->findOneBy(['name' => $orgName]))) {

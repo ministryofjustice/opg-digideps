@@ -25,17 +25,17 @@ class CasRecFactory
      */
     public function create(array $data): CasRec
     {
-        $caseNumber = str_pad((string) rand(1,99999999), 8, "0", STR_PAD_LEFT);
-        $deputyNumber = str_pad((string) rand(1,999999), 6, "0", STR_PAD_LEFT);
+        $caseNumber = str_pad((string) rand(1, 99999999), 8, "0", STR_PAD_LEFT);
+        $deputyNumber = str_pad((string) rand(1, 999999), 6, "0", STR_PAD_LEFT);
 
         $dto = (new LayDeputyshipDto())
-            ->setCaseNumber($caseNumber)
+            ->setCaseNumber($data['caseNumber'] ? $data['caseNumber'] : $caseNumber)
             ->setSource('casrec')
-            ->setClientSurname('Smith')
+            ->setClientSurname($data['clientLastName'] ? $data['clientLastName'] : 'Smith')
             ->setCorref('L2')
             ->setDeputyNumber($deputyNumber)
-            ->setDeputyPostcode('SW1')
-            ->setDeputySurname('Jones')
+            ->setDeputyPostcode($data['deputyPostCode'] ? $data['deputyPostCode'] : 'SW1')
+            ->setDeputySurname($data['deputyLastName'] ? $data['deputyLastName'] : 'Jones')
             ->setIsNdrEnabled(false)
             ->setOrderDate(new \DateTime())
             ->setTypeOfReport($data['reportType']);
@@ -47,7 +47,7 @@ class CasRecFactory
 
     public function createCoDeputy(string $caseNumber, array $data): CasRec
     {
-        $deputyNumber = str_pad((string) rand(1,999999), 6, "0", STR_PAD_LEFT);
+        $deputyNumber = str_pad((string) rand(1, 999999), 6, "0", STR_PAD_LEFT);
 
         $dto = (new LayDeputyshipDto())
             ->setCaseNumber($caseNumber)

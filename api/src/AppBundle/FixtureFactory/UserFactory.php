@@ -98,7 +98,9 @@ class UserFactory
                 )
             )
             ->addClient($client)
-            ->setActive($data['deputyType']);
+            ->setActive($data['deputyType'])
+            ->setRegistrationDate(new \DateTime())
+            ->setCoDeputyClientConfirmed(true);
 
         if ($data['activated'] === 'true' || $data['activated'] === true) {
             $user2->setPassword($this->encoder->encodePassword($user2, 'Abcd1234'));
