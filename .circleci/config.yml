@@ -641,15 +641,12 @@ jobs:
           flags: api
 
   cross-browser-test:
-    docker:
-      - image: circleci/python:3
-        auth:
-          username: $DOCKER_USER
-          password: $DOCKER_ACCESS_TOKEN
+    machine:
+      image: circleci/classic:latest
     resource_class: small
     steps:
       - dockerhub_helper/dockerhub_login
-      - setup_remote_docker
+      #- setup_remote_docker
       - aws-cli/install
       - checkout
       - attach_workspace: { at: ~/project }
