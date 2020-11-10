@@ -13,7 +13,7 @@
 
 {% block pageContent %}
 
-    {% if coDeputies is not empty %}
+    {% if clientHasCoDeputies %}
         {% include 'AppBundle:Report/Report:_codeputies.html.twig' with {coDeputies: coDeputies} %}
     {% endif %}
 
