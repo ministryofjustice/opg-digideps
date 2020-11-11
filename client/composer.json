@@ -11,7 +11,7 @@
         "psr-4": { "DigidepsTests\\": "tests/phpunit" }
     },
     "require": {
-        "php": ">=7.3.5",
+        "php": ">=7.4",
         "ext-gd": "*",
         "alphagov/notifications-php-client": "^2.1",
         "aws/aws-sdk-php": "^3.100.9",

@@ -16,11 +16,8 @@ RUN npm audit --production
 # Build assets
 RUN NODE_ENV=production npm run build
 
-FROM composer:1.10.16 AS composer
+FROM composer AS composer
 WORKDIR /app
-
-# Make composer super fast
-RUN composer global require hirak/prestissimo --no-plugins --no-scripts
 
 RUN apk update
 
@@ -36,7 +33,7 @@ COPY src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
-FROM php:7.3-fpm-alpine
+FROM php:7.4-fpm-alpine
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
