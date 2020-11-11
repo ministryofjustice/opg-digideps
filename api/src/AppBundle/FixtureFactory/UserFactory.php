@@ -98,7 +98,7 @@ class UserFactory
                 )
             )
             ->addClient($client)
-            ->setActive($data['deputyType'])
+            ->setActive($data['activated'])
             ->setRegistrationDate(new \DateTime())
             ->setCoDeputyClientConfirmed(true);
 

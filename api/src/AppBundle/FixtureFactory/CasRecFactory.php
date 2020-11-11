@@ -32,7 +32,7 @@ class CasRecFactory
             ->setCaseNumber($data['caseNumber'] ? $data['caseNumber'] : $caseNumber)
             ->setSource('casrec')
             ->setClientSurname($data['clientLastName'] ? $data['clientLastName'] : 'Smith')
-            ->setCorref('L2')
+            ->setCorref($this->determineCorref($data['reportType']))
             ->setDeputyNumber($deputyNumber)
             ->setDeputyPostcode($data['deputyPostCode'] ? $data['deputyPostCode'] : 'SW1')
             ->setDeputySurname($data['deputyLastName'] ? $data['deputyLastName'] : 'Jones')
@@ -40,9 +40,7 @@ class CasRecFactory
             ->setOrderDate(new \DateTime())
             ->setTypeOfReport($data['reportType']);
 
-        $casRecEntity = $this->casRecFactory->createFromDto($dto);
-
-        return $casRecEntity;
+        return $this->casRecFactory->createFromDto($dto);
     }
 
     public function createCoDeputy(string $caseNumber, array $data): CasRec
@@ -53,7 +51,7 @@ class CasRecFactory
             ->setCaseNumber($caseNumber)
             ->setSource('casrec')
             ->setClientSurname('Smith')
-            ->setCorref('L2')
+            ->setCorref($this->determineCorref($data['reportType']))
             ->setDeputyNumber($deputyNumber)
             ->setDeputyPostcode('SW1')
             ->setDeputySurname('Bloggs')
@@ -61,8 +59,26 @@ class CasRecFactory
             ->setOrderDate(new \DateTime())
             ->setTypeOfReport($data['reportType']);
 
-        $casRecEntity = $this->casRecFactory->createFromDto($dto);
+        return $this->casRecFactory->createFromDto($dto);
+    }
 
-        return $casRecEntity;
+    /**
+     * @param string $reportType
+     * @return string
+     */
+    private function determineCorref(string $reportType): string
+    {
+        switch ($reportType) {
+            case '102':
+                return 'l2';
+            case '103':
+                return 'l3';
+            case '102-4':
+            case '103-4':
+            case '104':
+                return 'hw';
+            default:
+                return 'l2';
+        }
     }
 }

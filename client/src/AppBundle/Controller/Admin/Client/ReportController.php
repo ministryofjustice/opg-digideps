@@ -97,8 +97,7 @@ class ReportController extends AbstractController
     public function __construct(
         RestClient $restClient,
         ReportApi $reportApi
-    )
-    {
+    ) {
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
     }
@@ -274,7 +273,8 @@ class ReportController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $attachmentName = sprintf('DigiChecklist-%s_%s_%s.pdf',
+        $attachmentName = sprintf(
+            'DigiChecklist-%s_%s_%s.pdf',
             $report->getEndDate()->format('Y'),
             $report->getSubmitDate() instanceof \DateTime ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
             $report->getClient()->getCaseNumber()
@@ -325,7 +325,6 @@ class ReportController extends AbstractController
                 return $this->redirect($this->generateUrl('admin_report_manage_close_report_confirm', ['id'=>$report->getId()]));
             }
         }
-
 
         return [
             'report'   => $report,
@@ -397,7 +396,7 @@ class ReportController extends AbstractController
         if (preg_match('/^\d+$/', $form['dueDateChoice']->getData())) {
             $newDueDate = new \DateTime();
             $newDueDate->modify("+{$form['dueDateChoice']->getData()} weeks");
-        } else if ($form['dueDateChoice']->getData() == 'custom' && $form['dueDateCustom']->getData() instanceof \DateTime) {
+        } elseif ($form['dueDateChoice']->getData() == 'custom' && $form['dueDateCustom']->getData() instanceof \DateTime) {
             $newDueDate = $form['dueDateCustom']->getData();
         }
 

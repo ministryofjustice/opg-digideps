@@ -3,6 +3,7 @@
 namespace AppBundle\v2\Fixture\Controller;
 
 use AppBundle\DataFixtures\DocumentSyncFixtures;
+use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Ndr\NdrRepository;
@@ -226,7 +227,7 @@ class FixtureController
         }
 
         $organisation->addUser($deputy);
-        $client->setNamedDeputy($this->buildNamedDeputy($deputy));
+        $client->setNamedDeputy($this->buildNamedDeputy($deputy, $fromRequest));
         $client->setOrganisation($organisation);
         $this->em->persist($organisation);
     }
@@ -235,13 +236,14 @@ class FixtureController
      * @param User $deputy
      * @return NamedDeputy
      */
-    private function buildNamedDeputy(User $deputy)
+    private function buildNamedDeputy(User $deputy, array $fromRequest)
     {
         $namedDeputy = (new NamedDeputy())
             ->setFirstname($deputy->getFirstname())
             ->setLastname($deputy->getLastname())
             ->setEmail1($deputy->getEmail())
-            ->setDeputyNo($deputy->getDeputyNo());
+            ->setDeputyNo($deputy->getDeputyNo())
+            ->setDeputyType($fromRequest['deputyType'] === 'PA' ? 23 : 21);
 
         $this->em->persist($namedDeputy);
 
