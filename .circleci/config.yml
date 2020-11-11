@@ -683,8 +683,7 @@ jobs:
 
 
             ./behat/BrowserStackLocal --daemon "start" --key $BROWSERSTACK_KEY
-            chmod -R 755 .certs
-            ./generate_certs.sh
+            sudo ./generate_certs.sh
             echo "127.0.0.1 digideps.local admin.digideps.local api.digideps.local www.digideps.local" >> /etc/hosts
 
 
