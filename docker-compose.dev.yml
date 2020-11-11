@@ -6,10 +6,9 @@ services:
         depends_on:
             - localstack-init
             - mock-sirius-integration
-        test:
-            volumes:
-                - ./behat/tests:/var/www/tests
-                - ./behat/snapshots:/tmp/html
+        volumes:
+            - ./behat/tests:/var/www/tests
+            - ./behat/snapshots:/tmp/html
         env_file:
             - ./behat/test.env
             - ./behat/.env
