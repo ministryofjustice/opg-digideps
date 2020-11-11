@@ -685,7 +685,7 @@ jobs:
             ./behat/BrowserStackLocal --daemon "start" --key $BROWSERSTACK_KEY
             sudo ./generate_certs.sh
             echo "127.0.0.1 digideps.local admin.digideps.local api.digideps.local www.digideps.local" \
-            | sudo tee -a etc/hosts
+            | sudo tee -a /etc/hosts
 
 
             docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.browserstack.yml \
