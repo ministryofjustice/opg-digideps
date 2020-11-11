@@ -24,6 +24,7 @@ ENV PHP_EXT_DIR=/usr/lib/php7/modules
 
 RUN apk --no-cache add \
 postgresql-dev \
+postgresql-client \
 openssl \
 nginx \
 nginx-mod-http-headers-more \

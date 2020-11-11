@@ -45,7 +45,7 @@
         <env name="PACT_CONSUMER_NAME" value="Complete the deputy report"/>
         <env name="PACT_PROVIDER_NAME" value="OPG Data"/>
 
-        <server name="KERNEL_CLASS" value="AppKernel" />
+        <server name="KERNEL_CLASS" value="App\Kernel" />
     </php>
 
     <filter>
