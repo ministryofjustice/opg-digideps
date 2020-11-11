@@ -284,6 +284,10 @@ workflows:
           name: api unit test
           requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
+      - cross-browser-test:
+          name: cross browser test
+          requires: [ apply integration ]
+          filters: { branches: { ignore: [ main ] } }
       - run-task:
           name: integration test
           requires: [ reset integration ]

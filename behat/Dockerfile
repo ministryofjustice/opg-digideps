@@ -16,7 +16,7 @@ FROM php:alpine
 WORKDIR /var/www
 
 # Install dependencies
-RUN apk add --no-cache postgresql-client libzip-dev unzip bash
+RUN apk add --no-cache postgresql-client libzip-dev unzip
 
 RUN mkdir -p /tmp/html
 RUN mkdir -p /tmp/sql
