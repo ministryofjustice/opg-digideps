@@ -55,7 +55,7 @@ workflows:
       - run-task:
           name: restore production to preproduction
           requires: [ apply environment ]
-          filters: { branches: { only: [ main ] } }
+          filters: { branches: { ignore: [ main ] } }
           task_name: restore_from_production
           tf_workspace: preproduction
           timeout: 700
