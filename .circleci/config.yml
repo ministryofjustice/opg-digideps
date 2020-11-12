@@ -70,7 +70,7 @@ workflows:
           requires: [ reset environment for testing ]
           filters: { branches: { ignore: [ master ] } }
           task_name: integration_test
-          timeout: 2500
+          timeout: 9000
 
       - run-task:
           name: backup environment
