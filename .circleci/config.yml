@@ -63,7 +63,7 @@ workflows:
       - approve:
           name: approval for further testing
           type: approval
-          requires: [ restore production to preproduction ]
+          requires: [ restore production to ddpb3716 ]
           filters: { branches: { ignore: [ master ] } }
 
       - run-task:
