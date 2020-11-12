@@ -38,24 +38,32 @@ workflows:
           filters: { branches: { ignore: [ main ] } }
           tf_command: apply
 
-      - client-unit-test:
-          name: client unit test
-          requires: [ build pr ]
-          filters: { branches: { ignore: [ main ] } }
-
-      - api-unit-tests:
-          name: api unit test
-          requires: [ build pr ]
-          filters: { branches: { ignore: [ main ] } }
+#      - client-unit-test:
+#          name: client unit test
+#          requires: [ build pr ]
+#          filters: { branches: { ignore: [ main ] } }
+#
+#      - api-unit-tests:
+#          name: api unit test
+#          requires: [ build pr ]
+#          filters: { branches: { ignore: [ main ] } }
 
 #      - pa11y-ci:
 #          name: accessibility test
 #          requires: [ apply environment ]
 #          filters: { branches: { ignore: [ main ] } }
+      - run-task:
+          name: restore production to preproduction
+          requires: [ apply environment ]
+          filters: { branches: { only: [ main ] } }
+          task_name: restore_from_production
+          tf_workspace: preproduction
+          timeout: 700
+
       - approve:
           name: approval for further testing
           type: approval
-          requires: [ api unit test, client unit test, apply environment ]
+          requires: [ restore production to preproduction ]
           filters: { branches: { ignore: [ master ] } }
 
       - run-task:
