@@ -53,11 +53,11 @@ workflows:
 #          requires: [ apply environment ]
 #          filters: { branches: { ignore: [ main ] } }
       - run-task:
-          name: restore production to preproduction
+          name: restore production to ddpb3716
           requires: [ apply environment ]
           filters: { branches: { ignore: [ main ] } }
           task_name: restore_from_production
-          tf_workspace: preproduction
+          tf_workspace: ddpb3716
           timeout: 700
 
       - approve:
