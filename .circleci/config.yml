@@ -3,13 +3,19 @@ version: 2.1
 workflows:
   pull_request:
     jobs:
+      - cross-browser-test:
+          name: cross browser test
+          filters: { branches: { ignore: [ main ] } }
+
       - lint:
           name: lint terraform
           filters: { branches: { ignore: [ main ] } }
+          requires: [ cross browser test]
 
       - build:
           name: build pr
           filters: { branches: { ignore: [ main ] } }
+          requires: [ cross browser test]
 
       - terraform-command:
           name: plan shared development

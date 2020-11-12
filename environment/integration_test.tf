@@ -58,9 +58,7 @@ locals {
     },
     "secrets": [
       { "name": "PGPASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
-      { "name": "SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_frontend_secret.arn}" },
-      { "name": "BROWSERSTACK_USERNAME", "valueFrom": "${data.aws_secretsmanager_secret.browserstack_username.arn}" },
-      { "name": "BROWSERSTACK_KEY", "valueFrom": "${data.aws_secretsmanager_secret.browserstack_access_key.arn}" }
+      { "name": "SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_frontend_secret.arn}" }
     ],
     "environment": [
       { "name": "PGHOST", "value": "${local.db.endpoint}" },
