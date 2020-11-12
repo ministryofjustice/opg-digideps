@@ -3,7 +3,6 @@
 
 namespace AppBundle\TestHelpers;
 
-
 use AppBundle\Entity\User;
 use PHPUnit\Framework\TestCase;
 

@@ -3,6 +3,7 @@
 namespace DigidepsBehat\Common;
 
 use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Exception\ElementNotFoundException;
 
 trait ReportTrait
 {
@@ -278,7 +279,7 @@ trait ReportTrait
         if ($reportType === 'ndr') {
             $this->completeNdr();
         } else {
-           $this->completeReport($reportType);
+            $this->completeReport($reportType);
         }
     }
 
@@ -287,15 +288,8 @@ trait ReportTrait
      */
     public function attachSupportingDocumentToSubmittedReport(string $imageName)
     {
-        $this->visit('/');
-
-        try {
-            $this->clickLink('Attach documents');
-        } catch(\Throwable $e) {
-            $this->clickOnBehatLink('pa-report-open');
-            $this->clickLink('Attach documents');
-        }
-
+        $reportId = self::$currentReportCache['reportId'];
+        $this->visit(sprintf('/report/%s/documents/step/2', $reportId));
         $this->attachDocument($imageName);
     }
 
@@ -311,7 +305,7 @@ trait ReportTrait
 
         $this->clickOnBehatLink('edit-documents');
         $this->clickOnBehatLink('edit');
-        $this->selectOption('document[wishToProvideDocumentation]','yes');
+        $this->selectOption('document[wishToProvideDocumentation]', 'yes');
         $this->clickOnBehatLink('save-and-continue');
 
         $this->attachDocument($imageName);
@@ -359,8 +353,10 @@ trait ReportTrait
     {
         if ($this->getSession()->getPage()->hasContent('Start now')) {
             $this->clickLink('Start now');
-        } else if ($this->getSession()->getPage()->hasContent($startDate . ' to ' . $endDate . ' report')) {
+        } elseif ($this->getSession()->getPage()->hasContent($startDate . ' to ' . $endDate . ' report')) {
             $this->clickLink($startDate . ' to ' . $endDate . ' report');
+        } elseif ($this->getSession()->getPage()->hasContent('Submitted reports')) {
+            $this->clickLink('View');
         } else {
             $this->clickLink($client.'-Client, John');
         }

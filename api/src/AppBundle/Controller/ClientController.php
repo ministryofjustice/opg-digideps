@@ -89,7 +89,7 @@ class ClientController extends RestController
 
     /**
      * @Route("/{id}", name="client_find_by_id", requirements={"id":"\d+"}, methods={"GET"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("has_role('ROLE_DEPUTY') or has_role('ROLE_ADMIN')")
      *
      * @param Request $request
      * @param int $id
@@ -125,7 +125,24 @@ class ClientController extends RestController
      */
     public function detailsAction(Request $request, int $id)
     {
-        $this->setJmsSerialiserGroups(['client', 'client-users', 'user', 'client-reports', 'client-ndr', 'ndr', 'report', 'status']);
+        if ($request->query->has('groups')) {
+            $serialisedGroups = (array) $request->query->get('groups');
+        } else {
+            $serialisedGroups = [
+                'client',
+                'client-users',
+                'user',
+                'client-reports',
+                'client-ndr',
+                'ndr',
+                'report',
+                'status',
+                'client-organisations',
+                'organisation'
+            ];
+        }
+
+        $this->setJmsSerialiserGroups($serialisedGroups);
 
         $result = $this->findEntityBy(EntityDir\Client::class, $id);
 
