@@ -24,7 +24,7 @@ func main() {
 	var configFile string
 
 	flag.String("help", "", "this help information")
-	flag.IntVar(&timeout, "timeout", 300, "timeout for the services to stabilize")
+	flag.IntVar(&timeout, "timeout", 600, "timeout for the services to stabilize")
 	flag.StringVar(&configFile, "config", "terraform.output.json", "config file for services")
 
 	config := LoadConfig(configFile)
