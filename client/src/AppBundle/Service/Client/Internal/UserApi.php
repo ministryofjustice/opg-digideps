@@ -3,6 +3,7 @@
 namespace AppBundle\Service\Client\Internal;
 
 use AppBundle\Entity\User;
+use AppBundle\Event\PasswordResetEvent;
 use AppBundle\Event\UserCreatedEvent;
 use AppBundle\Event\UserDeletedEvent;
 use AppBundle\Event\UserUpdatedEvent;
@@ -14,6 +15,7 @@ class UserApi
 {
     private const USER_ENDPOINT = 'user';
     private const USER_ENDPOINT_BY_ID = 'user/%s';
+    private const USER_RESET_PASSWORD_ENDPOINT = 'user/recreate-token/%s/%s';
 
     /**  @var RestClientInterface */
     private $restClient;
@@ -102,6 +104,10 @@ class UserApi
         return $response;
     }
 
+    /**
+     * @param User $userToDelete
+     * @param string $trigger
+     */
     public function delete(User $userToDelete, string $trigger)
     {
         $this->restClient->delete(sprintf(self::USER_ENDPOINT_BY_ID, $userToDelete->getId()));
@@ -111,5 +117,24 @@ class UserApi
 
         $userDeletedEvent = new UserDeletedEvent($userToDelete, $deletedBy, $trigger);
         $this->eventDispatcher->dispatch(UserDeletedEvent::NAME, $userDeletedEvent);
+    }
+
+    /**
+     * @param string $email
+     * @param string $type
+     */
+    public function resetPassword(string $email, string $type)
+    {
+        $passwordResetUser = $this->restClient->apiCall(
+            'put',
+            sprintf(self::USER_RESET_PASSWORD_ENDPOINT, $email, $type),
+            null,
+            'User',
+            [],
+            false
+        );
+
+        $passwordResetEvent = new PasswordResetEvent($passwordResetUser);
+        $this->eventDispatcher->dispatch(PasswordResetEvent::NAME, $passwordResetEvent);
     }
 }

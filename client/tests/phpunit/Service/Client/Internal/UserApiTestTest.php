@@ -1,12 +1,14 @@
 <?php declare(strict_types=1);
 
 
+use AppBundle\Event\PasswordResetEvent;
 use AppBundle\Event\UserCreatedEvent;
 use AppBundle\Event\UserDeletedEvent;
 use AppBundle\Event\UserUpdatedEvent;
 use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\TestHelpers\UserHelpers;
+use Faker\Factory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -96,5 +98,25 @@ class UserApiTest extends TestCase
         $this->eventDispatcher->dispatch('user.created', $userCreatedEvent)->shouldBeCalled();
 
         $this->sut->create($userToCreate);
+    }
+
+    /** @test */
+    public function resetPassword()
+    {
+        $userToResetPassword = UserHelpers::createUser();
+        $faker = Factory::create();
+
+        $email = $faker->safeEmail;
+        $type = 'pass-reset';
+
+        $this->restClient
+            ->apiCall('put', sprintf('user/recreate-token/%s/%s', $email, $type), null, 'User', [], false)
+            ->shouldBeCalled()
+            ->willReturn($userToResetPassword);
+
+        $passwordResetEvent = new PasswordResetEvent($userToResetPassword);
+        $this->eventDispatcher->dispatch('password.reset', $passwordResetEvent)->shouldBeCalled();
+
+        $this->sut->resetPassword($email, $type);
     }
 }

@@ -19,6 +19,7 @@ use AppBundle\Service\Mailer\MailSenderInterface;
 use AppBundle\Service\OrgService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -579,18 +580,10 @@ class IndexController extends AbstractController
      * @Route("/send-activation-link/{email}", name="admin_send_activation_link")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      **/
-    public function sendUserActivationLinkAction(
-        $email,
-        MailFactory $mailFactory,
-        MailSenderInterface $mailSender,
-        LoggerInterface $logger,
-        RestClient $restClient
-    ) {
+    public function sendUserActivationLinkAction(string $email, LoggerInterface $logger)
+    {
         try {
-            $user = $restClient->userRecreateToken($email, 'pass-reset');
-            $resetPasswordEmail = $mailFactory->createActivationEmail($user);
-
-            $mailSender->send($resetPasswordEmail);
+            $this->userApi->resetPassword($email, 'pass-reset');
         } catch (\Throwable $e) {
             $logger->debug($e->getMessage());
         }
