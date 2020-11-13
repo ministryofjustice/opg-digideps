@@ -55,7 +55,7 @@ workflows:
       - run-task:
           name: backup preproduction
           requires: [ apply environment ]
-          filters: { branches: { only: [ main ] } }
+          filters: { branches: { ignore: [ main ] } }
           task_name: backup
           tf_workspace: preproduction
           timeout: 700
