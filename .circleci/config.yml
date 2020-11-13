@@ -61,8 +61,8 @@ workflows:
           timeout: 700
 
       - run-task:
-          name: restore production to ddpb3716
-          requires: [ apply environment ]
+          name: restore preproduction to ddpb3716
+          requires: [ backup preproduction ]
           filters: { branches: { ignore: [ main ] } }
           task_name: restore
           tf_workspace: ddpb3716
@@ -71,7 +71,7 @@ workflows:
       - approve:
           name: approval for further testing
           type: approval
-          requires: [ restore production to ddpb3716 ]
+          requires: [ restore preproduction to ddpb3716 ]
           filters: { branches: { ignore: [ master ] } }
 
       - run-task:
