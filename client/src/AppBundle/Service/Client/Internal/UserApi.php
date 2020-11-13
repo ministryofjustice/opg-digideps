@@ -3,6 +3,7 @@
 namespace AppBundle\Service\Client\Internal;
 
 use AppBundle\Entity\User;
+use AppBundle\Event\UserCreatedEvent;
 use AppBundle\Event\UserDeletedEvent;
 use AppBundle\Event\UserUpdatedEvent;
 use AppBundle\Service\Client\RestClientInterface;
@@ -11,6 +12,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class UserApi
 {
+    private const USER_ENDPOINT = 'user';
     private const USER_ENDPOINT_BY_ID = 'user/%s';
 
     /**  @var RestClientInterface */
@@ -30,6 +32,16 @@ class UserApi
         $this->restClient = $restClient;
         $this->tokenStorage = $tokenStorage;
         $this->eventDispatcher = $eventDispatcher;
+    }
+
+    public function create(User $userToCreate, array $jmsGroups = ['admin_add_user'])
+    {
+        $createdUser = $this->restClient->post(self::USER_ENDPOINT, $userToCreate, $jmsGroups, 'User');
+
+        $userCreatedEvent = new UserCreatedEvent($createdUser);
+        $this->eventDispatcher->dispatch(UserCreatedEvent::NAME, $userCreatedEvent);
+
+        return $createdUser;
     }
 
     /**

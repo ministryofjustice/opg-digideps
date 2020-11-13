@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 
+use AppBundle\Event\UserCreatedEvent;
 use AppBundle\Event\UserDeletedEvent;
 use AppBundle\Event\UserUpdatedEvent;
 use AppBundle\Service\Client\Internal\UserApi;
@@ -82,5 +83,18 @@ class UserApiTest extends TestCase
         $this->eventDispatcher->dispatch('user.deleted', $userUpdatedEvent)->shouldBeCalled();
 
         $this->sut->delete($userToDelete, $trigger);
+    }
+
+    /** @test */
+    public function create()
+    {
+        $userToCreate = UserHelpers::createUser();
+
+        $this->restClient->post('user', $userToCreate, ["admin_add_user"], 'User')->shouldBeCalled()->willReturn($userToCreate);
+
+        $userCreatedEvent = new UserCreatedEvent($userToCreate);
+        $this->eventDispatcher->dispatch('user.created', $userCreatedEvent)->shouldBeCalled();
+
+        $this->sut->create($userToCreate);
     }
 }

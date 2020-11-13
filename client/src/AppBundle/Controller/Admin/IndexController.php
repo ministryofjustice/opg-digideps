@@ -125,11 +125,7 @@ class IndexController extends AbstractController
                     throw new \RuntimeException('Cannot add admin from non-admin user');
                 }
 
-                /** @var EntityDir\User $user */
-                $user = $restClient->post('user', $form->getData(), ['admin_add_user'], 'User');
-
-                $activationEmail = $mailFactory->createActivationEmail($user);
-                $mailSender->send($activationEmail);
+                $this->userApi->create($form->getData());
 
                 $this->addFlash(
                     'notice',
