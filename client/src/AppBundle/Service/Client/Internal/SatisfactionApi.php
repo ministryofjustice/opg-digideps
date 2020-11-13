@@ -9,7 +9,7 @@ use AppBundle\Service\Mailer\MailSender;
 
 class SatisfactionApi
 {
-    const CREATE_PUBLIC_ENDPOINT = 'satisfaction/public';
+    private const CREATE_PUBLIC_ENDPOINT = 'satisfaction/public';
 
     /** @var RestClient */
     private $restClient;

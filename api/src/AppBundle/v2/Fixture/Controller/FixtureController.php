@@ -21,6 +21,7 @@ use AppBundle\FixtureFactory\UserFactory;
 use AppBundle\v2\Controller\ControllerTrait;
 use AppBundle\v2\Fixture\ReportSection;
 use Doctrine\ORM\EntityManagerInterface;
+use Faker\Factory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -227,8 +228,25 @@ class FixtureController
         }
 
         $organisation->addUser($deputy);
+
+        foreach (range(1, $fromRequest['orgSizeUsers'] ? $fromRequest['orgSizeUsers'] : 1) as $number) {
+            $orgUser = $this->userFactory->createGenericOrgUser($organisation);
+            $organisation->addUser($orgUser);
+            $this->em->persist($orgUser);
+        }
+
+        $namedDeputy = $this->buildNamedDeputy($deputy, $fromRequest);
+
         $client->setNamedDeputy($this->buildNamedDeputy($deputy, $fromRequest));
         $client->setOrganisation($organisation);
+
+        foreach (range(1, $fromRequest['orgSizeClients'] ? $fromRequest['orgSizeClients'] : 1) as $number) {
+            $orgClient = $this->clientFactory->createGenericOrgClient($namedDeputy, $organisation);
+            $this->em->persist($orgClient);
+
+            $this->createReport($fromRequest, $orgClient);
+        }
+
         $this->em->persist($organisation);
     }
 

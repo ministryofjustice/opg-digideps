@@ -3,7 +3,9 @@
 namespace AppBundle\FixtureFactory;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Organisation;
 use AppBundle\Entity\User;
+use Faker\Factory;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserFactory
@@ -72,6 +74,33 @@ class UserFactory
         return $user;
     }
 
+    /**
+     * @param Organisation $organisation
+     * @return User|void
+     */
+    public function createGenericOrgUser(Organisation $organisation)
+    {
+        $faker = Factory::create();
+
+        $user = (new User())
+            ->setFirstname($faker->firstName)
+            ->setLastname($faker->lastName)
+            ->setEmail(sprintf('%s.%s@%s', $faker->firstName, $faker->lastName, $organisation->getEmailIdentifier()))
+            ->setActive(true)
+            ->setRegistrationDate(new \DateTime())
+            ->setNdrEnabled(false)
+            ->setPhoneMain('07911111111111')
+            ->setAddress1('Victoria Road')
+            ->setAddressPostcode('SW1')
+            ->setAddressCountry('GB')
+            ->setRoleName('ROLE_PROF');
+
+        $user->setPassword($this->encoder->encodePassword($user, 'Abcd1234'));
+        $user->setActive(false);
+
+        return $user;
+    }
+
     private function convertRoleName(string $roleName): string
     {
         switch ($roleName) {
@@ -100,7 +129,8 @@ class UserFactory
             ->addClient($client)
             ->setActive($data['activated'])
             ->setRegistrationDate(new \DateTime())
-            ->setCoDeputyClientConfirmed(true);
+            ->setCoDeputyClientConfirmed(true)
+            ->setActive(true);
 
         if ($data['activated'] === 'true' || $data['activated'] === true) {
             $user2->setPassword($this->encoder->encodePassword($user2, 'Abcd1234'));

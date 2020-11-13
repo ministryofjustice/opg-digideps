@@ -2,7 +2,6 @@
 
 namespace AppBundle\Service\Audit;
 
-
 use AppBundle\Entity\User;
 use AppBundle\Service\Time\DateTimeProvider;
 use AppBundle\Service\Time\FakeClock;
@@ -30,7 +29,7 @@ class AuditEventsTest extends TestCase
             'deputy_name' => 'Bjork Gudmundsdottir',
             'discharged_on' => $now->format(DateTime::ATOM),
             'deputyship_start_date' => $expectedStartDate,
-            'event' => 'CLIENT_DISCHARGED',
+            'event' => 'CLIENT_DELETED',
             'type' => 'audit'
         ];
 
@@ -47,7 +46,7 @@ class AuditEventsTest extends TestCase
 
     public function startDateProvider()
     {
-         return [
+        return [
              'Start date present' => [
                  '2019-07-08T09:36:00+01:00',
                  new DateTime('2019-07-08T09:36', new \DateTimeZone('+0100'))
