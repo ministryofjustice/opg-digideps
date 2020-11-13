@@ -77,7 +77,7 @@ locals {
         },
         {
             "name": "S3_OPTS",
-            "value": "--sse=aws:kms --sse-kms-key-id=${data.aws_kms_alias.backup.target_key_arn} --grants=read=id=${data.aws_canonical_user_id.preproduction.id},id=${data.aws_canonical_user_id.production.id}"
+            "value": "--sse=aws:kms --sse-kms-key-id=${data.aws_kms_alias.backup.target_key_arn} --grants=read=id=${data.aws_canonical_user_id.preproduction.id},id=${data.aws_canonical_user_id.production.id},id=${data.aws_canonical_user_id.development.id}"
         },
         {
             "name": "S3_PREFIX",

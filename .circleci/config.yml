@@ -53,10 +53,18 @@ workflows:
 #          requires: [ apply environment ]
 #          filters: { branches: { ignore: [ main ] } }
       - run-task:
+          name: backup preproduction
+          requires: [ apply environment ]
+          filters: { branches: { only: [ main ] } }
+          task_name: backup
+          tf_workspace: preproduction
+          timeout: 700
+
+      - run-task:
           name: restore production to ddpb3716
           requires: [ apply environment ]
           filters: { branches: { ignore: [ main ] } }
-          task_name: restore_from_production
+          task_name: restore
           tf_workspace: ddpb3716
           timeout: 700
 

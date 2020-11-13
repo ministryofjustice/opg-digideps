@@ -60,7 +60,7 @@ locals {
 		},
 		{
 			"name": "S3_PREFIX",
-			"value": "${local.environment}"
+			"value": "preproduction"
 		},
 		{
 			"name": "POSTGRES_DATABASE",
