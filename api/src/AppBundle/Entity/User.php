@@ -1278,4 +1278,17 @@ class User implements UserInterface
 
         return false;
     }
+
+    public function isCoDeputyWith(User $coDeputy)
+    {
+        foreach ($coDeputy->getClients() as $coDeputyClient) {
+            foreach ($this->getClients() as $userClient) {
+                if ($coDeputyClient === $userClient) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }

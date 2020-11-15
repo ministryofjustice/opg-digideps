@@ -2,8 +2,8 @@
 
 namespace Tests\AppBundle\EventListener;
 
-use AppBundle\Event\PasswordResetEvent;
-use AppBundle\EventSubscriber\PasswordResetSubscriber;
+use AppBundle\Event\UserPasswordResetEvent;
+use AppBundle\EventSubscriber\UserPasswordResetSubscriber;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use AppBundle\TestHelpers\EmailHelpers;
@@ -16,8 +16,8 @@ class PasswordResetSubscriberTest extends TestCase
     public function getSubscribedEvents()
     {
         self::assertEquals(
-            [PasswordResetEvent::NAME => 'sendEmail'],
-            PasswordResetSubscriber::getSubscribedEvents()
+            [UserPasswordResetEvent::NAME => 'sendEmail'],
+            UserPasswordResetSubscriber::getSubscribedEvents()
         );
     }
 
@@ -30,13 +30,12 @@ class PasswordResetSubscriberTest extends TestCase
         $passwordResetEmail = EmailHelpers::createEmail();
         $passwordResetUser = UserHelpers::createUser();
 
-        $passwordResetEvent = new PasswordResetEvent($passwordResetUser);
+        $passwordResetEvent = new UserPasswordResetEvent($passwordResetUser);
 
         $mailFactory->createActivationEmail($passwordResetUser)->shouldBeCalled()->willReturn($passwordResetEmail);
         $mailSender->send($passwordResetEmail)->shouldBeCalled();
 
-
-        $sut = new PasswordResetSubscriber($mailFactory->reveal(), $mailSender->reveal());
+        $sut = new UserPasswordResetSubscriber($mailFactory->reveal(), $mailSender->reveal());
 
         $sut->sendEmail($passwordResetEvent);
     }

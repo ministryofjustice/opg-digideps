@@ -236,11 +236,17 @@ class UserController extends RestController
 
         /** @var User $loggedInUser */
         $loggedInUser = $this->getUser();
-        $requestedUserIsLogged = $loggedInUser->getId() == $user->getId();
 
         $groups = $request->query->has('groups') ?
             $request->query->get('groups') : ['user'];
+
         $this->setJmsSerialiserGroups($groups);
+
+        if ($loggedInUser->isCoDeputyWith($user)) {
+            return $user;
+        }
+
+        $requestedUserIsLogged = $loggedInUser->getId() == $user->getId();
 
         // only allow admins to access any user, otherwise the user can only see himself
         if (!$this->isGranted(User::ROLE_ADMIN)
@@ -319,11 +325,9 @@ class UserController extends RestController
     /**
      * Requires client secret.
      *
-     * @Route("/recreate-token/{email}/{type}", defaults={"email": "none"}, requirements={
-     *   "type" = "(activate|pass-reset)"
-     * }, methods={"PUT"})
+     * @Route("/recreate-token/{email}", defaults={"email": "none"}, methods={"PUT"})
      */
-    public function recreateToken(Request $request, $email, $type)
+    public function recreateToken(Request $request, $email)
     {
         if (!$this->getAuthService()->isSecretValid($request)) {
             throw new \RuntimeException('client secret not accepted.', 403);
@@ -331,7 +335,6 @@ class UserController extends RestController
 
         /** @var User $user */
         $user = $this->findEntityBy(User::class, ['email' => strtolower($email)]);
-
         $hasAdminSecret = $this->getAuthService()->isSecretValidForRole(User::ROLE_ADMIN, $request);
 
         if (!$hasAdminSecret && $user->getRoleName() == User::ROLE_ADMIN) {

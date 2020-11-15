@@ -3,12 +3,12 @@
 
 namespace AppBundle\EventSubscriber;
 
-use AppBundle\Event\PasswordResetEvent;
+use AppBundle\Event\CoDeputyInvitedEvent;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class PasswordResetSubscriber implements EventSubscriberInterface
+class CoDeputyInvitedSubscriber implements EventSubscriberInterface
 {
     /** @var MailFactory */
     private $mailFactory;
@@ -25,13 +25,17 @@ class PasswordResetSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            PasswordResetEvent::NAME => 'sendEmail'
+            CoDeputyInvitedEvent::NAME => 'sendEmail'
         ];
     }
 
-    public function sendEmail(PasswordResetEvent $event)
+    public function sendEmail(CoDeputyInvitedEvent $event)
     {
-        $passwordResetEmail = $this->mailFactory->createActivationEmail($event->getPasswordResetUser());
-        $this->mailSender->send($passwordResetEmail);
+        $invitationEmail = $this->mailFactory->createInvitationEmail(
+            $event->getInvitedCoDeputy(),
+            $event->getInviterDeputy()->getFullName()
+        );
+
+        $this->mailSender->send($invitationEmail);
     }
 }

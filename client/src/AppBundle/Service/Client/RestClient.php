@@ -186,7 +186,7 @@ class RestClient implements RestClientInterface
      */
     public function userRecreateToken($email, $type = 'pass-reset')
     {
-        return $this->apiCall('put', 'user/recreate-token/' . $email . '/' . $type, null, 'User', [], false);
+        return $this->apiCall('put', 'user/recreate-token/' . $email, null, 'User', [], false);
     }
 
     /**

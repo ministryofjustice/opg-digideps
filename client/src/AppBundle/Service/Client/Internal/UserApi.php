@@ -3,7 +3,9 @@
 namespace AppBundle\Service\Client\Internal;
 
 use AppBundle\Entity\User;
-use AppBundle\Event\PasswordResetEvent;
+use AppBundle\Event\CoDeputyInvitedEvent;
+use AppBundle\Event\UserPasswordResetEvent;
+use AppBundle\Event\UserTokenRecreatedEvent;
 use AppBundle\Event\UserCreatedEvent;
 use AppBundle\Event\UserDeletedEvent;
 use AppBundle\Event\UserUpdatedEvent;
@@ -14,8 +16,9 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class UserApi
 {
     private const USER_ENDPOINT = 'user';
-    private const USER_ENDPOINT_BY_ID = 'user/%s';
-    private const USER_RESET_PASSWORD_ENDPOINT = 'user/recreate-token/%s/%s';
+    private const GET_USER_BY_EMAIL_ENDPOINT = 'user/get-one-by/email/%s';
+    private const USER_BY_ID_ENDPOINT = 'user/%s';
+    private const RECREATE_USER_TOKEN_ENDPOINT = 'user/recreate-token/%s';
 
     /**  @var RestClientInterface */
     private $restClient;
@@ -53,7 +56,12 @@ class UserApi
      */
     public function get(int $id, array $jmsGroups = [])
     {
-        return $this->restClient->get(sprintf(self::USER_ENDPOINT_BY_ID, $id), 'User', $jmsGroups);
+        return $this->restClient->get(sprintf(self::USER_BY_ID_ENDPOINT, $id), 'User', $jmsGroups);
+    }
+
+    public function getByEmail(string $email)
+    {
+        return $this->restClient->get(sprintf(self::GET_USER_BY_EMAIL_ENDPOINT, $email), 'User');
     }
 
     /**
@@ -71,7 +79,7 @@ class UserApi
         $user = $this->tokenStorage->getToken()->getUser();
 
         return $this->restClient->get(
-            sprintf(self::USER_ENDPOINT_BY_ID, $user->getId()),
+            sprintf(self::USER_BY_ID_ENDPOINT, $user->getId()),
             'User',
             $jmsGroups
         );
@@ -87,7 +95,7 @@ class UserApi
     public function update(User $preUpdateUser, User $postUpdateUser, string $trigger, $jmsGroups = [])
     {
         $response = $this->restClient->put(
-            sprintf(self::USER_ENDPOINT_BY_ID, $preUpdateUser->getId()),
+            sprintf(self::USER_BY_ID_ENDPOINT, $preUpdateUser->getId()),
             $postUpdateUser,
             $jmsGroups
         );
@@ -110,7 +118,7 @@ class UserApi
      */
     public function delete(User $userToDelete, string $trigger)
     {
-        $this->restClient->delete(sprintf(self::USER_ENDPOINT_BY_ID, $userToDelete->getId()));
+        $this->restClient->delete(sprintf(self::USER_BY_ID_ENDPOINT, $userToDelete->getId()));
 
         /** @var User */
         $deletedBy = $this->tokenStorage->getToken()->getUser();
@@ -123,18 +131,35 @@ class UserApi
      * @param string $email
      * @param string $type
      */
-    public function resetPassword(string $email, string $type)
+    public function resetPassword(string $email)
     {
-        $passwordResetUser = $this->restClient->apiCall(
+        $passwordResetUser = $this->recreateToken($email);
+
+        $passwordResetEvent = new UserPasswordResetEvent($passwordResetUser);
+        $this->eventDispatcher->dispatch(UserPasswordResetEvent::NAME, $passwordResetEvent);
+    }
+
+    /**
+     * @param string $email
+     * @return User
+     */
+    public function recreateToken(string $email)
+    {
+        return $this->restClient->apiCall(
             'put',
-            sprintf(self::USER_RESET_PASSWORD_ENDPOINT, $email, $type),
+            sprintf(self::RECREATE_USER_TOKEN_ENDPOINT, $email),
             null,
             'User',
             [],
             false
         );
+    }
 
-        $passwordResetEvent = new PasswordResetEvent($passwordResetUser);
-        $this->eventDispatcher->dispatch(PasswordResetEvent::NAME, $passwordResetEvent);
+    public function inviteCoDeputy(string $email, User $loggedInUser)
+    {
+        $invitedCoDeputy = $this->recreateToken($email);
+
+        $CoDeputyInvitedEvent = new CoDeputyInvitedEvent($invitedCoDeputy, $loggedInUser);
+        $this->eventDispatcher->dispatch(CoDeputyInvitedEvent::NAME, $CoDeputyInvitedEvent);
     }
 }

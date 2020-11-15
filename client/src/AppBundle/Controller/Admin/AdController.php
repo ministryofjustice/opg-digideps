@@ -6,6 +6,7 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Service\Client\RestClient;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -20,16 +21,16 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AdController extends AbstractController
 {
-    /**
-     * @var RestClient
-     */
+    /** @var RestClient */
     private $restClient;
 
-    public function __construct(
-        RestClient $restClient
-    )
+    /** @var UserApi */
+    private $userApi;
+
+    public function __construct(RestClient $restClient, UserApi $userApi)
     {
         $this->restClient = $restClient;
+        $this->userApi = $userApi;
     }
 
     /**
@@ -153,7 +154,7 @@ class AdController extends AbstractController
             $this->restClient->put('user/' . $deputy->getId(), $deputy, ['ad_managed']);
 
             // recreate token needed for login
-            $deputy = $this->restClient->userRecreateToken($deputy->getEmail(), 'activate');
+            $deputy = $this->userApi->recreateToken($deputy->getEmail());
 
             // redirect to deputy area
             $deputyBaseUrl = rtrim($this->container->getParameter('non_admin_host'), '/');

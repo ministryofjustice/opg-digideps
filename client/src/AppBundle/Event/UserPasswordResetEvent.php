@@ -6,7 +6,7 @@ namespace AppBundle\Event;
 use AppBundle\Entity\User;
 use Symfony\Component\EventDispatcher\Event;
 
-class PasswordResetEvent extends Event
+class UserPasswordResetEvent extends Event
 {
     public const NAME = 'password.reset';
 
@@ -28,9 +28,9 @@ class PasswordResetEvent extends Event
 
     /**
      * @param User $passwordResetUser
-     * @return PasswordResetEvent
+     * @return UserPasswordResetEvent
      */
-    public function setPasswordResetUser(User $passwordResetUser): PasswordResetEvent
+    public function setPasswordResetUser(User $passwordResetUser): UserPasswordResetEvent
     {
         $this->passwordResetUser = $passwordResetUser;
         return $this;

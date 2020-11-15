@@ -1,7 +1,8 @@
 <?php declare(strict_types=1);
 
 
-use AppBundle\Event\PasswordResetEvent;
+use AppBundle\Event\CoDeputyInvitedEvent;
+use AppBundle\Event\UserPasswordResetEvent;
 use AppBundle\Event\UserCreatedEvent;
 use AppBundle\Event\UserDeletedEvent;
 use AppBundle\Event\UserUpdatedEvent;
@@ -107,16 +108,50 @@ class UserApiTest extends TestCase
         $faker = Factory::create();
 
         $email = $faker->safeEmail;
-        $type = 'pass-reset';
 
         $this->restClient
-            ->apiCall('put', sprintf('user/recreate-token/%s/%s', $email, $type), null, 'User', [], false)
+            ->apiCall('put', sprintf('user/recreate-token/%s', $email), null, 'User', [], false)
             ->shouldBeCalled()
             ->willReturn($userToResetPassword);
 
-        $passwordResetEvent = new PasswordResetEvent($userToResetPassword);
+        $passwordResetEvent = new UserPasswordResetEvent($userToResetPassword);
         $this->eventDispatcher->dispatch('password.reset', $passwordResetEvent)->shouldBeCalled();
 
-        $this->sut->resetPassword($email, $type);
+        $this->sut->resetPassword($email);
+    }
+
+    /** @test */
+    public function inviteCoDeputy()
+    {
+        $invitedCoDeputy = UserHelpers::createUser();
+        $inviterDeputy = UserHelpers::createUser();
+        $faker = Factory::create();
+
+        $email = $faker->safeEmail;
+
+        $this->restClient
+            ->apiCall('put', sprintf('user/recreate-token/%s', $email), null, 'User', [], false)
+            ->shouldBeCalled()
+            ->willReturn($invitedCoDeputy);
+
+        $coDeputyInvitedEvent = new CoDeputyInvitedEvent($invitedCoDeputy, $inviterDeputy);
+        $this->eventDispatcher->dispatch('codeputy.invited', $coDeputyInvitedEvent)->shouldBeCalled();
+
+        $this->sut->inviteCoDeputy($email, $inviterDeputy);
+    }
+
+    /** @test */
+    public function getByEmail()
+    {
+        $existingUser = UserHelpers::createUser();
+
+        $this->restClient
+            ->get(sprintf('user/get-one-by/email/%s', $existingUser->getEmail()), 'User')
+            ->shouldBeCalled()
+            ->willReturn($existingUser);
+
+        $returnedUser = $this->sut->getByEmail($existingUser->getEmail());
+
+        self::assertEquals($existingUser, $returnedUser);
     }
 }
