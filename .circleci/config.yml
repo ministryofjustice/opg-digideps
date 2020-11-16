@@ -693,7 +693,7 @@ jobs:
             --project-name cross-browser run test --profile cross-browser-ie11 --suite ie11
 
             docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.browserstack.yml \
-            --project-name cross-browser run test --profile cross-browser-android --suite android
+            --project-name cross-browser run test --profile cross-browser-android-chrome --suite android-chrome
 
 
             ./behat/BrowserStackLocal --daemon "stop" --key $BROWSERSTACK_KEY

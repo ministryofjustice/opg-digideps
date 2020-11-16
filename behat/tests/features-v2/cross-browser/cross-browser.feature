@@ -3,7 +3,7 @@ Feature: Preview a summary of the report
   As a deputy
   I want to view a summarised preview of the report at any time
 
-  @mink:browser_stack @chrome @ie11 @android
+  @mink:browser_stack @chrome @ie11 @android-chrome
   Scenario: Create court orders for the feature
     Given the following court orders exist:
       | client   | deputy    | deputy_type | report_type                                | court_date |
@@ -23,7 +23,7 @@ Feature: Preview a summary of the report
     And I am viewing the "2018" to "2019" report for "48520099"
     When I click on "edit-report-review"
 
-  @mink:browser_stack @android
+  @mink:browser_stack @android-chrome
   Scenario: Accessing the report preview for an active report
     Given I am logged in as "deputy129@behat-test.com" with password "Abcd1234"
     And I am viewing the "2018" to "2019" report for "48520100"

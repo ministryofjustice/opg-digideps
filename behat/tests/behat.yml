@@ -144,11 +144,11 @@ default:
             contexts:
                 - DigidepsBehat\CrossBrowser\CrossBrowserFeatureContext
 
-        android:
-            description: Coverage of user journeys on an android
+        android-chrome:
+            description: Coverage of user journeys using the Chrome browser on an android device
             paths: [ "%paths.base%/features-v2/cross-browser" ]
             filters:
-                tags: "@android"
+                tags: "@android-chrome"
             contexts:
                 - DigidepsBehat\CrossBrowser\CrossBrowserFeatureContext
 
@@ -189,7 +189,7 @@ cross-browser-ie11:
                     os_version: '10'
                     build: 'Internet Explorer'
 
-cross-browser-android:
+cross-browser-android-chrome:
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             browser_stack:

@@ -48,4 +48,3 @@ services:
   wkhtmltopdf:
     volumes:
       - ./wkhtmltopdf/app.py:/app.py
-
