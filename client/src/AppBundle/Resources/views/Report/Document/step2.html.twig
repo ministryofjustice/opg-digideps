@@ -44,13 +44,16 @@
     <div class="js-hidden">
         {{ macros.notification('info', (page ~ '.uploadHint') | trans) }}
     </div>
-
-    {{ form_submit(form.save, '', {'buttonClass': 'behat-link-attach-file js-uploading', 'labelText': 'form.submitButton' | trans}) }}
-
+    <div style="clear:both;display:inline-block;height:0px;" data-module="opg-toggleable-submit">
+        {{ form_submit(form.save, '', {'buttonClass': 'behat-link-attach-file js-uploading', 'labelText': 'form.submitButton' | trans}) }}
+    </div>
+    <div>
+    <br>
     {% set alertMessage %}
         <p class="govuk-body">{{ (page ~ '.pleaseWait') | trans }}</p>
         <p class="govuk-body">{{ (page ~ '.uploadHint') | trans }}</p>
     {% endset %}
+    </div>
     <div id="upload-progress" class="hidden">
         {{ macros.notification('loader', alertMessage) }}
     </div>
@@ -68,7 +71,7 @@
         'translationDomain': translationDomain,
         'page' : page
         } %}
-        <a href="{{ nextLink }}" class="button push--top behat-link-continue">{{ 'continue' | trans({}, 'common' ) }}</a>
+        <a href="{{ nextLink }}" class="button push--top behat-link-continue" data-module="opg-toggleable-submit">{{ 'continue' | trans({}, 'common' ) }}</a>
     {% endif %}
 
 {% endblock %}
