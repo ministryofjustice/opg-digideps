@@ -981,8 +981,10 @@ class Client
 
         foreach ($this->getUsers() as $user) {
             if ($user->isLayDeputy()) {
-                return $this->getUsers()[0];
+                return $user;
             }
         }
+
+        return null;
     }
 }

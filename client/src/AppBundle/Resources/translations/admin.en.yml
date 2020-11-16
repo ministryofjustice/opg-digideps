@@ -7,7 +7,7 @@ home:
     upload: Upload users
   userTable:
     heading: User list
-    resultsLimited: Search results are limited to 30 users.<br>Use search to filter the wanted users.
+    resultsLimited: Search results are limited to 65 users.<br>Use search to filter the wanted users.
     results: Found %numberOfUsers% users
     header:
       name: Name
