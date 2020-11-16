@@ -72,7 +72,7 @@ class IndexController extends AbstractController
     public function indexAction(Request $request)
     {
         $filters = [
-            'limit'           => 100,
+            'limit'           => 30,
             'offset'          => $request->get('offset', 'id'),
             'role_name'       => '',
             'q'               => '',
