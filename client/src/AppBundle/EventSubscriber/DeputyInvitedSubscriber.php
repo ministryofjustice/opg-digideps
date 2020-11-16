@@ -4,24 +4,11 @@
 namespace AppBundle\EventSubscriber;
 
 use AppBundle\Event\DeputyInvitedEvent;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
+use AppBundle\Service\Mailer\BaseMailer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class DeputyInvitedSubscriber implements EventSubscriberInterface
+class DeputyInvitedSubscriber extends BaseMailer implements EventSubscriberInterface
 {
-    /** @var MailFactory */
-    private $mailFactory;
-
-    /** @var MailSender */
-    private $mailSender;
-
-    public function __construct(MailFactory $mailFactory, MailSender $mailSender)
-    {
-        $this->mailFactory = $mailFactory;
-        $this->mailSender = $mailSender;
-    }
-
     public static function getSubscribedEvents()
     {
         return [

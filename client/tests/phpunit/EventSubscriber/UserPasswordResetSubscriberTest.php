@@ -35,7 +35,9 @@ class UserPasswordResetSubscriberTest extends TestCase
         $mailFactory->createResetPasswordEmail($passwordResetUser)->shouldBeCalled()->willReturn($passwordResetEmail);
         $mailSender->send($passwordResetEmail)->shouldBeCalled();
 
-        $sut = new UserPasswordResetSubscriber($mailFactory->reveal(), $mailSender->reveal());
+        $sut = (new UserPasswordResetSubscriber())
+            ->setMailFactory($mailFactory->reveal())
+            ->setMailSender($mailSender->reveal());
 
         $sut->sendEmail($passwordResetEvent);
     }

@@ -4,23 +4,11 @@
 namespace AppBundle\EventSubscriber;
 
 use AppBundle\Event\UserActivatedEvent;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
+use AppBundle\Service\Mailer\BaseMailer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class UserActivatedSubscriber implements EventSubscriberInterface
+class UserActivatedSubscriber extends BaseMailer implements EventSubscriberInterface
 {
-    /** @var MailFactory */
-    private $mailFactory;
-
-    /** @var MailSender */
-    private $mailSender;
-
-    public function __construct(MailFactory $mailFactory, MailSender $mailSender)
-    {
-        $this->mailFactory = $mailFactory;
-        $this->mailSender = $mailSender;
-    }
     public static function getSubscribedEvents()
     {
         return [

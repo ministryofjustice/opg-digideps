@@ -2,9 +2,7 @@
 
 namespace Tests\AppBundle\EventListener;
 
-use AppBundle\Event\CoDeputyInvitedEvent;
 use AppBundle\Event\DeputyInvitedEvent;
-use AppBundle\EventSubscriber\CoDeputyInvitedSubscriber;
 use AppBundle\EventSubscriber\DeputyInvitedSubscriber;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
@@ -41,7 +39,9 @@ class DeputyInvitedSubscriberTest extends TestCase
 
         $mailSender->send($inviteDeputyEmail)->shouldBeCalled();
 
-        $sut = new DeputyInvitedSubscriber($mailFactory->reveal(), $mailSender->reveal());
+        $sut = (new DeputyInvitedSubscriber())
+            ->setMailFactory($mailFactory->reveal())
+            ->setMailSender($mailSender->reveal());
 
         $sut->sendEmail($deputyInvitedEvent);
     }

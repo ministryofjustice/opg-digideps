@@ -4,7 +4,6 @@
 namespace AppBundle\EventSubscriber;
 
 use AppBundle\Event\ClientUpdatedEvent;
-use AppBundle\Event\UserUpdatedEvent;
 use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;

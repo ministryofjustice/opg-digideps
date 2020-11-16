@@ -40,7 +40,9 @@ class CoDeputyInvitedSubscriberTest extends TestCase
 
         $mailSender->send($inviteCoDeputyEmail)->shouldBeCalled();
 
-        $sut = new CoDeputyInvitedSubscriber($mailFactory->reveal(), $mailSender->reveal());
+        $sut = (new CoDeputyInvitedSubscriber())
+            ->setMailFactory($mailFactory->reveal())
+            ->setMailSender($mailSender->reveal());
 
         $sut->sendEmail($coDeputyInvitedEvent);
     }

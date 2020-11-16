@@ -35,7 +35,9 @@ class UserActivatedSubscriberTest extends TestCase
         $mailFactory->createActivationEmail($activatedUser)->shouldBeCalled()->willReturn($userActivatedEmail);
         $mailSender->send($userActivatedEmail)->shouldBeCalled();
 
-        $sut = new UserActivatedSubscriber($mailFactory->reveal(), $mailSender->reveal());
+        $sut = (new UserActivatedSubscriber())
+            ->setMailFactory($mailFactory->reveal())
+            ->setMailSender($mailSender->reveal());
 
         $sut->sendEmail($userActivatedEvent);
     }

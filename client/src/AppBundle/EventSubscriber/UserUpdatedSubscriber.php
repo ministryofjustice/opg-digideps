@@ -6,13 +6,14 @@ namespace AppBundle\EventSubscriber;
 use AppBundle\Entity\User;
 use AppBundle\Event\UserUpdatedEvent;
 use AppBundle\Service\Audit\AuditEvents;
+use AppBundle\Service\Mailer\BaseMailer;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use AppBundle\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class UserUpdatedSubscriber implements EventSubscriberInterface
+class UserUpdatedSubscriber extends BaseMailer implements EventSubscriberInterface
 {
     /** @var DateTimeProvider */
     private $dateTimeProvider;
@@ -20,22 +21,12 @@ class UserUpdatedSubscriber implements EventSubscriberInterface
     /** @var LoggerInterface */
     private $logger;
 
-    /** @var MailFactory */
-    private $mailFactory;
-
-    /** @var MailSender */
-    private $mailSender;
-
     public function __construct(
         DateTimeProvider $dateTimeProvider,
-        LoggerInterface $logger,
-        MailFactory $mailFactory,
-        MailSender $mailSender
+        LoggerInterface $logger
     ) {
         $this->dateTimeProvider = $dateTimeProvider;
         $this->logger = $logger;
-        $this->mailFactory = $mailFactory;
-        $this->mailSender = $mailSender;
     }
 
     public static function getSubscribedEvents()

@@ -11,12 +11,13 @@ use AppBundle\Service\Mailer\MailSender;
 use AppBundle\Service\Time\DateTimeProvider;
 use AppBundle\TestHelpers\UserHelpers;
 use DateTime;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class UserUpdatedSubscriberTest extends KernelTestCase
+class UserUpdatedSubscriberTest extends TestCase
 {
     /** @var UserHelpers */
     private $userHelpers;
@@ -38,20 +39,18 @@ class UserUpdatedSubscriberTest extends KernelTestCase
 
     public function setUp(): void
     {
-        $container = (self::bootKernel())->getContainer();
-
-        $this->userHelpers = new UserHelpers($container->get('serializer'));
+        $this->userHelpers = new UserHelpers();
         $this->dateTimeProvider = self::prophesize(DateTimeProvider::class);
         $this->logger = self::prophesize(LoggerInterface::class);
         $this->mailFactory = self::prophesize(MailFactory::class);
         $this->mailSender = self::prophesize(MailSender::class);
 
-        $this->sut = new UserUpdatedSubscriber(
+        $this->sut = (new UserUpdatedSubscriber(
             $this->dateTimeProvider->reveal(),
             $this->logger->reveal(),
-            $this->mailFactory->reveal(),
-            $this->mailSender->reveal()
-        );
+        ))
+            ->setMailFactory($this->mailFactory->reveal())
+            ->setMailSender($this->mailSender->reveal());
     }
 
     /** @test */
