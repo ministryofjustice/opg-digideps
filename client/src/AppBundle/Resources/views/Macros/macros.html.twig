@@ -126,11 +126,13 @@
 {% endmacro %}
 
 {% macro saveAndContinueButton(button) %}
-        <div style="clear:both;display:inline-block;height:0px;" data-module="opg-toggleable-submit">{{ form_submit(button, '', {
+    <div style="clear:both;display:inline-block;height:0px;" data-module="opg-toggleable-submit">
+        {{ form_submit(button, '', {
             'labelText': 'saveAndContinue',
             'labelTranslationDomain': 'common',
             'buttonClass': 'govuk-button govuk-!-margin-right-1 behat-link-save-and-continue',
-            }) }}</div>
+            }) }}
+    </div>
 {% endmacro %}
 
 {% macro addAnotherSaveButton(button) %}
