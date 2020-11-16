@@ -6,6 +6,7 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
@@ -20,30 +21,28 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class TeamController extends AbstractController
 {
-    /**
-     * @var RestClient
-     */
+    /**@var RestClient */
     private $restClient;
 
-    /**
-     * @var MailFactory
-     */
+    /**@var MailFactory */
     private $mailFactory;
 
-    /**
-     * @var MailSender
-     */
+    /**@var MailSender */
     private $mailSender;
+
+    /** @var UserApi */
+    private $userApi;
 
     public function __construct(
         RestClient $restClient,
         MailFactory $mailFactory,
-        MailSender $mailSender
-    )
-    {
+        MailSender $mailSender,
+        UserApi $userApi
+    ) {
         $this->restClient = $restClient;
         $this->mailFactory = $mailFactory;
         $this->mailSender = $mailSender;
+        $this->userApi = $userApi;
     }
 
     /**
@@ -168,9 +167,12 @@ class TeamController extends AbstractController
 
         $validationGroups = $team->canAddAdmin() ? ['user_details_org', 'org_team_role_name'] : ['user_details_org'];
 
-        $form = $this->createForm(FormDir\Org\TeamMemberAccountType::class, $user, ['team' => $team, 'loggedInUser' => $this->getUser(), 'targetUser' => $user, 'validation_groups' => $validationGroups
+        $form = $this->createForm(
+            FormDir\Org\TeamMemberAccountType::class,
+            $user,
+            ['team' => $team, 'loggedInUser' => $this->getUser(), 'targetUser' => $user, 'validation_groups' => $validationGroups
                                    ]
-                                 );
+        );
 
         $form->handleRequest($request);
 
@@ -223,10 +225,7 @@ class TeamController extends AbstractController
             /* @var $user EntityDir\User */
             $user = $this->restClient->get('team/member/' . $id, 'User');
 
-            $user = $this->restClient->userRecreateToken($user->getEmail(), 'pass-reset');
-
-            $invitationEmail = $this->mailFactory->createInvitationEmail($user);
-            $this->mailSender->send($invitationEmail);
+            $this->userApi->inviteDeputy($user->getEmail());
 
             $request->getSession()->getFlashBag()->add(
                 'notice',

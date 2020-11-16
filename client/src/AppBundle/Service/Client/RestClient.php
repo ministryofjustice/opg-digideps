@@ -178,6 +178,7 @@ class RestClient implements RestClientInterface
         $this->apiCall('put', 'user/agree-terms-use/' . $token, null, 'raw', [], false);
     }
 
+    /**@TODO REMOVE ONCE TESTS FIXED PRIOR TO PUSHING PR */
     /**
      * @param string $email
      * @param string $type

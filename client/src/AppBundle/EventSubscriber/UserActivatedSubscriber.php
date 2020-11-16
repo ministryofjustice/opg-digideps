@@ -3,12 +3,12 @@
 
 namespace AppBundle\EventSubscriber;
 
-use AppBundle\Event\UserPasswordResetEvent;
+use AppBundle\Event\UserActivatedEvent;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class UserPasswordResetSubscriber implements EventSubscriberInterface
+class UserActivatedSubscriber implements EventSubscriberInterface
 {
     /** @var MailFactory */
     private $mailFactory;
@@ -21,17 +21,16 @@ class UserPasswordResetSubscriber implements EventSubscriberInterface
         $this->mailFactory = $mailFactory;
         $this->mailSender = $mailSender;
     }
-
     public static function getSubscribedEvents()
     {
         return [
-            UserPasswordResetEvent::NAME => 'sendEmail'
+            UserActivatedEvent::NAME => 'sendEmail'
         ];
     }
 
-    public function sendEmail(UserPasswordResetEvent $event)
+    public function sendEmail(UserActivatedEvent $event)
     {
-        $passwordResetEmail = $this->mailFactory->createResetPasswordEmail($event->getPasswordResetUser());
-        $this->mailSender->send($passwordResetEmail);
+        $userActivatedEmail = $this->mailFactory->createActivationEmail($event->getActivatedUser());
+        $this->mailSender->send($userActivatedEmail);
     }
 }

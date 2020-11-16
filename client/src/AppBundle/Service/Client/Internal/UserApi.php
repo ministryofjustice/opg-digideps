@@ -5,6 +5,7 @@ namespace AppBundle\Service\Client\Internal;
 use AppBundle\Entity\User;
 use AppBundle\Event\CoDeputyInvitedEvent;
 use AppBundle\Event\DeputyInvitedEvent;
+use AppBundle\Event\UserActivatedEvent;
 use AppBundle\Event\UserPasswordResetEvent;
 use AppBundle\Event\UserTokenRecreatedEvent;
 use AppBundle\Event\UserCreatedEvent;
@@ -130,18 +131,6 @@ class UserApi
 
     /**
      * @param string $email
-     * @param string $type
-     */
-    public function resetPassword(string $email)
-    {
-        $passwordResetUser = $this->recreateToken($email);
-
-        $passwordResetEvent = new UserPasswordResetEvent($passwordResetUser);
-        $this->eventDispatcher->dispatch(UserPasswordResetEvent::NAME, $passwordResetEvent);
-    }
-
-    /**
-     * @param string $email
      * @return User
      */
     public function recreateToken(string $email)
@@ -154,6 +143,18 @@ class UserApi
             [],
             false
         );
+    }
+
+    /**
+     * @param string $email
+     * @param string $type
+     */
+    public function activate(string $email)
+    {
+        $activatedUser = $this->recreateToken($email);
+
+        $userActivatedEvent = new UserActivatedEvent($activatedUser);
+        $this->eventDispatcher->dispatch(UserActivatedEvent::NAME, $userActivatedEvent);
     }
 
     public function inviteCoDeputy(string $email, User $loggedInUser)
@@ -170,5 +171,13 @@ class UserApi
 
         $deputyInvitedEvent = new DeputyInvitedEvent($invitedDeputy);
         $this->eventDispatcher->dispatch(DeputyInvitedEvent::NAME, $deputyInvitedEvent);
+    }
+
+    public function resetPassword(string $email)
+    {
+        $passwordResetUser = $this->recreateToken($email);
+
+        $passwordResetEvent = new UserPasswordResetEvent($passwordResetUser);
+        $this->eventDispatcher->dispatch(UserPasswordResetEvent::NAME, $passwordResetEvent);
     }
 }

@@ -10,7 +10,7 @@ use AppBundle\TestHelpers\EmailHelpers;
 use AppBundle\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 
-class PasswordResetSubscriberTest extends TestCase
+class UserPasswordResetSubscriberTest extends TestCase
 {
     /** @test */
     public function getSubscribedEvents()
@@ -32,7 +32,7 @@ class PasswordResetSubscriberTest extends TestCase
 
         $passwordResetEvent = new UserPasswordResetEvent($passwordResetUser);
 
-        $mailFactory->createActivationEmail($passwordResetUser)->shouldBeCalled()->willReturn($passwordResetEmail);
+        $mailFactory->createResetPasswordEmail($passwordResetUser)->shouldBeCalled()->willReturn($passwordResetEmail);
         $mailSender->send($passwordResetEmail)->shouldBeCalled();
 
         $sut = new UserPasswordResetSubscriber($mailFactory->reveal(), $mailSender->reveal());

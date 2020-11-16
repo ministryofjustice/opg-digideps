@@ -583,7 +583,7 @@ class IndexController extends AbstractController
     public function sendUserActivationLinkAction(string $email, LoggerInterface $logger)
     {
         try {
-            $this->userApi->resetPassword($email, 'pass-reset');
+            $this->userApi->activate($email, 'pass-reset');
         } catch (\Throwable $e) {
             $logger->debug($e->getMessage());
         }

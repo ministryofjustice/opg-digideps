@@ -181,16 +181,8 @@ class UserController extends AbstractController
      */
     public function activateLinkSendAction(string $token): Response
     {
-        // check $token is correct
         $user = $this->restClient->loadUserByToken($token);
-        /* @var $user EntityDir\User */
-
-        // recreate token
-        // the endpoint will also send the activation email
-        $this->restClient->userRecreateToken($user->getEmail(), 'activate');
-
-        $activationEmail = $this->mailFactory->createActivationEmail($user);
-        $this->mailSender->send($activationEmail);
+        $this->userApi->activate($user);
 
         return $this->redirect($this->generateUrl('activation_link_sent', ['token' => $token]));
     }
@@ -269,21 +261,10 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $emailAddress = $user->getEmail();
-            $disguisedEmail = '***' . substr($emailAddress, 3);
-            $logger->warning('Reset password request for : ' . $emailAddress);
-
             try {
-                $user = $this->restClient->userRecreateToken($user->getEmail(), 'pass-reset');
-
-                $logger->warning('Sending reset email to ' . $disguisedEmail);
-
-                $resetPasswordEmail = $this->mailFactory->createResetPasswordEmail($user);
-
-                $this->mailSender->send($resetPasswordEmail);
-                $logger->warning('Email sent to ' . $disguisedEmail);
+                $this->userApi->resetPassword($user->getEmail());
             } catch (RestClientException $e) {
-                $logger->warning('Email ' . $emailAddress . ' not found');
+                $logger->warning('Email ' . $user->getEmail() . ' not found');
             }
 
             // after details are added, admin users to go their homepage, deputies go to next step

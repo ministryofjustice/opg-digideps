@@ -118,7 +118,7 @@ class UserApiTest extends TestCase
         $passwordResetEvent = new UserPasswordResetEvent($userToResetPassword);
         $this->eventDispatcher->dispatch('password.reset', $passwordResetEvent)->shouldBeCalled();
 
-        $this->sut->resetPassword($email);
+        $this->sut->activate($email);
     }
 
     /** @test */
