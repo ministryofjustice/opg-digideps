@@ -37,9 +37,8 @@ monolog:
            channels: [ "!translation" ]
            bubble: false
        audit:
-           # writes audit logs to stderr for dev verification purposes
            type: service
-           id: AppBundle\Service\Audit\LocalAuditLogHandler
+           id: AppBundle\Service\Audit\AwsAuditLogHandler
 
 jms_serializer:
     metadata:

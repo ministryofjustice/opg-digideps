@@ -3,12 +3,10 @@
 namespace AppBundle\Controller\Admin\Client;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\Client;
-use AppBundle\Entity\NamedDeputy;
-use AppBundle\Entity\User;
 use AppBundle\Service\Audit\AuditEvents;
+use AppBundle\Service\Client\Internal\ClientApi;
 use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\Logger;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -21,11 +19,15 @@ class ClientController extends AbstractController
     /** @var RestClient */
     private $restClient;
 
+    /** @var ClientApi */
+    private $clientApi;
+
     public function __construct(
-        RestClient $restClient
-    )
-    {
+        RestClient $restClient,
+        ClientApi $clientApi
+    ) {
         $this->restClient = $restClient;
+        $this->clientApi = $clientApi;
     }
 
     /**
@@ -40,11 +42,11 @@ class ClientController extends AbstractController
      */
     public function detailsAction($id)
     {
-        $client = $this->restClient->get('v2/client/' . $id, 'Client');
+        $client = $this->clientApi->getWithUsers($id);
 
         return [
             'client'      => $client,
-            'namedDeputy' => $this->getNamedDeputy($id, $client)
+            'namedDeputy' => $client->getDeputy()
         ];
     }
 
@@ -53,11 +55,11 @@ class ClientController extends AbstractController
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @param string $caseNumber
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
-    public function detailsByCaseNumberAction($caseNumber)
+    public function detailsByCaseNumberAction(string $caseNumber)
     {
-        $client = $this->restClient->get('v2/client/case-number/' . $caseNumber, 'Client');
+        $client = $this->clientApi->getByCaseNumber($caseNumber);
 
         return $this->redirectToRoute('admin_client_details', ['id' => $client->getId()]);
     }
@@ -73,11 +75,11 @@ class ClientController extends AbstractController
      */
     public function dischargeAction($id)
     {
-        $client = $this->restClient->get('v2/client/' . $id, 'Client');
+        $client = $this->clientApi->getWithUsersV2($id);
 
         return [
             'client' => $client,
-            'namedDeputy' => $this->getNamedDeputy($id, $client)
+            'namedDeputy' => $client->getDeputy()
         ];
     }
 
@@ -86,52 +88,14 @@ class ClientController extends AbstractController
      * @Security("has_role('ROLE_SUPER_ADMIN')")
      *
      * @param $id
-     * @param Logger $logger
      * @param AuditEvents $auditEvents
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      * @throws \Exception
      */
-    public function dischargeConfirmAction($id, Logger $logger, AuditEvents $auditEvents)
+    public function dischargeConfirmAction($id)
     {
-        /** @var Client $client */
-        $client = $this->restClient->get('v2/client/' . $id, 'Client');
-        $deputy = $this->getNamedDeputy($client->getId(), $client);
-
-        $this->restClient->delete('client/' . $id . '/delete');
-
-        $logger->notice('', $auditEvents->clientDischarged(
-            AuditEvents::TRIGGER_ADMIN_BUTTON,
-            $client->getCaseNumber(),
-            $this->getUser()->getEmail(),
-            $deputy->getFullName(),
-            $client->getCourtDate()
-        ));
-
+        $this->clientApi->delete($id, AuditEvents::TRIGGER_ADMIN_BUTTON);
         return $this->redirectToRoute('admin_client_search');
-    }
-
-    /**
-     * @param int $id
-     * @param Client $client
-     * @return NamedDeputy|User|null
-     */
-    private function getNamedDeputy(int $id, Client $client)
-    {
-        if (!is_null($client->getNamedDeputy())) {
-            return $client->getNamedDeputy();
-        }
-
-        if ($client->getDeletedAt() instanceof \DateTime) {
-            return null;
-        }
-
-        $clientWithUsers = $this->restClient->get('client/' . $id . '/details', 'Client');
-
-        foreach ($clientWithUsers->getUsers() as $user) {
-            if ($user->isLayDeputy()) {
-                return $clientWithUsers->getUsers()[0];
-            }
-        }
     }
 }

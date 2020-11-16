@@ -104,9 +104,11 @@
             {% endif %}
         </p>
         {% if is_granted('ROLE_SUPER_ADMIN') %}
-            <a href="{{ path('admin_client_discharge', {id: client.id}) }}" role="button" data-module="govuk-button" class="govuk-button govuk-button--secondary">
-                Discharge deputy
-            </a>
+            {% if not client.isDeleted %}
+                <a href="{{ path('admin_client_discharge', {id: client.id}) }}" role="button" data-module="govuk-button" class="govuk-button govuk-button--secondary">
+                    Discharge deputy
+                </a>
+            {% endif %}
         {% endif %}
     </div>
 </details>

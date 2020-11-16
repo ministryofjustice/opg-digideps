@@ -3,6 +3,9 @@
 namespace AppBundle\FixtureFactory;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\NamedDeputy;
+use AppBundle\Entity\Organisation;
+use Faker\Factory;
 
 class ClientFactory
 {
@@ -27,6 +30,33 @@ class ClientFactory
             ->setCounty(isset($data['county']) ? $data['county'] : 'West Midlands')
             ->setCountry('GB')
             ->setCourtDate(\DateTime::createFromFormat('Y-m-d', $courtDate));
+
+        return $client;
+    }
+
+    /**
+     * @param NamedDeputy $namedDeputy
+     * @param Organisation $organisation
+     * @return Client
+     */
+    public function createGenericOrgClient(NamedDeputy $namedDeputy, Organisation $organisation)
+    {
+        $faker = Factory::create();
+
+        $client = (new Client())
+            ->setCaseNumber($faker->unique()->randomNumber(8))
+            ->setFirstname($faker->firstName)
+            ->setLastname($faker->lastName)
+            ->setPhone('0212112345')
+            ->setAddress('1 Fake road')
+            ->setAddress2($faker->city)
+            ->setPostcode($faker->postcode)
+            ->setCounty('West Midlands')
+            ->setCountry('GB')
+            ->setCourtDate(\DateTime::createFromFormat('Y-m-d', $faker->date()));
+
+        $client->setNamedDeputy($namedDeputy);
+        $client->setOrganisation($organisation);
 
         return $client;
     }

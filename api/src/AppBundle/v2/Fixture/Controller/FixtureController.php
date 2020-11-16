@@ -20,6 +20,7 @@ use AppBundle\FixtureFactory\UserFactory;
 use AppBundle\v2\Controller\ControllerTrait;
 use AppBundle\v2\Fixture\ReportSection;
 use Doctrine\ORM\EntityManagerInterface;
+use Faker\Factory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -195,7 +196,7 @@ class FixtureController
      */
     private function createOrgAndAttachParticipants($fromRequest, User $deputy, Client $client): void
     {
-        $uniqueOrgNameSegment = (preg_match('/\d+/', $fromRequest['deputyEmail'], $matches)) ? $matches[0] : rand(0,9999);
+        $uniqueOrgNameSegment = (preg_match('/\d+/', $fromRequest['deputyEmail'], $matches)) ? $matches[0] : rand(0, 9999);
         $orgName = sprintf('Org %s Ltd', $uniqueOrgNameSegment);
 
         if (null === ($organisation = $this->orgRepository->findOneBy(['name' => $orgName]))) {
@@ -203,8 +204,24 @@ class FixtureController
         }
 
         $organisation->addUser($deputy);
-        $client->setNamedDeputy($this->buildNamedDeputy($deputy));
+
+        foreach (range(1, $fromRequest['orgSizeUsers'] ? $fromRequest['orgSizeUsers'] : 1) as $number) {
+            $orgUser = $this->userFactory->createGenericOrgUser($organisation);
+            $organisation->addUser($orgUser);
+            $this->em->persist($orgUser);
+        }
+
+        $namedDeputy = $this->buildNamedDeputy($deputy);
+        $client->setNamedDeputy($namedDeputy);
         $client->setOrganisation($organisation);
+
+        foreach (range(1, $fromRequest['orgSizeClients'] ? $fromRequest['orgSizeClients'] : 1) as $number) {
+            $orgClient = $this->clientFactory->createGenericOrgClient($namedDeputy, $organisation);
+            $this->em->persist($orgClient);
+
+            $this->createReport($fromRequest, $orgClient);
+        }
+
         $this->em->persist($organisation);
     }
 

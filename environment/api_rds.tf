@@ -4,7 +4,7 @@ data "aws_kms_key" "rds" {
 
 module "api_aurora" {
   source                        = "./aurora"
-  count                         = terraform.workspace == "production02" ? 0 : 1
+  count                         = 1
   aurora_serverless             = local.account.aurora_serverless
   account_id                    = data.aws_caller_identity.current.account_id
   apply_immediately             = local.account.deletion_protection ? false : true

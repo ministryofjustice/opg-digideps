@@ -32,10 +32,6 @@ monolog:
            path: "%log_path%"
            level: warning
            formatter: line_formatter
-       audit:
-           # writes audit logs to stderr for dev verification purposes
-           type: service
-           id: AppBundle\Service\Audit\LocalAuditLogHandler
 
 jms_serializer:
     metadata:

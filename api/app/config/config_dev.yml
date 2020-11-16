@@ -14,7 +14,3 @@ monolog:
             formatter: line_formatter
             channels: [ "!translation" ]
             bubble: false
-        audit:
-            # writes audit logs to stderr for dev verification purposes
-            type: service
-            id: AppBundle\Service\Audit\LocalAuditLogHandler

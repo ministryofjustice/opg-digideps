@@ -277,10 +277,13 @@ class Client
 
     /**
      * @param NamedDeputy $namedDeputy
+     * @return Client
      */
-    public function setNamedDeputy(NamedDeputy $namedDeputy)
+    public function setNamedDeputy(NamedDeputy $namedDeputy): self
     {
         $this->namedDeputy = $namedDeputy;
+
+        return $this;
     }
 
     /**
@@ -961,5 +964,25 @@ class Client
             }
         }
         return false;
+    }
+
+    /**
+     * @return NamedDeputy|User|null
+     */
+    public function getDeputy()
+    {
+        if (!is_null($this->getNamedDeputy())) {
+            return $this->getNamedDeputy();
+        }
+
+        if ($this->getDeletedAt() instanceof \DateTime) {
+            return null;
+        }
+
+        foreach ($this->getUsers() as $user) {
+            if ($user->isLayDeputy()) {
+                return $this->getUsers()[0];
+            }
+        }
     }
 }
