@@ -319,11 +319,7 @@ class OrganisationController extends AbstractController
         }
 
         try {
-            /* @var $user EntityDir\User */
-            $user = $this->restClient->userRecreateToken($user->getEmail(), 'pass-reset');
-
-            $invitationEmail = $this->mailFactory->createInvitationEmail($user);
-            $this->mailSender->send($invitationEmail);
+            $this->userApi->inviteDeputy($user->getEmail());
 
             $this->addFlash(
                 'notice',

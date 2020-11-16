@@ -4,6 +4,7 @@ namespace AppBundle\Service\Client\Internal;
 
 use AppBundle\Entity\User;
 use AppBundle\Event\CoDeputyInvitedEvent;
+use AppBundle\Event\DeputyInvitedEvent;
 use AppBundle\Event\UserPasswordResetEvent;
 use AppBundle\Event\UserTokenRecreatedEvent;
 use AppBundle\Event\UserCreatedEvent;
@@ -161,5 +162,13 @@ class UserApi
 
         $CoDeputyInvitedEvent = new CoDeputyInvitedEvent($invitedCoDeputy, $loggedInUser);
         $this->eventDispatcher->dispatch(CoDeputyInvitedEvent::NAME, $CoDeputyInvitedEvent);
+    }
+
+    public function inviteDeputy(string $email)
+    {
+        $invitedDeputy = $this->recreateToken($email);
+
+        $deputyInvitedEvent = new DeputyInvitedEvent($invitedDeputy);
+        $this->eventDispatcher->dispatch(DeputyInvitedEvent::NAME, $deputyInvitedEvent);
     }
 }

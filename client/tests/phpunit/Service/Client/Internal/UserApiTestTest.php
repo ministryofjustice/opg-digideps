@@ -2,6 +2,7 @@
 
 
 use AppBundle\Event\CoDeputyInvitedEvent;
+use AppBundle\Event\DeputyInvitedEvent;
 use AppBundle\Event\UserPasswordResetEvent;
 use AppBundle\Event\UserCreatedEvent;
 use AppBundle\Event\UserDeletedEvent;
@@ -153,5 +154,24 @@ class UserApiTest extends TestCase
         $returnedUser = $this->sut->getByEmail($existingUser->getEmail());
 
         self::assertEquals($existingUser, $returnedUser);
+    }
+
+    /** @test */
+    public function inviteDeputy()
+    {
+        $invitedDeputy = UserHelpers::createUser();
+        $faker = Factory::create();
+
+        $email = $faker->safeEmail;
+
+        $this->restClient
+            ->apiCall('put', sprintf('user/recreate-token/%s', $email), null, 'User', [], false)
+            ->shouldBeCalled()
+            ->willReturn($invitedDeputy);
+
+        $deputyInvitedEvent = new DeputyInvitedEvent($invitedDeputy);
+        $this->eventDispatcher->dispatch('deputy.invited', $deputyInvitedEvent)->shouldBeCalled();
+
+        $this->sut->inviteDeputy($email);
     }
 }
