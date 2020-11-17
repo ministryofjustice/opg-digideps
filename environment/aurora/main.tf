@@ -76,13 +76,13 @@ resource "aws_rds_cluster" "cluster_serverless" {
   storage_encrypted            = var.storage_encrypted
   skip_final_snapshot          = var.skip_final_snapshot
   vpc_security_group_ids       = var.vpc_security_group_ids
+  enable_http_endpoint         = true
   tags                         = var.tags
 
   scaling_configuration {
     auto_pause               = true
     max_capacity             = 16
     min_capacity             = 4
-    seconds_until_auto_pause = 300
-    timeout_action           = "ForceApplyCapacityChange"
+    seconds_until_auto_pause = 900
   }
 }
