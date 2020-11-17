@@ -3,13 +3,20 @@
 
 namespace AppBundle\Service\Mailer;
 
+use AppBundle\Entity\Client;
+use AppBundle\Entity\Ndr\Ndr;
+use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\ReportInterface;
+use AppBundle\Entity\User;
+use AppBundle\Model\FeedbackReport;
+
 class Mailer
 {
     /** @var MailFactory */
-    protected $mailFactory;
+    private $mailFactory;
 
     /** @var MailSender */
-    protected $mailSender;
+    private $mailSender;
 
     public function __construct(MailFactory $mailFactory, MailSender $mailSender)
     {
@@ -17,21 +24,57 @@ class Mailer
         $this->mailSender = $mailSender;
     }
 
-    /**
-     * @return MailFactory
-     */
-    public function getMailFactory(): MailFactory
+    public function sendActivationEmail(User $activatedUser)
     {
-        return $this->mailFactory;
+        $this->mailSender->send($this->mailFactory->createActivationEmail($activatedUser));
     }
 
-    /**
-     * @return MailSender
-     */
-    public function getMailSender(): MailSender
+    public function sendInvitationEmail(User $invitedUser, string $deputyName = null)
     {
-        return $this->mailSender;
+        $this->mailSender->send($this->mailFactory->createInvitationEmail($invitedUser, $deputyName));
     }
 
-    //Look at wrapping up all email sending in this class rather than exposing the functions and then injecting Mailer into classes
+    public function sendResetPasswordEmail(User $passwordResetUser)
+    {
+        $this->mailSender->send($this->mailFactory->createResetPasswordEmail($passwordResetUser));
+    }
+
+    public function sendGeneralFeedbackEmail(array $feedbackFormResponse)
+    {
+        $this->mailSender->send($this->mailFactory->createGeneralFeedbackEmail($feedbackFormResponse));
+    }
+
+    public function sendPostSubmissionFeedbackEmail(FeedbackReport $submittedFeedbackReport, User $submittedByDeputy)
+    {
+        $this->mailSender->send(
+            $this->mailFactory->createPostSubmissionFeedbackEmail($submittedFeedbackReport, $submittedByDeputy)
+        );
+    }
+
+    public function sendUpdateClientDetailsEmail(Client $updatedClient)
+    {
+        $this->mailSender->send($this->mailFactory->createUpdateClientDetailsEmail($updatedClient));
+    }
+
+    public function sendUpdateDeputyDetailsEmail(User $updatedDeputy)
+    {
+        $this->mailSender->send($this->mailFactory->createUpdateDeputyDetailsEmail($updatedDeputy));
+    }
+
+    public function sendReportSubmissionConfirmationEmail(
+        User $submittedByDeputy,
+        ReportInterface $submittedReport,
+        Report $newReport
+    ) {
+        $this->mailSender->send(
+            $this->mailFactory->createReportSubmissionConfirmationEmail($submittedByDeputy, $submittedReport, $newReport)
+        );
+    }
+
+    public function sendNdrSubmissionConfirmationEmail(User $submittedByDeputy, Ndr $submittedNdr, Report $newReport)
+    {
+        $this->mailSender->send(
+            $this->mailFactory->createNdrSubmissionConfirmationEmail($submittedByDeputy, $submittedNdr, $newReport)
+        );
+    }
 }

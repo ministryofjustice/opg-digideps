@@ -6,6 +6,7 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\Ndr\Traits as NdrTraits;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Service\NdrStatusService;
+use DateTime;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -37,14 +38,14 @@ class Ndr implements ReportInterface
     private $submitted;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @JMS\Type("DateTime")
      * @JMS\Groups({"start_date"})
      */
     private $startDate;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @JMS\Type("DateTime")
      * @JMS\Groups({"submit"})
      */
@@ -161,14 +162,17 @@ class Ndr implements ReportInterface
 
     /**
      * @param int $id
+     * @return Ndr
      */
-    public function setId($id)
+    public function setId($id): self
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getStartDate()
     {
@@ -176,15 +180,18 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @param \DateTime $startDate
+     * @param DateTime $startDate
+     * @return Ndr
      */
-    public function setStartDate($startDate)
+    public function setStartDate($startDate): self
     {
         $this->startDate = $startDate;
+
+        return $this;
     }
 
     /**
-     * @return \DateTime|null
+     * @return DateTime|null
      */
     public function getSubmitDate()
     {
@@ -192,11 +199,14 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @param \DateTime $submitDate
+     * @param DateTime $submitDate
+     * @return Ndr
      */
-    public function setSubmitDate($submitDate)
+    public function setSubmitDate($submitDate): self
     {
         $this->submitDate = $submitDate;
+
+        return $this;
     }
 
     /**
@@ -279,11 +289,11 @@ class Ndr implements ReportInterface
     /**
      * Return the due date (calculated as court order date + 40 days).
      *
-     * @return \DateTime|null $dueDate
+     * @return DateTime|null $dueDate
      */
     public function getDueDate()
     {
-        if (!$this->getStartDate() instanceof \DateTime) {
+        if (!$this->getStartDate() instanceof DateTime) {
             return null;
         }
 

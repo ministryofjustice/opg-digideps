@@ -446,10 +446,13 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @param \DateTime|null $dueDate
+     * @return Report
      */
-    public function setDueDate(\DateTime $dueDate = null)
+    public function setDueDate(\DateTime $dueDate = null): self
     {
         $this->dueDate = $dueDate;
+
+        return $this;
     }
 
     /**
@@ -540,6 +543,17 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     public function getSubmittedBy()
     {
         return $this->submittedBy;
+    }
+
+    /**
+     * @param User|null $submittedBy
+     * @return Report
+     */
+    public function setSubmittedBy(?User $submittedBy): self
+    {
+        $this->submittedBy = $submittedBy;
+
+        return $this;
     }
 
     /**
