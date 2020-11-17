@@ -4,10 +4,10 @@
 namespace AppBundle\EventSubscriber;
 
 use AppBundle\Event\DeputyInvitedEvent;
-use AppBundle\Service\Mailer\BaseMailer;
+use AppBundle\Service\Mailer\Mailer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class DeputyInvitedSubscriber extends BaseMailer implements EventSubscriberInterface
+class DeputyInvitedSubscriber extends Mailer implements EventSubscriberInterface
 {
     public static function getSubscribedEvents()
     {

@@ -4,10 +4,10 @@
 namespace AppBundle\EventSubscriber;
 
 use AppBundle\Event\UserPasswordResetEvent;
-use AppBundle\Service\Mailer\BaseMailer;
+use AppBundle\Service\Mailer\Mailer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class UserPasswordResetSubscriber extends BaseMailer implements EventSubscriberInterface
+class UserPasswordResetSubscriber extends Mailer implements EventSubscriberInterface
 {
     public static function getSubscribedEvents()
     {

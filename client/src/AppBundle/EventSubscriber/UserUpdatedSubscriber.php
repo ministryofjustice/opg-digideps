@@ -6,14 +6,14 @@ namespace AppBundle\EventSubscriber;
 use AppBundle\Entity\User;
 use AppBundle\Event\UserUpdatedEvent;
 use AppBundle\Service\Audit\AuditEvents;
-use AppBundle\Service\Mailer\BaseMailer;
+use AppBundle\Service\Mailer\Mailer;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use AppBundle\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class UserUpdatedSubscriber extends BaseMailer implements EventSubscriberInterface
+class UserUpdatedSubscriber implements EventSubscriberInterface
 {
     /** @var DateTimeProvider */
     private $dateTimeProvider;
