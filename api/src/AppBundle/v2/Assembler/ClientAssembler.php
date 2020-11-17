@@ -4,6 +4,7 @@ namespace AppBundle\v2\Assembler;
 
 use AppBundle\v2\Assembler\Report\ReportAssemblerInterface;
 use AppBundle\v2\DTO\ClientDto;
+use AppBundle\v2\DTO\DeputyDto;
 use AppBundle\v2\DTO\DtoPropertySetterTrait;
 use AppBundle\Entity\Client;
 use AppBundle\v2\Registration\DTO\OrgDeputyshipDto;
@@ -69,6 +70,10 @@ class ClientAssembler
 
         if (isset($data['namedDeputy']) && is_array($data['namedDeputy'])) {
             $dto->setNamedDeputy($this->assembleClientNamedDeputy($data['namedDeputy']));
+        }
+
+        if (isset($data['users']) && is_array($data['users'])) {
+            $dto->setDeputies($this->assembleClientDeputies($data['users']));
         }
 
         return $dto;
@@ -146,5 +151,18 @@ class ClientAssembler
         }
 
         return $client;
+    }
+
+    private function assembleClientDeputies(array $deputies)
+    {
+        $dtos = [];
+
+        foreach ($deputies as $deputy) {
+            $dto = new DeputyDto();
+            $this->setPropertiesFromData($dto, $deputy, ['clients']);
+            $dtos[] = $dto;
+        }
+
+        return $dtos;
     }
 }

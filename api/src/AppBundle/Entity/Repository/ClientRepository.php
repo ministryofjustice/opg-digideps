@@ -111,7 +111,7 @@ class ClientRepository extends EntityRepository
 
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT c, r, ndr, o, nd FROM AppBundle\Entity\Client c LEFT JOIN c.reports r LEFT JOIN c.ndr ndr LEFT JOIN c.namedDeputy nd LEFT JOIN c.organisation o WHERE c.id = ?1')
+            ->createQuery('SELECT c, r, ndr, o, nd, u FROM AppBundle\Entity\Client c LEFT JOIN c.reports r LEFT JOIN c.ndr ndr LEFT JOIN c.namedDeputy nd LEFT JOIN c.organisation o LEFT JOIN c.users u WHERE c.id = ?1')
             ->setParameter(1, $id);
 
         $result = $query->getArrayResult();
