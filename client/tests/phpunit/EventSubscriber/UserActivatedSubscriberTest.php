@@ -4,6 +4,7 @@ namespace Tests\AppBundle\EventListener;
 
 use AppBundle\Event\UserActivatedEvent;
 use AppBundle\EventSubscriber\UserActivatedSubscriber;
+use AppBundle\Service\Mailer\Mailer;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use AppBundle\TestHelpers\EmailHelpers;
@@ -24,21 +25,13 @@ class UserActivatedSubscriberTest extends TestCase
     /** @test */
     public function sendEmail()
     {
-        $mailFactory = self::prophesize(MailFactory::class);
-        $mailSender = self::prophesize(MailSender::class);
-
-        $userActivatedEmail = EmailHelpers::createEmail();
         $activatedUser = UserHelpers::createUser();
-
         $userActivatedEvent = new UserActivatedEvent($activatedUser);
 
-        $mailFactory->createActivationEmail($activatedUser)->shouldBeCalled()->willReturn($userActivatedEmail);
-        $mailSender->send($userActivatedEmail)->shouldBeCalled();
+        $mailer = self::prophesize(Mailer::class);
+        $mailer->sendActivationEmail($activatedUser)->shouldBeCalled();
 
-        $sut = (new UserActivatedSubscriber())
-            ->setMailFactory($mailFactory->reveal())
-            ->setMailSender($mailSender->reveal());
-
+        $sut = new UserActivatedSubscriber($mailer->reveal());
         $sut->sendEmail($userActivatedEvent);
     }
 }

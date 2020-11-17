@@ -1,12 +1,11 @@
 <?php declare(strict_types=1);
 
+
 namespace Tests\AppBundle\EventListener;
 
 use AppBundle\Event\DeputyInvitedEvent;
 use AppBundle\EventSubscriber\DeputyInvitedSubscriber;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
-use AppBundle\TestHelpers\EmailHelpers;
+use AppBundle\Service\Mailer\Mailer;
 use AppBundle\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 
@@ -24,24 +23,13 @@ class DeputyInvitedSubscriberTest extends TestCase
     /** @test */
     public function sendEmail()
     {
-        $mailFactory = self::prophesize(MailFactory::class);
-        $mailSender = self::prophesize(MailSender::class);
-
-        $inviteDeputyEmail = EmailHelpers::createEmail();
         $invitedDeputy = UserHelpers::createUser();
-
         $deputyInvitedEvent = new DeputyInvitedEvent($invitedDeputy);
 
-        $mailFactory
-            ->createInvitationEmail($invitedDeputy)
-            ->shouldBeCalled()
-            ->willReturn($inviteDeputyEmail);
+        $mailer = self::prophesize(Mailer::class);
+        $mailer->sendInvitationEmail($invitedDeputy)->shouldBeCalled();
 
-        $mailSender->send($inviteDeputyEmail)->shouldBeCalled();
-
-        $sut = (new DeputyInvitedSubscriber())
-            ->setMailFactory($mailFactory->reveal())
-            ->setMailSender($mailSender->reveal());
+        $sut = new DeputyInvitedSubscriber($mailer->reveal());
 
         $sut->sendEmail($deputyInvitedEvent);
     }

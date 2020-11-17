@@ -4,6 +4,7 @@ namespace Tests\AppBundle\EventListener;
 
 use AppBundle\Event\CoDeputyInvitedEvent;
 use AppBundle\EventSubscriber\CoDeputyInvitedSubscriber;
+use AppBundle\Service\Mailer\Mailer;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use AppBundle\TestHelpers\EmailHelpers;
@@ -24,26 +25,14 @@ class CoDeputyInvitedSubscriberTest extends TestCase
     /** @test */
     public function sendEmail()
     {
-        $mailFactory = self::prophesize(MailFactory::class);
-        $mailSender = self::prophesize(MailSender::class);
-
-        $inviteCoDeputyEmail = EmailHelpers::createEmail();
         $invitedCoDeputy = UserHelpers::createUser();
         $inviterDeputy = UserHelpers::createUser();
-
         $coDeputyInvitedEvent = new CoDeputyInvitedEvent($invitedCoDeputy, $inviterDeputy);
 
-        $mailFactory
-            ->createInvitationEmail($invitedCoDeputy, $inviterDeputy->getFullName())
-            ->shouldBeCalled()
-            ->willReturn($inviteCoDeputyEmail);
+        $mailer = self::prophesize(Mailer::class);
+        $mailer->sendInvitationEmail($invitedCoDeputy, $inviterDeputy->getFullName())->shouldBeCalled();
 
-        $mailSender->send($inviteCoDeputyEmail)->shouldBeCalled();
-
-        $sut = (new CoDeputyInvitedSubscriber())
-            ->setMailFactory($mailFactory->reveal())
-            ->setMailSender($mailSender->reveal());
-
+        $sut = new CoDeputyInvitedSubscriber($mailer->reveal());
         $sut->sendEmail($coDeputyInvitedEvent);
     }
 }

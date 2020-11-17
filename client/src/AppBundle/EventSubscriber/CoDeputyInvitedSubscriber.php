@@ -7,8 +7,18 @@ use AppBundle\Event\CoDeputyInvitedEvent;
 use AppBundle\Service\Mailer\Mailer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class CoDeputyInvitedSubscriber extends Mailer implements EventSubscriberInterface
+class CoDeputyInvitedSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var Mailer
+     */
+    private $mailer;
+
+    public function __construct(Mailer $mailer)
+    {
+        $this->mailer = $mailer;
+    }
+
     public static function getSubscribedEvents()
     {
         return [
@@ -18,11 +28,6 @@ class CoDeputyInvitedSubscriber extends Mailer implements EventSubscriberInterfa
 
     public function sendEmail(CoDeputyInvitedEvent $event)
     {
-        $invitationEmail = $this->mailFactory->createInvitationEmail(
-            $event->getInvitedCoDeputy(),
-            $event->getInviterDeputy()->getFullName()
-        );
-
-        $this->mailSender->send($invitationEmail);
+        $this->mailer->sendInvitationEmail($event->getInvitedCoDeputy(), $event->getInviterDeputy()->getFullName());
     }
 }

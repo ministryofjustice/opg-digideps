@@ -7,8 +7,18 @@ use AppBundle\Event\UserPasswordResetEvent;
 use AppBundle\Service\Mailer\Mailer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class UserPasswordResetSubscriber extends Mailer implements EventSubscriberInterface
+class UserPasswordResetSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var Mailer
+     */
+    private $mailer;
+
+    public function __construct(Mailer $mailer)
+    {
+        $this->mailer = $mailer;
+    }
+
     public static function getSubscribedEvents()
     {
         return [
@@ -18,7 +28,6 @@ class UserPasswordResetSubscriber extends Mailer implements EventSubscriberInter
 
     public function sendEmail(UserPasswordResetEvent $event)
     {
-        $passwordResetEmail = $this->mailFactory->createResetPasswordEmail($event->getPasswordResetUser());
-        $this->mailSender->send($passwordResetEmail);
+        $this->mailer->sendResetPasswordEmail($event->getPasswordResetUser());
     }
 }

@@ -7,8 +7,6 @@ use AppBundle\Entity\User;
 use AppBundle\Event\UserUpdatedEvent;
 use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Mailer\Mailer;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
 use AppBundle\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -21,12 +19,17 @@ class UserUpdatedSubscriber implements EventSubscriberInterface
     /** @var LoggerInterface */
     private $logger;
 
+    /** @var Mailer */
+    private $mailer;
+
     public function __construct(
         DateTimeProvider $dateTimeProvider,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        Mailer $mailer
     ) {
         $this->dateTimeProvider = $dateTimeProvider;
         $this->logger = $logger;
+        $this->mailer = $mailer;
     }
 
     public static function getSubscribedEvents()
@@ -69,9 +72,8 @@ class UserUpdatedSubscriber implements EventSubscriberInterface
 
     public function sendEmail(UserUpdatedEvent $event)
     {
-        if ($event->getPostUpdateUser()->getRoleName() === User::ROLE_LAY_DEPUTY && $this->userDetailsHaveChanged($event)) {
-            $updateDeputyDetailsEmail = $this->mailFactory->createUpdateDeputyDetailsEmail($event->getPostUpdateUser());
-            $this->mailSender->send($updateDeputyDetailsEmail);
+        if ($this->layDeputyDetailsChanged($event)) {
+            $this->mailer->sendUpdateDeputyDetailsEmail($event->getPostUpdateUser());
         }
     }
 
@@ -103,5 +105,10 @@ class UserUpdatedSubscriber implements EventSubscriberInterface
             $pre->getPhoneMain() !== $post->getPhoneMain() ||
             $pre->getPhoneAlternative() !== $post->getPhoneAlternative() ||
             $this->emailHasChanged($event);
+    }
+
+    private function layDeputyDetailsChanged(UserUpdatedEvent $event)
+    {
+        return $event->getPostUpdateUser()->getRoleName() === User::ROLE_LAY_DEPUTY && $this->userDetailsHaveChanged($event);
     }
 }

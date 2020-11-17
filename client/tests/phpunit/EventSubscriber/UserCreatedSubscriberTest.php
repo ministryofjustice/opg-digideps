@@ -5,9 +5,7 @@ namespace Tests\AppBundle\EventListener;
 
 use AppBundle\Event\UserCreatedEvent;
 use AppBundle\EventSubscriber\UserCreatedSubscriber;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
-use AppBundle\TestHelpers\EmailHelpers;
+use AppBundle\Service\Mailer\Mailer;
 use AppBundle\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 
@@ -26,19 +24,12 @@ class UserCreatedSubscriberTest extends TestCase
     public function sendEmail()
     {
         $createdUser = UserHelpers::createUser();
-        $userCreatedEmail = EmailHelpers::createEmail();
-        $mailFactory = self::prophesize(MailFactory::class);
-        $mailSender = self::prophesize(MailSender::class);
-
         $userCreatedEvent = new UserCreatedEvent($createdUser);
 
-        $mailFactory->createActivationEmail($createdUser)->shouldBeCalled()->willReturn($userCreatedEmail);
-        $mailSender->send($userCreatedEmail)->shouldBeCalled();
+        $mailer = self::prophesize(Mailer::class);
+        $mailer->sendActivationEmail($createdUser)->shouldBeCalled();
 
-        $sut = (new UserCreatedSubscriber())
-            ->setMailFactory($mailFactory->reveal())
-            ->setMailSender($mailSender->reveal());
-
+        $sut = new UserCreatedSubscriber($mailer->reveal());
         $sut->sendEmail($userCreatedEvent);
     }
 }

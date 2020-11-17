@@ -7,8 +7,16 @@ use AppBundle\Event\UserCreatedEvent;
 use AppBundle\Service\Mailer\Mailer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class UserCreatedSubscriber extends Mailer implements EventSubscriberInterface
+class UserCreatedSubscriber implements EventSubscriberInterface
 {
+    /** @var Mailer */
+    private $mailer;
+
+    public function __construct(Mailer $mailer)
+    {
+        $this->mailer = $mailer;
+    }
+
     public static function getSubscribedEvents()
     {
         return [
@@ -18,7 +26,6 @@ class UserCreatedSubscriber extends Mailer implements EventSubscriberInterface
 
     public function sendEmail(UserCreatedEvent $event)
     {
-        $activationEmail = $this->mailFactory->createActivationEmail($event->getCreatedUser());
-        $this->mailSender->send($activationEmail);
+        $this->mailer->sendActivationEmail($event->getCreatedUser());
     }
 }
