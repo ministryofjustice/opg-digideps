@@ -33,16 +33,6 @@ class UserController extends AbstractController
     private $restClient;
 
     /**
-     * @var MailFactory
-     */
-    private $mailFactory;
-
-    /**
-     * @var MailSender
-     */
-    private $mailSender;
-
-    /**
      * @var UserApi
      */
     private $userApi;
@@ -54,14 +44,10 @@ class UserController extends AbstractController
 
     public function __construct(
         RestClient $restClient,
-        MailFactory $mailFactory,
-        MailSender $mailSender,
         UserApi $userApi,
         ClientApi $clientApi
     ) {
         $this->restClient = $restClient;
-        $this->mailFactory = $mailFactory;
-        $this->mailSender = $mailSender;
         $this->userApi = $userApi;
         $this->clientApi = $clientApi;
     }
@@ -306,9 +292,7 @@ class UserController extends AbstractController
             $data = $form->getData();
 
             try {
-                $user = $this->restClient->registerUser($data);
-                $activationEmail = $this->mailFactory->createActivationEmail($user);
-                $this->mailSender->send($activationEmail);
+                $this->userApi->selfRegister($data);
 
                 $bodyText = $translator->trans('thankyou.body', [], 'register');
                 $email = $data->getEmail();

@@ -3,46 +3,45 @@
 
 use AppBundle\Event\CoDeputyInvitedEvent;
 use AppBundle\Event\DeputyInvitedEvent;
+use AppBundle\Event\DeputySelfRegisteredEvent;
 use AppBundle\Event\UserPasswordResetEvent;
 use AppBundle\Event\UserCreatedEvent;
 use AppBundle\Event\UserDeletedEvent;
 use AppBundle\Event\UserUpdatedEvent;
+use AppBundle\Model\SelfRegisterData;
 use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\TestHelpers\UserHelpers;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class UserApiTest extends TestCase
 {
-    /**
-     * @var \Prophecy\Prophecy\ObjectProphecy
-     */
+    /** @var ObjectProphecy */
     private $restClient;
 
-    /**
-     * @var \Prophecy\Prophecy\ObjectProphecy
-     */
+    /** @var ObjectProphecy */
     private $tokenStorage;
 
-    /**
-     * @var \Prophecy\Prophecy\ObjectProphecy
-     */
+    /** @var ObjectProphecy */
     private $eventDispatcher;
 
-    /**
-     * @var UserApi
-     */
+    /** @var UserApi */
     private $sut;
+
+    /** @var \Faker\Generator */
+    private $faker;
 
     public function setUp(): void
     {
         $this->restClient = self::prophesize(RestClient::class);
         $this->tokenStorage = self::prophesize(TokenStorageInterface::class);
         $this->eventDispatcher = self::prophesize(EventDispatcher::class);
+        $this->faker = Factory::create();
 
         $this->sut = new UserApi(
             $this->restClient->reveal(),
@@ -106,9 +105,7 @@ class UserApiTest extends TestCase
     public function resetPassword()
     {
         $userToResetPassword = UserHelpers::createUser();
-        $faker = Factory::create();
-
-        $email = $faker->safeEmail;
+        $email = $this->faker->safeEmail;
 
         $this->restClient
             ->apiCall('put', sprintf('user/recreate-token/%s', $email), null, 'User', [], false)
@@ -126,9 +123,7 @@ class UserApiTest extends TestCase
     {
         $invitedCoDeputy = UserHelpers::createUser();
         $inviterDeputy = UserHelpers::createUser();
-        $faker = Factory::create();
-
-        $email = $faker->safeEmail;
+        $email = $this->faker->safeEmail;
 
         $this->restClient
             ->apiCall('put', sprintf('user/recreate-token/%s', $email), null, 'User', [], false)
@@ -160,9 +155,7 @@ class UserApiTest extends TestCase
     public function inviteDeputy()
     {
         $invitedDeputy = UserHelpers::createUser();
-        $faker = Factory::create();
-
-        $email = $faker->safeEmail;
+        $email = $this->faker->safeEmail;
 
         $this->restClient
             ->apiCall('put', sprintf('user/recreate-token/%s', $email), null, 'User', [], false)
@@ -173,5 +166,29 @@ class UserApiTest extends TestCase
         $this->eventDispatcher->dispatch('deputy.invited', $deputyInvitedEvent)->shouldBeCalled();
 
         $this->sut->inviteDeputy($email);
+    }
+
+    /** @test */
+    public function selfRegister()
+    {
+        $selfRegisteredDeputy = UserHelpers::createUser();
+        $selfRegisterData = (new SelfRegisterData())
+            ->setFirstname('Denis')
+            ->setLastname('Brauchla')
+            ->setPostcode('DB1 9FI')
+            ->setEmail('d.brauchla@mailbox.example')
+            ->setClientFirstname('Abraham')
+            ->setClientLastname('Ruhter')
+            ->setCaseNumber('13859388');
+
+        $this->restClient
+            ->apiCall('post', 'selfregister', $selfRegisterData, 'User', [], false)
+            ->shouldBeCalled()
+            ->willReturn($selfRegisteredDeputy);
+
+        $deputySelfRegisteredEvent = new DeputySelfRegisteredEvent($selfRegisteredDeputy);
+        $this->eventDispatcher->dispatch('deputy.self.registered', $deputySelfRegisteredEvent)->shouldBeCalled();
+
+        $this->sut->selfRegister($selfRegisterData);
     }
 }

@@ -5,12 +5,14 @@ namespace AppBundle\Service\Client\Internal;
 use AppBundle\Entity\User;
 use AppBundle\Event\CoDeputyInvitedEvent;
 use AppBundle\Event\DeputyInvitedEvent;
+use AppBundle\Event\DeputySelfRegisteredEvent;
 use AppBundle\Event\UserActivatedEvent;
 use AppBundle\Event\UserPasswordResetEvent;
 use AppBundle\Event\UserTokenRecreatedEvent;
 use AppBundle\Event\UserCreatedEvent;
 use AppBundle\Event\UserDeletedEvent;
 use AppBundle\Event\UserUpdatedEvent;
+use AppBundle\Model\SelfRegisterData;
 use AppBundle\Service\Client\RestClientInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -21,6 +23,7 @@ class UserApi
     private const GET_USER_BY_EMAIL_ENDPOINT = 'user/get-one-by/email/%s';
     private const USER_BY_ID_ENDPOINT = 'user/%s';
     private const RECREATE_USER_TOKEN_ENDPOINT = 'user/recreate-token/%s';
+    private const DEPUTY_SELF_REGISTER_ENDPOINT = 'selfregister';
 
     /**  @var RestClientInterface */
     private $restClient;
@@ -179,5 +182,20 @@ class UserApi
 
         $passwordResetEvent = new UserPasswordResetEvent($passwordResetUser);
         $this->eventDispatcher->dispatch(UserPasswordResetEvent::NAME, $passwordResetEvent);
+    }
+
+    public function selfRegister(SelfRegisterData $selfRegisterData)
+    {
+        $registeredDeputy = $this->restClient->apiCall(
+            'post',
+            self::DEPUTY_SELF_REGISTER_ENDPOINT,
+            $selfRegisterData,
+            'User',
+            [],
+            false
+        );
+
+        $event = new DeputySelfRegisteredEvent($registeredDeputy);
+        $this->eventDispatcher->dispatch(DeputySelfRegisteredEvent::NAME, $event);
     }
 }
