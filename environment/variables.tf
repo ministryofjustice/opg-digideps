@@ -27,7 +27,6 @@ variable "accounts" {
       sirius_api_account      = string
       state_source            = string
       elasticache_count       = number
-      always_on               = bool
       cpu_low                 = number
       cpu_medium              = number
       cpu_high                = number
