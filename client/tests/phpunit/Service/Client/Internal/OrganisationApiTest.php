@@ -2,9 +2,7 @@
 
 namespace DigidepsTests\Service\Client\Internal;
 
-use AppBundle\Event\OrgUserCreatedEvent;
 use AppBundle\Service\Client\Internal\OrganisationApi;
-use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\TestHelpers\OrganisationHelpers;
 use AppBundle\TestHelpers\UserHelpers;
