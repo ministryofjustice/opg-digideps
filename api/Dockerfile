@@ -33,6 +33,7 @@ php7-igbinary \
 php7-pecl-redis
 
 RUN docker-php-ext-install pdo pdo_pgsql opcache
+RUN docker-php-ext-enable opcache
 
 # Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=false
