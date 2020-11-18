@@ -2,23 +2,21 @@
 
 namespace Tests\AppBundle\EventListener;
 
+use AppBundle\Event\CoDeputyCreatedEvent;
 use AppBundle\Event\CoDeputyInvitedEvent;
-use AppBundle\EventSubscriber\CoDeputyInvitedSubscriber;
+use AppBundle\EventSubscriber\CoDeputyCreationSubscriber;
 use AppBundle\Service\Mailer\Mailer;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
-use AppBundle\TestHelpers\EmailHelpers;
 use AppBundle\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 
-class CoDeputyInvitedSubscriberTest extends TestCase
+class CoDeputyCreationSubscriberTest extends TestCase
 {
     /** @test */
     public function getSubscribedEvents()
     {
         self::assertEquals(
-            [CoDeputyInvitedEvent::NAME => 'sendEmail'],
-            CoDeputyInvitedSubscriber::getSubscribedEvents()
+            [CoDeputyInvitedEvent::NAME => 'sendEmail', CoDeputyCreatedEvent::NAME => 'sendEmail'],
+            CoDeputyCreationSubscriber::getSubscribedEvents()
         );
     }
 
@@ -32,7 +30,7 @@ class CoDeputyInvitedSubscriberTest extends TestCase
         $mailer = self::prophesize(Mailer::class);
         $mailer->sendInvitationEmail($invitedCoDeputy, $inviterDeputy->getFullName())->shouldBeCalled();
 
-        $sut = new CoDeputyInvitedSubscriber($mailer->reveal());
+        $sut = new CoDeputyCreationSubscriber($mailer->reveal());
         $sut->sendEmail($coDeputyInvitedEvent);
     }
 }

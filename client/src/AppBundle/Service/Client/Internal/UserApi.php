@@ -3,6 +3,7 @@
 namespace AppBundle\Service\Client\Internal;
 
 use AppBundle\Entity\User;
+use AppBundle\Event\CoDeputyCreatedEvent;
 use AppBundle\Event\CoDeputyInvitedEvent;
 use AppBundle\Event\DeputyInvitedEvent;
 use AppBundle\Event\DeputySelfRegisteredEvent;
@@ -24,6 +25,7 @@ class UserApi
     private const USER_BY_ID_ENDPOINT = 'user/%s';
     private const RECREATE_USER_TOKEN_ENDPOINT = 'user/recreate-token/%s';
     private const DEPUTY_SELF_REGISTER_ENDPOINT = 'selfregister';
+    private const CERATE_CODEPUTY_ENDPOINT = 'codeputy/add';
 
     /**  @var RestClientInterface */
     private $restClient;
@@ -195,7 +197,22 @@ class UserApi
             false
         );
 
-        $event = new DeputySelfRegisteredEvent($registeredDeputy);
-        $this->eventDispatcher->dispatch(DeputySelfRegisteredEvent::NAME, $event);
+        $deputySelfRegisteredEvent = new DeputySelfRegisteredEvent($registeredDeputy);
+        $this->eventDispatcher->dispatch(DeputySelfRegisteredEvent::NAME, $deputySelfRegisteredEvent);
+    }
+
+    public function createCoDeputy(User $invitedCoDeputy, string $invitedByDeputyName)
+    {
+        $createdCoDeputy = $this->restClient->post(
+            self::CERATE_CODEPUTY_ENDPOINT,
+            $invitedCoDeputy,
+            ['codeputy'],
+            'User'
+        );
+
+        $coDeputyCreatedEvent = new CoDeputyCreatedEvent($createdCoDeputy, $invitedByDeputyName);
+        $this->eventDispatcher->dispatch(CoDeputyCreatedEvent::NAME, $coDeputyCreatedEvent);
+
+        return $createdCoDeputy;
     }
 }

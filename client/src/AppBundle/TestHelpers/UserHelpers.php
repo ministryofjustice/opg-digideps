@@ -32,9 +32,9 @@ class UserHelpers extends KernelTestCase
     }
 
     /**
-     * @return User|array|object
+     * @return User
      */
-    public static function createProfAdminUser(?int $id = null)
+    public static function createProfAdminUser(?int $id = null): User
     {
         $faker = Faker\Factory::create();
 
@@ -47,5 +47,21 @@ class UserHelpers extends KernelTestCase
                 'email' => $faker->safeEmail,
             ]
         );
+    }
+
+    /**
+     * @return User
+     */
+    public static function createInvitedCoDeputy(): User
+    {
+        $faker = Faker\Factory::create();
+
+        $invitedCoDeputy = self::createUser();
+
+        foreach ($invitedCoDeputy as $key => $value) {
+            unset($invitedCoDeputy->$key);
+        }
+
+        return $invitedCoDeputy->setEmail($faker->safeEmail);
     }
 }

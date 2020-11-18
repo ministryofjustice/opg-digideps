@@ -6,9 +6,9 @@ namespace AppBundle\Event;
 use AppBundle\Entity\User;
 use Symfony\Component\EventDispatcher\Event;
 
-class CoDeputyInvitedEvent extends Event implements CoDeputyCreationEventInterface
+class CoDeputyCreatedEvent extends Event implements CoDeputyCreationEventInterface
 {
-    public const NAME = 'codeputy.invited';
+    public const NAME = 'codeputy.created';
 
     /** @var User */
     private $invitedCoDeputy;
@@ -16,7 +16,7 @@ class CoDeputyInvitedEvent extends Event implements CoDeputyCreationEventInterfa
     /** @var User */
     private $inviterDeputy;
 
-    public function __construct(User $invitedCoDeputy, User $inviterDeputy)
+    public function __construct(User $invitedCoDeputy, string $inviterDeputy)
     {
         $this->invitedCoDeputy = $invitedCoDeputy;
         $this->inviterDeputy = $inviterDeputy;
@@ -32,9 +32,9 @@ class CoDeputyInvitedEvent extends Event implements CoDeputyCreationEventInterfa
 
     /**
      * @param User $invitedCoDeputy
-     * @return CoDeputyInvitedEvent
+     * @return CoDeputyCreatedEvent
      */
-    public function setInvitedCoDeputy(User $invitedCoDeputy): CoDeputyInvitedEvent
+    public function setInvitedCoDeputy(User $invitedCoDeputy): CoDeputyCreatedEvent
     {
         $this->invitedCoDeputy = $invitedCoDeputy;
         return $this;
@@ -50,9 +50,9 @@ class CoDeputyInvitedEvent extends Event implements CoDeputyCreationEventInterfa
 
     /**
      * @param User $inviterDeputy
-     * @return CoDeputyInvitedEvent
+     * @return CoDeputyCreatedEvent
      */
-    public function setInviterDeputy(User $inviterDeputy): CoDeputyInvitedEvent
+    public function setInviterDeputy(User $inviterDeputy): CoDeputyCreatedEvent
     {
         $this->inviterDeputy = $inviterDeputy;
         return $this;

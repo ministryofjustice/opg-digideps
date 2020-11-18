@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 
+use AppBundle\Event\CoDeputyCreatedEvent;
 use AppBundle\Event\CoDeputyInvitedEvent;
 use AppBundle\Event\DeputyInvitedEvent;
 use AppBundle\Event\DeputySelfRegisteredEvent;
@@ -190,5 +191,23 @@ class UserApiTest extends TestCase
         $this->eventDispatcher->dispatch('deputy.self.registered', $deputySelfRegisteredEvent)->shouldBeCalled();
 
         $this->sut->selfRegister($selfRegisterData);
+    }
+
+    /** @test */
+    public function createCoDeputy()
+    {
+        $invitedCoDeputy = UserHelpers::createInvitedCoDeputy();
+        $createdCoDeputy = $invitedCoDeputy->setRegistrationDate(new DateTime());
+        $invitedByDeputyName = sprintf('%s %s', $this->faker->firstName, $this->faker->lastName);
+
+        $this->restClient
+            ->post('codeputy/add', $invitedCoDeputy, ['codeputy'], 'User')
+            ->shouldBeCalled()
+            ->willReturn($createdCoDeputy);
+
+        $coDeputyCreatedEvent = new CoDeputyCreatedEvent($createdCoDeputy, $invitedByDeputyName);
+        $this->eventDispatcher->dispatch('codeputy.created', $coDeputyCreatedEvent)->shouldBeCalled();
+
+        $this->sut->createCoDeputy($invitedCoDeputy, $invitedByDeputyName);
     }
 }

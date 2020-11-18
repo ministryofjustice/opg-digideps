@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Model\SelfRegisterData;
+use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Client\Internal\ClientApi;
 use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Service\Client\RestClient;
@@ -161,7 +162,6 @@ class CoDeputyController extends AbstractController
         }
 
         $invitedUser = new EntityDir\User();
-
         $form = $this->createForm(FormDir\CoDeputyInviteType::class, $invitedUser);
 
         $backLink = $loggedInUser->isNdrEnabled() ?
@@ -171,14 +171,13 @@ class CoDeputyController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                /** @var EntityDir\User $invitedUser */
-                $invitedUser = $this->restClient->post('codeputy/add', $form->getData(), ['codeputy'], 'User');
+                $this->userApi->createCoDeputy($invitedUser, $loggedInUser->getFullName());
 
-                // Regular deputies should become coDeputies via a CSV import, but at least for testing handle the change from non co-dep to co-dep here
-                $this->restClient->put('user/' . $loggedInUser->getId(), ['co_deputy_client_confirmed' => true], []);
-
-                $invitationEmail = $this->mailFactory->createInvitationEmail($invitedUser, $loggedInUser->getFullName());
-                $this->mailSender->send($invitationEmail);
+                $this->userApi->update(
+                    $loggedInUser,
+                    $loggedInUser->setCoDeputyClientConfirmed(true),
+                    AuditEvents::TRIGGER_CODEPUTY_CREATED
+                );
 
                 $request->getSession()->getFlashBag()->add('notice', 'Deputy invitation has been sent');
 
