@@ -46,6 +46,7 @@ Feature: Synchronising Documents with Sirius
     And the report PDF document should be queued
 
     Scenario Outline: Submitting supporting documents after a report submission sets the synchronisation status to queued
+      Given I have the "2018" to "2019" report between "<deputy>" and "<case_number>"
       Given I am logged in as "<emailAddress>" with password "Abcd1234"
       And I attached a supporting document "test-image.png" to the submitted report
       And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
@@ -54,13 +55,13 @@ Feature: Synchronising Documents with Sirius
       Then I should see "<case_number>"
       And the document "test-image.png" should be queued
       Examples:
-        | case_number | emailAddress               |
-        | 12121212    | DeputyDocsA@behat-test.com |
-        | 23232323    | DeputyDocsB@behat-test.com |
-        | 45454545    | DeputyDocsD@behat-test.com |
-        | 56565656    | DeputyDocsE@behat-test.com |
-        | 67676767    | DeputyDocsF@behat-test.com |
-        | 78787878    | DeputyDocsG@behat-test.com |
+        | case_number | emailAddress               | deputy      |
+        | 12121212    | DeputyDocsA@behat-test.com | DeputyDocsA |
+        | 23232323    | DeputyDocsB@behat-test.com | DeputyDocsB |
+        | 45454545    | DeputyDocsD@behat-test.com | DeputyDocsD |
+        | 56565656    | DeputyDocsE@behat-test.com | DeputyDocsE |
+        | 67676767    | DeputyDocsF@behat-test.com | DeputyDocsF |
+        | 78787878    | DeputyDocsG@behat-test.com | DeputyDocsG |
 
   Scenario: Running the document-sync command syncs queued Report PDF documents with Sirius
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"

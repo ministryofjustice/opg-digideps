@@ -17,13 +17,30 @@ class Logger
         $this->logger = $logger;
     }
 
+    /**
+     * @param string $message
+     * @param array $context
+     */
     public function notice(string $message, array $context)
     {
         $this->logger->notice($message, $context);
     }
 
-    public function warning(string $message, ?array $context)
+    /**
+     * @param string $message
+     * @param array|null $context
+     */
+    public function warning(string $message, ?array $context =[])
     {
         $this->logger->warning($message, $context);
+    }
+
+    /**
+     * @param string $message
+     * @param array|null $context
+     */
+    public function debug(string $message, ?array $context = [])
+    {
+        $this->logger->debug($message, $context);
     }
 }

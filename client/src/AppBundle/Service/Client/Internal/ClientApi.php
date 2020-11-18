@@ -4,13 +4,25 @@ namespace AppBundle\Service\Client\Internal;
 
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\User;
+use AppBundle\Event\ClientDeletedEvent;
+use AppBundle\Event\ClientUpdatedEvent;
 use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\Client\RestClientInterface;
+use AppBundle\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ClientApi
 {
+    private const GET_CLIENT_BY_ID = 'client/%s';
+    private const DELETE_CLIENT_BY_ID = 'client/%s/delete';
+    private const UPDATE_CLIENT = 'client/upsert';
+
+    private const GET_CLIENT_BY_ID_V2 = 'v2/client/%s';
+    private const GET_CLIENT_BY_CASE_NUMBER_V2 = 'v2/client/case-number/%s';
+
     /** @var RestClient */
     private $restClient;
 
@@ -23,24 +35,40 @@ class ClientApi
     /** @var UserApi */
     private $userApi;
 
+    /** @var DateTimeProvider */
+    private $dateTimeProvider;
+
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
+    /** @var EventDispatcherInterface */
+    private $eventDispatcher;
+
     public function __construct(
-        RestClient $restClient,
+        RestClientInterface $restClient,
         RouterInterface $router,
         LoggerInterface $logger,
-        UserApi $userApi
+        UserApi $userApi,
+        DateTimeProvider $dateTimeProvider,
+        TokenStorageInterface $tokenStorage,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->restClient = $restClient;
         $this->router = $router;
         $this->logger = $logger;
         $this->userApi = $userApi;
+        $this->dateTimeProvider = $dateTimeProvider;
+        $this->tokenStorage = $tokenStorage;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
+     * @param string[] $jmsGroups
      * @return Client|null
      */
-    public function getFirstClient($groups = ['user', 'user-clients', 'client'])
+    public function getFirstClient($jmsGroups = ['user', 'user-clients', 'client'])
     {
-        $user = $this->userApi->getUserWithData($groups);
+        $user = $this->userApi->getUserWithData($jmsGroups);
         $clients = $user->getClients();
 
         return (is_array($clients) && !empty($clients[0]) && $clients[0] instanceof Client) ? $clients[0] : null;
@@ -51,14 +79,18 @@ class ClientApi
      * So we need to make another API call with the correct JMS groups
      * thus ensuring the client is retrieved with the current report.
      *
-     * @param  Client     $client
-     * @throws \Exception
+     * @param Client $client
      * @return string
+     * @throws \Exception
      */
     public function generateClientProfileLink(Client $client)
     {
         /** @var Client $client */
-        $client = $this->restClient->get('client/' . $client->getId(), 'Client', ['client', 'report-id', 'current-report']);
+        $client = $this->restClient->get(
+            sprintf(self::GET_CLIENT_BY_ID, $client->getId()),
+            'Client',
+            ['client', 'report-id', 'current-report']
+        );
 
         $report = $client->getCurrentReport();
 
@@ -75,4 +107,95 @@ class ClientApi
         throw new \Exception('Unable to generate client profile link.');
     }
 
+    /**
+     * @param int $clientId
+     * @return Client
+     */
+    public function getWithUsers(int $clientId, array $includes = [])
+    {
+        return $this->restClient->get(
+            sprintf(self::GET_CLIENT_BY_ID, $clientId),
+            'Client',
+            [
+                'client',
+                'client-users',
+                'user',
+                'client-reports',
+                'client-ndr',
+                'ndr',
+                'report',
+                'status',
+                'client-named-deputy',
+                'named-deputy',
+                'client-organisations',
+                'organisation'
+            ]
+        );
+    }
+
+    /**
+     * @param int $clientId
+     * @return Client
+     */
+    public function getWithUsersV2(int $clientId, array $includes = [])
+    {
+        return $this->restClient->get(
+            sprintf(self::GET_CLIENT_BY_ID_V2, $clientId),
+            'Client',
+            [
+                'client',
+                'client-users',
+                'user',
+                'client-reports',
+                'client-ndr',
+                'ndr',
+                'report',
+                'status',
+                'client-named-deputy',
+                'named-deputy',
+                'client-organisations',
+                'organisation'
+            ]
+        );
+    }
+
+    /**
+     * @param int $id
+     * @param string $trigger
+     */
+    public function delete(int $id, string $trigger)
+    {
+        $clientWithUsers = $this->getWithUsersV2($id);
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+
+        $clientDeletedEvent = new ClientDeletedEvent($clientWithUsers, $currentUser, $trigger);
+
+        $this->restClient->delete(sprintf(self::DELETE_CLIENT_BY_ID, $id));
+
+        $this->eventDispatcher->dispatch(ClientDeletedEvent::NAME, $clientDeletedEvent);
+    }
+
+    /**
+     * @param Client $preUpdateClient
+     * @param Client $postUpdateClient
+     * @param string $trigger
+     */
+    public function update(Client $preUpdateClient, Client $postUpdateClient, string $trigger)
+    {
+        $this->restClient->put(self::UPDATE_CLIENT, $postUpdateClient, ['pa-edit']);
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+
+        $clientUpdatedEvent = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $currentUser, $trigger);
+
+        $this->eventDispatcher->dispatch(ClientUpdatedEvent::NAME, $clientUpdatedEvent);
+    }
+
+    /**
+     * @param string $caseNumber
+     * @return Client
+     */
+    public function getByCaseNumber(string $caseNumber)
+    {
+        return $this->restClient->get(sprintf(self::GET_CLIENT_BY_CASE_NUMBER_V2, $caseNumber), 'Client');
+    }
 }

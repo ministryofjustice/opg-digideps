@@ -24,7 +24,7 @@ class LogoutListener implements LogoutSuccessHandlerInterface
     private $router;
 
     /**
-     * @var RestClient
+     * @var RestClientInterface
      */
     private $restClient;
 

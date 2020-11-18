@@ -9,6 +9,7 @@ use AppBundle\Entity\User;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\Audit\AuditEvents;
+use AppBundle\Service\Client\Internal\ClientApi;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Logger;
 use AppBundle\Service\Time\DateTimeProvider;
@@ -37,17 +38,21 @@ class IndexController extends AbstractController
     /** @var FormFactoryInterface */
     private $form;
 
+    /** @var ClientApi */
+    private $clientApi;
+
     public function __construct(
         Logger $logger,
         DateTimeProvider $dateTimeProvider,
         RestClient $restClient,
-        FormFactoryInterface $form
-    )
-    {
+        FormFactoryInterface $form,
+        ClientApi $clientApi
+    ) {
         $this->logger = $logger;
         $this->dateTimeProvider = $dateTimeProvider;
         $this->restClient = $restClient;
         $this->form = $form;
+        $this->clientApi = $clientApi;
     }
 
     /**
@@ -113,32 +118,15 @@ class IndexController extends AbstractController
             $this->generateUrl('report_declaration', ['reportId' => $client->getCurrentReport()->getId()]) :
             $this->generateUrl('report_overview', ['reportId'=>$client->getCurrentReport()->getId()]);
 
-        $oldEmail = $client->getEmail();
-
-        $form = $this->form->create(FormDir\Org\ClientType::class, $client);
+        $form = $this->form->create(FormDir\Org\ClientType::class, clone $client);
         $form->handleRequest($request);
-
-        $newEmail = empty($client->getEmail()) ? '' : $client->getEmail();
 
         // edit client form
         if ($form->isSubmitted() && $form->isValid()) {
             $clientUpdated = $form->getData();
             $clientUpdated->setId($client->getId());
-            $this->restClient->put('client/upsert', $clientUpdated, ['pa-edit']);
 
-            if ($oldEmail !== $newEmail) {
-                $event = (new AuditEvents($this->dateTimeProvider))->clientEmailChanged(
-                    AuditEvents::TRIGGER_DEPUTY_USER_EDIT,
-                    $oldEmail,
-                    $newEmail,
-                    $this->getUser()->getEmail(),
-                    $clientUpdated->getFullName()
-                );
-
-                $message = empty($newEmail) ? 'Client email address removed' : '';
-                $this->logger->notice($message, $event);
-
-            }
+            $this->clientApi->update($client, $clientUpdated, AuditEvents::TRIGGER_DEPUTY_USER_EDIT);
 
             $this->addFlash('notice', 'The client details have been edited');
 

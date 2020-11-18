@@ -37,7 +37,7 @@ class Organisation implements OrganisationInterface
     /**
      * @var string
      *
-     * @JMS\Groups({"user-organisations"})
+     * @JMS\Groups({"user-organisations", "organisation"})
      *
      * @Assert\NotBlank()
      * @ORM\Column(name="email_identifier", type="string", length=256, nullable=false, unique=true)
