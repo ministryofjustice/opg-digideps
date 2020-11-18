@@ -7,11 +7,10 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\Audit\AuditEvents;
+use AppBundle\Service\Client\Internal\OrganisationApi;
 use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Logger;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
 use AppBundle\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,40 +32,27 @@ class OrganisationController extends AbstractController
     /** @var Logger */
     private $logger;
 
-    /**
-     * @var UserApi
-     */
+    /** @var UserApi */
     private $userApi;
 
-    /**
-     * @var RestClient
-     */
+    /** @var RestClient */
     private $restClient;
 
-    /**
-     * @var MailFactory
-     */
-    private $mailFactory;
-
-    /**
-     * @var MailSender
-     */
-    private $mailSender;
+    /** @var OrganisationApi */
+    private $organisationApi;
 
     public function __construct(
         DateTimeProvider $dateTimeProvider,
         Logger $logger,
         UserApi $userApi,
         RestClient $restClient,
-        MailFactory $mailFactory,
-        MailSender $mailSender
+        OrganisationApi $organisationApi
     ) {
         $this->dateTimeProvider = $dateTimeProvider;
         $this->logger = $logger;
         $this->userApi = $userApi;
         $this->restClient = $restClient;
-        $this->mailFactory = $mailFactory;
-        $this->mailSender = $mailSender;
+        $this->organisationApi = $organisationApi;
     }
 
     /**
@@ -150,15 +136,11 @@ class OrganisationController extends AbstractController
                     );
                 } else {
                     /** @var EntityDir\User $user */
-                    $user = $form->getData();
+                    $userToCreate = $form->getData();
 
                     /** @var EntityDir\User $user */
-                    $user = $this->restClient->post('user', $user, ['org_team_add'], 'User');
-
-                    $invitationEmail = $this->mailFactory->createInvitationEmail($user);
-                    $this->mailSender->send($invitationEmail);
-
-                    $this->restClient->put('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId(), '');
+                    $createdUser = $this->userApi->createOrgUser($userToCreate);
+                    $this->organisationApi->addUserToOrganisation($organisation, $createdUser);
                 }
 
                 return $this->redirectToRoute('org_organisation_view', ['id' => $organisation->getId()]);
@@ -319,7 +301,7 @@ class OrganisationController extends AbstractController
         }
 
         try {
-            $this->userApi->inviteDeputy($user->getEmail());
+            $this->userApi->reInviteDeputy($user->getEmail());
 
             $this->addFlash(
                 'notice',

@@ -234,7 +234,7 @@ class CoDeputyController extends AbstractController
                     $this->restClient->put('codeputy/' . $existingCoDeputy->getId(), $form->getData(), []);
                 }
 
-                $this->userApi->inviteCoDeputy($formEmail, $loggedInUser);
+                $this->userApi->reInviteCoDeputy($formEmail, $loggedInUser);
 
                 $request->getSession()->getFlashBag()->add('notice', 'Deputy invitation was re-sent');
 

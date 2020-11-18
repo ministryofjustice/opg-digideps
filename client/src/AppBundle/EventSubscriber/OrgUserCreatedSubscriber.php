@@ -3,11 +3,11 @@
 
 namespace AppBundle\EventSubscriber;
 
-use AppBundle\Event\UserCreatedEvent;
+use AppBundle\Event\OrgUserCreatedEvent;
 use AppBundle\Service\Mailer\Mailer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class UserCreatedSubscriber implements EventSubscriberInterface
+class OrgUserCreatedSubscriber implements EventSubscriberInterface
 {
     /** @var Mailer */
     private $mailer;
@@ -20,12 +20,12 @@ class UserCreatedSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            UserCreatedEvent::NAME => 'sendEmail'
+            OrgUserCreatedEvent::NAME => 'sendEmail'
         ];
     }
 
-    public function sendEmail(UserCreatedEvent $event)
+    public function sendEmail(OrgUserCreatedEvent $event)
     {
-        $this->mailer->sendActivationEmail($event->getCreatedUser());
+        $this->mailer->sendInvitationEmail($event->getCreatedUser());
     }
 }

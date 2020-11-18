@@ -225,7 +225,7 @@ class TeamController extends AbstractController
             /* @var $user EntityDir\User */
             $user = $this->restClient->get('team/member/' . $id, 'User');
 
-            $this->userApi->inviteDeputy($user->getEmail());
+            $this->userApi->reInviteDeputy($user->getEmail());
 
             $request->getSession()->getFlashBag()->add(
                 'notice',

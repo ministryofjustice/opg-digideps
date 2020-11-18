@@ -104,18 +104,11 @@ class IndexController extends AbstractController
      * @Template("AppBundle:Admin/Index:addUser.html.twig")
      *
      * @param Request $request
-     * @param RestClient $restClient
-     * @param MailFactory $mailFactory
-     * @param MailSenderInterface $mailSender
      *
      * @return array|RedirectResponse
      */
-    public function addUserAction(
-        Request $request,
-        RestClient $restClient,
-        MailFactory $mailFactory,
-        MailSenderInterface $mailSender
-    ) {
+    public function addUserAction(Request $request)
+    {
         $form = $this->createForm(FormDir\Admin\AddUserType::class, new EntityDir\User());
 
         $form->handleRequest($request);
@@ -126,7 +119,7 @@ class IndexController extends AbstractController
                     throw new \RuntimeException('Cannot add admin from non-admin user');
                 }
 
-                $this->userApi->create($form->getData());
+                $this->userApi->createAdminUser($form->getData());
 
                 $this->addFlash(
                     'notice',

@@ -24,7 +24,7 @@ class UserHelpers extends KernelTestCase
         }
 
         return (new User())
-            ->setId(1)
+            ->setId($faker->numberBetween(1, 99999999))
             ->setFirstname($faker->firstName)
             ->setLastname($faker->lastName)
             ->setRoleName($faker->jobTitle)

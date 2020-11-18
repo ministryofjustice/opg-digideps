@@ -7,10 +7,11 @@ use AppBundle\Event\CoDeputyCreatedEvent;
 use AppBundle\Event\CoDeputyInvitedEvent;
 use AppBundle\Event\DeputyInvitedEvent;
 use AppBundle\Event\DeputySelfRegisteredEvent;
+use AppBundle\Event\OrgUserCreatedEvent;
 use AppBundle\Event\UserActivatedEvent;
 use AppBundle\Event\UserPasswordResetEvent;
 use AppBundle\Event\UserTokenRecreatedEvent;
-use AppBundle\Event\UserCreatedEvent;
+use AppBundle\Event\AdminUserCreatedEvent;
 use AppBundle\Event\UserDeletedEvent;
 use AppBundle\Event\UserUpdatedEvent;
 use AppBundle\Model\SelfRegisterData;
@@ -25,7 +26,7 @@ class UserApi
     private const USER_BY_ID_ENDPOINT = 'user/%s';
     private const RECREATE_USER_TOKEN_ENDPOINT = 'user/recreate-token/%s';
     private const DEPUTY_SELF_REGISTER_ENDPOINT = 'selfregister';
-    private const CERATE_CODEPUTY_ENDPOINT = 'codeputy/add';
+    private const CREATE_CODEPUTY_ENDPOINT = 'codeputy/add';
 
     /**  @var RestClientInterface */
     private $restClient;
@@ -46,12 +47,22 @@ class UserApi
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function create(User $userToCreate, array $jmsGroups = ['admin_add_user'])
+    public function createAdminUser(User $userToCreate, array $jmsGroups = ['admin_add_user'])
     {
         $createdUser = $this->restClient->post(self::USER_ENDPOINT, $userToCreate, $jmsGroups, 'User');
 
-        $userCreatedEvent = new UserCreatedEvent($createdUser);
-        $this->eventDispatcher->dispatch(UserCreatedEvent::NAME, $userCreatedEvent);
+        $userCreatedEvent = new AdminUserCreatedEvent($createdUser);
+        $this->eventDispatcher->dispatch(AdminUserCreatedEvent::NAME, $userCreatedEvent);
+
+        return $createdUser;
+    }
+
+    public function createOrgUser(User $userToCreate, array $jmsGroups = ['org_team_add'])
+    {
+        $createdUser = $this->restClient->post(self::USER_ENDPOINT, $userToCreate, $jmsGroups, 'User');
+
+        $userCreatedEvent = new OrgUserCreatedEvent($createdUser);
+        $this->eventDispatcher->dispatch(OrgUserCreatedEvent::NAME, $userCreatedEvent);
 
         return $createdUser;
     }
@@ -162,7 +173,7 @@ class UserApi
         $this->eventDispatcher->dispatch(UserActivatedEvent::NAME, $userActivatedEvent);
     }
 
-    public function inviteCoDeputy(string $email, User $loggedInUser)
+    public function reInviteCoDeputy(string $email, User $loggedInUser)
     {
         $invitedCoDeputy = $this->recreateToken($email);
 
@@ -170,7 +181,7 @@ class UserApi
         $this->eventDispatcher->dispatch(CoDeputyInvitedEvent::NAME, $CoDeputyInvitedEvent);
     }
 
-    public function inviteDeputy(string $email)
+    public function reInviteDeputy(string $email)
     {
         $invitedDeputy = $this->recreateToken($email);
 
@@ -204,7 +215,7 @@ class UserApi
     public function createCoDeputy(User $invitedCoDeputy, string $invitedByDeputyName)
     {
         $createdCoDeputy = $this->restClient->post(
-            self::CERATE_CODEPUTY_ENDPOINT,
+            self::CREATE_CODEPUTY_ENDPOINT,
             $invitedCoDeputy,
             ['codeputy'],
             'User'

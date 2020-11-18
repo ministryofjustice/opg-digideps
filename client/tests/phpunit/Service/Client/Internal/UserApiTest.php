@@ -5,8 +5,9 @@ use AppBundle\Event\CoDeputyCreatedEvent;
 use AppBundle\Event\CoDeputyInvitedEvent;
 use AppBundle\Event\DeputyInvitedEvent;
 use AppBundle\Event\DeputySelfRegisteredEvent;
+use AppBundle\Event\OrgUserCreatedEvent;
 use AppBundle\Event\UserPasswordResetEvent;
-use AppBundle\Event\UserCreatedEvent;
+use AppBundle\Event\AdminUserCreatedEvent;
 use AppBundle\Event\UserDeletedEvent;
 use AppBundle\Event\UserUpdatedEvent;
 use AppBundle\Model\SelfRegisterData;
@@ -90,16 +91,16 @@ class UserApiTest extends TestCase
     }
 
     /** @test */
-    public function create()
+    public function createAdminUser()
     {
         $userToCreate = UserHelpers::createUser();
 
         $this->restClient->post('user', $userToCreate, ["admin_add_user"], 'User')->shouldBeCalled()->willReturn($userToCreate);
 
-        $userCreatedEvent = new UserCreatedEvent($userToCreate);
-        $this->eventDispatcher->dispatch('user.created', $userCreatedEvent)->shouldBeCalled();
+        $userCreatedEvent = new AdminUserCreatedEvent($userToCreate);
+        $this->eventDispatcher->dispatch('admin.user.created', $userCreatedEvent)->shouldBeCalled();
 
-        $this->sut->create($userToCreate);
+        $this->sut->createAdminUser($userToCreate);
     }
 
     /** @test */
@@ -120,7 +121,7 @@ class UserApiTest extends TestCase
     }
 
     /** @test */
-    public function inviteCoDeputy()
+    public function reInviteCoDeputy()
     {
         $invitedCoDeputy = UserHelpers::createUser();
         $inviterDeputy = UserHelpers::createUser();
@@ -134,7 +135,7 @@ class UserApiTest extends TestCase
         $coDeputyInvitedEvent = new CoDeputyInvitedEvent($invitedCoDeputy, $inviterDeputy);
         $this->eventDispatcher->dispatch('codeputy.invited', $coDeputyInvitedEvent)->shouldBeCalled();
 
-        $this->sut->inviteCoDeputy($email, $inviterDeputy);
+        $this->sut->reInviteCoDeputy($email, $inviterDeputy);
     }
 
     /** @test */
@@ -153,7 +154,7 @@ class UserApiTest extends TestCase
     }
 
     /** @test */
-    public function inviteDeputy()
+    public function reInviteDeputy()
     {
         $invitedDeputy = UserHelpers::createUser();
         $email = $this->faker->safeEmail;
@@ -166,7 +167,7 @@ class UserApiTest extends TestCase
         $deputyInvitedEvent = new DeputyInvitedEvent($invitedDeputy);
         $this->eventDispatcher->dispatch('deputy.invited', $deputyInvitedEvent)->shouldBeCalled();
 
-        $this->sut->inviteDeputy($email);
+        $this->sut->reInviteDeputy($email);
     }
 
     /** @test */
@@ -209,5 +210,18 @@ class UserApiTest extends TestCase
         $this->eventDispatcher->dispatch('codeputy.created', $coDeputyCreatedEvent)->shouldBeCalled();
 
         $this->sut->createCoDeputy($invitedCoDeputy, $invitedByDeputyName);
+    }
+
+    /** @test */
+    public function createOrgUser()
+    {
+        $userToCreate = UserHelpers::createUser();
+
+        $this->restClient->post('user', $userToCreate, ["org_team_add"], 'User')->shouldBeCalled()->willReturn($userToCreate);
+
+        $userCreatedEvent = new OrgUserCreatedEvent($userToCreate);
+        $this->eventDispatcher->dispatch('org.user.created', $userCreatedEvent)->shouldBeCalled();
+
+        $this->sut->createOrgUser($userToCreate);
     }
 }

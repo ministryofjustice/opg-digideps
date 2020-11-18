@@ -6,9 +6,9 @@ namespace AppBundle\Event;
 use AppBundle\Entity\User;
 use Symfony\Component\EventDispatcher\Event;
 
-class UserCreatedEvent extends Event
+class AdminUserCreatedEvent extends Event
 {
-    public const NAME = 'user.created';
+    public const NAME = 'admin.user.created';
 
     /**  @var User */
     private $createdUser;
@@ -28,9 +28,9 @@ class UserCreatedEvent extends Event
 
     /**
      * @param User $createdUser
-     * @return UserCreatedEvent
+     * @return AdminUserCreatedEvent
      */
-    public function setCreatedUser(User $createdUser): UserCreatedEvent
+    public function setCreatedUser(User $createdUser): AdminUserCreatedEvent
     {
         $this->createdUser = $createdUser;
         return $this;
