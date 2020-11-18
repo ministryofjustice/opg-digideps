@@ -658,6 +658,7 @@ jobs:
             touch .env behat/.env
             echo "export BROWSERSTACK_USERNAME=$BROWSERSTACK_USERNAME" >> $BASH_ENV
             echo "export BROWSERSTACK_KEY=$BROWSERSTACK_KEY" >> $BASH_ENV
+      #Initial steps to reset database/fixtures and remove any persistent data
       - run:
           name: Run tests
           command: |
