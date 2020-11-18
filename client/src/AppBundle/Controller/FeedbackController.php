@@ -52,7 +52,7 @@ class FeedbackController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('satisfactionLevel')->getData()) {
-                $this->satisfactionApi->create($form->getData());
+                $this->satisfactionApi->createGeneralFeedback($form->getData());
             }
 
             $confirmation = $this->translator->trans('collectionPage.confirmation', [], 'feedback');

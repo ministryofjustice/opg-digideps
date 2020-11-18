@@ -10,6 +10,7 @@ use AppBundle\Exception\ReportSubmittedException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
 use AppBundle\Service\Client\Internal\ClientApi;
+use AppBundle\Service\Client\Internal\SatisfactionApi;
 use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\S3FileUploader;
@@ -78,21 +79,25 @@ class NdrController extends AbstractController
      */
     private $mailSender;
 
+    /** @var SatisfactionApi */
+    private $satisfactionApi;
+
     public function __construct(
         WkHtmlToPdfGenerator $wkHtmlToPdfGenerator,
         UserApi $userApi,
         ClientApi $clientApi,
         RestClient $restClient,
         MailFactory $mailFactory,
-        MailSender $mailSender
-    )
-    {
+        MailSender $mailSender,
+        SatisfactionApi  $satisfactionApi
+    ) {
         $this->htmlToPdf = $wkHtmlToPdfGenerator;
         $this->userApi = $userApi;
         $this->clientApi = $clientApi;
         $this->restClient = $restClient;
         $this->mailFactory = $mailFactory;
         $this->mailSender = $mailSender;
+        $this->satisfactionApi = $satisfactionApi;
     }
 
     /**
@@ -330,28 +335,10 @@ class NdrController extends AbstractController
         $ndrStatus = new NdrStatusService($ndr);
 
         $form = $this->createForm(FormDir\FeedbackReportType::class, new ModelDir\FeedbackReport());
-
         $form->handleRequest($request);
 
-        $comments = $form->get('comments')->getData();
-        if (!isset($comments)) {
-            $comments = '';
-        }
-
         if ($form->isSubmitted() && $form->isValid()) {
-            // Store in database
-            $this->restClient->post('satisfaction', [
-                'score' => $form->get('satisfactionLevel')->getData(),
-                'comments' => $comments,
-                'reportType' => $ndr->getType(),
-            ]);
-
-            /** @var User */
-            $user = $this->getUser();
-
-            // Send notification email
-            $feedbackEmail = $this->mailFactory->createPostSubmissionFeedbackEmail($form->getData(), $user);
-            $this->mailSender->send($feedbackEmail);
+            $this->satisfactionApi->createPostSubmissionFeedback($form->getData(), $ndr->getType(), $this->getUser());
 
             return $this->redirect($this->generateUrl('ndr_submit_feedback', ['ndrId' => $ndrId]));
         }
