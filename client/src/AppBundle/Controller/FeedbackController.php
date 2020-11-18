@@ -4,8 +4,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Form\FeedbackType;
 use AppBundle\Service\Client\Internal\SatisfactionApi;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -19,12 +17,6 @@ class FeedbackController extends AbstractController
     /** @var SatisfactionApi */
     private $satisfactionApi;
 
-    /** @var MailSender */
-    private $mailSender;
-
-    /** @var MailFactory */
-    private $mailFactory;
-
     /** @var RouterInterface */
     private $router;
 
@@ -36,18 +28,14 @@ class FeedbackController extends AbstractController
 
     public function __construct(
         SatisfactionApi $satisfactionApi,
-        MailFactory $mailFactory,
-        MailSender $mailSender,
         RouterInterface $router,
         TranslatorInterface $translator,
         FormFactoryInterface $form
     ) {
-        $this->mailFactory = $mailFactory;
-        $this->mailSender = $mailSender;
+        $this->satisfactionApi = $satisfactionApi;
         $this->router = $router;
         $this->translator = $translator;
         $this->form = $form;
-        $this->satisfactionApi = $satisfactionApi;
     }
 
     /**
@@ -65,9 +53,6 @@ class FeedbackController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('satisfactionLevel')->getData()) {
                 $this->satisfactionApi->create($form->getData());
-
-                $feedbackEmail = $this->mailFactory->createGeneralFeedbackEmail($form->getData());
-                $this->mailSender->send($feedbackEmail);
             }
 
             $confirmation = $this->translator->trans('collectionPage.confirmation', [], 'feedback');

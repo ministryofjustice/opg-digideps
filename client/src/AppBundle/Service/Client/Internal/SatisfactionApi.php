@@ -2,10 +2,10 @@
 
 namespace AppBundle\Service\Client\Internal;
 
+use AppBundle\Event\GeneralFeedbackSubmittedEvent;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\RestClientInterface;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class SatisfactionApi
 {
@@ -14,9 +14,13 @@ class SatisfactionApi
     /** @var RestClient */
     private $restClient;
 
-    public function __construct(RestClientInterface $restClient)
+    /** @var EventDispatcherInterface */
+    private $eventDispatcher;
+
+    public function __construct(RestClientInterface $restClient, EventDispatcherInterface $eventDispatcher)
     {
         $this->restClient = $restClient;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -28,5 +32,8 @@ class SatisfactionApi
             self::CREATE_PUBLIC_ENDPOINT,
             ['score' => $formResponse['satisfactionLevel'], 'comments' => $formResponse['comments']]
         );
+
+        $event = (new GeneralFeedbackSubmittedEvent())->setFeedbackFormResponse($formResponse);
+        $this->eventDispatcher->dispatch(GeneralFeedbackSubmittedEvent::NAME, $event);
     }
 }
