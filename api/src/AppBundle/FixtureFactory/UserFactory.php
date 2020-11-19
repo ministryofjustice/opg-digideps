@@ -96,7 +96,6 @@ class UserFactory
             ->setRoleName('ROLE_PROF');
 
         $user->setPassword($this->encoder->encodePassword($user, 'Abcd1234'));
-        $user->setActive(false);
 
         return $user;
     }

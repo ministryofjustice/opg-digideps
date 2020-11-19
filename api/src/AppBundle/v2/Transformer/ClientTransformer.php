@@ -3,6 +3,7 @@
 namespace AppBundle\v2\Transformer;
 
 use AppBundle\v2\DTO\ClientDto;
+use AppBundle\v2\DTO\DeputyDto;
 use AppBundle\v2\DTO\NamedDeputyDto;
 use AppBundle\v2\DTO\NdrDto;
 use AppBundle\v2\DTO\OrganisationDto;
@@ -27,7 +28,7 @@ class ClientTransformer
      * @param ReportTransformer $reportTransformer
      * @param NdrTransformer $ndrTransformer
      * @param OrganisationTransformer $organisationTransformer
-     * @param DeputyTransformer $deputyTransformer
+     * @param NamedDeputyTransformer $namedDeputyTransformer
      */
     public function __construct(
         ReportTransformer $reportTransformer,
@@ -59,7 +60,7 @@ class ClientTransformer
             'total_report_count' => $dto->getReportCount()
         ];
 
-        if (!in_array('reports', $exclude)) {
+        if (!in_array('reports', $exclude) && !empty($dto->getReports())) {
             $transformed['reports'] = $this->transformReports($dto->getReports());
         }
 
@@ -73,6 +74,10 @@ class ClientTransformer
 
         if (!in_array('namedDeputy', $exclude) && $dto->getNamedDeputy() instanceof NamedDeputyDto) {
             $transformed['named_deputy'] = $this->transformNamedDeputy($dto->getNamedDeputy());
+        }
+
+        if (!in_array('deputies', $exclude) && !empty($dto->getDeputies())) {
+            $transformed['users'] = $this->transformDeputies($dto->getDeputies());
         }
 
         return $transformed;
@@ -142,5 +147,38 @@ class ClientTransformer
     private function transformNamedDeputy(NamedDeputyDto $namedDeputy)
     {
         return $this->namedDeputyTransformer->transform($namedDeputy);
+    }
+
+    private function transformDeputies(array $deputyDtos)
+    {
+        if (empty($deputyDtos)) {
+            return [];
+        }
+
+        $transformed = [];
+
+        foreach ($deputyDtos as $deputyDto) {
+            if ($deputyDto instanceof DeputyDto) {
+                $transformed[] = [
+                    'id' => $deputyDto->getId(),
+                    'firstname' => $deputyDto->getFirstName(),
+                    'lastname' => $deputyDto->getLastName(),
+                    'email' => $deputyDto->getEmail(),
+                    'role_name' => $deputyDto->getRoleName(),
+                    'address1' => $deputyDto->getAddress1(),
+                    'address2' => $deputyDto->getAddress2(),
+                    'address3' => $deputyDto->getAddress3(),
+                    'address_postcode' => $deputyDto->getAddressPostcode(),
+                    'address_country' => $deputyDto->getAddressCountry(),
+                    'ndr_enabled' => $deputyDto->getNdrEnabled(),
+                    'active' => $deputyDto->isActive(),
+                    'job_title' => $deputyDto->getJobTitle(),
+                    'phone_main' => $deputyDto->getPhoneMain()
+                ];
+                ;
+            }
+        }
+
+        return $transformed;
     }
 }
