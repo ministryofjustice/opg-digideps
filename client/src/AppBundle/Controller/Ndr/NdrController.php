@@ -10,6 +10,7 @@ use AppBundle\Exception\ReportSubmittedException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
 use AppBundle\Service\Client\Internal\ClientApi;
+use AppBundle\Service\Client\Internal\NdrApi;
 use AppBundle\Service\Client\Internal\SatisfactionApi;
 use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Service\Client\RestClient;
@@ -81,6 +82,8 @@ class NdrController extends AbstractController
 
     /** @var SatisfactionApi */
     private $satisfactionApi;
+    /** @var NdrApi */
+    private $ndrApi;
 
     public function __construct(
         WkHtmlToPdfGenerator $wkHtmlToPdfGenerator,
@@ -89,7 +92,8 @@ class NdrController extends AbstractController
         RestClient $restClient,
         MailFactory $mailFactory,
         MailSender $mailSender,
-        SatisfactionApi  $satisfactionApi
+        SatisfactionApi  $satisfactionApi,
+        NdrApi $ndrApi
     ) {
         $this->htmlToPdf = $wkHtmlToPdfGenerator;
         $this->userApi = $userApi;
@@ -98,6 +102,7 @@ class NdrController extends AbstractController
         $this->mailFactory = $mailFactory;
         $this->mailSender = $mailSender;
         $this->satisfactionApi = $satisfactionApi;
+        $this->ndrApi = $ndrApi;
     }
 
     /**
@@ -268,15 +273,12 @@ class NdrController extends AbstractController
             throw new ReportSubmittedException();
         }
 
-        $user = $this->userApi->getUserWithData(['user-clients', 'client']);
-        $clients = $user->getClients();
-        $client = $clients[0];
+        $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports']);
+        $client = $user->getClients()[0];
 
         $form = $this->createForm(FormDir\Ndr\ReportDeclarationType::class, $ndr);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            // set report submitted with date
-
             $ndr->setSubmitted(true)->setSubmitDate(new \DateTime());
 
             // store PDF as a document
@@ -289,14 +291,7 @@ class NdrController extends AbstractController
                 true
             );
 
-            $this->restClient->put('ndr/' . $ndr->getId() . '/submit?documentId=' . $document->getId(), $ndr, ['submit']);
-
-            /** @var User */
-            $user = $this->userApi->getUserWithData(['user-clients', 'report', 'client-reports']);
-            $client = $user->getClients()[0];
-
-            $reportConfirmEmail = $this->mailFactory->createNdrSubmissionConfirmationEmail($user, $ndr, $client->getActiveReport());
-            $this->mailSender->send($reportConfirmEmail);
+            $this->ndrApi->submit($ndr, $document, $user, $client);
 
             return $this->redirect($this->generateUrl('ndr_submit_confirmation', ['ndrId'=>$ndr->getId()]));
         }
