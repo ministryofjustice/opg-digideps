@@ -15,8 +15,6 @@ use AppBundle\Service\Client\Internal\SatisfactionApi;
 use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\S3FileUploader;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
 use AppBundle\Service\NdrStatusService;
 use AppBundle\Service\Redirector;
 use AppBundle\Service\WkHtmlToPdfGenerator;
@@ -55,33 +53,18 @@ class NdrController extends AbstractController
     /** @var WkHtmlToPdfGenerator */
     private $htmlToPdf;
 
-    /**
-     * @var UserApi
-     */
+    /** @var UserApi */
     private $userApi;
 
-    /**
-     * @var ClientApi
-     */
+    /** @var ClientApi */
     private $clientApi;
 
-    /**
-     * @var RestClient
-     */
+    /** @var RestClient */
     private $restClient;
-
-    /**
-     * @var MailFactory
-     */
-    private $mailFactory;
-
-    /**
-     * @var MailSender
-     */
-    private $mailSender;
 
     /** @var SatisfactionApi */
     private $satisfactionApi;
+
     /** @var NdrApi */
     private $ndrApi;
 
@@ -90,8 +73,6 @@ class NdrController extends AbstractController
         UserApi $userApi,
         ClientApi $clientApi,
         RestClient $restClient,
-        MailFactory $mailFactory,
-        MailSender $mailSender,
         SatisfactionApi  $satisfactionApi,
         NdrApi $ndrApi
     ) {
@@ -99,8 +80,6 @@ class NdrController extends AbstractController
         $this->userApi = $userApi;
         $this->clientApi = $clientApi;
         $this->restClient = $restClient;
-        $this->mailFactory = $mailFactory;
-        $this->mailSender = $mailSender;
         $this->satisfactionApi = $satisfactionApi;
         $this->ndrApi = $ndrApi;
     }
