@@ -16,11 +16,8 @@ RUN npm audit --production
 # Build assets
 RUN NODE_ENV=production npm run build
 
-FROM composer:1.10.16 AS composer
+FROM composer AS composer
 WORKDIR /app
-
-# Make composer super fast
-RUN composer global require hirak/prestissimo --no-plugins --no-scripts
 
 RUN apk update
 
@@ -36,7 +33,7 @@ COPY src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
-FROM php:7.3-fpm-alpine
+FROM php:7.4-fpm-alpine
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
@@ -45,8 +42,8 @@ ENV PHP_EXT_DIR=/usr/lib/php7/modules
 
 # Install core PHP extensions
 RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec postgresql-client libzip-dev unzip php7-igbinary php7-pecl-redis
-RUN docker-php-ext-enable opcache $PHP_EXT_DIR/igbinary.so $PHP_EXT_DIR/redis.so
-RUN docker-php-ext-install pcntl zip
+RUN docker-php-ext-install pcntl zip opcache
+RUN docker-php-ext-enable opcache
 
 # Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=false

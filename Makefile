@@ -63,7 +63,7 @@ api-unit-tests: reset-fixtures disable-debug ## Run the api unit tests
 	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose build api
 	docker-compose -f docker-compose.yml run --rm api sh scripts/apiunittest.sh
 
-behat-tests: up-app-integration-tests reset-fixtures disable-debug
+behat-tests: up-app-integration-tests reset-database reset-fixtures disable-debug
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test
 
 behat-suite: up-app-integration-tests reset-fixtures disable-debug ## Pass in suite name as arg e.g. make behat-suite suite=<SUITE NAME>

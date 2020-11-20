@@ -42,6 +42,9 @@ class ClientDto
     /** @var NamedDeputyDto */
     private $namedDeputy;
 
+    /** @var array */
+    private $deputies;
+
     /**
      * @return int
      */
@@ -255,6 +258,24 @@ class ClientDto
     public function setNamedDeputy(NamedDeputyDto $namedDeputy)
     {
         $this->namedDeputy = $namedDeputy;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDeputies()
+    {
+        return $this->deputies;
+    }
+
+    /**
+     * @param array $deputies
+     * @return ClientDto
+     */
+    public function setDeputies(array $deputies): ClientDto
+    {
+        $this->deputies = $deputies;
         return $this;
     }
 }
