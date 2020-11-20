@@ -182,7 +182,7 @@ class ClientApi
      */
     public function update(Client $preUpdateClient, Client $postUpdateClient, string $trigger)
     {
-        $this->restClient->put(self::UPDATE_CLIENT, $postUpdateClient, ['pa-edit']);
+        $this->restClient->put(self::UPDATE_CLIENT, $postUpdateClient, ['pa-edit', 'edit']);
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
         $clientUpdatedEvent = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $currentUser, $trigger);

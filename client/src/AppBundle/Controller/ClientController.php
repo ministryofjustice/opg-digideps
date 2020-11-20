@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
+use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Client\Internal\ClientApi;
 use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Form\ClientType;
@@ -90,16 +91,16 @@ class ClientController extends AbstractController
     public function editAction(Request $request)
     {
         $from = $request->get('from');
-        $client = $this->clientApi->getFirstClient();
+        $preUpdateClient = $this->clientApi->getFirstClient();
 
-        if (is_null($client)) {
+        if (is_null($preUpdateClient)) {
             /** @var User $user */
             $user = $this->getUser();
             $userId = $user->getId();
             throw new \RuntimeException("User $userId does not have a client");
         }
 
-        $form = $this->createForm(ClientType::class, $client, [
+        $form = $this->createForm(ClientType::class, clone $preUpdateClient, [
             'action' => $this->generateUrl('client_edit', ['action' => 'edit', 'from' => $from]),
             'validation_groups' => ['lay-deputy-client-edit']
         ]);
@@ -108,17 +109,11 @@ class ClientController extends AbstractController
 
         // edit client form
         if ($form->isSubmitted() && $form->isValid()) {
-            $clientUpdated = $form->getData();
-            $clientUpdated->setId($client->getId());
-            $this->restClient->put('client/upsert', $clientUpdated, ['edit']);
+            $postUpdateClient = $form->getData();
+            $postUpdateClient->setId($preUpdateClient->getId());
+            $this->clientApi->update($preUpdateClient, $postUpdateClient, AuditEvents::TRIGGER_DEPUTY_USER_EDIT_SELF);
+
             $this->addFlash('notice', htmlentities($client->getFirstname()) . "'s data edited");
-
-            $user = $this->userApi->getUserWithData(['user-clients', 'client']);
-
-            if ($user->isLayDeputy()) {
-                $updateClientDetailsEmail = $this->mailFactory->createUpdateClientDetailsEmail($clientUpdated);
-                $this->mailSender->send($updateClientDetailsEmail);
-            }
 
             $activeReport = $client->getActiveReport();
 
@@ -130,7 +125,7 @@ class ClientController extends AbstractController
         }
 
         return [
-            'client' => $client,
+            'client' => $preUpdateClient,
             'form' => $form->createView(),
         ];
     }

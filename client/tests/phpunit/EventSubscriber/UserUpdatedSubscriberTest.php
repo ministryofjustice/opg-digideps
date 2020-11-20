@@ -28,7 +28,7 @@ class UserUpdatedSubscriberTest extends TestCase
     /** @var ObjectProphecy */
     private $mailer;
 
-    /** @var UserUpdatedListener */
+    /** @var UserUpdatedSubscriber */
     private $sut;
 
     public function setUp(): void
