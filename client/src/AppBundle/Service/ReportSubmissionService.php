@@ -163,22 +163,6 @@ class ReportSubmissionService
     }
 
     /**
-     * @param Report $report
-     * @param User   $user
-     */
-    public function submit(ReportInterface $report, User $user)
-    {
-        // store report and get new YEAR report (only for reports submitted the first time)
-        $newYearReportId = $this->restClient->put('report/' . $report->getId() . '/submit', $report, ['submit']);
-        if ($newYearReportId) {
-            $newReport = $this->restClient->get('report/' . $newYearReportId, 'Report\\Report');
-
-            $reportConfirmEmail = $this->mailFactory->createReportSubmissionConfirmationEmail($user, $report, $newReport);
-            $this->mailSender->send($reportConfirmEmail);
-        }
-    }
-
-    /**
      * @param string $id
      * @return mixed
      */

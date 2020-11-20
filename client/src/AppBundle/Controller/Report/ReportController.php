@@ -415,7 +415,8 @@ class ReportController extends AbstractController
 
             $report->setSubmitted(true)->setSubmitDate(new DateTime());
             $reportSubmissionService->generateReportDocuments($report);
-            $reportSubmissionService->submit($report, $currentUser);
+
+            $this->reportApi->submit($report, $currentUser);
 
             return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId' => $report->getId()]));
         }
