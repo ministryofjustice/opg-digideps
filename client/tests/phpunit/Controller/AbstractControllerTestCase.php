@@ -3,11 +3,13 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
+use AppBundle\EventDispatcher\ObservableEventDispatcher;
 use AppBundle\Service\Client\RestClient;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -28,6 +30,26 @@ abstract class AbstractControllerTestCase extends WebTestCase
 
         $this->restClient = $this->injectProphecyService(RestClient::class, function () {
         }, ['rest_client']);
+    }
+
+    protected function logInAs(string $roleName)
+    {
+        $session = $this->client->getContainer()->get('session');
+
+        $firewallName = 'secured_area';
+        // if you don't define multiple connected firewalls, the context defaults to the firewall name
+        // See https://symfony.com/doc/current/reference/configuration/security.html#firewall-context
+        $firewallContext = 'secured_area';
+
+        // you may need to use a different token class depending on your application.
+        // for example, when using Guard authentication you must instantiate PostAuthenticationGuardToken
+        $user = (new User())->setRoleName($roleName);
+        $token = new UsernamePasswordToken($user, null, $firewallName, [$roleName]);
+        $session->set('_security_'.$firewallContext, serialize($token));
+        $session->save();
+
+        $cookie = new Cookie($session->getName(), $session->getId());
+        $this->client->getCookieJar()->set($cookie);
     }
 
     /**
