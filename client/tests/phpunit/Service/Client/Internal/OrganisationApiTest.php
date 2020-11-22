@@ -2,12 +2,12 @@
 
 namespace DigidepsTests\Service\Client\Internal;
 
+use AppBundle\EventDispatcher\ObservableEventDispatcher;
 use AppBundle\Service\Client\Internal\OrganisationApi;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\TestHelpers\OrganisationHelpers;
 use AppBundle\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class OrganisationApiTest extends TestCase
 {
@@ -17,7 +17,7 @@ class OrganisationApiTest extends TestCase
         $userToAdd = UserHelpers::createUser();
         $organisation = OrganisationHelpers::createActivatedOrganisation();
         $restClient = self::prophesize(RestClient::class);
-        $eventDispatcher = self::prophesize(EventDispatcher::class);
+        $eventDispatcher = self::prophesize(ObservableEventDispatcher::class);
 
         $restClient
             ->put(sprintf('v2/organisation/%s/user/%s', $organisation->getId(), $userToAdd->getId()), '')

@@ -5,8 +5,8 @@ namespace AppBundle\Service\Client\Internal;
 
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\User;
+use AppBundle\EventDispatcher\ObservableEventDispatcher;
 use AppBundle\Service\Client\RestClient;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class OrganisationApi
 {
@@ -15,10 +15,10 @@ class OrganisationApi
     /** @var RestClient */
     private $restClient;
 
-    /** @var EventDispatcherInterface */
+    /** @var ObservableEventDispatcher */
     private $eventDispatcher;
 
-    public function __construct(RestClient $restClient, EventDispatcherInterface $eventDispatcher)
+    public function __construct(RestClient $restClient, ObservableEventDispatcher $eventDispatcher)
     {
         $this->restClient = $restClient;
         $this->eventDispatcher = $eventDispatcher;

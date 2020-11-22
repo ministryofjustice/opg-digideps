@@ -10,6 +10,8 @@ use AppBundle\Event\UserPasswordResetEvent;
 use AppBundle\Event\AdminUserCreatedEvent;
 use AppBundle\Event\UserDeletedEvent;
 use AppBundle\Event\UserUpdatedEvent;
+use AppBundle\EventDispatcher\EventDispatcherMock;
+use AppBundle\EventDispatcher\ObservableEventDispatcher;
 use AppBundle\Model\SelfRegisterData;
 use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Service\Client\RestClient;
@@ -17,7 +19,6 @@ use AppBundle\TestHelpers\UserHelpers;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
@@ -42,7 +43,7 @@ class UserApiTest extends TestCase
     {
         $this->restClient = self::prophesize(RestClient::class);
         $this->tokenStorage = self::prophesize(TokenStorageInterface::class);
-        $this->eventDispatcher = self::prophesize(EventDispatcher::class);
+        $this->eventDispatcher = self::prophesize(ObservableEventDispatcher::class);
         $this->faker = Factory::create();
 
         $this->sut = new UserApi(
@@ -117,7 +118,7 @@ class UserApiTest extends TestCase
         $passwordResetEvent = new UserPasswordResetEvent($userToResetPassword);
         $this->eventDispatcher->dispatch('password.reset', $passwordResetEvent)->shouldBeCalled();
 
-        $this->sut->activate($email);
+        $this->sut->resetPassword($email);
     }
 
     /** @test */

@@ -6,11 +6,10 @@ namespace AppBundle\Service\Client\Internal;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Event\NdrSubmittedEvent;
+use AppBundle\EventDispatcher\ObservableEventDispatcher;
 use AppBundle\Service\Client\RestClient;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class NdrApi
 {
@@ -19,10 +18,10 @@ class NdrApi
     /** @var RestClient */
     private $restClient;
 
-    /** @var EventDispatcherInterface */
+    /** @var ObservableEventDispatcher */
     private $eventDispatcher;
 
-    public function __construct(RestClient $restClient, EventDispatcherInterface $eventDispatcher)
+    public function __construct(RestClient $restClient, ObservableEventDispatcher $eventDispatcher)
     {
         $this->restClient = $restClient;
         $this->eventDispatcher = $eventDispatcher;

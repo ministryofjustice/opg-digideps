@@ -14,33 +14,33 @@ use AppBundle\Event\UserTokenRecreatedEvent;
 use AppBundle\Event\AdminUserCreatedEvent;
 use AppBundle\Event\UserDeletedEvent;
 use AppBundle\Event\UserUpdatedEvent;
+use AppBundle\EventDispatcher\ObservableEventDispatcher;
 use AppBundle\Model\SelfRegisterData;
 use AppBundle\Service\Client\RestClientInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class UserApi
 {
-    private const USER_ENDPOINT = 'user';
-    private const GET_USER_BY_EMAIL_ENDPOINT = 'user/get-one-by/email/%s';
-    private const USER_BY_ID_ENDPOINT = 'user/%s';
-    private const RECREATE_USER_TOKEN_ENDPOINT = 'user/recreate-token/%s';
-    private const DEPUTY_SELF_REGISTER_ENDPOINT = 'selfregister';
-    private const CREATE_CODEPUTY_ENDPOINT = 'codeputy/add';
+    protected const USER_ENDPOINT = 'user';
+    protected const GET_USER_BY_EMAIL_ENDPOINT = 'user/get-one-by/email/%s';
+    protected const USER_BY_ID_ENDPOINT = 'user/%s';
+    protected const RECREATE_USER_TOKEN_ENDPOINT = 'user/recreate-token/%s';
+    protected const DEPUTY_SELF_REGISTER_ENDPOINT = 'selfregister';
+    protected const CREATE_CODEPUTY_ENDPOINT = 'codeputy/add';
 
     /**  @var RestClientInterface */
-    private $restClient;
+    protected $restClient;
 
     /** @var TokenStorageInterface */
-    private $tokenStorage;
+    protected $tokenStorage;
 
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
+    /** @var ObservableEventDispatcher */
+    protected $eventDispatcher;
 
     public function __construct(
         RestClientInterface $restClient,
         TokenStorageInterface $tokenStorage,
-        EventDispatcherInterface $eventDispatcher
+        ObservableEventDispatcher $eventDispatcher
     ) {
         $this->restClient = $restClient;
         $this->tokenStorage = $tokenStorage;
@@ -112,7 +112,7 @@ class UserApi
      */
     public function update(User $preUpdateUser, User $postUpdateUser, string $trigger, $jmsGroups = [])
     {
-        $response = $this->restClient->put(
+        $userIdArray = $this->restClient->put(
             sprintf(self::USER_BY_ID_ENDPOINT, $preUpdateUser->getId()),
             $postUpdateUser,
             $jmsGroups
@@ -127,7 +127,7 @@ class UserApi
 
         $this->eventDispatcher->dispatch(UserUpdatedEvent::NAME, $userUpdatedEvent);
 
-        return $response;
+        return $userIdArray;
     }
 
     /**

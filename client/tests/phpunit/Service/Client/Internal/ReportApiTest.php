@@ -3,14 +3,12 @@
 namespace Tests\AppBundle\Service\Client\Internal;
 
 use AppBundle\Event\ReportSubmittedEvent;
+use AppBundle\EventDispatcher\ObservableEventDispatcher;
 use AppBundle\Service\Client\Internal\ReportApi;
 use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\Mailer\Mailer;
 use AppBundle\TestHelpers\ReportHelpers;
 use AppBundle\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class ReportApiTest extends TestCase
 {
@@ -21,7 +19,7 @@ class ReportApiTest extends TestCase
     public function submit(?string $reportId)
     {
         $restClient = self::prophesize(RestClient::class);
-        $eventDispatcher = self::prophesize(EventDispatcher::class);
+        $eventDispatcher = self::prophesize(ObservableEventDispatcher::class);
 
         $reportToBeSubmitted = ReportHelpers::createReport();
         $submittedBy = UserHelpers::createUser();
@@ -38,12 +36,6 @@ class ReportApiTest extends TestCase
 
         $sut = new ReportApi($restClient->reveal(), $eventDispatcher->reveal());
         $sut->submit($reportToBeSubmitted, $submittedBy);
-
-
-//        $newYearReportId = $this->restClient->put(sprintf('report/%s/submit', $reportToSubmit->getId()), $reportToSubmit, ['submit']);
-//
-//        $event = new ReportSubmittedEvent($reportToSubmit, $submittedBy, $newYearReportId);
-//        $this->eventDispatcher->dispatch($event);
     }
 
     public function reportIdProvider()

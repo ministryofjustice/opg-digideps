@@ -6,16 +6,14 @@ namespace DigidepsTests\Service\Client\Internal;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Event\GeneralFeedbackSubmittedEvent;
 use AppBundle\Event\PostSubmissionFeedbackSubmittedEvent;
+use AppBundle\EventDispatcher\ObservableEventDispatcher;
 use AppBundle\Model\FeedbackReport;
 use AppBundle\Service\Client\Internal\SatisfactionApi;
 use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
 use AppBundle\TestHelpers\UserHelpers;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class SatisfactionApiTest extends TestCase
 {
@@ -25,13 +23,7 @@ class SatisfactionApiTest extends TestCase
     /** @var RestClient&ObjectProphecy */
     private $restClient;
 
-    /** @var MailFactory&ObjectProphecy */
-    private $mailFactory;
-
-    /** @var MailSender&ObjectProphecy */
-    private $mailSender;
-
-    /** @var EventDispatcher&ObjectProphecy */
+    /** @var ObservableEventDispatcher&ObjectProphecy */
     private $eventDisaptcher;
 
     /**  @var SatisfactionApi */
@@ -41,7 +33,7 @@ class SatisfactionApiTest extends TestCase
     {
         $this->faker = Factory::create('en_UK');
         $this->restClient = self::prophesize(RestClient::class);
-        $this->eventDisaptcher = self::prophesize(EventDispatcher::class);
+        $this->eventDisaptcher = self::prophesize(ObservableEventDispatcher::class);
         $this->sut = new SatisfactionApi($this->restClient->reveal(), $this->eventDisaptcher->reveal());
     }
 
@@ -64,7 +56,7 @@ class SatisfactionApiTest extends TestCase
             'phone' => $this->faker->phoneNumber,
             'page' => $this->faker->url,
             'email' => $this->faker->email,
-            'score' => $score
+            'satisfactionLevel' => $score
         ];
 
         $event = (new GeneralFeedbackSubmittedEvent())->setFeedbackFormResponse($formData);

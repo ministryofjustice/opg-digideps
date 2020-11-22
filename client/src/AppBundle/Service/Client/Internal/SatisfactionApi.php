@@ -5,10 +5,10 @@ namespace AppBundle\Service\Client\Internal;
 use AppBundle\Entity\User;
 use AppBundle\Event\GeneralFeedbackSubmittedEvent;
 use AppBundle\Event\PostSubmissionFeedbackSubmittedEvent;
+use AppBundle\EventDispatcher\ObservableEventDispatcher;
 use AppBundle\Model\FeedbackReport;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\RestClientInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class SatisfactionApi
 {
@@ -18,10 +18,10 @@ class SatisfactionApi
     /** @var RestClient */
     private $restClient;
 
-    /** @var EventDispatcherInterface */
+    /** @var ObservableEventDispatcher */
     private $eventDispatcher;
 
-    public function __construct(RestClientInterface $restClient, EventDispatcherInterface $eventDispatcher)
+    public function __construct(RestClientInterface $restClient, ObservableEventDispatcher $eventDispatcher)
     {
         $this->restClient = $restClient;
         $this->eventDispatcher = $eventDispatcher;

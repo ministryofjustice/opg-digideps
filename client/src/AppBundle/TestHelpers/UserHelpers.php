@@ -64,4 +64,14 @@ class UserHelpers extends KernelTestCase
 
         return $invitedCoDeputy->setEmail($faker->safeEmail);
     }
+
+    public static function createAdminUser(): User
+    {
+        return (self::createUser())->setRoleName(User::ROLE_ADMIN);
+    }
+
+    public static function createSuperAdminUser(): User
+    {
+        return (self::createUser())->setRoleName(User::ROLE_SUPER_ADMIN);
+    }
 }

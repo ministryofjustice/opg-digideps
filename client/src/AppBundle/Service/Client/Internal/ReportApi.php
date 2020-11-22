@@ -7,11 +7,11 @@ use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Event\ReportSubmittedEvent;
+use AppBundle\EventDispatcher\ObservableEventDispatcher;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Exception\ReportSubmittedException;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Service\Client\RestClient;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ReportApi
@@ -22,10 +22,10 @@ class ReportApi
     /** @var RestClient */
     private $restClient;
 
-    /** @var EventDispatcherInterface */
+    /** @var ObservableEventDispatcher */
     private $eventDispatcher;
 
-    public function __construct(RestClient $restClient, EventDispatcherInterface $eventDispatcher)
+    public function __construct(RestClient $restClient, ObservableEventDispatcher $eventDispatcher)
     {
         $this->restClient = $restClient;
         $this->eventDispatcher = $eventDispatcher;
