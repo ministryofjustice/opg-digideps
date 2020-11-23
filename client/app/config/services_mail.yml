@@ -33,9 +33,3 @@ services:
 
     Http\Adapter\Guzzle6\Client:
         class: Http\Adapter\Guzzle6\Client
-
-    AppBundle\Service\Mailer\BaseMailer:
-        abstract:  true
-        calls:
-            - [setMailFactory, ['@AppBundle\Service\Mailer\MailFactory']]
-            - [setMailSender, ['@AppBundle\Service\Mailer\MailSender']]
