@@ -178,18 +178,6 @@ class RestClient implements RestClientInterface
         $this->apiCall('put', 'user/agree-terms-use/' . $token, null, 'raw', [], false);
     }
 
-    /**@TODO REMOVE ONCE TESTS FIXED PRIOR TO PUSHING PR */
-    /**
-     * @param string $email
-     * @param string $type
-     *
-     * @return \AppBundle\Entity\User
-     */
-    public function userRecreateToken($email, $type = 'pass-reset')
-    {
-        return $this->apiCall('put', 'user/recreate-token/' . $email, null, 'User', [], false);
-    }
-
     /**
      * @param string $endpoint             e.g. /user
      * @param string $expectedResponseType Entity class to deserialise response into
