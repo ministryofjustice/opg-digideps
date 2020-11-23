@@ -33,3 +33,11 @@ data "aws_secretsmanager_secret" "front_api_client_secret" {
 data "aws_secretsmanager_secret" "front_notify_api_key" {
   name = join("/", compact([local.account.secrets_prefix, "front-notify-api-key"]))
 }
+
+data "aws_secretsmanager_secret" "browserstack_username" {
+  name = join("/", compact([local.account.secrets_prefix, "browserstack-username"]))
+}
+
+data "aws_secretsmanager_secret" "browserstack_access_key" {
+  name = join("/", compact([local.account.secrets_prefix, "browserstack-access-key"]))
+}

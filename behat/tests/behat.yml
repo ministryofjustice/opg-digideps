@@ -128,10 +128,73 @@ default:
             contexts:
                 - DigidepsBehat\ContactDetails\ContactDetailsFeatureContext
 
+
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
-              goutte:
-                  guzzle_parameters:
+            goutte:
+                guzzle_parameters:
                     verify: false
-              files_path: "%paths.base%/fixtures/"
+            browser_stack:
+                capabilities:
+                    browserstack-debug: true
+                    browserstack-tunnel: true
+                    acceptSslCerts: true
+                    project: 'Digideps Cross Browser Test - Manual'
+            files_path: '%paths.base%/fixtures/'
+            default_session: goutte
         Behatch\Extension: ~
+
+cross-browser-chrome:
+    suites:
+        chrome:
+            description: Coverage of user journeys using the Chrome browser
+            paths: [ "%paths.base%/features-v2/cross-browser" ]
+            filters:
+                tags: "@chrome"
+            contexts:
+                - DigidepsBehat\CrossBrowser\CrossBrowserFeatureContext
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            browser_stack:
+                capabilities:
+                    browser: 'chrome'
+                    browserVersion: 'latest'
+                    os: 'Windows'
+                    os_version: '10'
+                    build: 'Chrome'
+
+cross-browser-ie11:
+    suites:
+        ie11:
+            description: Coverage of user journeys using the Internet Explorer 11 browser
+            paths: [ "%paths.base%/features-v2/cross-browser" ]
+            filters:
+                tags: "@ie11"
+            contexts:
+                - DigidepsBehat\CrossBrowser\CrossBrowserFeatureContext
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            browser_stack:
+                capabilities:
+                    browser: 'ie'
+                    browserVersion: '11'
+                    os: 'Windows'
+                    os_version: '10'
+                    build: 'Internet Explorer'
+
+cross-browser-android-chrome:
+    suites:
+        android-chrome:
+            description: Coverage of user journeys using the Chrome browser on an android device
+            paths: [ "%paths.base%/features-v2/cross-browser" ]
+            filters:
+                tags: "@android-chrome"
+            contexts:
+                - DigidepsBehat\CrossBrowser\CrossBrowserFeatureContext
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            browser_stack:
+                capabilities:
+                    os_version: '9.0'
+                    device: 'Samsung Galaxy S10'
+                    build: 'Android'
