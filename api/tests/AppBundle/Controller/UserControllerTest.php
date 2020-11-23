@@ -401,7 +401,7 @@ class UserControllerTest extends AbstractTestController
 
     public function testRecreateTokenMissingClientSecret()
     {
-        $url = '/user/recreate-token/mail@example.org/activate';
+        $url = '/user/recreate-token/mail@example.org';
 
         // assert client token
         $this->assertJsonRequest('PUT', $url, [
@@ -418,24 +418,18 @@ class UserControllerTest extends AbstractTestController
         ];
     }
 
-    /**
-     * @dataProvider recreateTokenProvider
-     */
-    public function testRecreateTokenWrongClientSecret($urlPart)
+    public function testRecreateTokenWrongClientSecret()
     {
-        $this->assertJsonRequest('PUT', '/user/recreate-token/mail@example.org/' . $urlPart, [
+        $this->assertJsonRequest('PUT', '/user/recreate-token/mail@example.org', [
             'mustFail' => true,
             'assertResponseCode' => 403,
             'ClientSecret' => 'WRONG-CLIENT_SECRET',
         ]);
     }
 
-    /**
-     * @dataProvider recreateTokenProvider
-     */
-    public function testRecreateTokenUserNotFound($urlPart)
+    public function testRecreateTokenUserNotFound()
     {
-        $this->assertJsonRequest('PUT', '/user/recreate-token/WRONGUSER@example.org/' . $urlPart, [
+        $this->assertJsonRequest('PUT', '/user/recreate-token/WRONGUSER@example.org', [
             'mustFail' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
@@ -449,31 +443,31 @@ class UserControllerTest extends AbstractTestController
     public static function recreateTokenProviderForRole()
     {
         return [
-            ['activate', API_TOKEN_ADMIN, 'admin@example.org', true],
-            ['activate', API_TOKEN_ADMIN, 'deputy@example.org', true],
+            [API_TOKEN_ADMIN, 'admin@example.org', true],
+            [API_TOKEN_ADMIN, 'deputy@example.org', true],
 
-            ['activate', API_TOKEN_DEPUTY, 'deputy@example.org', true],
-            ['activate', API_TOKEN_DEPUTY, 'admin@example.org', false],
+            [API_TOKEN_DEPUTY, 'deputy@example.org', true],
+            [API_TOKEN_DEPUTY, 'admin@example.org', false],
 
-            ['pass-reset', API_TOKEN_ADMIN, 'deputy@example.org', true],
-            ['pass-reset', API_TOKEN_ADMIN, 'admin@example.org', true],
+            [API_TOKEN_ADMIN, 'deputy@example.org', true],
+            [API_TOKEN_ADMIN, 'admin@example.org', true],
 
-            ['pass-reset', API_TOKEN_DEPUTY, 'deputy@example.org', true],
-            ['pass-reset', API_TOKEN_DEPUTY, 'admin@example.org', false],
+            [API_TOKEN_DEPUTY, 'deputy@example.org', true],
+            [API_TOKEN_DEPUTY, 'admin@example.org', false],
         ];
     }
 
     /**
      * @dataProvider recreateTokenProviderForRole
      */
-    public function testRecreateTokenAcceptsClientSecret($urlPart, $secret, $email, $passOrFail)
+    public function testRecreateTokenAcceptsClientSecret($secret, $email, $passOrFail)
     {
         $deputy = self::fixtures()->clear()->getRepo('User')->findOneByEmail($email);
         $deputy->setRegistrationToken(null);
         $deputy->setTokenDate(new \DateTime('2014-12-30'));
         self::fixtures()->flush($deputy);
 
-        $url = '/user/recreate-token/' . $email . '/' . $urlPart;
+        $url = '/user/recreate-token/' . $email;
 
         if ($passOrFail) {
             $this->assertJsonRequest('PUT', $url, [
@@ -488,12 +482,9 @@ class UserControllerTest extends AbstractTestController
         }
     }
 
-    /**
-     * @dataProvider recreateTokenProvider
-     */
-    public function testRecreateTokenEmailActivate($urlPart, $emailSubject)
+    public function testRecreateTokenEmailActivate()
     {
-        $url = '/user/recreate-token/deputy@example.org/' . $urlPart;
+        $url = '/user/recreate-token/deputy@example.org';
 
         $deputy = self::fixtures()->clear()->getRepo('User')->findOneByEmail('deputy@example.org');
         $deputy->setRegistrationToken(null);
