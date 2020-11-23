@@ -19,6 +19,16 @@ use Symfony\Component\HttpFoundation\Request;
 class CasRecController extends RestController
 {
     /**
+     * @var CasrecVerificationService
+     */
+    private $casrecVerification;
+
+    public function __construct(CasrecVerificationService $casrecVerification)
+    {
+        $this->casrecVerification = $casrecVerification;
+    }
+
+    /**
      * @Route("/delete-by-source/{source}", methods={"DELETE"})
      * @Security("has_role('ROLE_ADMIN')")
      *
@@ -71,5 +81,15 @@ class CasRecController extends RestController
         $count = $qb->getQuery()->getSingleScalarResult();
 
         return $count;
+    }
+
+    /**
+     * @Route("/clientHasCoDeputies/{caseNumber}", methods={"GET"})
+     * @param string $caseNumber
+     * @return array|JsonResponse
+     */
+    public function clientHasCoDeputies(string $caseNumber)
+    {
+        return $this->casrecVerification->isMultiDeputyCase($caseNumber);
     }
 }
