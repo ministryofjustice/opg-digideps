@@ -3,6 +3,7 @@
 namespace AppBundle\v2\Fixture\Controller;
 
 use AppBundle\DataFixtures\DocumentSyncFixtures;
+use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Ndr\NdrRepository;
@@ -91,6 +92,17 @@ class FixtureController
 
         if (null === $deputy = $this->deputyRepository->findOneBy(['email' => strtolower($fromRequest['deputyEmail'])])) {
             $deputy = $this->createDeputy($fromRequest);
+            $deputyCasRec = $this->casRecFactory->create(
+                [
+                    'caseNumber' => $client->getCaseNumber(),
+                    'clientLastName' => $client->getLastname(),
+                    'deputyPostCode' => $deputy->getAddressPostcode(),
+                    'deputyLastName' => $deputy->getLastname(),
+                    'reportType' => $fromRequest['reportType']
+                ]
+            );
+
+            $this->em->persist($deputyCasRec);
         }
 
         if (strtolower($fromRequest['reportType']) === 'ndr') {
@@ -109,6 +121,18 @@ class FixtureController
         if ($fromRequest['coDeputyEnabled']) {
             $deputy->setCoDeputyClientConfirmed(true);
             $coDeputy = $this->userFactory->createCoDeputy($deputy, $client, $fromRequest);
+
+            $coDeputyCasRec = $this->casRecFactory->create(
+                [
+                    'caseNumber' => $client->getCaseNumber(),
+                    'clientLastName' => $client->getLastname(),
+                    'deputyPostCode' => $coDeputy->getAddressPostcode(),
+                    'deputyLastName' => $coDeputy->getLastname(),
+                    'reportType' => $fromRequest['reportType']
+                ]
+            );
+
+            $this->em->persist($coDeputyCasRec);
             $this->em->persist($coDeputy);
         }
 
@@ -211,8 +235,9 @@ class FixtureController
             $this->em->persist($orgUser);
         }
 
-        $namedDeputy = $this->buildNamedDeputy($deputy);
-        $client->setNamedDeputy($namedDeputy);
+        $namedDeputy = $this->buildNamedDeputy($deputy, $fromRequest);
+
+        $client->setNamedDeputy($this->buildNamedDeputy($deputy, $fromRequest));
         $client->setOrganisation($organisation);
 
         foreach (range(1, $fromRequest['orgSizeClients'] ? $fromRequest['orgSizeClients'] : 1) as $number) {
@@ -229,13 +254,14 @@ class FixtureController
      * @param User $deputy
      * @return NamedDeputy
      */
-    private function buildNamedDeputy(User $deputy)
+    private function buildNamedDeputy(User $deputy, array $fromRequest)
     {
         $namedDeputy = (new NamedDeputy())
             ->setFirstname($deputy->getFirstname())
             ->setLastname($deputy->getLastname())
             ->setEmail1($deputy->getEmail())
-            ->setDeputyNo($deputy->getDeputyNo());
+            ->setDeputyNo($deputy->getDeputyNo())
+            ->setDeputyType($fromRequest['deputyType'] === 'PA' ? 23 : 21);
 
         $this->em->persist($namedDeputy);
 
