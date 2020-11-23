@@ -113,9 +113,9 @@ class ClientController extends AbstractController
             $postUpdateClient->setId($preUpdateClient->getId());
             $this->clientApi->update($preUpdateClient, $postUpdateClient, AuditEvents::TRIGGER_DEPUTY_USER_EDIT_SELF);
 
-            $this->addFlash('notice', htmlentities($client->getFirstname()) . "'s data edited");
+            $this->addFlash('notice', htmlentities($postUpdateClient->getFirstname()) . "'s data edited");
 
-            $activeReport = $client->getActiveReport();
+            $activeReport = $postUpdateClient->getActiveReport();
 
             if ($from === 'declaration' && $activeReport instanceof Report) {
                 return $this->redirect($this->generateUrl('report_declaration', ['reportId' => $activeReport->getId()]));

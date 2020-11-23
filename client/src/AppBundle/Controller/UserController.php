@@ -168,7 +168,7 @@ class UserController extends AbstractController
     public function activateLinkSendAction(string $token): Response
     {
         $user = $this->restClient->loadUserByToken($token);
-        $this->userApi->activate($user);
+        $this->userApi->activate($user->getEmail());
 
         return $this->redirect($this->generateUrl('activation_link_sent', ['token' => $token]));
     }

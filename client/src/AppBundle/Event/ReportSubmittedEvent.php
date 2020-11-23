@@ -17,10 +17,10 @@ class ReportSubmittedEvent extends Event
     /** @var User */
     private $submittedBy;
 
-    /** @var string|null */
+    /** @var string|int|null */
     private $newYearReportId;
 
-    public function __construct(Report $submittedReport, User $submittedBy, ?string $newYearReportId)
+    public function __construct(Report $submittedReport, User $submittedBy, $newYearReportId)
     {
         $this->submittedReport = $submittedReport;
         $this->submittedBy = $submittedBy;
@@ -64,18 +64,18 @@ class ReportSubmittedEvent extends Event
     }
 
     /**
-     * @return string|null
+     * @return string|int|null
      */
-    public function getNewYearReportId(): ?string
+    public function getNewYearReportId()
     {
         return $this->newYearReportId;
     }
 
     /**
-     * @param string|null $newYearReportId
+     * @param string|int|null $newYearReportId
      * @return ReportSubmittedEvent
      */
-    public function setNewYearReportId(?string $newYearReportId): ReportSubmittedEvent
+    public function setNewYearReportId($newYearReportId): ReportSubmittedEvent
     {
         $this->newYearReportId = $newYearReportId;
         return $this;

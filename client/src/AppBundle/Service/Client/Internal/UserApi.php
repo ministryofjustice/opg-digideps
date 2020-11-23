@@ -212,7 +212,7 @@ class UserApi
         $this->eventDispatcher->dispatch(DeputySelfRegisteredEvent::NAME, $deputySelfRegisteredEvent);
     }
 
-    public function createCoDeputy(User $invitedCoDeputy, string $invitedByDeputyName)
+    public function createCoDeputy(User $invitedCoDeputy, User $invitedByDeputyName)
     {
         $createdCoDeputy = $this->restClient->post(
             self::CREATE_CODEPUTY_ENDPOINT,

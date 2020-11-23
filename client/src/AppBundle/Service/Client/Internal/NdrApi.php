@@ -21,13 +21,17 @@ class NdrApi
     /** @var ObservableEventDispatcher */
     private $eventDispatcher;
 
-    public function __construct(RestClient $restClient, ObservableEventDispatcher $eventDispatcher)
+    /** @var UserApi */
+    private $userApi;
+
+    public function __construct(RestClient $restClient, ObservableEventDispatcher $eventDispatcher, UserApi $userApi)
     {
         $this->restClient = $restClient;
         $this->eventDispatcher = $eventDispatcher;
+        $this->userApi = $userApi;
     }
 
-    public function submit(Ndr $ndrToSubmit, Document $ndrPdfDocument, User $submittedBy, Client $client)
+    public function submit(Ndr $ndrToSubmit, Document $ndrPdfDocument)
     {
         $this->restClient->put(
             sprintf(self::SUBMIT_NDR_ENDPOINT, $ndrToSubmit->getId(), $ndrPdfDocument->getId()),
@@ -35,7 +39,12 @@ class NdrApi
             ['submit']
         );
 
-        $ndrSubmittedEvent = new NdrSubmittedEvent($submittedBy, $ndrToSubmit, $client->getActiveReport());
+        // Debug here and see what we have with the User -> client -> report getting mailfactory 419 error on cloning non-object
+
+        $submittedByWithClientsAndReports = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report']);
+        $client = $submittedByWithClientsAndReports->getClients()[0];
+
+        $ndrSubmittedEvent = new NdrSubmittedEvent($submittedByWithClientsAndReports, $ndrToSubmit, $client->getActiveReport());
         $this->eventDispatcher->dispatch(NdrSubmittedEvent::NAME, $ndrSubmittedEvent);
     }
 }

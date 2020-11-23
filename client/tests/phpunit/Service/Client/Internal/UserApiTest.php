@@ -200,17 +200,17 @@ class UserApiTest extends TestCase
     {
         $invitedCoDeputy = UserHelpers::createInvitedCoDeputy();
         $createdCoDeputy = $invitedCoDeputy->setRegistrationDate(new DateTime());
-        $invitedByDeputyName = sprintf('%s %s', $this->faker->firstName, $this->faker->lastName);
+        $invitedByDeputy = UserHelpers::createInvitedCoDeputy();
 
         $this->restClient
             ->post('codeputy/add', $invitedCoDeputy, ['codeputy'], 'User')
             ->shouldBeCalled()
             ->willReturn($createdCoDeputy);
 
-        $coDeputyCreatedEvent = new CoDeputyCreatedEvent($createdCoDeputy, $invitedByDeputyName);
+        $coDeputyCreatedEvent = new CoDeputyCreatedEvent($createdCoDeputy, $invitedByDeputy);
         $this->eventDispatcher->dispatch('codeputy.created', $coDeputyCreatedEvent)->shouldBeCalled();
 
-        $this->sut->createCoDeputy($invitedCoDeputy, $invitedByDeputyName);
+        $this->sut->createCoDeputy($invitedCoDeputy, $invitedByDeputy);
     }
 
     /** @test */

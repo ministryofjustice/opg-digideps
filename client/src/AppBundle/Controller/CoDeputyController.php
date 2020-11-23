@@ -171,7 +171,7 @@ class CoDeputyController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->userApi->createCoDeputy($invitedUser, $loggedInUser->getFullName());
+                $this->userApi->createCoDeputy($invitedUser, $loggedInUser);
 
                 $this->userApi->update(
                     $loggedInUser,

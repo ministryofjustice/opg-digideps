@@ -252,9 +252,6 @@ class NdrController extends AbstractController
             throw new ReportSubmittedException();
         }
 
-        $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports']);
-        $client = $user->getClients()[0];
-
         $form = $this->createForm(FormDir\Ndr\ReportDeclarationType::class, $ndr);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -270,7 +267,7 @@ class NdrController extends AbstractController
                 true
             );
 
-            $this->ndrApi->submit($ndr, $document, $user, $client);
+            $this->ndrApi->submit($ndr, $document);
 
             return $this->redirect($this->generateUrl('ndr_submit_confirmation', ['ndrId'=>$ndr->getId()]));
         }
