@@ -17,9 +17,3 @@ services:
 
   AppBundle\Service\Audit\LocalAuditLogHandler:
     class: AppBundle\Service\Audit\LocalAuditLogHandler
-
-  AppBundle\Service\Audit\BaseLogger:
-      abstract: true
-      calls:
-          - [ setLogger, [ '@logger' ] ]
-          - [ setDateTimeProvider, [ '@AppBundle\Service\Time\DateTimeProvider' ] ]
