@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
+use AppBundle\Entity\Satisfaction;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Form\Admin\ReportSubmissionDownloadFilterType;
 use AppBundle\Form\Admin\SatisfactionFilterType;
@@ -13,15 +14,11 @@ use AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryMapper;
 use AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryQuery;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Transformer\ReportSubmission\ReportSubmissionBurFixedWidthTransformer;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Style\Color;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -29,14 +26,10 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class StatsController extends AbstractController
 {
-    /**
-     * @var RestClient
-     */
+    /** @var RestClient */
     private $restClient;
 
-    public function __construct(
-        RestClient $restClient
-    )
+    public function __construct(RestClient $restClient)
     {
         $this->restClient = $restClient;
     }
@@ -54,7 +47,7 @@ class StatsController extends AbstractController
      */
     public function statsAction(Request $request, ReportSubmissionSummaryMapper $mapper, ReportSubmissionBurFixedWidthTransformer $transformer)
     {
-        $form = $this->createForm(ReportSubmissionDownloadFilterType::class , new ReportSubmissionSummaryQuery());
+        $form = $this->createForm(ReportSubmissionDownloadFilterType::class, new ReportSubmissionSummaryQuery());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -63,7 +56,6 @@ class StatsController extends AbstractController
                 $downloadableData = $transformer->transform($reportSubmissionSummaries);
 
                 return $this->buildResponse($downloadableData);
-
             } catch (\Throwable $e) {
                 throw new DisplayableException($e);
             }
@@ -84,18 +76,24 @@ class StatsController extends AbstractController
      */
     public function satisfactionAction(Request $request, ReportSatisfactionSummaryMapper $mapper)
     {
-        $form = $this->createForm(SatisfactionFilterType::class , new ReportSatisfactionSummaryQuery());
+        $form = $this->createForm(SatisfactionFilterType::class, new ReportSatisfactionSummaryQuery());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $reportSatisfactionSummaries = $mapper->getBy($form->getData());
+                $csv = $this->buildSatisfactionCsv($reportSatisfactionSummaries);
 
-                $spreadsheet = $this->createSatisfactionSpreadsheet($reportSatisfactionSummaries);
+                $response = new Response($csv);
 
-                $this->downloadSpreadsheet($spreadsheet);
+                $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+                $disposition = $response->headers->makeDisposition(
+                    ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                    'satisfaction.csv'
+                );
 
-
+                $response->headers->set('Content-Disposition', $disposition);
+                return $response;
             } catch (\Throwable $e) {
                 throw new DisplayableException($e);
             }
@@ -107,71 +105,33 @@ class StatsController extends AbstractController
     }
 
     /**
-     * @param $spreadsheet
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @param Satisfaction[] $reportSatisfactionSummaries
+     * @return string
      */
-    public function downloadSpreadsheet($spreadsheet)
+    private function buildSatisfactionCsv(array $reportSatisfactionSummaries): string
     {
-        $extension = 'Xlsx';
-        $fileName = sprintf('Satisfaction_%s.xlsx', date('YmdHi'));
-        $writer = IOFactory::createWriter($spreadsheet, $extension);
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header("Content-Disposition: attachment; filename=\"{$fileName}\"");
-        $writer->save('php://output');
-        exit();
-    }
+        $stream = fopen('php://temp/maxmemory:'. (5*1024*1024), 'r+');
 
-    /**
-     * @param $reportSatisfactionSummaries
-     * @return Spreadsheet
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
-     */
-    public function createSatisfactionSpreadsheet($reportSatisfactionSummaries)
-    {
-        $spreadsheet = new Spreadsheet();
-        $spreadsheet->getProperties()
-        ->setCreator("Digideps")
-        ->setLastModifiedBy("Digideps Application")
-        ->setTitle("Satisfaction Report")
-        ->setSubject("Satisfaction Report")
-        ->setDescription(
-            "Output of a particular date range of satisfaction entries."
-        )
-        ->setKeywords("Openxml php")
-        ->setCategory("Satisfaction report results file");
-        $spreadsheet->getDefaultStyle()->getFont()->setName('Arial');
-        $spreadsheet->getDefaultStyle()->getFont()->setSize(12);
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'ID');
-        $sheet->setCellValue('B1', 'Score');
-        $sheet->setCellValue('C1', 'Created Date');
-        $sheet->setCellValue('D1', 'Comments');
-        $sheet->getColumnDimension('A')->setWidth(10);
-        $sheet->getColumnDimension('B')->setWidth(10);
-        $sheet->getColumnDimension('C')->setWidth(25);
-        $sheet->getColumnDimension('D')->setWidth(70);
-        $headerRows = 'A1:D1';
-        $sheet->getStyle($headerRows)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('525252');
-        $sheet->getStyle($headerRows)->getFont()->getColor()->setARGB(Color::COLOR_WHITE);
-        $sheet->getStyle($headerRows)->getFont()->setBold(true);
+        $headers = ['Satisfaction Score', 'Comments', 'Deputy Role', 'Report Type', 'Date Provided'];
+        fputcsv($stream, $headers);
 
-        $currentCell = 2;
-        foreach ($reportSatisfactionSummaries as $reportSubmissionSummary) {
-            $sheet->setCellValue("A{$currentCell}", $reportSubmissionSummary->getId());
-            $sheet->setCellValue("B{$currentCell}", $reportSubmissionSummary->getScore());
-            $sheet->setCellValue("C{$currentCell}", $reportSubmissionSummary->getCreated());
-            $sheet->getStyle("C{$currentCell}")
-                ->getNumberFormat()
-                ->setFormatCode(NumberFormat::FORMAT_DATE_YYYYMMDDSLASH);
-            $sheet->setCellValue("D{$currentCell}", $reportSubmissionSummary->getComments());
-            $currentCell++;
+        foreach ($reportSatisfactionSummaries as $summary) {
+            $row = [
+                $summary->getScore(),
+                $summary->getComments(),
+                $summary->getDeputyrole(),
+                $summary->getReporttype(),
+                $summary->getCreated()->format('Y-m-d')
+            ];
+
+            fputcsv($stream, $row);
         }
-        $sheet->getStyle("A1:D{$currentCell}")
-            ->getAlignment()->setWrapText(true);
 
-        $sheet->setAutoFilter("B1:B{$currentCell}");
+        rewind($stream);
+        $csv = stream_get_contents($stream);
+        fclose($stream);
 
-        return $spreadsheet;
+        return $csv;
     }
 
     /**
@@ -236,7 +196,8 @@ class StatsController extends AbstractController
      *
      * @return array
      */
-    private function mapToDeputyType(array $result): array {
+    private function mapToDeputyType(array $result): array
+    {
         $resultByDeputyType = [];
 
         foreach ($result as $resultBit) {

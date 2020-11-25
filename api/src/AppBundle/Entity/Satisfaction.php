@@ -111,9 +111,9 @@ class Satisfaction
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getComments(): string
+    public function getComments(): ?string
     {
         return $this->comments;
     }

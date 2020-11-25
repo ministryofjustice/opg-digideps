@@ -3,6 +3,8 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Satisfaction;
+use DateTime;
+use Exception;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,8 +58,8 @@ class SatisfactionController extends RestController
         $repo = $this->getRepository(EntityDir\Satisfaction::class);
 
         return $repo->findAllSatisfactionSubmissions(
-            $this->convertDateArrayToDateTime($request->get('fromDate', [])),
-            $this->convertDateArrayToDateTime($request->get('toDate', [])),
+            $this->convertDateStringToDateTime($request->get('fromDate', '')),
+            $this->convertDateStringToDateTime($request->get('toDate', '')),
             $request->get('orderBy', 'createdAt'),
             $request->get('order', 'ASC')
         );
@@ -80,11 +82,11 @@ class SatisfactionController extends RestController
 
     /**
      * @param array $date
-     * @return \DateTime|null
-     * @throws \Exception
+     * @return DateTime|null
+     * @throws Exception
      */
-    private function convertDateArrayToDateTime(array $date)
+    private function convertDateStringToDateTime(string $date)
     {
-        return (isset($date['date'])) ? new \DateTime($date['date']) : null;
+        return empty($date) ? null : new DateTime($date);
     }
 }
