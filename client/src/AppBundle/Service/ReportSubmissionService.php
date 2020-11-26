@@ -8,6 +8,7 @@ use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
 use AppBundle\Exception\ReportSubmissionDocumentsNotDownloadableException;
 use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\Csv\TransactionsCsvGenerator;
 use AppBundle\Service\File\S3FileUploader;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSenderInterface;
@@ -50,7 +51,7 @@ class ReportSubmissionService
     private $mailFactory;
 
     /**
-     * @var CsvGeneratorService
+     * @var TransactionsCsvGenerator
      */
     private $csvGenerator;
 
@@ -64,7 +65,7 @@ class ReportSubmissionService
      * @throws \Exception
      */
     public function __construct(
-        CsvGeneratorService $csvGenerator,
+        TransactionsCsvGenerator $csvGenerator,
         Environment $templating,
         S3FileUploader $fileUploader,
         RestClient $restClient,

@@ -1,29 +1,24 @@
-<?php
+<?php declare(strict_types=1);
 
-namespace AppBundle\Service;
+
+namespace AppBundle\Service\Csv;
 
 use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Entity\Report\Expense;
 use AppBundle\Entity\Report\Gift;
 use AppBundle\Entity\Report\MoneyTransaction;
-use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\ReportInterface;
-use AppBundle\Entity\User;
 use Common\Form\Elements\Validators\Money;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use MockeryStub as m;
-use Symfony\Bridge\Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 
-class CsvGeneratorServiceTest extends MockeryTestCase
+class TransactionCsvGeneratorTest extends MockeryTestCase
 {
-    /**
-     * @var CsvGeneratorService
-     */
+    /** @var TransactionsCsvGenerator */
     protected $sut;
 
     private $mockTranslator;
-    private $mockLogger;
     private $mockReport;
 
     /**
@@ -32,12 +27,10 @@ class CsvGeneratorServiceTest extends MockeryTestCase
     public function setUp(): void
     {
         $this->mockTranslator = m::mock(Translator::class);
-        $this->mockLogger = m::mock(Logger::class);
-        $this->mockLogger->shouldReceive('info')->with(m::type('String'));
 
         $this->mockTranslator->shouldReceive('trans')->with(m::type('string'), [], 'report-money-transaction')
             ->andReturn('SomeCategory');
-        $this->sut = new CsvGeneratorService($this->mockTranslator, $this->mockLogger);
+        $this->sut = new TransactionsCsvGenerator($this->mockTranslator, new CsvBuilder());
     }
 
     public function testGenerateTransactionsCsvNoTransactions()
@@ -78,8 +71,15 @@ class CsvGeneratorServiceTest extends MockeryTestCase
      * @param $numMoneyOut
      * @param $numMoneyIn
      */
-    private function generateMockReport($reportId, $numGifts = 0, $numExpenses = 0, $numMoneyOut = 0, $numMoneyIn = 0,
-                                        $dueDate = '2/5/2018', $submitDate = '4/28/2018')
+    private function generateMockReport(
+        $reportId,
+        $numGifts = 0,
+        $numExpenses = 0,
+        $numMoneyOut = 0,
+        $numMoneyIn = 0,
+        $dueDate = '2/5/2018',
+        $submitDate = '4/28/2018'
+    )
     {
         $mockReport = m::mock(ReportInterface::class);
 
@@ -201,5 +201,4 @@ class CsvGeneratorServiceTest extends MockeryTestCase
 
         return $mock;
     }
-
 }

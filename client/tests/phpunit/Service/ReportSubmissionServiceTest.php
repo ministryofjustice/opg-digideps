@@ -10,10 +10,10 @@ use AppBundle\Entity\User;
 use AppBundle\Exception\ReportSubmissionDocumentsNotDownloadableException;
 use AppBundle\Model\Email;
 use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\Csv\TransactionsCsvGenerator;
 use AppBundle\Service\File\S3FileUploader;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
-use AppBundle\TestHelpers\ReportTestHelper;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -53,7 +53,7 @@ class ReportSubmissionServiceTest extends TestCase
     private $pdfGenerator;
     /** @var ObjectProphecy&Logger */
     private $logger;
-    /** @var ObjectProphecy&CsvGeneratorService */
+    /** @var ObjectProphecy&TransactionsCsvGenerator */
     private $csvGenerator;
 
     /**
@@ -68,7 +68,7 @@ class ReportSubmissionServiceTest extends TestCase
         $this->mockTemplatingEngine = m::mock(Environment::class);
         $this->mockPdfGenerator = m::mock(WkHtmlToPdfGenerator::class);
         $this->mockLogger = m::mock(Logger::class);
-        $this->mockCsvGenerator = m::mock(CsvGeneratorService::class);
+        $this->mockCsvGenerator = m::mock(TransactionsCsvGenerator::class);
 
         $this->mockReport = m::mock(ReportInterface::class);
 
@@ -79,7 +79,7 @@ class ReportSubmissionServiceTest extends TestCase
         $this->twig = self::prophesize(Environment::class);
         $this->pdfGenerator = self::prophesize(WkHtmlToPdfGenerator::class);
         $this->logger = self::prophesize(Logger::class);
-        $this->csvGenerator = self::prophesize(CsvGeneratorService::class);
+        $this->csvGenerator = self::prophesize(TransactionsCsvGenerator::class);
     }
 
     /**
