@@ -1,30 +1,39 @@
-FROM composer:1.10.16 AS composer
+FROM composer AS composer
 
 WORKDIR /app
-
-# Make composer super fast
-RUN composer global require hirak/prestissimo --no-plugins --no-scripts
 
 # Install composer dependencies
 COPY composer.json .
 COPY composer.lock .
+
 RUN composer install --prefer-dist --no-interaction --no-scripts
 
 COPY app app
 COPY src src
+
 RUN composer run-script post-install-cmd --no-interaction
+
 RUN composer dump-autoload --optimize
 
-FROM php:7.3-fpm-alpine
+FROM php:7.4-fpm-alpine
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
 ENV TIMEOUT=20
 ENV PHP_EXT_DIR=/usr/lib/php7/modules
 
-# Install Postgres tools and command line client
-RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec postgresql-client php7-igbinary php7-pecl-redis php7-pdo_pgsql
-RUN docker-php-ext-enable opcache $PHP_EXT_DIR/igbinary.so $PHP_EXT_DIR/redis.so $PHP_EXT_DIR/pdo_pgsql.so
+RUN apk --no-cache add \
+postgresql-dev \
+postgresql-client \
+openssl \
+nginx \
+nginx-mod-http-headers-more \
+su-exec \
+php7-igbinary \
+php7-pecl-redis
+
+RUN docker-php-ext-install pdo pdo_pgsql opcache
+RUN docker-php-ext-enable opcache
 
 # Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=false

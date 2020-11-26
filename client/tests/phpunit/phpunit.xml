@@ -44,8 +44,6 @@
         <env name="PACT_MOCK_SERVER_PORT" value="80"/>
         <env name="PACT_CONSUMER_NAME" value="Complete the deputy report"/>
         <env name="PACT_PROVIDER_NAME" value="OPG Data"/>
-
-        <server name="KERNEL_CLASS" value="AppKernel" />
     </php>
 
     <filter>

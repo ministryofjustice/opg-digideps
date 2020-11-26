@@ -19,8 +19,20 @@ class DeputyDto
     /** @var string */
     private $roleName;
 
+    /** @var string|null */
+    private $address1;
+
+    /** @var string|null */
+    private $address2;
+
+    /** @var string|null */
+    private $address3;
+
     /** @var string */
     private $addressPostcode;
+
+    /** @var string|null */
+    private $addressCountry;
 
     /** @var bool */
     private $ndrEnabled;
@@ -234,5 +246,76 @@ class DeputyDto
         $this->clients = $clients;
         return $this;
     }
-}
 
+    /**
+     * @return string|null
+     */
+    public function getAddress1(): ?string
+    {
+        return $this->address1;
+    }
+
+    /**
+     * @param string|null $address1
+     * @return DeputyDto
+     */
+    public function setAddress1(?string $address1): DeputyDto
+    {
+        $this->address1 = $address1;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAddress2(): ?string
+    {
+        return $this->address2;
+    }
+
+    /**
+     * @param string|null $address2
+     * @return DeputyDto
+     */
+    public function setAddress2(?string $address2): DeputyDto
+    {
+        $this->address2 = $address2;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAddress3(): ?string
+    {
+        return $this->address3;
+    }
+
+    /**
+     * @param string|null $address3
+     * @return DeputyDto
+     */
+    public function setAddress3(?string $address3): DeputyDto
+    {
+        $this->address3 = $address3;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAddressCountry(): ?string
+    {
+        return $this->addressCountry;
+    }
+
+    /**
+     * @param string|null $addressCountry
+     * @return DeputyDto
+     */
+    public function setAddressCountry(?string $addressCountry): DeputyDto
+    {
+        $this->addressCountry = $addressCountry;
+        return $this;
+    }
+}

@@ -120,3 +120,7 @@ services:
     AppBundle\Controller\Org\OrganisationController:
         autowire: true
         autoconfigure: true
+
+    AppBundle\Controller\Report\ReportController:
+        autowire: true
+        autoconfigure: true

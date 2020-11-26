@@ -14,6 +14,7 @@ use AppBundle\Form\FeedbackReportType;
 use AppBundle\Form\Report\ReportDeclarationType;
 use AppBundle\Form\Report\ReportType;
 use AppBundle\Model\FeedbackReport;
+use AppBundle\Service\Client\Internal\CasrecApi;
 use AppBundle\Service\Client\Internal\ClientApi;
 use AppBundle\Service\Client\Internal\ReportApi;
 use AppBundle\Service\Client\Internal\SatisfactionApi;
@@ -105,31 +106,26 @@ class ReportController extends AbstractController
     /** @var ClientApi */
     private $clientApi;
 
-    /** @var MailFactory */
-    private $mailFactory;
-
-    /** @var MailSender */
-    private $mailSender;
-
     /** @var SatisfactionApi */
     private $satisfactionApi;
+
+    /** @var CasrecApi */
+    private $casrecApi;
 
     public function __construct(
         RestClient $restClient,
         ReportApi $reportApi,
         UserApi $userApi,
         ClientApi $clientApi,
-        MailFactory $mailFactory,
-        MailSender $mailSender,
-        SatisfactionApi $satisfactionApi
+        SatisfactionApi $satisfactionApi,
+        CasrecApi $casrecApi
     ) {
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
         $this->userApi = $userApi;
         $this->clientApi = $clientApi;
-        $this->mailFactory = $mailFactory;
-        $this->mailSender = $mailSender;
         $this->satisfactionApi = $satisfactionApi;
+        $this->casrecApi = $casrecApi;
     }
 
     /**
@@ -166,6 +162,8 @@ class ReportController extends AbstractController
         $coDeputies = $clientWithCoDeputies->getCoDeputies();
 
         return [
+            'user' => $user,
+            'clientHasCoDeputies' => $this->casrecApi->clientHasCoDeputies($client->getCaseNumber()),
             'client' => $client,
             'coDeputies' => $coDeputies,
         ];

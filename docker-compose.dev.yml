@@ -9,7 +9,9 @@ services:
         volumes:
             - ./behat/tests:/var/www/tests
             - ./behat/snapshots:/tmp/html
-        env_file: ./behat/test.env
+        env_file:
+            - ./behat/test.env
+            - ./behat/.env
 
     npm:
         image: node:8-alpine

@@ -96,7 +96,6 @@ class UserFactory
             ->setRoleName('ROLE_PROF');
 
         $user->setPassword($this->encoder->encodePassword($user, 'Abcd1234'));
-        $user->setActive(false);
 
         return $user;
     }
@@ -127,6 +126,9 @@ class UserFactory
                 )
             )
             ->addClient($client)
+            ->setActive($data['activated'])
+            ->setRegistrationDate(new \DateTime())
+            ->setCoDeputyClientConfirmed(true)
             ->setActive(true);
 
         if ($data['activated'] === 'true' || $data['activated'] === true) {

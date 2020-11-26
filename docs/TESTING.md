@@ -43,6 +43,11 @@ Run a specific suite:
 ```shell script
 $ make behat-suite suite=<NAME OF SUITE>
 ```
+Run a specific profile and suite:
+
+```shell script
+$ make behat-profile-suite profile=<NAME OF PROFILE> suite=<NAME OF SUITE>
+```
 
 ## PHPUnit
 
