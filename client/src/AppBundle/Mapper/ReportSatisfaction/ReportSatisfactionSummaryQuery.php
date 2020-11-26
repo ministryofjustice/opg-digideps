@@ -4,16 +4,17 @@ namespace AppBundle\Mapper\ReportSatisfaction;
 
 use AppBundle\Validator\Constraints as AppAssert;
 use AppBundle\Validator\Constraints\StartEndDateComparableInterface;
+use DateTime;
 
 /**
  * @AppAssert\EndDateNotBeforeStartDate
  */
 class ReportSatisfactionSummaryQuery implements StartEndDateComparableInterface
 {
-    /** @var \DateTime */
+    /** @var DateTime|null */
     private $startDate;
 
-    /** @var \DateTime */
+    /** @var DateTime|null */
     private $endDate;
 
     /** @var string */
@@ -23,7 +24,7 @@ class ReportSatisfactionSummaryQuery implements StartEndDateComparableInterface
     private $sortOrder = 'DESC';
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getStartDate()
     {
@@ -31,7 +32,7 @@ class ReportSatisfactionSummaryQuery implements StartEndDateComparableInterface
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getEndDate()
     {
@@ -39,10 +40,10 @@ class ReportSatisfactionSummaryQuery implements StartEndDateComparableInterface
     }
 
     /**
-     * @param \DateTime $startDate
+     * @param DateTime|null $startDate
      * @return ReportSatisfactionSummaryQuery
      */
-    public function setStartDate($startDate)
+    public function setStartDate(?DateTime $startDate)
     {
         $this->startDate = $startDate;
 
@@ -50,10 +51,10 @@ class ReportSatisfactionSummaryQuery implements StartEndDateComparableInterface
     }
 
     /**
-     * @param \DateTime $endDate
+     * @param DateTime|null $endDate
      * @return ReportSatisfactionSummaryQuery
      */
-    public function setEndDate($endDate)
+    public function setEndDate(?DateTime $endDate)
     {
         $this->endDate = $endDate;
 

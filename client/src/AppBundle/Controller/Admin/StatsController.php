@@ -3,7 +3,6 @@
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\Satisfaction;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Form\Admin\ReportSubmissionDownloadFilterType;
 use AppBundle\Form\Admin\SatisfactionFilterType;
@@ -13,6 +12,7 @@ use AppBundle\Mapper\ReportSatisfaction\ReportSatisfactionSummaryQuery;
 use AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryMapper;
 use AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryQuery;
 use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\Csv\SatisfactionCsvGenerator;
 use AppBundle\Transformer\ReportSubmission\ReportSubmissionBurFixedWidthTransformer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -29,9 +29,12 @@ class StatsController extends AbstractController
     /** @var RestClient */
     private $restClient;
 
-    public function __construct(RestClient $restClient)
+    private SatisfactionCsvGenerator $csvGenerator;
+
+    public function __construct(RestClient $restClient, SatisfactionCsvGenerator $csvGenerator)
     {
         $this->restClient = $restClient;
+        $this->csvGenerator = $csvGenerator;
     }
 
     /**
@@ -82,7 +85,7 @@ class StatsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $reportSatisfactionSummaries = $mapper->getBy($form->getData());
-                $csv = $this->buildSatisfactionCsv($reportSatisfactionSummaries);
+                $csv = $this->csvGenerator->generateSatisfactionResponsesCsv($reportSatisfactionSummaries);
 
                 $response = new Response($csv);
 
@@ -102,36 +105,6 @@ class StatsController extends AbstractController
         return [
             'form' => $form->createView()
         ];
-    }
-
-    /**
-     * @param Satisfaction[] $reportSatisfactionSummaries
-     * @return string
-     */
-    private function buildSatisfactionCsv(array $reportSatisfactionSummaries): string
-    {
-        $stream = fopen('php://temp/maxmemory:'. (5*1024*1024), 'r+');
-
-        $headers = ['Satisfaction Score', 'Comments', 'Deputy Role', 'Report Type', 'Date Provided'];
-        fputcsv($stream, $headers);
-
-        foreach ($reportSatisfactionSummaries as $summary) {
-            $row = [
-                $summary->getScore(),
-                $summary->getComments(),
-                $summary->getDeputyrole(),
-                $summary->getReporttype(),
-                $summary->getCreated()->format('Y-m-d')
-            ];
-
-            fputcsv($stream, $row);
-        }
-
-        rewind($stream);
-        $csv = stream_get_contents($stream);
-        fclose($stream);
-
-        return $csv;
     }
 
     /**

@@ -78,10 +78,10 @@ class ReportSatisfactionSummaryMapperTest extends TestCase
     private function buildExpectedUrl()
     {
         return sprintf('/satisfaction/satisfaction_data?%s', http_build_query([
-            'fromDate' => $this->query->getStartDate(),
-            'toDate' => $this->query->getEndDate(),
             'orderBy' => $this->query->getOrderBy(),
-            'order' => $this->query->getSortOrder()
+            'order' => $this->query->getSortOrder(),
+            'fromDate' => $this->query->getStartDate()->format('Y-m-d'),
+            'toDate' => $this->query->getEndDate()->format('Y-m-d')
         ]));
     }
 
