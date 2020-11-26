@@ -149,8 +149,12 @@ class TeamController extends AbstractController
         $form = $this->createForm(
             FormDir\Org\TeamMemberAccountType::class,
             $user,
-            ['team' => $team, 'loggedInUser' => $this->getUser(), 'targetUser' => $user, 'validation_groups' => $validationGroups
-                                   ]
+            [
+                'team' => $team,
+                'loggedInUser' => $this->getUser(),
+                'targetUser' => $user,
+                'validation_groups' => $validationGroups
+            ]
         );
 
         $form->handleRequest($request);
