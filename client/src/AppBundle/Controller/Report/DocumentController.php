@@ -34,34 +34,27 @@ class DocumentController extends AbstractController
         'documents-state',
     ];
 
-    /** @var S3FileUploader */
-    private $fileUploader;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
-    /** @var ClientApi */
-    private $clientApi;
-
-    /** @var StepRedirector */
-    private $stepRedirector;
+    private S3FileUploader$fileUploader;
+    private RestClient $restClient;
+    private ReportApi $reportApi;
+    private ClientApi $clientApi;
+    private StepRedirector $stepRedirector;
+    private TranslatorInterface $translator;
 
     public function __construct(
         RestClient $restClient,
         ReportApi $reportApi,
         S3FileUploader $fileUploader,
         ClientApi $clientApi,
-        StepRedirector $stepRedirector
-    )
-    {
+        StepRedirector $stepRedirector,
+        TranslatorInterface $translator
+    ) {
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
         $this->fileUploader = $fileUploader;
         $this->clientApi = $clientApi;
         $this->stepRedirector = $stepRedirector;
+        $this->translator = $translator;
     }
 
     /**
@@ -130,9 +123,7 @@ class DocumentController extends AbstractController
 
             if ('no' === $data->getWishToProvideDocumentation()) {
                 if (count($data->getDeputyDocuments()) > 0) {
-                    /** @var TranslatorInterface $translator */
-                    $translator = $this->get('translator');
-                    $translatedMessage = $translator->trans('summaryPage.setNoAttemptWithDocuments', [], 'report-documents');
+                    $translatedMessage = $this->translator->trans('summaryPage.setNoAttemptWithDocuments', [], 'report-documents');
 
                     $this->addFlash('error', $translatedMessage);
                 } else {
@@ -166,8 +157,12 @@ class DocumentController extends AbstractController
      * @return array|RedirectResponse
      * @throws \Exception
      */
-    public function step2Action(Request $request, MultiFileFormUploadVerifier $multiFileVerifier, $reportId,
-                                LoggerInterface $logger)
+    public function step2Action(
+        Request $request,
+        MultiFileFormUploadVerifier $multiFileVerifier,
+        $reportId,
+        LoggerInterface $logger
+    )
     {
         $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
         list($nextLink, $backLink) = $this->buildNavigationLinks($report);
@@ -176,10 +171,7 @@ class DocumentController extends AbstractController
         $form = $this->createForm(FormDir\Report\UploadType::class, null, ['action' =>  $formAction]);
 
         if ($request->get('error') == 'tooBig') {
-            /** @var TranslatorInterface $translator */
-            $translator = $this->get('translator');
-
-            $message = $translator->trans('document.file.errors.maxSizeMessage', [], 'validators');
+            $message = $this->translator->trans('document.file.errors.maxSizeMessage', [], 'validators');
             $form->get('files')->addError(new FormError($message));
         }
 
@@ -320,7 +312,7 @@ class DocumentController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function deleteDocument(Request $request, $documentId)
+    public function deleteDocument(Request $request, $documentId, DocumentService $documentService, LoggerInterface $logger)
     {
         $document = $this->getDocument($documentId);
 
@@ -328,16 +320,12 @@ class DocumentController extends AbstractController
         $this->denyAccessUnlessGranted(DocumentVoter::DELETE_DOCUMENT, $document, 'Access denied');
 
         try {
-            /** @var DocumentService $documentService */
-            $documentService = $this->get('AppBundle\Service\DocumentService');
             $result = $documentService->removeDocumentFromS3($document); // rethrows any exception
 
             if ($result) {
                 $this->addFlash('notice', 'Document has been removed');
             }
         } catch (\Throwable $e) {
-            /** @var LoggerInterface $logger */
-            $logger = $this->get('logger');
             $logger->error($e->getMessage());
 
             $this->addFlash(
