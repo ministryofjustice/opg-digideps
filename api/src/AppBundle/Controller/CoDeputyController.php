@@ -133,7 +133,6 @@ class CoDeputyController extends RestController
             $affected += $conn->exec($sql);
         }
 
-        $this->get('logger')->info('Received ' . count($data) . ' records, of which ' . $affected . ' were updated');
         return ['requested_mld_upgrades' => count($deputyNumbers), 'updated' => $affected, 'errors' => $retErrors];
     }
 }
