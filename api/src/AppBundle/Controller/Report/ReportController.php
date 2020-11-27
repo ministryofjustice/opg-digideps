@@ -125,11 +125,11 @@ class ReportController extends RestController
         /* @var $report Report */
         if ($this->isGranted(EntityDir\User::ROLE_ADMIN)) {
             /** @var SoftDeleteableFilter $filter */
-            $filter = $this->getEntityManager()->getFilters()->getFilter('softdeleteable');
+            $filter = $this->em->getFilters()->getFilter('softdeleteable');
             $filter->disableForEntity(EntityDir\Client::class);
 
             $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
-            $this->getEntityManager()->getFilters()->enable('softdeleteable');
+            $this->em->getFilters()->enable('softdeleteable');
         } else {
             $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
             $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -206,7 +206,7 @@ class ReportController extends RestController
             foreach ($report->getDebts() as $debt) {
                 $debt->setAmount(null);
                 $debt->setMoreDetails(null);
-                $this->getEntityManager()->flush($debt);
+                $this->em->flush($debt);
             }
             // set debts as per "debts" key
             if ($data['has_debts'] == 'yes') {
@@ -216,11 +216,11 @@ class ReportController extends RestController
                         continue; //not clear when that might happen. kept similar to transaction below
                     }
                     $debt->setAmountAndDetails($row['amount'], $row['more_details']);
-                    $this->getEntityManager()->flush($debt);
+                    $this->em->flush($debt);
                 }
             }
             $this->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
-            $this->getEntityManager()->flush();
+            $this->em->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_DEBTS
             ]);
@@ -253,18 +253,18 @@ class ReportController extends RestController
                         $profDeputyOtherCost->setMoreDetails($postedProfDeputyOtherCostType['more_details']);
                     }
 
-                    $this->getEntityManager()->persist($profDeputyOtherCost);
+                    $this->em->persist($profDeputyOtherCost);
                 }
             }
             $report->updateSectionsStatusCache([
                 Report::SECTION_PROF_DEPUTY_COSTS
             ]);
-            $this->getEntityManager()->flush();
+            $this->em->flush();
         }
 
         if (array_key_exists('debt_management', $data)) {
             $report->setDebtManagement($data['debt_management']);
-            $this->getEntityManager()->flush();
+            $this->em->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_DEBTS,
             ]);
@@ -277,7 +277,7 @@ class ReportController extends RestController
                     continue; //not clear when that might happen. kept similar to transaction below
                 }
                 $fee->setAmountAndDetails($row['amount'], $row['more_details']);
-                $this->getEntityManager()->flush($fee);
+                $this->em->flush($fee);
             }
             $report->updateSectionsStatusCache([
                 Report::SECTION_DEPUTY_EXPENSES,
@@ -293,7 +293,7 @@ class ReportController extends RestController
                         ->setMoreDetails(null);
                 }
             }
-            $this->getEntityManager()->flush();
+            $this->em->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_DEPUTY_EXPENSES,
                 Report::SECTION_PA_DEPUTY_EXPENSES
@@ -303,11 +303,11 @@ class ReportController extends RestController
         if (array_key_exists('paid_for_anything', $data)) {
             if ($data['paid_for_anything'] === 'no') { // remove existing expenses
                 foreach ($report->getExpenses() as $e) {
-                    $this->getEntityManager()->remove($e);
+                    $this->em->remove($e);
                 }
             }
             $report->setPaidForAnything($data['paid_for_anything']);
-            $this->getEntityManager()->flush();
+            $this->em->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_DEPUTY_EXPENSES,
                 Report::SECTION_PA_DEPUTY_EXPENSES
@@ -317,11 +317,11 @@ class ReportController extends RestController
         if (array_key_exists('gifts_exist', $data)) {
             if ($data['gifts_exist'] === 'no') { // remove existing gift
                 foreach ($report->getGifts() as $e) {
-                    $this->getEntityManager()->remove($e);
+                    $this->em->remove($e);
                 }
             }
             $report->setGiftsExist($data['gifts_exist']);
-            $this->getEntityManager()->flush();
+            $this->em->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_GIFTS,
             ]);
@@ -359,9 +359,9 @@ class ReportController extends RestController
             $report->setNoAssetToAdd($data['no_asset_to_add']);
             if ($report->getNoAssetToAdd()) {
                 foreach ($report->getAssets() as $asset) {
-                    $this->getEntityManager()->remove($asset);
+                    $this->em->remove($asset);
                 }
-                $this->getEntityManager()->flush();
+                $this->em->flush();
             }
             $report->updateSectionsStatusCache([
                 Report::SECTION_ASSETS,
@@ -372,7 +372,7 @@ class ReportController extends RestController
             if ($data['no_transfers_to_add'] === true) {
                 //true here means "no", so remove existing transfers
                 foreach ($report->getMoneyTransfers() as $e) {
-                    $this->getEntityManager()->remove($e);
+                    $this->em->remove($e);
                 }
             }
             $report->setNoTransfersToAdd($data['no_transfers_to_add']);
@@ -413,10 +413,10 @@ class ReportController extends RestController
                 if ($e instanceof EntityDir\Report\MoneyShortCategory) {
                     $e
                         ->setPresent($row['present']);
-                    $this->getEntityManager()->flush($e);
+                    $this->em->flush($e);
                 }
             }
-            $this->getEntityManager()->flush();
+            $this->em->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_MONEY_IN_SHORT,
                 Report::SECTION_MONEY_OUT_SHORT,
@@ -429,10 +429,10 @@ class ReportController extends RestController
                 if ($e instanceof EntityDir\Report\MoneyShortCategory) {
                     $e
                         ->setPresent($row['present']);
-                    $this->getEntityManager()->flush($e);
+                    $this->em->flush($e);
                 }
             }
-            $this->getEntityManager()->flush();
+            $this->em->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_MONEY_IN_SHORT,
                 Report::SECTION_MONEY_OUT_SHORT,
@@ -442,11 +442,11 @@ class ReportController extends RestController
         if (array_key_exists('money_transactions_short_in_exist', $data)) {
             if ($data['money_transactions_short_in_exist'] === 'no') { // remove existing
                 foreach ($report->getMoneyTransactionsShortIn() as $e) {
-                    $this->getEntityManager()->remove($e);
+                    $this->em->remove($e);
                 }
             }
             $report->setMoneyTransactionsShortInExist($data['money_transactions_short_in_exist']);
-            $this->getEntityManager()->flush();
+            $this->em->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_MONEY_IN_SHORT,
                 Report::SECTION_MONEY_OUT_SHORT,
@@ -456,11 +456,11 @@ class ReportController extends RestController
         if (array_key_exists('money_transactions_short_out_exist', $data)) {
             if ($data['money_transactions_short_out_exist'] === 'no') { // remove existing
                 foreach ($report->getMoneyTransactionsShortOut() as $e) {
-                    $this->getEntityManager()->remove($e);
+                    $this->em->remove($e);
                 }
             }
             $report->setMoneyTransactionsShortOutExist($data['money_transactions_short_out_exist']);
-            $this->getEntityManager()->flush();
+            $this->em->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_MONEY_IN_SHORT,
                 Report::SECTION_MONEY_OUT_SHORT,
@@ -472,7 +472,7 @@ class ReportController extends RestController
             if ('no' === $data['wish_to_provide_documentation']) {
                 $report->setWishToProvideDocumentation($data['wish_to_provide_documentation']);
             }
-            $this->getEntityManager()->flush();
+            $this->em->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_DOCUMENTS,
             ]);
@@ -486,7 +486,7 @@ class ReportController extends RestController
             } else {
                 $report->setProfFeesEstimateSccoReason($data['prof_fees_estimate_scco_reason']);
             }
-            $this->getEntityManager()->flush();
+            $this->em->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_PROF_CURRENT_FEES,
             ]);
@@ -495,13 +495,13 @@ class ReportController extends RestController
         if (array_key_exists('current_prof_payments_received', $data)) {
             if ($data['current_prof_payments_received'] == 'no') { //reset whole section
                 foreach ($report->getCurrentProfServiceFees() as $f) {
-                    $this->getEntityManager()->remove($f);
+                    $this->em->remove($f);
                 }
                 $report->setPreviousProfFeesEstimateGiven(null);
                 $report->setProfFeesEstimateSccoReason(null);
             }
             $report->setCurrentProfPaymentsReceived($data['current_prof_payments_received']);
-            $this->getEntityManager()->flush();
+            $this->em->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_PROF_CURRENT_FEES,
             ]);
@@ -519,7 +519,7 @@ class ReportController extends RestController
             $updateHandler->handle($report, $data);
         }
 
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $report->getId()];
     }
@@ -553,7 +553,7 @@ class ReportController extends RestController
             $data['unsubmitted_sections_list']
         );
 
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $report->getId()];
     }
@@ -759,7 +759,7 @@ class ReportController extends RestController
         if (!empty($checklistData['further_information_received'])) {
             $info = new EntityDir\Report\ChecklistInformation($checklist, $checklistData['further_information_received']);
             $info->setCreatedBy($user);
-            $this->getEntityManager()->persist($info);
+            $this->em->persist($info);
         }
 
         if ($checklistData['button_clicked'] == 'submitAndContinue') {
@@ -797,7 +797,7 @@ class ReportController extends RestController
         if (!empty($checklistData['further_information_received'])) {
             $info = new EntityDir\Report\ChecklistInformation($checklist, $checklistData['further_information_received']);
             $info->setCreatedBy($user);
-            $this->getEntityManager()->persist($info);
+            $this->em->persist($info);
         }
 
         if ($checklistData['button_clicked'] == 'submitAndContinue') {
@@ -918,7 +918,7 @@ class ReportController extends RestController
         $data = $this->deserializeBodyContent($request);
 
         /** @var ReportRepository $reportRepo */
-        $reportRepo = $this->getEntityManager()->getRepository(Report::class);
+        $reportRepo = $this->em->getRepository(Report::class);
         $queuedReportIds = $reportRepo->getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(intval($data['row_limit']));
 
         $reports = [];

@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,6 +12,12 @@ use Symfony\Component\HttpFoundation\Request;
 class MoneyTransferController extends RestController
 {
     private $sectionIds = [EntityDir\Report\Report::SECTION_MONEY_TRANSFERS];
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
 
     /**
      * @Route("/report/{reportId}/money-transfers", methods={"POST"})
@@ -35,7 +42,7 @@ class MoneyTransferController extends RestController
         $this->persistAndFlush($transfer);
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         $this->setJmsSerialiserGroups(['money-transfer']);
 
@@ -63,7 +70,7 @@ class MoneyTransferController extends RestController
         $this->persistAndFlush($transfer);
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return $transfer->getId();
     }
@@ -80,10 +87,10 @@ class MoneyTransferController extends RestController
         $transfer = $this->findEntityBy(EntityDir\Report\MoneyTransfer::class, $transferId);
         $this->denyAccessIfReportDoesNotBelongToUser($transfer->getReport());
 
-        $this->getEntityManager()->remove($transfer);
+        $this->em->remove($transfer);
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return [];
     }

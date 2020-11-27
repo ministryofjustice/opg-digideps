@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,6 +13,13 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class SettingController extends RestController
 {
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/{id}", methods={"GET"})
      */
@@ -41,10 +49,10 @@ class SettingController extends RestController
             $setting->setEnabled($data['enabled']);
         } else { //create new one
             $setting = new EntityDir\Setting($id, $data['content'], $data['enabled']);
-            $this->getEntityManager()->persist($setting);
+            $this->em->persist($setting);
         }
 
-        $this->getEntityManager()->flush($setting);
+        $this->em->flush($setting);
 
         return $setting->getId();
     }

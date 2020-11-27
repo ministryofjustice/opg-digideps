@@ -4,12 +4,20 @@ namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class VisitsCareController extends RestController
 {
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/ndr/visits-care", methods={"POST"})
      * @Security("has_role('ROLE_DEPUTY')")
@@ -43,7 +51,7 @@ class VisitsCareController extends RestController
         $data = $this->deserializeBodyContent($request);
         $this->updateEntity($data, $visitsCare);
 
-        $this->getEntityManager()->flush($visitsCare);
+        $this->em->flush($visitsCare);
 
         return ['id' => $visitsCare->getId()];
     }
@@ -90,8 +98,8 @@ class VisitsCareController extends RestController
         $visitsCare = $this->findEntityBy(EntityDir\Ndr\VisitsCare::class, $id, 'VisitsCare not found'); /* @var $visitsCare EntityDir\Ndr\VisitsCare */
         $this->denyAccessIfNdrDoesNotBelongToUser($visitsCare->getNdr());
 
-        $this->getEntityManager()->remove($visitsCare);
-        $this->getEntityManager()->flush($visitsCare);
+        $this->em->remove($visitsCare);
+        $this->em->flush($visitsCare);
 
         return [];
     }

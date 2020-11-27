@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +15,12 @@ use Symfony\Component\HttpFoundation\Request;
 class LifestyleController extends RestController
 {
     private $sectionIds = [EntityDir\Report\Report::SECTION_LIFESTYLE];
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
 
     /**
      * @Route("/lifestyle", methods={"POST"})
@@ -30,11 +37,11 @@ class LifestyleController extends RestController
         $lifestyle->setReport($report);
         $this->updateInfo($data, $lifestyle);
 
-        $this->getEntityManager()->persist($lifestyle);
-        $this->getEntityManager()->flush();
+        $this->em->persist($lifestyle);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $lifestyle->getId()];
     }
@@ -51,10 +58,10 @@ class LifestyleController extends RestController
 
         $data = $this->deserializeBodyContent($request);
         $this->updateInfo($data, $lifestyle);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $lifestyle->getId()];
     }
@@ -104,11 +111,11 @@ class LifestyleController extends RestController
 
         $this->denyAccessIfReportDoesNotBelongToUser($lifestyle->getReport());
 
-        $this->getEntityManager()->remove($lifestyle);
-        $this->getEntityManager()->flush();
+        $this->em->remove($lifestyle);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return [];
     }

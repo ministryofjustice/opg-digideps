@@ -4,13 +4,20 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class ActionController extends RestController
 {
-    private $sectionIds = [EntityDir\Report\Report::SECTION_ACTIONS];
+    private array $sectionIds = [EntityDir\Report\Report::SECTION_ACTIONS];
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
 
     /**
      * @Route("/report/{reportId}/action", methods={"PUT"})
@@ -24,15 +31,15 @@ class ActionController extends RestController
         $action = $report->getAction();
         if (!$action) {
             $action = new EntityDir\Report\Action($report);
-            $this->getEntityManager()->persist($action);
+            $this->em->persist($action);
         }
 
         $data = $this->deserializeBodyContent($request);
         $this->updateEntity($data, $action);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $action->getId()];
     }

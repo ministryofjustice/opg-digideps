@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +14,13 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class VisitsCareController extends RestController
 {
-    private $sectionIds = [EntityDir\Report\Report::SECTION_VISITS_CARE];
+    private array $sectionIds = [EntityDir\Report\Report::SECTION_VISITS_CARE];
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
 
     /**
      * @Route("/visits-care", methods={"POST"})
@@ -30,11 +37,11 @@ class VisitsCareController extends RestController
         $visitsCare->setReport($report);
         $this->updateInfo($data, $visitsCare);
 
-        $this->getEntityManager()->persist($visitsCare);
-        $this->getEntityManager()->flush();
+        $this->em->persist($visitsCare);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $visitsCare->getId()];
     }
@@ -51,10 +58,10 @@ class VisitsCareController extends RestController
 
         $data = $this->deserializeBodyContent($request);
         $this->updateInfo($data, $visitsCare);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $visitsCare->getId()];
     }
@@ -105,10 +112,10 @@ class VisitsCareController extends RestController
         $report = $visitsCare->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($visitsCare->getReport());
 
-        $this->getEntityManager()->remove($visitsCare);
+        $this->em->remove($visitsCare);
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return [];
     }

@@ -4,12 +4,20 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class MoneyTransactionShortController extends RestController
 {
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     private $sectionIds = [
         EntityDir\Report\Report::SECTION_MONEY_IN_SHORT,
         EntityDir\Report\Report::SECTION_MONEY_OUT_SHORT
@@ -33,11 +41,11 @@ class MoneyTransactionShortController extends RestController
         $t = EntityDir\Report\MoneyTransactionShort::factory($data['type'], $report);
         $this->fillData($t, $data);
 
-        $this->getEntityManager()->persist($t);
-        $this->getEntityManager()->flush();
+        $this->em->persist($t);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         $this->persistAndFlush($t);
 
@@ -59,10 +67,10 @@ class MoneyTransactionShortController extends RestController
         // set data
         $data = $this->deserializeBodyContent($request);
         $this->fillData($t, $data);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return $t->getId();
     }
@@ -78,11 +86,11 @@ class MoneyTransactionShortController extends RestController
 
         $t = $this->findEntityBy(EntityDir\Report\MoneyTransactionShort::class, $transactionId, 'transaction not found'); /* @var $t EntityDir\Report\MoneyTransaction */
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
-        $this->getEntityManager()->remove($t);
-        $this->getEntityManager()->flush();
+        $this->em->remove($t);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return [];
     }

@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -13,6 +14,13 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ClientContactController extends RestController
 {
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/clients/{clientId}/clientcontacts", name="clientcontact_add", methods={"POST"})
      * @Security("has_role('ROLE_ORG')")
@@ -71,7 +79,7 @@ class ClientContactController extends RestController
             'email'        => 'setEmail',
             'org_name'     => 'setOrgName',
         ]);
-        $this->getEntityManager()->flush($clientContact);
+        $this->em->flush($clientContact);
         return $clientContact->getId();
     }
 
@@ -105,8 +113,8 @@ class ClientContactController extends RestController
             $clientContact = $this->findEntityBy(EntityDir\ClientContact::class, $id);
             $this->denyAccessIfClientDoesNotBelongToUser($clientContact->getClient());
 
-            $this->getEntityManager()->remove($clientContact);
-            $this->getEntityManager()->flush($clientContact);
+            $this->em->remove($clientContact);
+            $this->em->flush($clientContact);
         } catch (\Throwable $e) {
             $logger->error('Failed to delete client contact ID: ' . $id . ' - ' . $e->getMessage());
         }

@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Exception as AppExceptions;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +15,13 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ContactController extends RestController
 {
-    private $sectionIds = [EntityDir\Report\Report::SECTION_CONTACTS];
+    private array $sectionIds = [EntityDir\Report\Report::SECTION_CONTACTS];
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
 
     /**
      * @Route("/contact/{id}", methods={"GET"})
@@ -42,11 +49,11 @@ class ContactController extends RestController
         $report = $contact->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($contact->getReport());
 
-        $this->getEntityManager()->remove($contact);
-        $this->getEntityManager()->flush();
+        $this->em->remove($contact);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return [];
     }
@@ -103,7 +110,7 @@ class ContactController extends RestController
         $report->setReasonForNoContacts(null);
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $contact->getId()];
     }

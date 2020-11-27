@@ -4,12 +4,20 @@ namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class ExpenseController extends RestController
 {
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/ndr/{ndrId}/expense/{expenseId}", requirements={"ndrId":"\d+", "expenseId":"\d+"}, methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
@@ -68,7 +76,7 @@ class ExpenseController extends RestController
 
         $this->updateEntityWithData($expense, $data);
 
-        $this->getEntityManager()->flush($expense);
+        $this->em->flush($expense);
 
         return ['id' => $expense->getId()];
     }
@@ -84,9 +92,9 @@ class ExpenseController extends RestController
 
         $expense = $this->findEntityBy(EntityDir\Ndr\Expense::class, $expenseId);
         $this->denyAccessIfNdrDoesNotBelongToUser($expense->getNdr());
-        $this->getEntityManager()->remove($expense);
+        $this->em->remove($expense);
 
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return [];
     }

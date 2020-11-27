@@ -19,7 +19,13 @@ class DocumentController extends RestController
     const RETRIES_FAILED_MESSAGE = 'Document failed to sync after 4 attempts';
     const REPORT_PDF_FAILED_MESSAGE = 'Report PDF failed to sync';
 
-    private $sectionIds = [EntityDir\Report\Report::SECTION_DOCUMENTS];
+    private array $sectionIds = [EntityDir\Report\Report::SECTION_DOCUMENTS];
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
 
     /**
      * @Route("/document/{reportType}/{reportId}", requirements={
@@ -55,7 +61,7 @@ class DocumentController extends RestController
         $this->persistAndFlush($document);
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $document->getId()];
     }
@@ -100,8 +106,8 @@ class DocumentController extends RestController
         // enable if the check above is removed and the note is available for editing for the whole team
         $this->denyAccessIfClientDoesNotBelongToUser($document->getReport()->getClient());
 
-        $this->getEntityManager()->remove($document);
-        $this->getEntityManager()->flush();
+        $this->em->remove($document);
+        $this->em->flush();
 
         // update yesno question to null if its the last document to be removed
         if (count($report->getDeputyDocuments()) == 0) {
@@ -109,7 +115,7 @@ class DocumentController extends RestController
         }
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $id];
     }

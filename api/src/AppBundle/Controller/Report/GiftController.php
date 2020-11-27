@@ -4,13 +4,20 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class GiftController extends RestController
 {
-    private $sectionIds = [EntityDir\Report\Report::SECTION_GIFTS];
+    private array $sectionIds = [EntityDir\Report\Report::SECTION_GIFTS];
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
 
     /**
      * @Route("/report/{reportId}/gift/{giftId}", requirements={"reportId":"\d+", "giftId":"\d+"}, methods={"GET"})
@@ -53,7 +60,7 @@ class GiftController extends RestController
         $this->persistAndFlush($gift);
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $gift->getId()];
     }
@@ -82,10 +89,10 @@ class GiftController extends RestController
                 $gift->setBankAccount(null);
             }
         }
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $gift->getId()];
     }
@@ -101,11 +108,11 @@ class GiftController extends RestController
 
         $gift = $this->findEntityBy(EntityDir\Report\Gift::class, $giftId);
         $this->denyAccessIfReportDoesNotBelongToUser($gift->getReport());
-        $this->getEntityManager()->remove($gift);
-        $this->getEntityManager()->flush();
+        $this->em->remove($gift);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return [];
     }

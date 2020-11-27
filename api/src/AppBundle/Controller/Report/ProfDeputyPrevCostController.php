@@ -4,13 +4,20 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class ProfDeputyPrevCostController extends RestController
 {
-    private $sectionIds = [EntityDir\Report\Report::SECTION_PROF_DEPUTY_COSTS];
+    private array $sectionIds = [EntityDir\Report\Report::SECTION_PROF_DEPUTY_COSTS];
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
 
     /**
      * @Route("/report/{reportId}/prof-deputy-previous-cost", methods={"POST"})
@@ -32,7 +39,7 @@ class ProfDeputyPrevCostController extends RestController
         $this->persistAndFlush($cost);
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $cost->getId()];
     }
@@ -50,10 +57,10 @@ class ProfDeputyPrevCostController extends RestController
 
         $data = $this->deserializeBodyContent($request);
         $this->updateEntity($data, $cost);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $cost->getId()];
     }
@@ -89,18 +96,17 @@ class ProfDeputyPrevCostController extends RestController
         $report = $cost->getReport(); /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($cost->getReport());
 
-        $this->getEntityManager()->remove($cost);
-        $this->getEntityManager()->flush();
+        $this->em->remove($cost);
+        $this->em->flush();
 
         if (count($report->getProfDeputyPreviousCosts()) === 0) {
             $report->setProfDeputyCostsHasPrevious(null);
         }
 
-        $this->getEntityManager()->flush();
-        //
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return [];
     }

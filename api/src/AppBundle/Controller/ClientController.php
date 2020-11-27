@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Repository\ClientRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,15 +14,13 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ClientController extends RestController
 {
-    /** @var ClientRepository */
-    private $repository;
+    private ClientRepository $repository;
+    private EntityManagerInterface $em;
 
-    /**
-     * @param ClientRepository $repository
-     */
-    public function __construct(ClientRepository $repository)
+    public function __construct(ClientRepository $repository, EntityManagerInterface $em)
     {
         $this->repository = $repository;
+        $this->em = $em;
     }
 
     /**
@@ -36,7 +35,6 @@ class ClientController extends RestController
         $data = $this->deserializeBodyContent($request);
         /** @var EntityDir\User|null $user */
         $user = $this->getUser();
-        $em = $this->getEntityManager();
 
         if ($user && $request->getMethod() == 'POST') {
             $client = new EntityDir\Client();
@@ -67,7 +65,7 @@ class ClientController extends RestController
 
             if ($ndrRequired && !$client->getNdr()) {
                 $ndr = new EntityDir\Ndr\Ndr($client);
-                $em->persist($ndr);
+                $this->em->persist($ndr);
             }
 
             $client->setCourtDate(new \DateTime($data['court_date']));
@@ -81,8 +79,8 @@ class ClientController extends RestController
             $client->setDateOfBirth($dob);
         }
 
-        $em->persist($client);
-        $em->flush();
+        $this->em->persist($client);
+        $this->em->flush();
 
         return ['id' => $client->getId()];
     }
@@ -165,7 +163,7 @@ class ClientController extends RestController
         }
 
         $client->setArchivedAt(new \DateTime);
-        $this->getEntityManager()->flush($client);
+        $this->em->flush($client);
 
         return [
             'id' => $client->getId()
@@ -199,7 +197,7 @@ class ClientController extends RestController
         $client = $this->findEntityBy(EntityDir\Client::class, $id);
 
         $client->setDeletedAt(new \DateTime());
-        $this->getEntityManager()->flush($client);
+        $this->em->flush($client);
 
         return [];
     }

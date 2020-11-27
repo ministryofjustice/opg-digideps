@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -34,9 +35,10 @@ class ManageController extends RestController
     }
 
     /**
+     * @param LoggerInterface $logger
      * @return array [boolean healthy, error string]
      */
-    private function dbInfo()
+    private function dbInfo(LoggerInterface $logger)
     {
         try {
             $this->getDoctrine()->getConnection()->query('select * from migrations LIMIT 1')->fetchAll();
@@ -52,8 +54,7 @@ class ManageController extends RestController
                 $returnMessage = 'Migrations table missing.';
             }
 
-            // log real error message
-            $this->get('logger')->error($e->getMessage());
+            $logger->error($e->getMessage());
 
             return [false, $returnMessage];
         }

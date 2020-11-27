@@ -4,14 +4,25 @@ namespace AppBundle\Controller;
 
 use AppBundle\Model\SelfRegisterData;
 use AppBundle\Service\UserRegistrationService;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @Route("/selfregister")
  */
 class SelfRegisterController extends RestController
 {
+    private LoggerInterface $logger;
+    private ValidatorInterface $validator;
+
+    public function __construct(LoggerInterface $logger, ValidatorInterface $validator)
+    {
+        $this->logger = $logger;
+        $this->validator = $validator;
+    }
+
     /**
      * @Route("", methods={"POST"})
      */
@@ -27,8 +38,7 @@ class SelfRegisterController extends RestController
 
         $this->populateSelfReg($selfRegisterData, $data);
 
-        $validator = $this->get('validator');
-        $errors = $validator->validate($selfRegisterData, null, 'self_registration');
+        $errors = $this->validator->validate($selfRegisterData, null, 'self_registration');
 
         if (count($errors) > 0) {
             throw new \RuntimeException('Invalid registration data: ' . $errors);
@@ -36,9 +46,9 @@ class SelfRegisterController extends RestController
 
         try {
             $user = $userRegistrationService->selfRegisterUser($selfRegisterData);
-            $this->get('logger')->warning('CasRec register success: ', ['extra' => ['page' => 'user_registration', 'success' => true] + $selfRegisterData->toArray()]);
+            $this->logger->warning('CasRec register success: ', ['extra' => ['page' => 'user_registration', 'success' => true] + $selfRegisterData->toArray()]);
         } catch (\Throwable $e) {
-            $this->get('logger')->warning('CasRec register failed:', ['extra' => ['page' => 'user_registration', 'success' => false] + $selfRegisterData->toArray()]);
+            $this->logger->warning('CasRec register failed:', ['extra' => ['page' => 'user_registration', 'success' => false] + $selfRegisterData->toArray()]);
             throw $e;
         }
 
@@ -52,8 +62,6 @@ class SelfRegisterController extends RestController
      */
     public function verifyCoDeputy(Request $request, UserRegistrationService $userRegistrationService)
     {
-        $coDeputyVerified = false;
-
         if (!$this->getAuthService()->isSecretValid($request)) {
             throw new \RuntimeException('client secret not accepted.', 403);
         }
@@ -61,8 +69,7 @@ class SelfRegisterController extends RestController
         $selfRegisterData = new SelfRegisterData();
         $this->populateSelfReg($selfRegisterData, $this->deserializeBodyContent($request));
 
-        $validator = $this->get('validator');
-        $errors = $validator->validate($selfRegisterData, null, ['verify_codeputy']);
+        $errors = $this->validator->validate($selfRegisterData, null, ['verify_codeputy']);
 
         if (count($errors) > 0) {
             throw new \RuntimeException('Invalid registration data: ' . $errors);
@@ -70,9 +77,9 @@ class SelfRegisterController extends RestController
 
         try {
             $coDeputyVerified = $userRegistrationService->validateCoDeputy($selfRegisterData);
-            $this->get('logger')->warning('CasRec codeputy validation success: ', ['extra' => ['page' => 'codep_validation', 'success' => true] + $selfRegisterData->toArray()]);
+            $this->logger->warning('CasRec codeputy validation success: ', ['extra' => ['page' => 'codep_validation', 'success' => true] + $selfRegisterData->toArray()]);
         } catch (\Throwable $e) {
-            $this->get('logger')->warning('CasRec codeputy validation failed:', ['extra' => ['page' => 'codep_validation', 'success' => false] + $selfRegisterData->toArray()]);
+            $this->logger->warning('CasRec codeputy validation failed:', ['extra' => ['page' => 'codep_validation', 'success' => false] + $selfRegisterData->toArray()]);
             throw $e;
         }
 

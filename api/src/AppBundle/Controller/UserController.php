@@ -11,6 +11,7 @@ use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Time\DateTimeProvider;
 use AppBundle\Service\UserService;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Psr\Log\LoggerInterface;
@@ -29,35 +30,13 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
  */
 class UserController extends RestController
 {
-    /**
-     * @var UserService
-     */
-    private $userService;
-
-    /**
-     * @var EncoderFactoryInterface
-     */
-    private $encoderFactory;
-
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
-
-    /**
-     * @var ClientRepository
-     */
-    private $clientRepository;
-
-    /**
-     * @var UserVoter
-     */
-    private $userVoter;
-
-    /**
-     * @var SecurityHelper
-     */
-    private $securityHelper;
+    private UserService $userService;
+    private EncoderFactoryInterface $encoderFactory;
+    private UserRepository $userRepository;
+    private ClientRepository $clientRepository;
+    private UserVoter $userVoter;
+    private SecurityHelper $securityHelper;
+    private EntityManagerInterface $em;
 
     public function __construct(
         UserService $userService,
@@ -65,7 +44,8 @@ class UserController extends RestController
         UserRepository $userRepository,
         ClientRepository $clientRepository,
         UserVoter $userVoter,
-        SecurityHelper $securityHelper
+        SecurityHelper $securityHelper,
+        EntityManagerInterface $em
     ) {
         $this->userService = $userService;
         $this->encoderFactory = $encoderFactory;
@@ -73,6 +53,7 @@ class UserController extends RestController
         $this->clientRepository = $clientRepository;
         $this->userVoter = $userVoter;
         $this->securityHelper = $securityHelper;
+        $this->em = $em;
     }
 
     /**
@@ -188,7 +169,7 @@ class UserController extends RestController
             $requestedUser->setActive($data['set_active']);
         }
 
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return $requestedUser->getId();
     }
@@ -303,11 +284,11 @@ class UserController extends RestController
 
         if ($deletee->getFirstClient()) {
             $clients = $deletee->getClients();
-            $this->getEntityManager()->remove($clients[0]);
+            $this->em->remove($clients[0]);
         }
 
-        $this->getEntityManager()->remove($deletee);
-        $this->getEntityManager()->flush();
+        $this->em->remove($deletee);
+        $this->em->flush();
 
         return [];
     }
@@ -343,7 +324,7 @@ class UserController extends RestController
 
         $user->recreateRegistrationToken();
 
-        $this->getEntityManager()->flush($user);
+        $this->em->flush($user);
 
         $this->setJmsSerialiserGroups(['user']);
 
@@ -390,8 +371,8 @@ class UserController extends RestController
         }
 
         $user->setAgreeTermsUse(true);
-        $this->getEntityManager()->persist($user);
-        $this->getEntityManager()->flush($user);
+        $this->em->persist($user);
+        $this->em->flush($user);
 
         return $user->getId();
     }

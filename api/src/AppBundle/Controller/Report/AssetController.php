@@ -4,13 +4,20 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class AssetController extends RestController
 {
-    private $sectionIds = [EntityDir\Report\Report::SECTION_ASSETS];
+    private array $sectionIds = [EntityDir\Report\Report::SECTION_ASSETS];
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
 
     /**
      * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"}, methods={"GET"})
@@ -50,11 +57,11 @@ class AssetController extends RestController
 
         $this->updateEntityWithData($asset, $data);
 
-        $this->getEntityManager()->persist($asset);
-        $this->getEntityManager()->flush();
+        $this->em->persist($asset);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $asset->getId()];
     }
@@ -74,10 +81,10 @@ class AssetController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
 
         $this->updateEntityWithData($asset, $data);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $asset->getId()];
     }
@@ -94,11 +101,11 @@ class AssetController extends RestController
         $asset = $this->findEntityBy(EntityDir\Report\Asset::class, $assetId);
         $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
 
-        $this->getEntityManager()->remove($asset);
-        $this->getEntityManager()->flush();
+        $this->em->remove($asset);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return [];
     }

@@ -4,16 +4,23 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class MoneyTransactionController extends RestController
 {
-    private $sectionIds = [
+    private array $sectionIds = [
         EntityDir\Report\Report::SECTION_MONEY_IN,
         EntityDir\Report\Report::SECTION_MONEY_OUT
     ];
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
 
     /**
      * @Route("/report/{reportId}/money-transaction", methods={"POST"})
@@ -56,7 +63,7 @@ class MoneyTransactionController extends RestController
         $this->persistAndFlush($t);
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return $t->getId();
     }
@@ -89,10 +96,10 @@ class MoneyTransactionController extends RestController
                 $t->setBankAccount(null);
             }
         }
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return $t->getId();
     }
@@ -109,11 +116,11 @@ class MoneyTransactionController extends RestController
         $t = $this->findEntityBy(EntityDir\Report\MoneyTransaction::class, $transactionId, 'transaction not found'); /* @var $t EntityDir\Report\MoneyTransaction */
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
-        $this->getEntityManager()->remove($t);
-        $this->getEntityManager()->flush();
+        $this->em->remove($t);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return [];
     }

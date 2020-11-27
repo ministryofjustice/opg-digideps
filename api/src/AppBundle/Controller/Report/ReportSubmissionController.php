@@ -7,6 +7,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer;
+use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -23,7 +24,7 @@ class ReportSubmissionController extends RestController
         Document::SYNC_STATUS_PERMANENT_ERROR
     ];
 
-    private static $jmsGroups = [
+    private static array $jmsGroups = [
         'report-submission',
         'report-type',
         'report-client',
@@ -41,6 +42,13 @@ class ReportSubmissionController extends RestController
         'synchronisation',
     ];
 
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN')")
@@ -50,14 +58,14 @@ class ReportSubmissionController extends RestController
         $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class); /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
 
         $ret = $repo->findByFiltersWithCounts(
-                $request->get('status'),
-                $request->get('q'),
-                $request->get('created_by_role'),
-                $request->get('offset', 0),
-                $request->get('limit', 15),
-                $request->get('orderBy', 'createdOn'),
-                $request->get('order', 'ASC')
-            );
+            $request->get('status'),
+            $request->get('q'),
+            $request->get('created_by_role'),
+            $request->get('offset', 0),
+            $request->get('limit', 15),
+            $request->get('orderBy', 'createdOn'),
+            $request->get('order', 'ASC')
+        );
 
         $this->setJmsSerialiserGroups(self::$jmsGroups);
 
@@ -96,7 +104,7 @@ class ReportSubmissionController extends RestController
             $reportSubmission->setArchivedBy($this->getUser());
         }
 
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return $reportSubmission->getId();
     }
@@ -122,7 +130,7 @@ class ReportSubmissionController extends RestController
             $reportSubmission->setUuid($data['uuid']);
         }
 
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return $reportSubmission->getId();
     }
@@ -167,7 +175,7 @@ class ReportSubmissionController extends RestController
             $document->setStorageReference(null);
         }
 
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return true;
     }
@@ -195,7 +203,7 @@ class ReportSubmissionController extends RestController
             }
         }
 
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return true;
     }

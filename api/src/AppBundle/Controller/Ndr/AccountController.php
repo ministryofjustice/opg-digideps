@@ -4,12 +4,20 @@ namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class AccountController extends RestController
 {
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/ndr/{ndrId}/account", methods={"POST"})
      * @Security("has_role('ROLE_DEPUTY')")
@@ -65,7 +73,7 @@ class AccountController extends RestController
 
         $account->setLastEdit(new \DateTime());
 
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return $account->getId();
     }
@@ -79,9 +87,8 @@ class AccountController extends RestController
         $account = $this->findEntityBy(EntityDir\Ndr\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Ndr\BankAccount */
         $this->denyAccessIfNdrDoesNotBelongToUser($account->getNdr());
 
-        $this->getEntityManager()->remove($account);
-
-        $this->getEntityManager()->flush();
+        $this->em->remove($account);
+        $this->em->flush();
 
         return [];
     }

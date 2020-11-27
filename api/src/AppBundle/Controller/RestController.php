@@ -7,6 +7,8 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\EventListener\RestInputOuputFormatter;
 use AppBundle\Exception\NotFound;
 use AppBundle\Service\Auth\AuthService;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,13 +16,14 @@ use Symfony\Component\HttpFoundation\Request;
 abstract class RestController extends Controller
 {
     /**
+     * @param Request $request
+     * @param array $assertions
+     * @param RestInputOuputFormatter $formatter
      * @return array
      */
-    protected function deserializeBodyContent(Request $request, array $assertions = [])
+    protected function deserializeBodyContent(Request $request, array $assertions = [], RestInputOuputFormatter $formatter)
     {
-        $restInputOuputFormatter = $this->get(RestInputOuputFormatter::class);
-
-        $return = $restInputOuputFormatter->requestContentToArray($request);
+        $return = $formatter->requestContentToArray($request);
 
         $this->validateArray($return, $assertions);
 
@@ -91,11 +94,12 @@ abstract class RestController extends Controller
     }
 
     /**
-     * @return \Doctrine\ORM\EntityManager
+     * @param EntityManagerInterface $em
+     * @return EntityManagerInterface
      */
-    protected function getEntityManager()
+    protected function getEntityManager(EntityManagerInterface $em)
     {
-        return $this->getDoctrine()->getManager();
+        return $em;
     }
 
     /**
@@ -118,11 +122,9 @@ abstract class RestController extends Controller
      *
      * @param string $groups user
      */
-    protected function setJmsSerialiserGroups(array $groups)
+    protected function setJmsSerialiserGroups(array $groups, RestInputOuputFormatter $formatter)
     {
-        $restInputOuputFormatter = $this->get(RestInputOuputFormatter::class);
-
-        $restInputOuputFormatter->addContextModifier(function ($context) use ($groups) {
+        $formatter->addContextModifier(function ($context) use ($groups) {
             $context->setGroups($groups);
         });
     }
@@ -130,9 +132,9 @@ abstract class RestController extends Controller
     /**
      * @return AuthService
      */
-    protected function getAuthService()
+    protected function getAuthService(AuthService $authService)
     {
-        return $this->get(AuthService::class);
+        return $authService;
     }
 
     /**

@@ -18,11 +18,23 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class AuthController extends RestController
 {
+    public function __construct(RestInputOuputFormatter $formatter)
+    {
+        parent::__construct($formatter);
+    }
+
     /**
      * Return the user by email&password or token
      * expected keys in body: 'token' or ('email' and 'password').
      *
      * @Route("/login", methods={"POST"})
+     * @param Request $request
+     * @param UserProvider $userProvider
+     * @param AttemptsInTimeChecker $attemptsInTimechecker
+     * @param AttemptsIncrementalWaitingChecker $incrementalWaitingTimechecker
+     * @param RestInputOuputFormatter $restInputOuputFormatter
+     * @param EntityManagerInterface $em
+     * @return \AppBundle\Entity\User|bool|null
      */
     public function login(
         Request $request,

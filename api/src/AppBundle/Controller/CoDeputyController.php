@@ -6,6 +6,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\User;
 use AppBundle\Service\CsvUploader;
 use AppBundle\Service\UserService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,15 +16,13 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CoDeputyController extends RestController
 {
+    private UserService $userService;
+    private EntityManagerInterface $em;
 
-    /**
-     * @var UserService
-     */
-    private $userService;
-
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, EntityManagerInterface $em)
     {
         $this->userService = $userService;
+        $this->em = $em;
     }
 
     /**
@@ -38,9 +37,7 @@ class CoDeputyController extends RestController
             ->where('u.coDeputyClientConfirmed = ?1')
             ->setParameter(1, true);
 
-        $count = $qb->getQuery()->getSingleScalarResult();
-
-        return $count;
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -126,7 +123,7 @@ class CoDeputyController extends RestController
             }
         }
 
-        $conn = $this->getEntityManager()->getConnection();
+        $conn = $this->em->getConnection();
         $affected = 0;
         foreach (array_chunk($deputyNumbers, 500) as $chunk) {
             $sql = "UPDATE dd_user SET codeputy_client_confirmed = TRUE WHERE deputy_no IN ('" . implode("','", $chunk) . "')";

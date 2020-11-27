@@ -4,12 +4,20 @@ namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class AssetController extends RestController
 {
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/ndr/{ndrId}/assets", requirements={"ndrId":"\d+"}, methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
@@ -66,8 +74,8 @@ class AssetController extends RestController
         $this->updateEntityWithData($asset, $data);
         $ndr->setNoAssetToAdd(false);
 
-        $this->getEntityManager()->persist($asset);
-        $this->getEntityManager()->flush();
+        $this->em->persist($asset);
+        $this->em->flush();
 
         return ['id' => $asset->getId()];
     }
@@ -88,7 +96,7 @@ class AssetController extends RestController
 
         $this->updateEntityWithData($asset, $data);
 
-        $this->getEntityManager()->flush($asset);
+        $this->em->flush($asset);
 
         return ['id' => $asset->getId()];
     }
@@ -105,8 +113,8 @@ class AssetController extends RestController
         $asset = $this->findEntityBy(EntityDir\Ndr\Asset::class, $assetId);
         $this->denyAccessIfNdrDoesNotBelongToUser($asset->getNdr());
 
-        $this->getEntityManager()->remove($asset);
-        $this->getEntityManager()->flush();
+        $this->em->remove($asset);
+        $this->em->flush();
 
         return [];
     }
