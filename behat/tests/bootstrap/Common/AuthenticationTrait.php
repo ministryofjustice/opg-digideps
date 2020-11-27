@@ -11,7 +11,7 @@ trait AuthenticationTrait
      */
     public function iAmLoggedInAsWithPassword($email, $password)
     {
-        $this->visitPath('/logout');
+        $this->getSession()->setCookie('digideps', null);
         $this->visitPath('/login');
         $this->fillField('login_email', $email);
         $this->fillField('login_password', $password);
