@@ -11,18 +11,18 @@ class ManageController extends RestController
 {
     /**
      * @Route("/availability", methods={"GET"})
+     * @param string $symfonyEnvironment
+     * @return array
      */
-    public function availabilityAction()
+    public function availabilityAction(string $symfonyEnvironment)
     {
         list($dbHealthy, $dbError) = $this->dbInfo();
 
-        $data = [
+        return [
             'healthy' => $dbHealthy,
-            'environment' => $this->get('kernel')->getEnvironment(),
+            'environment' => $symfonyEnvironment,
             'errors' => implode("\n", array_filter([$dbError])),
         ];
-
-        return $data;
     }
 
     /**
