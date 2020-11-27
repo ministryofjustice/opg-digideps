@@ -8,29 +8,34 @@ use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Service\Client\RestClient;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/org/settings/user-accounts")
  */
 class TeamController extends AbstractController
 {
-    /**@var RestClient */
-    private $restClient;
-
-    /** @var UserApi */
-    private $userApi;
+    private RestClient $restClient;
+    private UserApi $userApi;
+    private LoggerInterface $logger;
+    private TranslatorInterface $translator;
 
     public function __construct(
         RestClient $restClient,
-        UserApi $userApi
+        UserApi $userApi,
+        LoggerInterface $logger,
+        TranslatorInterface $translator
     ) {
         $this->restClient = $restClient;
         $this->userApi = $userApi;
+        $this->logger = $logger;
+        $this->translator = $translator;
     }
 
     /**
@@ -110,7 +115,7 @@ class TeamController extends AbstractController
             } catch (\Throwable $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
-                        $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'org-team')));
+                        $form->get('email')->addError(new FormError($this->translator->trans('form.email.existingError', [], 'org-team')));
                         break;
 
                     default:
@@ -177,7 +182,7 @@ class TeamController extends AbstractController
             } catch (\Throwable $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
-                        $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'org-team')));
+                        $form->get('email')->addError(new FormError($this->translator->trans('form.email.existingError', [], 'org-team')));
                         break;
 
                     default:
@@ -215,7 +220,7 @@ class TeamController extends AbstractController
                 'An activation email has been sent to the user.'
             );
         } catch (\Throwable $e) {
-            $this->get('logger')->debug($e->getMessage());
+            $this->logger->debug($e->getMessage());
             $request->getSession()->getFlashBag()->add(
                 'error',
                 'An activation email could not be sent.'
@@ -248,7 +253,7 @@ class TeamController extends AbstractController
 
                 $request->getSession()->getFlashBag()->add('notice', 'User account removed');
             } catch (\Throwable $e) {
-                $this->get('logger')->debug($e->getMessage());
+                $this->logger->debug($e->getMessage());
 
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
                     $request->getSession()->getFlashBag()->add(
