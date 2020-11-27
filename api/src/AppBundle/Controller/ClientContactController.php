@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -98,7 +99,7 @@ class ClientContactController extends RestController
      * @Route("/clientcontacts/{id}", methods={"DELETE"})
      * @Security("has_role('ROLE_ORG')")
      */
-    public function delete($id)
+    public function delete($id, LoggerInterface $logger)
     {
         try {
             $clientContact = $this->findEntityBy(EntityDir\ClientContact::class, $id);
@@ -107,7 +108,7 @@ class ClientContactController extends RestController
             $this->getEntityManager()->remove($clientContact);
             $this->getEntityManager()->flush($clientContact);
         } catch (\Throwable $e) {
-            $this->get('logger')->error('Failed to delete client contact ID: ' . $id . ' - ' . $e->getMessage());
+            $logger->error('Failed to delete client contact ID: ' . $id . ' - ' . $e->getMessage());
         }
 
         return [];
