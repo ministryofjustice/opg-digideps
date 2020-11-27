@@ -86,7 +86,7 @@
             {{ macros.notification('important', 'unableToEditAfterSubmission' | trans) }}
         </div>
 
-        <div class="govuk-form-group push-half--top">
+        <div style="clear:both;display:inline-block;height:0px;" data-module="opg-toggleable-submit">
             {{ form_submit(form.save,'save') }}
         </div>
 
