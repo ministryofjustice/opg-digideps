@@ -3,13 +3,15 @@
 
 namespace DigidepsTests\Service\Client\Internal;
 
-use AppBundle\Model\Email;
+use AppBundle\Entity\Report\Report;
+use AppBundle\Event\GeneralFeedbackSubmittedEvent;
+use AppBundle\Event\PostSubmissionFeedbackSubmittedEvent;
+use AppBundle\EventDispatcher\ObservableEventDispatcher;
+use AppBundle\Model\FeedbackReport;
 use AppBundle\Service\Client\Internal\SatisfactionApi;
 use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
+use AppBundle\TestHelpers\UserHelpers;
 use Faker\Factory;
-use Faker\Provider\en_US\Text;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 
@@ -21,11 +23,8 @@ class SatisfactionApiTest extends TestCase
     /** @var RestClient&ObjectProphecy */
     private $restClient;
 
-    /** @var MailFactory&ObjectProphecy */
-    private $mailFactory;
-
-    /** @var MailSender&ObjectProphecy */
-    private $mailSender;
+    /** @var ObservableEventDispatcher&ObjectProphecy */
+    private $eventDisaptcher;
 
     /**  @var SatisfactionApi */
     private $sut;
@@ -34,13 +33,14 @@ class SatisfactionApiTest extends TestCase
     {
         $this->faker = Factory::create('en_UK');
         $this->restClient = self::prophesize(RestClient::class);
-        $this->sut = new SatisfactionApi($this->restClient->reveal());
+        $this->eventDisaptcher = self::prophesize(ObservableEventDispatcher::class);
+        $this->sut = new SatisfactionApi($this->restClient->reveal(), $this->eventDisaptcher->reveal());
     }
 
     /**
      * @test
      */
-    public function create()
+    public function createGeneralFeedback()
     {
         $score = $this->faker->randomElement([1,2,3,4,5]);
         $comments = $this->faker->realText();
@@ -59,6 +59,49 @@ class SatisfactionApiTest extends TestCase
             'satisfactionLevel' => $score
         ];
 
-        $this->sut->create($formData);
+        $event = (new GeneralFeedbackSubmittedEvent())->setFeedbackFormResponse($formData);
+        $this->eventDisaptcher->dispatch('general.feedback.submitted', $event)->shouldBeCalled();
+
+        $this->sut->createGeneralFeedback($formData);
+    }
+
+    /**
+     * @test
+     * @dataProvider commentsProvider
+     */
+    public function createPostSubmissionFeedback(?string $comments, string $expectedCommentsInPostRequest)
+    {
+        $score = $this->faker->randomElement([1,2,3,4,5]);
+        $submittedByUser = UserHelpers::createUser();
+        $reportType = $this->faker->randomElement([
+            Report::TYPE_COMBINED_HIGH_ASSETS,
+            Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,
+            Report::TYPE_ABBREVIATION_COMBINED,
+            Report::TYPE_COMBINED_LOW_ASSETS,
+            Report::TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS,
+            Report::TYPE_HEALTH_WELFARE
+        ]);
+
+        $this->restClient->post(
+            'satisfaction',
+            ['score' => $score, 'comments' => $expectedCommentsInPostRequest, 'reportType' => $reportType]
+        )->shouldBeCalled();
+
+        $feedbackReportObject = (new FeedbackReport())
+            ->setComments($comments)
+            ->setSatisfactionLevel($score);
+
+        $event = new PostSubmissionFeedbackSubmittedEvent($feedbackReportObject, $submittedByUser);
+        $this->eventDisaptcher->dispatch('post.submission.feedback.submitted', $event)->shouldBeCalled();
+
+        $this->sut->createPostSubmissionFeedback($feedbackReportObject, $reportType, $submittedByUser);
+    }
+
+    public function commentsProvider()
+    {
+        return [
+            'Comments included' => ['Its greeeeat', 'Its greeeeat'],
+            'Empty string comments' => ['', 'Not provided'],
+        ];
     }
 }

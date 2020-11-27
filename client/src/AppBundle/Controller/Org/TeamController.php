@@ -6,9 +6,8 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
@@ -20,30 +19,18 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class TeamController extends AbstractController
 {
-    /**
-     * @var RestClient
-     */
+    /**@var RestClient */
     private $restClient;
 
-    /**
-     * @var MailFactory
-     */
-    private $mailFactory;
-
-    /**
-     * @var MailSender
-     */
-    private $mailSender;
+    /** @var UserApi */
+    private $userApi;
 
     public function __construct(
         RestClient $restClient,
-        MailFactory $mailFactory,
-        MailSender $mailSender
-    )
-    {
+        UserApi $userApi
+    ) {
         $this->restClient = $restClient;
-        $this->mailFactory = $mailFactory;
-        $this->mailSender = $mailSender;
+        $this->userApi = $userApi;
     }
 
     /**
@@ -116,17 +103,8 @@ class TeamController extends AbstractController
             }
 
             try {
-                // Check user belonging to another team. If so:
-                // PROF named or admin: add to all the teams the current user belongs to
-                // all the other cases (PROF team member and all PAs): throw an exception
-
-
-                // if the above doesn't apply: continue adding the user
-                $user = $this->restClient->post('user', $user, ['org_team_add'], 'User');
+                $this->userApi->createOrgUser($user);
                 $request->getSession()->getFlashBag()->add('notice', 'The user has been added');
-
-                $invitationEmail = $this->mailFactory->createInvitationEmail($user);
-                $this->mailSender->send($invitationEmail, ['text', 'html']);
 
                 return $this->redirectToRoute('org_team');
             } catch (\Throwable $e) {
@@ -168,9 +146,16 @@ class TeamController extends AbstractController
 
         $validationGroups = $team->canAddAdmin() ? ['user_details_org', 'org_team_role_name'] : ['user_details_org'];
 
-        $form = $this->createForm(FormDir\Org\TeamMemberAccountType::class, $user, ['team' => $team, 'loggedInUser' => $this->getUser(), 'targetUser' => $user, 'validation_groups' => $validationGroups
-                                   ]
-                                 );
+        $form = $this->createForm(
+            FormDir\Org\TeamMemberAccountType::class,
+            $user,
+            [
+                'team' => $team,
+                'loggedInUser' => $this->getUser(),
+                'targetUser' => $user,
+                'validation_groups' => $validationGroups
+            ]
+        );
 
         $form->handleRequest($request);
 
@@ -223,10 +208,7 @@ class TeamController extends AbstractController
             /* @var $user EntityDir\User */
             $user = $this->restClient->get('team/member/' . $id, 'User');
 
-            $user = $this->restClient->userRecreateToken($user->getEmail(), 'pass-reset');
-
-            $invitationEmail = $this->mailFactory->createInvitationEmail($user);
-            $this->mailSender->send($invitationEmail);
+            $this->userApi->reInviteDeputy($user->getEmail());
 
             $request->getSession()->getFlashBag()->add(
                 'notice',

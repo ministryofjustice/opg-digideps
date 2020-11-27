@@ -19,6 +19,7 @@ use AppBundle\Service\Mailer\MailSenderInterface;
 use AppBundle\Service\OrgService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -103,18 +104,11 @@ class IndexController extends AbstractController
      * @Template("AppBundle:Admin/Index:addUser.html.twig")
      *
      * @param Request $request
-     * @param RestClient $restClient
-     * @param MailFactory $mailFactory
-     * @param MailSenderInterface $mailSender
      *
      * @return array|RedirectResponse
      */
-    public function addUserAction(
-        Request $request,
-        RestClient $restClient,
-        MailFactory $mailFactory,
-        MailSenderInterface $mailSender
-    ) {
+    public function addUserAction(Request $request)
+    {
         $form = $this->createForm(FormDir\Admin\AddUserType::class, new EntityDir\User());
 
         $form->handleRequest($request);
@@ -125,11 +119,7 @@ class IndexController extends AbstractController
                     throw new \RuntimeException('Cannot add admin from non-admin user');
                 }
 
-                /** @var EntityDir\User $user */
-                $user = $restClient->post('user', $form->getData(), ['admin_add_user'], 'User');
-
-                $activationEmail = $mailFactory->createActivationEmail($user);
-                $mailSender->send($activationEmail);
+                $this->userApi->createAdminUser($form->getData());
 
                 $this->addFlash(
                     'notice',
@@ -583,18 +573,10 @@ class IndexController extends AbstractController
      * @Route("/send-activation-link/{email}", name="admin_send_activation_link")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      **/
-    public function sendUserActivationLinkAction(
-        $email,
-        MailFactory $mailFactory,
-        MailSenderInterface $mailSender,
-        LoggerInterface $logger,
-        RestClient $restClient
-    ) {
+    public function sendUserActivationLinkAction(string $email, LoggerInterface $logger)
+    {
         try {
-            $user = $restClient->userRecreateToken($email, 'pass-reset');
-            $resetPasswordEmail = $mailFactory->createActivationEmail($user);
-
-            $mailSender->send($resetPasswordEmail);
+            $this->userApi->activate($email, 'pass-reset');
         } catch (\Throwable $e) {
             $logger->debug($e->getMessage());
         }

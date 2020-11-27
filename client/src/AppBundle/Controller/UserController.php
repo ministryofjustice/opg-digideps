@@ -33,16 +33,6 @@ class UserController extends AbstractController
     private $restClient;
 
     /**
-     * @var MailFactory
-     */
-    private $mailFactory;
-
-    /**
-     * @var MailSender
-     */
-    private $mailSender;
-
-    /**
      * @var UserApi
      */
     private $userApi;
@@ -54,14 +44,10 @@ class UserController extends AbstractController
 
     public function __construct(
         RestClient $restClient,
-        MailFactory $mailFactory,
-        MailSender $mailSender,
         UserApi $userApi,
         ClientApi $clientApi
     ) {
         $this->restClient = $restClient;
-        $this->mailFactory = $mailFactory;
-        $this->mailSender = $mailSender;
         $this->userApi = $userApi;
         $this->clientApi = $clientApi;
     }
@@ -181,16 +167,8 @@ class UserController extends AbstractController
      */
     public function activateLinkSendAction(string $token): Response
     {
-        // check $token is correct
         $user = $this->restClient->loadUserByToken($token);
-        /* @var $user EntityDir\User */
-
-        // recreate token
-        // the endpoint will also send the activation email
-        $this->restClient->userRecreateToken($user->getEmail(), 'activate');
-
-        $activationEmail = $this->mailFactory->createActivationEmail($user);
-        $this->mailSender->send($activationEmail);
+        $this->userApi->activate($user->getEmail());
 
         return $this->redirect($this->generateUrl('activation_link_sent', ['token' => $token]));
     }
@@ -269,21 +247,10 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $emailAddress = $user->getEmail();
-            $disguisedEmail = '***' . substr($emailAddress, 3);
-            $logger->warning('Reset password request for : ' . $emailAddress);
-
             try {
-                $user = $this->restClient->userRecreateToken($user->getEmail(), 'pass-reset');
-
-                $logger->warning('Sending reset email to ' . $disguisedEmail);
-
-                $resetPasswordEmail = $this->mailFactory->createResetPasswordEmail($user);
-
-                $this->mailSender->send($resetPasswordEmail);
-                $logger->warning('Email sent to ' . $disguisedEmail);
+                $this->userApi->resetPassword($user->getEmail());
             } catch (RestClientException $e) {
-                $logger->warning('Email ' . $emailAddress . ' not found');
+                $logger->warning('Email ' . $user->getEmail() . ' not found');
             }
 
             // after details are added, admin users to go their homepage, deputies go to next step
@@ -325,9 +292,7 @@ class UserController extends AbstractController
             $data = $form->getData();
 
             try {
-                $user = $this->restClient->registerUser($data);
-                $activationEmail = $this->mailFactory->createActivationEmail($user);
-                $this->mailSender->send($activationEmail);
+                $this->userApi->selfRegister($data);
 
                 $bodyText = $translator->trans('thankyou.body', [], 'register');
                 $email = $data->getEmail();

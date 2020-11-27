@@ -77,10 +77,13 @@ class SelfRegisterData
 
     /**
      * @param string $firstname
+     * @return SelfRegisterData
      */
-    public function setFirstname($firstname)
+    public function setFirstname($firstname): self
     {
         $this->firstname = $firstname;
+
+        return $this;
     }
 
     /**
@@ -93,10 +96,13 @@ class SelfRegisterData
 
     /**
      * @param string $lastname
+     * @return SelfRegisterData
      */
-    public function setLastname($lastname)
+    public function setLastname($lastname): self
     {
         $this->lastname = $lastname;
+
+        return $this;
     }
 
     /**
@@ -109,10 +115,13 @@ class SelfRegisterData
 
     /**
      * @param string $email
+     * @return SelfRegisterData
      */
-    public function setEmail($email)
+    public function setEmail($email): self
     {
         $this->email = $email;
+
+        return $this;
     }
 
     /**
@@ -125,10 +134,13 @@ class SelfRegisterData
 
     /**
      * @param string $postcode
+     * @return SelfRegisterData
      */
-    public function setPostcode($postcode)
+    public function setPostcode($postcode): self
     {
         $this->postcode = $postcode;
+
+        return $this;
     }
 
     /**
@@ -141,10 +153,13 @@ class SelfRegisterData
 
     /**
      * @param string $clientFirstname
+     * @return SelfRegisterData
      */
-    public function setClientFirstname($clientFirstname)
+    public function setClientFirstname($clientFirstname): self
     {
         $this->clientFirstname = $clientFirstname;
+
+        return $this;
     }
 
     /**
@@ -157,10 +172,13 @@ class SelfRegisterData
 
     /**
      * @param string $clientLastname
+     * @return SelfRegisterData
      */
-    public function setClientLastname($clientLastname)
+    public function setClientLastname($clientLastname): self
     {
         $this->clientLastname = $clientLastname;
+
+        return $this;
     }
 
     /**
@@ -173,9 +191,12 @@ class SelfRegisterData
 
     /**
      * @param string $caseNumber
+     * @return SelfRegisterData
      */
-    public function setCaseNumber($caseNumber)
+    public function setCaseNumber($caseNumber): self
     {
         $this->caseNumber = $caseNumber;
+
+        return $this;
     }
 }

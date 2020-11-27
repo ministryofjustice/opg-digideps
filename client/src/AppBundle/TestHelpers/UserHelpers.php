@@ -24,7 +24,7 @@ class UserHelpers extends KernelTestCase
         }
 
         return (new User())
-            ->setId(1)
+            ->setId($faker->numberBetween(1, 99999999))
             ->setFirstname($faker->firstName)
             ->setLastname($faker->lastName)
             ->setRoleName($faker->jobTitle)
@@ -32,9 +32,9 @@ class UserHelpers extends KernelTestCase
     }
 
     /**
-     * @return User|array|object
+     * @return User
      */
-    public static function createProfAdminUser(?int $id = null)
+    public static function createProfAdminUser(?int $id = null): User
     {
         $faker = Faker\Factory::create();
 
@@ -47,5 +47,31 @@ class UserHelpers extends KernelTestCase
                 'email' => $faker->safeEmail,
             ]
         );
+    }
+
+    /**
+     * @return User
+     */
+    public static function createInvitedCoDeputy(): User
+    {
+        $faker = Faker\Factory::create();
+
+        $invitedCoDeputy = self::createUser();
+
+        foreach ($invitedCoDeputy as $key => $value) {
+            unset($invitedCoDeputy->$key);
+        }
+
+        return $invitedCoDeputy->setEmail($faker->safeEmail);
+    }
+
+    public static function createAdminUser(): User
+    {
+        return (self::createUser())->setRoleName(User::ROLE_ADMIN);
+    }
+
+    public static function createSuperAdminUser(): User
+    {
+        return (self::createUser())->setRoleName(User::ROLE_SUPER_ADMIN);
     }
 }

@@ -17,6 +17,7 @@ use AppBundle\Model\FeedbackReport;
 use AppBundle\Service\Client\Internal\CasrecApi;
 use AppBundle\Service\Client\Internal\ClientApi;
 use AppBundle\Service\Client\Internal\ReportApi;
+use AppBundle\Service\Client\Internal\SatisfactionApi;
 use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\CsvGeneratorService;
@@ -105,11 +106,8 @@ class ReportController extends AbstractController
     /** @var ClientApi */
     private $clientApi;
 
-    /** @var MailFactory */
-    private $mailFactory;
-
-    /** @var MailSender */
-    private $mailSender;
+    /** @var SatisfactionApi */
+    private $satisfactionApi;
 
     /** @var CasrecApi */
     private $casrecApi;
@@ -119,17 +117,14 @@ class ReportController extends AbstractController
         ReportApi $reportApi,
         UserApi $userApi,
         ClientApi $clientApi,
-        MailFactory $mailFactory,
-        MailSender $mailSender,
+        SatisfactionApi $satisfactionApi,
         CasrecApi $casrecApi
     ) {
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
         $this->userApi = $userApi;
         $this->clientApi = $clientApi;
-        $this->mailFactory = $mailFactory;
-        $this->mailSender = $mailSender;
-
+        $this->satisfactionApi = $satisfactionApi;
         $this->casrecApi = $casrecApi;
     }
 
@@ -418,7 +413,8 @@ class ReportController extends AbstractController
 
             $report->setSubmitted(true)->setSubmitDate(new DateTime());
             $reportSubmissionService->generateReportDocuments($report);
-            $reportSubmissionService->submit($report, $currentUser);
+
+            $this->reportApi->submit($report, $currentUser);
 
             return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId' => $report->getId()]));
         }
@@ -449,9 +445,6 @@ class ReportController extends AbstractController
         /** @var TranslatorInterface $translator */
         $translator = $this->get('translator');
 
-        /** @var User $user */
-        $user = $this->getUser();
-
         // check status
         if (!$report->getSubmitted()) {
             $message = $translator->trans('report.submissionExceptions.submitted', [], 'validators');
@@ -459,24 +452,10 @@ class ReportController extends AbstractController
         }
 
         $form = $this->createForm(FeedbackReportType::class, new FeedbackReport());
-
         $form->handleRequest($request);
-        $comments = $form->get('comments')->getData();
 
-        if (!isset($comments)) {
-            $comments = '';
-        }
         if ($form->isSubmitted() && $form->isValid()) {
-            // Store in database
-            $this->restClient->post('satisfaction', [
-                'score' => $form->get('satisfactionLevel')->getData(),
-                'comments' => $comments,
-                'reportType' => $report->getType()
-            ]);
-
-            // Send notification email
-            $feedbackEmail = $this->mailFactory->createPostSubmissionFeedbackEmail($form->getData(), $user);
-            $this->mailSender->send($feedbackEmail);
+            $this->satisfactionApi->createPostSubmissionFeedback($form->getData(), $report->getType(), $this->getUser());
 
             return $this->redirect($this->generateUrl('report_submit_feedback', ['reportId' => $reportId]));
         }

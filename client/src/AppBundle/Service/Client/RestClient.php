@@ -179,17 +179,6 @@ class RestClient implements RestClientInterface
     }
 
     /**
-     * @param string $email
-     * @param string $type
-     *
-     * @return \AppBundle\Entity\User
-     */
-    public function userRecreateToken($email, $type = 'pass-reset')
-    {
-        return $this->apiCall('put', 'user/recreate-token/' . $email . '/' . $type, null, 'User', [], false);
-    }
-
-    /**
      * @param string $endpoint             e.g. /user
      * @param string $expectedResponseType Entity class to deserialise response into
      *                                     e.g. "Account" (AppBundle\Entity\ prefix not needed)

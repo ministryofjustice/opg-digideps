@@ -70,7 +70,7 @@ workflows:
           requires: [ reset environment for testing ]
           filters: { branches: { ignore: [ master ] } }
           task_name: integration_test
-          timeout: 3600
+          timeout: 3000
 
       - run-task:
           name: backup environment
@@ -163,7 +163,7 @@ workflows:
           filters: { branches: { only: [ main ] } }
           task_name: integration_test
           tf_workspace: integration
-          timeout: 2500
+          timeout: 3000
 
       - client-unit-test:
           name: client unit test
@@ -289,7 +289,7 @@ workflows:
           task_name: integration_test
           tf_workspace: integration
           notify_slack: true
-          timeout: 2500
+          timeout: 3000
 
 orbs:
   aws-cli: circleci/aws-cli@0.1.13

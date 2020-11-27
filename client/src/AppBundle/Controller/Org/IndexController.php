@@ -126,7 +126,7 @@ class IndexController extends AbstractController
             $clientUpdated = $form->getData();
             $clientUpdated->setId($client->getId());
 
-            $this->clientApi->update($client, $clientUpdated, AuditEvents::TRIGGER_DEPUTY_USER_EDIT);
+            $this->clientApi->update($client, $clientUpdated, AuditEvents::TRIGGER_DEPUTY_USER_EDIT, $this->getUser());
 
             $this->addFlash('notice', 'The client details have been edited');
 
