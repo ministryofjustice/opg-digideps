@@ -102,7 +102,9 @@ class ReportController extends RestController
         $report->setReportSeen(true);
 
         $report->updateSectionsStatusCache($report->getAvailableSections());
-        $this->persistAndFlush($report);
+
+        $this->em->persist($report);
+        $this->em->flush();
 
         return ['report' => $report->getId()];
     }
@@ -768,7 +770,8 @@ class ReportController extends RestController
         }
         $checklist->setLastModifiedBy($user);
 
-        $this->persistAndFlush($checklist);
+        $this->em->persist($checklist);
+        $this->em->flush();
 
         return ['checklist' => $checklist->getId()];
     }
@@ -806,7 +809,9 @@ class ReportController extends RestController
         }
 
         $checklist->setLastModifiedBy($user);
-        $this->persistAndFlush($checklist);
+
+        $this->em->persist($checklist);
+        $this->em->flush();
 
         return ['checklist' => $checklist->getId()];
     }
@@ -898,7 +903,8 @@ class ReportController extends RestController
 
         $checklist->setLastModifiedBy($user);
 
-        $this->persistAndFlush($checklist);
+        $this->em->persist($checklist);
+        $this->em->flush();
 
         return ['checklist' => $checklist->getId()];
     }

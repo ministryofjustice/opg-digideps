@@ -46,7 +46,9 @@ class DecisionController extends RestController
             $decision = new EntityDir\Report\Decision();
             $decision->setReport($report);
             $report->setReasonForNoDecisions(null);
-            $this->persistAndFlush($report);
+
+            $this->em->persist($report);
+            $this->em->flush();
         }
 
         $this->validateArray($data, [

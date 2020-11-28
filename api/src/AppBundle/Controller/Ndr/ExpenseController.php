@@ -54,8 +54,9 @@ class ExpenseController extends RestController
         $this->updateEntityWithData($expense, $data);
         $ndr->setPaidForAnything('yes');
 
-        $this->persistAndFlush($expense);
-        $this->persistAndFlush($ndr);
+        $this->em->persist($expense);
+        $this->em->persist($ndr);
+        $this->em->flush();
 
         return ['id' => $expense->getId()];
     }

@@ -57,7 +57,8 @@ class GiftController extends RestController
         $this->updateEntityWithData($report, $gift, $data);
         $report->setGiftsExist('yes');
 
-        $this->persistAndFlush($gift);
+        $this->em->persist($gift);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
         $this->em->flush();

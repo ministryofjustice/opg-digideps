@@ -39,7 +39,8 @@ class MoneyTransferController extends RestController
         $report->setNoTransfersToAdd(false);
         $this->fillEntity($transfer, $data);
 
-        $this->persistAndFlush($transfer);
+        $this->em->persist($transfer);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
         $this->em->flush();
@@ -67,7 +68,8 @@ class MoneyTransferController extends RestController
         $transfer = $this->findEntityBy(EntityDir\Report\MoneyTransfer::class, $transferId);
         $this->fillEntity($transfer, $data);
 
-        $this->persistAndFlush($transfer);
+        $this->em->persist($transfer);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
         $this->em->flush();

@@ -58,8 +58,8 @@ class DocumentController extends RestController
             // only set flag to yes if document being added is a deputy Document (and not auto-generated)
             $report->setWishToProvideDocumentation('yes');
         }
-        $this->persistAndFlush($document);
 
+        $this->em->persist($document);
         $report->updateSectionsStatusCache($this->sectionIds);
         $this->em->flush();
 
@@ -211,7 +211,8 @@ class DocumentController extends RestController
             }
         }
 
-        $this->persistAndFlush($document);
+        $this->em->persist($document);
+        $this->em->flush();
 
         return $document;
     }

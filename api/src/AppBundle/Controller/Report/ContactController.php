@@ -104,7 +104,8 @@ class ContactController extends RestController
             ->setRelationship($contactData['relationship'])
             ->setLastedit(new \DateTime());
 
-        $this->persistAndFlush($contact);
+        $this->em->persist($contact);
+        $this->em->flush();
 
         // remove reason for no contacts
         $report->setReasonForNoContacts(null);

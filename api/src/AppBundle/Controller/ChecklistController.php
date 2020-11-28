@@ -51,7 +51,8 @@ class ChecklistController extends RestController
             $checklist->setUuid($data['uuid']);
         }
 
-        $this->persistAndFlush($checklist);
+        $em->persist($checklist);
+        $em->flush();
 
         $serialisedGroups = ['synchronisation', 'checklist-id', 'checklist-uuid'];
         $this->setJmsSerialiserGroups($serialisedGroups);

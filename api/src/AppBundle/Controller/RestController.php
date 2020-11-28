@@ -94,15 +94,6 @@ abstract class RestController extends Controller
     }
 
     /**
-     * @param EntityManagerInterface $em
-     * @return EntityManagerInterface
-     */
-    protected function getEntityManager(EntityManagerInterface $em)
-    {
-        return $em;
-    }
-
-    /**
      * @param mixed $object
      * @param array $data
      * @param array $keySetters
@@ -165,11 +156,5 @@ abstract class RestController extends Controller
         if (!$this->isGranted('edit', $client)) {
             throw $this->createAccessDeniedException('Client does not belong to user');
         }
-    }
-
-    protected function persistAndFlush($e)
-    {
-        $this->getEntityManager()->persist($e);
-        $this->getEntityManager()->flush($e);
     }
 }

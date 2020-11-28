@@ -35,7 +35,8 @@ class AccountController extends RestController
 
         $this->fillAccountData($account, $data);
 
-        $this->persistAndFlush($account);
+        $this->em->persist($account);
+        $this->em->flush();
 
         return ['id' => $account->getId()];
     }

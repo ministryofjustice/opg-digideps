@@ -19,7 +19,8 @@ class SatisfactionController extends RestController
         $satisfaction->setScore($satisfactionLevel);
         $satisfaction->setComments($comments);
 
-        $this->persistAndFlush($satisfaction);
+        $this->em->persist($satisfaction);
+        $this->em->flush();
 
         return $satisfaction;
     }
@@ -41,7 +42,8 @@ class SatisfactionController extends RestController
         $satisfaction->setReportType($data['reportType']);
         $satisfaction->setDeputyRole($this->getUser()->getRoleName());
 
-        $this->persistAndFlush($satisfaction);
+        $this->em->persist($satisfaction);
+        $this->em->flush();
 
         return $satisfaction->getId();
     }

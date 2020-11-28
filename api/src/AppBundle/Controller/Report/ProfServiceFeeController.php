@@ -35,7 +35,9 @@ class ProfServiceFeeController extends RestController
         $profServiceFee->setReport($report);
         $this->updateEntity($data, $profServiceFee);
         $report->setCurrentProfPaymentsReceived('yes');
-        $this->persistAndFlush($profServiceFee);
+
+        $this->em->persist($profServiceFee);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
         $this->em->flush();

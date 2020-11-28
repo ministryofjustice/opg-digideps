@@ -33,12 +33,6 @@ class ClientController extends AbstractController
     /** @var RestClient */
     private $restClient;
 
-    /** @var MailSender */
-    private $mailSender;
-
-    /** @var MailFactory */
-    private $mailFactory;
-
     /** @var RouterInterface */
     private $router;
 
@@ -46,15 +40,11 @@ class ClientController extends AbstractController
         UserApi $userApi,
         ClientApi $clientApi,
         RestClient $restClient,
-        MailSender $mailSender,
-        MailFactory $mailFactory,
         RouterInterface $router
     ) {
         $this->userApi = $userApi;
         $this->clientApi = $clientApi;
         $this->restClient = $restClient;
-        $this->mailSender = $mailSender;
-        $this->mailFactory = $mailFactory;
         $this->router = $router;
     }
 
@@ -133,8 +123,9 @@ class ClientController extends AbstractController
     /**
      * @Route("/client/add", name="client_add")
      * @Template("AppBundle:Client:add.html.twig")
+     * @return array|RedirectResponse
      */
-    public function addAction(Request $request, Redirector $redirector)
+    public function addAction(Request $request, Redirector $redirector, TranslatorInterface $translator, LoggerInterface $logger)
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->userApi->getUserWithData();
@@ -177,12 +168,6 @@ class ClientController extends AbstractController
                     : $this->generateUrl('report_create', ['clientId' => $response['id']]);
                 return $this->redirect($url);
             } catch (\Throwable $e) {
-                /** @var TranslatorInterface $translator */
-                $translator = $this->get('translator');
-
-                /** @var LoggerInterface $logger */
-                $logger = $this->get('logger');
-
                 switch ((int) $e->getCode()) {
                     case 400:
                         $form->addError(new FormError($translator->trans('formErrors.matching', [], 'register')));

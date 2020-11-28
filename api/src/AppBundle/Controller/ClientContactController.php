@@ -48,7 +48,9 @@ class ClientContactController extends RestController
 
         $clientContact->setClient($client);
         $clientContact->setCreatedBy($this->getUser());
-        $this->persistAndFlush($clientContact);
+
+        $this->em->persist($clientContact);
+        $this->em->flush();
 
         return ['id' => $clientContact->getId()];
     }

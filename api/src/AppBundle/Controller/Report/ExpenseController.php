@@ -57,10 +57,13 @@ class ExpenseController extends RestController
         $this->updateEntityWithData($report, $expense, $data);
         $report->setPaidForAnything('yes');
 
-        $this->persistAndFlush($expense);
+        $this->em->persist($expense);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->persistAndFlush($report);
+
+        $this->em->persist($report);
+        $this->em->flush();
 
         return ['id' => $expense->getId()];
     }

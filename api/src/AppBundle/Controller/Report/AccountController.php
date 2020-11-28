@@ -39,7 +39,8 @@ class AccountController extends RestController
 
         $this->fillAccountData($account, $data);
 
-        $this->persistAndFlush($account);
+        $this->em->persist($account);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
         $this->em->flush();

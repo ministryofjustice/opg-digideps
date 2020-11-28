@@ -36,7 +36,9 @@ class ProfDeputyPrevCostController extends RestController
         $cost = new EntityDir\Report\ProfDeputyPreviousCost($report, $data['amount']);
         $this->updateEntity($data, $cost);
         $report->setProfDeputyCostsHasPrevious('yes');
-        $this->persistAndFlush($cost);
+
+        $this->em->persist($cost);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
         $this->em->flush();

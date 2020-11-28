@@ -47,7 +47,8 @@ class MoneyTransactionShortController extends RestController
         $report->updateSectionsStatusCache($this->sectionIds);
         $this->em->flush();
 
-        $this->persistAndFlush($t);
+        $this->em->persist($t);
+        $this->em->flush();
 
         return $t->getId();
     }

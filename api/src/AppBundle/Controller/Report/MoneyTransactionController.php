@@ -60,8 +60,8 @@ class MoneyTransactionController extends RestController
         }
 
         $t->setReport($report);
-        $this->persistAndFlush($t);
 
+        $this->em->persist($t);
         $report->updateSectionsStatusCache($this->sectionIds);
         $this->em->flush();
 

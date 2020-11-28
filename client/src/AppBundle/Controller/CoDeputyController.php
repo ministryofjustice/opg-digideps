@@ -9,61 +9,43 @@ use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Client\Internal\ClientApi;
 use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
 use AppBundle\Service\Redirector;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CoDeputyController extends AbstractController
 {
-    /**
-     * @var ClientApi
-     */
-    private $clientApi;
-
-    /**
-     * @var UserApi
-     */
-    private $userApi;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var MailFactory
-     */
-    private $mailFactory;
-
-    /**
-     * @var MailSender
-     */
-    private $mailSender;
+    private ClientApi $clientApi;
+    private UserApi $userApi;
+    private RestClient $restClient;
+    private TranslatorInterface $translator;
+    private LoggerInterface $logger;
 
     public function __construct(
         ClientApi $clientApi,
         UserApi $userApi,
         RestClient $restClient,
-        MailFactory $mailFactory,
-        MailSender $mailSender
+        TranslatorInterface $translator,
+        LoggerInterface $logger
     ) {
         $this->clientApi = $clientApi;
         $this->userApi = $userApi;
         $this->restClient = $restClient;
-        $this->mailFactory = $mailFactory;
-        $this->mailSender = $mailSender;
+        $this->translator = $translator;
+        $this->logger = $logger;
     }
 
     /**
      * @Route("/codeputy/verification", name="codep_verification")
      * @Template("AppBundle:CoDeputy:verification.html.twig")
      */
-    public function verificationAction(Request $request, Redirector $redirector)
+    public function verificationAction(Request $request, Redirector $redirector, ValidatorInterface $validator)
     {
         $user = $this->userApi->getUserWithData(['user', 'user-clients', 'client']);
 
@@ -76,12 +58,13 @@ class CoDeputyController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-
             // get client validation errors, if any, and add to the form
             $client = new EntityDir\Client();
             $client->setLastName($form['clientLastname']->getData());
             $client->setCaseNumber($form['clientCaseNumber']->getData());
-            $errors = $this->get('validator')->validate($client, null, ['verify-codeputy']);
+
+            $errors = $validator->validate($client, null, ['verify-codeputy']);
+
             foreach ($errors as $error) {
                 $clientProperty = $error->getPropertyPath();
                 $form->get('client' . ucfirst($clientProperty))->addError(new FormError($error->getMessage()));
@@ -103,7 +86,8 @@ class CoDeputyController extends AbstractController
                     $this->restClient->put('user/' . $user->getId(), $user);
                     return $this->redirect($this->generateUrl('homepage'));
                 } catch (\Throwable $e) {
-                    $translator = $this->get('translator');
+                    $translator = $this->translator;
+
                     switch ((int) $e->getCode()) {
                         case 422:
                             $form->addError(new FormError(
@@ -130,7 +114,7 @@ class CoDeputyController extends AbstractController
                             $form->addError(new FormError($translator->trans('formErrors.generic', [], 'register')));
                     }
 
-                    $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+                    $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
                 }
             }
         }
@@ -185,13 +169,13 @@ class CoDeputyController extends AbstractController
             } catch (\Throwable $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
-                        $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'co-deputy')));
+                        $form->get('email')->addError(new FormError($this->translator->trans('form.email.existingError', [], 'co-deputy')));
                         break;
                     default:
-                        $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+                        $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
                         throw $e;
                 }
-                $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+                $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
             }
         }
 
@@ -242,13 +226,13 @@ class CoDeputyController extends AbstractController
             } catch (\Throwable $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
-                        $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'co-deputy')));
+                        $form->get('email')->addError(new FormError($this->translator->trans('form.email.existingError', [], 'co-deputy')));
                         break;
                     default:
-                        $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+                        $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
                         throw $e;
                 }
-                $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+                $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
             }
         }
 

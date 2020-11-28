@@ -34,7 +34,8 @@ class VisitsCareController extends RestController
 
         $this->updateEntity($data, $visitsCare);
 
-        $this->persistAndFlush($visitsCare);
+        $this->em->persist($visitsCare);
+        $this->em->flush();
 
         return ['id' => $visitsCare->getId()];
     }
