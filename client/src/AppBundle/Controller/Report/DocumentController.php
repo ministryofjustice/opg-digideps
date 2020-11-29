@@ -40,6 +40,8 @@ class DocumentController extends AbstractController
     private ClientApi $clientApi;
     private StepRedirector $stepRedirector;
     private TranslatorInterface $translator;
+    private DocumentService $documentService;
+    private LoggerInterface $logger;
 
     public function __construct(
         RestClient $restClient,
@@ -47,7 +49,9 @@ class DocumentController extends AbstractController
         S3FileUploader $fileUploader,
         ClientApi $clientApi,
         StepRedirector $stepRedirector,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        DocumentService $documentService,
+        LoggerInterface $logger
     ) {
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
@@ -55,6 +59,8 @@ class DocumentController extends AbstractController
         $this->clientApi = $clientApi;
         $this->stepRedirector = $stepRedirector;
         $this->translator = $translator;
+        $this->documentService = $documentService;
+        $this->logger = $logger;
     }
 
     /**
@@ -162,8 +168,7 @@ class DocumentController extends AbstractController
         MultiFileFormUploadVerifier $multiFileVerifier,
         $reportId,
         LoggerInterface $logger
-    )
-    {
+    ) {
         $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
         list($nextLink, $backLink) = $this->buildNavigationLinks($report);
 
@@ -312,7 +317,7 @@ class DocumentController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function deleteDocument(Request $request, $documentId, DocumentService $documentService, LoggerInterface $logger)
+    public function deleteDocument(Request $request, $documentId)
     {
         $document = $this->getDocument($documentId);
 
@@ -320,13 +325,13 @@ class DocumentController extends AbstractController
         $this->denyAccessUnlessGranted(DocumentVoter::DELETE_DOCUMENT, $document, 'Access denied');
 
         try {
-            $result = $documentService->removeDocumentFromS3($document); // rethrows any exception
+            $result = $this->documentService->removeDocumentFromS3($document); // rethrows any exception
 
             if ($result) {
                 $this->addFlash('notice', 'Document has been removed');
             }
         } catch (\Throwable $e) {
-            $logger->error($e->getMessage());
+            $this->logger->error($e->getMessage());
 
             $this->addFlash(
                 'error',

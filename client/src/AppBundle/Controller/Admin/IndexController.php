@@ -16,6 +16,7 @@ use AppBundle\Service\DataImporter\CsvToArray;
 use AppBundle\Service\Logger;
 use AppBundle\Service\OrgService;
 use Predis\Client;
+use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
 use Redis;
 use Symfony\Component\Routing\Annotation\Route;
@@ -35,20 +36,11 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class IndexController extends AbstractController
 {
-    /** @var OrgService */
-    private $orgService;
-
-    /** @var UserVoter */
-    private $userVoter;
-
-    /** @var Logger */
-    private $logger;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var UserApi */
-    private $userApi;
+    private OrgService $orgService;
+    private UserVoter $userVoter;
+    private Logger $logger;
+    private RestClient $restClient;
+    private UserApi$userApi;
 
     public function __construct(
         OrgService $orgService,
@@ -358,7 +350,7 @@ class IndexController extends AbstractController
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("AppBundle:Admin/Index:uploadUsers.html.twig")
      */
-    public function uploadUsersAction(Request $request, Client $redisClient)
+    public function uploadUsersAction(Request $request, ClientInterface $redisClient)
     {
         $chunkSize = 2000;
 
