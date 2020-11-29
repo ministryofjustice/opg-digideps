@@ -10,7 +10,6 @@ use AppBundle\Service\Auth\UserProvider;
 use AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use AppBundle\Service\BruteForce\AttemptsInTimeChecker;
 use AppBundle\Service\Formatter\RestFormatter;
-use AppBundle\Traits\RestFormatterTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;

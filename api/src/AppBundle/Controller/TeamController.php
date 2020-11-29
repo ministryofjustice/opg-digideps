@@ -5,7 +5,6 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\User;
 use AppBundle\Service\Formatter\RestFormatter;
 use AppBundle\Service\OrgService;
-use AppBundle\Traits\RestFormatterTrait;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;

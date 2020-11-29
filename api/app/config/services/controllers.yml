@@ -1,8 +1,4 @@
 services:
-  AppBundle\Controller\RestController:
-      autowire: true
-      autoconfigure: true
-
   AppBundle\Controller\Report\ReportController:
     class: AppBundle\Controller\Report\ReportController
     arguments:
