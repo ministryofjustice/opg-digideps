@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -12,10 +13,12 @@ use Symfony\Component\HttpFoundation\Request;
 class VisitsCareController extends RestController
 {
     private EntityManagerInterface $em;
+    private RestFormatter $formatter;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
     {
         $this->em = $em;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -25,7 +28,7 @@ class VisitsCareController extends RestController
     public function addAction(Request $request)
     {
         $visitsCare = new EntityDir\Ndr\VisitsCare();
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $data['ndr_id']);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
@@ -49,7 +52,7 @@ class VisitsCareController extends RestController
         $visitsCare = $this->findEntityBy(EntityDir\Ndr\VisitsCare::class, $id);
         $this->denyAccessIfNdrDoesNotBelongToUser($visitsCare->getNdr());
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
         $this->updateEntity($data, $visitsCare);
 
         $this->em->flush($visitsCare);
@@ -82,7 +85,7 @@ class VisitsCareController extends RestController
     public function getOneById(Request $request, $id)
     {
         $serialiseGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['visits-care'];
-        $this->setJmsSerialiserGroups($serialiseGroups);
+        $this->formatter->setJmsSerialiserGroups($serialiseGroups);
 
         $visitsCare = $this->findEntityBy(EntityDir\Ndr\VisitsCare::class, $id, 'VisitsCare with id:' . $id . ' not found');
         $this->denyAccessIfNdrDoesNotBelongToUser($visitsCare->getNdr());

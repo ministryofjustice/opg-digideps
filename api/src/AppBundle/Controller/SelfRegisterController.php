@@ -3,6 +3,8 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Model\SelfRegisterData;
+use AppBundle\Service\Auth\AuthService;
+use AppBundle\Service\Formatter\RestFormatter;
 use AppBundle\Service\UserRegistrationService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,11 +18,19 @@ class SelfRegisterController extends RestController
 {
     private LoggerInterface $logger;
     private ValidatorInterface $validator;
+    private AuthService $authService;
+    private RestFormatter $formatter;
 
-    public function __construct(LoggerInterface $logger, ValidatorInterface $validator)
-    {
+    public function __construct(
+        LoggerInterface $logger,
+        ValidatorInterface $validator,
+        AuthService $authService,
+        RestFormatter $formatter
+    ) {
         $this->logger = $logger;
         $this->validator = $validator;
+        $this->authService = $authService;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -28,15 +38,21 @@ class SelfRegisterController extends RestController
      */
     public function register(Request $request, UserRegistrationService $userRegistrationService)
     {
-        if (!$this->getAuthService()->isSecretValid($request)) {
+        if (!$this->authService->isSecretValid($request)) {
             throw new \RuntimeException('client secret not accepted.', 403);
         }
 
-        $data = $this->deserializeBodyContent($request);
-
         $selfRegisterData = new SelfRegisterData();
 
-        $this->populateSelfReg($selfRegisterData, $data);
+        $this->hydrateEntityWithArrayData($selfRegisterData, $this->formatter->deserializeBodyContent($request), [
+            'firstname' => 'setFirstname',
+            'lastname' => 'setLastname',
+            'email' => 'setEmail',
+            'postcode' => 'setPostcode',
+            'client_firstname' => 'setClientFirstname',
+            'client_lastname' => 'setClientLastname',
+            'case_number' => 'setCaseNumber',
+        ]);
 
         $errors = $this->validator->validate($selfRegisterData, null, 'self_registration');
 
@@ -52,7 +68,7 @@ class SelfRegisterController extends RestController
             throw $e;
         }
 
-        $this->setJmsSerialiserGroups(['user', 'user-login']);
+        $this->formatter->setJmsSerialiserGroups(['user', 'user-login']);
 
         return $user;
     }
@@ -62,12 +78,21 @@ class SelfRegisterController extends RestController
      */
     public function verifyCoDeputy(Request $request, UserRegistrationService $userRegistrationService)
     {
-        if (!$this->getAuthService()->isSecretValid($request)) {
+        if (!$this->authService->isSecretValid($request)) {
             throw new \RuntimeException('client secret not accepted.', 403);
         }
 
         $selfRegisterData = new SelfRegisterData();
-        $this->populateSelfReg($selfRegisterData, $this->deserializeBodyContent($request));
+
+        $this->hydrateEntityWithArrayData($selfRegisterData, $this->formatter->deserializeBodyContent($request), [
+            'firstname' => 'setFirstname',
+            'lastname' => 'setLastname',
+            'email' => 'setEmail',
+            'postcode' => 'setPostcode',
+            'client_firstname' => 'setClientFirstname',
+            'client_lastname' => 'setClientLastname',
+            'case_number' => 'setCaseNumber',
+        ]);
 
         $errors = $this->validator->validate($selfRegisterData, null, ['verify_codeputy']);
 

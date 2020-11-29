@@ -2,9 +2,9 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\User;
 use AppBundle\Service\CsvUploader;
+use AppBundle\Service\Formatter\RestFormatter;
 use AppBundle\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,11 +18,13 @@ class CoDeputyController extends RestController
 {
     private UserService $userService;
     private EntityManagerInterface $em;
+    private RestFormatter $formatter;
 
-    public function __construct(UserService $userService, EntityManagerInterface $em)
+    public function __construct(UserService $userService, EntityManagerInterface $em, RestFormatter $formatter)
     {
         $this->userService = $userService;
         $this->em = $em;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -46,7 +48,7 @@ class CoDeputyController extends RestController
      */
     public function add(Request $request)
     {
-        $data = $this->deserializeBodyContent($request, [
+        $data = $this->formatter->deserializeBodyContent($request, [
             'email' => 'notEmpty',
         ]);
 
@@ -62,7 +64,7 @@ class CoDeputyController extends RestController
 
         $this->userService->addUser($loggedInUser, $newUser, $data);
 
-        $this->setJmsSerialiserGroups(['user']);
+        $this->formatter->setJmsSerialiserGroups(['user']);
 
         return $newUser;
     }
@@ -81,7 +83,7 @@ class CoDeputyController extends RestController
             throw $this->createAccessDeniedException("User not authorised to update other user's data");
         }
 
-        $data = $this->deserializeBodyContent($request, ['email' => 'notEmpty']);
+        $data = $this->formatter->deserializeBodyContent($request, ['email' => 'notEmpty']);
         if (!empty($data['email'])) {
             $originalUser = clone $user;
             $user->setEmail($data['email']);

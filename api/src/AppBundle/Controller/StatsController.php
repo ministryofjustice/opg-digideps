@@ -10,10 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class StatsController extends RestController
 {
-    /**
-     * @var QueryFactory
-     */
-    private $QueryFactory;
+    private QueryFactory $QueryFactory;
 
     public function __construct(QueryFactory $QueryFactory)
     {

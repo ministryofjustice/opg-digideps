@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -12,10 +13,12 @@ use Symfony\Component\HttpFoundation\Request;
 class AccountController extends RestController
 {
     private EntityManagerInterface $em;
+    private RestFormatter $formatter;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
     {
         $this->em = $em;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -27,7 +30,7 @@ class AccountController extends RestController
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
-        $data = $this->deserializeBodyContent($request, [
+        $data = $this->formatter->deserializeBodyContent($request, [
         ]);
 
         $account = new EntityDir\Ndr\BankAccount();
@@ -48,13 +51,13 @@ class AccountController extends RestController
     public function getOneById(Request $request, $id)
     {
         if ($request->query->has('groups')) {
-            $this->setJmsSerialiserGroups((array) $request->query->get('groups'));
+            $this->formatter->setJmsSerialiserGroups((array) $request->query->get('groups'));
         }
 
         $account = $this->findEntityBy(EntityDir\Ndr\BankAccount::class, $id, 'Account not found');
         $this->denyAccessIfNdrDoesNotBelongToUser($account->getNdr());
 
-        $this->setJmsSerialiserGroups(['ndr-account', 'bank-acccount-ndr', 'ndr_id']);
+        $this->formatter->setJmsSerialiserGroups(['ndr-account', 'bank-acccount-ndr', 'ndr_id']);
 
         return $account;
     }
@@ -68,7 +71,7 @@ class AccountController extends RestController
         $account = $this->findEntityBy(EntityDir\Ndr\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Ndr\BankAccount*/
         $this->denyAccessIfNdrDoesNotBelongToUser($account->getNdr());
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         $this->fillAccountData($account, $data);
 

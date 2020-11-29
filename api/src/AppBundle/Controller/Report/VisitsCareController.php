@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -16,10 +17,12 @@ class VisitsCareController extends RestController
 {
     private array $sectionIds = [EntityDir\Report\Report::SECTION_VISITS_CARE];
     private EntityManagerInterface $em;
+    private RestFormatter $formatter;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
     {
         $this->em = $em;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -29,7 +32,7 @@ class VisitsCareController extends RestController
     public function addAction(Request $request)
     {
         $visitsCare = new EntityDir\Report\VisitsCare();
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $data['report_id']);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -56,7 +59,7 @@ class VisitsCareController extends RestController
         $report = $visitsCare->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($visitsCare->getReport());
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
         $this->updateInfo($data, $visitsCare);
         $this->em->flush();
 
@@ -74,7 +77,7 @@ class VisitsCareController extends RestController
      */
     public function findByReportIdAction($reportId)
     {
-        $this->setJmsSerialiserGroups(['visits-care']);
+        $this->formatter->setJmsSerialiserGroups(['visits-care']);
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -94,7 +97,7 @@ class VisitsCareController extends RestController
     {
         $serialiseGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['visits-care'];
-        $this->setJmsSerialiserGroups($serialiseGroups);
+        $this->formatter->setJmsSerialiserGroups($serialiseGroups);
 
         $visitsCare = $this->findEntityBy(EntityDir\Report\VisitsCare::class, $id, 'VisitsCare with id:' . $id . ' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($visitsCare->getReport());

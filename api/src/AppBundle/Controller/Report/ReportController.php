@@ -4,16 +4,14 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Entity\Organisation;
-use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Repository\ChecklistRepository;
 use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\Entity\User;
 use AppBundle\Exception\UnauthorisedException;
+use AppBundle\Service\Auth\AuthService;
+use AppBundle\Service\Formatter\RestFormatter;
 use AppBundle\Service\ReportService;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -26,19 +24,12 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ReportController extends RestController
 {
-    /** @var array */
-    private $updateHandlers;
-
-    /** @var EntityDir\Repository\ReportRepository */
-    private $repository;
-
-    /** @var ReportService */
-    private $reportService;
-
-    /**
-     * @var EntityManager
-     */
-    private $em;
+    private array $updateHandlers;
+    private ReportRepository $repository;
+    private ReportService $reportService;
+    private EntityManagerInterface $em;
+    private AuthService $authService;
+    private RestFormatter $formatter;
 
     /** @var array */
     private $checklistGroups = [
@@ -60,17 +51,20 @@ class ReportController extends RestController
         'report-submission-id'
     ];
 
-    /**
-     * @param array $updateHandlers
-     * @param EntityDir\Repository\ReportRepository $repository
-     * @param ReportService $reportService
-     */
-    public function __construct(array $updateHandlers, EntityDir\Repository\ReportRepository $repository, ReportService $reportService, EntityManager $em)
-    {
+    public function __construct(
+        array $updateHandlers,
+        ReportRepository $repository,
+        ReportService $reportService,
+        EntityManagerInterface $em,
+        AuthService $authService,
+        RestFormatter $formatter
+    ) {
         $this->updateHandlers = $updateHandlers;
         $this->repository = $repository;
         $this->reportService = $reportService;
         $this->em = $em;
+        $this->authService = $authService;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -83,7 +77,7 @@ class ReportController extends RestController
      */
     public function addAction(Request $request)
     {
-        $reportData = $this->deserializeBodyContent($request);
+        $reportData = $this->formatter->deserializeBodyContent($request);
 
         if (empty($reportData['client']['id'])) {
             throw new \InvalidArgumentException('Missing client.id');
@@ -91,7 +85,7 @@ class ReportController extends RestController
         $client = $this->findEntityBy(EntityDir\Client::class, $reportData['client']['id']);
         $this->denyAccessIfClientDoesNotBelongToUser($client);
 
-        $this->validateArray($reportData, [
+        $this->formatter->validateArray($reportData, [
             'start_date' => 'notEmpty',
             'end_date' => 'notEmpty',
         ]);
@@ -122,7 +116,7 @@ class ReportController extends RestController
         $groups = $request->query->has('groups')
             ? (array)$request->query->get('groups') : ['report'];
 
-        $this->setJmsSerialiserGroups($groups);
+        $this->formatter->setJmsSerialiserGroups($groups);
 
         /* @var $report Report */
         if ($this->isGranted(EntityDir\User::ROLE_ADMIN)) {
@@ -150,7 +144,7 @@ class ReportController extends RestController
         /* @var $currentReport Report */
         $this->denyAccessIfReportDoesNotBelongToUser($currentReport);
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         if (empty($data['submit_date'])) {
             throw new \InvalidArgumentException('Missing submit_date');
@@ -195,7 +189,7 @@ class ReportController extends RestController
             $this->denyAccessIfReportDoesNotBelongToUser($report);
         }
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         if (isset($data['type'])) {
             $report->setType($data['type']);
@@ -221,7 +215,7 @@ class ReportController extends RestController
                     $this->em->flush($debt);
                 }
             }
-            $this->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
+            $this->formatter->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
             $this->em->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_DEBTS
@@ -538,7 +532,7 @@ class ReportController extends RestController
             throw new \RuntimeException('Cannot unsubmit an active report');
         }
 
-        $data = $this->deserializeBodyContent($request, [
+        $data = $this->formatter->deserializeBodyContent($request, [
             'un_submit_date' => 'notEmpty',
             'due_date' => 'notEmpty',
             'unsubmitted_sections_list' => 'notEmpty',
@@ -752,7 +746,7 @@ class ReportController extends RestController
         /** @var Report $report */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $report_id, 'Report not found');
 
-        $checklistData = $this->deserializeBodyContent($request);
+        $checklistData = $this->formatter->deserializeBodyContent($request);
 
         /** @var EntityDir\Report\Checklist $checklist */
         $checklist = new EntityDir\Report\Checklist($report);
@@ -790,7 +784,7 @@ class ReportController extends RestController
         /** @var Report $report */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $report_id, 'Report not found');
 
-        $checklistData = $this->deserializeBodyContent($request);
+        $checklistData = $this->formatter->deserializeBodyContent($request);
 
         /** @var EntityDir\Report\Checklist $checklist */
         $checklist = $report->getChecklist();
@@ -858,7 +852,7 @@ class ReportController extends RestController
      */
     public function getChecklist(Request $request, $report_id)
     {
-        $this->setJmsSerialiserGroups(['checklist', 'last-modified', 'user']);
+        $this->formatter->setJmsSerialiserGroups(['checklist', 'last-modified', 'user']);
 
         $checklist = $this
             ->getRepository(EntityDir\Report\ReviewChecklist::class)
@@ -881,7 +875,7 @@ class ReportController extends RestController
         /** @var Report $report */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $report_id, 'Report not found');
 
-        $checklistData = $this->deserializeBodyContent($request);
+        $checklistData = $this->formatter->deserializeBodyContent($request);
 
         /** @var EntityDir\Report\ReviewChecklist|null $checklist */
         $checklist = $this
@@ -916,12 +910,12 @@ class ReportController extends RestController
      */
     public function getReportsWithQueuedChecklists(Request $request): array
     {
-        if (!$this->getAuthService()->isSecretValid($request)) {
+        if (!$this->authService->isSecretValid($request)) {
             throw new UnauthorisedException('client secret not accepted.');
         }
 
         /** @var array $data */
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         /** @var ReportRepository $reportRepo */
         $reportRepo = $this->em->getRepository(Report::class);
@@ -932,7 +926,7 @@ class ReportController extends RestController
             $reports[] = $this->findEntityBy(Report::class, $reportId);
         }
 
-        $this->setJmsSerialiserGroups($this->checklistGroups);
+        $this->formatter->setJmsSerialiserGroups($this->checklistGroups);
 
         return $reports;
     }

@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,10 +16,12 @@ use Symfony\Component\HttpFoundation\Request;
 class ClientContactController extends RestController
 {
     private EntityManagerInterface $em;
+    private RestFormatter $formatter;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
     {
         $this->em = $em;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -30,7 +33,7 @@ class ClientContactController extends RestController
         $client = $this->findEntityBy(EntityDir\Client::class, $clientId);
         $this->denyAccessIfClientDoesNotBelongToUser($client);
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
         $clientContact = new EntityDir\ClientContact();
         $this->hydrateEntityWithArrayData($clientContact, $data, [
             'first_name'   => 'setFirstName',
@@ -67,7 +70,7 @@ class ClientContactController extends RestController
         $clientContact = $this->findEntityBy(EntityDir\ClientContact::class, $id);
         $this->denyAccessIfClientDoesNotBelongToUser($clientContact->getClient());
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
         $this->hydrateEntityWithArrayData($clientContact, $data, [
             'first_name'   => 'setFirstName',
             'last_name'    => 'setLastName',
@@ -94,7 +97,7 @@ class ClientContactController extends RestController
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups')
             : ['clientcontact', 'clientcontact-client', 'client', 'client-users', 'current-report', 'report-id', 'user'];
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $clientContact = $this->findEntityBy(EntityDir\ClientContact::class, $id);
         $this->denyAccessIfClientDoesNotBelongToUser($clientContact->getClient());

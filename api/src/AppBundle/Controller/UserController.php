@@ -7,14 +7,13 @@ use AppBundle\Entity\Repository\ClientRepository;
 use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
 use AppBundle\Security\UserVoter;
-use AppBundle\Service\Audit\AuditEvents;
-use AppBundle\Service\Time\DateTimeProvider;
+use AppBundle\Service\Auth\AuthService;
+use AppBundle\Service\Formatter\RestFormatter;
 use AppBundle\Service\UserService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -37,6 +36,8 @@ class UserController extends RestController
     private UserVoter $userVoter;
     private SecurityHelper $securityHelper;
     private EntityManagerInterface $em;
+    private AuthService $authService;
+    private RestFormatter $formatter;
 
     public function __construct(
         UserService $userService,
@@ -45,7 +46,9 @@ class UserController extends RestController
         ClientRepository $clientRepository,
         UserVoter $userVoter,
         SecurityHelper $securityHelper,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        AuthService $authService,
+        RestFormatter $formatter
     ) {
         $this->userService = $userService;
         $this->encoderFactory = $encoderFactory;
@@ -54,6 +57,8 @@ class UserController extends RestController
         $this->userVoter = $userVoter;
         $this->securityHelper = $securityHelper;
         $this->em = $em;
+        $this->authService = $authService;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -62,7 +67,7 @@ class UserController extends RestController
      */
     public function add(Request $request)
     {
-        $data = $this->deserializeBodyContent($request, [
+        $data = $this->formatter->deserializeBodyContent($request, [
             'role_name' => 'notEmpty',
             'email' => 'notEmpty',
             'firstname' => 'mustExist',
@@ -79,7 +84,7 @@ class UserController extends RestController
 
         $groups = $request->query->has('groups') ?
             $request->query->get('groups') : ['user', 'user-teams', 'team'];
-        $this->setJmsSerialiserGroups($groups);
+        $this->formatter->setJmsSerialiserGroups($groups);
 
         return $newUser;
     }
@@ -107,7 +112,7 @@ class UserController extends RestController
         /** @var User $originalUser */
         $originalUser = clone $requestedUser;
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
         $this->populateUser($requestedUser, $data);
 
         // check if rolename in data - if so add audit log
@@ -131,7 +136,7 @@ class UserController extends RestController
             throw $this->createAccessDeniedException("Not authorised to check other user's password");
         }
 
-        $data = $this->deserializeBodyContent($request, [
+        $data = $this->formatter->deserializeBodyContent($request, [
             'password' => 'notEmpty',
         ]);
 
@@ -157,7 +162,7 @@ class UserController extends RestController
             throw $this->createAccessDeniedException("Not authorised to change other user's data");
         }
 
-        $data = $this->deserializeBodyContent($request, [
+        $data = $this->formatter->deserializeBodyContent($request, [
             'password_plain' => 'notEmpty',
         ]);
 
@@ -221,7 +226,7 @@ class UserController extends RestController
         $groups = $request->query->has('groups') ?
             $request->query->get('groups') : ['user'];
 
-        $this->setJmsSerialiserGroups($groups);
+        $this->formatter->setJmsSerialiserGroups($groups);
 
         if ($loggedInUser->isCoDeputyWith($user)) {
             return $user;
@@ -251,7 +256,7 @@ class UserController extends RestController
     {
         $user = $this->userRepository->findOneBy(['email' => $email]);
 
-        $this->setJmsSerialiserGroups(['user-id', 'team-names']);
+        $this->formatter->setJmsSerialiserGroups(['user-id', 'team-names']);
 
         return $user;
     }
@@ -299,7 +304,7 @@ class UserController extends RestController
      */
     public function getAll(Request $request)
     {
-        $this->setJmsSerialiserGroups(['user']);
+        $this->formatter->setJmsSerialiserGroups(['user']);
         return $this->userRepository->findUsersByQueryParameters($request);
     }
 
@@ -310,13 +315,13 @@ class UserController extends RestController
      */
     public function recreateToken(Request $request, $email)
     {
-        if (!$this->getAuthService()->isSecretValid($request)) {
+        if (!$this->authService->isSecretValid($request)) {
             throw new \RuntimeException('client secret not accepted.', 403);
         }
 
         /** @var User $user */
         $user = $this->findEntityBy(User::class, ['email' => strtolower($email)]);
-        $hasAdminSecret = $this->getAuthService()->isSecretValidForRole(User::ROLE_ADMIN, $request);
+        $hasAdminSecret = $this->authService->isSecretValidForRole(User::ROLE_ADMIN, $request);
 
         if (!$hasAdminSecret && $user->getRoleName() == User::ROLE_ADMIN) {
             throw new \RuntimeException('Admin emails not accepted.', 403);
@@ -326,7 +331,7 @@ class UserController extends RestController
 
         $this->em->flush($user);
 
-        $this->setJmsSerialiserGroups(['user']);
+        $this->formatter->setJmsSerialiserGroups(['user']);
 
         return $user;
     }
@@ -336,7 +341,7 @@ class UserController extends RestController
      */
     public function getByToken(Request $request, $token)
     {
-        if (!$this->getAuthService()->isSecretValid($request)) {
+        if (!$this->authService->isSecretValid($request)) {
             throw new \RuntimeException('client secret not accepted.', 403);
         }
 
@@ -344,12 +349,12 @@ class UserController extends RestController
         $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
 
 
-        if (!$this->getAuthService()->isSecretValidForRole($user->getRoleName(), $request)) {
+        if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
             throw new \RuntimeException($user->getRoleName() . ' user role not allowed from this client.', 403);
         }
 
         // `user-login` contains number of clients and reports, needed to properly redirect the user to the right page after activation
-        $this->setJmsSerialiserGroups(['user', 'user-login']);
+        $this->formatter->setJmsSerialiserGroups(['user', 'user-login']);
 
         return $user;
     }
@@ -359,14 +364,14 @@ class UserController extends RestController
      */
     public function agreeTermsUSe(Request $request, $token)
     {
-        if (!$this->getAuthService()->isSecretValid($request)) {
+        if (!$this->authService->isSecretValid($request)) {
             throw new \RuntimeException('client secret not accepted.', 403);
         }
 
         $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
         /* @var $user User */
 
-        if (!$this->getAuthService()->isSecretValidForRole($user->getRoleName(), $request)) {
+        if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
             throw new \RuntimeException($user->getRoleName() . ' user role not allowed from this client.', 403);
         }
 
@@ -458,7 +463,7 @@ class UserController extends RestController
             (array) $request->query->get('groups') :
             ['team', 'team-users', 'user'];
 
-        $this->setJmsSerialiserGroups($groups);
+        $this->formatter->setJmsSerialiserGroups($groups);
 
         return $requestedUserTeams->first();
     }

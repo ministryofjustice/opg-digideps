@@ -4,6 +4,8 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
+use AppBundle\Traits\RestFormatterTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -14,12 +16,15 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class DecisionController extends RestController
 {
-    private array $sectionIds = [EntityDir\Report\Report::SECTION_DECISIONS];
     private EntityManagerInterface $em;
+    private RestFormatter $formatter;
 
-    public function __construct(EntityManagerInterface $em)
+    private array $sectionIds = [EntityDir\Report\Report::SECTION_DECISIONS];
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
     {
         $this->em = $em;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -28,17 +33,17 @@ class DecisionController extends RestController
      */
     public function upsertDecision(Request $request)
     {
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         if ($request->getMethod() == 'PUT') {
-            $this->validateArray($data, [
+            $this->formatter->validateArray($data, [
                 'id' => 'mustExist',
             ]);
             $decision = $this->findEntityBy(EntityDir\Report\Decision::class, $data['id'], 'Decision with not found');
             $this->denyAccessIfReportDoesNotBelongToUser($decision->getReport());
             $report = $decision->getReport();
         } else {
-            $this->validateArray($data, [
+            $this->formatter->validateArray($data, [
                 'report_id' => 'mustExist',
             ]);
             $report = $this->findEntityBy(EntityDir\Report\Report::class, $data['report_id'], 'Report not found');
@@ -51,7 +56,7 @@ class DecisionController extends RestController
             $this->em->flush();
         }
 
-        $this->validateArray($data, [
+        $this->formatter->validateArray($data, [
             'description' => 'mustExist',
             'client_involved_boolean' => 'mustExist',
             'client_involved_details' => 'mustExist',
@@ -81,7 +86,7 @@ class DecisionController extends RestController
     public function getOneById(Request $request, $id)
     {
         $serialisedGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['decision'];
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $decision = $this->findEntityBy(EntityDir\Report\Decision::class, $id, 'Decision with id:' . $id . ' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($decision->getReport());

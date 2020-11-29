@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -11,15 +12,18 @@ use Symfony\Component\HttpFoundation\Request;
 
 class MoneyTransactionController extends RestController
 {
+    private EntityManagerInterface $em;
+    private RestFormatter $formatter;
+
     private array $sectionIds = [
         EntityDir\Report\Report::SECTION_MONEY_IN,
         EntityDir\Report\Report::SECTION_MONEY_OUT
     ];
-    private EntityManagerInterface $em;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
     {
         $this->em = $em;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -31,7 +35,7 @@ class MoneyTransactionController extends RestController
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $data = $this->deserializeBodyContent($request, [
+        $data = $this->formatter->deserializeBodyContent($request, [
            'category' => 'notEmpty',
            'amount' => 'notEmpty',
         ]);
@@ -81,7 +85,7 @@ class MoneyTransactionController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
         // set data
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
         if (isset($data['description'])) {
             $t->setDescription($data['description']);
         }

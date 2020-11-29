@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -11,12 +12,15 @@ use Symfony\Component\HttpFoundation\Request;
 
 class MoneyTransferController extends RestController
 {
-    private $sectionIds = [EntityDir\Report\Report::SECTION_MONEY_TRANSFERS];
     private EntityManagerInterface $em;
+    private RestFormatter $formatter;
 
-    public function __construct(EntityManagerInterface $em)
+    private $sectionIds = [EntityDir\Report\Report::SECTION_MONEY_TRANSFERS];
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
     {
         $this->em = $em;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -28,7 +32,7 @@ class MoneyTransferController extends RestController
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $data = $this->deserializeBodyContent($request, [
+        $data = $this->formatter->deserializeBodyContent($request, [
            'account_from_id' => 'notEmpty',
            'account_to_id' => 'notEmpty',
            'amount' => 'mustExist',
@@ -45,7 +49,7 @@ class MoneyTransferController extends RestController
         $report->updateSectionsStatusCache($this->sectionIds);
         $this->em->flush();
 
-        $this->setJmsSerialiserGroups(['money-transfer']);
+        $this->formatter->setJmsSerialiserGroups(['money-transfer']);
 
         return $transfer->getId();
     }
@@ -59,7 +63,7 @@ class MoneyTransferController extends RestController
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $data = $this->deserializeBodyContent($request, [
+        $data = $this->formatter->deserializeBodyContent($request, [
            'account_from_id' => 'notEmpty',
            'account_to_id' => 'notEmpty',
            'amount' => 'mustExist',

@@ -4,6 +4,8 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
+use AppBundle\Traits\RestFormatterTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -11,12 +13,15 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ActionController extends RestController
 {
-    private array $sectionIds = [EntityDir\Report\Report::SECTION_ACTIONS];
     private EntityManagerInterface $em;
+    private RestFormatter $formatter;
 
-    public function __construct(EntityManagerInterface $em)
+    private array $sectionIds = [EntityDir\Report\Report::SECTION_ACTIONS];
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
     {
         $this->em = $em;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -34,7 +39,7 @@ class ActionController extends RestController
             $this->em->persist($action);
         }
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
         $this->updateEntity($data, $action);
         $this->em->flush();
 
@@ -57,7 +62,7 @@ class ActionController extends RestController
 
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['action'];
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         return $action;
     }

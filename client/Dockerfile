@@ -38,7 +38,7 @@ WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
 ENV TIMEOUT=60
-ENV PHP_EXT_DIR=/usr/lib/php7/modules
+ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20190902
 
 # Install core PHP extensions
 RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec postgresql-client libzip-dev unzip php7-igbinary php7-pecl-redis
@@ -47,8 +47,9 @@ RUN docker-php-ext-enable opcache
 
 # Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=false
-RUN if [[ $REQUIRE_XDEBUG = "true" ]] ; then \
-        apk add --no-cache php7-pecl-xdebug; \
+RUN if [[ $REQUIRE_XDEBUG = true ]] ; then \
+        apk add --no-cache $PHPIZE_DEPS; \
+        pecl install xdebug-2.9.8; \
         docker-php-ext-enable $PHP_EXT_DIR/xdebug.so; \
     fi ;
 

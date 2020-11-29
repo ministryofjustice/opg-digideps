@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -12,10 +13,12 @@ use Symfony\Component\HttpFoundation\Request;
 class AssetController extends RestController
 {
     private EntityManagerInterface $em;
+    private RestFormatter $formatter;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
     {
         $this->em = $em;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -33,7 +36,7 @@ class AssetController extends RestController
             return [];
         }
 
-        $this->setJmsSerialiserGroups(['ndr-asset']);
+        $this->formatter->setJmsSerialiserGroups(['ndr-asset']);
 
         return $assets;
     }
@@ -50,7 +53,7 @@ class AssetController extends RestController
         $asset = $this->findEntityBy(EntityDir\Ndr\Asset::class, $assetId);
         $this->denyAccessIfNdrDoesNotBelongToUser($asset->getNdr());
 
-        $this->setJmsSerialiserGroups(['ndr-asset']);
+        $this->formatter->setJmsSerialiserGroups(['ndr-asset']);
 
         return $asset;
     }
@@ -61,11 +64,11 @@ class AssetController extends RestController
      */
     public function add(Request $request, $ndrId)
     {
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId); /* @var $ndr EntityDir\Ndr\Ndr */
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
-        $this->validateArray($data, [
+        $this->formatter->validateArray($data, [
             'type' => 'mustExist',
         ]);
         $asset = EntityDir\Ndr\Asset::factory($data['type']);
@@ -86,7 +89,7 @@ class AssetController extends RestController
      */
     public function edit(Request $request, $ndrId, $assetId)
     {
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);

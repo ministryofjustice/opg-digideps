@@ -4,6 +4,8 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
+use AppBundle\Traits\RestFormatterTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -11,12 +13,15 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AssetController extends RestController
 {
-    private array $sectionIds = [EntityDir\Report\Report::SECTION_ASSETS];
     private EntityManagerInterface $em;
+    private RestFormatter $formatter;
 
-    public function __construct(EntityManagerInterface $em)
+    private array $sectionIds = [EntityDir\Report\Report::SECTION_ASSETS];
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
     {
         $this->em = $em;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -33,7 +38,7 @@ class AssetController extends RestController
 
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['asset'];
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         return $asset;
     }
@@ -44,11 +49,11 @@ class AssetController extends RestController
      */
     public function add(Request $request, $reportId)
     {
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
-        $this->validateArray($data, [
+        $this->formatter->validateArray($data, [
             'type' => 'mustExist',
         ]);
         $asset = EntityDir\Report\Asset::factory($data['type']);
@@ -72,7 +77,7 @@ class AssetController extends RestController
      */
     public function edit(Request $request, $reportId, $assetId)
     {
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);

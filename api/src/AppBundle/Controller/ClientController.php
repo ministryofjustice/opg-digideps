@@ -4,6 +4,8 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Repository\ClientRepository;
+use AppBundle\Service\Formatter\RestFormatter;
+use AppBundle\Traits\RestFormatterTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -16,11 +18,13 @@ class ClientController extends RestController
 {
     private ClientRepository $repository;
     private EntityManagerInterface $em;
+    private RestFormatter $formatter;
 
-    public function __construct(ClientRepository $repository, EntityManagerInterface $em)
+    public function __construct(ClientRepository $repository, EntityManagerInterface $em, RestFormatter $formatter)
     {
         $this->repository = $repository;
         $this->em = $em;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -32,7 +36,7 @@ class ClientController extends RestController
      */
     public function upsertAction(Request $request)
     {
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
         /** @var EntityDir\User|null $user */
         $user = $this->getUser();
 
@@ -97,7 +101,7 @@ class ClientController extends RestController
     {
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['client'];
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $client = $this->findEntityBy(EntityDir\Client::class, $id);
         if ($client->getArchivedAt()) {
@@ -140,7 +144,7 @@ class ClientController extends RestController
             ];
         }
 
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $result = $this->findEntityBy(EntityDir\Client::class, $id);
 
@@ -176,7 +180,7 @@ class ClientController extends RestController
      */
     public function getAllAction(Request $request)
     {
-        $this->setJmsSerialiserGroups(['client', 'active-period']);
+        $this->formatter->setJmsSerialiserGroups(['client', 'active-period']);
 
         return $this->repository->searchClients(
             $request->get('q'),

@@ -3,6 +3,8 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Satisfaction;
+use AppBundle\Service\Formatter\RestFormatter;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +15,15 @@ use AppBundle\Entity as EntityDir;
  */
 class SatisfactionController extends RestController
 {
+    private EntityManagerInterface $em;
+    private RestFormatter $formatter;
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    {
+        $this->em = $em;
+        $this->formatter = $formatter;
+    }
+
     private function addSatisfactionScore($satisfactionLevel, $comments)
     {
         $satisfaction = new Satisfaction();
@@ -31,7 +42,7 @@ class SatisfactionController extends RestController
      */
     public function add(Request $request)
     {
-        $data = $this->deserializeBodyContent($request, [
+        $data = $this->formatter->deserializeBodyContent($request, [
             'score' => 'notEmpty',
             'comments' => 'mustExist',
             'reportType' => 'notEmpty',
@@ -70,7 +81,7 @@ class SatisfactionController extends RestController
      */
     public function publicAdd(Request $request)
     {
-        $data = $this->deserializeBodyContent($request, [
+        $data = $this->formatter->deserializeBodyContent($request, [
             'score' => 'notEmpty',
             'comments' => 'notEmpty'
         ]);

@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -11,12 +12,15 @@ use Symfony\Component\HttpFoundation\Request;
 
 class MentalCapacityController extends RestController
 {
-    private array $sectionIds = [EntityDir\Report\Report::SECTION_DECISIONS];
     private EntityManagerInterface $em;
+    private RestFormatter $formatter;
 
-    public function __construct(EntityManagerInterface $em)
+    private array $sectionIds = [EntityDir\Report\Report::SECTION_DECISIONS];
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
     {
         $this->em = $em;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -34,7 +38,7 @@ class MentalCapacityController extends RestController
             $this->em->persist($mc);
         }
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
         $this->updateEntity($data, $mc);
         $this->em->flush();
 
@@ -58,7 +62,7 @@ class MentalCapacityController extends RestController
 
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['mental-capacity'];
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         return $mc;
     }

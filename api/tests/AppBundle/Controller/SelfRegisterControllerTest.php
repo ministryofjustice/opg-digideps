@@ -2,73 +2,12 @@
 
 namespace Tests\AppBundle\Controller;
 
-use AppBundle\Controller\SelfRegisterController;
 use AppBundle\Entity\CasRec;
 use AppBundle\Entity\User;
-use AppBundle\Model\SelfRegisterData;
 use Mockery as m;
 
 class SelfRegisterControllerTest extends AbstractTestController
 {
-    /** @var SelfRegisterController */
-    private $selfRegisterController;
-
-    public function setUp(): void
-    {
-        $this->selfRegisterController = new SelfRegisterController();
-        parent::setUp();
-    }
-
-    public function tearDown(): void
-    {
-        m::close();
-        parent::tearDown();
-    }
-
-    /** @test */
-    public function populateUser()
-    {
-        $data = [
-            'firstname' => 'Zac',
-            'lastname' => 'Tolley',
-            'email' => 'behat-test@gov.uk',
-            'postcode' => 'SW1',
-            'client_firstname' => 'John',
-            'client_lastname' => 'Cross-Tolley',
-            'case_number' => '12345678',
-        ];
-
-        $selfRegisterData = new SelfRegisterData();
-
-        $this->selfRegisterController->populateSelfReg($selfRegisterData, $data);
-
-        $this->assertEquals('Zac', $selfRegisterData->getFirstname());
-        $this->assertEquals('Tolley', $selfRegisterData->getLastname());
-        $this->assertEquals('behat-test@gov.uk', $selfRegisterData->getEmail());
-        $this->assertEquals('SW1', $selfRegisterData->getPostcode());
-        $this->assertEquals('John', $selfRegisterData->getClientFirstname());
-        $this->assertEquals('Cross-Tolley', $selfRegisterData->getClientLastname());
-        $this->assertEquals('12345678', $selfRegisterData->getCaseNumber());
-    }
-
-    /** @test */
-    public function populatePartialData()
-    {
-        $data = [
-            'firstname' => 'Zac',
-            'lastname' => 'Tolley',
-            'email' => 'zac@thetolleys.com',
-        ];
-
-        $selfRegisterData = new SelfRegisterData();
-
-        $this->selfRegisterController->populateSelfReg($selfRegisterData, $data);
-
-        $this->assertEquals('Zac', $selfRegisterData->getFirstname());
-        $this->assertEquals('Tolley', $selfRegisterData->getLastname());
-        $this->assertEquals('zac@thetolleys.com', $selfRegisterData->getEmail());
-    }
-
     /** @test */
     public function failsWhenMissingData()
     {

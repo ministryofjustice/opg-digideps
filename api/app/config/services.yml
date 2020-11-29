@@ -39,6 +39,10 @@ services:
         tags: ['doctrine.fixture.orm']
         autowire: true
 
+    AppBundle\Traits\RestFormatterTrait:
+        autowire: true
+        autoconfigure: true
+
     # Disable autowiring for these helper classes
     AppBundle\Service\ReportStatusService: ~
     AppBundle\Service\Stats\StatsQueryParameters: ~

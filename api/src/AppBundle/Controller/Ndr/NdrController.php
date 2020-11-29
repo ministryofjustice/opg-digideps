@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Ndr;
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Document;
+use AppBundle\Service\Formatter\RestFormatter;
 use AppBundle\Service\ReportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,10 +15,12 @@ use Symfony\Component\HttpFoundation\Request;
 class NdrController extends RestController
 {
     private EntityManagerInterface $em;
+    private RestFormatter $formatter;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
     {
         $this->em = $em;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -28,7 +31,7 @@ class NdrController extends RestController
     public function getById(Request $request, $id)
     {
         $groups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['ndr'];
-        $this->setJmsSerialiserGroups($groups);
+        $this->formatter->setJmsSerialiserGroups($groups);
 
         /* @var $report EntityDir\Ndr\Ndr */
         $report = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $id);
@@ -51,7 +54,7 @@ class NdrController extends RestController
         /* @var $ndr EntityDir\Ndr\Ndr */
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         if (empty($data['agreed_behalf_deputy'])) {
             throw new \InvalidArgumentException('Missing agreed_behalf_deputy');
@@ -100,7 +103,7 @@ class NdrController extends RestController
             $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
         }
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         if (array_key_exists('has_debts', $data) && in_array($data['has_debts'], ['yes', 'no'])) {
             $ndr->setHasDebts($data['has_debts']);
@@ -119,7 +122,7 @@ class NdrController extends RestController
                     }
                     $debt->setAmountAndDetails($row['amount'], $row['more_details']);
                     $this->em->flush($debt);
-                    $this->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
+                    $this->formatter->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
                 }
             }
         }

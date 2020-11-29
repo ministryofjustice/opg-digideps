@@ -6,6 +6,9 @@ use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Exception\UnauthorisedException;
+use AppBundle\Service\Auth\AuthService;
+use AppBundle\Service\Formatter\RestFormatter;
+use AppBundle\Traits\RestFormatterTrait;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpParser\Comment\Doc;
@@ -19,12 +22,17 @@ class DocumentController extends RestController
     const RETRIES_FAILED_MESSAGE = 'Document failed to sync after 4 attempts';
     const REPORT_PDF_FAILED_MESSAGE = 'Report PDF failed to sync';
 
-    private array $sectionIds = [EntityDir\Report\Report::SECTION_DOCUMENTS];
     private EntityManagerInterface $em;
+    private AuthService $authService;
+    private RestFormatter $formatter;
 
-    public function __construct(EntityManagerInterface $em)
+    private array $sectionIds = [EntityDir\Report\Report::SECTION_DOCUMENTS];
+
+    public function __construct(EntityManagerInterface $em, AuthService $authService, RestFormatter $formatter)
     {
+        $this->authService = $authService;
         $this->em = $em;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -45,7 +53,7 @@ class DocumentController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         // hydrate and persist
-        $data = $this->deserializeBodyContent($request, [
+        $data = $this->formatter->deserializeBodyContent($request, [
             'file_name' => 'notEmpty',
             'storage_reference' => 'notEmpty'
         ]);
@@ -76,7 +84,7 @@ class DocumentController extends RestController
     {
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['documents'];
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         /* @var $document EntityDir\Report\Document */
         $document = $this->findEntityBy(EntityDir\Report\Document::class, $id);
@@ -129,11 +137,11 @@ class DocumentController extends RestController
      */
     public function getQueuedDocuments(Request $request, EntityManagerInterface $em): string
     {
-        if (!$this->getAuthService()->isSecretValid($request)) {
+        if (!$this->authService->isSecretValid($request)) {
             throw new UnauthorisedException('client secret not accepted.');
         }
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         $documentRepo = $em->getRepository(Document::class);
 
@@ -149,7 +157,7 @@ class DocumentController extends RestController
      */
     public function updateRelatedDocumentStatuses(Request $request, EntityManagerInterface $em): string
     {
-        if (!$this->getAuthService()->isSecretValid($request)) {
+        if (!$this->authService->isSecretValid($request)) {
             throw new UnauthorisedException('client secret not accepted.');
         }
 
@@ -171,11 +179,11 @@ class DocumentController extends RestController
      */
     public function update(Request $request, int $id, EntityManagerInterface $em): Document
     {
-        if (!$this->getAuthService()->isSecretValid($request)) {
+        if (!$this->authService->isSecretValid($request)) {
             throw new UnauthorisedException('client secret not accepted.');
         }
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         /** @var Document $document */
         $documentRepository = $em->getRepository(Document::class);
@@ -184,7 +192,7 @@ class DocumentController extends RestController
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['synchronisation', 'document-id'];
 
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         if (!empty($data['syncStatus'])) {
             $document->setSynchronisationStatus($data['syncStatus']);

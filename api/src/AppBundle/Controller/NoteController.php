@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,10 +16,12 @@ use Symfony\Component\HttpFoundation\Request;
 class NoteController extends RestController
 {
     private EntityManagerInterface $em;
+    private RestFormatter $formatter;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
     {
         $this->em = $em;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -31,7 +34,7 @@ class NoteController extends RestController
         $this->denyAccessIfClientDoesNotBelongToUser($client);
 
         // hydrate and persist
-        $data = $this->deserializeBodyContent($request, [
+        $data = $this->formatter->deserializeBodyContent($request, [
             'title' => 'notEmpty',
             'category' => 'mustExist',
             'content' => 'mustExist',
@@ -58,7 +61,7 @@ class NoteController extends RestController
     {
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['notes', 'user'];
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $note = $this->findEntityBy(EntityDir\Note::class, $id); /* @var $note EntityDir\Note */
         $this->denyAccessIfClientDoesNotBelongToUser($note->getClient());
@@ -80,7 +83,7 @@ class NoteController extends RestController
         // enable if the check above is removed and the note is available for editing for the whole team
         $this->denyAccessIfClientDoesNotBelongToUser($note->getClient());
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
         $this->hydrateEntityWithArrayData($note, $data, [
             'category' => 'setCategory',
             'title' => 'setTitle',

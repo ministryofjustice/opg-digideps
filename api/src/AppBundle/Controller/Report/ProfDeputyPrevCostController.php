@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -11,12 +12,15 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ProfDeputyPrevCostController extends RestController
 {
-    private array $sectionIds = [EntityDir\Report\Report::SECTION_PROF_DEPUTY_COSTS];
     private EntityManagerInterface $em;
+    private RestFormatter $formatter;
 
-    public function __construct(EntityManagerInterface $em)
+    private array $sectionIds = [EntityDir\Report\Report::SECTION_PROF_DEPUTY_COSTS];
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
     {
         $this->em = $em;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -25,7 +29,7 @@ class ProfDeputyPrevCostController extends RestController
      */
     public function addAction(Request $request, $reportId)
     {
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         /* @var $report EntityDir\Report\Report */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
@@ -57,7 +61,7 @@ class ProfDeputyPrevCostController extends RestController
         $report = $cost->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($cost->getReport());
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
         $this->updateEntity($data, $cost);
         $this->em->flush();
 
@@ -80,7 +84,7 @@ class ProfDeputyPrevCostController extends RestController
     {
         $serialiseGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['prof-deputy-costs-prev'];
-        $this->setJmsSerialiserGroups($serialiseGroups);
+        $this->formatter->setJmsSerialiserGroups($serialiseGroups);
 
         $cost = $this->findEntityBy(EntityDir\Report\ProfDeputyPreviousCost::class, $id, 'Prof Service Fee with id:' . $id . ' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($cost->getReport());

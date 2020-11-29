@@ -5,6 +5,8 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Exception as AppExceptions;
+use AppBundle\Service\Formatter\RestFormatter;
+use AppBundle\Traits\RestFormatterTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -15,12 +17,15 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ContactController extends RestController
 {
-    private array $sectionIds = [EntityDir\Report\Report::SECTION_CONTACTS];
     private EntityManagerInterface $em;
+    private RestFormatter $formatter;
 
-    public function __construct(EntityManagerInterface $em)
+    private array $sectionIds = [EntityDir\Report\Report::SECTION_CONTACTS];
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
     {
         $this->em = $em;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -31,7 +36,7 @@ class ContactController extends RestController
     {
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['contact'];
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $contact = $this->findEntityBy(EntityDir\Report\Contact::class, $id);
         $this->denyAccessIfReportDoesNotBelongToUser($contact->getReport());
@@ -64,10 +69,10 @@ class ContactController extends RestController
      **/
     public function upsertContact(Request $request)
     {
-        $contactData = $this->deserializeBodyContent($request);
+        $contactData = $this->formatter->deserializeBodyContent($request);
 
         if ($request->getMethod() == 'POST') {
-            $this->validateArray($contactData, [
+            $this->formatter->validateArray($contactData, [
                 'report_id' => 'mustExist',
             ]);
             $report = $this->findEntityBy(EntityDir\Report\Report::class, $contactData['report_id']);
@@ -75,7 +80,7 @@ class ContactController extends RestController
             $contact = new EntityDir\Report\Contact();
             $contact->setReport($report);
         } else {
-            $this->validateArray($contactData, [
+            $this->formatter->validateArray($contactData, [
                 'id' => 'mustExist',
             ]);
             $contact = $this->findEntityBy(EntityDir\Report\Contact::class, $contactData['id']); /* @var $contact EntityDir\Report\Contact */
@@ -83,7 +88,7 @@ class ContactController extends RestController
             $this->denyAccessIfReportDoesNotBelongToUser($contact->getReport());
         }
 
-        $this->validateArray($contactData, [
+        $this->formatter->validateArray($contactData, [
             'contact_name' => 'mustExist',
             'address' => 'mustExist',
             'address2' => 'mustExist',
@@ -132,7 +137,7 @@ class ContactController extends RestController
             return [];
         }
 
-        $this->setJmsSerialiserGroups(['report', 'contact']);
+        $this->formatter->setJmsSerialiserGroups(['report', 'contact']);
 
         return $contacts;
     }
