@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Service;
 
@@ -127,7 +127,7 @@ class ReportSubmissionService
      * @param  bool   $showSummary
      * @return string binary PDF content
      */
-    public function getPdfBinaryContent(ReportInterface $report, $showSummary = false)
+    public function getPdfBinaryContent(ReportInterface $report, bool $showSummary = false)
     {
         $html = $this->templating->render('AppBundle:Report/Formatted:formatted_standalone.html.twig', [
             'report' => $report,
