@@ -281,7 +281,7 @@ workflows:
       - cross-browser-test:
           name: cross browser test
           requires: [ apply integration ]
-          filters: { branches: { ignore: [ main ] } }
+          filters: { branches: { only: [ main ] } }
       - run-task:
           name: integration test
           requires: [ reset integration ]
