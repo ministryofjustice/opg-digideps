@@ -3,6 +3,9 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,6 +15,15 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class NoteController extends RestController
 {
+    private EntityManagerInterface $em;
+    private RestFormatter $formatter;
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    {
+        $this->em = $em;
+        $this->formatter = $formatter;
+    }
+
     /**
      * @Route("{clientId}", requirements={"clientId":"\d+"}, methods={"POST"})
      * @Security("has_role('ROLE_ORG')")
@@ -22,14 +34,16 @@ class NoteController extends RestController
         $this->denyAccessIfClientDoesNotBelongToUser($client);
 
         // hydrate and persist
-        $data = $this->deserializeBodyContent($request, [
+        $data = $this->formatter->deserializeBodyContent($request, [
             'title' => 'notEmpty',
             'category' => 'mustExist',
             'content' => 'mustExist',
         ]);
         $note = new EntityDir\Note($client, $data['category'], $data['title'], $data['content']);
         $note->setCreatedBy($this->getUser());
-        $this->persistAndFlush($note);
+
+        $this->em->persist($note);
+        $this->em->flush();
 
         return ['id' => $note->getId()];
     }
@@ -47,7 +61,7 @@ class NoteController extends RestController
     {
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['notes', 'user'];
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $note = $this->findEntityBy(EntityDir\Note::class, $id); /* @var $note EntityDir\Note */
         $this->denyAccessIfClientDoesNotBelongToUser($note->getClient());
@@ -69,7 +83,7 @@ class NoteController extends RestController
         // enable if the check above is removed and the note is available for editing for the whole team
         $this->denyAccessIfClientDoesNotBelongToUser($note->getClient());
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
         $this->hydrateEntityWithArrayData($note, $data, [
             'category' => 'setCategory',
             'title' => 'setTitle',
@@ -78,7 +92,7 @@ class NoteController extends RestController
 
         $note->setLastModifiedBy($this->getUser());
 
-        $this->getEntityManager()->flush($note);
+        $this->em->flush($note);
 
         return $note->getId();
     }
@@ -91,9 +105,10 @@ class NoteController extends RestController
      *
      * @param int $id
      *
+     * @param LoggerInterface $logger
      * @return array
      */
-    public function delete($id)
+    public function delete($id, LoggerInterface $logger)
     {
         try {
             /** @var $note EntityDir\Note $note */
@@ -102,11 +117,11 @@ class NoteController extends RestController
             // enable if the check above is removed and the note is available for editing for the whole team
             $this->denyAccessIfClientDoesNotBelongToUser($note->getClient());
 
-            $this->getEntityManager()->remove($note);
+            $this->em->remove($note);
 
-            $this->getEntityManager()->flush($note);
+            $this->em->flush($note);
         } catch (\Throwable $e) {
-            $this->get('logger')->error('Failed to delete note ID: ' . $id . ' - ' . $e->getMessage());
+            $logger->error('Failed to delete note ID: ' . $id . ' - ' . $e->getMessage());
         }
 
         return [];

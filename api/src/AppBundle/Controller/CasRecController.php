@@ -5,12 +5,10 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Repository\CasRecRepository;
 use AppBundle\Service\CasrecVerificationService;
-use AppBundle\Service\CsvUploader;
-use Doctrine\ORM\QueryBuilder;
+use AppBundle\Service\Formatter\RestFormatter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -18,14 +16,13 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CasRecController extends RestController
 {
-    /**
-     * @var CasrecVerificationService
-     */
-    private $casrecVerification;
+    private CasrecVerificationService $casrecVerification;
+    private RestFormatter $formatter;
 
-    public function __construct(CasrecVerificationService $casrecVerification)
+    public function __construct(CasrecVerificationService $casrecVerification, RestFormatter $formatter)
     {
         $this->casrecVerification = $casrecVerification;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -55,7 +52,7 @@ class CasRecController extends RestController
      */
     public function verify(Request $request, CasrecVerificationService $verificationService)
     {
-        $clientData = $this->deserializeBodyContent($request);
+        $clientData = $this->formatter->deserializeBodyContent($request);
         $user = $this->getUser();
 
         $casrecVerified = $verificationService->validate(

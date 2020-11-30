@@ -49,7 +49,7 @@ up-app-xdebug-api: ## Brings the app up, rebuilds containers and enabled xdebug 
 	REQUIRE_XDEBUG_API=true docker-compose up -d --build
 
 up-app-integration-tests: ## Brings the app up using test env vars (see test.env)
-	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose build frontend admin api
+	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose -f docker-compose.yml -f docker-compose.dev.yml build frontend admin api
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 
 down-app: ### Tears down the app

@@ -5,13 +5,24 @@ namespace AppBundle\Controller\Ndr;
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Document;
+use AppBundle\Service\Formatter\RestFormatter;
 use AppBundle\Service\ReportService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class NdrController extends RestController
 {
+    private EntityManagerInterface $em;
+    private RestFormatter $formatter;
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    {
+        $this->em = $em;
+        $this->formatter = $formatter;
+    }
+
     /**
      * @Route("/ndr/{id}", methods={"GET"})
      *
@@ -20,7 +31,7 @@ class NdrController extends RestController
     public function getById(Request $request, $id)
     {
         $groups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['ndr'];
-        $this->setJmsSerialiserGroups($groups);
+        $this->formatter->setJmsSerialiserGroups($groups);
 
         /* @var $report EntityDir\Ndr\Ndr */
         $report = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $id);
@@ -43,7 +54,7 @@ class NdrController extends RestController
         /* @var $ndr EntityDir\Ndr\Ndr */
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         if (empty($data['agreed_behalf_deputy'])) {
             throw new \InvalidArgumentException('Missing agreed_behalf_deputy');
@@ -55,11 +66,11 @@ class NdrController extends RestController
         }
 
         /** @var Document $reportPdf */
-        $reportPdf = $this->getEntityManager()->getRepository(EntityDir\Report\Document::class)->find($documentId);
+        $reportPdf = $this->em->getRepository(EntityDir\Report\Document::class)->find($documentId);
         $reportPdf->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
         $reportPdf->setSynchronisedBy($this->getUser());
 
-        $this->getEntityManager()->flush($reportPdf);
+        $this->em->flush($reportPdf);
 
         $ndr->setAgreedBehalfDeputy($data['agreed_behalf_deputy']);
 
@@ -92,7 +103,7 @@ class NdrController extends RestController
             $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
         }
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         if (array_key_exists('has_debts', $data) && in_array($data['has_debts'], ['yes', 'no'])) {
             $ndr->setHasDebts($data['has_debts']);
@@ -100,7 +111,7 @@ class NdrController extends RestController
             foreach ($ndr->getDebts() as $debt) {
                 $debt->setAmount(null);
                 $debt->setMoreDetails(null);
-                $this->getEntityManager()->flush($debt);
+                $this->em->flush($debt);
             }
             // set debts as per "debts" key
             if ($data['has_debts'] == 'yes') {
@@ -110,8 +121,8 @@ class NdrController extends RestController
                         continue; //not clear when that might happen. kept similar to transaction below
                     }
                     $debt->setAmountAndDetails($row['amount'], $row['more_details']);
-                    $this->getEntityManager()->flush($debt);
-                    $this->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
+                    $this->em->flush($debt);
+                    $this->formatter->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
                 }
             }
         }
@@ -127,7 +138,7 @@ class NdrController extends RestController
                     $e
                         ->setPresent($row['present'])
                         ->setMoreDetails($row['present'] ? $row['more_details'] : null);
-                    $this->getEntityManager()->flush($e);
+                    $this->em->flush($e);
                 }
             }
         }
@@ -163,7 +174,7 @@ class NdrController extends RestController
                 $e = $ndr->getOneOffByTypeId($row['type_id']);
                 if ($e instanceof EntityDir\Ndr\OneOff) {
                     $e->setPresent($row['present'])->setMoreDetails($row['more_details']);
-                    $this->getEntityManager()->flush($e);
+                    $this->em->flush($e);
                 }
             }
         }
@@ -172,16 +183,16 @@ class NdrController extends RestController
             $ndr->setNoAssetToAdd($data['no_asset_to_add']);
             if ($ndr->getNoAssetToAdd()) {
                 foreach ($ndr->getAssets() as $asset) {
-                    $this->getEntityManager()->remove($asset);
+                    $this->em->remove($asset);
                 }
-                $this->getEntityManager()->flush();
+                $this->em->flush();
             }
         }
 
         if (array_key_exists('paid_for_anything', $data)) {
             if ($data['paid_for_anything'] === 'no') { // remove existing expenses
                 foreach ($ndr->getExpenses() as $e) {
-                    $this->getEntityManager()->remove($e);
+                    $this->em->remove($e);
                 }
             }
             $ndr->setPaidForAnything($data['paid_for_anything']);
@@ -222,7 +233,7 @@ class NdrController extends RestController
             $ndr->setStartDate(new \DateTime($data['start_date']));
         }
 
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $ndr->getId()];
     }

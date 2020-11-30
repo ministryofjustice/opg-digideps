@@ -4,13 +4,24 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class ExpenseController extends RestController
 {
-    private $sectionIds = [EntityDir\Report\Report::SECTION_DEPUTY_EXPENSES];
+    private EntityManagerInterface $em;
+    private RestFormatter $formatter;
+
+    private array $sectionIds = [EntityDir\Report\Report::SECTION_DEPUTY_EXPENSES];
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    {
+        $this->em = $em;
+        $this->formatter = $formatter;
+    }
 
     /**
      * @Route("/report/{reportId}/expense/{expenseId}", requirements={"reportId":"\d+", "expenseId":"\d+"}, methods={"GET"})
@@ -26,7 +37,7 @@ class ExpenseController extends RestController
 
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['expenses', 'account'];
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         return $expense;
     }
@@ -37,11 +48,11 @@ class ExpenseController extends RestController
      */
     public function add(Request $request, $reportId)
     {
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
-        $this->validateArray($data, [
+        $this->formatter->validateArray($data, [
             'explanation' => 'mustExist',
             'amount' => 'mustExist',
         ]);
@@ -50,10 +61,13 @@ class ExpenseController extends RestController
         $this->updateEntityWithData($report, $expense, $data);
         $report->setPaidForAnything('yes');
 
-        $this->persistAndFlush($expense);
+        $this->em->persist($expense);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->persistAndFlush($report);
+
+        $this->em->persist($report);
+        $this->em->flush();
 
         return ['id' => $expense->getId()];
     }
@@ -64,7 +78,7 @@ class ExpenseController extends RestController
      */
     public function edit(Request $request, $reportId, $expenseId)
     {
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -73,10 +87,10 @@ class ExpenseController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($expense->getReport());
 
         $this->updateEntityWithData($report, $expense, $data);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $expense->getId()];
     }
@@ -92,11 +106,11 @@ class ExpenseController extends RestController
 
         $expense = $this->findEntityBy(EntityDir\Report\Expense::class, $expenseId);
         $this->denyAccessIfReportDoesNotBelongToUser($expense->getReport());
-        $this->getEntityManager()->remove($expense);
-        $this->getEntityManager()->flush();
+        $this->em->remove($expense);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return [];
     }

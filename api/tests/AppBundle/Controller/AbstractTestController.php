@@ -2,7 +2,6 @@
 
 namespace Tests\AppBundle\Controller;
 
-
 use AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use AppBundle\Service\BruteForce\AttemptsInTimeChecker;
 use Doctrine\ORM\EntityManager;
@@ -48,9 +47,8 @@ abstract class AbstractTestController extends WebTestCase
         /** @var EntityManager $em */
         $em = $container->get('em');
 
-        $t = $container->getParameter('fixtures');
-
         self::$fixtures = new Fixtures($em);
+
         $em->clear();
 
         self::$deputySecret = getenv('SECRETS_FRONT_KEY');
@@ -108,7 +106,8 @@ abstract class AbstractTestController extends WebTestCase
         self::$frameworkBundleClient->request(
             $method,
             $uri,
-            [], [],
+            [],
+            [],
             $headers,
             $rawData
         );

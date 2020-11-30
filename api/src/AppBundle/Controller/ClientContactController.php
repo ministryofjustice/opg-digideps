@@ -3,6 +3,9 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,6 +15,15 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ClientContactController extends RestController
 {
+    private EntityManagerInterface $em;
+    private RestFormatter $formatter;
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    {
+        $this->em = $em;
+        $this->formatter = $formatter;
+    }
+
     /**
      * @Route("/clients/{clientId}/clientcontacts", name="clientcontact_add", methods={"POST"})
      * @Security("has_role('ROLE_ORG')")
@@ -21,7 +33,7 @@ class ClientContactController extends RestController
         $client = $this->findEntityBy(EntityDir\Client::class, $clientId);
         $this->denyAccessIfClientDoesNotBelongToUser($client);
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
         $clientContact = new EntityDir\ClientContact();
         $this->hydrateEntityWithArrayData($clientContact, $data, [
             'first_name'   => 'setFirstName',
@@ -39,7 +51,9 @@ class ClientContactController extends RestController
 
         $clientContact->setClient($client);
         $clientContact->setCreatedBy($this->getUser());
-        $this->persistAndFlush($clientContact);
+
+        $this->em->persist($clientContact);
+        $this->em->flush();
 
         return ['id' => $clientContact->getId()];
     }
@@ -56,7 +70,7 @@ class ClientContactController extends RestController
         $clientContact = $this->findEntityBy(EntityDir\ClientContact::class, $id);
         $this->denyAccessIfClientDoesNotBelongToUser($clientContact->getClient());
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
         $this->hydrateEntityWithArrayData($clientContact, $data, [
             'first_name'   => 'setFirstName',
             'last_name'    => 'setLastName',
@@ -70,7 +84,7 @@ class ClientContactController extends RestController
             'email'        => 'setEmail',
             'org_name'     => 'setOrgName',
         ]);
-        $this->getEntityManager()->flush($clientContact);
+        $this->em->flush($clientContact);
         return $clientContact->getId();
     }
 
@@ -83,7 +97,7 @@ class ClientContactController extends RestController
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups')
             : ['clientcontact', 'clientcontact-client', 'client', 'client-users', 'current-report', 'report-id', 'user'];
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $clientContact = $this->findEntityBy(EntityDir\ClientContact::class, $id);
         $this->denyAccessIfClientDoesNotBelongToUser($clientContact->getClient());
@@ -98,16 +112,16 @@ class ClientContactController extends RestController
      * @Route("/clientcontacts/{id}", methods={"DELETE"})
      * @Security("has_role('ROLE_ORG')")
      */
-    public function delete($id)
+    public function delete($id, LoggerInterface $logger)
     {
         try {
             $clientContact = $this->findEntityBy(EntityDir\ClientContact::class, $id);
             $this->denyAccessIfClientDoesNotBelongToUser($clientContact->getClient());
 
-            $this->getEntityManager()->remove($clientContact);
-            $this->getEntityManager()->flush($clientContact);
+            $this->em->remove($clientContact);
+            $this->em->flush($clientContact);
         } catch (\Throwable $e) {
-            $this->get('logger')->error('Failed to delete client contact ID: ' . $id . ' - ' . $e->getMessage());
+            $logger->error('Failed to delete client contact ID: ' . $id . ' - ' . $e->getMessage());
         }
 
         return [];

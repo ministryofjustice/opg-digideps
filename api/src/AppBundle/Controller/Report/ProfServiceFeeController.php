@@ -4,13 +4,24 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class ProfServiceFeeController extends RestController
 {
-    private $sectionIds = [EntityDir\Report\Report::SECTION_PROF_CURRENT_FEES];
+    private EntityManagerInterface $em;
+    private RestFormatter $formatter;
+
+    private array $sectionIds = [EntityDir\Report\Report::SECTION_PROF_CURRENT_FEES];
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    {
+        $this->em = $em;
+        $this->formatter = $formatter;
+    }
 
     /**
      * @Route("/report/{reportId}/prof-service-fee", methods={"POST"})
@@ -18,7 +29,7 @@ class ProfServiceFeeController extends RestController
      */
     public function addAction(Request $request, $reportId)
     {
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         /* @var $report EntityDir\Report\Report */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
@@ -28,10 +39,12 @@ class ProfServiceFeeController extends RestController
         $profServiceFee->setReport($report);
         $this->updateEntity($data, $profServiceFee);
         $report->setCurrentProfPaymentsReceived('yes');
-        $this->persistAndFlush($profServiceFee);
+
+        $this->em->persist($profServiceFee);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $profServiceFee->getId()];
     }
@@ -47,12 +60,12 @@ class ProfServiceFeeController extends RestController
         $report = $profServiceFee->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($profServiceFee->getReport());
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
         $this->updateEntity($data, $profServiceFee);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $profServiceFee->getId()];
     }
@@ -70,7 +83,7 @@ class ProfServiceFeeController extends RestController
     {
         $serialiseGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['prof_service_fee'];
-        $this->setJmsSerialiserGroups($serialiseGroups);
+        $this->formatter->setJmsSerialiserGroups($serialiseGroups);
 
         $profServiceFee = $this->findEntityBy(EntityDir\Report\ProfServiceFee::class, $id, 'Prof Service Fee with id:' . $id . ' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($profServiceFee->getReport());
@@ -88,11 +101,11 @@ class ProfServiceFeeController extends RestController
         $report = $profServiceFee->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($profServiceFee->getReport());
 
-        $this->getEntityManager()->remove($profServiceFee);
-        $this->getEntityManager()->flush();
+        $this->em->remove($profServiceFee);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return [];
     }
