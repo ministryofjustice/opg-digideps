@@ -18,7 +18,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  */
 class ManageController extends AbstractController
 {
-    public function __construct(){}
+    private string $symfonyEnvironment;
+
+    public function __construct(string $symfonyEnvironment)
+    {
+        $this->symfonyEnvironment = $symfonyEnvironment;
+    }
 
     /**
      * @Route("/availability", methods={"GET"})
@@ -27,7 +32,7 @@ class ManageController extends AbstractController
      * @param ApiAvailability $apiAvailability
      * @param NotifyAvailability $notifyAvailability
      * @param RedisAvailability $redisAvailability
-     *
+
      * @return Response|null
      */
     public function availabilityAction(
@@ -35,9 +40,7 @@ class ManageController extends AbstractController
         ApiAvailability $apiAvailability,
         NotifyAvailability $notifyAvailability,
         RedisAvailability $redisAvailability
-    )
-    {
-
+    ) {
         $services = [
             $apiAvailability,
             $redisAvailability,
@@ -55,7 +58,7 @@ class ManageController extends AbstractController
         $response = $this->render('AppBundle:Manage:availability.html.twig', [
             'services' => $services,
             'errors' => $errors,
-            'environment' => $this->get('kernel')->getEnvironment(),
+            'environment' => $this->symfonyEnvironment,
         ]);
 
         $response->setStatusCode($healthy ? 200 : 500);
@@ -76,8 +79,7 @@ class ManageController extends AbstractController
         ApiAvailability $apiAvailability,
         NotifyAvailability $notifyAvailability,
         RedisAvailability $redisAvailability
-    )
-    {
+    ) {
         $services = [
             $apiAvailability,
             $redisAvailability,

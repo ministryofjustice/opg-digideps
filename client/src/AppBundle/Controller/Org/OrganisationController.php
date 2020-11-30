@@ -12,7 +12,6 @@ use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Logger;
 use AppBundle\Service\Time\DateTimeProvider;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
@@ -26,33 +25,27 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class OrganisationController extends AbstractController
 {
-    /** @var DateTimeProvider */
-    private $dateTimeProvider;
-
-    /** @var Logger */
-    private $logger;
-
-    /** @var UserApi */
-    private $userApi;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var OrganisationApi */
-    private $organisationApi;
+    private DateTimeProvider $dateTimeProvider;
+    private Logger $logger;
+    private UserApi $userApi;
+    private RestClient $restClient;
+    private OrganisationApi $organisationApi;
+    private TranslatorInterface $translator;
 
     public function __construct(
         DateTimeProvider $dateTimeProvider,
         Logger $logger,
         UserApi $userApi,
         RestClient $restClient,
-        OrganisationApi $organisationApi
+        OrganisationApi $organisationApi,
+        TranslatorInterface $translator
     ) {
         $this->dateTimeProvider = $dateTimeProvider;
         $this->logger = $logger;
         $this->userApi = $userApi;
         $this->restClient = $restClient;
         $this->organisationApi = $organisationApi;
+        $this->translator = $translator;
     }
 
     /**
@@ -148,7 +141,7 @@ class OrganisationController extends AbstractController
                 switch ((int) $e->getCode()) {
                     case 422:
                         /** @var TranslatorInterface */
-                        $translator = $this->get('translator');
+                        $translator = $this->translator;
 
                         $form->get('email')->addError(new FormError($translator->trans('form.email.existingError', [], 'org-organisation')));
                         break;
@@ -218,7 +211,7 @@ class OrganisationController extends AbstractController
                 switch ((int) $e->getCode()) {
                     case 422:
                         /** @var TranslatorInterface */
-                        $translator = $this->get('translator');
+                        $translator = $this->translator;
                         $form->get('email')->addError(new FormError($translator->trans('form.email.existingError', [], 'org-organisation')));
                         break;
 
@@ -308,9 +301,7 @@ class OrganisationController extends AbstractController
                 'An activation email has been sent to the user.'
             );
         } catch (\Throwable $e) {
-            /** @var LoggerInterface */
-            $logger = $this->get('logger');
-            $logger->debug($e->getMessage());
+            $this->logger->debug($e->getMessage());
 
             $this->addFlash(
                 'error',

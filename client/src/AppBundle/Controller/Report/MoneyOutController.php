@@ -15,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class MoneyOutController extends AbstractController
@@ -38,8 +39,7 @@ class MoneyOutController extends AbstractController
         RestClient $restClient,
         ReportApi $reportApi,
         StepRedirector $stepRedirector
-    )
-    {
+    ) {
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
         $this->stepRedirector = $stepRedirector;
@@ -73,11 +73,12 @@ class MoneyOutController extends AbstractController
      * @param Request $request
      * @param $reportId
      * @param $step
+     * @param AuthorizationCheckerInterface $authorizationChecker
      * @param null $transactionId
      *
      * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, $reportId, $step, $transactionId = null)
+    public function stepAction(Request $request, $reportId, $step, AuthorizationCheckerInterface $authorizationChecker, $transactionId = null)
     {
         $totalSteps = 2;
         if ($step < 1 || $step > $totalSteps) {
@@ -120,11 +121,14 @@ class MoneyOutController extends AbstractController
         ]);
 
         // crete and handle form
-        $form = $this->createForm(FormDir\Report\MoneyTransactionType::class, $transaction, [
+        $form = $this->createForm(
+            FormDir\Report\MoneyTransactionType::class,
+            $transaction,
+            [
             'step' => $step,
             'type'             => 'out',
             'selectedCategory' => $transaction->getCategory(),
-            'authChecker' => $this->get('security.authorization_checker'),
+            'authChecker' => $authorizationChecker,
             'report' => $report
             ]
         );
@@ -227,12 +231,14 @@ class MoneyOutController extends AbstractController
      * @Route("/report/{reportId}/money-out/{transactionId}/delete", name="money_out_delete")
      * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
+     * @param Request $request
      * @param $reportId
      * @param $transactionId
+     * @param TranslatorInterface $translator
      *
      * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $reportId, $transactionId)
+    public function deleteAction(Request $request, $reportId, $transactionId, TranslatorInterface $translator)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -261,9 +267,8 @@ class MoneyOutController extends AbstractController
             return $this->redirect($this->generateUrl('money_out_summary', ['reportId' => $reportId]));
         }
 
-        /** @var TranslatorInterface $translator */
-        $translator = $this->get('translator');
         $categoryKey = 'form.category.entries.' . $transaction->getCategory() . '.label';
+
         $summary = [
             ['label' => 'deletePage.summary.category', 'value' => $translator->trans($categoryKey, [], 'report-money-transaction')],
             ['label' => 'deletePage.summary.description', 'value' => $transaction->getDescription()],

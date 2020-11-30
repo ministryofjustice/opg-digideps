@@ -13,7 +13,6 @@ services:
         alias: AppBundle\Service\Client\RestClient
 
     AppBundle\Service\Client\RestClient:
-        public: true
         arguments:
             - '@service_container'
             - '@GuzzleHttp\Client'
@@ -24,4 +23,3 @@ services:
 
     rest_client:
         alias: AppBundle\Service\Client\RestClient
-        public: true

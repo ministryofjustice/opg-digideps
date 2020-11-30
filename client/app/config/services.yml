@@ -13,18 +13,15 @@ services:
     AppBundle\Controller\IndexController:
         autowire: true
         autoconfigure: true
-        public: true
         class: AppBundle\Controller\IndexController
         arguments:
           $environment: '%env(ENVIRONMENT)%'
 
     AppBundle\Service\Redirector:
-        public: true
         class: AppBundle\Service\Redirector
         arguments: [ "@security.token_storage", "@security.authorization_checker", "@router", "@session", "%env%" ]
 
     AppBundle\Service\WkHtmlToPdfGenerator:
-        public: true
         arguments: [ "%wkhtmltopdf_address%", 30]
 
     wkhtmltopdf:
@@ -43,7 +40,6 @@ services:
                 allow_redirects: false
 
     AppBundle\Service\Client\Sirius\SiriusApiGatewayClient:
-        public: true
         class: AppBundle\Service\Client\Sirius\SiriusApiGatewayClient
         arguments:
             $httpClient: '@guzzle_api_gateway_client'
@@ -75,7 +71,6 @@ services:
         arguments: ["%ssm_client_params%"]
 
     AppBundle\Service\FeatureFlagService:
-        public: true
         arguments: ['@Aws\Ssm\SsmClient', '%env(FEATURE_FLAG_PREFIX)%']
 
     AppBundle\Service\ParameterStoreService:
@@ -89,23 +84,18 @@ services:
     # Make optional availability services pullable
     AppBundle\Service\Availability\ClamAvAvailability:
         arguments: ['@guzzle_file_scanner_client']
-        public: true
 
     AppBundle\Service\Availability\SiriusApiAvailability:
         arguments: ['@AppBundle\Service\Client\Sirius\SiriusApiGatewayClient']
-        public: true
 
     AppBundle\Service\Availability\WkHtmlToPdfAvailability:
         arguments: ['@AppBundle\Service\WkHtmlToPdfGenerator']
-        public: true
 
     AppBundle\Service\Availability\NotifyAvailability:
-         public: true
          arguments:
              $notifyClient: '@Alphagov\Notifications\Client'
 
     AppBundle\Service\DocumentSyncService:
-        public: true
         autowire: true
         autoconfigure: true
         arguments:
