@@ -27,15 +27,17 @@ class CommonPasswordValidator extends ConstraintValidator
     /**
      * Validates a password is not in list of pwned passwords
      *
-     * @param string $password
+     * @param mixed $password
      * @param Constraint $constraint
      */
     public function validate($password, Constraint $constraint)
     {
-        $this->checkCommonPasswordsFileExists($this->filePathCommonPasswords);
+        if (isset($password)) {
+            $this->checkCommonPasswordsFileExists($this->filePathCommonPasswords);
 
-        if ($this->passwordMatchesCommonPasswords($password, $this->filePathCommonPasswords)) {
-            $this->context->buildViolation($constraint->message)->addViolation();
+            if ($this->passwordMatchesCommonPasswords($password, $this->filePathCommonPasswords)) {
+                $this->context->buildViolation($constraint->message)->addViolation();
+            }
         }
     }
 
