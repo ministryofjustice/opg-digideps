@@ -103,6 +103,10 @@ $(document).ready(function () {
       $el.addEventListener('click', function ($e) {
         this.classList.add('opg-submit-link--disabled', 'govuk-button--disabled')
       })
+
+      setTimeout(function () {
+        this.classList.remove('opg-submit-link--disabled', 'govuk-button--disabled')
+      }, 3000)
     })
   }
 

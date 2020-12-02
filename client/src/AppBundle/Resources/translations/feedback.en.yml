@@ -8,6 +8,7 @@ collectionPage:
         title: Do you want a reply?
         explanation: If you'd like us to get back to you, please leave your details below.
     confirmation: Thank you for your feedback
+    spamError: Spam detected!
 
 form:
     specificPage:

@@ -37,7 +37,7 @@ up-app: ## Brings the app up
 
 up-app-debug: up-app enable-debug ## Brings the app up in dev mode with debugging enabled
 
-up-app-no-debug: up-app	disable-debug ## Brings the app up in dev mode with debugging disabled
+up-app-no-debug: up-app disable-debug ## Brings the app up in dev mode with debugging disabled
 
 up-app-build: ## Brings the app up and rebuilds containers
 	COMPOSE_HTTP_TIMEOUT=90 docker-compose up -d --build --remove-orphans

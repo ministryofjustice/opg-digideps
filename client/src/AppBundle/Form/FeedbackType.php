@@ -12,6 +12,8 @@ class FeedbackType extends AbstractType
 {
     use Traits\HasTranslatorTrait;
 
+    public const HONEYPOT_FIELD_NAME = 'question';
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $satisfactionScores = range(5, 1);
@@ -51,6 +53,7 @@ class FeedbackType extends AbstractType
                 'required' => false,
                 'placeholder' => false,
             ])
+            ->add(self::HONEYPOT_FIELD_NAME, FormTypes\TextType::class, ['required' => false])
             ->add('save', FormTypes\SubmitType::class);
     }
 

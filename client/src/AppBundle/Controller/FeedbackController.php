@@ -51,12 +51,20 @@ class FeedbackController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('satisfactionLevel')->getData()) {
-                $this->satisfactionApi->createGeneralFeedback($form->getData());
-            }
+            [FeedbackType::HONEYPOT_FIELD_NAME => $honeyPot] = $form->getData();
+            if (empty($honeyPot)) {
+                // Not spam
+                if ($form->get('satisfactionLevel')->getData()) {
+                    $this->satisfactionApi->createGeneralFeedback($form->getData());
+                }
 
-            $confirmation = $this->translator->trans('collectionPage.confirmation', [], 'feedback');
-            $request->getSession()->getFlashBag()->add('notice', $confirmation);
+                $confirmation = $this->translator->trans('collectionPage.confirmation', [], 'feedback');
+                $request->getSession()->getFlashBag()->add('notice', $confirmation);
+            } else {
+                // Spam detected
+                $error = $this->translator->trans('collectionPage.spamError', [], 'feedback');
+                $request->getSession()->getFlashBag()->add('error', $error);
+            }
 
             return new RedirectResponse($this->router->generate('feedback'));
         }
