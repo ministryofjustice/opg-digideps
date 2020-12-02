@@ -18,7 +18,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  */
 class ManageController extends AbstractController
 {
-    public function __construct(){}
+    public function __construct()
+    {
+    }
 
     /**
      * @Route("/availability", methods={"GET"})
@@ -35,9 +37,7 @@ class ManageController extends AbstractController
         ApiAvailability $apiAvailability,
         NotifyAvailability $notifyAvailability,
         RedisAvailability $redisAvailability
-    )
-    {
-
+    ) {
         $services = [
             $apiAvailability,
             $redisAvailability,
@@ -76,8 +76,7 @@ class ManageController extends AbstractController
         ApiAvailability $apiAvailability,
         NotifyAvailability $notifyAvailability,
         RedisAvailability $redisAvailability
-    )
-    {
+    ) {
         $services = [
             $apiAvailability,
             $redisAvailability,
@@ -116,7 +115,9 @@ class ManageController extends AbstractController
 
         foreach ($services as $service) {
             if (!$service->isHealthy()) {
-                $healthy = false;
+                if ($service->getName() != 'Sirius') {
+                    $healthy = false;
+                }
                 $errors[] = $service->getErrors();
             }
         }
