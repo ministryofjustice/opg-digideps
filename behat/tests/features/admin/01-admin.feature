@@ -156,8 +156,8 @@ Feature: admin / admin
     And I click on "user-account, password-edit"
     And I fill in the following:
       | change_password_current_password      | Abcd12345 |
-      | change_password_plain_password_first  | Abcd1234  |
-      | change_password_plain_password_second | Abcd1234  |
+      | change_password_plain_password_first  | Abcd1234! |
+      | change_password_plain_password_second | Abcd1234! |
     And I press "change_password_save"
     Then the form should be valid
 
