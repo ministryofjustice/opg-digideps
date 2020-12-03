@@ -68,12 +68,15 @@ class CommonPasswordValidator extends ConstraintValidator
         if (file_exists($filePath) & (time()-filemtime($filePath) < 24 * 3600)) {
             return;
         } else {
-            $written = file_put_contents(
-                "$filePath",
-                fopen($this->pwnedPasswordsUrl, 'r')
-            );
-            if ($written === false) {
-                throw new RuntimeException(sprintf('Unable to download or write common password file to disk'));
+            $fp = fopen($this->pwnedPasswordsUrl, "r");
+            if ($fp !== false) {
+                $written = file_put_contents(
+                    "$filePath",
+                    $fp
+                );
+                if ($written === false) {
+                    throw new RuntimeException(sprintf('Unable to download or write common password file to disk'));
+                }
             }
         }
     }

@@ -97,6 +97,10 @@ COPY docker/confd /etc/confd
 
 RUN chown -R www-data scripts
 
+# Add common passwords file
+RUN wget -q -O /tmp/commonpasswords.txt "https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt" \
+    && chown www-data /tmp/commonpasswords.txt
+
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
