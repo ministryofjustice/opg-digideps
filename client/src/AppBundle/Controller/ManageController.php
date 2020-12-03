@@ -118,7 +118,9 @@ class ManageController extends AbstractController
 
         foreach ($services as $service) {
             if (!$service->isHealthy()) {
-                $healthy = false;
+                if ($service->getName() != 'Sirius') {
+                    $healthy = false;
+                }
                 $errors[] = $service->getErrors();
             }
         }
