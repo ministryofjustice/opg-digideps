@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class IncomeBenefitController extends AbstractController
 {
@@ -42,8 +43,7 @@ class IncomeBenefitController extends AbstractController
         ReportApi $reportApi,
         RestClient $restClient,
         StepRedirector $stepRedirector
-    )
-    {
+    ) {
         $this->reportApi = $reportApi;
         $this->restClient = $restClient;
         $this->stepRedirector = $stepRedirector;
@@ -73,7 +73,7 @@ class IncomeBenefitController extends AbstractController
      * @Route("/ndr/{ndrId}/income-benefits/step/{step}", name="ndr_income_benefits_step")
      * @Template("AppBundle:Ndr/IncomeBenefit:step.html.twig")
      */
-    public function stepAction(Request $request, $ndrId, $step)
+    public function stepAction(Request $request, $ndrId, $step, TranslatorInterface $translator)
     {
         $totalSteps = 5;
         if ($step < 1 || $step > $totalSteps) {
@@ -89,9 +89,12 @@ class IncomeBenefitController extends AbstractController
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['ndrId' => $ndrId]);
 
-        $form = $this->createForm(FormDir\Ndr\IncomeBenefitType::class, $ndr, [ 'step'            => $step, 'translator'      => $this->get('translator'), 'clientFirstName' => $ndr->getClient()->getFirstname()
-                                   ]
-                                 );
+        $form = $this->createForm(
+            FormDir\Ndr\IncomeBenefitType::class,
+            $ndr,
+            [ 'step' => $step, 'translator'  => $translator, 'clientFirstName' => $ndr->getClient()->getFirstname() ]
+        );
+
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {

@@ -146,7 +146,7 @@ class IndexController extends AbstractController
      * @Route("/client/{clientId}/archive", name="org_client_archive")
      * @Template("AppBundle:Org/Index:clientArchive.html.twig")
      */
-    public function clientArchiveAction(Request $request, $clientId)
+    public function clientArchiveAction(Request $request, $clientId, TranslatorInterface $translator)
     {
         /** @var Client $client */
         $client = $this->restClient->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report']);
@@ -164,9 +164,6 @@ class IndexController extends AbstractController
                 $this->addFlash('notice', 'The client has been archived');
                 return $this->redirectToRoute('org_dashboard');
             } else {
-                /** @var TranslatorInterface $translator */
-                $translator = $this->get('translator');
-
                 $form->get('confirmArchive')->addError(new FormError($translator->trans('form.error.confirmArchive', [], 'pa-client-archive')));
             }
         }

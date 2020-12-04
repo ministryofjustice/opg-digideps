@@ -54,8 +54,7 @@ class IndexController extends AbstractController
         TranslatorInterface $translator,
         RouterInterface $router,
         string $environment
-    )
-    {
+    ) {
         $this->deputyProvider = $deputyProvider;
         $this->eventDispatcher = $eventDispatcher;
         $this->tokenStorage = $tokenStorage;
@@ -167,10 +166,6 @@ class IndexController extends AbstractController
      */
     public function adLoginAction(Request $request, $userToken, $adId, $adFirstname, $adLastname)
     {
-        // logout first
-//        $this->get('security.token_storage')->setToken(null);
-//        $request->getSession()->invalidate();
-
         $this->logUserIn(['token' => $userToken], $request, [
             '_adId' => $adId,
             '_adFirstname' =>  $adFirstname,
@@ -353,11 +348,15 @@ class IndexController extends AbstractController
     {
         $referer = $request->headers->get('referer');
 
-        if (!is_string($referer)) return null;
+        if (!is_string($referer)) {
+            return null;
+        }
 
         $refererUrlPath = parse_url($referer, \PHP_URL_PATH);
 
-        if (!$refererUrlPath) return null;
+        if (!$refererUrlPath) {
+            return null;
+        }
 
         try {
             $routeParams = $this->router->match($refererUrlPath);
