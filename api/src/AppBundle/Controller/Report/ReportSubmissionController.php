@@ -210,9 +210,12 @@ class ReportSubmissionController extends RestController
         /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
         $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class);
 
+        $fromDate = $request->get('fromDate', null) ? new DateTime($request->get('fromDate')) : null;
+        $toDate = $request->get('toDate', null) ? new DateTime($request->get('toDate')) : null;
+
         $ret = $repo->findAllReportSubmissions(
-            new DateTime($request->get('fromDate', null)),
-            new DateTime($request->get('toDate', null)),
+            $fromDate,
+            $toDate,
             $request->get('orderBy', 'createdOn'),
             $request->get('order', 'ASC')
         );
