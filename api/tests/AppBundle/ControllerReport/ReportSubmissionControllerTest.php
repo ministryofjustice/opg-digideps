@@ -188,7 +188,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
         $data = $this->makeRequestAndReturnResults(
             '/report-submission/casrec_data',
-            ['fromDate[date]' => $fromDate, 'toDate[date]' => $toDate]
+            ['fromDate' => $fromDate, 'toDate' => $toDate]
         );
 
         $this->assertEquals($expectedOutcomes['count'], count($data));

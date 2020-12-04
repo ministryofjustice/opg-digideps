@@ -9,6 +9,7 @@ use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Service\Auth\AuthService;
 use AppBundle\Service\Formatter\RestFormatter;
 use AppBundle\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -224,23 +225,16 @@ class ReportSubmissionController extends RestController
         /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
         $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class);
 
+        $fromDate = $request->get('fromDate', null) ? new DateTime($request->get('fromDate')) : null;
+        $toDate = $request->get('toDate', null) ? new DateTime($request->get('toDate')) : null;
+
         $ret = $repo->findAllReportSubmissions(
-            $this->convertDateArrayToDateTime($request->get('fromDate', [])),
-            $this->convertDateArrayToDateTime($request->get('toDate', [])),
+            $fromDate,
+            $toDate,
             $request->get('orderBy', 'createdOn'),
             $request->get('order', 'ASC')
         );
 
         return $reportSubmissionSummaryTransformer->transform($ret);
-    }
-
-    /**
-     * @param array $date
-     * @return \DateTime|null
-     * @throws \Exception
-     */
-    private function convertDateArrayToDateTime(array $date)
-    {
-        return (isset($date['date'])) ? new \DateTime($date['date']) : null;
     }
 }
