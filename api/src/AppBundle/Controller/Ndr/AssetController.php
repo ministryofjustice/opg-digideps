@@ -4,12 +4,23 @@ namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class AssetController extends RestController
 {
+    private EntityManagerInterface $em;
+    private RestFormatter $formatter;
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    {
+        $this->em = $em;
+        $this->formatter = $formatter;
+    }
+
     /**
      * @Route("/ndr/{ndrId}/assets", requirements={"ndrId":"\d+"}, methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
@@ -25,7 +36,7 @@ class AssetController extends RestController
             return [];
         }
 
-        $this->setJmsSerialiserGroups(['ndr-asset']);
+        $this->formatter->setJmsSerialiserGroups(['ndr-asset']);
 
         return $assets;
     }
@@ -42,7 +53,7 @@ class AssetController extends RestController
         $asset = $this->findEntityBy(EntityDir\Ndr\Asset::class, $assetId);
         $this->denyAccessIfNdrDoesNotBelongToUser($asset->getNdr());
 
-        $this->setJmsSerialiserGroups(['ndr-asset']);
+        $this->formatter->setJmsSerialiserGroups(['ndr-asset']);
 
         return $asset;
     }
@@ -53,11 +64,11 @@ class AssetController extends RestController
      */
     public function add(Request $request, $ndrId)
     {
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId); /* @var $ndr EntityDir\Ndr\Ndr */
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
-        $this->validateArray($data, [
+        $this->formatter->validateArray($data, [
             'type' => 'mustExist',
         ]);
         $asset = EntityDir\Ndr\Asset::factory($data['type']);
@@ -66,8 +77,8 @@ class AssetController extends RestController
         $this->updateEntityWithData($asset, $data);
         $ndr->setNoAssetToAdd(false);
 
-        $this->getEntityManager()->persist($asset);
-        $this->getEntityManager()->flush();
+        $this->em->persist($asset);
+        $this->em->flush();
 
         return ['id' => $asset->getId()];
     }
@@ -78,7 +89,7 @@ class AssetController extends RestController
      */
     public function edit(Request $request, $ndrId, $assetId)
     {
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
@@ -88,7 +99,7 @@ class AssetController extends RestController
 
         $this->updateEntityWithData($asset, $data);
 
-        $this->getEntityManager()->flush($asset);
+        $this->em->flush($asset);
 
         return ['id' => $asset->getId()];
     }
@@ -105,8 +116,8 @@ class AssetController extends RestController
         $asset = $this->findEntityBy(EntityDir\Ndr\Asset::class, $assetId);
         $this->denyAccessIfNdrDoesNotBelongToUser($asset->getNdr());
 
-        $this->getEntityManager()->remove($asset);
-        $this->getEntityManager()->flush();
+        $this->em->remove($asset);
+        $this->em->flush();
 
         return [];
     }

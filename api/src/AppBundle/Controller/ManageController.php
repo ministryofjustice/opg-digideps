@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Service\Formatter\RestFormatter;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -9,20 +11,31 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ManageController extends RestController
 {
+    private string $symfonyEnvironment;
+    private LoggerInterface $logger;
+    private RestFormatter $restFormatter;
+
+    public function __construct(string $symfonyEnvironment, LoggerInterface $logger, RestFormatter $restFormatter)
+    {
+        $this->symfonyEnvironment = $symfonyEnvironment;
+        $this->logger = $logger;
+        $this->restFormatter = $restFormatter;
+    }
+
     /**
      * @Route("/availability", methods={"GET"})
+     *
+     * @return array
      */
     public function availabilityAction()
     {
         list($dbHealthy, $dbError) = $this->dbInfo();
 
-        $data = [
+        return [
             'healthy' => $dbHealthy,
-            'environment' => $this->get('kernel')->getEnvironment(),
+            'environment' => $this->symfonyEnvironment,
             'errors' => implode("\n", array_filter([$dbError])),
         ];
-
-        return $data;
     }
 
     /**
@@ -34,6 +47,7 @@ class ManageController extends RestController
     }
 
     /**
+     * @param LoggerInterface $logger
      * @return array [boolean healthy, error string]
      */
     private function dbInfo()
@@ -52,8 +66,7 @@ class ManageController extends RestController
                 $returnMessage = 'Migrations table missing.';
             }
 
-            // log real error message
-            $this->get('logger')->error($e->getMessage());
+            $this->logger->error($e->getMessage());
 
             return [false, $returnMessage];
         }
