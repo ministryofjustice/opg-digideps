@@ -4,37 +4,57 @@ namespace AppBundle\Controller;
 
 use AppBundle\EventListener\RestInputOuputFormatter;
 use AppBundle\Exception as AppException;
+use AppBundle\Service\Auth\AuthService;
 use AppBundle\Service\Auth\HeaderTokenAuthenticator;
 use AppBundle\Service\Auth\UserProvider;
 use AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use AppBundle\Service\BruteForce\AttemptsInTimeChecker;
+use AppBundle\Service\Formatter\RestFormatter;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @Route("/auth")
  */
 class AuthController extends RestController
 {
+    private AuthService $authService;
+    private RestFormatter $formatter;
+
+    public function __construct(AuthService $authService, RestFormatter $restFormatter)
+    {
+        $this->authService = $authService;
+        $this->formatter = $restFormatter;
+    }
+
     /**
      * Return the user by email&password or token
      * expected keys in body: 'token' or ('email' and 'password').
      *
-     *
      * @Route("/login", methods={"POST"})
+     * @param Request $request
+     * @param UserProvider $userProvider
+     * @param AttemptsInTimeChecker $attemptsInTimechecker
+     * @param AttemptsIncrementalWaitingChecker $incrementalWaitingTimechecker
+     * @param RestInputOuputFormatter $restInputOuputFormatter
+     * @param EntityManagerInterface $em
+     * @param AuthService $authService
+     * @return \AppBundle\Entity\User|bool|null
      */
     public function login(
         Request $request,
         UserProvider $userProvider,
         AttemptsInTimeChecker $attemptsInTimechecker,
         AttemptsIncrementalWaitingChecker $incrementalWaitingTimechecker,
-        RestInputOuputFormatter $restInputOuputFormatter
-    )
-    {
-        if (!$this->getAuthService()->isSecretValid($request)) {
+        RestInputOuputFormatter $restInputOuputFormatter,
+        EntityManagerInterface $em
+    ) {
+        if (!$this->authService->isSecretValid($request)) {
             throw new AppException\UnauthorisedException('client secret not accepted.');
         }
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         //brute force checks
         $index = array_key_exists('token', $data) ? 'token' : 'email';
@@ -55,9 +75,9 @@ class AuthController extends RestController
 
         // load user by credentials (token or username & password)
         if (array_key_exists('token', $data)) {
-            $user = $this->getAuthService()->getUserByToken($data['token']);
+            $user = $this->authService->getUserByToken($data['token']);
         } else {
-            $user = $this->getAuthService()->getUserByEmailAndPassword(strtolower($data['email']), $data['password']);
+            $user = $this->authService->getUserByEmailAndPassword(strtolower($data['email']), $data['password']);
         }
 
         if (!$user) {
@@ -68,7 +88,7 @@ class AuthController extends RestController
                 throw new AppException\UserWrongCredentials();
             }
         }
-        if (!$this->getAuthService()->isSecretValidForRole($user->getRoleName(), $request)) {
+        if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
             throw new AppException\UnauthorisedException($user->getRoleName() . ' user role not allowed from this client.');
         }
 
@@ -78,7 +98,8 @@ class AuthController extends RestController
 
         $randomToken = $userProvider->generateRandomTokenAndStore($user);
         $user->setLastLoggedIn(new \DateTime());
-        $this->get('em')->flush($user);
+        $em->persist($user);
+        $em->flush();
 
         // add token into response
         $restInputOuputFormatter->addResponseModifier(function ($response) use ($randomToken) {
@@ -86,7 +107,7 @@ class AuthController extends RestController
         });
 
         // needed for redirector
-        $this->setJmsSerialiserGroups(['user', 'user-login']);
+        $this->formatter->setJmsSerialiserGroups(['user', 'user-login']);
 
         return $user;
     }
@@ -109,10 +130,10 @@ class AuthController extends RestController
      *
      * @Route("/get-logged-user", methods={"GET"})
      */
-    public function getLoggedUser()
+    public function getLoggedUser(TokenStorageInterface $tokenStorage)
     {
-        $this->setJmsSerialiserGroups(['user']);
+        $this->formatter->setJmsSerialiserGroups(['user']);
 
-        return $this->get('security.token_storage')->getToken()->getUser();
+        return $tokenStorage->getToken()->getUser();
     }
 }

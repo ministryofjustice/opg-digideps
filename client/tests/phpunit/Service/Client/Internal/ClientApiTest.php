@@ -4,6 +4,7 @@ namespace DigidepsTests\Service\Client\Internal;
 
 use AppBundle\Event\ClientDeletedEvent;
 use AppBundle\Event\ClientUpdatedEvent;
+use AppBundle\EventDispatcher\ObservableEventDispatcher;
 use AppBundle\Service\Client\Internal\ClientApi;
 use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Service\Client\RestClient;
@@ -13,7 +14,6 @@ use AppBundle\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -68,7 +68,7 @@ class ClientApiTest extends TestCase
         $this->userApi = self::prophesize(UserApi::class);
         $this->dateTimeProvider = self::prophesize(DateTimeProvider::class);
         $this->tokenStorage = self::prophesize(TokenStorageInterface::class);
-        $this->eventDispatcher = self::prophesize(EventDispatcher::class);
+        $this->eventDispatcher = self::prophesize(ObservableEventDispatcher::class);
 
         $this->sut = new ClientApi(
             $this->restClient->reveal(),

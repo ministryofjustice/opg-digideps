@@ -4,13 +4,24 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class ActionController extends RestController
 {
-    private $sectionIds = [EntityDir\Report\Report::SECTION_ACTIONS];
+    private EntityManagerInterface $em;
+    private RestFormatter $formatter;
+
+    private array $sectionIds = [EntityDir\Report\Report::SECTION_ACTIONS];
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    {
+        $this->em = $em;
+        $this->formatter = $formatter;
+    }
 
     /**
      * @Route("/report/{reportId}/action", methods={"PUT"})
@@ -24,15 +35,15 @@ class ActionController extends RestController
         $action = $report->getAction();
         if (!$action) {
             $action = new EntityDir\Report\Action($report);
-            $this->getEntityManager()->persist($action);
+            $this->em->persist($action);
         }
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
         $this->updateEntity($data, $action);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $action->getId()];
     }
@@ -50,7 +61,7 @@ class ActionController extends RestController
 
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['action'];
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         return $action;
     }

@@ -4,16 +4,27 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class MoneyTransactionController extends RestController
 {
-    private $sectionIds = [
+    private EntityManagerInterface $em;
+    private RestFormatter $formatter;
+
+    private array $sectionIds = [
         EntityDir\Report\Report::SECTION_MONEY_IN,
         EntityDir\Report\Report::SECTION_MONEY_OUT
     ];
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    {
+        $this->em = $em;
+        $this->formatter = $formatter;
+    }
 
     /**
      * @Route("/report/{reportId}/money-transaction", methods={"POST"})
@@ -24,7 +35,7 @@ class MoneyTransactionController extends RestController
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $data = $this->deserializeBodyContent($request, [
+        $data = $this->formatter->deserializeBodyContent($request, [
            'category' => 'notEmpty',
            'amount' => 'notEmpty',
         ]);
@@ -53,10 +64,10 @@ class MoneyTransactionController extends RestController
         }
 
         $t->setReport($report);
-        $this->persistAndFlush($t);
 
+        $this->em->persist($t);
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return $t->getId();
     }
@@ -74,7 +85,7 @@ class MoneyTransactionController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
         // set data
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
         if (isset($data['description'])) {
             $t->setDescription($data['description']);
         }
@@ -89,10 +100,10 @@ class MoneyTransactionController extends RestController
                 $t->setBankAccount(null);
             }
         }
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return $t->getId();
     }
@@ -109,11 +120,11 @@ class MoneyTransactionController extends RestController
         $t = $this->findEntityBy(EntityDir\Report\MoneyTransaction::class, $transactionId, 'transaction not found'); /* @var $t EntityDir\Report\MoneyTransaction */
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
-        $this->getEntityManager()->remove($t);
-        $this->getEntityManager()->flush();
+        $this->em->remove($t);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return [];
     }

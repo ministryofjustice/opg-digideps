@@ -12,7 +12,6 @@ imports:
 services:
     em:
         alias: doctrine.orm.entity_manager
-        public: true
 
     monolog.processor.add_request_id:
         class: AppBundle\Service\RequestIdLoggerProcessor

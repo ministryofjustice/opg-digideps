@@ -25,35 +25,33 @@ class CasRecFactory
      */
     public function create(array $data): CasRec
     {
-        $caseNumber = str_pad((string) rand(1,99999999), 8, "0", STR_PAD_LEFT);
-        $deputyNumber = str_pad((string) rand(1,999999), 6, "0", STR_PAD_LEFT);
+        $caseNumber = str_pad((string) rand(1, 99999999), 8, "0", STR_PAD_LEFT);
+        $deputyNumber = str_pad((string) rand(1, 999999), 6, "0", STR_PAD_LEFT);
 
         $dto = (new LayDeputyshipDto())
-            ->setCaseNumber($caseNumber)
+            ->setCaseNumber($data['caseNumber'] ? $data['caseNumber'] : $caseNumber)
             ->setSource('casrec')
-            ->setClientSurname('Smith')
-            ->setCorref('L2')
+            ->setClientSurname($data['clientLastName'] ? $data['clientLastName'] : 'Smith')
+            ->setCorref($this->determineCorref($data['reportType']))
             ->setDeputyNumber($deputyNumber)
-            ->setDeputyPostcode('SW1')
-            ->setDeputySurname('Jones')
+            ->setDeputyPostcode($data['deputyPostCode'] ? $data['deputyPostCode'] : 'SW1')
+            ->setDeputySurname($data['deputyLastName'] ? $data['deputyLastName'] : 'Jones')
             ->setIsNdrEnabled(false)
             ->setOrderDate(new \DateTime())
             ->setTypeOfReport($data['reportType']);
 
-        $casRecEntity = $this->casRecFactory->createFromDto($dto);
-
-        return $casRecEntity;
+        return $this->casRecFactory->createFromDto($dto);
     }
 
     public function createCoDeputy(string $caseNumber, array $data): CasRec
     {
-        $deputyNumber = str_pad((string) rand(1,999999), 6, "0", STR_PAD_LEFT);
+        $deputyNumber = str_pad((string) rand(1, 999999), 6, "0", STR_PAD_LEFT);
 
         $dto = (new LayDeputyshipDto())
             ->setCaseNumber($caseNumber)
             ->setSource('casrec')
             ->setClientSurname('Smith')
-            ->setCorref('L2')
+            ->setCorref($this->determineCorref($data['reportType']))
             ->setDeputyNumber($deputyNumber)
             ->setDeputyPostcode('SW1')
             ->setDeputySurname('Bloggs')
@@ -61,8 +59,26 @@ class CasRecFactory
             ->setOrderDate(new \DateTime())
             ->setTypeOfReport($data['reportType']);
 
-        $casRecEntity = $this->casRecFactory->createFromDto($dto);
+        return $this->casRecFactory->createFromDto($dto);
+    }
 
-        return $casRecEntity;
+    /**
+     * @param string $reportType
+     * @return string
+     */
+    private function determineCorref(string $reportType): string
+    {
+        switch ($reportType) {
+            case '102':
+                return 'l2';
+            case '103':
+                return 'l3';
+            case '102-4':
+            case '103-4':
+            case '104':
+                return 'hw';
+            default:
+                return 'l2';
+        }
     }
 }

@@ -14,7 +14,7 @@
             <div class="govuk-panel govuk-panel--confirmation">
                 <h1 class="govuk-panel__title">{{ (page ~ '.panelTitle') | trans }}</h1>
                 <div class="govuk-panel__body">
-                    {{ report.client.fullName }} - {{ ('reportTitles.' ~ report.reportTitle) | trans({}, 'report') }}
+                    {{ (page ~ '.panelContent') | trans }}
                 </div>
             </div>
 

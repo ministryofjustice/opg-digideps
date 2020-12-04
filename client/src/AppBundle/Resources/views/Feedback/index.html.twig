@@ -43,9 +43,9 @@
             {{ form_checkbox_group(form.satisfactionLevel, 'form.satisfactionLevel', {
                 legendClass: 'govuk-label--m'
             }) }}
-
-            {{ form_submit(form.save, 'form.send') }}
-
+            <div style="clear:both;display:inline-block;height:0px;" data-module="opg-toggleable-submit">
+                {{ form_submit(form.save, 'form.send') }}
+            </div>
             {{ form_end(form) }}
         </div>
     </div>

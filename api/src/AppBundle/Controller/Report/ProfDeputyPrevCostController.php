@@ -4,13 +4,24 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class ProfDeputyPrevCostController extends RestController
 {
-    private $sectionIds = [EntityDir\Report\Report::SECTION_PROF_DEPUTY_COSTS];
+    private EntityManagerInterface $em;
+    private RestFormatter $formatter;
+
+    private array $sectionIds = [EntityDir\Report\Report::SECTION_PROF_DEPUTY_COSTS];
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    {
+        $this->em = $em;
+        $this->formatter = $formatter;
+    }
 
     /**
      * @Route("/report/{reportId}/prof-deputy-previous-cost", methods={"POST"})
@@ -18,7 +29,7 @@ class ProfDeputyPrevCostController extends RestController
      */
     public function addAction(Request $request, $reportId)
     {
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         /* @var $report EntityDir\Report\Report */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
@@ -29,10 +40,12 @@ class ProfDeputyPrevCostController extends RestController
         $cost = new EntityDir\Report\ProfDeputyPreviousCost($report, $data['amount']);
         $this->updateEntity($data, $cost);
         $report->setProfDeputyCostsHasPrevious('yes');
-        $this->persistAndFlush($cost);
+
+        $this->em->persist($cost);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $cost->getId()];
     }
@@ -48,12 +61,12 @@ class ProfDeputyPrevCostController extends RestController
         $report = $cost->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($cost->getReport());
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
         $this->updateEntity($data, $cost);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $cost->getId()];
     }
@@ -71,7 +84,7 @@ class ProfDeputyPrevCostController extends RestController
     {
         $serialiseGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['prof-deputy-costs-prev'];
-        $this->setJmsSerialiserGroups($serialiseGroups);
+        $this->formatter->setJmsSerialiserGroups($serialiseGroups);
 
         $cost = $this->findEntityBy(EntityDir\Report\ProfDeputyPreviousCost::class, $id, 'Prof Service Fee with id:' . $id . ' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($cost->getReport());
@@ -89,18 +102,17 @@ class ProfDeputyPrevCostController extends RestController
         $report = $cost->getReport(); /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($cost->getReport());
 
-        $this->getEntityManager()->remove($cost);
-        $this->getEntityManager()->flush();
+        $this->em->remove($cost);
+        $this->em->flush();
 
         if (count($report->getProfDeputyPreviousCosts()) === 0) {
             $report->setProfDeputyCostsHasPrevious(null);
         }
 
-        $this->getEntityManager()->flush();
-        //
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return [];
     }

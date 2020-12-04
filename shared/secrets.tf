@@ -24,3 +24,15 @@ module "environment_secrets" {
   ]
   tags = local.default_tags
 }
+
+module "development_environment_secrets" {
+  count = local.account.name == "development" ? 1 : 0
+
+  source      = "./environment_secrets"
+  environment = local.account.name
+  secrets = [
+    "browserstack-username",
+    "browserstack-access-key"
+  ]
+  tags = local.default_tags
+}

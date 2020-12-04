@@ -615,10 +615,13 @@ class User implements AdvancedUserInterface, DeputyInterface
 
     /**
      * @param bool $isCoDeputyClientConfirmed
+     * @return User
      */
-    public function setCoDeputyClientConfirmed($isCoDeputyClientConfirmed)
+    public function setCoDeputyClientConfirmed($isCoDeputyClientConfirmed): self
     {
         $this->coDeputyClientConfirmed = $isCoDeputyClientConfirmed;
+
+        return $this;
     }
 
     public function eraseCredentials()

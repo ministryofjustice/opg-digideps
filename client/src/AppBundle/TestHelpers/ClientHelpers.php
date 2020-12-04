@@ -4,34 +4,43 @@
 namespace AppBundle\TestHelpers;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Report\Report;
 use DateTime;
 use Faker;
 
 class ClientHelpers
 {
     /**
+     * @param Report|null $report
      * @return Client
      */
-    public static function createClient(): Client
+    public static function createClient(?Report $report = null): Client
     {
         $faker = Faker\Factory::create();
 
-        return (new Client())
+        $client = (new Client())
             ->setCaseNumber(self::createValidCaseNumber())
             ->setCourtDate(new DateTime())
             ->setEmail($faker->safeEmail)
             ->setFirstname($faker->firstName)
             ->setLastname($faker->lastName)
             ->setId(1);
+
+        if ($report) {
+            $client->addReport($report);
+        }
+
+        return $client;
     }
 
     /**
+     * @param Report|null $report
      * @return Client
      */
-    public static function createClientWithUsers(): Client
+    public static function createClientWithUsers(?Report $report = null): Client
     {
         $user = UserHelpers::createUser();
-        return (self::createClient())->addUser($user);
+        return (self::createClient($report))->addUser($user);
     }
 
     /**

@@ -1,8 +1,5 @@
-FROM composer:1.10.16 AS composer
+FROM composer AS composer
 WORKDIR /app
-
-# Make composer super fast
-RUN composer global require hirak/prestissimo --no-plugins --no-scripts
 
 # Install composer dependencies
 COPY composer.json .
@@ -12,7 +9,7 @@ RUN composer install --prefer-dist --no-interaction --no-scripts
 RUN composer dump-autoload --optimize
 
 
-FROM php:alpine
+FROM php:7.4-alpine
 WORKDIR /var/www
 
 # Install dependencies

@@ -7,6 +7,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\Client\Internal\ClientApi;
 use AppBundle\Service\Client\RestClient;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,8 +34,7 @@ class NoteController extends AbstractController
     public function __construct(
         ClientApi $clientApi,
         RestClient $restClient
-    )
-    {
+    ) {
         $this->clientApi = $clientApi;
         $this->restClient = $restClient;
     }
@@ -129,12 +129,11 @@ class NoteController extends AbstractController
      *
      * @param Request $request
      * @param $noteId
-     * @param bool $confirmed
-     *
+     * @param LoggerInterface $logger
      * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Exception
      */
-    public function deleteConfirmAction(Request $request, $noteId, $confirmed = false)
+    public function deleteConfirmAction(Request $request, $noteId, LoggerInterface $logger)
     {
         /** @var EntityDir\Note $note */
         $note = $this->getNote($noteId);
@@ -155,7 +154,7 @@ class NoteController extends AbstractController
 
                 $request->getSession()->getFlashBag()->add('notice', 'Note has been removed');
             } catch (\Throwable $e) {
-                $this->get('logger')->error($e->getMessage());
+                $logger->error($e->getMessage());
 
                 $request->getSession()->getFlashBag()->add('error', 'Note could not be removed');
             }

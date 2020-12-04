@@ -2,6 +2,9 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+        bind:
+            $symfonyEnvironment: "%kernel.environment%"
+
 
     AppBundle\:
         resource: "@AppBundle/*"

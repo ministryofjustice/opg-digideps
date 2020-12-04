@@ -5,18 +5,16 @@ namespace Tests\AppBundle\EventListener;
 use AppBundle\Entity\User;
 use AppBundle\Event\UserUpdatedEvent;
 use AppBundle\EventSubscriber\UserUpdatedSubscriber;
-use AppBundle\Model\Email;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
+use AppBundle\Service\Mailer\Mailer;
 use AppBundle\Service\Time\DateTimeProvider;
 use AppBundle\TestHelpers\UserHelpers;
 use DateTime;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class UserUpdatedSubscriberTest extends KernelTestCase
+class UserUpdatedSubscriberTest extends TestCase
 {
     /** @var UserHelpers */
     private $userHelpers;
@@ -28,30 +26,23 @@ class UserUpdatedSubscriberTest extends KernelTestCase
     private $logger;
 
     /** @var ObjectProphecy */
-    private $mailFactory;
+    private $mailer;
 
-    /** @var ObjectProphecy */
-    private $mailSender;
-
-    /** @var UserUpdatedListener */
+    /** @var UserUpdatedSubscriber */
     private $sut;
 
     public function setUp(): void
     {
-        $container = (self::bootKernel())->getContainer();
-
-        $this->userHelpers = new UserHelpers($container->get('serializer'));
+        $this->userHelpers = new UserHelpers();
         $this->dateTimeProvider = self::prophesize(DateTimeProvider::class);
         $this->logger = self::prophesize(LoggerInterface::class);
-        $this->mailFactory = self::prophesize(MailFactory::class);
-        $this->mailSender = self::prophesize(MailSender::class);
+        $this->mailer = self::prophesize(Mailer::class);
 
-        $this->sut = new UserUpdatedSubscriber(
+        $this->sut = (new UserUpdatedSubscriber(
             $this->dateTimeProvider->reveal(),
             $this->logger->reveal(),
-            $this->mailFactory->reveal(),
-            $this->mailSender->reveal()
-        );
+            $this->mailer->reveal()
+        ));
     }
 
     /** @test */
@@ -147,8 +138,7 @@ class UserUpdatedSubscriberTest extends KernelTestCase
         $trigger = 'A_TRIGGER';
         $currentUser = $this->userHelpers->createUser();
 
-        $this->mailFactory->createUpdateDeputyDetailsEmail($postUpdateUser)->shouldBeCalled();
-        $this->mailSender->send(Argument::type(Email::class))->shouldBeCalled();
+        $this->mailer->sendUpdateDeputyDetailsEmail($postUpdateUser)->shouldBeCalled();
 
         $event = new UserUpdatedEvent($preUpdateUser, $postUpdateUser, $currentUser, $trigger);
         $this->sut->sendEmail($event);

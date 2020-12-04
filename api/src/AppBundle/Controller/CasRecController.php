@@ -5,12 +5,10 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Repository\CasRecRepository;
 use AppBundle\Service\CasrecVerificationService;
-use AppBundle\Service\CsvUploader;
-use Doctrine\ORM\QueryBuilder;
+use AppBundle\Service\Formatter\RestFormatter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -18,6 +16,15 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CasRecController extends RestController
 {
+    private CasrecVerificationService $casrecVerification;
+    private RestFormatter $formatter;
+
+    public function __construct(CasrecVerificationService $casrecVerification, RestFormatter $formatter)
+    {
+        $this->casrecVerification = $casrecVerification;
+        $this->formatter = $formatter;
+    }
+
     /**
      * @Route("/delete-by-source/{source}", methods={"DELETE"})
      * @Security("has_role('ROLE_ADMIN')")
@@ -45,7 +52,7 @@ class CasRecController extends RestController
      */
     public function verify(Request $request, CasrecVerificationService $verificationService)
     {
-        $clientData = $this->deserializeBodyContent($request);
+        $clientData = $this->formatter->deserializeBodyContent($request);
         $user = $this->getUser();
 
         $casrecVerified = $verificationService->validate(
@@ -71,5 +78,15 @@ class CasRecController extends RestController
         $count = $qb->getQuery()->getSingleScalarResult();
 
         return $count;
+    }
+
+    /**
+     * @Route("/clientHasCoDeputies/{caseNumber}", methods={"GET"})
+     * @param string $caseNumber
+     * @return array|JsonResponse
+     */
+    public function clientHasCoDeputies(string $caseNumber)
+    {
+        return $this->casrecVerification->isMultiDeputyCase($caseNumber);
     }
 }

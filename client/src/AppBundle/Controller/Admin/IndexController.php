@@ -14,11 +14,11 @@ use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\CsvUploader;
 use AppBundle\Service\DataImporter\CsvToArray;
 use AppBundle\Service\Logger;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSenderInterface;
 use AppBundle\Service\OrgService;
+use Predis\Client;
+use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Redis;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -29,26 +29,18 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/admin")
  */
 class IndexController extends AbstractController
 {
-    /** @var OrgService */
-    private $orgService;
-
-    /** @var UserVoter */
-    private $userVoter;
-
-    /** @var Logger */
-    private $logger;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var UserApi */
-    private $userApi;
+    private OrgService $orgService;
+    private UserVoter $userVoter;
+    private Logger $logger;
+    private RestClient $restClient;
+    private UserApi$userApi;
 
     public function __construct(
         OrgService $orgService,
@@ -103,18 +95,11 @@ class IndexController extends AbstractController
      * @Template("AppBundle:Admin/Index:addUser.html.twig")
      *
      * @param Request $request
-     * @param RestClient $restClient
-     * @param MailFactory $mailFactory
-     * @param MailSenderInterface $mailSender
      *
      * @return array|RedirectResponse
      */
-    public function addUserAction(
-        Request $request,
-        RestClient $restClient,
-        MailFactory $mailFactory,
-        MailSenderInterface $mailSender
-    ) {
+    public function addUserAction(Request $request)
+    {
         $form = $this->createForm(FormDir\Admin\AddUserType::class, new EntityDir\User());
 
         $form->handleRequest($request);
@@ -125,11 +110,7 @@ class IndexController extends AbstractController
                     throw new \RuntimeException('Cannot add admin from non-admin user');
                 }
 
-                /** @var EntityDir\User $user */
-                $user = $restClient->post('user', $form->getData(), ['admin_add_user'], 'User');
-
-                $activationEmail = $mailFactory->createActivationEmail($user);
-                $mailSender->send($activationEmail);
+                $this->userApi->createAdminUser($form->getData());
 
                 $this->addFlash(
                     'notice',
@@ -173,7 +154,7 @@ class IndexController extends AbstractController
      * @return array|Response
      * @throws \Throwable
      */
-    public function editUserAction(Request $request)
+    public function editUserAction(Request $request, TranslatorInterface $translator)
     {
         $filter = $request->get('filter');
 
@@ -202,8 +183,6 @@ class IndexController extends AbstractController
                 $this->addFlash('notice', 'Your changes were saved');
                 $this->redirectToRoute('admin_editUser', ['filter' => $user->getId()]);
             } catch (\Throwable $e) {
-                /** @var Translator $translator */
-                $translator = $this->get('translator');
                 switch ((int) $e->getCode()) {
                     case 422:
                         $form->get('email')->addError(new FormError($translator->trans('editUserForm.email.existingError', [], 'admin')));
@@ -371,7 +350,7 @@ class IndexController extends AbstractController
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("AppBundle:Admin/Index:uploadUsers.html.twig")
      */
-    public function uploadUsersAction(Request $request)
+    public function uploadUsersAction(Request $request, ClientInterface $redisClient)
     {
         $chunkSize = 2000;
 
@@ -414,13 +393,10 @@ class IndexController extends AbstractController
                 // big amount of data => store in redis + redirect
                 $chunks = array_chunk($data, $chunkSize);
 
-                /** @var \Redis $redis */
-                $redis = $this->get('snc_redis.default');
                 foreach ($chunks as $k => $chunk) {
                     $compressedData = CsvUploader::compressData($chunk);
-                    $redis->set('chunk' . $k, $compressedData);
+                    $redisClient->set('chunk' . $k, $compressedData);
                 }
-
 
                 return $this->redirect($this->generateUrl('casrec_upload', ['nOfChunks' => count($chunks), 'source' => $source]));
             } catch (\Throwable $e) {
@@ -583,18 +559,10 @@ class IndexController extends AbstractController
      * @Route("/send-activation-link/{email}", name="admin_send_activation_link")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      **/
-    public function sendUserActivationLinkAction(
-        $email,
-        MailFactory $mailFactory,
-        MailSenderInterface $mailSender,
-        LoggerInterface $logger,
-        RestClient $restClient
-    ) {
+    public function sendUserActivationLinkAction(string $email, LoggerInterface $logger)
+    {
         try {
-            $user = $restClient->userRecreateToken($email, 'pass-reset');
-            $resetPasswordEmail = $mailFactory->createActivationEmail($user);
-
-            $mailSender->send($resetPasswordEmail);
+            $this->userApi->activate($email, 'pass-reset');
         } catch (\Throwable $e) {
             $logger->debug($e->getMessage());
         }

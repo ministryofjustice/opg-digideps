@@ -5,6 +5,9 @@ namespace AppBundle\Service\Client\Internal;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\User;
+use AppBundle\Event\ReportSubmittedEvent;
+use AppBundle\EventDispatcher\ObservableEventDispatcher;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Exception\ReportSubmittedException;
 use AppBundle\Exception\RestClientException;
@@ -16,14 +19,16 @@ class ReportApi
     private const REPORT_ENDPOINT_BY_ID = 'report/%s';
     private const NDR_ENDPOINT_BY_ID = 'ndr/%s';
 
-    /**
-     * @var RestClient
-     */
+    /** @var RestClient */
     private $restClient;
 
-    public function __construct(RestClient $restClient)
+    /** @var ObservableEventDispatcher */
+    private $eventDispatcher;
+
+    public function __construct(RestClient $restClient, ObservableEventDispatcher $eventDispatcher)
     {
         $this->restClient = $restClient;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -140,5 +145,13 @@ class ReportApi
     protected function getSectionId()
     {
         return null;
+    }
+
+    public function submit(Report $reportToSubmit, User $submittedBy)
+    {
+        $newYearReportId = $this->restClient->put(sprintf('report/%s/submit', $reportToSubmit->getId()), $reportToSubmit, ['submit']);
+
+        $event = new ReportSubmittedEvent($reportToSubmit, $submittedBy, $newYearReportId);
+        $this->eventDispatcher->dispatch(ReportSubmittedEvent::NAME, $event);
     }
 }

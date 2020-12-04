@@ -230,7 +230,8 @@ checklistPage:
 
 checklistSubmittedPage:
   htmlTitle: Administration - Report checklist
-  panelTitle: Checklist submitted
+  panelTitle: Checklist added to Sirius
+  panelContent: It may take a few minutes for the checklist to appear on Sirius
   downloadText: Your PDF download should start automatically. <a href="%downloadLinkUrl%" class="%downloadLinkClassList%">Click here</a> to download it if it does not download automatically.
   toChecklistButtonText: Return to checklist
   toClientListButtonText: View client list

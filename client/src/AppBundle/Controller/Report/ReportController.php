@@ -14,20 +14,20 @@ use AppBundle\Form\FeedbackReportType;
 use AppBundle\Form\Report\ReportDeclarationType;
 use AppBundle\Form\Report\ReportType;
 use AppBundle\Model\FeedbackReport;
+use AppBundle\Service\Client\Internal\CasrecApi;
 use AppBundle\Service\Client\Internal\ClientApi;
 use AppBundle\Service\Client\Internal\ReportApi;
+use AppBundle\Service\Client\Internal\SatisfactionApi;
 use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\CsvGeneratorService;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
 use AppBundle\Service\Redirector;
 use AppBundle\Service\ReportSubmissionService;
 use DateTime;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -92,39 +92,33 @@ class ReportController extends AbstractController
         'unsubmitted-reports-count'
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
-    /** @var UserApi */
-    private $userApi;
-
-    /** @var ClientApi */
-    private $clientApi;
-
-    /** @var MailFactory */
-    private $mailFactory;
-
-    /** @var MailSender */
-    private $mailSender;
+    private RestClient $restClient;
+    private ReportApi$reportApi;
+    private UserApi $userApi;
+    private ClientApi $clientApi;
+    private SatisfactionApi $satisfactionApi;
+    private CasrecApi $casrecApi;
+    private FormFactoryInterface $formFactory;
+    private TranslatorInterface $translator;
 
     public function __construct(
         RestClient $restClient,
         ReportApi $reportApi,
         UserApi $userApi,
         ClientApi $clientApi,
-        MailFactory $mailFactory,
-        MailSender $mailSender
-    )
-    {
+        SatisfactionApi $satisfactionApi,
+        CasrecApi $casrecApi,
+        FormFactoryInterface $formFactory,
+        TranslatorInterface $translator
+    ) {
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
         $this->userApi = $userApi;
         $this->clientApi = $clientApi;
-        $this->mailFactory = $mailFactory;
-        $this->mailSender = $mailSender;
+        $this->satisfactionApi = $satisfactionApi;
+        $this->casrecApi = $casrecApi;
+        $this->formFactory = $formFactory;
+        $this->translator = $translator;
     }
 
     /**
@@ -161,6 +155,8 @@ class ReportController extends AbstractController
         $coDeputies = $clientWithCoDeputies->getCoDeputies();
 
         return [
+            'user' => $user,
+            'clientHasCoDeputies' => $this->casrecApi->clientHasCoDeputies($client->getCaseNumber()),
             'client' => $client,
             'coDeputies' => $coDeputies,
         ];
@@ -183,13 +179,10 @@ class ReportController extends AbstractController
         $report = $this->reportApi->getReportIfNotSubmitted($reportId);
         $client = $report->getClient();
 
-        /** @var FormFactory */
-        $formFactory = $this->get('form.factory');
-
         /** @var User */
         $user = $this->getUser();
 
-        $editReportDatesForm = $formFactory->createNamed('report_edit', ReportType::class, $report, [ 'translation_domain' => 'report']);
+        $editReportDatesForm = $this->formFactory->createNamed('report_edit', ReportType::class, $report, [ 'translation_domain' => 'report']);
         $returnLink = $user->isDeputyOrg()
             ? $this->clientApi->generateClientProfileLink($report->getClient())
             : $this->generateUrl('lay_home');
@@ -239,10 +232,7 @@ class ReportController extends AbstractController
         $report = new Report();
         $report->setClient($client);
 
-        /** @var FormFactory */
-        $formFactory = $this->get('form.factory');
-
-        $form = $formFactory->createNamed(
+        $form = $this->formFactory->createNamed(
             'report',
             ReportType::class,
             $report,
@@ -386,13 +376,10 @@ class ReportController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$reportGroupsAll);
 
-        /** @var TranslatorInterface $translator */
-        $translator = $this->get('translator');
-
         // check status
         $status = $report->getStatus();
         if (!$report->isDue() || !$status->getIsReadyToSubmit()) {
-            $message = $translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators');
+            $message = $this->translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators');
             throw new ReportNotSubmittableException($message);
         }
 
@@ -410,7 +397,8 @@ class ReportController extends AbstractController
 
             $report->setSubmitted(true)->setSubmitDate(new DateTime());
             $reportSubmissionService->generateReportDocuments($report);
-            $reportSubmissionService->submit($report, $currentUser);
+
+            $this->reportApi->submit($report, $currentUser);
 
             return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId' => $report->getId()]));
         }
@@ -438,37 +426,17 @@ class ReportController extends AbstractController
     {
         $report = $this->reportApi->getReport($reportId, ['status']);
 
-        /** @var TranslatorInterface $translator */
-        $translator = $this->get('translator');
-
-        /** @var User $user */
-        $user = $this->getUser();
-
         // check status
         if (!$report->getSubmitted()) {
-            $message = $translator->trans('report.submissionExceptions.submitted', [], 'validators');
+            $message = $this->translator->trans('report.submissionExceptions.submitted', [], 'validators');
             throw new ReportNotSubmittedException($message);
         }
 
         $form = $this->createForm(FeedbackReportType::class, new FeedbackReport());
-
         $form->handleRequest($request);
-        $comments = $form->get('comments')->getData();
 
-        if (!isset($comments)) {
-            $comments = '';
-        }
         if ($form->isSubmitted() && $form->isValid()) {
-            // Store in database
-            $this->restClient->post('satisfaction', [
-                'score' => $form->get('satisfactionLevel')->getData(),
-                'comments' => $comments,
-                'reportType' => $report->getType()
-            ]);
-
-            // Send notification email
-            $feedbackEmail = $this->mailFactory->createPostSubmissionFeedbackEmail($form->getData(), $user);
-            $this->mailSender->send($feedbackEmail);
+            $this->satisfactionApi->createPostSubmissionFeedback($form->getData(), $report->getType(), $this->getUser());
 
             return $this->redirect($this->generateUrl('report_submit_feedback', ['reportId' => $reportId]));
         }
@@ -489,12 +457,9 @@ class ReportController extends AbstractController
     {
         $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
 
-        /** @var TranslatorInterface $translator */
-        $translator = $this->get('translator');
-
         // check status
         if (!$report->getSubmitted()) {
-            $message = $translator->trans('report.submissionExceptions.submitted', [], 'validators');
+            $message = $this->translator->trans('report.submissionExceptions.submitted', [], 'validators');
             throw new ReportNotSubmittedException($message);
         }
 

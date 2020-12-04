@@ -13,7 +13,7 @@ workflows:
 
       - terraform-command:
           name: plan shared development
-          requires: [lint terraform ]
+          requires: [ lint terraform ]
           filters: { branches: { ignore: [ main ] } }
           tf_apply: false
           tf_command: plan
@@ -22,7 +22,7 @@ workflows:
 
       - terraform-command:
           name: plan pr environment
-          requires: [lint terraform ]
+          requires: [ lint terraform ]
           filters: { branches: { ignore: [ main ] } }
           tf_apply: false
           tf_command: plan
@@ -70,7 +70,7 @@ workflows:
           requires: [ reset environment for testing ]
           filters: { branches: { ignore: [ master ] } }
           task_name: integration_test
-          timeout: 2500
+          timeout: 3000
 
       - run-task:
           name: backup environment
@@ -163,7 +163,7 @@ workflows:
           filters: { branches: { only: [ main ] } }
           task_name: integration_test
           tf_workspace: integration
-          timeout: 2500
+          timeout: 3000
 
       - client-unit-test:
           name: client unit test
@@ -278,6 +278,10 @@ workflows:
           name: api unit test
           requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
+      - cross-browser-test:
+          name: cross browser test
+          requires: [ apply integration ]
+          filters: { branches: { only: [ main ] } }
       - run-task:
           name: integration test
           requires: [ reset integration ]
@@ -285,7 +289,7 @@ workflows:
           task_name: integration_test
           tf_workspace: integration
           notify_slack: true
-          timeout: 2500
+          timeout: 3000
 
 orbs:
   aws-cli: circleci/aws-cli@0.1.13
@@ -633,6 +637,67 @@ jobs:
       - codecov/upload:
           file: ./api-unit-tests.xml
           flags: api
+
+  cross-browser-test:
+    machine:
+      image: circleci/classic:latest
+    steps:
+      - dockerhub_helper/dockerhub_login
+      - aws-cli/install
+      - checkout
+      - attach_workspace: { at: ~/project }
+      - run:
+          name: Set environment
+          command: |
+            ~/project/.circleci/set_env.sh >> $BASH_ENV
+      - run:
+          name: Get secrets
+          command: |
+            chmod 755 ecs_helper/cmd/get_secrets/get_secrets.sh
+            source ./ecs_helper/cmd/get_secrets/get_secrets.sh
+            touch .env behat/.env
+            echo "export BROWSERSTACK_USERNAME=$BROWSERSTACK_USERNAME" >> $BASH_ENV
+            echo "export BROWSERSTACK_KEY=$BROWSERSTACK_KEY" >> $BASH_ENV
+      #Initial steps to reset database/fixtures and remove any persistent data
+      - run:
+          name: Run tests
+          command: |
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.browserstack.yml \
+            --project-name cross-browser up -d --build --remove-orphans
+
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.browserstack.yml \
+            --project-name cross-browser rm -fsv postgres
+
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.browserstack.yml \
+            --project-name cross-browser up -d postgres
+
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.browserstack.yml \
+            --project-name cross-browser run --rm wait-for-it -address postgres:5432 --timeout=30 -debug
+
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.browserstack.yml \
+            --project-name cross-browser run --rm api sh scripts/reset_db_structure_local.sh
+
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.browserstack.yml \
+            --project-name cross-browser run --rm api sh scripts/reset_db_fixtures_local.sh
+
+
+            ./behat/BrowserStackLocal --daemon "start" --key $BROWSERSTACK_KEY
+            sudo ./generate_certs.sh
+            echo "127.0.0.1 digideps.local admin.digideps.local api.digideps.local www.digideps.local" \
+            | sudo tee -a /etc/hosts
+
+
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.browserstack.yml \
+            --project-name cross-browser run test --profile cross-browser-chrome --suite chrome
+
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.browserstack.yml \
+            --project-name cross-browser run test --profile cross-browser-ie11 --suite ie11
+
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.browserstack.yml \
+            --project-name cross-browser run test --profile cross-browser-android-chrome --suite android-chrome
+
+
+            ./behat/BrowserStackLocal --daemon "stop" --key $BROWSERSTACK_KEY
 
   pa11y-ci:
     machine:

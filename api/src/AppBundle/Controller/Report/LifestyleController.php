@@ -4,6 +4,8 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +15,16 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class LifestyleController extends RestController
 {
-    private $sectionIds = [EntityDir\Report\Report::SECTION_LIFESTYLE];
+    private EntityManagerInterface $em;
+    private RestFormatter $formatter;
+
+    private array $sectionIds = [EntityDir\Report\Report::SECTION_LIFESTYLE];
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    {
+        $this->em = $em;
+        $this->formatter = $formatter;
+    }
 
     /**
      * @Route("/lifestyle", methods={"POST"})
@@ -22,7 +33,7 @@ class LifestyleController extends RestController
     public function addAction(Request $request)
     {
         $lifestyle = new EntityDir\Report\Lifestyle();
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $data['report_id']);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -30,11 +41,11 @@ class LifestyleController extends RestController
         $lifestyle->setReport($report);
         $this->updateInfo($data, $lifestyle);
 
-        $this->getEntityManager()->persist($lifestyle);
-        $this->getEntityManager()->flush();
+        $this->em->persist($lifestyle);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $lifestyle->getId()];
     }
@@ -49,12 +60,12 @@ class LifestyleController extends RestController
         $report = $lifestyle->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($lifestyle->getReport());
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
         $this->updateInfo($data, $lifestyle);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $lifestyle->getId()];
     }
@@ -85,7 +96,7 @@ class LifestyleController extends RestController
     {
         $serialiseGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['lifestyle'];
-        $this->setJmsSerialiserGroups($serialiseGroups);
+        $this->formatter->setJmsSerialiserGroups($serialiseGroups);
 
         $lifestyle = $this->findEntityBy(EntityDir\Report\Lifestyle::class, $id, 'Lifestyle with id:' . $id . ' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($lifestyle->getReport());
@@ -104,11 +115,11 @@ class LifestyleController extends RestController
 
         $this->denyAccessIfReportDoesNotBelongToUser($lifestyle->getReport());
 
-        $this->getEntityManager()->remove($lifestyle);
-        $this->getEntityManager()->flush();
+        $this->em->remove($lifestyle);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return [];
     }

@@ -7,6 +7,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\Client\Internal\ClientApi;
 use AppBundle\Service\Client\RestClient;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,8 +34,7 @@ class ClientContactController extends AbstractController
     public function __construct(
         ClientApi $clientApi,
         RestClient $restClient
-    )
-    {
+    ) {
         $this->clientApi = $clientApi;
         $this->restClient = $restClient;
     }
@@ -63,7 +63,10 @@ class ClientContactController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->post('clients/' . $client->getId() . '/clientcontacts', $form->getData(), ['add_clientcontact']
+            $this->restClient->post(
+                'clients/' . $client->getId() . '/clientcontacts',
+                $form->getData(),
+                ['add_clientcontact']
             );
             $request->getSession()->getFlashBag()->add('notice', 'The contact has been added');
 
@@ -94,7 +97,10 @@ class ClientContactController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->put('/clientcontacts/' . $id, $form->getData(), ['edit_clientcontact']
+            $this->restClient->put(
+                '/clientcontacts/' . $id,
+                $form->getData(),
+                ['edit_clientcontact']
             );
             $request->getSession()->getFlashBag()->add('notice', 'The contact has been updated');
             return $this->redirect($backLink);
@@ -113,7 +119,7 @@ class ClientContactController extends AbstractController
      * @Template("AppBundle:Common:confirmDelete.html.twig")
      * @throws \Exception
      */
-    public function deleteConfirmAction(Request $request, $id, $confirmed = false)
+    public function deleteConfirmAction(Request $request, $id, $confirmed = false, LoggerInterface $logger)
     {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
@@ -127,7 +133,7 @@ class ClientContactController extends AbstractController
                 $this->restClient->delete('clientcontacts/' . $id);
                 $request->getSession()->getFlashBag()->add('notice', 'Contact has been removed');
             } catch (\Throwable $e) {
-                $this->get('logger')->error($e->getMessage());
+                $logger->error($e->getMessage());
                 $request->getSession()->getFlashBag()->add(
                     'error',
                     'Client contact could not be removed'

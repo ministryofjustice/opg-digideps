@@ -32,7 +32,10 @@ trait FormTrait
      */
     public function theFormShouldBeValid()
     {
-        $this->assertResponseStatus(200);
+        $driver = $this->getSession()->getDriver();
+        if (get_class($driver) != 'Behat\Mink\Driver\Selenium2Driver') {
+            $this->assertResponseStatus(200);
+        }
 
         $page = $this->getSession()->getPage();
 

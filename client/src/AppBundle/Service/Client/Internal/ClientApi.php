@@ -6,11 +6,11 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Event\ClientDeletedEvent;
 use AppBundle\Event\ClientUpdatedEvent;
+use AppBundle\EventDispatcher\ObservableEventDispatcher;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Client\RestClientInterface;
 use AppBundle\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -41,7 +41,7 @@ class ClientApi
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /** @var EventDispatcherInterface */
+    /** @var ObservableEventDispatcher */
     private $eventDispatcher;
 
     public function __construct(
@@ -51,7 +51,7 @@ class ClientApi
         UserApi $userApi,
         DateTimeProvider $dateTimeProvider,
         TokenStorageInterface $tokenStorage,
-        EventDispatcherInterface $eventDispatcher
+        ObservableEventDispatcher $eventDispatcher
     ) {
         $this->restClient = $restClient;
         $this->router = $router;
@@ -182,7 +182,7 @@ class ClientApi
      */
     public function update(Client $preUpdateClient, Client $postUpdateClient, string $trigger)
     {
-        $this->restClient->put(self::UPDATE_CLIENT, $postUpdateClient, ['pa-edit']);
+        $this->restClient->put(self::UPDATE_CLIENT, $postUpdateClient, ['pa-edit', 'edit']);
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
         $clientUpdatedEvent = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $currentUser, $trigger);
