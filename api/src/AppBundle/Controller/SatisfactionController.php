@@ -57,9 +57,15 @@ class SatisfactionController extends RestController
         /* @var $repo EntityDir\Repository\SatisfactionRepository */
         $repo = $this->getRepository(EntityDir\Satisfaction::class);
 
+        $fromDate = $this->convertDateStringToDateTime($request->get('fromDate', ''));
+        $fromDate instanceof DateTime ? $fromDate->setTime(0, 0, 1) : null;
+
+        $toDate = $this->convertDateStringToDateTime($request->get('toDate', ''));
+        $toDate instanceof DateTime ? $toDate->setTime(23, 59, 59) : null;
+
         return $repo->findAllSatisfactionSubmissions(
-            $this->convertDateStringToDateTime($request->get('fromDate', '')),
-            $this->convertDateStringToDateTime($request->get('toDate', '')),
+            $fromDate,
+            $toDate,
             $request->get('orderBy', 'createdAt'),
             $request->get('order', 'ASC')
         );
