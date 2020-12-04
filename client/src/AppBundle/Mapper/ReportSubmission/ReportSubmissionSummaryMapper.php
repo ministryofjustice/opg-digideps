@@ -35,12 +35,19 @@ class ReportSubmissionSummaryMapper
      */
     private function generateApiUrl(ReportSubmissionSummaryQuery $query)
     {
-        return sprintf ('%s?%s', self::API_ENDPOINT, http_build_query([
-                'fromDate' => $query->getStartDate(),
-                'toDate' => $query->getEndDate(),
-                'orderBy' => $query->getOrderBy(),
-                'order' => $query->getSortOrder()
-            ])
-        );
+        $queryStringArray = [
+            'orderBy' => $query->getOrderBy(),
+            'order' => $query->getSortOrder()
+        ];
+
+        if ($query->getStartDate()) {
+            $queryStringArray['fromDate'] = $query->getStartDate()->format('Y-m-d');
+        }
+
+        if ($query->getEndDate()) {
+            $queryStringArray['toDate'] = $query->getEndDate()->format('Y-m-d');
+        }
+
+        return sprintf('%s?%s', self::API_ENDPOINT, http_build_query($queryStringArray));
     }
 }

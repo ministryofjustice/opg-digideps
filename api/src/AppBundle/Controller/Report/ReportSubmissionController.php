@@ -7,6 +7,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer;
+use DateTime;
 use InvalidArgumentException;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -50,14 +51,14 @@ class ReportSubmissionController extends RestController
         $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class); /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
 
         $ret = $repo->findByFiltersWithCounts(
-                $request->get('status'),
-                $request->get('q'),
-                $request->get('created_by_role'),
-                $request->get('offset', 0),
-                $request->get('limit', 15),
-                $request->get('orderBy', 'createdOn'),
-                $request->get('order', 'ASC')
-            );
+            $request->get('status'),
+            $request->get('q'),
+            $request->get('created_by_role'),
+            $request->get('offset', 0),
+            $request->get('limit', 15),
+            $request->get('orderBy', 'createdOn'),
+            $request->get('order', 'ASC')
+        );
 
         $this->setJmsSerialiserGroups(self::$jmsGroups);
 
@@ -210,8 +211,8 @@ class ReportSubmissionController extends RestController
         $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class);
 
         $ret = $repo->findAllReportSubmissions(
-            $this->convertDateArrayToDateTime($request->get('fromDate', [])),
-            $this->convertDateArrayToDateTime($request->get('toDate', [])),
+            new DateTime($request->get('fromDate', null)),
+            new DateTime($request->get('toDate', null)),
             $request->get('orderBy', 'createdOn'),
             $request->get('order', 'ASC')
         );
