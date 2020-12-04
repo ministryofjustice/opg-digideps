@@ -5,13 +5,13 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-
 use AppBundle\Service\Client\Internal\ReportApi;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\StepRedirector;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ActionController extends AbstractController
 {
@@ -33,8 +33,7 @@ class ActionController extends AbstractController
         RestClient $restClient,
         ReportApi $reportApi,
         StepRedirector $stepRedirector
-    )
-    {
+    ) {
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
         $this->stepRedirector = $stepRedirector;
@@ -60,7 +59,7 @@ class ActionController extends AbstractController
      * @Route("/report/{reportId}/actions/step/{step}", name="actions_step")
      * @Template("AppBundle:Report/Action:step.html.twig")
      */
-    public function stepAction(Request $request, $reportId, $step)
+    public function stepAction(Request $request, $reportId, $step, TranslatorInterface $translator)
     {
         $totalSteps = 2;
         if ($step < 1 || $step > $totalSteps) {
@@ -76,9 +75,16 @@ class ActionController extends AbstractController
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId]);
 
-        $form = $this->createForm(FormDir\Report\ActionType::class, $action, [ 'step'            => $step, 'translator'      => $this->get('translator'), 'clientFirstName' => $report->getClient()->getFirstname()
-                                   ]
-                                 );
+        $form = $this->createForm(
+            FormDir\Report\ActionType::class,
+            $action,
+            [
+                'step' => $step,
+                'translator' => $translator,
+                'clientFirstName' => $report->getClient()->getFirstname()
+            ]
+        );
+
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {

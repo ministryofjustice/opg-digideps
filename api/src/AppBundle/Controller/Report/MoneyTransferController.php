@@ -4,13 +4,24 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class MoneyTransferController extends RestController
 {
+    private EntityManagerInterface $em;
+    private RestFormatter $formatter;
+
     private $sectionIds = [EntityDir\Report\Report::SECTION_MONEY_TRANSFERS];
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    {
+        $this->em = $em;
+        $this->formatter = $formatter;
+    }
 
     /**
      * @Route("/report/{reportId}/money-transfers", methods={"POST"})
@@ -21,7 +32,7 @@ class MoneyTransferController extends RestController
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $data = $this->deserializeBodyContent($request, [
+        $data = $this->formatter->deserializeBodyContent($request, [
            'account_from_id' => 'notEmpty',
            'account_to_id' => 'notEmpty',
            'amount' => 'mustExist',
@@ -32,12 +43,13 @@ class MoneyTransferController extends RestController
         $report->setNoTransfersToAdd(false);
         $this->fillEntity($transfer, $data);
 
-        $this->persistAndFlush($transfer);
+        $this->em->persist($transfer);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
-        $this->setJmsSerialiserGroups(['money-transfer']);
+        $this->formatter->setJmsSerialiserGroups(['money-transfer']);
 
         return $transfer->getId();
     }
@@ -51,7 +63,7 @@ class MoneyTransferController extends RestController
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $data = $this->deserializeBodyContent($request, [
+        $data = $this->formatter->deserializeBodyContent($request, [
            'account_from_id' => 'notEmpty',
            'account_to_id' => 'notEmpty',
            'amount' => 'mustExist',
@@ -60,10 +72,11 @@ class MoneyTransferController extends RestController
         $transfer = $this->findEntityBy(EntityDir\Report\MoneyTransfer::class, $transferId);
         $this->fillEntity($transfer, $data);
 
-        $this->persistAndFlush($transfer);
+        $this->em->persist($transfer);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return $transfer->getId();
     }
@@ -80,10 +93,10 @@ class MoneyTransferController extends RestController
         $transfer = $this->findEntityBy(EntityDir\Report\MoneyTransfer::class, $transferId);
         $this->denyAccessIfReportDoesNotBelongToUser($transfer->getReport());
 
-        $this->getEntityManager()->remove($transfer);
+        $this->em->remove($transfer);
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return [];
     }

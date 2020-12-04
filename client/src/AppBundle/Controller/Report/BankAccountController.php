@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class BankAccountController extends AbstractController
 {
@@ -34,8 +35,7 @@ class BankAccountController extends AbstractController
         RestClient $restClient,
         ReportApi $reportApi,
         StepRedirector $stepRedirector
-    )
-    {
+    ) {
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
         $this->stepRedirector = $stepRedirector;
@@ -239,9 +239,8 @@ class BankAccountController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function deleteConfirmAction(Request $request, $reportId, $accountId)
+    public function deleteConfirmAction(Request $request, $reportId, $accountId, TranslatorInterface $translator)
     {
-        $translator = $this->get('translator');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $summaryPageUrl = $this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]);
 
@@ -301,7 +300,9 @@ class BankAccountController extends AbstractController
         if ($dependentRecords['transactionsCount'] > 0) {
             $transactionTypes = [];
             foreach ($dependentRecords['transactions'] as $type => $count) {
-                if ($count > 0) $transactionTypes[] = $translator->trans($type, [], 'common');
+                if ($count > 0) {
+                    $transactionTypes[] = $translator->trans($type, [], 'common');
+                }
             }
 
             $templateData['warning'] = $translator->trans(

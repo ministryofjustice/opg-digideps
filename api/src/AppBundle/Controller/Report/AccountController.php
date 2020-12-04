@@ -5,13 +5,24 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Report as Report;
+use AppBundle\Service\Formatter\RestFormatter;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class AccountController extends RestController
 {
+    private EntityManagerInterface $em;
+    private RestFormatter $formatter;
+
     private $sectionIds = [Report::SECTION_BANK_ACCOUNTS];
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    {
+        $this->em = $em;
+        $this->formatter = $formatter;
+    }
 
     /**
      * @Route("/report/{reportId}/account", methods={"POST"})
@@ -22,7 +33,7 @@ class AccountController extends RestController
         $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $data = $this->deserializeBodyContent($request, [
+        $data = $this->formatter->deserializeBodyContent($request, [
            'opening_balance' => 'mustExist',
         ]);
 
@@ -31,10 +42,11 @@ class AccountController extends RestController
 
         $this->fillAccountData($account, $data);
 
-        $this->persistAndFlush($account);
+        $this->em->persist($account);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return ['id' => $account->getId()];
     }
@@ -50,7 +62,7 @@ class AccountController extends RestController
 
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['account'];
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         return $account;
     }
@@ -65,17 +77,17 @@ class AccountController extends RestController
         $report = $account->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         $this->fillAccountData($account, $data);
 
         $account->setLastEdit(new \DateTime());
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
-        $this->setJmsSerialiserGroups(['account']);
+        $this->formatter->setJmsSerialiserGroups(['account']);
 
         return $account;
     }
@@ -133,11 +145,11 @@ class AccountController extends RestController
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount */
         $report = $account->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($report);
-        $this->getEntityManager()->remove($account);
-        $this->getEntityManager()->flush();
+        $this->em->remove($account);
+        $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return [];
     }

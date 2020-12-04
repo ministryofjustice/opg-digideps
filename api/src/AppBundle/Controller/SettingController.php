@@ -3,6 +3,8 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,6 +14,15 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class SettingController extends RestController
 {
+    private EntityManagerInterface $em;
+    private RestFormatter $formatter;
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    {
+        $this->em = $em;
+        $this->formatter = $formatter;
+    }
+
     /**
      * @Route("/{id}", methods={"GET"})
      */
@@ -19,7 +30,7 @@ class SettingController extends RestController
     {
         $setting = $this->getRepository(EntityDir\Setting::class)->find($id);/* @var $setting EntityDir\Setting */
 
-        $this->setJmsSerialiserGroups(['setting']);
+        $this->formatter->setJmsSerialiserGroups(['setting']);
 
         return $setting ?: [];
     }
@@ -30,7 +41,7 @@ class SettingController extends RestController
      */
     public function upsertSetting(Request $request, $id)
     {
-        $data = $this->deserializeBodyContent($request, [
+        $data = $this->formatter->deserializeBodyContent($request, [
             'content' => 'notEmpty',
             'enabled' => 'mustExist',
         ]);
@@ -41,10 +52,10 @@ class SettingController extends RestController
             $setting->setEnabled($data['enabled']);
         } else { //create new one
             $setting = new EntityDir\Setting($id, $data['content'], $data['enabled']);
-            $this->getEntityManager()->persist($setting);
+            $this->em->persist($setting);
         }
 
-        $this->getEntityManager()->flush($setting);
+        $this->em->flush($setting);
 
         return $setting->getId();
     }

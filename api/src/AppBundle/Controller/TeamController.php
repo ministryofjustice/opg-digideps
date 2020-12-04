@@ -2,8 +2,8 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\User;
+use AppBundle\Service\Formatter\RestFormatter;
 use AppBundle\Service\OrgService;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -14,6 +14,13 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class TeamController extends RestController
 {
+    private RestFormatter $formatter;
+
+    public function __construct(RestFormatter $formatter)
+    {
+        $this->formatter = $formatter;
+    }
+
     /**
      * @Route("/members", methods={"GET"})
      * @Security("has_role('ROLE_ORG')")
@@ -24,7 +31,7 @@ class TeamController extends RestController
             (array) $request->query->get('groups') :
             ['team', 'team-users', 'user', 'team-names'];
 
-        $this->setJmsSerialiserGroups($groups);
+        $this->formatter->setJmsSerialiserGroups($groups);
 
         /** @var User $user */
         $user = $this->getUser();
@@ -38,7 +45,7 @@ class TeamController extends RestController
      */
     public function getMemberById($id, OrgService $orgService)
     {
-        $this->setJmsSerialiserGroups(['team', 'team-users', 'user', 'team-names']);
+        $this->formatter->setJmsSerialiserGroups(['team', 'team-users', 'user', 'team-names']);
 
         /** @var User $user */
         $user = $this->getUser();

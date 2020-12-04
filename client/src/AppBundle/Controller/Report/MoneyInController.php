@@ -15,6 +15,8 @@ use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class MoneyInController extends AbstractController
@@ -38,8 +40,7 @@ class MoneyInController extends AbstractController
         RestClient $restClient,
         ReportApi $reportApi,
         StepRedirector $stepRedirector
-    )
-    {
+    ) {
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
         $this->stepRedirector = $stepRedirector;
@@ -74,9 +75,10 @@ class MoneyInController extends AbstractController
      * @param $step
      * @param null $transactionId
      *
+     * @param AuthorizationCheckerInterface $authorizationChecker
      * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, $reportId, $step, $transactionId = null)
+    public function stepAction(Request $request, $reportId, $step, $transactionId = null, AuthorizationCheckerInterface $authorizationChecker)
     {
         $totalSteps = 2;
         if ($step < 1 || $step > $totalSteps) {
@@ -94,7 +96,6 @@ class MoneyInController extends AbstractController
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId'=>$reportId, 'transactionId' => $transactionId]);
-
 
         // create (add mode) or load transaction (edit mode)
         if ($transactionId) {
@@ -128,7 +129,7 @@ class MoneyInController extends AbstractController
                 'step' => $step,
                 'type'             => 'in',
                 'selectedCategory' => $transaction->getCategory(),
-                'authChecker' => $this->get('security.authorization_checker'),
+                'authChecker' => $authorizationChecker,
                 'report' => $report
             ]
         );
@@ -237,7 +238,7 @@ class MoneyInController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $reportId, $transactionId)
+    public function deleteAction(Request $request, $reportId, $transactionId, TranslatorInterface $translator)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -266,8 +267,6 @@ class MoneyInController extends AbstractController
             return $this->redirect($this->generateUrl('money_in_summary', ['reportId' => $reportId]));
         }
 
-        /** @var TranslatorInterface $translator */
-        $translator = $this->get('translator');
         $categoryKey = 'form.category.entries.' . $transaction->getCategory() . '.label';
         $summary = [
             ['label' => 'deletePage.summary.category', 'value' => $translator->trans($categoryKey, [], 'report-money-transaction')],

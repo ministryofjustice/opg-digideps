@@ -4,12 +4,23 @@ namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\Formatter\RestFormatter;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class ExpenseController extends RestController
 {
+    private EntityManagerInterface $em;
+    private RestFormatter $formatter;
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    {
+        $this->em = $em;
+        $this->formatter = $formatter;
+    }
+
     /**
      * @Route("/ndr/{ndrId}/expense/{expenseId}", requirements={"ndrId":"\d+", "expenseId":"\d+"}, methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
@@ -22,7 +33,7 @@ class ExpenseController extends RestController
         $expense = $this->findEntityBy(EntityDir\Ndr\Expense::class, $expenseId);
         $this->denyAccessIfNdrDoesNotBelongToUser($expense->getNdr());
 
-        $this->setJmsSerialiserGroups(['ndr-expenses']);
+        $this->formatter->setJmsSerialiserGroups(['ndr-expenses']);
 
         return $expense;
     }
@@ -33,11 +44,11 @@ class ExpenseController extends RestController
      */
     public function add(Request $request, $ndrId)
     {
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId); /* @var $ndr EntityDir\Ndr\Ndr */
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
-        $this->validateArray($data, [
+        $this->formatter->validateArray($data, [
             'explanation' => 'mustExist',
             'amount' => 'mustExist',
         ]);
@@ -46,8 +57,9 @@ class ExpenseController extends RestController
         $this->updateEntityWithData($expense, $data);
         $ndr->setPaidForAnything('yes');
 
-        $this->persistAndFlush($expense);
-        $this->persistAndFlush($ndr);
+        $this->em->persist($expense);
+        $this->em->persist($ndr);
+        $this->em->flush();
 
         return ['id' => $expense->getId()];
     }
@@ -58,7 +70,7 @@ class ExpenseController extends RestController
      */
     public function edit(Request $request, $ndrId, $expenseId)
     {
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
@@ -68,7 +80,7 @@ class ExpenseController extends RestController
 
         $this->updateEntityWithData($expense, $data);
 
-        $this->getEntityManager()->flush($expense);
+        $this->em->flush($expense);
 
         return ['id' => $expense->getId()];
     }
@@ -84,9 +96,9 @@ class ExpenseController extends RestController
 
         $expense = $this->findEntityBy(EntityDir\Ndr\Expense::class, $expenseId);
         $this->denyAccessIfNdrDoesNotBelongToUser($expense->getNdr());
-        $this->getEntityManager()->remove($expense);
+        $this->em->remove($expense);
 
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return [];
     }

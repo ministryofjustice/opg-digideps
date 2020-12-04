@@ -8,27 +8,28 @@ use AppBundle\Entity\User;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\Client\RestClient;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/admin/organisations")
  */
 class OrganisationController extends AbstractController
 {
-    /**
-     * @var RestClient
-     */
-    private $restClient;
+    private RestClient $restClient;
+    private LoggerInterface $logger;
 
     public function __construct(
-        RestClient $restClient
-    )
-    {
+        RestClient $restClient,
+        LoggerInterface $logger
+    ) {
         $this->restClient = $restClient;
+        $this->logger = $logger;
     }
 
     /**
@@ -157,7 +158,7 @@ class OrganisationController extends AbstractController
                 $this->restClient->delete('v2/organisation/' . $organisation->getId());
                 $request->getSession()->getFlashBag()->add('notice', 'The organisation has been removed');
             } catch (\Throwable $e) {
-                $this->get('logger')->error($e->getMessage());
+                $this->logger->error($e->getMessage());
                 $request->getSession()->getFlashBag()->add('error', 'Organisation could not be removed');
             }
 
@@ -185,7 +186,8 @@ class OrganisationController extends AbstractController
      * @Security("has_role('ROLE_ADMIN')")
      * @Template("AppBundle:Admin/Organisation:add-user.html.twig")
      */
-    public function addUserAction(Request $request, $id) {
+    public function addUserAction(Request $request, $id, TranslatorInterface $translator)
+    {
         $form = $this->createForm(FormDir\Admin\OrganisationAddUserType::class);
         $form->handleRequest($request);
 
@@ -210,9 +212,8 @@ class OrganisationController extends AbstractController
         }
 
         if (!empty($errors)) {
-            foreach ($errors as $error)
-            {
-                $errorMessage = $this->get('translator')->trans($error, [], 'admin-organisation-users');
+            foreach ($errors as $error) {
+                $errorMessage = $translator->trans($error, [], 'admin-organisation-users');
                 $form->get('email')->addError(new FormError($errorMessage));
             }
             $user = new User();
@@ -238,7 +239,8 @@ class OrganisationController extends AbstractController
      * @Security("has_role('ROLE_ADMIN')")
      * @Template("AppBundle:Common:confirmDelete.html.twig")
      */
-    public function deleteUserAction(Request $request, $id, $userId) {
+    public function deleteUserAction(Request $request, $id, $userId)
+    {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
 
@@ -250,7 +252,7 @@ class OrganisationController extends AbstractController
                 $this->restClient->delete('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId());
                 $request->getSession()->getFlashBag()->add('notice', 'User has been removed from ' . $organisation->getName());
             } catch (\Throwable $e) {
-                $this->get('logger')->error($e->getMessage());
+                $this->logger->error($e->getMessage());
                 $request->getSession()->getFlashBag()->add('error', 'User could not be removed form '  . $organisation->getName());
             }
 

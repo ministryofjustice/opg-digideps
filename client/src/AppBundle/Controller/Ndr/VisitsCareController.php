@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class VisitsCareController extends AbstractController
 {
@@ -39,8 +40,7 @@ class VisitsCareController extends AbstractController
         ReportApi $reportApi,
         RestClient $restClient,
         StepRedirector $stepRedirector
-    )
-    {
+    ) {
         $this->reportApi = $reportApi;
         $this->restClient = $restClient;
         $this->stepRedirector = $stepRedirector;
@@ -77,7 +77,7 @@ class VisitsCareController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, $ndrId, $step)
+    public function stepAction(Request $request, $ndrId, $step, TranslatorInterface $translator)
     {
         $totalSteps = 5;
         if ($step < 1 || $step > $totalSteps) {
@@ -94,9 +94,16 @@ class VisitsCareController extends AbstractController
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['ndrId'=>$ndrId]);
 
-        $form = $this->createForm(FormDir\Ndr\VisitsCareType::class, $visitsCare, [ 'step'            => $step, 'translator'      => $this->get('translator'), 'clientFirstName' => $ndr->getClient()->getFirstname()
-                                   ]
-                                 );
+        $form = $this->createForm(
+            FormDir\Ndr\VisitsCareType::class,
+            $visitsCare,
+            [
+                'step' => $step,
+                'translator' => $translator,
+                'clientFirstName' => $ndr->getClient()->getFirstname()
+            ]
+        );
+
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {

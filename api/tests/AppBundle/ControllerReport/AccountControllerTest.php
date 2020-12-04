@@ -118,6 +118,7 @@ class AccountControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data']['bank_accounts'];
+
         $this->assertCount(3, $data);
         $this->assertTrue($data[0]['id'] != $data[1]['id']);
         $this->assertArrayHasKey('bank', $data[0]);

@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Service\Client\RestClient;
+use Predis\Client;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,8 +23,7 @@ class AjaxController extends AbstractController
 
     public function __construct(
         RestClient $restClient
-    )
-    {
+    ) {
         $this->restClient = $restClient;
     }
 
@@ -52,19 +52,18 @@ class AjaxController extends AbstractController
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      *
      * @param Request $request
+     * @param Client $redisClient
      * @return JsonResponse
      */
-    public function uploadUsersAjaxAction(Request $request)
+    public function uploadUsersAjaxAction(Request $request, Client $redisClient)
     {
         $chunkId = 'chunk' . $request->get('chunk');
-        /** @var \Redis $redis */
-        $redis = $this->get('snc_redis.default');
 
         try {
-            $compressedData = $redis->get($chunkId);
+            $compressedData = $redisClient->get($chunkId);
             if ($compressedData) {
                 $ret = $this->restClient->setTimeout(600)->post('v2/lay-deputyship/upload', $compressedData);
-                $redis->del($chunkId); //cleanup for next execution
+                $redisClient->del($chunkId); //cleanup for next execution
             } else {
                 $ret['added'] = 0;
             }
