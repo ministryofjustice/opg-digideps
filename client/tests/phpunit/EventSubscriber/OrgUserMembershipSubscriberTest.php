@@ -4,7 +4,7 @@
 namespace Tests\AppBundle\EventListener;
 
 use AppBundle\Event\UserAddedToOrganisationEvent;
-use AppBundle\EventSubscriber\UserAddedToOrganisationSubscriber;
+use AppBundle\EventSubscriber\OrgUserMembershipSubscriber;
 use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Time\DateTimeProvider;
 use AppBundle\TestHelpers\OrganisationHelpers;
@@ -13,14 +13,14 @@ use DateTime;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-class UserAddedToOrganisationSubscriberTest extends TestCase
+class OrgUserMembershipSubscriberTest extends TestCase
 {
     /** @test */
     public function getSubscribedEvents()
     {
         self::assertEquals(
             [UserAddedToOrganisationEvent::NAME => 'logEvent'],
-            UserAddedToOrganisationSubscriber::getSubscribedEvents()
+            OrgUserMembershipSubscriber::getSubscribedEvents()
         );
     }
 
@@ -55,7 +55,7 @@ class UserAddedToOrganisationSubscriberTest extends TestCase
 
         $userAddedToOrganisationEvent = new UserAddedToOrganisationEvent($organisation, $addedUser, $currentUser, $trigger);
 
-        $sut = new UserAddedToOrganisationSubscriber($logger->reveal(), $dateTimeProvider->reveal());
+        $sut = new OrgUserMembershipSubscriber($logger->reveal(), $dateTimeProvider->reveal());
         $sut->logEvent($userAddedToOrganisationEvent);
     }
 }

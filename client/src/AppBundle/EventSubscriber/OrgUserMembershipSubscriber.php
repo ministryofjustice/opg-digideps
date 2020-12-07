@@ -9,7 +9,7 @@ use AppBundle\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class UserAddedToOrganisationSubscriber implements EventSubscriberInterface
+class OrgUserMembershipSubscriber implements EventSubscriberInterface
 {
     private LoggerInterface $logger;
     private DateTimeProvider $dateTimeProvider;
