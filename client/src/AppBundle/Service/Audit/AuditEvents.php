@@ -16,6 +16,7 @@ final class AuditEvents
     const EVENT_DEPUTY_DELETED = 'DEPUTY_DELETED';
     const EVENT_ADMIN_DELETED = 'ADMIN_DELETED';
     const EVENT_USER_ADDED_TO_ORG = 'USER_ADDED_TO_ORG';
+    const EVENT_USER_REMOVED_FROM_ORG = 'USER_REMOVED_FROM_ORG';
 
     const TRIGGER_ADMIN_USER_EDIT = 'ADMIN_USER_EDIT';
     const TRIGGER_ADMIN_BUTTON = 'ADMIN_BUTTON';
@@ -167,6 +168,21 @@ final class AuditEvents
         ];
 
         return $event + $this->baseEvent(AuditEvents::EVENT_USER_ADDED_TO_ORG);
+    }
+
+    public function userRemovedFromOrg(string $trigger, User $removedUser, Organisation $organisation, User $removedBy)
+    {
+        $event = [
+            'trigger' => $trigger,
+            'removed_user_email' => $removedUser->getEmail(),
+            'removed_user_name' => $removedUser->getFullName(),
+            'organisation_identifier' => $organisation->getEmailIdentifier(),
+            'organisation_id' => $organisation->getId(),
+            'removed_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            'removed_by' => $removedBy->getEmail(),
+        ];
+
+        return $event + $this->baseEvent(AuditEvents::EVENT_USER_REMOVED_FROM_ORG);
     }
 
     /**

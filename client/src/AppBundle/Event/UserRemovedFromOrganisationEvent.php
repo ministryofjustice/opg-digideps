@@ -12,14 +12,14 @@ class UserRemovedFromOrganisationEvent extends Event
     const NAME = 'user.removed.from.organisation';
 
     private Organisation $organisation;
-    private User $userToRemove;
+    private User $removedUser;
     private User $currentUser;
     private string $trigger;
 
     public function __construct(Organisation $organisation, User $userToRemove, User $currentUser, string $trigger)
     {
         $this->organisation = $organisation;
-        $this->userToRemove = $userToRemove;
+        $this->removedUser = $userToRemove;
         $this->currentUser = $currentUser;
         $this->trigger = $trigger;
     }
@@ -45,18 +45,18 @@ class UserRemovedFromOrganisationEvent extends Event
     /**
      * @return User
      */
-    public function getUserToRemove(): User
+    public function getRemovedUser(): User
     {
-        return $this->userToRemove;
+        return $this->removedUser;
     }
 
     /**
-     * @param User $userToRemove
+     * @param User $removedUser
      * @return UserRemovedFromOrganisationEvent
      */
-    public function setUserToRemove(User $userToRemove): UserRemovedFromOrganisationEvent
+    public function setRemovedUser(User $removedUser): UserRemovedFromOrganisationEvent
     {
-        $this->userToRemove = $userToRemove;
+        $this->removedUser = $removedUser;
         return $this;
     }
 
