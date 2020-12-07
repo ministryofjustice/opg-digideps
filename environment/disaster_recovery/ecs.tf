@@ -56,7 +56,7 @@ locals {
       },
       {
         name  = "CLUSTER"
-        value = var.account.always_on ? "false" : "true"
+        value = "true"
       },
     ]
   })
