@@ -120,20 +120,18 @@ class OrganisationController extends AbstractController
             try {
                 $email = $form->getData()->getEmail();
                 $existingUser = $this->restClient->get('user/get-team-names-by-email/' . $email, 'User');
+                $currentUser = $this->getUser();
 
                 if ($existingUser->getId()) {
                     // existing users just get added to the organisation
-                    $this->restClient->put(
-                        'v2/organisation/' . $organisation->getId() . '/user/' . $existingUser->getId(),
-                        ''
-                    );
+                    $this->organisationApi->addUserToOrganisation($organisation, $existingUser, $currentUser, AuditEvents::TRIGGER_ORG_USER_ADD_ORG_MEMBER);
                 } else {
                     /** @var EntityDir\User $user */
                     $userToCreate = $form->getData();
 
                     /** @var EntityDir\User $user */
                     $createdUser = $this->userApi->createOrgUser($userToCreate);
-                    $this->organisationApi->addUserToOrganisation($organisation, $createdUser);
+                    $this->organisationApi->addUserToOrganisation($organisation, $createdUser, $currentUser, AuditEvents::TRIGGER_ORG_USER_ADD_ORG_MEMBER);
                 }
 
                 return $this->redirectToRoute('org_organisation_view', ['id' => $organisation->getId()]);
