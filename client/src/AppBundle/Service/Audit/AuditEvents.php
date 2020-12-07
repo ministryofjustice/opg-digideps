@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service\Audit;
 
+use AppBundle\Entity\Organisation;
 use AppBundle\Entity\User;
 use AppBundle\Service\Time\DateTimeProvider;
 use DateTime;
@@ -14,6 +15,7 @@ final class AuditEvents
     const EVENT_CLIENT_DELETED = 'CLIENT_DELETED';
     const EVENT_DEPUTY_DELETED = 'DEPUTY_DELETED';
     const EVENT_ADMIN_DELETED = 'ADMIN_DELETED';
+    const EVENT_USER_ADDED_TO_ORG = 'USER_ADDED_TO_ORG';
 
     const TRIGGER_ADMIN_USER_EDIT = 'ADMIN_USER_EDIT';
     const TRIGGER_ADMIN_BUTTON = 'ADMIN_BUTTON';
@@ -21,6 +23,7 @@ final class AuditEvents
     const TRIGGER_DEPUTY_USER_EDIT_SELF = 'DEPUTY_USER_EDIT_SELF';
     const TRIGGER_DEPUTY_USER_EDIT = 'DEPUTY_USER_EDIT';
     const TRIGGER_CODEPUTY_CREATED = 'CODEPUTY_CREATED';
+    const TRIGGER_ORG_USER_ADD_ORG_MEMBER = 'ORG_USER_ADD_ORG_MEMBER';
 
     /**
      * @var DateTimeProvider
@@ -101,17 +104,6 @@ final class AuditEvents
         return $event + $this->baseEvent(AuditEvents::EVENT_CLIENT_EMAIL_CHANGED);
     }
 
-    /**
-     * @param string $eventName
-     * @return array
-     */
-    private function baseEvent(string $eventName): array
-    {
-        return [
-            'event' => $eventName,
-            'type' => 'audit'
-        ];
-    }
 
     /**
      * @param string $trigger
@@ -160,5 +152,31 @@ final class AuditEvents
             AuditEvents::EVENT_ADMIN_DELETED : AuditEvents::EVENT_DEPUTY_DELETED;
 
         return $event + $this->baseEvent($eventType);
+    }
+
+    public function userAddedToOrg(string $trigger, User $addedUser, Organisation $organisation, User $addedBy)
+    {
+        $event = [
+            'trigger' => $trigger,
+            'added_user_email' => $addedUser->getEmail(),
+            'organisation_identifier' => $organisation->getEmailIdentifier(),
+            'organisation_id' => $organisation->getId(),
+            'added_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            'added_by' => $addedBy->getEmail(),
+        ];
+
+        return $event + $this->baseEvent(AuditEvents::EVENT_USER_ADDED_TO_ORG);
+    }
+
+    /**
+     * @param string $eventName
+     * @return array
+     */
+    private function baseEvent(string $eventName): array
+    {
+        return [
+            'event' => $eventName,
+            'type' => 'audit'
+        ];
     }
 }
