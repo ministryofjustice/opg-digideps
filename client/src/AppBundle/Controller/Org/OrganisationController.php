@@ -124,14 +124,14 @@ class OrganisationController extends AbstractController
 
                 if ($existingUser->getId()) {
                     // existing users just get added to the organisation
-                    $this->organisationApi->addUserToOrganisation($organisation, $existingUser, $currentUser, AuditEvents::TRIGGER_ORG_USER_ADD_ORG_MEMBER);
+                    $this->organisationApi->addUserToOrganisation($organisation, $existingUser, $currentUser, AuditEvents::TRIGGER_ORG_USER_MANAGE_ORG_MEMBER);
                 } else {
                     /** @var EntityDir\User $user */
                     $userToCreate = $form->getData();
 
                     /** @var EntityDir\User $user */
                     $createdUser = $this->userApi->createOrgUser($userToCreate);
-                    $this->organisationApi->addUserToOrganisation($organisation, $createdUser, $currentUser, AuditEvents::TRIGGER_ORG_USER_ADD_ORG_MEMBER);
+                    $this->organisationApi->addUserToOrganisation($organisation, $createdUser, $currentUser, AuditEvents::TRIGGER_ORG_USER_MANAGE_ORG_MEMBER);
                 }
 
                 return $this->redirectToRoute('org_organisation_view', ['id' => $organisation->getId()]);
@@ -256,7 +256,7 @@ class OrganisationController extends AbstractController
                     $organisation,
                     $userToRemove,
                     $currentUser,
-                    AuditEvents::TRIGGER_ORG_USER_REMOVE_ORG_MEMBER
+                    AuditEvents::TRIGGER_ORG_USER_MANAGE_ORG_MEMBER
                 );
 
                 $this->addFlash('notice', 'User account removed from organisation');

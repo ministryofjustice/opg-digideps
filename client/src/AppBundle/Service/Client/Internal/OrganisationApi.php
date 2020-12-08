@@ -13,7 +13,7 @@ use AppBundle\Service\Client\RestClient;
 
 class OrganisationApi
 {
-    private const ADD_USER_TO_ORG_ENDPOINT = 'v2/organisation/%s/user/%s';
+    private const MANAGE_USER_IN_ORG_ENDPOINT = 'v2/organisation/%s/user/%s';
 
     private RestClient $restClient;
     private ObservableEventDispatcher $eventDispatcher;
@@ -32,7 +32,7 @@ class OrganisationApi
      */
     public function addUserToOrganisation(Organisation $organisation, User $userToAdd, User $currentUser, string $trigger)
     {
-        $this->restClient->put(sprintf(self::ADD_USER_TO_ORG_ENDPOINT, $organisation->getId(), $userToAdd->getId()), '');
+        $this->restClient->put(sprintf(self::MANAGE_USER_IN_ORG_ENDPOINT, $organisation->getId(), $userToAdd->getId()), '');
 
         $event = new UserAddedToOrganisationEvent(
             $organisation,
@@ -52,7 +52,7 @@ class OrganisationApi
      */
     public function removeUserFromOrganisation(Organisation $organisation, User $userToRemove, User $currentUser, string $trigger)
     {
-        $this->restClient->delete(sprintf('v2/organisation/%s/user/%s', $organisation->getId(), $userToRemove->getId()));
+        $this->restClient->delete(sprintf(self::MANAGE_USER_IN_ORG_ENDPOINT, $organisation->getId(), $userToRemove->getId()));
 
         $event = new UserRemovedFromOrganisationEvent(
             $organisation,
