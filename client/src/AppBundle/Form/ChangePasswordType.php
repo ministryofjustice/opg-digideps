@@ -3,6 +3,7 @@
 namespace AppBundle\Form;
 
 use AppBundle\Validator\Constraints\DUserPassword;
+use AppBundle\Validator\Constraints\CommonPassword;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -32,6 +33,7 @@ class ChangePasswordType extends AbstractType
                         new Assert\Regex(['pattern' => '/[a-z]/', 'message' => 'user.password.noLowerCaseChars', 'groups' => self::VALIDATION_GROUP]),
                         new Assert\Regex(['pattern' => '/[A-Z]/', 'message' => 'user.password.noUpperCaseChars', 'groups' => self::VALIDATION_GROUP]),
                         new Assert\Regex(['pattern' => '/[0-9]/', 'message' => 'user.password.noNumber', 'groups' => self::VALIDATION_GROUP]),
+                        new CommonPassword(['message' => 'user.password.notCommonPassword', 'groups' => self::VALIDATION_GROUP]),
                     ],
                 ])
                 ->add('id', FormTypes\HiddenType::class)
