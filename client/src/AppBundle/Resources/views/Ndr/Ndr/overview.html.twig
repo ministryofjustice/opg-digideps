@@ -12,8 +12,6 @@
 {% block breadcrumbs %}{{ macros.homepage }}{% endblock %}
 
 {% block pageContent %}
-    {% include 'AppBundle:Ndr/Ndr:_header.html.twig' %}
-
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             <ul>
@@ -27,7 +25,7 @@
                             <a href="{{ path('ndr_review', {'ndrId': ndr.id}) }}">{{ 'status.viewReportOnline' | trans({}, 'ndr-submitted') }}</a>
                         </p>
                     </li>
-                {% else %}
+                {% elseif not ndrStatus.isReadyToSubmit %}
                     <li>
                         <p class="govuk-body">Report status: <strong>{{ ('status.' ~ ndrStatus.status) | trans() }}</strong></p>
                     </li>
@@ -36,12 +34,13 @@
         </div>
     </div>
 
+    {% include 'AppBundle:Ndr/Ndr:_header.html.twig' %}
+
     {% if not ndrStatus.isReadyToSubmit %}
         <div class="push--top">
             {{ macros.notification('info', 'guidanceNotice' | trans()) }}
         </div>
     {% endif %}
-
 
     <ul id="overview-sections" class="push--bottom">
 
