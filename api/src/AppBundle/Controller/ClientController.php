@@ -4,6 +4,8 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Repository\ClientRepository;
+use AppBundle\Service\Formatter\RestFormatter;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,15 +15,15 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ClientController extends RestController
 {
-    /** @var ClientRepository */
-    private $repository;
+    private ClientRepository $repository;
+    private EntityManagerInterface $em;
+    private RestFormatter $formatter;
 
-    /**
-     * @param ClientRepository $repository
-     */
-    public function __construct(ClientRepository $repository)
+    public function __construct(ClientRepository $repository, EntityManagerInterface $em, RestFormatter $formatter)
     {
         $this->repository = $repository;
+        $this->em = $em;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -33,10 +35,9 @@ class ClientController extends RestController
      */
     public function upsertAction(Request $request)
     {
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
         /** @var EntityDir\User|null $user */
         $user = $this->getUser();
-        $em = $this->getEntityManager();
 
         if ($user && $request->getMethod() == 'POST') {
             $client = new EntityDir\Client();
@@ -67,7 +68,7 @@ class ClientController extends RestController
 
             if ($ndrRequired && !$client->getNdr()) {
                 $ndr = new EntityDir\Ndr\Ndr($client);
-                $em->persist($ndr);
+                $this->em->persist($ndr);
             }
 
             $client->setCourtDate(new \DateTime($data['court_date']));
@@ -81,8 +82,8 @@ class ClientController extends RestController
             $client->setDateOfBirth($dob);
         }
 
-        $em->persist($client);
-        $em->flush();
+        $this->em->persist($client);
+        $this->em->flush();
 
         return ['id' => $client->getId()];
     }
@@ -99,7 +100,7 @@ class ClientController extends RestController
     {
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['client'];
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $client = $this->findEntityBy(EntityDir\Client::class, $id);
         if ($client->getArchivedAt()) {
@@ -142,7 +143,7 @@ class ClientController extends RestController
             ];
         }
 
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $result = $this->findEntityBy(EntityDir\Client::class, $id);
 
@@ -165,7 +166,7 @@ class ClientController extends RestController
         }
 
         $client->setArchivedAt(new \DateTime);
-        $this->getEntityManager()->flush($client);
+        $this->em->flush($client);
 
         return [
             'id' => $client->getId()
@@ -178,7 +179,7 @@ class ClientController extends RestController
      */
     public function getAllAction(Request $request)
     {
-        $this->setJmsSerialiserGroups(['client', 'active-period']);
+        $this->formatter->setJmsSerialiserGroups(['client', 'active-period']);
 
         return $this->repository->searchClients(
             $request->get('q'),
@@ -199,7 +200,7 @@ class ClientController extends RestController
         $client = $this->findEntityBy(EntityDir\Client::class, $id);
 
         $client->setDeletedAt(new \DateTime());
-        $this->getEntityManager()->flush($client);
+        $this->em->flush($client);
 
         return [];
     }

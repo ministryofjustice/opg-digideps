@@ -10,8 +10,6 @@ use AppBundle\Service\Client\Internal\ClientApi;
 use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\DeputyProvider;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
 use AppBundle\Service\Redirector;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -27,43 +25,24 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class UserController extends AbstractController
 {
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var MailFactory
-     */
-    private $mailFactory;
-
-    /**
-     * @var MailSender
-     */
-    private $mailSender;
-
-    /**
-     * @var UserApi
-     */
-    private $userApi;
-
-    /**
-     * @var ClientApi
-     */
-    private $clientApi;
+    private RestClient $restClient;
+    private UserApi $userApi;
+    private ClientApi $clientApi;
+    private TranslatorInterface $translator;
+    private LoggerInterface $logger;
 
     public function __construct(
         RestClient $restClient,
-        MailFactory $mailFactory,
-        MailSender $mailSender,
         UserApi $userApi,
-        ClientApi $clientApi
+        ClientApi $clientApi,
+        TranslatorInterface $translator,
+        LoggerInterface $logger
     ) {
         $this->restClient = $restClient;
-        $this->mailFactory = $mailFactory;
-        $this->mailSender = $mailSender;
         $this->userApi = $userApi;
         $this->clientApi = $clientApi;
+        $this->translator = $translator;
+        $this->logger = $logger;
     }
 
     /**
@@ -80,10 +59,10 @@ class UserController extends AbstractController
         Redirector $redirector,
         DeputyProvider $deputyProvider,
         string $action,
-        string $token
+        string $token,
+        TokenStorageInterface $tokenStorage,
+        SessionInterface $session
     ): Response {
-        /** @var TranslatorInterface */
-        $translator = $this->get('translator');
         $isActivatePage = 'activate' === $action;
 
         // check $token is correct
@@ -114,7 +93,7 @@ class UserController extends AbstractController
 
         // define form and template that differs depending on the action (activate or password-reset)
         if ($isActivatePage) {
-            $passwordMismatchMessage = $translator->trans('password.validation.passwordMismatch', [], 'user-activate');
+            $passwordMismatchMessage = $this->translator->trans('password.validation.passwordMismatch', [], 'user-activate');
             $form = $this->createForm(
                 FormDir\SetPasswordType::class,
                 $user,
@@ -123,7 +102,7 @@ class UserController extends AbstractController
             );
             $template = 'AppBundle:User:activate.html.twig';
         } else { // 'password-reset'
-            $passwordMismatchMessage = $translator->trans('form.password.validation.passwordMismatch', [], 'password-reset');
+            $passwordMismatchMessage = $this->translator->trans('form.password.validation.passwordMismatch', [], 'password-reset');
             $form = $this->createForm(FormDir\ResetPasswordType::class, $user, ['passwordMismatchMessage' => $passwordMismatchMessage]);
             $template = 'AppBundle:User:passwordReset.html.twig';
         }
@@ -148,13 +127,8 @@ class UserController extends AbstractController
 
             // log in
             $clientToken = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
-
-            /** @var TokenStorageInterface */
-            $tokenStorage = $this->get('security.token_storage');
             $tokenStorage->setToken($clientToken); //now the user is logged in
 
-            /** @var SessionInterface */
-            $session = $this->get('session');
             $session->set('_security_secured_area', serialize($clientToken));
 
             if ($isActivatePage) {
@@ -181,16 +155,8 @@ class UserController extends AbstractController
      */
     public function activateLinkSendAction(string $token): Response
     {
-        // check $token is correct
         $user = $this->restClient->loadUserByToken($token);
-        /* @var $user EntityDir\User */
-
-        // recreate token
-        // the endpoint will also send the activation email
-        $this->restClient->userRecreateToken($user->getEmail(), 'activate');
-
-        $activationEmail = $this->mailFactory->createActivationEmail($user);
-        $this->mailSender->send($activationEmail);
+        $this->userApi->activate($user->getEmail());
 
         return $this->redirect($this->generateUrl('activation_link_sent', ['token' => $token]));
     }
@@ -261,29 +227,15 @@ class UserController extends AbstractController
      **/
     public function passwordForgottenAction(Request $request)
     {
-        /** @var LoggerInterface */
-        $logger = $this->get('logger');
-
         $user = new EntityDir\User();
         $form = $this->createForm(FormDir\PasswordForgottenType::class, $user);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $emailAddress = $user->getEmail();
-            $disguisedEmail = '***' . substr($emailAddress, 3);
-            $logger->warning('Reset password request for : ' . $emailAddress);
-
             try {
-                $user = $this->restClient->userRecreateToken($user->getEmail(), 'pass-reset');
-
-                $logger->warning('Sending reset email to ' . $disguisedEmail);
-
-                $resetPasswordEmail = $this->mailFactory->createResetPasswordEmail($user);
-
-                $this->mailSender->send($resetPasswordEmail);
-                $logger->warning('Email sent to ' . $disguisedEmail);
+                $this->userApi->resetPassword($user->getEmail());
             } catch (RestClientException $e) {
-                $logger->warning('Email ' . $emailAddress . ' not found');
+                $this->logger->warning('Email ' . $user->getEmail() . ' not found');
             }
 
             // after details are added, admin users to go their homepage, deputies go to next step
@@ -315,8 +267,6 @@ class UserController extends AbstractController
         $selfRegisterData = new SelfRegisterData();
         $form = $this->createForm(FormDir\SelfRegisterDataType::class, $selfRegisterData);
 
-        /** @var TranslatorInterface */
-        $translator = $this->get('translator');
         $vars = [];
 
         $form->handleRequest($request);
@@ -325,15 +275,13 @@ class UserController extends AbstractController
             $data = $form->getData();
 
             try {
-                $user = $this->restClient->registerUser($data);
-                $activationEmail = $this->mailFactory->createActivationEmail($user);
-                $this->mailSender->send($activationEmail);
+                $this->userApi->selfRegister($data);
 
-                $bodyText = $translator->trans('thankyou.body', [], 'register');
+                $bodyText = $this->translator->trans('thankyou.body', [], 'register');
                 $email = $data->getEmail();
                 $bodyText = str_replace('{{ email }}', $email, $bodyText);
 
-                $signInText = $translator->trans('signin', [], 'register');
+                $signInText = $this->translator->trans('signin', [], 'register');
                 $signIn = '<a href="' . $this->generateUrl('login') . '">' . $signInText . '</a>';
                 $bodyText = str_replace('{{ sign_in }}', $signIn, $bodyText);
 
@@ -344,34 +292,32 @@ class UserController extends AbstractController
             } catch (\Throwable $e) {
                 switch ((int) $e->getCode()) {
                     case 403:
-                        $form->addError(new FormError($translator->trans('formErrors.coDepCaseAlreadyRegistered', [], 'register')));
+                        $form->addError(new FormError($this->translator->trans('formErrors.coDepCaseAlreadyRegistered', [], 'register')));
                         break;
 
                     case 422:
                         $form->addError(new FormError(
-                            $translator->trans('email.first.existingError', [], 'register')
+                            $this->translator->trans('email.first.existingError', [], 'register')
                         ));
                         break;
 
                     case 400:
-                        $form->addError(new FormError($translator->trans('formErrors.matching', [], 'register')));
+                        $form->addError(new FormError($this->translator->trans('formErrors.matching', [], 'register')));
                         break;
 
                     case 424:
-                        $form->get('postcode')->addError(new FormError($translator->trans('postcode.matchingError', [], 'register')));
+                        $form->get('postcode')->addError(new FormError($this->translator->trans('postcode.matchingError', [], 'register')));
                         break;
 
                     case 425:
-                        $form->addError(new FormError($translator->trans('formErrors.caseNumberAlreadyUsed', [], 'register')));
+                        $form->addError(new FormError($this->translator->trans('formErrors.caseNumberAlreadyUsed', [], 'register')));
                         break;
 
                     default:
-                        $form->addError(new FormError($translator->trans('formErrors.generic', [], 'register')));
+                        $form->addError(new FormError($this->translator->trans('formErrors.generic', [], 'register')));
                 }
 
-                /** @var LoggerInterface */
-                $logger = $this->get('logger');
-                $logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+                $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
             }
         }
 

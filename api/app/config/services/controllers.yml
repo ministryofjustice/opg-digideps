@@ -9,3 +9,5 @@ services:
       - '@AppBundle\Entity\Repository\ReportRepository'
       - '@AppBundle\Service\ReportService'
       - '@em'
+      - '@AppBundle\Service\Auth\AuthService'
+      - '@AppBundle\Service\Formatter\RestFormatter'

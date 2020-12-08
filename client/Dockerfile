@@ -51,7 +51,7 @@ RUN pecl install pcov && docker-php-ext-enable pcov
 
 # Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=false
-RUN if [[ $REQUIRE_XDEBUG = "true" ]] ; then \
+RUN if [[ $REQUIRE_XDEBUG = true ]] ; then \
         apk add --no-cache $PHPIZE_DEPS; \
         pecl install xdebug-2.9.8; \
         docker-php-ext-enable $PHP_EXT_DIR/xdebug.so; \
@@ -97,6 +97,10 @@ COPY phpstan.neon .
 COPY docker/confd /etc/confd
 
 RUN chown -R www-data scripts
+
+# Add common passwords file
+RUN wget -q -O /tmp/commonpasswords.txt "https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt" \
+    && chown www-data /tmp/commonpasswords.txt
 
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup

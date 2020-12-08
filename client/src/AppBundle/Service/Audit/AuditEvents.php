@@ -20,6 +20,7 @@ final class AuditEvents
     const TRIGGER_CSV_UPLOAD = 'CSV_UPLOAD';
     const TRIGGER_DEPUTY_USER_EDIT_SELF = 'DEPUTY_USER_EDIT_SELF';
     const TRIGGER_DEPUTY_USER_EDIT = 'DEPUTY_USER_EDIT';
+    const TRIGGER_CODEPUTY_CREATED = 'CODEPUTY_CREATED';
 
     /**
      * @var DateTimeProvider

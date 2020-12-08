@@ -11,7 +11,6 @@ services:
         arguments: [ '@em', "@snc_redis.default", "@logger", { "timeout_seconds": "%user_provider_timeout_seconds%" }, '@AppBundle\Entity\Repository\UserRepository' ]
 
     AppBundle\Service\Auth\AuthService:
-        public: true
         arguments:
             $encoderFactory: '@security.encoder_factory'
             $logger: '@logger'
@@ -25,9 +24,9 @@ services:
             - [ setRedisPrefix, ["ac_ret_code"] ]
             # after 5 attempts in the last 10 minutes, return a different return code (activate captcha)
             - [ addTrigger, [  5, 600 ] ]
+
     AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker:
         arguments: [ "@snc_redis.default" ]
-        public: true
         calls:
             - [ setRedisPrefix, ["ac_exception"] ]
             # after 10 attempts, freeze for 30 minutes

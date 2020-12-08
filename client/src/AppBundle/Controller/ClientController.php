@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
+use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Client\Internal\ClientApi;
 use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Form\ClientType;
@@ -32,12 +33,6 @@ class ClientController extends AbstractController
     /** @var RestClient */
     private $restClient;
 
-    /** @var MailSender */
-    private $mailSender;
-
-    /** @var MailFactory */
-    private $mailFactory;
-
     /** @var RouterInterface */
     private $router;
 
@@ -45,15 +40,11 @@ class ClientController extends AbstractController
         UserApi $userApi,
         ClientApi $clientApi,
         RestClient $restClient,
-        MailSender $mailSender,
-        MailFactory $mailFactory,
         RouterInterface $router
     ) {
         $this->userApi = $userApi;
         $this->clientApi = $clientApi;
         $this->restClient = $restClient;
-        $this->mailSender = $mailSender;
-        $this->mailFactory = $mailFactory;
         $this->router = $router;
     }
 
@@ -90,16 +81,16 @@ class ClientController extends AbstractController
     public function editAction(Request $request)
     {
         $from = $request->get('from');
-        $client = $this->clientApi->getFirstClient();
+        $preUpdateClient = $this->clientApi->getFirstClient();
 
-        if (is_null($client)) {
+        if (is_null($preUpdateClient)) {
             /** @var User $user */
             $user = $this->getUser();
             $userId = $user->getId();
             throw new \RuntimeException("User $userId does not have a client");
         }
 
-        $form = $this->createForm(ClientType::class, $client, [
+        $form = $this->createForm(ClientType::class, clone $preUpdateClient, [
             'action' => $this->generateUrl('client_edit', ['action' => 'edit', 'from' => $from]),
             'validation_groups' => ['lay-deputy-client-edit']
         ]);
@@ -108,19 +99,13 @@ class ClientController extends AbstractController
 
         // edit client form
         if ($form->isSubmitted() && $form->isValid()) {
-            $clientUpdated = $form->getData();
-            $clientUpdated->setId($client->getId());
-            $this->restClient->put('client/upsert', $clientUpdated, ['edit']);
-            $this->addFlash('notice', htmlentities($client->getFirstname()) . "'s data edited");
+            $postUpdateClient = $form->getData();
+            $postUpdateClient->setId($preUpdateClient->getId());
+            $this->clientApi->update($preUpdateClient, $postUpdateClient, AuditEvents::TRIGGER_DEPUTY_USER_EDIT_SELF);
 
-            $user = $this->userApi->getUserWithData(['user-clients', 'client']);
+            $this->addFlash('notice', htmlentities($postUpdateClient->getFirstname()) . "'s data edited");
 
-            if ($user->isLayDeputy()) {
-                $updateClientDetailsEmail = $this->mailFactory->createUpdateClientDetailsEmail($clientUpdated);
-                $this->mailSender->send($updateClientDetailsEmail);
-            }
-
-            $activeReport = $client->getActiveReport();
+            $activeReport = $postUpdateClient->getActiveReport();
 
             if ($from === 'declaration' && $activeReport instanceof Report) {
                 return $this->redirect($this->generateUrl('report_declaration', ['reportId' => $activeReport->getId()]));
@@ -130,7 +115,7 @@ class ClientController extends AbstractController
         }
 
         return [
-            'client' => $client,
+            'client' => $preUpdateClient,
             'form' => $form->createView(),
         ];
     }
@@ -138,8 +123,9 @@ class ClientController extends AbstractController
     /**
      * @Route("/client/add", name="client_add")
      * @Template("AppBundle:Client:add.html.twig")
+     * @return array|RedirectResponse
      */
-    public function addAction(Request $request, Redirector $redirector)
+    public function addAction(Request $request, Redirector $redirector, TranslatorInterface $translator, LoggerInterface $logger)
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->userApi->getUserWithData();
@@ -182,12 +168,6 @@ class ClientController extends AbstractController
                     : $this->generateUrl('report_create', ['clientId' => $response['id']]);
                 return $this->redirect($url);
             } catch (\Throwable $e) {
-                /** @var TranslatorInterface $translator */
-                $translator = $this->get('translator');
-
-                /** @var LoggerInterface $logger */
-                $logger = $this->get('logger');
-
                 switch ((int) $e->getCode()) {
                     case 400:
                         $form->addError(new FormError($translator->trans('formErrors.matching', [], 'register')));

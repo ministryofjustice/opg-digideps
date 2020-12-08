@@ -3,6 +3,8 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Satisfaction;
+use AppBundle\Service\Formatter\RestFormatter;
+use Doctrine\ORM\EntityManagerInterface;
 use DateTime;
 use Exception;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,13 +17,23 @@ use AppBundle\Entity as EntityDir;
  */
 class SatisfactionController extends RestController
 {
+    private EntityManagerInterface $em;
+    private RestFormatter $formatter;
+
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    {
+        $this->em = $em;
+        $this->formatter = $formatter;
+    }
+
     private function addSatisfactionScore($satisfactionLevel, $comments)
     {
         $satisfaction = new Satisfaction();
         $satisfaction->setScore($satisfactionLevel);
         $satisfaction->setComments($comments);
 
-        $this->persistAndFlush($satisfaction);
+        $this->em->persist($satisfaction);
+        $this->em->flush();
 
         return $satisfaction;
     }
@@ -32,7 +44,7 @@ class SatisfactionController extends RestController
      */
     public function add(Request $request)
     {
-        $data = $this->deserializeBodyContent($request, [
+        $data = $this->formatter->deserializeBodyContent($request, [
             'score' => 'notEmpty',
             'comments' => 'mustExist',
             'reportType' => 'notEmpty',
@@ -43,7 +55,8 @@ class SatisfactionController extends RestController
         $satisfaction->setReportType($data['reportType']);
         $satisfaction->setDeputyRole($this->getUser()->getRoleName());
 
-        $this->persistAndFlush($satisfaction);
+        $this->em->persist($satisfaction);
+        $this->em->flush();
 
         return $satisfaction->getId();
     }
@@ -76,7 +89,7 @@ class SatisfactionController extends RestController
      */
     public function publicAdd(Request $request)
     {
-        $data = $this->deserializeBodyContent($request, [
+        $data = $this->formatter->deserializeBodyContent($request, [
             'score' => 'notEmpty',
             'comments' => 'notEmpty'
         ]);

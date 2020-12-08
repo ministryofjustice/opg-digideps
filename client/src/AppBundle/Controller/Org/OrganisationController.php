@@ -7,13 +7,11 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\Audit\AuditEvents;
+use AppBundle\Service\Client\Internal\OrganisationApi;
 use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\Logger;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
 use AppBundle\Service\Time\DateTimeProvider;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
@@ -27,46 +25,27 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class OrganisationController extends AbstractController
 {
-    /** @var DateTimeProvider */
-    private $dateTimeProvider;
-
-    /** @var Logger */
-    private $logger;
-
-    /**
-     * @var UserApi
-     */
-    private $userApi;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var MailFactory
-     */
-    private $mailFactory;
-
-    /**
-     * @var MailSender
-     */
-    private $mailSender;
+    private DateTimeProvider $dateTimeProvider;
+    private Logger $logger;
+    private UserApi $userApi;
+    private RestClient $restClient;
+    private OrganisationApi $organisationApi;
+    private TranslatorInterface $translator;
 
     public function __construct(
         DateTimeProvider $dateTimeProvider,
         Logger $logger,
         UserApi $userApi,
         RestClient $restClient,
-        MailFactory $mailFactory,
-        MailSender $mailSender
+        OrganisationApi $organisationApi,
+        TranslatorInterface $translator
     ) {
         $this->dateTimeProvider = $dateTimeProvider;
         $this->logger = $logger;
         $this->userApi = $userApi;
         $this->restClient = $restClient;
-        $this->mailFactory = $mailFactory;
-        $this->mailSender = $mailSender;
+        $this->organisationApi = $organisationApi;
+        $this->translator = $translator;
     }
 
     /**
@@ -150,15 +129,11 @@ class OrganisationController extends AbstractController
                     );
                 } else {
                     /** @var EntityDir\User $user */
-                    $user = $form->getData();
+                    $userToCreate = $form->getData();
 
                     /** @var EntityDir\User $user */
-                    $user = $this->restClient->post('user', $user, ['org_team_add'], 'User');
-
-                    $invitationEmail = $this->mailFactory->createInvitationEmail($user);
-                    $this->mailSender->send($invitationEmail);
-
-                    $this->restClient->put('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId(), '');
+                    $createdUser = $this->userApi->createOrgUser($userToCreate);
+                    $this->organisationApi->addUserToOrganisation($organisation, $createdUser);
                 }
 
                 return $this->redirectToRoute('org_organisation_view', ['id' => $organisation->getId()]);
@@ -166,7 +141,7 @@ class OrganisationController extends AbstractController
                 switch ((int) $e->getCode()) {
                     case 422:
                         /** @var TranslatorInterface */
-                        $translator = $this->get('translator');
+                        $translator = $this->translator;
 
                         $form->get('email')->addError(new FormError($translator->trans('form.email.existingError', [], 'org-organisation')));
                         break;
@@ -236,7 +211,7 @@ class OrganisationController extends AbstractController
                 switch ((int) $e->getCode()) {
                     case 422:
                         /** @var TranslatorInterface */
-                        $translator = $this->get('translator');
+                        $translator = $this->translator;
                         $form->get('email')->addError(new FormError($translator->trans('form.email.existingError', [], 'org-organisation')));
                         break;
 
@@ -319,20 +294,14 @@ class OrganisationController extends AbstractController
         }
 
         try {
-            /* @var $user EntityDir\User */
-            $user = $this->restClient->userRecreateToken($user->getEmail(), 'pass-reset');
-
-            $invitationEmail = $this->mailFactory->createInvitationEmail($user);
-            $this->mailSender->send($invitationEmail);
+            $this->userApi->reInviteDeputy($user->getEmail());
 
             $this->addFlash(
                 'notice',
                 'An activation email has been sent to the user.'
             );
         } catch (\Throwable $e) {
-            /** @var LoggerInterface */
-            $logger = $this->get('logger');
-            $logger->debug($e->getMessage());
+            $this->logger->debug($e->getMessage());
 
             $this->addFlash(
                 'error',

@@ -28,7 +28,3 @@ output "Tasks" {
 output "opg_docker_tag" {
   value = var.OPG_DOCKER_TAG
 }
-
-//output "db_engine_version" {
-//  value = local.account.always_on ? aws_db_instance.api[0].engine_version : aws_rds_cluster.api[0].engine_version
-//}

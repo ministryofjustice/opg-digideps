@@ -6,7 +6,11 @@ use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\ReportSubmission;
+use AppBundle\Service\Auth\AuthService;
+use AppBundle\Service\Formatter\RestFormatter;
 use AppBundle\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer;
+use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -17,13 +21,17 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ReportSubmissionController extends RestController
 {
+    private EntityManagerInterface $em;
+    private AuthService $authService;
+    private RestFormatter $formatter;
+
     const QUEUEABLE_STATUSES = [
         null,
         Document::SYNC_STATUS_TEMPORARY_ERROR,
         Document::SYNC_STATUS_PERMANENT_ERROR
     ];
 
-    private static $jmsGroups = [
+    private static array $jmsGroups = [
         'report-submission',
         'report-type',
         'report-client',
@@ -41,6 +49,14 @@ class ReportSubmissionController extends RestController
         'synchronisation',
     ];
 
+
+    public function __construct(EntityManagerInterface $em, AuthService $authService, RestFormatter $formatter)
+    {
+        $this->em = $em;
+        $this->authService = $authService;
+        $this->formatter = $formatter;
+    }
+
     /**
      * @Route("", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN')")
@@ -50,16 +66,16 @@ class ReportSubmissionController extends RestController
         $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class); /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
 
         $ret = $repo->findByFiltersWithCounts(
-                $request->get('status'),
-                $request->get('q'),
-                $request->get('created_by_role'),
-                $request->get('offset', 0),
-                $request->get('limit', 15),
-                $request->get('orderBy', 'createdOn'),
-                $request->get('order', 'ASC')
-            );
+            $request->get('status'),
+            $request->get('q'),
+            $request->get('created_by_role'),
+            $request->get('offset', 0),
+            $request->get('limit', 15),
+            $request->get('orderBy', 'createdOn'),
+            $request->get('order', 'ASC')
+        );
 
-        $this->setJmsSerialiserGroups(self::$jmsGroups);
+        $this->formatter->setJmsSerialiserGroups(self::$jmsGroups);
 
         return $ret;
     }
@@ -72,7 +88,7 @@ class ReportSubmissionController extends RestController
     {
         $ret = $this->getRepository(EntityDir\Report\ReportSubmission::class)->findOneByIdUnfiltered($id);
 
-        $this->setJmsSerialiserGroups(array_merge(self::$jmsGroups, ['document-storage-reference']));
+        $this->formatter->setJmsSerialiserGroups(array_merge(self::$jmsGroups, ['document-storage-reference']));
 
         return $ret;
     }
@@ -89,14 +105,14 @@ class ReportSubmissionController extends RestController
         /* @var $reportSubmission EntityDir\Report\ReportSubmission */
         $reportSubmission = $this->findEntityBy(EntityDir\Report\ReportSubmission::class, $reportSubmissionId);
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         if (!empty($data['archive'])) {
             $reportSubmission->setArchived(true);
             $reportSubmission->setArchivedBy($this->getUser());
         }
 
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return $reportSubmission->getId();
     }
@@ -109,20 +125,20 @@ class ReportSubmissionController extends RestController
      */
     public function updateUuid(Request $request, $reportSubmissionId)
     {
-        if (!$this->getAuthService()->isSecretValid($request)) {
+        if (!$this->authService->isSecretValid($request)) {
             throw new UnauthorisedException('client secret not accepted.');
         }
 
         /* @var $reportSubmission EntityDir\Report\ReportSubmission */
         $reportSubmission = $this->findEntityBy(EntityDir\Report\ReportSubmission::class, $reportSubmissionId);
 
-        $data = $this->deserializeBodyContent($request);
+        $data = $this->formatter->deserializeBodyContent($request);
 
         if (!empty($data['uuid'])) {
             $reportSubmission->setUuid($data['uuid']);
         }
 
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return $reportSubmission->getId();
     }
@@ -135,7 +151,7 @@ class ReportSubmissionController extends RestController
      */
     public function getOld(Request $request)
     {
-        if (!$this->getAuthService()->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request)) {
+        if (!$this->authService->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request)) {
             throw new \RuntimeException(__METHOD__ . ' only accessible from ADMIN container.', 403);
         }
 
@@ -143,7 +159,7 @@ class ReportSubmissionController extends RestController
 
         $ret = $repo->findDownloadableOlderThan(new \DateTime(EntityDir\Report\ReportSubmission::REMOVE_FILES_WHEN_OLDER_THAN), 100);
 
-        $this->setJmsSerialiserGroups(['report-submission-id', 'report-submission-documents', 'document-storage-reference']);
+        $this->formatter->setJmsSerialiserGroups(['report-submission-id', 'report-submission-documents', 'document-storage-reference']);
 
         return $ret;
     }
@@ -156,7 +172,7 @@ class ReportSubmissionController extends RestController
      */
     public function setUndownloadable($id, Request $request)
     {
-        if (!$this->getAuthService()->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request)) {
+        if (!$this->authService->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request)) {
             throw new \RuntimeException(__METHOD__ . ' only accessible from ADMIN container.', 403);
         }
 
@@ -167,7 +183,7 @@ class ReportSubmissionController extends RestController
             $document->setStorageReference(null);
         }
 
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return true;
     }
@@ -195,7 +211,7 @@ class ReportSubmissionController extends RestController
             }
         }
 
-        $this->getEntityManager()->flush();
+        $this->em->flush();
 
         return true;
     }
@@ -209,23 +225,16 @@ class ReportSubmissionController extends RestController
         /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
         $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class);
 
+        $fromDate = $request->get('fromDate', null) ? new DateTime($request->get('fromDate')) : null;
+        $toDate = $request->get('toDate', null) ? new DateTime($request->get('toDate')) : null;
+
         $ret = $repo->findAllReportSubmissions(
-            $this->convertDateArrayToDateTime($request->get('fromDate', [])),
-            $this->convertDateArrayToDateTime($request->get('toDate', [])),
+            $fromDate,
+            $toDate,
             $request->get('orderBy', 'createdOn'),
             $request->get('order', 'ASC')
         );
 
         return $reportSubmissionSummaryTransformer->transform($ret);
-    }
-
-    /**
-     * @param array $date
-     * @return \DateTime|null
-     * @throws \Exception
-     */
-    private function convertDateArrayToDateTime(array $date)
-    {
-        return (isset($date['date'])) ? new \DateTime($date['date']) : null;
     }
 }

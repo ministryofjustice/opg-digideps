@@ -3,11 +3,12 @@
 
 namespace AppBundle\TestHelpers;
 
-
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\User;
+use DateTime;
 use Doctrine\ORM\EntityManager;
+use Faker\Factory;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class ReportSubmissionHelper extends KernelTestCase
@@ -20,13 +21,15 @@ class ReportSubmissionHelper extends KernelTestCase
      */
     public function generateAndPersistReportSubmission(EntityManager $em)
     {
+        $faker = Factory::create();
+
         $client = new Client();
         $report = (new ReportTestHelper())->generateReport($client);
         $user = (new User)
-            ->setFirstname('First')
-            ->setLastname('Last')
-            ->setEmail(sprintf('first.last.%d@example.com', mt_rand(1, 999999)))
-            ->setRoleName(User::ROLE_ADMIN);
+            ->setFirstname($faker->firstName)
+            ->setLastname($faker->lastName)
+            ->setEmail($faker->safeEmail)
+            ->setRoleName(User::ROLE_LAY_DEPUTY);
 
         $reportSubmission = new ReportSubmission($report, $user);
 
@@ -37,5 +40,20 @@ class ReportSubmissionHelper extends KernelTestCase
         $em->flush();
 
         return $reportSubmission;
+    }
+
+    public function generateAndPersistSubmittedReportSubmission(EntityManager $em, DateTime $submitDate)
+    {
+        $rs = $this->generateAndPersistReportSubmission($em);
+        $report = $rs->getReport()
+            ->setSubmitDate($submitDate)
+            ->setSubmitted(true);
+        $rs->setCreatedOn($submitDate);
+
+        $em->persist($rs);
+        $em->persist($report);
+        $em->flush();
+
+        return $rs;
     }
 }

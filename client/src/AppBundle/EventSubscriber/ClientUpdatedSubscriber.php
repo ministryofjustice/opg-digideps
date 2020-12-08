@@ -4,8 +4,8 @@
 namespace AppBundle\EventSubscriber;
 
 use AppBundle\Event\ClientUpdatedEvent;
-use AppBundle\Event\UserUpdatedEvent;
 use AppBundle\Service\Audit\AuditEvents;
+use AppBundle\Service\Mailer\Mailer;
 use AppBundle\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -18,16 +18,21 @@ class ClientUpdatedSubscriber implements EventSubscriberInterface
     /** @var LoggerInterface */
     private $logger;
 
-    public function __construct(LoggerInterface $logger, DateTimeProvider $dateTimeProvider)
+    /** @var Mailer */
+    private $mailer;
+
+    public function __construct(LoggerInterface $logger, DateTimeProvider $dateTimeProvider, Mailer $mailer)
     {
         $this->dateTimeProvider = $dateTimeProvider;
         $this->logger = $logger;
+        $this->mailer = $mailer;
     }
 
     public static function getSubscribedEvents()
     {
         return [
-            ClientUpdatedEvent::NAME => 'logEvent'
+            ClientUpdatedEvent::NAME => 'logEvent',
+            ClientUpdatedEvent::NAME => 'sendEmail'
         ];
     }
 
@@ -47,6 +52,20 @@ class ClientUpdatedSubscriber implements EventSubscriberInterface
         }
     }
 
+    public function sendEmail(ClientUpdatedEvent $event)
+    {
+        if ($this->shouldSendEmail($event)) {
+            $this->mailer->sendUpdateClientDetailsEmail($event->getPostUpdateClient());
+        }
+    }
+
+    private function shouldSendEmail(ClientUpdatedEvent $event)
+    {
+        return $event->getChangedBy()->isLayDeputy() &&
+            $this->clientDetailsHaveChanged($event) &&
+            $this->clientsAreTheSame($event);
+    }
+
     /**
      * @param ClientUpdatedEvent $event
      * @return bool
@@ -54,5 +73,17 @@ class ClientUpdatedSubscriber implements EventSubscriberInterface
     private function emailHasChanged(ClientUpdatedEvent $event)
     {
         return $event->getPreUpdateClient()->getEmail() !== $event->getPostUpdateClient()->getEmail();
+    }
+
+    private function clientDetailsHaveChanged(ClientUpdatedEvent $event)
+    {
+        // Purposeful using non-strict comparison here as we're just interested in testing properties being different
+        // rather than the objects being strictly different
+        return $event->getPostUpdateClient() != $event->getPreUpdateClient();
+    }
+
+    private function clientsAreTheSame(ClientUpdatedEvent $event)
+    {
+        return $event->getPreUpdateClient()->getId() === $event->getPostUpdateClient()->getId();
     }
 }

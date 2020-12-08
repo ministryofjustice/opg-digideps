@@ -104,13 +104,13 @@ Feature: admin / admin
     Then the response status code should be 200
     And I click on "password-edit"
     Then the response status code should be 200
-      # wrong old password
+    # wrong old password
     When I fill in "change_password_current_password" with "this.is.the.wrong.password"
     And I press "change_password_save"
     Then the following fields should have an error:
       | change_password_current_password     |
       | change_password_plain_password_first |
-      # invalid new password
+    # invalid new password
     When I fill in the following:
       | change_password_current_password      | Abcd1234 |
       | change_password_plain_password_first  | 1        |
@@ -118,7 +118,7 @@ Feature: admin / admin
     And I press "change_password_save"
     Then the following fields should have an error:
       | change_password_plain_password_first |
-      # unmatching new passwords
+    # unmatching new passwords
     When I fill in the following:
       | change_password_current_password      | Abcd1234  |
       | change_password_plain_password_first  | Abcd1234  |
@@ -126,7 +126,7 @@ Feature: admin / admin
     And I press "change_password_save"
     Then the following fields should have an error:
       | change_password_plain_password_first |
-      #empty password
+    #empty password
     When I fill in the following:
       | change_password_current_password      | Abcd1234 |
       | change_password_plain_password_first  |          |
@@ -134,7 +134,15 @@ Feature: admin / admin
     And I press "change_password_save"
     Then the following fields should have an error:
       | change_password_plain_password_first |
-      # valid new password
+    # too common password
+    When I fill in the following:
+      | change_password_current_password      | Abcd1234 |
+      | change_password_plain_password_first  | Password123 |
+      | change_password_plain_password_second | Password123 |
+    And I press "change_password_save"
+    Then the following fields should have an error:
+      | change_password_plain_password_first |
+    # valid new password
     When I fill in the following:
       | change_password_current_password      | Abcd1234  |
       | change_password_plain_password_first  | Abcd12345 |
@@ -148,8 +156,8 @@ Feature: admin / admin
     And I click on "user-account, password-edit"
     And I fill in the following:
       | change_password_current_password      | Abcd12345 |
-      | change_password_plain_password_first  | Abcd1234  |
-      | change_password_plain_password_second | Abcd1234  |
+      | change_password_plain_password_first  | Abcd1234! |
+      | change_password_plain_password_second | Abcd1234! |
     And I press "change_password_save"
     Then the form should be valid
 

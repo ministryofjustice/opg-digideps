@@ -162,7 +162,15 @@ Feature: A deputy user edits their details
     And I press "change_password_save"
     Then the following fields should have an error:
       | change_password_plain_password_first |
-        # valid new password
+      #too common password
+    When I fill in the following:
+      | change_password_current_password | Abcd1234 |
+      | change_password_plain_password_first | Password123 |
+      | change_password_plain_password_second | Password123 |
+    And I press "change_password_save"
+    Then the following fields should have an error:
+      | change_password_plain_password_first |
+      # valid new password
     When I fill in the following:
       | change_password_current_password | Abcd1234 |
       | change_password_plain_password_first | Abcd12345 |

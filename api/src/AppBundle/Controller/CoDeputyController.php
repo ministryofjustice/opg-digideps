@@ -2,10 +2,11 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\User;
 use AppBundle\Service\CsvUploader;
+use AppBundle\Service\Formatter\RestFormatter;
 use AppBundle\Service\UserService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,15 +16,15 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CoDeputyController extends RestController
 {
+    private UserService $userService;
+    private EntityManagerInterface $em;
+    private RestFormatter $formatter;
 
-    /**
-     * @var UserService
-     */
-    private $userService;
-
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, EntityManagerInterface $em, RestFormatter $formatter)
     {
         $this->userService = $userService;
+        $this->em = $em;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -38,9 +39,7 @@ class CoDeputyController extends RestController
             ->where('u.coDeputyClientConfirmed = ?1')
             ->setParameter(1, true);
 
-        $count = $qb->getQuery()->getSingleScalarResult();
-
-        return $count;
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -49,7 +48,7 @@ class CoDeputyController extends RestController
      */
     public function add(Request $request)
     {
-        $data = $this->deserializeBodyContent($request, [
+        $data = $this->formatter->deserializeBodyContent($request, [
             'email' => 'notEmpty',
         ]);
 
@@ -65,7 +64,7 @@ class CoDeputyController extends RestController
 
         $this->userService->addUser($loggedInUser, $newUser, $data);
 
-        $this->setJmsSerialiserGroups(['user']);
+        $this->formatter->setJmsSerialiserGroups(['user']);
 
         return $newUser;
     }
@@ -84,7 +83,7 @@ class CoDeputyController extends RestController
             throw $this->createAccessDeniedException("User not authorised to update other user's data");
         }
 
-        $data = $this->deserializeBodyContent($request, ['email' => 'notEmpty']);
+        $data = $this->formatter->deserializeBodyContent($request, ['email' => 'notEmpty']);
         if (!empty($data['email'])) {
             $originalUser = clone $user;
             $user->setEmail($data['email']);
@@ -126,14 +125,13 @@ class CoDeputyController extends RestController
             }
         }
 
-        $conn = $this->getEntityManager()->getConnection();
+        $conn = $this->em->getConnection();
         $affected = 0;
         foreach (array_chunk($deputyNumbers, 500) as $chunk) {
             $sql = "UPDATE dd_user SET codeputy_client_confirmed = TRUE WHERE deputy_no IN ('" . implode("','", $chunk) . "')";
             $affected += $conn->exec($sql);
         }
 
-        $this->get('logger')->info('Received ' . count($data) . ' records, of which ' . $affected . ' were updated');
         return ['requested_mld_upgrades' => count($deputyNumbers), 'updated' => $affected, 'errors' => $retErrors];
     }
 }
