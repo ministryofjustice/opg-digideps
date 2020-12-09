@@ -11,7 +11,7 @@ class FileNameFixerTest extends KernelTestCase
 
     public function setUp(): void
     {
-        $this->projectDir = (self::bootKernel())->getProjectDir();
+        $this->projectDir = sprintf('%s/..', (self::bootKernel())->getProjectDir());
     }
 
     /**
@@ -20,7 +20,7 @@ class FileNameFixerTest extends KernelTestCase
      */
     public function removeWhiteSpaceBeforeFileExtension(string $originalFileName, string $expectedFileName)
     {
-        $sut = new FileNameFixer(new FinfoMimeTypeDetector());
+        $sut = new FileNameFixer(new FinfoMimeTypeDetector(), $this->projectDir);
         $fixedFilename = $sut->removeWhiteSpaceBeforeFileExtension($originalFileName);
         self::assertEquals($expectedFileName, $fixedFilename);
     }
@@ -42,7 +42,8 @@ class FileNameFixerTest extends KernelTestCase
     public function addMissingFileExtension(string $relativeFilePath, string $expectedFilename)
     {
         $sut = new FileNameFixer(new FinfoMimeTypeDetector(), $this->projectDir);
-        $alteredFileName = $sut->addMissingFileExtension($relativeFilePath);
+        $localPathToFile = sprintf('%s/%s', $this->projectDir, $relativeFilePath);
+        $alteredFileName = $sut->addMissingFileExtension($localPathToFile);
 
         self::assertEquals($expectedFilename, $alteredFileName);
     }
@@ -50,9 +51,10 @@ class FileNameFixerTest extends KernelTestCase
     public function missingExtensionFilesProvider()
     {
         return [
-            'jpg' => ['/tests/TestData/good-jpg', 'good-jpg.jpg'],
-            'pdf' => ['/tests/TestData/good-pdf', 'good-pdf.pdf'],
-            'png' => ['/tests/TestData/good-png', 'good-png.png'],
+            'jpeg' => ['tests/phpunit/TestData/good-jpeg', 'good-jpeg.jpeg'],
+            'pdf' => ['tests/phpunit/TestData/good-pdf', 'good-pdf.pdf'],
+            'png' => ['tests/phpunit/TestData/good-png', 'good-png.png'],
+            'Already has an extension' => ['tests/phpunit/TestData/good-jpeg.jpeg', 'good-jpeg.jpeg'],
         ];
     }
 }
