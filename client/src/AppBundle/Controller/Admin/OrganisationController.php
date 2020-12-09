@@ -252,12 +252,12 @@ class OrganisationController extends AbstractController
         $form->handleRequest($request);
 
         $organisation = $this->restClient->get('v2/organisation/' . $id, 'Organisation');
-        $userToremove = $this->restClient->get('user/' . $userId, 'User');
+        $userToRemove = $this->restClient->get('user/' . $userId, 'User');
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $currentUser = $this->getUser();
-                $this->organisationApi->removeUserFromOrganisation($organisation, $userToremove, $currentUser, AuditEvents::TRIGGER_ADMIN_USER_MANAGE_ORG_MEMBER);
+                $this->organisationApi->removeUserFromOrganisation($organisation, $userToRemove, $currentUser, AuditEvents::TRIGGER_ADMIN_USER_MANAGE_ORG_MEMBER);
 
                 $request->getSession()->getFlashBag()->add('notice', 'User has been removed from ' . $organisation->getName());
             } catch (\Throwable $e) {
@@ -273,8 +273,8 @@ class OrganisationController extends AbstractController
             'form' => $form->createView(),
             'summary' => [
                 ['label' => 'deletePage.summary.organisationName', 'value' => $organisation->getName()],
-                ['label' => 'deletePage.summary.userName', 'value' => $userToremove->getFullName()],
-                ['label' => 'deletePage.summary.userEmail', 'value' => $userToremove->getEmail()],
+                ['label' => 'deletePage.summary.userName', 'value' => $userToRemove->getFullName()],
+                ['label' => 'deletePage.summary.userEmail', 'value' => $userToRemove->getEmail()],
             ],
             'backLink' => $this->generateUrl('admin_organisation_view', ['id' => $organisation->getId()])
         ];
