@@ -156,6 +156,14 @@ final class AuditEvents
         return $event + $this->baseEvent($eventType);
     }
 
+    /**
+     * @param string $trigger, what caused the event
+     * @param User $addedUser, the user that was added to the org
+     * @param Organisation $organisation, the org the user has been added to
+     * @param User $addedBy, the user who added the the user to the org
+     * @return array|string[]
+     * @throws \Exception
+     */
     public function userAddedToOrg(string $trigger, User $addedUser, Organisation $organisation, User $addedBy)
     {
         $event = [
@@ -170,6 +178,14 @@ final class AuditEvents
         return $event + $this->baseEvent(AuditEvents::EVENT_USER_ADDED_TO_ORG);
     }
 
+    /**
+     * @param string $trigger, what caused the event
+     * @param User $removedUser, the user that was removed from the org
+     * @param Organisation $organisation, the org the user has been removed from
+     * @param User $removedBy, the user who removed the the user from the org
+     * @return array|string[]
+     * @throws \Exception
+     */
     public function userRemovedFromOrg(string $trigger, User $removedUser, Organisation $organisation, User $removedBy)
     {
         $event = [

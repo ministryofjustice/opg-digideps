@@ -21,6 +21,9 @@ class OrgUserMembershipSubscriber implements EventSubscriberInterface
         $this->dateTimeProvider = $dateTimeProvider;
     }
 
+    /**
+     * @return array|string[]
+     */
     public static function getSubscribedEvents()
     {
         return [
@@ -29,6 +32,9 @@ class OrgUserMembershipSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @param UserAddedToOrganisationEvent $event
+     */
     public function logUserAddedEvent(UserAddedToOrganisationEvent $event)
     {
         $auditEvent = (new AuditEvents($this->dateTimeProvider))
@@ -42,6 +48,9 @@ class OrgUserMembershipSubscriber implements EventSubscriberInterface
         $this->logger->notice('', $auditEvent);
     }
 
+    /**
+     * @param UserRemovedFromOrganisationEvent $event
+     */
     public function logUserRemovedEvent(UserRemovedFromOrganisationEvent $event)
     {
         $auditEvent = (new AuditEvents($this->dateTimeProvider))
