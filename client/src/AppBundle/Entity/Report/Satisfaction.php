@@ -101,9 +101,9 @@ class Satisfaction
 
     /**
      * @param string $deputyrole
-     * @return string
+     * @return Satisfaction
      */
-    public function setDeputyrole($deputyrole): string
+    public function setDeputyrole($deputyrole): Satisfaction
     {
         $this->deputyrole = $deputyrole;
         return $this;
@@ -119,9 +119,9 @@ class Satisfaction
 
     /**
      * @param string $reporttype
-     * @return string
+     * @return Satisfaction
      */
-    public function setReporttype($reporttype): string
+    public function setReporttype($reporttype): Satisfaction
     {
         $this->reporttype = $reporttype;
         return $this;
@@ -144,5 +144,4 @@ class Satisfaction
         $this->created = $created;
         return $this;
     }
-
 }

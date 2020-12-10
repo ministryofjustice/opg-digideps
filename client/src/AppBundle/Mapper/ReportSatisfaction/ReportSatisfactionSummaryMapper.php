@@ -35,12 +35,23 @@ class ReportSatisfactionSummaryMapper
      */
     private function generateApiUrl(ReportSatisfactionSummaryQuery $query)
     {
-        return sprintf ('%s?%s', self::API_ENDPOINT, http_build_query([
-                'fromDate' => $query->getStartDate(),
-                'toDate' => $query->getEndDate(),
-                'orderBy' => $query->getOrderBy(),
-                'order' => $query->getSortOrder()
-            ])
+        $queryArray = [
+            'orderBy' => $query->getOrderBy(),
+            'order' => $query->getSortOrder()
+        ];
+
+        if ($query->getStartDate()) {
+            $queryArray['fromDate'] = $query->getStartDate()->format('Y-m-d');
+        }
+
+        if ($query->getEndDate()) {
+            $queryArray['toDate'] = $query->getEndDate()->format('Y-m-d');
+        }
+
+        return sprintf(
+            '%s?%s',
+            self::API_ENDPOINT,
+            http_build_query($queryArray)
         );
     }
 }

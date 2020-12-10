@@ -5,6 +5,8 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Satisfaction;
 use AppBundle\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
+use DateTime;
+use Exception;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -68,9 +70,15 @@ class SatisfactionController extends RestController
         /* @var $repo EntityDir\Repository\SatisfactionRepository */
         $repo = $this->getRepository(EntityDir\Satisfaction::class);
 
+        $fromDate = $this->convertDateStringToDateTime($request->get('fromDate', ''));
+        $fromDate instanceof DateTime ? $fromDate->setTime(0, 0, 1) : null;
+
+        $toDate = $this->convertDateStringToDateTime($request->get('toDate', ''));
+        $toDate instanceof DateTime ? $toDate->setTime(23, 59, 59) : null;
+
         return $repo->findAllSatisfactionSubmissions(
-            $this->convertDateArrayToDateTime($request->get('fromDate', [])),
-            $this->convertDateArrayToDateTime($request->get('toDate', [])),
+            $fromDate,
+            $toDate,
             $request->get('orderBy', 'createdAt'),
             $request->get('order', 'ASC')
         );
@@ -93,11 +101,11 @@ class SatisfactionController extends RestController
 
     /**
      * @param array $date
-     * @return \DateTime|null
-     * @throws \Exception
+     * @return DateTime|null
+     * @throws Exception
      */
-    private function convertDateArrayToDateTime(array $date)
+    private function convertDateStringToDateTime(string $date)
     {
-        return (isset($date['date'])) ? new \DateTime($date['date']) : null;
+        return empty($date) ? null : new DateTime($date);
     }
 }

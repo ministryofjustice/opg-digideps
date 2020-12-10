@@ -45,6 +45,10 @@ RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec postgre
 RUN docker-php-ext-install pcntl zip opcache
 RUN docker-php-ext-enable opcache
 
+# Install pcov for faster coverage tooling
+RUN apk add --no-cache autoconf build-base
+RUN pecl install pcov && docker-php-ext-enable pcov
+
 # Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=false
 RUN if [[ $REQUIRE_XDEBUG = true ]] ; then \
@@ -52,10 +56,6 @@ RUN if [[ $REQUIRE_XDEBUG = true ]] ; then \
         pecl install xdebug-2.9.8; \
         docker-php-ext-enable $PHP_EXT_DIR/xdebug.so; \
     fi ;
-
-# Install pcov for faster coverage tooling
-RUN apk add --no-cache autoconf build-base
-RUN pecl install pcov && docker-php-ext-enable pcov
 
 # Route NGINX logs to stdout/stderr
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \

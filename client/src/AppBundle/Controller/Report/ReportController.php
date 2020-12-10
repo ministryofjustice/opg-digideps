@@ -20,7 +20,7 @@ use AppBundle\Service\Client\Internal\ReportApi;
 use AppBundle\Service\Client\Internal\SatisfactionApi;
 use AppBundle\Service\Client\Internal\UserApi;
 use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\CsvGeneratorService;
+use AppBundle\Service\Csv\TransactionsCsvGenerator;
 use AppBundle\Service\Redirector;
 use AppBundle\Service\ReportSubmissionService;
 use DateTime;
@@ -565,11 +565,11 @@ class ReportController extends AbstractController
      * @Route("/report/transactions-{reportId}.csv", name="report_transactions_csv")
      *
      * @param $reportId
-     * @param CsvGeneratorService $csvGenerator
+     * @param TransactionsCsvGenerator $csvGenerator
      *
      * @return Response
      */
-    public function transactionsCsvViewAction($reportId, CsvGeneratorService $csvGenerator)
+    public function transactionsCsvViewAction($reportId, TransactionsCsvGenerator $csvGenerator)
     {
         $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
 
