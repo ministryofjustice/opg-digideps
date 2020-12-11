@@ -73,7 +73,13 @@ class S3FileUploader
      */
     public function uploadFileAndPersistDocument(ReportInterface $report, string $body, string $fileName, bool $isReportPdf)
     {
-        $storageReference = sprintf('dd_doc_%s_%s', $report->getId(), $this->dateTimeProvider->getDateTime()->format('U'));
+        $storageReference = sprintf(
+            'dd_doc_%s_%s%s',
+            $report->getId(),
+            $this->dateTimeProvider->getDateTime()->format('U'),
+            // Append milliseconds to ensure the storage reference is unique
+            $this->dateTimeProvider->getDateTime()->format('v')
+        );
 
         $this->storage->store($storageReference, $body);
 

@@ -8,12 +8,10 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class FileNameFixer
 {
     private FinfoMimeTypeDetector $mimeTypeDetector;
-    private string $projectDir;
 
-    public function __construct(FinfoMimeTypeDetector $mimeTypeDetector, string $projectDir)
+    public function __construct(FinfoMimeTypeDetector $mimeTypeDetector)
     {
         $this->mimeTypeDetector = $mimeTypeDetector;
-        $this->projectDir = $projectDir;
     }
 
     /**

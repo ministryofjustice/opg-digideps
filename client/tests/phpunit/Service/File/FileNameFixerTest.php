@@ -15,7 +15,7 @@ class FileNameFixerTest extends KernelTestCase
     public function setUp(): void
     {
         $this->projectDir = sprintf('%s/..', (self::bootKernel())->getProjectDir());
-        $this->sut = new FileNameFixer(new FinfoMimeTypeDetector(), $this->projectDir);
+        $this->sut = new FileNameFixer(new FinfoMimeTypeDetector());
     }
 
     /**

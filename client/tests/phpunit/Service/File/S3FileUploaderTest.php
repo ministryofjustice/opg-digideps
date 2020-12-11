@@ -49,7 +49,7 @@ class S3FileUploaderTest extends KernelTestCase
         $fileContent = 'testcontent';
         $now = new DateTime();
         $report = ReportHelpers::createReport();
-        $expectedStorageRef = sprintf('dd_doc_%s_%s', $report->getId(), $now->format('U'));
+        $expectedStorageRef = sprintf('dd_doc_%s_%s%s', $report->getId(), $now->format('U'), $now->format('v'));
 
         $this->dateTimeProvider->getDateTime()->willReturn($now);
         $this->storage->store($expectedStorageRef, $fileContent)->shouldBeCalled();
