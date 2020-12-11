@@ -70,13 +70,14 @@ class S3FileUploaderTest extends KernelTestCase
     public function uploadSupportingFilesAndPersistDocuments_single_file()
     {
         $filePath = sprintf('%s/tests/phpunit/TestData/good-jpeg', $this->projectDir);
+        $fileBody = file_get_contents($filePath);
         $uploadedFile = new UploadedFile($filePath, 'good-jpeg');
         $files = [$uploadedFile];
 
         $report = ReportHelpers::createReport();
         $now = new DateTime();
 
-        $this->fileNameFixer->addMissingFileExtension($filePath)->shouldBeCalled()->willReturn('good-jpeg.jpeg');
+        $this->fileNameFixer->addMissingFileExtension($uploadedFile, $fileBody)->shouldBeCalled()->willReturn('good-jpeg.jpeg');
         $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension('good-jpeg.jpeg')->shouldBeCalled()->willReturn('good-jpeg.jpeg');
         $this->dateTimeProvider->getDateTime()->willReturn($now);
         $this->storage->store(Argument::cetera())->shouldBeCalled();
@@ -96,7 +97,7 @@ class S3FileUploaderTest extends KernelTestCase
         $report = ReportHelpers::createReport();
         $now = new DateTime();
 
-        $this->fileNameFixer->addMissingFileExtension(Argument::type('string'))->shouldBeCalledTimes(3)->willReturn('the-fixed-file-name');
+        $this->fileNameFixer->addMissingFileExtension(Argument::cetera())->shouldBeCalledTimes(3)->willReturn('the-fixed-file-name');
         $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension('the-fixed-file-name')->shouldBeCalledTimes(3)->willReturn('the-fixed-file-name');
 
         $this->dateTimeProvider->getDateTime()->willReturn($now);
