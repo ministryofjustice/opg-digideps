@@ -1,17 +1,21 @@
 <?php declare(strict_types=1);
 
+
 namespace AppBundle\Service\File;
 
 use League\MimeTypeDetection\FinfoMimeTypeDetector;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileNameFixerTest extends KernelTestCase
 {
     private string $projectDir;
+    private FileNameFixer $sut;
 
     public function setUp(): void
     {
         $this->projectDir = sprintf('%s/..', (self::bootKernel())->getProjectDir());
+        $this->sut = new FileNameFixer(new FinfoMimeTypeDetector(), $this->projectDir);
     }
 
     /**
@@ -20,8 +24,7 @@ class FileNameFixerTest extends KernelTestCase
      */
     public function removeWhiteSpaceBeforeFileExtension(string $originalFileName, string $expectedFileName)
     {
-        $sut = new FileNameFixer(new FinfoMimeTypeDetector(), $this->projectDir);
-        $fixedFilename = $sut->removeWhiteSpaceBeforeFileExtension($originalFileName);
+        $fixedFilename = $this->sut->removeWhiteSpaceBeforeFileExtension($originalFileName);
         self::assertEquals($expectedFileName, $fixedFilename);
     }
 
@@ -39,11 +42,12 @@ class FileNameFixerTest extends KernelTestCase
      * @dataProvider missingExtensionFilesProvider
      * @test
      */
-    public function addMissingFileExtension(string $relativeFilePath, string $expectedFilename)
+    public function addMissingFileExtension(string $relativeFilePath, string $fileName, string $expectedFilename)
     {
-        $sut = new FileNameFixer(new FinfoMimeTypeDetector(), $this->projectDir);
-        $localPathToFile = sprintf('%s/%s', $this->projectDir, $relativeFilePath);
-        $alteredFileName = $sut->addMissingFileExtension($localPathToFile);
+        $filePath = sprintf('%s/%s', $this->projectDir, $relativeFilePath);
+        $uploadedFile = new UploadedFile($filePath, $fileName);
+        $fileBody = file_get_contents($filePath);
+        $alteredFileName = $this->sut->addMissingFileExtension($uploadedFile, $fileBody);
 
         self::assertEquals($expectedFilename, $alteredFileName);
     }
@@ -51,10 +55,10 @@ class FileNameFixerTest extends KernelTestCase
     public function missingExtensionFilesProvider()
     {
         return [
-            'jpeg' => ['tests/phpunit/TestData/good-jpeg', 'good-jpeg.jpeg'],
-            'pdf' => ['tests/phpunit/TestData/good-pdf', 'good-pdf.pdf'],
-            'png' => ['tests/phpunit/TestData/good-png', 'good-png.png'],
-            'Already has an extension' => ['tests/phpunit/TestData/good-jpeg.jpeg', 'good-jpeg.jpeg'],
+            'jpeg' => ['tests/phpunit/TestData/good-jpeg', 'good-jpeg', 'good-jpeg.jpeg'],
+            'pdf' => ['tests/phpunit/TestData/good-pdf', 'good-pdf', 'good-pdf.pdf'],
+            'png' => ['tests/phpunit/TestData/good-png', 'good-png', 'good-png.png'],
+            'Already has an extension' => ['tests/phpunit/TestData/good-jpeg.jpeg', 'good-jpeg.jpeg', 'good-jpeg.jpeg'],
         ];
     }
 }

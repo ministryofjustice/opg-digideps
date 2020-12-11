@@ -56,7 +56,7 @@ class S3FileUploader
         /** @var string $body */
         $body = file_get_contents($file->getPathname());
 
-        $fileName = $this->fileNameFixer->addMissingFileExtension($file->getPathname());
+        $fileName = $this->fileNameFixer->addMissingFileExtension($file, $body);
         $fileName = $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension($fileName);
 
         return [$body, $fileName];

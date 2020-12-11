@@ -3,6 +3,7 @@
 namespace AppBundle\Service\File;
 
 use League\MimeTypeDetection\FinfoMimeTypeDetector;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileNameFixer
 {
@@ -31,14 +32,16 @@ class FileNameFixer
      * @param string $relativeFilePath
      * @return string
      */
-    public function addMissingFileExtension(string $relativeFilePath): string
+    public function addMissingFileExtension(UploadedFile $uploadedFile, string $fileBody): string
     {
-        $fileInfo = pathinfo($relativeFilePath);
+        if (empty($uploadedFile->getClientOriginalExtension())) {
+            $mimeType = $this->mimeTypeDetector->detectMimeType($uploadedFile->getPathName(), $fileBody);
+            $fileExtension = $this->mimeToExtension($mimeType);
 
-        $mimeType = $this->mimeTypeDetector->detectMimeType($relativeFilePath, file_get_contents($relativeFilePath));
-        $fileExtension = $this->mimeToExtension($mimeType);
+            return sprintf('%s.%s', $uploadedFile->getClientOriginalName(), $fileExtension);
+        }
 
-        return sprintf('%s.%s', $fileInfo['filename'], $fileExtension);
+        return $uploadedFile->getClientOriginalName();
     }
 
     /**
