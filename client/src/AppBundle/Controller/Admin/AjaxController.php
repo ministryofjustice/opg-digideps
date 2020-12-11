@@ -4,7 +4,7 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Service\Client\RestClient;
-use Predis\Client;
+use Predis\ClientInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -52,10 +52,10 @@ class AjaxController extends AbstractController
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      *
      * @param Request $request
-     * @param Client $redisClient
+     * @param ClientInterface $redisClient
      * @return JsonResponse
      */
-    public function uploadUsersAjaxAction(Request $request, Client $redisClient)
+    public function uploadUsersAjaxAction(Request $request, ClientInterface $redisClient)
     {
         $chunkId = 'chunk' . $request->get('chunk');
 
