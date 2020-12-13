@@ -38,6 +38,11 @@ workflows:
           filters: { branches: { ignore: [ main ] } }
           tf_command: apply
 
+      - protect-workspace:
+          name: protect branch workspace
+          requires: [ apply environment ]
+          filters: { branches: { ignore: [ main ] } }
+
       - client-unit-test:
           name: client unit test
           requires: [ build pr ]
@@ -55,7 +60,7 @@ workflows:
       - approve:
           name: approval for further testing
           type: approval
-          requires: [ api unit test, client unit test, apply environment ]
+          requires: [ api unit test, client unit test, protect branch workspace ]
           filters: { branches: { ignore: [ master ] } }
 
       - run-task:
@@ -291,6 +296,16 @@ workflows:
           notify_slack: true
           timeout: 3000
 
+  nightly_workspace_deletion:
+    triggers:
+      - schedule:
+          cron: "00 00 * * *"
+          filters: { branches: { only: [ DDPB-3645 ] } }
+    jobs:
+      - destroy-workspaces:
+          name: destroy non protected workspaces
+          filters: { branches: { only: [ DDPB-3645 ] } }
+
 orbs:
   aws-cli: circleci/aws-cli@0.1.13
   slack: circleci/slack@3.4.2
@@ -356,6 +371,14 @@ orbs:
           - run:
               name: Install Terraform
               command: sudo unzip terraform_${TF_VERSION}_linux_amd64.zip -d /bin
+      install_workspace_manager:
+        steps:
+          - run:
+              name: install workspace manager
+              command: |
+                wget https://github.com/TomTucka/terraform-workspace-manager/releases/download/v0.3.0/terraform-workspace-manager_Linux_x86_64.tar.gz -O $HOME/terraform-workspace-manager.tar.gz
+                sudo tar -xvf $HOME/terraform-workspace-manager.tar.gz -C /usr/local/bin
+                sudo chmod +x /usr/local/bin/terraform-workspace-manager
 
 jobs:
   lint:
@@ -435,6 +458,42 @@ jobs:
             - run:
                 name: tag pact commit with v<x>_production
                 command: pact_tags
+
+  protect-workspace:
+    executor: terraform/terraform
+    resource_class: small
+    working_directory: ~/project/environment
+    steps:
+      - checkout:
+          path: ~/project
+      - terraform/install
+      - terraform/install_workspace_manager
+      - run:
+          name: Set environment
+          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
+      - run:
+          name: Add workspace to protected list
+          command: terraform-workspace-manager -register-workspace="${TF_WORKSPACE}" -time-to-protect=24 -aws-account-id=248804316466 -aws-iam-role=digideps-ci
+
+  destroy-workspaces:
+    executor: terraform/terraform
+    resource_class: small
+    working_directory: ~/project/environment
+    steps:
+      - checkout:
+          path: ~/project
+      - terraform/install
+      - terraform/install_workspace_manager
+      - attach_workspace: { at: ~/project }
+      - run:
+          name: destroy unprotected workspaces
+          command: |
+            unset TF_WORKSPACE
+            ./scripts/workspace_cleanup.sh $(terraform-workspace-manager -protected-workspaces=true -aws-account-id=248804316466 -aws-iam-role=digideps-ci)
+      - slack/status:
+          channel: opg-digideps-devs
+          failure_message: nightly destroy workspaces has failed.
+          success_message: nightly destroy workspaces has succeeded.
 
   build:
     docker:
