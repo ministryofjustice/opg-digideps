@@ -90,16 +90,10 @@ workflows:
           task_name: restore
 
       - cleanup:
-          name: approve destroy environment
+          name: destroy environment
           type: approval
           requires: [ restore environment ]
           filters: { branches: { ignore: [ main ] } }
-
-      - terraform-command:
-          name: destroy environment
-          requires: [ approve destroy environment ]
-          filters: { branches: { ignore: [ main ] } }
-          tf_command: destroy
 
   integration:
     jobs:
