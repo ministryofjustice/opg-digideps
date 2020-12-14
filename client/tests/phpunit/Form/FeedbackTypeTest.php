@@ -11,7 +11,8 @@ class FeedbackTypeTest extends TypeTestCase {
      */
     public function testSubmitInvalidData()
     {
-        $form = $this->factory->create(FeedbackType::class);
+        $feedback = new FeedbackType();
+        $form = $this->factory->create(FeedbackType::class, $feedback);
 
         $formData = [
             'old_question' => 'some value', // honeypot field
