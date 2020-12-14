@@ -12,7 +12,7 @@ class FeedbackType extends AbstractType
 {
     use Traits\HasTranslatorTrait;
 
-    public const HONEYPOT_FIELD_NAME = 'question';
+    public const HONEYPOT_FIELD_NAME = 'old_question';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
