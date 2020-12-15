@@ -120,20 +120,18 @@ class OrganisationController extends AbstractController
             try {
                 $email = $form->getData()->getEmail();
                 $existingUser = $this->restClient->get('user/get-team-names-by-email/' . $email, 'User');
+                $currentUser = $this->getUser();
 
                 if ($existingUser->getId()) {
                     // existing users just get added to the organisation
-                    $this->restClient->put(
-                        'v2/organisation/' . $organisation->getId() . '/user/' . $existingUser->getId(),
-                        ''
-                    );
+                    $this->organisationApi->addUserToOrganisation($organisation, $existingUser, $currentUser, AuditEvents::TRIGGER_ORG_USER_MANAGE_ORG_MEMBER);
                 } else {
                     /** @var EntityDir\User $user */
                     $userToCreate = $form->getData();
 
                     /** @var EntityDir\User $user */
                     $createdUser = $this->userApi->createOrgUser($userToCreate);
-                    $this->organisationApi->addUserToOrganisation($organisation, $createdUser);
+                    $this->organisationApi->addUserToOrganisation($organisation, $createdUser, $currentUser, AuditEvents::TRIGGER_ORG_USER_MANAGE_ORG_MEMBER);
                 }
 
                 return $this->redirectToRoute('org_organisation_view', ['id' => $organisation->getId()]);
@@ -203,7 +201,7 @@ class OrganisationController extends AbstractController
             $editedUser = $form->getData();
 
             try {
-                $this->userApi->update($userToEdit, $editedUser, AuditEvents::TRIGGER_DEPUTY_USER, ['org_team_add']);
+                $this->userApi->update($userToEdit, $editedUser, AuditEvents::TRIGGER_DEPUTY_USER_EDIT, ['org_team_add']);
                 $this->addFlash('notice', 'The user has been edited');
 
                 return $this->redirectToRoute('org_organisation_view', ['id' => $organisation->getId()]);
@@ -236,23 +234,30 @@ class OrganisationController extends AbstractController
     {
         try {
             $organisation = $this->restClient->get('v2/organisation/' . $orgId, 'Organisation');
-            $user = $organisation->getUserById($userId);
+            $userToRemove = $organisation->getUserById($userId);
         } catch (RestClientException $e) {
             throw $this->createNotFoundException('Organisation not found');
         }
 
-        if (!($user instanceof EntityDir\User)) {
+        if (!($userToRemove instanceof EntityDir\User)) {
             throw $this->createNotFoundException();
         }
 
-        $this->denyAccessUnlessGranted('delete-user', $user, 'Access denied');
+        $this->denyAccessUnlessGranted('delete-user', $userToRemove, 'Access denied');
 
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->restClient->delete('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId());
+                $currentUser = $this->getUser();
+
+                $this->organisationApi->removeUserFromOrganisation(
+                    $organisation,
+                    $userToRemove,
+                    $currentUser,
+                    AuditEvents::TRIGGER_ORG_USER_MANAGE_ORG_MEMBER
+                );
 
                 $this->addFlash('notice', 'User account removed from organisation');
             } catch (\Throwable $e) {
@@ -273,8 +278,8 @@ class OrganisationController extends AbstractController
             'translationDomain' => 'org-organisation',
             'form' => $form->createView(),
             'summary' => [
-                ['label' => 'deletePage.summary.fullName', 'value' => $user->getFullName()],
-                ['label' => 'deletePage.summary.email', 'value' => $user->getEmail()],
+                ['label' => 'deletePage.summary.fullName', 'value' => $userToRemove->getFullName()],
+                ['label' => 'deletePage.summary.email', 'value' => $userToRemove->getEmail()],
             ],
             'backLink' => $this->generateUrl('org_organisation_view', ['id' => $organisation->getId()]),
         ];

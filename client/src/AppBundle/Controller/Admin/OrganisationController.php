@@ -7,6 +7,8 @@ use AppBundle\Entity\Organisation;
 use AppBundle\Entity\User;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\Audit\AuditEvents;
+use AppBundle\Service\Client\Internal\OrganisationApi;
 use AppBundle\Service\Client\RestClient;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,13 +25,16 @@ class OrganisationController extends AbstractController
 {
     private RestClient $restClient;
     private LoggerInterface $logger;
+    private OrganisationApi $organisationApi;
 
     public function __construct(
         RestClient $restClient,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        OrganisationApi $organisationApi
     ) {
         $this->restClient = $restClient;
         $this->logger = $logger;
+        $this->organisationApi = $organisationApi;
     }
 
     /**
@@ -197,13 +202,13 @@ class OrganisationController extends AbstractController
             try {
                 $errors = [];
                 $email = $form->get('email')->getData();
-                $user = $this->restClient->get('user/get-one-by/email/' . $email, 'User');
+                $userToAdd = $this->restClient->get('user/get-one-by/email/' . $email, 'User');
 
-                if (!$user->isDeputyOrg()) {
+                if (!$userToAdd->isDeputyOrg()) {
                     $errors[] = 'form.email.notOrgUserError';
                 }
 
-                if ($organisation->hasUser($user)) {
+                if ($organisation->hasUser($userToAdd)) {
                     $errors[] = 'form.email.alreadyInOrgError';
                 }
             } catch (RestClientException $e) {
@@ -216,20 +221,22 @@ class OrganisationController extends AbstractController
                 $errorMessage = $translator->trans($error, [], 'admin-organisation-users');
                 $form->get('email')->addError(new FormError($errorMessage));
             }
-            $user = new User();
+            $userToAdd = new User();
         }
 
         if ($form->get('confirm')->isClicked()) {
-            $this->restClient->put('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId(), '');
-            $request->getSession()->getFlashBag()->add('notice', $user->getFullName() . ' has been added to ' . $organisation->getName());
+            $currentUser = $this->getUser();
+            $this->organisationApi->addUserToOrganisation($organisation, $userToAdd, $currentUser, AuditEvents::TRIGGER_ADMIN_USER_MANAGE_ORG_MEMBER);
 
-            return$this->redirectToRoute('admin_organisation_view', ['id' => $organisation->getId()]);
+            $request->getSession()->getFlashBag()->add('notice', $userToAdd->getFullName() . ' has been added to ' . $organisation->getName());
+
+            return $this->redirectToRoute('admin_organisation_view', ['id' => $organisation->getId()]);
         }
 
         return [
             'form' => $form->createView(),
             'organisation' => $organisation,
-            'user' => isset($user) ? $user : new User(),
+            'user' => isset($userToAdd) ? $userToAdd : new User(),
             'backLink' => $this->generateUrl('admin_organisation_view', ['id' => $organisation->getId()])
         ];
     }
@@ -245,11 +252,13 @@ class OrganisationController extends AbstractController
         $form->handleRequest($request);
 
         $organisation = $this->restClient->get('v2/organisation/' . $id, 'Organisation');
-        $user = $this->restClient->get('user/' . $userId, 'User');
+        $userToRemove = $this->restClient->get('user/' . $userId, 'User');
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->restClient->delete('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId());
+                $currentUser = $this->getUser();
+                $this->organisationApi->removeUserFromOrganisation($organisation, $userToRemove, $currentUser, AuditEvents::TRIGGER_ADMIN_USER_MANAGE_ORG_MEMBER);
+
                 $request->getSession()->getFlashBag()->add('notice', 'User has been removed from ' . $organisation->getName());
             } catch (\Throwable $e) {
                 $this->logger->error($e->getMessage());
@@ -264,8 +273,8 @@ class OrganisationController extends AbstractController
             'form' => $form->createView(),
             'summary' => [
                 ['label' => 'deletePage.summary.organisationName', 'value' => $organisation->getName()],
-                ['label' => 'deletePage.summary.userName', 'value' => $user->getFullName()],
-                ['label' => 'deletePage.summary.userEmail', 'value' => $user->getEmail()],
+                ['label' => 'deletePage.summary.userName', 'value' => $userToRemove->getFullName()],
+                ['label' => 'deletePage.summary.userEmail', 'value' => $userToRemove->getEmail()],
             ],
             'backLink' => $this->generateUrl('admin_organisation_view', ['id' => $organisation->getId()])
         ];

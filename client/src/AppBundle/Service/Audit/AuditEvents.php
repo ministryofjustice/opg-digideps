@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service\Audit;
 
+use AppBundle\Entity\Organisation;
 use AppBundle\Entity\User;
 use AppBundle\Service\Time\DateTimeProvider;
 use DateTime;
@@ -14,6 +15,8 @@ final class AuditEvents
     const EVENT_CLIENT_DELETED = 'CLIENT_DELETED';
     const EVENT_DEPUTY_DELETED = 'DEPUTY_DELETED';
     const EVENT_ADMIN_DELETED = 'ADMIN_DELETED';
+    const EVENT_USER_ADDED_TO_ORG = 'USER_ADDED_TO_ORG';
+    const EVENT_USER_REMOVED_FROM_ORG = 'USER_REMOVED_FROM_ORG';
 
     const TRIGGER_ADMIN_USER_EDIT = 'ADMIN_USER_EDIT';
     const TRIGGER_ADMIN_BUTTON = 'ADMIN_BUTTON';
@@ -21,6 +24,8 @@ final class AuditEvents
     const TRIGGER_DEPUTY_USER_EDIT_SELF = 'DEPUTY_USER_EDIT_SELF';
     const TRIGGER_DEPUTY_USER_EDIT = 'DEPUTY_USER_EDIT';
     const TRIGGER_CODEPUTY_CREATED = 'CODEPUTY_CREATED';
+    const TRIGGER_ORG_USER_MANAGE_ORG_MEMBER = 'ORG_USER_MANAGE_ORG_MEMBER';
+    const TRIGGER_ADMIN_USER_MANAGE_ORG_MEMBER = 'ADMIN_USER_MANAGE_ORG_USER';
 
     /**
      * @var DateTimeProvider
@@ -101,17 +106,6 @@ final class AuditEvents
         return $event + $this->baseEvent(AuditEvents::EVENT_CLIENT_EMAIL_CHANGED);
     }
 
-    /**
-     * @param string $eventName
-     * @return array
-     */
-    private function baseEvent(string $eventName): array
-    {
-        return [
-            'event' => $eventName,
-            'type' => 'audit'
-        ];
-    }
 
     /**
      * @param string $trigger
@@ -160,5 +154,62 @@ final class AuditEvents
             AuditEvents::EVENT_ADMIN_DELETED : AuditEvents::EVENT_DEPUTY_DELETED;
 
         return $event + $this->baseEvent($eventType);
+    }
+
+    /**
+     * @param string $trigger, what caused the event
+     * @param User $addedUser, the user that was added to the org
+     * @param Organisation $organisation, the org the user has been added to
+     * @param User $addedBy, the user who added the the user to the org
+     * @return array|string[]
+     * @throws \Exception
+     */
+    public function userAddedToOrg(string $trigger, User $addedUser, Organisation $organisation, User $addedBy)
+    {
+        $event = [
+            'trigger' => $trigger,
+            'added_user_email' => $addedUser->getEmail(),
+            'organisation_identifier' => $organisation->getEmailIdentifier(),
+            'organisation_id' => $organisation->getId(),
+            'added_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            'added_by' => $addedBy->getEmail(),
+        ];
+
+        return $event + $this->baseEvent(AuditEvents::EVENT_USER_ADDED_TO_ORG);
+    }
+
+    /**
+     * @param string $trigger, what caused the event
+     * @param User $removedUser, the user that was removed from the org
+     * @param Organisation $organisation, the org the user has been removed from
+     * @param User $removedBy, the user who removed the the user from the org
+     * @return array|string[]
+     * @throws \Exception
+     */
+    public function userRemovedFromOrg(string $trigger, User $removedUser, Organisation $organisation, User $removedBy)
+    {
+        $event = [
+            'trigger' => $trigger,
+            'removed_user_email' => $removedUser->getEmail(),
+            'removed_user_name' => $removedUser->getFullName(),
+            'organisation_identifier' => $organisation->getEmailIdentifier(),
+            'organisation_id' => $organisation->getId(),
+            'removed_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            'removed_by' => $removedBy->getEmail(),
+        ];
+
+        return $event + $this->baseEvent(AuditEvents::EVENT_USER_REMOVED_FROM_ORG);
+    }
+
+    /**
+     * @param string $eventName
+     * @return array
+     */
+    private function baseEvent(string $eventName): array
+    {
+        return [
+            'event' => $eventName,
+            'type' => 'audit'
+        ];
     }
 }
