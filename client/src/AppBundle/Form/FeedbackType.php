@@ -6,17 +6,27 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints as Constraints;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class FeedbackType extends AbstractType
 {
-    use Traits\HasTranslatorTrait;
+    /**
+     * @var TranslatorInterface
+     */
+    private TranslatorInterface $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
+    public const HONEYPOT_FIELD_NAME = 'old_question';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $satisfactionScores = range(5, 1);
         $satisfactionLabels = array_map(function($score) {
-            return $this->translate('form.satisfactionLevel.choices.' . $score, [], 'feedback');
+            return $this->translator->trans('form.satisfactionLevel.choices.' . $score, [], 'feedback');
         }, $satisfactionScores);
 
         $builder
@@ -37,9 +47,6 @@ class FeedbackType extends AbstractType
             ])
             ->add('email', FormTypes\EmailType::class, [
                 'required' => false,
-                'constraints' => [
-                    new Constraints\Email(['message' => 'login.email.inValid'])
-                ]
             ])
             ->add('phone', FormTypes\TextType::class, [
                 'required' => false,
@@ -51,6 +58,7 @@ class FeedbackType extends AbstractType
                 'required' => false,
                 'placeholder' => false,
             ])
+            ->add(self::HONEYPOT_FIELD_NAME, FormTypes\TextType::class, ['required' => false])
             ->add('save', FormTypes\SubmitType::class);
     }
 

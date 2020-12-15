@@ -40,9 +40,13 @@
             {{ form_input(form.email, 'form.email') }}
             {{ form_input(form.phone, 'form.phone') }}
 
+            {{ form_widget(form.old_question, {'attr': {'style': 'display:none!important', 'tabindex': '-1',
+                'autocomplete': 'off'}}) }}
+
             {{ form_checkbox_group(form.satisfactionLevel, 'form.satisfactionLevel', {
                 legendClass: 'govuk-label--m'
             }) }}
+
             <div style="clear:both;display:inline-block;height:0px;" data-module="opg-toggleable-submit">
                 {{ form_submit(form.save, 'form.send') }}
             </div>

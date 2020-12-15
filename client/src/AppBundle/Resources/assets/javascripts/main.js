@@ -101,7 +101,11 @@ $(document).ready(function () {
   if ($submitButtons !== null) {
     $submitButtons.forEach(function ($el) {
       $el.addEventListener('click', function ($e) {
-        this.classList.add('opg-submit-link--disabled', 'govuk-button--disabled')
+        $e.target.classList.add('opg-submit-link--disabled', 'govuk-button--disabled')
+
+        setTimeout(function () {
+          $e.target.classList.remove('opg-submit-link--disabled', 'govuk-button--disabled')
+        }, 3000)
       })
     })
   }
