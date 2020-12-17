@@ -24,7 +24,7 @@
         <p class="govuk-body">{{ 'page.yourNextReport' | trans }}</p>
     </div>
 
-    <a href="{{ path('ndr_index') }}" role="button" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary govuk-!-margin-bottom-7" data-module="govuk-button">
+    <a href="{{ path('ndr_index') }}" role="button" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary govuk-!-margin-bottom-7 behat-link-return-to-reports-page" data-module="govuk-button">
         {{ 'page.yourReportsButton' | trans }}
     </a>
 
@@ -49,11 +49,5 @@
 
     {{ form_end(form) }}
     {# end feedback form #}
-
-    {% if app.user.isDeputyOrg() %}
-        <a href="{{path('org_dashboard')}}" class="behat-link-return-to-org-dashboard">{{ 'page.returnToDashboard' | trans }}</a>
-    {% else %}
-        <a href="{{ path('lay_home')}}" class="behat-link-return-to-reports-page">{{ 'page.returnToHomepage' | trans }}</a>
-    {% endif %}
 
 {% endblock %}
