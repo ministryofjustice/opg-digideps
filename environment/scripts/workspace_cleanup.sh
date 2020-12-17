@@ -22,7 +22,7 @@ do
       echo "protected workspace: $workspace"
       ;;
     *)
-      if [[ $workspace == *"prod"* ]] || [[ $workspace == *"dependabot"* ]]
+      if [[ $workspace == *"prod"* ]]
       then
         echo "check on this workspace: $workspace as it has reserved word fragment in the title..."
       else
