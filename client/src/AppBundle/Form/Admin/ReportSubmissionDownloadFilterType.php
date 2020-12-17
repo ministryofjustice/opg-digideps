@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form\Admin;
 
+use DateTime;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -36,19 +37,6 @@ class ReportSubmissionDownloadFilterType extends AbstractType
             ->addEventListener(FormEvents::POST_SUBMIT, [$this, 'onPostSubmit']);
     }
 
-    /**
-     * @param FormEvent $event
-     */
-    public function onPostSubmit(FormEvent $event)
-    {
-        $entity = $event->getData();
-
-        if ($entity->getEndDate() instanceof \DateTime) {
-            $endDate = $entity->getEndDate();
-            $entity->setEndDate($endDate->setTime(23, 59, 59));
-        }
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
@@ -56,7 +44,7 @@ class ReportSubmissionDownloadFilterType extends AbstractType
         ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'admin';
     }
