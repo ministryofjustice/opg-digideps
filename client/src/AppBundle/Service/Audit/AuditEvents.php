@@ -5,6 +5,7 @@ namespace AppBundle\Service\Audit;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\User;
 use AppBundle\Service\Time\DateTimeProvider;
+use AppBundle\Entity\Report\Report;
 use DateTime;
 
 final class AuditEvents
@@ -15,6 +16,7 @@ final class AuditEvents
     const EVENT_CLIENT_DELETED = 'CLIENT_DELETED';
     const EVENT_DEPUTY_DELETED = 'DEPUTY_DELETED';
     const EVENT_ADMIN_DELETED = 'ADMIN_DELETED';
+    const EVENT_REPORT_UNSUBMITTED = 'REPORT_UNSUBMITTED';
     const EVENT_USER_ADDED_TO_ORG = 'USER_ADDED_TO_ORG';
     const EVENT_USER_REMOVED_FROM_ORG = 'USER_REMOVED_FROM_ORG';
 
@@ -199,6 +201,25 @@ final class AuditEvents
         ];
 
         return $event + $this->baseEvent(AuditEvents::EVENT_USER_REMOVED_FROM_ORG);
+    }
+
+    /**
+     * @param string $trigger, what caused the event
+     * @param User $deputyOnReport,
+     * @param Report $unsubmittedReport
+     * @return array|string[]
+     * @throws \Exception
+     */
+    public function reportUnsubmitted(string $trigger, Report $unsubmittedReport, User $deputyOnReport)
+    {
+        $event = [
+            'trigger' => $trigger,
+            'deputy_user' => $deputyOnReport->getId(),
+            'report_id' => $unsubmittedReport->getId(),
+            'date_unsubmitted' => $unsubmittedReport->getUnSubmitDate(),
+        ];
+
+        return $event + $this->baseEvent(AuditEvents::EVENT_REPORT_UNSUBMITTED);
     }
 
     /**
