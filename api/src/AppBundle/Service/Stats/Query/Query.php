@@ -46,11 +46,11 @@ abstract class Query
         $query = $this->em->createNativeQuery($this->constructQuery($sq), $rsm);
 
         if ($sq->queryHasDateConstraint()) {
-            $startDate = (clone $sq->getStartDate());
-            $endDate = (clone $sq->getEndDate());
+            $startDate = (clone $sq->getStartDate())->setTime(0, 0, 0);
+            $endDate = (clone $sq->getEndDate())->setTime(23, 59, 59);
 
-            $query->setParameter('startDate', $startDate->format('Y-m-d'));
-            $query->setParameter('endDate', $endDate->format('Y-m-d'));
+            $query->setParameter('startDate', $startDate->format('Y-m-d H:i:s'));
+            $query->setParameter('endDate', $endDate->format('Y-m-d H:i:s'));
         }
 
         return $query->getResult();
