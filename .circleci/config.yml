@@ -480,6 +480,9 @@ jobs:
       - terraform/install_workspace_manager
       - attach_workspace: { at: ~/project }
       - run:
+          name: initialise terraform
+          command: terraform init
+      - run:
           name: destroy unprotected workspaces
           command: |
             unset TF_WORKSPACE
