@@ -182,8 +182,8 @@ class ReportSubmissionControllerTest extends AbstractTestController
      */
     public function testGetCaserecDataRetrievesWithinGivenDateRangesInclusive(string $fromDate, string $toDate, array $expectedOutcomes)
     {
-        $this->updateReportSubmissionByIdWithNewDateTime(1, '2018-01-01 12:00:00');
-        $this->updateReportSubmissionByIdWithNewDateTime(2, '2018-01-31 12:00:00');
+        $this->updateReportSubmissionByIdWithNewDateTime(1, '2018-01-01');
+        $this->updateReportSubmissionByIdWithNewDateTime(2, '2018-01-31');
         self::fixtures()->flush();
 
         $data = $this->makeRequestAndReturnResults(
