@@ -444,7 +444,7 @@ class ReportController extends AbstractController
         return [
             'report' => $report,
             'form' => $form->createView(),
-            'homePathName' => $this->getUser()->isDeputy() ? 'lay_home' : "org_dashboard"
+            'homePathName' => $this->getUser()->isLayDeputy() ? 'lay_home' : "org_dashboard"
         ];
     }
 
