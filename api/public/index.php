@@ -9,9 +9,13 @@ require dirname(__DIR__) . '/app/AppKernel.php';
 if ($_SERVER['APP_DEBUG']) {
     umask(0000);
 
-    // Excluding notices as they include array undefined index errors which we rely on, e.g.
-    // $ary['test'] = null;
-    // Trying to access $ary['test'] would throw a notice error which would also throw an app error
+    /**
+     * Excluding notices as they include array undefined index errors which we rely on, e.g. :
+     *
+     * $ary['test'] = null;
+     *
+     * Trying to access $ary['test'] would throw a notice error and app error
+     */
     Debug::enable(E_ALL & ~E_NOTICE);
 }
 
