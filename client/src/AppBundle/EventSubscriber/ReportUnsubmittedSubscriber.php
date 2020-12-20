@@ -4,27 +4,19 @@
 namespace AppBundle\EventSubscriber;
 
 use AppBundle\Event\ReportUnsubmittedEvent;
-use AppBundle\Service\Client\Internal\ReportApi;
-use AppBundle\Service\Mailer\Mailer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use AppBundle\Event\UserAddedToOrganisationEvent;
-use AppBundle\Event\UserRemovedFromOrganisationEvent;
 use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 
 class ReportUnsubmittedSubscriber implements EventSubscriberInterface
 {
-    /** @var ReportApi */
-    private $reportApi;
-
     private LoggerInterface $logger;
 
     private DateTimeProvider $dateTimeProvider;
 
-    public function __construct(LoggerInterface $logger, DateTimeProvider $dateTimeProvider, ReportApi $reportApi)
+    public function __construct(LoggerInterface $logger, DateTimeProvider $dateTimeProvider)
     {
-        $this->reportApi = $reportApi;
         $this->logger = $logger;
         $this->dateTimeProvider = $dateTimeProvider;
     }
@@ -41,13 +33,13 @@ class ReportUnsubmittedSubscriber implements EventSubscriberInterface
      * @param ReportUnsubmittedEvent $event
      * @throws \Exception
      */
-    public function logUserAddedEvent(ReportUnsubmittedEvent $event)
+    public function logReportUnsubmittedEvent(ReportUnsubmittedEvent $event)
     {
         $auditEvent = (new AuditEvents($this->dateTimeProvider))
             ->reportUnsubmitted(
-                $event->getTrigger(),
                 $event->getUnsubmittedReport(),
-                $event->getUnsubmittedBy()
+                $event->getUnsubmittedBy(),
+                $event->getTrigger(),
             );
 
         $this->logger->notice('', $auditEvent);

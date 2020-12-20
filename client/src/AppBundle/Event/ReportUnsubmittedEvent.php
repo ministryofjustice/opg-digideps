@@ -18,19 +18,15 @@ class ReportUnsubmittedEvent extends Event
     /** @var User */
     private $unsubmittedBy;
 
-    /** @var string|int|null */
-    private $newYearReportId;
-
     /**
      * @var string
      */
     private string $trigger;
 
-    public function __construct(Report $unsubmittedReport, User $unsubmittedBy, $newYearReportId, string $trigger)
+    public function __construct(Report $unsubmittedReport, User $unsubmittedBy, string $trigger)
     {
         $this->unsubmittedReport = $unsubmittedReport;
-        $this->submittedBy = $unsubmittedBy;
-        $this->newYearReportId = $newYearReportId;
+        $this->unsubmittedBy = $unsubmittedBy;
         $this->trigger = $trigger;
     }
 
@@ -72,24 +68,6 @@ class ReportUnsubmittedEvent extends Event
     public function setUnsubmittedBy(User $unsubmittedBy): ReportUnsubmittedEvent
     {
         $this->unsubmittedBy = $unsubmittedBy;
-        return $this;
-    }
-
-    /**
-     * @return string|int|null
-     */
-    public function getNewYearReportId()
-    {
-        return $this->newYearReportId;
-    }
-
-    /**
-     * @param string|int|null $newYearReportId
-     * @return ReportUnsubmittedEvent
-     */
-    public function setNewYearReportId($newYearReportId): ReportUnsubmittedEvent
-    {
-        $this->newYearReportId = $newYearReportId;
         return $this;
     }
 }

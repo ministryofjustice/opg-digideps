@@ -4,8 +4,11 @@
 namespace AppBundle\EventSubscriber;
 
 use AppBundle\Event\ReportSubmittedEvent;
+use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Client\Internal\ReportApi;
 use AppBundle\Service\Mailer\Mailer;
+use AppBundle\Service\Time\DateTimeProvider;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ReportSubmittedSubscriber implements EventSubscriberInterface
@@ -16,17 +19,37 @@ class ReportSubmittedSubscriber implements EventSubscriberInterface
     /* @var Mailer */
     private $mailer;
 
-    public function __construct(ReportApi $reportApi, Mailer $mailer)
+    private LoggerInterface $logger;
+
+    /**
+     * @var DateTimeProvider
+     */
+    private DateTimeProvider $dateTimeProvider;
+
+    public function __construct(ReportApi $reportApi, Mailer $mailer, LoggerInterface $logger, DateTimeProvider $dateTimeProvider)
     {
         $this->reportApi = $reportApi;
         $this->mailer = $mailer;
+        $this->logger = $logger;
+        $this->dateTimeProvider = $dateTimeProvider;
     }
 
     public static function getSubscribedEvents()
     {
         return [
-            ReportSubmittedEvent::NAME => 'sendEmail'
+            ReportSubmittedEvent::NAME => 'submitReportEvent'
         ];
+    }
+
+    public function submitReportEvent(ReportSubmittedEvent $event)
+    {
+        if ($event->getSubmittedReport()->getUnSubmitDate() !== null) {
+            try {
+                $this->logReportSubmittedEvent($event);
+            } catch (\Exception $e) {
+            }
+        }
+        $this->sendEmail($event);
     }
 
     public function sendEmail(ReportSubmittedEvent $event)
@@ -35,5 +58,20 @@ class ReportSubmittedSubscriber implements EventSubscriberInterface
             $newReport = $this->reportApi->getReport(intval($event->getNewYearReportId()), ['submit']);
             $this->mailer->sendReportSubmissionConfirmationEmail($event->getSubmittedBy(), $event->getSubmittedReport(), $newReport);
         }
+    }
+
+    /**
+     * @param ReportSubmittedEvent $event
+     * @throws \Exception
+     */
+    public function logReportSubmittedEvent(ReportSubmittedEvent $event)
+    {
+        $auditEvent = (new AuditEvents($this->dateTimeProvider))
+            ->reportResubmitted(
+                $event->getSubmittedReport(),
+                $event->getSubmittedBy()
+            );
+
+        $this->logger->notice('', $auditEvent);
     }
 }
