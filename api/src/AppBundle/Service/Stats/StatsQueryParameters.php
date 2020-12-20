@@ -17,7 +17,7 @@ class StatsQueryParameters
     public function __construct(array $parameters)
     {
         $this->metric = $parameters['metric'];
-        $this->dimensions = $parameters['dimension'];
+        $this->dimensions = $parameters['dimension'] ?? null;
 
         if ($this->metric === null) {
             throw new \InvalidArgumentException('Must specify a metric');
@@ -46,8 +46,8 @@ class StatsQueryParameters
      */
     private function applyDateConstraints(array $parameters)
     {
-        $this->startDate = $parameters['startDate'];
-        $this->endDate = $parameters['endDate'];
+        $this->startDate = $parameters['startDate'] ?? null;
+        $this->endDate = $parameters['endDate'] ?? null;
 
         if ($this->startDate === null && $this->endDate === null) {
             $this->endDate = new \DateTime();
