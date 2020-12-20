@@ -34,7 +34,7 @@ services:
             - [ setAnnotationReader, [ "@annotation_reader" ] ]
 
     AppBundle\DataFixtures\:
-        resource: '../../src/AppBundle/DataFixtures'
+        resource: '../src/AppBundle/DataFixtures'
         tags: ['doctrine.fixture.orm']
         autowire: true
 
