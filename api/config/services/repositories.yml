@@ -1,0 +1,53 @@
+services:
+
+  AppBundle\Entity\Repository\UserRepository:
+    class: AppBundle\Entity\User
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments:
+      - AppBundle\Entity\User
+
+  AppBundle\Entity\Repository\ReportRepository:
+    class: AppBundle\Entity\Report\Report
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments:
+      - AppBundle\Entity\Report\Report
+    calls:
+      - [setSearchFilter, ["@AppBundle\\Service\\Search\\ClientSearchFilter"]]
+
+  AppBundle\Entity\Repository\ClientRepository:
+    class: AppBundle\Entity\Client
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments:
+      - AppBundle\Entity\Client
+    calls:
+      - [setSearchFilter, ["@AppBundle\\Service\\Search\\ClientSearchFilter"]]
+
+  AppBundle\Entity\Repository\OrganisationRepository:
+    class: AppBundle\Entity\Organisation
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments:
+      - AppBundle\Entity\Organisation
+
+  AppBundle\Entity\Repository\TeamRepository:
+      class: AppBundle\Entity\Team
+      factory: ["@doctrine.orm.entity_manager", getRepository]
+      arguments:
+          - AppBundle\Entity\Team
+
+  AppBundle\Entity\Repository\NamedDeputyRepository:
+    class: AppBundle\Entity\NamedDeputy
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments:
+      - AppBundle\Entity\NamedDeputy
+
+  AppBundle\Entity\Repository\CasRecRepository:
+    class: AppBundle\Entity\CasRec
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments:
+      - AppBundle\Entity\CasRec
+
+  AppBundle\Entity\Ndr\NdrRepository:
+      class: AppBundle\Entity\Ndr\Ndr
+      factory: ["@doctrine.orm.entity_manager", getRepository]
+      arguments:
+          - AppBundle\Entity\Ndr\Ndr

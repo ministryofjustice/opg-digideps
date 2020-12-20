@@ -67,7 +67,7 @@
     "symfony-app-dir": "app",
     "symfony-web-dir": "web",
     "incenteev-parameters": {
-      "file": "app/config/parameters.yml"
+      "file": "config/parameters.yml"
     }
   }
 }

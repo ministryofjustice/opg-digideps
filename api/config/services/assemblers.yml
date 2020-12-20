@@ -1,0 +1,25 @@
+services:
+  AppBundle\v2\Assembler\ClientAssembler:
+    class: AppBundle\v2\Assembler\ClientAssembler
+    arguments:
+      - '@AppBundle\v2\Assembler\Report\ReportSummaryAssembler'
+      - '@AppBundle\v2\Assembler\NdrAssembler'
+      - '@PlainOrganisationAssembler'
+      - '@AppBundle\v2\Assembler\NamedDeputyAssembler'
+
+  ClientAssemblerFromReportEntity:
+    class: AppBundle\v2\Assembler\ClientAssembler
+    arguments:
+      - '@AppBundle\v2\Assembler\Report\FullReportAssembler'
+      - '@AppBundle\v2\Assembler\NdrAssembler'
+      - '@PlainOrganisationAssembler'
+      - '@AppBundle\v2\Assembler\NamedDeputyAssembler'
+
+  PlainDeputyAssembler:
+    class: AppBundle\v2\Assembler\DeputyAssembler
+
+  PlainOrganisationAssembler:
+    class: AppBundle\v2\Assembler\OrganisationAssembler
+
+  AppBundle\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler: ~
+  AppBundle\v2\Registration\Assembler\LayDeputyshipDtoAssemblerInterface: '@AppBundle\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler'

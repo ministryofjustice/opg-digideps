@@ -1,0 +1,17 @@
+services:
+  AppBundle\Security\OrganisationVoter:
+    class: AppBundle\Security\OrganisationVoter
+    arguments: [ "@security.helper" ]
+    tags:
+        - { name: security.voter }
+
+  AppBundle\Security\ClientVoter:
+    class: AppBundle\Security\ClientVoter
+    arguments: [ "@security.helper" ]
+    tags:
+        - { name: security.voter }
+
+  AppBundle\Security\UserVoter:
+      class: AppBundle\Security\UserVoter
+      tags:
+          - { name: security.voter }
