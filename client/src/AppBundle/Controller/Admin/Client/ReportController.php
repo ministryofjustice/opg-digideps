@@ -5,7 +5,6 @@ namespace AppBundle\Controller\Admin\Client;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\User;
 use AppBundle\Exception\ReportNotSubmittedException;
 use AppBundle\Form\Admin\CloseReportConfirmType;
 use AppBundle\Form\Admin\CloseReportType;
@@ -16,7 +15,6 @@ use AppBundle\Form\Admin\ManageSubmittedReportType;
 use AppBundle\Form\Admin\ManageReportConfirmType;
 use AppBundle\Service\Client\Internal\ReportApi;
 use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\Client\Internal\OrganisationApi;
 use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\ParameterStoreService;
 use AppBundle\Service\ReportSubmissionService;
@@ -97,9 +95,6 @@ class ReportController extends AbstractController
 
     /** @var ReportApi */
     private $reportApi;
-
-    /** @var OrganisationApi */
-    private OrganisationApi $organisationApi;
 
     private LoggerInterface $logger;
 
@@ -531,19 +526,6 @@ class ReportController extends AbstractController
             'form' => $form->createView()
         ];
     }
-
-//    /**
-//     * @param Report $report
-//     * @throws \Exception
-//     */
-//    private function unsubmitReport(Report $report): void
-//    {
-//        $report->setUnSubmitDate(new \DateTime());
-//
-//        $this->restClient->put('report/' . $report->getId() . '/unsubmit', $report, [
-//            'submitted', 'unsubmit_date', 'report_unsubmitted_sections_list', 'startEndDates', 'report_due_date'
-//        ]);
-//    }
 
     /**
      * @param Report $report

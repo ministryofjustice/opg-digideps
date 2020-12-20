@@ -14,7 +14,6 @@ use AppBundle\Form\FeedbackReportType;
 use AppBundle\Form\Report\ReportDeclarationType;
 use AppBundle\Form\Report\ReportType;
 use AppBundle\Model\FeedbackReport;
-use AppBundle\Service\Audit\AuditEvents;
 use AppBundle\Service\Client\Internal\CasrecApi;
 use AppBundle\Service\Client\Internal\ClientApi;
 use AppBundle\Service\Client\Internal\ReportApi;
@@ -377,9 +376,6 @@ class ReportController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$reportGroupsAll);
 
-        file_put_contents('php://stderr', print_r("BEFORE", true));
-        file_put_contents('php://stderr', print_r($report->getUnSubmitDate(), true));
-        file_put_contents('php://stderr', print_r("BOOOOOOOM", true));
         // check status
         $status = $report->getStatus();
         if (!$report->isDue() || !$status->getIsReadyToSubmit()) {
@@ -396,15 +392,11 @@ class ReportController extends AbstractController
         $form = $this->createForm(ReportDeclarationType::class, $report);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
             /** @var User $currentUser */
             $currentUser = $this->getUser();
 
             $report->setSubmitted(true)->setSubmitDate(new DateTime());
             $reportSubmissionService->generateReportDocuments($report);
-            file_put_contents('php://stderr', print_r("AFTER", true));
-            file_put_contents('php://stderr', print_r($report->getUnSubmitDate(), true));
-            file_put_contents('php://stderr', print_r("BOOOOOOOM", true));
 
             $this->reportApi->submit($report, $currentUser);
 
