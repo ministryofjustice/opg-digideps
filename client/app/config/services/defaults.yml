@@ -5,6 +5,7 @@ services:
         bind:
             $symfonyEnvironment: "%kernel.environment%"
             Predis\ClientInterface: '@snc_redis.default'
+            $projectDir: '%kernel.project_dir%'
 
     AppBundle\:
         resource: "@AppBundle/*"

@@ -114,3 +114,6 @@ services:
     AppBundle\Controller\Report\ReportController:
         autowire: true
         autoconfigure: true
+
+    League\MimeTypeDetection\FinfoMimeTypeDetector:
+        class: League\MimeTypeDetection\FinfoMimeTypeDetector

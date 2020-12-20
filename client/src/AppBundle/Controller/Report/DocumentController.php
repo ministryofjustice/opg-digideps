@@ -16,6 +16,7 @@ use AppBundle\Service\File\S3FileUploader;
 use AppBundle\Service\File\Verifier\MultiFileFormUploadVerifier;
 use AppBundle\Service\StepRedirector;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
@@ -183,14 +184,15 @@ class DocumentController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $files = $request->files->get('report_document_upload')['files'];
+            /** @var UploadedFile[]|null $uploadedFiles */
+            $uploadedFiles = $request->files->get('report_document_upload')['files'];
 
-            if (is_array($files)) {
-                $verified = $multiFileVerifier->verify($files, $form, $report);
+            if (is_array($uploadedFiles)) {
+                $verified = $multiFileVerifier->verify($uploadedFiles, $form, $report);
 
                 if ($verified) {
                     try {
-                        $this->fileUploader->uploadFiles($files, $report);
+                        $this->fileUploader->uploadSupportingFilesAndPersistDocuments($uploadedFiles, $report);
                         $this->addFlash('notice', 'Files uploaded');
                         return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
                     } catch (\Throwable $e) {

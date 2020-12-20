@@ -7,40 +7,42 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\Storage\StorageInterface;
-use Psr\Log\LoggerInterface;
+use AppBundle\Service\Time\DateTimeProvider;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class S3FileUploader
 {
-    /** @var StorageInterface */
-    private $storage;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var LoggerInterface */
-    private $logger;
-
-    /** @var array */
-    private $options;
-    private $fileCheckers;
-
+    private StorageInterface $storage;
+    private RestClient $restClient;
+    private array $options;
+    private FileNameFixer $fileNameFixer;
     /**
-     * FileUploader constructor.
+     * @var DateTimeProvider
      */
-    public function __construct(StorageInterface $s3Storage, RestClient $restClient, LoggerInterface $logger, array $options = [])
-    {
+    private DateTimeProvider $dateTimeProvider;
+
+    public function __construct(
+        StorageInterface $s3Storage,
+        RestClient $restClient,
+        FileNameFixer $fileNameFixer,
+        DateTimeProvider $dateTimeProvider,
+        array $options = []
+    ) {
         $this->storage = $s3Storage;
         $this->restClient = $restClient;
-        $this->logger = $logger;
-        $this->fileCheckers = [];
-        $this->options = [];
+        $this->fileNameFixer = $fileNameFixer;
+        $this->options = $options;
+        $this->dateTimeProvider = $dateTimeProvider;
     }
 
-    public function uploadFiles(array $files, Report $report): void
+    /**
+     * @param UploadedFile[] $uploadedFiles
+     * @param Report $report
+     */
+    public function uploadSupportingFilesAndPersistDocuments(array $uploadedFiles, Report $report): void
     {
-        foreach ($files as $file) {
-            [$body, $fileName] = $this->getFileBodyAndFileName($file);
+        foreach ($uploadedFiles as $uploadedFile) {
+            [$body, $fileName] = $this->getFileBodyAndFileName($uploadedFile);
             $this->uploadFileAndPersistDocument($report, $body, $fileName, false);
         }
     }
@@ -54,8 +56,8 @@ class S3FileUploader
         /** @var string $body */
         $body = file_get_contents($file->getPathname());
 
-        /** @var string $fileName */
-        $fileName = FileNameFixer::removeWhiteSpaceBeforeFileExtension($file->getClientOriginalName());
+        $fileName = $this->fileNameFixer->addMissingFileExtension($file, $body);
+        $fileName = $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension($fileName);
 
         return [$body, $fileName];
     }
@@ -71,10 +73,15 @@ class S3FileUploader
      */
     public function uploadFileAndPersistDocument(ReportInterface $report, string $body, string $fileName, bool $isReportPdf)
     {
-        $storageReference = 'dd_doc_' . $report->getId() . '_' . str_replace('.', '', microtime(true));
+        $storageReference = sprintf(
+            'dd_doc_%s_%s%s',
+            $report->getId(),
+            $this->dateTimeProvider->getDateTime()->format('U'),
+            // Append milliseconds to ensure the storage reference is unique
+            $this->dateTimeProvider->getDateTime()->format('v')
+        );
 
         $this->storage->store($storageReference, $body);
-        $this->logger->debug("FileUploader : stored $storageReference, " . strlen($body) . ' bytes');
 
         $document = (new Document())
             ->setStorageReference($storageReference)
@@ -107,6 +114,5 @@ class S3FileUploader
         }
 
         $this->storage->removeFromS3($storageReference);
-        $this->logger->debug('FileUploader : Removed ' . $storageReference . ' completely from S3');
     }
 }
