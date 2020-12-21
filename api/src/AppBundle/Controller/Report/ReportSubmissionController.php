@@ -233,10 +233,13 @@ class ReportSubmissionController extends RestController
 
         $fromDate = $request->get('fromDate') ? new DateTime($request->get('fromDate')) : null;
         $toDate = $request->get('toDate') ? new DateTime($request->get('toDate')) : null;
+        
+        $fromDateTime = $fromDate ? $fromDate->setTime(0, 0) : null;
+        $toDateTime = $toDate ? $toDate->setTime(23, 59, 59) : null;
 
         $ret = $repo->findAllReportSubmissions(
-            $fromDate->setTime(0, 0),
-            $toDate->setTime(23, 59, 59),
+            $fromDateTime,
+            $toDateTime,
             $request->get('orderBy', 'createdOn'),
             $request->get('order', 'ASC')
         );
