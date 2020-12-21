@@ -219,8 +219,14 @@ class ReportSubmissionController extends RestController
     /**
      * @Route("/casrec_data", name="casrec_data", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN')")
+     * 
+     * @param Request $request
+     * @param ReportSubmissionSummaryTransformer $reportSubmissionSummaryTransformer
+     * 
+     * @return array
+     * @throws \Exception
      */
-    public function getCasrecData(Request $request, ReportSubmissionSummaryTransformer $reportSubmissionSummaryTransformer)
+    public function getCasrecData(Request $request, ReportSubmissionSummaryTransformer $reportSubmissionSummaryTransformer): array
     {
         /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
         $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class);
