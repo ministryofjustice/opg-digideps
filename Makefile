@@ -50,7 +50,7 @@ up-app-xdebug-api: ## Brings the app up, rebuilds containers and enabled xdebug 
 
 up-app-integration-tests: ## Brings the app up using test env vars (see test.env)
 	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose -f docker-compose.yml -f docker-compose.dev.yml build frontend admin api
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+	APP_ENV=test APP_DEBUG=false docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 
 down-app: ### Tears down the app
 	docker-compose down -v --remove-orphans
@@ -63,7 +63,7 @@ api-unit-tests: reset-fixtures disable-debug ## Run the api unit tests
 	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose build api
 	docker-compose -f docker-compose.yml run --rm api sh scripts/apiunittest.sh
 
-behat-tests: up-app-integration-tests reset-database reset-fixtures disable-debug
+behat-tests: up-app-integration-tests reset-database reset-fixtures
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test
 
 behat-suite: up-app-integration-tests reset-fixtures disable-debug ## Pass in suite name as arg e.g. make behat-suite suite=<SUITE NAME>
@@ -80,12 +80,12 @@ reset-fixtures: ## Resets the DB contents and reloads fixtures
 
 disable-debug: ## Puts app in dev mode and disables debug (so the app runs faster, but no toolbar/profiling)
 	for c in ${APP_CONTAINERS} ; do \
-	  docker-compose exec $$c rm -f /var/www/.enableDebug ; \
+	  APP_ENV=dev APP_DEBUG=false docker-compose restart $$c; \
 	  echo "$$c: debug disabled." ; \
 	done
 
 enable-debug: ## Puts app in dev mode and enables debug (so the app has toolbar/profiling)
 	for c in ${APP_CONTAINERS} ; do \
-  	  docker-compose exec $$c touch /var/www/.enableDebug ; \
+	  APP_ENV=dev APP_DEBUG=true docker-compose restart $$c; \
 	  echo "$$c: debug enabled." ; \
 	done

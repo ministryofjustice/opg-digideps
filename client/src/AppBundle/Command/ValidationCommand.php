@@ -34,7 +34,7 @@ class ValidationCommand extends \Symfony\Bundle\FrameworkBundle\Command\Containe
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $ret = [];
-        foreach (glob($this->getContainer()->get('kernel')->getRootDir() . '/../src/AppBundle/Entity/*.php') as $entity) {
+        foreach (glob($this->getContainer()->get('kernel')->getRootDir() . '/src/AppBundle/Entity/*.php') as $entity) {
             if (preg_match('/([A-Z][a-z]+)\.php$/', $entity, $matches)) {
                 $className = '\\AppBundle\\Entity\\' . $matches[1];
                 if (class_exists($className)) {

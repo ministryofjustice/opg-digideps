@@ -93,7 +93,7 @@ class UserFactory
             ->setAddress1('Victoria Road')
             ->setAddressPostcode('SW1')
             ->setAddressCountry('GB')
-            ->setRoleName('ROLE_PROF');
+            ->setRoleName('ROLE_PROF_TEAM_MEMBER');
 
         $user->setPassword($this->encoder->encodePassword($user, 'Abcd1234'));
 
