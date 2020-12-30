@@ -50,7 +50,7 @@ up-app-xdebug-api: ## Brings the app up, rebuilds containers and enabled xdebug 
 
 up-app-integration-tests: ## Brings the app up using test env vars (see test.env)
 	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose -f docker-compose.yml -f docker-compose.dev.yml build frontend admin api
-	APP_ENV=test APP_DEBUG=false docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+	APP_ENV=dev APP_DEBUG=false docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 
 down-app: ### Tears down the app
 	docker-compose down -v --remove-orphans
@@ -66,7 +66,7 @@ api-unit-tests: reset-fixtures disable-debug ## Run the api unit tests
 behat-tests: up-app-integration-tests reset-database reset-fixtures
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test
 
-behat-suite: up-app-integration-tests reset-fixtures disable-debug ## Pass in suite name as arg e.g. make behat-suite suite=<SUITE NAME>
+behat-suite: up-app-integration-tests reset-fixtures ## Pass in suite name as arg e.g. make behat-suite suite=<SUITE NAME>
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test --suite $(suite)
 
 behat-profile-suite: up-app-integration-tests reset-fixtures prod-mode ## Pass in profile and suite name as args e.g. make behat-profile-suite profile=<PROFILE NAME> suite=<SUITE NAME>
