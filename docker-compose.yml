@@ -79,7 +79,7 @@ services:
             APP_ENV: ${APP_ENV}
             APP_DEBUG: ${APP_DEBUG}
         env_file:
-            - ./client/docker/env/frontend.env
+            - ./client/frontend.env
         restart: always
         networks:
             default:
