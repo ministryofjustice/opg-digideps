@@ -9,8 +9,8 @@ framework:
     ide: 'phpstorm://open?file=%%f&line=%%l'
 
 web_profiler:
-    toolbar: false
-    intercept_redirects: false
+    toolbar: true
+    intercept_redirects: true
 
 services:
     data_collector.apiCollectorss:

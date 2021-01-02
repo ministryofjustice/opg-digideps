@@ -4,6 +4,7 @@ services:
         autoconfigure: true
         bind:
             $symfonyEnvironment: "%kernel.environment%"
+            $symfonyDebug: "%kernel.debug%"
             Predis\ClientInterface: '@snc_redis.default'
             $projectDir: '%kernel.project_dir%'
 

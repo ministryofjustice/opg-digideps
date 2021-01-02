@@ -86,6 +86,8 @@ COPY public public
 COPY scripts scripts
 COPY src src
 COPY tests tests
+COPY api.env api.env
+COPY postgres.env postgres.env
 COPY phpstan.neon .
 
 # Prebuild cache

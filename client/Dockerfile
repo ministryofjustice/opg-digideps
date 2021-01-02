@@ -97,6 +97,8 @@ COPY src src
 COPY tests tests
 COPY phpstan.neon .
 COPY docker/confd /etc/confd
+COPY frontend.env frontend.env
+COPY admin.env admin.env
 
 RUN chown -R www-data scripts
 

@@ -76,6 +76,8 @@ services:
             VIRTUAL_HOST: www.digideps.local,digideps.local
             VIRTUAL_PROTO: https
             VIRTUAL_PORT: 443
+            APP_ENV: ${APP_ENV}
+            APP_DEBUG: ${APP_DEBUG}
         env_file:
             - ./client/docker/env/frontend.env
         restart: always
@@ -94,13 +96,16 @@ services:
         depends_on:
             - api
             - redisadmin
+            - mock-sirius-integration
         environment:
             VIRTUAL_HOST: admin.digideps.local
             VIRTUAL_PROTO: https
             VIRTUAL_PORT: 443
+            APP_ENV: ${APP_ENV}
+            APP_DEBUG: ${APP_DEBUG}
         env_file:
-            - ./client/docker/env/frontend.env
-            - ./client/docker/env/admin.env
+            - ./client/frontend.env
+            - ./client/admin.env
         restart: always
         networks:
             default:
@@ -116,8 +121,11 @@ services:
         depends_on:
             - postgres
             - redisapi
+        environment:
+            APP_ENV: ${APP_ENV}
+            APP_DEBUG: ${APP_DEBUG}
         env_file:
-            - ./api/docker/env/api.env
+            - ./api/api.env
         restart: always
 
     wkhtmltopdf:
@@ -129,7 +137,7 @@ services:
         ports:
             - 5432:5432
         env_file:
-            - ./api/docker/env/postgres.env
+            - ./api/postgres.env
         environment:
             # use a different data directory to avoid using the old 9.3 version
             PGDATA: /var/lib/postgresql96/data
@@ -184,3 +192,10 @@ services:
             - Complete the deputy report
             - --provider
             - OPG Data
+
+    mock-sirius-integration:
+        image: muonsoft/openapi-mock:latest
+        ports:
+            - 6060:8080
+        environment:
+            - OPENAPI_MOCK_SPECIFICATION_URL=https://raw.githubusercontent.com/ministryofjustice/opg-data-deputy-reporting/master/lambda_functions/v2/openapi/deputy-reporting-openapi.yml
