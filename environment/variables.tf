@@ -21,7 +21,7 @@ variable "accounts" {
       secrets_prefix          = string
       task_count              = number
       scan_count              = number
-      symfony_env             = string
+      app_env                 = string
       db_subnet_group         = string
       ec_subnet_group         = string
       sirius_api_account      = string
