@@ -88,6 +88,7 @@ COPY --from=composer /app/app app
 COPY --from=composer /app/bin bin
 COPY --from=composer /app/vendor vendor
 COPY --from=composer /app/composer.lock composer.lock
+COPY --from=composer /app/config/parameters.yml config/parameters.yml
 COPY config config
 COPY public public
 COPY --from=webpack /app/public/assets public/assets
@@ -108,14 +109,10 @@ RUN wget -q -O /tmp/commonpasswords.txt "https://www.ncsc.gov.uk/static-assets/d
     && chown www-data /tmp/commonpasswords.txt
 
 #Check for security issues
-RUN cp config/parameters.yml.dist config/parameters.yml
 RUN su-exec www-data php app/console security:check
 
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
-
-# Cleanup temp file
-RUN rm config/parameters.yml
 
 CMD confd -onetime -backend env \
   && waitforit -address=$API_URL/manage/availability -timeout=$TIMEOUT -insecure \

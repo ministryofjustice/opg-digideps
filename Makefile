@@ -55,13 +55,13 @@ up-app-integration-tests: ## Brings the app up using test env vars (see test.env
 down-app: ### Tears down the app
 	docker-compose down -v --remove-orphans
 
-client-unit-tests: disable-debug ## Run the client unit tests
+client-unit-tests: ## Run the client unit tests
 	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose build frontend admin
-	docker-compose -f docker-compose.yml run -e APP_ENV=unit_test --rm frontend bin/phpunit -c tests/phpunit
+	docker-compose -f docker-compose.yml run -e APP_ENV=unit_test -e APP_DEBUG=0 --rm frontend bin/phpunit -c tests/phpunit
 
-api-unit-tests: reset-fixtures disable-debug ## Run the api unit tests
+api-unit-tests: reset-fixtures ## Run the api unit tests
 	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose build api
-	docker-compose -f docker-compose.yml run --rm api sh scripts/apiunittest.sh
+	docker-compose -f docker-compose.yml run --rm -e APP_ENV=dev -e APP_DEBUG=0 api sh scripts/apiunittest.sh
 
 behat-tests: up-app-integration-tests reset-fixtures
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test
