@@ -6,8 +6,8 @@
  {% else %}
     {% set message = 'generic.title' | trans %}
  {% endif %}
- 
- {% include 'TwigBundle:Exception:template.html.twig' with {
+
+ {% include '@Twig/Exception/template.html.twig' with {
     message: message,
     description: 'generic.description' | trans
  } %}

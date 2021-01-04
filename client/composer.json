@@ -31,7 +31,7 @@
         "snc/redis-bundle": "^2.1.9",
         "symfony/monolog-bundle": "^3.0.0",
         "symfony/serializer": "3.4.38",
-        "symfony/symfony": "^3.4.28",
+        "symfony/symfony": "^3.4",
         "twig/extensions": "^1.5.4"
     },
     "scripts": {

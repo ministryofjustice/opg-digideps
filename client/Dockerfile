@@ -94,6 +94,7 @@ COPY --from=webpack /app/public/assets public/assets
 COPY --from=webpack /app/public/images public/images
 COPY scripts scripts
 COPY src src
+COPY templates templates
 COPY tests tests
 COPY phpstan.neon .
 COPY docker/confd /etc/confd

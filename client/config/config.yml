@@ -42,6 +42,7 @@ framework:
 
 # Twig Configuration
 twig:
+    default_path: '%kernel.root_dir%/templates'
     globals:
         env: "%env%"
         opg_docker_tag: "%opg_docker_tag%"
