@@ -50,7 +50,7 @@ dd-enable-debug()
     containers=(frontend api admin)
     for i in "${containers[@]}"
     do
-      dd-exec $i sh -c 'export APP_ENV=dev; export APP_DEBUG=true; pkill php-fpm; php-fpm -D'
+      APP_ENV=dev APP_DEBUG=1 docker-compose up -d --no-deps $i
       echo "$i: debug mode enabled."
     done
 }
@@ -60,7 +60,7 @@ dd-disable-debug()
     containers=(frontend api admin)
     for i in "${containers[@]}"
     do
-       dd-exec $i sh -c 'export APP_ENV=dev; export APP_DEBUG=false; pkill php-fpm; php-fpm -D'
+       APP_ENV=dev APP_DEBUG=0 docker-compose up -d --no-deps $i
        echo "$i: debug mode disabled."
     done
 }
