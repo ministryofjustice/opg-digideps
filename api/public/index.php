@@ -7,7 +7,10 @@ use Symfony\Component\HttpFoundation\Request;
 require dirname(__DIR__).'/vendor/autoload.php';
 require dirname(__DIR__) . '/app/AppKernel.php';
 
-(new Dotenv())->load(dirname(__DIR__).'/api.env', dirname(__DIR__).'/postgres.env');
+// We don't want to load the .env files if we are running on a server - ENVIRONMENT is only injected via terraform
+if (empty($_SERVER['ENVIRONMENT'])) {
+    (new Dotenv())->load(dirname(__DIR__) . '/api.env', dirname(__DIR__) . '/postgres.env');
+}
 
 if ($_SERVER['APP_DEBUG']) {
     umask(0000);
