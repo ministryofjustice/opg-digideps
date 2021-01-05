@@ -62,7 +62,7 @@ Feature: Report submit (client 31000010)
         And the URL should match "/report/\d+/submitted"
         And I should not see the "report-submit-submitted" link
         # assert report display page is not broken
-        When I click on "return-to-org-dashboard"
+        When I click on "return-to-reports-page"
         Then the URL should match "/org"
         And the response status code should be 200
 

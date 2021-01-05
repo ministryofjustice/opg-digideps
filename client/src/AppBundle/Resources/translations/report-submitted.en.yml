@@ -1,10 +1,11 @@
 page:
   htmlTitle: "Report submitted - Complete the deputy report | GOV.UK"
   pageTitle: "Report submitted"
-  thankYouForsubmitting: Thank you for submitting your %reportName% report
-  yourReportWillBeSent: "Your report has been sent to OPG. You'll get an email shortly to let you know we've received it."
-  weWillSendReminder: "We'll send you a reminder when it's time for you to complete the next report. You can make a start on it at any time from now on."
-  downloadLink: View %reportName% report
+  successBannerTitle: Report submitted
+  successBannerBody: Your report has been sent to OPG
+  weHaveSentEmail: We’ve sent you an email to confirm we’ve got your report. It may take a few minutes to arrive. We’ll write to you again once we’ve reviewed your report.
+  yourNextReport: Your next report has been added to your account. You can add information to it as you go throughout the year. We’ll send you a reminder before it’s due.
+  yourReportsButton: Your reports
   returnToHomepage: Return to reports page
   returnToClientProfile: Return to client profile
   returnToDashboard: Return to dashboard

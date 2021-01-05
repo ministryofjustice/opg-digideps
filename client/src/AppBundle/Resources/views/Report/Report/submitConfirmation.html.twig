@@ -13,15 +13,22 @@
 
 {% block pageContent %}
 
-    {{ macros.notification('success', 'page.thankYouForsubmitting' | trans(transOptions)) }}
-
-    <div class="text push--top">
-        <p class="govuk-body">{{ 'page.yourReportWillBeSent' | trans }}</p>
-        <p class="govuk-body">{{ 'page.weWillSendReminder' | trans }}</p>
+    <div class="govuk-panel govuk-panel--confirmation">
+        <h1 class="govuk-panel__title">
+            {{ 'page.successBannerTitle' | trans }}
+        </h1>
+        <div class="govuk-panel__body">
+            {{ 'page.successBannerBody' | trans }}
+        </div>
     </div>
 
-    <a href="{{ path('report_review', {'reportId': report.id}) }}" class="behat-link-download-report">
-        {{ 'page.downloadLink' | trans(transOptions) }}
+    <div class="text push--top">
+        <p class="govuk-body">{{ 'page.weHaveSentEmail' | trans }}</p>
+        <p class="govuk-body">{{ 'page.yourNextReport' | trans }}</p>
+    </div>
+
+    <a href="{{ path( homePathName ) }}" role="button" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary govuk-!-margin-bottom-7 behat-link-return-to-reports-page" data-module="govuk-button">
+        {{ 'page.yourReportsButton' | trans }}
     </a>
 
     {% if report.hasSection('profDeputyCosts') %}
@@ -53,11 +60,5 @@
 
     {{ form_end(form) }}
     {# end feedback form #}
-
-    {% if app.user.isDeputyOrg() %}
-        <a href="{{path('org_dashboard')}}" class="behat-link-return-to-org-dashboard">{{ 'page.returnToDashboard' | trans }}</a>
-    {% else %}
-        <a href="{{ path('lay_home')}}" class="behat-link-return-to-reports-page">{{ 'page.returnToHomepage' | trans }}</a>
-    {% endif %}
 
 {% endblock %}
