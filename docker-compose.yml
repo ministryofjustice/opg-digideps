@@ -76,8 +76,8 @@ services:
             VIRTUAL_HOST: www.digideps.local,digideps.local
             VIRTUAL_PROTO: https
             VIRTUAL_PORT: 443
-            APP_ENV: ${APP_ENV}
-            APP_DEBUG: ${APP_DEBUG}
+            APP_ENV: ${APP_ENV:-dev}
+            APP_DEBUG: ${APP_DEBUG:-0}
         env_file:
             - ./client/frontend.env
         restart: always
@@ -101,8 +101,8 @@ services:
             VIRTUAL_HOST: admin.digideps.local
             VIRTUAL_PROTO: https
             VIRTUAL_PORT: 443
-            APP_ENV: ${APP_ENV}
-            APP_DEBUG: ${APP_DEBUG}
+            APP_ENV: ${APP_ENV:-dev}
+            APP_DEBUG: ${APP_DEBUG:-0}
         env_file:
             - ./client/frontend.env
             - ./client/admin.env
@@ -122,8 +122,8 @@ services:
             - postgres
             - redisapi
         environment:
-            APP_ENV: ${APP_ENV}
-            APP_DEBUG: ${APP_DEBUG}
+            APP_ENV: ${APP_ENV:-dev}
+            APP_DEBUG: ${APP_DEBUG:-0}
         env_file:
             - ./api/api.env
         restart: always

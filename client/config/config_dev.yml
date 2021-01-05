@@ -9,7 +9,7 @@ framework:
     ide: 'phpstorm://open?file=%%f&line=%%l'
 
 web_profiler:
-    toolbar: true
+    toolbar: "%kernel.debug%"
     intercept_redirects: false
 
 services:

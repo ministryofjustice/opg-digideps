@@ -35,10 +35,6 @@ lint-terraform:
 up-app: ## Brings the app up
 	docker-compose up -d --remove-orphans
 
-up-app-debug: up-app enable-debug ## Brings the app up in dev mode with debugging enabled
-
-up-app-no-debug: up-app disable-debug ## Brings the app up in dev mode with debugging disabled
-
 up-app-build: ## Brings the app up and rebuilds containers
 	COMPOSE_HTTP_TIMEOUT=90 docker-compose up -d --build --remove-orphans
 
@@ -79,9 +75,13 @@ reset-fixtures: ## Resets the DB contents and reloads fixtures
 	docker-compose run --rm api sh scripts/reset_db_fixtures_local.sh
 
 disable-debug: ## Puts app in dev mode and disables debug (so the app runs faster, but no toolbar/profiling)
-	  APP_ENV=dev APP_DEBUG=0 docker-compose up -d --remove-orphans
-	  echo "Debug disabled" ;
+	for c in ${APP_CONTAINERS} ; do \
+	  APP_ENV=dev APP_DEBUG=0 docker-compose up -d --no-deps $$c; \
+	  echo "$$c: debug disabled." ; \
+	done
 
 enable-debug: ## Puts app in dev mode and enables debug (so the app has toolbar/profiling)
-	  APP_ENV=dev APP_DEBUG=1 docker-compose up -d --remove-orphans
-	  echo "Debug enabled" ;
+	for c in ${APP_CONTAINERS} ; do \
+	  APP_ENV=dev APP_DEBUG=1 docker-compose up -d --no-deps $$c; \
+	  echo "$$c: debug enabled." ; \
+	done
