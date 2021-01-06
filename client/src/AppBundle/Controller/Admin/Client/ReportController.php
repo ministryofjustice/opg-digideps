@@ -443,7 +443,7 @@ class ReportController extends AbstractController
             if ($form->has('confirm') && $form['confirm']->getData() === 'yes' && $report->isSubmitted()) {
                 $this->reportApi->unsubmit(
                     $report,
-                    $this->get('security.token_storage')->getToken()->getUser(),
+                    $this->getUser(),
                     AuditEvents::TRIGGER_UNSUBMIT_REPORT
                 );
                 $this->upsertChecklistInformation($report);

@@ -24,7 +24,7 @@ class ReportSubmittedSubscriberTest extends TestCase
     public function getSubscribedEvents()
     {
         self::assertEquals(
-            [ReportSubmittedEvent::NAME => 'submitReportEvent'],
+            [ReportSubmittedEvent::NAME => 'log', ReportSubmittedEvent::NAME => 'sendEmail'],
             ReportSubmittedSubscriber::getSubscribedEvents()
         );
     }
@@ -88,7 +88,7 @@ class ReportSubmittedSubscriberTest extends TestCase
     /**
      * @test
      */
-    public function logReportSubmittedEvent()
+    public function log()
     {
         $logger = self::prophesize(LoggerInterface::class);
         $dateTimeProvider = self::prophesize(DateTimeProvider::class);
@@ -116,6 +116,6 @@ class ReportSubmittedSubscriberTest extends TestCase
         ];
 
         $logger->notice('', $expectedEvent)->shouldBeCalled();
-        $sut->logReportSubmittedEvent($reportResubmittedEvent);
+        $sut->log($reportResubmittedEvent);
     }
 }

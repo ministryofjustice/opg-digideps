@@ -37,19 +37,9 @@ class ReportSubmittedSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            ReportSubmittedEvent::NAME => 'submitReportEvent'
+            ReportSubmittedEvent::NAME => 'log',
+            ReportSubmittedEvent::NAME => 'sendEmail'
         ];
-    }
-
-    public function submitReportEvent(ReportSubmittedEvent $event)
-    {
-        if ($event->getSubmittedReport()->getUnSubmitDate() !== null) {
-            try {
-                $this->logReportSubmittedEvent($event);
-            } catch (\Exception $e) {
-            }
-        }
-        $this->sendEmail($event);
     }
 
     public function sendEmail(ReportSubmittedEvent $event)
@@ -60,18 +50,16 @@ class ReportSubmittedSubscriber implements EventSubscriberInterface
         }
     }
 
-    /**
-     * @param ReportSubmittedEvent $event
-     * @throws \Exception
-     */
-    public function logReportSubmittedEvent(ReportSubmittedEvent $event)
+    public function log(ReportSubmittedEvent $event)
     {
-        $auditEvent = (new AuditEvents($this->dateTimeProvider))
-            ->reportResubmitted(
-                $event->getSubmittedReport(),
-                $event->getSubmittedBy()
-            );
+        if ($event->getSubmittedReport()->getUnSubmitDate() !== null) {
+            $auditEvent = (new AuditEvents($this->dateTimeProvider))
+                ->reportResubmitted(
+                    $event->getSubmittedReport(),
+                    $event->getSubmittedBy()
+                );
 
-        $this->logger->notice('', $auditEvent);
+            $this->logger->notice('', $auditEvent);
+        }
     }
 }

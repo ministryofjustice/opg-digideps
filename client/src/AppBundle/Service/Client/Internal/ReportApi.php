@@ -8,7 +8,6 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Event\ReportSubmittedEvent;
 use AppBundle\Event\ReportUnsubmittedEvent;
-use AppBundle\Event\ReportResubmittedEvent;
 use AppBundle\EventDispatcher\ObservableEventDispatcher;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Exception\ReportSubmittedException;
