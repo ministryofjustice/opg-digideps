@@ -104,8 +104,10 @@ COPY admin.env admin.env
 
 RUN chown -R www-data scripts
 
-# Add common passwords file
+# Add common passwords file. Two options to combat flakey responses from site.
+COPY docker/extra/commonpasswords.txt /tmp/commonpasswords.txt
 RUN wget -q -O /tmp/commonpasswords.txt "https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt" \
+    || echo 'using local copy of pwnedpasswords' \
     && chown www-data /tmp/commonpasswords.txt
 
 #Check for security issues
