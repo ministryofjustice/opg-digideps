@@ -19,10 +19,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class ManageController extends AbstractController
 {
     private string $symfonyEnvironment;
+    private string $symfonyDebug;
 
-    public function __construct(string $symfonyEnvironment)
+    public function __construct(string $symfonyEnvironment, string $symfonyDebug)
     {
         $this->symfonyEnvironment = $symfonyEnvironment;
+        $this->symfonyDebug = $symfonyDebug;
     }
 
     /**
@@ -59,6 +61,7 @@ class ManageController extends AbstractController
             'services' => $services,
             'errors' => $errors,
             'environment' => $this->symfonyEnvironment,
+            'debug' => $this->symfonyDebug
         ]);
 
         $response->setStatusCode($healthy ? 200 : 500);

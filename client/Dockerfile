@@ -29,6 +29,7 @@ COPY composer.lock .
 RUN composer install --prefer-dist --no-interaction --no-scripts
 
 COPY app app
+COPY config config
 COPY src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
@@ -87,14 +88,19 @@ COPY --from=composer /app/app app
 COPY --from=composer /app/bin bin
 COPY --from=composer /app/vendor vendor
 COPY --from=composer /app/composer.lock composer.lock
+COPY --from=composer /app/config/parameters.yml config/parameters.yml
+COPY config config
+COPY public public
+COPY --from=webpack /app/public/assets public/assets
+COPY --from=webpack /app/public/images public/images
 COPY scripts scripts
 COPY src src
+COPY templates templates
 COPY tests tests
-COPY web web
-COPY --from=webpack /app/web/assets web/assets
-COPY --from=webpack /app/web/images web/images
 COPY phpstan.neon .
 COPY docker/confd /etc/confd
+COPY frontend.env frontend.env
+COPY admin.env admin.env
 
 RUN chown -R www-data scripts
 
@@ -104,11 +110,11 @@ RUN wget -q -O /tmp/commonpasswords.txt "https://www.ncsc.gov.uk/static-assets/d
     || echo 'using local copy of pwnedpasswords' \
     && chown www-data /tmp/commonpasswords.txt
 
+#Check for security issues
+RUN su-exec www-data php app/console security:check
+
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
-
-# Check for security issues
-RUN su-exec www-data php app/console security:check
 
 CMD confd -onetime -backend env \
   && waitforit -address=$API_URL/manage/availability -timeout=$TIMEOUT -insecure \
