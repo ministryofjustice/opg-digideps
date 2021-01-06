@@ -49,44 +49,6 @@ resource "aws_appautoscaling_policy" "down" {
   depends_on = [aws_appautoscaling_target.target]
 }
 
-# CloudWatch alarm that triggers the autoscaling up policy
-//resource "aws_cloudwatch_metric_alarm" "service_cpu_high" {
-//  alarm_name          = "${var.environment}-${var.aws_ecs_service_name}-cpu-utilization-high"
-//  comparison_operator = "GreaterThanOrEqualToThreshold"
-//  evaluation_periods  = "1"
-//  metric_name         = "CPUUtilization"
-//  namespace           = "AWS/ECS"
-//  period              = "60"
-//  statistic           = "Average"
-//  threshold           = "30"
-//
-//  dimensions = {
-//    ServiceName = var.aws_ecs_service_name
-//    ClusterName = var.aws_ecs_cluster_name
-//  }
-//
-//  alarm_actions = [aws_appautoscaling_policy.up.arn]
-//}
-
-# CloudWatch alarm that triggers the autoscaling down policy
-//resource "aws_cloudwatch_metric_alarm" "service_cpu_low" {
-//  alarm_name          = "${var.environment}-${var.aws_ecs_service_name}-cpu-utilization-low"
-//  comparison_operator = "LessThanOrEqualToThreshold"
-//  evaluation_periods  = "1"
-//  metric_name         = "CPUUtilization"
-//  namespace           = "AWS/ECS"
-//  period              = "60"
-//  statistic           = "Average"
-//  threshold           = "20"
-//
-//  dimensions = {
-//    ServiceName = var.aws_ecs_service_name
-//    ClusterName = var.aws_ecs_cluster_name
-//  }
-//
-//  alarm_actions = [aws_appautoscaling_policy.down.arn]
-//}
-
 # Use bespoke metrics for two reasons.
 # 1) so we dont wobble between cpu and memory scaling
 # 2) we can turn off alarms at min scaling
@@ -101,7 +63,7 @@ resource "aws_cloudwatch_metric_alarm" "scale_up" {
 
   metric_query {
     id          = "up"
-    expression  = "IF((cpu > 35 OR mem > 35) AND tc < 3, 1, 0)"
+    expression  = "IF((cpu > 60 OR mem > 70) AND tc < ${var.ecs_task_autoscaling_maximum}, 1, 0)"
     label       = "ContainerScaleUp"
     return_data = "true"
   }
@@ -167,7 +129,7 @@ resource "aws_cloudwatch_metric_alarm" "scale_down" {
 
   metric_query {
     id          = "down"
-    expression  = "IF((cpu < 30 AND mem < 30) AND tc > 1, 1, 0)"
+    expression  = "IF((cpu < 30 AND mem < 40) AND tc > ${var.ecs_task_autoscaling_minimum}, 1, 0)"
     label       = "ContainerScaleUp"
     return_data = "true"
   }

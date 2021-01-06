@@ -20,8 +20,11 @@ func makeRequests(url string, chStatus chan<-int, batchSize int) {
   }
 }
 
+// The purpose of this script is to put some basic stress on the application for testing of alarms and scaling etc
+// It is not meant to be used as a full load testing suite.
+// Replace the base url with the branch you wish to test and make sure you are connected to the VPN.
 func main() {
-	baseUrl := flag.String("base_url", "ddpb3833.complete-deputy-report.service.gov.uk", "a string")
+	baseUrl := flag.String("base_url", "ddpb0000.complete-deputy-report.service.gov.uk", "a string")
 	urlSuffix := flag.String("url_suffix", "manage/availability", "a string")
 	batchSize := flag.Int("batch_size", 50, "an int")
 	numberOfBatches := flag.Int("number_of_batches", 100, "an int")
