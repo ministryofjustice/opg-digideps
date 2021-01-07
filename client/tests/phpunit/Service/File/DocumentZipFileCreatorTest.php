@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Service\File;
+namespace App\Service\File;
 
-use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Model\RetrievedDocument;
+use App\Entity\Report\ReportSubmission;
+use App\Model\RetrievedDocument;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use ZipArchive;
@@ -44,7 +44,7 @@ class DocumentZipFileCreatorTest extends TestCase
 
         $zip = new ZipArchive();
 
-        foreach($expectedZipFilenames as $zipFileName) {
+        foreach ($expectedZipFilenames as $zipFileName) {
             self::assertContains($zipFileName, $actualZipFileNames);
             self::assertTrue(file_exists($zipFileName));
         }
@@ -82,7 +82,7 @@ class DocumentZipFileCreatorTest extends TestCase
     {
         $zipFiles = [];
 
-        foreach($zipFileContent as $fileName => $content) {
+        foreach ($zipFileContent as $fileName => $content) {
             $zipFile = "/tmp/${fileName}";
             file_put_contents($zipFile, $content);
 

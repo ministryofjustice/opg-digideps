@@ -1,0 +1,76 @@
+{% extends 'App:Layouts:application.html.twig' %}
+
+{% import 'App:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-decisions" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'existPage' %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set append104 = report.get104TransSuffix %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageHeader %}{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+        <div class="govuk-form-group {% if not form.hasDecisions.vars.valid %}govuk-form-group--error{% endif %}">
+            {{ form_checkbox_group(form.hasDecisions, (page ~ '.form.hasDecisions'), {
+                'useFormGroup': false,
+                'labelParameters': transOptions,
+                legend: {
+                    isPageHeading: true,
+                    caption: (page ~ '.supportTitle') | trans
+                },
+                'items': [
+                    {},
+                    {'dataTarget': 'reason-for-no-decisions'}
+                ],
+                'formGroupClass': 'flush--bottom'
+            }) }}
+
+            <div id="reason-for-no-decisions" class="opg-indented-block js-hidden">
+                {{ form_input(form.reasonForNoDecisions, (page ~ '.form.reasonForNoDecisions'), {
+                    'labelClass': 'required',
+                    'labelParameters': transOptions
+                }) }}
+            </div>
+        </div>
+
+        {# Reusing content from the start page #}
+        {% set page = 'startPage' %}
+
+    <details class="govuk-details" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">{{ (page ~ '.whatisdecisionSummary') | trans }}</span>
+            </summary>
+            <div class="govuk-details__text">
+                <p class="govuk-body">{{ (page ~ '.whatisdecisionPara1' ~ append104) | trans(transOptions) }}</p>
+                <p class="govuk-body">{{ (page ~ '.whatisdecisionPara2' ~ append104) | trans(transOptions) }}</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>{{ (page ~ '.whatisdecisionListItem1' ~ append104) | trans(transOptions) }}</li>
+                    <li>{{ (page ~ '.whatisdecisionListItem2' ~ append104) | trans(transOptions) }}</li>
+                    <li>{{ (page ~ '.whatisdecisionListItem3' ~ append104) | trans(transOptions) }}</li>
+                    {% if '104' not in report.type %}
+                        <li>{{ (page ~ '.whatisdecisionListItem4' ~ append104) | trans(transOptions) }}</li>
+                        <li>{{ (page ~ '.whatisdecisionListItem5' ~ append104) | trans(transOptions) }}</li>
+                        <li>{{ (page ~ '.whatisdecisionListItem6' ~ append104) | trans(transOptions) }}</li>
+                        <li>{{ (page ~ '.whatisdecisionListItem7' ~ append104) | trans(transOptions) }}</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </details>
+
+        {# Resetting correct page for content #}
+        {% set page = 'existPage' %}
+
+        {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

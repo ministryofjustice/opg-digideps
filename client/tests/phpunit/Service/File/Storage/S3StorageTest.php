@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service\File\Storage;
+namespace App\Service\File\Storage;
 
 use Aws\Command;
 use Aws\Exception\AwsException;
@@ -70,7 +70,7 @@ class S3StorageTest extends TestCase
             ->with(m::type('array'))
             ->once()
             ->andReturn(
-            [
+                [
                 'TagSet' => [
                     [
                         'Key' => 'someKey',
@@ -79,7 +79,7 @@ class S3StorageTest extends TestCase
                 ],
                 'VersionId' => 'someVersionId',
             ]
-        );
+            );
 
         $awsClient->shouldReceive('putObjectTagging')
             ->with(m::type('array'))
@@ -156,7 +156,9 @@ class S3StorageTest extends TestCase
             [
                 'Bucket' => 'unit_test_bucket',
                 'Prefix' => $key
-            ])->andReturn($this->generateAwsResult(
+            ]
+        )->andReturn(
+            $this->generateAwsResult(
                 200,
                 [
                     'Versions' => [
@@ -182,7 +184,8 @@ class S3StorageTest extends TestCase
                         ['Key' => $key, 'VersionId' => 'testVersionId_2'],
                     ]
                 ]
-            ])->andReturn($this->generateAwsResult(200));
+            ]
+        )->andReturn($this->generateAwsResult(200));
 
         $mockLogger = m::mock(LoggerInterface::class);
         $mockLogger->shouldReceive('log')->withAnyArgs();
@@ -190,7 +193,7 @@ class S3StorageTest extends TestCase
         $this->object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
 
         $result = $this->object->removeFromS3($key);
-            $this->assertEquals(
+        $this->assertEquals(
             [
                 ['Key' => $key, 'VersionId' => 'testVersionId_1'],
                 ['Key' => $key, 'VersionId' => 'testVersionId_2']
@@ -209,9 +212,11 @@ class S3StorageTest extends TestCase
             [
                 'Bucket' => 'unit_test_bucket',
                 'Prefix' => $key
-            ])->andReturn($this->generateAwsResult(
-            200,
-            [
+            ]
+        )->andReturn(
+            $this->generateAwsResult(
+                200,
+                [
                 'Versions' => [
                     0 => [
                         'Key' => $key,
@@ -223,7 +228,7 @@ class S3StorageTest extends TestCase
                     ]
                 ]
             ]
-        )
+            )
         );
 
         $awsClient->shouldReceive('deleteObjects')->with(
@@ -235,7 +240,9 @@ class S3StorageTest extends TestCase
                         ['Key' => $key, 'VersionId' => 'testVersionId_2'],
                     ]
                 ]
-            ])->andReturn($this->generateAwsResult(
+            ]
+        )->andReturn(
+            $this->generateAwsResult(
                 200,
                 [
                     'Errors' => [
@@ -273,7 +280,9 @@ class S3StorageTest extends TestCase
             [
                 'Bucket' => 'unit_test_bucket',
                 'Prefix' => $key
-            ])->andReturn($this->generateAwsResult(404)
+            ]
+        )->andReturn(
+            $this->generateAwsResult(404)
         );
 
         $awsClient->shouldNotReceive('deleteObjects')->never();
@@ -324,8 +333,9 @@ class S3StorageTest extends TestCase
             [
                 'Bucket' => 'unit_test_bucket',
                 'Prefix' => $key
-            ])->andReturn(
-                new AwsException('AWS is down', new Command('listObjectVersions'), ['code' => 500])
+            ]
+        )->andReturn(
+            new AwsException('AWS is down', new Command('listObjectVersions'), ['code' => 500])
         );
 
         $awsClient->shouldNotReceive('deleteObjects')->never();
@@ -352,7 +362,8 @@ class S3StorageTest extends TestCase
         $awsClient = self::prophesize(S3Client::class);
         $s3Exception = new S3Exception(
             'The specified key does not exist.',
-            new Command('getObject'), ['code' => 'NoSuchKey']
+            new Command('getObject'),
+            ['code' => 'NoSuchKey']
         );
 
         $awsClient->getObject(['Bucket' => 'unit_test_bucket', 'Key' => $key])->willThrow($s3Exception);
@@ -374,7 +385,8 @@ class S3StorageTest extends TestCase
         $awsClient = self::prophesize(S3Client::class);
         $s3Exception = new S3Exception(
             'Access Denied.',
-            new Command('getObject'), ['code' => 'AccessDenied']
+            new Command('getObject'),
+            ['code' => 'AccessDenied']
         );
 
         $awsClient->getObject(['Bucket' => 'unit_test_bucket', 'Key' => $key])->willThrow($s3Exception);
@@ -396,7 +408,8 @@ class S3StorageTest extends TestCase
         $awsClient = self::prophesize(S3Client::class);
         $s3Exception = new S3Exception(
             'Some other error message',
-            new Command('getObject'), ['code' => 'InvalidRequest']
+            new Command('getObject'),
+            ['code' => 'InvalidRequest']
         );
 
         $awsClient->getObject(['Bucket' => 'unit_test_bucket', 'Key' => $key])->willThrow($s3Exception);

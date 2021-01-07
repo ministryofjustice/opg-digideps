@@ -1,0 +1,26 @@
+{% import 'App:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+
+{% set page = 'checklistPage' %}
+
+<p class="govuk-body-s behat-region-{{ checklistDomain }}-last-saved-by">
+    {{ 'lastSaved' | trans({}, 'common') }}:
+    {{ (checklist.lastModifiedOn) ? (checklist.lastModifiedOn | date("j F Y H:i")) : 'Not saved yet' }}
+    <br>
+    {% if (checklist.lastModifiedBy is defined) and (checklist.lastModifiedBy is not empty) %}
+        {{ checklist.lastModifiedBy.fullName}}, {{ checklist.lastModifiedBy.roleFullName }}
+    {% endif %}
+</p>
+
+{% if checklist.submittedOn %}
+    <p class="govuk-body-s behat-region-{{ checklistDomain }}-last-submitted-by">
+        {{ 'lastSubmitted' | trans({}, 'common') }}:
+        {{ checklist.submittedOn | date("j F Y H:i") }}
+        <br>
+        {{ checklist.submittedBy.fullName}}, {{ checklist.submittedBy.roleFullName }}
+    </p>
+{% endif %}
+
+{#<hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">#}

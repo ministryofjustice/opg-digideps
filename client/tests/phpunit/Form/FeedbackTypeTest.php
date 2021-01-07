@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-use AppBundle\Form\FeedbackType;
+use App\Form\FeedbackType;
 use Symfony\Component\Form\PreloadedExtension;
 use Symfony\Component\Form\Test\TypeTestCase;
 use Mockery as m;

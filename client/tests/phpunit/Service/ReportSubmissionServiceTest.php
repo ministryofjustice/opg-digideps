@@ -1,19 +1,19 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Entity\ReportInterface;
-use AppBundle\Entity\User;
-use AppBundle\Exception\ReportSubmissionDocumentsNotDownloadableException;
-use AppBundle\Model\Email;
-use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\Csv\TransactionsCsvGenerator;
-use AppBundle\Service\File\S3FileUploader;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
+use App\Entity\Report\Document;
+use App\Entity\Report\Report;
+use App\Entity\Report\ReportSubmission;
+use App\Entity\ReportInterface;
+use App\Entity\User;
+use App\Exception\ReportSubmissionDocumentsNotDownloadableException;
+use App\Model\Email;
+use App\Service\Client\RestClient;
+use App\Service\Csv\TransactionsCsvGenerator;
+use App\Service\File\S3FileUploader;
+use App\Service\Mailer\MailFactory;
+use App\Service\Mailer\MailSender;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -93,8 +93,8 @@ class ReportSubmissionServiceTest extends TestCase
 
         $mockContainer->shouldReceive('get')->with('file_uploader')->andReturn($this->mockFileUploader);
         $mockContainer->shouldReceive('get')->with('rest_client')->andReturn($this->mockRestClient);
-        $mockContainer->shouldReceive('get')->with('AppBundle\Service\Mailer\MailSender')->andReturn($this->mockMailSender);
-        $mockContainer->shouldReceive('get')->with('AppBundle\Service\Mailer\MailFactory')->andReturn($this->mockMailFactory);
+        $mockContainer->shouldReceive('get')->with('App\Service\Mailer\MailSender')->andReturn($this->mockMailSender);
+        $mockContainer->shouldReceive('get')->with('App\Service\Mailer\MailFactory')->andReturn($this->mockMailFactory);
         $mockContainer->shouldReceive('get')->with('templating')->andReturn($this->mockTemplatingEngine);
         $mockContainer->shouldReceive('get')->with('logger')->andReturn($this->mockLogger);
         $mockContainer->shouldReceive('get')->with('csv_generator_service')->andReturn($this->mockCsvGenerator);
@@ -195,7 +195,7 @@ class ReportSubmissionServiceTest extends TestCase
     {
         $this->mockTemplatingEngine->shouldReceive('render')
             ->with(
-                'AppBundle:Report/Formatted:formatted_standalone.html.twig',
+                'App:Report/Formatted:formatted_standalone.html.twig',
                 [
                     'report' => $this->mockReport,
                     'showSummary' => true

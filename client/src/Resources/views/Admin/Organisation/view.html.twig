@@ -1,0 +1,176 @@
+{% extends 'App:Layouts:application.html.twig' %}
+{% import 'App:Macros:macros.html.twig' as macros %}
+
+{% trans_default_domain "admin-organisations" %}
+{% set page = 'viewPage' %}
+
+{% set navSection = 'organisations' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ organisation.name }}{% endblock %}
+
+{% block actions %}
+    <a href="{{ path('admin_organisation_edit', {'id': organisation.id}) }}" role="button" data-module="govuk-button" class="govuk-button govuk-button--secondary">
+        {{ (page ~ '.summary.editOrganisation') | trans }}
+    </a>
+{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="govuk-caption-xl">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsArray([
+        { href: url('admin_homepage'), text: 'Admin' },
+        { href: url('admin_organisation_homepage'), text: 'Organisations' },
+        { text: organisation.name }
+    ]) }}
+{% endblock %}
+
+{% block pageContent %}
+    <dl class="govuk-summary-list govuk-summary-list--no-border">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ (page ~ '.summary.emailDomain') | trans }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ organisation.emailIdentifier }}
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ (page ~ '.summary.users') | trans }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ organisation.users | length }}
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ (page ~ '.summary.clients') | trans }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ organisation.clients | length }}
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ (page ~ '.summary.status.label') | trans }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {% if organisation.isActivated %}
+                    {{ (page ~ '.summary.status.active') | trans }}
+                {% else %}
+                    {{ (page ~ '.summary.status.inactive') | trans }}
+                {% endif %}
+            </dd>
+        </div>
+    </dl>
+
+    <div class="govuk-tabs" data-module="govuk-tabs">
+        <ul class="govuk-tabs__list" role="tablist">
+            <li class="govuk-tabs__list-item {{ app.request.get('tab') != 'clients' ? 'govuk-tabs__list-item--selected' : '' }}">
+                <a class="govuk-tabs__tab" href="{{ path('admin_organisation_view', {'id': organisation.id, 'tab':'users' }) }}" role="tab" tabindex="0">
+                    {{ (page ~ '.tabs.users') | trans }}
+                </a>
+            </li>
+            <li class="govuk-tabs__list-item {{ app.request.get('tab') == 'clients' ? 'govuk-tabs__list-item--selected' : '' }}">
+                <a class="govuk-tabs__tab behat-link-tab-unstarted" href="{{ path('admin_organisation_view', {'id': organisation.id, 'tab':'clients' }) }}" role="tab" tabindex="0">
+                    {{ (page ~ '.tabs.clients') | trans }}
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    {% if app.request.get('tab') == 'clients' %}
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">{{ (page ~ '.clients.caseNumber') | trans }}</th>
+                <th class="govuk-table__header" scope="col">{{ (page ~ '.clients.name') | trans }}</th>
+                <th class="govuk-table__header" scope="col">{{ (page ~ '.clients.reportCount') | trans }}</th>
+            </tr>
+            </thead>
+
+            <tbody class="govuk-table__body">
+            {% for client in organisation.clients %}
+                <tr class="govuk-table__row behat-region-org-{{ client.caseNumber | behat_namify }}">
+                    <td class="govuk-table__cell">
+                        <a class="govuk-link" href="{{ url('admin_client_details', { id: client.id }) }}">
+                            {{ client.caseNumber }}
+                        </a>
+                    </td>
+                    <td class="govuk-table__cell">
+                        {{ client.fullName }}
+                    </td>
+                    <td class="govuk-table__cell">
+                        {{ client.totalReportCount }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr class="govuk-table__row">
+                    <td colspan="3" class="govuk-table__cell text--center">
+                        {{ (page ~ '.noClients') | trans }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <a href="{{ url('admin_organisation_member_add', { id: organisation.id }) }}" role="button" data-module="govuk-button" class="govuk-button govuk-button--secondary right">
+            {{ (page ~ '.addMember') | trans }}
+        </a>
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">{{ (page ~ '.users.name') | trans }}</th>
+                <th class="govuk-table__header" scope="col">{{ (page ~ '.users.emailAddress') | trans }}</th>
+                <th class="govuk-table__header" scope="col">{{ (page ~ '.users.admin') | trans }}</th>
+                <th class="govuk-table__header" scope="col">{{ (page ~ '.users.active') | trans }}</th>
+                <th class="govuk-table__header" scope="col">
+                    <span class="govuk-visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                </th>
+            </tr>
+            </thead>
+
+            <tbody class="govuk-table__body">
+            {% for user in organisation.users %}
+                <tr class="govuk-table__row behat-region-org-{{ user.fullName | behat_namify }}">
+                    <td class="govuk-table__cell">
+                        <a class="govuk-link" href="{{ url('admin_user_view', { id: user.id }) }}">
+                            {{ user.fullName }}
+                        </a>
+                    </td>
+                    <td class="govuk-table__cell">
+                        {{ user.email }}
+                    </td>
+                    <td class="govuk-table__cell">
+                        {{ (user.isOrgAdministrator or user.isOrgNamedDeputy ? 'yes' : 'no') | trans({}, 'common') }}
+                    </td>
+                    <td class="govuk-table__cell">
+                        {{ (user.active ? 'yes' : 'no') | trans({}, 'common') }}
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <a class="govuk-link behat-link-delete" href="{{ url('admin_organisation_member_delete', { id: organisation.id, userId: user.id }) }}">
+                            {{ 'remove' | trans({}, 'common') }}
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr class="govuk-table__row">
+                    <td colspan="4" class="govuk-table__cell text--center">
+                        {{ (page ~ '.noMembers') | trans }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+
+
+
+
+
+
+{% endblock %}

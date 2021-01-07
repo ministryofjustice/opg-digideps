@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form\Report\Asset;
+namespace App\Form\Report\Asset;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;

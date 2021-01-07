@@ -10,7 +10,7 @@ services:
   Aws\S3\S3Client:
     arguments: ["%s3_client_params%"]
 
-  AppBundle\Service\File\Storage\S3Storage:
+  App\Service\File\Storage\S3Storage:
     arguments: [ '@Aws\S3\S3Client', "%s3_bucket_name%", "@logger" ]
 
   guzzle_file_scanner_client:
@@ -28,10 +28,10 @@ services:
         timeout: 10
         allow_redirects: false
 
-  AppBundle\Service\File\Verifier\MultiFileFormUploadVerifier:
+  App\Service\File\Verifier\MultiFileFormUploadVerifier:
     calls:
-      - [ addVerifier, ['@AppBundle\Service\File\Verifier\ConstraintVerifier'] ]
-      - [ addVerifier, ['@AppBundle\Service\File\Verifier\ScannerVerifier'] ]
+      - [ addVerifier, ['@App\Service\File\Verifier\ConstraintVerifier'] ]
+      - [ addVerifier, ['@App\Service\File\Verifier\ScannerVerifier'] ]
 
-  AppBundle\Service\File\Scanner\ClamFileScanner:
+  App\Service\File\Scanner\ClamFileScanner:
     arguments: [ "@guzzle_file_scanner_client", "@logger", "%bad_pdf_keywords%"]

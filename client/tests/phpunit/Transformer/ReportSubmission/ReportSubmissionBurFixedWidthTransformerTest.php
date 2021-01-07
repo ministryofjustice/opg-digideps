@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Transformer\ReportSubmission;
+namespace App\Transformer\ReportSubmission;
 
-use AppBundle\Entity\Report\ReportSubmissionSummary;
+use App\Entity\Report\ReportSubmissionSummary;
 use PHPUnit\Framework\TestCase;
 
 class ReportSubmissionBurFixedWidthTransformerTest extends TestCase

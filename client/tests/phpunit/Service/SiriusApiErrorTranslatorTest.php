@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 
-use AppBundle\Service\SiriusApiErrorTranslator;
+use App\Service\SiriusApiErrorTranslator;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;

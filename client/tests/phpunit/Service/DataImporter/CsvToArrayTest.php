@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service\DataImporter;
+namespace App\Service\DataImporter;
 
 use JMS\Serializer\Exception\RuntimeException;
 use PHPUnit\Framework\TestCase;

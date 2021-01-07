@@ -1,0 +1,41 @@
+{% extends 'App:Layouts:application.html.twig' %}
+
+{% trans_default_domain "register" %}
+
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="text">
+        <p class="govuk-body">{{ 'intro' | trans }}</p>
+        <p class="govuk-body">{{ 'ifyoualready' | trans }} <a href="{{ path('login') }}">{{ 'signin' | trans }}</a>.</p>
+    </div>
+
+    <details class="govuk-details" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">{{ 'moreThanOne' | trans }}</span>
+        </summary>
+        <div class="govuk-details__text">
+            <p class="govuk-body">{{ 'moreThanOneDescription' | trans | raw }}</p>
+        </div>
+    </details>
+
+    {% set formClass = 'registration-form' %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass } }) }}
+
+        {{ form_input(form.firstname,'firstname') }}
+        {{ form_input(form.lastname,'lastname') }}
+        {{ form_input(form.email.first,'email.first') }}
+        {{ form_input(form.email.second,'email.second') }}
+        {{ form_input(form.postcode,'postcode', {}) }}
+        {{ form_input(form.clientFirstname,'clientFirstname') }}
+        {{ form_input(form.clientLastname,'clientLastname') }}
+        {{ form_input(form.caseNumber,'caseNumber', { 'labelRaw': true }) }}
+
+        {{ form_submit(form.save,'save') }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

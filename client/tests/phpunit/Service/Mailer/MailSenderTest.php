@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Service\Mailer;
+namespace App\Service\Mailer;
 
 use Alphagov\Notifications\Client as NotifyClient;
 use Alphagov\Notifications\Exception\NotifyException;
-use AppBundle\Model\Email;
+use App\Model\Email;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
@@ -60,8 +60,7 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         string $templateID='123-template-id',
         array $parameters=['param' => 'param value'],
         string $fromEmailNotifyID='fake-id'
-    )
-    {
+    ) {
         return (new Email())
             ->setToEmail($toEmail)
             ->setTemplate($templateID)

@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace Tests\AppBundle\EventListener;
+namespace Tests\App\EventListener;
 
-use AppBundle\Event\UserActivatedEvent;
-use AppBundle\EventSubscriber\UserActivatedSubscriber;
-use AppBundle\Service\Mailer\Mailer;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
-use AppBundle\TestHelpers\EmailHelpers;
-use AppBundle\TestHelpers\UserHelpers;
+use App\Event\UserActivatedEvent;
+use App\EventSubscriber\UserActivatedSubscriber;
+use App\Service\Mailer\Mailer;
+use App\Service\Mailer\MailFactory;
+use App\Service\Mailer\MailSender;
+use App\TestHelpers\EmailHelpers;
+use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 
 class UserActivatedSubscriberTest extends TestCase

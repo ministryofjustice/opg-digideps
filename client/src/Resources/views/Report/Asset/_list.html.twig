@@ -1,0 +1,60 @@
+{% import 'App:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-assets" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'summaryPage' %}
+
+{% set hideEditLink = hideEditLink | default(false) %}
+
+{# "client own assets" question #}
+<dl class="govuk-summary-list">
+    {{ macros.summaryListHeaderQA(hideEditLink) }}
+    <div class="govuk-summary-list__row behat-region-has-assets">
+        <dt class="govuk-summary-list__key">
+            {{ 'existPage.form.noAssetToAdd.label' | trans(transOptions)  }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ report.noAssetToAdd ? 'No' : 'Yes' }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            {% if not hideEditLink  %}
+                <a class="govuk-link behat-link-edit" href="{{ url('assets_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
+                    {{ 'edit' | trans({}, 'common') }}
+                </a>
+            {% endif %}
+        </dd>
+    </div>
+</dl>
+
+{# display title if assets are present #}
+{% if report.assets %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <h2 class="govuk-heading-l">{{ (page ~ '.listOfAssets') | trans }}</h2>
+        </div>
+        <div class="govuk-grid-column-one-half text--right">
+            {% if not hideEditLink  %}
+                <a href="{{ path('assets_type', { 'reportId': report.id}) }}" class="govuk-!-font-size-19 govuk-!-font-weight-bold move-quarter--up action-link behat-link-add">
+                    <span class="icon icon-plus"></span>
+                    {{ (page ~ '.addButton') | trans }}
+                </a>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
+
+{# display assets in groups #}
+{% for groupId, assetsInGroup in report.assetsGroupedByTitle %}
+    {% if (groupId | lower) == 'property' %}
+        {% include 'App:Report/Asset/Property:_list_item.html.twig' %}
+    {% else %}
+        {% include 'App:Report/Asset/Other:_list_item.html.twig' %}
+    {% endif %}
+{% endfor %}
+
+{# Total #}
+{% if report.assets %}
+    <div class="govuk-heading-m text--right behat-region-asset-total">
+        {{ (page ~ '.totalValueOfAssets') | trans }}: £{{ report.assetsTotalValue | money_format }}
+    </div>
+{% endif %}

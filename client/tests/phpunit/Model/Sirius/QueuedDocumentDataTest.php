@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 
-use AppBundle\Model\Sirius\QueuedDocumentData;
+use App\Model\Sirius\QueuedDocumentData;
 use PHPUnit\Framework\TestCase;
 
 class QueuedDocumentDataTest extends TestCase
@@ -21,7 +21,6 @@ class QueuedDocumentDataTest extends TestCase
 
     public function supportingDocumentProvider()
     {
-
         return [
             'Can be synced' => ['abc-123-def-456', true],
             'Cannot be synced' => [null, false]

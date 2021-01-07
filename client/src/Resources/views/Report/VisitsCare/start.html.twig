@@ -1,0 +1,33 @@
+{% extends 'App:Layouts:application.html.twig'%}
+
+{% import 'App:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-visits-care" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'startPage.pageTitle' | trans }}{% endblock %}
+
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <p class="govuk-body">
+        {%
+            set descriptionKey = (report.determineReportType == 'PF') ?
+                'startPage.pageSectionDescriptionPf' : 'startPage.pageSectionDescriptionHw'
+        %}
+        {{ descriptionKey | trans(transOptions, translationDomain) }}
+    </p>
+
+    {{ macros.startSectionButton(path('visits_care_step', { 'reportId': report.id, 'step': 1 }), 'startPage.startButton' | trans) }}
+
+    {# Pagination #}
+    {% include 'App:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'visitsCare',
+    } %}
+
+{% endblock %}

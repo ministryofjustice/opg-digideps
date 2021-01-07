@@ -1,33 +1,33 @@
 services:
-    AppBundle\EventListener\SessionListener:
+    App\EventListener\SessionListener:
         arguments: [ "@router" , "@logger", {idleTimeout: "%session_expire_seconds%"}]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
     logout_listener:
-      class:   AppBundle\EventListener\LogoutListener
+      class:   App\EventListener\LogoutListener
       arguments: ["@security.token_storage", "@rest_client", "@router"]
 
-    AppBundle\EventListener\ResponseNoCacheListener:
+    App\EventListener\ResponseNoCacheListener:
        tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 
-    AppBundle\EventListener\AuthTokenExpiredListener:
+    App\EventListener\AuthTokenExpiredListener:
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
 
-    AppBundle\Service\RequestIdLoggerProcessor:
+    App\Service\RequestIdLoggerProcessor:
         arguments: [ "@service_container" ]
         tags:
             - { name: monolog.processor, method: processRecord }
 
-    AppBundle\EventListener\LoginEventListener:
+    App\EventListener\LoginEventListener:
         arguments:
             - '@event_dispatcher'
-            - '@AppBundle\Service\Redirector'
+            - '@App\Service\Redirector'
         tags:
             - { name: kernel.event_listener, event: security.interactive_login, method: onSecurityInteractiveLogin }
 
-    AppBundle\EventListener\ResponseHeadersListener:
+    App\EventListener\ResponseHeadersListener:
         tags:
               - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }

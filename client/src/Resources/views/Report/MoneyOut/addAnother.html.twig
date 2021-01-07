@@ -1,0 +1,28 @@
+{% extends 'App:Layouts:application.html.twig' %}
+
+{% import 'App:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-transaction" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% block htmlTitle %}{{ 'addAnotherPage.moneyOut.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'addAnotherPage.moneyOut.pageTitle' | trans }}{% endblock %}
+{% block supportTitleTop %}{{ 'addAnotherPage.moneyOut.supportTitle' | trans }}{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_checkbox_group(form.addAnother, 'addAnotherPage.moneyOut.form.addAnother', {
+        'fieldSetClass' : 'inline',
+        'legendClass' : 'govuk-label--s text'
+    }) }}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

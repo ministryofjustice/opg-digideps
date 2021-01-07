@@ -1,15 +1,15 @@
 <?php declare(strict_types=1);
 
 
-namespace Tests\AppBundle\EventListener;
+namespace Tests\App\EventListener;
 
-use AppBundle\Event\UserAddedToOrganisationEvent;
-use AppBundle\Event\UserRemovedFromOrganisationEvent;
-use AppBundle\EventSubscriber\OrgUserMembershipSubscriber;
-use AppBundle\Service\Audit\AuditEvents;
-use AppBundle\Service\Time\DateTimeProvider;
-use AppBundle\TestHelpers\OrganisationHelpers;
-use AppBundle\TestHelpers\UserHelpers;
+use App\Event\UserAddedToOrganisationEvent;
+use App\Event\UserRemovedFromOrganisationEvent;
+use App\EventSubscriber\OrgUserMembershipSubscriber;
+use App\Service\Audit\AuditEvents;
+use App\Service\Time\DateTimeProvider;
+use App\TestHelpers\OrganisationHelpers;
+use App\TestHelpers\UserHelpers;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;

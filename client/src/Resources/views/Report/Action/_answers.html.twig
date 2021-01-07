@@ -1,0 +1,108 @@
+{% import 'App:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-actions" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set append104 = report.get104TransSuffix %}
+
+{% set hideEditLink = hideEditLink | default(false) %}
+
+<dl class="govuk-summary-list">
+    {{ macros.summaryListHeaderQA(hideEditLink) }}
+
+    {# step 1 #}
+    <div class="govuk-summary-list__row behat-region-expect-financial-decision">
+
+        {% if report.action.doYouExpectFinancialDecisions is null %}
+            <dt class="govuk-summary-list__key">
+                <span class="error">
+                    {{ ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions) }}
+                </span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </dd>
+        {% else %}
+            <dt class="govuk-summary-list__key">
+                {{ ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.action.doYouExpectFinancialDecisions | capitalize }}
+            </dd>
+        {% endif %}
+
+        {% if not hideEditLink  %}
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">
+                    {{ 'edit' | trans({}, 'common' ) }}
+                </a>
+            </dd>
+        {% endif  %}
+    </div>
+
+    {% if report.action.doYouExpectFinancialDecisions == 'yes' %}
+        <div class="govuk-summary-list__row behat-region-expect-financial-decision-details">
+            <dt class="govuk-summary-list__key">
+                {{ ('form.doYouExpectFinancialDecisionsDetails.label' ~ append104) | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.action.doYouExpectFinancialDecisionsDetails | nl2br }}
+            </dd>
+            {% if not hideEditLink  %}
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link behat-link-edit" href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">
+                        {{ 'edit' | trans({}, 'common' ) }}
+                    </a>
+                </dd>
+            {% endif  %}
+        </div>
+    {% endif %}
+
+    {# step 2 #}
+    <div class="govuk-summary-list__row behat-region-have-concerns">
+
+        {% if report.action.doYouHaveConcerns is null %}
+            <dt class="govuk-summary-list__key">
+                <span class="error">
+                    {{ 'form.doYouHaveConcerns.label' | trans(transOptions) }}
+                </span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </dd>
+        {% else %}
+            <dt class="govuk-summary-list__key">
+                {{ 'form.doYouHaveConcerns.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.action.doYouHaveConcerns | capitalize }}
+            </dd>
+        {% endif %}
+
+        {% if not hideEditLink  %}
+        <dd class="govuk-summary-list__actions">
+            <a class="govuk-link behat-link-edit" href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}">
+                {{ 'edit' | trans({}, 'common' ) }}
+            </a>
+        </dd>
+        {% endif  %}
+    </div>
+
+    {% if report.action.doYouHaveConcerns == 'yes' %}
+        <div class="govuk-summary-list__row behat-region-have-concerns-details">
+            <dt class="govuk-summary-list__key">
+                {{ 'form.doYouHaveConcernsDetails.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.action.doYouHaveConcernsDetails | nl2br }}
+            </dd>
+            {% if not hideEditLink  %}
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}">
+                    {{ 'edit' | trans({}, 'common' ) }}
+                </a>
+            </dd>
+            {% endif  %}
+        </div>
+    {% endif %}
+</dl>

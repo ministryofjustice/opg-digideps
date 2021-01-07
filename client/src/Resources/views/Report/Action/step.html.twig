@@ -1,0 +1,96 @@
+{% extends 'App:Layouts:application.html.twig' %}
+
+{% import 'App:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-actions" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set append104 = report.get104TransSuffix %}
+
+{% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans }}{% endblock %}
+{% block pageHeader %}{% endblock %}
+
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {% if step == 1 %}
+        <div class="govuk-form-group {% if not form.doYouExpectFinancialDecisions.vars.valid %}govuk-form-group--error{% endif %}">
+            {{ form_checkbox_group(form.doYouExpectFinancialDecisions, 'form.doYouExpectFinancialDecisions', {
+                'useFormGroup': false,
+                'legendText' : ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions, translationDomain),
+                legend: {
+                    isPageHeading: true,
+                    caption: 'stepPage.supportTitle' | trans
+                },
+                'hintText' : ('form.doYouExpectFinancialDecisions.hint' ~ append104 ) | trans(transOptions, translationDomain),
+                'items': [
+                    {'dataTarget': 'financial-decisions-textarea' },
+                    {},
+                ]
+            }) }}
+
+            <div id="financial-decisions-textarea" class="opg-indented-block js-hidden">
+                {{ form_input(form.doYouExpectFinancialDecisionsDetails, 'form.doYouExpectFinancialDecisionsDetails', {
+                    'labelText': ('form.doYouExpectFinancialDecisionsDetails.label' ~ append104) | trans(transOptions, translationDomain),
+                    'labelClass': 'required',
+                    'labelParameters': transOptions
+                }) }}
+            </div>
+        </div>
+
+        {% if '104' not in report.type %}
+            <details class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">{{ 'form.doYouExpectFinancialDecisions.hiddenText01.summary' | trans(transOptions) }}</span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p class="govuk-body">{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para01' |trans(transOptions) }}</p>
+                    <p class="govuk-body">{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para02' |trans(transOptions)|raw }}</p>
+                    <p class="govuk-body">{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para03' |trans(transOptions) }}</p>
+                    <p class="govuk-body">{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para04' |trans(transOptions)|raw }}</p>
+                </div>
+            </details>
+        {% endif %}
+
+    {% endif %}
+
+    {% if step == 2 %}
+        <div class="govuk-form-group {% if not form.doYouHaveConcerns.vars.valid %}govuk-form-group--error{% endif %}">
+            {{ form_checkbox_group(form.doYouHaveConcerns, 'form.doYouHaveConcerns', {
+                'useFormGroup': false,
+                'legendText' : 'form.doYouHaveConcerns.label' | trans(transOptions, translationDomain),
+                legend: {
+                    isPageHeading: true,
+                    caption: 'stepPage.supportTitle' | trans
+                },
+                'hintText' : ('form.doYouHaveConcerns.hint' ~ append104)  | trans(transOptions, translationDomain),
+                'items': [
+                    {'dataTarget': 'actions-details-textarea' },
+                    {},
+                ]
+            }) }}
+
+            <div id="actions-details-textarea" class="opg-indented-block js-hidden">
+                {{ form_input(form.doYouHaveConcernsDetails, 'form.doYouHaveConcernsDetails', {
+                    'labelClass': 'required',
+                    'labelParameters': transOptions
+                }) }}
+            </div>
+        </div>
+    {% endif %}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {% if skipLink %}
+        <a href="{{ skipLink }}" class="govuk-link button-link behat-link-step-skip">{{ 'skipLink' | trans({}, 'common') }}</a>
+    {% endif %}
+
+    {{ form_end(form) }}
+
+{% endblock %}

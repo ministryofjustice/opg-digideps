@@ -1,0 +1,133 @@
+{% extends 'App:Layouts:application.html.twig' %}
+
+{% import 'App:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-assets" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'stepPageProperty' %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set translationPrefix = "form.property." %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans(transOptions) }}{% endblock %}
+
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+    {{ form_start(form, {attr: {novalidate: 'novalidate' } }) }}
+
+    {% if step == 1 %}
+        {{ macros.addressFields(form, translationDomain, translationPrefix) }}
+    {% endif %}
+
+    {% if step == 2 %}
+        {{ form_input(form.occupants, 'form.property.occupants') }}
+    {% endif %}
+
+    {% if step == 3 %}
+        <div class="push--bottom">
+            <div class="govuk-form-group flush--bottom {% if not form.owned.vars.valid %}govuk-form-group--error{% endif %}">
+                {{ form_checkbox_group(form.owned, 'form.property.owned', {
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'labelParameters': transOptions,
+                    'legendClass': 'govuk-label--s',
+                    'items': [
+                        {},
+                        {'dataTarget': 'owned-percentage-textarea' }
+                    ]
+                }) }}
+                <div id="owned-percentage-textarea" class="opg-indented-block js-hidden">
+                    {{ form_input(form.ownedPercentage, 'form.property.ownedPercentage', {
+                        'inputPrefix' : '%',
+                        'inputClass' : 'govuk-!-width-one-quarter',
+                        'labelParameters': transOptions,
+                    }) }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if step == 4 %}
+        <div class="push--bottom">
+            <div class="govuk-form-group flush--bottom {% if not form.hasMortgage.vars.valid %}govuk-form-group--error{% endif %}">
+                {{ form_checkbox_group(form.hasMortgage, 'form.property.hasMortgage', {
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'legendClass': 'govuk-label--s',
+                    'items': [
+                        {'dataTarget': 'mortgage-outstanding-amount-textarea' },
+                        {},
+                    ]
+                }) }}
+                <div id="mortgage-outstanding-amount-textarea" class="opg-indented-block js-hidden">
+                    {{ form_input(form.mortgageOutstandingAmount, 'form.property.mortgageOutstandingAmount', {
+                        'inputPrefix' : '£',
+                        'inputClass' : 'govuk-!-width-one-quarter js-format-currency'
+                    }) }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if step == 5 %}
+        {{ form_input(form.value, 'form.property.value', {
+            'inputPrefix' : '£',
+            'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
+            'labelRaw': true
+        } ) }}
+    {% endif %}
+
+    {% if step == 6 %}
+        {{ form_checkbox_group(form.isSubjectToEquityRelease, 'form.property.isSubjectToEquityRelease', {
+            'fieldSetClass' : 'inline',
+            'legendClass': 'govuk-label--s'
+        }) }}
+    {% endif %}
+
+    {% if step == 7 %}
+        {{ form_checkbox_group(form.hasCharges, 'form.property.hasCharges', {
+            'fieldSetClass' : 'inline',
+            'legendClass': 'govuk-label--s'
+        }) }}
+    {% endif %}
+
+    {% if step == 8 %}
+        <div class="push--bottom">
+            <div class="govuk-form-group flush--bottom {% if not form.isRentedOut.vars.valid %}govuk-form-group--error{% endif %}">
+                {{ form_checkbox_group(form.isRentedOut, 'form.property.isRentedOut', {
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'legendClass': 'govuk-label--s',
+                    'items': [
+                        {'dataTarget': 'rented-out-info' },
+                        {}
+                    ]
+                }) }}
+
+                <div id="rented-out-info" class="opg-indented-block js-hidden">
+                    {{ form_known_date(form.rentAgreementEndDate, 'form.property.rentAgreementEndDate', {
+                        'showDay': 'false'
+                    }) }}
+
+                    {{ form_input(form.rentIncomeMonth, 'form.property.rentIncomeMonth', {
+                        'inputPrefix' : '£',
+                        'inputClass' : 'govuk-!-width-one-quarter js-format-currency'
+                    }) }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

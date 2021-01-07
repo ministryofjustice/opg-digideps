@@ -1,15 +1,15 @@
 <?php
 
-namespace AppBundle\Resources\views\Ndr;
+namespace App\Resources\views\Ndr;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Ndr\AssetOther;
-use AppBundle\Entity\Ndr\AssetProperty;
-use AppBundle\Entity\Ndr\BankAccount;
-use AppBundle\Entity\Ndr\Debt;
-use AppBundle\Entity\Ndr\Ndr;
-use AppBundle\Entity\Ndr\VisitsCare;
-use AppBundle\Entity\User;
+use App\Entity\Client;
+use App\Entity\Ndr\AssetOther;
+use App\Entity\Ndr\AssetProperty;
+use App\Entity\Ndr\BankAccount;
+use App\Entity\Ndr\Debt;
+use App\Entity\Ndr\Ndr;
+use App\Entity\Ndr\VisitsCare;
+use App\Entity\User;
 use Mockery as m;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
@@ -79,7 +79,7 @@ class NdrFormattedTest extends WebTestCase
             ->setDebts([$this->debt1])
         ;
 
-        $this->html = $this->twig->render('AppBundle:Ndr/Formatted:formatted_body.html.twig', [
+        $this->html = $this->twig->render('App:Ndr/Formatted:formatted_body.html.twig', [
             'ndr' => $this->ndr,
             'app' => ['user'=>$this->user] //mock twig app.user from the view
         ]);

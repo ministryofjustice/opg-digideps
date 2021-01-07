@@ -1,0 +1,73 @@
+{% import 'App:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-prof-deputy-costs" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set append104 = report.get104TransSuffix %}
+
+{# Set page to summary page to allow correct translations to be pulled in#}
+{% set page = 'summaryPage' %}
+
+{% set hideEditLink = hideEditLink | default(false) %}
+{% set actualSubmittedOtherCosts = report.generateActualSubmittedOtherCosts %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <p class="govuk-body"><strong>{{ (page ~ '.weveListedYourAnswers') | trans }}</strong></p>
+        <p class="govuk-body">{{ (page ~ '.checkTheyreCorrect') | trans }}</p>
+    </div>
+    <div class="govuk-grid-column-one-third">
+        {{ macros.relatedSections(report, 'profDeputyCosts') }}
+    </div>
+</div>
+
+<dl class="govuk-summary-list">
+    {{ macros.summaryListHeaderQA(hideEditLink) }}
+    {# How did you charge for your costs? #}
+    {% include 'App:Report/ProfDeputyCosts:_how_charged_answers.html.twig' with {
+        'report': report,
+        'transDomain': translationDomain,
+        'hideEditLink' : false
+    } %}
+    {% include 'App:Report/ProfDeputyCosts:_payments_received_answers.html.twig' with {
+        'report': report,
+        'transDomain': translationDomain,
+        'hideEditLink' : false
+    } %}
+</dl>
+
+<dl class="govuk-summary-list">
+    {{ macros.summaryListHeaderQA(hideEditLink) }}
+    {% include 'App:Report/ProfDeputyCosts:_all_cost_total_answers.html.twig' with {
+        'report': report,
+        'submittedOtherCosts': actualSubmittedOtherCosts,
+        'transDomain': "report-prof-deputy-costs",
+        'hideEditLink' : false
+    } %}
+    {% include 'App:Report/ProfDeputyCosts:_scco_more_details_answer.html.twig' with {
+        'report': report,
+        'submittedOtherCosts': actualSubmittedOtherCosts,
+        'transDomain': "report-prof-deputy-costs",
+        'hideEditLink' : false
+    } %}
+</dl>
+
+<h2 class="govuk-heading-m">{{ (page ~ '.breakdownOfAdditionalCosts') |  trans(transOptions) }}</h2>
+
+<dl class="govuk-summary-list">
+    {% include 'App:Report/ProfDeputyCosts:_breakdown_costs_answers.html.twig' with {
+        'report': report,
+        'submittedOtherCosts': actualSubmittedOtherCosts,
+        'transDomain': "report-prof-deputy-costs",
+        'hideEditLink' : false
+    } %}
+
+    {% if report.profDeputyTotalCosts is not null %}
+        {% include 'App:Report/ProfDeputyCosts:_total_final_answers.html.twig' with {
+            'report': report,
+            'submittedOtherCosts': actualSubmittedOtherCosts,
+            'transDomain': "report-prof-deputy-costs",
+            'hideEditLink' : false
+        } %}
+    {% endif %}
+</dl>

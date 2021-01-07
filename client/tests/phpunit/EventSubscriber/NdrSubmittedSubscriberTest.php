@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
 
-namespace Tests\AppBundle\EventListener;
+namespace Tests\App\EventListener;
 
-use AppBundle\Event\NdrSubmittedEvent;
-use AppBundle\EventSubscriber\NdrSubmittedSubscriber;
-use AppBundle\Service\Mailer\Mailer;
-use AppBundle\TestHelpers\NdrHelpers;
-use AppBundle\TestHelpers\ReportHelpers;
-use AppBundle\TestHelpers\UserHelpers;
+use App\Event\NdrSubmittedEvent;
+use App\EventSubscriber\NdrSubmittedSubscriber;
+use App\Service\Mailer\Mailer;
+use App\TestHelpers\NdrHelpers;
+use App\TestHelpers\ReportHelpers;
+use App\TestHelpers\UserHelpers;
 use PHPStan\Testing\TestCase;
 
 class NdrSubmittedSubscriberTest extends TestCase

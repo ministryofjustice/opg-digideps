@@ -1,0 +1,15 @@
+{% from 'App:Admin/Client/Report:macros.html.twig' import checklist_radios %}
+{% from 'App:Macros:macros.html.twig' import details %}
+
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'checklistPage' %}
+
+<h3 class="govuk-heading-m" id="lifestyle">{{ (page ~ '.heading.lodging.healthAndLifestyle') | trans }}</h3>
+
+{{ checklist_radios(form.satisfiedWithHealthAndLifestyle) }}
+
+{{ details({
+    summaryText: (page ~ '.revealTitle.lifestyleResponses') | trans,
+    html: include('App:Report/Lifestyle:_answers.html.twig', { hideEditLink: true })
+}) }}

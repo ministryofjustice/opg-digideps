@@ -1,0 +1,145 @@
+{% extends 'App:Layouts:application.html.twig' %}
+
+{% import 'App:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-balance" %}
+{% trans_default_domain translationDomain %}
+
+{% set transOptions = {
+    '%client%': report.client.firstname | e,
+    '%moreless%': report.totalsOffset < 0 ? "less" : "more"
+} %}
+
+{% set readyToBalance = report.status.balanceState['state'] != 'not-started' %}
+
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+    {% if not readyToBalance %}
+        {{ macros.notification('info', ('alerts.notStarted' ~ app.user.getRoleForTrans) | trans(transOptions)) }}
+    {% else %}
+        {% if report.isTotalsMatch %}
+            {{ macros.notification('success', 'alerts.balanced' | trans) }}
+        {% else %}
+            {% set alertMessage %}
+                <div class="behat-region-balance-bad">
+                    {% if report.isDue %}
+                        <h3 class="govuk-heading-m">{{ 'alerts.notBalanced' | trans }}</h3>
+                    {% endif %}
+                    <div class="data behat-region-unaccounted-for">
+                        <span class="govuk-heading-xl govuk-!-margin-bottom-0">
+                            £{{ report.totalsOffset | abs | money_format }}
+                        </span>
+                        {{ 'alerts.notBalancedSupport' | trans(transOptions) }}
+                    </div>
+                </div>
+            {% endset %}
+            {{ macros.notification(report.isDue and report.balanceMismatchExplanation is null ? 'error' : 'info', alertMessage) }}
+        {% endif %}
+    {% endif %}
+
+    {# Balance table #}
+    {% include 'App:Report/Balance:_balance_table.html.twig' %}
+
+    {% if readyToBalance %}
+        {# Balance table #}
+        {% include 'App:Report/Balance:_difference_table.html.twig' %}
+    {% endif %}
+
+    {# TODO use report.hasSection('moneyIn') || report.hasSection('gifts') || report.hasSection('deputyExpenses') to decouple #}
+    {% if report.canLinkToBankAccounts %}
+        {# If no transactions, don't display download CSV link #}
+        {% if report.gifts is not empty or report.expenses is not empty or report.moneyTransactionsIn is not empty or report.moneyTransactionsOut is not empty %}
+            <p class="text push--top">
+                {{ 'download-transactions' | trans({ '%transactionsCsvPath%': path('report_transactions_csv', {reportId: report.id})}) | raw }}
+            </p>
+        {% endif %}
+    {% endif %}
+
+    <h3 class="govuk-heading-m">{{ 'moreInfo.heading' | trans }}</h3>
+
+    <div class="text">
+        <p class="govuk-body">{{ 'moreInfo.para1' | trans(transOptions) | raw }}</p>
+        <p class="govuk-body">{{ 'moreInfo.para2' | trans }}</p>
+        <p class="govuk-body">{{ 'moreInfo.para3' | trans }}</p>
+
+        {% if readyToBalance and not report.isTotalsMatch %}
+
+            <p class="govuk-!-font-weight-bold">{{ 'moreInfo.para4' | trans(transOptions) }}</p>
+
+            <details class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">{{ 'moreInfo.whatToDo.title' | trans }}</span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p class="govuk-body">{{ 'moreInfo.whatToDo.para1' | trans }}</p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>{{ 'moreInfo.whatToDo.listItem1' | trans }}</li>
+                        <li>{{ ('moreInfo.whatToDo.listItem2' ~ app.user.getRoleForTrans) | trans }}</li>
+                        <li>{{ ('moreInfo.whatToDo.listItem3' ~ app.user.getRoleForTrans) | trans(transOptions) }}</li>
+                        {% if app.user and not app.user.isDeputyProf() %}
+                            <li>{{ ('moreInfo.whatToDo.listItem4' ~ app.user.getRoleForTrans) | trans }}</li>
+                        {% endif %}
+                        <li>{{ 'moreInfo.whatToDo.listItem5' | trans(transOptions) | raw }}</li>
+                    </ul>
+                </div>
+            </details>
+
+        {% endif %}
+    </div>
+
+    {% if report.isDue and readyToBalance and not report.isTotalsMatch %}
+        <h3 class="govuk-heading-m" id="cantFindTheProblem">{{ 'cantFind.heading' | trans }}</h3>
+
+        <div class="text">
+            <p class="govuk-body">{{ 'cantFind.para1' | trans }}</p>
+            <p class="govuk-body">{{ 'cantFind.para2' | trans }}</p>
+        </div>
+
+        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+        {{ form_input(form.balanceMismatchExplanation, '', {
+            'labelText': 'form.explanation.label' | trans
+        }) }}
+
+        {{ macros.saveAndContinueButton(form.save) }}
+
+        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="govuk-link button-link">
+            {% if app.user.isDeputyOrg() %}
+                {{ 'backToClientProfile' | trans({}, 'common') }}
+            {% else %}
+                {{ 'backToReportOverview' | trans({}, 'common') }}
+            {% endif %}
+        </a>
+
+        {{ form_end(form) }}
+
+    {% else %}
+
+        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="button">
+            {% if app.user.isDeputyOrg() %}
+                {{ 'backToClientProfile' | trans({}, 'common') }}
+            {% else %}
+                {{ 'backToReportOverview' | trans({}, 'common') }}
+            {% endif %}
+        </a>
+
+    {% endif %}
+
+    {# Pagination #}
+    {% include 'App:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'balance',
+    } %}
+
+    <script>
+        $(document).ready(function() {
+            var ga = new opg.Ga({'timeout': 250});
+            ga.trackDownloadableLink($('#transactionsCsv'));
+        });
+    </script>
+
+{% endblock %}

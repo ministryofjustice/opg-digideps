@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\Service;
+namespace App\Service;
 
 use Alphagov\Notifications\Client as NotifyClient;
 use Alphagov\Notifications\Exception\ApiException as NotifyAPIException;
-use AppBundle\Service\Availability\NotifyAvailability;
+use App\Service\Availability\NotifyAvailability;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -46,7 +46,7 @@ class NotifyAvailabilityTest extends TestCase
     {
         return new NotifyAPIException(
             'HTTP:502',
-            '502' ,
+            '502',
             ['errors' => [0 => ['error' => '502', 'message' => 'Not available']]],
             new Response(502)
         );

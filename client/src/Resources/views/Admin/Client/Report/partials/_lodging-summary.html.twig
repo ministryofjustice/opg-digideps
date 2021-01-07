@@ -1,0 +1,44 @@
+{% from 'App:Macros:macros.html.twig' import details %}
+{% trans_default_domain 'admin-checklist' %}
+
+{% set translations = {
+    'for-review': 'forReview',
+    incomplete: 'incomplete',
+    'further-casework-required': 'furtherCaseworkRequired',
+    satisfied: 'satisfied',
+} %}
+
+{% set contents %}
+    <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ (page ~ '.form.lodgingSummary.label') | trans }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.checklist.lodgingSummary }}
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ (page ~ '.form.finalDecision.legend') | trans }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ (page ~ '.form.finalDecision.options.' ~ translations[report.checklist.finalDecision]) | trans }}
+            </dd>
+        </div>
+    </dl>
+
+    {% if report.checklist.checklistInformation %}
+        <h3 class="govuk-heading-m">{{ (page ~ '.form.furtherInformation.label') | trans }}</h3>
+
+        {{ include('App:Admin/Client/Report/partials:_further-information-table.html.twig', {
+            information: report.checklist.checklistInformation
+        }) }}
+    {% endif %}
+{% endset %}
+
+{{ details({
+    summaryText: (page ~ '.revealTitle.lodgingSummary') | trans,
+    text: contents,
+    classes: "behat-region-lodging-summary"
+}) }}

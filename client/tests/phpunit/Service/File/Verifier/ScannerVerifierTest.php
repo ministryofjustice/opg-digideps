@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Service\File\Verifier;
+namespace App\Service\File\Verifier;
 
-use AppBundle\Entity\Report\Document;
-use AppBundle\Service\File\Scanner\ClamFileScanner;
+use App\Entity\Report\Document;
+use App\Service\File\Scanner\ClamFileScanner;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Monolog\Logger;

@@ -1,0 +1,163 @@
+{% extends env == 'admin' ? 'App:Layouts:admin_moj_template.html.twig' : 'App:Layouts:moj_template.html.twig' %}
+
+{% import 'App:Macros:macros.html.twig' as macros %}
+
+{% set adLoggedAsDeputy = app.session.get('_adId') %}
+{% set adName = app.session.get('_adFirstname') ~ ' ' ~ app.session.get('_adLastname') %}
+
+
+{% trans_default_domain "layout" %}
+
+{% block head %}
+    <meta name="format-detection" content="telephone=no">
+{% endblock %}
+
+{% block htmlTitle %}Deputy Report{% endblock %}
+
+{% block proposition_content %}
+    <a href="{{ (app.user and app.user.isDeputyOrg()) ? path('org_dashboard') : '/' }}" class="govuk-header__link govuk-header__link--service-name">
+        {% block proposition_title %}Complete the deputy report{% endblock %}
+    </a>
+
+    {% if app.user %}
+        <button type="button" role="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">
+            Menu
+        </button>
+    {% endif %}
+    <nav>
+        {% if app.user %}
+            <ul id="navigation" class="govuk-header__navigation behat-region-navbar" aria-label="Top Level Navigation">
+                {% if is_granted('ROLE_LAY_DEPUTY') %}
+                    {% if adLoggedAsDeputy %}
+                        <li class="govuk-header__navigation-item">
+                            Logged as {{  adName }} (Assisted Digital)
+                        </li>
+                    {% endif %}
+                    <li class="govuk-header__navigation-item">
+                        <a href="{{path('homepage')}}" class="govuk-header__link behat-link-reports">
+                            {{ 'nav.reports' | trans }}
+                        </a>
+                    </li>
+                    <li class="govuk-header__navigation-item">
+                        <a href="{{path('account_settings')}}" class="govuk-header__link behat-link-user-account">
+                            {{ 'nav.userAccount' | trans }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if app.user.isDeputyOrg() %}
+                    <li class="govuk-header__navigation-item">
+                        <a href="{{path('org_dashboard')}}" class="govuk-header__link behat-link-org-dashboard">
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="govuk-header__navigation-item">
+                        <a href="{{path('org_settings')}}" class="govuk-header__link behat-link-org-settings">
+                            Settings
+                        </a>
+                    </li>
+                {% endif %}
+                <li class="govuk-header__navigation-item">
+                    <a href="{{path('logout')}}" class="govuk-header__link behat-link-logout">
+                        {{ 'signOut' | trans({}, 'common' ) }}
+                    </a>
+                </li>
+            </ul>
+        {% endif %}
+    </nav>
+{% endblock %}
+
+{% block content %}
+
+    {% block validationSummary %}
+        {% if form | default(false) %}
+            {{ form_errors_list(form) }}
+        {% endif %}
+    {% endblock %}
+
+
+    {% block notification %}
+        {% for flashMessage in app.session.flashbag.get('notice') %}
+            {{ macros.notification('success', flashMessage) }}
+        {% endfor %}
+    {% endblock %}
+
+    {% block errors %}
+        {% for flashMessage in app.session.flashbag.get('error') %}
+            <div class="behat-region-error">
+                {{ macros.notification('error', flashMessage) }}
+            </div>
+        {% endfor %}
+    {% endblock %}
+
+    {% block warnings %}
+        {% for flashMessage in app.session.flashbag.get('warning') %}
+            <div class="behat-region-error">
+                {{ macros.notification('warning', flashMessage) }}
+            </div>
+        {% endfor %}
+    {% endblock %}
+
+    {% block pageHeader %}
+        <div class="moj-page-header-actions">
+            <div class="moj-page-header-actions__title">
+                {% if block("supportTitleTop") is defined and block("supportTitleTop") != "" %}
+                    <span class="govuk-caption-xl">{% block supportTitleTop %}{% endblock %}</span>
+                {% endif %}
+                <h1 class="govuk-heading-xl">
+                    {% block pageTitle %} Deputy report {% endblock %}
+                </h1>
+            </div>
+
+            <div class="moj-page-header-actions__actions">
+                <div class="moj-button-menu">
+                    <div class="moj-button-menu__wrapper">
+                        {% block actions %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+
+    {% block progressBar %}{% endblock %}
+
+    {% block pageContent %}{% endblock %}
+
+{% endblock %}
+
+{% block footerSupportLinks %}
+    <li class="govuk-footer__inline-list-item">
+        <a href="{{path('terms')}}" class="govuk-footer__link">
+            Terms of use
+        </a>
+    </li>
+    <li class="govuk-footer__inline-list-item">
+        <a href="{{path('privacy')}}" class="govuk-footer__link">
+            Privacy notice
+        </a>
+    </li>
+    <li class="govuk-footer__inline-list-item">
+        <a href="{{ path('cookies') }}" class="govuk-footer__link">
+            Cookies
+        </a>
+    </li>
+    <li class="govuk-footer__inline-list-item">
+        <a href="{{path('accessibility')}}" class="govuk-footer__link">
+            Accessibility
+        </a>
+    </li>
+{% endblock %}
+
+
+
+{% block javascripts %}
+    <script src="{{ 'javascripts/application.js'| assetUrl }}"></script>
+{% endblock %}
+
+{% block bodyEnd %}
+
+    {% block popups %}
+        {% include 'App:Components/Resources:_popups.html.twig' %}
+    {% endblock %}
+
+{% endblock %}

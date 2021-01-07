@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 
-namespace AppBundle\Service\File;
+namespace App\Service\File;
 
 use League\MimeTypeDetection\FinfoMimeTypeDetector;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;

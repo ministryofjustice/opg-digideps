@@ -1,0 +1,24 @@
+{% extends 'App:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin" %}
+{% set page = 'upload' %}
+
+{% set navSection = 'users' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block supportTitleTop %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form) }}
+
+        {{ form_checkbox_group(form.type, '', {}) }}
+
+        {{ form_submit(form.save, (page ~ '.form.continue'), {labelTranslationDomain: 'admin'}) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

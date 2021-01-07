@@ -1,21 +1,21 @@
 <?php declare(strict_types=1);
 
 
-use AppBundle\Event\CoDeputyCreatedEvent;
-use AppBundle\Event\CoDeputyInvitedEvent;
-use AppBundle\Event\DeputyInvitedEvent;
-use AppBundle\Event\DeputySelfRegisteredEvent;
-use AppBundle\Event\OrgUserCreatedEvent;
-use AppBundle\Event\UserPasswordResetEvent;
-use AppBundle\Event\AdminUserCreatedEvent;
-use AppBundle\Event\UserDeletedEvent;
-use AppBundle\Event\UserUpdatedEvent;
-use AppBundle\EventDispatcher\EventDispatcherMock;
-use AppBundle\EventDispatcher\ObservableEventDispatcher;
-use AppBundle\Model\SelfRegisterData;
-use AppBundle\Service\Client\Internal\UserApi;
-use AppBundle\Service\Client\RestClient;
-use AppBundle\TestHelpers\UserHelpers;
+use App\Event\CoDeputyCreatedEvent;
+use App\Event\CoDeputyInvitedEvent;
+use App\Event\DeputyInvitedEvent;
+use App\Event\DeputySelfRegisteredEvent;
+use App\Event\OrgUserCreatedEvent;
+use App\Event\UserPasswordResetEvent;
+use App\Event\AdminUserCreatedEvent;
+use App\Event\UserDeletedEvent;
+use App\Event\UserUpdatedEvent;
+use App\EventDispatcher\EventDispatcherMock;
+use App\EventDispatcher\ObservableEventDispatcher;
+use App\Model\SelfRegisterData;
+use App\Service\Client\Internal\UserApi;
+use App\Service\Client\RestClient;
+use App\TestHelpers\UserHelpers;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;

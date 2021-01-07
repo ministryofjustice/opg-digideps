@@ -1,10 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Form\Admin;
+namespace App\Form\Admin;
 
-
-use AppBundle\Entity\Report\Checklist;
-use AppBundle\Entity\Report\Report;
+use App\Entity\Report\Checklist;
+use App\Entity\Report\Report;
 use Symfony\Component\Form\Test\TypeTestCase;
 
 class ReportChecklistTypeTest extends TypeTestCase

@@ -1,0 +1,39 @@
+{% extends 'App:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin" %}
+{% set page = 'statsPage' %}
+
+{% set navSection = 'metrics' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block supportTitleTop %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+    <div class="text">
+        <p class="govuk-body">{{ (page ~ '.reportSubmissionsPara') | trans }}</p>
+
+
+        {{ form_start(form, {attr: {class: 'search', novalidate: 'novalidate' }}) }}
+
+        {{ form_known_date(form.startDate, 'statsPage.form.fromDate', {
+            'hintText': 'statsPage.form.fromDate.hint'
+        }) }}
+
+        {{ form_known_date(form.endDate, 'statsPage.form.toDate', {
+            'hintText': 'statsPage.form.toDate.hint'
+        }) }}
+
+        <div class="govuk-form-group">
+            {{ form_submit(form.submitAndDownload, (page ~ '.form.submitAndDownload'), {
+                'buttonClass': 'behat-link-submit-and-download'
+            }) }}
+            <a href="{{ path('admin_stats') }}" class="govuk-link button-link">{{ 'homeForm.clear' | trans }}</a>
+        </div>
+        {{ form_end(form) }}
+
+    </div>
+
+{% endblock %}

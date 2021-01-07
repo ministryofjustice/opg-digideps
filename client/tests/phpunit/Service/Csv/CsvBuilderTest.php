@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 
-namespace AppBundle\Service\Csv;
+namespace App\Service\Csv;
 
 use PHPUnit\Framework\TestCase;
 

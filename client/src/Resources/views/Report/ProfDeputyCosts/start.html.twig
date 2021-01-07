@@ -1,0 +1,42 @@
+{% extends 'App:Layouts:application.html.twig'%}
+{% set transOptions = {
+    '%client%': report.client.firstname | e,
+    '%periodStartDate%': report.startDate | date("j F Y"),
+    '%periodEndDate%': report.endDate | date("j F Y")
+} %}
+
+{% import 'App:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-prof-deputy-costs" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'startPage' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="text behat-region-start-page">
+        <p class="govuk-body">{{ (page ~ '.pageSectionDescription1') | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ (page ~ '.pageSectionDescription2') | trans(transOptions) }}</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>{{ (page ~ '.listItem01') | trans }}</li>
+            <li>{{ (page ~ '.listItem02') | trans }}</li>
+        </ul>
+        <p class="govuk-body">{{ (page ~ '.pageSectionDescription3') | trans }}</p>
+        <p class="govuk-body">{{ (page ~ '.pageSectionDescription4') | trans }}</p>
+        <p class="govuk-body">{{ (page ~ '.pageSectionDescription5') | trans }}</p>
+    </div>
+
+    {{ macros.startSectionButton(path('prof_deputy_costs_how_charged', { 'reportId': report.id}), (page ~ '.startButton') | trans ) }}
+
+    {# Pagination #}
+    {% include 'App:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'profDeputyCosts',
+    } %}
+
+{% endblock %}

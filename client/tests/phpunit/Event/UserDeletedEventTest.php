@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
 
-namespace AppBundle\Event;
+namespace App\Event;
 
-use AppBundle\TestHelpers\UserHelpers;
+use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 
 class UserDeletedEventTest extends TestCase

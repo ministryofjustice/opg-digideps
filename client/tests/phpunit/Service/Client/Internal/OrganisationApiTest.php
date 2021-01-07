@@ -2,13 +2,13 @@
 
 namespace DigidepsTests\Service\Client\Internal;
 
-use AppBundle\Event\UserAddedToOrganisationEvent;
-use AppBundle\Event\UserRemovedFromOrganisationEvent;
-use AppBundle\EventDispatcher\ObservableEventDispatcher;
-use AppBundle\Service\Client\Internal\OrganisationApi;
-use AppBundle\Service\Client\RestClient;
-use AppBundle\TestHelpers\OrganisationHelpers;
-use AppBundle\TestHelpers\UserHelpers;
+use App\Event\UserAddedToOrganisationEvent;
+use App\Event\UserRemovedFromOrganisationEvent;
+use App\EventDispatcher\ObservableEventDispatcher;
+use App\Service\Client\Internal\OrganisationApi;
+use App\Service\Client\RestClient;
+use App\TestHelpers\OrganisationHelpers;
+use App\TestHelpers\UserHelpers;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;

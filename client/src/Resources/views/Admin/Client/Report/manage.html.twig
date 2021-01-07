@@ -1,0 +1,94 @@
+{% extends 'App:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin-clients" %}
+{% set page = 'reportManage' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    <p class="flush--bottom">{{ 'client' | trans({}, 'common') }}: <span class="govuk-!-font-weight-bold">{{ report.client.fullName }}</span></p>
+    <p class="govuk-body">{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="govuk-!-font-weight-bold">{{ report.client.caseNumber }}</span></p>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-form' }}) }}
+
+    {{ form_select(form.type, 'reportManage.form.type') }}
+
+    {% if report.isSubmitted %}
+        {{ (page ~ '.form.startDate.label') | trans }}
+        {{ form_known_date(form.startDate, 'startDate') }}
+
+        {{ (page ~ '.form.endDate.label') | trans }}
+        {{ form_known_date(form.endDate, 'endDate') }}
+
+        <fieldset class="govuk-form-group {% if not form.unsubmittedSection.vars.valid %}govuk-form-group--error{% endif %}">
+            <legend>
+                <h2 class="govuk-heading-s flush--top">{{ (page ~ '.form.markSections.legend') | trans }}</h2>
+            </legend>
+            <div class="govuk-checkboxes govuk-checkboxes--small">
+                {% for section in form.unsubmittedSection  %}
+                    {{ form_row(section.id) }}
+                    {{ form_checkbox(section.present, '', {
+                        'labelText': ('prevNextLinks.sections.' ~ section.id.vars.value) | trans({}, 'report-common'),
+                        'useFormGroup': false
+                    }) }}
+                {% endfor %}
+            </div>
+        </fieldset>
+    {% endif %}
+
+    <p class="govuk-heading-s flush--ends">{{  'reportManage.currentDueDate' | trans }}</p>
+    <p class="govuk-body">
+        {{ report.dueDate | date("j F Y") }}
+        {% set dueDateDiffDays = report.dueDateDiffDays  %}
+        {% if dueDateDiffDays < 0 %}
+        <br/><span class="govuk-body-s govuk-!-font-weight-bold text-red">{{  'reportManage.overdueBy' | trans ({
+                '%overdueDays%': report.dueDateDiffDays|abs,
+                '%dueDays%': report.dueDateDiffDays
+            }) }}
+        </span>
+        {% endif %}
+    </p>
+
+    <div class="govuk-form-group push--bottom {% if not form.dueDateChoice.vars.valid %}govuk-form-group--error{% endif %}">
+        {{ form_checkbox_group(form.dueDateChoice, 'reportManage.form.dueDateChoice', {
+            'legendClass' : 'govuk-label--s',
+            'useFormGroup': false,
+            'items': [
+                {},
+                {},
+                {},
+                {},
+                {'dataTarget': 'due-date-custom' }
+            ]
+        }) }}
+        <div id="due-date-custom" class="opg-indented-block js-hidden">
+            {{ form_known_date(form.dueDateCustom, 'reportManage.form.dueDateCustom') }}
+        </div>
+    </div>
+
+    {{ form_submit(form.save, 'reportManage.form.save') }}
+
+    <a href="{{ path('admin_client_details', {'id': report.client.id}) }}" class="govuk-link button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+
+    {{ form_end(form) }}
+
+    {% if closeForm is not null %}
+        {{ form_start(closeForm) }}
+            <legend class="govuk-fieldset__legend govuk-label--s">Close this report</legend>
+            {{ form_checkbox(closeForm.agreeCloseReport, 'reportManage.closeReport.form.agreeCloseReport', {
+                'labelClass': 'required'
+            }) }}
+            <div class="govuk-form-group">
+                {{ form_submit(closeForm.save, 'reportManage.closeReport.form.save', {
+                    'buttonClass': 'behat-link-close-report govuk-button govuk-button--warning',
+                }) }}
+            </div>
+        {{ form_end(closeForm) }}
+    {% endif %}
+
+{% endblock %}

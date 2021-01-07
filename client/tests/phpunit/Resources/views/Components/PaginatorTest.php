@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Resources\views\Report;
+namespace App\Resources\views\Report;
 
 use Mockery as m;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -31,7 +31,7 @@ class PaginatorTest extends WebTestCase
 
     private function html($params)
     {
-        return $this->twig->render('AppBundle:Components:paginator.html.twig', $params + [
+        return $this->twig->render('App:Components:paginator.html.twig', $params + [
                 'messages'       => [
                     'singlePage' => '{0} Showing 0 records|{1} Showing 1 record|]1,Inf[ Showing %count% records',
                     'multiPage'  => 'Showing %from% - %to% of %total% records',

@@ -1,20 +1,20 @@
 <?php
-namespace AppBundle\Resources\views\Report;
+namespace App\Resources\views\Report;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\Account;
-use AppBundle\Entity\Report\Action;
-use AppBundle\Entity\Report\AssetOther;
-use AppBundle\Entity\Report\AssetProperty;
-use AppBundle\Entity\Report\BankAccount;
-use AppBundle\Entity\Report\Debt;
-use AppBundle\Entity\Report\Decision;
-use AppBundle\Entity\Report\MoneyTransaction;
-use AppBundle\Entity\Report\MoneyTransfer;
-use AppBundle\Entity\Report\ProfDeputyOtherCost;
-use AppBundle\Entity\Report\Report as Report;
-use AppBundle\Entity\Report\Status;
-use AppBundle\Entity\User;
+use App\Entity\Client;
+use App\Entity\Report\Account;
+use App\Entity\Report\Action;
+use App\Entity\Report\AssetOther;
+use App\Entity\Report\AssetProperty;
+use App\Entity\Report\BankAccount;
+use App\Entity\Report\Debt;
+use App\Entity\Report\Decision;
+use App\Entity\Report\MoneyTransaction;
+use App\Entity\Report\MoneyTransfer;
+use App\Entity\Report\ProfDeputyOtherCost;
+use App\Entity\Report\Report as Report;
+use App\Entity\Report\Status;
+use App\Entity\User;
 use Mockery as m;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
@@ -149,7 +149,7 @@ class FormattedTest extends WebTestCase
      */
     private function renderTemplateAndGetCrawler($additionalVars = [])
     {
-        $html = $this->twig->render('AppBundle:Report/Formatted:formatted_body.html.twig', $additionalVars + [
+        $html = $this->twig->render('App:Report/Formatted:formatted_body.html.twig', $additionalVars + [
             'report' => $this->report,
             'app' => ['user' => $this->user], //mock twig app.user from the view
         ]);
@@ -162,7 +162,7 @@ class FormattedTest extends WebTestCase
      */
     private function renderTemplateOntoCrawler($additionalVars = [])
     {
-        $html = $this->twig->render('AppBundle:Report/Formatted:formatted_body.html.twig', $additionalVars + [
+        $html = $this->twig->render('App:Report/Formatted:formatted_body.html.twig', $additionalVars + [
                 'report' => $this->report,
                 'app' => ['user' => $this->user],
             ]);

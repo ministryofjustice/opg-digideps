@@ -16,18 +16,18 @@ web_profiler:
 
 services:
     data_collector.apiCollectorss:
-        class: AppBundle\Service\ApiCollector
+        class: App\Service\ApiCollector
         arguments: ["@rest_client"]
         tags:
-            - { name: data_collector, template: "AppBundle:Manage:api-collector", id: "api-collector" }
+            - { name: data_collector, template: "App:Manage:api-collector", id: "api-collector" }
     data_collector.CssClassCollector:
-      class: AppBundle\Service\CssClassCollector
+      class: App\Service\CssClassCollector
       tags:
-        - { name: data_collector, template: 'AppBundle:Manage:css-class-collector', id: 'css-class-collector' }
+        - { name: data_collector, template: 'App:Manage:css-class-collector', id: 'css-class-collector' }
       public: false
 
     Alphagov\Notifications\Client:
-        alias: AppBundle\Service\Mailer\NotifyClientMock
+        alias: App\Service\Mailer\NotifyClientMock
 
 monolog:
    handlers:
@@ -40,7 +40,7 @@ monolog:
            bubble: false
        audit:
            type: service
-           id: AppBundle\Service\Audit\AwsAuditLogHandler
+           id: App\Service\Audit\AwsAuditLogHandler
 
 jms_serializer:
     metadata:

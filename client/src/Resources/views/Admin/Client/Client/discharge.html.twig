@@ -1,0 +1,51 @@
+{% extends 'App:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin-clients" %}
+{% set page = 'clientDischarge' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+
+{% block pageContent %}
+    <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ 'caseNumber' | trans({}, 'common') }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ client.caseNumber }}
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ 'client' | trans({}, 'common') }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ client.firstname }} {{ client.lastname }}
+            </dd>
+        </div>
+        {% if namedDeputy %}
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    {{ 'namedDeputy' | trans({}, 'common') }}
+                </dt>
+                <dd class="govuk-summary-list__value behat-region-named-deputy-fullname  ">
+                    {{ namedDeputy.fullName }}
+                </dd>
+            </div>
+        {% endif %}
+    </dl>
+
+    <div class="govuk-warning-text">
+        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+        <strong class="govuk-warning-text__text">
+            <span class="govuk-warning-text__assistive">{{ 'warning' | trans({}, 'common' ) }}</span>
+            {{ (page ~ '.warning') | trans({ '%clientFirstName%': client.firstname, '%clientLastName%' : client.lastname }) }}
+        </strong>
+    </div>
+
+    <a href="{{ path('admin_client_discharge_confirm', {id: client.id}) }}" role="button" data-module="govuk-button" class="govuk-button">
+        {{ (page ~ '.confirm') | trans }}
+    </a>
+{% endblock %}

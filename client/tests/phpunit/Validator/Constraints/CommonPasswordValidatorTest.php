@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Validator\Constraints;
+namespace App\Validator\Constraints;
 
-use AppBundle\Validator\Constraints\CommonPassword;
-use AppBundle\Validator\Constraints\CommonPasswordValidator;
+use App\Validator\Constraints\CommonPassword;
+use App\Validator\Constraints\CommonPasswordValidator;
 use PHPUnit\Framework\TestCase;
 
 class CommonPasswordValidatorTest extends TestCase

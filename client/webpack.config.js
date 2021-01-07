@@ -8,9 +8,9 @@ const tag = (new Date()).getTime()
 
 module.exports = {
   entry: {
-    application: './src/AppBundle/Resources/assets/javascripts/main.js',
-    'formatted-report': './src/AppBundle/Resources/assets/scss/formatted-report.scss',
-    fonts: './src/AppBundle/Resources/assets/scss/fonts.scss'
+    application: './src/Resources/assets/javascripts/main.js',
+    'formatted-report': './src/Resources/assets/scss/formatted-report.scss',
+    fonts: './src/Resources/assets/scss/fonts.scss'
   },
   mode: 'production',
   devtool: 'source-map',
@@ -72,7 +72,7 @@ module.exports = {
       { from: 'node_modules/govuk-frontend/govuk/assets/images', to: path.resolve(__dirname, 'public/images') },
       { from: 'node_modules/@ministryofjustice/frontend/moj/assets/images', to: path.resolve(__dirname, 'public/images') },
       { from: 'node_modules/govuk_frontend_toolkit/images', to: path.resolve(__dirname, 'public/images') },
-      { from: 'src/AppBundle/Resources/assets/images', to: path.resolve(__dirname, 'public/images') }
+      { from: 'src/Resources/assets/images', to: path.resolve(__dirname, 'public/images') }
     ]),
     new MiniCssExtractPlugin({
       filename: 'stylesheets/[name].css'

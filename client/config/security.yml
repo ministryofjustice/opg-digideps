@@ -2,28 +2,28 @@ services:
   # Voter on User, used by PA area
   # http://symfony.com/doc/2.8/security/voters.html
   app.user_voter:
-    class: AppBundle\Security\UserVoter
+    class: App\Security\UserVoter
     arguments: ['@security.access.decision_manager']
     tags:
         - { name: security.voter }
     # small performance boost
     public: false
   app.note_voter:
-    class: AppBundle\Security\NoteVoter
+    class: App\Security\NoteVoter
     arguments: ['@security.access.decision_manager']
     tags:
         - { name: security.voter }
     # small performance boost
     public: false
   app.client_contact_voter:
-    class: AppBundle\Security\ClientContactVoter
+    class: App\Security\ClientContactVoter
     arguments: ['@security.access.decision_manager']
     tags:
         - { name: security.voter }
     # small performance boost
     public: false
   app.document_voter:
-    class: AppBundle\Security\DocumentVoter
+    class: App\Security\DocumentVoter
     arguments: ['@security.access.decision_manager']
     tags:
         - { name: security.voter }
@@ -47,7 +47,7 @@ security:
 
     providers:
         deputy:
-           id: AppBundle\Service\DeputyProvider
+           id: App\Service\DeputyProvider
 
     firewalls:
         dev:

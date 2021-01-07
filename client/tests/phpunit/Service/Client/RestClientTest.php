@@ -2,8 +2,8 @@
 
 namespace DigidepsTests\Service\Client;
 
-use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\Client\TokenStorage\TokenStorageInterface;
+use App\Service\Client\RestClient;
+use App\Service\Client\TokenStorage\TokenStorageInterface;
 use GuzzleHttp\ClientInterface;
 use JMS\Serializer\SerializerInterface;
 use Mockery as m;
@@ -64,7 +64,7 @@ class RestClientTest extends TestCase
     public function setUp(): void
     {
         $this->client = m::mock('GuzzleHttp\ClientInterface');
-        $this->tokenStorage = m::mock('AppBundle\Service\Client\TokenStorage\TokenStorageInterface');
+        $this->tokenStorage = m::mock('App\Service\Client\TokenStorage\TokenStorageInterface');
         $this->serialiser = m::mock('JMS\Serializer\SerializerInterface');
         $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
         $this->clientSecret = 'secret-123';
@@ -93,7 +93,7 @@ class RestClientTest extends TestCase
     {
         $credentialsArray = ['username' => 'u', 'password' => 'p'];
         $credentialsJson = json_encode($credentialsArray);
-        $loggedUser = m::mock('AppBundle\Entity\User')
+        $loggedUser = m::mock('App\Entity\User')
             ->shouldReceive('getId')->andReturn(1)
             ->getMock();
         $userArray = ['id' => 1, 'firstname' => 'Peter'];
@@ -101,7 +101,7 @@ class RestClientTest extends TestCase
 
         $this->serialiser->shouldReceive('serialize')->with($credentialsArray, 'json')->andReturn($credentialsJson);
         $this->serialiser->shouldReceive('deserialize')->with($userJson, 'array', 'json')->andReturn(['success' => true, 'data' => $userArray]);
-        $this->serialiser->shouldReceive('deserialize')->with($userJson, 'AppBundle\Entity\User', 'json')->andReturn($loggedUser);
+        $this->serialiser->shouldReceive('deserialize')->with($userJson, 'App\Entity\User', 'json')->andReturn($loggedUser);
 
         $this->endpointResponse->shouldReceive('getHeader')->with('AuthToken')->andReturn([$this->sessionToken]);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($userJson);
@@ -151,10 +151,10 @@ class RestClientTest extends TestCase
         $userJson = json_encode($userArray);
         $responseArray = ['success' => true, 'data' => $userArray];
         $responseJson = json_encode($responseArray);
-        $loggedUser = m::mock('AppBundle\Entity\User');
+        $loggedUser = m::mock('App\Entity\User');
 
         $this->serialiser->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
-        $this->serialiser->shouldReceive('deserialize')->with($userJson, 'AppBundle\Entity\User', 'json')->andReturn($loggedUser);
+        $this->serialiser->shouldReceive('deserialize')->with($userJson, 'App\Entity\User', 'json')->andReturn($loggedUser);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
@@ -171,17 +171,17 @@ class RestClientTest extends TestCase
         $this->logger->shouldReceive('error')->andReturnUsing(function ($e) {
             echo $e;
         });
-        $user = m::mock('AppBundle\Entity\User');
+        $user = m::mock('App\Entity\User');
 
         $data = ['id' => 1];
         $responseArray = ['success' => true, 'data' => $data];
         $responseJson = json_encode($responseArray);
-        /** @var \AppBundle\Model\SelfRegisterData $selfRegData */
-        $selfRegData = m::mock('AppBundle\Model\SelfRegisterData');
+        /** @var \App\Model\SelfRegisterData $selfRegData */
+        $selfRegData = m::mock('App\Model\SelfRegisterData');
         $selfRegDataJson = 'selfRegData.json';
 
         $this->serialiser->shouldReceive('serialize')->with($selfRegData, 'json', m::any())->andReturn($selfRegDataJson);
-        $this->serialiser->shouldReceive('deserialize')->with(json_encode($data), 'AppBundle\Entity\User', 'json')->andReturn($user);
+        $this->serialiser->shouldReceive('deserialize')->with(json_encode($data), 'App\Entity\User', 'json')->andReturn($user);
         $this->serialiser->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_CREATED);
@@ -284,10 +284,10 @@ class RestClientTest extends TestCase
         $responseDataJson = json_encode($responseData);
         $responseArray = ['success' => true, 'data' => $responseData];
         $responseJson = json_encode($responseArray);
-        $user = m::mock('AppBundle\Entity\User');
+        $user = m::mock('App\Entity\User');
 
         $this->serialiser->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
-        $this->serialiser->shouldReceive('deserialize')->with($responseDataJson, 'AppBundle\Entity\User', 'json')->andReturn($user);
+        $this->serialiser->shouldReceive('deserialize')->with($responseDataJson, 'App\Entity\User', 'json')->andReturn($user);
 
         $this->tokenStorage
             ->shouldReceive('get')->once()->andReturn($this->sessionToken);
@@ -313,16 +313,16 @@ class RestClientTest extends TestCase
         $responseData = [$user1Array, $user2Array];
         $responseArray = ['success' => true, 'data' => $responseData];
         $responseJson = json_encode($responseArray);
-        $user1 = m::mock('AppBundle\Entity\User');
-        $user2 = m::mock('AppBundle\Entity\User');
+        $user1 = m::mock('App\Entity\User');
+        $user2 = m::mock('App\Entity\User');
 
         $user1->shouldReceive('getId')->andReturn(1);
         $user2->shouldReceive('getId')->andReturn(2);
 
 
         $this->serialiser->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray); //extractDataArray()
-        $this->serialiser->shouldReceive('deserialize')->with($user1Json, 'AppBundle\Entity\User', 'json')->andReturn($user1);
-        $this->serialiser->shouldReceive('deserialize')->with($user2Json, 'AppBundle\Entity\User', 'json')->andReturn($user2);
+        $this->serialiser->shouldReceive('deserialize')->with($user1Json, 'App\Entity\User', 'json')->andReturn($user1);
+        $this->serialiser->shouldReceive('deserialize')->with($user2Json, 'App\Entity\User', 'json')->andReturn($user2);
 
         $this->tokenStorage
             ->shouldReceive('get')->once()->andReturn($this->sessionToken);
@@ -342,7 +342,7 @@ class RestClientTest extends TestCase
 
     public function testGetNoSuccess()
     {
-        $this->expectException(\AppBundle\Service\Client\Exception\NoSuccess::class);
+        $this->expectException(\App\Service\Client\Exception\NoSuccess::class);
 
         $endpointUrl = '/path/to/endpoint';
         $expectedResponseType = 'array';
@@ -374,8 +374,8 @@ class RestClientTest extends TestCase
         $responseData = [];
         $responseArray = ['success' => true, 'data' => $responseData];
         $responseJson = json_encode($responseArray);
-        $user1 = m::mock('AppBundle\Entity\User');
-        $user2 = m::mock('AppBundle\Entity\User');
+        $user1 = m::mock('App\Entity\User');
+        $user2 = m::mock('App\Entity\User');
 
         $user1->shouldReceive('getId')->andReturn(1);
         $user2->shouldReceive('getId')->andReturn(2);
@@ -401,7 +401,7 @@ class RestClientTest extends TestCase
 
     public function testNetworkExceptionIsLoggedAndReThrown()
     {
-        $this->expectException(\AppBundle\Exception\RestClientException::class);
+        $this->expectException(\App\Exception\RestClientException::class);
 
         $endpointUrl = '/path/to/endpoint';
 
@@ -447,7 +447,7 @@ class RestClientTest extends TestCase
     public function testGetHistory()
     {
         $this->client = m::mock('GuzzleHttp\ClientInterface');
-        $this->tokenStorage = m::mock('AppBundle\Service\Client\TokenStorage\TokenStorageInterface');
+        $this->tokenStorage = m::mock('App\Service\Client\TokenStorage\TokenStorageInterface');
         $this->serialiser = m::mock('JMS\Serializer\SerializerInterface');
         $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
         $this->clientSecret = 'secret-123';
