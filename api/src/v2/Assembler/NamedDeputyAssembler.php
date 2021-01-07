@@ -1,12 +1,12 @@
 <?php
 
-namespace AppBundle\v2\Assembler;
+namespace App\v2\Assembler;
 
-use AppBundle\Entity\NamedDeputy;
-use AppBundle\v2\DTO\DtoPropertySetterTrait;
-use AppBundle\Entity\User;
-use AppBundle\v2\DTO\NamedDeputyDto;
-use AppBundle\v2\Registration\DTO\OrgDeputyshipDto;
+use App\Entity\NamedDeputy;
+use App\v2\DTO\DtoPropertySetterTrait;
+use App\Entity\User;
+use App\v2\DTO\NamedDeputyDto;
+use App\v2\Registration\DTO\OrgDeputyshipDto;
 
 class NamedDeputyAssembler
 {

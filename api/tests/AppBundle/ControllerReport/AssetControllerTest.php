@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\AppBundle\ControllerReport;
+namespace Tests\App\ControllerReport;
 
-use AppBundle\Entity\Report\Report;
-use Tests\AppBundle\Controller\AbstractTestController;
+use App\Entity\Report\Report;
+use Tests\App\Controller\AbstractTestController;
 
 class AssetControllerTest extends AbstractTestController
 {
@@ -139,8 +139,8 @@ class AssetControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $asset = self::fixtures()->getRepo('Report\Asset')->find($return['data']['id']); /* @var $asset \AppBundle\Entity\Report\AssetOther */
-        $this->assertInstanceOf('AppBundle\Entity\Report\AssetOther', $asset);
+        $asset = self::fixtures()->getRepo('Report\Asset')->find($return['data']['id']); /* @var $asset \App\Entity\Report\AssetOther */
+        $this->assertInstanceOf('App\Entity\Report\AssetOther', $asset);
         $this->assertEquals(123, $asset->getValue());
         $this->assertEquals('de', $asset->getDescription());
         $this->assertEquals('01/01/2015', $asset->getValuationDate()->format('m/d/Y'));
@@ -179,9 +179,9 @@ class AssetControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $asset = self::fixtures()->getRepo('Report\Asset')->find($return['data']['id']); /* @var $asset \AppBundle\Entity\Report\AssetProperty */
+        $asset = self::fixtures()->getRepo('Report\Asset')->find($return['data']['id']); /* @var $asset \App\Entity\Report\AssetProperty */
 
-        $this->assertInstanceOf('AppBundle\Entity\Report\AssetProperty', $asset);
+        $this->assertInstanceOf('App\Entity\Report\AssetProperty', $asset);
         $this->assertEquals('me', $asset->getOccupants());
         $this->assertEquals('partly', $asset->getOwned());
         $this->assertEquals('51.00', $asset->getOwnedPercentage());

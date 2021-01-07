@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity\Report\Traits;
+namespace App\Entity\Report\Traits;
 
-use AppBundle\Entity\Ndr\Ndr;
+use App\Entity\Ndr\Ndr;
 use JMS\Serializer\Annotation as JMS;
 
 trait MoreInfoTrait

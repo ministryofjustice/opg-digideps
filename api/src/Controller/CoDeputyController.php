@@ -1,11 +1,11 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
-use AppBundle\Entity\User;
-use AppBundle\Service\CsvUploader;
-use AppBundle\Service\Formatter\RestFormatter;
-use AppBundle\Service\UserService;
+use App\Entity\User;
+use App\Service\CsvUploader;
+use App\Service\Formatter\RestFormatter;
+use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -35,7 +35,7 @@ class CoDeputyController extends RestController
     {
         $qb = $this->getDoctrine()->getManager()->createQueryBuilder()
             ->select('count(u.id)')
-            ->from('AppBundle\Entity\User', 'u')
+            ->from('App\Entity\User', 'u')
             ->where('u.coDeputyClientConfirmed = ?1')
             ->setParameter(1, true);
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\AppBundle\Service\Stats\Query;
+namespace Tests\App\Service\Stats\Query;
 
-use AppBundle\Entity\User;
-use AppBundle\Entity\Satisfaction;
-use AppBundle\Service\Stats\Query\RegisteredDeputiesQuery;
-use AppBundle\Service\Stats\StatsQueryParameters;
+use App\Entity\User;
+use App\Entity\Satisfaction;
+use App\Service\Stats\Query\RegisteredDeputiesQuery;
+use App\Service\Stats\StatsQueryParameters;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class RegisteredDeputiesQueryTest extends WebTestCase

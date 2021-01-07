@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity\Report;
+namespace App\Entity\Report;
 
-use AppBundle\Entity\Report\Traits\HasBankAccountTrait;
+use App\Entity\Report\Traits\HasBankAccountTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -131,7 +131,7 @@ class MoneyTransaction implements MoneyTransactionInterface
     /**
      * @var Report
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="moneyTransactions")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="moneyTransactions")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;

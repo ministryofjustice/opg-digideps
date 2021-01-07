@@ -1,16 +1,16 @@
 <?php
 
-namespace Tests\AppBundle\Entity\Repository;
+namespace Tests\App\Entity\Repository;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\ClientInterface;
-use AppBundle\Entity\Report\Checklist;
-use AppBundle\Entity\Report\Fee;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Entity\Repository\ReportRepository;
-use AppBundle\Entity\SynchronisableInterface;
-use AppBundle\Entity\User;
+use App\Entity\Client;
+use App\Entity\ClientInterface;
+use App\Entity\Report\Checklist;
+use App\Entity\Report\Fee;
+use App\Entity\Report\Report;
+use App\Entity\Report\ReportSubmission;
+use App\Entity\Repository\ReportRepository;
+use App\Entity\SynchronisableInterface;
+use App\Entity\User;
 use DateInterval;
 use DateTimeZone;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -77,7 +77,6 @@ class ReportRepositoryTest extends WebTestCase
 
     public function testAddFeesToReportIfMissingForNonPAUser()
     {
-
         $this->mockReport->shouldReceive('isPAReport')->andReturn(false);
 
         $this->assertNull($this->sut->addFeesToReportIfMissing($this->mockReport));

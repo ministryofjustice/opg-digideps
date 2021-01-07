@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\v2\DTO;
+namespace App\v2\DTO;
 
 trait DtoPropertySetterTrait
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\AppBundle\Controller\Ndr;
+namespace Tests\App\Controller\Ndr;
 
-use AppBundle\Entity\Ndr\VisitsCare;
-use Tests\AppBundle\Controller\AbstractTestController;
+use App\Entity\Ndr\VisitsCare;
+use Tests\App\Controller\AbstractTestController;
 
 class VisitsCareControllerTest extends AbstractTestController
 {
@@ -173,7 +173,7 @@ class VisitsCareControllerTest extends AbstractTestController
         /**
          * @var $visitsCare VisitsCare
          */
-        $visitsCare = self::fixtures()->getRepo('Ndr\VisitsCare')->find($return['data']['id']); /* @var $visitsCare \AppBundle\Entity\Ndr\VisitsCare */
+        $visitsCare = self::fixtures()->getRepo('Ndr\VisitsCare')->find($return['data']['id']); /* @var $visitsCare \App\Entity\Ndr\VisitsCare */
         $this->assertEquals('y-m', $visitsCare->getDoYouLiveWithClient());
         $this->assertEquals('hodycc', $visitsCare->getHowOftenDoYouContactClient());
         $this->assertEquals('yes', $visitsCare->getPlanMoveNewResidence());

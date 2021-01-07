@@ -1,10 +1,10 @@
 <?php
-namespace AppBundle\Entity\Report\Traits;
+namespace App\Entity\Report\Traits;
 
-use AppBundle\Entity\Report\MoneyShortCategory;
-use AppBundle\Entity\Report\MoneyTransactionShort;
-use AppBundle\Entity\Report\MoneyTransactionShortIn;
-use AppBundle\Entity\Report\MoneyTransactionShortOut;
+use App\Entity\Report\MoneyShortCategory;
+use App\Entity\Report\MoneyTransactionShort;
+use App\Entity\Report\MoneyTransactionShortIn;
+use App\Entity\Report\MoneyTransactionShortOut;
 use Doctrine\Common\Collections\ArrayCollection;
 
 trait MoneyShortTrait
@@ -12,7 +12,7 @@ trait MoneyShortTrait
     /**
      * @var MoneyShortCategory[]
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\MoneyShortCategory", mappedBy="report", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\MoneyShortCategory", mappedBy="report", cascade={"persist"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $moneyShortCategories;
@@ -20,7 +20,7 @@ trait MoneyShortTrait
     /**
      * @var MoneyTransactionShort[]
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\MoneyTransactionShort", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\MoneyTransactionShort", mappedBy="report", cascade={"persist", "remove"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $moneyTransactionsShort;
@@ -64,7 +64,7 @@ trait MoneyShortTrait
     }
 
     /**
-     * @return \AppBundle\Entity\Report\MoneyShortCategory[]
+     * @return \App\Entity\Report\MoneyShortCategory[]
      */
     public function getMoneyShortCategoriesInPresent()
     {
@@ -86,7 +86,7 @@ trait MoneyShortTrait
     }
 
     /**
-     * @return \AppBundle\Entity\Report\MoneyShortCategory[]
+     * @return \App\Entity\Report\MoneyShortCategory[]
      */
     public function getMoneyShortCategoriesOutPresent()
     {
@@ -116,7 +116,7 @@ trait MoneyShortTrait
     }
 
     /**
-     * @return \AppBundle\Entity\Report\MoneyTransactionShort[]
+     * @return \App\Entity\Report\MoneyTransactionShort[]
      */
     public function getMoneyTransactionsShort()
     {

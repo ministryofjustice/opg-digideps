@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\AppBundle\Controller;
+namespace Tests\App\Controller;
 
-use AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker;
-use AppBundle\Service\BruteForce\AttemptsInTimeChecker;
+use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
+use App\Service\BruteForce\AttemptsInTimeChecker;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;

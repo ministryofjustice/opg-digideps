@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\AppBundle\Controller\Ndr;
+namespace Tests\App\Controller\Ndr;
 
-use Tests\AppBundle\Controller\AbstractTestController;
+use Tests\App\Controller\AbstractTestController;
 
 class AssetControllerTest extends AbstractTestController
 {
@@ -158,8 +158,8 @@ class AssetControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $asset = self::fixtures()->getRepo('Ndr\Asset')->find($return['data']['id']); /* @var $asset \AppBundle\Entity\Ndr\AssetOther */
-        $this->assertInstanceOf('AppBundle\Entity\Ndr\AssetOther', $asset);
+        $asset = self::fixtures()->getRepo('Ndr\Asset')->find($return['data']['id']); /* @var $asset \App\Entity\Ndr\AssetOther */
+        $this->assertInstanceOf('App\Entity\Ndr\AssetOther', $asset);
         $this->assertEquals(123, $asset->getValue());
         $this->assertEquals('de', $asset->getDescription());
         $this->assertEquals('01/01/2015', $asset->getValuationDate()->format('m/d/Y'));
@@ -196,9 +196,9 @@ class AssetControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $asset = self::fixtures()->getRepo('Ndr\Asset')->find($return['data']['id']); /* @var $asset \AppBundle\Entity\Ndr\AssetProperty */
+        $asset = self::fixtures()->getRepo('Ndr\Asset')->find($return['data']['id']); /* @var $asset \App\Entity\Ndr\AssetProperty */
 
-        $this->assertInstanceOf('AppBundle\Entity\Ndr\AssetProperty', $asset);
+        $this->assertInstanceOf('App\Entity\Ndr\AssetProperty', $asset);
         $this->assertEquals('me', $asset->getOccupants());
         $this->assertEquals('partly', $asset->getOwned());
         $this->assertEquals('51.00', $asset->getOwnedPercentage());

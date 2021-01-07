@@ -1,13 +1,13 @@
 <?php
 
-namespace AppBundle\v2\Registration\SelfRegistration\Factory;
+namespace App\v2\Registration\SelfRegistration\Factory;
 
-use AppBundle\Entity\CasRec;
-use AppBundle\Service\DataNormaliser;
-use AppBundle\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler;
-use AppBundle\v2\Registration\Assembler\LayDeputyshipDtoAssemblerInterface;
-use AppBundle\v2\Registration\Assembler\LayDeputyshipDtoCollectionAssembler;
-use AppBundle\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
+use App\Entity\CasRec;
+use App\Service\DataNormaliser;
+use App\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler;
+use App\v2\Registration\Assembler\LayDeputyshipDtoAssemblerInterface;
+use App\v2\Registration\Assembler\LayDeputyshipDtoCollectionAssembler;
+use App\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
 
 class LayDeputyshipDtoCollectionAssemblerFactory
 {

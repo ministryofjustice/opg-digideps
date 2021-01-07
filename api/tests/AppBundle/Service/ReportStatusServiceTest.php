@@ -1,16 +1,16 @@
 <?php
 
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\Action;
-use AppBundle\Entity\Report\Debt;
-use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\MoneyShortCategory;
-use AppBundle\Entity\Report\MoneyTransactionShort;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\VisitsCare;
-use AppBundle\Service\ReportStatusService as StatusService;
+use App\Entity\Client;
+use App\Entity\Report\Action;
+use App\Entity\Report\Debt;
+use App\Entity\Report\Document;
+use App\Entity\Report\MoneyShortCategory;
+use App\Entity\Report\MoneyTransactionShort;
+use App\Entity\Report\Report;
+use App\Entity\Report\VisitsCare;
+use App\Service\ReportStatusService as StatusService;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
@@ -110,16 +110,16 @@ class ReportStatusServiceTest extends TestCase
 
     public function decisionsProvider()
     {
-        $decision = m::mock(\AppBundle\Entity\Decision::class);
-        $mcEmpty = m::mock(\AppBundle\Entity\MentalCapacity::class, [
+        $decision = m::mock(\App\Entity\Decision::class);
+        $mcEmpty = m::mock(\App\Entity\MentalCapacity::class, [
             'getHasCapacityChanged'   => null,
             'getMentalAssessmentDate' => null,
         ]);
-        $mcPartial = m::mock(\AppBundle\Entity\MentalCapacity::class, [
+        $mcPartial = m::mock(\App\Entity\MentalCapacity::class, [
             'getHasCapacityChanged'   => 'no',
             'getMentalAssessmentDate' => null,
         ]);
-        $mcComplete = m::mock(\AppBundle\Entity\MentalCapacity::class, [
+        $mcComplete = m::mock(\App\Entity\MentalCapacity::class, [
             'getHasCapacityChanged'   => 'no',
             'getMentalAssessmentDate' => new \DateTime('2016-01-01'),
         ]);
@@ -149,7 +149,7 @@ class ReportStatusServiceTest extends TestCase
 
     public function contactsProvider()
     {
-        $contact = m::mock(\AppBundle\Entity\Contact::class);
+        $contact = m::mock(\App\Entity\Contact::class);
 
         return [
             [[], StatusService::STATE_NOT_STARTED, false],
@@ -241,7 +241,7 @@ class ReportStatusServiceTest extends TestCase
 
     public function bankAccountProvider()
     {
-        $account = m::mock(\AppBundle\Entity\Report\Account::class);
+        $account = m::mock(\App\Entity\Report\Account::class);
 
         return [
             [['getBankAccounts' => [], 'getBankAccountsIncomplete' => []], StatusService::STATE_NOT_STARTED],
@@ -262,9 +262,9 @@ class ReportStatusServiceTest extends TestCase
 
     public function moneyTransferProvider()
     {
-        $account1 = m::mock(\AppBundle\Entity\Report\Account::class);
-        $account2 = m::mock(\AppBundle\Entity\Report\Account::class);
-        $mt1 = m::mock(\AppBundle\Entity\Report\MoneyTransfer::class);
+        $account1 = m::mock(\App\Entity\Report\Account::class);
+        $account2 = m::mock(\App\Entity\Report\Account::class);
+        $mt1 = m::mock(\App\Entity\Report\MoneyTransfer::class);
 
         return [
             [['getBankAccounts' => [$account1, $account2], 'getMoneyTransfers' => [], 'getNoTransfersToAdd' => null], StatusService::STATE_NOT_STARTED],
@@ -626,7 +626,7 @@ class ReportStatusServiceTest extends TestCase
 
     public function assetsProvider()
     {
-        $asset = m::mock(\AppBundle\Entity\Asset::class);
+        $asset = m::mock(\App\Entity\Asset::class);
 
         return [
             [['getAssets' => [], 'getNoAssetToAdd' => null], StatusService::STATE_NOT_STARTED],
@@ -852,7 +852,7 @@ class ReportStatusServiceTest extends TestCase
         $report->getSectionStatusesCached()->shouldBeCalled()->willReturn([]);
         $report->giftsSectionCompleted()->shouldBeCalled()->willReturn(true);
         $report->getGifts()->shouldBeCalled()->willReturn(['a gift']);
-        
+
         $report->isDue()->shouldBeCalled()->willReturn(true);
 
         $sut = new ReportStatusService($report->reveal());
@@ -868,7 +868,7 @@ class ReportStatusServiceTest extends TestCase
         $report->getSectionStatusesCached()->shouldBeCalled()->willReturn([]);
         $report->giftsSectionCompleted()->shouldBeCalled()->willReturn(true);
         $report->getGifts()->shouldBeCalled()->willReturn(['a gift']);
-        
+
         $report->isDue()->shouldBeCalled()->willReturn(false);
 
         $sut = new ReportStatusService($report->reveal());
@@ -888,7 +888,7 @@ class ReportStatusServiceTest extends TestCase
         $status = $sut->getStatus();
         self::assertEquals(Report::STATUS_NOT_STARTED, $status);
     }
-    
+
     public function testGetStatusIgnoringDueDate_ready_to_submit()
     {
         $report = $this->prophesize(Report::class);

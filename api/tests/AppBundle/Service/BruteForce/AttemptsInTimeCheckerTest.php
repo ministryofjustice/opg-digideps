@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\AppBundle\Service\BruteForce;
+namespace Tests\App\Service\BruteForce;
 
-use AppBundle\Service\BruteForce\AttemptsInTimeChecker;
+use App\Service\BruteForce\AttemptsInTimeChecker;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 

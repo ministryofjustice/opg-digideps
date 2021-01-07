@@ -1,13 +1,13 @@
 <?php
 
-namespace AppBundle\v2\Transformer;
+namespace App\v2\Transformer;
 
-use AppBundle\v2\DTO\ClientDto;
-use AppBundle\v2\DTO\DeputyDto;
-use AppBundle\v2\DTO\NamedDeputyDto;
-use AppBundle\v2\DTO\NdrDto;
-use AppBundle\v2\DTO\OrganisationDto;
-use AppBundle\v2\DTO\ReportDto;
+use App\v2\DTO\ClientDto;
+use App\v2\DTO\DeputyDto;
+use App\v2\DTO\NamedDeputyDto;
+use App\v2\DTO\NdrDto;
+use App\v2\DTO\OrganisationDto;
+use App\v2\DTO\ReportDto;
 use Symfony\Component\Intl\Exception\NotImplementedException;
 
 class ClientTransformer

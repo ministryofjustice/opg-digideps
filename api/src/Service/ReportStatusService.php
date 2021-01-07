@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Entity\Report\Report;
+use App\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
 /**

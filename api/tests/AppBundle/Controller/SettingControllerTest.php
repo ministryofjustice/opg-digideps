@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\AppBundle\Controller;
+namespace Tests\App\Controller;
 
-use AppBundle\Entity\Setting;
+use App\Entity\Setting;
 use Tests\Fixtures;
 
 class SettingControllerTest extends AbstractTestController

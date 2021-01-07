@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\Controller\Report;
+namespace App\Controller\Report;
 
-use AppBundle\Controller\RestController;
-use AppBundle\Entity as EntityDir;
-use AppBundle\Service\Formatter\RestFormatter;
+use App\Controller\RestController;
+use App\Entity as EntityDir;
+use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -70,7 +70,7 @@ class ActionController extends RestController
      * @param array                   $data
      * @param EntityDir\Report\Action $action
      *
-     * @return \AppBundle\Entity\Report\Report $report
+     * @return \App\Entity\Report\Report $report
      */
     private function updateEntity(array $data, EntityDir\Report\Action $action)
     {

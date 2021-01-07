@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\AppBundle\v2\Registration\Assembler;
+namespace Tests\App\v2\Registration\Assembler;
 
-use AppBundle\Entity\CasRec;
-use AppBundle\Service\DataNormaliser;
-use AppBundle\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler;
-use AppBundle\v2\Registration\DTO\LayDeputyshipDto;
+use App\Entity\CasRec;
+use App\Service\DataNormaliser;
+use App\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler;
+use App\v2\Registration\DTO\LayDeputyshipDto;
 use PHPUnit\Framework\TestCase;
 
 class CasRecToLayDeputyshipDtoAssemblerTest extends TestCase
@@ -66,7 +66,6 @@ class CasRecToLayDeputyshipDtoAssemblerTest extends TestCase
         $this->assertEquals(true, $result->isNdrEnabled());
         $this->assertEquals(CasRec::CASREC_SOURCE, $result->getSource());
         $this->assertEquals('2011-06-14', $result->getOrderDate()->format('Y-m-d'));
-
     }
 
     /**

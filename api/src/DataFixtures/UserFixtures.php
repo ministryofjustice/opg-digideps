@@ -1,14 +1,14 @@
 <?php
-namespace AppBundle\DataFixtures;
+namespace App\DataFixtures;
 
-use AppBundle\Entity\CasRec;
-use AppBundle\Entity\Client;
-use AppBundle\Entity\NamedDeputy;
-use AppBundle\Entity\Ndr\Ndr;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Repository\OrganisationRepository;
-use AppBundle\Entity\User;
-use AppBundle\Factory\OrganisationFactory;
+use App\Entity\CasRec;
+use App\Entity\Client;
+use App\Entity\NamedDeputy;
+use App\Entity\Ndr\Ndr;
+use App\Entity\Report\Report;
+use App\Entity\Repository\OrganisationRepository;
+use App\Entity\User;
+use App\Factory\OrganisationFactory;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class UserFixtures extends AbstractDataFixture

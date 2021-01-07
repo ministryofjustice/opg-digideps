@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Service\Auth;
+namespace App\Service\Auth;
 
-use AppBundle\Entity\User;
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

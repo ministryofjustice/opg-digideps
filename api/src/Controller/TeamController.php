@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
-use AppBundle\Entity\User;
-use AppBundle\Service\Formatter\RestFormatter;
-use AppBundle\Service\OrgService;
+use App\Entity\User;
+use App\Service\Formatter\RestFormatter;
+use App\Service\OrgService;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;

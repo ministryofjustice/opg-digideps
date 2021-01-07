@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity\Report;
+namespace App\Entity\Report;
 
-use AppBundle\Entity\Traits\CreationAudit;
+use App\Entity\Traits\CreationAudit;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -36,11 +36,11 @@ class ChecklistInformation
     /**
      * @var Checklist
      *
-     * @JMS\Type("AppBundle\Entity\Report\Checklist")
+     * @JMS\Type("App\Entity\Report\Checklist")
      * @JMS\Groups({"checklist-information-checklist"})
      *
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Checklist", inversedBy="checklistInformation", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Checklist", inversedBy="checklistInformation", cascade={"persist"})
      * @ORM\JoinColumn(name="checklist_id", referencedColumnName="id", onDelete="CASCADE", nullable=false   )
      */
     private $checklist;

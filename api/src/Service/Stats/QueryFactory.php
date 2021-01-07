@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Service\Stats;
+namespace App\Service\Stats;
 
-use AppBundle\Service\Stats\Query\Query;
+use App\Service\Stats\Query\Query;
 use Doctrine\ORM\EntityManagerInterface;
 
 class QueryFactory
@@ -24,7 +24,7 @@ class QueryFactory
      */
     public function create(StatsQueryParameters $sq): Query
     {
-        $className = 'AppBundle\\Service\\Stats\\Query\\'. ucfirst($sq->getMetric()) . 'Query';
+        $className = 'App\\Service\\Stats\\Query\\'. ucfirst($sq->getMetric()) . 'Query';
 
         if (!class_exists($className)) {
             throw new \InvalidArgumentException('Invalid metric given');

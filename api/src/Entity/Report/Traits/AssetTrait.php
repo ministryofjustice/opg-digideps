@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\Entity\Report\Traits;
+namespace App\Entity\Report\Traits;
 
-use AppBundle\Entity\AssetInterface;
-use AppBundle\Entity\Report\Asset;
-use AppBundle\Entity\Report\Report;
+use App\Entity\AssetInterface;
+use App\Entity\Report\Asset;
+use App\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -16,8 +16,8 @@ trait AssetTrait
      * @var AssetInterface[]
      *
      * @JMS\Groups({"asset"})
-     * @JMS\Type("array<AppBundle\Entity\Report\Asset>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Asset", mappedBy="report", cascade={"persist", "remove"})
+     * @JMS\Type("array<App\Entity\Report\Asset>")
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\Asset", mappedBy="report", cascade={"persist", "remove"})
      */
     private $assets;
 

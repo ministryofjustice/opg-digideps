@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\v2\Registration\Assembler;
+namespace App\v2\Registration\Assembler;
 
-use AppBundle\Entity\CasRec;
-use AppBundle\Service\DataNormaliser;
-use AppBundle\v2\Registration\DTO\LayDeputyshipDto;
+use App\Entity\CasRec;
+use App\Service\DataNormaliser;
+use App\v2\Registration\DTO\LayDeputyshipDto;
 
 class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInterface
 {

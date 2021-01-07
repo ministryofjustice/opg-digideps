@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
-namespace Tests\AppBundle\Entity\Repository;
+namespace Tests\App\Entity\Repository;
 
 use App\Tests\ApiWebTestCase;
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Ndr\Ndr;
-use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Entity\ReportInterface;
-use AppBundle\Entity\Repository\DocumentRepository;
-use AppBundle\Entity\User;
+use App\Entity\Client;
+use App\Entity\Ndr\Ndr;
+use App\Entity\Report\Document;
+use App\Entity\Report\Report;
+use App\Entity\Report\ReportSubmission;
+use App\Entity\ReportInterface;
+use App\Entity\Repository\DocumentRepository;
+use App\Entity\User;
 use DateInterval;
 use DateTime;
 use DateTimeZone;
@@ -27,7 +27,12 @@ class DocumentRepositoryTest extends KernelTestCase
     private $documentRepository;
 
     /** @var DateTime */
-    private $firstJulyAm, $firstJulyPm, $secondJulyAm, $secondJulyPm, $thirdJulyAm, $thirdJulyPm;
+    private $firstJulyAm;
+    private $firstJulyPm;
+    private $secondJulyAm;
+    private $secondJulyPm;
+    private $thirdJulyAm;
+    private $thirdJulyPm;
 
     protected function setUp(): void
     {
@@ -164,7 +169,6 @@ class DocumentRepositoryTest extends KernelTestCase
     /** @test */
     public function updateSupportingDocumentStatusByReportSubmissionIds()
     {
-
         [$client, $report, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->secondJulyAm);
         [$client2, $report2, $reportPdfDoc2, $supportingDoc2, $reportSubmission2] = $this->createAndSubmitReportWithSupportingDoc($this->secondJulyAm);
 
@@ -181,12 +185,12 @@ class DocumentRepositoryTest extends KernelTestCase
 
         $this->assertEquals(2, $updatedDocumentsCount);
 
-        foreach([$supportingDoc, $supportingDoc2] as $doc) {
+        foreach ([$supportingDoc, $supportingDoc2] as $doc) {
             self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $doc->getSynchronisationStatus());
             self::assertEquals('An error message', $doc->getSynchronisationError());
         }
 
-        foreach([$reportPdfDoc, $reportPdfDoc2] as $doc) {
+        foreach ([$reportPdfDoc, $reportPdfDoc2] as $doc) {
             self::assertEquals(Document::SYNC_STATUS_QUEUED, $doc->getSynchronisationStatus());
             self::assertEquals(null, $doc->getSynchronisationError());
         }
@@ -211,7 +215,7 @@ class DocumentRepositoryTest extends KernelTestCase
         $this->assertDataMatchesEntity($documents, $reportPdfDoc2, $client2, $reportSubmission2, $report2);
         $this->assertDataMatchesEntity($documents, $supportingDoc2, $client2, $reportSubmission2, $report2);
 
-        foreach([$reportPdfDoc, $supportingDoc, $reportPdfDoc, $supportingDoc] as $doc) {
+        foreach ([$reportPdfDoc, $supportingDoc, $reportPdfDoc, $supportingDoc] as $doc) {
             self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $doc->getSynchronisationStatus());
         }
     }
@@ -233,7 +237,7 @@ class DocumentRepositoryTest extends KernelTestCase
     {
         [$client, $report, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
 
-        foreach(range(1, 5) as $index) {
+        foreach (range(1, 5) as $index) {
             $this->createAndSubmitAdditionalDocuments($report, $this->firstJulyPm);
         }
 
@@ -247,7 +251,7 @@ class DocumentRepositoryTest extends KernelTestCase
         $reportPdf1Returned = false;
         $reportPdf2Returned = false;
 
-        foreach($documents as $document) {
+        foreach ($documents as $document) {
             if ($document['document_id'] === $reportPdfDoc->getId()) {
                 $reportPdf1Returned = true;
             }
@@ -274,8 +278,7 @@ class DocumentRepositoryTest extends KernelTestCase
         Client $client,
         ReportSubmission $submission,
         $report
-    )
-    {
+    ) {
         $docId = $document->getId();
 
         self::assertEquals($document->getId(), $documents[$docId]['document_id']);
@@ -345,13 +348,14 @@ class DocumentRepositoryTest extends KernelTestCase
     private function generateAndPersistReport(Client $client, bool $isNdr)
     {
         if ($isNdr) {
-           $report = (new Ndr($client))->setStartDate($this->firstJulyAm);
+            $report = (new Ndr($client))->setStartDate($this->firstJulyAm);
         } else {
             $report = (new Report(
                 $client,
                 Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,
                 $this->firstJulyAm,
-                $this->firstJulyAm->add(new DateInterval('P364D')))
+                $this->firstJulyAm->add(new DateInterval('P364D'))
+            )
             );
         }
 
@@ -387,7 +391,6 @@ class DocumentRepositoryTest extends KernelTestCase
 
     private function generateAndPersistReportSubmission(ReportInterface $report, DateTime $createdOn)
     {
-
         $submission = (new ReportSubmission($report, $this->generateAndPersistUser()))->setCreatedOn($createdOn);
 
         $this->entityManager->persist($submission);

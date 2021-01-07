@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Factory;
+namespace App\Factory;
 
-use AppBundle\Entity\NamedDeputy;
+use App\Entity\NamedDeputy;
 
 class NamedDeputyFactory
 {

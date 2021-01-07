@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Entity\CasRec;
-use AppBundle\Entity\Client;
+use App\Entity\CasRec;
+use App\Entity\Client;
 
 class ReportUtils
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\EventListener;
+namespace App\EventListener;
 
-use AppBundle\Exception\BusinessRulesException;
-use AppBundle\Exception\HasDataInterface;
+use App\Exception\BusinessRulesException;
+use App\Exception\HasDataInterface;
 use Closure;
 use http\Exception\BadConversionException;
 use JMS\Serializer\SerializationContext;

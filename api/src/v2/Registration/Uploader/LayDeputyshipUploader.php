@@ -1,14 +1,14 @@
 <?php
 
-namespace AppBundle\v2\Registration\Uploader;
+namespace App\v2\Registration\Uploader;
 
-use AppBundle\Entity\CasRec;
-use AppBundle\Entity\Repository\ReportRepository;
-use AppBundle\Entity\User;
-use AppBundle\v2\Registration\DTO\LayDeputyshipDto;
-use AppBundle\v2\Registration\DTO\LayDeputyshipDtoCollection;
-use AppBundle\v2\Registration\SelfRegistration\Factory\CasRecCreationException;
-use AppBundle\v2\Registration\SelfRegistration\Factory\CasRecFactory;
+use App\Entity\CasRec;
+use App\Entity\Repository\ReportRepository;
+use App\Entity\User;
+use App\v2\Registration\DTO\LayDeputyshipDto;
+use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
+use App\v2\Registration\SelfRegistration\Factory\CasRecCreationException;
+use App\v2\Registration\SelfRegistration\Factory\CasRecFactory;
 use Doctrine\ORM\EntityManagerInterface;
 
 class LayDeputyshipUploader

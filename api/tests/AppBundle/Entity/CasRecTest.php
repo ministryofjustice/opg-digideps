@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\AppBundle\Entity;
+namespace Tests\App\Entity;
 
-use AppBundle\Entity\CasRec;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\User;
+use App\Entity\CasRec;
+use App\Entity\Report\Report;
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use PHPUnit\Framework\TestCase;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\v2\Transformer;
+namespace App\v2\Transformer;
 
-use AppBundle\v2\DTO\NamedDeputyDto;
+use App\v2\DTO\NamedDeputyDto;
 
 class NamedDeputyTransformer
 {

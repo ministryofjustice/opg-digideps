@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation as JMS;
  * Named Deputy.
  *
  * @ORM\Table(name="named_deputy", indexes={@ORM\Index(name="named_deputy_no_idx", columns={"deputy_no"})})
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\NamedDeputyRepository")
+ * @ORM\Entity(repositoryClass="App\Entity\Repository\NamedDeputyRepository")
  */
 class NamedDeputy
 {
@@ -33,7 +33,7 @@ class NamedDeputy
      *
      * @JMS\Exclude
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Client", mappedBy="namedDeputy")
+     * @ORM\OneToMany(targetEntity="App\Entity\Client", mappedBy="namedDeputy")
      * @ORM\JoinColumn(name="id", referencedColumnName="named_deputy_id")
      */
     private $clients;

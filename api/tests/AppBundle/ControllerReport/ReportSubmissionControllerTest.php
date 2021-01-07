@@ -1,13 +1,13 @@
 <?php
 
-namespace Tests\AppBundle\ControllerReport;
+namespace Tests\App\ControllerReport;
 
-use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\ReportSubmission;
+use App\Entity\Report\Document;
+use App\Entity\Report\ReportSubmission;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Response;
-use Tests\AppBundle\Controller\AbstractTestController;
-use AppBundle\TestHelpers\ReportSubmissionHelper;
+use Tests\App\Controller\AbstractTestController;
+use App\TestHelpers\ReportSubmissionHelper;
 
 class ReportSubmissionControllerTest extends AbstractTestController
 {

@@ -7,25 +7,25 @@ parameters:
 
 services:
     # authenticator
-    AppBundle\Service\Auth\UserProvider:
-        arguments: [ '@em', "@snc_redis.default", "@logger", { "timeout_seconds": "%user_provider_timeout_seconds%" }, '@AppBundle\Entity\Repository\UserRepository' ]
+    App\Service\Auth\UserProvider:
+        arguments: [ '@em', "@snc_redis.default", "@logger", { "timeout_seconds": "%user_provider_timeout_seconds%" }, '@App\Entity\Repository\UserRepository' ]
 
-    AppBundle\Service\Auth\AuthService:
+    App\Service\Auth\AuthService:
         arguments:
             $encoderFactory: '@security.encoder_factory'
             $logger: '@logger'
-            $userRepository: '@AppBundle\Entity\Repository\UserRepository'
+            $userRepository: '@App\Entity\Repository\UserRepository'
             $roleHierarchy: '@security.role_hierarchy'
             $clientPermissions: '%client_permissions%'
 
-    AppBundle\Service\BruteForce\AttemptsInTimeChecker:
+    App\Service\BruteForce\AttemptsInTimeChecker:
         arguments: [ "@snc_redis.default" ]
         calls:
             - [ setRedisPrefix, ["ac_ret_code"] ]
             # after 5 attempts in the last 10 minutes, return a different return code (activate captcha)
             - [ addTrigger, [  5, 600 ] ]
 
-    AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker:
+    App\Service\BruteForce\AttemptsIncrementalWaitingChecker:
         arguments: [ "@snc_redis.default" ]
         calls:
             - [ setRedisPrefix, ["ac_exception"] ]
@@ -40,11 +40,11 @@ services:
 security:
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext
-        AppBundle\Entity\User: sha512
+        App\Entity\User: sha512
 
     providers:
         user_provider_redis:
-            id: AppBundle\Service\Auth\UserProvider
+            id: App\Service\Auth\UserProvider
 
     firewalls:
         elb:
@@ -120,7 +120,7 @@ security:
             pattern: .*
             security: true
             simple_preauth:
-                authenticator: AppBundle\Service\Auth\HeaderTokenAuthenticator
+                authenticator: App\Service\Auth\HeaderTokenAuthenticator
             provider: user_provider_redis
             stateless:   true
 

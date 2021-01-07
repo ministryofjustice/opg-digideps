@@ -1,6 +1,6 @@
 <?php declare(strict_types=1); declare(strict_types=1);
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use DateTime;
 
@@ -32,9 +32,9 @@ trait SynchronisableTrait
 
     /**
      * @var User|null
-     * @JMS\Type("AppBundle\Entity\User")
+     * @JMS\Type("App\Entity\User")
      * @JMS\Groups({"synchronisation"})
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(name="synchronised_by", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $synchronisedBy;

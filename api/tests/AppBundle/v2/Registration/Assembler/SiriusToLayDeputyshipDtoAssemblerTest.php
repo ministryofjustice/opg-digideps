@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\AppBundle\v2\Registration\Assembler;
+namespace Tests\App\v2\Registration\Assembler;
 
-use AppBundle\Entity\CasRec;
-use AppBundle\Service\DataNormaliser;
-use AppBundle\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
-use AppBundle\v2\Registration\DTO\LayDeputyshipDto;
+use App\Entity\CasRec;
+use App\Service\DataNormaliser;
+use App\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
+use App\v2\Registration\DTO\LayDeputyshipDto;
 use PHPUnit\Framework\TestCase;
 
 class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase

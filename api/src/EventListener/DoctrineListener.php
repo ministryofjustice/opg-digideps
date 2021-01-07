@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\EventListener;
+namespace App\EventListener;
 
-use AppBundle\Entity as EntityDir;
+use App\Entity as EntityDir;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
 /**
@@ -17,14 +17,14 @@ class DoctrineListener
         $entityManager = $args->getEntityManager();
 
         if ($entity instanceof EntityDir\Report\Report && !$entity->getId()) {
-            $reportRepo = $entityManager->getRepository('AppBundle\Entity\Report\Report'); /* @var $reportRepo EntityDir\Repository\ReportRepository */
+            $reportRepo = $entityManager->getRepository('App\Entity\Report\Report'); /* @var $reportRepo EntityDir\Repository\ReportRepository */
             $reportRepo->addDebtsToReportIfMissing($entity);
             $reportRepo->addMoneyShortCategoriesIfMissing($entity);
             $reportRepo->addFeesToReportIfMissing($entity);
         }
 
         if ($entity instanceof EntityDir\Ndr\Ndr && !$entity->getId()) {
-            $ndrRepo = $entityManager->getRepository('AppBundle\Entity\Ndr\Ndr');
+            $ndrRepo = $entityManager->getRepository('App\Entity\Ndr\Ndr');
             /* @var $ndrRepo EntityDir\Ndr\NdrRepository */
             $ndrRepo->addDebtsToNdrIfMissing($entity);
             $ndrRepo->addIncomeBenefitsToNdrIfMissing($entity);

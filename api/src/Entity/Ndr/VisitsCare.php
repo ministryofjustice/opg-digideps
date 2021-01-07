@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Ndr;
+namespace App\Entity\Ndr;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -26,7 +26,7 @@ class VisitsCare
     /**
      * @var Ndr
      *
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Ndr\Ndr", inversedBy="visitsCare")
+     * @ORM\OneToOne(targetEntity="App\Entity\Ndr\Ndr", inversedBy="visitsCare")
      * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $ndr;

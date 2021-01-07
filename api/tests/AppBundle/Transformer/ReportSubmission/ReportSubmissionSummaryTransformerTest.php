@@ -1,15 +1,15 @@
 <?php
 
-namespace Tests\AppBundle\Transformer\ReportSubmission;
+namespace Tests\App\Transformer\ReportSubmission;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Ndr\Ndr;
-use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Entity\User;
-use AppBundle\Service\DateTimeProvider;
-use AppBundle\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer;
+use App\Entity\Client;
+use App\Entity\Ndr\Ndr;
+use App\Entity\Report\Document;
+use App\Entity\Report\Report;
+use App\Entity\Report\ReportSubmission;
+use App\Entity\User;
+use App\Service\DateTimeProvider;
+use App\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer;
 use PHPUnit\Framework\TestCase;
 
 class ReportSubmissionSummaryTransformerTest extends TestCase

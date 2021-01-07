@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Entity\Report\Traits;
+namespace App\Entity\Report\Traits;
 
-use AppBundle\Entity\Report\Report;
-use AppBundle\Service\ReportStatusService;
+use App\Entity\Report\Report;
+use App\Service\ReportStatusService;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 

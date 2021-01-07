@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\Command;
+namespace App\Command;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\User;
+use App\Entity\Client;
+use App\Entity\Report\Report;
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

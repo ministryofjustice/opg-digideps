@@ -1,13 +1,13 @@
 <?php
 
-namespace Tests\AppBundle\v2\Transformer;
+namespace Tests\App\v2\Transformer;
 
-use AppBundle\v2\DTO\DeputyDto;
-use AppBundle\v2\DTO\NamedDeputyDto;
-use AppBundle\v2\DTO\OrganisationDto;
-use AppBundle\v2\Transformer\DeputyTransformer;
-use AppBundle\v2\Transformer\NamedDeputyTransformer;
-use AppBundle\v2\Transformer\OrganisationTransformer;
+use App\v2\DTO\DeputyDto;
+use App\v2\DTO\NamedDeputyDto;
+use App\v2\DTO\OrganisationDto;
+use App\v2\Transformer\DeputyTransformer;
+use App\v2\Transformer\NamedDeputyTransformer;
+use App\v2\Transformer\OrganisationTransformer;
 use PHPUnit\Framework\TestCase;
 
 class NamedDeputyTransformerTest extends TestCase
@@ -55,6 +55,5 @@ class NamedDeputyTransformerTest extends TestCase
         $this->assertEquals('a5', $transformed['address5']);
         $this->assertEquals('apc', $transformed['address_postcode']);
         $this->assertEquals('bar', $transformed['address_country']);
-
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity\Repository;
+namespace App\Entity\Repository;
 
-use AppBundle\Entity\Organisation;
+use App\Entity\Organisation;
 use Doctrine\ORM\EntityRepository;
 
 class OrganisationRepository extends EntityRepository
@@ -14,7 +14,7 @@ class OrganisationRepository extends EntityRepository
     {
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT o FROM AppBundle\Entity\Organisation o');
+            ->createQuery('SELECT o FROM App\Entity\Organisation o');
 
         return $query->getArrayResult();
     }
@@ -27,7 +27,7 @@ class OrganisationRepository extends EntityRepository
     {
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT o, u, c FROM AppBundle\Entity\Organisation o LEFT JOIN o.users u LEFT JOIN o.clients c WHERE o.id = ?1')
+            ->createQuery('SELECT o, u, c FROM App\Entity\Organisation o LEFT JOIN o.users u LEFT JOIN o.clients c WHERE o.id = ?1')
             ->setParameter(1, $id);
 
         $result = $query->getArrayResult();
@@ -61,7 +61,7 @@ class OrganisationRepository extends EntityRepository
     public function organisationExists(string $email): bool
     {
         $email = strtolower($email);
-        $queryString = 'SELECT COUNT(o.id) FROM AppBundle\Entity\Organisation o WHERE o.emailIdentifier = ?1';
+        $queryString = 'SELECT COUNT(o.id) FROM App\Entity\Organisation o WHERE o.emailIdentifier = ?1';
         $queryParams = [1 => $email];
 
         if (false !== ($atSymbolPosition = strpos($email, '@'))) {
@@ -87,7 +87,7 @@ class OrganisationRepository extends EntityRepository
     public function findByEmailIdentifier(string $email): ?Organisation
     {
         $email = strtolower($email);
-        $queryString = 'SELECT o FROM AppBundle\Entity\Organisation o WHERE o.emailIdentifier = ?1';
+        $queryString = 'SELECT o FROM App\Entity\Organisation o WHERE o.emailIdentifier = ?1';
         $queryParams = [1 => $email];
 
         if (false !== ($atSymbolPosition = strpos($email, '@'))) {

@@ -1,12 +1,12 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
-use AppBundle\Entity\Report\Checklist;
-use AppBundle\Entity\Repository\ChecklistRepository;
-use AppBundle\Exception\UnauthorisedException;
-use AppBundle\Service\Auth\AuthService;
-use AppBundle\Service\Formatter\RestFormatter;
+use App\Entity\Report\Checklist;
+use App\Entity\Repository\ChecklistRepository;
+use App\Exception\UnauthorisedException;
+use App\Service\Auth\AuthService;
+use App\Service\Formatter\RestFormatter;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;

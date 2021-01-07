@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Command;
+namespace App\Command;
 
 use Doctrine\Bundle\MigrationsBundle\Command\MigrationsStatusDoctrineCommand;
 use Symfony\Component\Console\Input\InputInterface;

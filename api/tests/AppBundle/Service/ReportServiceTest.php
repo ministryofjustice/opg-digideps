@@ -1,17 +1,17 @@
 <?php
 
-namespace Tests\AppBundle\Service;
+namespace Tests\App\Service;
 
-use AppBundle\Entity as EntityDir;
+use App\Entity as EntityDir;
 
-use AppBundle\Entity\CasRec;
-use AppBundle\Entity\Client;
-use AppBundle\Entity\NamedDeputy;
-use AppBundle\Entity\Report\Asset;
-use AppBundle\Entity\Report\BankAccount;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\User;
-use AppBundle\Service\ReportService;
+use App\Entity\CasRec;
+use App\Entity\Client;
+use App\Entity\NamedDeputy;
+use App\Entity\Report\Asset;
+use App\Entity\Report\BankAccount;
+use App\Entity\Report\Report;
+use App\Entity\User;
+use App\Service\ReportService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManager;
@@ -197,7 +197,6 @@ class ReportServiceTest extends TestCase
         $ndrDoccumentId = 999;
 
         $this->sut->submit($this->ndr, $this->user, $submitDate, $ndrDoccumentId);
-
     }
 
     private function getFilledInNdr()

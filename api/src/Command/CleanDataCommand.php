@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\Command;
+namespace App\Command;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\User;
-use AppBundle\Service\CasrecVerificationService;
+use App\Entity\Client;
+use App\Entity\User;
+use App\Service\CasrecVerificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;

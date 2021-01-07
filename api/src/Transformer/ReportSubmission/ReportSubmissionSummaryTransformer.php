@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\Transformer\ReportSubmission;
+namespace App\Transformer\ReportSubmission;
 
-use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Entity\ReportInterface;
-use AppBundle\Service\DateTimeProvider;
+use App\Entity\Report\ReportSubmission;
+use App\Entity\ReportInterface;
+use App\Service\DateTimeProvider;
 
 class ReportSubmissionSummaryTransformer
 {

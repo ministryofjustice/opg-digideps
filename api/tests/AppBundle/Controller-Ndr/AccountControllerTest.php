@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\AppBundle\Controller\Ndr;
+namespace Tests\App\Controller\Ndr;
 
-use Tests\AppBundle\Controller\AbstractTestController;
+use Tests\App\Controller\AbstractTestController;
 
 class AccountControllerTest extends AbstractTestController
 {
@@ -81,7 +81,7 @@ class AccountControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         // assert account created with transactions
-        $account = self::fixtures()->getRepo('Ndr\BankAccount')->find($return['data']['id']); /* @var $account \AppBundle\Entity\Ndr\BankAccount */
+        $account = self::fixtures()->getRepo('Ndr\BankAccount')->find($return['data']['id']); /* @var $account \App\Entity\Ndr\BankAccount */
         $this->assertEquals('hsbc', $account->getBank());
         $this->assertEquals('savings', $account->getAccountType());
         $this->assertEquals('123456', $account->getSortCode());

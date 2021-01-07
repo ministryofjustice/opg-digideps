@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\AppBundle\Entity\Repository;
+namespace Tests\App\Entity\Repository;
 
-use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Entity\Repository\ReportSubmissionRepository;
-use AppBundle\TestHelpers\ReportSubmissionHelper;
+use App\Entity\Report\Document;
+use App\Entity\Report\Report;
+use App\Entity\Report\ReportSubmission;
+use App\Entity\Repository\ReportSubmissionRepository;
+use App\TestHelpers\ReportSubmissionHelper;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;

@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\AppBundle\ControllerReport;
+namespace Tests\App\ControllerReport;
 
-use AppBundle\Entity\Report\Report;
-use Tests\AppBundle\Controller\AbstractTestController;
+use App\Entity\Report\Report;
+use Tests\App\Controller\AbstractTestController;
 
 class ContactControllerTest extends AbstractTestController
 {
@@ -184,7 +184,7 @@ class ContactControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $contact = self::fixtures()->getRepo('Report\Contact')->find($return['data']['id']); /* @var $contact \AppBundle\Entity\Report\Contact */
+        $contact = self::fixtures()->getRepo('Report\Contact')->find($return['data']['id']); /* @var $contact \App\Entity\Report\Contact */
         $this->assertEquals('address-changed', $contact->getAddress());
         $this->assertEquals(self::$report1->getId(), $contact->getReport()->getId());
 
@@ -205,7 +205,7 @@ class ContactControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         // assert account created with transactions
-        $contact = self::fixtures()->getRepo('Report\Contact')->find($return['data']['id']); /* @var $contact \AppBundle\Entity\Report\Contact */
+        $contact = self::fixtures()->getRepo('Report\Contact')->find($return['data']['id']); /* @var $contact \App\Entity\Report\Contact */
         $this->assertEquals('address-changed', $contact->getAddress());
         $this->assertEquals(self::$report1->getId(), $contact->getReport()->getId());
         // TODO assert other fields

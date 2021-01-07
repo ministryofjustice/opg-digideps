@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Service\Time;
+namespace App\Service\Time;
 
 class DateTimeProvider
 {

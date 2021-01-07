@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\AppBundle\Entity;
+namespace Tests\App\Entity;
 
-use AppBundle\Entity\Team;
-use AppBundle\Entity\Team as Entity;
+use App\Entity\Team;
+use App\Entity\Team as Entity;
 use Doctrine\Common\Collections\ArrayCollection;
-use Tests\AppBundle\Entity\Abstracts\EntityTester;
+use Tests\App\Entity\Abstracts\EntityTester;
 
 /**
  * Team Entity test

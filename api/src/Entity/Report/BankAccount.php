@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity\Report;
+namespace App\Entity\Report;
 
-use AppBundle\Entity\BankAccountInterface;
+use App\Entity\BankAccountInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -138,7 +138,7 @@ class BankAccount implements BankAccountInterface
     /**
      * @var Report
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="bankAccounts")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="bankAccounts")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;

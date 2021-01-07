@@ -1,15 +1,15 @@
 <?php
 
-namespace Tests\AppBundle\Service;
+namespace Tests\App\Service;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Organisation;
-use AppBundle\Entity\Repository\ClientRepository;
-use AppBundle\Entity\Repository\UserRepository;
-use AppBundle\Entity\User;
-use AppBundle\Model\SelfRegisterData;
-use AppBundle\Service\CasrecVerificationService;
-use AppBundle\Service\UserRegistrationService;
+use App\Entity\Client;
+use App\Entity\Organisation;
+use App\Entity\Repository\ClientRepository;
+use App\Entity\Repository\UserRepository;
+use App\Entity\User;
+use App\Model\SelfRegisterData;
+use App\Service\CasrecVerificationService;
+use App\Service\UserRegistrationService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMInvalidArgumentException;
@@ -32,7 +32,7 @@ class UserRegistrationServiceTest extends TestCase
 
         $em = m::mock(EntityManager::class)
 //            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getRepository')->with('AppBundle\Entity\User')->andReturn($mockUserRepository)
+            ->shouldReceive('getRepository')->with('App\Entity\User')->andReturn($mockUserRepository)
             ->getMock();
 
         $mockCasrecVerificationService = m::mock(CasrecVerificationService::class);
@@ -99,12 +99,12 @@ class UserRegistrationServiceTest extends TestCase
      */
     public function saveUserAndClientAndJoinThem()
     {
-        $mockUser = m::mock('\AppBundle\Entity\User')
+        $mockUser = m::mock('\App\Entity\User')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->getMock();
 
-        $mockClient = m::mock('\AppBundle\Entity\Client')
+        $mockClient = m::mock('\App\Entity\Client')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('addUser')->once()->with($mockUser)
             ->getMock();
@@ -123,7 +123,7 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('persist')->with($mockClient)->once()
             ->getMock();
 
-        $mockCasrecVerificationService = m::mock('\AppBundle\Service\CasrecVerificationService');
+        $mockCasrecVerificationService = m::mock('\App\Service\CasrecVerificationService');
         $mockCasrecVerificationService->shouldIgnoreMissing(true);
 
         $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
@@ -136,12 +136,12 @@ class UserRegistrationServiceTest extends TestCase
      */
     public function rollbackWhenSavingUserWithError()
     {
-        $mockUser = m::mock('\AppBundle\Entity\User')
+        $mockUser = m::mock('\App\Entity\User')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->getMock();
 
-        $mockClient = m::mock('\AppBundle\Entity\Client')
+        $mockClient = m::mock('\App\Entity\Client')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('addUser')->with($mockUser)
             ->getMock();
@@ -160,7 +160,7 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('persist')->with($mockUser)->once()->andThrow($exception)
             ->getMock();
 
-        $mockCasrecVerificationService = m::mock('\AppBundle\Service\CasrecVerificationService');
+        $mockCasrecVerificationService = m::mock('\App\Service\CasrecVerificationService');
         $mockCasrecVerificationService->shouldIgnoreMissing(true);
 
         $this->expectException(\Doctrine\ORM\ORMInvalidArgumentException::class);
@@ -175,12 +175,12 @@ class UserRegistrationServiceTest extends TestCase
      */
     public function rollbackWhenSavingClientWithError()
     {
-        $mockUser = m::mock('\AppBundle\Entity\User')
+        $mockUser = m::mock('\App\Entity\User')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->getMock();
 
-        $mockClient = m::mock('\AppBundle\Entity\Client')
+        $mockClient = m::mock('\App\Entity\Client')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('addUser')->with($mockUser)
             ->getMock();
@@ -200,7 +200,7 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('persist')->with($mockClient)->once()->andThrow($exception)
             ->getMock();
 
-        $mockCasrecVerificationService = m::mock('\AppBundle\Service\CasrecVerificationService');
+        $mockCasrecVerificationService = m::mock('\App\Service\CasrecVerificationService');
         $mockCasrecVerificationService->shouldIgnoreMissing(true);
 
         $this->expectException(\Doctrine\ORM\ORMInvalidArgumentException::class);
@@ -224,7 +224,7 @@ class UserRegistrationServiceTest extends TestCase
         $data->setClientLastname('Cross-Tolley');
         $data->setCaseNumber('12341234');
 
-        $mockUser = m::mock('\AppBundle\Entity\User')
+        $mockUser = m::mock('\App\Entity\User')
             ->shouldReceive('getId')->andReturn(1)
             ->getMock();
 
@@ -262,11 +262,11 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('flush')->twice()
             ->shouldReceive('persist')->with($mockUser)
             ->shouldReceive('persist')->with($mockClient)
-            ->shouldReceive('getRepository')->with('AppBundle\Entity\User')->andReturn($mockUserRepository)
-            ->shouldReceive('getRepository')->with('AppBundle\Entity\Client')->andReturn($mockClientRepository)
+            ->shouldReceive('getRepository')->with('App\Entity\User')->andReturn($mockUserRepository)
+            ->shouldReceive('getRepository')->with('App\Entity\Client')->andReturn($mockClientRepository)
             ->getMock();
 
-        $mockCasrecVerificationService = m::mock('\AppBundle\Service\CasrecVerificationService')
+        $mockCasrecVerificationService = m::mock('\App\Service\CasrecVerificationService')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('isMultiDeputyCase')->with('12341234')->andReturn(false)
             ->shouldReceive('getLastMatchedDeputyNumbers')->andReturn(['123'])
@@ -299,8 +299,8 @@ class UserRegistrationServiceTest extends TestCase
             ->getMock();
 
         $em = m::mock(EntityManager::class)
-            ->shouldReceive('getRepository')->with('AppBundle\Entity\Client')->andReturn($clientRepo)
-            ->shouldReceive('getRepository')->with('AppBundle\Entity\User')->andReturn($userRepo)
+            ->shouldReceive('getRepository')->with('App\Entity\Client')->andReturn($clientRepo)
+            ->shouldReceive('getRepository')->with('App\Entity\User')->andReturn($userRepo)
             ->getMock();
 
         $casrecVerificationService = m::mock(CasrecVerificationService::class)
@@ -337,8 +337,8 @@ class UserRegistrationServiceTest extends TestCase
             ->getMock();
 
         $em = m::mock(EntityManager::class)
-            ->shouldReceive('getRepository')->with('AppBundle\Entity\Client')->andReturn($clientRepo)
-            ->shouldReceive('getRepository')->with('AppBundle\Entity\User')->andReturn($userRepo)
+            ->shouldReceive('getRepository')->with('App\Entity\Client')->andReturn($clientRepo)
+            ->shouldReceive('getRepository')->with('App\Entity\User')->andReturn($userRepo)
             ->getMock();
 
         $casrecVerificationService = m::mock(CasrecVerificationService::class)

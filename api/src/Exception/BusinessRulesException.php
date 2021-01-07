@@ -1,12 +1,12 @@
 <?php
 
-namespace AppBundle\Exception;
+namespace App\Exception;
 
 /**
  * Class BusinessRulesException
  * Used for Exceptions thrown by API layer that contain data useful to the error message displayed to the user.
  *
- * @package AppBundle\Exception
+ * @package App\Exception
  */
 class BusinessRulesException extends \RuntimeException implements HasDataInterface
 {

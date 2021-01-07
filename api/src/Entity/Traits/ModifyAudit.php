@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Traits;
+namespace App\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -14,10 +14,10 @@ trait ModifyAudit
     /**
      * Last modified by
      *
-     * @var \AppBundle\Entity\User
-     * @JMS\Type("AppBundle\Entity\User")
+     * @var \App\Entity\User
+     * @JMS\Type("App\Entity\User")
      * @JMS\Groups({"last-modified"})
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", fetch="EAGER")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     protected $lastModifiedBy;
@@ -35,7 +35,7 @@ trait ModifyAudit
     protected $lastModifiedOn;
 
     /**
-     * @return \AppBundle\Entity\User
+     * @return \App\Entity\User
      */
     public function getLastModifiedBy()
     {
@@ -43,7 +43,7 @@ trait ModifyAudit
     }
 
     /**
-     * @param \AppBundle\Entity\User $lastModifiedBy
+     * @param \App\Entity\User $lastModifiedBy
      *
      * @return $this
      */

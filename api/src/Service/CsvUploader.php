@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service;
+namespace App\Service;
 
 /**
  * keep in sync with CLIENT
@@ -11,7 +11,7 @@ class CsvUploader
      * @param mixed $data
      *
      * @return string
-     * @deprecated Use AppBundle\Service\DataCompression
+     * @deprecated Use App\Service\DataCompression
      */
     public static function compressData($data)
     {
@@ -22,7 +22,7 @@ class CsvUploader
      * @param mixed $data
      *
      * @return string|array
-     * @deprecated Use AppBundle\Service\DataCompression
+     * @deprecated Use App\Service\DataCompression
      */
     public static function decompressData($data)
     {

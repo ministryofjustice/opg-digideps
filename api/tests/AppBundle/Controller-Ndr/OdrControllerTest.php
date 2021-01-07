@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\AppBundle\Controller\Ndr;
+namespace Tests\App\Controller\Ndr;
 
-use AppBundle\Entity\Report\ReportSubmission;
-use Tests\AppBundle\Controller\AbstractTestController;
+use App\Entity\Report\ReportSubmission;
+use Tests\App\Controller\AbstractTestController;
 
 class NdrControllerTest extends AbstractTestController
 {
@@ -79,7 +79,7 @@ class NdrControllerTest extends AbstractTestController
 
         // assert account created with transactions
         $ndr = self::fixtures()->clear()->getRepo('Ndr\Ndr')->find($ndrId);
-        /* @var $ndr \AppBundle\Entity\Ndr\Ndr */
+        /* @var $ndr \App\Entity\Ndr\Ndr */
         $this->assertEquals(true, $ndr->getSubmitted());
         $this->assertEquals('more_deputies_not_behalf', $ndr->getAgreedBehalfDeputy());
         $this->assertEquals('abdexplanation', $ndr->getAgreedBehalfDeputyExplanation());
@@ -105,7 +105,7 @@ class NdrControllerTest extends AbstractTestController
         // assert account created with transactions
 
         $ndr = self::fixtures()->clear()->getRepo('Ndr\Ndr')->find($ndrId);
-        /* @var $ndr \AppBundle\Entity\Ndr\Ndr */
+        /* @var $ndr \App\Entity\Ndr\Ndr */
         $this->assertEquals(true, $ndr->getSubmitted());
         $this->assertEquals('only_deputy', $ndr->getAgreedBehalfDeputy());
         $this->assertEquals(null, $ndr->getAgreedBehalfDeputyExplanation());

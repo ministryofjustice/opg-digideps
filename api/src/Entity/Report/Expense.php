@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity\Report;
+namespace App\Entity\Report;
 
-use AppBundle\Entity\Report\Traits\HasBankAccountTrait;
+use App\Entity\Report\Traits\HasBankAccountTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -53,7 +53,7 @@ class Expense
     /**
      * @var Report
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="expenses")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="expenses")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;

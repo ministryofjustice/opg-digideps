@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service\Stats\Query;
+namespace App\Service\Stats\Query;
 
 class SatisfactionQuery extends Query
 {

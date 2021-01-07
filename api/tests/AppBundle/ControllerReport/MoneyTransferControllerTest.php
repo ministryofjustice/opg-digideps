@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\AppBundle\ControllerReport;
+namespace Tests\App\ControllerReport;
 
-use AppBundle\Entity\Report\MoneyTransfer;
-use AppBundle\Entity\Report\Report;
-use Tests\AppBundle\Controller\AbstractTestController;
+use App\Entity\Report\MoneyTransfer;
+use App\Entity\Report\Report;
+use Tests\App\Controller\AbstractTestController;
 
 class MoneyTransferControllerTest extends AbstractTestController
 {
@@ -119,7 +119,7 @@ class MoneyTransferControllerTest extends AbstractTestController
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_MONEY_TRANSFERS));
 
         // assert account created with transactions
-        $report = self::fixtures()->getReportById(self::$report1->getId()); /* @var $report \AppBundle\Entity\Report\Report */
+        $report = self::fixtures()->getReportById(self::$report1->getId()); /* @var $report \App\Entity\Report\Report */
 
         // test last transaction
         $t = $report->getMoneyTransfers()->get(2);

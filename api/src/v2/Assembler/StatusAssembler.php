@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\v2\Assembler;
+namespace App\v2\Assembler;
 
-use AppBundle\Entity\Report\Report;
-use AppBundle\Service\ReportStatusServiceFactory;
-use AppBundle\v2\DTO\StatusDto;
+use App\Entity\Report\Report;
+use App\Service\ReportStatusServiceFactory;
+use App\v2\DTO\StatusDto;
 
 class StatusAssembler
 {

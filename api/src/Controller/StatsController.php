@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
-use AppBundle\Service\Stats\StatsQueryParameters;
-use AppBundle\Service\Stats\QueryFactory;
+use App\Service\Stats\StatsQueryParameters;
+use App\Service\Stats\QueryFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;

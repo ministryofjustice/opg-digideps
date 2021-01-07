@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
 
-namespace AppBundle\Service\Formatter;
+namespace App\Service\Formatter;
 
-use AppBundle\EventListener\RestInputOuputFormatter;
-use AppBundle\Service\Validator\RestArrayValidator;
+use App\EventListener\RestInputOuputFormatter;
+use App\Service\Validator\RestArrayValidator;
 use Symfony\Component\HttpFoundation\Request;
 
 class RestFormatter

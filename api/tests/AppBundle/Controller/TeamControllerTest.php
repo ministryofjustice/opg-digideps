@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\AppBundle\Controller;
+namespace Tests\App\Controller;
 
-use AppBundle\Entity\Team;
-use AppBundle\Entity\User;
+use App\Entity\Team;
+use App\Entity\User;
 
 class TeamControllerTest extends AbstractTestController
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace AppBundle\Entity\Report;
+namespace App\Entity\Report;
 
-use AppBundle\Entity\Ndr\Ndr;
-use AppBundle\Entity\ReportInterface;
-use AppBundle\Entity\Traits\CreationAudit;
-use AppBundle\Entity\User;
+use App\Entity\Ndr\Ndr;
+use App\Entity\ReportInterface;
+use App\Entity\Traits\CreationAudit;
+use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -15,7 +15,7 @@ use JMS\Serializer\Annotation as JMS;
  *     indexes={
  *     @ORM\Index(name="rs_created_on_idx", columns={"created_on"})
  *  })
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ReportSubmissionRepository")
+ * @ORM\Entity(repositoryClass="App\Entity\Repository\ReportSubmissionRepository")
  */
 class ReportSubmission
 {
@@ -41,10 +41,10 @@ class ReportSubmission
     /**
      * @var Report
      *
-     * @JMS\Type("AppBundle\Entity\Report\Report")
+     * @JMS\Type("App\Entity\Report\Report")
      *
      * @JMS\Groups({"report-submission"})
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="reportSubmissions")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="reportSubmissions")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;
@@ -52,10 +52,10 @@ class ReportSubmission
     /**
      * @var Ndr
      *
-     * @JMS\Type("AppBundle\Entity\Ndr\Ndr")
+     * @JMS\Type("App\Entity\Ndr\Ndr")
      *
      * @JMS\Groups({"report-submission"})
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Ndr\Ndr")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr")
      * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $ndr;
@@ -63,10 +63,10 @@ class ReportSubmission
     /**
      * @var ArrayCollection<int, Document>
      *
-     * @JMS\Type("array<AppBundle\Entity\Report\Document>")
+     * @JMS\Type("array<App\Entity\Report\Document>")
      * @JMS\Groups({"report-submission", "report-submission-documents"})
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Document", mappedBy="reportSubmission")
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\Document", mappedBy="reportSubmission")
      * @ORM\JoinColumn(name="report_submission_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @ORM\OrderBy({"createdBy"="ASC"})
@@ -85,10 +85,10 @@ class ReportSubmission
     /**
      * @var User|null
      *
-     * @JMS\Type("AppBundle\Entity\User")
+     * @JMS\Type("App\Entity\User")
      * @JMS\Groups({"report-submission"})
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", fetch="EAGER")
      * @ORM\JoinColumn(name="archived_by", referencedColumnName="id", onDelete="SET NULL")
      */
     private $archivedBy;

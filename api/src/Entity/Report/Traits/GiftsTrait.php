@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Entity\Report\Traits;
+namespace App\Entity\Report\Traits;
 
-use AppBundle\Entity\Report\Gift;
-use AppBundle\Entity\Report\Report;
+use App\Entity\Report\Gift;
+use App\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -21,9 +21,9 @@ trait GiftsTrait
     /**
      * @var Gift[]
      *
-     * @JMS\Type("array<AppBundle\Entity\Report\Gift>")
+     * @JMS\Type("array<App\Entity\Report\Gift>")
      * @JMS\Groups({"gifts"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Gift", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\Gift", mappedBy="report", cascade={"persist", "remove"})
      *
      */
     private $gifts;

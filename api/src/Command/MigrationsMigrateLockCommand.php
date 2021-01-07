@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Command;
+namespace App\Command;
 
 use Doctrine\Bundle\MigrationsBundle\Command\MigrationsMigrateDoctrineCommand;
 use Predis\Client;

@@ -1,11 +1,11 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
-use AppBundle\Model\SelfRegisterData;
-use AppBundle\Service\Auth\AuthService;
-use AppBundle\Service\Formatter\RestFormatter;
-use AppBundle\Service\UserRegistrationService;
+use App\Model\SelfRegisterData;
+use App\Service\Auth\AuthService;
+use App\Service\Formatter\RestFormatter;
+use App\Service\UserRegistrationService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;

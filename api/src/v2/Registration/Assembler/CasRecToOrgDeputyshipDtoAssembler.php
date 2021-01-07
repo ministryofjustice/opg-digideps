@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
 
-namespace AppBundle\v2\Registration\Assembler;
+namespace App\v2\Registration\Assembler;
 
-use AppBundle\Entity\User;
-use AppBundle\Service\ReportUtils;
-use AppBundle\v2\Registration\DTO\OrgDeputyshipDto;
+use App\Entity\User;
+use App\Service\ReportUtils;
+use App\v2\Registration\DTO\OrgDeputyshipDto;
 use DateTime;
 
 class CasRecToOrgDeputyshipDtoAssembler

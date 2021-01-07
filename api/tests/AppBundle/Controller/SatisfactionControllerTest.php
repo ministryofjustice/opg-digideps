@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\AppBundle\Controller;
+namespace Tests\App\Controller;
 
-use AppBundle\Entity\Satisfaction;
+use App\Entity\Satisfaction;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\User;
 
 class SatisfactionControllerTest extends AbstractTestController
@@ -89,7 +89,7 @@ class SatisfactionControllerTest extends AbstractTestController
         ]);
 
         $em = self::$frameworkBundleClient->getContainer()->get('em');
-        $persistedEntity = $em->getRepository('AppBundle\Entity\Satisfaction')->find($response['data']);
+        $persistedEntity = $em->getRepository('App\Entity\Satisfaction')->find($response['data']);
 
         $this->assertEquals($data['score'], $persistedEntity->getScore());
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\v2\Assembler;
+namespace App\v2\Assembler;
 
-use AppBundle\v2\DTO\DeputyDto;
-use AppBundle\v2\DTO\DtoPropertySetterTrait;
-use AppBundle\Entity\User;
+use App\v2\DTO\DeputyDto;
+use App\v2\DTO\DtoPropertySetterTrait;
+use App\Entity\User;
 
 class DeputyAssembler
 {

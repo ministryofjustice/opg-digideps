@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity\Report\Traits;
+namespace App\Entity\Report\Traits;
 
-use AppBundle\Entity\Report\MoneyTransfer;
+use App\Entity\Report\MoneyTransfer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -11,8 +11,8 @@ trait MoneyTransferTrait
 {
     /**
      * @JMS\Groups({"money-transfer"})
-     * @JMS\Type("array<AppBundle\Entity\Report\MoneyTransfer>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\MoneyTransfer", mappedBy="report", cascade={"persist"})
+     * @JMS\Type("array<App\Entity\Report\MoneyTransfer>")
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\MoneyTransfer", mappedBy="report", cascade={"persist"})
      */
     private $moneyTransfers;
 

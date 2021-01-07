@@ -1,13 +1,13 @@
 <?php
 
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Ndr\Ndr;
-use AppBundle\Entity\Repository\TeamRepository;
-use AppBundle\Entity\Repository\UserRepository;
-use AppBundle\Entity\Team;
-use AppBundle\Entity\User;
+use App\Entity\Client;
+use App\Entity\Ndr\Ndr;
+use App\Entity\Repository\TeamRepository;
+use App\Entity\Repository\UserRepository;
+use App\Entity\Team;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
 class UserService

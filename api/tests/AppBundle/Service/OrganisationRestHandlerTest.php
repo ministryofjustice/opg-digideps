@@ -1,14 +1,14 @@
 <?php
 
-namespace Tests\AppBundle\Service\RestHandler;
+namespace Tests\App\Service\RestHandler;
 
-use AppBundle\Entity\Organisation;
-use AppBundle\Entity\Repository\OrganisationRepository;
-use AppBundle\Entity\Repository\UserRepository;
-use AppBundle\Factory\OrganisationFactory;
-use AppBundle\Service\RestHandler\OrganisationCreationException;
-use AppBundle\Service\RestHandler\OrganisationRestHandler;
-use AppBundle\Service\RestHandler\OrganisationUpdateException;
+use App\Entity\Organisation;
+use App\Entity\Repository\OrganisationRepository;
+use App\Entity\Repository\UserRepository;
+use App\Factory\OrganisationFactory;
+use App\Service\RestHandler\OrganisationCreationException;
+use App\Service\RestHandler\OrganisationRestHandler;
+use App\Service\RestHandler\OrganisationUpdateException;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -62,13 +62,13 @@ class OrganisationRestHandlerTest extends TestCase
         $this->orgFactory = self::prophesize(OrganisationFactory::class);
         $this->sharedDomains = ['gmail.com'];
         $this->sut = new OrganisationRestHandler(
-        $this->em->reveal(),
-        $this->validator->reveal(),
-        $this->orgRepository->reveal(),
-        $this->userRepository->reveal(),
-        $this->orgFactory->reveal(),
-        $this->sharedDomains
-    );
+            $this->em->reveal(),
+            $this->validator->reveal(),
+            $this->orgRepository->reveal(),
+            $this->userRepository->reveal(),
+            $this->orgFactory->reveal(),
+            $this->sharedDomains
+        );
     }
 
     /**
@@ -97,7 +97,6 @@ class OrganisationRestHandlerTest extends TestCase
      */
     public function create_requiredDataMissing(array $data)
     {
-
         self::expectException(OrganisationCreationException::class);
 
         $this->sut->create($data);
@@ -187,7 +186,6 @@ class OrganisationRestHandlerTest extends TestCase
      */
     public function update_missingData($data)
     {
-
         self::expectException(OrganisationUpdateException::class);
 
         $this->sut->update($data, 1);

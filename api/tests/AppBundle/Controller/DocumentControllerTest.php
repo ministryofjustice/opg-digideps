@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Tests\AppBundle\Controller;
+namespace Tests\App\Controller;
 
-use AppBundle\Entity\Ndr\Ndr;
-use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Entity\Repository\DocumentRepository;
+use App\Entity\Ndr\Ndr;
+use App\Entity\Report\Document;
+use App\Entity\Report\Report;
+use App\Entity\Report\ReportSubmission;
+use App\Entity\Repository\DocumentRepository;
 use DateTime;
 
 class DocumentControllerTest extends AbstractTestController

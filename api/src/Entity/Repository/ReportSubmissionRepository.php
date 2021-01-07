@@ -1,11 +1,11 @@
 <?php
 
-namespace AppBundle\Entity\Repository;
+namespace App\Entity\Repository;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Entity\User;
+use App\Entity\Client;
+use App\Entity\Report\Document;
+use App\Entity\Report\ReportSubmission;
+use App\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 
@@ -32,8 +32,8 @@ class ReportSubmissionRepository extends EntityRepository
         $order = 'ASC'
     ) {
         $statusFilters = [
-            'new' => 'rs.archived = false AND NOT EXISTS (SELECT 1 FROM AppBundle:Report\Document d WHERE d.reportSubmission = rs AND d.synchronisationStatus IS NOT NULL)',
-            'pending' => 'rs.archived = false AND EXISTS (SELECT 1 FROM AppBundle:Report\Document d WHERE d.reportSubmission = rs AND d.synchronisationStatus IS NOT NULL)',
+            'new' => 'rs.archived = false AND NOT EXISTS (SELECT 1 FROM App:Report\Document d WHERE d.reportSubmission = rs AND d.synchronisationStatus IS NOT NULL)',
+            'pending' => 'rs.archived = false AND EXISTS (SELECT 1 FROM App:Report\Document d WHERE d.reportSubmission = rs AND d.synchronisationStatus IS NOT NULL)',
             'archived' => 'rs.archived = true',
         ];
 

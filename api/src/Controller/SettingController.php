@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
-use AppBundle\Entity as EntityDir;
-use AppBundle\Service\Formatter\RestFormatter;
+use App\Entity as EntityDir;
+use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;

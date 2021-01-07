@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\AppBundle\Entity\Report;
+namespace Tests\App\Entity\Report;
 
-use AppBundle\Entity\Report\BankAccount;
+use App\Entity\Report\BankAccount;
 use PHPUnit\Framework\TestCase;
 
 class BankAccountTest extends TestCase

@@ -1,15 +1,15 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Repository\ClientRepository;
-use AppBundle\Entity\Repository\UserRepository;
-use AppBundle\Entity\User;
-use AppBundle\Security\UserVoter;
-use AppBundle\Service\Auth\AuthService;
-use AppBundle\Service\Formatter\RestFormatter;
-use AppBundle\Service\UserService;
+use App\Entity\Client;
+use App\Entity\Repository\ClientRepository;
+use App\Entity\Repository\UserRepository;
+use App\Entity\User;
+use App\Security\UserVoter;
+use App\Service\Auth\AuthService;
+use App\Service\Formatter\RestFormatter;
+use App\Service\UserService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;

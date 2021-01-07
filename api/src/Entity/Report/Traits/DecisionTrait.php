@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity\Report\Traits;
+namespace App\Entity\Report\Traits;
 
-use AppBundle\Entity\Report\Decision;
+use App\Entity\Report\Decision;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -12,8 +12,8 @@ trait DecisionTrait
      * @var Decision[]
      *
      * @JMS\Groups({"decision"})
-     * @JMS\Type("array<AppBundle\Entity\Report\Decision>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Decision", mappedBy="report", cascade={"persist", "remove"})
+     * @JMS\Type("array<App\Entity\Report\Decision>")
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\Decision", mappedBy="report", cascade={"persist", "remove"})
      */
     private $decisions;
 

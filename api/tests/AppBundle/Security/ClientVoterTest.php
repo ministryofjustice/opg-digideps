@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Tests\AppBundle\Security;
+namespace Tests\App\Security;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Organisation;
-use AppBundle\Entity\User;
-use AppBundle\Security\ClientVoter;
+use App\Entity\Client;
+use App\Entity\Organisation;
+use App\Entity\User;
+use App\Security\ClientVoter;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

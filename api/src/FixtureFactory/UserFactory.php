@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\FixtureFactory;
+namespace App\FixtureFactory;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Organisation;
-use AppBundle\Entity\User;
+use App\Entity\Client;
+use App\Entity\Organisation;
+use App\Entity\User;
 use Faker\Factory;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 

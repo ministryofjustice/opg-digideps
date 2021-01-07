@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
 
-namespace AppBundle\TestHelpers;
+namespace App\TestHelpers;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Entity\User;
+use App\Entity\Client;
+use App\Entity\Report\ReportSubmission;
+use App\Entity\User;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Faker\Factory;

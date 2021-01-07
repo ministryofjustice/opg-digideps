@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\AppBundle\Service\Stats\Query;
+namespace Tests\App\Service\Stats\Query;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Ndr\Ndr;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Service\Stats\Query\ClientsQuery;
-use AppBundle\Service\Stats\StatsQueryParameters;
+use App\Entity\Client;
+use App\Entity\Ndr\Ndr;
+use App\Entity\Report\Report;
+use App\Service\Stats\Query\ClientsQuery;
+use App\Service\Stats\StatsQueryParameters;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ClientsQueryTest extends WebTestCase
@@ -106,7 +106,6 @@ class ClientsQueryTest extends WebTestCase
             if (('NDR' === $reportType)) {
                 $report = new Ndr($client);
             } else {
-
                 $report = new Report(
                     $client,
                     $reportType,

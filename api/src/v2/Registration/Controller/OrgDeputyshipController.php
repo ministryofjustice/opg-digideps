@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
 
-namespace AppBundle\v2\Registration\Controller;
+namespace App\v2\Registration\Controller;
 
-use AppBundle\Service\DataCompression;
-use AppBundle\v2\Controller\ControllerTrait;
-use AppBundle\v2\Registration\Assembler\CasRecToOrgDeputyshipDtoAssembler;
-use AppBundle\v2\Registration\Uploader\OrgDeputyshipUploader;
+use App\Service\DataCompression;
+use App\v2\Controller\ControllerTrait;
+use App\v2\Registration\Assembler\CasRecToOrgDeputyshipDtoAssembler;
+use App\v2\Registration\Uploader\OrgDeputyshipUploader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

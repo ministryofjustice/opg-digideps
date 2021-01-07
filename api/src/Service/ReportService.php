@@ -1,25 +1,25 @@
 <?php
 
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Entity\AssetInterface;
-use AppBundle\Entity\BankAccountInterface;
-use AppBundle\Entity\CasRec;
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Ndr\Ndr;
-use AppBundle\Entity\Report\Asset;
-use AppBundle\Entity\Report\AssetProperty as ReportAssetProperty;
-use AppBundle\Entity\Report\AssetOther as ReportAssetOther;
-use AppBundle\Entity\Ndr\AssetProperty as NdrAssetProperty;
-use AppBundle\Entity\Ndr\AssetOther as NdrAssetOther;
-use AppBundle\Entity\Report\BankAccount as BankAccountEntity;
-use AppBundle\Entity\Report\BankAccount as ReportBankAccount;
-use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Entity\ReportInterface;
-use AppBundle\Entity\Repository\ReportRepository;
-use AppBundle\Entity\User;
+use App\Entity\AssetInterface;
+use App\Entity\BankAccountInterface;
+use App\Entity\CasRec;
+use App\Entity\Client;
+use App\Entity\Ndr\Ndr;
+use App\Entity\Report\Asset;
+use App\Entity\Report\AssetProperty as ReportAssetProperty;
+use App\Entity\Report\AssetOther as ReportAssetOther;
+use App\Entity\Ndr\AssetProperty as NdrAssetProperty;
+use App\Entity\Ndr\AssetOther as NdrAssetOther;
+use App\Entity\Report\BankAccount as BankAccountEntity;
+use App\Entity\Report\BankAccount as ReportBankAccount;
+use App\Entity\Report\Document;
+use App\Entity\Report\Report;
+use App\Entity\Report\ReportSubmission;
+use App\Entity\ReportInterface;
+use App\Entity\Repository\ReportRepository;
+use App\Entity\User;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ObjectRepository;

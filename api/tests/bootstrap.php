@@ -4,7 +4,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 require __DIR__ . '/Fixtures.php';
 require __DIR__ . '/MockeryStub.php';
-require __DIR__ . '/AppBundle/Controller/AbstractTestController.php';
+require __DIR__ . '/App/Controller/AbstractTestController.php';
 
 
 // keep aligned with API_SECRETS_*_KEY env var (digi-deps-local-dev repo)

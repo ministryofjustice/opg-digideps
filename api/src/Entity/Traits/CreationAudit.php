@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity\Traits;
+namespace App\Entity\Traits;
 
-use AppBundle\Entity\User;
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -15,11 +15,11 @@ trait CreationAudit
     /**
      * Created by
      *
-     * @var \AppBundle\Entity\User
+     * @var \App\Entity\User
      *
-     * @JMS\Type("AppBundle\Entity\User")
+     * @JMS\Type("App\Entity\User")
      * @JMS\Groups({"notes", "documents", "report-submission", "checklist-information"})
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", fetch="EAGER")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     protected $createdBy;
@@ -37,7 +37,7 @@ trait CreationAudit
     protected $createdOn;
 
     /**
-     * @return \AppBundle\Entity\User
+     * @return \App\Entity\User
      */
     public function getCreatedBy()
     {
@@ -45,7 +45,7 @@ trait CreationAudit
     }
 
     /**
-     * @param \AppBundle\Entity\User $createdBy
+     * @param \App\Entity\User $createdBy
      *
      * @return $this
      */

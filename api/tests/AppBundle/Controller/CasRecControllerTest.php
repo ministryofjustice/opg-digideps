@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\AppBundle\Controller;
+namespace Tests\App\Controller;
 
-use AppBundle\Entity\CasRec;
+use App\Entity\CasRec;
 use Tests\Fixtures;
 
 class CasRecControllerTest extends AbstractTestController

@@ -14,7 +14,7 @@ services:
         alias: doctrine.orm.entity_manager
 
     monolog.processor.add_request_id:
-        class: AppBundle\Service\RequestIdLoggerProcessor
+        class: App\Service\RequestIdLoggerProcessor
         arguments:  [ "@service_container" ]
         tags:
               - { name: monolog.processor, method: processRecord }
@@ -33,13 +33,13 @@ services:
         calls:
             - [ setAnnotationReader, [ "@annotation_reader" ] ]
 
-    AppBundle\DataFixtures\:
-        resource: '../src/AppBundle/DataFixtures'
+    App\DataFixtures\:
+        resource: '../src/DataFixtures'
         tags: ['doctrine.fixture.orm']
         autowire: true
 
     # Disable autowiring for these helper classes
-    AppBundle\Service\ReportStatusService: ~
-    AppBundle\Service\Stats\StatsQueryParameters: ~
+    App\Service\ReportStatusService: ~
+    App\Service\Stats\StatsQueryParameters: ~
 
     Symfony\Component\Security\Core\Role\RoleHierarchyInterface: '@security.role_hierarchy'

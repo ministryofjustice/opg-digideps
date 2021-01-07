@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\Entity\Report\Traits;
+namespace App\Entity\Report\Traits;
 
-use AppBundle\Entity\Report\Expense;
-use AppBundle\Entity\Report\Fee;
-use AppBundle\Entity\Report\Report;
+use App\Entity\Report\Expense;
+use App\Entity\Report\Fee;
+use App\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -14,7 +14,7 @@ trait FeeExpensesTrait
      * @var Fee[]
      *
      * @JMS\Groups({"fee"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Fee", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\Fee", mappedBy="report", cascade={"persist", "remove"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $fees;
@@ -45,9 +45,9 @@ trait FeeExpensesTrait
      *
      * @var Expense[]
      *
-     * @JMS\Type("array<AppBundle\Entity\Report\Expense>")
+     * @JMS\Type("array<App\Entity\Report\Expense>")
      * @JMS\Groups({"expenses"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Expense", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\Expense", mappedBy="report", cascade={"persist", "remove"})
      *
      * @var Expense[]
      */

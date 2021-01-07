@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
 
-namespace AppBundle\TestHelpers;
+namespace App\TestHelpers;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\Report;
+use App\Entity\Client;
+use App\Entity\Report\Report;
 use PHPUnit\Framework\TestCase;
 
 class ClientTestHelper extends TestCase

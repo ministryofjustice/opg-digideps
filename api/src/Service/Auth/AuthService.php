@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Service\Auth;
+namespace App\Service\Auth;
 
-use AppBundle\Entity\Repository\UserRepository;
-use AppBundle\Entity\User;
+use App\Entity\Repository\UserRepository;
+use App\Entity\User;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;

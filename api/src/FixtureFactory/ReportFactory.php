@@ -1,11 +1,11 @@
 <?php
 
-namespace AppBundle\FixtureFactory;
+namespace App\FixtureFactory;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\User;
-use AppBundle\v2\Fixture\ReportSection;
+use App\Entity\Client;
+use App\Entity\Report\Report;
+use App\Entity\User;
+use App\v2\Fixture\ReportSection;
 
 class ReportFactory
 {

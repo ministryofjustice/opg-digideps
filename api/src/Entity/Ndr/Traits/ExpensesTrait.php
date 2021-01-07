@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Entity\Ndr\Traits;
+namespace App\Entity\Ndr\Traits;
 
-use AppBundle\Entity\Ndr\Expense;
-use AppBundle\Entity\Ndr\Ndr;
+use App\Entity\Ndr\Expense;
+use App\Entity\Ndr\Ndr;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -19,9 +19,9 @@ trait ExpensesTrait
     private $paidForAnything;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\Ndr\Expense>")
+     * @JMS\Type("array<App\Entity\Ndr\Expense>")
      * @JMS\Groups({"ndr-expenses"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\Expense", mappedBy="ndr", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Ndr\Expense", mappedBy="ndr", cascade={"persist"})
      *
      * @var Expense[]
      */

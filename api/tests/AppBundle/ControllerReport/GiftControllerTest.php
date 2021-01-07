@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\AppBundle\ControllerReport;
+namespace Tests\App\ControllerReport;
 
-use AppBundle\Entity\Report\Gift;
-use AppBundle\Entity\Report\Report;
-use Tests\AppBundle\Controller\AbstractTestController;
+use App\Entity\Report\Gift;
+use App\Entity\Report\Report;
+use Tests\App\Controller\AbstractTestController;
 
 class GiftControllerTest extends AbstractTestController
 {
@@ -135,7 +135,7 @@ class GiftControllerTest extends AbstractTestController
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_GIFTS));
 
         $gift = self::fixtures()->getRepo('Report\Gift')->find($giftId);
-        /* @var $gift \AppBundle\Entity\Report\Gift */
+        /* @var $gift \App\Entity\Report\Gift */
         $this->assertEquals(3.3, $gift->getAmount());
         $this->assertEquals('e3', $gift->getExplanation());
 
@@ -152,7 +152,7 @@ class GiftControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         $gift = self::fixtures()->getRepo('Report\Gift')->find($giftId);
-        /* @var $gift \AppBundle\Entity\Report\Gift */
+        /* @var $gift \App\Entity\Report\Gift */
         $this->assertEquals(3.31, $gift->getAmount());
         $this->assertEquals('e3.1', $gift->getExplanation());
 

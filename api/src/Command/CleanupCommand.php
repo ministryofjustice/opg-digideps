@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Command;
+namespace App\Command;
 
-use AppBundle\Entity\Repository\UserRepository;
-use AppBundle\Entity\User;
+use App\Entity\Repository\UserRepository;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

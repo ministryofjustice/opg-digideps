@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
 
-namespace Tests\AppBundle\v2\Registration\Controller;
+namespace Tests\App\v2\Registration\Controller;
 
-use AppBundle\Entity\User;
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpFoundation\Response;
-use Tests\AppBundle\Controller\AbstractTestController;
-use Tests\AppBundle\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
+use Tests\App\Controller\AbstractTestController;
+use Tests\App\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
 
 class OrgDeputyshipControllerTest extends AbstractTestController
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity\Ndr;
+namespace App\Entity\Ndr;
 
-use AppBundle\Entity\Traits\DebtTrait;
+use App\Entity\Traits\DebtTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -42,7 +42,7 @@ class Debt
     /**
      * @var Ndr
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Ndr\Ndr", inversedBy="debts")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr", inversedBy="debts")
      * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $ndr;

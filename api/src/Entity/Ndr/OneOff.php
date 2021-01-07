@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Ndr;
+namespace App\Entity\Ndr;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -35,7 +35,7 @@ class OneOff
     /**
      * @var Ndr
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Ndr\Ndr", inversedBy="oneOff")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr", inversedBy="oneOff")
      * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $ndr;

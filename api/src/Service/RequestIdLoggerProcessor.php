@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service;
+namespace App\Service;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * Usage in services.yml
  * monolog.processor.add_request_id:
- *        class: AppBundle\Service\RequestIdLoggerProcessor
+ *        class: App\Service\RequestIdLoggerProcessor
  *        arguments:  [ @service_container ]
  *        tags:
  *            - { name: monolog.processor, method: processRecord }

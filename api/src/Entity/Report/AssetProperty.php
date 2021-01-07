@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Entity\Report;
+namespace App\Entity\Report;
 
-use AppBundle\Entity\AssetInterface;
-use AppBundle\Entity\Ndr\AssetProperty as NdrAssetProperty;
+use App\Entity\AssetInterface;
+use App\Entity\Ndr\AssetProperty as NdrAssetProperty;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 

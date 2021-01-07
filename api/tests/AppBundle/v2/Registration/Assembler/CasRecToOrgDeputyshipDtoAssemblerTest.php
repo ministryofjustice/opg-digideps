@@ -1,15 +1,15 @@
 <?php declare(strict_types=1);
 
-namespace Tests\AppBundle\v2\Registration\Assembler;
+namespace Tests\App\v2\Registration\Assembler;
 
-use AppBundle\Service\ReportUtils;
-use AppBundle\v2\Registration\Assembler\CasRecToOrgDeputyshipDtoAssembler;
-use AppBundle\v2\Registration\Converter\ReportTypeConverter;
+use App\Service\ReportUtils;
+use App\v2\Registration\Assembler\CasRecToOrgDeputyshipDtoAssembler;
+use App\v2\Registration\Converter\ReportTypeConverter;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
-use Tests\AppBundle\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
+use Tests\App\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
 
 class CasRecToOrgDeputyshipDtoAssemblerTest extends TestCase
 {

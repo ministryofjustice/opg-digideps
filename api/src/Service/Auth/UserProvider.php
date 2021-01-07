@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Service\Auth;
+namespace App\Service\Auth;
 
-use AppBundle\Entity\Repository\UserRepository;
-use AppBundle\Entity\User;
+use App\Entity\Repository\UserRepository;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Predis\Client;
 use Psr\Log\LoggerInterface;
@@ -98,7 +98,7 @@ class UserProvider implements UserProviderInterface
 
     public function supportsClass($class)
     {
-        return 'AppBundle\Entity\User' === $class || is_subclass_of($class, 'AppBundle\Entity\User');
+        return 'App\Entity\User' === $class || is_subclass_of($class, 'App\Entity\User');
     }
 
     /**

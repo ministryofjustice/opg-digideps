@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\v2\Assembler\Report;
+namespace App\v2\Assembler\Report;
 
-use AppBundle\v2\DTO\DtoPropertySetterTrait;
-use AppBundle\v2\DTO\ReportDto;
+use App\v2\DTO\DtoPropertySetterTrait;
+use App\v2\DTO\ReportDto;
 
 class ReportSummaryAssembler implements ReportAssemblerInterface
 {

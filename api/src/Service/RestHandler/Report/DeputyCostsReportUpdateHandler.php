@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Service\RestHandler\Report;
+namespace App\Service\RestHandler\Report;
 
-use AppBundle\Entity\Report\ProfDeputyInterimCost;
-use AppBundle\Entity\Report\Report;
+use App\Entity\Report\ProfDeputyInterimCost;
+use App\Entity\Report\Report;
 use Doctrine\ORM\EntityManagerInterface;
 
 class DeputyCostsReportUpdateHandler implements ReportUpdateHandlerInterface

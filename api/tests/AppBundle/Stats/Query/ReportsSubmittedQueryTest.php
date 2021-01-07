@@ -1,13 +1,13 @@
 <?php
 
-namespace Tests\AppBundle\Service\Stats\Query;
+namespace Tests\App\Service\Stats\Query;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Entity\User;
-use AppBundle\Service\Stats\Query\ReportsSubmittedQuery;
-use AppBundle\Service\Stats\StatsQueryParameters;
+use App\Entity\Client;
+use App\Entity\Report\Report;
+use App\Entity\Report\ReportSubmission;
+use App\Entity\User;
+use App\Service\Stats\Query\ReportsSubmittedQuery;
+use App\Service\Stats\StatsQueryParameters;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ReportsSubmittedQueryTest extends WebTestCase

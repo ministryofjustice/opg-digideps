@@ -1,14 +1,14 @@
 <?php
 
-namespace AppBundle\Controller\Report;
+namespace App\Controller\Report;
 
-use AppBundle\Controller\RestController;
-use AppBundle\Entity as EntityDir;
-use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Service\Auth\AuthService;
-use AppBundle\Service\Formatter\RestFormatter;
-use AppBundle\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer;
+use App\Controller\RestController;
+use App\Entity as EntityDir;
+use App\Entity\Report\Document;
+use App\Entity\Report\ReportSubmission;
+use App\Service\Auth\AuthService;
+use App\Service\Formatter\RestFormatter;
+use App\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;

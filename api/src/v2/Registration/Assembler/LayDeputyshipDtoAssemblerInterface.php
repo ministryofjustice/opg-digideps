@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\v2\Registration\Assembler;
+namespace App\v2\Registration\Assembler;
 
-use AppBundle\v2\Registration\DTO\LayDeputyshipDto;
+use App\v2\Registration\DTO\LayDeputyshipDto;
 
 interface LayDeputyshipDtoAssemblerInterface
 {

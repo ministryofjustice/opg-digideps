@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
-use AppBundle\Entity as EntityDir;
-use AppBundle\Exception\NotFound;
+use App\Entity as EntityDir;
+use App\Exception\NotFound;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 

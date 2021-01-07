@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Entity\Repository;
+namespace App\Entity\Repository;
 
-use AppBundle\Entity\Report\Document;
+use App\Entity\Report\Document;
 use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;

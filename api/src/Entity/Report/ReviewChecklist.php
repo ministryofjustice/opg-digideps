@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\Entity\Report;
+namespace App\Entity\Report;
 
-use AppBundle\Entity\ReportInterface;
-use AppBundle\Entity\Traits\ModifyAudit;
-use AppBundle\Entity\User;
+use App\Entity\ReportInterface;
+use App\Entity\Traits\ModifyAudit;
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -31,8 +31,8 @@ class ReviewChecklist
     private $id;
 
     /**
-     * @JMS\Type("AppBundle\Entity\Report\Report")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="checklist")
+     * @JMS\Type("App\Entity\Report\Report")
+     * @ORM\OneToOne(targetEntity="App\Entity\Report\Report", inversedBy="checklist")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      * @JMS\Groups({"checklist"})
      */
@@ -55,11 +55,11 @@ class ReviewChecklist
     private $decision;
 
     /**
-     * @var \AppBundle\Entity\User
+     * @var \App\Entity\User
      *
-     * @JMS\Type("AppBundle\Entity\User")
+     * @JMS\Type("App\Entity\User")
      * @JMS\Groups({"checklist"})
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", fetch="EAGER")
      * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     protected $submittedBy;
@@ -155,7 +155,7 @@ class ReviewChecklist
     }
 
     /**
-     * @return \AppBundle\Entity\User
+     * @return \App\Entity\User
      */
     public function getSubmittedBy(): ?User
     {
@@ -163,7 +163,7 @@ class ReviewChecklist
     }
 
     /**
-     * @param \AppBundle\Entity\User $submittedBy
+     * @param \App\Entity\User $submittedBy
      *
      * @return $this
      */

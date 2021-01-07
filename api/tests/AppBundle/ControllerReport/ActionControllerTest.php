@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\AppBundle\ControllerReport;
+namespace Tests\App\ControllerReport;
 
-use AppBundle\Entity\Report\Report;
-use Tests\AppBundle\Controller\AbstractTestController;
+use App\Entity\Report\Report;
+use Tests\App\Controller\AbstractTestController;
 
 class ActionControllerTest extends AbstractTestController
 {
@@ -83,7 +83,7 @@ class ActionControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $action = self::fixtures()->getRepo('Report\Action')->find($return['data']['id']); /* @var $action \AppBundle\Entity\Report\Action */
+        $action = self::fixtures()->getRepo('Report\Action')->find($return['data']['id']); /* @var $action \App\Entity\Report\Action */
         $this->assertEquals('yes', $action->getDoYouExpectFinancialDecisions());
         $this->assertEquals('fdd', $action->getDoYouExpectFinancialDecisionsDetails());
         $this->assertEquals('yes', $action->getDoYouHaveConcerns());
@@ -100,7 +100,7 @@ class ActionControllerTest extends AbstractTestController
         ]);
         $this->assertTrue($return['data']['id'] > 0);
         self::fixtures()->clear();
-        $action = self::fixtures()->getRepo('Report\Action')->find($return['data']['id']); /* @var $action \AppBundle\Entity\Report\Action */
+        $action = self::fixtures()->getRepo('Report\Action')->find($return['data']['id']); /* @var $action \App\Entity\Report\Action */
         $this->assertEquals('no', $action->getDoYouExpectFinancialDecisions());
         $this->assertEquals(null, $action->getDoYouExpectFinancialDecisionsDetails());
         $this->assertEquals('no', $action->getDoYouHaveConcerns());

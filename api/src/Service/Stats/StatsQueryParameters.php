@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service\Stats;
+namespace App\Service\Stats;
 
 class StatsQueryParameters
 {

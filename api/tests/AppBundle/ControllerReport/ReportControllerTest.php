@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\AppBundle\ControllerReport;
+namespace Tests\App\ControllerReport;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\Fee;
-use AppBundle\Entity\Report\Report;
-use Tests\AppBundle\Controller\AbstractTestController;
+use App\Entity\Client;
+use App\Entity\Report\Document;
+use App\Entity\Report\Fee;
+use App\Entity\Report\Report;
+use Tests\App\Controller\AbstractTestController;
 
 class ReportControllerTest extends AbstractTestController
 {
@@ -159,7 +159,7 @@ class ReportControllerTest extends AbstractTestController
 
         // assert creation
         $report = self::fixtures()->getReportById($reportId);
-        /* @var $report \AppBundle\Entity\Report\Report */
+        /* @var $report \App\Entity\Report\Report */
         $this->assertEquals(self::$client1->getId(), $report->getClient()->getId());
         $this->assertEquals('2016-01-01', $report->getStartDate()->format('Y-m-d'));
         $this->assertEquals('2016-12-31', $report->getEndDate()->format('Y-m-d'));
@@ -319,7 +319,7 @@ class ReportControllerTest extends AbstractTestController
 
         // assert account created with transactions
         $report = self::fixtures()->clear()->getReportById($reportId);
-        /* @var $report \AppBundle\Entity\Report\Report */
+        /* @var $report \App\Entity\Report\Report */
         $this->assertEquals(true, $report->getSubmitted());
         $this->assertEquals(self::$deputy1->getId(), $report->getSubmittedBy()->getId());
         $this->assertEquals('only_deputy', $report->getAgreedBehalfDeputy());
@@ -691,9 +691,9 @@ class ReportControllerTest extends AbstractTestController
         ])['data']['checklist'];
 
         // assert creation
-        /* @var $report \AppBundle\Entity\Report\Report */
+        /* @var $report \App\Entity\Report\Report */
         $report = self::fixtures()->getReportById($reportId);
-        /* @var $checklist \AppBundle\Entity\Report\Checklist */
+        /* @var $checklist \App\Entity\Report\Checklist */
         $checklist = $report->getChecklist();
         $this->assertEquals($checklistId, $checklist->getId());
         $this->assertEquals('yes', $checklist->getReportingPeriodAccurate());
@@ -749,9 +749,9 @@ class ReportControllerTest extends AbstractTestController
         ])['data']['checklist'];
 
         // assert creation
-        /* @var $report \AppBundle\Entity\Report\Report */
+        /* @var $report \App\Entity\Report\Report */
         $report = self::fixtures()->getReportById($reportId);
-        /* @var $checklist \AppBundle\Entity\Report\Checklist */
+        /* @var $checklist \App\Entity\Report\Checklist */
         $checklist = $report->getChecklist();
         $this->assertEquals($checklistId, $checklist->getId());
         $this->assertEquals('yes', $checklist->getReportingPeriodAccurate());
@@ -772,13 +772,13 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());
 
         // assert checklist information created
-        /* @var $checklist \AppBundle\Entity\Report\Checklist */
+        /* @var $checklist \App\Entity\Report\Checklist */
         $checklistInfo = $checklist->getChecklistInformation();
         $this->assertCount(1, $checklistInfo);
 
         // assert checklist information saved correctly
         $checklistInfo = $checklistInfo[0];
-        /** @var $checklistInfo \AppBundle\Entity\Report\ChecklistInformation * */
+        /** @var $checklistInfo \App\Entity\Report\ChecklistInformation * */
         $this->assertEquals($checklist->getId(), $checklistInfo->getChecklist()->getId());
         $this->assertNotEmpty($checklistInfo->getId());
         $this->assertNotEmpty($checklistInfo->getCreatedBy());
@@ -818,9 +818,9 @@ class ReportControllerTest extends AbstractTestController
         ])['data']['checklist'];
 
         // assert creation
-        /* @var $report \AppBundle\Entity\Report\Report */
+        /* @var $report \App\Entity\Report\Report */
         $report = self::fixtures()->getReportById($reportId);
-        /* @var $checklist \AppBundle\Entity\Report\Checklist */
+        /* @var $checklist \App\Entity\Report\Checklist */
         $checklist = $report->getChecklist();
 
         $this->assertEquals($checklistId, $checklist->getId());
@@ -844,14 +844,14 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('for-review', $checklist->getFinalDecision());
 
         // assert checklist information created
-        /* @var $checklist \AppBundle\Entity\Report\Checklist */
+        /* @var $checklist \App\Entity\Report\Checklist */
         $checklist = $report->getChecklist();
         $checklistInfo = $checklist->getChecklistInformation();
         $this->assertCount(1, $checklistInfo);
 
         // assert checklist information saved correctly
         $checklistInfo = $checklistInfo[0];
-        /** @var $checklistInfo \AppBundle\Entity\Report\ChecklistInformation * */
+        /** @var $checklistInfo \App\Entity\Report\ChecklistInformation * */
         $this->assertEquals($checklist->getId(), $checklistInfo->getChecklist()->getId());
         $this->assertNotEmpty($checklistInfo->getId());
         $this->assertNotEmpty($checklistInfo->getCreatedBy());

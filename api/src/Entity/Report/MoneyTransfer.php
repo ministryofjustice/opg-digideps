@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Report;
+namespace App\Entity\Report;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -33,7 +33,7 @@ class MoneyTransfer
      * @var Account
      * @JMS\Groups({"account"})
      * @JMS\SerializedName("accountFrom")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\BankAccount")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Report\BankAccount")
      * @ORM\JoinColumn(name="from_account_id", referencedColumnName="id")
      */
     private $from;
@@ -42,14 +42,14 @@ class MoneyTransfer
      * @var Account
      * @JMS\Groups({"account"})
      * @JMS\SerializedName("accountTo")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\BankAccount")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Report\BankAccount")
      * @ORM\JoinColumn(name="to_account_id", referencedColumnName="id")
      */
     private $to;
 
     /**
      * @var Report
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="moneyTransfers")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="moneyTransfers")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;

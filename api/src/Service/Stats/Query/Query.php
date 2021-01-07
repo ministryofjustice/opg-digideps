@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Service\Stats\Query;
+namespace App\Service\Stats\Query;
 
 use Doctrine\ORM\Query\ResultSetMapping;
-use AppBundle\Service\Stats\StatsQueryParameters;
+use App\Service\Stats\StatsQueryParameters;
 use Doctrine\ORM\EntityManagerInterface;
 
 abstract class Query

@@ -1,12 +1,12 @@
 <?php
 
-namespace AppBundle\v2\Controller;
+namespace App\v2\Controller;
 
-use AppBundle\Entity\Organisation;
-use AppBundle\Entity\Repository\OrganisationRepository;
-use AppBundle\Service\RestHandler\OrganisationRestHandler;
-use AppBundle\v2\Assembler\OrganisationAssembler;
-use AppBundle\v2\Transformer\OrganisationTransformer;
+use App\Entity\Organisation;
+use App\Entity\Repository\OrganisationRepository;
+use App\Service\RestHandler\OrganisationRestHandler;
+use App\v2\Assembler\OrganisationAssembler;
+use App\v2\Transformer\OrganisationTransformer;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;

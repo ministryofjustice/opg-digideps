@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AppBundle\Service\BruteForce;
+namespace Tests\App\Service\BruteForce;
 
 // create a simple predis Mock to just return keys
 class PredisMock extends \Predis\Client

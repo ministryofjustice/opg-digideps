@@ -1,12 +1,12 @@
 <?php
 
-namespace AppBundle\Controller\Ndr;
+namespace App\Controller\Ndr;
 
-use AppBundle\Controller\RestController;
-use AppBundle\Entity as EntityDir;
-use AppBundle\Entity\Report\Document;
-use AppBundle\Service\Formatter\RestFormatter;
-use AppBundle\Service\ReportService;
+use App\Controller\RestController;
+use App\Entity as EntityDir;
+use App\Entity\Report\Document;
+use App\Service\Formatter\RestFormatter;
+use App\Service\ReportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;

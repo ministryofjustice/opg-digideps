@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\v2\Registration\SelfRegistration\Factory;
+namespace App\v2\Registration\SelfRegistration\Factory;
 
-use AppBundle\Entity\CasRec;
-use AppBundle\Service\DateTimeProvider;
-use AppBundle\v2\Registration\DTO\LayDeputyshipDto;
+use App\Entity\CasRec;
+use App\Service\DateTimeProvider;
+use App\v2\Registration\DTO\LayDeputyshipDto;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CasRecFactory
@@ -66,7 +66,7 @@ class CasRecFactory
 
         if (count($errors) > 0) {
             throw new CasRecCreationException(
-                str_replace('Object(AppBundle\Entity\CasRec).', '', (string) $errors)
+                str_replace('Object(App\Entity\CasRec).', '', (string) $errors)
             );
         }
     }

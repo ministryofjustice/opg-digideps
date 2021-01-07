@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\AppBundle\ControllerReport;
+namespace Tests\App\ControllerReport;
 
-use AppBundle\Entity\Report\MoneyTransactionShort;
-use AppBundle\Entity\Report\MoneyTransactionShortIn;
-use AppBundle\Entity\Report\MoneyTransactionShortOut;
-use AppBundle\Entity\Report\Report;
-use Tests\AppBundle\Controller\AbstractTestController;
+use App\Entity\Report\MoneyTransactionShort;
+use App\Entity\Report\MoneyTransactionShortIn;
+use App\Entity\Report\MoneyTransactionShortOut;
+use App\Entity\Report\Report;
+use Tests\App\Controller\AbstractTestController;
 
 class MoneyTransactionShortControllerTest extends AbstractTestController
 {

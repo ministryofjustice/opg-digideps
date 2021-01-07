@@ -6,10 +6,10 @@
  * Time: 15:46.
  */
 
-namespace AppBundle\Entity\Ndr\Traits;
+namespace App\Entity\Ndr\Traits;
 
-use AppBundle\Entity\Ndr\OneOff;
-use AppBundle\Entity\Ndr\StateBenefit;
+use App\Entity\Ndr\OneOff;
+use App\Entity\Ndr\StateBenefit;
 
 trait IncomeBenefitTrait
 {
@@ -17,7 +17,7 @@ trait IncomeBenefitTrait
      * @var StateBenefit[]
      *
      * @JMS\Groups({"state-benefits"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\StateBenefit", mappedBy="ndr")
+     * @ORM\OneToMany(targetEntity="App\Entity\Ndr\StateBenefit", mappedBy="ndr")
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $stateBenefits;
@@ -71,7 +71,7 @@ trait IncomeBenefitTrait
      * @var OneOff[]
      *
      * @JMS\Groups({"one-off"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\OneOff", mappedBy="ndr")
+     * @ORM\OneToMany(targetEntity="App\Entity\Ndr\OneOff", mappedBy="ndr")
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $oneOff;

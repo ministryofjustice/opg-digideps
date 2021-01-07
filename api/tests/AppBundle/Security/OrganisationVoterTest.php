@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Tests\AppBundle\Security;
+namespace Tests\App\Security;
 
-use AppBundle\Entity\Organisation;
-use AppBundle\Entity\User;
-use AppBundle\Security\OrganisationVoter;
+use App\Entity\Organisation;
+use App\Entity\User;
+use App\Security\OrganisationVoter;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -17,19 +17,19 @@ class OrganisationVoterTest extends TestCase
         $orgMemberUser = new User();
         $subject = new Organisation();
         $subject->addUser($orgMemberUser);
-        
+
         $token = self::prophesize(TokenInterface::class);
         $token->getUser()->willReturn($orgMemberUser);
-        
+
         $security = self::prophesize(Security::class);
         $sut = new OrganisationVoter($security->reveal());
-        
+
         $attributes = [$sut::VIEW];
         $voteResult = $sut->vote($token->reveal(), $subject, $attributes);
-        
+
         self::assertEquals($sut::ACCESS_GRANTED, $voteResult);
     }
-    
+
     public function testOrganisationDoesNotContainsLoggedInUser()
     {
         $user = new User();
@@ -46,7 +46,7 @@ class OrganisationVoterTest extends TestCase
 
         self::assertEquals($sut::ACCESS_DENIED, $voteResult);
     }
-    
+
     public function testUnrecognisedAttribute()
     {
         $user = new User();
@@ -63,7 +63,7 @@ class OrganisationVoterTest extends TestCase
 
         self::assertEquals($sut::ACCESS_ABSTAIN, $voteResult);
     }
-    
+
     public function testSubjectIsNotOrganisation()
     {
         $subject = new DateTime();

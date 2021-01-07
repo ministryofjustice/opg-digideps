@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Traits;
+namespace App\Entity\Traits;
 
 trait AddressTrait
 {

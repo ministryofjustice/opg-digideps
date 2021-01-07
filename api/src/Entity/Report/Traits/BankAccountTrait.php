@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Entity\Report\Traits;
+namespace App\Entity\Report\Traits;
 
-use AppBundle\Entity\Report\BankAccount;
-use AppBundle\Entity\Report\Report;
+use App\Entity\Report\BankAccount;
+use App\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -12,8 +12,8 @@ trait BankAccountTrait
 
     /**
      * @JMS\Groups({"account"})
-     * @JMS\Type("array<AppBundle\Entity\Report\BankAccount>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\BankAccount", mappedBy="report", cascade={"persist", "remove"})
+     * @JMS\Type("array<App\Entity\Report\BankAccount>")
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\BankAccount", mappedBy="report", cascade={"persist", "remove"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $bankAccounts;

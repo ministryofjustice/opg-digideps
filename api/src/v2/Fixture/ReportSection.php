@@ -1,17 +1,17 @@
 <?php
 
-namespace AppBundle\v2\Fixture;
+namespace App\v2\Fixture;
 
-use AppBundle\Entity\Ndr as Ndr;
-use AppBundle\Entity\Report\Action;
-use AppBundle\Entity\Report\BankAccount;
-use AppBundle\Entity\Report\Lifestyle;
-use AppBundle\Entity\Report\MentalCapacity;
-use AppBundle\Entity\Report\MoneyTransaction;
-use AppBundle\Entity\Report\ProfDeputyOtherCost;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\VisitsCare;
-use AppBundle\Entity\ReportInterface;
+use App\Entity\Ndr as Ndr;
+use App\Entity\Report\Action;
+use App\Entity\Report\BankAccount;
+use App\Entity\Report\Lifestyle;
+use App\Entity\Report\MentalCapacity;
+use App\Entity\Report\MoneyTransaction;
+use App\Entity\Report\ProfDeputyOtherCost;
+use App\Entity\Report\Report;
+use App\Entity\Report\VisitsCare;
+use App\Entity\ReportInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 

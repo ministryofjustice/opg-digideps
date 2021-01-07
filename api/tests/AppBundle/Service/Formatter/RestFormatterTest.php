@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
 
-namespace Tests\AppBundle\Service\Formatter;
+namespace Tests\App\Service\Formatter;
 
-use AppBundle\EventListener\RestInputOuputFormatter;
-use AppBundle\Service\Formatter\RestFormatter;
-use AppBundle\Service\Validator\RestArrayValidator;
+use App\EventListener\RestInputOuputFormatter;
+use App\Service\Formatter\RestFormatter;
+use App\Service\Validator\RestArrayValidator;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Request;

@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
-use AppBundle\Service\Formatter\RestFormatter;
+use App\Service\Formatter\RestFormatter;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 

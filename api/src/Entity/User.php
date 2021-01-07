@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
-use AppBundle\Entity\Traits\AddressTrait;
+use App\Entity\Traits\AddressTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * Users.
  *
  * @ORM\Table(name="dd_user", indexes={@ORM\Index(name="deputy_no_idx", columns={"deputy_no"})})
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\UserRepository")
+ * @ORM\Entity(repositoryClass="App\Entity\Repository\UserRepository")
  */
 class User implements UserInterface
 {
@@ -80,24 +80,24 @@ class User implements UserInterface
     /**
      * @JMS\Groups({"user-clients"})
      * @JMS\Type("array")
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Client", mappedBy="users", cascade={"persist"}, fetch="EXTRA_LAZY")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Client", mappedBy="users", cascade={"persist"}, fetch="EXTRA_LAZY")
      */
     private $clients;
 
     /**
-     * @JMS\Type("ArrayCollection<AppBundle\Entity\Team>")
+     * @JMS\Type("ArrayCollection<App\Entity\Team>")
      * @JMS\Groups({"user-teams"})
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Team", inversedBy="members", cascade={"persist"}, fetch="EXTRA_LAZY")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Team", inversedBy="members", cascade={"persist"}, fetch="EXTRA_LAZY")
      *
      * @var ArrayCollection
      */
     private $teams;
 
     /**
-     * @JMS\Type("ArrayCollection<AppBundle\Entity\Organisation>")
+     * @JMS\Type("ArrayCollection<App\Entity\Organisation>")
      * @JMS\Groups({"user-organisations"})
      * @JMS\Accessor(getter="getOrganisations")
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Organisation", mappedBy="users", fetch="EXTRA_LAZY")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Organisation", mappedBy="users", fetch="EXTRA_LAZY")
      *
      * @var ArrayCollection
      */

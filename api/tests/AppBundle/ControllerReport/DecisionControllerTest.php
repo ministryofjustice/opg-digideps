@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\AppBundle\ControllerReport;
+namespace Tests\App\ControllerReport;
 
-use AppBundle\Entity\Report\Report;
-use Tests\AppBundle\Controller\AbstractTestController;
+use App\Entity\Report\Report;
+use Tests\App\Controller\AbstractTestController;
 
 class DecisionControllerTest extends AbstractTestController
 {
@@ -159,7 +159,7 @@ class DecisionControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $decision = self::fixtures()->getRepo('Report\Decision')->find($return['data']['id']); /* @var $decision \AppBundle\Entity\Report\Decision */
+        $decision = self::fixtures()->getRepo('Report\Decision')->find($return['data']['id']); /* @var $decision \App\Entity\Report\Decision */
         $this->assertEquals('description-changed', $decision->getDescription());
         $this->assertEquals(self::$report1->getId(), $decision->getReport()->getId());
 
@@ -180,7 +180,7 @@ class DecisionControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         // assert account created with transactions
-        $decision = self::fixtures()->getRepo('Report\Decision')->find($return['data']['id']); /* @var $decision \AppBundle\Entity\Report\Decision */
+        $decision = self::fixtures()->getRepo('Report\Decision')->find($return['data']['id']); /* @var $decision \App\Entity\Report\Decision */
         $this->assertEquals('description-changed', $decision->getDescription());
         $this->assertEquals(self::$report1->getId(), $decision->getReport()->getId());
         // TODO assert other fields

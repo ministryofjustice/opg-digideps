@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\v2\Controller;
+namespace App\v2\Controller;
 
-use AppBundle\Entity\Repository\UserRepository;
-use AppBundle\v2\Assembler\DeputyAssembler;
-use AppBundle\v2\Transformer\DeputyTransformer;
+use App\Entity\Repository\UserRepository;
+use App\v2\Assembler\DeputyAssembler;
+use App\v2\Transformer\DeputyTransformer;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;

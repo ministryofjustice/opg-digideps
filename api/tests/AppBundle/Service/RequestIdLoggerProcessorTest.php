@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\AppBundle\Service;
+namespace Tests\App\Service;
 
-use AppBundle\Service\RequestIdLoggerProcessor;
+use App\Service\RequestIdLoggerProcessor;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;

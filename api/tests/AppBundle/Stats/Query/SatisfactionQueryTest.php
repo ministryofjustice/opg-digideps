@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\AppBundle\Service\Stats\Query;
+namespace Tests\App\Service\Stats\Query;
 
-use AppBundle\Entity\Satisfaction;
-use AppBundle\Service\Stats\Query\SatisfactionQuery;
-use AppBundle\Service\Stats\StatsQueryParameters;
+use App\Entity\Satisfaction;
+use App\Service\Stats\Query\SatisfactionQuery;
+use App\Service\Stats\StatsQueryParameters;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class SatisfactionQueryTest extends WebTestCase

@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Security;
+namespace App\Security;
 
-use AppBundle\Entity\User;
+use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use AppBundle\TestHelpers\UserTestHelper;
+use App\TestHelpers\UserTestHelper;
 
 class UserVoterTest extends TestCase
 {

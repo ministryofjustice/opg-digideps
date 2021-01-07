@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -12,7 +12,7 @@ use DateTime;
  *
  * @ORM\Table(name="satisfaction")
  * @ORM\Entity()
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\SatisfactionRepository")
+ * @ORM\Entity(repositoryClass="App\Entity\Repository\SatisfactionRepository")
  */
 class Satisfaction
 {

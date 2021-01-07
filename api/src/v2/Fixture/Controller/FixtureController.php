@@ -1,25 +1,25 @@
 <?php
 
-namespace AppBundle\v2\Fixture\Controller;
+namespace App\v2\Fixture\Controller;
 
-use AppBundle\DataFixtures\DocumentSyncFixtures;
-use AppBundle\Entity\CasRec;
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Ndr\Ndr;
-use AppBundle\Entity\Ndr\NdrRepository;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\NamedDeputy;
-use AppBundle\Entity\Repository\OrganisationRepository;
-use AppBundle\Entity\Repository\ReportRepository;
-use AppBundle\Entity\Repository\UserRepository;
-use AppBundle\Entity\User;
-use AppBundle\Factory\OrganisationFactory;
-use AppBundle\FixtureFactory\CasRecFactory;
-use AppBundle\FixtureFactory\ClientFactory;
-use AppBundle\FixtureFactory\ReportFactory;
-use AppBundle\FixtureFactory\UserFactory;
-use AppBundle\v2\Controller\ControllerTrait;
-use AppBundle\v2\Fixture\ReportSection;
+use App\DataFixtures\DocumentSyncFixtures;
+use App\Entity\CasRec;
+use App\Entity\Client;
+use App\Entity\Ndr\Ndr;
+use App\Entity\Ndr\NdrRepository;
+use App\Entity\Report\Report;
+use App\Entity\NamedDeputy;
+use App\Entity\Repository\OrganisationRepository;
+use App\Entity\Repository\ReportRepository;
+use App\Entity\Repository\UserRepository;
+use App\Entity\User;
+use App\Factory\OrganisationFactory;
+use App\FixtureFactory\CasRecFactory;
+use App\FixtureFactory\ClientFactory;
+use App\FixtureFactory\ReportFactory;
+use App\FixtureFactory\UserFactory;
+use App\v2\Controller\ControllerTrait;
+use App\v2\Fixture\ReportSection;
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 use Symfony\Component\HttpFoundation\Request;

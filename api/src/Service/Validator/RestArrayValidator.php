@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 
-namespace AppBundle\Service\Validator;
+namespace App\Service\Validator;
 
 class RestArrayValidator
 {

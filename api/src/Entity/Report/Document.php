@@ -1,12 +1,12 @@
 <?php
 
-namespace AppBundle\Entity\Report;
+namespace App\Entity\Report;
 
-use AppBundle\Entity\Ndr\Ndr;
-use AppBundle\Entity\SynchronisableInterface;
-use AppBundle\Entity\SynchronisableTrait;
-use AppBundle\Entity\Traits\CreationAudit;
-use AppBundle\Entity\User;
+use App\Entity\Ndr\Ndr;
+use App\Entity\SynchronisableInterface;
+use App\Entity\SynchronisableTrait;
+use App\Entity\Traits\CreationAudit;
+use App\Entity\User;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -19,7 +19,7 @@ use JMS\Serializer\Annotation as JMS;
  *     @ORM\Index(name="ix_document_report_id", columns={"report_id"}),
  *     @ORM\Index(name="ix_document_created_by", columns={"created_by"})
  *     })
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\DocumentRepository")
+ * @ORM\Entity(repositoryClass="App\Entity\Repository\DocumentRepository")
  */
 class Document implements SynchronisableInterface
 {
@@ -73,8 +73,8 @@ class Document implements SynchronisableInterface
      *
      * @JMS\Groups({"document-report"})
      *
-     * @JMS\Type("AppBundle\Entity\Report\Report")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="documents")
+     * @JMS\Type("App\Entity\Report\Report")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="documents")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;
@@ -84,8 +84,8 @@ class Document implements SynchronisableInterface
      *
      * @JMS\Groups({"document-report"})
      *
-     * @JMS\Type("AppBundle\Entity\Ndr\Ndr")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Ndr\Ndr")
+     * @JMS\Type("App\Entity\Ndr\Ndr")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr")
      * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $ndr;
@@ -93,10 +93,10 @@ class Document implements SynchronisableInterface
     /**
      * @var ReportSubmission
      *
-     * @JMS\Type("AppBundle\Entity\Report\ReportSubmission")
+     * @JMS\Type("App\Entity\Report\ReportSubmission")
      * @JMS\Groups({"document-report-submission"})
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\ReportSubmission", inversedBy="documents", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Report\ReportSubmission", inversedBy="documents", cascade={"persist"})
      * @ORM\JoinColumn(name="report_submission_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $reportSubmission;

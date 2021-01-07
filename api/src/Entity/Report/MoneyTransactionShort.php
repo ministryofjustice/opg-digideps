@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Report;
+namespace App\Entity\Report;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -11,8 +11,8 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
- *      "in"   = "AppBundle\Entity\Report\MoneyTransactionShortIn",
- *      "out"  = "AppBundle\Entity\Report\MoneyTransactionShortOut"
+ *      "in"   = "App\Entity\Report\MoneyTransactionShortIn",
+ *      "out"  = "App\Entity\Report\MoneyTransactionShortOut"
  * })
  */
 abstract class MoneyTransactionShort implements MoneyTransactionInterface
@@ -32,7 +32,7 @@ abstract class MoneyTransactionShort implements MoneyTransactionInterface
     /**
      * @var Report
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="moneyTransactionsShort")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="moneyTransactionsShort")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;

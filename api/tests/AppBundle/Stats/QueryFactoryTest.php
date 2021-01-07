@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\AppBundle\Service\Stats;
+namespace Tests\App\Service\Stats;
 
-use AppBundle\Service\Stats\Query\Query;
-use AppBundle\Service\Stats\QueryFactory;
-use AppBundle\Service\Stats\StatsQueryParameters;
+use App\Service\Stats\Query\Query;
+use App\Service\Stats\QueryFactory;
+use App\Service\Stats\StatsQueryParameters;
 use Doctrine\ORM\EntityManager;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;

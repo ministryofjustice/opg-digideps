@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\AppBundle\Entity\Report;
+namespace Tests\App\Entity\Report;
 
-use AppBundle\Entity\Report\Asset;
-use AppBundle\Entity\Report\AssetOther;
-use AppBundle\Entity\Report\AssetProperty;
+use App\Entity\Report\Asset;
+use App\Entity\Report\AssetOther;
+use App\Entity\Report\AssetProperty;
 use PHPUnit\Framework\TestCase;
 
 class AssetTest extends TestCase

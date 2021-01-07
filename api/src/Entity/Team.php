@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
-use AppBundle\Entity\Traits\AddressTrait;
+use App\Entity\Traits\AddressTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -11,7 +11,7 @@ use JMS\Serializer\Annotation as JMS;
  * Team
  *
  * @ORM\Table(name="dd_team")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\TeamRepository")
+ * @ORM\Entity(repositoryClass="App\Entity\Repository\TeamRepository")
  */
 class Team
 {
@@ -30,8 +30,8 @@ class Team
     /**
      * @JMS\Groups({"team-users"})
      *
-     * @JMS\Type("ArrayCollection<AppBundle\Entity\User>")
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", mappedBy="teams", cascade={"persist"})
+     * @JMS\Type("ArrayCollection<App\Entity\User>")
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="teams", cascade={"persist"})
      * @ORM\OrderBy({"lastname" = "ASC"})
      */
     private $members;

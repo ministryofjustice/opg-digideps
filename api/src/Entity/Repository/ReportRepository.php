@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Entity\Repository;
+namespace App\Entity\Repository;
 
-use AppBundle\Entity\Report\Debt as ReportDebt;
-use AppBundle\Entity\Report\Fee as ReportFee;
-use AppBundle\Entity\Report\MoneyShortCategory as ReportMoneyShortCategory;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\SynchronisableInterface;
-use AppBundle\Service\Search\ClientSearchFilter;
+use App\Entity\Report\Debt as ReportDebt;
+use App\Entity\Report\Fee as ReportFee;
+use App\Entity\Report\MoneyShortCategory as ReportMoneyShortCategory;
+use App\Entity\Report\Report;
+use App\Entity\SynchronisableInterface;
+use App\Service\Search\ClientSearchFilter;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -203,7 +203,7 @@ class ReportRepository extends EntityRepository
     {
         $dql = <<<DQL
 SELECT c.id as checklist_id, r.id as report_id
-FROM AppBundle\Entity\Report\Report r
+FROM App\Entity\Report\Report r
 JOIN r.checklist c
 JOIN r.reportSubmissions rs
 WHERE c.synchronisationStatus = ?1

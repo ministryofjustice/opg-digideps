@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Tests\AppBundle\Controller;
+namespace Tests\App\Controller;
 
-use AppBundle\Entity\Role;
-use AppBundle\Entity\User;
+use App\Entity\Role;
+use App\Entity\User;
 
 class UserControllerTest extends AbstractTestController
 {
@@ -126,7 +126,7 @@ class UserControllerTest extends AbstractTestController
             ],
         ]);
 
-        $user = self::fixtures()->clear()->getRepo('User')->find($deputyId); /* @var $user \AppBundle\Entity\User */
+        $user = self::fixtures()->clear()->getRepo('User')->find($deputyId); /* @var $user \App\Entity\User */
 
         $this->assertEquals(self::$deputy1->getLastname() . '-modified', $user->getLastname());
         $this->assertEquals(self::$deputy1->getEmail() . '-modified', $user->getEmail());

@@ -1,13 +1,13 @@
 services:
-  AppBundle\Controller\Report\ReportController:
-    class: AppBundle\Controller\Report\ReportController
+  App\Controller\Report\ReportController:
+    class: App\Controller\Report\ReportController
     arguments:
       -
         - '@rest_handler.report.deputy_costs_estimate_report_update_handler'
         - '@rest_handler.report.deputy_costs_report_update_handler'
         - '@rest_handler.report.pa_fees_expenses_report_update_handler'
-      - '@AppBundle\Entity\Repository\ReportRepository'
-      - '@AppBundle\Service\ReportService'
+      - '@App\Entity\Repository\ReportRepository'
+      - '@App\Service\ReportService'
       - '@em'
-      - '@AppBundle\Service\Auth\AuthService'
-      - '@AppBundle\Service\Formatter\RestFormatter'
+      - '@App\Service\Auth\AuthService'
+      - '@App\Service\Formatter\RestFormatter'

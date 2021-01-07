@@ -1,17 +1,17 @@
 <?php
 
-namespace AppBundle\Controller\Report;
+namespace App\Controller\Report;
 
-use AppBundle\Controller\RestController;
-use AppBundle\Entity as EntityDir;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Repository\ChecklistRepository;
-use AppBundle\Entity\Repository\ReportRepository;
-use AppBundle\Entity\User;
-use AppBundle\Exception\UnauthorisedException;
-use AppBundle\Service\Auth\AuthService;
-use AppBundle\Service\Formatter\RestFormatter;
-use AppBundle\Service\ReportService;
+use App\Controller\RestController;
+use App\Entity as EntityDir;
+use App\Entity\Report\Report;
+use App\Entity\Repository\ChecklistRepository;
+use App\Entity\Repository\ReportRepository;
+use App\Entity\User;
+use App\Exception\UnauthorisedException;
+use App\Service\Auth\AuthService;
+use App\Service\Formatter\RestFormatter;
+use App\Service\ReportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

@@ -1,15 +1,15 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
-use AppBundle\Entity\Report\Report;
+use App\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="casrec", indexes={@ORM\Index(name="updated_at_idx", columns={"updated_at"})})
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\CasRecRepository")
+ * @ORM\Entity(repositoryClass="App\Entity\Repository\CasRecRepository")
  */
 class CasRec
 {
@@ -184,7 +184,7 @@ class CasRec
      * Filled from cron
      *
      * @var array
-     * @deprecated use AppBundle\Service\DataNormaliser
+     * @deprecated use App\Service\DataNormaliser
      */
     private static $normalizeChars = [
         'Š' => 'S', 'š' => 's', 'Ð' => 'Dj', 'Ž' => 'Z', 'ž' => 'z', 'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A',
@@ -221,7 +221,7 @@ class CasRec
         return trim(strtolower($value));
     }
 
-    /** @deprecated use AppBundle\Service\DataNormaliser */
+    /** @deprecated use App\Service\DataNormaliser */
     public static function normaliseSurname($value)
     {
         $value = trim($value);
@@ -235,7 +235,7 @@ class CasRec
         return $value;
     }
 
-    /** @deprecated use AppBundle\Service\DataNormaliser */
+    /** @deprecated use App\Service\DataNormaliser */
     public static function normaliseCaseNumber($value)
     {
         $value = trim($value);
@@ -245,7 +245,7 @@ class CasRec
         return $value;
     }
 
-    /** @deprecated use AppBundle\Service\DataNormaliser */
+    /** @deprecated use App\Service\DataNormaliser */
     public static function normaliseDeputyNo($value)
     {
         $value = trim($value);
@@ -254,7 +254,7 @@ class CasRec
         return $value;
     }
 
-    /** @deprecated use AppBundle\Service\DataNormaliser */
+    /** @deprecated use App\Service\DataNormaliser */
     public static function normalisePostCode($value)
     {
         $value = trim($value);

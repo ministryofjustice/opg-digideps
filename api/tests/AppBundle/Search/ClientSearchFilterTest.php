@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\AppBundle\Search;
+namespace Tests\App\Search;
 
-use AppBundle\Service\Search\ClientSearchFilter;
+use App\Service\Search\ClientSearchFilter;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
@@ -45,8 +45,6 @@ class ClientSearchFilterTest extends TestCase
             ->invokeTestWithSearchTerm('John')
             ->assertQueryEquals('SELECT c WHERE lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike')
             ->assertQueryParametersEqual([['name' => 'qLike', 'value' => '%john%']]);
-
-
     }
 
     /**

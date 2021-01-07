@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\AppBundle\v2\Registration\SelfRegistration\Factory;
+namespace Tests\App\v2\Registration\SelfRegistration\Factory;
 
-use AppBundle\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler;
-use AppBundle\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
-use AppBundle\v2\Registration\SelfRegistration\Factory\LayDeputyshipDtoCollectionAssemblerFactory;
+use App\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler;
+use App\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
+use App\v2\Registration\SelfRegistration\Factory\LayDeputyshipDtoCollectionAssemblerFactory;
 use PHPUnit\Framework\TestCase;
 
 class LayDeputyshipDtoCollectionAssemblerFactoryTest extends TestCase

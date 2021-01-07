@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
 
-namespace AppBundle\TestHelpers;
+namespace App\TestHelpers;
 
-use AppBundle\Entity\User;
+use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 
 class UserTestHelper extends TestCase

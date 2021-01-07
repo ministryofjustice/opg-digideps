@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Service\Search;
+namespace App\Service\Search;
 
-use AppBundle\Entity\Client;
+use App\Entity\Client;
 use Doctrine\ORM\QueryBuilder;
 
 class ClientSearchFilter

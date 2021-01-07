@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\AppBundle\Service\RestHandler\Report;
+namespace Tests\App\Service\RestHandler\Report;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\ProfDeputyInterimCost;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Service\RestHandler\Report\DeputyCostsReportUpdateHandler;
+use App\Entity\Client;
+use App\Entity\Report\ProfDeputyInterimCost;
+use App\Entity\Report\Report;
+use App\Service\RestHandler\Report\DeputyCostsReportUpdateHandler;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
@@ -87,7 +87,6 @@ class DeputyCostsReportUpdateHandlerTest extends TestCase
         $this->invokeHandler($data);
 
         $this->assertTrue($this->report->getProfDeputyInterimCosts()->isEmpty());
-
     }
 
     public function testInterimCostsAdded()

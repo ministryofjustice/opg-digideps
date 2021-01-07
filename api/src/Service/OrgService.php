@@ -1,15 +1,15 @@
 <?php
 
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Entity as EntityDir;
-use AppBundle\Entity\NamedDeputy;
-use AppBundle\Entity\Repository\ClientRepository;
-use AppBundle\Entity\Repository\TeamRepository;
-use AppBundle\Entity\Repository\UserRepository;
-use AppBundle\Entity\Repository\NamedDeputyRepository;
-use AppBundle\Entity\User;
-use AppBundle\Factory\NamedDeputyFactory;
+use App\Entity as EntityDir;
+use App\Entity\NamedDeputy;
+use App\Entity\Repository\ClientRepository;
+use App\Entity\Repository\TeamRepository;
+use App\Entity\Repository\UserRepository;
+use App\Entity\Repository\NamedDeputyRepository;
+use App\Entity\User;
+use App\Factory\NamedDeputyFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Symfony\Component\Finder\Exception\AccessDeniedException;

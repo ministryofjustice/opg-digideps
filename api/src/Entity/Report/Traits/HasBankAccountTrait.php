@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity\Report\Traits;
+namespace App\Entity\Report\Traits;
 
-use AppBundle\Entity\Report\BankAccount;
+use App\Entity\Report\BankAccount;
 use JMS\Serializer\Annotation as JMS;
 
 trait HasBankAccountTrait
@@ -12,8 +12,8 @@ trait HasBankAccountTrait
      *
      * @JMS\Groups({"account"})
      * @JMS\SerializedName("bankAccount")
-     * @JMS\Type("AppBundle\Entity\Report\BankAccount")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\BankAccount")
+     * @JMS\Type("App\Entity\Report\BankAccount")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Report\BankAccount")
      * @ORM\JoinColumn(name="bank_account_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     private $bankAccount;

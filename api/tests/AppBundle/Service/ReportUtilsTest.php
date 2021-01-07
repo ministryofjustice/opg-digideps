@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\AppBundle\Service;
+namespace Tests\App\Service;
 
-use AppBundle\Service\ReportUtils;
+use App\Service\ReportUtils;
 use PHPUnit\Framework\TestCase;
 
 class ReportUtilsTest extends TestCase

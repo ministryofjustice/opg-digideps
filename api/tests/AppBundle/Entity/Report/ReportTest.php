@@ -1,23 +1,23 @@
 <?php
 
-namespace Tests\AppBundle\Entity\Report;
+namespace Tests\App\Entity\Report;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Ndr\Ndr;
-use AppBundle\Entity\Report\AssetOther;
-use AppBundle\Entity\Report\AssetProperty;
-use AppBundle\Entity\Report\BankAccount;
-use AppBundle\Entity\Report\Expense;
-use AppBundle\Entity\Report\Fee;
-use AppBundle\Entity\Report\Gift;
-use AppBundle\Entity\Report\MoneyTransaction;
-use AppBundle\Entity\Report\MoneyTransactionShortIn;
-use AppBundle\Entity\Report\MoneyTransactionShortOut;
-use AppBundle\Entity\Report\ProfDeputyInterimCost;
-use AppBundle\Entity\Report\ProfDeputyOtherCost;
-use AppBundle\Entity\Report\ProfDeputyPreviousCost;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Service\ReportStatusService;
+use App\Entity\Client;
+use App\Entity\Ndr\Ndr;
+use App\Entity\Report\AssetOther;
+use App\Entity\Report\AssetProperty;
+use App\Entity\Report\BankAccount;
+use App\Entity\Report\Expense;
+use App\Entity\Report\Fee;
+use App\Entity\Report\Gift;
+use App\Entity\Report\MoneyTransaction;
+use App\Entity\Report\MoneyTransactionShortIn;
+use App\Entity\Report\MoneyTransactionShortOut;
+use App\Entity\Report\ProfDeputyInterimCost;
+use App\Entity\Report\ProfDeputyOtherCost;
+use App\Entity\Report\ProfDeputyPreviousCost;
+use App\Entity\Report\Report;
+use App\Service\ReportStatusService;
 use Doctrine\Common\Collections\ArrayCollection;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
@@ -185,7 +185,6 @@ class ReportTest extends TestCase
             (new ProfDeputyInterimCost($this->report, new \DateTime('now'), 11)),
         ]));
         $this->assertEquals(-1 - 1 - 11 - 11 - 10 - 10, $this->report->getCalculatedBalance());
-
     }
 
     /**
@@ -293,7 +292,7 @@ class ReportTest extends TestCase
         $reportCurrent->shouldReceive('getId')->andReturn(10);
         $reportCurrent->shouldReceive('getClient')->andReturn($mockClient);
 
-        $ndrBankAccount1 = new \AppBundle\Entity\Ndr\BankAccount();
+        $ndrBankAccount1 = new \App\Entity\Ndr\BankAccount();
         $ndrBankAccount1->setId(1);
         $ndrBankAccount1->setBank('ndrBank1');
         $ndrBankAccount1->setAccountNumber('1111');
@@ -379,7 +378,6 @@ class ReportTest extends TestCase
             $currentReportPreviousData['financial-summary']['closing-balance-total'],
             ($bankAccount1->getClosingBalance() + $bankAccount2->getClosingBalance())
         );
-
     }
 
 

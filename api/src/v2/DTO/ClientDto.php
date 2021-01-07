@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\v2\DTO;
+namespace App\v2\DTO;
 
-use AppBundle\Entity\Organisation;
+use App\Entity\Organisation;
 
 class ClientDto
 {

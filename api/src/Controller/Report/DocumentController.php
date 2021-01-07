@@ -1,13 +1,13 @@
 <?php
 
-namespace AppBundle\Controller\Report;
+namespace App\Controller\Report;
 
-use AppBundle\Controller\RestController;
-use AppBundle\Entity as EntityDir;
-use AppBundle\Entity\Report\Document;
-use AppBundle\Exception\UnauthorisedException;
-use AppBundle\Service\Auth\AuthService;
-use AppBundle\Service\Formatter\RestFormatter;
+use App\Controller\RestController;
+use App\Entity as EntityDir;
+use App\Entity\Report\Document;
+use App\Exception\UnauthorisedException;
+use App\Service\Auth\AuthService;
+use App\Service\Formatter\RestFormatter;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;

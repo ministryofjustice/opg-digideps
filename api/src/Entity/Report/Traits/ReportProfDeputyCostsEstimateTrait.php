@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity\Report\Traits;
+namespace App\Entity\Report\Traits;
 
-use AppBundle\Entity\Report\ProfDeputyEstimateCost;
+use App\Entity\Report\ProfDeputyEstimateCost;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -21,9 +21,9 @@ trait ReportProfDeputyCostsEstimateTrait
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyEstimateCost>")
+     * @JMS\Type("array<App\Entity\Report\ProfDeputyEstimateCost>")
      * @JMS\Groups({"prof-deputy-estimate-costs"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ProfDeputyEstimateCost", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\ProfDeputyEstimateCost", mappedBy="report", cascade={"persist", "remove"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $profDeputyEstimateCosts;

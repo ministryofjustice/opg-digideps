@@ -1,15 +1,15 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
-use AppBundle\EventListener\RestInputOuputFormatter;
-use AppBundle\Exception as AppException;
-use AppBundle\Service\Auth\AuthService;
-use AppBundle\Service\Auth\HeaderTokenAuthenticator;
-use AppBundle\Service\Auth\UserProvider;
-use AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker;
-use AppBundle\Service\BruteForce\AttemptsInTimeChecker;
-use AppBundle\Service\Formatter\RestFormatter;
+use App\EventListener\RestInputOuputFormatter;
+use App\Exception as AppException;
+use App\Service\Auth\AuthService;
+use App\Service\Auth\HeaderTokenAuthenticator;
+use App\Service\Auth\UserProvider;
+use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
+use App\Service\BruteForce\AttemptsInTimeChecker;
+use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,7 +41,7 @@ class AuthController extends RestController
      * @param RestInputOuputFormatter $restInputOuputFormatter
      * @param EntityManagerInterface $em
      * @param AuthService $authService
-     * @return \AppBundle\Entity\User|bool|null
+     * @return \App\Entity\User|bool|null
      */
     public function login(
         Request $request,

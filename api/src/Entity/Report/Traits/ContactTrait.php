@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Entity\Report\Traits;
+namespace App\Entity\Report\Traits;
 
-use AppBundle\Entity\Report\Contact;
-use AppBundle\Entity\Report\Report;
+use App\Entity\Report\Contact;
+use App\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -12,8 +12,8 @@ trait ContactTrait
 
     /**
      * @JMS\Groups({"contact"})
-     * @JMS\Type("array<AppBundle\Entity\Report\Contact>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Contact", mappedBy="report", cascade={"persist", "remove"})
+     * @JMS\Type("array<App\Entity\Report\Contact>")
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\Contact", mappedBy="report", cascade={"persist", "remove"})
      */
     private $contacts;
 

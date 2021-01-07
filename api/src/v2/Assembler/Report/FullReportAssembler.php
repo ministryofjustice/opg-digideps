@@ -1,11 +1,11 @@
 <?php
 
-namespace AppBundle\v2\Assembler\Report;
+namespace App\v2\Assembler\Report;
 
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Repository\ReportRepository;
-use AppBundle\v2\Assembler\StatusAssembler;
-use AppBundle\v2\DTO\StatusDto;
+use App\Entity\Report\Report;
+use App\Entity\Repository\ReportRepository;
+use App\v2\Assembler\StatusAssembler;
+use App\v2\DTO\StatusDto;
 
 class FullReportAssembler implements ReportAssemblerInterface
 {
@@ -35,7 +35,7 @@ class FullReportAssembler implements ReportAssemblerInterface
 
     /**
      * @param array $data
-     * @return \AppBundle\v2\DTO\ReportDto
+     * @return \App\v2\DTO\ReportDto
      */
     public function assembleFromArray(array $data)
     {

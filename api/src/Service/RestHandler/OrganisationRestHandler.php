@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Service\RestHandler;
+namespace App\Service\RestHandler;
 
-use AppBundle\Entity\Organisation;
-use AppBundle\Entity\Repository\OrganisationRepository;
-use AppBundle\Entity\Repository\UserRepository;
-use AppBundle\Entity\User;
-use AppBundle\Factory\OrganisationFactory;
+use App\Entity\Organisation;
+use App\Entity\Repository\OrganisationRepository;
+use App\Entity\Repository\UserRepository;
+use App\Entity\User;
+use App\Factory\OrganisationFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException as OptimisticLockExceptionAlias;
 use Symfony\Component\Validator\Validator\ValidatorInterface;

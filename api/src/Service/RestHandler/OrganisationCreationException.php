@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service\RestHandler;
+namespace App\Service\RestHandler;
 
 class OrganisationCreationException extends \InvalidArgumentException
 {

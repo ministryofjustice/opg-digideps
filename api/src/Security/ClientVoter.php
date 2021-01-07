@@ -1,9 +1,9 @@
 <?php
-namespace AppBundle\Security;
+namespace App\Security;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Organisation;
-use AppBundle\Entity\User;
+use App\Entity\Client;
+use App\Entity\Organisation;
+use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;

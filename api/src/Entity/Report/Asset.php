@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Report;
+namespace App\Entity\Report;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -13,8 +13,8 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
- *      "property"  = "AppBundle\Entity\Report\AssetProperty",
- *      "other"     = "AppBundle\Entity\Report\AssetOther"
+ *      "property"  = "App\Entity\Report\AssetProperty",
+ *      "other"     = "App\Entity\Report\AssetOther"
  * })
  * @ORM\HasLifecycleCallbacks
  */
@@ -53,7 +53,7 @@ abstract class Asset
     /**
      * @var Report
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="assets")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="assets")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;

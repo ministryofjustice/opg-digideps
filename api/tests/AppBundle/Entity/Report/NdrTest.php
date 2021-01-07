@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\AppBundle\Entity\Report;
+namespace Tests\App\Entity\Report;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Ndr\Ndr;
+use App\Entity\Client;
+use App\Entity\Ndr\Ndr;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 

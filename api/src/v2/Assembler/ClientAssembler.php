@@ -1,13 +1,13 @@
 <?php
 
-namespace AppBundle\v2\Assembler;
+namespace App\v2\Assembler;
 
-use AppBundle\v2\Assembler\Report\ReportAssemblerInterface;
-use AppBundle\v2\DTO\ClientDto;
-use AppBundle\v2\DTO\DeputyDto;
-use AppBundle\v2\DTO\DtoPropertySetterTrait;
-use AppBundle\Entity\Client;
-use AppBundle\v2\Registration\DTO\OrgDeputyshipDto;
+use App\v2\Assembler\Report\ReportAssemblerInterface;
+use App\v2\DTO\ClientDto;
+use App\v2\DTO\DeputyDto;
+use App\v2\DTO\DtoPropertySetterTrait;
+use App\Entity\Client;
+use App\v2\Registration\DTO\OrgDeputyshipDto;
 
 class ClientAssembler
 {

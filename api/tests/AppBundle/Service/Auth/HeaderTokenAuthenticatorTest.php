@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\AppBundle\Service\Auth;
+namespace Tests\App\Service\Auth;
 
-use AppBundle\Service\Auth\HeaderTokenAuthenticator;
+use App\Service\Auth\HeaderTokenAuthenticator;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,14 +50,14 @@ class HeaderTokenAuthenticatorTest extends TestCase
 
     public function testauthenticateTokenSuccess()
     {
-        $user = m::stub('AppBundle\Entity\User', [
+        $user = m::stub('App\Entity\User', [
                 'getRoles' => ['role1'],
         ]);
 
         $token = m::stub('Symfony\Component\Security\Core\Authentication\Token\TokenInterface', [
             'getCredentials' => 'AuthTokenValue',
         ]);
-        $userProvider = m::stub('AppBundle\Service\Auth\UserProvider', [
+        $userProvider = m::stub('App\Service\Auth\UserProvider', [
             'loadUserByUsername(AuthTokenValue)' => $user,
         ]);
 

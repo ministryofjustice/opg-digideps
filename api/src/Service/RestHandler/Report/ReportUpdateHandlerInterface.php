@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Service\RestHandler\Report;
+namespace App\Service\RestHandler\Report;
 
-use AppBundle\Entity\Report\Report;
+use App\Entity\Report\Report;
 
 interface ReportUpdateHandlerInterface
 {

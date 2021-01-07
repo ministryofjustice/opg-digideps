@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Exception;
+namespace App\Exception;
 
 class UnauthorisedException extends \RuntimeException implements HasDataInterface
 {

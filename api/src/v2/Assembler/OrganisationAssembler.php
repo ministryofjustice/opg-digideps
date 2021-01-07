@@ -1,12 +1,12 @@
 <?php
 
-namespace AppBundle\v2\Assembler;
+namespace App\v2\Assembler;
 
-use AppBundle\v2\DTO\DtoPropertySetterTrait;
-use AppBundle\v2\DTO\OrganisationDto;
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Organisation;
-use AppBundle\Entity\User;
+use App\v2\DTO\DtoPropertySetterTrait;
+use App\v2\DTO\OrganisationDto;
+use App\Entity\Client;
+use App\Entity\Organisation;
+use App\Entity\User;
 
 class OrganisationAssembler
 {

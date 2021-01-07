@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="organisation")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\OrganisationRepository")
+ * @ORM\Entity(repositoryClass="App\Entity\Repository\OrganisationRepository")
  */
 class Organisation implements OrganisationInterface
 {

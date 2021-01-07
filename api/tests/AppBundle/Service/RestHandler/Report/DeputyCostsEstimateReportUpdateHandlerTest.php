@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\AppBundle\Service\RestHandler\Report;
+namespace Tests\App\Service\RestHandler\Report;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\ProfDeputyEstimateCost;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler;
+use App\Entity\Client;
+use App\Entity\Report\ProfDeputyEstimateCost;
+use App\Entity\Report\Report;
+use App\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;

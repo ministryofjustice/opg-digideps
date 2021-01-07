@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\AppBundle\ControllerReport;
+namespace Tests\App\ControllerReport;
 
-use AppBundle\Entity\Report\MentalCapacity;
-use AppBundle\Entity\Report\Report;
-use Tests\AppBundle\Controller\AbstractTestController;
+use App\Entity\Report\MentalCapacity;
+use App\Entity\Report\Report;
+use Tests\App\Controller\AbstractTestController;
 
 class MentalCapacityControllerTest extends AbstractTestController
 {
@@ -85,7 +85,7 @@ class MentalCapacityControllerTest extends AbstractTestController
 
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_DECISIONS));
 
-        $mc = self::fixtures()->getRepo('Report\MentalCapacity')->find($return['data']['id']); /* @var $mc \AppBundle\Entity\Report\MentalCapacity */
+        $mc = self::fixtures()->getRepo('Report\MentalCapacity')->find($return['data']['id']); /* @var $mc \App\Entity\Report\MentalCapacity */
         $this->assertEquals(MentalCapacity::CAPACITY_CHANGED, $mc->getHasCapacityChanged());
         $this->assertEquals('ccd', $mc->getHasCapacityChangedDetails());
         $this->assertEquals('2015-12-31', $mc->getMentalAssessmentDate()->format('Y-m-d'));
@@ -102,7 +102,7 @@ class MentalCapacityControllerTest extends AbstractTestController
         ]);
         $this->assertTrue($return['data']['id'] > 0);
         self::fixtures()->clear();
-        $mc = self::fixtures()->getRepo('Report\MentalCapacity')->find($return['data']['id']); /* @var $mc \AppBundle\Entity\Report\MentalCapacity */
+        $mc = self::fixtures()->getRepo('Report\MentalCapacity')->find($return['data']['id']); /* @var $mc \App\Entity\Report\MentalCapacity */
         $this->assertEquals(MentalCapacity::CAPACITY_STAYED_SAME, $mc->getHasCapacityChanged());
         $this->assertEquals(null, $mc->getHasCapacityChangedDetails());
         $this->assertEquals('2016-01-01', $mc->getMentalAssessmentDate()->format('Y-m-d'));

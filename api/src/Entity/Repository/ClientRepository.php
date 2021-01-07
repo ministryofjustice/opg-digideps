@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\Entity\Repository;
+namespace App\Entity\Repository;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\User;
-use AppBundle\Service\Search\ClientSearchFilter;
+use App\Entity\Client;
+use App\Entity\User;
+use App\Service\Search\ClientSearchFilter;
 use Doctrine\ORM\EntityRepository;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 
@@ -111,7 +111,7 @@ class ClientRepository extends EntityRepository
 
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT c, r, ndr, o, nd, u FROM AppBundle\Entity\Client c LEFT JOIN c.reports r LEFT JOIN c.ndr ndr LEFT JOIN c.namedDeputy nd LEFT JOIN c.organisation o LEFT JOIN c.users u WHERE c.id = ?1')
+            ->createQuery('SELECT c, r, ndr, o, nd, u FROM App\Entity\Client c LEFT JOIN c.reports r LEFT JOIN c.ndr ndr LEFT JOIN c.namedDeputy nd LEFT JOIN c.organisation o LEFT JOIN c.users u WHERE c.id = ?1')
             ->setParameter(1, $id);
 
         $result = $query->getArrayResult();
@@ -128,7 +128,7 @@ class ClientRepository extends EntityRepository
     {
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT c FROM AppBundle\Entity\Client c WHERE c.caseNumber = ?1')
+            ->createQuery('SELECT c FROM App\Entity\Client c WHERE c.caseNumber = ?1')
             ->setParameter(1, $caseNumber);
 
         $result = $query->getArrayResult();

@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Tests\AppBundle\Entity;
+namespace Tests\App\Entity;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\NamedDeputy;
-use AppBundle\Entity\Organisation;
+use App\Entity\Client;
+use App\Entity\NamedDeputy;
+use App\Entity\Organisation;
 use PHPUnit\Framework\TestCase;
 
 /**

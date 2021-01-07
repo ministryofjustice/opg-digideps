@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Service\RestHandler\Report;
+namespace App\Service\RestHandler\Report;
 
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Repository\ReportRepository;
+use App\Entity\Report\Report;
+use App\Entity\Repository\ReportRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class PaFeesExpensesReportUpdateHandler implements ReportUpdateHandlerInterface

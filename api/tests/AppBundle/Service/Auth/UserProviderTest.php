@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\AppBundle\Service\Auth;
+namespace Tests\App\Service\Auth;
 
-use AppBundle\Entity\Repository\UserRepository;
-use AppBundle\Service\Auth\UserProvider;
+use App\Entity\Repository\UserRepository;
+use App\Service\Auth\UserProvider;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 
@@ -18,7 +18,7 @@ class UserProviderTest extends TestCase
     {
         $this->repo = m::stub(UserRepository::class);
         $this->em = m::stub('Doctrine\ORM\EntityManager', [
-                'getRepository(AppBundle\Entity\User)' => $this->repo,
+                'getRepository(App\Entity\User)' => $this->repo,
         ]);
         $this->redis = m::stub('Predis\Client');
         $this->logger = m::stub('Symfony\Bridge\Monolog\Logger');
@@ -49,7 +49,7 @@ class UserProviderTest extends TestCase
 
     public function testloadUserByUsernameFound()
     {
-        $user = m::mock('AppBundle\Entity\User');
+        $user = m::mock('App\Entity\User');
 
         $this->redis->shouldReceive('get')->with('token')->andReturn(1);
         $this->redis->shouldReceive('expire')->with('token', 7)->once()->andReturn(1);
@@ -62,16 +62,16 @@ class UserProviderTest extends TestCase
 
     public function testsupportsClass()
     {
-        $user = m::mock('AppBundle\Entity\User');
+        $user = m::mock('App\Entity\User');
 
         $this->assertFalse($this->userProvider->supportsClass('not a user class'));
         $this->assertTrue($this->userProvider->supportsClass(get_class($user)));
-        $this->assertTrue($this->userProvider->supportsClass('AppBundle\Entity\User'));
+        $this->assertTrue($this->userProvider->supportsClass('App\Entity\User'));
     }
 
     public function testgenerateRandomTokenAndStore()
     {
-        $user = m::stub('AppBundle\Entity\User', [
+        $user = m::stub('App\Entity\User', [
             'getId' => 123,
         ]);
 

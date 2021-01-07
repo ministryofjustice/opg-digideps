@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\AppBundle\Entity;
+namespace Tests\App\Entity;
 
-use AppBundle\Entity\User as Entity;
+use App\Entity\User as Entity;
 use Doctrine\Common\Collections\ArrayCollection;
-use Tests\AppBundle\Entity\Abstracts\EntityTester;
+use Tests\App\Entity\Abstracts\EntityTester;
 
 /**
  * User Entity test

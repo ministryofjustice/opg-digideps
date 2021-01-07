@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Report;
+namespace App\Entity\Report;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -25,7 +25,7 @@ class Action
     /**
      * @var Report
      *
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="action")
+     * @ORM\OneToOne(targetEntity="App\Entity\Report\Report", inversedBy="action")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;

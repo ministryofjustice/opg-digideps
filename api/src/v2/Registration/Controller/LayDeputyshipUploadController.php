@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\v2\Registration\Controller;
+namespace App\v2\Registration\Controller;
 
-use AppBundle\Service\DataCompression;
-use AppBundle\v2\Registration\SelfRegistration\Factory\LayDeputyshipDtoCollectionAssemblerFactory;
-use AppBundle\v2\Registration\Uploader\LayDeputyshipUploader;
+use App\Service\DataCompression;
+use App\v2\Registration\SelfRegistration\Factory\LayDeputyshipDtoCollectionAssemblerFactory;
+use App\v2\Registration\Uploader\LayDeputyshipUploader;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;

@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\AppBundle\Entity\Repository;
+namespace Tests\App\Entity\Repository;
 
-use AppBundle\Entity\Repository\UserRepository;
-use AppBundle\Entity\User;
+use App\Entity\Repository\UserRepository;
+use App\Entity\User;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;

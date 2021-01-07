@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Ndr;
+namespace App\Entity\Ndr;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -13,8 +13,8 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
- *      "property"  = "AppBundle\Entity\Ndr\AssetProperty",
- *      "other"     = "AppBundle\Entity\Ndr\AssetOther"
+ *      "property"  = "App\Entity\Ndr\AssetProperty",
+ *      "other"     = "App\Entity\Ndr\AssetOther"
  * })
  * @ORM\HasLifecycleCallbacks
  */
@@ -53,7 +53,7 @@ abstract class Asset
     /**
      * @var Ndr
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Ndr\Ndr", inversedBy="assets")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr", inversedBy="assets")
      * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $ndr;

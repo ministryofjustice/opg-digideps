@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\AppBundle\Service\RestHandler\Report;
+namespace Tests\App\Service\RestHandler\Report;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\ProfDeputyEstimateCost;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Repository\ReportRepository;
-use AppBundle\Service\RestHandler\Report\PaFeesExpensesReportUpdateHandler;
+use App\Entity\Client;
+use App\Entity\Report\ProfDeputyEstimateCost;
+use App\Entity\Report\Report;
+use App\Entity\Repository\ReportRepository;
+use App\Service\RestHandler\Report\PaFeesExpensesReportUpdateHandler;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
@@ -64,7 +64,6 @@ class PaFeesExpensesReportUpdateHandlerTest extends TestCase
             ->with($this->report);
 
         $this->invokeHandler(['reason_for_no_fees' => null]);
-
     }
 
     /**
@@ -78,7 +77,6 @@ class PaFeesExpensesReportUpdateHandlerTest extends TestCase
             ->with($this->report);
 
         $this->invokeHandler(['reason_for_no_fees' => 'some reason']);
-
     }
 
     /**
@@ -97,5 +95,4 @@ class PaFeesExpensesReportUpdateHandlerTest extends TestCase
             ->method('updateSectionsStatusCache')
             ->with([Report::SECTION_PA_DEPUTY_EXPENSES ]);
     }
-
 }

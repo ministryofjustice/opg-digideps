@@ -1,11 +1,11 @@
 <?php
 
-namespace AppBundle\Entity\Report\Traits;
+namespace App\Entity\Report\Traits;
 
-use AppBundle\Entity\Report\ProfDeputyEstimateCost;
-use AppBundle\Entity\Report\ProfDeputyOtherCost;
-use AppBundle\Entity\Report\ProfDeputyInterimCost;
-use AppBundle\Entity\Report\Report;
+use App\Entity\Report\ProfDeputyEstimateCost;
+use App\Entity\Report\ProfDeputyOtherCost;
+use App\Entity\Report\ProfDeputyInterimCost;
+use App\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -31,10 +31,10 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyCostsHasPrevious;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyPreviousCost>")
+     * @JMS\Type("array<App\Entity\Report\ProfDeputyPreviousCost>")
      * @JMS\Groups({"report-prof-deputy-costs-prev"})
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ProfDeputyPreviousCost", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\ProfDeputyPreviousCost", mappedBy="report", cascade={"persist", "remove"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $profDeputyPreviousCosts;
@@ -49,10 +49,10 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyCostsHasInterim;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyInterimCost>")
+     * @JMS\Type("array<App\Entity\Report\ProfDeputyInterimCost>")
      * @JMS\Groups({"report-prof-deputy-costs-interim"})
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ProfDeputyInterimCost", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\ProfDeputyInterimCost", mappedBy="report", cascade={"persist", "remove"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $profDeputyInterimCosts;
@@ -85,9 +85,9 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyCostsReasonBeyondEstimate;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyOtherCost>")
+     * @JMS\Type("array<App\Entity\Report\ProfDeputyOtherCost>")
      * @JMS\Groups({"prof-deputy-other-costs"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ProfDeputyOtherCost", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\ProfDeputyOtherCost", mappedBy="report", cascade={"persist", "remove"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $profDeputyOtherCosts;

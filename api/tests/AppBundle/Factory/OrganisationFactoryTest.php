@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Tests\AppBundle\Factory;
+namespace Tests\App\Factory;
 
-use AppBundle\Entity\Organisation;
-use AppBundle\Factory\OrganisationFactory;
+use App\Entity\Organisation;
+use App\Factory\OrganisationFactory;
 use PHPUnit\Framework\TestCase;
 
 class OrganisationFactoryTest extends TestCase
@@ -30,8 +30,7 @@ class OrganisationFactoryTest extends TestCase
     public function createFromFullEmail_determinesEmailIdentiferFromTheFullGivenEmail(
         string $fullEmail,
         string $expectedEmailIdentifier
-    )
-    {
+    ) {
         $organisation = $this->factory->createFromFullEmail('Foo Inc.', $fullEmail, true);
 
         $this->assertInstanceOf(Organisation::class, $organisation);
@@ -117,5 +116,4 @@ class OrganisationFactoryTest extends TestCase
             ['name' => 'name', 'emailIdentifier' => '@@private.com'],
         ];
     }
-
 }

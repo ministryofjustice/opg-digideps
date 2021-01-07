@@ -1,18 +1,18 @@
 <?php
 
-namespace Tests\AppBundle\v2\Registration\Uploader;
+namespace Tests\App\v2\Registration\Uploader;
 
-use AppBundle\Entity\CasRec;
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Repository\ReportRepository;
-use AppBundle\Entity\User;
-use AppBundle\Service\ReportService;
-use AppBundle\v2\Registration\DTO\LayDeputyshipDto;
-use AppBundle\v2\Registration\DTO\LayDeputyshipDtoCollection;
-use AppBundle\v2\Registration\SelfRegistration\Factory\CasRecCreationException;
-use AppBundle\v2\Registration\SelfRegistration\Factory\CasRecFactory;
-use AppBundle\v2\Registration\Uploader\LayDeputyshipUploader;
+use App\Entity\CasRec;
+use App\Entity\Client;
+use App\Entity\Report\Report;
+use App\Entity\Repository\ReportRepository;
+use App\Entity\User;
+use App\Service\ReportService;
+use App\v2\Registration\DTO\LayDeputyshipDto;
+use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
+use App\v2\Registration\SelfRegistration\Factory\CasRecCreationException;
+use App\v2\Registration\SelfRegistration\Factory\CasRecFactory;
+use App\v2\Registration\Uploader\LayDeputyshipUploader;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 
@@ -96,7 +96,7 @@ class LayDeputyshipUploaderTest extends TestCase
     {
         $collection = new LayDeputyshipDtoCollection();
         $collection->append($this->buildLayDeputyshipDto(1));
-        
+
         $casRec = new CasRec(['Typeofrep' => 'opg103', 'Corref' => 'l3']);
 
         $this->factory

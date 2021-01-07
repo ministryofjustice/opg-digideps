@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\AppBundle\Controller\Ndr;
+namespace Tests\App\Controller\Ndr;
 
-use AppBundle\Entity\Ndr\Expense;
-use Tests\AppBundle\Controller\AbstractTestController;
+use App\Entity\Ndr\Expense;
+use Tests\App\Controller\AbstractTestController;
 
 class ExpenseControllerTest extends AbstractTestController
 {
@@ -132,7 +132,7 @@ class ExpenseControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         $expense = self::fixtures()->getRepo('Ndr\Expense')->find($expenseId);
-        /* @var $expense \AppBundle\Entity\Ndr\Expense */
+        /* @var $expense \App\Entity\Ndr\Expense */
         $this->assertEquals(3.3, $expense->getAmount());
         $this->assertEquals('e3', $expense->getExplanation());
 
@@ -149,7 +149,7 @@ class ExpenseControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         $expense = self::fixtures()->getRepo('Ndr\Expense')->find($expenseId);
-        /* @var $expense \AppBundle\Entity\Ndr\Expense */
+        /* @var $expense \App\Entity\Ndr\Expense */
         $this->assertEquals(3.31, $expense->getAmount());
         $this->assertEquals('e3.1', $expense->getExplanation());
 

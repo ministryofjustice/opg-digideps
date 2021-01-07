@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Entity\CasRec;
+use App\Entity\CasRec;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -22,7 +22,7 @@ class CasrecVerificationService
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
-        $this->casRecRepo = $this->em->getRepository('AppBundle\Entity\CasRec');
+        $this->casRecRepo = $this->em->getRepository('App\Entity\CasRec');
         $this->lastMatchedCasrecUsers = [];
     }
 

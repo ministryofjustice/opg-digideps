@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\AppBundle\Service;
+namespace Tests\App\Service;
 
-use AppBundle\Service\CasrecVerificationService;
+use App\Service\CasrecVerificationService;
 use Doctrine\ORM\EntityManager;
 use Mockery as m;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -21,14 +21,14 @@ class CasrecVerificationServiceTest extends WebTestCase
 
     public function setUp(): void
     {
-        $crLayHasPC = m::mock('\AppBundle\Entity\Casrec')
+        $crLayHasPC = m::mock('\App\Entity\Casrec')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('11111111')
             ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('dpc123')
             ->shouldReceive('getDeputyNo')->withNoArgs()->andReturn('Dep1')
             ->getMock();
 
-        $crLayNoPC = m::mock('\AppBundle\Entity\Casrec')
+        $crLayNoPC = m::mock('\App\Entity\Casrec')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('22222222')
             ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('')
@@ -36,7 +36,7 @@ class CasrecVerificationServiceTest extends WebTestCase
             ->getMock();
 
         //Group MLD1 has a postcode for each of the three deputies
-        $casrecMLD1A = m::mock('\AppBundle\Entity\Casrec')
+        $casrecMLD1A = m::mock('\App\Entity\Casrec')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('33333333')
             ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('mld1aa')
@@ -44,7 +44,7 @@ class CasrecVerificationServiceTest extends WebTestCase
             ->shouldReceive('getDeputyNo')->withNoArgs()->andReturn('MLDA')
             ->getMock();
 
-        $casrecMLD1B = m::mock('\AppBundle\Entity\Casrec')
+        $casrecMLD1B = m::mock('\App\Entity\Casrec')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('33333333')
             ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('mld1bb')
@@ -52,7 +52,7 @@ class CasrecVerificationServiceTest extends WebTestCase
             ->shouldReceive('getDeputyNo')->withNoArgs()->andReturn('MLDB')
             ->getMock();
 
-        $casrecMLD1C = m::mock('\AppBundle\Entity\Casrec')
+        $casrecMLD1C = m::mock('\App\Entity\Casrec')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('33333333')
             ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('mld1bb')
@@ -61,7 +61,7 @@ class CasrecVerificationServiceTest extends WebTestCase
             ->getMock();
 
         //Group MLD2 has a missing postcode for one of the two deputies
-        $casrecMLD2A = m::mock('\AppBundle\Entity\Casrec')
+        $casrecMLD2A = m::mock('\App\Entity\Casrec')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('44444444')
             ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('mld2aa')
@@ -69,7 +69,7 @@ class CasrecVerificationServiceTest extends WebTestCase
             ->shouldReceive('getDeputyNo')->withNoArgs()->andReturn('MLDA')
             ->getMock();
 
-        $casrecMLD2B = m::mock('\AppBundle\Entity\Casrec')
+        $casrecMLD2B = m::mock('\App\Entity\Casrec')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('44444444')
             ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('')
@@ -97,7 +97,7 @@ class CasrecVerificationServiceTest extends WebTestCase
 
         $em = m::mock(EntityManager::class)
             ->shouldIgnoreMissing(true)
-            ->shouldReceive('getRepository')->with('AppBundle\Entity\CasRec')->andReturn($mockCasrecRepo)
+            ->shouldReceive('getRepository')->with('App\Entity\CasRec')->andReturn($mockCasrecRepo)
             ->getMock();
 
         $this->casrecVerificationService = new CasrecVerificationService($em);

@@ -1,18 +1,18 @@
 <?php
-namespace AppBundle\DataFixtures;
+namespace App\DataFixtures;
 
-use AppBundle\Entity\CasRec;
-use AppBundle\Entity\Client;
-use AppBundle\Entity\NamedDeputy;
-use AppBundle\Entity\Ndr\Ndr;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Repository\NamedDeputyRepository;
-use AppBundle\Entity\Repository\OrganisationRepository;
-use AppBundle\Entity\Team;
-use AppBundle\Entity\User;
-use AppBundle\Factory\OrganisationFactory;
-use AppBundle\Service\OrgService;
-use AppBundle\Service\ReportUtils;
+use App\Entity\CasRec;
+use App\Entity\Client;
+use App\Entity\NamedDeputy;
+use App\Entity\Ndr\Ndr;
+use App\Entity\Report\Report;
+use App\Entity\Repository\NamedDeputyRepository;
+use App\Entity\Repository\OrganisationRepository;
+use App\Entity\Team;
+use App\Entity\User;
+use App\Factory\OrganisationFactory;
+use App\Service\OrgService;
+use App\Service\ReportUtils;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class PATestUserFixtures extends AbstractDataFixture

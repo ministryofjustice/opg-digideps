@@ -1,11 +1,11 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
-use AppBundle\Entity\CasRec;
-use AppBundle\Entity\Repository\CasRecRepository;
-use AppBundle\Service\CasrecVerificationService;
-use AppBundle\Service\Formatter\RestFormatter;
+use App\Entity\CasRec;
+use App\Entity\Repository\CasRecRepository;
+use App\Service\CasrecVerificationService;
+use App\Service\Formatter\RestFormatter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -73,7 +73,7 @@ class CasRecController extends RestController
     {
         $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
         $qb->select('count(c.id)');
-        $qb->from('AppBundle\Entity\CasRec', 'c');
+        $qb->from('App\Entity\CasRec', 'c');
 
         $count = $qb->getQuery()->getSingleScalarResult();
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service\BruteForce;
+namespace App\Service\BruteForce;
 
 use Predis\Client as PredisClient;
 

@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Factory;
+namespace App\Factory;
 
-use AppBundle\Entity\Organisation;
+use App\Entity\Organisation;
 
 class OrganisationFactory
 {

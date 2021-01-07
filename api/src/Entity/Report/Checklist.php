@@ -1,12 +1,12 @@
 <?php
 
-namespace AppBundle\Entity\Report;
+namespace App\Entity\Report;
 
-use AppBundle\Entity\ReportInterface;
-use AppBundle\Entity\SynchronisableInterface;
-use AppBundle\Entity\SynchronisableTrait;
-use AppBundle\Entity\Traits\ModifyAudit;
-use AppBundle\Entity\User;
+use App\Entity\ReportInterface;
+use App\Entity\SynchronisableInterface;
+use App\Entity\SynchronisableTrait;
+use App\Entity\Traits\ModifyAudit;
+use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -37,8 +37,8 @@ class Checklist implements SynchronisableInterface
     /**
      * @var Report
      *
-     * @JMS\Type("AppBundle\Entity\Report\Report")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="checklist")
+     * @JMS\Type("App\Entity\Report\Report")
+     * @ORM\OneToOne(targetEntity="App\Entity\Report\Report", inversedBy="checklist")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      * @JMS\Groups({"checklist-report"})
      */
@@ -271,9 +271,9 @@ class Checklist implements SynchronisableInterface
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("array<AppBundle\Entity\Report\ChecklistInformation>")
+     * @JMS\Type("array<App\Entity\Report\ChecklistInformation>")
      * @JMS\Groups({"checklist-information"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ChecklistInformation", mappedBy="checklist", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\ChecklistInformation", mappedBy="checklist", cascade={"persist", "remove"})
      * @ORM\OrderBy({"createdOn"="DESC"})
      */
     private $checklistInformation;
@@ -288,11 +288,11 @@ class Checklist implements SynchronisableInterface
     /**
      * Submitted by
      *
-     * @var \AppBundle\Entity\User
+     * @var \App\Entity\User
      *
-     * @JMS\Type("AppBundle\Entity\User")
+     * @JMS\Type("App\Entity\User")
      * @JMS\Groups({"report-checklist"})
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", fetch="EAGER")
      * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     protected $submittedBy;
@@ -867,7 +867,7 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @return \AppBundle\Entity\User
+     * @return \App\Entity\User
      */
     public function getSubmittedBy()
     {
@@ -875,7 +875,7 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param \AppBundle\Entity\User $submittedBy
+     * @param \App\Entity\User $submittedBy
      *
      * @return $this
      */

@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\AppBundle\Controller;
+namespace Tests\App\Controller;
 
-use AppBundle\Entity\User;
-use AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker;
-use AppBundle\Service\BruteForce\AttemptsInTimeChecker;
+use App\Entity\User;
+use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
+use App\Service\BruteForce\AttemptsInTimeChecker;
 use Mockery as m;
 
 class AuthControllerTest extends AbstractTestController

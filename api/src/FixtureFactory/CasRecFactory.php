@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\FixtureFactory;
+namespace App\FixtureFactory;
 
-use AppBundle\Entity\CasRec;
-use AppBundle\v2\Registration\DTO\LayDeputyshipDto;
-use AppBundle\v2\Registration\SelfRegistration\Factory\CasRecFactory as CasRecDTOFactory;
+use App\Entity\CasRec;
+use App\v2\Registration\DTO\LayDeputyshipDto;
+use App\v2\Registration\SelfRegistration\Factory\CasRecFactory as CasRecDTOFactory;
 
 class CasRecFactory
 {

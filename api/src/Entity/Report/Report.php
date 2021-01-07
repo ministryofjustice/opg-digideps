@@ -1,14 +1,14 @@
 <?php
 
-namespace AppBundle\Entity\Report;
+namespace App\Entity\Report;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Ndr\Ndr;
-use AppBundle\Entity\Report\Traits as ReportTraits;
-use AppBundle\Entity\ReportInterface;
-use AppBundle\Entity\User;
-use AppBundle\Service\ReportService;
-use AppBundle\Service\ReportStatusService;
+use App\Entity\Client;
+use App\Entity\Ndr\Ndr;
+use App\Entity\Report\Traits as ReportTraits;
+use App\Entity\ReportInterface;
+use App\Entity\User;
+use App\Service\ReportService;
+use App\Service\ReportStatusService;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,7 +24,7 @@ use JMS\Serializer\Annotation as JMS;
  *     @ORM\Index(name="submitted_idx", columns={"submitted"}),
  *     @ORM\Index(name="report_status_cached_idx", columns={"report_status_cached"})
  *  })
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ReportRepository")
+ * @ORM\Entity(repositoryClass="App\Entity\Repository\ReportRepository")
  */
 class Report implements ReportInterface
 {
@@ -216,8 +216,8 @@ class Report implements ReportInterface
      * @var int
      *
      * @JMS\Groups({"report-client"})
-     * @JMS\Type("AppBundle\Entity\Client")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="reports")
+     * @JMS\Type("App\Entity\Client")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="reports")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $client;
@@ -226,8 +226,8 @@ class Report implements ReportInterface
      * @var VisitsCare
      *
      * @JMS\Groups({"visits-care"})
-     * @JMS\Type("AppBundle\Entity\Report\VisitsCare")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\VisitsCare",  mappedBy="report", cascade={"persist", "remove"}, fetch="LAZY")
+     * @JMS\Type("App\Entity\Report\VisitsCare")
+     * @ORM\OneToOne(targetEntity="App\Entity\Report\VisitsCare",  mappedBy="report", cascade={"persist", "remove"}, fetch="LAZY")
      **/
     private $visitsCare;
 
@@ -235,8 +235,8 @@ class Report implements ReportInterface
      * @var Lifestyle
      *
      * @JMS\Groups({"lifestyle"})
-     * @JMS\Type("AppBundle\Entity\Report\Lifestyle")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Lifestyle",  mappedBy="report", cascade={"persist", "remove"})
+     * @JMS\Type("App\Entity\Report\Lifestyle")
+     * @ORM\OneToOne(targetEntity="App\Entity\Report\Lifestyle",  mappedBy="report", cascade={"persist", "remove"})
      **/
     private $lifestyle;
 
@@ -244,8 +244,8 @@ class Report implements ReportInterface
      * @var Action
      *
      * @JMS\Groups({"action"})
-     * @JMS\Type("AppBundle\Entity\Report\Action")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Action",  mappedBy="report", cascade={"persist", "remove"})
+     * @JMS\Type("App\Entity\Report\Action")
+     * @ORM\OneToOne(targetEntity="App\Entity\Report\Action",  mappedBy="report", cascade={"persist", "remove"})
      **/
     private $action;
 
@@ -253,8 +253,8 @@ class Report implements ReportInterface
      * @var MentalCapacity
      *
      * @JMS\Groups({ "mental-capacity"})
-     * @JMS\Type("AppBundle\Entity\Report\MentalCapacity")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\MentalCapacity",  mappedBy="report", cascade={"persist", "remove"})
+     * @JMS\Type("App\Entity\Report\MentalCapacity")
+     * @ORM\OneToOne(targetEntity="App\Entity\Report\MentalCapacity",  mappedBy="report", cascade={"persist", "remove"})
      **/
     private $mentalCapacity;
 
@@ -326,8 +326,8 @@ class Report implements ReportInterface
      * @var User
      *
      * @JMS\Groups({"report-submitted-by"})
-     * @JMS\Type("AppBundle\Entity\User")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @JMS\Type("App\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", onDelete="SET NULL")
      */
     private $submittedBy;
@@ -363,17 +363,17 @@ class Report implements ReportInterface
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("array<AppBundle\Entity\Report\Document>")
+     * @JMS\Type("array<App\Entity\Report\Document>")
      * @JMS\Groups({"report-documents"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Document", mappedBy="report", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\Document", mappedBy="report", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"createdOn"="DESC"})
      */
     private $documents;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\Report\ReportSubmission>")
+     * @JMS\Type("array<App\Entity\Report\ReportSubmission>")
      * @JMS\Groups({"document-sync"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ReportSubmission", mappedBy="report", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\ReportSubmission", mappedBy="report", fetch="EXTRA_LAZY")
      */
     private $reportSubmissions;
 
@@ -427,8 +427,8 @@ class Report implements ReportInterface
      * @var Checklist
      *
      * @JMS\Groups({"report", "report-checklist"})
-     * @JMS\Type("AppBundle\Entity\Report\Checklist")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Checklist", mappedBy="report", cascade={"persist", "remove"})
+     * @JMS\Type("App\Entity\Report\Checklist")
+     * @ORM\OneToOne(targetEntity="App\Entity\Report\Checklist", mappedBy="report", cascade={"persist", "remove"})
      */
     private $checklist;
 
@@ -436,8 +436,8 @@ class Report implements ReportInterface
      * @var ReviewChecklist
      *
      * @JMS\Groups({"report", "report-checklist"})
-     * @JMS\Type("AppBundle\Entity\Report\ReviewChecklist")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\ReviewChecklist", mappedBy="report", cascade={"persist", "remove"})
+     * @JMS\Type("App\Entity\Report\ReviewChecklist")
+     * @ORM\OneToOne(targetEntity="App\Entity\Report\ReviewChecklist", mappedBy="report", cascade={"persist", "remove"})
      */
     private $reviewChecklist;
 
@@ -839,9 +839,9 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param \AppBundle\Entity\Report\Action $action
+     * @param \App\Entity\Report\Action $action
      *
-     * @return \AppBundle\Entity\Report\Report
+     * @return \App\Entity\Report\Report
      */
     public function setAction(Action $action)
     {
@@ -1023,7 +1023,7 @@ class Report implements ReportInterface
      * @JMS\VirtualProperty("submittedDocuments")
      * @JMS\SerializedName("submitted_documents")
      * @JMS\Groups({"documents"})
-     * @JMS\Type("array<AppBundle\Entity\Report\Document>")
+     * @JMS\Type("array<App\Entity\Report\Document>")
      *
      * @return ArrayCollection|Document[]
      */

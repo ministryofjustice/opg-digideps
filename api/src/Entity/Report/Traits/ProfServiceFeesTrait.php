@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\Entity\Report\Traits;
+namespace App\Entity\Report\Traits;
 
-use AppBundle\Entity\Report\ProfServiceFee;
-use AppBundle\Entity\Report\ProfServiceFeeCurrent;
-use AppBundle\Entity\Report\Report;
+use App\Entity\Report\ProfServiceFee;
+use App\Entity\Report\ProfServiceFeeCurrent;
+use App\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -14,7 +14,7 @@ trait ProfServiceFeesTrait
      * @var ProfServiceFee[]
      *
      * @JMS\Groups({"report-prof-service-fees"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ProfServiceFee", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\ProfServiceFee", mappedBy="report", cascade={"persist", "remove"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $profServiceFees;

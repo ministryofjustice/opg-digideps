@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\FixtureFactory;
+namespace App\FixtureFactory;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\NamedDeputy;
-use AppBundle\Entity\Organisation;
+use App\Entity\Client;
+use App\Entity\NamedDeputy;
+use App\Entity\Organisation;
 use Faker\Factory;
 
 class ClientFactory

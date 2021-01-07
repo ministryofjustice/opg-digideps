@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Repository;
+namespace App\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -18,7 +18,7 @@ class CasRecRepository extends EntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb
-            ->delete('AppBundle\Entity\CasRec', 'cr')
+            ->delete('App\Entity\CasRec', 'cr')
             ->where('cr.source = :source')
             ->setParameter('source', $source);
 

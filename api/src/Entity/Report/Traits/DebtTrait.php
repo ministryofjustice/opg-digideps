@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity\Report\Traits;
+namespace App\Entity\Report\Traits;
 
-use AppBundle\Entity\Report\Debt;
+use App\Entity\Report\Debt;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -13,7 +13,7 @@ trait DebtTrait
      * @var Debt[]
      *
      * @JMS\Groups({"debt"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Debt", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\Debt", mappedBy="report", cascade={"persist", "remove"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $debts;

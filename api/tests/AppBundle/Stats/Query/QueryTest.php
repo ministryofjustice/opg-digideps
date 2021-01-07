@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\AppBundle\Service\Stats\Metrics;
+namespace Tests\App\Service\Stats\Metrics;
 
-use AppBundle\Entity\User;
-use AppBundle\Service\Stats\Query\Query;
-use AppBundle\Service\Stats\StatsQueryParameters;
+use App\Entity\User;
+use App\Service\Stats\Query\Query;
+use App\Service\Stats\StatsQueryParameters;
 use Mockery as m;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -92,7 +92,8 @@ class QueryTest extends WebTestCase
     /**
      * @test
      */
-    public function returnsArrayOfDimensions() {
+    public function returnsArrayOfDimensions()
+    {
         $query = new UsersQuery($this::$em);
 
         $result = $query->execute(new StatsQueryParameters([
@@ -111,7 +112,8 @@ class QueryTest extends WebTestCase
     /**
      * @test
      */
-    public function returnsValueIfNoDimension() {
+    public function returnsValueIfNoDimension()
+    {
         $query = new UsersQuery($this::$em);
 
         $result = $query->execute(new StatsQueryParameters([
@@ -126,7 +128,8 @@ class QueryTest extends WebTestCase
     /**
      * @test
      */
-    public function adheresToDateRange() {
+    public function adheresToDateRange()
+    {
         $query = new UsersQuery($this::$em);
 
         $this->addUserWithRegistrationDate('2016-05-04');
@@ -144,7 +147,8 @@ class QueryTest extends WebTestCase
     /**
      * @test
      */
-    public function includesDataFromBothEndDays() {
+    public function includesDataFromBothEndDays()
+    {
         $query = new UsersQuery($this::$em);
 
         $result1 = $query->execute(new StatsQueryParameters([
@@ -167,7 +171,8 @@ class QueryTest extends WebTestCase
     /**
      * @test
      */
-    public function ignoresDateRangeIfMetricNotConstrainedByDate() {
+    public function ignoresDateRangeIfMetricNotConstrainedByDate()
+    {
         $query = new UsersQuery($this::$em);
 
         $result = $query->execute(new StatsQueryParameters([

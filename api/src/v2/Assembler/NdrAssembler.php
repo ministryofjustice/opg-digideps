@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\v2\Assembler;
+namespace App\v2\Assembler;
 
-use AppBundle\v2\DTO\DtoPropertySetterTrait;
-use AppBundle\v2\DTO\NdrDto;
+use App\v2\DTO\DtoPropertySetterTrait;
+use App\v2\DTO\NdrDto;
 
 class NdrAssembler
 {

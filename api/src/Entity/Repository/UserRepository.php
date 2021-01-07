@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Entity\Repository;
+namespace App\Entity\Repository;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\User;
+use App\Entity\Client;
+use App\Entity\User;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\QueryBuilder;
@@ -22,7 +22,7 @@ class UserRepository extends AbstractEntityRepository
     {
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT u, c, r FROM AppBundle\Entity\User u LEFT JOIN u.clients c LEFT JOIN c.reports r WHERE u.id = ?1 ORDER BY c.id')
+            ->createQuery('SELECT u, c, r FROM App\Entity\User u LEFT JOIN u.clients c LEFT JOIN c.reports r WHERE u.id = ?1 ORDER BY c.id')
             ->setParameter(1, $id);
 
         $result = $query->getArrayResult();
@@ -183,12 +183,12 @@ class UserRepository extends AbstractEntityRepository
 
         $reportSubquery = $this->_em->createQueryBuilder()
             ->select('1')
-            ->from('AppBundle\Entity\Report\Report', 'r')
+            ->from('App\Entity\Report\Report', 'r')
             ->andWhere('r.client = c');
 
         $ndrSubquery = $this->_em->createQueryBuilder()
             ->select('1')
-            ->from('AppBundle\Entity\Ndr\Ndr', 'n')
+            ->from('App\Entity\Ndr\Ndr', 'n')
             ->andWhere('n.client = c');
 
         $qb = $this->createQueryBuilder('u');

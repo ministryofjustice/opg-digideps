@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\AppBundle\v2\Registration\SelfRegistration\Factory;
+namespace Tests\App\v2\Registration\SelfRegistration\Factory;
 
-use AppBundle\Entity\CasRec;
-use AppBundle\Service\DateTimeProvider;
-use AppBundle\v2\Registration\DTO\LayDeputyshipDto;
-use AppBundle\v2\Registration\SelfRegistration\Factory\CasRecCreationException;
-use AppBundle\v2\Registration\SelfRegistration\Factory\CasRecFactory;
+use App\Entity\CasRec;
+use App\Service\DateTimeProvider;
+use App\v2\Registration\DTO\LayDeputyshipDto;
+use App\v2\Registration\SelfRegistration\Factory\CasRecCreationException;
+use App\v2\Registration\SelfRegistration\Factory\CasRecFactory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
@@ -37,7 +37,7 @@ class CasRecFactoryTest extends TestCase
      */
     public function throwsExceptionIfCreatesInvalidEntity()
     {
-        $this->expectException(\AppBundle\v2\Registration\SelfRegistration\Factory\CasRecCreationException::class);
+        $this->expectException(\App\v2\Registration\SelfRegistration\Factory\CasRecCreationException::class);
         $constraintList = new ConstraintViolationList([
             new ConstraintViolation('Bad casenumber given', '', [], '', '', ''),
             new ConstraintViolation('Bad postcode given', '', [], '', '', '')

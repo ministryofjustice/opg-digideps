@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
-use AppBundle\Entity\Traits\CreationAudit;
-use AppBundle\Entity\Traits\ModifyAudit;
+use App\Entity\Traits\CreationAudit;
+use App\Entity\Traits\ModifyAudit;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -16,7 +16,7 @@ use JMS\Serializer\Annotation as JMS;
  *     @ORM\Index(name="ix_note_created_by", columns={"created_by"}),
  *     @ORM\Index(name="ix_note_last_modified_by", columns={"last_modified_by"})
  *     })
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\NoteRepository")
+ * @ORM\Entity(repositoryClass="App\Entity\Repository\NoteRepository")
  *
  */
 class Note
@@ -87,8 +87,8 @@ class Note
      *
      * @JMS\Groups({"note-client"})
      *
-     * @JMS\Type("AppBundle\Entity\Client")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="notes")
+     * @JMS\Type("App\Entity\Client")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="notes")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $client;

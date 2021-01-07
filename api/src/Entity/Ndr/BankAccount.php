@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity\Ndr;
+namespace App\Entity\Ndr;
 
-use AppBundle\Entity\BankAccountInterface;
+use App\Entity\BankAccountInterface;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -112,7 +112,7 @@ class BankAccount implements BankAccountInterface
      * @var Ndr
      * @JMS\Groups({"bank-acccount-ndr"})
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Ndr\Ndr", inversedBy="bankAccounts")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr", inversedBy="bankAccounts")
      * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $ndr;
@@ -379,7 +379,7 @@ class BankAccount implements BankAccountInterface
     /**
      * @param string $isJointAccount yes/no/null
      *
-     * @return \AppBundle\Entity\Report\BankAccount
+     * @return \App\Entity\Report\BankAccount
      */
     public function setIsJointAccount($isJointAccount)
     {

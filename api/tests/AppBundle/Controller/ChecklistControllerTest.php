@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Tests\AppBundle\Controller;
+namespace Tests\App\Controller;
 
-use AppBundle\Entity\Report\Checklist;
+use App\Entity\Report\Checklist;
 use DateTime;
 
 class ChecklistControllerTest extends AbstractTestController

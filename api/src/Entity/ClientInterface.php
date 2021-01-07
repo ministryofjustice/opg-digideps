@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 /**
  * Interface ClientInterface
- * @package AppBundle\Entity
+ * @package App\Entity
  */
 interface ClientInterface
 {

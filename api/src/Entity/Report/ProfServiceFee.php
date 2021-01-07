@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Report;
+namespace App\Entity\Report;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -11,7 +11,7 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="fee_type_id", type="string")
  * @ORM\DiscriminatorMap({
- *      "current"  = "AppBundle\Entity\Report\ProfServiceFeeCurrent",
+ *      "current"  = "App\Entity\Report\ProfServiceFeeCurrent",
  * })
  */
 abstract class ProfServiceFee
@@ -39,7 +39,7 @@ abstract class ProfServiceFee
     /**
      * @var Report
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="profServiceFees")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="profServiceFees")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     private $report;

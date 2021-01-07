@@ -1,9 +1,9 @@
 <?php
-namespace AppBundle\DataFixtures;
+namespace App\DataFixtures;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Team;
-use AppBundle\Entity\User;
+use App\Entity\Client;
+use App\Entity\Team;
+use App\Entity\User;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 

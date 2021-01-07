@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Repository;
+namespace App\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
@@ -25,7 +25,7 @@ class SatisfactionRepository extends EntityRepository
         $entityManager = $this->getEntityManager(EntityDir\Satisfaction::class);
         $query = $entityManager->createQuery(
             'SELECT s.id, s.score, s.comments, s.deputyrole, s.reporttype, s.created
-             FROM AppBundle:Satisfaction s
+             FROM App:Satisfaction s
              WHERE s.created > :fromDate
              AND s.created < :toDate'
         )

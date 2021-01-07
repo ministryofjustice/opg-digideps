@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\AppBundle\ControllerReport;
+namespace Tests\App\ControllerReport;
 
-use AppBundle\Entity\Report\Expense;
-use AppBundle\Entity\Report\Report;
-use Tests\AppBundle\Controller\AbstractTestController;
+use App\Entity\Report\Expense;
+use App\Entity\Report\Report;
+use Tests\App\Controller\AbstractTestController;
 
 class ExpenseControllerTest extends AbstractTestController
 {
@@ -133,7 +133,7 @@ class ExpenseControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         $expense = self::fixtures()->getRepo('Report\Expense')->find($expenseId);
-        /* @var $expense \AppBundle\Entity\Report\Expense */
+        /* @var $expense \App\Entity\Report\Expense */
         $this->assertEquals(3.3, $expense->getAmount());
         $this->assertEquals('e3', $expense->getExplanation());
 
@@ -152,7 +152,7 @@ class ExpenseControllerTest extends AbstractTestController
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_DEPUTY_EXPENSES));
 
         $expense = self::fixtures()->getRepo('Report\Expense')->find($expenseId);
-        /* @var $expense \AppBundle\Entity\Report\Expense */
+        /* @var $expense \App\Entity\Report\Expense */
         $this->assertEquals(3.31, $expense->getAmount());
         $this->assertEquals('e3.1', $expense->getExplanation());
 

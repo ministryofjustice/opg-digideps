@@ -1,11 +1,11 @@
 <?php
 
-namespace AppBundle\Entity\Ndr;
+namespace App\Entity\Ndr;
 
-use AppBundle\Entity\AssetInterface;
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Ndr\Traits as NdrTraits;
-use AppBundle\Entity\ReportInterface;
+use App\Entity\AssetInterface;
+use App\Entity\Client;
+use App\Entity\Ndr\Traits as NdrTraits;
+use App\Entity\ReportInterface;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,7 +17,7 @@ use JMS\Serializer\Annotation as JMS;
  *     @ORM\Index(name="odr_submitted_idx", columns={"submitted"}),
  *     @ORM\Index(name="odr_submit_date_idx", columns={"submit_date"})
  *  })
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Ndr\NdrRepository")
+ * @ORM\Entity(repositoryClass="App\Entity\Ndr\NdrRepository")
  */
 class Ndr implements ReportInterface
 {
@@ -46,7 +46,7 @@ class Ndr implements ReportInterface
      * @var Client
      *
      * @JMS\Groups({"ndr-client"})
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Client", inversedBy="ndr")
+     * @ORM\OneToOne(targetEntity="App\Entity\Client", inversedBy="ndr")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $client;
@@ -55,8 +55,8 @@ class Ndr implements ReportInterface
      * @var VisitsCare
      *
      * @JMS\Groups({"ndr"})
-     * @JMS\Type("AppBundle\Entity\Ndr\VisitsCare")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Ndr\VisitsCare", mappedBy="ndr", cascade={"persist", "remove"})
+     * @JMS\Type("App\Entity\Ndr\VisitsCare")
+     * @ORM\OneToOne(targetEntity="App\Entity\Ndr\VisitsCare", mappedBy="ndr", cascade={"persist", "remove"})
      **/
     private $visitsCare;
 
@@ -64,8 +64,8 @@ class Ndr implements ReportInterface
      * @var BankAccount[]
      *
      * @JMS\Groups({"ndr-account"})
-     * @JMS\Type("array<AppBundle\Entity\Ndr\BankAccount>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\BankAccount", mappedBy="ndr", cascade={"persist", "remove"})
+     * @JMS\Type("array<App\Entity\Ndr\BankAccount>")
+     * @ORM\OneToMany(targetEntity="App\Entity\Ndr\BankAccount", mappedBy="ndr", cascade={"persist", "remove"})
      */
     private $bankAccounts;
 
@@ -73,7 +73,7 @@ class Ndr implements ReportInterface
      * @var Debt[]
      *
      * @JMS\Groups({"ndr-debt"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\Debt", mappedBy="ndr", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Ndr\Debt", mappedBy="ndr", cascade={"persist", "remove"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $debts;
@@ -103,8 +103,8 @@ class Ndr implements ReportInterface
      * @var AssetInterface[]
      *
      * @JMS\Groups({"ndr-asset"})
-     * @JMS\Type("array<AppBundle\Entity\Ndr\Asset>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\Asset", mappedBy="ndr", cascade={"persist", "remove"})
+     * @JMS\Type("array<App\Entity\Ndr\Asset>")
+     * @ORM\OneToMany(targetEntity="App\Entity\Ndr\Asset", mappedBy="ndr", cascade={"persist", "remove"})
      */
     private $assets;
 
@@ -168,8 +168,8 @@ class Ndr implements ReportInterface
      * @var User
      *
      * @JMS\Groups({"report-submitted-by"})
-     * @JMS\Type("AppBundle\Entity\User")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @JMS\Type("App\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", onDelete="SET NULL")
      */
     private $submittedBy;

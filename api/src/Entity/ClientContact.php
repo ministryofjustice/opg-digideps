@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
-use AppBundle\Entity\Traits\AddressTrait;
-use AppBundle\Entity\Traits\CreationAudit;
+use App\Entity\Traits\AddressTrait;
+use App\Entity\Traits\CreationAudit;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -13,7 +13,7 @@ use JMS\Serializer\Annotation as JMS;
  *     @ORM\Index(name="ix_clientcontact_client_id", columns={"client_id"}),
  *     @ORM\Index(name="ix_clientcontact_created_by", columns={"created_by"})
  *     })
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ClientContactRepository")
+ * @ORM\Entity(repositoryClass="App\Entity\Repository\ClientContactRepository")
  *
  */
 class ClientContact
@@ -101,10 +101,10 @@ class ClientContact
     /**
      * @var Client
      *
-     * @JMS\Type("AppBundle\Entity\Client")
+     * @JMS\Type("App\Entity\Client")
      * @JMS\Groups({"clientcontact-client"})
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="clientContacts")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="clientContacts")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $client;

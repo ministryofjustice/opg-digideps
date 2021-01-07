@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\AppBundle\v2\Controller;
+namespace Tests\App\v2\Controller;
 
-use AppBundle\Entity\Organisation;
+use App\Entity\Organisation;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Response;
-use Tests\AppBundle\Controller\AbstractTestController;
+use Tests\App\Controller\AbstractTestController;
 
 class OrganisationControllerTest extends AbstractTestController
 {

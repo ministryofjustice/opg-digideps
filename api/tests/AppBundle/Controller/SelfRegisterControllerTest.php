@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\AppBundle\Controller;
+namespace Tests\App\Controller;
 
-use AppBundle\Entity\CasRec;
-use AppBundle\Entity\User;
+use App\Entity\CasRec;
+use App\Entity\User;
 use Mockery as m;
 
 class SelfRegisterControllerTest extends AbstractTestController
@@ -89,7 +89,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertEquals('gooduser@gov.zzz', $user->getEmail());
         $this->assertEquals(true, $user->getNdrEnabled());
 
-        /** @var \AppBundle\Entity\Client $theClient */
+        /** @var \App\Entity\Client $theClient */
         $theClient = $user->getClients()->first();
 
         $this->assertEquals('John', $theClient->getFirstname());

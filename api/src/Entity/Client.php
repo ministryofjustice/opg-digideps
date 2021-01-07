@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
-use AppBundle\Entity\Ndr\Ndr;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Traits\IsSoftDeleteableEntity;
+use App\Entity\Ndr\Ndr;
+use App\Entity\Report\Report;
+use App\Entity\Traits\IsSoftDeleteableEntity;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *     },
  *     options={"collate":"utf8_general_ci", "charset":"utf8"}
  *     )
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ClientRepository")
+ * @ORM\Entity(repositoryClass="App\Entity\Repository\ClientRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
 class Client implements ClientInterface
@@ -46,7 +46,7 @@ class Client implements ClientInterface
     /**
      * @JMS\Groups({"client-users"})
      * @JMS\Type("array")
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", inversedBy="clients", fetch="EXTRA_LAZY")
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="clients", fetch="EXTRA_LAZY")
      * @ORM\JoinTable(name="deputy_case",
      *         joinColumns={@ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")},
      *         inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -57,14 +57,14 @@ class Client implements ClientInterface
     /**
      * @JMS\Groups({"client-reports"})
      * @JMS\Type("array")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Report", mappedBy="client", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\Report", mappedBy="client", cascade={"persist", "remove"})
      */
     private $reports;
 
     /**
      * @JMS\Groups({"basic", "client-ndr", "ndr_id"})
-     * @JMS\Type("AppBundle\Entity\Ndr\Ndr")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Ndr\Ndr", mappedBy="client", cascade={"persist", "remove"})
+     * @JMS\Type("App\Entity\Ndr\Ndr")
+     * @ORM\OneToOne(targetEntity="App\Entity\Ndr\Ndr", mappedBy="client", cascade={"persist", "remove"})
      **/
     private $ndr;
 
@@ -200,9 +200,9 @@ class Client implements ClientInterface
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("ArrayCollection<AppBundle\Entity\Note>")
+     * @JMS\Type("ArrayCollection<App\Entity\Note>")
      * @JMS\Groups({"client-notes"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Note", mappedBy="client", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Note", mappedBy="client", cascade={"persist", "remove"})
      * @ORM\OrderBy({"createdOn"="DESC"})
      */
     private $notes;
@@ -210,9 +210,9 @@ class Client implements ClientInterface
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("ArrayCollection<AppBundle\Entity\ClientContact>")
+     * @JMS\Type("ArrayCollection<App\Entity\ClientContact>")
      * @JMS\Groups({"client-clientcontacts"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\ClientContact", mappedBy="client", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\ClientContact", mappedBy="client", cascade={"persist", "remove"})
      * @ORM\OrderBy({"lastName"="ASC"})
      */
     private $clientContacts;
@@ -224,8 +224,8 @@ class Client implements ClientInterface
      * @var NamedDeputy|null
      *
      * @JMS\Groups({"report-submitted-by", "client-named-deputy"})
-     * @JMS\Type("AppBundle\Entity\NamedDeputy")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\NamedDeputy", inversedBy="clients", fetch="EAGER")
+     * @JMS\Type("App\Entity\NamedDeputy")
+     * @ORM\ManyToOne(targetEntity="App\Entity\NamedDeputy", inversedBy="clients", fetch="EAGER")
      * @ORM\JoinColumn(name="named_deputy_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $namedDeputy;
@@ -627,7 +627,7 @@ class Client implements ClientInterface
      * That means the first one that is unsubmitted AND has an unsubmit date
      *
      * @JMS\VirtualProperty
-     * @JMS\Type("AppBundle\Entity\Report\Report")
+     * @JMS\Type("App\Entity\Report\Report")
      * @JMS\SerializedName("current_report")
      * @JMS\Groups({"current-report"})
      *

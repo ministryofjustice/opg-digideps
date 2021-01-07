@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 
-namespace AppBundle\v2\Registration\DTO;
+namespace App\v2\Registration\DTO;
 
 use DateTime;
 

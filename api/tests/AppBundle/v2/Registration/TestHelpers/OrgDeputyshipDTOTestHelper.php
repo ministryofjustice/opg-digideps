@@ -1,20 +1,20 @@
 <?php declare(strict_types=1);
 
-namespace Tests\AppBundle\v2\Registration\TestHelpers;
+namespace Tests\App\v2\Registration\TestHelpers;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\NamedDeputy;
-use AppBundle\Entity\Organisation;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Repository\ClientRepository;
-use AppBundle\Entity\Repository\NamedDeputyRepository;
-use AppBundle\Entity\Repository\OrganisationRepository;
-use AppBundle\Entity\Repository\ReportRepository;
-use AppBundle\Entity\User;
-use AppBundle\Service\ReportUtils;
-use AppBundle\v2\Registration\Assembler\CasRecToOrgDeputyshipDtoAssembler;
-use AppBundle\v2\Registration\Converter\ReportTypeConverter;
-use AppBundle\v2\Registration\DTO\OrgDeputyshipDto;
+use App\Entity\Client;
+use App\Entity\NamedDeputy;
+use App\Entity\Organisation;
+use App\Entity\Report\Report;
+use App\Entity\Repository\ClientRepository;
+use App\Entity\Repository\NamedDeputyRepository;
+use App\Entity\Repository\OrganisationRepository;
+use App\Entity\Repository\ReportRepository;
+use App\Entity\User;
+use App\Service\ReportUtils;
+use App\v2\Registration\Assembler\CasRecToOrgDeputyshipDtoAssembler;
+use App\v2\Registration\Converter\ReportTypeConverter;
+use App\v2\Registration\DTO\OrgDeputyshipDto;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManager;

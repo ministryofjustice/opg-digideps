@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\AppBundle\ControllerReport;
+namespace Tests\App\ControllerReport;
 
-use AppBundle\Entity\Report\BankAccount;
-use AppBundle\Entity\Report\Report;
-use Tests\AppBundle\Controller\AbstractTestController;
+use App\Entity\Report\BankAccount;
+use App\Entity\Report\Report;
+use Tests\App\Controller\AbstractTestController;
 
 class AccountControllerTest extends AbstractTestController
 {
@@ -92,7 +92,7 @@ class AccountControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         // assert account created with transactions
-        $account = self::fixtures()->getRepo('Report\BankAccount')->find($return['data']['id']); /* @var $account \AppBundle\Entity\Report\BankAccount */
+        $account = self::fixtures()->getRepo('Report\BankAccount')->find($return['data']['id']); /* @var $account \App\Entity\Report\BankAccount */
         $this->assertNull($account->getLastEdit(), 'account.lastEdit must be null on creation');
         $this->assertFalse($account->getIsClosed());
         $this->assertNull($account->getIsJointAccount());

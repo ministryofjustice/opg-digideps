@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\AppBundle\Service\Auth;
+namespace Tests\App\Service\Auth;
 
-use AppBundle\Entity\Repository\UserRepository;
-use AppBundle\Service\Auth\AuthService;
+use App\Entity\Repository\UserRepository;
+use App\Service\Auth\AuthService;
 use Mockery;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
@@ -103,7 +103,7 @@ class AuthServiceTest extends TestCase
 
     public function testgetUserByEmailAndPasswordMismatchPassword()
     {
-        $user = m::stub('AppBundle\Entity\User', [
+        $user = m::stub('App\Entity\User', [
                 'getSalt' => 'salt',
                 'getPassword' => 'encodedPassword',
         ]);
@@ -121,7 +121,7 @@ class AuthServiceTest extends TestCase
 
     public function testgetUserByEmailAndPasswordCorrect()
     {
-        $user = m::stub('AppBundle\Entity\User', [
+        $user = m::stub('App\Entity\User', [
                 'getSalt' => 'salt',
                 'getPassword' => 'encodedPassword',
         ]);
@@ -137,7 +137,7 @@ class AuthServiceTest extends TestCase
 
     public function testgetUserByToken()
     {
-        $user = m::mock('AppBundle\Entity\User');
+        $user = m::mock('App\Entity\User');
 
         $this->userRepo->shouldReceive('findOneBy')->with(['registrationToken' => 'token'])->andReturn($user);
         $this->assertEquals($user, $this->authService->getUserByToken('token'));

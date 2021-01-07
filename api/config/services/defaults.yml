@@ -5,11 +5,10 @@ services:
         bind:
             $symfonyEnvironment: "%kernel.environment%"
 
+    App\:
+        resource: '../../src/'
+        exclude: '../../src/{Entity,DoctrineMigrations,Tests,Kernel.php}'
 
-    AppBundle\:
-        resource: "@AppBundle/*"
-        exclude: '@AppBundle/{Entity,Migrations,Tests,Kernel.php}'
-
-    AppBundle\Controller\:
-        resource: "@AppBundle/Controller/*"
+    App\Controller\:
+        resource: '../../src/Controller/'
         tags: [controller.service_arguments]

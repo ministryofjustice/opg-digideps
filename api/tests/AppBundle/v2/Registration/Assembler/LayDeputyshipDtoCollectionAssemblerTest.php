@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\AppBundle\v2\Registration\Assembler;
+namespace Tests\App\v2\Registration\Assembler;
 
-use AppBundle\v2\Registration\Assembler\LayDeputyshipDtoAssemblerInterface;
-use AppBundle\v2\Registration\Assembler\LayDeputyshipDtoCollectionAssembler;
-use AppBundle\v2\Registration\DTO\LayDeputyshipDto;
-use AppBundle\v2\Registration\DTO\LayDeputyshipDtoCollection;
+use App\v2\Registration\Assembler\LayDeputyshipDtoAssemblerInterface;
+use App\v2\Registration\Assembler\LayDeputyshipDtoCollectionAssembler;
+use App\v2\Registration\DTO\LayDeputyshipDto;
+use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
 use PHPUnit\Framework\TestCase;
 
 class LayDeputyshipDtoCollectionAssemblerTest extends TestCase

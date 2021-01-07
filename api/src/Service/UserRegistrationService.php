@@ -1,12 +1,12 @@
 <?php
 
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Entity\CasRec;
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Organisation;
-use AppBundle\Entity\User;
-use AppBundle\Model\SelfRegisterData;
+use App\Entity\CasRec;
+use App\Entity\Client;
+use App\Entity\Organisation;
+use App\Entity\User;
+use App\Model\SelfRegisterData;
 use Doctrine\ORM\EntityManagerInterface;
 
 class UserRegistrationService
@@ -43,7 +43,7 @@ class UserRegistrationService
     public function selfRegisterUser(SelfRegisterData $selfRegisterData)
     {
         $isMultiDeputyCase = $this->casrecVerificationService->isMultiDeputyCase($selfRegisterData->getCaseNumber());
-        $existingClient = $this->em->getRepository('AppBundle\Entity\Client')->findOneByCaseNumber(CasRec::normaliseCaseNumber($selfRegisterData->getCaseNumber()));
+        $existingClient = $this->em->getRepository('App\Entity\Client')->findOneByCaseNumber(CasRec::normaliseCaseNumber($selfRegisterData->getCaseNumber()));
 
         // ward off non-fee-paying codeps trying to self-register
         if ($isMultiDeputyCase && ($existingClient instanceof Client) && $existingClient->hasDeputies()) {
@@ -52,7 +52,7 @@ class UserRegistrationService
         }
 
         // Check the user doesn't already exist
-        $existingUser = $this->em->getRepository('AppBundle\Entity\User')->findOneByEmail($selfRegisterData->getEmail());
+        $existingUser = $this->em->getRepository('App\Entity\User')->findOneByEmail($selfRegisterData->getEmail());
         if ($existingUser) {
             throw new \RuntimeException("User with email {$existingUser->getEmail()} already exists.", 422);
         }
@@ -109,7 +109,7 @@ class UserRegistrationService
      */
     public function validateCoDeputy(SelfRegisterData $selfRegisterData)
     {
-        $user = $this->em->getRepository('AppBundle\Entity\User')->findOneByEmail($selfRegisterData->getEmail());
+        $user = $this->em->getRepository('App\Entity\User')->findOneByEmail($selfRegisterData->getEmail());
         if (!($user)) {
             throw new \RuntimeException('User registration: not found', 421);
         }

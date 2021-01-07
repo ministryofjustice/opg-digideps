@@ -1,7 +1,7 @@
 <?php
-namespace AppBundle\DataFixtures;
+namespace App\DataFixtures;
 
-use AppBundle\Entity\User;
+use App\Entity\User;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class AdminUserFixtures extends AbstractDataFixture
