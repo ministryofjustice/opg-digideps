@@ -151,6 +151,10 @@ workflows:
 
   integration:
     jobs:
+      - lambda-unit-test:
+          name: lambda unit test
+          filters: { branches: { only: [ main ] } }
+
       - build:
           name: build integration
           build_dev: true
@@ -166,13 +170,12 @@ workflows:
           requires: [ build integration ]
           filters: { branches: { only: [ main ] } }
 
-      - lambda-unit-test:
-          name: lambda unit test
-          filters: { branches: { only: [ main ] } }
-
       - terraform-command:
           name: apply shared-development
-          requires: [ build integration ]
+          requires: [
+            build integration,
+            lambda unit test
+          ]
           filters: { branches: { only: [ main ] } }
           tf_tier: shared
           tf_workspace: development
@@ -201,7 +204,10 @@ workflows:
 
       - terraform-command:
           name: apply shared-preproduction
-          requires: [ plan shared-preproduction ]
+          requires: [
+            plan shared-preproduction,
+            lambda unit test
+          ]
           filters: { branches: { only: [ main ] } }
           tf_tier: shared
           tf_workspace: preproduction
@@ -211,7 +217,6 @@ workflows:
           name: apply integration
           requires: [
             build integration,
-            lambda unit test,
             apply shared-preproduction
           ]
           filters: { branches: { only: [ main ] } }
@@ -247,8 +252,7 @@ workflows:
             api unit test,
             client unit test,
             integration test,
-            apply shared-preproduction,
-            lambda unit test
+            apply shared-preproduction
           ]
           filters: { branches: { only: [ main ] } }
           tf_workspace: preproduction
