@@ -37,7 +37,7 @@ class ReportSubmittedSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            ReportSubmittedEvent::NAME => 'log',
+            ReportSubmittedEvent::NAME => 'logResubmittedReport',
             ReportSubmittedEvent::NAME => 'sendEmail'
         ];
     }
@@ -50,7 +50,7 @@ class ReportSubmittedSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function log(ReportSubmittedEvent $event)
+    public function logResubmittedReport(ReportSubmittedEvent $event)
     {
         if ($event->getSubmittedReport()->getUnSubmitDate() !== null) {
             $auditEvent = (new AuditEvents($this->dateTimeProvider))

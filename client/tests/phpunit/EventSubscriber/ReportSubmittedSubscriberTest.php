@@ -116,6 +116,6 @@ class ReportSubmittedSubscriberTest extends TestCase
         ];
 
         $logger->notice('', $expectedEvent)->shouldBeCalled();
-        $sut->log($reportResubmittedEvent);
+        $sut->logResubmittedReport($reportResubmittedEvent);
     }
 }
