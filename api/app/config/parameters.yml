@@ -1,0 +1,30 @@
+# This file is auto-generated during the composer install
+
+
+# This file is a "template" of what your parameters.yml file should look like
+parameters:
+    cloudwatch_logs_client_params:
+       version: 'latest'
+       region: 'eu-west-1'
+
+       endpoint: 'http://localstack:4586'
+       validate: false
+       credentials:
+           key: 'FAKE_ID'
+           secret: 'FAKE_KEY'
+
+    database_driver: pdo_pgsql
+    database_host: postgres
+    database_port: 5432
+    database_name: api
+    database_user: api
+    database_password: api
+    locale: en
+    secret: foobar
+    redis_dsn: 'redis://redisapi'
+
+    fixtures:
+        account_password: Abcd1234
+
+    log_level: warning
+    log_path: /var/log/app/application.log
