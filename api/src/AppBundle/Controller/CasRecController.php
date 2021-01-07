@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @Route("/casrec")
@@ -18,11 +19,13 @@ class CasRecController extends RestController
 {
     private CasrecVerificationService $casrecVerification;
     private RestFormatter $formatter;
+    private EntityManagerInterface $em;
 
-    public function __construct(CasrecVerificationService $casrecVerification, RestFormatter $formatter)
+    public function __construct(CasrecVerificationService $casrecVerification, RestFormatter $formatter, EntityManagerInterface $em)
     {
         $this->casrecVerification = $casrecVerification;
         $this->formatter = $formatter;
+        $this->em = $em;
     }
 
     /**
@@ -52,9 +55,16 @@ class CasRecController extends RestController
      */
     public function verify(Request $request, CasrecVerificationService $verificationService)
     {
+//        file_put_contents('php://stderr', print_r($request, TRUE));
+//        file_put_contents('php://stderr', print_r($verificationService, TRUE));
         $clientData = $this->formatter->deserializeBodyContent($request);
-        $user = $this->getUser();
 
+        $user = $this->getUser();
+        // Check this here for cases created through non registration routes
+        $isMultiDeputyCase = $verificationService->isMultiDeputyCase($clientData['case_number']);
+        if ($isMultiDeputyCase) {
+            $this->updateUserToMultipleDeputy($user, $isMultiDeputyCase);
+        }
         $casrecVerified = $verificationService->validate(
             $clientData['case_number'],
             $clientData['lastname'],
@@ -63,6 +73,13 @@ class CasRecController extends RestController
         );
 
         return ['verified' => $casrecVerified];
+    }
+
+    private function updateUserToMultipleDeputy($user, $isMultiDeputyCase)
+    {
+        $user->setCoDeputyClientConfirmed($isMultiDeputyCase);
+        $this->em->persist($user);
+        $this->em->flush();
     }
 
     /**
