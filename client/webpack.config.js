@@ -8,9 +8,9 @@ const tag = (new Date()).getTime()
 
 module.exports = {
   entry: {
-    application: './src/assets/javascripts/main.js',
-    'formatted-report': './src/assets/scss/formatted-report.scss',
-    fonts: './src/assets/scss/fonts.scss'
+    application: './assets/javascripts/main.js',
+    'formatted-report': './assets/scss/formatted-report.scss',
+    fonts: './assets/scss/fonts.scss'
   },
   mode: 'production',
   devtool: 'source-map',

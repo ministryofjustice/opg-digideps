@@ -4,7 +4,9 @@ WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
 COPY webpack.config.js .
-COPY src src
+COPY templates templates
+COPY assets assets
+COPY translations translations
 
 # Install NPM dependencies
 RUN npm install
@@ -13,7 +15,7 @@ RUN npm install
 RUN npm run lint
 RUN npm audit --production
 
-# Build assets
+#Build assets
 RUN NODE_ENV=production npm run build
 
 FROM composer AS composer
@@ -96,6 +98,8 @@ COPY --from=webpack /app/public/images public/images
 COPY scripts scripts
 COPY src src
 COPY templates templates
+COPY assets assets
+COPY translations translations
 COPY tests tests
 COPY phpstan.neon .
 COPY docker/confd /etc/confd
