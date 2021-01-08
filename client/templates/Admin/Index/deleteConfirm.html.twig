@@ -1,4 +1,4 @@
-{% extends '@App:Layouts:application.html.twig' %}
+{% extends '@App/Layouts/application.html.twig' %}
 
 {% trans_default_domain "admin" %}
 {% set page = 'deleteConfirm' %}
@@ -15,14 +15,14 @@
 
     <p class="govuk-body">{{ (page ~ '.question') | trans({'%fullName%': user.getFullname()}) | raw }}</p>
 
-    {% include '@App:Components/Link:_link-button.html.twig' with {
+    {% include '@App/Components/Link/_link-button.html.twig' with {
         transDomain: 'admin',
         linkButtonLabel: 'yes.label',
         linkClass: 'button-warning push-half--right',
         linkHref: path('admin_delete', { id: user.id })
     } %}
 
-    {% include '@App:Components/Link:_link-button.html.twig' with {
+    {% include '@App/Components/Link/_link-button.html.twig' with {
         transDomain: 'admin',
         linkButtonLabel: 'no.label',
         linkClass: 'button-secondary',

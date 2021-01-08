@@ -45,7 +45,7 @@ class BankAccountController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/bank-accounts", name="ndr_bank_accounts")
-     * @Template("@App:Ndr/BankAccount:start.html.twig")
+     * @Template("@App/Ndr/BankAccount/start.html.twig")
      *
      * @param $ndrId
      *
@@ -65,7 +65,7 @@ class BankAccountController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/bank-account/step{step}/{accountId}", name="ndr_bank_accounts_step", requirements={"step":"\d+"})
-     * @Template("@App:Ndr/BankAccount:step.html.twig")
+     * @Template("@App/Ndr/BankAccount/step.html.twig")
      *
      * @param Request $request
      * @param $ndrId
@@ -165,7 +165,7 @@ class BankAccountController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/bank-accounts/add_another", name="ndr_bank_accounts_add_another")
-     * @Template("@App:Ndr/BankAccount:add_another.html.twig")
+     * @Template("@App/Ndr/BankAccount/add_another.html.twig")
      */
     public function addAnotherAction(Request $request, $ndrId)
     {
@@ -193,7 +193,7 @@ class BankAccountController extends AbstractController
      * @Route("/ndr/{ndrId}/bank-accounts/summary", name="ndr_bank_accounts_summary")
      *
      * @param $ndrId
-     * @Template("@App:Ndr/BankAccount:summary.html.twig")
+     * @Template("@App/Ndr/BankAccount/summary.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -211,7 +211,7 @@ class BankAccountController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/bank-account/{accountId}/delete", name="ndr_bank_account_delete")
-     * @Template("@App:Common:confirmDelete.html.twig")
+     * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @param Request $request
      * @param $ndrId

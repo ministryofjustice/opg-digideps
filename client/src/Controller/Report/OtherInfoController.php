@@ -42,7 +42,7 @@ class OtherInfoController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/any-other-info", name="other_info")
-     * @Template("@App:Report/OtherInfo:start.html.twig")
+     * @Template("@App/Report/OtherInfo/start.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -63,7 +63,7 @@ class OtherInfoController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/any-other-info/step/{step}", name="other_info_step")
-     * @Template("@App:Report/OtherInfo:step.html.twig")
+     * @Template("@App/Report/OtherInfo/step.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -114,7 +114,7 @@ class OtherInfoController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/any-other-info/summary", name="other_info_summary")
-     * @Template("@App:Report/OtherInfo:summary.html.twig")
+     * @Template("@App/Report/OtherInfo/summary.html.twig")
      *
      * @param Request $request
      * @param $reportId

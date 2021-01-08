@@ -50,7 +50,7 @@ class FixtureController extends AbstractController
     /**
      * @Route("/", name="admin_fixtures")
      * @Security("has_role('ROLE_SUPER_ADMIN')")
-     * @Template("@App:Admin/Fixtures:index.html.twig")
+     * @Template("@App/Admin/Fixtures/index.html.twig")
      */
     public function fixtures()
     {
@@ -60,7 +60,7 @@ class FixtureController extends AbstractController
     /**
      * @Route("/court-orders", name="admin_fixtures_court_orders")
      * @Security("has_role('ROLE_SUPER_ADMIN')")
-     * @Template("@App:Admin/Fixtures:courtOrders.html.twig")
+     * @Template("@App/Admin/Fixtures/courtOrders.html.twig")
      */
     public function courtOrdersAction(Request $request, KernelInterface $kernel)
     {
@@ -137,7 +137,7 @@ class FixtureController extends AbstractController
     public function createUsersFlashMessage(array $deputies, string $caseNumber)
     {
         return $this->twig->render(
-            '@App:FlashMessages:fixture-user-created.html.twig',
+            '@App/FlashMessages/fixture-user-created.html.twig',
             ['deputies' => $deputies, 'caseNumber' => $caseNumber]
         );
     }
@@ -310,7 +310,7 @@ class FixtureController extends AbstractController
     /**
      * @Route("/create-casrec", name="casrec_fixture", methods={"GET", "POST"})
      * @Security("has_role('ROLE_SUPER_ADMIN')")
-     * @Template("@App:Admin/Fixtures:casRec.html.twig")
+     * @Template("@App/Admin/Fixtures/casRec.html.twig")
      *
      * @param Request $request
      * @param KernelInterface $kernel
@@ -352,6 +352,6 @@ class FixtureController extends AbstractController
      */
     public function createCasRecFlashMessage(array $data)
     {
-        return $this->twig->render('@App:FlashMessages:fixture-casrec-created.html.twig', $data);
+        return $this->twig->render('@App/FlashMessages/fixture-casrec-created.html.twig', $data);
     }
 }

@@ -1,6 +1,6 @@
-{% extends '@App:Layouts:application.html.twig' %}
+{% extends '@App/Layouts/application.html.twig' %}
 
-{% import '@App:Macros:macros.html.twig' as macros %}
+{% import '@App/Macros/macros.html.twig' as macros %}
 
 {% set translationDomain = "org-organisation" %}
 {% trans_default_domain translationDomain %}
@@ -35,7 +35,7 @@
 
     {{ form_submit(form.save,'form.save', {'buttonClass': 'behat-link-save'}) }}
 
-    {% include '@App:Components/Link:_link-button.html.twig' with {
+    {% include '@App/Components/Link/_link-button.html.twig' with {
         transDomain: translationDomain,
         linkButtonLabel: 'Cancel',
         linkHref: path('org_organisation_view', {id: organisation.id})

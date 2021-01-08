@@ -14,7 +14,7 @@ abstract class AbstractController extends Controller
      */
     protected function renderError(string $description, $statusCode = 500)
     {
-        $text = $this->renderView('TwigBundle:Exception:template.html.twig', [
+        $text = $this->renderView('TwigBundle/Exception/template.html.twig', [
             'message' => 'Application error',
             'description' => $description
         ]);

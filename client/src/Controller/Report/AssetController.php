@@ -42,7 +42,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/assets", name="assets")
-     * @Template("@App:Report/Asset:start.html.twig")
+     * @Template("@App/Report/Asset/start.html.twig")
      *
      * @param $reportId
      *
@@ -62,7 +62,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/assets/exist", name="assets_exist")
-     * @Template("@App:Report/Asset:exist.html.twig")
+     * @Template("@App/Report/Asset/exist.html.twig")
      */
     public function existAction(Request $request, $reportId)
     {
@@ -102,7 +102,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/assets/step-type", name="assets_type")
-     * @Template("@App:Report/Asset:type.html.twig")
+     * @Template("@App/Report/Asset/type.html.twig")
      */
     public function typeAction(Request $request, $reportId)
     {
@@ -131,7 +131,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/assets/other/{title}/add", name="asset_other_add")
-     * @Template("@App:Report/Asset/Other:add.html.twig")
+     * @Template("@App/Report/Asset/Other/add.html.twig")
      */
     public function otherAddAction(Request $request, $reportId, $title)
     {
@@ -162,7 +162,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/assets/other/edit/{assetId}", name="asset_other_edit")
-     * @Template("@App:Report/Asset/Other:edit.html.twig")
+     * @Template("@App/Report/Asset/Other/edit.html.twig")
      */
     public function otherEditAction(Request $request, $reportId, $assetId = null)
     {
@@ -196,7 +196,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/assets/add_another", name="assets_add_another")
-     * @Template("@App:Report/Asset:addAnother.html.twig")
+     * @Template("@App/Report/Asset/addAnother.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -227,7 +227,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/assets/property/step{step}/{assetId}", name="assets_property_step", requirements={"step":"\d+"})
-     * @Template("@App:Report/Asset/Property:step.html.twig")
+     * @Template("@App/Report/Asset/Property/step.html.twig")
      */
     public function propertyStepAction(Request $request, $reportId, $step, $assetId = null)
     {
@@ -350,7 +350,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/assets/summary", name="assets_summary")
-     * @Template("@App:Report/Asset:summary.html.twig")
+     * @Template("@App/Report/Asset/summary.html.twig")
      *
      * @param $reportId
      *
@@ -370,7 +370,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/assets/{assetId}/delete", name="asset_delete")
-     * @Template("@App:Common:confirmDelete.html.twig")
+     * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @param Request $request
      * @param $reportId

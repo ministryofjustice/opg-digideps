@@ -50,7 +50,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("", name="org_organisation_list")
-     * @Template("@App:Org/Organisation:list.html.twig")
+     * @Template("@App/Org/Organisation/list.html.twig")
      */
     public function listAction(Request $request)
     {
@@ -70,7 +70,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{id}", name="org_organisation_view")
-     * @Template("@App:Org/Organisation:view.html.twig")
+     * @Template("@App/Org/Organisation/view.html.twig")
      */
     public function viewAction(Request $request, string $id)
     {
@@ -87,7 +87,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{id}/add-user", name="org_organisation_add_member")
-     * @Template("@App:Org/Organisation:add.html.twig")
+     * @Template("@App/Org/Organisation/add.html.twig")
      */
     public function addAction(Request $request, int $id)
     {
@@ -158,7 +158,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{orgId}/edit/{userId}", name="org_organisation_edit_member")
-     * @Template("@App:Org/Organisation:edit.html.twig")
+     * @Template("@App/Org/Organisation/edit.html.twig")
      */
     public function editAction(Request $request, int $orgId, int $userId)
     {
@@ -228,7 +228,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{orgId}/delete-user/{userId}", name="org_organisation_delete_member")
-     * @Template("@App:Common:confirmDelete.html.twig")
+     * @Template("@App/Common/confirmDelete.html.twig")
      */
     public function deleteConfirmAction(Request $request, int $orgId, int $userId)
     {

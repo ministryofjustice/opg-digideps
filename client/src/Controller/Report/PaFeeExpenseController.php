@@ -41,7 +41,7 @@ class PaFeeExpenseController extends AbstractController
 
     /**
      * @Route("", name="pa_fee_expense")
-     * @Template("@App:Report/PaFeeExpense:start.html.twig")
+     * @Template("@App/Report/PaFeeExpense/start.html.twig")
      *
      * @param $reportId
      *
@@ -62,7 +62,7 @@ class PaFeeExpenseController extends AbstractController
 
     /**
      * @Route("/fee-exist", name="pa_fee_expense_fee_exist")
-     * @Template("@App:Report/PaFeeExpense:feeExist.html.twig")
+     * @Template("@App/Report/PaFeeExpense/feeExist.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -101,7 +101,7 @@ class PaFeeExpenseController extends AbstractController
 
     /**
      * @Route("/fee-edit", name="pa_fee_expense_fee_edit")
-     * @Template("@App:Report/PaFeeExpense:feeEdit.html.twig")
+     * @Template("@App/Report/PaFeeExpense/feeEdit.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -138,7 +138,7 @@ class PaFeeExpenseController extends AbstractController
 
     /**
      * @Route("/other/exist", name="pa_fee_expense_other_exist")
-     * @Template("@App:Report/PaFeeExpense:otherExist.html.twig")
+     * @Template("@App/Report/PaFeeExpense/otherExist.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -186,7 +186,7 @@ class PaFeeExpenseController extends AbstractController
 
     /**
      * @Route("/other/add", name="pa_fee_expense_other_add")
-     * @Template("@App:Report/PaFeeExpense:otherAdd.html.twig")
+     * @Template("@App/Report/PaFeeExpense/otherAdd.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -234,7 +234,7 @@ class PaFeeExpenseController extends AbstractController
 
     /**
      * @Route("/other/add-another", name="pa_fee_expense_add_another")
-     * @Template("@App:Report/PaFeeExpense:otherAddAnother.html.twig")
+     * @Template("@App/Report/PaFeeExpense/otherAddAnother.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -265,7 +265,7 @@ class PaFeeExpenseController extends AbstractController
 
     /**
      * @Route("/other-edit/{expenseId}", name="pa_fee_expense_edit")
-     * @Template("@App:Report/PaFeeExpense:otherEdit.html.twig")
+     * @Template("@App/Report/PaFeeExpense/otherEdit.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -307,7 +307,7 @@ class PaFeeExpenseController extends AbstractController
 
     /**
      * @Route("/other/delete/{expenseId}", name="pa_fee_expense_delete")
-     * @Template("@App:Common:confirmDelete.html.twig")
+     * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -351,7 +351,7 @@ class PaFeeExpenseController extends AbstractController
 
     /**
      * @Route("/summary", name="pa_fee_expense_summary")
-     * @Template("@App:Report/PaFeeExpense:summary.html.twig")
+     * @Template("@App/Report/PaFeeExpense/summary.html.twig")
      *
      * @param $reportId
      *

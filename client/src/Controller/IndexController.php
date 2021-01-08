@@ -77,14 +77,14 @@ class IndexController extends AbstractController
         }
 
         // deputy homepage with links to register and login
-        return $this->render('@App:Index:index.html.twig', [
+        return $this->render('@App/Index/index.html.twig', [
                 'environment' => $this->environment
             ]);
     }
 
     /**
      * @Route("login", name="login")
-     * @Template("@App:Index:login.html.twig")
+     * @Template("@App/Index/login.html.twig")
      *
      * @param Request $request
      * @return Response|null
@@ -121,7 +121,7 @@ class IndexController extends AbstractController
 
                 $form->addError(new FormError($error));
 
-                return $this->render('@App:Index:login.html.twig', [
+                return $this->render('@App/Index/login.html.twig', [
                         'form' => $form->createView(),
                     ] + $vars);
             }
@@ -133,7 +133,7 @@ class IndexController extends AbstractController
 
         if ($session->get('loggedOutFrom') === 'logoutPage') {
             $session->set('loggedOutFrom', null); //avoid display the message at next page reload
-            return $this->render('@App:Index:login-from-logout.html.twig', [
+            return $this->render('@App/Index/login-from-logout.html.twig', [
                     'form' => $form->createView()
                 ] + $vars);
         } elseif ($session->get('loggedOutFrom') === 'timeout' || $request->query->get('from') === 'api') {
@@ -145,7 +145,7 @@ class IndexController extends AbstractController
 
         $snSetting = $this->restClient->get('setting/service-notification', 'Setting', [], ['addAuthToken'=>false]);
 
-        return $this->render('@App:Index:login.html.twig', [
+        return $this->render('@App/Index/login.html.twig', [
                 'form' => $form->createView(),
                 'serviceNotificationContent' => $snSetting->isEnabled() ? $snSetting->getContent() : null
 
@@ -230,7 +230,7 @@ class IndexController extends AbstractController
         $vars = [];
         $vars['request'] = $request;
 
-        return $this->render('@App:Index:error-503.html.twig', $vars);
+        return $this->render('@App/Index/error-503.html.twig', $vars);
     }
 
     /**
@@ -260,7 +260,7 @@ class IndexController extends AbstractController
      */
     public function termsAction(Request $request)
     {
-        return $this->render('@App:Index:terms.html.twig', [
+        return $this->render('@App/Index/terms.html.twig', [
             'backlink' => $this->getRefererUrlSafe($request, ['terms'])
         ]);
     }
@@ -270,7 +270,7 @@ class IndexController extends AbstractController
      */
     public function privacyAction(Request $request)
     {
-        return $this->render('@App:Index:privacy.html.twig', [
+        return $this->render('@App/Index/privacy.html.twig', [
             'backlink' => $this->getRefererUrlSafe($request, ['privacy'])
         ]);
     }
@@ -280,7 +280,7 @@ class IndexController extends AbstractController
      */
     public function accessibilityAction(Request $request)
     {
-        return $this->render('@App:Index:accessibility.html.twig', [
+        return $this->render('@App/Index/accessibility.html.twig', [
             'backlink' => $this->getRefererUrlSafe($request, ['accessibility'])
         ]);
     }
@@ -332,7 +332,7 @@ class IndexController extends AbstractController
             );
         }
 
-        return $this->render('@App:Index:cookies.html.twig', [
+        return $this->render('@App/Index/cookies.html.twig', [
             'form' => $form->createView()
         ]);
     }

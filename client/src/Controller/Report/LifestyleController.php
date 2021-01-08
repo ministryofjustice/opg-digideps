@@ -42,7 +42,7 @@ class LifestyleController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/lifestyle", name="lifestyle")
-     * @Template("@App:Report/Lifestyle:start.html.twig")
+     * @Template("@App/Report/Lifestyle/start.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -63,7 +63,7 @@ class LifestyleController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/lifestyle/step/{step}", name="lifestyle_step")
-     * @Template("@App:Report/Lifestyle:step.html.twig")
+     * @Template("@App/Report/Lifestyle/step.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -127,7 +127,7 @@ class LifestyleController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/lifestyle/summary", name="lifestyle_summary")
-     * @Template("@App:Report/Lifestyle:summary.html.twig")
+     * @Template("@App/Report/Lifestyle/summary.html.twig")
      *
      * @param Request $request
      * @param $reportId

@@ -108,7 +108,7 @@ class ReportController extends AbstractController
      * @param Request $request
      * @param string $id
      *
-     * @Template("@App:Admin/Client/Report:checklist.html.twig")
+     * @Template("@App/Admin/Client/Report/checklist.html.twig")
      *
      * @return array|RedirectResponse|Response
      */
@@ -224,7 +224,7 @@ class ReportController extends AbstractController
      * @param int $id
      *
      * @return array
-     * @Template("@App:Admin/Client/Report:checklistSubmitted.html.twig")
+     * @Template("@App/Admin/Client/Report/checklistSubmitted.html.twig")
      *
      */
     public function checklistSubmittedAction(int $id, ParameterStoreService $parameterStore)
@@ -294,7 +294,7 @@ class ReportController extends AbstractController
      * @param Request $request
      * @param string $id
      *
-     * @Template("@App:Admin/Client/Report:manage.html.twig")
+     * @Template("@App/Admin/Client/Report/manage.html.twig")
      *
      * @return array|Response|RedirectResponse
      * @throws \Exception
@@ -410,7 +410,7 @@ class ReportController extends AbstractController
      *
      * @param $id
      * @return array|Response|RedirectResponse
-     * @Template("@App:Admin/Client/Report:manageConfirm.html.twig")
+     * @Template("@App/Admin/Client/Report/manageConfirm.html.twig")
      *
      * @throws \Exception
      */
@@ -496,7 +496,7 @@ class ReportController extends AbstractController
      * @param Request $request
      * @param $id
      * @return array|RedirectResponse
-     * @Template("@App:Admin/Client/Report:manageCloseReportConfirm.html.twig")
+     * @Template("@App/Admin/Client/Report/manageCloseReportConfirm.html.twig")
      *
      * @throws \Exception
      */
@@ -537,7 +537,7 @@ class ReportController extends AbstractController
     private function upsertChecklistInformation(Report $report): void
     {
         $content = $this
-            ->render('@App:Admin/Client/Report/Formatted:unsubmit_information.html.twig', ['report' => $report])
+            ->render('@App/Admin/Client/Report/Formatted/unsubmit_information.html.twig', ['report' => $report])
             ->getContent();
 
         $checklist = $report->getChecklist();

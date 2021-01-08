@@ -36,7 +36,7 @@ class ClientController extends AbstractController
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @param string $id
      *
-     * @Template("@App:Admin/Client/Client:details.html.twig")
+     * @Template("@App/Admin/Client/Client/details.html.twig")
      *
      * @return array
      */
@@ -69,7 +69,7 @@ class ClientController extends AbstractController
      * @Security("has_role('ROLE_SUPER_ADMIN')")
      * @param $id
      *
-     * @Template("@App:Admin/Client/Client:discharge.html.twig")
+     * @Template("@App/Admin/Client/Client/discharge.html.twig")
      *
      * @return array
      */

@@ -232,7 +232,7 @@ class ComponentsExtension extends AbstractExtension
             ];
         }
 
-        echo $env->render('@App:Components/Navigation:_progress-indicator.html.twig', [
+        echo $env->render('@App/Components/Navigation/_progress-indicator.html.twig', [
             'progressSteps' => $progressSteps,
         ]);
     }

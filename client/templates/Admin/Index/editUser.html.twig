@@ -1,4 +1,4 @@
-{% extends '@App:Layouts:application.html.twig' %}
+{% extends '@App/Layouts/application.html.twig' %}
 
 {% trans_default_domain "admin" %}
 {% set page = 'editUser' %}
@@ -41,7 +41,7 @@
 
     {% if action is defined %}
         {% if action == 'edit' %}
-            {% include '@App:Components/Link:_link-button.html.twig' with {
+            {% include '@App/Components/Link/_link-button.html.twig' with {
             transDomain: 'admin',
             linkId: 'admin_cancel',
             linkButtonLabel: 'cancel.label',
@@ -54,7 +54,7 @@
     {% if action is defined %}
         {% if action == 'edit' %}
             {% if is_granted('delete-user', user) %}
-                {% include '@App:Components/Link:_link-button.html.twig' with {
+                {% include '@App/Components/Link/_link-button.html.twig' with {
                     transDomain: 'admin',
                     linkButtonLabel: user.getClients|length > 0 ? 'Delete User and Client' : 'Delete user',
                     linkClass: 'button-warning push--top',

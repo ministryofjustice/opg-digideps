@@ -20,9 +20,9 @@
                 {% for groupId, assetsInGroup in ndr.getAssetsGroupedByTitle %}
                     <li data-group="{{ groupId }}">
                         {% if (groupId | lower) == 'property' %}
-                            {% include '@App:Ndr/Formatted/Asset:_property.html.twig' %}
+                            {% include '@App/Ndr/Formatted/Asset/_property.html.twig' %}
                         {% else %}
-                             {% include '@App:Ndr/Formatted/Asset:_other.html.twig' %}
+                             {% include '@App/Ndr/Formatted/Asset/_other.html.twig' %}
                         {% endif %}
                     </li>
                 {% endfor %}

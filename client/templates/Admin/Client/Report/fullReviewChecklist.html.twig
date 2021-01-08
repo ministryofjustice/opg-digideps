@@ -1,4 +1,4 @@
-{% from '@App:Admin/Client/Report:macros.html.twig' import checklist_radios %}
+{% from '@App/Admin/Client/Report/macros.html.twig' import checklist_radios %}
 
 {% trans_default_domain 'admin-checklist' %}
 {% set page = 'checklistPage' %}
@@ -18,7 +18,7 @@
 
         {{ checklist_radios(form.answers.fullBankStatementsExist) }}
         {% if report.deputyDocuments is defined and (report.deputyDocuments is not empty) %}
-            {% include '@App:Admin/Client/Report/partials:_document-summary.html.twig' %}
+            {% include '@App/Admin/Client/Report/partials/_document-summary.html.twig' %}
         {% else %}
             <p class="govuk-body">{{ (page ~ '.noDocuments') | trans }}</p>
         {% endif %}
@@ -26,21 +26,21 @@
         <h3 class="govuk-heading-m" id="anchor-full-review-lodgingConcerns">{{ (page ~ '.heading.fullReview.lodgingConcerns') | trans }}</h3>
 
         {{ checklist_radios(form.answers.anyLodgingConcerns) }}
-        {% include '@App:Admin/Client/Report/partials:_lodging-summary.html.twig' %}
+        {% include '@App/Admin/Client/Report/partials/_lodging-summary.html.twig' %}
 
         <h3 class="govuk-heading-m" id="anchor-full-review-spendingAndDebt">{{ (page ~ '.heading.fullReview.spendingAndDebt') | trans }}</h3>
 
         {{ checklist_radios(form.answers.spendingAcceptable) }}
-        {% include '@App:Admin/Client/Report/partials:_money-summaries.html.twig' %}
+        {% include '@App/Admin/Client/Report/partials/_money-summaries.html.twig' %}
 
         {{ checklist_radios(form.answers.expensesReasonable) }}
-        {% include '@App:Admin/Client/Report/partials:_expenses-summary.html.twig' %}
+        {% include '@App/Admin/Client/Report/partials/_expenses-summary.html.twig' %}
 
         {{ checklist_radios(form.answers.giftingReasonable) }}
-        {% include '@App:Admin/Client/Report/partials:_gifting-summary.html.twig' %}
+        {% include '@App/Admin/Client/Report/partials/_gifting-summary.html.twig' %}
 
         {{ checklist_radios(form.answers.debtManageable) }}
-        {{ include('@App:Admin/Client/Report/partials:_debts-summary.html.twig') }}
+        {{ include('@App/Admin/Client/Report/partials/_debts-summary.html.twig') }}
 
         {{ checklist_radios(form.answers.anySpendingConcerns, { margin: 6 }) }}
 
@@ -73,8 +73,8 @@
         {{ form_end(form) }}
     </div>
     <div class="govuk-grid-column-one-third opg-sticky-menu">
-        {% include '@App:Admin/Client/Report/sidebar:_statuses.html.twig' with {checklistDomain: 'fullReview'} %}
-        {% include '@App:Admin/Client/Report/sidebar:_lodging.html.twig' %}
-        {% include '@App:Admin/Client/Report/sidebar:_backToTopLinks.html.twig' with {checklistDomain: 'fullReview'} %}
+        {% include '@App/Admin/Client/Report/sidebar/_statuses.html.twig' with {checklistDomain: 'fullReview'} %}
+        {% include '@App/Admin/Client/Report/sidebar/_lodging.html.twig' %}
+        {% include '@App/Admin/Client/Report/sidebar/_backToTopLinks.html.twig' with {checklistDomain: 'fullReview'} %}
     </div>
 </div>

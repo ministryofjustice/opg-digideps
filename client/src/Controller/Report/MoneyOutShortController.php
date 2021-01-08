@@ -39,7 +39,7 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short", name="money_out_short")
-     * @Template("@App:Report/MoneyOutShort:start.html.twig")
+     * @Template("@App/Report/MoneyOutShort/start.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -61,7 +61,7 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short/category", name="money_out_short_category")
-     * @Template("@App:Report/MoneyOutShort:category.html.twig")
+     * @Template("@App/Report/MoneyOutShort/category.html.twig")
      *
      * @param Request $request
      * @
@@ -102,7 +102,7 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short/exist", name="money_out_short_exist")
-     * @Template("@App:Report/MoneyOutShort:exist.html.twig")
+     * @Template("@App/Report/MoneyOutShort/exist.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -141,7 +141,7 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short/add", name="money_out_short_add")
-     * @Template("@App:Report/MoneyOutShort:add.html.twig")
+     * @Template("@App/Report/MoneyOutShort/add.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -184,7 +184,7 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short/add_another", name="money_out_short_add_another")
-     * @Template("@App:Report/MoneyOutShort:addAnother.html.twig")
+     * @Template("@App/Report/MoneyOutShort/addAnother.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -215,7 +215,7 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short/edit/{transactionId}", name="money_out_short_edit")
-     * @Template("@App:Report/MoneyOutShort:edit.html.twig")
+     * @Template("@App/Report/MoneyOutShort/edit.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -249,7 +249,7 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short/{transactionId}/delete", name="money_out_short_delete")
-     * @Template("@App:Common:confirmDelete.html.twig")
+     * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -294,7 +294,7 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short/summary", name="money_out_short_summary")
-     * @Template("@App:Report/MoneyOutShort:summary.html.twig")
+     * @Template("@App/Report/MoneyOutShort/summary.html.twig")
      *
      * @param Request $request
      * @param $reportId

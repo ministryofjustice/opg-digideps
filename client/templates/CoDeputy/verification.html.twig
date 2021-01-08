@@ -1,4 +1,4 @@
-{% extends '@App:Layouts:application.html.twig' %}
+{% extends '@App/Layouts/application.html.twig' %}
 
 {% trans_default_domain "settings" %}
 {% set page = "verifyDeputy" %}
@@ -18,7 +18,7 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {% include '@App:User:_form_fields.html.twig' %}
+    {% include '@App/User/_form_fields.html.twig' %}
 
     <h2 class="govuk-heading-m flush--top">{{ (page ~ '.yourClientsDetails') | trans }}</h2>
 

@@ -1,6 +1,6 @@
-{% extends '@App:Layouts:application.html.twig' %}
+{% extends '@App/Layouts/application.html.twig' %}
 
-{% import '@App:Macros:macros.html.twig' as macros %}
+{% import '@App/Macros/macros.html.twig' as macros %}
 
 {% set translationDomain = "report-overview" %}
 {% trans_default_domain translationDomain %}
@@ -23,7 +23,7 @@
         </div>
     </div>
 
-    {% include '@App:Report/Report:_header.html.twig' %}
+    {% include '@App/Report/Report/_header.html.twig' %}
 
     {% if not report.isDue or report.isDue and not reportStatus.isReadyToSubmit %}
         <div class="push--top">
@@ -36,7 +36,7 @@
         <li>
             <h2 class="govuk-heading-m opg-overview-section__divider">{{ 'heading.decisionsContacts' | trans() }}</h2>
             {% if report.hasSection('decisions') %}
-                {% include '@App:Report/Report:_subsection.html.twig' with {
+                {% include '@App/Report/Report/_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'decisions',
                     sectionId: 'decisions',
@@ -47,7 +47,7 @@
                 } %}
             {% endif %}
             {% if report.hasSection('contacts') %}
-                {% include '@App:Report/Report:_subsection.html.twig' with {
+                {% include '@App/Report/Report/_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'contacts',
                     sectionId: 'contacts',
@@ -63,7 +63,7 @@
         <li>
             <h2 class="govuk-heading-m opg-overview-section__divider">{{ 'heading.healthAndWelfare' | trans(transOptions) }}</h2>
             {% if report.hasSection('visitsCare') %}
-                {% include '@App:Report/Report:_subsection.html.twig' with {
+                {% include '@App/Report/Report/_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'visits_care',
                     sectionId: 'visitsCare',
@@ -74,7 +74,7 @@
                 } %}
             {% endif %}
             {% if report.hasSection('lifestyle') %}
-                {% include '@App:Report/Report:_subsection.html.twig' with {
+                {% include '@App/Report/Report/_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'lifestyle',
                 sectionId: 'lifestyle',
@@ -90,7 +90,7 @@
                 <h2 class="govuk-heading-m opg-overview-section__divider">{{ 'heading.propFinance' | trans(transOptions) }}</h2>
 
                 {% if report.hasSection('bankAccounts') %}
-                    {% include '@App:Report/Report:_subsection.html.twig' with {
+                    {% include '@App/Report/Report/_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'bank_accounts',
                     sectionId: 'bankAccounts',
@@ -101,7 +101,7 @@
                 {% endif %}
 
                 {% if report.hasSection('deputyExpenses') %}
-                    {% include '@App:Report/Report:_subsection.html.twig' with {
+                    {% include '@App/Report/Report/_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'deputy_expenses',
                         sectionId: 'deputyExpenses',
@@ -113,7 +113,7 @@
                 {% endif %}
 
                 {% if report.hasSection('gifts') %}
-                    {% include '@App:Report/Report:_subsection.html.twig' with {
+                    {% include '@App/Report/Report/_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'gifts',
                     sectionId: 'gifts',
@@ -125,7 +125,7 @@
                 {% endif %}
 
                 {% if report.hasSection('moneyTransfers') %}
-                    {% include '@App:Report/Report:_subsection.html.twig' with {
+                    {% include '@App/Report/Report/_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'money_transfers',
                         sectionId: 'moneyTransfers',
@@ -135,7 +135,7 @@
                     } %}
                     {% endif %}
                 {% if report.hasSection('moneyIn') and report.hasSection('moneyOut') %}
-                    {% include '@App:Report/Report:_subsection.html.twig' with {
+                    {% include '@App/Report/Report/_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'money_in',
                     sectionId: 'moneyIn',
@@ -143,7 +143,7 @@
                     state: reportStatus.moneyInState,
                     description: true
                     } %}
-                    {% include '@App:Report/Report:_subsection.html.twig' with {
+                    {% include '@App/Report/Report/_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'money_out',
                     sectionId: 'moneyOut',
@@ -153,7 +153,7 @@
                     } %}
                 {% endif %}
                 {% if report.hasSection('moneyInShort') and report.hasSection('moneyOutShort') %}
-                    {% include '@App:Report/Report:_subsection.html.twig' with {
+                    {% include '@App/Report/Report/_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'money_in_short',
                     sectionId: 'moneyInShort',
@@ -161,7 +161,7 @@
                     state: reportStatus.MoneyInShortState,
                     description: true
                     } %}
-                    {% include '@App:Report/Report:_subsection.html.twig' with {
+                    {% include '@App/Report/Report/_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'money_out_short',
                     sectionId: 'moneyOutShort',
@@ -190,7 +190,7 @@
                         {% set linkAction = '' %}
                     {% endif %}
 
-                    {% include '@App:Report/Report:_subsection.html.twig' with {
+                    {% include '@App/Report/Report/_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'balance',
                         sectionId: 'balance',
@@ -205,7 +205,7 @@
                 {% endif %}
 
                 {% if report.hasSection('assets') %}
-                    {% include '@App:Report/Report:_subsection.html.twig' with {
+                    {% include '@App/Report/Report/_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'assets',
                         sectionId: 'assets',
@@ -216,7 +216,7 @@
                     } %}
                 {% endif %}
                 {% if report.hasSection('debts') %}
-                    {% include '@App:Report/Report:_subsection.html.twig' with {
+                    {% include '@App/Report/Report/_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'debts',
                     sectionId: 'debts',
@@ -233,7 +233,7 @@
         <li>
             <h2 class="govuk-heading-m opg-overview-section__divider">{{ 'heading.other' | trans() }}</h2>
             {% if report.hasSection('actions') %}
-                {% include '@App:Report/Report:_subsection.html.twig' with {
+                {% include '@App/Report/Report/_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'actions',
                     sectionId: 'actions',
@@ -244,7 +244,7 @@
                 } %}
             {% endif %}
             {% if report.hasSection('otherInfo') %}
-                {% include '@App:Report/Report:_subsection.html.twig' with {
+                {% include '@App/Report/Report/_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'other_info',
                     sectionId: 'otherInfo',
@@ -259,7 +259,7 @@
         <li>
             <h2 class="govuk-heading-m opg-overview-section__divider">{{ 'heading.caseDocuments' | trans() }}</h2>
             {% if report.hasSection('documents') %}
-                {% include '@App:Report/Report:_subsection.html.twig' with {
+                {% include '@App/Report/Report/_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'documents',
                     sectionId: 'documents',

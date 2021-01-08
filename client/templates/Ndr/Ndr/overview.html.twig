@@ -1,6 +1,6 @@
-{% extends '@App:Layouts:application.html.twig' %}
+{% extends '@App/Layouts/application.html.twig' %}
 
-{% import '@App:Macros:macros.html.twig' as macros %}
+{% import '@App/Macros/macros.html.twig' as macros %}
 
 {% set translationDomain = "ndr-overview" %}
 {% trans_default_domain translationDomain %}
@@ -34,7 +34,7 @@
         </div>
     </div>
 
-    {% include '@App:Ndr/Ndr:_header.html.twig' %}
+    {% include '@App/Ndr/Ndr/_header.html.twig' %}
 
     {% if not ndrStatus.isReadyToSubmit %}
         <div class="push--top">
@@ -46,7 +46,7 @@
 
         <li>
             <h2 class="govuk-heading-m opg-overview-section__divider">Health and welfare</h2>
-            {% include '@App:Ndr/Ndr:_subsection.html.twig' with {
+            {% include '@App/Ndr/Ndr/_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'visits_care',
                 linkToSubSection: path('ndr_visits_care', {ndrId: ndr.id}),
@@ -60,7 +60,7 @@
 
         <li>
             <h2 class="govuk-heading-m opg-overview-section__divider">{{ client.firstname }}'s property and finances</h2>
-            {% include '@App:Ndr/Ndr:_subsection.html.twig' with {
+            {% include '@App/Ndr/Ndr/_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'deputy_expenses',
                 ndr: ndr,
@@ -69,7 +69,7 @@
                 linkToSubSection: path('ndr_deputy_expenses', {ndrId: ndr.id}),
                 description: true
             } %}
-            {% include '@App:Ndr/Ndr:_subsection.html.twig' with {
+            {% include '@App/Ndr/Ndr/_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'income_benefits',
                 ndr: ndr,
@@ -77,7 +77,7 @@
                 linkToSubSection: path('ndr_income_benefits', {ndrId: ndr.id}),
                 description: true
             } %}
-            {% include '@App:Ndr/Ndr:_subsection.html.twig' with {
+            {% include '@App/Ndr/Ndr/_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'bank_accounts',
                 ndr: ndr,
@@ -86,7 +86,7 @@
                 linkToSubSection: path('ndr_bank_accounts', {ndrId: ndr.id}),
                 description: true
             } %}
-            {% include '@App:Ndr/Ndr:_subsection.html.twig' with {
+            {% include '@App/Ndr/Ndr/_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'assets',
                 ndr: ndr,
@@ -95,7 +95,7 @@
                 linkToSubSection: path('ndr_assets', {ndrId: ndr.id}),
                 description: true
             } %}
-            {% include '@App:Ndr/Ndr:_subsection.html.twig' with {
+            {% include '@App/Ndr/Ndr/_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'debts',
                 ndr: ndr,
@@ -109,7 +109,7 @@
 
         <li>
             <h2 class="govuk-heading-m opg-overview-section__divider">Other information</h2>
-            {% include '@App:Ndr/Ndr:_subsection.html.twig' with {
+            {% include '@App/Ndr/Ndr/_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'actions',
                 linkToSubSection: path('ndr_actions', {ndrId: ndr.id}),
@@ -118,7 +118,7 @@
                 description: true,
                 state: ndrStatus.actionsState,
             } %}
-            {% include '@App:Ndr/Ndr:_subsection.html.twig' with {
+            {% include '@App/Ndr/Ndr/_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'other_info',
                 linkToSubSection: path('ndr_other_info', {ndrId: ndr.id}),

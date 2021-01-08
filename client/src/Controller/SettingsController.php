@@ -74,7 +74,7 @@ class SettingsController extends AbstractController
     /**
      * @Route("/deputyship-details", name="account_settings")
      * @Route("/org/settings", name="org_settings")
-     * @Template("@App:Settings:index.html.twig")
+     * @Template("@App/Settings/index.html.twig")
      **/
     public function indexAction(Redirector $redirector)
     {
@@ -102,7 +102,7 @@ class SettingsController extends AbstractController
     /**
      * @Route("/deputyship-details/your-details/change-password", name="user_password_edit")
      * @Route("/org/settings/your-details/change-password", name="org_profile_password_edit")
-     * @Template("@App:Settings:passwordEdit.html.twig")
+     * @Template("@App/Settings/passwordEdit.html.twig")
      */
     public function passwordEditAction(Request $request)
     {
@@ -135,7 +135,7 @@ class SettingsController extends AbstractController
      *
      * @Route("/deputyship-details/your-details", name="user_show")
      * @Route("/org/settings/your-details", name="org_profile_show")
-     * @Template("@App:Settings:profile.html.twig")
+     * @Template("@App/Settings/profile.html.twig")
      **/
     public function profileAction()
     {
@@ -149,7 +149,7 @@ class SettingsController extends AbstractController
      *
      * @Route("/deputyship-details/your-details/edit", name="user_edit")
      * @Route("/org/settings/your-details/edit", name="org_profile_edit")
-     * @Template("@App:Settings:profileEdit.html.twig")
+     * @Template("@App/Settings/profileEdit.html.twig")
      * @throw AccessDeniedException
      **/
     public function profileEditAction(Request $request)

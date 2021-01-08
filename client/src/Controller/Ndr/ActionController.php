@@ -48,7 +48,7 @@ class ActionController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/actions", name="ndr_actions")
-     * @Template("@App:Ndr/Action:start.html.twig")
+     * @Template("@App/Ndr/Action/start.html.twig")
      *
      * @param Request $request
      * @param $ndrId
@@ -69,7 +69,7 @@ class ActionController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/actions/step/{step}", name="ndr_actions_step")
-     * @Template("@App:Ndr/Action:step.html.twig")
+     * @Template("@App/Ndr/Action/step.html.twig")
      */
     public function stepAction(Request $request, $ndrId, $step)
     {
@@ -115,7 +115,7 @@ class ActionController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/actions/summary", name="ndr_actions_summary")
-     * @Template("@App:Ndr/Action:summary.html.twig")
+     * @Template("@App/Ndr/Action/summary.html.twig")
      */
     public function summaryAction(Request $request, $ndrId)
     {

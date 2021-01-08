@@ -195,7 +195,7 @@ class ReportSubmissionServiceTest extends TestCase
     {
         $this->mockTemplatingEngine->shouldReceive('render')
             ->with(
-                '@App:Report/Formatted:formatted_standalone.html.twig',
+                '@App/Report/Formatted/formatted_standalone.html.twig',
                 [
                     'report' => $this->mockReport,
                     'showSummary' => true

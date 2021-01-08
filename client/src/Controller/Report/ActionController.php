@@ -41,7 +41,7 @@ class ActionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/actions", name="actions")
-     * @Template("@App:Report/Action:start.html.twig")
+     * @Template("@App/Report/Action/start.html.twig")
      */
     public function startAction(Request $request, $reportId)
     {
@@ -57,7 +57,7 @@ class ActionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/actions/step/{step}", name="actions_step")
-     * @Template("@App:Report/Action:step.html.twig")
+     * @Template("@App/Report/Action/step.html.twig")
      */
     public function stepAction(Request $request, $reportId, $step, TranslatorInterface $translator)
     {
@@ -116,7 +116,7 @@ class ActionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/actions/summary", name="actions_summary")
-     * @Template("@App:Report/Action:summary.html.twig")
+     * @Template("@App/Report/Action/summary.html.twig")
      */
     public function summaryAction(Request $request, $reportId)
     {

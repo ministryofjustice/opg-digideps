@@ -19,7 +19,7 @@ class ChecklistPdfGenerator
     /** @var LoggerInterface */
     private $logger;
 
-    const TEMPLATE_FILE = '@App:Admin/Client/Report/Formatted:checklist_formatted_standalone.html.twig';
+    const TEMPLATE_FILE = '@App/Admin/Client/Report/Formatted/checklist_formatted_standalone.html.twig';
 
     /**
      * @param Environment $templating

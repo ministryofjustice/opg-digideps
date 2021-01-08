@@ -1,6 +1,6 @@
-{% extends '@App:Layouts:application.html.twig' %}
+{% extends '@App/Layouts/application.html.twig' %}
 
-{% import '@App:Macros:macros.html.twig' as macros %}
+{% import '@App/Macros/macros.html.twig' as macros %}
 
 {% set translationDomain = "report-prof-deputy-costs" %}
 {% trans_default_domain translationDomain %}
@@ -18,10 +18,10 @@
 {% block pageContent %}
 
     {# Questions and answers table #}
-    {% include '@App:Report/ProfDeputyCosts:_answers.html.twig' %}
+    {% include '@App/Report/ProfDeputyCosts/_answers.html.twig' %}
 
     {# Pagination #}
-    {% include '@App:Report:_nextprevious.html.twig' with {
+    {% include '@App/Report/_nextprevious.html.twig' with {
         'report': report,
         'sectionId': 'profDeputyCosts',
     } %}

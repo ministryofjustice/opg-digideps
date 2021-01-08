@@ -43,7 +43,7 @@ class CoDeputyController extends AbstractController
 
     /**
      * @Route("/codeputy/verification", name="codep_verification")
-     * @Template("@App:CoDeputy:verification.html.twig")
+     * @Template("@App/CoDeputy/verification.html.twig")
      */
     public function verificationAction(Request $request, Redirector $redirector, ValidatorInterface $validator)
     {
@@ -128,7 +128,7 @@ class CoDeputyController extends AbstractController
 
     /**
      * @Route("/codeputy/{clientId}/add", name="add_co_deputy")
-     * @Template("@App:CoDeputy:add.html.twig")
+     * @Template("@App/CoDeputy/add.html.twig")
      *
      * @param Request $request
      * @param Redirector $redirector
@@ -188,7 +188,7 @@ class CoDeputyController extends AbstractController
 
     /**
      * @Route("/codeputy/re-invite/{email}", name="codep_resend_activation")
-     * @Template("@App:CoDeputy:resendActivation.html.twig")
+     * @Template("@App/CoDeputy/resendActivation.html.twig")
      *
      * @param Request $request
      * @param $email

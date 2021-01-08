@@ -1,27 +1,27 @@
-{% from '@App:Macros:macros.html.twig' import details %}
+{% from '@App/Macros/macros.html.twig' import details %}
 {% trans_default_domain 'admin-checklist' %}
 
 {% if report.hasSection('moneyIn') %}
-    {% set moneyInSummary = '@App:Report/MoneyIn:_list.html.twig' %}
+    {% set moneyInSummary = '@App/Report/MoneyIn/_list.html.twig' %}
 {% endif %}
 
 {% if report.hasSection('moneyInShort') %}
-    {% set moneyInSummary = '@App:Report/MoneyInShort:_answers.html.twig' %}
+    {% set moneyInSummary = '@App/Report/MoneyInShort/_answers.html.twig' %}
 {% endif %}
 
 {% if report.hasSection('moneyOut') %}
-    {% set moneyOutSummary = '@App:Report/MoneyOut:_list.html.twig' %}
+    {% set moneyOutSummary = '@App/Report/MoneyOut/_list.html.twig' %}
 {% endif %}
 
 {% if report.hasSection('moneyOutShort') %}
-    {% set moneyOutSummary = '@App:Report/MoneyOutShort:_answers.html.twig' %}
+    {% set moneyOutSummary = '@App/Report/MoneyOutShort/_answers.html.twig' %}
 {% endif %}
 
 {% if report.hasSection('moneyTransfers') %}
     {% if report.enoughBankAccountForTransfers %}
         {{ details({
             summaryText: (page ~ '.revealTitle.moneyTransfersSummary') | trans,
-            html: include('@App:Report/MoneyTransfer:_list.html.twig', { hideEditLink: true }),
+            html: include('@App/Report/MoneyTransfer/_list.html.twig', { hideEditLink: true }),
             classes: 'govuk-!-margin-bottom-0',
         }) }}
     {% else %}

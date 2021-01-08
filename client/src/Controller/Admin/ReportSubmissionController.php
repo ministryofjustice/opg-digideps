@@ -62,7 +62,7 @@ class ReportSubmissionController extends AbstractController
     /**
      * @Route("/documents/list", name="admin_documents", methods={"GET", "POST"})
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Template("@App:Admin/ReportSubmission:index.html.twig")
+     * @Template("@App/Admin/ReportSubmission/index.html.twig")
      *
      * @return array<mixed>|Response
      */
@@ -178,7 +178,7 @@ class ReportSubmissionController extends AbstractController
     /**
      * @Route("/documents/list/download_ready", name="admin_documents_download_ready", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Template("@App:Admin/ReportSubmission:download-ready.html.twig")
+     * @Template("@App/Admin/ReportSubmission/download-ready.html.twig")
      *
      * @return array<mixed>
      */

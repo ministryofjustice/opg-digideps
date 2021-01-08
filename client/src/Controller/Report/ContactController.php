@@ -37,7 +37,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts", name="contacts")
-     * @Template("@App:Report/Contact:start.html.twig")
+     * @Template("@App/Report/Contact/start.html.twig")
      *
      * @param $reportId
      *
@@ -58,7 +58,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/exist", name="contacts_exist")
-     * @Template("@App:Report/Contact:exist.html.twig")
+     * @Template("@App/Report/Contact/exist.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -98,7 +98,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/add", name="contacts_add")
-     * @Template("@App:Report/Contact:add.html.twig")
+     * @Template("@App/Report/Contact/add.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -143,7 +143,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/add_another", name="contacts_add_another")
-     * @Template("@App:Report/Contact:addAnother.html.twig")
+     * @Template("@App/Report/Contact/addAnother.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -174,7 +174,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/edit/{contactId}", name="contacts_edit")
-     * @Template("@App:Report/Contact:edit.html.twig")
+     * @Template("@App/Report/Contact/edit.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -210,7 +210,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/summary", name="contacts_summary")
-     * @Template("@App:Report/Contact:summary.html.twig")
+     * @Template("@App/Report/Contact/summary.html.twig")
      *
      * @param $reportId
      *
@@ -231,7 +231,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/{contactId}/delete", name="contacts_delete")
-     * @Template("@App:Common:confirmDelete.html.twig")
+     * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @param Request $request
      * @param $reportId

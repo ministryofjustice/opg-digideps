@@ -1,5 +1,5 @@
-{% import '@App:Macros:macros.html.twig' as macros %}
-{% from '@App:Admin/Client/Report:macros.html.twig' import checklist_radios %}
+{% import '@App/Macros/macros.html.twig' as macros %}
+{% from '@App/Admin/Client/Report/macros.html.twig' import checklist_radios %}
 
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
@@ -138,12 +138,12 @@
     {% if report.hasSection('moneyTransfers') %}
         {% set contents %}
             {# Balance table #}
-            {% include '@App:Report/Balance:_balance_table.html.twig' with {
+            {% include '@App/Report/Balance/_balance_table.html.twig' with {
                 hideEditLink: true
             } %}
 
             {# Difference table #}
-            {% include '@App:Report/Balance:_difference_table.html.twig' with {
+            {% include '@App/Report/Balance/_difference_table.html.twig' with {
                 hideEditLink: true
             } %}
 
@@ -171,14 +171,14 @@
 
 {{ checklist_radios(form.moneyMovementsAcceptable) }}
 
-{{ include('@App:Admin/Client/Report/partials:_money-summaries.html.twig', { collapseMargin: true }) }}
+{{ include('@App/Admin/Client/Report/partials/_money-summaries.html.twig', { collapseMargin: true }) }}
 
 {% if report.hasSection('gifts') %}
-    {{ include('@App:Admin/Client/Report/partials:_gifting-summary.html.twig', { collapseMargin: true }) }}
+    {{ include('@App/Admin/Client/Report/partials/_gifting-summary.html.twig', { collapseMargin: true }) }}
 {% endif %}
 
 {% if report.hasSection('deputyExpenses') %}
-    {{ include('@App:Admin/Client/Report/partials:_expenses-summary.html.twig') }}
+    {{ include('@App/Admin/Client/Report/partials/_expenses-summary.html.twig') }}
 {% endif %}
 
 <div class="govuk-!-margin-top-6 govuk-!-margin-bottom-6">

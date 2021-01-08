@@ -44,7 +44,7 @@ class MoneyTransferController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-transfers", name="money_transfers")
-     * @Template("@App:Report/MoneyTransfer:start.html.twig")
+     * @Template("@App/Report/MoneyTransfer/start.html.twig")
      *
      * @param $reportId
      *
@@ -54,7 +54,7 @@ class MoneyTransferController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (!$report->enoughBankAccountForTransfers()) {
-            return $this->render('@App:Report/MoneyTransfer:error.html.twig', [
+            return $this->render('@App/Report/MoneyTransfer/error.html.twig', [
                 'error' => 'atLeastTwoBankAccounts',
                 'report' => $report,
             ]);
@@ -71,7 +71,7 @@ class MoneyTransferController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-transfers/exist", name="money_transfers_exist")
-     * @Template("@App:Report/MoneyTransfer:exist.html.twig")
+     * @Template("@App/Report/MoneyTransfer/exist.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -112,7 +112,7 @@ class MoneyTransferController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-transfers/step{step}/{transferId}", name="money_transfers_step", requirements={"step":"\d+"})
-     * @Template("@App:Report/MoneyTransfer:step.html.twig")
+     * @Template("@App/Report/MoneyTransfer/step.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -212,7 +212,7 @@ class MoneyTransferController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-transfers/add_another", name="money_transfers_add_another")
-     * @Template("@App:Report/MoneyTransfer:addAnother.html.twig")
+     * @Template("@App/Report/MoneyTransfer/addAnother.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -243,7 +243,7 @@ class MoneyTransferController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-transfers/summary", name="money_transfers_summary")
-     * @Template("@App:Report/MoneyTransfer:summary.html.twig")
+     * @Template("@App/Report/MoneyTransfer/summary.html.twig")
      *
      * @param $reportId
      *
@@ -263,7 +263,7 @@ class MoneyTransferController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-transfers/{transferId}/delete", name="money_transfers_delete")
-     * @Template("@App:Common:confirmDelete.html.twig")
+     * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @param $reportId
      * @param int $transferId

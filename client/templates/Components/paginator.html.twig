@@ -1,6 +1,6 @@
 {# generic paginator component. See example at http://rural-payments-styleguide.herokuapp.com/pagination/  #}
 {# Example of usage
-    include '@App:Components:paginator.html.twig' with {
+    include '@App/Components/paginator.html.twig' with {
     currentOffset: filters.offset,
     recordsPerPage: filters.limit,
     totalRecords: counts[filters.status ?: 'total'],

@@ -1,5 +1,5 @@
 {# @param report App\Entity\Report #}
-{% import '@App:Macros:macros.html.twig' as macros %}
+{% import '@App/Macros/macros.html.twig' as macros %}
 
 {% set translationDomain = "report-overview" %}
 {% trans_default_domain translationDomain %}
@@ -89,7 +89,7 @@
                     <ul>
 
                         {% if report.hasSection('decisions') %}
-                            {% include '@App:Org/ClientProfile:_subsection.html.twig' with {
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                                 transDomain: translationDomain,
                                 subSection: 'decisions',
                                 sectionId: 'decisions',
@@ -101,7 +101,7 @@
                         {% endif %}
 
                         {% if report.hasSection('contacts') %}
-                            {% include '@App:Org/ClientProfile:_subsection.html.twig' with {
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                                 transDomain: translationDomain,
                                 subSection: 'contacts',
                                 sectionId: 'contacts',
@@ -114,7 +114,7 @@
                         {% endif %}
 
                         {% if report.hasSection('visitsCare') %}
-                            {% include '@App:Org/ClientProfile:_subsection.html.twig' with {
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                                 transDomain: translationDomain,
                                 subSection: 'visits_care',
                                 sectionId: 'visitsCare',
@@ -126,7 +126,7 @@
                         {% endif %}
 
                         {% if report.hasSection('lifestyle') %}
-                            {% include '@App:Org/ClientProfile:_subsection.html.twig' with {
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                             transDomain: translationDomain,
                             subSection: 'lifestyle',
                             sectionId: 'lifestyle',
@@ -138,7 +138,7 @@
                         {%  endif %}
 
                         {% if report.hasSection('bankAccounts') %}
-                            {% include '@App:Org/ClientProfile:_subsection.html.twig' with {
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                             transDomain: translationDomain,
                             subSection: 'bank_accounts',
                             sectionId: 'bankAccounts',
@@ -150,7 +150,7 @@
                         {% endif %}
 
                         {% if report.hasSection('moneyIn') %}
-                            {% include '@App:Org/ClientProfile:_subsection.html.twig' with {
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                             transDomain: translationDomain,
                             subSection: 'money_in',
                             sectionId: 'moneyIn',
@@ -162,7 +162,7 @@
                         {% endif %}
 
                         {% if report.hasSection('moneyInShort') and report.hasSection('moneyOutShort') %}
-                            {% include '@App:Org/ClientProfile:_subsection.html.twig' with {
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                             transDomain: translationDomain,
                             subSection: 'money_in_short',
                             sectionId: 'moneyInShort',
@@ -174,7 +174,7 @@
                         {% endif %}
 
                         {% if report.hasSection('moneyTransfers') %}
-                            {% include '@App:Org/ClientProfile:_subsection.html.twig' with {
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                             transDomain: translationDomain,
                             subSection: 'money_transfers',
                             sectionId: 'moneyTransfers',
@@ -186,7 +186,7 @@
                         {% endif %}
 
                         {% if report.hasSection('moneyOut') %}
-                            {% include '@App:Org/ClientProfile:_subsection.html.twig' with {
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                             transDomain: translationDomain,
                             subSection: 'money_out',
                             sectionId: 'moneyOut',
@@ -198,7 +198,7 @@
                         {% endif %}
 
                         {% if report.hasSection('moneyOutShort') %}
-                            {% include '@App:Org/ClientProfile:_subsection.html.twig' with {
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                             transDomain: translationDomain,
                             subSection: 'money_out_short',
                             sectionId: 'moneyOutShort',
@@ -210,7 +210,7 @@
                         {% endif %}
 
                         {% if report.hasSection('documents') %}
-                            {% include '@App:Org/ClientProfile:_subsection.html.twig' with {
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                             transDomain: translationDomain,
                             subSection: 'documents',
                             sectionId: 'documents',
@@ -228,7 +228,7 @@
                     <ul>
 
                         {% if report.hasSection('gifts') %}
-                            {% include '@App:Org/ClientProfile:_subsection.html.twig' with {
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                             transDomain: translationDomain,
                             subSection: 'gifts',
                             sectionId: 'gifts',
@@ -240,7 +240,7 @@
                         {% endif %}
 
                         {% if report.hasSection('assets') %}
-                            {% include '@App:Org/ClientProfile:_subsection.html.twig' with {
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                             transDomain: translationDomain,
                             subSection: 'assets',
                             sectionId: 'assets',
@@ -252,7 +252,7 @@
                         {% endif %}
 
                         {% if report.hasSection('debts') %}
-                            {% include '@App:Org/ClientProfile:_subsection.html.twig' with {
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                             transDomain: translationDomain,
                             subSection: 'debts',
                             sectionId: 'debts',
@@ -264,7 +264,7 @@
                         {% endif %}
 
                         {% if report.hasSection('profCurrentFees') %}
-                            {% include '@App:Org/ClientProfile:_subsection.html.twig' with {
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                             transDomain: translationDomain,
                             subSection: 'prof_current_fees',
                             sectionId: 'profCurrentFees',
@@ -276,7 +276,7 @@
                         {% endif %}
 
                         {% if report.hasSection('profDeputyCosts') %}
-                            {% include '@App:Org/ClientProfile:_subsection.html.twig' with {
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                             transDomain: translationDomain,
                             subSection: 'prof_deputy_costs',
                             sectionId: 'profDeputyCosts',
@@ -289,7 +289,7 @@
                         {% endif %}
 
                         {% if report.hasSection('profDeputyCostsEstimate') %}
-                            {% include '@App:Org/ClientProfile:_subsection.html.twig' with {
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                             transDomain: translationDomain,
                             subSection: 'prof_deputy_costs_estimate',
                             sectionId: 'profDeputyCostsEstimate',
@@ -302,7 +302,7 @@
                         {% endif %}
 
                         {% if report.hasSection('balance') %}
-                            {% include '@App:Org/ClientProfile:_subsection.html.twig' with {
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                                 transDomain: translationDomain,
                                 subSection: 'balance',
                                 sectionId: 'balance',
@@ -315,7 +315,7 @@
                         {% endif %}
 
                         {% if report.hasSection('actions') %}
-                            {% include '@App:Org/ClientProfile:_subsection.html.twig' with {
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                             transDomain: translationDomain,
                             subSection: 'actions',
                             sectionId: 'actions',
@@ -327,7 +327,7 @@
                         {% endif %}
 
                         {% if report.hasSection('otherInfo') %}
-                            {% include '@App:Org/ClientProfile:_subsection.html.twig' with {
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                             transDomain: translationDomain,
                             subSection: 'other_info',
                             sectionId: 'otherInfo',

@@ -1,6 +1,6 @@
 <div class="section break-before">
     <h2 class="section-heading">Money in</h2>
-    {% include '@App:Report/Formatted:Accounts/_categories.html.twig' with {
+    {% include '@App/Report/Formatted/Accounts/_categories.html.twig' with {
     'type': 'in',
     'moneyType': 'moneyIn',
     'transactions': report.moneyTransactionsIn,
@@ -10,7 +10,7 @@
 
 <div class="section break-before">
     <h2 class="section-heading">Money out</h2>
-    {% include '@App:Report/Formatted:Accounts/_categories.html.twig' with {
+    {% include '@App/Report/Formatted/Accounts/_categories.html.twig' with {
     'type': 'out',
     'moneyType': 'moneyOut',
     'transactions': report.moneyTransactionsOut,

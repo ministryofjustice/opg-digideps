@@ -37,7 +37,7 @@ class DebtController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/debts", name="debts")
-     * @Template("@App:Report/Debt:start.html.twig")
+     * @Template("@App/Report/Debt/start.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -58,7 +58,7 @@ class DebtController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/debts/exist", name="debts_exist")
-     * @Template("@App:Report/Debt:exist.html.twig")
+     * @Template("@App/Report/Debt/exist.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -101,7 +101,7 @@ class DebtController extends AbstractController
      * List debts.
      *
      * @Route("/report/{reportId}/debts/edit", name="debts_edit")
-     * @Template("@App:Report/Debt:edit.html.twig")
+     * @Template("@App/Report/Debt/edit.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -145,7 +145,7 @@ class DebtController extends AbstractController
      * How debts are managed question.
      *
      * @Route("/report/{reportId}/debts/management", name="debts_management")
-     * @Template("@App:Report/Debt:management.html.twig")
+     * @Template("@App/Report/Debt/management.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -187,7 +187,7 @@ class DebtController extends AbstractController
      * List debts.
      *
      * @Route("/report/{reportId}/debts/summary", name="debts_summary")
-     * @Template("@App:Report/Debt:summary.html.twig")
+     * @Template("@App/Report/Debt/summary.html.twig")
      *
      * @param Request $request
      * @param $reportId

@@ -1,5 +1,5 @@
-{% from '@App:Admin/Client/Report:macros.html.twig' import checklist_radios %}
-{% from '@App:Macros:macros.html.twig' import details %}
+{% from '@App/Admin/Client/Report/macros.html.twig' import checklist_radios %}
+{% from '@App/Macros/macros.html.twig' import details %}
 
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
@@ -11,9 +11,9 @@
 
 {{ details({
     summaryText: (page ~ '.revealTitle.assetsSummary') | trans,
-    html: include('@App:Report/Asset:_list.html.twig', { hideEditLink: true })
+    html: include('@App/Report/Asset/_list.html.twig', { hideEditLink: true })
 }) }}
 
 {{ checklist_radios(form.debtsManaged) }}
 
-{{ include('@App:Admin/Client/Report/partials:_debts-summary.html.twig') }}
+{{ include('@App/Admin/Client/Report/partials/_debts-summary.html.twig') }}

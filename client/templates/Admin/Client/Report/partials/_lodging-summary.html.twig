@@ -1,4 +1,4 @@
-{% from '@App:Macros:macros.html.twig' import details %}
+{% from '@App/Macros/macros.html.twig' import details %}
 {% trans_default_domain 'admin-checklist' %}
 
 {% set translations = {
@@ -31,7 +31,7 @@
     {% if report.checklist.checklistInformation %}
         <h3 class="govuk-heading-m">{{ (page ~ '.form.furtherInformation.label') | trans }}</h3>
 
-        {{ include('@App:Admin/Client/Report/partials:_further-information-table.html.twig', {
+        {{ include('@App/Admin/Client/Report/partials/_further-information-table.html.twig', {
             information: report.checklist.checklistInformation
         }) }}
     {% endif %}

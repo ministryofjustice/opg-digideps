@@ -57,7 +57,7 @@ class ManageController extends AbstractController
 
         list($healthy, $services, $errors) = $this->servicesHealth($services);
 
-        $response = $this->render('@App:Manage:availability.html.twig', [
+        $response = $this->render('@App/Manage/availability.html.twig', [
             'services' => $services,
             'errors' => $errors,
             'environment' => $this->symfonyEnvironment,
@@ -102,7 +102,7 @@ class ManageController extends AbstractController
 
     /**
      * @Route("/elb", name="manage-elb", methods={"GET"})
-     * @Template("@App:Manage:elb.html.twig")
+     * @Template("@App/Manage/elb.html.twig")
      */
     public function elbAction()
     {

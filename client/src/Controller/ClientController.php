@@ -50,7 +50,7 @@ class ClientController extends AbstractController
 
     /**
      * @Route("/deputyship-details/your-client", name="client_show")
-     * @Template("@App:Client:show.html.twig")
+     * @Template("@App/Client/show.html.twig")
      */
     public function showAction(Redirector $redirector)
     {
@@ -72,7 +72,7 @@ class ClientController extends AbstractController
 
     /**
      * @Route("/deputyship-details/your-client/edit", name="client_edit")
-     * @Template("@App:Client:edit.html.twig")
+     * @Template("@App/Client/edit.html.twig")
      *
      * @param Request $request
      *
@@ -122,7 +122,7 @@ class ClientController extends AbstractController
 
     /**
      * @Route("/client/add", name="client_add")
-     * @Template("@App:Client:add.html.twig")
+     * @Template("@App/Client/add.html.twig")
      * @return array|RedirectResponse
      */
     public function addAction(Request $request, Redirector $redirector, TranslatorInterface $translator, LoggerInterface $logger)
