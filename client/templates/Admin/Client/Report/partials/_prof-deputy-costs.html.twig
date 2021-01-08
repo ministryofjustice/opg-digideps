@@ -1,5 +1,5 @@
-{% import 'App:Macros:macros.html.twig' as macros %}
-{% from 'App:Admin/Client/Report:macros.html.twig' import checklist_radios %}
+{% import '@App:Macros:macros.html.twig' as macros %}
+{% from '@App:Admin/Client/Report:macros.html.twig' import checklist_radios %}
 
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
@@ -15,7 +15,7 @@
     <dl class="govuk-summary-list">
         {{ macros.summaryListHeaderQA(hideEditLink) }}
 
-        {% include 'App:Report/ProfDeputyCosts:_payments_received_answers.html.twig' with {
+        {% include '@App:Report/ProfDeputyCosts:_payments_received_answers.html.twig' with {
             'report': report,
             'transDomain': "report-prof-deputy-costs",
             'hideEditLink' : hideEditLink
@@ -34,13 +34,13 @@
     <dl class="govuk-summary-list">
         {{ macros.summaryListHeaderQA(hideEditLink) }}
 
-        {% include 'App:Report/ProfDeputyCosts:_how_charged_answers.html.twig' with {
+        {% include '@App:Report/ProfDeputyCosts:_how_charged_answers.html.twig' with {
             'report': report,
             'transDomain': 'report-prof-deputy-costs',
             'hideEditLink' : true
         } %}
 
-        {% include 'App:Report/ProfDeputyCosts:_all_cost_total_answers.html.twig' with {
+        {% include '@App:Report/ProfDeputyCosts:_all_cost_total_answers.html.twig' with {
             'report': report,
             'submittedOtherCosts': actualOtherCosts,
             'transDomain': "report-prof-deputy-costs",
@@ -49,7 +49,7 @@
     </dl>
 
     <dl class="govuk-summary-list">
-        {% include 'App:Report/ProfDeputyCosts:_breakdown_costs_answers.html.twig' with {
+        {% include '@App:Report/ProfDeputyCosts:_breakdown_costs_answers.html.twig' with {
             'report': report,
             'submittedOtherCosts': actualOtherCosts,
             'transDomain': "report-prof-deputy-costs",
@@ -58,14 +58,14 @@
     </dl>
 
     <dl class="govuk-summary-list">
-        {% include 'App:Report/ProfDeputyCosts:_total_taken_from_client_answers.html.twig' with {
+        {% include '@App:Report/ProfDeputyCosts:_total_taken_from_client_answers.html.twig' with {
             'report': report,
             'submittedOtherCosts': actualOtherCosts,
             'transDomain': "report-prof-deputy-costs",
             'hideEditLink' : true
         } %}
 
-        {% include 'App:Report/ProfDeputyCosts:_total_final_answers.html.twig' with {
+        {% include '@App:Report/ProfDeputyCosts:_total_final_answers.html.twig' with {
             'report': report,
             'submittedOtherCosts': actualOtherCosts,
             'transDomain': "report-prof-deputy-costs",
@@ -86,7 +86,7 @@
     <dl class="govuk-summary-list">
         {{ macros.summaryListHeaderQA(hideEditLink) }}
 
-        {% include 'App:Report/ProfDeputyCosts:_scco_more_details_answer.html.twig' with {
+        {% include '@App:Report/ProfDeputyCosts:_scco_more_details_answer.html.twig' with {
             'report': report,
             'submittedOtherCosts': actualOtherCosts,
             'transDomain': "report-prof-deputy-costs",

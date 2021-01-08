@@ -51,7 +51,7 @@ class IncomeBenefitController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/income-benefits", name="ndr_income_benefits")
-     * @Template("App:Ndr/IncomeBenefit:start.html.twig")
+     * @Template("@App:Ndr/IncomeBenefit:start.html.twig")
      *
      * @param $ndrId
      *
@@ -71,7 +71,7 @@ class IncomeBenefitController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/income-benefits/step/{step}", name="ndr_income_benefits_step")
-     * @Template("App:Ndr/IncomeBenefit:step.html.twig")
+     * @Template("@App:Ndr/IncomeBenefit:step.html.twig")
      */
     public function stepAction(Request $request, $ndrId, $step, TranslatorInterface $translator)
     {
@@ -132,7 +132,7 @@ class IncomeBenefitController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/income-benefits/summary", name="ndr_income_benefits_summary")
-     * @Template("App:Ndr/IncomeBenefit:summary.html.twig")
+     * @Template("@App:Ndr/IncomeBenefit:summary.html.twig")
      */
     public function summaryAction(Request $request, $ndrId)
     {

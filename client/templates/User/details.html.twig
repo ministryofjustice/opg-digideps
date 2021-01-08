@@ -1,4 +1,4 @@
-{% extends 'App:Layouts:application.html.twig' %}
+{% extends '@App:Layouts:application.html.twig' %}
 
 {% trans_default_domain "settings" %}
 {% set translationDomain = "settings" %}
@@ -16,7 +16,7 @@
 
     {{ form_start(form, {attr: {class: 'behat-region-user-details', novalidate: 'novalidate' }}) }}
 
-    {% include 'App:User:_form_fields.html.twig'  with {
+    {% include '@App:User:_form_fields.html.twig'  with {
         'translationDomain': translationDomain,
         'user': user,
         'client_validated': client_validated

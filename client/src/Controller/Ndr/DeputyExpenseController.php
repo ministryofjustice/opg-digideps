@@ -42,7 +42,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/deputy-expenses", name="ndr_deputy_expenses")
-     * @Template("App:Ndr/DeputyExpense:start.html.twig")
+     * @Template("@App:Ndr/DeputyExpense:start.html.twig")
      *
      * @param $ndrId
      *
@@ -63,7 +63,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/deputy-expenses/exist", name="ndr_deputy_expenses_exist")
-     * @Template("App:Ndr/DeputyExpense:exist.html.twig")
+     * @Template("@App:Ndr/DeputyExpense:exist.html.twig")
      */
     public function existAction(Request $request, $ndrId)
     {
@@ -101,7 +101,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/deputy-expenses/add", name="ndr_deputy_expenses_add")
-     * @Template("App:Ndr/DeputyExpense:add.html.twig")
+     * @Template("@App:Ndr/DeputyExpense:add.html.twig")
      *
      * @param Request $request
      * @param $ndrId
@@ -145,7 +145,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/deputy-expenses/add_another", name="ndr_deputy_expenses_add_another")
-     * @Template("App:Ndr/DeputyExpense:addAnother.html.twig")
+     * @Template("@App:Ndr/DeputyExpense:addAnother.html.twig")
      */
     public function addAnotherAction(Request $request, $ndrId)
     {
@@ -171,7 +171,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/deputy-expenses/edit/{expenseId}", name="ndr_deputy_expenses_edit")
-     * @Template("App:Ndr/DeputyExpense:edit.html.twig")
+     * @Template("@App:Ndr/DeputyExpense:edit.html.twig")
      */
     public function editAction(Request $request, $ndrId, $expenseId)
     {
@@ -199,7 +199,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/deputy-expenses/summary", name="ndr_deputy_expenses_summary")
-     * @Template("App:Ndr/DeputyExpense:summary.html.twig")
+     * @Template("@App:Ndr/DeputyExpense:summary.html.twig")
      *
      * @param $ndrId
      *
@@ -219,7 +219,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/deputy-expenses/{expenseId}/delete", name="ndr_deputy_expenses_delete")
-     * @Template("App:Common:confirmDelete.html.twig")
+     * @Template("@App:Common:confirmDelete.html.twig")
      *
      * @param int $id
      *

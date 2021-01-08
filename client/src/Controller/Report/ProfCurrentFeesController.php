@@ -43,7 +43,7 @@ class ProfCurrentFeesController extends AbstractController
 
     /**
      * @Route("", name="prof_current_fees")
-     * @Template("App:Report/ProfCurrentFees:start.html.twig")
+     * @Template("@App:Report/ProfCurrentFees:start.html.twig")
      *
      * @param $reportId
      *
@@ -63,7 +63,7 @@ class ProfCurrentFeesController extends AbstractController
 
     /**
      * @Route("/exist", name="prof_current_fees_exist")
-     * @Template("App:Report/ProfCurrentFees:exist.html.twig")
+     * @Template("@App:Report/ProfCurrentFees:exist.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -102,7 +102,7 @@ class ProfCurrentFeesController extends AbstractController
 
     /**
      * @Route("/step/{step}/{feeId}", name="current_service_fee_step", requirements={"step":"\d+"})
-     * @Template("App:Report/ProfCurrentFees:step.html.twig")
+     * @Template("@App:Report/ProfCurrentFees:step.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -232,7 +232,7 @@ class ProfCurrentFeesController extends AbstractController
 
     /**
      * @Route("/previous-estimates/fee/{feeId}", name="previous_estimates")
-     * @Template("App:Report/ProfCurrentFees:previousEstimates.html.twig")
+     * @Template("@App:Report/ProfCurrentFees:previousEstimates.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -274,7 +274,7 @@ class ProfCurrentFeesController extends AbstractController
 
     /**
      * @Route("/summary", name="prof_service_fees_summary")
-     * @Template("App:Report/ProfCurrentFees:summary.html.twig")
+     * @Template("@App:Report/ProfCurrentFees:summary.html.twig")
      *
      * @param $reportId
      *

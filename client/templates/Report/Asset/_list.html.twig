@@ -1,4 +1,4 @@
-{% import 'App:Macros:macros.html.twig' as macros %}
+{% import '@App:Macros:macros.html.twig' as macros %}
 
 {% set translationDomain = "report-assets" %}
 {% trans_default_domain translationDomain %}
@@ -46,9 +46,9 @@
 {# display assets in groups #}
 {% for groupId, assetsInGroup in report.assetsGroupedByTitle %}
     {% if (groupId | lower) == 'property' %}
-        {% include 'App:Report/Asset/Property:_list_item.html.twig' %}
+        {% include '@App:Report/Asset/Property:_list_item.html.twig' %}
     {% else %}
-        {% include 'App:Report/Asset/Other:_list_item.html.twig' %}
+        {% include '@App:Report/Asset/Other:_list_item.html.twig' %}
     {% endif %}
 {% endfor %}
 

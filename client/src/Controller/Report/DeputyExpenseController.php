@@ -37,7 +37,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/deputy-expenses", name="deputy_expenses")
-     * @Template("App:Report/DeputyExpense:start.html.twig")
+     * @Template("@App:Report/DeputyExpense:start.html.twig")
      *
      * @param $reportId
      *
@@ -58,7 +58,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/deputy-expenses/exist", name="deputy_expenses_exist")
-     * @Template("App:Report/DeputyExpense:exist.html.twig")
+     * @Template("@App:Report/DeputyExpense:exist.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -101,7 +101,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/deputy-expenses/add", name="deputy_expenses_add")
-     * @Template("App:Report/DeputyExpense:add.html.twig")
+     * @Template("@App:Report/DeputyExpense:add.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -152,7 +152,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/deputy-expenses/add_another", name="deputy_expenses_add_another")
-     * @Template("App:Report/DeputyExpense:addAnother.html.twig")
+     * @Template("@App:Report/DeputyExpense:addAnother.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -183,7 +183,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/deputy-expenses/edit/{expenseId}", name="deputy_expenses_edit")
-     * @Template("App:Report/DeputyExpense:edit.html.twig")
+     * @Template("@App:Report/DeputyExpense:edit.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -243,7 +243,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/deputy-expenses/summary", name="deputy_expenses_summary")
-     * @Template("App:Report/DeputyExpense:summary.html.twig")
+     * @Template("@App:Report/DeputyExpense:summary.html.twig")
      *
      * @param $reportId
      *
@@ -263,7 +263,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/deputy-expenses/{expenseId}/delete", name="deputy_expenses_delete")
-     * @Template("App:Common:confirmDelete.html.twig")
+     * @Template("@App:Common:confirmDelete.html.twig")
      *
      * @param Request $request
      * @param $reportId

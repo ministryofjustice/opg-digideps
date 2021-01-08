@@ -48,7 +48,7 @@ class VisitsCareController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/visits-care", name="ndr_visits_care")
-     * @Template("App:Ndr/VisitsCare:start.html.twig")
+     * @Template("@App:Ndr/VisitsCare:start.html.twig")
      *
      * @param Request $request
      * @param $ndrId
@@ -69,7 +69,7 @@ class VisitsCareController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/visits-care/step/{step}", name="ndr_visits_care_step")
-     * @Template("App:Ndr/VisitsCare:step.html.twig")
+     * @Template("@App:Ndr/VisitsCare:step.html.twig")
      *
      * @param Request $request
      * @param $ndrId
@@ -141,7 +141,7 @@ class VisitsCareController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/visits-care/summary", name="ndr_visits_care_summary")
-     * @Template("App:Ndr/VisitsCare:summary.html.twig")
+     * @Template("@App:Ndr/VisitsCare:summary.html.twig")
      *
      * @param Request $request
      * @param $ndrId

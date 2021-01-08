@@ -48,7 +48,7 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("", name="prof_deputy_costs")
-     * @Template("App:Report/ProfDeputyCosts:start.html.twig")
+     * @Template("@App:Report/ProfDeputyCosts:start.html.twig")
      *
      * @param $reportId
      * @param ProfCostsSubSectionRouteResolver $routeResolver
@@ -71,7 +71,7 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("/how-charged", name="prof_deputy_costs_how_charged")
-     * @Template("App:Report/ProfDeputyCosts:howCharged.html.twig")
+     * @Template("@App:Report/ProfDeputyCosts:howCharged.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -111,7 +111,7 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("/previous-received-exists", name="prof_deputy_costs_previous_received_exists")
-     * @Template("App:Report/ProfDeputyCosts:previousReceivedExists.html.twig")
+     * @Template("@App:Report/ProfDeputyCosts:previousReceivedExists.html.twig")
      * @param Request $request
      * @param $reportId
      * @return array|RedirectResponse
@@ -164,7 +164,7 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("/previous-received/{previousReceivedId}", name="prof_deputy_costs_previous_received")
-     * @Template("App:Report/ProfDeputyCosts:previousReceived.html.twig")
+     * @Template("@App:Report/ProfDeputyCosts:previousReceived.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -220,7 +220,7 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("/previous-received/{previousReceivedId}/delete", name="prof_deputy_costs_previous_received_delete")
-     * @Template("App:Common:confirmDelete.html.twig")
+     * @Template("@App:Common:confirmDelete.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -264,7 +264,7 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("/interim-exists", name="prof_deputy_costs_inline_interim_19b_exists")
-     * @Template("App:Report/ProfDeputyCosts:interimExists.html.twig")
+     * @Template("@App:Report/ProfDeputyCosts:interimExists.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -319,7 +319,7 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("/interim", name="prof_deputy_costs_inline_interim_19b")
-     * @Template("App:Report/ProfDeputyCosts:interim.html.twig")
+     * @Template("@App:Report/ProfDeputyCosts:interim.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -360,7 +360,7 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("/costs-received", name="prof_deputy_costs_received")
-     * @Template("App:Report/ProfDeputyCosts:fixedCost.html.twig")
+     * @Template("@App:Report/ProfDeputyCosts:fixedCost.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -401,7 +401,7 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("/amount-scco", name="prof_deputy_costs_amount_scco")
-     * @Template("App:Report/ProfDeputyCosts:amountToScco.html.twig")
+     * @Template("@App:Report/ProfDeputyCosts:amountToScco.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -439,7 +439,7 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("/breakdown", name="prof_deputy_costs_breakdown")
-     * @Template("App:Report/ProfDeputyCosts:breakdown.html.twig")
+     * @Template("@App:Report/ProfDeputyCosts:breakdown.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -512,7 +512,7 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("/summary", name="prof_deputy_costs_summary")
-     * @Template("App:Report/ProfDeputyCosts:summary.html.twig")
+     * @Template("@App:Report/ProfDeputyCosts:summary.html.twig")
      *
      * @param $reportId
      *

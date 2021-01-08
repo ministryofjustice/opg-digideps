@@ -1,26 +1,26 @@
-{% from 'App:Macros:macros.html.twig' import details %}
+{% from '@App:Macros:macros.html.twig' import details %}
 {% trans_default_domain 'admin-checklist' %}
 
 {% if report.hasSection('deputyExpenses') %}
     {{ details({
         summaryText: (page ~ '.revealTitle.deputyExpensesSummary') | trans,
-        html: include('App:Report/DeputyExpense:_list.html.twig', { hideEditLink: true }),
+        html: include('@App:Report/DeputyExpense:_list.html.twig', { hideEditLink: true }),
     }) }}
 {% elseif report.hasSection('paDeputyExpenses') %}
     {% set contents %}
-        {% include 'App:Report/PaFeeExpense:_yn_questions.html.twig' with {
+        {% include '@App:Report/PaFeeExpense:_yn_questions.html.twig' with {
             'report': report,
             'transDomain': translationDomain,
             'hideEditLink' : true
         } %}
 
-        {% include 'App:Report/PaFeeExpense:_fee_list.html.twig' with {
+        {% include '@App:Report/PaFeeExpense:_fee_list.html.twig' with {
             'report': report,
             'transDomain': translationDomain,
             'hideEditLink': true
         } %}
 
-        {% include 'App:Report/PaFeeExpense:_other_list.html.twig' with {
+        {% include '@App:Report/PaFeeExpense:_other_list.html.twig' with {
             'report': report,
             'transDomain': translationDomain,
             'hideEditLink': true

@@ -124,7 +124,7 @@
     <div class="govuk-width-container opg-main-wrapper {% if env == 'admin' %}opg-width-container--wider{% endif %}">
         {% if env == 'front' %}
             {% block detailsBanner %}
-                {% include 'App:Org/ClientProfile:_detailsBanner.html.twig' with {
+                {% include '@App:Org/ClientProfile:_detailsBanner.html.twig' with {
                     'report': report is defined ? report : null
                 } %}
             {% endblock %}
@@ -140,7 +140,7 @@
 
         {% if env == 'front' %}
             {% block contactDetails %}
-                {% include 'App:Layouts:_contact_details_dynamic.html.twig' %}
+                {% include '@App:Layouts:_contact_details_dynamic.html.twig' %}
             {% endblock %}
         {% endif %}
     </div>

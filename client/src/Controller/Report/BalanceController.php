@@ -52,7 +52,7 @@ class BalanceController extends AbstractController
      * @Route("/report/{reportId}/balance", name="balance")
      *
      * @param $reportId
-     * @Template("App:Report/Balance:balance.html.twig")
+     * @Template("@App:Report/Balance:balance.html.twig")
      *
      * @return array|RedirectResponse
      */

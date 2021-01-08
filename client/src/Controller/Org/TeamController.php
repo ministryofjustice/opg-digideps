@@ -40,7 +40,7 @@ class TeamController extends AbstractController
 
     /**
      * @Route("", name="org_team")
-     * @Template("App:Org/Team:list.html.twig")
+     * @Template("@App:Org/Team:list.html.twig")
      */
     public function listAction(Request $request)
     {
@@ -53,7 +53,7 @@ class TeamController extends AbstractController
 
     /**
      * @Route("/add", name="add_team_member")
-     * @Template("App:Org/Team:add.html.twig")
+     * @Template("@App:Org/Team:add.html.twig")
      */
     public function addAction(Request $request)
     {
@@ -131,7 +131,7 @@ class TeamController extends AbstractController
 
     /**
      * @Route("/edit/{id}", name="edit_team_member")
-     * @Template("App:Org/Team:edit.html.twig")
+     * @Template("@App:Org/Team:edit.html.twig")
      */
     public function editAction(Request $request, $id)
     {
@@ -234,7 +234,7 @@ class TeamController extends AbstractController
      * Removes a user, adds a flash message and redirects to page. Asks for confirmation first.
      *
      * @Route("/delete-user/{id}", name="delete_team_member")
-     * @Template("App:Common:confirmDelete.html.twig")
+     * @Template("@App:Common:confirmDelete.html.twig")
      */
     public function deleteConfirmAction(Request $request, $id, $confirmed = false)
     {

@@ -59,7 +59,7 @@ class IndexController extends AbstractController
     /**
      * @Route("/", name="admin_homepage")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Template("App:Admin/Index:index.html.twig")
+     * @Template("@App:Admin/Index:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -92,7 +92,7 @@ class IndexController extends AbstractController
     /**
      * @Route("/user-add", name="admin_add_user")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Template("App:Admin/Index:addUser.html.twig")
+     * @Template("@App:Admin/Index:addUser.html.twig")
      *
      * @param Request $request
      *
@@ -131,7 +131,7 @@ class IndexController extends AbstractController
     /**
      * @Route("/user/{id}", name="admin_user_view", requirements={"id":"\d+"})
      * @Security("has_role('ROLE_ADMIN')")
-     * @Template("App:Admin/Index:viewUser.html.twig")
+     * @Template("@App:Admin/Index:viewUser.html.twig")
      *
      * @param $id
      * @return User[]|Response
@@ -148,7 +148,7 @@ class IndexController extends AbstractController
     /**
      * @Route("/edit-user", name="admin_editUser", methods={"GET", "POST"})
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Template("App:Admin/Index:editUser.html.twig")
+     * @Template("@App:Admin/Index:editUser.html.twig")
      *
      * @param Request $request
      * @return array|Response
@@ -166,7 +166,7 @@ class IndexController extends AbstractController
         }
 
         if ($user->getRoleName() == EntityDir\User::ROLE_ADMIN && !$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
-            return $this->render('App:Admin/Index:error.html.twig', [
+            return $this->render('@App:Admin/Index:error.html.twig', [
                 'error' => 'Non-admin cannot edit admin users',
             ]);
         }
@@ -233,7 +233,7 @@ class IndexController extends AbstractController
      */
     private function renderNotFound(): Response
     {
-        return $this->render('App:Admin/Index:error.html.twig', [
+        return $this->render('@App:Admin/Index:error.html.twig', [
             'error' => 'User not found',
         ]);
     }
@@ -269,7 +269,7 @@ class IndexController extends AbstractController
     /**
      * @Route("/delete-confirm/{id}", name="admin_delete_confirm", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Template("App:Admin/Index:deleteConfirm.html.twig")
+     * @Template("@App:Admin/Index:deleteConfirm.html.twig")
      *
      * @param int $id
      *
@@ -314,7 +314,7 @@ class IndexController extends AbstractController
     /**
      * @Route("/upload", name="admin_upload")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Template("App:Admin/Index:upload.html.twig")
+     * @Template("@App:Admin/Index:upload.html.twig")
      */
     public function uploadAction(Request $request, RouterInterface $router)
     {
@@ -348,7 +348,7 @@ class IndexController extends AbstractController
     /**
      * @Route("/casrec-upload", name="casrec_upload")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Template("App:Admin/Index:uploadUsers.html.twig")
+     * @Template("@App:Admin/Index:uploadUsers.html.twig")
      */
     public function uploadUsersAction(Request $request, ClientInterface $redisClient)
     {
@@ -420,7 +420,7 @@ class IndexController extends AbstractController
     /**
      * @Route("/casrec-mld-upgrade", name="casrec_mld_upgrade")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Template("App:Admin/Index:upgradeMld.html.twig")
+     * @Template("@App:Admin/Index:upgradeMld.html.twig")
      */
     public function upgradeMldAction(Request $request)
     {
@@ -471,7 +471,7 @@ class IndexController extends AbstractController
     /**
      * @Route("/org-csv-upload", name="admin_org_upload")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Template("App:Admin/Index:uploadOrgUsers.html.twig")
+     * @Template("@App:Admin/Index:uploadOrgUsers.html.twig")
      */
     public function uploadOrgUsersAction(Request $request)
     {

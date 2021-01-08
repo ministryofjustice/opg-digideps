@@ -40,7 +40,7 @@ class StatsController extends AbstractController
     /**
      * @Route("", name="admin_stats")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Template("App:Admin/Stats:stats.html.twig")
+     * @Template("@App:Admin/Stats:stats.html.twig")
      *
      * @param Request $request
      * @param ReportSubmissionSummaryMapper $mapper
@@ -72,7 +72,7 @@ class StatsController extends AbstractController
     /**
      * @Route("/satisfaction", name="admin_satisfaction")
      * @Security("has_role('ROLE_SUPER_ADMIN')")
-     * @Template("App:Admin/Stats:satisfaction.html.twig")
+     * @Template("@App:Admin/Stats:satisfaction.html.twig")
      * @param Request $request
      * @param ReportSatisfactionSummaryMapper $mapper
      * @return array|Response
@@ -127,7 +127,7 @@ class StatsController extends AbstractController
     /**
      * @Route("/metrics", name="admin_metrics")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Template("App:Admin/Stats:metrics.html.twig")
+     * @Template("@App:Admin/Stats:metrics.html.twig")
      * @param Request $request
      * @return array|Response
      */

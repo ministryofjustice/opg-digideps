@@ -9,7 +9,7 @@
     <div class="category box box-white">
         <table class="labelvalue money">
             {% for transaction in transactions %}
-                {% include 'App:Report/Formatted:Accounts/_transaction.html.twig' with {
+                {% include '@App:Report/Formatted:Accounts/_transaction.html.twig' with {
                     transaction: transaction
                 } %}
             {% endfor %}

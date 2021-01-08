@@ -1,6 +1,6 @@
-{% extends 'App:Layouts:application.html.twig'%}
+{% extends '@App:Layouts:application.html.twig'%}
 
-{% import 'App:Macros:macros.html.twig' as macros %}
+{% import '@App:Macros:macros.html.twig' as macros %}
 
 {% set translationDomain = "ndr-deputy-expenses" %}
 {% trans_default_domain translationDomain %}
@@ -33,7 +33,7 @@
     {{ macros.startSectionButton(path('ndr_deputy_expenses_exist', { 'ndrId': ndr.id}), 'startPage.startButton' | trans ) }}
 
     {# Pagination #}
-    {% include 'App:Report:_nextprevious.html.twig' with {
+    {% include '@App:Report:_nextprevious.html.twig' with {
         'report': ndr,
         'sectionId': 'deputyExpenses',
     } %}

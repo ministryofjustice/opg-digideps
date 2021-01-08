@@ -40,7 +40,7 @@ class FeedbackController extends AbstractController
 
     /**
      * @Route("/feedback", name="feedback")
-     * @Template("App:Feedback:index.html.twig")
+     * @Template("@App:Feedback:index.html.twig")
      * @param Request $request
      * @return array|RedirectResponse
      */

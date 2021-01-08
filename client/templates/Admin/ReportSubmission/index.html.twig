@@ -1,4 +1,4 @@
-{% extends 'App:Layouts:application.html.twig' %}
+{% extends '@App:Layouts:application.html.twig' %}
 
 {% trans_default_domain "admin-documents" %}
 {% set transOptions = {} %}
@@ -193,14 +193,14 @@
 
                     <tr id="docs-table-{{ reportSubmission.id }}" class="behat-region-report-submission-documents-{{ loop.index }}">
                         <td colspan="7">
-                            {{ include('App:Admin/ReportSubmission:_document-sync-table.html.twig', { reportSubmission: reportSubmission, documents: reportSubmission.documents }) }}
+                            {{ include('@App:Admin/ReportSubmission:_document-sync-table.html.twig', { reportSubmission: reportSubmission, documents: reportSubmission.documents }) }}
                         </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
         </form>
-        {% include 'App:Components:paginator.html.twig' with {
+        {% include '@App:Components:paginator.html.twig' with {
             currentOffset: filters.offset,
             recordsPerPage: filters.limit,
             totalRecords: counts[filters.status ?: 'total'],

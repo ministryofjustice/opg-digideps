@@ -1,4 +1,4 @@
-{% import 'App:Macros:macros-review.html.twig' as macros %}
+{% import '@App:Macros:macros-review.html.twig' as macros %}
 
 {# always true when sent as PDF at submittion time #}
 {% set readyToBalance = report.status.balanceState['state'] != 'not-started' %}
@@ -26,9 +26,9 @@
     {% if report.hasSection('moneyIn') %}
         {% if (report.bankAccounts | length) > 0 %}
             {% if report.totalsMatch %}
-                {% include 'App:Report/Formatted:Accounts/_good.html.twig' %}
+                {% include '@App:Report/Formatted:Accounts/_good.html.twig' %}
             {% else %}
-                {% include 'App:Report/Formatted:Accounts/_bad.html.twig' with {
+                {% include '@App:Report/Formatted:Accounts/_bad.html.twig' with {
                     'showReason': false
                 } %}
             {% endif %}

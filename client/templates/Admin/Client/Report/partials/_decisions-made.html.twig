@@ -1,5 +1,5 @@
-{% from 'App:Admin/Client/Report:macros.html.twig' import checklist_radios %}
-{% from 'App:Macros:macros.html.twig' import details %}
+{% from '@App:Admin/Client/Report:macros.html.twig' import checklist_radios %}
+{% from '@App:Macros:macros.html.twig' import details %}
 
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
@@ -11,5 +11,5 @@
 
 {{ details({
     summaryText: (page ~ '.revealTitle.decisionsSummary') | trans,
-    html: include('App:Report/Decision:_list.html.twig', { hideEditLink: true })
+    html: include('@App:Report/Decision:_list.html.twig', { hideEditLink: true })
 }) }}

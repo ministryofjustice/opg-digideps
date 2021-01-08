@@ -48,7 +48,7 @@ class MoneyInController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in", name="money_in")
-     * @Template("App:Report/MoneyIn:start.html.twig")
+     * @Template("@App:Report/MoneyIn:start.html.twig")
      *
      * @param $reportId
      *
@@ -68,7 +68,7 @@ class MoneyInController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in/step{step}/{transactionId}", name="money_in_step", requirements={"step":"\d+"})
-     * @Template("App:Report/MoneyIn:step.html.twig")
+     * @Template("@App:Report/MoneyIn:step.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -179,7 +179,7 @@ class MoneyInController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in/add_another", name="money_in_add_another")
-     * @Template("App:Report/MoneyIn:addAnother.html.twig")
+     * @Template("@App:Report/MoneyIn:addAnother.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -210,7 +210,7 @@ class MoneyInController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in/summary", name="money_in_summary")
-     * @Template("App:Report/MoneyIn:summary.html.twig")
+     * @Template("@App:Report/MoneyIn:summary.html.twig")
      *
      * @param $reportId
      *
@@ -230,7 +230,7 @@ class MoneyInController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in/{transactionId}/delete", name="money_in_delete")
-     * @Template("App:Common:confirmDelete.html.twig")
+     * @Template("@App:Common:confirmDelete.html.twig")
      *
      * @param Request $request
      * @param $reportId

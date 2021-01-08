@@ -43,7 +43,7 @@ class VisitsCareController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/visits-care", name="visits_care")
-     * @Template("App:Report/VisitsCare:start.html.twig")
+     * @Template("@App:Report/VisitsCare:start.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -64,7 +64,7 @@ class VisitsCareController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/visits-care/step/{step}", name="visits_care_step")
-     * @Template("App:Report/VisitsCare:step.html.twig")
+     * @Template("@App:Report/VisitsCare:step.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -136,7 +136,7 @@ class VisitsCareController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/visits-care/summary", name="visits_care_summary")
-     * @Template("App:Report/VisitsCare:summary.html.twig")
+     * @Template("@App:Report/VisitsCare:summary.html.twig")
      *
      * @param Request $request
      * @param $reportId

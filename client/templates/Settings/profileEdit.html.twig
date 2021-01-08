@@ -1,6 +1,6 @@
-{% extends 'App:Layouts:application.html.twig' %}
+{% extends '@App:Layouts:application.html.twig' %}
 
-{% import 'App:Macros:macros.html.twig' as macros %}
+{% import '@App:Macros:macros.html.twig' as macros %}
 
 {% set translationDomain = "settings" %}
 {% trans_default_domain translationDomain %}
@@ -15,11 +15,11 @@
 {% block pageContent %}
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {% include 'App:User:_form_fields.html.twig' %}
+    {% include '@App:User:_form_fields.html.twig' %}
 
     {{ form_submit(form.save,'form.editYourDetails.controls.save', {'buttonClass': 'behat-link-save'}) }}
 
-    {% include 'App:Components/Link:_link-button.html.twig' with {
+    {% include '@App:Components/Link:_link-button.html.twig' with {
     transDomain: translationDomain,
     linkButtonLabel: 'form.editYourDetails.controls.cancel.label',
     linkHref: path(app.user.isDeputyOrg() ? 'org_profile_show' : 'user_show')

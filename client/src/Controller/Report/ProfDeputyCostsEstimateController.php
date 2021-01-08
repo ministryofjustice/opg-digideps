@@ -46,7 +46,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
 
     /**
      * @Route("", name="prof_deputy_costs_estimate")
-     * @Template("App:Report/ProfDeputyCostsEstimate:start.html.twig")
+     * @Template("@App:Report/ProfDeputyCostsEstimate:start.html.twig")
      *
      * @param $reportId
      * @param ProfCostsEstimateSubSectionRouteResolver $routeResolver
@@ -69,7 +69,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
 
     /**
      * @Route("/how-charged", name="prof_deputy_costs_estimate_how_charged")
-     * @Template("App:Report/ProfDeputyCostsEstimate:howCharged.html.twig")
+     * @Template("@App:Report/ProfDeputyCostsEstimate:howCharged.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -107,7 +107,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
 
     /**
      * @Route("/breakdown", name="prof_deputy_costs_estimate_breakdown")
-     * @Template("App:Report/ProfDeputyCostsEstimate:breakdown.html.twig")
+     * @Template("@App:Report/ProfDeputyCostsEstimate:breakdown.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -151,7 +151,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
 
     /**
      * @Route("/more-info", name="prof_deputy_costs_estimate_more_info")
-     * @Template("App:Report/ProfDeputyCostsEstimate:moreInfo.html.twig")
+     * @Template("@App:Report/ProfDeputyCostsEstimate:moreInfo.html.twig")
      * @param Request $request
      * @param $reportId
      * @return array|RedirectResponse
@@ -183,7 +183,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
 
     /**
      * @Route("/summary", name="prof_deputy_costs_estimate_summary")
-     * @Template("App:Report/ProfDeputyCostsEstimate:summary.html.twig")
+     * @Template("@App:Report/ProfDeputyCostsEstimate:summary.html.twig")
      *
      * @param $reportId
      *

@@ -1,6 +1,6 @@
-{% extends 'App:Layouts:application.html.twig' %}
+{% extends '@App:Layouts:application.html.twig' %}
 
-{% import 'App:Macros:macros.html.twig' as macros %}
+{% import '@App:Macros:macros.html.twig' as macros %}
 
 {% set translationDomain = "report-declaration" %}
 {% trans_default_domain translationDomain %}
@@ -38,7 +38,7 @@
 
 {% block pageContent %}
 
-    {% include 'App:Report/Report:_contact_details.html.twig' with {
+    {% include '@App:Report/Report:_contact_details.html.twig' with {
         'contactDetails': contactDetails,
         'transDomain': translationDomain
     } %}

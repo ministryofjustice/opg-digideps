@@ -1,6 +1,6 @@
-{% extends 'App:Layouts:application.html.twig' %}
+{% extends '@App:Layouts:application.html.twig' %}
 
-{% import 'App:Macros:macros.html.twig' as macros %}
+{% import '@App:Macros:macros.html.twig' as macros %}
 
 {% set translationDomain = "report-documents" %}
 {% set page = "attachPage" %}
@@ -61,13 +61,13 @@
     {{ form_end(form) }}
 
     {% if report.isSubmitted %}
-        {% include 'App:Report/Document:_list_submitted.html.twig'  with {
+        {% include '@App:Report/Document:_list_submitted.html.twig'  with {
         'documents': report.submittedDocuments,
         'translationDomain': translationDomain,
         'page' : page,
         } %}
     {% elseif report.documents | length > 0 %}
-        {% include 'App:Report/Document:_list.html.twig'  with {
+        {% include '@App:Report/Document:_list.html.twig'  with {
         'translationDomain': translationDomain,
         'page' : page
         } %}

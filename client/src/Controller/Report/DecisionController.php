@@ -38,7 +38,7 @@ class DecisionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/decisions", name="decisions")
-     * @Template("App:Report/Decision:start.html.twig")
+     * @Template("@App:Report/Decision:start.html.twig")
      *
      * @param $reportId
      *
@@ -59,7 +59,7 @@ class DecisionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/decisions/mental-capacity", name="decisions_mental_capacity")
-     * @Template("App:Report/Decision:mentalCapacity.html.twig")
+     * @Template("@App:Report/Decision:mentalCapacity.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -101,7 +101,7 @@ class DecisionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/decisions/mental-assessment", name="decisions_mental_assessment")
-     * @Template("App:Report/Decision:mentalAssessment.html.twig")
+     * @Template("@App:Report/Decision:mentalAssessment.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -144,7 +144,7 @@ class DecisionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/decisions/exist", name="decisions_exist")
-     * @Template("App:Report/Decision:exist.html.twig")
+     * @Template("@App:Report/Decision:exist.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -184,7 +184,7 @@ class DecisionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/decisions/add", name="decisions_add")
-     * @Template("App:Report/Decision:add.html.twig")
+     * @Template("@App:Report/Decision:add.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -229,7 +229,7 @@ class DecisionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/decisions/add_another", name="decisions_add_another")
-     * @Template("App:Report/Decision:addAnother.html.twig")
+     * @Template("@App:Report/Decision:addAnother.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -260,7 +260,7 @@ class DecisionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/decisions/edit/{decisionId}", name="decisions_edit")
-     * @Template("App:Report/Decision:edit.html.twig")
+     * @Template("@App:Report/Decision:edit.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -297,7 +297,7 @@ class DecisionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/decisions/summary", name="decisions_summary")
-     * @Template("App:Report/Decision:summary.html.twig")
+     * @Template("@App:Report/Decision:summary.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -322,7 +322,7 @@ class DecisionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/decisions/{decisionId}/delete", name="decisions_delete")
-     * @Template("App:Common:confirmDelete.html.twig")
+     * @Template("@App:Common:confirmDelete.html.twig")
      *
      * @param Request $request
      * @param $reportId

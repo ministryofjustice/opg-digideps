@@ -1,4 +1,4 @@
-{% extends 'App:Layouts:application.html.twig' %}
+{% extends '@App:Layouts:application.html.twig' %}
 
 {% set translationDomain = "org-dashboard" %}
 {% trans_default_domain translationDomain %}
@@ -139,7 +139,7 @@
         <hr>
     {% endif %}
 
-    {% include 'App:Components:paginator.html.twig' with {
+    {% include '@App:Components:paginator.html.twig' with {
         currentOffset: filters.offset,
         recordsPerPage: filters.limit,
         totalRecords: counts[filters.status ?: 'total'],

@@ -66,7 +66,7 @@ class DocumentController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/documents", name="documents")
-     * @Template("App:Report/Document:start.html.twig")
+     * @Template("@App:Report/Document:start.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -95,7 +95,7 @@ class DocumentController extends AbstractController
     /**
      * @Route("/report/{reportId}/documents/step", name="documents_stepzero")
      * @Route("/report/{reportId}/documents/step/1", name="documents_step")
-     * @Template("App:Report/Document:step1.html.twig")
+     * @Template("@App:Report/Document:step1.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -154,7 +154,7 @@ class DocumentController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/documents/step/2", name="report_documents", defaults={"what"="new"})
-     * @Template("App:Report/Document:step2.html.twig")
+     * @Template("@App:Report/Document:step2.html.twig")
      *
      * @param Request $request
      * @param MultiFileFormUploadVerifier $multiFileVerifier
@@ -240,7 +240,7 @@ class DocumentController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/documents/summary", name="report_documents_summary")
-     * @Template("App:Report/Document:summary.html.twig")
+     * @Template("@App:Report/Document:summary.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -268,7 +268,7 @@ class DocumentController extends AbstractController
      * Confirm delete document form
      *
      * @Route("/documents/{documentId}/delete", name="delete_document")
-     * @Template("App:Common:confirmDelete.html.twig")
+     * @Template("@App:Common:confirmDelete.html.twig")
      *
      * @param Request $request
      * @param $documentId
@@ -363,7 +363,7 @@ class DocumentController extends AbstractController
      * Confirm additional documents form
      *
      * @Route("/report/{reportId}/documents/submit-more", name="report_documents_submit_more")
-     * @Template("App:Report/Document:submitMoreDocumentsConfirm.html.twig")
+     * @Template("@App:Report/Document:submitMoreDocumentsConfirm.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -391,7 +391,7 @@ class DocumentController extends AbstractController
      * Confirmed send additional documents.
      *
      * @Route("/report/{reportId}/documents/confirm-submit-more", name="report_documents_submit_more_confirmed")
-     * @Template("App:Report/Document:submitMoreDocumentsConfirmed.html.twig")
+     * @Template("@App:Report/Document:submitMoreDocumentsConfirmed.html.twig")
      *
      * @param Request $request
      * @param $reportId

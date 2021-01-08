@@ -1,4 +1,4 @@
-{% extends 'App:Layouts:application.html.twig' %}
+{% extends '@App:Layouts:application.html.twig' %}
 
 {% trans_default_domain "registration" %}
 
@@ -17,6 +17,6 @@
 
 {% block pageContent %}
 
-    {% include 'App:Report:_report_form.html.twig' %}
+    {% include '@App:Report:_report_form.html.twig' %}
 
 {% endblock %}

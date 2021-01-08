@@ -159,7 +159,7 @@ class OrgService
         $flashBag = $this->session->getFlashBag();
 
         if (count($this->output['errors'])) {
-            $flash = $this->twig->render('App:Admin/Index:_uploadErrorAlert.html.twig', [
+            $flash = $this->twig->render('@App:Admin/Index:_uploadErrorAlert.html.twig', [
                 'type' => 'errors',
                 'errors' => $this->output['errors'],
             ]);
