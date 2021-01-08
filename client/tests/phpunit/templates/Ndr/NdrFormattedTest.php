@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Resources\views\Ndr;
+namespace App\Templates\Ndr;
 
 use App\Entity\Client;
 use App\Entity\Ndr\AssetOther;

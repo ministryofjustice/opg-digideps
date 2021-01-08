@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Resources\views\Report;
+namespace App\Templates\Report;
 
 use Mockery as m;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;

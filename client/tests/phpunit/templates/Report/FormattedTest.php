@@ -1,5 +1,5 @@
 <?php
-namespace App\Resources\views\Report;
+namespace App\Templates\Report;
 
 use App\Entity\Client;
 use App\Entity\Report\Account;
