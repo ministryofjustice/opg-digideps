@@ -3,6 +3,9 @@
 namespace Tests\App\v2\Controller;
 
 use App\Entity\Organisation;
+use App\Entity\User;
+use App\TestHelpers\UserHelpers;
+use App\TestHelpers\UserTestHelper;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\App\Controller\AbstractTestController;
@@ -21,6 +24,12 @@ class OrganisationControllerTest extends AbstractTestController
     /** @var EntityManager */
     private static $em;
 
+    /** @var []Organisation */
+    private static $orgs;
+
+    /** @var User */
+    private static $profUser;
+
     /** @var null|string */
     private static $tokenAdmin = null;
 
@@ -36,11 +45,12 @@ class OrganisationControllerTest extends AbstractTestController
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        self::fixtures()->createOrganisations(4);
+        self::$orgs = self::fixtures()->createOrganisations(4);
+
         self::fixtures()->flush()->clear();
 
-        $profUser = self::fixtures()->getRepo('User')->findOneByEmail('prof@example.org');
-        self::fixtures()->addUserToOrganisation($profUser->getId(), 4);
+        self::$profUser = self::fixtures()->getRepo('User')->findOneByEmail('prof@example.org');
+        self::fixtures()->addUserToOrganisation(self::$profUser->getId(), end(self::$orgs)->getId());
         self::fixtures()->flush()->clear();
 
         self::$em = self::$frameworkBundleClient->getContainer()->get('em');
@@ -89,7 +99,8 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function getByIdActionReturnsOrganisationsIfFound()
     {
-        self::$frameworkBundleClient->request('GET', '/v2/organisation/2', [], [], $this->headers);
+        $org = self::$orgs[0];
+        self::$frameworkBundleClient->request('GET', '/v2/organisation/' . $org->getId(), [], [], $this->headers);
 
         $response = self::$frameworkBundleClient->getResponse();
         $responseContent = json_decode($response->getContent(), true);
@@ -97,9 +108,9 @@ class OrganisationControllerTest extends AbstractTestController
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
         $this->assertTrue($responseContent['success']);
-        $this->assertEquals(2, $responseContent['data']['id']);
-        $this->assertEquals('Org 2', $responseContent['data']['name']);
-        $this->assertEquals('org_email_2', $responseContent['data']['email_identifier']);
+        $this->assertEquals($org->getId(), $responseContent['data']['id']);
+        $this->assertEquals($org->getName(), $responseContent['data']['name']);
+        $this->assertEquals($org->getEmailIdentifier(), $responseContent['data']['email_identifier']);
         $this->assertTrue($responseContent['data']['is_activated']);
     }
 
@@ -108,7 +119,7 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function getByIdActionReturns404IfNotFound()
     {
-        self::$frameworkBundleClient->request('GET', '/v2/organisation/27', [], [], $this->headers);
+        self::$frameworkBundleClient->request('GET', '/v2/organisation/99999', [], [], $this->headers);
 
         $response = self::$frameworkBundleClient->getResponse();
         $responseContent = json_decode($response->getContent(), true);
@@ -123,7 +134,7 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function getByIdActionReturnsForbiddenForDeputiesNotInOrganisation()
     {
-        self::$frameworkBundleClient->request('GET', '/v2/organisation/1', [], [], $this->headersDeputy);
+        self::$frameworkBundleClient->request('GET', '/v2/organisation/' . self::$orgs[0]->getId(), [], [], $this->headersDeputy);
 
         $response = self::$frameworkBundleClient->getResponse();
 
@@ -135,7 +146,7 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function getByIdActionAllowsDeputiesFetchTheirOwnOrganisation()
     {
-        self::$frameworkBundleClient->request('GET', '/v2/organisation/4', [], [], $this->headersDeputy);
+        self::$frameworkBundleClient->request('GET', '/v2/organisation/' . end(self::$orgs)->getId(), [], [], $this->headersDeputy);
 
         $response = self::$frameworkBundleClient->getResponse();
 
@@ -216,9 +227,10 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function updateActionUpdatesAnOrganisation()
     {
+        $orgId = self::$orgs[0]->getId();
         self::$frameworkBundleClient->request(
             'PUT',
-            '/v2/organisation/1',
+            '/v2/organisation/' . $orgId,
             [],
             [],
             $this->headers,
@@ -230,7 +242,7 @@ class OrganisationControllerTest extends AbstractTestController
 
         $organisation = self::$em
             ->getRepository(Organisation::class)
-            ->findOneBy(['id' => 1]);
+            ->findOneBy(['id' => $orgId]);
 
         $this->assertInstanceOf(Organisation::class, $organisation);
         $this->assertEquals('Org Name Updated', $organisation->getName());
@@ -245,9 +257,10 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function updateActionReturnsBadRequestIfGivenBadData($data)
     {
+        $orgId = self::$orgs[1]->getId();
         self::$frameworkBundleClient->request(
             'PUT',
-            '/v2/organisation/2',
+            '/v2/organisation/' . $orgId,
             [],
             [],
             $this->headers,
@@ -276,9 +289,10 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function updateActionReturnsBadRequestIfGivenExistingEmailIdentifier()
     {
+        $orgId = self::$orgs[1]->getId();
         self::$frameworkBundleClient->request(
             'PUT',
-            '/v2/organisation/2',
+            '/v2/organisation/' . $orgId,
             [],
             [],
             $this->headers,
@@ -294,9 +308,10 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function deleteActionDeletesOrganisation()
     {
+        $orgId = self::$orgs[1]->getId();
         self::$frameworkBundleClient->request(
             'DELETE',
-            '/v2/organisation/2',
+            '/v2/organisation/' . $orgId,
             [],
             [],
             $this->headersSuperAdmin
@@ -312,7 +327,7 @@ class OrganisationControllerTest extends AbstractTestController
 
         $organisation = self::$em
             ->getRepository(Organisation::class)
-            ->findOneBy(['id' => 2]);
+            ->findOneBy(['id' => $orgId]);
 
         $this->assertNull($organisation);
     }
@@ -322,9 +337,10 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function adminsCannotDeleteOrganisation()
     {
+        $orgId = self::$orgs[0]->getId();
         self::$frameworkBundleClient->request(
             'DELETE',
-            '/v2/organisation/1',
+            '/v2/organisation/' . $orgId,
             [],
             [],
             $this->headers
@@ -340,9 +356,12 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function addUserActionAddsUserToOrganisation()
     {
+        $orgId = self::$orgs[0]->getId();
+        $newUser = self::fixtures()->getRepo('User')->findOneBy([], ['id' => 'ASC']);
+
         self::$frameworkBundleClient->request(
             'PUT',
-            '/v2/organisation/1/user/3',
+            '/v2/organisation/' . $orgId . '/user/' . $newUser->getId(),
             [],
             [],
             $this->headers
@@ -354,11 +373,11 @@ class OrganisationControllerTest extends AbstractTestController
 
         $organisation = self::$em
             ->getRepository(Organisation::class)
-            ->findOneBy(['id' => 1]);
+            ->findOneBy(['id' => $orgId]);
 
         $this->assertInstanceOf(Organisation::class, $organisation);
         $this->assertEquals(1, count($organisation->getUsers()));
-        $this->assertEquals(3, $organisation->getUsers()[0]->getId());
+        $this->assertContains($newUser, $organisation->getUsers());
     }
 
     /**
@@ -387,9 +406,10 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function addUserActionReturnsBadRequestOnInvalidUserId()
     {
+        $orgId = self::$orgs[0]->getId();
         self::$frameworkBundleClient->request(
             'PUT',
-            '/v2/organisation/1/user/9003',
+            '/v2/organisation/' . $orgId . '/user/9003',
             [],
             [],
             $this->headers
@@ -409,9 +429,10 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function addUserActionReturnsForbiddenForUsersNotInOrganisation()
     {
+        $orgId = self::$orgs[0]->getId();
         self::$frameworkBundleClient->request(
             'PUT',
-            '/v2/organisation/1/user/3',
+            '/v2/organisation/' . $orgId . '/user/' . self::$profUser->getId(),
             [],
             [],
             $this->headersDeputy
@@ -426,9 +447,11 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function addUserActionAllowsUsersToAddToTheirOrganisation()
     {
+        $orgId = end(self::$orgs)->getId();
+
         self::$frameworkBundleClient->request(
             'PUT',
-            '/v2/organisation/4/user/3',
+            '/v2/organisation/' . $orgId . '/user/' . self::$profUser->getId(),
             [],
             [],
             $this->headersDeputy
@@ -443,12 +466,15 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function removeUserActionRemovesUserFromOrganisation()
     {
-        self::fixtures()->addUserToOrganisation(5, 3);
+        $orgId = self::$orgs[0]->getId();
+        $newUser = self::fixtures()->getRepo('User')->findOneBy([], ['id' => 'DESC']);
+
+        self::fixtures()->addUserToOrganisation($newUser->getId(), $orgId);
         self::fixtures()->flush()->clear();
 
         self::$frameworkBundleClient->request(
             'DELETE',
-            '/v2/organisation/3/user/5',
+            '/v2/organisation/' . $orgId . '/user/' . $newUser->getId(),
             [],
             [],
             $this->headers
@@ -464,10 +490,10 @@ class OrganisationControllerTest extends AbstractTestController
 
         $organisation = self::$em
             ->getRepository(Organisation::class)
-            ->findOneBy(['id' => 3]);
+            ->findOneBy(['id' => $orgId]);
 
         $this->assertInstanceOf(Organisation::class, $organisation);
-        $this->assertTrue($organisation->getUsers()->isEmpty());
+        $this->assertTrue(!in_array($newUser, $organisation->getUsers()));
     }
 
     /**
@@ -475,9 +501,10 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function removeUserActionReturnsNotFoundOnInvalidOrganisationId()
     {
+        $user = self::fixtures()->getRepo('User')->findOneBy([], ['id' => 'DESC']);
         self::$frameworkBundleClient->request(
             'DELETE',
-            '/v2/organisation/9001/user/3',
+            '/v2/organisation/9001/user/' . $user->getId(),
             [],
             [],
             $this->headers
@@ -496,9 +523,11 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function removeUserActionReturnsBadRequestOnInvalidUserId()
     {
+        $orgId = self::$orgs[0]->getId();
+
         self::$frameworkBundleClient->request(
             'DELETE',
-            '/v2/organisation/1/user/9003',
+            '/v2/organisation/' . $orgId . '/user/9003',
             [],
             [],
             $this->headers
@@ -518,9 +547,12 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function removeUserActionReturnsForbiddenForUsersNotInOrganisation()
     {
+        $orgId = self::$orgs[0]->getId();
+        $user = self::fixtures()->getRepo('User')->findOneBy([], ['id' => 'DESC']);
+
         self::$frameworkBundleClient->request(
             'DELETE',
-            '/v2/organisation/1/user/3',
+            '/v2/organisation/' . $orgId . '/user/' . $user->getId(),
             [],
             [],
             $this->headersDeputy
@@ -535,9 +567,15 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function removeUserActionAllowsUserRemoveFromTheirOrganisation()
     {
+        $orgId = self::$orgs[0]->getId();
+        $newUser = self::fixtures()->getRepo('User')->findOneBy([], ['id' => 'DESC']);
+
+        self::fixtures()->addUserToOrganisation($newUser->getId(), $orgId);
+        self::fixtures()->flush()->clear();
+
         self::$frameworkBundleClient->request(
             'DELETE',
-            '/v2/organisation/4/user/3',
+            '/v2/organisation/' . $orgId . '/user/' . $newUser->getId(),
             [],
             [],
             $this->headersDeputy
