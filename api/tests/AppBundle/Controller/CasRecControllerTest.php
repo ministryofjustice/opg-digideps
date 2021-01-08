@@ -81,13 +81,12 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertJsonRequest('POST', '/casrec/verify', [
             'data' => [
                 'case_number' => '12345678',
-                'lastname' => 'smith',
+                'lastname' => 'I should get deleted',
             ],
             'mustSucceed' => true,
             'AuthToken' => self::$tokenAdmin,
         ]);
     }
-
     /**
      * @group jim
      */
@@ -142,7 +141,7 @@ class CasRecControllerTest extends AbstractTestController
             'Case' => $case,
             'Surname' => 'I should get deleted',
             'Deputy No' => 'Deputy No',
-            'Dep Surname' => 'Dep Surname',
+            'Dep Surname' => 'admin',
             'Dep Postcode' => 'SW1',
             'Typeofrep' => 'OPG102',
             'Corref' => 'L2',

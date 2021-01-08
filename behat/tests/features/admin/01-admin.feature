@@ -14,6 +14,11 @@ Feature: admin / admin
     Then I should see "behat-admin-user@publicguardian.gov.uk" in the "users" region
     And the response status code should be 200
 
+  Scenario: login and add lay user
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I create a new "NDR-enabled" "Lay Deputy" user "Joe" "Bloggs" with email "joe.bloggs@publicguardian.gov.uk" and postcode "SW1"
+    Then I should see "joe.bloggs@publicguardian.gov.uk" in the "users" region
+    And the response status code should be 200
 
   Scenario: login and add user (admin)
     When I activate the admin user "behat-admin-user@publicguardian.gov.uk" with password "Abcd1234"
