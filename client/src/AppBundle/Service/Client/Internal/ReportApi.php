@@ -7,6 +7,7 @@ use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Event\ReportSubmittedEvent;
+use AppBundle\Event\ReportUnsubmittedEvent;
 use AppBundle\EventDispatcher\ObservableEventDispatcher;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Exception\ReportSubmittedException;
@@ -153,5 +154,22 @@ class ReportApi
 
         $event = new ReportSubmittedEvent($reportToSubmit, $submittedBy, $newYearReportId);
         $this->eventDispatcher->dispatch(ReportSubmittedEvent::NAME, $event);
+    }
+
+    public function unsubmit(Report $report, User $user, string $trigger): void
+    {
+        $report->setUnSubmitDate(new \DateTime());
+
+        $this->restClient->put('report/' . $report->getId() . '/unsubmit', $report, [
+            'submitted', 'unsubmit_date', 'report_unsubmitted_sections_list', 'startEndDates', 'report_due_date'
+        ]);
+
+        $event = new ReportUnsubmittedEvent(
+            $report,
+            $user,
+            $trigger
+        );
+
+        $this->eventDispatcher->dispatch(ReportUnsubmittedEvent::NAME, $event);
     }
 }

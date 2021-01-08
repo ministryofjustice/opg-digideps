@@ -6,7 +6,7 @@ Feature: pre checks
         And the admin area works properly
         And I reset the behat SQL snapshots
 
-    @infra
+    @infra @smoke
     Scenario: check maintenance page checks
       When I go to "/manage/availability"
       Then I should see "Sirius: OK"

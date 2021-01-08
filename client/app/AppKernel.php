@@ -39,7 +39,7 @@ class AppKernel extends Kernel
 
     public function getRootDir()
     {
-        return __DIR__;
+        return dirname(__DIR__);
     }
 
     public function getCacheDir()
@@ -49,7 +49,7 @@ class AppKernel extends Kernel
 
     public function getLogDir()
     {
-        return dirname(__DIR__) . '/var/logs';
+        return dirname(__DIR__) . '/var/log';
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader)

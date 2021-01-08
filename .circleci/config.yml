@@ -3,44 +3,47 @@ version: 2.1
 workflows:
   pull_request:
     jobs:
-      - lint:
-          name: lint terraform
-          filters: { branches: { ignore: [ main ] } }
-
       - build:
           name: build pr
           filters: { branches: { ignore: [ main ] } }
 
-      - terraform-command:
-          name: plan shared development
-          requires: [ lint terraform ]
+      - cancel_redundant_builds:
+          name: cancel redundant builds
           filters: { branches: { ignore: [ main ] } }
-          tf_apply: false
-          tf_command: plan
+
+      - lint:
+          name: lint terraform
+          filters: { branches: { ignore: [ main ] } }
+
+      - terraform-command:
+          name: plan shared-development
+          requires: [ cancel redundant builds ]
+          filters: { branches: { only: [ main ] } }
           tf_tier: shared
           tf_workspace: development
-
-      - terraform-command:
-          name: plan pr environment
-          requires: [ lint terraform ]
-          filters: { branches: { ignore: [ main ] } }
-          tf_apply: false
           tf_command: plan
-          tf_tier: environment
 
       - terraform-command:
-          name: apply environment
+          name: plan branch env
+          requires: [ cancel redundant builds ]
+          filters: { branches: { only: [ main ] } }
+          tf_command: plan
+
+      - terraform-command:
+          name: initial terraform apply
           requires: [
-            build pr,
-            plan shared development,
-            plan pr environment
+            lint terraform,
+            cancel redundant builds,
+            plan shared-development,
+            plan branch env
              ]
           filters: { branches: { ignore: [ main ] } }
           tf_command: apply
+          tf_initial_apply: true
 
-      - protect-workspace:
-          name: protect branch workspace
-          requires: [ apply environment ]
+      - lambda-unit-test:
+          name: lambda unit test
+          requires: [ lint terraform ]
           filters: { branches: { ignore: [ main ] } }
 
       - client-unit-test:
@@ -53,58 +56,126 @@ workflows:
           requires: [ build pr ]
           filters: { branches: { ignore: [ main ] } }
 
+      - terraform-command:
+          name: terraform apply
+          requires: [
+            initial terraform apply,
+            build pr,
+            lambda unit test
+          ]
+          filters: { branches: { ignore: [ main ] } }
+          tf_command: apply
+
+      - workspace-protection:
+          name: protect branch workspace
+          requires: [ terraform apply ]
+          filters: { branches: { ignore: [ main ] } }
+
 #      - pa11y-ci:
 #          name: accessibility test
 #          requires: [ apply environment ]
 #          filters: { branches: { ignore: [ main ] } }
-      - approve:
-          name: approval for further testing
-          type: approval
-          requires: [ api unit test, client unit test, protect branch workspace ]
-          filters: { branches: { ignore: [ master ] } }
 
       - run-task:
           name: reset environment for testing
-          requires: [ approval for further testing ]
+          requires: [ terraform apply ]
           filters: { branches: { ignore: [ main ] } }
           task_name: reset_database
           timeout: 180
 
+      - approve:
+          name: approval for further testing
+          type: approval
+          requires: [
+            protect branch workspace,
+            reset environment for testing
+          ]
+          filters: { branches: { ignore: [ master ] } }
+
       - run-task:
-          name: integration test
-          requires: [ reset environment for testing ]
+          name: integration tests
+          requires: [ approval for further testing ]
           filters: { branches: { ignore: [ master ] } }
           task_name: integration_test
           timeout: 3000
 
-      - run-task:
-          name: backup environment
-          requires: [ integration test ]
+      - terraform-plan-all:
+          name: plan all terraform environments
+          requires: [ approval for further testing ]
           filters: { branches: { ignore: [ main ] } }
-          task_name: backup
+          tf_tier: environment
 
-      - run-task:
-          name: restore environment
-          requires: [ backup environment ]
+      - terraform-plan-all:
+          name: plan all shared terraform environments
+          requires: [ approval for further testing ]
           filters: { branches: { ignore: [ main ] } }
-          task_name: restore
+          tf_tier: shared
+
+      - slack/approval-notification:
+          name: branch complete notification
+          message: Your branch << pipeline.git.branch >> has completed
+          channel: opg-digicop-builds
+          requires: [
+            integration tests,
+            plan all terraform environments,
+            plan all shared terraform environments,
+            api unit test,
+            client unit test,
+            unprotect environment
+          ]
+          filters: { branches: { ignore: [ main ] } }
 
       - cleanup:
-          name: destroy environment
+          name: unprotect environment approval
           type: approval
-          requires: [ restore environment ]
+          requires: [ terraform apply ]
           filters: { branches: { ignore: [ main ] } }
+
+      - workspace-protection:
+          name: unprotect environment
+          requires: [ unprotect environment approval ]
+          filters: { branches: { ignore: [ main ] } }
+          protect_time: "0"
+      # Optional manual destruction of environment
+      - cleanup:
+          name: optional destroy environment approval
+          type: approval
+          requires: [ cancel redundant builds ]
+          filters: { branches: { ignore: [ main ] } }
+
+      - terraform-command:
+          name: destroy environment
+          requires: [ optional destroy environment approval ]
+          filters: { branches: { ignore: [ main ] } }
+          tf_command: destroy
 
   integration:
     jobs:
+      - lambda-unit-test:
+          name: lambda unit test
+          filters: { branches: { only: [ main ] } }
+
       - build:
           name: build integration
           build_dev: true
           filters: { branches: { only: [ main ] } }
 
+      - client-unit-test:
+          name: client unit test
+          requires: [ build integration ]
+          filters: { branches: { only: [ main ] } }
+
+      - api-unit-tests:
+          name: api unit test
+          requires: [ build integration ]
+          filters: { branches: { only: [ main ] } }
+
       - terraform-command:
           name: apply shared-development
-          requires: [ build integration ]
+          requires: [
+            build integration,
+            lambda unit test
+          ]
           filters: { branches: { only: [ main ] } }
           tf_tier: shared
           tf_workspace: development
@@ -113,29 +184,30 @@ workflows:
       # Notice, no 'reset' or 'restore' over development so we can keep test data
       - terraform-command:
           name: apply development
-          requires: [ apply shared-development ]
+          requires: [
+            apply shared-development,
+            lambda unit test
+          ]
           tf_workspace: development
           filters: { branches: { only: [ main ] } }
           tf_command: apply
 
       - terraform-command:
           name: plan shared-preproduction
-          requires: [ apply shared-development ]
+          requires: [
+            build integration
+          ]
           filters: { branches: { only: [ main ] } }
           tf_tier: shared
           tf_workspace: preproduction
           tf_command: plan
 
       - terraform-command:
-          name: plan preproduction
-          requires: [ apply shared-development ]
-          filters: { branches: { only: [ main ] } }
-          tf_workspace: preproduction
-          tf_command: plan
-
-      - terraform-command:
           name: apply shared-preproduction
-          requires: [ plan shared-preproduction, plan preproduction ]
+          requires: [
+            plan shared-preproduction,
+            lambda unit test
+          ]
           filters: { branches: { only: [ main ] } }
           tf_tier: shared
           tf_workspace: preproduction
@@ -143,7 +215,10 @@ workflows:
 
       - terraform-command:
           name: apply integration
-          requires: [ apply shared-preproduction ]
+          requires: [
+            build integration,
+            apply shared-preproduction
+          ]
           filters: { branches: { only: [ main ] } }
           tf_workspace: integration
           tf_command: apply
@@ -164,29 +239,32 @@ workflows:
           tf_workspace: integration
           timeout: 3000
 
-      - client-unit-test:
-          name: client unit test
-          requires: [ apply integration ]
-          filters: { branches: { only: [ main ] } }
-
-      - api-unit-tests:
-          name: api unit test
-          requires: [ apply integration ]
-          filters: { branches: { only: [ main ] } }
-
       - terraform-command:
-          name: apply training
-          requires: [ apply shared-production ]
+          name: plan preproduction
+          requires: [ apply shared-development ]
           filters: { branches: { only: [ main ] } }
-          tf_workspace: training
-          tf_command: apply
+          tf_workspace: preproduction
+          tf_command: plan
 
       - terraform-command:
           name: apply preproduction
-          requires: [ api unit test, client unit test, integration test ]
+          requires: [
+            api unit test,
+            client unit test,
+            integration test,
+            apply shared-preproduction
+          ]
           filters: { branches: { only: [ main ] } }
           tf_workspace: preproduction
           tf_command: apply
+
+      - run-task:
+          name: smoke tests
+          requires: [ apply preproduction ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: smoke_test
+          tf_workspace: preproduction
+          timeout: 600
 
       - terraform-command:
           name: plan production
@@ -221,6 +299,13 @@ workflows:
           filters: { branches: { only: [ main ] } }
           tf_tier: shared
           tf_workspace: production
+          tf_command: apply
+
+      - terraform-command:
+          name: apply training
+          requires: [ apply shared-production ]
+          filters: { branches: { only: [ main ] } }
+          tf_workspace: training
           tf_command: apply
 
       - terraform-command:
@@ -384,6 +469,78 @@ jobs:
       - run:
           name: terraform lint
           command: terraform fmt -diff -check -recursive
+      - run:
+          name: terraform validate
+          command: |
+            terraform init -backend=false
+            terraform validate
+          working_directory: ~/project/environment
+      - run:
+          name: terraform shared validate
+          command: |
+            terraform init -backend=false
+            terraform validate
+          working_directory: ~/project/shared
+
+  terraform-plan-all:
+    executor: terraform/terraform
+    resource_class: small
+    parameters:
+      tf_tier:
+        description: tier to alter - shared or environment
+        default: environment
+        type: string
+    working_directory: ~/project/<< parameters.tf_tier >>
+    environment:
+      TF_TIER: << parameters.tf_tier >>
+      INIT_APPLY: "true"
+    steps:
+      - checkout:
+          path: ~/project
+      - terraform/install
+      - ecs_helper/install
+      - run:
+          name: Initialize
+          command: terraform init
+      - run:
+          name: Set environment
+          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
+      - when:
+          condition:
+            and:
+              - equal: [ environment, << parameters.tf_tier >> ]
+          steps:
+          # We already run on branch on shared dev so no repetition here.
+            - run:
+                name: Run plan on integration
+                command: |
+                  export TF_WORKSPACE=integration
+                  terraform plan
+            - run:
+                name: Run plan on training
+                command: |
+                  export TF_WORKSPACE=training
+                  terraform plan
+            - run:
+                name: Run plan on production
+                command: |
+                  export TF_WORKSPACE=production02
+                  terraform plan
+      - run:
+          name: Run plan on preproduction
+          command: |
+            export TF_WORKSPACE=preproduction
+            terraform plan
+      - when:
+          condition:
+            and:
+              - equal: [ shared, << parameters.tf_tier >> ]
+          steps:
+            - run:
+                name: Run plan on shared production
+                command: |
+                  export TF_WORKSPACE=production
+                  terraform plan
 
   terraform-command:
     executor: terraform/terraform
@@ -400,17 +557,17 @@ jobs:
       tf_command:
         description: terraform command
         type: string
-      tf_apply:
-        description: whether this is a terraform apply
-        default: true
+      tf_initial_apply:
+        description: whether this is doing the initial environment apply
+        default: false
         type: boolean
       pact_tag:
         description: whether to add environment tag to pact broker
         default: false
         type: boolean
     environment:
-      TF_TIER: << parameters.tf_tier >>
       WORKSPACE: << parameters.tf_workspace >>
+      INIT_APPLY: << parameters.tf_initial_apply >>
     working_directory: ~/project/<< parameters.tf_tier >>
     steps:
       - checkout:
@@ -418,24 +575,49 @@ jobs:
       - terraform/install
       - ecs_helper/install
       - attach_workspace: { at: ~/project }
-      - when:
-          condition: << parameters.tf_apply >>
-          steps:
-            - run:
-                name: Extract lambda layers
-                working_directory:  ~/project/lambda_functions
-                command: tar xvf ~/project/lambda_functions/layer.tar
       - run:
           name: Initialize
           command: terraform init
       - run:
           name: Set environment
           command: ~/project/.circleci/set_env.sh >> $BASH_ENV
-      - run:
-          name: Run << parameters.tf_command >>
-          command: terraform << parameters.tf_command >>
       - when:
-          condition: << parameters.tf_apply >>
+          condition:
+            and:
+              - equal: [ apply, << parameters.tf_command >> ]
+              - equal: [ false, << parameters.tf_initial_apply >> ]
+          steps:
+            - run:
+                name: Extract lambda layers
+                command: tar xvf ~/project/lambda_functions/layer.tar
+                working_directory:  ~/project/lambda_functions
+      - when:
+          condition:
+            and:
+              - equal: [ true, << parameters.tf_initial_apply >> ]
+          steps:
+            - run:
+                name: Run << parameters.tf_command >>
+                command: |
+                  if [ $(terraform output | grep "No outputs found" | wc -l) -eq "0" ]
+                  then
+                    echo "Skipping apply as already exists"
+                  else
+                    terraform << parameters.tf_command >>
+                  fi
+      - when:
+          condition:
+            and:
+              - equal: [ false, << parameters.tf_initial_apply >> ]
+          steps:
+            - run:
+                name: Run << parameters.tf_command >>
+                command: terraform << parameters.tf_command >>
+      - when:
+          condition:
+            and:
+              - equal: [ apply, << parameters.tf_command >> ]
+              - equal: [ false, << parameters.tf_initial_apply >> ]
           steps:
             - run:
                 name: Output
@@ -453,10 +635,17 @@ jobs:
                 name: tag pact commit with v<x>_production
                 command: pact_tags
 
-  protect-workspace:
+  workspace-protection:
     executor: terraform/terraform
     resource_class: small
     working_directory: ~/project/environment
+    parameters:
+      protect_time:
+        description: time to protect workspace
+        type: string
+        default: "24"
+    environment:
+      PROTECT_TIME: << parameters.protect_time >>
     steps:
       - checkout:
           path: ~/project
@@ -467,7 +656,7 @@ jobs:
           command: ~/project/.circleci/set_env.sh >> $BASH_ENV
       - run:
           name: Add workspace to protected list
-          command: terraform-workspace-manager -register-workspace="${TF_WORKSPACE}" -time-to-protect=24 -aws-account-id=248804316466 -aws-iam-role=digideps-ci
+          command: terraform-workspace-manager -register-workspace="${TF_WORKSPACE}" -time-to-protect="${PROTECT_TIME}" -aws-account-id=248804316466 -aws-iam-role=digideps-ci
 
   destroy-workspaces:
     executor: terraform/terraform
@@ -492,13 +681,34 @@ jobs:
           failure_message: nightly destroy workspaces has failed.
           success_message: nightly destroy workspaces has succeeded.
 
-  build:
+  cancel_redundant_builds:
     docker:
       - image: circleci/python:3
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
     resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: Cancel running builds
+          command: |
+            python cancel_redundant_builds.py \
+            --circle_project_username="${CIRCLE_PROJECT_USERNAME}" \
+            --circle_project_reponame="${CIRCLE_PROJECT_REPONAME}" \
+            --circle_branch="${CIRCLE_BRANCH}" \
+            --circle_builds_token="${CIRCLE_BUILDS_TOKEN}" \
+            --terms_to_waitfor="apply,plan,terraform" \
+            --prod_job_terms=" production,shared-production"
+          working_directory: ~/project/ecs_helper/cmd/circle_builds
+
+  build:
+    docker:
+      - image: circleci/python:3
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: medium
     environment:
       AWS_REGION: eu-west-1
       AWS_CONFIG_FILE: ~/project/aws_config
@@ -517,19 +727,12 @@ jobs:
             - 6f:4b:55:76:0e:cd:27:7d:ad:c3:28:38:53:69:5c:32
       - checkout
       - run:
-          name: Cancel running builds
-          command: |
-            python cancel_redundant_builds.py \
-            --circle_project_username="${CIRCLE_PROJECT_USERNAME}" \
-            --circle_project_reponame="${CIRCLE_PROJECT_REPONAME}" \
-            --circle_branch="${CIRCLE_BRANCH}" \
-            --circle_builds_token="${CIRCLE_BUILDS_TOKEN}" \
-            --terms_to_waitfor="apply,plan" \
-            --prod_job_terms=" production,shared-production"
-          working_directory: ~/project/ecs_helper/cmd/circle_builds
-      - run:
           name: Set environment
           command: ~/project/.circleci/set_env.sh >> $BASH_ENV
+      - run:
+          name: Download common passwords file
+          command: wget -O commonpasswords.txt "https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt"
+          working_directory: ~/project/client/extra
       - run:
           name: Set version
           command: |
@@ -572,6 +775,16 @@ jobs:
                 docker-compose -f docker-compose.ci.yml run --rm client php bin/phpstan analyse $CLIENT_CHANGED_FILES --memory-limit=0 --level=max
             fi
       - run:
+          name: Archive docker images
+          command: |
+            docker tag ${AWS_REGISTRY}/digideps/client:${VERSION} client:latest
+            docker tag ${AWS_REGISTRY}/digideps/api:${VERSION} api:latest
+            docker tag ${AWS_REGISTRY}/digideps/wkhtmltopdf:${VERSION} wkhtmltopdf:latest
+            docker save -o client.tar client:latest
+            docker save -o api.tar api:latest
+            docker save -o wkhtmltopdf.tar wkhtmltopdf:latest
+          background: true
+      - run:
           name: Push images
           command: docker-compose -f docker-compose.ci.yml push
       - when:
@@ -593,25 +806,14 @@ jobs:
           working_directory: ~/project/ecs_helper/check_ecr_scan_results
           command: |
             python3 aws_ecr_scan_results.py --search digideps --tag $VERSION --post_to_slack True
-      - run:
-          name: Archive docker images
-          command: |
-            docker tag ${AWS_REGISTRY}/digideps/client:${VERSION} client:latest
-            docker save -o docker-images.tar client:latest
-      - run:
-          name: install requirements for all lambda layers
-          command: |
-            export LAYER_PATH=lambda_functions/layers/monitoring/python/lib/python3.7/site-packages
-            pip3 install -r lambda_functions/requirements/requirements.txt --target ./$LAYER_PATH/
-            cd lambda_functions
-            tar cvf layer.tar layers
       - persist_to_workspace:
           root: .
           paths:
-            - ./docker-images.tar
-            - ./lambda_functions/layer.tar
+            - ./client.tar
+            - ./api.tar
+            - ./wkhtmltopdf.tar
 
-  client-unit-test:
+  lambda-unit-test:
     docker:
       - image: circleci/python:3
         auth:
@@ -631,7 +833,38 @@ jobs:
             sleep 5
             docker-compose run pythontests python -m pytest
             docker-compose down
-          background: true
+      - run:
+          name: install requirements for all lambda layers
+          command: |
+            export LAYER_PATH=lambda_functions/layers/monitoring/python/lib/python3.7/site-packages
+            pip3 install -r lambda_functions/requirements/requirements.txt --target ./$LAYER_PATH/
+            cd lambda_functions
+            tar cvf layer.tar layers
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./lambda_functions/layer.tar
+
+  client-unit-test:
+    docker:
+      - image: circleci/python:3
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    steps:
+      - dockerhub_helper/dockerhub_login
+      - setup_remote_docker
+      - checkout
+      - attach_workspace: { at: ~/project }
+      - run:
+          name: load docker image
+          command: |
+            docker load -i ~/project/client.tar
+            docker load -i ~/project/api.tar
+            docker load -i ~/project/wkhtmltopdf.tar
+            docker tag client:latest admin:latest
+            docker tag client:latest frontend:latest
       - run:
           name: install aws cli
           command: |
@@ -645,15 +878,15 @@ jobs:
       - run:
           name: Run tests
           command: |
-            docker-compose -f docker-compose.yml --project-name client-unit-tests up -d --no-deps frontend pact-mock
+            APP_ENV=dev APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests up -d --no-deps frontend pact-mock
             sleep 3
 
-            docker-compose -f docker-compose.yml --project-name client-unit-tests exec frontend sh scripts/client-unit-tests.sh
-            docker-compose -f docker-compose.yml --project-name client-unit-tests exec frontend chmod -R 777 tests/phpunit/coverage/client-unit-tests.xml
+            docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests exec frontend sh scripts/client-unit-tests.sh
+            docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests exec frontend chmod -R 777 tests/phpunit/coverage/client-unit-tests.xml
             docker cp "client-unit-tests_frontend_1:/var/www/tests/phpunit/coverage/client-unit-tests.xml" "./client-unit-tests.xml"
 
-            docker-compose -f docker-compose.yml --project-name client-unit-tests exec pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
-            docker-compose -f docker-compose.yml --project-name client-unit-tests stop pact-mock
+            docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests exec pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
+            docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests stop pact-mock
       - codecov/upload:
           file: ./client-unit-tests.xml
           flags: client
@@ -674,21 +907,30 @@ jobs:
       - checkout
       - attach_workspace: { at: ~/project }
       - run:
+          name: load docker image
+          command: |
+            docker load -i ~/project/client.tar
+            docker load -i ~/project/api.tar
+            docker load -i ~/project/wkhtmltopdf.tar
+            docker tag client:latest admin:latest
+            docker tag client:latest frontend:latest
+            docker tag client:latest localstack-init:latest
+      - run:
           name: Set environment
           command: |
             ~/project/.circleci/set_env.sh >> $BASH_ENV
       - run:
           name: Run tests
           command: |
-            docker-compose -f docker-compose.yml --project-name api-unit-tests up -d api
-            docker-compose -f docker-compose.yml --project-name api-unit-tests exec api chmod -R 777 var
-            docker-compose -f docker-compose.yml --project-name api-unit-tests up -d localstack
-            docker-compose -f docker-compose.yml --project-name api-unit-tests run --rm wait-for-it -address localstack:4583 --timeout=20 -debug
-            docker-compose -f docker-compose.yml --project-name api-unit-tests run --rm wait-for-it -address localstack:4586 --timeout=20 -debug
-            docker-compose -f docker-compose.yml --project-name api-unit-tests up -d localstack-init
-            docker-compose -f docker-compose.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
+            APP_ENV=dev APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests up -d api
+            docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec api chmod -R 777 var
+            docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests up -d localstack
+            docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests run --rm wait-for-it -address localstack:4583 --timeout=20 -debug
+            docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests run --rm wait-for-it -address localstack:4586 --timeout=20 -debug
+            docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests up -d localstack-init
+            docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
 
-            docker-compose -f docker-compose.yml --project-name api-unit-tests exec api chmod -R 777 tests/coverage/api-unit-tests.xml
+            docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec api chmod -R 777 tests/coverage/api-unit-tests.xml
             docker cp "api-unit-tests_api_1:/var/www/tests/coverage/api-unit-tests.xml" "./api-unit-tests.xml"
       - codecov/upload:
           file: ./api-unit-tests.xml

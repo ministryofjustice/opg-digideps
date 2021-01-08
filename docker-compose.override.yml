@@ -9,40 +9,50 @@ services:
 
   admin:
     volumes:
-      - ./client/app/config/security.yml:/var/www/app/config/security.yml
-      - ./client/app/config/config.yml:/var/www/app/config/config.yml
-      - ./client/app/config/config_dev.yml:/var/www/app/config/config_dev.yml
-      - ./client/app/config/config_dev_with_debug.yml:/var/www/app/config/config_dev_with_debug.yml
-      - ./client/app/config/config_unit_test.yml:/var/www/app/config/config_unit_test.yml
-      - ./client/app/config/config_prod.yml:/var/www/app/config/config_prod.yml
-      - ./client/app/config/services.yml:/var/www/app/config/services.yml
-      - ./client/app/config/services:/var/www/app/config/services
+      - ./client/config/security.yml:/var/www/config/security.yml
+      - ./client/config/config.yml:/var/www/config/config.yml
+      - ./client/config/config_dev.yml:/var/www/config/config_dev.yml
+      - ./client/config/config_dev_with_debug.yml:/var/www/config/config_dev_with_debug.yml
+      - ./client/config/config_unit_test.yml:/var/www/config/config_unit_test.yml
+      - ./client/config/config_prod.yml:/var/www/config/config_prod.yml
+      - ./client/config/services.yml:/var/www/config/services.yml
+      - ./client/config/services:/var/www/config/services
       - ./client/src:/var/www/src
       - ./client/tests:/var/www/tests
+      - ./client/frontend.env:/var/www/frontend.env
+      - ./client/admin.env:/var/www/admin.env
+      - ./client/templates:/var/www/templates
       - ./client/phpstan.neon:/var/www/phpstan.neon
 
   api:
     volumes:
       - ./api/app:/var/www/app
+      - ./api/config:/var/www/config
+      - ./api/DoctrineMigrations:/var/www/DoctrineMigrations
+      - ./api/public:/var/www/public
       - ./api/scripts:/var/www/scripts
       - ./api/src:/var/www/src
       - ./api/tests:/var/www/tests
-      - ./api/web:/var/www/web
+      - ./api/api.env:/var/www/api.env
+      - ./api/postgres.env:/var/www/postgres.env
       - ./api/phpstan.neon:/var/www/phpstan.neon
       - ./api/var:/var/www/var
 
   frontend:
     volumes:
-      - ./client/app/config/security.yml:/var/www/app/config/security.yml
-      - ./client/app/config/config.yml:/var/www/app/config/config.yml
-      - ./client/app/config/config_dev.yml:/var/www/app/config/config_dev.yml
-      - ./client/app/config/config_dev_with_debug.yml:/var/www/app/config/config_dev_with_debug.yml
-      - ./client/app/config/config_unit_test.yml:/var/www/app/config/config_unit_test.yml
-      - ./client/app/config/config_prod.yml:/var/www/app/config/config_prod.yml
-      - ./client/app/config/services.yml:/var/www/app/config/services.yml
-      - ./client/app/config/services:/var/www/app/config/services
+      - ./client/config/security.yml:/var/www/config/security.yml
+      - ./client/config/config.yml:/var/www/config/config.yml
+      - ./client/config/config_dev.yml:/var/www/config/config_dev.yml
+      - ./client/config/config_dev_with_debug.yml:/var/www/config/config_dev_with_debug.yml
+      - ./client/config/config_unit_test.yml:/var/www/config/config_unit_test.yml
+      - ./client/config/config_prod.yml:/var/www/config/config_prod.yml
+      - ./client/config/services.yml:/var/www/config/services.yml
+      - ./client/config/services:/var/www/config/services
       - ./client/src:/var/www/src
       - ./client/tests:/var/www/tests
+      - ./client/frontend.env:/var/www/frontend.env
+      - ./client/admin.env:/var/www/admin.env
+      - ./client/templates:/var/www/templates
       - ./client/phpstan.neon:/var/www/phpstan.neon
 
   wkhtmltopdf:

@@ -5,6 +5,7 @@ namespace AppBundle\Service\Audit;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\User;
 use AppBundle\Service\Time\DateTimeProvider;
+use AppBundle\Entity\Report\Report;
 use DateTime;
 
 final class AuditEvents
@@ -15,6 +16,8 @@ final class AuditEvents
     const EVENT_CLIENT_DELETED = 'CLIENT_DELETED';
     const EVENT_DEPUTY_DELETED = 'DEPUTY_DELETED';
     const EVENT_ADMIN_DELETED = 'ADMIN_DELETED';
+    const EVENT_REPORT_UNSUBMITTED = 'REPORT_UNSUBMITTED';
+    const EVENT_REPORT_RESUBMITTED = 'REPORT_RESUBMITTED';
     const EVENT_USER_ADDED_TO_ORG = 'USER_ADDED_TO_ORG';
     const EVENT_USER_REMOVED_FROM_ORG = 'USER_REMOVED_FROM_ORG';
 
@@ -26,6 +29,8 @@ final class AuditEvents
     const TRIGGER_CODEPUTY_CREATED = 'CODEPUTY_CREATED';
     const TRIGGER_ORG_USER_MANAGE_ORG_MEMBER = 'ORG_USER_MANAGE_ORG_MEMBER';
     const TRIGGER_ADMIN_USER_MANAGE_ORG_MEMBER = 'ADMIN_USER_MANAGE_ORG_USER';
+    const TRIGGER_UNSUBMIT_REPORT = 'UNSUBMIT_REPORT';
+    const TRIGGER_RESUBMIT_REPORT = 'RESUBMIT_REPORT';
 
     /**
      * @var DateTimeProvider
@@ -199,6 +204,42 @@ final class AuditEvents
         ];
 
         return $event + $this->baseEvent(AuditEvents::EVENT_USER_REMOVED_FROM_ORG);
+    }
+
+    /**
+     * @param string $trigger, what caused the event
+     * @param User $reportUnsubmittedBy,
+     * @param Report $unsubmittedReport
+     * @return array|string[]
+     * @throws \Exception
+     */
+    public function reportUnsubmitted(Report $unsubmittedReport, User $reportUnsubmittedBy, string $trigger)
+    {
+        $event = [
+            'trigger' => $trigger,
+            'deputy_user' => $reportUnsubmittedBy->getId(),
+            'report_id' => $unsubmittedReport->getId(),
+            'date_unsubmitted' => $unsubmittedReport->getUnSubmitDate(),
+        ];
+
+        return $event + $this->baseEvent(AuditEvents::EVENT_REPORT_UNSUBMITTED);
+    }
+
+    /**
+     * @param Report $resubmittedReport
+     * @param User $reportSubmittedBy
+     * @return array|string[]
+     */
+    public function reportResubmitted(Report $resubmittedReport, User $reportSubmittedBy)
+    {
+        $event = [
+            'trigger' => AuditEvents::TRIGGER_RESUBMIT_REPORT,
+            'deputy_user' => $reportSubmittedBy->getId(),
+            'report_id' => $resubmittedReport->getId(),
+            'date_resubmitted' => $resubmittedReport->getSubmitDate(),
+        ];
+
+        return $event + $this->baseEvent(AuditEvents::EVENT_REPORT_RESUBMITTED);
     }
 
     /**
