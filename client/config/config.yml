@@ -54,7 +54,7 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     form_themes:
-        - 'App/Form/fields.html.twig'
+        - '@App/Form/fields.html.twig'
     paths:
         '%kernel.root_dir%/templates': App
 
