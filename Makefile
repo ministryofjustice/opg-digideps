@@ -57,7 +57,7 @@ client-unit-tests: ## Run the client unit tests
 
 api-unit-tests: reset-fixtures ## Run the api unit tests
 	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose build api
-	docker-compose -f docker-compose.yml run --rm -e APP_ENV=dev -e APP_DEBUG=0 api sh scripts/apiunittest.sh
+	docker-compose -f docker-compose.yml run --rm -e APP_ENV=test -e APP_DEBUG=0 api sh scripts/apiunittest.sh
 
 behat-tests: up-app-integration-tests reset-fixtures
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test
