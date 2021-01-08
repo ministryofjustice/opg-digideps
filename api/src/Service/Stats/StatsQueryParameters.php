@@ -2,6 +2,9 @@
 
 namespace App\Service\Stats;
 
+use DateInterval;
+use DateTime;
+
 class StatsQueryParameters
 {
     private $metric;
@@ -50,19 +53,19 @@ class StatsQueryParameters
         $this->endDate = $parameters['endDate'];
 
         if ($this->startDate === null && $this->endDate === null) {
-            $this->endDate = new \DateTime();
-            $this->startDate = new \DateTime('-30 days');
+            $this->endDate = new DateTime();
+            $this->startDate = new DateTime('-30 days');
         } elseif ($this->startDate === null) {
-            $this->endDate = new \DateTime($this->endDate);
+            $this->endDate = new DateTime($this->endDate);
             $this->startDate = clone $this->endDate;
-            $this->startDate->sub(new \DateInterval('P30D'));
+            $this->startDate->sub(new DateInterval('P30D'));
         } elseif ($this->endDate === null) {
-            $this->startDate = new \DateTime($this->startDate);
+            $this->startDate = new DateTime($this->startDate);
             $this->endDate = clone $this->startDate;
-            $this->endDate->add(new \DateInterval('P30D'));
+            $this->endDate->add(new DateInterval('P30D'));
         } else {
-            $this->startDate = new \DateTime($this->startDate);
-            $this->endDate = new \DateTime($this->endDate);
+            $this->startDate = new DateTime($this->startDate);
+            $this->endDate = new DateTime($this->endDate);
         }
     }
 

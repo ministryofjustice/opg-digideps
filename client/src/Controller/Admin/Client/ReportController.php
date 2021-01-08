@@ -15,8 +15,10 @@ use App\Form\Admin\ManageSubmittedReportType;
 use App\Form\Admin\ManageReportConfirmType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
+use App\Service\Audit\AuditEvents;
 use App\Service\ParameterStoreService;
 use App\Service\ReportSubmissionService;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -94,12 +96,16 @@ class ReportController extends AbstractController
     /** @var ReportApi */
     private $reportApi;
 
+    private LoggerInterface $logger;
+
     public function __construct(
         RestClient $restClient,
-        ReportApi $reportApi
+        ReportApi $reportApi,
+        LoggerInterface $logger
     ) {
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
+        $this->logger = $logger;
     }
 
     /**
@@ -410,9 +416,8 @@ class ReportController extends AbstractController
      *
      * @param $id
      * @return array|Response|RedirectResponse
-     * @Template("@App/Admin/Client/Report/manageConfirm.html.twig")
-     *
      * @throws \Exception
+     * @Template("@App/Admin/Client/Report/manageConfirm.html.twig")
      */
     public function manageConfirmAction(Request $request, $id)
     {
@@ -436,7 +441,11 @@ class ReportController extends AbstractController
             $this->restClient->put('report/' . $report->getId(), $report, ['report_type', 'report_due_date']);
 
             if ($form->has('confirm') && $form['confirm']->getData() === 'yes' && $report->isSubmitted()) {
-                $this->unsubmitReport($report);
+                $this->reportApi->unsubmit(
+                    $report,
+                    $this->getUser(),
+                    AuditEvents::TRIGGER_UNSUBMIT_REPORT
+                );
                 $this->upsertChecklistInformation($report);
                 $this->addFlash('notice', 'Report marked as incomplete');
             }
@@ -516,19 +525,6 @@ class ReportController extends AbstractController
         return [
             'form' => $form->createView()
         ];
-    }
-
-    /**
-     * @param Report $report
-     * @throws \Exception
-     */
-    private function unsubmitReport(Report $report): void
-    {
-        $report->setUnSubmitDate(new \DateTime());
-
-        $this->restClient->put('report/' . $report->getId() . '/unsubmit', $report, [
-            'submitted', 'unsubmit_date', 'report_unsubmitted_sections_list', 'startEndDates', 'report_due_date'
-        ]);
     }
 
     /**

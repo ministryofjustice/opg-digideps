@@ -4,6 +4,7 @@ namespace Tests\App\ControllerReport;
 
 use App\Entity\Report\Document;
 use App\Entity\Report\ReportSubmission;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\App\Controller\AbstractTestController;
@@ -34,11 +35,11 @@ class ReportSubmissionControllerTest extends AbstractTestController
                 ['setFirstname' => "c{$i}", 'setLastname' => "l{$i}", 'setCaseNumber' => "100000{$i}"]
             );
             $report = self::fixtures()->createReport($client, [
-                'setStartDate'   => new \DateTime('2014-01-01'),
-                'setEndDate'     => new \DateTime('2014-12-31'),
+                'setStartDate'   => new DateTime('2014-01-01'),
+                'setEndDate'     => new DateTime('2014-12-31'),
                 'setSubmitted'   => true,
                 'setSubmittedBy' => self::$pa1, //irrelevant for assertions
-                'setSubmitDate'  => new \DateTime('2015-01-01')
+                'setSubmitDate'  => new DateTime('2015-01-01')
             ]);
             // create submission
             $submission = new ReportSubmission($report, ($i<3) ? self::$pa2 : self::$deputy1);
@@ -191,7 +192,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
             ['fromDate' => $fromDate, 'toDate' => $toDate]
         );
 
-        $this->assertEquals($expectedOutcomes['count'], count($data));
+        $this->assertCount($expectedOutcomes['count'], $data);
 
         foreach ($expectedOutcomes['caseNumbers'] as $expectedCaseNumber) {
             $this->assertResponseIncludesReportWithCaseNumber($data, $expectedCaseNumber);
@@ -205,32 +206,32 @@ class ReportSubmissionControllerTest extends AbstractTestController
     {
         return [
             [
-                'fromDate' => '2018-01-01 12:00:00',
-                'toDate' => '2018-01-31 12:00:00',
+                'fromDate' => '2018-01-01',
+                'toDate' => '2018-01-31',
                 'expectedOutcomes' => [
                     'count' => 2,
                     'caseNumbers' => ['1000000', '1000001']
                 ]
             ],
             [
-                'fromDate' => '2017-12-31 23:59:59',
-                'toDate' => '2018-02-01 00:00:00',
+                'fromDate' => '2017-12-31',
+                'toDate' => '2018-02-01',
                 'expectedOutcomes' => [
                     'count' => 2,
                     'caseNumbers' => ['1000000', '1000001']
                 ]
             ],
             [
-                'fromDate' => '2018-01-01 12:00:01',
-                'toDate' => '2018-01-31 12:00:00',
+                'fromDate' => '2018-01-02',
+                'toDate' => '2018-01-31',
                 'expectedOutcomes' => [
                     'count' => 1,
                     'caseNumbers' => ['1000001']
                 ]
             ],
             [
-                'fromDate' => '2018-01-01 12:00:00',
-                'toDate' => '2018-01-31 09:59:59',
+                'fromDate' => '2018-01-01',
+                'toDate' => '2018-01-30',
                 'expectedOutcomes' => [
                     'count' => 1,
                     'caseNumbers' => ['1000000']
@@ -280,7 +281,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
     private function updateReportSubmissionByIdWithNewDateTime(int $id, string $date)
     {
         $entity = self::fixtures()->getRepo('Report\ReportSubmission')->findOneById($id);
-        $entity->setCreatedOn(new \DateTime($date));
+        $entity->setCreatedOn(new DateTime($date));
 
         self::fixtures()->persist($entity);
     }

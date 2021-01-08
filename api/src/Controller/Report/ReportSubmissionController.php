@@ -219,18 +219,27 @@ class ReportSubmissionController extends RestController
     /**
      * @Route("/casrec_data", name="casrec_data", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN')")
+     *
+     * @param Request $request
+     * @param ReportSubmissionSummaryTransformer $reportSubmissionSummaryTransformer
+     *
+     * @return array
+     * @throws \Exception
      */
-    public function getCasrecData(Request $request, ReportSubmissionSummaryTransformer $reportSubmissionSummaryTransformer)
+    public function getCasrecData(Request $request, ReportSubmissionSummaryTransformer $reportSubmissionSummaryTransformer): array
     {
         /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
         $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class);
 
-        $fromDate = $request->get('fromDate', null) ? new DateTime($request->get('fromDate')) : null;
-        $toDate = $request->get('toDate', null) ? new DateTime($request->get('toDate')) : null;
+        $fromDate = $request->get('fromDate') ? new DateTime($request->get('fromDate')) : null;
+        $toDate = $request->get('toDate') ? new DateTime($request->get('toDate')) : null;
+
+        $fromDateTime = $fromDate ? $fromDate->setTime(0, 0) : null;
+        $toDateTime = $toDate ? $toDate->setTime(23, 59, 59) : null;
 
         $ret = $repo->findAllReportSubmissions(
-            $fromDate,
-            $toDate,
+            $fromDateTime,
+            $toDateTime,
             $request->get('orderBy', 'createdOn'),
             $request->get('order', 'ASC')
         );
