@@ -63,7 +63,7 @@ resource "aws_cloudwatch_metric_alarm" "scale_up" {
 
   metric_query {
     id          = "up"
-    expression  = "IF((cpu > 60 OR mem > 70) AND tc < ${var.ecs_task_autoscaling_maximum}, 1, 0)"
+    expression  = "IF((cpu > 80 OR mem > 80) AND tc < ${var.ecs_task_autoscaling_maximum}, 1, 0)"
     label       = "ContainerScaleUp"
     return_data = "true"
   }
