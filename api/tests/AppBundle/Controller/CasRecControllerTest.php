@@ -87,9 +87,7 @@ class CasRecControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenAdmin,
         ]);
     }
-    /**
-     * @group jim
-     */
+
     public function testDeleteBySourceDeletesBySource()
     {
         $this->buildAndPersistCasRecEntity('23410954', CasRec::CASREC_SOURCE);

@@ -55,16 +55,14 @@ class CasRecController extends RestController
      */
     public function verify(Request $request, CasrecVerificationService $verificationService)
     {
-//        file_put_contents('php://stderr', print_r($request, TRUE));
-//        file_put_contents('php://stderr', print_r($verificationService, TRUE));
         $clientData = $this->formatter->deserializeBodyContent($request);
 
         $user = $this->getUser();
-        // Check this here for cases created through non registration routes
+
+        // Update multi-deputy case flag
         $isMultiDeputyCase = $verificationService->isMultiDeputyCase($clientData['case_number']);
-        if ($isMultiDeputyCase) {
-            $this->updateUserToMultipleDeputy($user, $isMultiDeputyCase);
-        }
+        $this->updateUserToMultipleDeputy($user, $isMultiDeputyCase);
+
         $casrecVerified = $verificationService->validate(
             $clientData['case_number'],
             $clientData['lastname'],

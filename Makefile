@@ -55,7 +55,7 @@ client-unit-tests: ## Run the client unit tests
 	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose build frontend admin
 	docker-compose -f docker-compose.yml run -e APP_ENV=unit_test -e APP_DEBUG=0 --rm frontend bin/phpunit -c tests/phpunit
 
-api-unit-tests: reset-fixtures ## Run the api unit tests
+api-unit-tests: reset-database reset-fixtures ## Run the api unit tests
 	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose build api
 	docker-compose -f docker-compose.yml run --rm -e APP_ENV=dev -e APP_DEBUG=0 api sh scripts/apiunittest.sh
 
@@ -66,7 +66,7 @@ behat-suite: up-app-integration-tests reset-fixtures ## Pass in suite name as ar
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test --suite $(suite)
 
 behat-profile-suite: up-app-integration-tests reset-fixtures prod-mode ## Pass in profile and suite name as args e.g. make behat-profile-suite profile=<PROFILE NAME> suite=<SUITE NAME>
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test --profle $(profile) --suite $(suite)
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test --profile $(profile) --suite $(suite)
 
 reset-database: ## Resets the DB schema and runs migrations
 	docker-compose run --rm api sh scripts/reset_db_structure_local.sh

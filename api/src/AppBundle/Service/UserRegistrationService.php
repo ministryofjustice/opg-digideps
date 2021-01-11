@@ -85,11 +85,14 @@ class UserRegistrationService
 
         $this->populateClient($client, $selfRegisterData);
 
-        $this->casrecVerificationService->validate($selfRegisterData->getCaseNumber(), $selfRegisterData->getClientLastname(), $selfRegisterData->getLastname(), $user->getAddressPostcode()
-                                      );
+        $this->casrecVerificationService->validate(
+            $selfRegisterData->getCaseNumber(),
+            $selfRegisterData->getClientLastname(),
+            $selfRegisterData->getLastname(),
+            $user->getAddressPostcode()
+        );
 
         $user->setDeputyNo(implode(',', $this->casrecVerificationService->getLastMatchedDeputyNumbers()));
-        $user->setCoDeputyClientConfirmed($isMultiDeputyCase);
         $user->setNdrEnabled($this->casrecVerificationService->isLastMachedDeputyNdrEnabled());
 
         $this->saveUserAndClient($user, $client);
@@ -114,8 +117,12 @@ class UserRegistrationService
             throw new \RuntimeException("User with email {$user->getEmail()} already exists.", 422);
         }
 
-        $this->casrecVerificationService->validate($selfRegisterData->getCaseNumber(), $selfRegisterData->getClientLastname(), $selfRegisterData->getLastname(), $selfRegisterData->getPostcode()
-                                                  );
+        $this->casrecVerificationService->validate(
+            $selfRegisterData->getCaseNumber(),
+            $selfRegisterData->getClientLastname(),
+            $selfRegisterData->getLastname(),
+            $selfRegisterData->getPostcode()
+        );
 
         return true;
     }
