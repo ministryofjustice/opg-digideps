@@ -9,11 +9,11 @@ services:
     arguments: ["%cloudwatch_logs_client_params%"]
 
 
-  AppBundle\Service\Audit\AwsAuditLogHandler:
-    class: AppBundle\Service\Audit\AwsAuditLogHandler
+  App\Service\Audit\AwsAuditLogHandler:
+    class: App\Service\Audit\AwsAuditLogHandler
     arguments:
       - '@Aws\CloudWatchLogs\CloudWatchLogsClient'
       - '%env(AUDIT_LOG_GROUP_NAME)%'
 
-  AppBundle\Service\Audit\LocalAuditLogHandler:
-    class: AppBundle\Service\Audit\LocalAuditLogHandler
+  App\Service\Audit\LocalAuditLogHandler:
+    class: App\Service\Audit\LocalAuditLogHandler

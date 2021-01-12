@@ -1,0 +1,24 @@
+{% from '@App/Macros/macros.html.twig' import details %}
+{% trans_default_domain 'admin-checklist' %}
+
+{% set contents %}
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+            <th class="govuk-table__header" scope="col">{{ 'summaryPage.filename' | trans({}, 'report-documents') }}</th>
+            <th class="govuk-table__header" scope="col">{{ 'summaryPage.dateAttached' | trans({}, 'report-documents') }}</th>
+        </thead>
+        <tbody class="govuk-table__body">
+            {% for document in report.deputyDocuments %}
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">{{ document.fileName }}</td>
+                    <td class="govuk-table__cell">{{ document.createdOn | date("j F Y H:i") }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endset %}
+
+{{ details({
+    summaryText: (page ~ '.revealTitle.documentsSummary') | trans,
+    text: contents,
+}) }}

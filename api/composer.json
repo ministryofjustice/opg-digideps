@@ -4,11 +4,8 @@
   "type": "project",
   "description": "The \"Symfony Standard Edition\" distribution",
   "autoload": {
-    "psr-0": {
-      "": "src/"
-    },
     "psr-4": {
-      "ApplicationTest\\": "tests/phpunit"
+      "App\\": "src"
     }
   },
   "autoload-dev": {

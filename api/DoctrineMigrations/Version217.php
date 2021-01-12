@@ -2,10 +2,10 @@
 
 namespace Application\Migrations;
 
-use AppBundle\Entity\Organisation;
-use AppBundle\Entity\Repository\OrganisationRepository;
-use AppBundle\Entity\User;
-use AppBundle\Factory\OrganisationFactory;
+use App\Entity\Organisation;
+use App\Entity\Repository\OrganisationRepository;
+use App\Entity\User;
+use App\Factory\OrganisationFactory;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
@@ -31,7 +31,7 @@ final class Version217 extends AbstractMigration implements ContainerAwareInterf
         ]]);
 
         /** @var OrganisationFactory $orgFactory */
-        $orgFactory = $this->container->get('AppBundle\Factory\OrganisationFactory');
+        $orgFactory = $this->container->get('App\Factory\OrganisationFactory');
 
         /** @var OrganisationRepository $orgRepo */
         $orgRepo = $em->getRepository(Organisation::class);

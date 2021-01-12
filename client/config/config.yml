@@ -4,7 +4,9 @@ imports:
     - { resource: services.yml }
 
 framework:
-    translator:      { fallback: "%locale%" }
+    translator:
+        fallback: "%locale%"
+        default_path: '%kernel.root_dir%/translations'
     secret:          "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -52,7 +54,9 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     form_themes:
-        - 'AppBundle:Form:fields.html.twig'
+        - '@App/Form/fields.html.twig'
+    paths:
+        '%kernel.root_dir%/templates': App
 
 snc_redis:
     clients:

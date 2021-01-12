@@ -1,11 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Service\Client\AWS;
+namespace App\Service\Client\AWS;
 
-
-use AppBundle\Service\AWS\DefaultCredentialProvider;
-use AppBundle\Service\AWS\RequestSigner;
-use AppBundle\Service\AWS\SignatureV4Signer;
+use App\Service\AWS\DefaultCredentialProvider;
+use App\Service\AWS\RequestSigner;
+use App\Service\AWS\SignatureV4Signer;
 use Aws\Credentials\Credentials;
 use GuzzleHttp\Promise;
 use GuzzleHttp\Psr7\Request;

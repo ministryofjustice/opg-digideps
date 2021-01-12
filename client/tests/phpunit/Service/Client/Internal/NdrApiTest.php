@@ -3,16 +3,16 @@
 
 namespace DigidepsTests\Service\Client\Internal;
 
-use AppBundle\Event\NdrSubmittedEvent;
-use AppBundle\EventDispatcher\ObservableEventDispatcher;
-use AppBundle\Service\Client\Internal\NdrApi;
-use AppBundle\Service\Client\Internal\UserApi;
-use AppBundle\Service\Client\RestClient;
-use AppBundle\TestHelpers\ClientHelpers;
-use AppBundle\TestHelpers\DocumentHelpers;
-use AppBundle\TestHelpers\NdrHelpers;
-use AppBundle\TestHelpers\ReportHelpers;
-use AppBundle\TestHelpers\UserHelpers;
+use App\Event\NdrSubmittedEvent;
+use App\EventDispatcher\ObservableEventDispatcher;
+use App\Service\Client\Internal\NdrApi;
+use App\Service\Client\Internal\UserApi;
+use App\Service\Client\RestClient;
+use App\TestHelpers\ClientHelpers;
+use App\TestHelpers\DocumentHelpers;
+use App\TestHelpers\NdrHelpers;
+use App\TestHelpers\ReportHelpers;
+use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 
 class NdrApiTest extends TestCase

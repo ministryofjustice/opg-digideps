@@ -8,17 +8,17 @@ framework:
         storage_id: session.storage.mock_file
 
 services:
-    AppBundle\Service\Client\RestClientMock:
-        class: AppBundle\Service\Client\RestClientMock
+    App\Service\Client\RestClientMock:
+        class: App\Service\Client\RestClientMock
 
     Alphagov\Notifications\Client:
-        alias: AppBundle\Service\Mailer\NotifyClientMock
+        alias: App\Service\Mailer\NotifyClientMock
 
-    AppBundle\Service\Client\RestClientInterface:
-        alias: AppBundle\Service\Client\RestClientMock
+    App\Service\Client\RestClientInterface:
+        alias: App\Service\Client\RestClientMock
 
-    AppBundle\Service\Mailer\MailSender:
-        class: AppBundle\Service\Mailer\MailSender
+    App\Service\Mailer\MailSender:
+        class: App\Service\Mailer\MailSender
         arguments:
             $logger: '@logger'
-            $notifyClient: '@AppBundle\Service\Mailer\NotifyClientMock'
+            $notifyClient: '@App\Service\Mailer\NotifyClientMock'

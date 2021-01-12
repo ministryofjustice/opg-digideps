@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
-namespace Tests\AppBundle\EventListener;
+namespace Tests\App\EventListener;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\User;
-use AppBundle\Event\ClientUpdatedEvent;
-use AppBundle\EventSubscriber\ClientUpdatedSubscriber;
-use AppBundle\Service\Audit\AuditEvents;
-use AppBundle\Service\Mailer\Mailer;
-use AppBundle\Service\Time\DateTimeProvider;
-use AppBundle\TestHelpers\ClientHelpers;
-use AppBundle\TestHelpers\UserHelpers;
+use App\Entity\Client;
+use App\Entity\User;
+use App\Event\ClientUpdatedEvent;
+use App\EventSubscriber\ClientUpdatedSubscriber;
+use App\Service\Audit\AuditEvents;
+use App\Service\Mailer\Mailer;
+use App\Service\Time\DateTimeProvider;
+use App\TestHelpers\ClientHelpers;
+use App\TestHelpers\UserHelpers;
 use DateTime;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;

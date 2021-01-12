@@ -53,7 +53,7 @@
     </filter>
 
     <listeners>
-        <listener class="AppBundle\Pact\Listener\PactTestListener" file="./Pact/Listener/PactTestListener.php">
+        <listener class="App\Pact\Listener\PactTestListener" file="./Pact/Listener/PactTestListener.php">
             <arguments>
                 <array>
                      <element key="0">

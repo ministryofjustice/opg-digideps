@@ -11,13 +11,13 @@ doctrine:
         dbname: digideps_unit_test
 
 services:
-    AppBundle\Service\BruteForce\AttemptsInTimeChecker:
+    App\Service\BruteForce\AttemptsInTimeChecker:
         arguments: [ "@snc_redis.default" ]
         calls:
             - [ setRedisPrefix, ["test_ac_ret_code"] ]
             # after 5 attempts in the last 10 minutes, return a different return code (activate captcha)
             - [ addTrigger, [  5, 600 ] ]
-    AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker:
+    App\Service\BruteForce\AttemptsIncrementalWaitingChecker:
         arguments: [ "@snc_redis.default" ]
         calls:
             - [ setRedisPrefix, ["test_ac_exception"] ]

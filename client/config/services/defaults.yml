@@ -8,10 +8,10 @@ services:
             Predis\ClientInterface: '@snc_redis.default'
             $projectDir: '%kernel.project_dir%'
 
-    AppBundle\:
-        resource: "@AppBundle/*"
-        exclude: '@AppBundle/{Entity,Event}'
+    App\:
+        resource: '../../src/'
+        exclude: '../../src/{Entity,Event,Kernel.php}'
 
-    AppBundle\Controller\:
-        resource: "@AppBundle/Controller/*"
+    App\Controller\:
+        resource: '../../src/Controller/'
         tags: [controller.service_arguments]

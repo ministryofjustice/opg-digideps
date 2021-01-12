@@ -1,15 +1,15 @@
 services:
-    AppBundle\Form\Report\Asset\AssetTypeTitle:
+    App\Form\Report\Asset\AssetTypeTitle:
         arguments: ["%asset_dropdown%", "@translator", "report-assets"]
         tags:
             - { name: form.type }
 
-    AppBundle\Form\Ndr\Asset\AssetTypeTitle:
+    App\Form\Ndr\Asset\AssetTypeTitle:
         arguments: ["%asset_dropdown%", "@translator", "ndr-assets"]
         tags:
             - { name: form.type }
 
-    AppBundle\Validator\Constraints\EmailSameDomainValidator:
+    App\Validator\Constraints\EmailSameDomainValidator:
         calls:
             - [ setTokenStorage, ["@security.token_storage"] ]
         tags:

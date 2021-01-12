@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
-use AppBundle\Service\AWS\RequestSigner;
-use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
+use App\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
+use App\Service\AWS\RequestSigner;
+use App\Service\Client\Sirius\SiriusApiGatewayClient;
 use DateTime;
 use DigidepsTests\Helpers\DocumentHelpers;
 use DigidepsTests\Helpers\SiriusHelpers;

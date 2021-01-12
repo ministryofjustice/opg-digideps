@@ -1,0 +1,38 @@
+{% extends '@App/Layouts/application.html.twig' %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-prof-deputy-costs" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'howCharged' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageHeader %}{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    <div class="govuk-form-group push--bottom {% if not form.profDeputyCostsHowCharged.vars.valid %}govuk-form-group--error{% endif %}">
+        {{ form_checkbox_group(form.profDeputyCostsHowCharged, 'report.form.profDeputyCostsHowCharged', {
+            'legendText': (page ~ '.form.profDeputyCostsHow.label') | trans(transOptions),
+            legend: {
+                isPageHeading: true,
+                caption: (page ~ '.supportTitle') | trans,
+            },
+            'useFormGroup': false,
+        }) }}
+    </div>
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

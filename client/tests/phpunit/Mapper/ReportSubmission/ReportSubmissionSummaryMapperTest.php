@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\Mapper\ReportSubmission;
+namespace App\Mapper\ReportSubmission;
 
-use AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryMapper;
-use AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryQuery;
-use AppBundle\Service\Client\RestClient;
+use App\Mapper\ReportSubmission\ReportSubmissionSummaryMapper;
+use App\Mapper\ReportSubmission\ReportSubmissionSummaryQuery;
+use App\Service\Client\RestClient;
 use PHPUnit\Framework\TestCase;
 
 class ReportSubmissionSummaryMapperTest extends TestCase

@@ -1,5 +1,5 @@
 services:
-    AppBundle\Twig\AssetsExtension:
+    App\Twig\AssetsExtension:
         public: false
         arguments: [ "%kernel.root_dir%" ]
         tags:

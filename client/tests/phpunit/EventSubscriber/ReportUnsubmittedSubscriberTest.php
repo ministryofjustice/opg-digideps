@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
 
-namespace Tests\AppBundle\EventListener;
+namespace Tests\App\EventListener;
 
-use AppBundle\Event\ReportUnsubmittedEvent;
-use AppBundle\EventSubscriber\ReportUnsubmittedSubscriber;
-use AppBundle\Service\Audit\AuditEvents;
-use AppBundle\Service\Time\DateTimeProvider;
-use AppBundle\TestHelpers\ReportHelpers;
-use AppBundle\TestHelpers\UserHelpers;
+use App\Event\ReportUnsubmittedEvent;
+use App\EventSubscriber\ReportUnsubmittedSubscriber;
+use App\Service\Audit\AuditEvents;
+use App\Service\Time\DateTimeProvider;
+use App\TestHelpers\ReportHelpers;
+use App\TestHelpers\UserHelpers;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;

@@ -6,10 +6,10 @@ framework:
 
 services:
     Alphagov\Notifications\Client:
-        alias: AppBundle\Service\Mailer\NotifyClientMock
+        alias: App\Service\Mailer\NotifyClientMock
 
-    AppBundle\Service\Mailer\NotifyClientMock:
-        class: AppBundle\Service\Mailer\NotifyClientMock
+    App\Service\Mailer\NotifyClientMock:
+        class: App\Service\Mailer\NotifyClientMock
         arguments:
             $config:
                 httpClient: '@Http\Adapter\Guzzle6\Client'

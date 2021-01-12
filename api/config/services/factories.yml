@@ -24,6 +24,6 @@ parameters:
     - 'example.com'
 
 services:
-  AppBundle\Factory\OrganisationFactory:
-    class: AppBundle\Factory\OrganisationFactory
+  App\Factory\OrganisationFactory:
+    class: App\Factory\OrganisationFactory
     arguments: ['%shared_email_domains%']

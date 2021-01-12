@@ -4,11 +4,10 @@
     "type": "project",
     "description": "The \"Symfony Standard Edition\" distribution",
     "autoload": {
-        "psr-0": {
-            "": "src/",
-            "AppKernel": ""
-        },
-        "psr-4": { "DigidepsTests\\": "tests/phpunit" }
+        "psr-4": {
+            "App\\": "src/",
+            "DigidepsTests\\": "tests/phpunit"
+        }
     },
     "require": {
         "php": ">=7.4",

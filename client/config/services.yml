@@ -10,27 +10,27 @@ imports:
     - { resource: services_login.yml }
 
 services:
-    AppBundle\Controller\IndexController:
+    App\Controller\IndexController:
         autowire: true
         autoconfigure: true
-        class: AppBundle\Controller\IndexController
+        class: App\Controller\IndexController
         arguments:
           $environment: '%env(ENVIRONMENT)%'
 
-    AppBundle\Service\Redirector:
-        class: AppBundle\Service\Redirector
+    App\Service\Redirector:
+        class: App\Service\Redirector
         arguments: [ "@security.token_storage", "@security.authorization_checker", "@router", "@session", "%env%" ]
 
-    AppBundle\Service\WkHtmlToPdfGenerator:
+    App\Service\WkHtmlToPdfGenerator:
         arguments: [ "%wkhtmltopdf_address%", 30]
 
     wkhtmltopdf:
-        alias: AppBundle\Service\WkHtmlToPdfGenerator
+        alias: App\Service\WkHtmlToPdfGenerator
 
     # Disable autowiring
-    AppBundle\Model\EmailAttachment: ~
-    AppBundle\Service\DataImporter\CsvToArray: ~
-    AppBundle\Service\NdrStatusService: ~
+    App\Model\EmailAttachment: ~
+    App\Service\DataImporter\CsvToArray: ~
+    App\Service\NdrStatusService: ~
 
     guzzle_api_gateway_client:
         class: GuzzleHttp\Client
@@ -39,79 +39,79 @@ services:
                 timeout: 30
                 allow_redirects: false
 
-    AppBundle\Service\Client\Sirius\SiriusApiGatewayClient:
-        class: AppBundle\Service\Client\Sirius\SiriusApiGatewayClient
+    App\Service\Client\Sirius\SiriusApiGatewayClient:
+        class: App\Service\Client\Sirius\SiriusApiGatewayClient
         arguments:
             $httpClient: '@guzzle_api_gateway_client'
-            $requestSigner: '@AppBundle\Service\AWS\RequestSigner'
+            $requestSigner: '@App\Service\AWS\RequestSigner'
             $baseUrl: '%env(SIRIUS_API_BASE_URI)%'
             $serializer: '@serializer'
             $logger: '@logger'
 
-    AppBundle\Command\DocumentSyncCommand:
+    App\Command\DocumentSyncCommand:
         autowire: true
         autoconfigure: true
-        class: AppBundle\Command\DocumentSyncCommand
+        class: App\Command\DocumentSyncCommand
         arguments:
             $serializer: '@serializer'
 
-    AppBundle\Service\AWS\RequestSigner:
-        class: AppBundle\Service\AWS\RequestSigner
+    App\Service\AWS\RequestSigner:
+        class: App\Service\AWS\RequestSigner
         arguments:
-            $credentialProvider: '@AppBundle\Service\AWS\DefaultCredentialProvider'
-            $signer: '@AppBundle\Service\AWS\SignatureV4Signer'
+            $credentialProvider: '@App\Service\AWS\DefaultCredentialProvider'
+            $signer: '@App\Service\AWS\SignatureV4Signer'
 
-    AppBundle\Service\AWS\DefaultCredentialProvider:
-        class: AppBundle\Service\AWS\DefaultCredentialProvider
+    App\Service\AWS\DefaultCredentialProvider:
+        class: App\Service\AWS\DefaultCredentialProvider
 
-    AppBundle\Service\AWS\SignatureV4Signer:
-        class: AppBundle\Service\AWS\SignatureV4Signer
+    App\Service\AWS\SignatureV4Signer:
+        class: App\Service\AWS\SignatureV4Signer
 
     Aws\Ssm\SsmClient:
         arguments: ["%ssm_client_params%"]
 
-    AppBundle\Service\FeatureFlagService:
+    App\Service\FeatureFlagService:
         arguments: ['@Aws\Ssm\SsmClient', '%env(FEATURE_FLAG_PREFIX)%']
 
-    AppBundle\Service\ParameterStoreService:
+    App\Service\ParameterStoreService:
         arguments: ['@Aws\Ssm\SsmClient', '%env(PARAMETER_PREFIX)%', '%env(FEATURE_FLAG_PREFIX)%']
 
-    AppBundle\Serializer\SiriusDocumentUploadSerializer:
+    App\Serializer\SiriusDocumentUploadSerializer:
         autowire: true
         autoconfigure: true
         tags: ['serializer.normalizer']
 
     # Make optional availability services pullable
-    AppBundle\Service\Availability\ClamAvAvailability:
+    App\Service\Availability\ClamAvAvailability:
         arguments: ['@guzzle_file_scanner_client']
 
-    AppBundle\Service\Availability\SiriusApiAvailability:
-        arguments: ['@AppBundle\Service\Client\Sirius\SiriusApiGatewayClient']
+    App\Service\Availability\SiriusApiAvailability:
+        arguments: ['@App\Service\Client\Sirius\SiriusApiGatewayClient']
 
-    AppBundle\Service\Availability\WkHtmlToPdfAvailability:
-        arguments: ['@AppBundle\Service\WkHtmlToPdfGenerator']
+    App\Service\Availability\WkHtmlToPdfAvailability:
+        arguments: ['@App\Service\WkHtmlToPdfGenerator']
 
-    AppBundle\Service\Availability\NotifyAvailability:
+    App\Service\Availability\NotifyAvailability:
          arguments:
              $notifyClient: '@Alphagov\Notifications\Client'
 
-    AppBundle\Service\DocumentSyncService:
+    App\Service\DocumentSyncService:
         autowire: true
         autoconfigure: true
         arguments:
-            $storage: '@AppBundle\Service\File\Storage\S3Storage'
-            $siriusApiGatewayClient: '@AppBundle\Service\Client\Sirius\SiriusApiGatewayClient'
-            $restClient: '@AppBundle\Service\Client\RestClient'
+            $storage: '@App\Service\File\Storage\S3Storage'
+            $siriusApiGatewayClient: '@App\Service\Client\Sirius\SiriusApiGatewayClient'
+            $restClient: '@App\Service\Client\RestClient'
 
-    AppBundle\Controller\SettingsController:
+    App\Controller\SettingsController:
         autowire: true
         autoconfigure: true
 
-    AppBundle\Controller\Org\OrganisationController:
+    App\Controller\Org\OrganisationController:
         autowire: true
         autoconfigure: true
 
-    AppBundle\Controller\Report\ReportController:
+    App\Controller\Report\ReportController:
         autowire: true
         autoconfigure: true
 

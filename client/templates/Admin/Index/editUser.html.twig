@@ -1,0 +1,67 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% trans_default_domain "admin" %}
+{% set page = 'editUser' %}
+
+{% set navSection = 'users' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block supportTitleTop %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
+
+{% block pageContent %}
+
+    {% if 'ROLE_LAY_DEPUTY' == user.roleName %}
+        {% set numberOfClients = user.clients | length %}
+        {% set firstClient = numberOfClients > 0 ? (user.clients | first) : null %}
+        {% set reports = firstClient ? firstClient.reports : [] %}
+        {% set reportsCount = reports | length %}
+    {% endif %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_input(form.firstname,'addUserForm.firstname') }}
+    {{ form_input(form.lastname,'addUserForm.lastname') }}
+
+    {% if form.email is defined %}
+        {{ form_input(form.email,'addUserForm.emailEdit') }}
+    {% endif %}
+
+    {{ form_input(form.addressPostcode,'addUserForm.addressPostcode', {inputClass: 'govuk-!-width-one-third'}) }}
+
+    {% if 'ROLE_LAY_DEPUTY' == user.roleName %}
+        {{ form_checkbox(form.ndrEnabled, 'addUserForm.ndrEnabled') }}
+    {% endif %}
+
+    {% if 'ROLE_LAY_DEPUTY' == user.roleName and reportsCount > 0 %}
+        <p class="govuk-body">{{ 'editUserForm.reportsExist' | trans }}</p>
+    {% endif %}
+
+    {{ form_submit(form.save, 'editUserForm.submit', {'buttonClass': 'behat-link-save'}) }}
+
+    {% if action is defined %}
+        {% if action == 'edit' %}
+            {% include '@App/Components/Link/_link-button.html.twig' with {
+            transDomain: 'admin',
+            linkId: 'admin_cancel',
+            linkButtonLabel: 'cancel.label',
+            linkHref: path('admin_homepage')
+            } %}
+        {% endif %}
+    {% endif %}
+    {{ form_end(form) }}
+
+    {% if action is defined %}
+        {% if action == 'edit' %}
+            {% if is_granted('delete-user', user) %}
+                {% include '@App/Components/Link/_link-button.html.twig' with {
+                    transDomain: 'admin',
+                    linkButtonLabel: user.getClients|length > 0 ? 'Delete User and Client' : 'Delete user',
+                    linkClass: 'button-warning push--top',
+                    linkHref: path('admin_delete_confirm', { id: id })
+                } %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

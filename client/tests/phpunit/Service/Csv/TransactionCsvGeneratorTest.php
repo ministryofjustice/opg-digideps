@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
 
-namespace AppBundle\Service\Csv;
+namespace App\Service\Csv;
 
-use AppBundle\Entity\Report\BankAccount;
-use AppBundle\Entity\Report\Expense;
-use AppBundle\Entity\Report\Gift;
-use AppBundle\Entity\Report\MoneyTransaction;
-use AppBundle\Entity\ReportInterface;
+use App\Entity\Report\BankAccount;
+use App\Entity\Report\Expense;
+use App\Entity\Report\Gift;
+use App\Entity\Report\MoneyTransaction;
+use App\Entity\ReportInterface;
 use Common\Form\Elements\Validators\Money;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use MockeryStub as m;
@@ -79,8 +79,7 @@ class TransactionCsvGeneratorTest extends MockeryTestCase
         $numMoneyIn = 0,
         $dueDate = '2/5/2018',
         $submitDate = '4/28/2018'
-    )
-    {
+    ) {
         $mockReport = m::mock(ReportInterface::class);
 
         $mockReport->shouldReceive('getId')->andReturn($reportId);

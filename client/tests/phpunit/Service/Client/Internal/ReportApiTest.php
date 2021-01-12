@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
-namespace Tests\AppBundle\Service\Client\Internal;
+namespace Tests\App\Service\Client\Internal;
 
-use AppBundle\Event\ReportSubmittedEvent;
-use AppBundle\EventDispatcher\ObservableEventDispatcher;
-use AppBundle\Service\Client\Internal\ReportApi;
-use AppBundle\Service\Client\RestClient;
-use AppBundle\TestHelpers\ReportHelpers;
-use AppBundle\TestHelpers\UserHelpers;
+use App\Event\ReportSubmittedEvent;
+use App\EventDispatcher\ObservableEventDispatcher;
+use App\Service\Client\Internal\ReportApi;
+use App\Service\Client\RestClient;
+use App\TestHelpers\ReportHelpers;
+use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
-use AppBundle\Event\ReportUnsubmittedEvent;
+use App\Event\ReportUnsubmittedEvent;
 
 class ReportApiTest extends TestCase
 {

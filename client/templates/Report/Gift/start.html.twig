@@ -1,0 +1,56 @@
+{% extends '@App/Layouts/application.html.twig'%}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-gifts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {
+    '%client%': report.client.firstname | e,
+    '%accountsPath%': path('bank_accounts', {reportId: report.id})
+} %}
+
+{% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'startPage.pageTitle' | trans }}{% endblock %}
+
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+	<div class="text">
+        <p class="govuk-body">{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
+
+        <details class="push--bottom" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">{{ 'startPage.hiddenText01.summary' | trans(transOptions) }}</span>
+            </summary>
+            <div class="govuk-details__text">
+                <p class="govuk-body">{{ 'startPage.hiddenText01.content.para01' |trans(transOptions) }}</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>{{ 'startPage.hiddenText01.content.listItem01' | trans }}</li>
+                    <li>{{ 'startPage.hiddenText01.content.listItem02' | trans }}</li>
+                    <li>{{ 'startPage.hiddenText01.content.listItem03' | trans }}</li>
+                    <li>{{ 'startPage.hiddenText01.content.listItem04' | trans(transOptions) }}</li>
+                    <li>{{ 'startPage.hiddenText01.content.listItem05' | trans(transOptions) }}</li>
+                </ul>
+                <p class="govuk-body">{{ 'startPage.hiddenText01.content.para02' |trans(transOptions)|raw }}</p>
+                <p class="govuk-body">{{ 'startPage.hiddenText01.content.para03' |trans(transOptions)|raw }}</p>
+            </div>
+        </details>
+
+        {% if report.bankAccounts is empty and report.canLinkToBankAccounts %}
+            <h3 class="govuk-heading-s">{{ 'startPage.accountLinksHeading' | trans(transOptions) }}</h3>
+            <p class="govuk-body">{{ 'startPage.accountLinksPara1' | trans(transOptions) | raw }}</p>
+        {% endif %}
+    </div>
+
+    {{ macros.startSectionButton(path('gifts_exist', { 'reportId': report.id}), 'startPage.startButton' | trans ) }}
+
+    {# Pagination #}
+    {% include '@App/Report/_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'gifts',
+    } %}
+
+{% endblock %}

@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service\Client\TokenStorage;
+namespace App\Service\Client\TokenStorage;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;

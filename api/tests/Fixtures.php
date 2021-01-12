@@ -2,12 +2,12 @@
 
 namespace Tests;
 
-use AppBundle\Entity as EntityDir;
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Organisation;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Entity\User;
+use App\Entity as EntityDir;
+use App\Entity\Client;
+use App\Entity\Organisation;
+use App\Entity\Report\Report;
+use App\Entity\Report\ReportSubmission;
+use App\Entity\User;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -471,7 +471,7 @@ class Fixtures
 
     public function getRepo($entity)
     {
-        return $this->em->getRepository(class_exists($entity) ? $entity : "AppBundle\\Entity\\{$entity}");
+        return $this->em->getRepository(class_exists($entity) ? $entity : "App\\Entity\\{$entity}");
     }
 
     /**

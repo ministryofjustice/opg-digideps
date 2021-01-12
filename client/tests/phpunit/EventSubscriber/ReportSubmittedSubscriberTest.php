@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
 
-namespace Tests\AppBundle\EventListener;
+namespace Tests\App\EventListener;
 
-use AppBundle\Event\ReportSubmittedEvent;
-use AppBundle\EventSubscriber\ReportSubmittedSubscriber;
-use AppBundle\Service\Audit\AuditEvents;
-use AppBundle\Service\Client\Internal\ReportApi;
-use AppBundle\Service\Time\DateTimeProvider;
-use AppBundle\Service\Mailer\Mailer;
-use AppBundle\TestHelpers\ReportHelpers;
-use AppBundle\TestHelpers\UserHelpers;
+use App\Event\ReportSubmittedEvent;
+use App\EventSubscriber\ReportSubmittedSubscriber;
+use App\Service\Audit\AuditEvents;
+use App\Service\Client\Internal\ReportApi;
+use App\Service\Time\DateTimeProvider;
+use App\Service\Mailer\Mailer;
+use App\TestHelpers\ReportHelpers;
+use App\TestHelpers\UserHelpers;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;

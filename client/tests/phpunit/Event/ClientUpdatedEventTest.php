@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Tests\AppBundle\Event;
+namespace Tests\App\Event;
 
-use AppBundle\Event\ClientUpdatedEvent;
-use AppBundle\TestHelpers\ClientHelpers;
-use AppBundle\TestHelpers\UserHelpers;
+use App\Event\ClientUpdatedEvent;
+use App\TestHelpers\ClientHelpers;
+use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 
 class ClientUpdatedEventTest extends TestCase

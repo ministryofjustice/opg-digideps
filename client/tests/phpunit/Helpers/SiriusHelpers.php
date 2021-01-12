@@ -2,11 +2,11 @@
 
 namespace DigidepsTests\Helpers;
 
-use AppBundle\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
-use AppBundle\Model\Sirius\SiriusDocumentFile;
-use AppBundle\Model\Sirius\SiriusDocumentUpload;
-use AppBundle\Model\Sirius\SiriusReportPdfDocumentMetadata;
-use AppBundle\Model\Sirius\SiriusSupportingDocumentMetadata;
+use App\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
+use App\Model\Sirius\SiriusDocumentFile;
+use App\Model\Sirius\SiriusDocumentUpload;
+use App\Model\Sirius\SiriusReportPdfDocumentMetadata;
+use App\Model\Sirius\SiriusSupportingDocumentMetadata;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 

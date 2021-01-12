@@ -2,9 +2,9 @@
 
 namespace Application\Migrations;
 
-use AppBundle\Entity\Organisation;
-use AppBundle\Entity\Repository\OrganisationRepository;
-use AppBundle\Entity\User;
+use App\Entity\Organisation;
+use App\Entity\Repository\OrganisationRepository;
+use App\Entity\User;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;

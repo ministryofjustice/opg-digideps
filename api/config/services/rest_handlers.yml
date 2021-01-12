@@ -1,22 +1,22 @@
 services:
   rest_handler.report.deputy_costs_estimate_report_update_handler:
-    class: AppBundle\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler
+    class: App\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler
     arguments: [ '@em' ]
 
   rest_handler.report.deputy_costs_report_update_handler:
-    class: AppBundle\Service\RestHandler\Report\DeputyCostsReportUpdateHandler
+    class: App\Service\RestHandler\Report\DeputyCostsReportUpdateHandler
     arguments: [ '@em' ]
 
   rest_handler.report.pa_fees_expenses_report_update_handler:
-    class: AppBundle\Service\RestHandler\Report\PaFeesExpensesReportUpdateHandler
+    class: App\Service\RestHandler\Report\PaFeesExpensesReportUpdateHandler
     arguments: [ '@em' ]
 
-  AppBundle\Service\RestHandler\OrganisationRestHandler:
-    class: AppBundle\Service\RestHandler\OrganisationRestHandler
+  App\Service\RestHandler\OrganisationRestHandler:
+    class: App\Service\RestHandler\OrganisationRestHandler
     arguments:
         - '@em'
         - '@validator'
-        - '@AppBundle\Entity\Repository\OrganisationRepository'
-        - '@AppBundle\Entity\Repository\UserRepository'
-        - '@AppBundle\Factory\OrganisationFactory'
+        - '@App\Entity\Repository\OrganisationRepository'
+        - '@App\Entity\Repository\UserRepository'
+        - '@App\Factory\OrganisationFactory'
         - '%shared_email_domains%'

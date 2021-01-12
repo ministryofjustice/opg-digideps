@@ -1,0 +1,24 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% set translationDomain = "user-activation-link-sent" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
+
+{% block pageContent %}
+
+  <div class="text">
+
+    <p class="govuk-body">{{ 'subtitle' | trans({'%tokenExpireHours%': tokenExpireHours})}}</p>
+
+    <p class="govuk-body">{{ 'didnotReceive' | trans({'%senderEmail%': 'opgdeputyservice@digideps.dsd.io' }) }}</p>
+
+    <p class="govuk-body">{{ 'stillHavingProblems' | trans() }}
+    	<a href="https://www.gov.uk/government/organisations/office-of-the-public-guardian#org-contacts">{{ 'contactOPG' | trans }}</a>
+    </p>
+
+  </div>
+
+
+{% endblock %}

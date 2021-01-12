@@ -18,4 +18,4 @@ monolog:
       bubble: false
     audit:
       type: service
-      id: AppBundle\Service\Audit\AwsAuditLogHandler
+      id: App\Service\Audit\AwsAuditLogHandler

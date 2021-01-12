@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Tests\AppBundle\Entity\Report;
+namespace Tests\App\Entity\Report;
 
-use AppBundle\Entity\Report\Report;
+use App\Entity\Report\Report;
 use PHPUnit\Framework\TestCase;
 
 class ReportTest extends TestCase

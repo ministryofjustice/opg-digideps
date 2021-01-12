@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
 
-namespace Tests\AppBundle\EventListener;
+namespace Tests\App\EventListener;
 
-use AppBundle\Event\DeputyInvitedEvent;
-use AppBundle\EventSubscriber\DeputyInvitedSubscriber;
-use AppBundle\Service\Mailer\Mailer;
-use AppBundle\TestHelpers\UserHelpers;
+use App\Event\DeputyInvitedEvent;
+use App\EventSubscriber\DeputyInvitedSubscriber;
+use App\Service\Mailer\Mailer;
+use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 
 class DeputyInvitedSubscriberTest extends TestCase
