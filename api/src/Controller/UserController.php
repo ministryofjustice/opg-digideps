@@ -245,23 +245,6 @@ class UserController extends RestController
     }
 
     /**
-     * Get user by email, and retrieve only id and team names the user belongs to.
-     * Only for ROLE_PROF named and admin, when adding users to multiple teams.
-     * Returns empty if user doesn't exist
-     *
-     * @Route("/get-team-names-by-email/{email}", methods={"GET"})
-     * @Security("has_role('ROLE_ORG_NAMED') or has_role('ROLE_ORG_ADMIN')")
-     */
-    public function getUserTeamNames(Request $request, $email)
-    {
-        $user = $this->userRepository->findOneBy(['email' => $email]);
-
-        $this->formatter->setJmsSerialiserGroups(['user-id', 'team-names']);
-
-        return $user;
-    }
-
-    /**
      * Delete user with clients.
      *
      * @Route("/{id}", methods={"DELETE"})
@@ -432,39 +415,5 @@ class UserController extends RestController
         }
 
         return $user;
-    }
-
-    /**
-     * @Route("/{id}/team", requirements={"id":"\d+"}, methods={"GET"})
-     * @Security("has_role('ROLE_ORG')")
-     */
-    public function getTeamByUserId(Request $request, $id)
-    {
-        /** @var User $loggedInUser */
-        $loggedInUser = $this->getUser();
-
-        /** @var User|null $requestedUser */
-        $requestedUser = $this->userRepository->find($id);
-
-        if (!$requestedUser) {
-            throw new \RuntimeException('User not found', 419);
-        }
-
-        /** @var ArrayCollection $requestedUserTeams */
-        $requestedUserTeams = $requestedUser->getTeams();
-
-        /** @var ArrayCollection $loggedInUserTeams */
-        $loggedInUserTeams = $loggedInUser->getTeams();
-        if ($requestedUserTeams->first() !== $loggedInUserTeams->first()) {
-            throw $this->createAccessDeniedException('User not part of the same team');
-        }
-
-        $groups = $request->query->has('groups') ?
-            (array) $request->query->get('groups') :
-            ['team', 'team-users', 'user'];
-
-        $this->formatter->setJmsSerialiserGroups($groups);
-
-        return $requestedUserTeams->first();
     }
 }

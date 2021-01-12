@@ -8,7 +8,6 @@ use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\Repository\NamedDeputyRepository;
 use App\Entity\Repository\OrganisationRepository;
-use App\Entity\Team;
 use App\Entity\User;
 use App\Factory\OrganisationFactory;
 use App\Service\ReportUtils;
@@ -533,10 +532,6 @@ class ProfTestUserFixtures extends AbstractDataFixture
 
     private function addUser($data, $manager)
     {
-        $organisation = null;
-        $team = new Team($data['Email'] . ' Team');
-        $manager->persist($team);
-
         // Create user
         $user = (new User())
             ->setFirstname(isset($data['Dep Forename']) ? $data['Dep Forename'] : 'test')
@@ -554,7 +549,6 @@ class ProfTestUserFixtures extends AbstractDataFixture
             ->setDeputyNo(isset($data['Deputy No']) ? $data['Deputy No'] : null)
             ->setRoleName($data['roleName']);
 
-        $user->addTeam($team);
         $manager->persist($user);
 
         $organisation = $this->orgRepository->findByEmailIdentifier($data['Email']);

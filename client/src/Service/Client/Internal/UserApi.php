@@ -77,6 +77,10 @@ class UserApi
         return $this->restClient->get(sprintf(self::USER_BY_ID_ENDPOINT, $id), 'User', $jmsGroups);
     }
 
+    /**
+     * @param string $email
+     * @return mixed
+     */
     public function getByEmail(string $email)
     {
         return $this->restClient->get(sprintf(self::GET_USER_BY_EMAIL_ENDPOINT, $email), 'User');
