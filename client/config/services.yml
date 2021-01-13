@@ -1,0 +1,119 @@
+imports:
+    - { resource: services/defaults.yml }
+    - { resource: services/file_uploads.yml }
+    - { resource: services/log_handlers.yml }
+    - { resource: services/twig.yml }
+    - { resource: services_mail.yml }
+    - { resource: services_forms.yml }
+    - { resource: services_api.yml }
+    - { resource: services_listeners.yml }
+    - { resource: services_login.yml }
+
+services:
+    App\Controller\IndexController:
+        autowire: true
+        autoconfigure: true
+        class: App\Controller\IndexController
+        arguments:
+          $environment: '%env(ENVIRONMENT)%'
+
+    App\Service\Redirector:
+        class: App\Service\Redirector
+        arguments: [ "@security.token_storage", "@security.authorization_checker", "@router", "@session", "%env%" ]
+
+    App\Service\WkHtmlToPdfGenerator:
+        arguments: [ "%wkhtmltopdf_address%", 30]
+
+    wkhtmltopdf:
+        alias: App\Service\WkHtmlToPdfGenerator
+
+    # Disable autowiring
+    App\Model\EmailAttachment: ~
+    App\Service\DataImporter\CsvToArray: ~
+    App\Service\NdrStatusService: ~
+
+    guzzle_api_gateway_client:
+        class: GuzzleHttp\Client
+        arguments:
+            $config:
+                timeout: 30
+                allow_redirects: false
+
+    App\Service\Client\Sirius\SiriusApiGatewayClient:
+        class: App\Service\Client\Sirius\SiriusApiGatewayClient
+        arguments:
+            $httpClient: '@guzzle_api_gateway_client'
+            $requestSigner: '@App\Service\AWS\RequestSigner'
+            $baseUrl: '%env(SIRIUS_API_BASE_URI)%'
+            $serializer: '@serializer'
+            $logger: '@logger'
+
+    App\Command\DocumentSyncCommand:
+        autowire: true
+        autoconfigure: true
+        class: App\Command\DocumentSyncCommand
+        arguments:
+            $serializer: '@serializer'
+
+    App\Service\AWS\RequestSigner:
+        class: App\Service\AWS\RequestSigner
+        arguments:
+            $credentialProvider: '@App\Service\AWS\DefaultCredentialProvider'
+            $signer: '@App\Service\AWS\SignatureV4Signer'
+
+    App\Service\AWS\DefaultCredentialProvider:
+        class: App\Service\AWS\DefaultCredentialProvider
+
+    App\Service\AWS\SignatureV4Signer:
+        class: App\Service\AWS\SignatureV4Signer
+
+    Aws\Ssm\SsmClient:
+        arguments: ["%ssm_client_params%"]
+
+    App\Service\FeatureFlagService:
+        arguments: ['@Aws\Ssm\SsmClient', '%env(FEATURE_FLAG_PREFIX)%']
+
+    App\Service\ParameterStoreService:
+        arguments: ['@Aws\Ssm\SsmClient', '%env(PARAMETER_PREFIX)%', '%env(FEATURE_FLAG_PREFIX)%']
+
+    App\Serializer\SiriusDocumentUploadSerializer:
+        autowire: true
+        autoconfigure: true
+        tags: ['serializer.normalizer']
+
+    # Make optional availability services pullable
+    App\Service\Availability\ClamAvAvailability:
+        arguments: ['@guzzle_file_scanner_client']
+
+    App\Service\Availability\SiriusApiAvailability:
+        arguments: ['@App\Service\Client\Sirius\SiriusApiGatewayClient']
+
+    App\Service\Availability\WkHtmlToPdfAvailability:
+        arguments: ['@App\Service\WkHtmlToPdfGenerator']
+
+    App\Service\Availability\NotifyAvailability:
+         arguments:
+             $notifyClient: '@Alphagov\Notifications\Client'
+
+    App\Service\DocumentSyncService:
+        autowire: true
+        autoconfigure: true
+        arguments:
+            $storage: '@App\Service\File\Storage\S3Storage'
+            $siriusApiGatewayClient: '@App\Service\Client\Sirius\SiriusApiGatewayClient'
+            $restClient: '@App\Service\Client\RestClient'
+
+    App\Controller\SettingsController:
+        autowire: true
+        autoconfigure: true
+
+    App\Controller\Org\OrganisationController:
+        autowire: true
+        autoconfigure: true
+
+    App\Controller\Report\ReportController:
+        autowire: true
+        autoconfigure: true
+
+    League\MimeTypeDetection\FinfoMimeTypeDetector:
+        class: League\MimeTypeDetection\FinfoMimeTypeDetector

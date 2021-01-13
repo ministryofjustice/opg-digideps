@@ -1,0 +1,163 @@
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-visits-care" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% set hideEditLink = hideEditLink | default(false) %}
+
+<dl class="govuk-summary-list">
+    {{ macros.summaryListHeaderQA(hideEditLink) }}
+    {# step 1 #}
+    <div class="govuk-summary-list__row behat-region-live-with-client">
+        {% if report.visitsCare.doYouLiveWithClient is null %}
+            <dt class="govuk-summary-list__key">
+                <span class="error">
+                    {{ 'form.doYouLiveWithClient.label' | trans(transOptions) }}
+                </span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </dd>
+        {% else %}
+            <dt class="govuk-summary-list__key">
+                {{ 'form.doYouLiveWithClient.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.visitsCare.doYouLiveWithClient | capitalize }}
+            </dd>
+        {% endif %}
+        {% if not hideEditLink  %}
+            <dd class="govuk-summary-list__actions">
+                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-live-with-client-edit govuk-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+            </dd>
+        {% endif %}
+    </div>
+
+    {% if report.visitsCare.doYouLiveWithClient == 'no' %}
+        <div class="govuk-summary-list__row behat-region-how-often-contact-client">
+            <dt class="govuk-summary-list__key">
+                {{ 'form.howOftenDoYouContactClient.labelShort' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.visitsCare.howOftenDoYouContactClient | nl2br }}
+            </dd>
+            {% if not hideEditLink  %}
+                <dd class="govuk-summary-list__actions">
+                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="govuk-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </dd>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {# step 2 #}
+    <div class="govuk-summary-list__row behat-region-does-client-receive-paid-care">
+        {% if report.visitsCare.doesClientReceivePaidCare is null %}
+            <dt class="govuk-summary-list__key">
+                <span class="error">{{ 'form.doesClientReceivePaidCare.label' | trans(transOptions) }}</span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </dd>
+        {% else %}
+            <dt class="govuk-summary-list__key">
+                {{ 'form.doesClientReceivePaidCare.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.visitsCare.doesClientReceivePaidCare | capitalize }}
+            </dd>
+        {% endif %}
+        {% if not hideEditLink  %}
+            <dd class="govuk-summary-list__actions">
+                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}" class="govuk-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+            </dd>
+        {% endif %}
+    </div>
+
+    {% if report.visitsCare.doesClientReceivePaidCare == 'yes' %}
+        <div class="govuk-summary-list__row behat-region-how-is-care-funded">
+            <dt class="govuk-summary-list__key">
+                {{ 'form.howIsCareFunded.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ ('form.howIsCareFunded.choices.' ~ report.visitsCare.howIsCareFunded) | trans(transOptions) }}
+            </dd>
+            {% if not hideEditLink  %}
+                <dd class="govuk-summary-list__actions">
+                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}" class="govuk-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </dd>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {# step 3 #}
+    <div class="govuk-summary-list__row behat-region-who-is-doing-caring">
+        {% if report.visitsCare.whoIsDoingTheCaring is null %}
+            <dt class="govuk-summary-list__key">
+                <span class="error">
+                    {{ 'form.whoIsDoingTheCaring.label' | trans(transOptions) }}
+                </span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </dd>
+        {% else %}
+            <dt class="govuk-summary-list__key">
+                {{ 'form.whoIsDoingTheCaring.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.visitsCare.whoIsDoingTheCaring | nl2br }}
+            </dd>
+        {% endif %}
+        {% if not hideEditLink  %}
+            <dd class="govuk-summary-list__actions">
+                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':3, 'from': 'summary'}) }}" class="govuk-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+            </dd>
+        {% endif %}
+    </div>
+
+    {# step 4 #}
+    <div class="govuk-summary-list__row behat-region-client-has-care-plan">
+        {% if report.visitsCare.doesClientHaveACarePlan is null %}
+            <dt class="govuk-summary-list__key">
+                <span class="error">
+                    {{ 'form.doesClientHaveACarePlan.label' | trans(transOptions) }}
+                </span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </dd>
+        {% else %}
+            <dt class="govuk-summary-list__key">
+                {{ 'form.doesClientHaveACarePlan.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.visitsCare.doesClientHaveACarePlan | capitalize }}
+        </dd>
+        {% endif %}
+        {% if not hideEditLink  %}
+            <dd class="govuk-summary-list__actions"><a href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': 'summary'}) }}" class="govuk-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+            </dd>
+        {% endif %}
+    </div>
+
+    {% if report.visitsCare.doesClientHaveACarePlan == 'yes' %}
+        <div class="govuk-summary-list__row behat-region-care-plan-last-reviewed">
+            <dt class="govuk-summary-list__key">
+                {{ 'form.whenWasCarePlanLastReviewed.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.visitsCare.whenWasCarePlanLastReviewed | date('F Y') }}
+            </dd>
+            {% if not hideEditLink  %}
+                <dd class="govuk-summary-list__actions">
+                    <a
+                        href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': 'summary'}) }}"
+                        class="govuk-link">
+                        {{ 'edit' | trans({}, 'common' ) }}
+                    </a>
+                </dd>
+            {% endif %}
+        </div>
+    {% endif %}
+</dl>

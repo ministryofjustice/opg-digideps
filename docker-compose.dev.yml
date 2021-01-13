@@ -41,10 +41,3 @@ services:
         env_file:
             - ./behat/test.env
             - .env
-
-    mock-sirius-integration:
-        image: muonsoft/openapi-mock:latest
-        ports:
-            - 6060:8080
-        environment:
-            - OPENAPI_MOCK_SPECIFICATION_URL=https://raw.githubusercontent.com/ministryofjustice/opg-data-deputy-reporting/master/lambda_functions/v2/openapi/deputy-reporting-openapi.yml

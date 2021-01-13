@@ -1,0 +1,11 @@
+{% from '@App/Admin/Client/Report/macros.html.twig' import checklist_radios %}
+
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'checklistPage' %}
+
+<h3 class="govuk-heading-m" id="bonds">{{ (page ~ '.heading.lodging.bonds') | trans }}</h3>
+
+{{ checklist_radios(form.bondAdequate, { margin: 6 }) }}
+
+{{ checklist_radios(form.bondOrderMatchCasrec, { margin: 6 }) }}

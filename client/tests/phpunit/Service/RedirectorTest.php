@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\User;
+use App\Entity\Client;
+use App\Entity\User;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -148,8 +148,8 @@ class RedirectorTest extends TestCase
         $isDeputyOrg,
         $clientKnown,
         $hasAddress,
-        $expectedRoute)
-    {
+        $expectedRoute
+    ) {
         $this->user->setRoleName($userRole);
 
         $this->user->shouldReceive('isNdrEnabled')->andReturn($isNdrEnabled);

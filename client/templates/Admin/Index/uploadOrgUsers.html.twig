@@ -1,0 +1,42 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% trans_default_domain "admin" %}
+{% set page = 'uploadPA' %}
+
+{% set navSection = 'users' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block supportTitleTop %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    <h2 class="govuk-heading-m">{{ (page ~ '.heading') | trans }}</h2>
+
+    {{ form_errors(form) }}
+
+    {{ form_start(form, {attr: {'data-module': 'csv-upload-progress', novalidate: 'novalidate' }}) }}
+
+    <div class="opg-alert opg-alert--error hidden" data-js="upload-error">
+        <div class="opg-alert__message">
+            {{ (page ~ '.uploadError') | trans }}
+        </div>
+    </div>
+
+    {{ form_input(form.file, 'uploadPA.upload', {
+        'inputClass': 'no-border'
+    }) }}
+
+    {{ form_submit(form.upload, 'uploadPA.submit') }}
+
+    <div class="govuk-form-group">
+        <p class="hidden" data-js="upload-explanation">{{ (page ~ '.uploading') | trans | nl2br }}</p>
+
+        <progress value="0" min="0" max="1" class="hidden"></progress>
+    </div>
+
+    {{ form_end(form) }}
+
+{% endblock %}

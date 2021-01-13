@@ -1,0 +1,38 @@
+{% extends '@App/Layouts/application.html.twig'%}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "ndr-assets" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+
+{% block htmlTitle %}{{ 'typePage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'typePage.pageTitle' | trans }}{% endblock %}
+
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'typePage.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block pageContent %}
+
+    <div class="text">
+        <p class="govuk-body">{{ 'typePage.pageSectionDescription' | trans(transOptions) }}</p>
+    </div>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
+
+    {{ form_checkbox_group(form.title, 'form.title', {
+        'legendClass' : 'govuk-label--s',
+        'legendText' : 'form.title.legend' | trans(transOptions)
+    }) }}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

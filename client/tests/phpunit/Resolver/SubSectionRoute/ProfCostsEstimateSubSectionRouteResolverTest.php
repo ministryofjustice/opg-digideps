@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Resolver\SubSectionRoute;
+namespace App\Resolver\SubSectionRoute;
 
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\Status;
+use App\Entity\Report\Report;
+use App\Entity\Report\Status;
 use PHPUnit\Framework\TestCase;
 
 class ProfCostsEstimateSubSectionRouteResolverTest extends TestCase

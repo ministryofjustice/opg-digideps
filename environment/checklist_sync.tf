@@ -120,7 +120,7 @@ locals {
       { "name": "API_URL", "value": "https://${local.api_service_fqdn}" },
       { "name": "ROLE", "value": "checklist_sync" },
       { "name": "S3_BUCKETNAME", "value": "pa-uploads-${local.environment}" },
-      { "name": "SYMFONY_ENV", "value": "${local.account.symfony_env}" },
+      { "name": "APP_ENV", "value": "${local.account.app_env}" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
       { "name": "ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
       { "name": "NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },

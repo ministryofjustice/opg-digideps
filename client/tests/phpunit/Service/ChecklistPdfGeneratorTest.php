@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Entity\Report\Checklist;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\ReviewChecklist;
-use AppBundle\Exception\PdfGenerationFailedException;
+use App\Entity\Report\Checklist;
+use App\Entity\Report\Report;
+use App\Entity\Report\ReviewChecklist;
+use App\Exception\PdfGenerationFailedException;
 use PHPStan\Testing\TestCase;
 use Psr\Log\LoggerInterface;
 use Twig\Environment;
@@ -13,7 +13,9 @@ use Twig\Environment;
 class ChecklistPdfGeneratorTest extends TestCase
 {
     /** @var \PHPUnit_Framework_MockObject_MockObject */
-    private $templating, $wkhtmltopdf, $logger;
+    private $templating;
+    private $wkhtmltopdf;
+    private $logger;
 
     /** @var ChecklistPdfGenerator */
     private $sut;

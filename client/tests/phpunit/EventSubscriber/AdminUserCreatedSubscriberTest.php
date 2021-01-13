@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
 
-namespace Tests\AppBundle\EventListener;
+namespace Tests\App\EventListener;
 
-use AppBundle\Event\AdminUserCreatedEvent;
-use AppBundle\EventSubscriber\AdminUserCreatedSubscriber;
-use AppBundle\Service\Mailer\Mailer;
-use AppBundle\TestHelpers\UserHelpers;
+use App\Event\AdminUserCreatedEvent;
+use App\EventSubscriber\AdminUserCreatedSubscriber;
+use App\Service\Mailer\Mailer;
+use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 
 class AdminUserCreatedSubscriberTest extends TestCase

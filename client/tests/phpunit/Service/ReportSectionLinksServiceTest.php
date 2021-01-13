@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\ReportInterface;
+use App\Entity\Report\Report;
+use App\Entity\ReportInterface;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\RouterInterface;

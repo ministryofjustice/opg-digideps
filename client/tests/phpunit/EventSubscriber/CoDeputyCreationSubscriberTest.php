@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Tests\AppBundle\EventListener;
+namespace Tests\App\EventListener;
 
-use AppBundle\Event\CoDeputyCreatedEvent;
-use AppBundle\Event\CoDeputyInvitedEvent;
-use AppBundle\EventSubscriber\CoDeputyCreationSubscriber;
-use AppBundle\Service\Mailer\Mailer;
-use AppBundle\TestHelpers\UserHelpers;
+use App\Event\CoDeputyCreatedEvent;
+use App\Event\CoDeputyInvitedEvent;
+use App\EventSubscriber\CoDeputyCreationSubscriber;
+use App\Service\Mailer\Mailer;
+use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 
 class CoDeputyCreationSubscriberTest extends TestCase

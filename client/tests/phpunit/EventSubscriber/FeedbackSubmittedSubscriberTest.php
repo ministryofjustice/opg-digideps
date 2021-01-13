@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
 
-namespace Tests\AppBundle\EventListener;
+namespace Tests\App\EventListener;
 
-use AppBundle\Event\GeneralFeedbackSubmittedEvent;
-use AppBundle\Event\PostSubmissionFeedbackSubmittedEvent;
-use AppBundle\EventSubscriber\FeedbackSubmittedSubscriber;
-use AppBundle\Model\FeedbackReport;
-use AppBundle\Service\Mailer\Mailer;
-use AppBundle\TestHelpers\UserHelpers;
+use App\Event\GeneralFeedbackSubmittedEvent;
+use App\Event\PostSubmissionFeedbackSubmittedEvent;
+use App\EventSubscriber\FeedbackSubmittedSubscriber;
+use App\Model\FeedbackReport;
+use App\Service\Mailer\Mailer;
+use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 
 class FeedbackSubmittedSubscriberTest extends TestCase

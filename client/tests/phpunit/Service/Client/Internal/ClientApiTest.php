@@ -2,15 +2,15 @@
 
 namespace DigidepsTests\Service\Client\Internal;
 
-use AppBundle\Event\ClientDeletedEvent;
-use AppBundle\Event\ClientUpdatedEvent;
-use AppBundle\EventDispatcher\ObservableEventDispatcher;
-use AppBundle\Service\Client\Internal\ClientApi;
-use AppBundle\Service\Client\Internal\UserApi;
-use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\Time\DateTimeProvider;
-use AppBundle\TestHelpers\ClientHelpers;
-use AppBundle\TestHelpers\UserHelpers;
+use App\Event\ClientDeletedEvent;
+use App\Event\ClientUpdatedEvent;
+use App\EventDispatcher\ObservableEventDispatcher;
+use App\Service\Client\Internal\ClientApi;
+use App\Service\Client\Internal\UserApi;
+use App\Service\Client\RestClient;
+use App\Service\Time\DateTimeProvider;
+use App\TestHelpers\ClientHelpers;
+use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;

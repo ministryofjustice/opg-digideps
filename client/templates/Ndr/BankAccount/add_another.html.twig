@@ -1,0 +1,28 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "ndr-bank-accounts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+
+{% block htmlTitle %}{{ 'addAnotherPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'addAnotherPage.pageTitle' | trans }}{% endblock %}
+
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(ndr) }}{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_checkbox_group(form.addAnother, 'addAnotherPage.form.addAnother', {
+        'fieldSetClass' : 'inline',
+        'legendClass' : 'govuk-label--s'
+    }) }}
+
+    {{ macros.addAnotherSaveButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

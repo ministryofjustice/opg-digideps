@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
 
-use AppBundle\Entity\Client;
-use AppBundle\Event\ClientDeletedEvent;
-use AppBundle\EventSubscriber\ClientDeletedSubscriber;
-use AppBundle\Service\Audit\AuditEvents;
-use AppBundle\Service\Time\DateTimeProvider;
-use AppBundle\TestHelpers\ClientHelpers;
-use AppBundle\TestHelpers\NamedDeputyHelper;
-use AppBundle\TestHelpers\UserHelpers;
+use App\Entity\Client;
+use App\Event\ClientDeletedEvent;
+use App\EventSubscriber\ClientDeletedSubscriber;
+use App\Service\Audit\AuditEvents;
+use App\Service\Time\DateTimeProvider;
+use App\TestHelpers\ClientHelpers;
+use App\TestHelpers\NamedDeputyHelper;
+use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 

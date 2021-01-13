@@ -1,0 +1,101 @@
+{% import '@App/Macros/macros.html.twig' as macros %}
+{% from '@App/Admin/Client/Report/macros.html.twig' import checklist_radios %}
+
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'checklistPage' %}
+{% set hideEditLink = true %}
+{% set actualOtherCosts = report.generateActualSubmittedOtherCosts %}
+
+<h3 class="govuk-heading-m" id="profDeputyCosts">{{ (page ~ '.heading.lodging.profDeputyCosts') | trans }}</h3>
+
+{{ checklist_radios(form.paymentsMatchCostCertificate) }}
+
+{% set contents %}
+    <dl class="govuk-summary-list">
+        {{ macros.summaryListHeaderQA(hideEditLink) }}
+
+        {% include '@App/Report/ProfDeputyCosts/_payments_received_answers.html.twig' with {
+            'report': report,
+            'transDomain': "report-prof-deputy-costs",
+            'hideEditLink' : hideEditLink
+        } %}
+    </dl>
+{% endset %}
+
+{{ macros.details({
+    summaryText: (page ~ '.revealTitle.profDeputyCosts') | trans,
+    text: contents
+}) }}
+
+{{ checklist_radios(form.profCostsReasonableAndProportionate) }}
+
+{% set contents %}
+    <dl class="govuk-summary-list">
+        {{ macros.summaryListHeaderQA(hideEditLink) }}
+
+        {% include '@App/Report/ProfDeputyCosts/_how_charged_answers.html.twig' with {
+            'report': report,
+            'transDomain': 'report-prof-deputy-costs',
+            'hideEditLink' : true
+        } %}
+
+        {% include '@App/Report/ProfDeputyCosts/_all_cost_total_answers.html.twig' with {
+            'report': report,
+            'submittedOtherCosts': actualOtherCosts,
+            'transDomain': "report-prof-deputy-costs",
+            'hideEditLink' : true
+        } %}
+    </dl>
+
+    <dl class="govuk-summary-list">
+        {% include '@App/Report/ProfDeputyCosts/_breakdown_costs_answers.html.twig' with {
+            'report': report,
+            'submittedOtherCosts': actualOtherCosts,
+            'transDomain': "report-prof-deputy-costs",
+            'hideEditLink' : true
+        } %}
+    </dl>
+
+    <dl class="govuk-summary-list">
+        {% include '@App/Report/ProfDeputyCosts/_total_taken_from_client_answers.html.twig' with {
+            'report': report,
+            'submittedOtherCosts': actualOtherCosts,
+            'transDomain': "report-prof-deputy-costs",
+            'hideEditLink' : true
+        } %}
+
+        {% include '@App/Report/ProfDeputyCosts/_total_final_answers.html.twig' with {
+            'report': report,
+            'submittedOtherCosts': actualOtherCosts,
+            'transDomain': "report-prof-deputy-costs",
+            'hideEditLink' : true
+        } %}
+    </dl>
+{% endset %}
+
+{{ macros.details({
+    summaryText: (page ~ '.revealTitle.profDeputyCosts') | trans,
+    text: contents
+}) }}
+
+
+{{ checklist_radios(form.hasDeputyOverchargedFromPreviousEstimates) }}
+
+{% set contents %}
+    <dl class="govuk-summary-list">
+        {{ macros.summaryListHeaderQA(hideEditLink) }}
+
+        {% include '@App/Report/ProfDeputyCosts/_scco_more_details_answer.html.twig' with {
+            'report': report,
+            'submittedOtherCosts': actualOtherCosts,
+            'transDomain': "report-prof-deputy-costs",
+            'hideEditLink' : true
+        } %}
+    </dl>
+{% endset %}
+
+{{ macros.details({
+    summaryText: (page ~ '.revealTitle.profDeputyCosts') | trans,
+    text: contents
+}) }}

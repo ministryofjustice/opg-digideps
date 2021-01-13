@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Service\Audit;
+namespace App\Service\Audit;
 
-use AppBundle\Entity\User;
-use AppBundle\Service\Time\DateTimeProvider;
-use AppBundle\Service\Time\FakeClock;
+use App\Entity\User;
+use App\Service\Time\DateTimeProvider;
+use App\Service\Time\FakeClock;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;

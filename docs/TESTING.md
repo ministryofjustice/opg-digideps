@@ -51,7 +51,7 @@ $ make behat-profile-suite profile=<NAME OF PROFILE> suite=<NAME OF SUITE>
 
 ## PHPUnit
 
-The PHPUnit tests are stored in a directory structure matching `src/AppBundle`.
+The PHPUnit tests are stored in a directory structure matching `src/App`.
 
 We use [Prophecy][prophecy] (and in some cases [Mockery][mockery]) to mock classes and entities which are not being tested. Client unit tests of controllers should extend `AbstractControllerTestCase` and can mock Symfony containers using the `injectProphecyService` method.
 

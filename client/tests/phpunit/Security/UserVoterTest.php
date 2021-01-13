@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Security;
+namespace App\Security;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\User;
+use App\Entity\Client;
+use App\Entity\Report\Report;
+use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;

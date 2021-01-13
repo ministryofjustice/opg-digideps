@@ -1,0 +1,91 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% trans_default_domain "admin-clients" %}
+{% set page = 'clientSearch' %}
+
+{% set navSection = 'clients' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {class: 'search', novalidate: 'novalidate' }}) }}
+
+    {{ form_input(form.q, 'Search', {
+        'labelText': (page ~ '.searchBy') | trans,
+        'inputClass': '' })
+    }}
+    {{ form_submit(form.search, '', { 'labelText': 'Search' }) }}
+
+    {{ form_end(form) }}
+
+    <hr>
+
+    {# LIST #}
+    {% if app.request.get('search_clients') is not null %}
+
+    <div class="behat-region-clients client-list">
+
+        <h2 id="client-list-title" class="govuk-heading-m flush--ends">{{ (page ~ '.clientTable.heading') | trans }}</h2>
+        {% if clients | length  == filters.limit %}
+            <p class="govuk-body">{{ (page ~ '.clientTable.resultsLimited') | trans|raw }}</p>
+        {% else %}
+            <p class="behat-region-client-search-count">{{ (page ~ '.clientTable.results') | trans({'%numberOfClients%': clients | length }) | raw }}</p>
+        {% endif %}
+
+
+        {# client list #}
+        <table class="width-two-thirds">
+            <thead>
+                <tr>
+                    <th scope="col">{{ 'client' | trans({}, 'common') }}</th>
+                    <th scope="col">{{ 'caseNumber' | trans({}, 'common') }}</th>
+                    <th scope="col">{{ 'clientSearch.clientTable.activeFrom' | trans({}, 'admin-clients') }}</th>
+                    <th scope="col">{{ 'clientSearch.clientTable.discharged' | trans({}, 'admin-clients') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if clients | length %}
+                    {% for client in clients %}
+                        {% set discharged = "" %}
+                        {% if client.deletedAt is not null %}
+                            {% set discharged = "discharged-" %}
+                        {% endif %}
+                        <tr class="behat-region-client-row behat-region-{{ discharged }}client-{{ client.caseNumber }}">
+                            <td>
+                                <a class="behat-link-client-details behat-link-{{ discharged }}client-detail-{{ client.caseNumber }} govuk-!-font-weight-bold" href="{{ path('admin_client_details', {'id' : client.id}) }}">
+                                    {{ client.fullName }}
+                                </a>
+                            </td>
+                            <td>
+                                {{ client.caseNumber }}
+                                {% if client.archivedAt %}
+                                    (Archived)
+                                {% endif %}
+                            </td>
+                            <td class="behat-region-{{ discharged }}client-{{ client.caseNumber }}-active-from">
+                                {% if client.activeFrom is not null %}
+                                    {{ client.activeFrom | date('j M Y') }}
+                                {% endif %}
+                            </td>
+                            <td class="behat-region-{{ discharged }}client-{{ client.caseNumber }}-discharged-on">
+                                {% if client.deletedAt is not null %}
+                                    {{ client.deletedAt | date('j M Y') }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="3">{{ (page ~ '.clientTable.noResults') | trans  }}</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+{% endblock %}

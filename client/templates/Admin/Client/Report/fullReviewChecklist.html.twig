@@ -1,0 +1,80 @@
+{% from '@App/Admin/Client/Report/macros.html.twig' import checklist_radios %}
+
+{% trans_default_domain 'admin-checklist' %}
+{% set page = 'checklistPage' %}
+
+<a name="anchor-fullReview-checklist"></a>
+<hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+<h2 class="govuk-heading-l govuk-!-margin-top-6">{{ 'checklistPage.heading.fullReview.title' | trans }}</h2>
+<hr class="govuk-section-break govuk-section-break--xl govuk-!-margin-top-1 govuk-section-break--visible">
+
+<div class="govuk-grid-row behat-region-full-review-checklist">
+    <div class="govuk-grid-column-two-thirds">
+        {{ form_errors_list(form) }}
+
+        {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+
+        <h3 class="govuk-heading-m" id="anchor-full-review-bankStatements">{{ (page ~ '.heading.fullReview.bankStatements') | trans }}</h3>
+
+        {{ checklist_radios(form.answers.fullBankStatementsExist) }}
+        {% if report.deputyDocuments is defined and (report.deputyDocuments is not empty) %}
+            {% include '@App/Admin/Client/Report/partials/_document-summary.html.twig' %}
+        {% else %}
+            <p class="govuk-body">{{ (page ~ '.noDocuments') | trans }}</p>
+        {% endif %}
+
+        <h3 class="govuk-heading-m" id="anchor-full-review-lodgingConcerns">{{ (page ~ '.heading.fullReview.lodgingConcerns') | trans }}</h3>
+
+        {{ checklist_radios(form.answers.anyLodgingConcerns) }}
+        {% include '@App/Admin/Client/Report/partials/_lodging-summary.html.twig' %}
+
+        <h3 class="govuk-heading-m" id="anchor-full-review-spendingAndDebt">{{ (page ~ '.heading.fullReview.spendingAndDebt') | trans }}</h3>
+
+        {{ checklist_radios(form.answers.spendingAcceptable) }}
+        {% include '@App/Admin/Client/Report/partials/_money-summaries.html.twig' %}
+
+        {{ checklist_radios(form.answers.expensesReasonable) }}
+        {% include '@App/Admin/Client/Report/partials/_expenses-summary.html.twig' %}
+
+        {{ checklist_radios(form.answers.giftingReasonable) }}
+        {% include '@App/Admin/Client/Report/partials/_gifting-summary.html.twig' %}
+
+        {{ checklist_radios(form.answers.debtManageable) }}
+        {{ include('@App/Admin/Client/Report/partials/_debts-summary.html.twig') }}
+
+        {{ checklist_radios(form.answers.anySpendingConcerns, { margin: 6 }) }}
+
+        <h3 class="govuk-heading-m" id="anchor-full-review-referral">{{ (page ~ '.heading.fullReview.referral') | trans }}</h3>
+
+        {{ checklist_radios(form.answers.needReferral, { margin: 6 }) }}
+
+        <a name="anchor-full-review-finalDecision"></a>
+        {{ form_checkbox_group(form.decision, (page ~ '.form.finalDecision'), {
+            classes: 'govuk-radios--small',
+            legendClass: 'govuk-fieldset__legend--m',
+            formGroupClass: 'govuk-!-margin-bottom-1',
+        }) }}
+
+        {{ form_input(form.answers.decisionExplanation, page ~ '.form.finalDecisionExplanation', {
+            inputClass: 'govuk-!-width-full',
+            formGroupClass: 'js-auto-size'
+        }) }}
+
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+        {{ form_submit(form.save, (page ~ '.form.save'), {
+            buttonClass: 'govuk-button--secondary behat-link-save-progress'
+        }) }}
+
+        {{ form_submit(form.submit, (page ~ '.form.submitAndContinue'), {
+            buttonClass: 'behat-link-submit-and-continue'
+        }) }}
+
+        {{ form_end(form) }}
+    </div>
+    <div class="govuk-grid-column-one-third opg-sticky-menu">
+        {% include '@App/Admin/Client/Report/sidebar/_statuses.html.twig' with {checklistDomain: 'fullReview'} %}
+        {% include '@App/Admin/Client/Report/sidebar/_lodging.html.twig' %}
+        {% include '@App/Admin/Client/Report/sidebar/_backToTopLinks.html.twig' with {checklistDomain: 'fullReview'} %}
+    </div>
+</div>

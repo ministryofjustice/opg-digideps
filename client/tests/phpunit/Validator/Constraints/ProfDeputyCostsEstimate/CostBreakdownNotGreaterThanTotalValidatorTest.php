@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\Validator\Constraints\ProfDeputyCostsEstimate;
+namespace App\Validator\Constraints\ProfDeputyCostsEstimate;
 
-use AppBundle\Entity\Report\ProfDeputyEstimateCost;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\ReportInterface;
+use App\Entity\Report\ProfDeputyEstimateCost;
+use App\Entity\Report\Report;
+use App\Entity\ReportInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;

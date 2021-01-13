@@ -1,10 +1,9 @@
 <?php declare(strict_types=1);
 
 
-namespace AppBundle\Service\Client\Sirius;
+namespace App\Service\Client\Sirius;
 
-
-use AppBundle\Service\AWS\RequestSigner;
+use App\Service\AWS\RequestSigner;
 use DateTime;
 use DigidepsTests\Helpers\SiriusHelpers;
 use GuzzleHttp\Client;
@@ -44,14 +43,13 @@ class SiriusApiGatewayClientTest extends KernelTestCase
         $this->requestSigner = self::prophesize(RequestSigner::class);
         $this->logger = self::prophesize(LoggerInterface::class);
         $this->serializer = (self::bootKernel(['debug' => false]))->getContainer()->get('serializer');
-
     }
 
     /** @test */
     public function get()
     {
         $expectedRequest = $this->buildRequest($this->baseURL, $this->endpoint, 'GET');
-        $signedRequest = $this->buildRequest($this->baseURL, $this->endpoint, 'GET' ,['A-Header' => 'value']);
+        $signedRequest = $this->buildRequest($this->baseURL, $this->endpoint, 'GET', ['A-Header' => 'value']);
 
         $this->requestSigner->signRequest($expectedRequest, 'execute-api')->shouldBeCalled()->willReturn($signedRequest);
         $this->httpClient->send($signedRequest)->shouldBeCalled()->willReturn(new Response());

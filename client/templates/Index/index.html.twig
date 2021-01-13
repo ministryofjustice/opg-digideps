@@ -1,0 +1,152 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "home" %}
+    {% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
+
+
+{% block pageContent %}
+
+    {% if environment == 'development' %}{{ macros.warningBanner('This is a non-production environment for training purposes. Do not use real data in this environment!') }}{% endif %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="text">
+                <p class="govuk-body-l">{{ 'intro.lede' |trans }}</p>
+                {{ macros.notification('info', 'intro.para01' |trans) }}
+                <p class="govuk-body">{{ 'intro.para02' |trans }}</p>
+            </div>
+
+            <div class="govuk-grid-row push--top">
+                <div class="column-half">
+                    <h2 class="govuk-heading-m flush--top">{{ 'iwanttocreate' | trans }}</h2>
+                </div>
+                <div class="column-half">
+
+                    <p class="govuk-body">
+                        <a id="creat-account-button" class="button" href="{{ path('register') }}">{{ 'createaccount' | trans }}</a>
+                    </p>
+
+                    <details class="govuk-details" data-module="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">{{ 'whatyouneed' |trans }}</span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <ul class="govuk-list govuk-list--bullet">
+                                <li>{{ 'whatyouneedListItem1' | trans }}</li>
+                                <li>{{ 'whatyouneedListItem2' | trans }}</li>
+                                <li>{{ 'whatyouneedListItem3' | trans }}</li>
+                            </ul>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <div class="govuk-grid-row push-half--top">
+                <div class="column-half">
+                    <h2 class="govuk-heading-m flush--top">{{ 'ialready' |trans }}</h2>
+                </div>
+                <div class="column-half">
+                    <p class="govuk-body">
+                        <a href="{{ path('login') }}" class="button">{{ 'signin' |trans }}</a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="text push--top">
+
+                <details class="govuk-details" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">{{ 'whyWeNeed.summary' |trans }}</span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        <p class="govuk-body">{{ 'whyWeNeed.para01' |trans }}</p>
+                    </div>
+                </details>
+
+                <details class="govuk-details" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">{{ 'provideDetails.summary' |trans }}</span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        <p class="govuk-body">{{ 'provideDetails.para01' |trans }}</p>
+                        <ul class="govuk-list govuk-list--bullet">
+                            <li>{{ 'provideDetails.listItem01' |trans }}</li>
+                            <li>{{ 'provideDetails.listItem02' |trans }}</li>
+                            <li>{{ 'provideDetails.listItem03' |trans }}</li>
+                        </ul>
+                        <p class="govuk-body">{{ 'provideDetails.para02' |trans }}</p>
+                        <ul class="govuk-list govuk-list--bullet">
+                            <li>{{ 'provideDetails.listItem04' |trans }}</li>
+                            <li>{{ 'provideDetails.listItem05' |trans }}</li>
+                            <li>{{ 'provideDetails.listItem06' |trans }}</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="govuk-details" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">{{ 'moreThanOne.summary' |trans }}</span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        <p class="govuk-body">{{ 'moreThanOne.para01' |trans }}</p>
+                    </div>
+                </details>
+
+                <details class="govuk-details" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">{{ 'afterISubmit.summary' |trans }}</span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        <p class="govuk-body">{{ 'afterISubmit.para01' |trans }}</p>
+                    </div>
+                </details>
+
+            </div>
+
+        </div>
+        <div class="govuk-grid-column-one-third">
+            <div class="opg-related-items">
+                <h2 id="related-items-title" class="govuk-heading-m">{{ 'relatedLinks.heading' |trans|raw }}</h2>
+                <nav role="navigation" aria-labelledby="related-items-title">
+                    <ul class="govuk-list govuk-!-font-size-16">
+                        <li>
+                            <a href="{{ 'relatedLinks.link01Src' |trans|raw }}" class="govuk-link">
+                                {{ 'relatedLinks.link01Text' |trans|raw }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ 'relatedLinks.link02Src' |trans|raw }}" class="govuk-link">
+                                {{ 'relatedLinks.link02Text' |trans|raw }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ 'relatedLinks.link03Src' |trans|raw }}" class="govuk-link">
+                                {{ 'relatedLinks.link03Text' |trans|raw }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ 'relatedLinks.link04Src' |trans|raw }}" class="govuk-link">
+                                {{ 'relatedLinks.link04Text' |trans|raw }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ 'relatedLinks.link05Src' |trans|raw }}" class="govuk-link">
+                                {{ 'relatedLinks.link05Text' |trans|raw }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ 'relatedLinks.link06Src' |trans|raw }}" class="govuk-link">
+                                {{ 'relatedLinks.link06Text' |trans|raw }}
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

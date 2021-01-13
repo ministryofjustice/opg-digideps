@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Service\Mailer;
+namespace App\Service\Mailer;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Ndr\Ndr;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\User;
-use AppBundle\Model\FeedbackReport;
-use AppBundle\Service\IntlService;
+use App\Entity\Client;
+use App\Entity\Ndr\Ndr;
+use App\Entity\Report\Report;
+use App\Entity\User;
+use App\Model\FeedbackReport;
+use App\Service\IntlService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -78,7 +78,7 @@ class MailFactoryTest extends TestCase
         $this->translator = self::prophesize('Symfony\Bundle\FrameworkBundle\Translation\Translator');
         $this->router = self::prophesize('Symfony\Bundle\FrameworkBundle\Routing\Router');
         $this->templating = self::prophesize('Symfony\Bundle\TwigBundle\TwigEngine');
-        $this->intlService = self::prophesize('AppBundle\Service\IntlService');
+        $this->intlService = self::prophesize('App\Service\IntlService');
     }
 
     /**
@@ -236,7 +236,7 @@ class MailFactoryTest extends TestCase
             'newStartDate' => '24 March 2018',
             'newEndDate' => '23 March 2019',
             'EndDatePlus1' => '24 March 2019',
-            'PFA' => substr($reportType, 0, 3 ) === '104' ? 'no' : 'yes',
+            'PFA' => substr($reportType, 0, 3) === '104' ? 'no' : 'yes',
             'lay' => 'yes'
         ];
 
@@ -288,7 +288,7 @@ class MailFactoryTest extends TestCase
             'newStartDate' => '24 March 2018',
             'newEndDate' => '23 March 2019',
             'EndDatePlus1' => '24 March 2019',
-            'PFA' => substr($reportType, 0, 3 ) === '104' ? 'no' : 'yes',
+            'PFA' => substr($reportType, 0, 3) === '104' ? 'no' : 'yes',
             'lay' => 'no'
         ];
 

@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
 
-namespace AppBundle\Service\File;
+namespace App\Service\File;
 
-use AppBundle\Entity\Report\Document;
-use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\File\Storage\S3Storage;
-use AppBundle\Service\Time\DateTimeProvider;
-use AppBundle\TestHelpers\DocumentHelpers;
-use AppBundle\TestHelpers\ReportHelpers;
+use App\Entity\Report\Document;
+use App\Service\Client\RestClient;
+use App\Service\File\Storage\S3Storage;
+use App\Service\Time\DateTimeProvider;
+use App\TestHelpers\DocumentHelpers;
+use App\TestHelpers\ReportHelpers;
 use DateTime;
 use Exception;
 use Prophecy\Argument;
