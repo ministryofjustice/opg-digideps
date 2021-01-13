@@ -55,6 +55,8 @@ class CasRecController extends RestController
      */
     public function verify(Request $request, CasrecVerificationService $verificationService)
     {
+//        file_put_contents('php://stderr', print_r($request, TRUE));
+//        file_put_contents('php://stderr', print_r($verificationService, TRUE));
         $clientData = $this->formatter->deserializeBodyContent($request);
 
         $user = $this->getUser();
