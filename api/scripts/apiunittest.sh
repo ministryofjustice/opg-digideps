@@ -24,5 +24,6 @@ php bin/phpunit -c tests tests/App/Service/ --coverage-php tests/coverage/Servic
 php bin/phpunit -c tests tests/App/Stats/ --coverage-php tests/coverage/Stats.cov
 php bin/phpunit -c tests tests/App/Transformer/ --coverage-php tests/coverage/Transformer.cov
 php bin/phpunit -c tests tests/App/v2/ --coverage-php tests/coverage/v2.cov
+php bin/phpunit -c tests tests/AppBundle/Controller/ --group jim
 
 php vendor/phpunit/phpcov/phpcov merge --clover "./tests/coverage/api-unit-tests.xml" "./tests/coverage"
