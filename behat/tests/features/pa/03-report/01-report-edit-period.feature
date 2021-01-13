@@ -1,5 +1,24 @@
 Feature: PA report
 
+  Scenario:
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given the following organisations exist:
+      | name               | emailIdentifier              | activated |
+      | Metric             | @metric.example              | true      |
+    Given the following users exist:
+      | ndr      | deputyType     | firstName | lastName | email                     | postCode | activated |
+      | disabled | PA             | Emily     | Haines   | e.haines@metric.example   | HA4      | true      |
+      | disabled | PA             | James     | Shaw     | j.shaw@metric.example     | HA4      | true      |
+      | disabled | PA_TEAM_MEMBER | Joshua    | Winstead | j.winstead@metric.example | HA4      | true      |
+    And the following users are in the organisations:
+      | userEmail                 | orgName |
+      | e.haines@metric.example   | Metric  |
+      | j.shaw@metric.example     | Metric  |
+      | j.winstead@metric.example | Metric  |
+    Given the following clients exist and are attached to organisations:
+      | firstName   | lastName     | phone       | address     | address2  | county  | postCode | caseNumber | orgEmailIdentifier |
+      | Tustin      | Mollenhauer  | 01215552222 | 1 Fake Road | Fakeville | Faketon | B4 6HQ   | JD123456   | metric.example    |
+
   Scenario: PA does not see unsubmitted reports in the submitted reports section
     Given I load the application status from "team-users-complete"
     And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
