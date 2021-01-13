@@ -1,0 +1,20 @@
+{% from '@App/Admin/Client/Report/macros.html.twig' import checklist_radios %}
+{% from '@App/Macros/macros.html.twig' import details %}
+
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'checklistPage' %}
+{% set hideEditLink = true %}
+
+<h3 class="govuk-heading-m" id="profDeputyCostsEstimate">{{ (page ~ '.heading.lodging.profDeputyCostsEstimate') | trans }}</h3>
+
+{{ checklist_radios(form.nextBillingEstimatesSatisfactory) }}
+
+{{ details({
+    summaryText: (page ~ '.revealTitle.profDeputyCostsEstimate') | trans,
+    html: include('@App/Report/ProfDeputyCostsEstimate/_answers.html.twig', {
+        report: report,
+        hideEditLink : hideEditLink,
+        submittedEstimateCosts: submittedEstimateCosts
+    })
+}) }}

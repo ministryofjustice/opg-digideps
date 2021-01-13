@@ -1,18 +1,18 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Entity\Report\Checklist;
-use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Entity\User;
-use AppBundle\Exception\PdfGenerationFailedException;
-use AppBundle\Exception\SiriusDocumentSyncFailedException;
-use AppBundle\Model\Sirius\QueuedChecklistData;
-use AppBundle\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
-use AppBundle\Model\Sirius\SiriusDocumentFile;
-use AppBundle\Model\Sirius\SiriusDocumentUpload;
-use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
+use App\Entity\Report\Checklist;
+use App\Entity\Report\ReportSubmission;
+use App\Entity\User;
+use App\Exception\PdfGenerationFailedException;
+use App\Exception\SiriusDocumentSyncFailedException;
+use App\Model\Sirius\QueuedChecklistData;
+use App\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
+use App\Model\Sirius\SiriusDocumentFile;
+use App\Model\Sirius\SiriusDocumentUpload;
+use App\Service\Client\RestClient;
+use App\Service\Client\Sirius\SiriusApiGatewayClient;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 

@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Mapper\ReportSatisfaction;
+namespace App\Mapper\ReportSatisfaction;
 
-use AppBundle\Service\Client\RestClient;
+use App\Service\Client\RestClient;
 use PHPUnit\Framework\TestCase;
 
 class ReportSatisfactionSummaryMapperTest extends TestCase

@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Model\MissingDocument;
-use AppBundle\Model\RetrievedDocument;
-use AppBundle\Service\File\DocumentsZipFileCreator;
+use App\Entity\Client;
+use App\Entity\Report\Report;
+use App\Entity\Report\ReportSubmission;
+use App\Model\MissingDocument;
+use App\Model\RetrievedDocument;
+use App\Service\File\DocumentsZipFileCreator;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;

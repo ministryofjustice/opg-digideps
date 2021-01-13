@@ -15,7 +15,7 @@
 >
     <testsuites>
         <testsuite name="src">
-            <directory>./AppBundle</directory>
+            <directory>./App</directory>
         </testsuite>
     </testsuites>
     <php>

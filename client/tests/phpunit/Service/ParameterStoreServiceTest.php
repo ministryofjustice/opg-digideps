@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service;
+namespace App\Service;
 
 use Aws\Ssm\SsmClient;
 use PHPUnit\Framework\TestCase;

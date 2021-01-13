@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
 
-namespace AppBundle\Service\Csv;
+namespace App\Service\Csv;
 
-use AppBundle\Entity\Report\Satisfaction;
+use App\Entity\Report\Satisfaction;
 use PHPUnit\Framework\TestCase;
 
 class SatisfactionCsvGeneratorTest extends TestCase

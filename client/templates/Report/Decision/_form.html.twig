@@ -1,0 +1,30 @@
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
+
+    <h3 class="govuk-heading-m">
+        {{ 'form.description.heading' | trans({}, translationDomain) }}
+    </h3>
+
+    {{ form_input(form.description,'form.description') }}
+
+    <h3 class="govuk-heading-m">
+        {{ 'form.clientInvolvedBoolean.heading' | trans(transOptions, translationDomain) }}
+    </h3>
+
+    {{ form_checkbox_group(form.clientInvolvedBoolean, 'form.clientInvolvedBoolean', {
+        'fieldSetClass' : 'inline',
+        'legendClass' : 'form-label',
+        'labelParameters': transOptions
+    }) }}
+
+    {{ form_input(form.clientInvolvedDetails,'form.clientInvolvedDetails', {
+        'labelClass': 'required',
+        'labelParameters': transOptions
+    }) }}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+{{ form_end(form) }}

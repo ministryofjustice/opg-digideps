@@ -1,18 +1,18 @@
 <?php
 namespace App\Tests\Command;
 
-use AppBundle\Command\ChecklistSyncCommand;
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\Checklist;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Exception\PdfGenerationFailedException;
-use AppBundle\Exception\SiriusDocumentSyncFailedException;
-use AppBundle\Entity\User;
-use AppBundle\Model\Sirius\QueuedChecklistData;
-use AppBundle\Service\ChecklistPdfGenerator;
-use AppBundle\Service\ChecklistSyncService;
-use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\ParameterStoreService;
+use App\Command\ChecklistSyncCommand;
+use App\Entity\Client;
+use App\Entity\Report\Checklist;
+use App\Entity\Report\Report;
+use App\Exception\PdfGenerationFailedException;
+use App\Exception\SiriusDocumentSyncFailedException;
+use App\Entity\User;
+use App\Model\Sirius\QueuedChecklistData;
+use App\Service\ChecklistPdfGenerator;
+use App\Service\ChecklistSyncService;
+use App\Service\Client\RestClient;
+use App\Service\ParameterStoreService;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;

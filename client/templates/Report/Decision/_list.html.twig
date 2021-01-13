@@ -1,0 +1,203 @@
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-decisions" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set append104 = report.get104TransSuffix %}
+{% set page = 'summaryPage' %}
+{% set hideEditLink = hideEditLink | default(false) %}
+
+<dl class="govuk-summary-list">
+    {{ macros.summaryListHeaderQA(hideEditLink) }}
+
+    {# mental capacity #}
+    <div class="govuk-summary-list__row behat-region-mental-capacity">
+
+        {% if report.mentalCapacity and report.mentalCapacity.hasCapacityChanged %}
+            <dt class="govuk-summary-list__key">
+                {{ ('mentalCapacity.form.hasCapacityChanged.label' ~ append104) | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {% if report.mentalCapacity.hasCapacityChanged == 'stayedSame' %}
+                    Stayed the same
+                {% elseif report.mentalCapacity.hasCapacityChanged == 'changed' %}
+                    Changed
+                {% else %}
+                    -
+                {% endif %}
+            </dd>
+        {% else %}
+            <dt class="govuk-summary-list__key">
+                <span class="error">
+                    {{ 'mentalCapacity.form.hasCapacityChanged.label' | trans(transOptions) }}
+                </span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </dd>
+        {% endif %}
+        {% if not hideEditLink  %}
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ path('decisions_mental_capacity', { 'reportId': report.id, 'from': 'summary' }) }}">
+                    {{ 'edit' | trans({}, 'common') }}
+                </a>
+            </dd>
+        {% endif %}
+    </div>
+
+    {% if report.mentalCapacity and report.mentalCapacity.hasCapacityChanged == 'changed' %}
+        <div class="govuk-summary-list__row behat-region-mental-capacity-changed-details">
+            <dt class="govuk-summary-list__key">
+                {{ (page ~ '.capacityChangeDetails') | trans }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.mentalCapacity.hasCapacityChangedDetails | nl2br }}
+            </dd>
+            {% if not hideEditLink  %}
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link behat-link-edit" href="{{ path('decisions_mental_capacity', { 'reportId': report.id, 'from': 'summary'}) }}">
+                        {{ 'edit' | trans({}, 'common') }}
+                    </a>
+                </dd>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <div class="govuk-summary-list__row">
+        {% if report.mentalCapacity and report.mentalCapacity.mentalAssessmentDate %}
+            <dt class="govuk-summary-list__key">
+                {{ 'mentalCapacity.form.mentalAssessmentDate.legend' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {% if report.mentalCapacity.mentalAssessmentDate %}
+                    {{ report.mentalCapacity.mentalAssessmentDate | date("m/Y") }}
+                {% else %}
+                    -
+                {% endif %}
+            </dd>
+        {% else %}
+            <dt class="govuk-summary-list__key">
+                <span class="error">
+                    {{ 'mentalCapacity.form.mentalAssessmentDate.legend' | trans(transOptions) }}
+                </span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </dd>
+        {% endif %}
+        {% if not hideEditLink  %}
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ path('decisions_mental_assessment', { 'reportId': report.id, 'from': 'summary' }) }}">
+                    {{ 'edit' | trans({}, 'common') }}
+                </a>
+            </dd>
+        {% endif %}
+    </div>
+
+    {# decisions #}
+    <div class="govuk-summary-list__row behat-region-has-decisions">
+        {% if not report.hasDecisions %}
+            <dt class="govuk-summary-list__key">
+                <span class="error">
+                    {{ 'existPage.form.hasDecisions.label' | trans(transOptions) }}
+                </span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </dd>
+        {% else %}
+            <dt class="govuk-summary-list__key">
+                {{ 'existPage.form.hasDecisions.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.hasDecisions | capitalize }}
+            </dd>
+        {% endif %}
+        {% if not hideEditLink  %}
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ path('decisions_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
+                    {{ 'edit' | trans({}, 'common') }}
+                </a>
+            </dd>
+        {% endif %}
+    </div>
+
+    {% if report.reasonForNoDecisions %}
+        <div class="govuk-summary-list__row behat-region-reason-no-decisions">
+            <dt class="govuk-summary-list__key">
+                {{ (page ~ '.reasonNoDecisions') | trans }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.reasonForNoDecisions | nl2br }}
+            </dd>
+            {% if not hideEditLink  %}
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link behat-link-edit" href="{{ path('decisions_exist', { 'reportId': report.id, 'from': 'summary'}) }}">
+                        {{ 'edit' | trans({}, 'common') }}
+                    </a>
+                </dd>
+            {% endif %}
+        </div>
+    {% endif %}
+
+</dl>
+
+{% if report.decisions | length > 0 %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <h2 class="govuk-heading-m">{{ (page ~ '.listOfDecisions') | trans }}</h2>
+        </div>
+        <div class="govuk-grid-column-one-half text--right">
+            {% if not hideEditLink  %}
+                <a href="{{ path('decisions_add', { 'reportId': report.id ,'from': 'decisions_summary'}) }}" class="behat-link-add govuk-link">
+                    <strong>
+                        <span class="icon icon-plus"></span>
+                        {{ (page ~ '.addButton') | trans }}
+                    </strong>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
+
+{% if report.decisions | length > 0 %}
+    <dl class="govuk-summary-list behat-region-decisions">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ (page ~ '.decisionTableColumnHeading1') | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__key">
+                {{ (page ~ '.decisionTableColumnHeading2') | trans(transOptions) }}
+            </dd>
+            <dd class="govuk-summary-list__key">
+                {{ (page ~ '.decisionTableColumnHeading3') | trans(transOptions) }}
+            </dd>
+            {% if not hideEditLink  %}
+                <dd class="govuk-summary-list__actions">
+                    <span class="govuk-visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                </dd>
+            {% endif %}
+        </div>
+
+        {% for decision in report.decisions %}
+            <div class="govuk-summary-list__row behat-region-decision-{{ loop.index }}">
+                <dt class="govuk-summary-list__value">
+                    {{ decision.description | nl2br }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{ decision.clientInvolvedBoolean ? 'Yes' : 'No' }}
+                </dd>
+                <dd class="govuk-summary-list__value">
+                    {{ decision.clientInvolvedDetails | nl2br }}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a href="{{ path('decisions_edit', { 'reportId': report.id, 'decisionId': decision.id }) }}"
+                        class="behat-link-edit govuk-link">{{ 'edit' | trans({}, 'common') }}</a>
+                    <a href="{{ path('decisions_delete', { 'reportId': report.id, 'decisionId': decision.id }) }}"
+                        class="govuk-!-margin-left-1 govuk-link behat-link-delete">{{ 'remove' | trans({}, 'common' ) }}</a>
+                </dd>
+            </div>
+        {% endfor %}
+
+    </dl>
+{% endif %}

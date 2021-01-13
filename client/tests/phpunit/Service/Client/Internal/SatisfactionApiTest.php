@@ -3,14 +3,14 @@
 
 namespace DigidepsTests\Service\Client\Internal;
 
-use AppBundle\Entity\Report\Report;
-use AppBundle\Event\GeneralFeedbackSubmittedEvent;
-use AppBundle\Event\PostSubmissionFeedbackSubmittedEvent;
-use AppBundle\EventDispatcher\ObservableEventDispatcher;
-use AppBundle\Model\FeedbackReport;
-use AppBundle\Service\Client\Internal\SatisfactionApi;
-use AppBundle\Service\Client\RestClient;
-use AppBundle\TestHelpers\UserHelpers;
+use App\Entity\Report\Report;
+use App\Event\GeneralFeedbackSubmittedEvent;
+use App\Event\PostSubmissionFeedbackSubmittedEvent;
+use App\EventDispatcher\ObservableEventDispatcher;
+use App\Model\FeedbackReport;
+use App\Service\Client\Internal\SatisfactionApi;
+use App\Service\Client\RestClient;
+use App\TestHelpers\UserHelpers;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;

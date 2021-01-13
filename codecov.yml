@@ -4,12 +4,12 @@ coverage:
       patch: off
 
 ignore:
-  - "api/src/AppBundle/DataFixtures/**/*"  # ignore folders and all its contents
-  - "api/src/AppBundle/FixtureFactory/**/*"
-  - "api/src/AppBundle/TestHelpers/**/*"
-  - "api/src/AppBundle/v2/Fixture/**/*"
-  - "client/src/AppBundle/Exception/**/*"
-  - "client/src/AppBundle/Resources/**/*"
+  - "api/src/DataFixtures/**/*"  # ignore folders and all its contents
+  - "api/src/FixtureFactory/**/*"
+  - "api/src/TestHelpers/**/*"
+  - "api/src/v2/Fixture/**/*"
+  - "client/src/Exception/**/*"
+  - "client/src/Resources/**/*"
 
 comment:
   layout: "reach, diff, flags, files"
@@ -21,9 +21,9 @@ comment:
 flags:
   api:
     paths:
-      - api/src/AppBundle
+      - api/src
     carryforward: false
   client:
     paths:
-      - client/src/AppBundle
+      - client/src
     carryforward: false

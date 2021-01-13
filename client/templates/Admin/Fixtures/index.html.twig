@@ -1,0 +1,19 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% trans_default_domain "admin-fixtures" %}
+
+{% set navSection = 'fixtures' %}
+
+{% block htmlTitle %}Data Fixtures{% endblock %}
+{% block pageTitle %}Fixtures{% endblock %}
+{% block supportTitleTop %}Data Fixtures{% endblock %}
+
+{% block pageContent %}
+    <p class="govuk-body">
+        <a href="{{ path('admin_fixtures_court_orders') }}" class="govuk-link"> {{ 'list.links.courtOrders' | trans }} </a>
+    </p>
+    <p class="govuk-body">
+        <a href="{{ path('casrec_fixture') }}" class="govuk-link"> {{ 'list.links.casRec' | trans }} </a>
+    </p>
+
+{% endblock %}

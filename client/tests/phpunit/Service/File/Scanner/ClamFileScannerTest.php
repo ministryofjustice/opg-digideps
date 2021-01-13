@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Service\File\Scanner;
+namespace App\Service\File\Scanner;
 
-use AppBundle\Service\File\Scanner\Exception\VirusFoundException;
+use App\Service\File\Scanner\Exception\VirusFoundException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\ServerException;
@@ -166,7 +166,6 @@ class ClamFileScannerTest extends TestCase
     {
         $handler = HandlerStack::create(new MockHandler($mockResponses));
         $this->client = new Client(['handler' => $handler]);
-
     }
 
     /**

@@ -4,7 +4,9 @@ WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
 COPY webpack.config.js .
-COPY src src
+COPY templates templates
+COPY assets assets
+COPY translations translations
 
 # Install NPM dependencies
 RUN npm install
@@ -13,7 +15,7 @@ RUN npm install
 RUN npm run lint
 RUN npm audit --production
 
-# Build assets
+#Build assets
 RUN NODE_ENV=production npm run build
 
 FROM composer AS composer
@@ -29,6 +31,7 @@ COPY composer.lock .
 RUN composer install --prefer-dist --no-interaction --no-scripts
 
 COPY app app
+COPY config config
 COPY src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
@@ -87,26 +90,35 @@ COPY --from=composer /app/app app
 COPY --from=composer /app/bin bin
 COPY --from=composer /app/vendor vendor
 COPY --from=composer /app/composer.lock composer.lock
+COPY --from=composer /app/config/parameters.yml config/parameters.yml
+COPY config config
+COPY public public
+COPY --from=webpack /app/public/assets public/assets
+COPY --from=webpack /app/public/images public/images
 COPY scripts scripts
 COPY src src
+COPY templates templates
+COPY assets assets
+COPY translations translations
 COPY tests tests
-COPY web web
-COPY --from=webpack /app/web/assets web/assets
-COPY --from=webpack /app/web/images web/images
 COPY phpstan.neon .
 COPY docker/confd /etc/confd
+COPY frontend.env frontend.env
+COPY admin.env admin.env
 
 RUN chown -R www-data scripts
 
-# Add common passwords file
+# Add common passwords file. Two options to combat flakey responses from site.
+COPY docker/extra/commonpasswords.txt /tmp/commonpasswords.txt
 RUN wget -q -O /tmp/commonpasswords.txt "https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt" \
+    || echo 'using local copy of pwnedpasswords' \
     && chown www-data /tmp/commonpasswords.txt
+
+#Check for security issues
+RUN su-exec www-data php app/console security:check
 
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
-
-# Check for security issues
-RUN su-exec www-data php app/console security:check
 
 CMD confd -onetime -backend env \
   && waitforit -address=$API_URL/manage/availability -timeout=$TIMEOUT -insecure \

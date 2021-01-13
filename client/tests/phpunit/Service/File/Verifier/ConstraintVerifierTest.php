@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Service\File\Verifier;
+namespace App\Service\File\Verifier;
 
-use AppBundle\Entity\Report\Document;
+use App\Entity\Report\Document;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;

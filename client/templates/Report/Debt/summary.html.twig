@@ -1,0 +1,55 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-debts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% set hideEditLink = hideEditLink | default(false) %}
+
+{# Page Titles #}
+{% block htmlTitle %}{{ 'startPage.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'startPage.pageTitle' | trans(transOptions) }}{% endblock %}
+
+
+{# Breadcrumbs #}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {# Introduction text #}
+            <p class="govuk-body">
+                 {{ 'summaryPage.weAskAbout' | trans(transOptions) }}
+            </p>
+
+            {# Check answers text #}
+            <h2 class="govuk-heading-s">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
+            <p class="govuk-body">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+
+            {# Missing questions alerts #}
+            {% if status.debtsState.state != 'done' and comingFromLastStep%}
+                {{ macros.notification('notice', 'remindComplete' | trans(transOptions, 'common')) }}
+            {% endif %}
+
+            {% if status.debtsState.state != 'done' and not comingFromLastStep%}
+                {{ macros.notification('notice', 'canYouAnswer' | trans(transOptions, 'common')) }}
+            {% endif %}
+        </div>
+        <div class="column-third">
+            {{ macros.relatedSections(report, 'debts') }}
+        </div>
+    </div>
+
+    {# Questions and answers table #}
+    {% include '@App/Report/Debt/_answers.html.twig' %}
+
+    {# Pagination #}
+    {% include '@App/Report/_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'debts',
+    } %}
+
+{% endblock %}

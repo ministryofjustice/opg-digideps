@@ -1,0 +1,142 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "ndr-income-benefits" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+
+{% block htmlTitle %}{{ ('stepPage.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}
+    {{ {
+        1: 'stepPage.pageTitle.stateBenefits',
+        2: 'stepPage.pageTitle.pensions',
+        3: 'stepPage.pageTitle.pensions' ,
+        4: 'stepPage.pageTitle.damages',
+        5: 'stepPage.pageTitle.oneOff'}[step] | trans(transOptions)  }}
+{% endblock %}
+
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'stepPage.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {% if step == 1 %}
+        <p class="govuk-!-font-size-19 govuk-!-font-weight-bold text">
+            {{ 'form.stateBenefits.label' | trans(transOptions) }}
+        </p>
+        <p class="govuk-body">
+            {{ 'form.stateBenefits.hint' | trans(transOptions) }}
+        </p>
+        {% include '@App/Ndr/IncomeBenefit/_checkboxes_list.html.twig' with {
+        'categoryKey': 'form.stateBenefits',
+        'elements': form.stateBenefits,
+        } %}
+        {{ macros.saveAndContinueButton(form.save) }}
+
+    {% endif %}
+
+    {% if step == 2 %}
+        {{ form_checkbox_group(form.receiveStatePension, '', {
+            'fieldSetClass' : 'inline',
+            'legendClass' : 'form-label',
+            'legendText' : 'form.receiveStatePension.label' | trans(transOptions),
+        }) }}
+        {{ macros.saveAndContinueButton(form.save) }}
+
+        {% if skipLink %}
+            <a href="{{ skipLink }}"
+               class="govuk-link button-link behat-link-step-skip">{{ 'skipLink' | trans({}, 'common') }}</a>
+        {% endif %}
+    {% endif %}
+
+    {% if step == 3 %}
+
+        <div class="push--bottom">
+            <div class="govuk-form-group flush--bottom {% if not form.receiveOtherIncome.vars.valid %}govuk-form-group--error{% endif %}">
+
+                {{ form_checkbox_group(form.receiveOtherIncome, '', {
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'legendClass' : 'govuk-label--s',
+                    'legendText' : 'form.receiveOtherIncome.label' | trans(transOptions),
+                    'hintText' : 'form.receiveOtherIncome.hint' | trans(transOptions),
+                    'items': [
+                    {'dataTarget': 'receive-other-income-details' }
+                    ]
+                }) }}
+                <div id="receive-other-income-details" class="opg-indented-block js-hidden">
+                    {{ form_input(form.receiveOtherIncomeDetails, 'form.receiveOtherIncomeDetails', {
+                        'labelClass': 'required',
+                        'labelParameters': transOptions,
+                        'labelRaw': true
+                    }) }}
+                </div>
+            </div>
+        </div>
+        {{ macros.saveAndContinueButton(form.save) }}
+
+        {% if skipLink %}
+            <a href="{{ skipLink }}"
+               class="govuk-link button-link behat-link-step-skip">{{ 'skipLink' | trans({}, 'common') }}</a>
+        {% endif %}
+    {% endif %}
+
+
+    {% if step == 4 %}
+        <div class="push--bottom">
+            <div class="govuk-form-group flush--bottom {% if not form.expectCompensationDamages.vars.valid %}govuk-form-group--error{% endif %}">
+
+                {{ form_checkbox_group(form.expectCompensationDamages, '', {
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'legendClass' : 'govuk-label--s',
+                    'legendText' : 'form.expectCompensationDamages.label' | trans(transOptions),
+                    'items': [
+                    {'dataTarget': 'expect-compensation-damages-details' }
+                    ]
+                }) }}
+                <div id="expect-compensation-damages-details" class="opg-indented-block js-hidden">
+                    {{ form_input(form.expectCompensationDamagesDetails, 'form.expectCompensationDamagesDetails', {
+                        'labelClass': 'required',
+                        'labelParameters': transOptions,
+                        'labelRaw': true
+                    }) }}
+                </div>
+            </div>
+        </div>
+        {{ macros.saveAndContinueButton(form.save) }}
+
+        {% if skipLink %}
+            <a href="{{ skipLink }}"
+               class="govuk-link button-link behat-link-step-skip">{{ 'skipLink' | trans({}, 'common') }}</a>
+        {% endif %}
+    {% endif %}
+
+
+    {% if step == 5 %}
+        <p class="govuk-!-font-size-19 govuk-!-font-weight-bold text">
+            {{ 'form.oneOff.label' | trans(transOptions) }}
+        </p>
+        <p class="govuk-body">
+            {{ 'form.oneOff.hint' | trans(transOptions) }}
+        </p>
+        {% include '@App/Ndr/IncomeBenefit/_checkboxes_list.html.twig' with {
+        'categoryKey': 'form.oneOff',
+        'elements': form.oneOff,
+        } %}
+        {{ macros.saveAndContinueButton(form.save) }}
+
+    {% endif %}
+
+    {{ form_end(form) }}
+
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-transaction" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {
+    '%client%': report.client.firstname | e,
+    '%startDate%': report.startDate | date("j F Y"),
+    '%endDate%': report.endDate | date("j F Y"),
+    '%moneyTransfersPath%': path('money_transfers', {reportId: report.id}),
+    '%deputyExpensesPath%': path('deputy_expenses', {reportId: report.id}),
+    '%paDeputyExpensesPath%': path('pa_fee_expense', {reportId: report.id}),
+    '%giftsPath%': path('gifts', {reportId: report.id}),
+    '%accountsPath%': path('bank_accounts', {reportId: report.id}),
+    '%deputyCostsPath%': path('prof_deputy_costs', {reportId: report.id})
+} %}
+
+{% block htmlTitle %}{{ 'startPage.moneyOut.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'startPage.moneyOut.pageTitle' | trans(transOptions) }}{% endblock %}
+
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="text">
+        <p class="govuk-body">{{ 'startPage.moneyOut.pageSectionDescription1' | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ ('startPage.moneyOut.pageSectionDescription2' ~ app.user.getRoleForTrans) | trans(transOptions) | raw }}</p>
+
+        <p class="govuk-body">{{ 'startPage.moneyOut.pageSectionDescription3' | trans }}</p>
+        <h3 class="govuk-heading-s">{{ 'startPage.moneyOut.totalOrIndividualHeading' | trans }}</h3>
+        <p class="govuk-body">{{ 'startPage.moneyOut.totalOrIndividualPara' | trans }}</p>
+
+        {% if report.bankAccounts is empty and report.canLinkToBankAccounts %}
+            <h3 class="govuk-heading-s">{{ 'startPage.moneyOut.accountLinksHeading' | trans(transOptions) }}</h3>
+            <p class="govuk-body">{{ 'startPage.moneyOut.accountLinksPara1' | trans(transOptions) | raw }}</p>
+        {% endif %}
+    </div>
+
+    {{ macros.startSectionButton(path('money_out_step', { 'reportId': report.id, 'step': 1 }), 'startPage.moneyOut.startButton' | trans ) }}
+
+    {# Pagination #}
+    {% include '@App/Report/_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'moneyOut',
+    } %}
+
+{% endblock %}

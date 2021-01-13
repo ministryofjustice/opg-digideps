@@ -1,14 +1,14 @@
 <?php
 
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Entity\Ndr\BankAccount;
-use AppBundle\Entity\Ndr\Debt;
-use AppBundle\Entity\Ndr\Expense;
-use AppBundle\Entity\Ndr\IncomeBenefit;
-use AppBundle\Entity\Ndr\Ndr;
-use AppBundle\Entity\Ndr\VisitsCare;
-use AppBundle\Service\NdrStatusService as StatusService;
+use App\Entity\Ndr\BankAccount;
+use App\Entity\Ndr\Debt;
+use App\Entity\Ndr\Expense;
+use App\Entity\Ndr\IncomeBenefit;
+use App\Entity\Ndr\Ndr;
+use App\Entity\Ndr\VisitsCare;
+use App\Service\NdrStatusService as StatusService;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
@@ -195,7 +195,7 @@ class NdrStatusServiceTest extends TestCase
 
     public function assetsProvider()
     {
-        $asset = m::mock(\AppBundle\Entity\Asset::class);
+        $asset = m::mock(\App\Entity\Asset::class);
 
         return [
             [[], StatusService::STATE_NOT_STARTED],

@@ -1,6 +1,0 @@
-services:
-    AppBundle\Twig\AssetsExtension:
-        public: false
-        arguments: [ "%kernel.root_dir%" ]
-        tags:
-            - { name: twig.extension }

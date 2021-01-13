@@ -1,0 +1,51 @@
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-more-info" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% set hideEditLink = hideEditLink | default(false) %}
+
+<dl class="govuk-summary-list">
+    {{ macros.summaryListHeaderQA(false) }}
+    <div class="govuk-summary-list__row behat-region-more-info">
+        {% if report.actionMoreInfo is null %}
+            <dt class="govuk-summary-list__key">
+                <span class="error">
+                    {{ 'form.actionMoreInfo.label' | trans(transOptions) }}
+                </span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </dd>
+        {% else %}
+            <dt class="govuk-summary-list__key">
+                {{ 'form.actionMoreInfo.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.actionMoreInfo | capitalize }}
+            </dd>
+        {% endif %}
+        <dd class="govuk-summary-list__actions">
+            <a class="govuk-link behat-link-edit" href="{{ path('other_info_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">
+                {{ 'edit' | trans({}, 'common') }}
+            </a>
+        </dd>
+    </div>
+
+    {% if report.actionMoreInfo == 'yes' %}
+        <div class="govuk-summary-list__row behat-region-more-info-details">
+            <dt class="govuk-summary-list__key">
+                {{ 'form.actionMoreInfoDetails.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.actionMoreInfoDetails | nl2br }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ path('other_info_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">
+                    {{ 'edit' | trans({}, 'common') }}
+                </a>
+            </dd>
+        </div>
+    {% endif %}
+</dl>

@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Service\Client\RestClient;
+use App\Service\Client\RestClient;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Monolog\Logger;
@@ -26,7 +26,7 @@ class DeputyProviderTest extends TestCase
 
     public function setUp(): void
     {
-        $this->restClient = m::mock('AppBundle\Service\Client\RestClient');
+        $this->restClient = m::mock('App\Service\Client\RestClient');
         $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
 
         $this->object = new DeputyProvider($this->restClient, $this->logger);
@@ -39,7 +39,7 @@ class DeputyProviderTest extends TestCase
     {
         $credentials = ['email' => 'Peter', 'password' => 'p'];
 
-        $user = m::mock('AppBundle\Entity\User')
+        $user = m::mock('App\Entity\User')
             ->shouldReceive('getId')->andReturn(1)
             ->getMock();
 
@@ -75,8 +75,8 @@ class DeputyProviderTest extends TestCase
 
     public function testSupportsClass()
     {
-        $this->assertTrue($this->object->supportsClass('AppBundle\Entity\User'));
-        $this->assertFalse($this->object->supportsClass('AppBundle\Entity\Report'));
+        $this->assertTrue($this->object->supportsClass('App\Entity\User'));
+        $this->assertFalse($this->object->supportsClass('App\Entity\Report'));
     }
 
     public function tearDown(): void

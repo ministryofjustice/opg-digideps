@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Tests\AppBundle\EventListener;
+namespace Tests\App\EventListener;
 
-use AppBundle\Entity\User;
-use AppBundle\Event\UserUpdatedEvent;
-use AppBundle\EventSubscriber\UserUpdatedSubscriber;
-use AppBundle\Service\Mailer\Mailer;
-use AppBundle\Service\Time\DateTimeProvider;
-use AppBundle\TestHelpers\UserHelpers;
+use App\Entity\User;
+use App\Event\UserUpdatedEvent;
+use App\EventSubscriber\UserUpdatedSubscriber;
+use App\Service\Mailer\Mailer;
+use App\Service\Time\DateTimeProvider;
+use App\TestHelpers\UserHelpers;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;

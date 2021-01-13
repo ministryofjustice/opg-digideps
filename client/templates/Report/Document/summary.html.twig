@@ -1,0 +1,64 @@
+{% extends '@App/Layouts/application.html.twig'%}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-documents" %}
+{% set page = "summaryPage" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% set hideEditLink = hideEditLink | default(false) %}
+
+{# Page Titles #}
+{% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.pageTitle' | trans }}{% endblock %}
+
+{# Breadcrumbs #}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {# Introduction text #}
+            <p class="govuk-body">
+                 {{ 'summaryPage.weAskAbout' | trans(transOptions) }}
+            </p>
+        </div>
+        <div class="column-third">
+            {{ macros.relatedSections(report, 'documents') }}
+        </div>
+    </div>
+
+    <dl class="govuk-summary-list columns-2 push-double--bottom">
+        {{ macros.summaryListHeaderQA(false) }}
+        <div class="govuk-summary-list__row behat-region-provided-documentation">
+            <dt class="govuk-summary-list__key">
+                {{ 'stepPage.form.wishToUploadDocumentation.label' | trans(transOptions)  }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.wishToProvideDocumentation | capitalize }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ path('documents_step', { 'reportId': report.id, 'from': 'summary' }) }}">
+                    {{ 'edit' | trans(transOptions, 'common') }}
+                </a>
+            </dd>
+        </div>
+    </dl>
+
+    {# Attached documents table #}
+    {% if report.wishToProvideDocumentation == 'yes' %}
+        {% include '@App/Report/Document/_list.html.twig'  with {
+        'translationDomain': translationDomain,
+        'page' : page
+        } %}
+    {% endif %}
+
+    {# Pagination #}
+    {% include '@App/Report/_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'documents',
+    } %}
+
+{% endblock %}

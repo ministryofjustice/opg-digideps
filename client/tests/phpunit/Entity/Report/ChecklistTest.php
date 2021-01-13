@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
 
-namespace Tests\AppBundle\Entity\Report;
+namespace Tests\App\Entity\Report;
 
-use AppBundle\Entity\Report\Checklist;
-use AppBundle\Entity\Report\Report;
+use App\Entity\Report\Checklist;
+use App\Entity\Report\Report;
 use DigidepsTests\Helpers\ValidatorTestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -29,8 +29,7 @@ class ChecklistTest extends KernelTestCase
         $paymentsMatchCostCertificate,
         $hasDeputyOverchargedFromPreviousEstimates,
         $expectedCountErrors
-    )
-    {
+    ) {
         $report = new Report();
 
         $checklist = new Checklist($report);

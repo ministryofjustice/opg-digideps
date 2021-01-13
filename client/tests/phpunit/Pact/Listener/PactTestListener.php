@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Pact\Listener;
+namespace App\Pact\Listener;
 
-use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
+use App\Service\Client\Sirius\SiriusApiGatewayClient;
 use GuzzleHttp\Psr7\Uri;
 use PhpPact\Broker\Service\BrokerHttpClient;
 use PhpPact\Http\GuzzleClient;
@@ -80,7 +80,6 @@ class PactTestListener implements TestListener
     public function endTestSuite(TestSuite $suite): void
     {
         if (\in_array($suite->getName(), $this->testSuiteNames)) {
-
             if ($this->failed === true) {
                 echo 'A unit test has failed. Skipping PACT file upload.';
             } else {
@@ -89,8 +88,7 @@ class PactTestListener implements TestListener
                 $json = $httpService->getPactJson();
                 //requires these to exist
                 if (($pactBrokerUri = \getenv('PACT_BROKER_BASE_URL')) &&
-                    ($consumerVersion = \getenv('PACT_CONSUMER_VERSION')))
-                {
+                    ($consumerVersion = \getenv('PACT_CONSUMER_VERSION'))) {
                     $clientConfig = [];
                     if (($user = \getenv('PACT_BROKER_HTTP_AUTH_USER')) &&
                         ($pass = \getenv('PACT_BROKER_HTTP_AUTH_PASSWORD'))

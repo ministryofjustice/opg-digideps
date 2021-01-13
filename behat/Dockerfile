@@ -24,6 +24,8 @@ COPY --from=composer /app/composer.lock composer.lock
 COPY tests tests
 
 COPY docker-entrypoint.sh /usr/local/bin/
+COPY docker-smoke-test-entrypoint.sh /usr/local/bin/
 RUN ["chmod", "+x", "/usr/local/bin/docker-entrypoint.sh"]
+RUN ["chmod", "+x", "/usr/local/bin/docker-smoke-test-entrypoint.sh"]
 
 ENTRYPOINT [ "docker-entrypoint.sh" ]

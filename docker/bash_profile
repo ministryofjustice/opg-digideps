@@ -50,7 +50,7 @@ dd-enable-debug()
     containers=(frontend api admin)
     for i in "${containers[@]}"
     do
-      dd-exec $i touch /var/www/.enableDebug
+      APP_ENV=dev APP_DEBUG=1 docker-compose up -d --no-deps $i
       echo "$i: debug mode enabled."
     done
 }
@@ -60,7 +60,7 @@ dd-disable-debug()
     containers=(frontend api admin)
     for i in "${containers[@]}"
     do
-       dd-exec $i rm -f /var/www/.enableDebug
+       APP_ENV=dev APP_DEBUG=0 docker-compose up -d --no-deps $i
        echo "$i: debug mode disabled."
     done
 }

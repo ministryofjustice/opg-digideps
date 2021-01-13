@@ -1,0 +1,14 @@
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+
+{% set page = 'checklistPage' %}
+
+<div class="opg-related-items">
+    <span class="govuk-caption-m">{{ (page ~ '.jumpTo') | trans }}:</span>
+    <h3 class="govuk-heading-s">{{ (page ~ '.heading.' ~ checklistDomain ~ '.title') | trans }}</h3>
+    <ul class="govuk-list">
+        {% block links %}{% endblock %}
+    </ul>
+</div>

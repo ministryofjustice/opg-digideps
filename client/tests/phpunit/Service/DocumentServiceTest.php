@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Model\MissingDocument;
-use AppBundle\Model\RetrievedDocument;
-use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\File\Storage\FileNotFoundException;
-use AppBundle\Service\File\Storage\S3Storage;
+use App\Entity\Client;
+use App\Entity\Report\Document;
+use App\Entity\Report\Report;
+use App\Entity\Report\ReportSubmission;
+use App\Model\MissingDocument;
+use App\Model\RetrievedDocument;
+use App\Service\Client\RestClient;
+use App\Service\File\Storage\FileNotFoundException;
+use App\Service\File\Storage\S3Storage;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use PHPUnit\Framework\TestCase;
@@ -300,7 +300,7 @@ class DocumentServiceTest extends TestCase
         $expectedFlash = 'some flash message here';
 
         $this->twig
-            ->render('AppBundle:FlashMessages:missing-documents.html.twig', ['missingDocuments' => $missingDocuments])
+            ->render('@App/FlashMessages/missing-documents.html.twig', ['missingDocuments' => $missingDocuments])
             ->shouldBeCalled()
             ->willReturn($expectedFlash);
 
@@ -343,7 +343,7 @@ class DocumentServiceTest extends TestCase
         $missingDocuments = [$missingDoc1, $missingDoc2, $missingDoc3];
         $missingDocumentCaseNumbers = ['CaseNumber1', 'CaseNumber2', 'CaseNumber1'];
 
-        $loader = new FilesystemLoader([__DIR__ . '/../../../src/AppBundle/Resources/views/FlashMessages']);
+        $loader = new FilesystemLoader([__DIR__ . '/../../../templates/FlashMessages']);
 
         $sut = new Environment($loader);
 

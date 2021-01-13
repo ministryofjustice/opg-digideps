@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\EventListener;
+namespace App\EventListener;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;

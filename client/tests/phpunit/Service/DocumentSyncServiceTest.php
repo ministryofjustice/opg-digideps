@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Model\Sirius\QueuedDocumentData;
-use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\Client\Sirius\SiriusApiGatewayClient;
-use AppBundle\Service\File\Storage\S3Storage;
+use App\Entity\Report\Document;
+use App\Entity\Report\Report;
+use App\Entity\Report\ReportSubmission;
+use App\Model\Sirius\QueuedDocumentData;
+use App\Service\Client\RestClient;
+use App\Service\Client\Sirius\SiriusApiGatewayClient;
+use App\Service\File\Storage\S3Storage;
 use DateTime;
 use DigidepsTests\Helpers\DocumentHelpers;
 use DigidepsTests\Helpers\SiriusHelpers;

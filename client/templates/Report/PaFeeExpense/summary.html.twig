@@ -1,0 +1,59 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-pa-fee-expense" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set hideEditLink = hideEditLink | default(false) %}
+
+{# Page Titles #}
+{% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.pageTitle' | trans }}{% endblock %}
+
+{# Breadcrumbs #}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {# Introduction text #}
+            <p class="govuk-body">{{ 'summaryPage.pageSectionDescription' | trans(transOptions) }}</p>
+
+            {# Check answers text #}
+            <p class="govuk-body"><strong>{{ 'weHaveListed' | trans(transOptions, 'common') }}</strong></p>
+            <p class="govuk-body">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+
+            {# Missing questions alerts #}
+            {% if report.status.paFeesExpensesState.state != 'done' %}
+                {{ macros.notification('notice', 'canYouAnswer' | trans(transOptions, 'common')) }}
+            {% endif %}
+        </div>
+        <div class="govuk-grid-column-one-third">
+            {{ macros.relatedSections(report, 'paFeeExpense') }}
+        </div>
+    </div>
+
+    {% include '@App/Report/PaFeeExpense/_yn_questions.html.twig' with {
+    'report': report,
+    'transDomain': translationDomain
+    } %}
+
+    {% include '@App/Report/PaFeeExpense/_fee_list.html.twig' with {
+    'report': report,
+    'transDomain': translationDomain
+    } %}
+
+    {% include '@App/Report/PaFeeExpense/_other_list.html.twig' with {
+    'report': report,
+    'transDomain': translationDomain
+    } %}
+
+    {# Pagination #}
+    {% include '@App/Report/_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'paFeeExpense',
+    } %}
+
+{% endblock %}

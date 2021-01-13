@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Ndr;
+namespace App\Entity\Ndr;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;

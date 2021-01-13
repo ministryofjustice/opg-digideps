@@ -1,0 +1,14 @@
+version: '3.2'
+
+## Override for tests in CI
+services:
+    frontend:
+        image: frontend:latest
+    admin:
+        image: admin:latest
+    api:
+        image: api:latest
+    localstack-init:
+        image: localstack-init:latest
+    wkhtmltopdf:
+        image: wkhtmltopdf:latest

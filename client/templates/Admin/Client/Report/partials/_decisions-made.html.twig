@@ -1,0 +1,15 @@
+{% from '@App/Admin/Client/Report/macros.html.twig' import checklist_radios %}
+{% from '@App/Macros/macros.html.twig' import details %}
+
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'checklistPage' %}
+
+<h3 class="govuk-heading-m" id="decisionsMade">{{ (page ~ '.heading.lodging.decisions') | trans }}</h3>
+
+{{ checklist_radios(form.decisionsSatisfactory) }}
+
+{{ details({
+    summaryText: (page ~ '.revealTitle.decisionsSummary') | trans,
+    html: include('@App/Report/Decision/_list.html.twig', { hideEditLink: true })
+}) }}

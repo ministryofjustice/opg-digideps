@@ -1,0 +1,35 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "ndr-debts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+
+{% block htmlTitle %}{{ 'managementPage.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageHeader %}{% endblock %}
+
+{% block linkBack %}
+{{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+        {{ form_input(form.debtManagement,'managementPage.form.debtManagement', {
+            label: {
+                isPageHeading: true,
+                caption: 'managementPage.supportTitle' | trans
+            },
+        }) }}
+
+        {{ macros.saveAndContinueButton(form.save) }}
+
+        {% if skipLink %}
+            <a href="{{ skipLink }}" class="govuk-link button-link behat-link-step-skip">{{ 'skipLink' | trans({}, 'common') }}</a>
+        {% endif %}
+
+    {{ form_end(form) }}
+
+{% endblock %}

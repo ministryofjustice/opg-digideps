@@ -1,18 +1,18 @@
 <?php declare(strict_types=1);
 
-namespace Tests\AppBundle\Service\Mailer;
+namespace Tests\App\Service\Mailer;
 
-use AppBundle\Model\Email;
-use AppBundle\Model\FeedbackReport;
-use AppBundle\Service\Mailer\Mailer;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
-use AppBundle\TestHelpers\ClientHelpers;
-use AppBundle\TestHelpers\EmailHelpers;
-use AppBundle\TestHelpers\NdrHelpers;
-use AppBundle\TestHelpers\ReportHelpers;
-use AppBundle\TestHelpers\ReportTestHelper;
-use AppBundle\TestHelpers\UserHelpers;
+use App\Model\Email;
+use App\Model\FeedbackReport;
+use App\Service\Mailer\Mailer;
+use App\Service\Mailer\MailFactory;
+use App\Service\Mailer\MailSender;
+use App\TestHelpers\ClientHelpers;
+use App\TestHelpers\EmailHelpers;
+use App\TestHelpers\NdrHelpers;
+use App\TestHelpers\ReportHelpers;
+use App\TestHelpers\ReportTestHelper;
+use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 

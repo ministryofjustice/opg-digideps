@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
 
-namespace Tests\AppBundle\EventListener;
+namespace Tests\App\EventListener;
 
-use AppBundle\Entity\User;
-use AppBundle\Event\UserDeletedEvent;
-use AppBundle\EventSubscriber\UserDeletedSubscriber;
-use AppBundle\Service\Audit\AuditEvents;
-use AppBundle\Service\Time\DateTimeProvider;
-use AppBundle\TestHelpers\UserHelpers;
+use App\Entity\User;
+use App\Event\UserDeletedEvent;
+use App\EventSubscriber\UserDeletedSubscriber;
+use App\Service\Audit\AuditEvents;
+use App\Service\Time\DateTimeProvider;
+use App\TestHelpers\UserHelpers;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;

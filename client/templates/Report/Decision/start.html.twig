@@ -1,0 +1,65 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-decisions" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'startPage' %}
+{% set clientName = report.client.firstname %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set append104 = report.get104TransSuffix %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <p class="govuk-body">{{ (page ~ '.description1') | trans(transOptions) }}</p>
+
+    <details class="govuk-details" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">{{ (page ~ '.whatisMentalCapacitySummary') | trans }}</span>
+        </summary>
+        <div class="govuk-details__text">
+            <p class="govuk-body">{{ (page ~ '.whatisMentalCapacityPara1') | trans(transOptions) }}</p>
+            <p class="govuk-body">{{ (page ~ '.whatisMentalCapacityPara2') | trans(transOptions)|raw }}</p>
+        </div>
+    </details>
+
+    <details class="govuk-details" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">{{ (page ~ '.whatisdecisionSummary') | trans }}</span>
+        </summary>
+        <div class="govuk-details__text">
+            <p class="govuk-body">{{ (page ~ '.whatisdecisionPara1' ~ append104) | trans(transOptions) }}</p>
+            <p class="govuk-body">{{ (page ~ '.whatisdecisionPara2' ~ append104) | trans(transOptions) }}</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>{{ (page ~ '.whatisdecisionListItem1' ~ append104) | trans(transOptions) }}</li>
+                <li>{{ (page ~ '.whatisdecisionListItem2' ~ append104) | trans(transOptions) }}</li>
+                <li>{{ (page ~ '.whatisdecisionListItem3' ~ append104) | trans(transOptions) }}</li>
+                {% if '104' not in report.type %}
+                    <li>{{ (page ~ '.whatisdecisionListItem4' ~ append104) | trans(transOptions) }}</li>
+                    <li>{{ (page ~ '.whatisdecisionListItem5' ~ append104) | trans(transOptions) }}</li>
+                    <li>{{ (page ~ '.whatisdecisionListItem6' ~ append104) | trans(transOptions) }}</li>
+                    <li>{{ (page ~ '.whatisdecisionListItem7' ~ append104) | trans(transOptions) }}</li>
+                {% endif %}
+            </ul>
+        </div>
+    </details>
+
+    {% if '104' not in report.type %}
+        <p class="govuk-body">{{ (page ~ '.description2') | trans }}</p>
+    {% endif %}
+
+    {{ macros.startSectionButton(path('decisions_mental_capacity', { 'reportId': report.id}), (page ~ '.startButton') | trans) }}
+
+    {# Pagination #}
+    {% include '@App/Report/_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'decisions',
+    } %}
+
+{% endblock %}

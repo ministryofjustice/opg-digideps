@@ -1,0 +1,69 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% set translationDomain = "accessibility" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
+
+{% block linkBack %}
+    {% if backlink %}
+        <a href="{{ backlink }}" class="link-back behat-link-step-back">{{ 'back' | trans({}, 'common' ) }}</a>
+    {% endif %}
+{% endblock %}
+
+{% block pageContent %}
+    <p class="govuk-body">{{ 'intro.para01' | trans | raw }}</p>
+
+    <ul class="govuk-list govuk-list--bullet">
+        <li>{{ 'intro.bullets.changeColours' | trans }}</p></li>
+        <li>{{ 'intro.bullets.zoom' | trans }}</p> </li>
+        <li>{{ 'intro.bullets.navigateKeyboard' | trans }}</p> </li>
+        <li>{{ 'intro.bullets.navigateSpeech' | trans }}</p></li>
+        <li>{{ 'intro.bullets.screenReader' | trans }}</p></li>
+    </ul>
+
+    <p class="govuk-body">{{ 'intro.para02' | trans | raw  }}</p>
+    <p class="govuk-body">{{ 'intro.para03' | trans | raw  }}</p>
+
+    <h2 class="govuk-heading-l">{{ 'cannotAccess.heading' | trans }}</h2>
+    <p class="govuk-body">{{ 'cannotAccess.para01' | trans | raw  }}</p>
+
+    <h2 class="govuk-heading-l">{{ 'reportProblems.heading' | trans }}</h2>
+    <p class="govuk-body">{{ 'reportProblems.para01' | trans }}</p>
+
+    <ul class="govuk-list govuk-list--bullet">
+        <li>{{ 'reportProblems.bullets.email' | trans | raw }}</li>
+        <li>{{ 'reportProblems.bullets.phone' | trans }}</li>
+        <li>{{ 'reportProblems.bullets.textPhone' | trans }}</li>
+    </ul>
+
+    <p class="govuk-body">{{ 'reportProblems.para02' | trans }}</p>
+
+    <h2 class="govuk-heading-l">{{ 'enforcementProcedure.heading' | trans }}</h2>
+    <p class="govuk-body">{{ 'enforcementProcedure.para01' | trans | raw }}</p>
+
+    <h2 class="govuk-heading-l">{{ 'technicalInfo.heading' | trans }}</h2>
+    <p class="govuk-body">{{ 'technicalInfo.para01' | trans }}</p>
+
+    <p class="govuk-body">{{ 'technicalInfo.para02' | trans | raw }}</p>
+
+    <p class="govuk-body">{{ 'technicalInfo.para03' | trans }}</p>
+
+    <h2 class="govuk-heading-l">{{ 'burden.heading' | trans }}</h2>
+    <p class="govuk-body">{{ 'burden.para01' | trans }}</p>
+
+    <p class="govuk-body">{{ 'burden.para02' | trans }}</p>
+
+    <h2 class="govuk-heading-l">{{ 'outsideScope.heading' | trans }}</h2>
+    <p class="govuk-body">{{ 'outsideScope.para01' | trans }}</p>
+    <p class="govuk-body">{{ 'outsideScope.para02' | trans }}</p>
+    <p class="govuk-body">{{ 'outsideScope.para03' | trans }}</p>
+
+    <h2 class="govuk-heading-l">{{ 'howTested.heading' | trans }}</h2>
+    <p class="govuk-body">{{ 'howTested.para01' | trans }}</p>
+
+    {{ '\n'|nl2br }}
+
+    <p class="govuk-body">{{ 'lastUpdatedDate' | trans }}</p>
+{% endblock %}

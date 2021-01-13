@@ -16,8 +16,11 @@ starts with the branch name. Example `git commit -m 'DDPB-1234 add scheduling of
 - When you are ready, you can make a pull request. No one will approve this yet. It is simply to kick off the workflow
 that will build your environment in AWS and run all unit and integration tests.
 
+- Because of duration of our behat tests currently we have an approval step to move on to further testing (to save on circleci credits).
+We aim to remove this once we have improved behat test duration.
+
 - If all the tests pass and it is ready for approval then fill in the pull request template giving all relevant details.
-If not then you can continue submmitting commits to the branch which will kick off the rebuild process.
+If not then you can continue submitting commits to the branch which will kick off the rebuild process.
 
 - Put a link to your jira ticket in the Dev channel `opg-digideps-devs`. This should have automatically linked
 through to your ticket so your colleagues can go and review your code.
@@ -28,7 +31,12 @@ at by a project manager (internal infrastructure change for example) then procee
 
 - Move your ticket across the board to `ready to merge` in jira.
 
-- Run the destroy environment workflow approval from CircleCi which can be accessed through github on your PR.
+- Your environment will be destroyed asynchronously, not on the current night but the subsequent night (via the circle workflow).
+
+- To make sure we aren't protecting needlessly there's an approval for un-protecting the branch that you
+need to click on just before merge. It only takes a few seconds to run. Optionally you can destroy the
+environment now from a separate approval. This is useful in case of a bad build to fully reset your env. You
+don't need to click this to merge your pull request though.
 
 - Once this process has finished then you are able to merge your PR. You will perform a 'squash and merge' on your PR
 and at this point you should tidy up your PR to adhere to the following guidelines:
