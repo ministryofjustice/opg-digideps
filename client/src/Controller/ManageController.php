@@ -90,7 +90,7 @@ class ManageController extends AbstractController
         ];
         list($healthy, $services, $errors, $time) = $this->servicesHealth($services);
 
-        $response = $this->render('@App:Manage:health-check.xml.twig', [
+        $response = $this->render('@App/Manage/health-check.xml.twig', [
             'status' => $healthy ? 'OK' : 'ERRORS: ',
             'time' => $time * 1000,
         ]);
