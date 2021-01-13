@@ -109,6 +109,10 @@ class UserFactory
                 return 'ROLE_AD';
             case 'ADMIN':
                 return 'ROLE_ADMIN';
+            case 'PA_TEAM_MEMBER':
+                return 'ROLE_PA_TEAM_MEMBER';
+            case 'PROF_TEAM_MEMBER':
+                return 'ROLE_PROF_TEAM_MEMBER';
             default:
                 return 'ROLE_' . $roleName . '_NAMED';
         }

@@ -272,15 +272,53 @@ class FixtureController extends AbstractController
                     "v2/fixture/createClientAttachDeputy",
                     json_encode(
                         [
-                        "firstName" => $request->query->get('firstName'),
-                        "lastName" => $request->query->get('lastName'),
-                        "phone" => $request->query->get('phone'),
-                        "address" => $request->query->get('address'),
-                        "address2" => $request->query->get('address2'),
-                        "county" => $request->query->get('county'),
-                        "postCode" => $request->query->get('postCode'),
-                        "caseNumber" => $request->query->get('caseNumber'),
-                        "deputyEmail" => $request->query->get('deputyEmail')]
+                            "firstName" => $request->query->get('firstName'),
+                            "lastName" => $request->query->get('lastName'),
+                            "phone" => $request->query->get('phone'),
+                            "address" => $request->query->get('address'),
+                            "address2" => $request->query->get('address2'),
+                            "county" => $request->query->get('county'),
+                            "postCode" => $request->query->get('postCode'),
+                            "caseNumber" => $request->query->get('caseNumber'),
+                            "deputyEmail" => $request->query->get('deputyEmail')
+                        ]
+                    )
+                );
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+
+        return new Response();
+    }
+
+    /**
+     * @Route("/createClientAttachOrgs", methods={"GET"})
+     * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
+     */
+    public function createClientAndAttachToOrg(Request $request, KernelInterface $kernel)
+    {
+        if ($kernel->getEnvironment() === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
+        try {
+            $this
+                ->restClient
+                ->post(
+                    "v2/fixture/createClientAttachOrgs",
+                    json_encode(
+                        [
+                            "firstName" => $request->query->get('firstName'),
+                            "lastName" => $request->query->get('lastName'),
+                            "phone" => $request->query->get('phone'),
+                            "address" => $request->query->get('address'),
+                            "address2" => $request->query->get('address2'),
+                            "county" => $request->query->get('county'),
+                            "postCode" => $request->query->get('postCode'),
+                            "caseNumber" => $request->query->get('caseNumber'),
+                            "orgEmailIdentifier" => $request->query->get('orgEmailIdentifier'),
+                            "namedDeputyEmail" => $request->query->get('namedDeputyEmail')
+                        ]
                     )
                 );
         } catch (\Throwable $e) {

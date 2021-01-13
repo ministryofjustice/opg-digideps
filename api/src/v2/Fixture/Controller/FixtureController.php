@@ -7,6 +7,7 @@ use App\Entity\CasRec;
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Ndr\NdrRepository;
+use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\NamedDeputy;
 use App\Entity\Repository\OrganisationRepository;
@@ -419,6 +420,76 @@ class FixtureController
         $this->em->flush();
 
         return $this->buildSuccessResponse($fromRequest, 'User created', Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/createClientAttachOrgs", methods={"POST"})
+     * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
+     */
+    public function createClientAndAttachToOrgs(Request $request)
+    {
+        $fromRequest = json_decode($request->getContent(), true);
+
+        $client = $this->clientFactory->create([
+            "firstName" => $fromRequest['firstName'],
+            "lastName" => $fromRequest['lastName'],
+            "phone" => $fromRequest['phone'],
+            "address" => $fromRequest['address'],
+            "address2" => $fromRequest['address2'],
+            "county" => $fromRequest['county'],
+            "postCode" => $fromRequest['postCode'],
+            "caseNumber" => $fromRequest['caseNumber'],
+        ]);
+
+        /** @var Organisation $org */
+        $org = $this->em->getRepository(Organisation::class)->findOneBy(['emailIdentifier' => $fromRequest['orgEmailIdentifier']]);
+
+        if (is_null($org)) {
+            return $this->buildNotFoundResponse(sprintf("Could not find org with email identifier '%s'", $fromRequest['orgEmailIdentifier']));
+        }
+
+        if (!empty($fromRequest['namedDeputyEmail'])) {
+            $namedDeputy = $this->createNamedDeputyByExistingUser($fromRequest['namedDeputyEmail']);
+            $client->setNamedDeputy($namedDeputy);
+        }
+
+        $client->setOrganisation($org);
+        $org->addClient($client);
+
+        $this->em->persist($org);
+        $this->em->persist($client);
+
+        $this->em->flush();
+
+        return $this->buildSuccessResponse($fromRequest, 'User created', Response::HTTP_OK);
+    }
+
+    private function createNamedDeputyByExistingUser(string $userEmail)
+    {
+        $namedDeputy = $this->em->getRepository(NamedDeputy::class)->findOneBy(['email1' => $userEmail]);
+
+        if (is_null($namedDeputy)) {
+            $user = $this->em->getRepository(User::class)->findOneBy(['email' => $userEmail]);
+
+            if ($user) {
+                $namedDeputy = (new NamedDeputy())
+                    ->setEmail1($user->getEmail())
+                    ->setFirstname($user->getFirstname())
+                    ->setLastname($user->getLastname())
+                    ->setDeputyNo(rand(8, 8));
+
+                $this->em->persist($namedDeputy);
+
+                return $namedDeputy;
+            } else {
+                return $this->buildNotFoundResponse(
+                    sprintf(
+                        "Could not find user or named Deputy with email identifier '%s'. Ensure one exists before using this function.",
+                        $userEmail
+                    )
+                );
+            }
+        }
     }
 
     /**
