@@ -93,7 +93,6 @@ class UserRegistrationService
         );
 
         $user->setDeputyNo(implode(',', $this->casrecVerificationService->getLastMatchedDeputyNumbers()));
-        $user->setCoDeputyClientConfirmed($isMultiDeputyCase);
         $user->setNdrEnabled($this->casrecVerificationService->isLastMachedDeputyNdrEnabled());
 
         $this->saveUserAndClient($user, $client);

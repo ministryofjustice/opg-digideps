@@ -25,11 +25,7 @@ Feature: admin / admin
       | 12345XYZ | Smith   | D004      | Doe         | SW1          | OPG102    |
     When I activate the user "joe.bloggs@publicguardian.gov.uk" with password "Abcd1234"
     And I go to "logout"
-    And I go to "/login"
-    And I fill in the following:
-      | login_email     | joe.bloggs@publicguardian.gov.uk |
-      | login_password  | Abcd1234 |
-    And I press "login_login"
+    Given I am logged in as "joe.bloggs@publicguardian.gov.uk" with password "Abcd1234"
     Then the url should match "/user/details"
     When I fill in the following:
       | user_details_firstname       | Joe                              |
