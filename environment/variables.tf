@@ -59,7 +59,7 @@ locals {
   project = "digideps"
 
   default_allow_list = concat(module.allow_list.moj_sites, formatlist("%s/32", data.aws_nat_gateway.nat[*].public_ip))
-  admin_allow_list   = length(local.account["admin_allow_list"]) > 0 ? local.account["admin_allow_list"] : local.default_allow_list
+  admin_allow_list   = length(local.account["admin_allow_list"]) > 0 ? concat(local.account["admin_allow_list"], local.default_allow_list) : local.default_allow_list
   front_allow_list   = length(local.account["front_allow_list"]) > 0 ? local.account["front_allow_list"] : local.default_allow_list
 
   route53_healthchecker_ips = data.aws_ip_ranges.route53_healthchecks_ips.cidr_blocks
