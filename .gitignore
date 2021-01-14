@@ -38,3 +38,6 @@ lambda_functions/layers/monitoring/python/lib/python3.7/site-packages/
 
 # Code coverage
 api/tests/coverage/
+
+#cache grinds
+client/cachegrind/*/cachegrind*
