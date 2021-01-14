@@ -48,6 +48,20 @@ locals {
       target_type = "security_group_id"
       target      = module.mock_sirius_integration_security_group.id
     }
+    bsi = {
+      port        = 80
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = data.aws_security_group.bsi-sg.id
+    }
+    bsi_ssl = {
+      port        = 443
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = data.aws_security_group.bsi-sg.id
+    }
   }
 }
 
