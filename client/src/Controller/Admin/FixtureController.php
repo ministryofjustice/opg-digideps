@@ -7,6 +7,7 @@ use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Form\Admin\Fixture\CasrecFixtureType;
 use App\Form\Admin\Fixture\CourtOrderFixtureType;
+use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\TestHelpers\ClientHelpers;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -32,19 +33,22 @@ class FixtureController extends AbstractController
     /** @var Serializer */
     private $serializer;
 
-    /**
-     * @var RestClient
-     */
+    /** @var RestClient */
     private $restClient;
+
+    /** @var ReportApi */
+    private ReportApi $reportApi;
 
     public function __construct(
         Environment $twig,
         SerializerInterface $serializer,
-        RestClient $restClient
+        RestClient $restClient,
+        ReportApi $reportApi
     ) {
         $this->twig = $twig;
         $this->serializer = $serializer;
         $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
     }
 
     /**
@@ -391,5 +395,23 @@ class FixtureController extends AbstractController
     public function createCasRecFlashMessage(array $data)
     {
         return $this->twig->render('@App/FlashMessages/fixture-casrec-created.html.twig', $data);
+    }
+
+    /**
+     * @Route("/unsubmit-report/{reportId}", name="casrec_fixture", methods={"GET", "POST"})
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     *
+     * @param int $reportId
+     * @return void
+     * @throws \Exception
+     */
+    public function unsubmitReport(int $reportId)
+    {
+        try {
+            $report = $this->reportApi->getReport($reportId);
+            $this->reportApi->unsubmit($report, $this->getUser(), 'Fixture tests');
+        } catch (\Throwable $e) {
+            throw new \Exception(sprintf('Could not unsubmit report %s: %s', $reportId, $e->getMessage()));
+        }
     }
 }

@@ -214,6 +214,17 @@ trait ReportTrait
     }
 
     /**
+     * @Given /^the report has been unsubmitted/
+     */
+    public function theReportHasBeenUnsubmitted()
+    {
+        $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'Abcd1234');
+
+        $reportId = self::$currentReportCache['reportId'];
+        $this->visitAdminPath("/admin/fixtures/unsubmit-report/$reportId");
+    }
+
+    /**
      * @Then the report should be unsubmitted
      */
     public function theReportShouldBeUnsubmitted()
