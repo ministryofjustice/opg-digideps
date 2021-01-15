@@ -19,9 +19,9 @@ Feature: PA report
 #      | firstName   | lastName     | phone       | address     | address2  | county  | postCode | caseNumber | orgEmailIdentifier |
 #      | Tustin      | Mollenhauer  | 01215552222 | 1 Fake Road | Fakeville | Faketon | B4 6HQ   | JD123456   | metric.example     |
     Given the following court orders exist:
-      | client   | deputy       | deputy_type  | report_type                                | court_date |
-      | 78978978 | EmilyHaines  | PA           | Property and Financial Affairs High Assets | 2018-01-30 |
-      | 98798798 | James        | LAY          | Health and Welfare                         | 2018-01-30 |
+      | client   | deputy      | deputy_type | report_type                                | court_date |
+      | 78978978 | EmilyHaines | PA          | Property and Financial Affairs High Assets | 2018-01-30 |
+      | 98798798 | JamesShaw   | PA          | Health and Welfare                         | 2018-01-30 |
 
   Scenario: PA does not see unsubmitted reports in the submitted reports section
     Given I have the "2018" to "2019" report between "EmilyHaines" and "78978978"
@@ -32,19 +32,17 @@ Feature: PA report
 
   # Logic will evolve differently therefore better to have regression test on this
   Scenario: PA edit 102 report dates
-    Given I load the application status from "team-users-complete"
-    And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "pa-report-open" in the "client-02100014" region
-
+    And I am logged in as "JamesShaw@behat-test.com" with password "Abcd1234"
+    When I click on "pa-report-open" in the "client-98798798" region
     And I click on "edit-report-period"
     # check the form loads teh right value (should match with the behat CSV fixtures)
     Then the following fields should have the corresponding values:
-      | report_edit_startDate_day   | 29   |
-      | report_edit_startDate_month | 05   |
-      | report_edit_startDate_year  | 2016 |
-      | report_edit_endDate_day     | 28   |
-      | report_edit_endDate_month   | 05   |
-      | report_edit_endDate_year    | 2017 |
+      | report_edit_startDate_day   | 30   |
+      | report_edit_startDate_month | 01   |
+      | report_edit_startDate_year  | 2018 |
+      | report_edit_endDate_day     | 29   |
+      | report_edit_endDate_month   | 01   |
+      | report_edit_endDate_year    | 2019 |
     # check validations (from here, same steps as Lay deputy
     When I fill in the following:
       | report_edit_startDate_day   | aa |
