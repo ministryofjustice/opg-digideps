@@ -47,7 +47,7 @@ up-app-xdebug-frontend-cachegrind: ## Brings the app up, rebuilds containers and
 up-app-xdebug-api: ## Brings the app up, rebuilds containers and enabled xdebug in client
 	REQUIRE_XDEBUG_API=true docker-compose up -d --build --remove-orphans
 
-up-app-xdebug-api-cachegrind: ## Brings the app up, rebuilds containers and enabled xdebug in client
+up-app-xdebug-api-cachegrind: ## Brings the app up, rebuilds containers and enabled xdebug in client with cachegrind
 	REQUIRE_XDEBUG_API=true docker-compose -f docker-compose.yml -f docker-compose.cachegrind.yml  up -d --build --remove-orphans
 
 

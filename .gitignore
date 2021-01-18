@@ -41,3 +41,4 @@ api/tests/coverage/
 
 #cache grinds
 client/cachegrind/*/cachegrind*
+api/cachegrind/*/cachegrind*

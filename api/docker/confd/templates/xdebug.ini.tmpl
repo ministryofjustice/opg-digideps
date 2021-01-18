@@ -6,4 +6,9 @@
     xdebug.remote_host={{ if exists "/opg/php/xdebug/remote/host" }}{{ getv "/opg/php/xdebug/remote/host" }}{{ end }}
     xdebug.idekey={{ if exists "/opg/php/xdebug/idekey" }}{{ getv "/opg/php/xdebug/idekey" }}{{ end }}
 
+    {{ if exists "/opg/php/xdebug/cachegrind/enabled" }}
+    xdebug.profiler_enable=1
+    xdebug.profiler_output_dir="/var/www/cachegrind"
+    {{ end }}
+
 {{ end }}

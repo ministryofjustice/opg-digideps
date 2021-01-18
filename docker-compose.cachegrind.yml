@@ -9,3 +9,6 @@ services:
   admin:
     volumes:
       - ./client/cachegrind/admin:/var/www/cachegrind
+  api:
+    volumes:
+      - ./api/cachegrind/api:/var/www/cachegrind
