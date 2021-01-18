@@ -8,7 +8,7 @@
 
 {% block pageContent %}
 
-    {% if app.user.getCoDeputyClientConfirmed() %}
+    {% if clientHasCoDeputies %}
         {% include '@App/Report/Report/_codeputies.html.twig' with {coDeputies: coDeputies} %}
     {% endif %}
 

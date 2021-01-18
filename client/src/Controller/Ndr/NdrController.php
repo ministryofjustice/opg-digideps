@@ -13,6 +13,7 @@ use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\NdrApi;
 use App\Service\Client\Internal\SatisfactionApi;
 use App\Service\Client\Internal\UserApi;
+use App\Service\Client\Internal\CasrecApi;
 use App\Service\Client\RestClient;
 use App\Service\File\S3FileUploader;
 use App\Service\NdrStatusService;
@@ -68,11 +69,14 @@ class NdrController extends AbstractController
     /** @var NdrApi */
     private $ndrApi;
 
+    private CasrecApi $casrecApi;
+
     public function __construct(
         WkHtmlToPdfGenerator $wkHtmlToPdfGenerator,
         UserApi $userApi,
         ClientApi $clientApi,
         RestClient $restClient,
+        CasrecApi $casrecApi,
         SatisfactionApi  $satisfactionApi,
         NdrApi $ndrApi
     ) {
@@ -80,6 +84,7 @@ class NdrController extends AbstractController
         $this->userApi = $userApi;
         $this->clientApi = $clientApi;
         $this->restClient = $restClient;
+        $this->casrecApi = $casrecApi;
         $this->satisfactionApi = $satisfactionApi;
         $this->ndrApi = $ndrApi;
     }
@@ -105,11 +110,14 @@ class NdrController extends AbstractController
 
         $clients = $user->getClients();
         $client = !empty($clients) ? $clients[0] : null;
-        $coDeputies = !empty($client) ? $this->getCoDeputiesForClient($user) : [];
+
+        $clientWithCoDeputies = $this->restClient->get('client/' . $client->getId(), 'Client', ['client', 'client-users', 'user']);
+        $coDeputies = $clientWithCoDeputies->getCoDeputies();
 
         return [
             'client' => $client,
             'coDeputies' => $coDeputies,
+            'clientHasCoDeputies' => $this->casrecApi->clientHasCoDeputies($client->getCaseNumber()),
             'ndr' => $client->getNdr(),
             'reportsSubmitted' => $client->getSubmittedReports(),
             'reportActive' => $client->getActiveReport(),
@@ -348,30 +356,5 @@ class NdrController extends AbstractController
         return [
             'ndr' => $ndr,
         ];
-    }
-
-    /**
-     * @param User $user
-     * @return mixed
-     */
-    private function getCoDeputiesForClient(User $user)
-    {
-        return $this->hydrateClientWithUsers($user)->getCoDeputies();
-    }
-
-    /**
-     * @param User $user
-     * @return mixed
-     */
-    private function hydrateClientWithUsers(User $user)
-    {
-        $clients = $user->getClients();
-        $clientId = array_shift($clients)->getId();
-
-        return  $this->restClient->get(
-            'client/' . $clientId,
-            'Client',
-            ['client', 'client-users', 'user']
-        );
     }
 }
