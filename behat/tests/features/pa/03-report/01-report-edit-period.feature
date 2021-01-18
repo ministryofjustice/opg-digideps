@@ -21,7 +21,7 @@ Feature: PA report
     Given the following court orders exist:
       | client   | deputy      | deputy_type | report_type                                | court_date |
       | 78978978 | EmilyHaines | PA          | Property and Financial Affairs High Assets | 2018-01-30 |
-      | 98798798 | JamesShaw   | PA          | Health and Welfare                         | 2018-01-30 |
+      | 98798798 | JamesShaw   | PA_ADMIN    | High Assets with Health and Welfare        | 2018-01-30 |
 
   Scenario: PA does not see unsubmitted reports in the submitted reports section
     Given I have the "2018" to "2019" report between "EmilyHaines" and "78978978"
@@ -77,12 +77,3 @@ Feature: PA report
       | report_edit_endDate_day     | 27   |
       | report_edit_endDate_month   | 04   |
       | report_edit_endDate_year    | 2016 |
-    # restore initial values (for future tests and have this test not affecting subsequent scenarios)
-    And I load the application status from "team-users-complete"
-
-  Scenario: PA admin has access to edit 102 report dates
-    Given I load the application status from "team-users-complete"
-    And I am logged in as "behat-pa1-team-member@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "pa-report-open" in the "client-02100014" region
-    And I click on "edit-report-period"
-    Then the response status code should be 200

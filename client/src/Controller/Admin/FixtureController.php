@@ -398,7 +398,7 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @Route("/unsubmit-report/{reportId}", name="casrec_fixture", methods={"GET", "POST"})
+     * @Route("/unsubmit-report/{reportId}", name="unsubmit_report_fixture", methods={"GET", "POST"})
      * @Security("has_role('ROLE_SUPER_ADMIN')")
      *
      * @param int $reportId
