@@ -369,7 +369,13 @@ trait ReportTrait
         } elseif ($this->getSession()->getPage()->hasContent('Submitted reports')) {
             $this->clickLink('View');
         } else {
-            $this->clickLink($client.'-Client, John');
+            try {
+                $this->clickLink($client.'-Client, John');
+            } catch (\Throwable $e) {
+                $this->fillField('search', $client);
+                $this->pressButton('search_submit');
+                $this->clickLink($client.'-Client, John');
+            }
         }
     }
 
