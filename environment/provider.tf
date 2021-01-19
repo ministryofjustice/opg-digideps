@@ -40,6 +40,16 @@ provider "aws" {
 }
 
 provider "aws" {
+  region = "us-east-1"
+  alias  = "dns-us"
+
+  assume_role {
+    role_arn     = "arn:aws:iam::515688267891:role/${var.DEFAULT_ROLE}"
+    session_name = "terraform-session"
+  }
+}
+
+provider "aws" {
   region = "eu-west-1"
   alias  = "development"
 
