@@ -111,7 +111,7 @@ class NdrController extends AbstractController
         $clients = $user->getClients();
         $client = !empty($clients) ? $clients[0] : null;
 
-        $clientWithCoDeputies = $this->restClient->get('client/' . $client->getId(), 'Client', ['client', 'client-users', 'user']);
+        $clientWithCoDeputies = $this->clientApi->getWithUsersV2($client->getId());
         $coDeputies = $clientWithCoDeputies->getCoDeputies();
 
         return [
