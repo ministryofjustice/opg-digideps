@@ -15,6 +15,20 @@ Feature: Add PA users and activate PA user (journey)
 #    Then the response status code should be 200
 #    And the last email containing a link matching "/user/activate/" should have been sent to "behat-pa1@publicguardian.gov.uk"
 
+#  Scenario: Setup data
+#    Given the following court orders exist:
+#      | client   | deputy      | deputy_type | report_type                                | court_date | orgSizeClients |
+#      | 78978978 | EmilyHaines | PA_ADMIN    | Property and Financial Affairs High Assets | 2018-01-30 | 18             |
+#
+#    Given the following users exist:
+#      | ndr      | deputyType     | firstName | lastName | email                         | postCode | activated |
+#      | disabled | PA_TEAM_MEMBER | James     | Shaw     | JamesShaw@behat-test.com      | HA4      | true      |
+#      | disabled | PA_TEAM_MEMBER | Joshua    | Winstead | JoshuaWinstead@behat-test.com | HA4      | true      |
+#
+#    And the following users are in the organisations:
+#      | userEmail                 | orgName |
+#      | KimPetras@behat-test.com   | PA OPG  |
+
   Scenario: Activate PA user
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
       # upload PA users
@@ -127,7 +141,6 @@ Feature: Add PA users and activate PA user (journey)
     And I should see the "client-02300001" region
 
   Scenario: Edit PA2 user
-    Given I save the application status into "pa-users-uploaded"
     When I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "user-behat-pa2publicguardiangovuk" in the "user-behat-pa2publicguardiangovuk" region
     And I press "Edit user"
@@ -141,3 +154,17 @@ Feature: Add PA users and activate PA user (journey)
     Then the form should be valid
     When I click on "admin_cancel"
     And I should see "Edited Pa User Edited Two" in the "user-behat-pa2publicguardiangovuk" region
+
+  Scenario: Ensure all team members are in the same org
+    Given the "PA OPG" organisation is activated
+    Given the following users are in the organisations:
+      | userEmail                         | orgName |
+      | behat-pa1@publicguardian.gov.uk   | PA OPG  |
+      | behat-pa2@publicguardian.gov.uk   | PA OPG  |
+      | behat-pa3@publicguardian.gov.uk   | PA OPG  |
+
+    Given the following users clients are in the users organisation:
+      | userEmail                       |
+      | behat-pa1@publicguardian.gov.uk |
+      | behat-pa2@publicguardian.gov.uk |
+      | behat-pa3@publicguardian.gov.uk |

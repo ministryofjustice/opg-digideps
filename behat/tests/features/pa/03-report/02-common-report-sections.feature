@@ -1,9 +1,17 @@
 Feature: PA user edits common report sections common to ALL report types
 
+#  Scenario: Setup data
+#    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+#    Given the following court orders exist:
+#      | client   | deputy      | deputy_type | report_type                                | court_date |
+#      | 78978978 | KimPetras   | PA          | Property and Financial Affairs High Assets | 2018-01-30 |
+#      | 98798798 | JamesShaw   | PA_ADMIN    | High Assets with Health and Welfare        | 2018-01-30 |
+
   @102 @103-6 @104
   Scenario: PA 102 user edit decisions section
-    Given I load the application status from "team-users-complete"
     And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    And I fill in "search" with "02100014"
+    And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region
     Then the response status code should be 200
     And the URL should match "report/\d+/overview"
@@ -23,6 +31,8 @@ Feature: PA user edits common report sections common to ALL report types
   @102 @103-6 @104
   Scenario: PA 102 saves a contact
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    And I fill in "search" with "02100014"
+    And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region
     And I click on "edit-contacts, start"
         # chose "no records"
@@ -34,6 +44,8 @@ Feature: PA user edits common report sections common to ALL report types
   @102 @103-6 @104
   Scenario: PA 102 visits and care steps
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    And I fill in "search" with "02100014"
+    And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region
     And I click on "edit-visits_care, start"
     # step 1 empty
@@ -64,6 +76,8 @@ Feature: PA user edits common report sections common to ALL report types
   @102 @103-6 @104
   Scenario: PA 102 report actions
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    And I fill in "search" with "02100014"
+    And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region
     And I click on "edit-actions, start"
       # step 1
@@ -80,6 +94,8 @@ Feature: PA user edits common report sections common to ALL report types
   @102 @103-6 @104
   Scenario: PA 102 any other info
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    And I fill in "search" with "02100014"
+    And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region
     And I click on "edit-other_info, start"
      # step 1
@@ -91,6 +107,8 @@ Feature: PA user edits common report sections common to ALL report types
   @102 @103-6 @104
   Scenario: PA adds documents to 102
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    And I fill in "search" with "02100014"
+    And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region
     # Check report is not submittable until documents section complete
     And the PA report should not be submittable
@@ -125,6 +143,8 @@ Feature: PA user edits common report sections common to ALL report types
   @102 @103-6 @104
   Scenario: PA deletes document from 102
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    And I fill in "search" with "02100014"
+    And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region
     And I click on "edit-documents"
     # chose "yes documents"
