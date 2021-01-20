@@ -99,8 +99,16 @@ trait UserTrait
 
     private function assertValidRole(string $roleName): void
     {
-        if (!in_array($roleName, ['ADMIN', 'AD', 'LAY', 'PA', 'PROF', 'PA_TEAM_MEMBER', 'PROF_TEAM_MEMBER'])) {
-            throw new \Exception("DeputyType should be one of 'ADMIN', 'AD', 'LAY', 'PA', 'PROF'; '$roleName' provided");
+        $allowedRoles = ['ADMIN', 'AD', 'LAY', 'PA', 'PA_TEAM_MEMBER', 'PA_ADMIN', 'PROF', 'PROF_TEAM_MEMBER', 'PROF_ADMIN'];
+
+        if (!in_array($roleName, $allowedRoles)) {
+            throw new \Exception(
+                sprintf(
+                    "DeputyType should be one of %s; '%s' provided",
+                    implode(', ', $allowedRoles),
+                    $roleName
+                )
+            );
         }
     }
 

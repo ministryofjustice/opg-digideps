@@ -2,7 +2,11 @@ Feature: Users can view their organisations
 
   @prof
   Scenario: Without organisation, user cannot access settings pages
-    Given I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given the following users exist:
+      | ndr      | deputyType | firstName | lastName  | email                                    | postCode | activated |
+      | disabled | PROF_ADMIN | Lorely    | Rodriguez | LorelyRodriguezAdminNoOrg@behat-test.com | HA4      | true      |
+    Given I am logged in as "LorelyRodriguezAdminNoOrg@behat-test.com" with password "Abcd1234"
     When I go to "/org/settings"
     And I follow "User accounts"
     Then I should be on "/org/settings/user-accounts"
