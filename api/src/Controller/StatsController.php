@@ -28,4 +28,12 @@ class StatsController extends RestController
 
         return $query->execute($params);
     }
+
+    /**
+     * @Route("/stats/activeLays", methods={"GET"})
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     */
+    public function getActiveLays()
+    {
+    }
 }
