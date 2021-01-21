@@ -41,7 +41,7 @@ class ClientController
 
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_DEPUTY')")
      *
      * @param $id
      * @return JsonResponse

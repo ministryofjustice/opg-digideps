@@ -292,7 +292,6 @@ class RestClient implements RestClientInterface
             'addClientSecret' => !$authenticated,
             'addAuthToken' => $authenticated,
         ]);
-
         if ($expectedResponseType == 'raw') {
             return $response->getBody();
         }
@@ -306,6 +305,7 @@ class RestClient implements RestClientInterface
         }
 
         $responseArray = $this->extractDataArray($response);
+
         if ($expectedResponseType == 'array') {
             return $responseArray;
         } elseif (substr($expectedResponseType, -2) == '[]') {
