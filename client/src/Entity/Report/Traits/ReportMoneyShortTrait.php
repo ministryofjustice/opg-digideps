@@ -5,6 +5,7 @@ namespace App\Entity\Report\Traits;
 use App\Entity\Report\MoneyShortCategory;
 use App\Entity\Report\MoneyTransactionShort;
 use JMS\Serializer\Annotation as JMS;
+use App\Validator\Constraints as AppAssert;
 
 trait ReportMoneyShortTrait
 {
@@ -45,6 +46,7 @@ trait ReportMoneyShortTrait
      * @JMS\Groups({"money-transactions-short-in-exist"})
      *
      * @Assert\NotBlank(message="moneyTransactionShort.exist.notBlank", groups={"exist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"exist"})
      */
     private $moneyTransactionsShortInExist;
 
@@ -55,6 +57,7 @@ trait ReportMoneyShortTrait
      * @JMS\Groups({"money-transactions-short-out-exist"})
      *
      * @Assert\NotBlank(message="moneyTransactionShort.exist.notBlank", groups={"exist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"exist"})
      */
     private $moneyTransactionsShortOutExist;
 

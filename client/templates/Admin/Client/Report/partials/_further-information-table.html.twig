@@ -14,7 +14,7 @@
                 <tr class="govuk-table__row govuk-body-s">
                     <td class="govuk-table__cell">{{ info.createdOn | date("j F Y") }}</td>
                     <td class="govuk-table__cell">{{ info.createdBy.fullname }}, {{ info.createdBy.roleFullName }}</td>
-                    <td class="govuk-table__cell">{{ info.information | nl2br | raw }}</td>
+                    <td class="govuk-table__cell">{{ info.information | nl2br }}</td>
                 </tr>
             {% endfor %}
         {% else %}

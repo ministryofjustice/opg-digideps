@@ -5,6 +5,7 @@ namespace App\Entity\Ndr;
 use App\Entity\Ndr\Traits\HasNdrTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\Constraints as AppAssert;
 
 class Expense
 {
@@ -25,6 +26,7 @@ class Expense
      * @JMS\Groups({"ndr-expense"})
      *
      * @Assert\NotBlank(message="expenses.explanation.notBlank", groups={"ndr-deputy-expense"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"ndr-deputy-expense"})
      */
     private $explanation;
 
@@ -39,6 +41,7 @@ class Expense
      * @Assert\Range(min=0.01, max=10000000, minMessage = "expenses.amount.minMessage", maxMessage = "expenses.amount.maxMessage", groups={"ndr-deputy-expense"})
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters(groups={"ndr-deputy-expense"})
      */
     private $amount;
 

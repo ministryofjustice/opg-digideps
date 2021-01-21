@@ -13,6 +13,7 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use App\Validator\Constraints as AppAssert;
 
 /**
  * @Assert\Callback(callback="isValidForReport", groups={"document"})
@@ -93,6 +94,7 @@ class Document implements DocumentInterface, SynchronisableInterface
      * @JMS\Groups({"document"})
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $fileName;
 
@@ -101,6 +103,7 @@ class Document implements DocumentInterface, SynchronisableInterface
      * @JMS\Groups({"document"})
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $storageReference;
 

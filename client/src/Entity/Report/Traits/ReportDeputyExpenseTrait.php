@@ -5,6 +5,7 @@ namespace App\Entity\Report\Traits;
 use App\Entity\Report\Expense;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\Constraints as AppAssert;
 
 trait ReportDeputyExpenseTrait
 {
@@ -13,7 +14,9 @@ trait ReportDeputyExpenseTrait
      *
      * @JMS\Type("string")
      * @JMS\Groups({"expenses-paid-anything"})
+     *
      * @Assert\NotBlank(message="ndr.expenses.paidForAnything.notBlank", groups={"expenses-paid-anything"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"expenses-paid-anything"})
      */
     private $paidForAnything;
 

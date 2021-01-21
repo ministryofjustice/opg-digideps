@@ -5,6 +5,7 @@ namespace App\Entity\Report;
 use App\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\Constraints as AppAssert;
 
 class Decision
 {
@@ -26,6 +27,7 @@ class Decision
      * @Assert\Length( min=2, minMessage="decision.description.length", groups={"decision-description"})
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters(groups={"decision-description"})
      */
     private $description;
 

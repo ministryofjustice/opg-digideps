@@ -9,6 +9,7 @@ use App\Entity\Traits\CreationAudit;
 use DateTime;
 use JMS\Serializer\Annotation as JMS;
 use RuntimeException;
+use App\Validator\Constraints as AppAssert;
 
 class ReportSubmission
 {
@@ -59,6 +60,7 @@ class ReportSubmission
     /**
      * @var string|null
      * @JMS\Type("string")
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $uuid;
 

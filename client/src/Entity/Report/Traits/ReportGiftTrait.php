@@ -6,6 +6,7 @@ use App\Entity\Report\Gift;
 use App\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\Constraints as AppAssert;
 
 trait ReportGiftTrait
 {
@@ -15,6 +16,7 @@ trait ReportGiftTrait
      * @JMS\Type("string")
      * @JMS\Groups({"gifts-exist"})
      * @Assert\NotBlank(message="gifts.giftsExist.notBlank", groups={"gifts-exist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"gifts-exist"})
      */
     private $giftsExist;
 

@@ -5,6 +5,7 @@ namespace App\Entity\Report;
 use App\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\Constraints as AppAssert;
 
 /**
  * @JMS\Discriminator(field = "fee_type_id", map = {
@@ -56,6 +57,7 @@ abstract class ProfServiceFee
      * @JMS\Groups({"prof-service-fees"})
      *
      * @Assert\NotBlank(message="profServiceFee.assessedOrFixed.notBlank", groups={"prof-service-fee-details-type"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"prof-service-fee-details-type"})
      */
     private $assessedOrFixed;
 
@@ -78,6 +80,7 @@ abstract class ProfServiceFee
      *
      * @Assert\NotBlank(message="profServiceFee.serviceType.notBlank", groups={"prof-service-fee-type"})
      * @JMS\Groups({"prof-service-fees", "prof-service-fee-serviceType"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"prof-service-fee-type"})
      */
     private $serviceTypeId;
 
@@ -97,6 +100,7 @@ abstract class ProfServiceFee
      * @JMS\Type("string")
      * @JMS\Groups({"prof-service-fees"})
      * @Assert\NotBlank(message="profServiceFee.paymentReceived.notBlank", groups={"prof-service-fee-details-type"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"prof-service-fee-details-type"})
      */
     private $paymentReceived;
 

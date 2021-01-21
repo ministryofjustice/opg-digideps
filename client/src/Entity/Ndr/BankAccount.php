@@ -6,6 +6,7 @@ use App\Entity\BankAccountInterface;
 use App\Entity\Ndr\Traits\HasNdrTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\Constraints as AppAssert;
 
 class BankAccount implements BankAccountInterface
 {
@@ -59,6 +60,7 @@ class BankAccount implements BankAccountInterface
      * @Assert\Length(max=100, maxMessage="ndr.account.accountType.maxMessage", groups={"bank-account-type"})
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters(groups={"bank-account-type"})
      */
     private $accountType;
 
@@ -70,6 +72,7 @@ class BankAccount implements BankAccountInterface
      * @Assert\Length(max=500, min=2,  minMessage="ndr.account.bank.minMessage", maxMessage="ndr.account.bank.maxMessage", groups={"bank-account-name"})
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters(groups={"bank-account-name"})
      */
     private $bank;
 
@@ -78,6 +81,7 @@ class BankAccount implements BankAccountInterface
      * @JMS\Type("string")
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $accountTypeText;
 
@@ -86,6 +90,7 @@ class BankAccount implements BankAccountInterface
      * @JMS\Groups({"bank-account"})
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $sortCode;
 
@@ -98,6 +103,7 @@ class BankAccount implements BankAccountInterface
      * @Assert\Length(exactMessage="ndr.account.accountNumber.length",min=4, max=4, groups={"bank-account-number"})
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters(groups={"bank-account-number"})
      */
     private $accountNumber;
 
@@ -120,6 +126,7 @@ class BankAccount implements BankAccountInterface
      * @Assert\NotBlank(message="ndr.account.isJointAccount.notBlank", groups={"bank-account-is-joint"})
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters(groups={"bank-account-is-joint"})
      */
     private $isJointAccount;
 
@@ -134,6 +141,7 @@ class BankAccount implements BankAccountInterface
      * @JMS\Groups({"bank-account"})
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $nameOneLine;
 

@@ -6,6 +6,7 @@ use App\Entity\Traits\CreationAudit;
 use App\Entity\Traits\ModifyAudit;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\Constraints as AppAssert;
 
 /**
  * Note.
@@ -47,6 +48,7 @@ class Note
      * @JMS\Type("string")
      * @JMS\Groups({"add_note"})
      *
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $category;
 
@@ -59,6 +61,7 @@ class Note
      * @Assert\NotBlank( message="note.form.title.notBlank", groups={"add_note", "edit_note"})
      * @Assert\Length(max=150, maxMessage="note.form.title.maxLength",
      *     groups={"add_note", "edit_note"} )
+     * @AppAssert\TextNoSpecialCharacters(groups={"add_note", "edit_note"})
      */
     private $title;
 
@@ -68,6 +71,7 @@ class Note
      * @JMS\Type("string")
      * @JMS\Groups({"add_note"})
      *
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $content;
 

@@ -5,6 +5,7 @@ namespace App\Entity\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use App\Validator\Constraints as AppAssert;
 
 /**
  * @Assert\Callback(callback="moreDetailsValidate", groups={"prof-deputy-estimate-costs"})
@@ -31,6 +32,7 @@ class ProfDeputyEstimateCost
      * @var string
      * @JMS\Groups({"prof-deputy-estimate-costs"})
      * @JMS\Type("boolean")
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $hasMoreDetails;
 
@@ -38,6 +40,7 @@ class ProfDeputyEstimateCost
      * @var string
      * @JMS\Groups({"prof-deputy-estimate-costs"})
      * @JMS\Type("string")
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $moreDetails;
 

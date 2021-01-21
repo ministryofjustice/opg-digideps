@@ -34,7 +34,11 @@
                     <span class="govuk-details__summary-text">{{ 'summaryPage.moneyIn.moreDetails' |trans }}</span>
                 </summary>
                 <div class="govuk-details__text">
-                    <p class="govuk-body">{{ 'startPage.moneyIn.pageSectionDescription2' | trans(transOptions) | raw }}</p>
+                    <p class="govuk-body">
+                        {{ 'startPage.moneyIn.pageSectionDescription2.left' | trans(transOptions) }}
+                        <a href="{{ path('money_transfers', {reportId: report.id}) }}">money transfers</a>
+                        {{ 'startPage.moneyIn.pageSectionDescription2.right' | trans(transOptions) }}
+                    </p>
                     <p class="govuk-body">{{ 'startPage.moneyIn.pageSectionDescription3' | trans }}</p>
                     <p class="govuk-body"><strong>{{ 'startPage.moneyIn.totalOrIndividualHeading' | trans }}</strong></p>
                     <p class="govuk-body">{{ 'startPage.moneyIn.totalOrIndividualPara' | trans }}</p>

@@ -22,7 +22,11 @@
 
     <div class="text">
         <p class="govuk-body">{{ 'startPage.moneyIn.pageSectionDescription1' | trans(transOptions) }}</p>
-        <p class="govuk-body">{{ 'startPage.moneyIn.pageSectionDescription2' | trans(transOptions) | raw }}</p>
+        <p class="govuk-body">
+            {{ 'startPage.moneyIn.pageSectionDescription2.left' | trans(transOptions) }}
+            <a href="{{ path('money_transfers', {reportId: report.id}) }}">money transfers</a>
+            {{ 'startPage.moneyIn.pageSectionDescription2.right' | trans(transOptions) }}
+        </p>
         <p class="govuk-body">{{ 'startPage.moneyIn.pageSectionDescription3' | trans }}</p>
 
         <h3 class="govuk-heading-s">{{ 'startPage.moneyIn.totalOrIndividualHeading' | trans }}</h3>
@@ -30,7 +34,13 @@
 
         {% if report.bankAccounts is empty and report.canLinkToBankAccounts %}
             <h3 class="govuk-heading-s">{{ 'startPage.moneyIn.accountLinksHeading' | trans(transOptions) }}</h3>
-            <p class="govuk-body">{{ 'startPage.moneyIn.accountLinksPara1' | trans(transOptions) | raw }}</p>
+            <p class="govuk-body">
+                {{ 'startPage.moneyIn.accountLinksPara1.left' | trans(transOptions) }}
+                <a href="{{ path('bank_accounts', {reportId: report.id}) }}">
+                    {{ 'startPage.moneyIn.accountLinksPara1.link' | trans(transOptions) }}
+                </a>
+                {{ 'startPage.moneyIn.accountLinksPara1.right' | trans(transOptions) }}
+            </p>
         {% endif %}
     </div>
 

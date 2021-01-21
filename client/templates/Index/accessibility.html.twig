@@ -13,7 +13,12 @@
 {% endblock %}
 
 {% block pageContent %}
-    <p class="govuk-body">{{ 'intro.para01' | trans | raw }}</p>
+    <p class="govuk-body">{{ 'intro.para01.left' | trans }}
+        <a href="https://www.gov.uk/government/organisations/office-of-the-public-guardian" class="govuk-link">
+            Office of the Public Guardian
+        </a>.
+        {{ 'intro.para01.right' | trans }}
+    </p>
 
     <ul class="govuk-list govuk-list--bullet">
         <li>{{ 'intro.bullets.changeColours' | trans }}</p></li>
@@ -23,17 +28,32 @@
         <li>{{ 'intro.bullets.screenReader' | trans }}</p></li>
     </ul>
 
-    <p class="govuk-body">{{ 'intro.para02' | trans | raw  }}</p>
-    <p class="govuk-body">{{ 'intro.para03' | trans | raw  }}</p>
+    <p class="govuk-body">{{ 'intro.para02' | trans  }}</p>
+    <p class="govuk-body">
+        <a href="https://mcmw.abilitynet.org.uk/" class="govuk-link">
+            AbilityNet
+        </a>
+        {{ 'intro.para03' | trans  }}
+    </p>
 
     <h2 class="govuk-heading-l">{{ 'cannotAccess.heading' | trans }}</h2>
-    <p class="govuk-body">{{ 'cannotAccess.para01' | trans | raw  }}</p>
+    <p class="govuk-body">
+        {{ 'cannotAccess.para01.part1' | trans  }}
+        <a href="https://www.gov.uk/government/publications/deputy-annual-report-accounting-for-your-actions" class="govuk-link">
+            {{ 'cannotAccess.para01.link1' | trans  }}
+        </a>.
+        {{ 'cannotAccess.para01.part2' | trans  }}
+        <a href="mailto:customerservices@publicguardian.gov.uk">
+            {{ 'cannotAccess.para01.link2' | trans  }}
+        </a>
+        {{ 'cannotAccess.para01.part3' | trans  }}
+    </p>
 
     <h2 class="govuk-heading-l">{{ 'reportProblems.heading' | trans }}</h2>
     <p class="govuk-body">{{ 'reportProblems.para01' | trans }}</p>
 
     <ul class="govuk-list govuk-list--bullet">
-        <li>{{ 'reportProblems.bullets.email' | trans | raw }}</li>
+        <li>Email: <a href="mailto:digideps@digital.justice.gov.uk">digideps@digital.justice.gov.uk</a></li>
         <li>{{ 'reportProblems.bullets.phone' | trans }}</li>
         <li>{{ 'reportProblems.bullets.textPhone' | trans }}</li>
     </ul>
@@ -41,12 +61,23 @@
     <p class="govuk-body">{{ 'reportProblems.para02' | trans }}</p>
 
     <h2 class="govuk-heading-l">{{ 'enforcementProcedure.heading' | trans }}</h2>
-    <p class="govuk-body">{{ 'enforcementProcedure.para01' | trans | raw }}</p>
+    <p class="govuk-body">
+        {{ 'enforcementProcedure.para01' | trans }}
+        <a href="https://www.equalityadvisoryservice.com/" class="govuk-link">
+            {{ 'enforcementProcedure.link1' | trans }}
+        </a>.
+    </p>
 
     <h2 class="govuk-heading-l">{{ 'technicalInfo.heading' | trans }}</h2>
     <p class="govuk-body">{{ 'technicalInfo.para01' | trans }}</p>
 
-    <p class="govuk-body">{{ 'technicalInfo.para02' | trans | raw }}</p>
+    <p class="govuk-body">
+        {{ 'technicalInfo.para02.left' | trans }}
+        <a href="https://www.w3.org/TR/WCAG21/" class="govuk-link">
+            {{ 'technicalInfo.para02.link' | trans }}
+        </a>
+        {{ 'technicalInfo.para02.right' | trans }}
+    </p>
 
     <p class="govuk-body">{{ 'technicalInfo.para03' | trans }}</p>
 

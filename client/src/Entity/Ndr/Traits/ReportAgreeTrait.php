@@ -19,6 +19,7 @@ trait ReportAgreeTrait
      * @JMS\Type("string")
      * @JMS\Groups({"submit"})
      * @Assert\NotBlank(message="ndr.agreedBehalfDeputy.notBlank", groups={"declare"} )
+     * @AppAssert\TextNoSpecialCharacters(groups={"declare"})
      */
     private $agreedBehalfDeputy;
 
@@ -28,6 +29,7 @@ trait ReportAgreeTrait
      * @JMS\Type("string")
      * @JMS\Groups({"submit"})
      * @Assert\NotBlank(message="ndr.agreedBehalfDeputyExplanation.notBlank", groups={"declare-explanation"} )
+     * @AppAssert\TextNoSpecialCharacters(groups={"declare-explanation"})
      */
     private $agreedBehalfDeputyExplanation;
 

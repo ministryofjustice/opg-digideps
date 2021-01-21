@@ -5,6 +5,7 @@ namespace App\Entity\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use DateTime;
+use App\Validator\Constraints as AppAssert;
 
 class ProfDeputyInterimCost
 {
@@ -22,6 +23,7 @@ class ProfDeputyInterimCost
      * @JMS\Groups({"profDeputyInterimCosts"})
      *
      * @Assert\Range(min=0.01, max=10000000, minMessage = "profDeputyInterimCost.amount.minMessage", maxMessage = "profDeputyInterimCost.amount.maxMessage", groups={"prof-deputy-interim-costs"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"prof-deputy-interim-costs"})
      */
     private $amount;
 

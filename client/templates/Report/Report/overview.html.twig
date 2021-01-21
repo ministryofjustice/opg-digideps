@@ -197,7 +197,8 @@
                         report: report,
                         state: reportStatus.balanceState,
                         description: true,
-                        descriptionRaw: ('balance.subSectionDescription.' ~ labelIndex) | trans(transOptions),
+                        descriptionLeft: ('balance.subSectionDescription.' ~ labelIndex ~ '.left') | trans(transOptions),
+                        descriptionRight: ('balance.subSectionDescription.' ~ labelIndex ~ '.right') | trans(transOptions),
                         customiseAllLabels: true,
                         descriptionLink: descLink | default(false),
                         descriptionLinkAction: linkAction

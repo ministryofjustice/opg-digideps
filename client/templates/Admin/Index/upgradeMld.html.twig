@@ -20,7 +20,6 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {{ form_input(form.file, '', {
-        'labelRaw': true,
         'labelText': "Your CSV file should contain a single column of deputy numbers you wish to upgrade to MLD with a heading row of 'Deputy No'",
         'hintText': 'Max upload size is ' ~ maxUploadSize,
         'inputClass': 'no-border'

@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\Constraints as AppAssert;
 
 class Client
 {
@@ -27,7 +28,7 @@ class Client
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
-     *
+     * @AppAssert\TextNoSpecialCharacters(groups={"lay-deputy-client", "lay-deputy-client-edit", "pa-client"})
      * @Assert\NotBlank( message="client.firstname.notBlank", groups={"lay-deputy-client", "lay-deputy-client-edit", "pa-client"})
      * @Assert\Length(min=2, minMessage= "client.firstname.minMessage", max=50, maxMessage= "client.firstname.maxMessage", groups={"lay-deputy-client", "pa-client"})
      *
@@ -43,6 +44,7 @@ class Client
      * @Assert\Length(min = 2, minMessage= "client.lastname.minMessage", max=50, maxMessage= "client.lastname.maxMessage", groups={"lay-deputy-client", "verify-codeputy", "pa-client"})
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters(groups={"lay-deputy-client", "verify-codeputy", "pa-client"})
      */
     private $lastname;
 
@@ -83,6 +85,7 @@ class Client
      * @JMS\Exclude()
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $fullname;
 
@@ -95,6 +98,7 @@ class Client
      * @Assert\Length(min = 8, max=8, exactMessage= "client.caseNumber.exactMessage2", groups={"lay-deputy-client", "verify-codeputy"})
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters(groups={"lay-deputy-client", "verify-codeputy"})
      */
     private $caseNumber;
 
@@ -115,10 +119,11 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\NotBlank( message="client.address.notBlank", groups={"lay-deputy-client", "lay-deputy-client-edit"})
+     * @Assert\NotBlank(message="client.address.notBlank", groups={"lay-deputy-client", "lay-deputy-client-edit"})
      * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client"})
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters(groups={"lay-deputy-client", "pa-client"})
      */
     private $address;
 
@@ -127,17 +132,18 @@ class Client
      * @JMS\Groups({"edit", "pa-edit"})
      *
      * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
+     * @Assert\Regex(pattern="/[$&+,:;=?@#|\'<>.^*()%!-]/", match=false, message="BadBADBAD.", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters(groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      */
     private $address2;
 
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
-     *
+     * @AppAssert\TextNoSpecialCharacters(groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      * @Assert\Length(max=75, maxMessage="client.county.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
-     *
      * @var string
      */
     private $county;
@@ -150,6 +156,7 @@ class Client
      * @Assert\Length(max=10, maxMessage= "client.postcode.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters(groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      */
     private $postcode;
 
@@ -158,6 +165,7 @@ class Client
      * @JMS\Groups({"edit"})
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $country;
 
@@ -168,6 +176,7 @@ class Client
      * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters(groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      */
     private $phone;
 
@@ -179,6 +188,7 @@ class Client
      * @Assert\Length(max=60, maxMessage="client.email.maxLength", groups={"pa-client"})
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters(groups={"pa-client"})
      */
     private $email;
 

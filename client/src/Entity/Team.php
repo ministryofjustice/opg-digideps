@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
+use App\Validator\Constraints as AppAssert;
 
 /**
  * Team
@@ -34,6 +35,7 @@ class Team
      *
      * @JMS\Groups({"team"})
      * @JMS\Type("string")
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $teamName;
 
@@ -41,6 +43,7 @@ class Team
      * @JMS\Type("string")
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $address1;
 
@@ -48,6 +51,7 @@ class Team
      * @JMS\Type("string")
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $address2;
 
@@ -55,6 +59,7 @@ class Team
      * @JMS\Type("string")
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $address3;
 
@@ -62,6 +67,7 @@ class Team
      * @JMS\Type("string")
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $addressPostcode;
 
@@ -69,6 +75,7 @@ class Team
      * @JMS\Type("string")
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $addressCountry;
 

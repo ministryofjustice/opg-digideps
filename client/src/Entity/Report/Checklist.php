@@ -36,6 +36,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.reportingPeriodAccurate.notBlank", groups={"submit-common-checklist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"submit-common-checklist"})
      */
     private $reportingPeriodAccurate;
 
@@ -45,6 +46,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("boolean")
      * @Assert\NotBlank(message="checklist.contactDetailsUptoDate.notBlank", groups={"submit-common-checklist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"submit-common-checklist"})
      */
     private $contactDetailsUptoDate;
 
@@ -54,6 +56,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("boolean")
      * @Assert\NotBlank(message="checklist.deputyFullNameAccurateInCasrec.notBlank", groups={"submit-deputy-fullname-accurate-casrec-checklist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"submit-deputy-fullname-accurate-casrec-checklist"})
      */
     private $deputyFullNameAccurateInCasrec;
 
@@ -63,6 +66,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.decisionsSatisfactory.notBlank", groups={"submit-decisions-checklist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"submit-decisions-checklist"})
      */
     private $decisionsSatisfactory;
 
@@ -72,6 +76,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.consultationsSatisfactory.notBlank", groups={"submit-common-checklist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"submit-common-checklist"})
      */
     private $consultationsSatisfactory;
 
@@ -81,6 +86,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.careArrangements.notBlank", groups={"submit-visitsCare-checklist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"submit-visitsCare-checklist"})
      */
     private $careArrangements;
 
@@ -90,6 +96,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.assetsDeclaredAndManaged.notBlank", groups={"submit-assets-checklist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"submit-assets-checklist"})
      */
     private $assetsDeclaredAndManaged;
 
@@ -99,6 +106,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.debtsManaged.notBlank", groups={"submit-debts-checklist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"submit-debts-checklist"})
      */
     private $debtsManaged;
 
@@ -108,6 +116,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.openClosingBalancesMatch.notBlank", groups={"submit-balance-checklist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"submit-balance-checklist"})
      */
     private $openClosingBalancesMatch;
 
@@ -117,6 +126,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.accountsBalance.notBlank", groups={"submit-balance-checklist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"submit-balance-checklist"})
      */
     private $accountsBalance;
 
@@ -126,6 +136,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.moneyMovementsAcceptable.notBlank", groups={"submit-bankAccounts-checklist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"submit-bankAccounts-checklist"})
      */
     private $moneyMovementsAcceptable;
 
@@ -135,6 +146,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.deputyChargeAllowedByCourt.notBlank", groups={"submit-paDeputyExpenses-checklist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"submit-paDeputyExpenses-checklist"})
      */
     protected $deputyChargeAllowedByCourt;
 
@@ -144,6 +156,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.satisfiedWithPaExpenses.notBlank", groups={"submit-paDeputyExpenses-checklist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"submit-paDeputyExpenses-checklist"})
      */
     protected $satisfiedWithPaExpenses;
 
@@ -153,6 +166,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.lifestyle.notBlank", groups={"submit-lifestyle-checklist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"submit-lifestyle-checklist"})
      */
     private $satisfiedWithHealthAndLifestyle;
 
@@ -162,6 +176,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.bondOrderMatchCasrec.notBlank", groups={"submit-bonds-checklist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"submit-bonds-checklist"})
      */
     private $bondAdequate;
 
@@ -171,6 +186,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.bondOrderMatchCasrec.notBlank", groups={"submit-bonds-checklist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"submit-bonds-checklist"})
      */
     private $bondOrderMatchCasrec;
 
@@ -180,6 +196,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.futureSignificantDecisions.notBlank", groups={"submit-common-checklist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"submit-common-checklist"})
      */
     private $futureSignificantDecisions;
 
@@ -189,6 +206,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.hasDeputyRaisedConcerns.notBlank", groups={"submit-common-checklist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"submit-common-checklist"})
      */
     private $hasDeputyRaisedConcerns;
 
@@ -198,6 +216,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.caseWorkerSatisified.notBlank", groups={"submit-common-checklist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"submit-common-checklist"})
      */
     private $caseWorkerSatisified;
 
@@ -207,6 +226,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @AppAssert\YesNoNa(groups={"submit-profDeputyCosts-checklist"})
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $paymentsMatchCostCertificate;
 
@@ -216,6 +236,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @AppAssert\YesNoNa(groups={"submit-profDeputyCosts-checklist"})
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $profCostsReasonableAndProportionate;
 
@@ -225,6 +246,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @AppAssert\YesNoNa(groups={"submit-profDeputyCosts-checklist"})
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $hasDeputyOverchargedFromPreviousEstimates;
 
@@ -234,6 +256,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.nextBillingEstimatesSatisfactory.notBlank", groups={"submit-profDeputyCostsEstimate-checklist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"submit-profDeputyCostsEstimate-checklist"})
      */
     private $nextBillingEstimatesSatisfactory;
 
@@ -243,6 +266,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.lodgingSummary.notBlank", groups={"submit-common-checklist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"submit-common-checklist"})
      */
     private $lodgingSummary;
 
@@ -252,6 +276,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.finalDecision.notBlank", groups={"submit-common-checklist"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"submit-common-checklist"})
      */
     private $finalDecision;
 
@@ -269,6 +294,7 @@ class Checklist implements SynchronisableInterface
      *
      * @JMS\Groups({"checklist-information"})
      * @JMS\Type("string")
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $furtherInformationReceived;
 
@@ -296,6 +322,7 @@ class Checklist implements SynchronisableInterface
      * @var string
      * @JMS\Type("string")
      * @JMS\Groups({"report-checklist"})
+     * @AppAssert\TextNoSpecialCharacters
      */
     protected $buttonClicked;
 
@@ -303,6 +330,7 @@ class Checklist implements SynchronisableInterface
      * @var string|null
      * @JMS\Type("string")
      * @JMS\Groups({"report-checklist-uuid"})
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $uuid;
 

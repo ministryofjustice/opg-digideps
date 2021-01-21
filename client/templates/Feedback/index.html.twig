@@ -12,7 +12,11 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body">{{ (page ~ '.intro.para1') | trans }}</p>
-            <p class="govuk-body">{{ (page ~ '.intro.para2') | trans | raw }}</p>
+            <p class="govuk-body">
+                {{ (page ~ '.intro.para2.left') | trans }}
+                <a href="mailto:customerservices@publicguardian.gov.uk">customerservices@publicguardian.gov.uk</a>
+                {{ (page ~ '.intro.para2.right') | trans }}
+            </p>
 
             {{ form_start(form) }}
 

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Traits\CreationAudit;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\Constraints as AppAssert;
 
 class ClientContact
 {
@@ -23,6 +24,7 @@ class ClientContact
      *
      * @JMS\Type("string")
      * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $address1;
 
@@ -31,6 +33,7 @@ class ClientContact
      *
      * @JMS\Type("string")
      * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $address2;
 
@@ -39,6 +42,7 @@ class ClientContact
      *
      * @JMS\Type("string")
      * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $address3;
 
@@ -48,6 +52,7 @@ class ClientContact
      * @JMS\Type("string")
      * @Assert\Length(max=10, maxMessage="clientContact.form.postcode.maxMessage",
      *     groups={"edit_clientcontact", "add_clientcontact"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"edit_clientcontact", "add_clientcontact"})
      * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
      */
     private $addressPostcode;
@@ -57,6 +62,7 @@ class ClientContact
      *
      * @JMS\Type("string")
      * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"edit_clientcontact", "add_clientcontact"})
      */
     private $addressCountry;
 
@@ -64,6 +70,7 @@ class ClientContact
      * @var string
      *
      * @JMS\Type("App\Entity\Client")
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $client;
 
@@ -75,6 +82,7 @@ class ClientContact
      * @Assert\Length( max=60, maxMessage="clientContact.form.email.maxLength", groups={"add_clientcontact", "edit_clientcontact"} )
      *
      * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"add_clientcontact", "edit_clientcontact"})
      */
     private $email;
 
@@ -87,6 +95,7 @@ class ClientContact
      *     groups={"edit_clientcontact", "add_clientcontact"})
      *
      * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"edit_clientcontact", "add_clientcontact"})
      */
     private $firstName;
 
@@ -96,6 +105,7 @@ class ClientContact
      * @JMS\Type("string")
      * @Assert\Length(min=2, max=100, minMessage="clientContact.form.firstname.minMessage", maxMessage="clientContact.form.firstname.maxMessage" )
      * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $jobTitle;
 
@@ -108,6 +118,7 @@ class ClientContact
      *     groups={"edit_clientcontact", "add_clientcontact"})
      *
      * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
+     * @AppAssert\TextNoSpecialCharacters(groups={"edit_clientcontact", "add_clientcontact"})
      */
     private $lastName;
 
@@ -116,6 +127,7 @@ class ClientContact
      *
      * @JMS\Type("string")
      * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $orgName;
 
@@ -124,6 +136,7 @@ class ClientContact
      *
      * @JMS\Type("string")
      * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $phone;
 

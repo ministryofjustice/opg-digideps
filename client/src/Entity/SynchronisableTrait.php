@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use DateTime;
+use App\Validator\Constraints as AppAssert;
 
 trait SynchronisableTrait
 {
@@ -10,6 +11,7 @@ trait SynchronisableTrait
      * @var string|null
      * @JMS\Type("string")
      * @JMS\Groups({"synchronisation"})
+     * @AppAssert\TextNoSpecialCharacters
      */
     protected $synchronisationStatus;
 
@@ -24,6 +26,7 @@ trait SynchronisableTrait
      * @var string|null
      * @JMS\Type("string")
      * @JMS\Groups({"synchronisation"})
+     * @AppAssert\TextNoSpecialCharacters
      */
     protected $synchronisationError;
 

@@ -7,6 +7,10 @@ use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints as Constraints;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * PA - edit client
@@ -16,7 +20,7 @@ use Symfony\Component\Validator\Constraints\Email;
  */
 class ClientType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('firstname', FormTypes\TextType::class)
@@ -27,10 +31,32 @@ class ClientType extends AbstractType
                     'invalid_message' => 'Enter a valid date',
             ])
             ->add('email', FormTypes\EmailType::class)
-            ->add('address', FormTypes\TextType::class)
+            ->add('address', FormTypes\TextType::class, [
+                'constraints' => new Length(['min' => 8, 'groups' => 'pa-client'])
+            ])
             ->add('address2', FormTypes\TextType::class)
+//                'constraints' => [
+//                    new Regex([
+//                        'pattern'   => '/[$&+,:;=?@#|\'<>.^*()%!-]/',
+//                        'match'     => false,
+//                        'message'   => '',
+//                        'groups' => 'pa-client'
+//                    ]),
+////                    new Length(['min' => 8, 'groups' => 'pa-client']),
+//                ]
+//            ])
+//            ->add('address2', FormTypes\TextType::class, [
+//                'constraints' => [
+//                    new Regex([
+//                        'pattern'   => '/[$&+,:;=?@#|\'<>.^*()%!-]/',
+//                        'match'     => false,
+//                        'message'   => '',
+//                        'groups' => 'pa-client'
+//                    ]),
+////                    new Length(['min' => 8, 'groups' => 'pa-client']),
+//                ]
+//            ])
             ->add('postcode', FormTypes\TextType::class)
-
             ->add('county', FormTypes\TextType::class)
             ->add('phone', FormTypes\TextType::class)
             ->add('id', FormTypes\HiddenType::class)

@@ -5,6 +5,7 @@ namespace App\Entity\Report\Traits;
 use App\Entity\Report\Report;
 use App\Entity\Report\UnsubmittedSection;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use App\Validator\Constraints as AppAssert;
 
 trait ReportUnsubmittedSections
 {
@@ -18,6 +19,7 @@ trait ReportUnsubmittedSections
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report_unsubmitted_sections_list"})
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $unsubmittedSectionsList;
 

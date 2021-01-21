@@ -15,10 +15,17 @@
 
     <div class="text">
 
-        <p class="govuk-body">{{ 'thankyou.pageDescription1' | trans(transOptions) | raw }}</p>
-        <p class="govuk-body">{{ 'thankyou.pageDescription2' | trans(transOptions) | raw }}</p>
-        <p class="govuk-body">{{ 'thankyou.pageDescription3' | trans(transOptions) | raw }}</p>
-        <p class="govuk-body">{{ 'thankyou.pageDescription4' | trans(transOptions) | raw }}</p>
+        <p class="govuk-body">
+            {{ 'thankyou.pageDescription1' | trans(transOptions) }}
+            <strong class="bold-small">{{ email }}</strong>
+            {{ 'thankyou.pageDescription2' | trans(transOptions) }}
+        </p>
+        <p class="govuk-body">{{ 'thankyou.pageDescription2' | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ 'thankyou.pageDescription3' | trans(transOptions) }}</p>
+        <p class="govuk-body">
+            {{ 'thankyou.pageDescription4' | trans(transOptions) }}
+            <a href="{{ path('login') }}">sign in</a>.
+        </p>
     </div>
 
 {% endblock %}

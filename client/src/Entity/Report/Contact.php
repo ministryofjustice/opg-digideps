@@ -5,6 +5,7 @@ namespace App\Entity\Report;
 use App\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\Constraints as AppAssert;
 
 class Contact
 {
@@ -27,6 +28,7 @@ class Contact
      * @JMS\Groups({"contact"})
      *
      * @var string
+     * @AppAssert\TextNoSpecialCharacters
      */
     private $contactName;
 

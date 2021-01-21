@@ -5,9 +5,9 @@ startPage:
     pageSectionDescription1: |
       In this section, we ask you about money paid into %client%'s accounts between %startDate%
       and %endDate%.
-    pageSectionDescription2: |
-      Transfers between %client%'s accounts should be entered in the
-      <a href="%moneyTransfersPath%">money transfers</a> section.
+    pageSectionDescription2:
+      left: Transfers between %client%'s accounts should be entered in the
+      right: section.
     pageSectionDescription3: |
       Make sure you only enter each payment in one place, so we do not count it twice.
     totalOrIndividualHeading: |
@@ -17,10 +17,12 @@ startPage:
       received over the reporting period, or you can add 12 items - one for each month's pension
       payment.
     accountLinksHeading: Link payments to %client%'s bank accounts
-    accountLinksPara1: |
-      When you add a payment, you have the option to say which of %client%'s bank accounts it was paid into.
-      If you'd like to do this, you may want to <a href="%accountsPath%">add %client%'s bank accounts</a>
-      before you start this section.
+    accountLinksPara1:
+      left: |
+        When you add a payment, you have the option to say which of %client%'s bank accounts it was paid into.
+        If you'd like to do this, you may want to
+      link: add %client%'s bank accounts
+      right: before you start this section.
     startButton: Start money in
   moneyOut:
     htmlTitle: "Money out - Complete the deputy report | GOV.UK"

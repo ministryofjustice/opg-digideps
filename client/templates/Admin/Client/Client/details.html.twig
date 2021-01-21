@@ -83,7 +83,9 @@
                 {{ (page ~ '.namedDeputy.address') | trans }}
             </h3>
             <p class="govuk-body">
-                {{ namedDeputy.addressNotEmptyParts | join('<br>') | raw }}
+                {% for addressPart in client.addressNotEmptyParts %}
+                    {{ addressPart }}<br/>
+                {% endfor %}
             </p>
         {% endif %}
         <h3 class="govuk-heading-s">

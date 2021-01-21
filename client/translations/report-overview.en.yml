@@ -157,7 +157,9 @@ money_out_short:
 balance:
   subSectionTitle: "Accounts balance check"
   subSectionDescription:
-    default: Check that %client%'s accounts balance
+    default:
+      left: 'Check that '
+      right: '''s accounts balance'
     addExplanation: "Add explanation"
     editExplanation: "Edit explanation"
   label:
