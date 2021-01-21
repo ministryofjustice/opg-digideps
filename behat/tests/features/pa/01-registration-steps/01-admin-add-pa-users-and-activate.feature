@@ -1,34 +1,4 @@
 Feature: Add PA users and activate PA user (journey)
-
-#  Scenario: add PA users
-#    Given emails are sent from "admin" area
-#    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-#      # upload PA users
-#    When I go to admin page "/admin/org-csv-upload"
-#    When I attach the file "behat-pa.csv" to "admin_upload_file"
-#    And I press "admin_upload_upload"
-#    Then the form should be valid
-#    #Then I should see "Added 1 PA users"
-#      # activate PA user 1
-#    When I click on "admin-homepage"
-#    And I click on "send-activation-email" in the "user-behat-pa1publicguardiangovuk" region
-#    Then the response status code should be 200
-#    And the last email containing a link matching "/user/activate/" should have been sent to "behat-pa1@publicguardian.gov.uk"
-
-#  Scenario: Setup data
-#    Given the following court orders exist:
-#      | client   | deputy      | deputy_type | report_type                                | court_date | orgSizeClients |
-#      | 78978978 | EmilyHaines | PA_ADMIN    | Property and Financial Affairs High Assets | 2018-01-30 | 18             |
-#
-#    Given the following users exist:
-#      | ndr      | deputyType     | firstName | lastName | email                         | postCode | activated |
-#      | disabled | PA_TEAM_MEMBER | James     | Shaw     | JamesShaw@behat-test.com      | HA4      | true      |
-#      | disabled | PA_TEAM_MEMBER | Joshua    | Winstead | JoshuaWinstead@behat-test.com | HA4      | true      |
-#
-#    And the following users are in the organisations:
-#      | userEmail                 | orgName |
-#      | KimPetras@behat-test.com   | PA OPG  |
-
   Scenario: Activate PA user
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
       # upload PA users

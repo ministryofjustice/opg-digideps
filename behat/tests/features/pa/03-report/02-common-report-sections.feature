@@ -1,12 +1,4 @@
 Feature: PA user edits common report sections common to ALL report types
-
-#  Scenario: Setup data
-#    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-#    Given the following court orders exist:
-#      | client   | deputy      | deputy_type | report_type                                | court_date |
-#      | 78978978 | KimPetras   | PA          | Property and Financial Affairs High Assets | 2018-01-30 |
-#      | 98798798 | JamesShaw   | PA_ADMIN    | High Assets with Health and Welfare        | 2018-01-30 |
-
   @102 @103-6 @104
   Scenario: PA 102 user edit decisions section
     And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
