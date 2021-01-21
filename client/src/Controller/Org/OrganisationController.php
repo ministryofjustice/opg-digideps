@@ -119,7 +119,7 @@ class OrganisationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $email = $form->getData()->getEmail();
-                $user = $this->userApi->getByEmail($email);
+                $user = $this->userApi->getByEmailOrgAdmins($email);
 
                 if (!$user->getId()) {
                     /** @var EntityDir\User $formData */

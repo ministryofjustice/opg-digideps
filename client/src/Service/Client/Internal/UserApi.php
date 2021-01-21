@@ -23,6 +23,7 @@ class UserApi
 {
     protected const USER_ENDPOINT = 'user';
     protected const GET_USER_BY_EMAIL_ENDPOINT = 'user/get-one-by/email/%s';
+    protected const GET_USER_BY_EMAIL_ORG_ADMINS_ENDPOINT = 'user/get-team-names-by-email/%s';
     protected const USER_BY_ID_ENDPOINT = 'user/%s';
     protected const RECREATE_USER_TOKEN_ENDPOINT = 'user/recreate-token/%s';
     protected const DEPUTY_SELF_REGISTER_ENDPOINT = 'selfregister';
@@ -84,6 +85,15 @@ class UserApi
     public function getByEmail(string $email)
     {
         return $this->restClient->get(sprintf(self::GET_USER_BY_EMAIL_ENDPOINT, $email), 'User');
+    }
+
+    /**
+     * @param string $email
+     * @return mixed
+     */
+    public function getByEmailOrgAdmins(string $email)
+    {
+        return $this->restClient->get(sprintf(self::GET_USER_BY_EMAIL_ORG_ADMINS_ENDPOINT, $email), 'User');
     }
 
     /**
