@@ -62,14 +62,6 @@ class UserRegistrationService
             if ($existingClient->hasDeputies() || $existingClient->getOrganisation() instanceof Organisation) {
                 throw new \RuntimeException('User registration: Case number already used', 425);
             } else {
-                foreach ($existingClient->getCourtOrders() as $order) {
-                    foreach ($order->getDeputies() as $deputy) {
-                        if (!is_null($deputy->getUser()) || !is_null($deputy->getOrganisation())) {
-                            throw new \RuntimeException('User registration: Case number already used', 425);
-                        }
-                    }
-                }
-
                 // soft delete client
                 $this->em->remove($existingClient);
                 $this->em->flush();
