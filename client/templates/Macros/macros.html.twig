@@ -173,55 +173,64 @@
             <div class="opg-alert opg-alert--notice">
                 {{ _self.icon('notification', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
-                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | raw }}</p>
+                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | nl2br }}</p>
                 </div>
             </div>
         {% elseif alertType == 'success' %}
             <div class="opg-alert opg-alert--success">
                 {{ _self.icon('tick', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
-                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | raw }}</p>
+                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | nl2br }}</p>
                 </div>
             </div>
         {% elseif alertType == 'error' %}
             <div class="opg-alert opg-alert--error">
                 {{ _self.icon('cross', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
-                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | raw }}</p>
+                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | nl2br }}</p>
                 </div>
             </div>
         {% elseif alertType == 'info' %}
             <div class="opg-alert opg-alert--info">
                 {{ _self.icon('information', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
-                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | raw }}</p>
+                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | nl2br }}</p>
                 </div>
             </div>
         {% elseif alertType == 'important' %}
             <div class="opg-alert opg-alert--important">
                 {{ _self.icon('important-small', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
-                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | raw }}</p>
+                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | nl2br }}</p>
+                </div>
+            </div>
+        {% elseif alertType == 'infolink' %}
+            <div class="opg-alert opg-alert--info">
+                {{ _self.icon('information', 'opg-alert__icon') }}
+                <div class="behat-region-alert-message opg-alert__message">
+                    <p class="govuk-body govuk-!-margin-bottom-0">
+                        {{ message | nl2br }}
+                    </p>
                 </div>
             </div>
         {% elseif alertType == 'loader' %}
             <div class="opg-alert opg-alert--info">
                 {{ _self.icon('loader', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
-                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | raw }}</p>
+                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | nl2br }}</p>
                 </div>
             </div>
         {% else %}
             <div class="opg-alert">
                 <div class="behat-region-alert-message opg-alert__message">
-                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | raw }}</p>
+                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | nl2br }}</p>
                 </div>
             </div>
         {% endif %}
     {% else %}
         <div class="opg-alert">
             <div class="behat-region-alert-message opg-alert__message">
-                <p class="govuk-body govuk-!-margin-bottom-0">{{ message | raw }}</p>
+                <p class="govuk-body govuk-!-margin-bottom-0">{{ message | nl2br }}</p>
             </div>
         </div>
     {% endif %}
@@ -324,8 +333,7 @@ C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.
         <div class="govuk-details__text">
             {% if options.text is defined %}
                 {{ options.text }}
-            {% elseif options.html is defined %}
-                {{ options.html | raw }}
+                <!-- html version has no instances -->
             {% endif %}
         </div>
     </details>

@@ -207,8 +207,11 @@
             routeName: 'admin_documents',
             routeParams: filtersToPreserveInPagination,
             messages: {
-                singlePage: '{0} Showing 0 report submissions|{1} Showing 1 report submission|]1,Inf[ Showing %count% report submissions',
-                multiPage: 'Showing %from% &ndash; %to% of %total% report submissions'
+                singlePage: {
+                    singular: 'Showing 1 report submission',
+                    plural: 'Showing %count% report submissions'
+                },
+                multiPage: 'Showing %from% - %to% of %total% report submissions'
             }
         } %}
 

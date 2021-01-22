@@ -39,10 +39,16 @@
             </div>
         </details>
 
-        {% if report.bankAccounts is empty and report.canLinkToBankAccounts %}
+{#        {% if report.bankAccounts is empty and report.canLinkToBankAccounts %}#}
             <h3 class="govuk-heading-s">{{ 'startPage.accountLinksHeading' | trans(transOptions) }}</h3>
-            <p class="govuk-body">{{ 'startPage.accountLinksPara1' | trans(transOptions) | raw }}</p>
-        {% endif %}
+            <p class="govuk-body">
+                {{ 'startPage.accountLinksPara1.left' | trans(transOptions) }}
+                <a href="{{ path('bank_accounts', {reportId: report.id}) }}">
+                    {{ 'startPage.accountLinksPara1.link' | trans(transOptions) }}
+                </a>
+                {{ 'startPage.accountLinksPara1.right' | trans(transOptions) }}
+            </p>
+{#        {% endif %}#}
     </div>
 
     {{ macros.startSectionButton(path('gifts_exist', { 'reportId': report.id}), 'startPage.startButton' | trans ) }}

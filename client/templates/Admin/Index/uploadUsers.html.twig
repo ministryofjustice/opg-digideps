@@ -36,7 +36,6 @@
         {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
         {{ form_input(form.file, '', {
-            'labelRaw': true,
             'labelText': 'Select CSV file exported from CASREC',
             'hintText': 'Max upload size is ' ~ maxUploadSize,
             'inputClass': 'no-border'

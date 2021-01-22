@@ -17,9 +17,9 @@
     <p class="govuk-body">{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
 
     {% if app.user.isDeputyProf() %}
-        {{ macros.notification('info', 'startPage.deputyProfNotice' | trans) }}
+        {{ macros.notification('info', 'startPage.deputyProfNotice' | trans) }} <!-- fine -->
     {% else %}
-        {{ macros.notification('info', 'startPage.notice' | trans) }}
+        {{ macros.notification('info', 'startPage.notice' | trans) }} <!-- fine -->
     {% endif %}
 
     {#{% if not app.user.isDeputyProf() %}#}

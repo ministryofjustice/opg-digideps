@@ -27,11 +27,11 @@
 
             {# Missing questions alerts #}
             {% if report.actionMoreInfo is null and comingFromLastStep%}
-                {{ macros.notification('notice', 'remindComplete' | trans(transOptions, 'common')) }}
+                {{ macros.notification('notice', 'remindComplete' | trans(transOptions, 'common')) }} <!-- fine -->
             {% endif %}
 
             {% if report.actionMoreInfo is null and not comingFromLastStep%}
-                {{ macros.notification('notice', 'canYouAnswer' | trans(transOptions, 'common')) }}
+                {{ macros.notification('notice', 'canYouAnswer' | trans(transOptions, 'common')) }} <!-- fine -->
             {% endif %}
         </div>
         <div class="govuk-grid-column-one-third">

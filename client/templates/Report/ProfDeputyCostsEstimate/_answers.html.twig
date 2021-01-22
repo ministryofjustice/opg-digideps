@@ -11,7 +11,7 @@
 
     <p class="govuk-body">{{ (page ~ '.checkTheyreCorrect') | trans }}</p>
 
-    {{ macros.notification('info', (page ~ '.informationMessage') | trans(transOptions)) }}
+    {{ macros.notification('info', (page ~ '.informationMessage') | trans(transOptions)) }} <!-- fine -->
 {% endif %}
 
 <dl class="govuk-summary-list">

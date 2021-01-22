@@ -23,7 +23,9 @@
         {% endif %}
         <label class="{{ labelClass }}" for="{{ element.vars.id }}">
             {% if labelRaw %}
-                {{ labelText | raw }}
+                {{ labelText }} <!-- check -->
+            {% elseif labelLink %}
+                {{ labelText.left }}<a href="{{ labelText.url }}">{{ labelText.link }}</a>{{ labelText.right }}
             {% else %}
                 {{ labelText }}
             {% endif %}

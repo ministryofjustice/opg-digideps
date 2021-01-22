@@ -31,11 +31,11 @@
 
             {# Missing questions alerts #}
             {% if status.debtsState.state != 'done' and comingFromLastStep%}
-                {{ macros.notification('notice', 'remindComplete' | trans(transOptions, 'common')) }}
+                {{ macros.notification('notice', 'remindComplete' | trans(transOptions, 'common')) }}  <!-- fine -->
             {% endif %}
 
             {% if status.debtsState.state != 'done' and not comingFromLastStep%}
-                {{ macros.notification('notice', 'canYouAnswer' | trans(transOptions, 'common')) }}
+                {{ macros.notification('notice', 'canYouAnswer' | trans(transOptions, 'common')) }}  <!-- fine -->
             {% endif %}
         </div>
         <div class="column-third">

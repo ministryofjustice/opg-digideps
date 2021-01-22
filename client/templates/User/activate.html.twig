@@ -16,14 +16,19 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_input(form.password.first,'password', { 'labelRaw': true, 'hasHintList': true } ) }}
+    {{ form_input(form.password.first,'password', { 'hasHintList': true } ) }}
 
     {{ form_input(form.password.second,'password_confirm' ) }}
 
     {% if form.showTermsAndConditions is defined %}
         {{ form_checkbox(form.showTermsAndConditions, '', {
-            'labelText': 'terms_conditions.label' | trans({'%link%': path('terms')}) | raw,
-            'labelRaw': true
+            'labelText': {
+                'left': 'I have read and understood the ',
+                'url': path('terms'),
+                'link': 'terms of use',
+                'right': ''
+            },
+            'labelLink': true
         } ) }}
     {% endif %}
 

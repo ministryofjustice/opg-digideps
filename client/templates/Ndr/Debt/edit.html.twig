@@ -28,8 +28,7 @@
                     'inputPrefix' : '£',
                     'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
                     'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.label') | trans,
-                    'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.hint') | trans(transOptions),
-                    'labelRaw': true
+                    'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.hint') | trans(transOptions)
                 }) }}
 
                 {% if debt.moreDetails is defined %}
@@ -37,8 +36,7 @@
                         <div class="opg-indented-block flush--bottom js-hidden">
                             {{ form_input(debt.moreDetails, 'moreDetails', {
                                 'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,
-                                'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInfoHint') | trans(transOptions),
-                                'labelRaw': true
+                                'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInfoHint') | trans(transOptions)
                             }) }}
                         </div>
                     </div>

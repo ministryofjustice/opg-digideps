@@ -19,10 +19,12 @@ startPage:
       para01: |
         OPG'S <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties/">'How to be a deputy' (SD3) </a> booklet gives detailed guidance on what you can and cannot claim for while carrying out your duties as a deputy.
   accountLinksHeading: Link expenses to %client%'s bank accounts
-  accountLinksPara1: |
-    When you add an expense, you have the option to say which of %client%'s bank accounts it was paid from.
-    If you'd like to do this, you may want to <a href="%accountsPath%">add %client%'s bank accounts</a>
-    before you start this section.
+  accountLinksPara1:
+    left: |
+      When you add an expense, you have the option to say which of %client%'s bank accounts it was paid from.
+      If you'd like to do this, you may want to
+    link: add %client%'s bank accounts
+    right: before you start this section.
   startButton: Start deputy expenses
 
 existPage:

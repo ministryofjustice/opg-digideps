@@ -23,7 +23,7 @@
     <h2 class="govuk-heading-m flush--top">{{ (page ~ '.yourClientsDetails') | trans }}</h2>
 
     {{ form_input(form.clientLastname,   'clientLastname') }}
-    {{ form_input(form.clientCaseNumber, 'clientCaseNumber', { 'labelRaw': true }) }}
+    {{ form_input(form.clientCaseNumber, 'clientCaseNumber') }}
     {{ form_submit(form.save, 'saveAndContinue') }}
 
     {{ form_end(form) }}

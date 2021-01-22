@@ -6,8 +6,10 @@ startPage:
     savings accounts and ISAs.
   pageSectionDescription2: |
     We will also need to know the balance of each account.
-  pageSectionDescription3: |
-    Interest can be added in the <a href="%moneyInPath%">money in</a> section.
+  pageSectionDescription3:
+    left: 'Interest can be added in the '
+    link: money in
+    right: section.
   hiddenText01:
     summary: More on how to carry out your duties
     content:

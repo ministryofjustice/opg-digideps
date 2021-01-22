@@ -30,18 +30,27 @@ startPage:
     pageSectionDescription1: |
       In this section, we ask you about money paid out of %client%'s accounts between %startDate%
       and %endDate%.
-    pageSectionDescription2: |
-      There are different sections for you to tell us about <a href="%moneyTransfersPath%">
-      money transfers</a> between %client%'s accounts, your <a href="%deputyExpensesPath%">
-      deputy expenses</a>, and <a href="%giftsPath%">gifts</a>.
-    pageSectionDescription2-PA: |
-      There are different sections for you to tell us about <a href="%moneyTransfersPath%">
-      money transfers</a> between %client%'s accounts, your <a href="%paDeputyExpensesPath%">
-      deputy fees and expenses</a>, and <a href="%giftsPath%">gifts</a>.
+    pageSectionDescription2:
+      part1: There are different sections for you to tell us about
+      link1: money transfers
+      part2: between %client%'s accounts, your
+      link2: deputy expenses
+      part3: and
+      link3: gifts
+    pageSectionDescription2-PA:
+      part1: There are different sections for you to tell us about
+      link1: money transfers
+      part2: between %client%'s accounts, your
+      link2: deputy fees and expenses
+      part3: and
+      link3: gifts
     pageSectionDescription2-PROF: |
-      There are different sections for you to tell us about <a href="%moneyTransfersPath%">
-      money transfers</a> between %client%'s accounts, your <a href="%deputyCostsPath%">
-      deputy costs</a>, and <a href="%giftsPath%">gifts</a>.
+      part1: There are different sections for you to tell us about
+      link1: money transfers
+      part2: between %client%'s accounts, your
+      link2: deputy fees and expenses
+      part3: deputy costs
+      link3: gifts
     #    pageSectionDescription2-PROF: |
     #      There are different sections for you to tell us about <a href="%moneyTransfersPath%">
     #      money transfers</a> between %client%'s accounts, your <a href="%deputyCostsPath%">
@@ -54,10 +63,12 @@ startPage:
       For example, you can add one payment that covers the cost of rent for the whole reporting
       period, or you can add 12 payments - one for each month's rent.
     accountLinksHeading: Link payments to %client%'s bank accounts
-    accountLinksPara1: |
-      When you add a payment, you have the option to say which of %client%'s bank accounts it was paid
-      out from. If you'd like to do this, you may want to <a href="%accountsPath%">add %client%'s
-      bank accounts</a> before you start this section.
+    accountLinksPara1:
+      left: |
+        When you add a payment, you have the option to say which of %client%'s bank accounts it was paid
+        out from. If you'd like to do this, you may want to
+      link: add %client%'s bank accounts
+      right: before you start this section.
     startButton: Start money out
 
 stepPage:
