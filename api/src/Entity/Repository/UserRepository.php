@@ -204,4 +204,19 @@ class UserRepository extends AbstractEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findActiveInLastYear()
+    {
+        $oneYearAgo = (new DateTime())->modify('-1 Year');
+
+        $qb = $this->createQueryBuilder('u');
+        $qb
+            ->select()
+            ->where('u.lastLoggedIn > :login_cutoff')
+            ->andWhere('u.roleName = :lay_deputy_role')
+            ->setParameter('login_cutoff', $oneYearAgo)
+            ->setParameter('lay_deputy_role', User::ROLE_LAY_DEPUTY);
+
+        return $qb->getQuery()->getResult();
+    }
 }

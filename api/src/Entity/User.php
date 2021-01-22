@@ -969,6 +969,30 @@ class User implements UserInterface
     }
 
     /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"user-login"})
+     * @JMS\Type("integer")
+     * @JMS\SerializedName("number_of_submitted_reports")
+     */
+    public function getNumberOfSubmittedReports()
+    {
+        if (!$this->getFirstClient()) {
+            return 0;
+        }
+
+        $isSubmittedClosure = function (Report $report) {
+            return !is_null($report->getSubmitDate());
+        };
+
+        $submittedReports = array_filter(
+            $this->getFirstClient()->getReports()->toArray(),
+            $isSubmittedClosure
+        );
+
+        return count($submittedReports);
+    }
+
+    /**
      * @return null|Client
      */
     public function getFirstClient()

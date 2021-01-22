@@ -4,7 +4,11 @@ namespace Tests\App\Entity\Repository;
 
 use App\Entity\Repository\UserRepository;
 use App\Entity\User;
+
+
+use App\TestHelpers\UserTestHelper;
 use DateTime;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -32,6 +36,9 @@ class UserRepositoryTest extends WebTestCase
         $metaClass->name = User::class;
 
         $this->sut = new UserRepository($this->em, $metaClass->reveal());
+
+        $purger = new ORMPurger($this->em);
+        $purger->purge();
     }
 
     public function testCountsInactiveUsers()
@@ -71,6 +78,45 @@ class UserRepositoryTest extends WebTestCase
         $inactiveUsers = $this->sut->findInactive();
 
         self::assertCount(2, $inactiveUsers);
+    }
+
+    /** @test */
+    public function findActiveInLastYear()
+    {
+        $oneYearAgo = (new \DateTimeImmutable())->modify('-1 Year');
+
+        $userTestHelper = new UserTestHelper();
+
+        $activeLay = ($userTestHelper->createAndPersistUser($this->em, null))
+            ->setLastLoggedIn(
+                DateTime::createFromImmutable($oneYearAgo->modify('+1 day'))
+            );
+
+        $activeLay2 = ($userTestHelper->createAndPersistUser($this->em, null))
+            ->setLastLoggedIn(
+                DateTime::createFromImmutable($oneYearAgo->modify('+1 minute'))
+            );
+
+        $inactiveLay = ($userTestHelper->createAndPersistUser($this->em, null))
+            ->setLastLoggedIn(
+                DateTime::createFromImmutable($oneYearAgo->modify('-5 second'))
+            );
+
+        $this->em->persist($activeLay);
+        $this->em->persist($activeLay2);
+        $this->em->persist($inactiveLay);
+        $this->em->flush();
+
+        $results = $this->sut->findActiveInLastYear();
+        $resultsUserIds = [];
+
+        foreach ($results as $user) {
+            $resultsUserIds[] = $user->getId();
+        }
+
+        self::assertContains($activeLay->getId(), $resultsUserIds);
+        self::assertContains($activeLay2->getId(), $resultsUserIds);
+        self::assertNotContains($inactiveLay->getId(), $resultsUserIds);
     }
 
     protected function tearDown(): void
