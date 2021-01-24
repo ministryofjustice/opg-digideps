@@ -276,6 +276,11 @@ class NdrController extends AbstractController
             );
 
             $this->ndrApi->submit($ndr, $document);
+//            JIMMMY
+//            foreach ($client->getUsers() as $user) {
+//                $user->setNdrEnabled(false);
+//                $this->restClient->put('user/' . $user->getId(), $user);
+//            };
 
             return $this->redirect($this->generateUrl('ndr_submit_confirmation', ['ndrId'=>$ndr->getId()]));
         }

@@ -61,7 +61,7 @@ class ClientController
 
     /**
      * @Route("/case-number/{caseNumber}", methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_DEPUTY')")
      *
      * @param string $caseNumber
      * @return JsonResponse
