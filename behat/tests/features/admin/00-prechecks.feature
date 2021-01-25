@@ -5,4 +5,4 @@ Feature: admin / pre checks
     When I go to admin page "/manage/availability"
     Then I should see "Api: OK"
     And I should see "Redis: OK"
-    And I should see "Notify: OK"
+#    And I should see "Notify: OK"

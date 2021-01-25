@@ -18,17 +18,15 @@ class TextNoSpecialCharactersValidator extends ConstraintValidator
             return;
         }
 
-//        if (!is_string($value)) {
-//            throw new UnexpectedTypeException($value, 'string');
-//        }
-
         // Allowed .
         // Reserved : / ? # [ ] @ ! $ & ' ( ) * + , ; =
         // Danger " < > % { } | \ ^ `
         // ASCII Control characters	Includes the ISO-8859-1 (ISO-Latin) character ranges 00-1F hex (0-31 decimal) and 7F (127 decimal)	YES
         // Non-ASCII characters	Includes the entire “top half” of the ISO-Latin set 80-FF hex (128-255 decimal)
 
-        if (preg_match("/[$&+,:;=?#|\'<>^*()%!]/", $value, $matches)) {
+        //We take pragmatic approach and disallow the following:
+
+        if (preg_match("/[<>|^`{}]/", $value, $matches)) {
             $this->context->buildViolation($constraint->message)
             ->setParameter('{{ string }}', $value)
             ->addViolation();

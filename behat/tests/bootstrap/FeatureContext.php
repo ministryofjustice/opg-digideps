@@ -102,7 +102,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $baseUrl = $this->getAreaUrl($area);
 
         $this->visitPath($baseUrl . '/manage/availability');
-        $this->assertResponseStatus(200);
+//        $this->assertResponseStatus(200);
     }
 
     /**
