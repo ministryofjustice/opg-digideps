@@ -347,6 +347,14 @@ class User implements AdvancedUserInterface, DeputyInterface
      */
     private $organisations;
 
+    /**
+     * @JMS\Type("int")
+     * @JMS\Groups({"user"})
+     *
+     * @var int
+     */
+    private $numberOfSubmittedReports;
+
     public function __construct()
     {
         $this->teams = new ArrayCollection();
@@ -1230,5 +1238,23 @@ class User implements AdvancedUserInterface, DeputyInterface
     public function getFirstClient(): ?Client
     {
         return count($this->getClients()) > 0 ? $this->getClients()[0] : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumberOfSubmittedReports(): int
+    {
+        return $this->numberOfSubmittedReports;
+    }
+
+    /**
+     * @param int $numberOfSubmittedReports
+     * @return User
+     */
+    public function setNumberOfSubmittedReports(int $numberOfSubmittedReports)
+    {
+        $this->numberOfSubmittedReports = $numberOfSubmittedReports;
+        return $this;
     }
 }

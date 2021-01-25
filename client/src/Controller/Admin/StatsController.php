@@ -179,4 +179,36 @@ class StatsController extends AbstractController
 
         return $resultByDeputyType;
     }
+
+    /**
+     * @Route("/test", name="test")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Template("@App/Admin/Stats/stats-test.html.twig")
+     *
+     * @param Request $request
+     * @param ReportSubmissionSummaryMapper $mapper
+     * @param ReportSubmissionBurFixedWidthTransformer $transformer
+     *
+     * @return array|Response
+     */
+    public function test(Request $request, ReportSubmissionSummaryMapper $mapper, ReportSubmissionBurFixedWidthTransformer $transformer)
+    {
+        $form = $this->createForm(ReportSubmissionDownloadFilterType::class, new ReportSubmissionSummaryQuery());
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $reportSubmissionSummaries = $mapper->getBy($form->getData());
+                $downloadableData = $transformer->transform($reportSubmissionSummaries);
+
+                return $this->buildResponse($downloadableData);
+            } catch (\Throwable $e) {
+                throw new DisplayableException($e);
+            }
+        }
+
+        return [
+            'form' => $form->createView()
+        ];
+    }
 }

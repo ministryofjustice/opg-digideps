@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Report\Report;
 use App\Entity\Traits\AddressTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -970,7 +971,7 @@ class User implements UserInterface
 
     /**
      * @JMS\VirtualProperty
-     * @JMS\Groups({"user-login"})
+     * @JMS\Groups({"user"})
      * @JMS\Type("integer")
      * @JMS\SerializedName("number_of_submitted_reports")
      */

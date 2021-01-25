@@ -27,7 +27,7 @@ class UserTestHelper extends TestCase
         return $user->reveal();
     }
 
-    public function createAndPersistUser(EntityManager $em, ?Client $client, ?string $roleName = User::ROLE_LAY_DEPUTY)
+    public function createAndPersistUser(EntityManager $em, ?Client $client = null, ?string $roleName = User::ROLE_LAY_DEPUTY)
     {
         $faker = Factory::create('en_GB');
 
@@ -37,7 +37,8 @@ class UserTestHelper extends TestCase
             ->setEmail($faker->safeEmail)
             ->setRoleName($roleName)
             ->setPhoneMain($faker->phoneNumber)
-            ->setRegistrationDate(new DateTime());
+            ->setRegistrationDate(new DateTime())
+            ->setLastLoggedIn(new DateTime());
 
         if (!is_null($client)) {
             $em->persist($client);

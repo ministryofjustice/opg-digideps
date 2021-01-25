@@ -81,7 +81,7 @@ class UserRepositoryTest extends WebTestCase
     }
 
     /** @test */
-    public function findActiveInLastYear()
+    public function findActiveLaysInLastYear()
     {
         $oneYearAgo = (new \DateTimeImmutable())->modify('-1 Year');
 
@@ -107,7 +107,7 @@ class UserRepositoryTest extends WebTestCase
         $this->em->persist($inactiveLay);
         $this->em->flush();
 
-        $results = $this->sut->findActiveInLastYear();
+        $results = $this->sut->findActiveLaysInLastYear();
         $resultsUserIds = [];
 
         foreach ($results as $user) {

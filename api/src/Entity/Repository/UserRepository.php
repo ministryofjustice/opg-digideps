@@ -205,7 +205,10 @@ class UserRepository extends AbstractEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findActiveInLastYear()
+    /**
+     * @return User[]
+     */
+    public function findActiveLaysInLastYear()
     {
         $oneYearAgo = (new DateTime())->modify('-1 Year');
 
