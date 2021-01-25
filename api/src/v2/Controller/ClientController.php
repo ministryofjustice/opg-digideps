@@ -2,6 +2,8 @@
 
 namespace App\v2\Controller;
 
+use App\Entity\Client;
+use App\Controller\RestController;
 use App\Entity\Repository\ClientRepository;
 use App\v2\Assembler\ClientAssembler;
 use App\v2\Transformer\ClientTransformer;
@@ -14,7 +16,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * @Route("/client")
  */
-class ClientController
+class ClientController extends RestController
 {
     use ControllerTrait;
 
@@ -56,6 +58,17 @@ class ClientController
 
         $transformedDto = $this->transformer->transform($dto);
 
+        if ($transformedDto['archived_at']) {
+            throw $this->createAccessDeniedException('Cannot access archived reports');
+        };
+
+        /* @var $client Client */
+        $client = $this->findEntityBy(Client::class, $transformedDto['id']);
+
+        if (!$this->isGranted('view', $client)) {
+            throw $this->createAccessDeniedException('Client does not belong to user');
+        }
+
         return $this->buildSuccessResponse($transformedDto);
     }
 
@@ -75,6 +88,17 @@ class ClientController
         $dto = $this->assembler->assembleFromArray($data);
 
         $transformedDto = $this->transformer->transform($dto, ['reports', 'ndr', 'organisation', 'namedDeputy']);
+
+        if ($transformedDto['archived_at']) {
+            throw $this->createAccessDeniedException('Cannot access archived reports');
+        };
+
+        /* @var $client Client */
+        $client = $this->findEntityBy(Client::class, $transformedDto['id']);
+
+        if (!$this->isGranted('view', $client)) {
+            throw $this->createAccessDeniedException('Client does not belong to user');
+        }
 
         return $this->buildSuccessResponse($transformedDto);
     }

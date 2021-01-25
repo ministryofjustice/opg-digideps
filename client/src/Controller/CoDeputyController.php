@@ -49,6 +49,9 @@ class CoDeputyController extends AbstractController
     {
         $user = $this->userApi->getUserWithData(['user', 'user-clients', 'client']);
 
+
+        $clientId = $this->restClient->get('v2/client/case-number/20060467', 'Client')->getId();
+
         // redirect if user has missing details or is on wrong page
         if ($route = $redirector->getCorrectRouteIfDifferent($user, 'codep_verification')) {
             return $this->redirectToRoute($route);
