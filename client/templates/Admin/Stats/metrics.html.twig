@@ -8,6 +8,26 @@
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 
+{% block actions %}
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+        <a href="{{ path('admin_stats') }}" role="button" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary " data-module="govuk-button">
+            {{ (page ~ '.downloadDAT') | trans }}
+        </a>
+
+        <a href="{{ path('admin_satisfaction') }}" role="button" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary " data-module="govuk-button">
+            {{ (page ~ '.downloadSatisfaction') | trans }}
+        </a>
+
+        <a href="{{ path('admin_active_lays_csv') }}" role="button" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary " data-module="govuk-button">
+            {{ (page ~ '.downloadActiveLays') | trans }}
+        </a>
+    {% else %}
+        <a href="{{ path('admin_stats') }}" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+            {{ (page ~ '.downloadDAT') | trans }}
+        </a>
+    {% endif %}
+{% endblock %}
+
 {% block pageContent %}
 
   <div class="govuk-grid-row">
@@ -52,16 +72,6 @@
         {{ form_end(form) }}
         </div>
       </details>
-    </div>
-    <div class="govuk-grid-column-one-third text--right">
-      <a href="{{ path('admin_stats') }}" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-        {{ (page ~ '.downloadDAT') | trans }}
-      </a>
-      {% if is_granted('ROLE_SUPER_ADMIN') %}
-      <a href="{{ path('admin_satisfaction') }}" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-        {{ (page ~ '.downloadSatisfaction') | trans }}
-      </a>
-      {% endif %}
     </div>
   </div>
 
