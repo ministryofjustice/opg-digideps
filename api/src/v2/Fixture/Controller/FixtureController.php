@@ -7,6 +7,7 @@ use App\Entity\CasRec;
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Ndr\NdrRepository;
+use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\NamedDeputy;
 use App\Entity\Repository\OrganisationRepository;
@@ -22,6 +23,8 @@ use App\v2\Controller\ControllerTrait;
 use App\v2\Fixture\ReportSection;
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -31,7 +34,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 /**
  * @Route("/fixture")
  */
-class FixtureController
+class FixtureController extends AbstractController
 {
     use ControllerTrait;
 
@@ -47,6 +50,7 @@ class FixtureController
     private $userRepository;
     private $ndrRepository;
     private $casRecFactory;
+    private string $symfonyEnvironment;
 
     public function __construct(
         EntityManagerInterface $em,
@@ -60,7 +64,8 @@ class FixtureController
         OrganisationRepository $organisationRepository,
         UserRepository $userRepository,
         NdrRepository $ndrRepository,
-        CasRecFactory $casRecFactory
+        CasRecFactory $casRecFactory,
+        string $symfonyEnvironment
     ) {
         $this->em = $em;
         $this->clientFactory = $clientFactory;
@@ -74,6 +79,7 @@ class FixtureController
         $this->userRepository = $userRepository;
         $this->ndrRepository = $ndrRepository;
         $this->casRecFactory = $casRecFactory;
+        $this->symfonyEnvironment = $symfonyEnvironment;
     }
 
     /**
@@ -81,11 +87,15 @@ class FixtureController
      * @Security("has_role('ROLE_ADMIN')")
      *
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return JsonResponse
      * @throws \Exception
      */
     public function createCourtOrderAction(Request $request)
     {
+        if ($this->symfonyEnvironment === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
         $fromRequest = json_decode($request->getContent(), true);
 
         $client = $this->createClient($fromRequest);
@@ -229,10 +239,12 @@ class FixtureController
 
         $organisation->addUser($deputy);
 
-        foreach (range(1, $fromRequest['orgSizeUsers'] ? $fromRequest['orgSizeUsers'] : 1) as $number) {
-            $orgUser = $this->userFactory->createGenericOrgUser($organisation);
-            $organisation->addUser($orgUser);
-            $this->em->persist($orgUser);
+        if ($fromRequest['orgSizeUsers'] > 1 && !empty($fromRequest['orgSizeUsers'])) {
+            foreach (range(1, $fromRequest['orgSizeUsers']) as $number) {
+                $orgUser = $this->userFactory->createGenericOrgUser($organisation);
+                $organisation->addUser($orgUser);
+                $this->em->persist($orgUser);
+            }
         }
 
         $namedDeputy = $this->buildNamedDeputy($deputy, $fromRequest);
@@ -240,11 +252,13 @@ class FixtureController
         $client->setNamedDeputy($this->buildNamedDeputy($deputy, $fromRequest));
         $client->setOrganisation($organisation);
 
-        foreach (range(1, $fromRequest['orgSizeClients'] ? $fromRequest['orgSizeClients'] : 1) as $number) {
-            $orgClient = $this->clientFactory->createGenericOrgClient($namedDeputy, $organisation);
-            $this->em->persist($orgClient);
+        if ($fromRequest['orgSizeUsers'] > 1 && !empty($fromRequest['orgSizeUsers'])) {
+            foreach (range(1, $fromRequest['orgSizeClients']) as $number) {
+                $orgClient = $this->clientFactory->createGenericOrgClient($namedDeputy, $organisation);
+                $this->em->persist($orgClient);
 
-            $this->createReport($fromRequest, $orgClient);
+                $this->createReport($fromRequest, $orgClient);
+            }
         }
 
         $this->em->persist($organisation);
@@ -274,11 +288,15 @@ class FixtureController
      *
      * @param Request $request
      * @param $id
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return JsonResponse
      * @throws \Exception
      */
     public function completeReportSectionsAction(Request $request, string $reportType, $reportId)
     {
+        if ($this->symfonyEnvironment === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
         $repository = $reportType === 'ndr' ? $this->ndrRepository : $this->reportRepository;
 
         if (null === $report = $repository->find(intval($reportId))) {
@@ -308,6 +326,10 @@ class FixtureController
      */
     public function createAdmin(Request $request)
     {
+        if ($this->symfonyEnvironment === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
         $fromRequest = json_decode($request->getContent(), true);
 
         $deputy = $this->userFactory->createAdmin([
@@ -331,6 +353,10 @@ class FixtureController
      */
     public function getUserIDByEmail(string $email)
     {
+        if ($this->symfonyEnvironment === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
         $user = $this->userRepository->findOneBy(['email' => $email]);
 
         if ($user !== null) {
@@ -348,6 +374,10 @@ class FixtureController
      */
     public function createUser(Request $request)
     {
+        if ($this->symfonyEnvironment === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
         $fromRequest = json_decode($request->getContent(), true);
 
         $deputy = $this->userFactory->create([
@@ -375,6 +405,10 @@ class FixtureController
      */
     public function deleteUser(Request $request)
     {
+        if ($this->symfonyEnvironment === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
         $fromRequest = json_decode($request->getContent(), true);
 
         $user = $this->em
@@ -393,6 +427,10 @@ class FixtureController
      */
     public function createClientAndAttachToDeputy(Request $request)
     {
+        if ($this->symfonyEnvironment === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
         $fromRequest = json_decode($request->getContent(), true);
 
         $client = $this->clientFactory->create([
@@ -422,11 +460,89 @@ class FixtureController
     }
 
     /**
+     * @Route("/createClientAttachOrgs", methods={"POST"})
+     * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
+     */
+    public function createClientAndAttachToOrgs(Request $request)
+    {
+        if ($this->symfonyEnvironment === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
+        $fromRequest = json_decode($request->getContent(), true);
+
+        $client = $this->clientFactory->create([
+            "firstName" => $fromRequest['firstName'],
+            "lastName" => $fromRequest['lastName'],
+            "phone" => $fromRequest['phone'],
+            "address" => $fromRequest['address'],
+            "address2" => $fromRequest['address2'],
+            "county" => $fromRequest['county'],
+            "postCode" => $fromRequest['postCode'],
+            "caseNumber" => $fromRequest['caseNumber'],
+        ]);
+
+        /** @var Organisation $org */
+        $org = $this->em->getRepository(Organisation::class)->findOneBy(['emailIdentifier' => $fromRequest['orgEmailIdentifier']]);
+
+        if (is_null($org)) {
+            return $this->buildNotFoundResponse(sprintf("Could not find org with email identifier '%s'", $fromRequest['orgEmailIdentifier']));
+        }
+
+        if (!empty($fromRequest['namedDeputyEmail'])) {
+            $namedDeputy = $this->createNamedDeputyByExistingUser($fromRequest['namedDeputyEmail']);
+            $client->setNamedDeputy($namedDeputy);
+        }
+
+        $client->setOrganisation($org);
+        $org->addClient($client);
+
+        $this->em->persist($org);
+        $this->em->persist($client);
+
+        $this->em->flush();
+
+        return $this->buildSuccessResponse($fromRequest, 'User created', Response::HTTP_OK);
+    }
+
+    private function createNamedDeputyByExistingUser(string $userEmail)
+    {
+        $namedDeputy = $this->em->getRepository(NamedDeputy::class)->findOneBy(['email1' => $userEmail]);
+
+        if (is_null($namedDeputy)) {
+            $user = $this->em->getRepository(User::class)->findOneBy(['email' => $userEmail]);
+
+            if ($user) {
+                $namedDeputy = (new NamedDeputy())
+                    ->setEmail1($user->getEmail())
+                    ->setFirstname($user->getFirstname())
+                    ->setLastname($user->getLastname())
+                    ->setDeputyNo(rand(8, 8));
+
+                $this->em->persist($namedDeputy);
+
+                return $namedDeputy;
+            } else {
+                return $this->buildNotFoundResponse(
+                    sprintf(
+                        "Could not find user or named Deputy with email identifier '%s'. Ensure one exists before using this function.",
+                        $userEmail
+                    )
+                );
+            }
+        }
+    }
+
+    /**
      * @Route("/createCasrec", methods={"POST"})
      * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
      */
     public function createCasrec(Request $request)
     {
+        if ($this->symfonyEnvironment === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
         $fromRequest = json_decode($request->getContent(), true);
 
         $casRec = $this->casRecFactory->create($fromRequest);
@@ -450,5 +566,70 @@ class FixtureController
 
 
         return $this->buildSuccessResponse($data, 'CasRec row created', Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/move-users-clients-to-users-org/{userEmail}", name="move_users_clients_to_org", methods={"GET"})
+     * @Security("has_role('ROLE_ADMIN')")
+     * @param string $userEmail
+     * @return JsonResponse
+     */
+    public function moveUsersClientsToUsersOrg(string $userEmail)
+    {
+        if ($this->symfonyEnvironment === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
+        /** @var User $user */
+        $user = $this->em->getRepository(User::class)->findOneBy(['email' => $userEmail]);
+
+        if (is_null($user)) {
+            $this->buildErrorResponse("User $userEmail not found");
+        }
+
+        $clients = $user->getClients();
+
+        foreach ($clients as $client) {
+            if (!$user->getOrganisations()->first()) {
+                $this->buildErrorResponse("User $userEmail has no Organisations associated with them");
+            }
+
+            $client->setOrganisation($user->getOrganisations()[0]);
+            $this->em->persist($client);
+        }
+
+        $this->em->flush();
+
+        return $this->buildSuccessResponse([json_encode($clients, JSON_PRETTY_PRINT)], 'Clients added to Users first Org', Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/activateOrg/{orgName}", name="activate_org", methods={"GET"})
+     * @Security("has_role('ROLE_ADMIN')")
+     * @param string $orgName
+     * @return JsonResponse
+     */
+    public function activateOrg(string $orgName)
+    {
+        try {
+            if ($this->symfonyEnvironment === 'prod') {
+                throw $this->createNotFoundException();
+            }
+
+            /** @var Organisation $org */
+            $org = $this->em->getRepository(Organisation::class)->findOneBy(['name' => $orgName]);
+
+            if (is_null($org)) {
+                $this->buildErrorResponse("Org '$orgName' not found");
+            }
+
+            $org->setIsActivated(true);
+            $this->em->persist($org);
+            $this->em->flush();
+
+            return $this->buildSuccessResponse([json_encode($org, JSON_PRETTY_PRINT)], "Org '$orgName' activated", Response::HTTP_OK);
+        } catch (\Throwable $e) {
+            $this->buildErrorResponse(sprintf("Organisation '%s' could not be activated: %s", $orgName, $e->getMessage()));
+        }
     }
 }

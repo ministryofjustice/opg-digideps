@@ -4,12 +4,15 @@ namespace App\v2\Controller;
 
 use App\Entity\Organisation;
 use App\Entity\Repository\OrganisationRepository;
+use App\Entity\User;
+use App\Service\Formatter\RestFormatter;
 use App\Service\RestHandler\OrganisationRestHandler;
 use App\v2\Assembler\OrganisationAssembler;
 use App\v2\Transformer\OrganisationTransformer;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,7 +24,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * @Route("/organisation")
  */
-class OrganisationController
+class OrganisationController extends AbstractController
 {
     use ControllerTrait;
 
@@ -47,7 +50,8 @@ class OrganisationController
         OrganisationRestHandler $restHandler,
         OrganisationRepository $repository,
         OrganisationAssembler $assembler,
-        OrganisationTransformer $transformer
+        OrganisationTransformer $transformer,
+        RestFormatter $formatter
     ) {
         $this->restHandler = $restHandler;
         $this->repository = $repository;
@@ -180,5 +184,22 @@ class OrganisationController
         $this->restHandler->removeUser($orgId, $userId);
 
         return $this->buildSuccessResponse([], 'User removed');
+    }
+
+    /**
+     * @Route("/members", methods={"GET"})
+     * @Security("has_role('ROLE_ORG')")
+     */
+    public function getMembers(Request $request)
+    {
+        return $this->getUser()->getOrganisations()[0]->getUsers();
+    }
+    /**
+     * @Route("/member/{id}", requirements={"id":"\d+"}, methods={"GET"})
+     * @Security("has_role('ROLE_ORG')")
+     */
+    public function getMemberById(string $id)
+    {
+        return $this->getUser()->getOrganisations()[0]->getUsers()->get($id);
     }
 }

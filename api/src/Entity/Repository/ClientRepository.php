@@ -85,21 +85,6 @@ class ClientRepository extends EntityRepository
     }
 
     /**
-     * @param User $user
-     * @param int $teamId
-     * @throws \Doctrine\DBAL\DBALException
-     */
-    public function saveUserToTeam(User $user, $teamId)
-    {
-        $conn = $this->getEntityManager()->getConnection();
-
-        $conn->executeQuery(
-            'INSERT INTO user_team (user_id, team_id) VALUES (?, ?) ON CONFLICT DO NOTHING',
-            [$user->getId(), $teamId]
-        );
-    }
-
-    /**
      * @param int $id
      * @return null
      */
