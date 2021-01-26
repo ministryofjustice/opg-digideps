@@ -10,7 +10,7 @@ use App\TestHelpers\ReportHelpers;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 
-class ActiveLaysCsvBuilderTest extends TestCase
+class ActiveLaysCsvGeneratorTest extends TestCase
 {
     /** @test */
     public function generateActiveLaysCsv()
@@ -52,7 +52,7 @@ Id,"Deputy Full Name","Deputy Email","Deputy Phone Number","Reports Submitted","
 
 CSV;
 
-        $sut = new ActiveLaysCsvBuilder(new CsvBuilder());
+        $sut = new ActiveLaysCsvGenerator(new CsvBuilder());
         self::assertEquals($expectedCsv, $sut->generateActiveLaysCsv($lays));
     }
 }

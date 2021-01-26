@@ -474,7 +474,7 @@ class UserController extends RestController
      */
     public function getActiveLays()
     {
-        $this->formatter->setJmsSerialiserGroups(['user']);
+        $this->formatter->setJmsSerialiserGroups(['user', 'user-clients', 'client-name']);
         return $this->userRepository->findActiveLaysInLastYear();
     }
 }

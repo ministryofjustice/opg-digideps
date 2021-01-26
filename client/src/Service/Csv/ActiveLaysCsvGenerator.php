@@ -5,7 +5,7 @@ namespace App\Service\Csv;
 
 use App\Entity\User;
 
-class ActiveLaysCsvBuilder
+class ActiveLaysCsvGenerator
 {
     /**
      * @var CsvBuilder

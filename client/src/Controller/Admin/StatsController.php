@@ -11,7 +11,9 @@ use App\Mapper\ReportSatisfaction\ReportSatisfactionSummaryMapper;
 use App\Mapper\ReportSatisfaction\ReportSatisfactionSummaryQuery;
 use App\Mapper\ReportSubmission\ReportSubmissionSummaryMapper;
 use App\Mapper\ReportSubmission\ReportSubmissionSummaryQuery;
+use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
+use App\Service\Csv\ActiveLaysCsvGenerator;
 use App\Service\Csv\SatisfactionCsvGenerator;
 use App\Transformer\ReportSubmission\ReportSubmissionBurFixedWidthTransformer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -26,15 +28,17 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class StatsController extends AbstractController
 {
-    /** @var RestClient */
-    private $restClient;
-
+    private RestClient $restClient;
     private SatisfactionCsvGenerator $csvGenerator;
+    private UserApi $userApi;
+    private ActiveLaysCsvGenerator $activeLaysCsvGenerator;
 
-    public function __construct(RestClient $restClient, SatisfactionCsvGenerator $csvGenerator)
+    public function __construct(RestClient $restClient, SatisfactionCsvGenerator $csvGenerator, UserApi $userApi, ActiveLaysCsvGenerator $activeLaysCsvGenerator)
     {
         $this->restClient = $restClient;
         $this->csvGenerator = $csvGenerator;
+        $this->userApi = $userApi;
+        $this->activeLaysCsvGenerator = $activeLaysCsvGenerator;
     }
 
     /**
@@ -181,34 +185,25 @@ class StatsController extends AbstractController
     }
 
     /**
-     * @Route("/test", name="test")
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Template("@App/Admin/Stats/stats-test.html.twig")
+     * @Route("/downloadActiveLaysCsv", name="admin_active_lays_csv")
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
      *
-     * @param Request $request
-     * @param ReportSubmissionSummaryMapper $mapper
-     * @param ReportSubmissionBurFixedWidthTransformer $transformer
-     *
-     * @return array|Response
+     * @return Response
      */
-    public function test(Request $request, ReportSubmissionSummaryMapper $mapper, ReportSubmissionBurFixedWidthTransformer $transformer)
+    public function downloadActiveLayCsv()
     {
-        $form = $this->createForm(ReportSubmissionDownloadFilterType::class, new ReportSubmissionSummaryQuery());
-        $form->handleRequest($request);
+        $activeLays = $this->userApi->getActiveLays();
+        $csv = $this->activeLaysCsvGenerator->generateActiveLaysCsv($activeLays);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $reportSubmissionSummaries = $mapper->getBy($form->getData());
-                $downloadableData = $transformer->transform($reportSubmissionSummaries);
+        $response = new Response($csv);
 
-                return $this->buildResponse($downloadableData);
-            } catch (\Throwable $e) {
-                throw new DisplayableException($e);
-            }
-        }
+        $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+        $disposition = $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            'activeLays.csv'
+        );
 
-        return [
-            'form' => $form->createView()
-        ];
+        $response->headers->set('Content-Disposition', $disposition);
+        return $response;
     }
 }

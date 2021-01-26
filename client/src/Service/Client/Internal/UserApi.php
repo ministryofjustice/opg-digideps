@@ -27,6 +27,7 @@ class UserApi
     protected const RECREATE_USER_TOKEN_ENDPOINT = 'user/recreate-token/%s';
     protected const DEPUTY_SELF_REGISTER_ENDPOINT = 'selfregister';
     protected const CREATE_CODEPUTY_ENDPOINT = 'codeputy/add';
+    protected const GET_ACTIVE_LAYS = 'user/activeLays';
 
     /**  @var RestClientInterface */
     protected $restClient;
@@ -173,6 +174,10 @@ class UserApi
         $this->eventDispatcher->dispatch(UserActivatedEvent::NAME, $userActivatedEvent);
     }
 
+    /**
+     * @param string $email
+     * @param User $loggedInUser
+     */
     public function reInviteCoDeputy(string $email, User $loggedInUser)
     {
         $invitedCoDeputy = $this->recreateToken($email);
@@ -181,6 +186,9 @@ class UserApi
         $this->eventDispatcher->dispatch(CoDeputyInvitedEvent::NAME, $CoDeputyInvitedEvent);
     }
 
+    /**
+     * @param string $email
+     */
     public function reInviteDeputy(string $email)
     {
         $invitedDeputy = $this->recreateToken($email);
@@ -189,6 +197,9 @@ class UserApi
         $this->eventDispatcher->dispatch(DeputyInvitedEvent::NAME, $deputyInvitedEvent);
     }
 
+    /**
+     * @param string $email
+     */
     public function resetPassword(string $email)
     {
         $passwordResetUser = $this->recreateToken($email);
@@ -197,6 +208,9 @@ class UserApi
         $this->eventDispatcher->dispatch(UserPasswordResetEvent::NAME, $passwordResetEvent);
     }
 
+    /**
+     * @param SelfRegisterData $selfRegisterData
+     */
     public function selfRegister(SelfRegisterData $selfRegisterData)
     {
         $registeredDeputy = $this->restClient->apiCall(
@@ -212,6 +226,11 @@ class UserApi
         $this->eventDispatcher->dispatch(DeputySelfRegisteredEvent::NAME, $deputySelfRegisteredEvent);
     }
 
+    /**
+     * @param User $invitedCoDeputy
+     * @param User $invitedByDeputyName
+     * @return User
+     */
     public function createCoDeputy(User $invitedCoDeputy, User $invitedByDeputyName)
     {
         $createdCoDeputy = $this->restClient->post(
@@ -225,5 +244,17 @@ class UserApi
         $this->eventDispatcher->dispatch(CoDeputyCreatedEvent::NAME, $coDeputyCreatedEvent);
 
         return $createdCoDeputy;
+    }
+
+    /**
+     * @return User[]
+     */
+    public function getActiveLays()
+    {
+        return $this->restClient->get(
+            self::GET_ACTIVE_LAYS,
+            'User[]',
+            ['user', 'user-clients']
+        );
     }
 }
