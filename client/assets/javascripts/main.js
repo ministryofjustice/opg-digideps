@@ -98,8 +98,6 @@ $(document).ready(function () {
     })
   }
 
-  // So ugly but we have instances of empty button menus - this ensure we have buttons with button items
-  // const $menuButtons = $('.moj-button-menu > .moj-button-menu__wrapper > .moj-button-menu__item').parent().parent()
   const $menuButtons = $('.moj-button-menu')
 
   if ($menuButtons !== null) {

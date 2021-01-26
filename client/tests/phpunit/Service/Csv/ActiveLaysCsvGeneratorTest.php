@@ -15,15 +15,6 @@ class ActiveLaysCsvGeneratorTest extends TestCase
     /** @test */
     public function generateActiveLaysCsv()
     {
-//        $clients = [
-//            'oneSubmittedReport' => (ClientHelpers::createClient())
-//                ->addReport(ReportHelpers::createSubmittedReport()),
-//            'threeSubmittedReports' => (ClientHelpers::createClient())
-//                ->addReport(ReportHelpers::createSubmittedReport())
-//                ->addReport(ReportHelpers::createSubmittedReport())
-//                ->addReport(ReportHelpers::createSubmittedReport())
-//        ];
-
         $lays = [
             (new User())
                 ->setId(10)
