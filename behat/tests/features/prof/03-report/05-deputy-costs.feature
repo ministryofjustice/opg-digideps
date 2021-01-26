@@ -2,6 +2,8 @@ Feature: PROF deputy costs
 
   Scenario: add cost fixed, no previous, no interim, other 2 items
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    And I fill in "search" with "31000010"
+    And I press "search_submit"
     And I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-prof_deputy_costs, start"
     And I submit the step
@@ -34,9 +36,10 @@ Feature: PROF deputy costs
       | 1,030.03    | total-cost-taken-from-client |
 
   Scenario: all ticked, no previous, no interim, empty breakdown
-    Given I load the application status from "pre-deputy-costs"
     And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-31000010" region
+    And I fill in "search" with "3138393T"
+    And I press "search_submit"
+    And I click on "pa-report-open" in the "client-3138393T" region
     And I click on "edit-prof_deputy_costs, start"
     # how charged: all ticked
     Then the step with the following values CAN be submitted:
@@ -71,9 +74,10 @@ Feature: PROF deputy costs
 
   # Entering the section at the correct subsection
   Scenario: Entering partially completed sections with Fixed costs
-    Given I load the application status from "pre-deputy-costs"
     And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-31000010" region
+    And I fill in "search" with "31498120"
+    And I press "search_submit"
+    And I click on "pa-report-open" in the "client-31498120" region
     And I click on "edit-prof_deputy_costs, start"
     And the step with the following values CAN be submitted:
       | deputy_costs_profDeputyCostsHowCharged_0 | fixed |
@@ -97,9 +101,10 @@ Feature: PROF deputy costs
     Then the url should match "/report/\d+/prof-deputy-costs/summary"
 
   Scenario: Entering partially completed sections with non Fixed costs and has interim
-    Given I load the application status from "pre-deputy-costs"
     And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-31000010" region
+    And I fill in "search" with "32000002"
+    And I press "search_submit"
+    And I click on "pa-report-open" in the "client-32000002" region
     And I click on "edit-prof_deputy_costs, start"
     And the step with the following values CAN be submitted:
       | deputy_costs_profDeputyCostsHowCharged_1 | assessed |
@@ -136,9 +141,10 @@ Feature: PROF deputy costs
     Then the url should match "/report/\d+/prof-deputy-costs/summary"
 
   Scenario: Entering partially completed sections with non Fixed costs and not interim
-    Given I load the application status from "pre-deputy-costs"
     And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-31000010" region
+    And I fill in "search" with "32000003"
+    And I press "search_submit"
+    And I click on "pa-report-open" in the "client-32000003" region
     And I click on "edit-prof_deputy_costs, start"
     And the step with the following values CAN be submitted:
       | deputy_costs_profDeputyCostsHowCharged_1 | assessed |
@@ -172,9 +178,10 @@ Feature: PROF deputy costs
     Then the url should match "/report/\d+/prof-deputy-costs/summary"
 
   Scenario: all ticked, previous, interim, 2 breakdown
-    Given I load the application status from "pre-deputy-costs"
     And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-31000010" region
+    And I fill in "search" with "33000002"
+    And I press "search_submit"
+    And I click on "pa-report-open" in the "client-33000002" region
     And I click on "edit-prof_deputy_costs, start"
     # how charged: all ticked
     Then the step with the following values CAN be submitted:

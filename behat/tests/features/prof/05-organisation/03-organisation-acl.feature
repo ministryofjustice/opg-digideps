@@ -1,15 +1,5 @@
 Feature: Users can access the correct clients
 
-  # fixture data inserts existing deputy attached to a single client
-  Scenario: Existing Team User can still access clients belonging to their team
-    Given I am logged in as "existing-deputy1@abc-solicitors.uk" with password "Abcd1234"
-    And I go to "/org/?limit=50"
-    And I should see the "client" region exactly 1 times
-    And I should see the "client-50000050" region
-    Then I click on "pa-report-open" in the "client-50000050" region
-    And I save the report as "50000050-report"
-    Then the response status code should be 200
-
   Scenario: New client is added to existing deputy and brand new organisation added
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     # upload new Prof client 50000051 attached to org

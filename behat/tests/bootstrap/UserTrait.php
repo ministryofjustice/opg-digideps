@@ -42,7 +42,7 @@ trait UserTrait
             throw new \Exception("adminType should be 'ROLE_ADMIN' or 'ROLE_SUPER_ADMIN'; '$adminType' provided");
         }
 
-        foreach(['adminType', 'firstName', 'lastName', 'email', 'activated'] as $key) {
+        foreach (['adminType', 'firstName', 'lastName', 'email', 'activated'] as $key) {
             $missingKeys = [];
 
             if (!array_key_exists($key, $inputs)) {
@@ -99,8 +99,16 @@ trait UserTrait
 
     private function assertValidRole(string $roleName): void
     {
-        if (!in_array($roleName, ['ADMIN', 'AD', 'LAY', 'PA', 'PROF'])) {
-            throw new \Exception("DeputyType should be one of 'ADMIN', 'AD', 'LAY', 'PA', 'PROF'; '$roleName' provided");
+        $allowedRoles = ['ADMIN', 'AD', 'LAY', 'PA', 'PA_TEAM_MEMBER', 'PA_ADMIN', 'PROF', 'PROF_TEAM_MEMBER', 'PROF_ADMIN'];
+
+        if (!in_array($roleName, $allowedRoles)) {
+            throw new \Exception(
+                sprintf(
+                    "DeputyType should be one of %s; '%s' provided",
+                    implode(', ', $allowedRoles),
+                    $roleName
+                )
+            );
         }
     }
 
@@ -347,7 +355,7 @@ trait UserTrait
                 'deputy_lastname'    => $row['Dep Surname'],
                 'deputy_postcode'    => $row['Dep Postcode'],
                 'type_of_report'     => $row['Typeofrep'],
-                'other_columns'      => str_replace('"', '\\"',serialize($row)),
+                'other_columns'      => str_replace('"', '\\"', serialize($row)),
                 'order_date'         => (new \DateTime($row['OrderDate']))->format('Y-m-d H:i:s'),
                 'corref'             => $row['Corref']
             ]);

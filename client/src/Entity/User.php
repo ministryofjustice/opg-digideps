@@ -289,17 +289,6 @@ class User implements AdvancedUserInterface, DeputyInterface
      */
     private $jobTitle;
 
-    /**
-     * PA Team name
-     * note: stored as Team entiy in the API. Consider doing the same in the client if Team acquires new fields
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"user_details_org"})
-     * @Assert\Length(max=50, maxMessage="user.paTeamName.maxMessage", groups={"user_details_org"} )
-     *
-     * @var string
-     */
-    private $paTeamName;
 
     /**
      * @var bool
@@ -309,14 +298,6 @@ class User implements AdvancedUserInterface, DeputyInterface
      * @Assert\NotBlank( message="user.agreeTermsUse.notBlank", groups={"agree-terms-use"} )
      */
     private $agreeTermsUse;
-
-    /**
-     * @JMS\Type("array<App\Entity\Team>")
-     * @JMS\Groups({"user_teams"})
-     *
-     * @var ArrayCollection
-     */
-    private $teams;
 
     /**
      * @JMS\Type("boolean")
@@ -331,13 +312,6 @@ class User implements AdvancedUserInterface, DeputyInterface
      * @var bool
      */
     private $coDeputyClientConfirmed;
-
-    /**
-     * @var array
-     *
-     * @JMS\Type("array")
-     */
-    private $teamNames = [];
 
     /**
      * @JMS\Type("array<App\Entity\Organisation>")
@@ -357,7 +331,6 @@ class User implements AdvancedUserInterface, DeputyInterface
 
     public function __construct()
     {
-        $this->teams = new ArrayCollection();
         $this->organisations = new ArrayCollection();
     }
 
@@ -915,25 +888,6 @@ class User implements AdvancedUserInterface, DeputyInterface
     }
 
     /**
-     * @return string
-     */
-    public function getPaTeamName()
-    {
-        return $this->paTeamName;
-    }
-
-    /**
-     * @param  string $paTeamName
-     * @return User
-     */
-    public function setPaTeamName($paTeamName)
-    {
-        $this->paTeamName = $paTeamName;
-
-        return $this;
-    }
-
-    /**
      * @return bool
      */
     public function getAgreeTermsUse()
@@ -950,22 +904,6 @@ class User implements AdvancedUserInterface, DeputyInterface
         $this->agreeTermsUse = $agreeTermsUse;
 
         return $this;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getTeams()
-    {
-        return $this->teams;
-    }
-
-    /**
-     * @param ArrayCollection $teams
-     */
-    public function setTeams($teams)
-    {
-        $this->teams = $teams;
     }
 
     /**
@@ -1168,24 +1106,6 @@ class User implements AdvancedUserInterface, DeputyInterface
         } else {
             return '';
         }
-    }
-
-    /**
-     * @return array
-     */
-    public function getTeamNames()
-    {
-        return $this->teamNames;
-    }
-
-    /**
-     * @param  array $teamNames
-     * @return User
-     */
-    public function setTeamNames($teamNames)
-    {
-        $this->teamNames = $teamNames;
-        return $this;
     }
 
     /**

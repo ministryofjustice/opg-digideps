@@ -28,8 +28,6 @@ Feature: Deputy search
   @admin@admin-search  @deputy-search
   Scenario: Search broadly across deputy by a role, including clients
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    When I search in admin for a deputy with the term "103-6-client" and include clients
-    Then I should see "Found 3 users"
     When I search in admin for a deputy with the term "103-6-client" and filter role by "Public Authority deputies (named)" and include clients
     Then I should see "Found 1 users"
 

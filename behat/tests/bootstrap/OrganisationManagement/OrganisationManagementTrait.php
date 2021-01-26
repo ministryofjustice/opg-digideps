@@ -47,6 +47,40 @@ trait OrganisationManagementTrait
             $this->fillField('organisation_add_user_email', $inputs['userEmail']);
             $this->pressButton('Find user');
             $this->pressButton('Add user to organisation');
+
+            if ($this->getSession()->getStatusCode() > 399) {
+                throw new \Exception($this->getSession()->getPage()->getContent());
+            }
+        }
+    }
+
+    /**
+     * @Given the following users clients are in the users organisation:
+     */
+    public function usersClientsAreInUsersOrg(TableNode $table)
+    {
+        $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'Abcd1234');
+
+        foreach ($table as $inputs) {
+            $this->visitAdminPath(sprintf("/admin/fixtures/move-users-clients-to-users-org/%s", $inputs['userEmail']));
+
+            if ($this->getSession()->getStatusCode() > 399) {
+                throw new \Exception($this->getSession()->getPage()->getContent());
+            }
+        }
+    }
+
+    /**
+     * @Given the :orgName organisation is activated
+     */
+    public function theOrgIsActivated(string $orgName)
+    {
+        $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'Abcd1234');
+
+        $this->visitAdminPath(sprintf("/admin/fixtures/activateOrg/%s", $orgName));
+
+        if ($this->getSession()->getStatusCode() > 399) {
+            throw new \Exception($this->getSession()->getPage()->getContent());
         }
     }
 }
