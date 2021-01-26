@@ -1,14 +1,12 @@
 Feature: PROF client profile Notes
 
   Scenario: PROF view client notes
-    Given I load the application status from "prof-users-uploaded"
     And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-31000011" region
     Then each text should be present in the corresponding region:
       | No notes    | client-profile-notes |
 
   Scenario: PROF adds client notes
-    Given I load the application status from "prof-users-uploaded"
     And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-31000011" region
     And I click on "add-notes-button" in the "client-profile-notes" region
@@ -77,4 +75,3 @@ Feature: PROF client profile Notes
     Then the form should be valid
     Then I go to the URL previously saved as "report-overview"
     And I should not see "test title content" in the "client-profile-notes" region
-

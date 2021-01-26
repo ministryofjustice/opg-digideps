@@ -7,8 +7,12 @@ use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Form\Admin\Fixture\CasrecFixtureType;
 use App\Form\Admin\Fixture\CourtOrderFixtureType;
+use App\Service\Client\Internal\ReportApi;
+use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\TestHelpers\ClientHelpers;
+use Exception;
+use GuzzleHttp\Psr7\Stream;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +22,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
-use Tests\App\Entity\ClientTest;
 use Twig\Environment;
 
 /**
@@ -32,19 +35,27 @@ class FixtureController extends AbstractController
     /** @var Serializer */
     private $serializer;
 
-    /**
-     * @var RestClient
-     */
+    /** @var RestClient */
     private $restClient;
+
+    /** @var ReportApi */
+    private ReportApi $reportApi;
+
+    /** @var UserApi */
+    private UserApi $userApi;
 
     public function __construct(
         Environment $twig,
         SerializerInterface $serializer,
-        RestClient $restClient
+        RestClient $restClient,
+        ReportApi $reportApi,
+        UserApi $userApi
     ) {
         $this->twig = $twig;
         $this->serializer = $serializer;
         $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
+        $this->userApi = $userApi;
     }
 
     /**
@@ -272,15 +283,53 @@ class FixtureController extends AbstractController
                     "v2/fixture/createClientAttachDeputy",
                     json_encode(
                         [
-                        "firstName" => $request->query->get('firstName'),
-                        "lastName" => $request->query->get('lastName'),
-                        "phone" => $request->query->get('phone'),
-                        "address" => $request->query->get('address'),
-                        "address2" => $request->query->get('address2'),
-                        "county" => $request->query->get('county'),
-                        "postCode" => $request->query->get('postCode'),
-                        "caseNumber" => $request->query->get('caseNumber'),
-                        "deputyEmail" => $request->query->get('deputyEmail')]
+                            "firstName" => $request->query->get('firstName'),
+                            "lastName" => $request->query->get('lastName'),
+                            "phone" => $request->query->get('phone'),
+                            "address" => $request->query->get('address'),
+                            "address2" => $request->query->get('address2'),
+                            "county" => $request->query->get('county'),
+                            "postCode" => $request->query->get('postCode'),
+                            "caseNumber" => $request->query->get('caseNumber'),
+                            "deputyEmail" => $request->query->get('deputyEmail')
+                        ]
+                    )
+                );
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+
+        return new Response();
+    }
+
+    /**
+     * @Route("/createClientAttachOrgs", methods={"GET"})
+     * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
+     */
+    public function createClientAndAttachToOrg(Request $request, KernelInterface $kernel)
+    {
+        if ($kernel->getEnvironment() === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
+        try {
+            $this
+                ->restClient
+                ->post(
+                    "v2/fixture/createClientAttachOrgs",
+                    json_encode(
+                        [
+                            "firstName" => $request->query->get('firstName'),
+                            "lastName" => $request->query->get('lastName'),
+                            "phone" => $request->query->get('phone'),
+                            "address" => $request->query->get('address'),
+                            "address2" => $request->query->get('address2'),
+                            "county" => $request->query->get('county'),
+                            "postCode" => $request->query->get('postCode'),
+                            "caseNumber" => $request->query->get('caseNumber'),
+                            "orgEmailIdentifier" => $request->query->get('orgEmailIdentifier'),
+                            "namedDeputyEmail" => $request->query->get('namedDeputyEmail')
+                        ]
                     )
                 );
         } catch (\Throwable $e) {
@@ -301,8 +350,7 @@ class FixtureController extends AbstractController
         }
 
         $email = $request->query->get('email');
-
-        $user = $restClient->get("user/get-one-by/email/$email", 'User');
+        $user = $this->userApi->getByEmail($email);
 
         return new Response($user->getRegistrationToken());
     }
@@ -353,5 +401,73 @@ class FixtureController extends AbstractController
     public function createCasRecFlashMessage(array $data)
     {
         return $this->twig->render('@App/FlashMessages/fixture-casrec-created.html.twig', $data);
+    }
+
+    /**
+     * @Route("/unsubmit-report/{reportId}", name="unsubmit_report_fixture", methods={"GET", "POST"})
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     *
+     * @param int $reportId
+     * @return void
+     * @throws \Exception
+     */
+    public function unsubmitReport(int $reportId)
+    {
+        try {
+            $report = $this->reportApi->getReport($reportId);
+            $this->reportApi->unsubmit($report, $this->getUser(), 'Fixture tests');
+        } catch (\Throwable $e) {
+            throw new \Exception(sprintf('Could not unsubmit report %s: %s', $reportId, $e->getMessage()));
+        }
+    }
+
+    /**
+     * @Route("/move-users-clients-to-users-org/{userEmail}", name="move_users_clients_to_org", methods={"GET"})
+     * @Security("has_role('ROLE_ADMIN')")
+     *
+     * @param string $userEmail
+     * @return Response
+     */
+    public function moveUsersClientsToUsersOrg(string $userEmail)
+    {
+        try {
+            /** @var \GuzzleHttp\Psr7\Response $response */
+            $response = $this
+                ->restClient
+                ->get("v2/fixture/move-users-clients-to-users-org/$userEmail", 'response');
+
+            if ($response->getStatusCode() > 399) {
+                return new Response(sprintf('Could not move %s clients to users org: %s', $userEmail, $response->getBody()->getContents()), 500);
+            }
+
+            return new Response('Clients added to Users org');
+        } catch (\Throwable $e) {
+            return new Response(sprintf('Could not move %s clients to users org: %s', $userEmail, $e->getMessage()), 500);
+        }
+    }
+
+    /**
+     * @Route("/activateOrg/{orgName}", name="activate_org", methods={"GET"})
+     * @Security("has_role('ROLE_ADMIN')")
+     *
+     * @param string $orgName
+     * @return Response
+     */
+    public function activateOrg(string $orgName)
+    {
+        try {
+            /** @var \GuzzleHttp\Psr7\Response $response */
+            $response = $this
+                ->restClient
+                ->get("v2/fixture/activateOrg/$orgName", 'response');
+
+            if ($response->getStatusCode() > 399) {
+                return new Response(sprintf('Could not activate %s org: %s', $orgName, $response->getBody()->getContents()), 500);
+            }
+
+            return new Response('Org activated');
+        } catch (\Throwable $e) {
+            return new Response(sprintf('Could not activate %s org: %s', $orgName, $response->getBody()->getContents()), 500);
+        }
     }
 }

@@ -214,6 +214,17 @@ trait ReportTrait
     }
 
     /**
+     * @Given /^the report has been unsubmitted/
+     */
+    public function theReportHasBeenUnsubmitted()
+    {
+        $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'Abcd1234');
+
+        $reportId = self::$currentReportCache['reportId'];
+        $this->visitAdminPath("/admin/fixtures/unsubmit-report/$reportId");
+    }
+
+    /**
      * @Then the report should be unsubmitted
      */
     public function theReportShouldBeUnsubmitted()
@@ -358,7 +369,13 @@ trait ReportTrait
         } elseif ($this->getSession()->getPage()->hasContent('Submitted reports')) {
             $this->clickLink('View');
         } else {
-            $this->clickLink($client.'-Client, John');
+            try {
+                $this->clickLink($client.'-Client, John');
+            } catch (\Throwable $e) {
+                $this->fillField('search', $client);
+                $this->pressButton('search_submit');
+                $this->clickLink($client.'-Client, John');
+            }
         }
     }
 

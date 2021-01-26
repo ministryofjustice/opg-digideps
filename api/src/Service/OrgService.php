@@ -5,13 +5,11 @@ namespace App\Service;
 use App\Entity as EntityDir;
 use App\Entity\NamedDeputy;
 use App\Entity\Repository\ClientRepository;
-use App\Entity\Repository\TeamRepository;
 use App\Entity\Repository\UserRepository;
 use App\Entity\Repository\NamedDeputyRepository;
 use App\Entity\User;
 use App\Factory\NamedDeputyFactory;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\OptimisticLockException;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 
 class OrgService
@@ -34,11 +32,6 @@ class OrgService
     private $clientRepository;
 
     /**
-     * @var TeamRepository
-     */
-    private $teamRepository;
-
-    /**
      * @var NamedDeputyFactory
      */
     private $namedDeputyFactory;
@@ -57,7 +50,6 @@ class OrgService
      * @param EntityManagerInterface $em
      * @param UserRepository $userRepository
      * @param ClientRepository $clientRepository
-     * @param TeamRepository $teamRepository
      * @param NamedDeputyRepository $namedDeputyRepository
      * @param NamedDeputyFactory $namedDeputyFactory
      */
@@ -65,49 +57,26 @@ class OrgService
         EntityManagerInterface $em,
         UserRepository $userRepository,
         ClientRepository $clientRepository,
-        TeamRepository $teamRepository,
         NamedDeputyRepository $namedDeputyRepository,
         NamedDeputyFactory $namedDeputyFactory
     ) {
         $this->em = $em;
         $this->userRepository = $userRepository;
         $this->clientRepository = $clientRepository;
-        $this->teamRepository = $teamRepository;
         $this->namedDeputyRepository = $namedDeputyRepository;
         $this->namedDeputyFactory = $namedDeputyFactory;
         $this->added = [];
     }
 
     /**
-     * @param User $userCreator
      * @param string $id
-     *
-     * @throws AccessDeniedException if user not part of the team the creator user belongs to
      *
      * @return User|null|object
      *
      */
-    public function getMemberById(User $userCreator, string $id)
+    public function getMemberById(string $id)
     {
-        $user = $this->userRepository->find($id);
-        if (!array_key_exists($id, $userCreator->getMembersInAllTeams())) {
-            throw new AccessDeniedException('User not part of the same team');
-        }
-
-        return $user;
-    }
-
-    /**
-     * @param User $userWithTeams
-     * @param User $userBeingAdded
-     */
-    public function addUserToUsersTeams(User $userWithTeams, User $userBeingAdded)
-    {
-        $teamIds = $this->teamRepository->findAllTeamIdsByUser($userWithTeams);
-
-        foreach ($teamIds as $teamId) {
-            $this->clientRepository->saveUserToTeam($userBeingAdded, $teamId);
-        }
+        return $this->userRepository->find($id);
     }
 
     /**
@@ -121,36 +90,6 @@ class OrgService
         foreach ($clientIds as $clientId) {
             $this->clientRepository->saveUserToClient($userBeingAdded, $clientId);
         }
-    }
-
-    /**
-     * Delete $user from all the teams $loggedInUser belongs to
-     * Also removes the user, if doesn't belong to any team any longer
-     *
-     * @param User $loggedInUser
-     * @param User $user
-     *
-     * @throws OptimisticLockException
-     */
-    public function removeUserFromTeamsOf(User $loggedInUser, User $user)
-    {
-        // remove user from teams the logged-user (operation performer) belongs to
-        foreach ($loggedInUser->getTeams() as $team) {
-            $user->getTeams()->removeElement($team);
-        }
-
-        // remove client that also belongs to the creator
-        // (equivalent to remove client from all the teams of the creator)
-        foreach ($loggedInUser->getClients() as $client) {
-            $client->removeUser($user);
-        }
-
-        // remove user if belonging to no teams
-        if (count($user->getTeams()) === 0) {
-            $this->em->remove($user);
-        }
-
-        $this->em->flush();
     }
 
     /**

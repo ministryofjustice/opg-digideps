@@ -1,9 +1,21 @@
 Feature: PROF report 102-5
 
+  Scenario: Setup data
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given the following users exist:
+      | ndr      | deputyType       | firstName | lastName | email                               | postCode | activated |
+      | disabled | PROF_TEAM_MEMBER | Caroline  | Polachek | CarolinePolachekTeamMember@prof.opg | HA4      | true      |
+      | disabled | PROF_ADMIN       | Danny     | Harle    | DannyHarleAdmin@prof.opg            | HA4      | true      |
+    And the following users are in the organisations:
+      | userEmail                           | orgName  |
+      | CarolinePolachekTeamMember@prof.opg | PROF OPG |
+      | DannyHarleAdmin@prof.opg            | PROF OPG |
+
   @102-5
   Scenario: PROF does not see unsubmitted reports in the submitted reports section
-    Given I load the application status from "prof-team-users-complete"
     And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    And I fill in "search" with "31000010"
+    And I press "search_submit"
     When I click on "pa-report-open" in the "client-31000010" region
     Then I should see "No submitted reports" in the "client-profile-reports" region
 
@@ -11,8 +23,9 @@ Feature: PROF report 102-5
   # Logic will evolve differently therefore better to have regression test on this
   @102-5
   Scenario: PROF edit 102-5 report dates
-    Given I load the application status from "prof-team-users-complete"
     And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    And I fill in "search" with "31000010"
+    And I press "search_submit"
     When I click on "pa-report-open" in the "client-31000010" region
 
     And I click on "edit-report-period"
@@ -59,13 +72,12 @@ Feature: PROF report 102-5
       | report_edit_endDate_day     | 27   |
       | report_edit_endDate_month   | 04   |
       | report_edit_endDate_year    | 2016 |
-    # restore initial values (for future tests and have this test not affecting subsequent scenarios)
-    And I load the application status from "prof-team-users-complete"
 
   @102-5
   Scenario: PROF admin has access to edit 102-5 report dates
-    Given I load the application status from "prof-team-users-complete"
-    And I am logged in as "behat-prof1-team-member@publicguardian.gov.uk" with password "Abcd1234"
+    And I am logged in as "CarolinePolachekTeamMember@prof.opg" with password "Abcd1234"
+    And I fill in "search" with "31000014"
+    And I press "search_submit"
     When I click on "pa-report-open" in the "client-31000014" region
     And I click on "edit-report-period"
     Then the response status code should be 200

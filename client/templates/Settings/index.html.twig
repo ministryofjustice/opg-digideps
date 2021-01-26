@@ -29,7 +29,8 @@
             </a>
         </h2>
         <p class="text text-info">{{ 'settings-page.links.organisation.description' | trans }}</p>
-    {% elseif app.user.isDeputyOrg() %}
+{#    Check on orgs length is accounting for users directly navigating to page#}
+    {% elseif app.user.isDeputyOrg() and app.user.organisations|length > 0 %}
         {% set transOptions = {} %}
         <h2 class="govuk-heading-m">
             <a href="{{ path('org_team') }}" class="govuk-link behat-link-user-accounts">
@@ -37,8 +38,7 @@
             </a>
         </h2>
         <p class="text text-info">
-            {% if app.user.isPaNamedDeputy() or app.user.isPaAdministrator() or
-                app.user.isProfNamedDeputy() or app.user.isProfAdministrator()%}
+            {% if app.user.roleOrgAdmin() or app.user.roleOrgNamed() %}
                 {{ 'settings-page.links.team.admin-description' | trans }}
             {% else %}
                 {{ 'settings-page.links.team.description' | trans }}

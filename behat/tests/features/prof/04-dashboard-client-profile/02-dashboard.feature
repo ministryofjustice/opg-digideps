@@ -1,12 +1,11 @@
 Feature: PROF dashboard
 
   Scenario: PROF dashboard check visibility, pagination and search
-    Given I load the application status from "prof-users-uploaded"
     And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     # check pagination
     And I should see the "client" region exactly 15 times
     When I click on "paginator-page-2"
-    Then I should see the "client" region exactly 3 times
+    Then I should see the "client" region exactly 9 times
     # check search
     When I fill in "search" with "31000010"
     And I press "search_submit"

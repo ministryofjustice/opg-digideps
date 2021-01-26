@@ -7,7 +7,7 @@ Feature: Report submit (client 31000010)
           # check balance mismatch difference
         When I click on "edit-balance"
         Then I should see the "balance-bad" region
-        And I should see "£475.50" in the "unaccounted-for" region
+        And I should see "£1,030.03" in the "unaccounted-for" region
       # add explanation
         And the step with the following values CAN be submitted:
             | balance_balanceMismatchExplanation | fix prof balance altered by costs |
@@ -18,7 +18,6 @@ Feature: Report submit (client 31000010)
         Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "pa-report-open" in the "client-31000010" region
         Then the PROF report should be submittable
-
 
     Scenario: 102-5 report declaration page
         Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
@@ -70,10 +69,10 @@ Feature: Report submit (client 31000010)
         Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "tab-in-progress"
         And I click on "pa-report-open" in the "client-31000010" region
-        And I should see the "submitted-report-20170319" region
+        And I should see the "view-report" link
         And I save the current URL as "client-31000010-profile"
         # view report
-        When I click on "view-report" in the "submitted-report-20170319" region
+        When I follow "View report"
         Then I should see the "deputy-declaration" region
         And I click on "return-to-client-profile"
         Then the current URL should match with the URL previously saved as "client-31000010-profile"
