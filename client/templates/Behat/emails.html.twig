@@ -38,7 +38,7 @@
                 </button>
                 <hr>
                 {% autoescape %}
-{#  Not used? email.body | raw | nl2br #}
+{#                    this isnt used any more? #}
                     {{ email.body | nl2br }}
                 {% endautoescape %}
             </div>
