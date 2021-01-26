@@ -13,11 +13,11 @@
 {% endblock %}
 
 {% block pageContent %}
-    <p class="govuk-body">{{ 'intro.para01.left' | trans }}
+    <p class="govuk-body">{{ 'intro.para01.beforeMarkupText' | trans }}
         <a href="https://www.gov.uk/government/organisations/office-of-the-public-guardian" class="govuk-link">
             Office of the Public Guardian
         </a>.
-        {{ 'intro.para01.right' | trans }}
+        {{ 'intro.para01.afterMarkupText' | trans }}
     </p>
 
     <ul class="govuk-list govuk-list--bullet">
@@ -39,12 +39,12 @@
     <h2 class="govuk-heading-l">{{ 'cannotAccess.heading' | trans }}</h2>
     <p class="govuk-body">
         {{ 'cannotAccess.para01.part1' | trans  }}
-        <a href="https://www.gov.uk/government/publications/deputy-annual-report-accounting-for-your-actions" class="govuk-link">
-            {{ 'cannotAccess.para01.link1' | trans  }}
+        <a href="{{ 'cannotAccess.para01.link1' | trans  }}" class="govuk-link">
+            {{ 'cannotAccess.para01.linkText1' | trans  }}
         </a>.
         {{ 'cannotAccess.para01.part2' | trans  }}
-        <a href="mailto:customerservices@publicguardian.gov.uk">
-            {{ 'cannotAccess.para01.link2' | trans  }}
+        <a href="{{ 'cannotAccess.para01.link2' | trans  }}">
+            {{ 'cannotAccess.para01.linkText2' | trans  }}
         </a>
         {{ 'cannotAccess.para01.part3' | trans  }}
     </p>
@@ -53,7 +53,11 @@
     <p class="govuk-body">{{ 'reportProblems.para01' | trans }}</p>
 
     <ul class="govuk-list govuk-list--bullet">
-        <li>Email: <a href="mailto:digideps@digital.justice.gov.uk">digideps@digital.justice.gov.uk</a></li>
+        <li>{{ 'reportProblems.bullets.email.beforeMarkupText' | trans }}
+            <a href="{{ 'reportProblems.bullets.email.link' | trans }}">
+                {{ 'reportProblems.bullets.email.linkText' | trans }}
+            </a>
+        </li>
         <li>{{ 'reportProblems.bullets.phone' | trans }}</li>
         <li>{{ 'reportProblems.bullets.textPhone' | trans }}</li>
     </ul>
@@ -63,8 +67,8 @@
     <h2 class="govuk-heading-l">{{ 'enforcementProcedure.heading' | trans }}</h2>
     <p class="govuk-body">
         {{ 'enforcementProcedure.para01' | trans }}
-        <a href="https://www.equalityadvisoryservice.com/" class="govuk-link">
-            {{ 'enforcementProcedure.link1' | trans }}
+        <a href="{{ 'enforcementProcedure.link' | trans }}" class="govuk-link">
+            {{ 'enforcementProcedure.linkText' | trans }}
         </a>.
     </p>
 
@@ -72,11 +76,11 @@
     <p class="govuk-body">{{ 'technicalInfo.para01' | trans }}</p>
 
     <p class="govuk-body">
-        {{ 'technicalInfo.para02.left' | trans }}
-        <a href="https://www.w3.org/TR/WCAG21/" class="govuk-link">
-            {{ 'technicalInfo.para02.link' | trans }}
+        {{ 'technicalInfo.para02.beforeMarkupText' | trans }}
+        <a href="{{ 'technicalInfo.para02.link' | trans }}" class="govuk-link">
+            {{ 'technicalInfo.para02.linkText' | trans }}
         </a>
-        {{ 'technicalInfo.para02.right' | trans }}
+        {{ 'technicalInfo.para02.afterMarkupText' | trans }}
     </p>
 
     <p class="govuk-body">{{ 'technicalInfo.para03' | trans }}</p>

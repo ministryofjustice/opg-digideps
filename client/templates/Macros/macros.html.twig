@@ -194,7 +194,23 @@
             <div class="opg-alert opg-alert--info">
                 {{ _self.icon('information', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
-                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | nl2br }}</p>
+                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message }}</p>
+                </div>
+            </div>
+        {% elseif alertType == 'infoLink' %}
+            <div class="opg-alert opg-alert--info">
+                {{ _self.icon('information', 'opg-alert__icon') }}
+                <div class="behat-region-alert-message opg-alert__message">
+                    <p class="govuk-body govuk-!-margin-bottom-0">
+                        {{ message.textbeforemarkup }}<a href="{{ message.link }}">{{ message.linktext }}</a>{{ message.textaftermarkup }}
+                    </p>
+                </div>
+            </div>
+        {% elseif alertType == 'fixture' %}
+            <div class="opg-alert opg-alert--success">
+                {{ _self.icon('tick', 'opg-alert__icon') }}
+                <div class="behat-region-alert-message opg-alert__message">
+                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | raw }}</p>
                 </div>
             </div>
         {% elseif alertType == 'important' %}
@@ -202,15 +218,6 @@
                 {{ _self.icon('important-small', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
                     <p class="govuk-body govuk-!-margin-bottom-0">{{ message | nl2br }}</p>
-                </div>
-            </div>
-        {% elseif alertType == 'infolink' %}
-            <div class="opg-alert opg-alert--info">
-                {{ _self.icon('information', 'opg-alert__icon') }}
-                <div class="behat-region-alert-message opg-alert__message">
-                    <p class="govuk-body govuk-!-margin-bottom-0">
-                        {{ message | nl2br }}
-                    </p>
                 </div>
             </div>
         {% elseif alertType == 'loader' %}

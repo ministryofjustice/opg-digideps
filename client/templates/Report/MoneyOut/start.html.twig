@@ -53,11 +53,11 @@
         {% if report.bankAccounts is empty and report.canLinkToBankAccounts %}
             <h3 class="govuk-heading-s">{{ 'startPage.moneyOut.accountLinksHeading' | trans(transOptions) }}</h3>
             <p class="govuk-body">
-                {{ 'startPage.moneyOut.accountLinksPara1.left' | trans(transOptions) }}
+                {{ 'startPage.moneyOut.accountLinksPara1.beforeMarkupText' | trans(transOptions) }}
                 <a href="{{ path('bank_accounts', {reportId: report.id}) }}">
                     {{ 'startPage.moneyOut.accountLinksPara1.link' | trans(transOptions) }}
                 </a>
-                {{ 'startPage.moneyOut.accountLinksPara1.right' | trans(transOptions) }}
+                {{ 'startPage.moneyOut.accountLinksPara1.afterMarkupText' | trans(transOptions) }}
             </p>
         {% endif %}
     </div>

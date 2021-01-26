@@ -3,8 +3,8 @@ pageTitle: Accessibility statement for the Complete the deputy report service
 
 intro:
     para01:
-        left: 'This online service is run by the '
-        right: 'We want as many people as possible to be able to use this service. For example, that means you should be able to:'
+        beforeMarkupText: 'This online service is run by the '
+        afterMarkupText: 'We want as many people as possible to be able to use this service. For example, that means you should be able to:'
     bullets:
         changeColours: change colours, contrast levels and fonts using accessibility software you have installed on your computer
         zoom: zoom in up to 300% without the text spilling off the screen
@@ -18,9 +18,11 @@ cannotAccess:
     heading: What to do if you cannot access parts of this service
     para01:
       part1: 'If you cannot use this service, you can '
-      link1: 'complete your deputy report using a paper form'
+      link1: 'https://www.gov.uk/government/publications/deputy-annual-report-accounting-for-your-actions'
+      linkText1: 'complete your deputy report using a paper form'
       part2: 'If you need the form in a more accessible format, email '
-      link2: 'customerservices@publicguardian.gov.uk'
+      link2: 'mailto:customerservices@publicguardian.gov.uk'
+      linkText2: 'customerservices@publicguardian.gov.uk'
       part3: ' and tell us what format you need.'
 
 reportProblems:
@@ -29,20 +31,26 @@ reportProblems:
     bullets:
         phone: 'Telephone: 0300 456 0300'
         textPhone: 'Textphone: 0115 934 2778'
+        email:
+          link: 'mailto:digideps@digital.justice.gov.uk'
+          linkText: digideps@digital.justice.gov.uk
+          beforeMarkupText: 'Email: '
     para02: We’re available Monday, Tuesday, Thursday, Friday 9:30am to 5pm. Wednesday 10am to 5pm
 
 enforcementProcedure:
     heading: Enforcement procedure
     para01: 'The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’). If you’re not happy with how we respond to your complaint, '
-    link1: 'contact the Equality Advisory and Support Service (EASS)'
+    link: 'https://www.equalityadvisoryservice.com/'
+    linkText: 'contact the Equality Advisory and Support Service (EASS)'
 
 technicalInfo:
     heading: Technical information about this website’s accessibility
     para01: The Office of the Public Guardian is committed to making its online services accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.
     para02:
-      left: 'This website fully conforms to the '
-      link: 'Web Content Accessibility Guidelines version 2.1'
-      right: 'AA standard.'
+      beforeMarkupText: 'This website fully conforms to the '
+      link: 'https://www.w3.org/TR/WCAG21/'
+      linkText: 'Web Content Accessibility Guidelines version 2.1'
+      afterMarkupText: 'AA standard.'
     para03: The content listed below is non-accessible for the following reasons.
 
 burden:

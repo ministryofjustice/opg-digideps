@@ -13,9 +13,9 @@
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body">{{ (page ~ '.intro.para1') | trans }}</p>
             <p class="govuk-body">
-                {{ (page ~ '.intro.para2.left') | trans }}
-                <a href="mailto:customerservices@publicguardian.gov.uk">customerservices@publicguardian.gov.uk</a>
-                {{ (page ~ '.intro.para2.right') | trans }}
+                {{ (page ~ '.intro.para2.beforeMarkupText') | trans }}
+                <a href="{{ (page ~ '.intro.para2.link') | trans }}">{{ (page ~ '.intro.para2.linkText') | trans }}</a>
+                {{ (page ~ '.intro.para2.afterMarkupText') | trans }}
             </p>
 
             {{ form_start(form) }}

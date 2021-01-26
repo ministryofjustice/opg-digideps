@@ -77,7 +77,7 @@
 
     {% block notification %}
         {% for flashMessage in app.session.flashbag.get('notice') %}
-            {{ macros.notification('success', flashMessage) }}
+            {{ macros.notification('fixture', flashMessage) }}
         {% endfor %}
     {% endblock %}
 

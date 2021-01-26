@@ -59,7 +59,6 @@
                         <strong class="govuk-!-font-weight-bold">{{ (page ~ '.address') | trans }}</strong>
                     </dt>
                     <dd>
-{#                        {{ (client.addressNotEmptyParts) ? client.addressNotEmptyParts | join('<br/>') }}#}
                         {% for addressPart in client.addressNotEmptyParts %}
                             {{ addressPart }}<br/>
                         {% endfor %}

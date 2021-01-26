@@ -20,7 +20,7 @@ password_confirm:
     label: Confirm password
 terms_conditions:
     label:
-      left: I have read and understood the
+      beforeMarkupText: I have read and understood the
       link: terms of use
 submit:
     label: Submit

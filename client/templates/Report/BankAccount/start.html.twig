@@ -22,11 +22,11 @@
         <p class="govuk-body">{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
         {% if report.hasSection('moneyIn') %}
             <p class="govuk-body">
-                {{ 'startPage.pageSectionDescription3.left' | trans(transOptions) }}
+                {{ 'startPage.pageSectionDescription3.beforeMarkupText' | trans(transOptions) }}
                 <a href="{{ path('money_in', {reportId: report.id}) }}">
                     {{ 'startPage.pageSectionDescription3.link' | trans(transOptions) }}
                 </a>
-                {{ 'startPage.pageSectionDescription3.right' | trans(transOptions) }}
+                {{ 'startPage.pageSectionDescription3.afterMarkupText' | trans(transOptions) }}
             </p>
         {% endif %}
 

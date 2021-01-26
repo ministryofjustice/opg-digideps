@@ -78,8 +78,8 @@ deleteConfirm:
   pageTitle: Delete user
   supportTitle: Users
   question:
-    left: 'Are you sure that you want to delete '
-    right: '? This action cannot be undone.'
+    beforeMarkupText: 'Are you sure that you want to delete '
+    afterMarkupText: '? This action cannot be undone.'
 
 viewUser:
   htmlTitle: Administration - Users
@@ -195,8 +195,8 @@ uploadUsers:
   heading: Upload users
   usersInTheDB: users in the database
   uploading:
-    left: Uploading... please wait.
-    right: Do not refresh this page
+    beforeMarkupText: Uploading... please wait.
+    afterMarkupText: Do not refresh this page
   incidentsOccurred: "%count% %type% occurred"
   moreDetails: More details
 

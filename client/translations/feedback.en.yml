@@ -4,8 +4,10 @@ collectionPage:
     intro:
         para1: We will not respond to your feedback directly but will use it to improve this service. If you're happy to be contacted to give further feedback, please leave your email address or phone number.
         para2:
-          left: 'If you have a question about your deputyship, please email '
-          right: 'who will be able to help.'
+          beforeMarkupText: 'If you have a question about your deputyship, please email '
+          link: mailto:customerservices@publicguardian.gov.uk
+          linkText: customerservices@publicguardian.gov.uk
+          afterMarkupText: 'who will be able to help.'
     reply:
         title: Do you want a reply?
         explanation: If you'd like us to get back to you, please leave your details below.

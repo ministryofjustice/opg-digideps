@@ -14,8 +14,8 @@
 {% block pageContent %}
 
     <p class="govuk-body">
-        {{ (page ~ '.question.left') | trans }}
-        <strong class="bold">{{ user.getFullname() }}</strong>{{ (page ~ '.question.right') | trans }}
+        {{ (page ~ '.question.beforeMarkupText') | trans }}
+        <strong class="bold">{{ user.getFullname() }}</strong>{{ (page ~ '.question.afterMarkupText') | trans }}
     </p>
 
     {% include '@App/Components/Link/_link-button.html.twig' with {

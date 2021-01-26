@@ -8,5 +8,5 @@ use Symfony\Component\Validator\Constraint;
  */
 class TextNoSpecialCharacters extends Constraint
 {
-    public $message = 'This text box contains a illegal special characters.';
+    public $message = 'This text box contains special characters that are not permitted.';
 }

@@ -35,27 +35,6 @@ class ClientType extends AbstractType
                 'constraints' => new Length(['min' => 8, 'groups' => 'pa-client'])
             ])
             ->add('address2', FormTypes\TextType::class)
-//                'constraints' => [
-//                    new Regex([
-//                        'pattern'   => '/[$&+,:;=?@#|\'<>.^*()%!-]/',
-//                        'match'     => false,
-//                        'message'   => '',
-//                        'groups' => 'pa-client'
-//                    ]),
-////                    new Length(['min' => 8, 'groups' => 'pa-client']),
-//                ]
-//            ])
-//            ->add('address2', FormTypes\TextType::class, [
-//                'constraints' => [
-//                    new Regex([
-//                        'pattern'   => '/[$&+,:;=?@#|\'<>.^*()%!-]/',
-//                        'match'     => false,
-//                        'message'   => '',
-//                        'groups' => 'pa-client'
-//                    ]),
-////                    new Length(['min' => 8, 'groups' => 'pa-client']),
-//                ]
-//            ])
             ->add('postcode', FormTypes\TextType::class)
             ->add('county', FormTypes\TextType::class)
             ->add('phone', FormTypes\TextType::class)

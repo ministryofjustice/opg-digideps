@@ -37,7 +37,7 @@ differenceTable:
 
 download-transactions:
   link: Download a copy of your transactions (csv)
-  right: to import into a spreadsheet.
+  afterMarkupText: to import into a spreadsheet.
 
 moreInfo:
   heading: More information

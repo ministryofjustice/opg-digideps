@@ -22,11 +22,11 @@ startPage:
         OPG's <a href="https://www.gov.uk/government/publications/giving-gifts-a-guide-for-deputies-and-attorneys">'Giving gifts for someone else' (OPG2)</a> booklet gives detailed guidance on giving gifts as a deputy.
   accountLinksHeading: Link gifts to %client%'s bank accounts
   accountLinksPara1:
-    left: |
+    beforeMarkupText: |
       When you add a gift, you have the option to say which of %client%'s bank accounts it was bought from.
       If you'd like to do this, you may want to
     link: add %client%'s bank accounts
-    right: before you start this section.
+    afterMarkupText: before you start this section.
 
   startButton: Start gifts
 

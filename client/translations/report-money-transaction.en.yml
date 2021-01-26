@@ -6,8 +6,8 @@ startPage:
       In this section, we ask you about money paid into %client%'s accounts between %startDate%
       and %endDate%.
     pageSectionDescription2:
-      left: Transfers between %client%'s accounts should be entered in the
-      right: section.
+      beforeMarkupText: Transfers between %client%'s accounts should be entered in the
+      afterMarkupText: section.
     pageSectionDescription3: |
       Make sure you only enter each payment in one place, so we do not count it twice.
     totalOrIndividualHeading: |
@@ -18,11 +18,11 @@ startPage:
       payment.
     accountLinksHeading: Link payments to %client%'s bank accounts
     accountLinksPara1:
-      left: |
+      beforeMarkupText: |
         When you add a payment, you have the option to say which of %client%'s bank accounts it was paid into.
         If you'd like to do this, you may want to
       link: add %client%'s bank accounts
-      right: before you start this section.
+      afterMarkupText: before you start this section.
     startButton: Start money in
   moneyOut:
     htmlTitle: "Money out - Complete the deputy report | GOV.UK"
@@ -64,11 +64,11 @@ startPage:
       period, or you can add 12 payments - one for each month's rent.
     accountLinksHeading: Link payments to %client%'s bank accounts
     accountLinksPara1:
-      left: |
+      beforeMarkupText: |
         When you add a payment, you have the option to say which of %client%'s bank accounts it was paid
         out from. If you'd like to do this, you may want to
       link: add %client%'s bank accounts
-      right: before you start this section.
+      afterMarkupText: before you start this section.
     startButton: Start money out
 
 stepPage:

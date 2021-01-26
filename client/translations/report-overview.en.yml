@@ -158,8 +158,8 @@ balance:
   subSectionTitle: "Accounts balance check"
   subSectionDescription:
     default:
-      left: 'Check that '
-      right: '''s accounts balance'
+      beforeMarkupText: 'Check that '
+      afterMarkupText: '''s accounts balance'
     addExplanation: "Add explanation"
     editExplanation: "Edit explanation"
   label:
