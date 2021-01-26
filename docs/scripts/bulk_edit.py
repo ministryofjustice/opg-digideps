@@ -1,5 +1,7 @@
 import os
 
+# The purpose of this script is to bulk edit annotations
+# It could equally be amended for any other bulk update where a simple find replace isn't enough
 
 def find_between( s, first, last ):
     try:
@@ -29,12 +31,6 @@ for root, dirs, files in os.walk('.'):
 
             for line in contents:
 
-                # print(f"current_line: {current_line}")
-                # print(f"prev_start_annot: {prev_start_annot}")
-                # print(f"prev_end_annot: {prev_end_annot}")
-                # print(f"string_line: {string_line}")
-                # print(f"already_done: {already_done}")
-
                 current_line = current_line + 1
 
                 if "/**" in line:
@@ -55,9 +51,7 @@ for root, dirs, files in os.walk('.'):
 
                 else:
                     if not already_done and string_line:
-                        # lines_numbers_to_insert.append(prev_end_annot - 1)
                         index = prev_end_annot - 1
-
                         contents.insert(index, f"     * @AppAssert\TextNoSpecialCharacters{groups}\n")
 
                     already_done = False
