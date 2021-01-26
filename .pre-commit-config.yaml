@@ -1,5 +1,6 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
+
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.0.0
@@ -20,6 +21,13 @@ repos:
     hooks:
     - id: php-cs-fixer
       files: \.(php)$
+#-   repo: .
+#    hooks:
+#    -   id: no-raw-in-templates
+#        name: No raw added to templates
+#        description: This hook checks we haven't added any raw to templates.
+#        entry: "no-raw-in-templates.sh"
+#        language: script
 #-   repo: https://github.com/acsauk/php-strict-types-pre-commit-hook
 #    rev: main
 #    hooks:
