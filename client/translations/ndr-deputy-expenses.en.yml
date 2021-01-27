@@ -10,8 +10,11 @@ startPage:
   hiddenText01:
     summary: More about what you can and cannot claim for
     content:
-      para01: |
-        OPG'S <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties/">'How to be a deputy' (SD3) </a> booklet gives detailed guidance on what you can and cannot claim for while carrying out your duties as a deputy.
+      para01:
+        beforeMarkupText: OPG'S
+        afterMarkupText: booklet gives detailed guidance on what you can and cannot claim for while carrying out your duties as a deputy.
+        link: https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties/
+        linkText: "'How to be a deputy' (SD3)"
   startButton: Start deputy expenses
 
 existPage:

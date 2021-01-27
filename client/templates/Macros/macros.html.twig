@@ -197,6 +197,13 @@
                     <p class="govuk-body govuk-!-margin-bottom-0">{{ message }}</p>
                 </div>
             </div>
+        {% elseif alertType == 'info2Part' %}
+            <div class="opg-alert opg-alert--info">
+                {{ _self.icon('information', 'opg-alert__icon') }}
+                <div class="behat-region-alert-message opg-alert__message">
+                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message.textbeforemarkup }}<br><br>{{ message.textaftermarkup }}</p>
+                </div>
+            </div>
         {% elseif alertType == 'infoLink' %}
             <div class="opg-alert opg-alert--info">
                 {{ _self.icon('information', 'opg-alert__icon') }}

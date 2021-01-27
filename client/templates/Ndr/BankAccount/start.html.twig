@@ -31,8 +31,20 @@
                     <li>{{ 'startPage.hiddenText01.content.listItem03' | trans(transOptions) }}</li>
                     <li>{{ 'startPage.hiddenText01.content.listItem04' | trans(transOptions) }}</li>
                 </ul>
-                <p class="govuk-body">{{ 'startPage.hiddenText01.content.para02' |trans(transOptions)|raw }}</p>
-                <p class="govuk-body">{{ 'startPage.hiddenText01.content.para03' |trans(transOptions)|raw }}</p>
+                <p class="govuk-body">
+                    {{ 'startPage.hiddenText01.content.para02.beforeMarkupText' |trans(transOptions) }}
+                    <a href="{{ 'startPage.hiddenText01.content.para02.link' |trans(transOptions) }}">
+                        {{ 'startPage.hiddenText01.content.para02.linkText' |trans(transOptions) }}
+                    </a>.
+                    {{ 'startPage.hiddenText01.content.para02.afterMarkupText' |trans(transOptions) }}
+                </p>
+                <p class="govuk-body">
+                    {{ 'startPage.hiddenText01.content.para03.beforeMarkupText' |trans(transOptions) }}
+                    <a href="{{ 'startPage.hiddenText01.content.para03.link' |trans(transOptions) }}">
+                        {{ 'startPage.hiddenText01.content.para03.linkText' |trans(transOptions) }}
+                    </a>
+                    {{ 'startPage.hiddenText01.content.para03.afterMarkupText' |trans(transOptions) }}
+                </p>
             </div>
         </details>
     </div>

@@ -7,9 +7,11 @@ startPage:
   hiddenText01:
     summary: Find out what benefits %client% is entitled to
     content:
-      para01: |
-        You can use a <a href="https://www.entitledto.co.uk/">benefits calculator</a>
-        to work out which benefits %client% could be claiming.
+      para01:
+        beforeMarkupText: You can use a
+        afterMarkupText: to work out which benefits %client% could be claiming.
+        link: https://www.entitledto.co.uk/
+        linkText: benefits calculator
   startButton: Start income and benefits
 
 stepPage:

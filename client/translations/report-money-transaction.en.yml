@@ -44,7 +44,7 @@ startPage:
       link2: deputy fees and expenses
       part3: and
       link3: gifts
-    pageSectionDescription2-PROF: |
+    pageSectionDescription2-PROF:
       part1: There are different sections for you to tell us about
       link1: money transfers
       part2: between %client%'s accounts, your

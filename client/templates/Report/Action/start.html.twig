@@ -25,13 +25,25 @@
             </summary>
             <div class="govuk-details__text">
                 <p class="govuk-body">{{ (page ~ '.hiddenText01.content.para01') |trans(transOptions) }}</p>
-                <p class="govuk-body">{{ (page ~ '.hiddenText01.content.para02') |trans(transOptions)|raw }}</p>
+                <p class="govuk-body">{{ (page ~ '.hiddenText01.content.para02') |trans(transOptions) }}</p>
                 <ul class="govuk-list govuk-list--bullet">
                     <li>{{ (page ~ '.hiddenText01.content.listItem01') | trans(transOptions) }}</li>
                     <li>{{ (page ~ '.hiddenText01.content.listItem02') | trans(transOptions) }}</li>
                     <li>{{ (page ~ '.hiddenText01.content.listItem03') | trans(transOptions) }}</li>
                 </ul>
-                <p class="govuk-body">{{ (page ~ '.hiddenText01.content.para03' ~ append104) |trans(transOptions)|raw }}</p>
+                <p class="govuk-body">
+                    {{ (page ~ '.hiddenText01.content.para03' ~ append104 ~ '.beforeMarkupText') |trans(transOptions) }}
+                    <a href="{{ (page ~ '.hiddenText01.content.para03' ~ append104 ~ '.link') |trans(transOptions) }}">
+                        {{ (page ~ '.hiddenText01.content.para03' ~ append104 ~ '.linkText') |trans(transOptions) }}
+                    </a>
+                    {{ (page ~ '.hiddenText01.content.para03' ~ append104 ~ '.afterMarkupText') |trans(transOptions) }}
+                    {% if append104 == '-4' %}
+                        <a href="{{ (page ~ '.hiddenText01.content.para03' ~ append104 ~ '.link2') |trans(transOptions) }}">
+                            {{ (page ~ '.hiddenText01.content.para03' ~ append104 ~ '.linkText2') |trans(transOptions) }}
+                        </a>
+                        {{ (page ~ '.hiddenText01.content.para03' ~ append104 ~ '.afterMarkupText2') |trans(transOptions) }}
+                    {%  endif %}
+                </p>
             </div>
         </details>
 	</div>

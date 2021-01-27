@@ -23,7 +23,17 @@
     </p>
 
     <p class="govuk-body">
-        {{ ('startPage.pageSectionDescription3' ~ append104) | trans(transOptions)|raw }}
+        {{ ('startPage.pageSectionDescription3' ~ append104 ~ '.beforeMarkupText') | trans(transOptions) }}
+        <a href="{{ ('startPage.pageSectionDescription3' ~ append104 ~ '.link') | trans(transOptions) }}">
+            {{ ('startPage.pageSectionDescription3' ~ append104 ~ '.linkText') | trans(transOptions) }}
+        </a>
+        {{ ('startPage.pageSectionDescription3' ~ append104 ~ '.afterMarkupText') | trans(transOptions) }}
+        {% if append104 == '-4' %}
+            <a href="{{ ('startPage.pageSectionDescription3'  ~ append104 ~ '.link2') |trans(transOptions) }}">
+                {{ ('startPage.pageSectionDescription3' ~ append104 ~ '.linkText2') |trans(transOptions) }}
+            </a>
+            {{ ('startPage.pageSectionDescription3' ~ append104 ~ '.afterMarkupText2') |trans(transOptions) }}
+        {%  endif %}
     </p>
 
     {{ macros.startSectionButton(path('other_info_step', { 'reportId': report.id, 'step': 1 }), 'startPage.startButton' | trans ) }}

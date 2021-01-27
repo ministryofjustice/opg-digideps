@@ -50,8 +50,14 @@
                         <li>{{ 'stepPage.gifts.hiddenText01.content.listItem04' | trans(transOptions) }}</li>
                         <li>{{ 'stepPage.gifts.hiddenText01.content.listItem05' | trans(transOptions) }}</li>
                     </ul>
-                    <p class="govuk-body">{{ 'stepPage.gifts.hiddenText01.content.para02' |trans(transOptions)|raw }}</p>
-                    <p class="govuk-body">{{ 'stepPage.gifts.hiddenText01.content.para03' |trans(transOptions)|raw }}</p>
+                    <p class="govuk-body">{{ 'stepPage.gifts.hiddenText01.content.para02' |trans(transOptions) }}</p>
+                    <p class="govuk-body">
+                        {{ 'stepPage.gifts.hiddenText01.content.para03.beforeMarkupText' |trans(transOptions) }}
+                        <a href="{{ 'stepPage.gifts.hiddenText01.content.para03.link' |trans(transOptions) }}">
+                            {{ 'stepPage.gifts.hiddenText01.content.para03.linkText' |trans(transOptions) }}
+                        </a>
+                        {{ 'stepPage.gifts.hiddenText01.content.para03.afterMarkupText' |trans(transOptions) }}
+                    </p>
                 </div>
             </details>
         </div>
@@ -100,9 +106,13 @@
             </summary>
             <div class="govuk-details__text">
                 <p class="govuk-body">{{ 'stepPage.property.selling.hiddenText01.content.para01' |trans(transOptions) }}</p>
-                <p class="govuk-body">{{ 'stepPage.property.selling.hiddenText01.content.para02' |trans(transOptions)|raw }}</p>
+                <p class="govuk-body">{{ 'stepPage.property.selling.hiddenText01.content.para02' |trans(transOptions) }}</p>
                 <p class="govuk-body">{{ 'stepPage.property.selling.hiddenText01.content.para03' |trans(transOptions) }}</p>
-                <p class="govuk-body">{{ 'stepPage.property.selling.hiddenText01.content.para04' |trans(transOptions)|raw }}</p>
+                <p class="govuk-body">
+                    <a href="{{ 'stepPage.property.selling.hiddenText01.content.para04.link' |trans(transOptions) }}">
+                        {{ 'stepPage.property.selling.hiddenText01.content.para04.linkText' |trans(transOptions) }}
+                    </a>{
+                </p>
             </div>
         </details>
     {% endif %}

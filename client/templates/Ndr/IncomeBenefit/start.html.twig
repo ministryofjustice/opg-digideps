@@ -24,7 +24,13 @@
                 <span class="govuk-details__summary-text">{{ 'startPage.hiddenText01.summary' | trans(transOptions, translationDomain) }}</span>
             </summary>
             <div class="govuk-details__text">
-                <p class="govuk-body">{{ 'startPage.hiddenText01.content.para01' |trans(transOptions, translationDomain)|raw }}</p>
+                <p class="govuk-body">
+                    {{ 'startPage.hiddenText01.content.para01.beforeMarkupText' |trans(transOptions, translationDomain) }}
+                    <a href="{{ 'startPage.hiddenText01.content.para01.link' |trans(transOptions, translationDomain) }}">
+                        {{ 'startPage.hiddenText01.content.para01.linkText' |trans(transOptions, translationDomain) }}
+                    </a>
+                    {{ 'startPage.hiddenText01.content.para01.afterMarkupText' |trans(transOptions, translationDomain) }}
+                </p>
             </div>
         </details>
 	</div>

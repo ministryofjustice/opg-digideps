@@ -51,9 +51,13 @@
                 </summary>
                 <div class="govuk-details__text">
                     <p class="govuk-body">{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para01' |trans(transOptions) }}</p>
-                    <p class="govuk-body">{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para02' |trans(transOptions)|raw }}</p>
+                    <p class="govuk-body">{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para02' |trans(transOptions) }}</p>
                     <p class="govuk-body">{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para03' |trans(transOptions) }}</p>
-                    <p class="govuk-body">{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para04' |trans(transOptions)|raw }}</p>
+                    <p class="govuk-body">
+                        <a href="{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para04.link' |trans(transOptions) }}">
+                            {{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para04.linkText' |trans(transOptions) }}
+                        </a>
+                    </p>
                 </div>
             </details>
         {% endif %}

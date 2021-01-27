@@ -17,12 +17,16 @@ startPage:
       listItem02: contracts for services or tradespeople
       listItem03: receipts
       listItem04: letters and emails about your activities as a deputy
-      para02: |
-        You must include details of how you've managed %client%'s money in your
-        <a href="https://www.gov.uk/become-deputy/complete-your-annual-report">annual report</a>.
-        This report falls due on the first anniversary of your court order.
-      para03: |
-        OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on how to look after %client%'s financial affairs.
+      para02:
+        beforeMarkupText: You must include details of how you've managed %client%'s money in your
+        afterMarkupText: This report falls due on the first anniversary of your court order.
+        link: https://www.gov.uk/become-deputy/complete-your-annual-report
+        linkText: annual report
+      para03:
+        beforeMarkupText: "OPG's "
+        afterMarkupText: booklet gives detailed guidance on how to look after %client%'s financial affairs.
+        link: https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties
+        linkText: "'How to be a deputy' (SD3)"
   startButton: Start accounts
 
 stepPage:
