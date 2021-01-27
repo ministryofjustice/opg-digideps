@@ -86,10 +86,5 @@ resource "aws_rds_cluster" "cluster_serverless" {
     timeout_action           = "ForceApplyCapacityChange"
   }
 
-  depends_on = [aws_cloudwatch_log_group.serverless_log[0]]
-}
-
-resource "aws_cloudwatch_log_group" "serverless_log" {
-  count = var.aurora_serverless ? 1 : 0
-  name  = "/aws/rds/instance/${var.cluster_identifier}-${terraform.workspace}/postgresql"
+  depends_on = [var.log_group]
 }

@@ -20,7 +20,6 @@ Feature: PROF user edits 102-5 report sections common to ALL report types
     And I should see a "#edit-documents" element
 
   Scenario: PROF 102-5 user edit decisions section
-    Given I load the application status from "prof-team-users-complete"
     And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-31000010" region
     Then the response status code should be 200

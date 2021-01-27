@@ -30,9 +30,9 @@ class ReportFactory
     {
         if ($data['deputyType'] === User::TYPE_LAY) {
             $type = $data['reportType'];
-        } elseif ($data['deputyType'] === User::TYPE_PA) {
+        } elseif (in_array($data['deputyType'], ['PA', 'PA_ADMIN', 'PA_TEAM_MEMBER'])) {
             $type = $data['reportType'] . '-6';
-        } elseif ($data['deputyType'] === User::TYPE_PROF) {
+        } elseif (in_array($data['deputyType'], ['PROF', 'PROF_ADMIN', 'PROF_TEAM_MEMBER'])) {
             $type = $data['reportType'] . '-5';
         }
 

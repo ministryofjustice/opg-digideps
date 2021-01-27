@@ -4,9 +4,7 @@ namespace App\Service;
 
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
-use App\Entity\Repository\TeamRepository;
 use App\Entity\Repository\UserRepository;
-use App\Entity\Team;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -14,9 +12,6 @@ class UserService
 {
     /** @var UserRepository */
     private $userRepository;
-
-    /** @var TeamRepository */
-    private $teamRepository;
 
     /** @var EntityManagerInterface */
     private $em;
@@ -31,7 +26,6 @@ class UserService
         OrgService $orgService
     ) {
         $this->userRepository = $em->getRepository(User::class);
-        $this->teamRepository = $em->getRepository(Team::class);
         $this->em = $em;
         $this->orgService = $orgService;
     }
@@ -47,24 +41,12 @@ class UserService
     {
         $this->exceptionIfEmailExist($userToAdd->getEmail());
 
-        // generate org team name
-        if ($loggedInUser->isOrgNamedDeputy() &&
-            !empty($data['pa_team_name']) &&
-            $this->getTeams()->isEmpty()
-        ) {
-            $this->getTeams()->first()->setTeamName($data['pa_team_name']);
-        }
-
         $userToAdd->setRegistrationDate(new \DateTime());
         $userToAdd->recreateRegistrationToken();
         $this->em->persist($userToAdd);
         $this->em->flush();
 
         $this->orgService->addUserToUsersClients($loggedInUser, $userToAdd);
-
-        if ($loggedInUser->isOrgNamedOrAdmin() && $userToAdd->isDeputyOrg()) {
-            $this->orgService->addUserToUsersTeams($loggedInUser, $userToAdd);
-        }
     }
 
     /**

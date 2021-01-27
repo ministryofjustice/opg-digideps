@@ -1,9 +1,19 @@
 Feature: Report submit (client 02100014)
 
+    Scenario: Setup data
+        Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+        Given the following users exist:
+          | ndr      | deputyType     | firstName | lastName | email                              | postCode | activated |
+          | disabled | PA_TEAM_MEMBER | Kim       | Petras   | KimPetrasTeamMember@behat-test.com | HA4      | true      |
+        And the following users are in the organisations:
+          | userEmail                 | orgName |
+          | KimPetrasTeamMember@behat-test.com   | PA OPG  |
+
     Scenario: 102 report declaration page
-        Given I load the application status from "pa-report-completed"
-        And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+        And I am logged in as "KimPetrasTeamMember@behat-test.com" with password "Abcd1234"
         And I click on "tab-ready"
+        And I fill in "search" with "02100014"
+        And I press "search_submit"
         And I click on "pa-report-open" in the "client-02100014" region
         Then I should not see the "download-2016-report" link
         # if not found, it means that the report is not submittable
@@ -26,7 +36,9 @@ Feature: Report submit (client 02100014)
 
     Scenario: 102 report submission
         # log in as team member to submit the report and test that named deputy details are displayed
-        Given I am logged in as "behat-pa1-team-member@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "KimPetrasTeamMember@behat-test.com" with password "Abcd1234"
+        And I fill in "search" with "02100014"
+        And I press "search_submit"
         When I click on "pa-report-open" in the "client-02100014" region
         And I should see "Ready to submit" in the "report-detail-status" region
         And I click on "edit-report_submit"
@@ -50,8 +62,10 @@ Feature: Report submit (client 02100014)
         And the response status code should be 200
 
     Scenario: 102 assert submitted report displays correctly in client profile page
-        Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "KimPetrasTeamMember@behat-test.com" with password "Abcd1234"
         And I click on "tab-in-progress"
+        And I fill in "search" with "02100014"
+        And I press "search_submit"
         And I click on "pa-report-open" in the "client-02100014" region
         And I should see the "submitted-report-20170528" region
         And I save the current URL as "client-02100014-profile"
@@ -62,8 +76,10 @@ Feature: Report submit (client 02100014)
         Then the current URL should match with the URL previously saved as "client-02100014-profile"
 
     Scenario: 102 assert 2nd year report has been created and displays correctly
-        Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "KimPetrasTeamMember@behat-test.com" with password "Abcd1234"
         And I click on "tab-in-progress"
+        And I fill in "search" with "02100014"
+        And I press "search_submit"
         And I click on "pa-report-open" in the "client-02100014" region
         Then I should see a "#edit-contacts" element
         And I should see a "#edit-decisions" element

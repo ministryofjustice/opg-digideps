@@ -25,9 +25,14 @@ trait CourtOrderTrait
             $url = sprintf('/admin/fixtures/court-orders?%s', $queryString);
             $this->visitAdminPath($url);
 
+            $activated = is_null($row['activated']) || $row['activated'] == 'true';
+            $this->fillField('court_order_fixture_activated', $activated);
             $this->fillField('court_order_fixture_deputyType', $row['deputy_type']);
             $this->fillField('court_order_fixture_reportType', $this->resolveReportType($row));
             $this->fillField('court_order_fixture_reportStatus', $row['completed'] ? 'readyToSubmit' : 'notStarted');
+            $this->fillField('court_order_fixture_orgSizeClients', $row['orgSizeClients'] ? $row['orgSizeClients'] : 1);
+            $this->fillField('court_order_fixture_orgSizeUsers', $row['orgSizeUsers'] ? $row['orgSizeUsers'] : 1);
+
             $this->pressButton('court_order_fixture_submit');
         }
     }

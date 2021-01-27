@@ -188,3 +188,20 @@ Feature: Add PROF users and activate PROF user (journey)
     Then the form should be valid
     When I click on "admin_cancel"
     And I should see "Edited Pa User Edited Two" in the "user-behat-prof2publicguardiangovuk" region
+
+  Scenario: Ensure all team members are in the same org
+    Given the following organisations exist:
+      | name     | emailIdentifier | activated |
+      | PROF OPG | @prof.opg       | true      |
+
+    Given the following users are in the organisations:
+      | userEmail                         | orgName  |
+      | behat-prof1@publicguardian.gov.uk | PROF OPG |
+      | behat-prof2@publicguardian.gov.uk | PROF OPG |
+      | behat-prof3@publicguardian.gov.uk | PROF OPG |
+
+    Given the following users clients are in the users organisation:
+      | userEmail                         |
+      | behat-prof1@publicguardian.gov.uk |
+      | behat-prof2@publicguardian.gov.uk |
+      | behat-prof3@publicguardian.gov.uk |

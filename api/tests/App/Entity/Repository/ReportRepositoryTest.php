@@ -13,30 +13,21 @@ use App\Entity\SynchronisableInterface;
 use App\Entity\User;
 use DateInterval;
 use DateTimeZone;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Mockery\MockInterface;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Tests\Fixtures;
+use Tests\ApiBaseTestCase;
 use Mockery as m;
 
-class ReportRepositoryTest extends WebTestCase
+class ReportRepositoryTest extends ApiBaseTestCase
 {
-    /**
-     * @var ReportRepository
-     */
+    /** @var ReportRepository */
     private $sut;
 
-    /**
-     * @var Report | MockInterface
-     */
+    /** @var Report | MockInterface */
     private $mockReport;
 
-    /**
-     * @var EntityManagerInterface | MockInterface
-     */
+    /** @var EntityManagerInterface | MockInterface */
     private $mockEm;
 
     /** @var ClientInterface | MockInterface */
@@ -47,17 +38,21 @@ class ReportRepositoryTest extends WebTestCase
     /** @var ReportRepository */
     private $repository;
 
-    /** @var EntityManager */
-    private $entityManager;
-
     /** @var array */
     private $queryResult;
+
+    /** @var []Checklist */
+    private $queuedChecklists = [];
 
     /** @var int */
     const QUERY_LIMIT = 2;
 
     public function setUp(): void
     {
+        parent::setUp();
+
+        $this->purgeDatabase();
+
         $this->mockEm = m::mock(EntityManagerInterface::class);
         $this->mockMetaClass = m::mock(ClassMetadata::class);
         $this->mockReport = m::mock(Report::class);
@@ -68,10 +63,6 @@ class ReportRepositoryTest extends WebTestCase
             ->andReturn($this->mockClient);
 
         $this->sut = new ReportRepository($this->mockEm, $this->mockMetaClass);
-
-        $kernel = self::bootKernel();
-
-        $this->entityManager = $kernel->getContainer()->get('doctrine')->getManager();
         $this->repository = $this->entityManager->getRepository(Report::class);
     }
 
@@ -130,12 +121,11 @@ class ReportRepositoryTest extends WebTestCase
         $client = (new Client())->setCaseNumber('49329657');
         $this->entityManager->persist($client);
 
-        $this
-            ->buildChecklistWithStatus($client, SynchronisableInterface::SYNC_STATUS_QUEUED)
-            ->buildChecklistWithStatus($client, SynchronisableInterface::SYNC_STATUS_QUEUED)
-            ->buildChecklistWithStatus($client, SynchronisableInterface::SYNC_STATUS_QUEUED)
-            ->buildChecklistWithStatus($client, SynchronisableInterface::SYNC_STATUS_SUCCESS)
-            ->buildChecklistWithStatus($client, null);
+        $this->queuedChecklists[] = $this->buildChecklistWithStatus($client, SynchronisableInterface::SYNC_STATUS_QUEUED);
+        $this->queuedChecklists[] = $this->buildChecklistWithStatus($client, SynchronisableInterface::SYNC_STATUS_QUEUED);
+        $this->queuedChecklists[] = $this->buildChecklistWithStatus($client, SynchronisableInterface::SYNC_STATUS_QUEUED);
+        $this->buildChecklistWithStatus($client, SynchronisableInterface::SYNC_STATUS_SUCCESS);
+        $this->buildChecklistWithStatus($client, null);
 
         $this->entityManager->flush();
 
@@ -167,8 +157,8 @@ class ReportRepositoryTest extends WebTestCase
         $repository = $this->entityManager->getRepository(Checklist::class);
         $result = $repository->findBy(['synchronisationStatus' => SynchronisableInterface::SYNC_STATUS_IN_PROGRESS]);
         $this->assertCount(2, $result);
-        $this->assertEquals(1, $result[0]->getId());
-        $this->assertEquals(2, $result[1]->getId());
+        $this->assertEquals($this->queuedChecklists[0]->getId(), $result[0]->getId());
+        $this->assertEquals($this->queuedChecklists[1]->getId(), $result[1]->getId());
     }
 
     /**
@@ -177,7 +167,7 @@ class ReportRepositoryTest extends WebTestCase
      * @return ReportRepositoryTest
      * @throws \Doctrine\ORM\ORMException
      */
-    private function buildChecklistWithStatus(Client $client, ?string $status): ReportRepositoryTest
+    private function buildChecklistWithStatus(Client $client, ?string $status): Checklist
     {
         $report = $this->buildReport($client);
         $checklist = new Checklist($report);
@@ -188,7 +178,7 @@ class ReportRepositoryTest extends WebTestCase
 
         $this->entityManager->persist($checklist);
 
-        return $this;
+        return $checklist;
     }
 
     /**
@@ -224,8 +214,5 @@ class ReportRepositoryTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-
-        $this->entityManager->close();
-        $this->entityManager = null;
     }
 }
