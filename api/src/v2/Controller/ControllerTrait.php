@@ -33,4 +33,16 @@ trait ControllerTrait
             'message' => $message
         ], Response::HTTP_NOT_FOUND);
     }
+
+    /**
+     * @param string $message
+     * @return JsonResponse
+     */
+    private function buildErrorResponse($message = '')
+    {
+        return new JsonResponse([
+            'success' => false,
+            'message' => $message
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
 }

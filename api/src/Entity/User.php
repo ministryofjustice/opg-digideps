@@ -85,15 +85,6 @@ class User implements UserInterface
     private $clients;
 
     /**
-     * @JMS\Type("ArrayCollection<App\Entity\Team>")
-     * @JMS\Groups({"user-teams"})
-     * @ORM\ManyToMany(targetEntity="App\Entity\Team", inversedBy="members", cascade={"persist"}, fetch="EXTRA_LAZY")
-     *
-     * @var ArrayCollection
-     */
-    private $teams;
-
-    /**
      * @JMS\Type("ArrayCollection<App\Entity\Organisation>")
      * @JMS\Groups({"user-organisations"})
      * @JMS\Accessor(getter="getOrganisations")
@@ -297,7 +288,6 @@ class User implements UserInterface
     {
         $this->clients = new ArrayCollection();
         $this->password = '';
-        $this->teams = new ArrayCollection();
         $this->organisations = new ArrayCollection();
         $this->setCoDeputyClientConfirmed($coDeputyClientConfirmed);
     }
@@ -570,113 +560,6 @@ class User implements UserInterface
         return $this->getClients()->filter(function ($client) use ($caseNumber) {
             return $client->getCaseNumber() == strtolower($caseNumber);
         })->first();
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getTeams()
-    {
-        return $this->teams;
-    }
-
-    /**
-     * @JMS\VirtualProperty
-     * @JMS\SerializedName("team_names")
-     * @JMS\Groups({"team-names", "user-list"})
-     *
-     * @return mixed
-     */
-    public function getTeamNames()
-    {
-        $ret = [];
-        foreach ($this->getTeams() as $team) {
-            $ret[$team->getId()] = $team->getTeamName();
-        }
-
-        asort($ret);
-
-        return $ret;
-    }
-
-    /**
-     * Get users in all the teams the user belongs to
-     *
-     * @return User[] array indexed by user id
-     */
-    public function getMembersInAllTeams()
-    {
-        $ret = [];
-        foreach ($this->getTeams() as $team) { /* @var $team Team */
-            foreach ($team->getMembers() as $member) {
-                $ret[$member->getId()] = $member;
-            }
-        }
-
-        return $ret;
-    }
-
-    /**
-     * @param $teams
-     *
-     * @return $this
-     */
-    public function setTeams($teams)
-    {
-        $this->teams = $teams;
-
-        return $this;
-    }
-
-    /**
-     * Add a team
-     *
-     * @param Team $team
-     *
-     * @return $this
-     */
-    public function addTeam(Team $team)
-    {
-        if (!$this->teams->contains($team)) {
-            $this->teams->add($team);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Add a team
-     *
-     * @param ArrayCollection|Team $teams Collection being added
-     *
-     * @return $this
-     */
-    public function addTeams(ArrayCollection $teams)
-    {
-        $this->teams = new ArrayCollection(
-            array_merge(
-                $this->teams->toArray(),
-                $teams->toArray()
-            )
-        );
-
-        return $this;
-    }
-
-    /**
-     * Remove a team from the collection
-     *
-     * @param mixed $team collection being removed
-     *
-     * @return $this
-     */
-    public function removeTeam($team)
-    {
-        if ($this->teams->contains($team)) {
-            $this->teams->removeElement($team);
-        }
-
-        return $this;
     }
 
     /**
@@ -1033,21 +916,6 @@ class User implements UserInterface
         $this->jobTitle = $jobTitle;
 
         return $this;
-    }
-
-    /**
-     * @JMS\VirtualProperty
-     * @JMS\Groups({"user", "user-teamname"})
-     * @JMS\Type("string")
-     * @JMS\SerializedName("pa_team_name")
-     */
-    public function getTeamName()
-    {
-        if ($this->getTeams()->isEmpty()) {
-            return null;
-        }
-
-        return $this->getTeams()->first()->getTeamName();
     }
 
     /**
