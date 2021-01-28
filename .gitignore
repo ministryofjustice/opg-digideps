@@ -10,7 +10,6 @@
 .php_cs.cache
 
 # Common vendor folders
-.terraform/
 bin/
 lib/
 node_modules/
@@ -18,15 +17,18 @@ var/
 vendor/
 !ecs_helper/vendor/
 
+# Terraform
+**/.terraform.lock.hcl
+.terraform/
+**/terraform.output.json
+**/terraform.plan*
+
 # Repo-specific excludes
 docker/log
 terraform/to_import\.sh
-
 .certs
-
-**/terraform.output.json
 log/pact.log
-**/terraform.plan*
+
 
 # Lambda specific
 *lambda*.zip
