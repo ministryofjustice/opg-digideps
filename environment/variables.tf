@@ -55,7 +55,7 @@ module "allow_list" {
   source = "git@github.com:ministryofjustice/terraform-aws-moj-ip-whitelist.git"
 }
 
-data aws_instance "bsi" {
+data "aws_instance" "bsi" {
   count       = local.account.name == "development" ? 1 : 0
   instance_id = "i-03b19c1e198b25ed3"
 }

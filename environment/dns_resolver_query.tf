@@ -6,8 +6,7 @@ resource "aws_route53_resolver_query_log_config_association" "resolver" {
 resource "aws_route53_resolver_query_log_config" "resolver" {
   name            = "resolver-${local.environment}"
   destination_arn = aws_cloudwatch_log_group.route53_resolver_public.arn
-
-  tags = local.default_tags
+  tags            = local.default_tags
 }
 
 resource "aws_cloudwatch_log_group" "route53_resolver_public" {
