@@ -26,11 +26,11 @@
 
             {# Missing questions alerts #}
             {% if status.lifestyleState.state != 'done' and comingFromLastStep%}
-                {{ macros.notification('notice', 'remindComplete' | trans(transOptions, 'common')) }} <!-- fine -->
+                {{ macros.notification('notice', 'remindComplete' | trans(transOptions, 'common')) }}
             {% endif %}
 
             {% if status.lifestyleState.state != 'done' and not comingFromLastStep%}
-                {{ macros.notification('notice', 'canYouAnswer' | trans(transOptions, 'common')) }} <!-- fine -->
+                {{ macros.notification('notice', 'canYouAnswer' | trans(transOptions, 'common')) }}
             {% endif %}
         </div>
         <div class="govuk-grid-column-one-third">

@@ -21,7 +21,7 @@
 {% block pageContent %}
 
     {% if user.organisations | length >= 1 %}
-        {{ macros.notification('info', 'editPage.moreThanOneTeamNotification' |trans) }} <!-- fine -->
+        {{ macros.notification('info', 'editPage.moreThanOneTeamNotification' |trans) }}
     {% endif %}
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}

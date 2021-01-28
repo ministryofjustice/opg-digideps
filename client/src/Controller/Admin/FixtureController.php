@@ -115,7 +115,7 @@ class FixtureController extends AbstractController
 
             $deputies = $this->serializer->deserialize(json_encode($sanitizedDeputyData), 'App\Entity\User[]', 'json');
 
-            $this->addFlash('notice', $this->createUsersFlashMessage(array_reverse($deputies), $caseNumber));
+            $this->addFlash('fixture', $this->createUsersFlashMessage(array_reverse($deputies), $caseNumber));
         }
 
         return ['form' => $form->createView()];
@@ -387,7 +387,7 @@ class FixtureController extends AbstractController
                 'createCoDeputy' => $submitted['createCoDeputy'],
             ]), [], 'array');
 
-            $this->addFlash('notice', $this->createCasRecFlashMessage($response));
+            $this->addFlash('fixture', $this->createCasRecFlashMessage($response));
         }
 
         return ['form' => $form->createView()];

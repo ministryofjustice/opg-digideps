@@ -19,10 +19,10 @@
 
 {% block pageContent %}
     {% if not readyToBalance %}
-        {{ macros.notification('info', ('alerts.notStarted' ~ app.user.getRoleForTrans) | trans(transOptions)) }} <!-- fine -->
+        {{ macros.notification('info', ('alerts.notStarted' ~ app.user.getRoleForTrans) | trans(transOptions)) }}
     {% else %}
         {% if report.isTotalsMatch %}
-            {{ macros.notification('success', 'alerts.balanced' | trans) }} <!-- fine -->
+            {{ macros.notification('success', 'alerts.balanced' | trans) }}
         {% else %}
             {% set alertMessage %}
                 <div class="behat-region-balance-bad">
@@ -37,7 +37,7 @@
                     </div>
                 </div>
             {% endset %}
-            {{ macros.notification(report.isDue and report.balanceMismatchExplanation is null ? 'error' : 'info', alertMessage) }} <!-- check -->
+            {{ macros.notification(report.isDue and report.balanceMismatchExplanation is null ? 'error' : 'info', alertMessage) }}
         {% endif %}
     {% endif %}
 

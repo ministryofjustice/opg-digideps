@@ -23,7 +23,7 @@
         {% endif %}
         <label class="{{ labelClass }}" for="{{ element.vars.id }}">
             {% if labelRaw %}
-                {{ labelText }} <!-- check -->
+                {{ labelText }}
             {% elseif labelLink %}
                 {{ labelText.beforeMarkupText }}<a href="{{ labelText.url }}">{{ labelText.link }}</a>{{ labelText.afterMarkupText }}
             {% else %}

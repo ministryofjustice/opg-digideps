@@ -27,7 +27,7 @@
 
     {% if not report.isDue or report.isDue and not reportStatus.isReadyToSubmit %}
         <div class="push--top">
-            {{ macros.notification('info', 'guidanceNotice' | trans(transOptions)) }} <!-- fine -->
+            {{ macros.notification('info', 'guidanceNotice' | trans(transOptions)) }}
         </div>
     {% endif %}
 
@@ -278,7 +278,7 @@
             {% set endDate = report.getEndDate() | date("j F Y")  %}
             {% set transOptions = {'%date%': endDate} %}
 
-            {{ macros.notification('info', 'previewNoticeNotDue' | trans(transOptions)) }} <!-- fine -->
+            {{ macros.notification('info', 'previewNoticeNotDue' | trans(transOptions)) }}
         </div>
     {% endif %}
     <div class="js-only">

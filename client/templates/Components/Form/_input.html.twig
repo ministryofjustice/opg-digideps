@@ -7,12 +7,12 @@
                 <span class="govuk-caption-xl">{{ label.caption }}</span>
             {% endif %}
             <label class="govuk-label govuk-label--xl {{ labelClass | default('') }}" for="{{ element.vars.id }}">
-                {{ labelRaw is defined and labelRaw ? label.text : label.text }} <!-- check -->
+                {{ labelRaw is defined and labelRaw ? label.text : label.text }}
             </label>
         </h1>
     {% else %}
         <label for="{{ element.vars.id }}" class="govuk-label {{ labelClass | default('') }}">
-           {{ labelRaw is defined and labelRaw ? label.text : label.text }} <!-- check -->
+           {{ labelRaw is defined and labelRaw ? label.text : label.text }}
         </label>
     {% endif %}
 

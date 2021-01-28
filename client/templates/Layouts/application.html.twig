@@ -5,7 +5,6 @@
 {% set adLoggedAsDeputy = app.session.get('_adId') %}
 {% set adName = app.session.get('_adFirstname') ~ ' ' ~ app.session.get('_adLastname') %}
 
-
 {% trans_default_domain "layout" %}
 
 {% block head %}
@@ -74,9 +73,11 @@
         {% endif %}
     {% endblock %}
 
-
     {% block notification %}
         {% for flashMessage in app.session.flashbag.get('notice') %}
+            {{ macros.notification('info', flashMessage) }}
+        {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('fixture') %}
             {{ macros.notification('fixture', flashMessage) }}
         {% endfor %}
     {% endblock %}
@@ -147,8 +148,6 @@
         </a>
     </li>
 {% endblock %}
-
-
 
 {% block javascripts %}
     <script src="{{ 'javascripts/application.js'| assetUrl }}"></script>

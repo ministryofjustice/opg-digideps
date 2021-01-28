@@ -38,7 +38,7 @@
 
     {% if not ndrStatus.isReadyToSubmit %}
         <div class="push--top">
-            {{ macros.notification('info', 'guidanceNotice' | trans()) }} <!-- fine -->
+            {{ macros.notification('info', 'guidanceNotice' | trans()) }}
         </div>
     {% endif %}
 
@@ -133,7 +133,7 @@
     {% if not ndrStatus.isReadyToSubmit %}
 
         <div class="push--top">
-            {{ macros.notification('info', 'previewNotice' | trans()) }} <!-- fine -->
+            {{ macros.notification('info', 'previewNotice' | trans()) }}
         </div>
         <a id="edit-report-preview" class="govuk-button" href="{{ path('ndr_review', {'ndrId': ndr.id}) }}" data-module="govuk-button">{{ 'options.previewReport' | trans() }}</a>
 

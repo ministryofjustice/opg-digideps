@@ -36,21 +36,21 @@ startPage:
       part2: between %client%'s accounts, your
       link2: deputy expenses
       part3: and
-      link3: gifts
+      link3: gifts.
     pageSectionDescription2-PA:
       part1: There are different sections for you to tell us about
       link1: money transfers
       part2: between %client%'s accounts, your
       link2: deputy fees and expenses
       part3: and
-      link3: gifts
+      link3: gifts.
     pageSectionDescription2-PROF:
       part1: There are different sections for you to tell us about
       link1: money transfers
       part2: between %client%'s accounts, your
       link2: deputy fees and expenses
       part3: deputy costs
-      link3: gifts
+      link3: gifts.
     #    pageSectionDescription2-PROF: |
     #      There are different sections for you to tell us about <a href="%moneyTransfersPath%">
     #      money transfers</a> between %client%'s accounts, your <a href="%deputyCostsPath%">
