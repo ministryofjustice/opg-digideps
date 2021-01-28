@@ -469,10 +469,10 @@ jobs:
       - run:
           name: check for added raw to templates
           command: |
-            if [ `grep -r '| raw' ./* | grep -v 'assetSource' | wc -l` -gt 1 ]
+            if [ `grep -r 'raw' ./* | grep -v 'assetSource' | wc -l` -gt 1 ]
             then
               echo "Additional instances of raw added in template directory."
-              echo "This can make us vulnerable to CSS attacks."
+              echo "This can make us vulnerable to cross site scripting attacks."
               echo "Please check and amend accordingly."
               exit 1
             else
