@@ -59,16 +59,6 @@ module "api_service_security_group" {
   vpc_id = data.aws_vpc.vpc.id
 }
 
-resource "aws_security_group_rule" "bsi" {
-  count                    = local.account.name == "development" ? 1 : 0
-  type                     = "ingress"
-  from_port                = 443
-  to_port                  = 443
-  protocol                 = "tcp"
-  source_security_group_id = data.aws_security_group.bsi-sg[0].id
-  security_group_id        = module.api_service_security_group.id
-}
-
 locals {
   api_cache_sg_rules = {
     api_service = {
