@@ -2,7 +2,7 @@ resource "aws_flow_log" "vpc_flow_logs" {
   iam_role_arn    = aws_iam_role.vpc_flow_logs.arn
   log_destination = aws_cloudwatch_log_group.vpc_flow_logs.arn
   traffic_type    = "ALL"
-  vpc_id          = data.aws_vpc.vpc.id
+  vpc_id          = aws_vpc.main.id
 }
 
 resource "aws_cloudwatch_log_group" "vpc_flow_logs" {
@@ -11,7 +11,7 @@ resource "aws_cloudwatch_log_group" "vpc_flow_logs" {
 }
 
 resource "aws_iam_role" "vpc_flow_logs" {
-  name               = "vpc_flow_logs"
+  name               = "vpc_flow_logs-${local.account.name}"
   assume_role_policy = data.aws_iam_policy_document.vpc_flow_logs_role_assume_role_policy.json
 }
 
@@ -27,7 +27,7 @@ data "aws_iam_policy_document" "vpc_flow_logs_role_assume_role_policy" {
 }
 
 resource "aws_iam_role_policy" "vpc_flow_logs" {
-  name   = "vpc_flow_logs"
+  name   = "vpc_flow_logs-${local.account.name}"
   role   = aws_iam_role.vpc_flow_logs.id
   policy = data.aws_iam_policy_document.vpc_flow_logs_role_policy.json
 }
