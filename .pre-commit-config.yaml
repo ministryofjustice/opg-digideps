@@ -20,11 +20,11 @@ repos:
     hooks:
     - id: php-cs-fixer
       files: \.(php)$
--   repo: https://github.com/jamesrwarren/opg-test-githooks.git
-    rev: v0.1.3
+-   repo: https://github.com/ministryofjustice/opg-pre-commit-hooks.git
+    rev: v0.1.0
     hooks:
-      - id: test-hook
-        args: ['--d', 'client/templates']
+      - id: check-for-raw-in-templates
+        args: ['-d', 'client/templates', '-c', '1']
 #-   repo: https://github.com/acsauk/php-strict-types-pre-commit-hook
 #    rev: main
 #    hooks:
