@@ -41,8 +41,15 @@ up-app-build: ## Brings the app up and rebuilds containers
 up-app-xdebug-frontend: ## Brings the app up, rebuilds containers and enabled xdebug in client
 	REQUIRE_XDEBUG_FRONTEND=true docker-compose up -d --build --remove-orphans
 
+up-app-xdebug-frontend-cachegrind: ## Brings the app up, rebuilds containers and enabled xdebug in client with cachegrind being captured
+ 	REQUIRE_XDEBUG_FRONTEND=true docker-compose -f docker-compose.yml -f docker-compose.cachegrind.yml up -d --build --remove-orphans
+
 up-app-xdebug-api: ## Brings the app up, rebuilds containers and enabled xdebug in client
 	REQUIRE_XDEBUG_API=true docker-compose up -d --build --remove-orphans
+
+up-app-xdebug-api-cachegrind: ## Brings the app up, rebuilds containers and enabled xdebug in client with cachegrind
+	REQUIRE_XDEBUG_API=true docker-compose -f docker-compose.yml -f docker-compose.cachegrind.yml  up -d --build --remove-orphans
+
 
 up-app-integration-tests: ## Brings the app up using test env vars (see test.env)
 	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose -f docker-compose.yml -f docker-compose.dev.yml build frontend admin api
