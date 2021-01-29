@@ -26,6 +26,7 @@ resource "aws_rds_cluster" "cluster" {
     ignore_changes  = [replication_source_identifier]
     prevent_destroy = true
   }
+  depends_on = [var.log_group]
 }
 
 resource "aws_rds_cluster_instance" "cluster_instances" {
@@ -85,4 +86,6 @@ resource "aws_rds_cluster" "cluster_serverless" {
     seconds_until_auto_pause = 300
     timeout_action           = "ForceApplyCapacityChange"
   }
+
+  depends_on = [var.log_group]
 }
