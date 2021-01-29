@@ -193,8 +193,7 @@ class DocumentController extends AbstractController
                 if ($verified) {
                     try {
                         $this->fileUploader->uploadSupportingFilesAndPersistDocuments($uploadedFiles, $report);
-                        $this->addFlash('notice', 'Files uploaded');
-                        return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
+                        return $this->redirectToRoute('report_documents', ['reportId' => $reportId, 'successUploaded' => 'true']);
                     } catch (\Throwable $e) {
                         $logger->warning('Error uploading file: ' . $e->getMessage());
                         $form->get('files')->addError(new FormError('Cannot upload file, please try again later'));
@@ -208,6 +207,7 @@ class DocumentController extends AbstractController
             'step'     => $request->get('step'), // if step is set, this is used to show the save and continue button
             'backLink' => $backLink,
             'nextLink' => $nextLink,
+            'successUploaded' => $request->get('successUploaded'),
             'form'     => $form->createView(),
         ];
     }

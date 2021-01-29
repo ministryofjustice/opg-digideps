@@ -14,11 +14,24 @@ trait UserManagementTrait
      *
      * @Given the following clients exist and are attached to deputies:
      */
-    public function clientsExist(TableNode $table)
+    public function clientsExistDeputies(TableNode $table)
     {
         foreach ($table as $inputs) {
             $query = build_query($inputs);
             $this->visitAdminPath("/admin/fixtures/createClientAttachDeputy?$query");
+        }
+    }
+
+    /**
+     * it's assumed you are logged as an admin and you are on the admin homepage (with add user form).
+     *
+     * @Given the following clients exist and are attached to organisations:
+     */
+    public function clientsExistOrganisations(TableNode $table)
+    {
+        foreach ($table as $inputs) {
+            $query = build_query($inputs);
+            $this->visitAdminPath("/admin/fixtures/createClientAttachOrgs?$query");
         }
     }
 

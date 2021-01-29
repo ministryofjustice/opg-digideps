@@ -5,12 +5,16 @@ namespace DigidepsBehat;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\MinkExtension\Context\MinkContext;
 use DigidepsBehat\Common\AuthenticationTrait;
+use DigidepsBehat\Common\CourtOrderTrait;
 use DigidepsBehat\Common\DebugTrait;
 use DigidepsBehat\Common\FormTrait;
 use DigidepsBehat\Common\LinksTrait;
 use DigidepsBehat\Common\RegionTrait;
 use DigidepsBehat\Common\ReportTrait;
 use DigidepsBehat\Common\SiteNavigationTrait;
+use DigidepsBehat\CourtOrderManagement\CourtOrderManagementTrait;
+use DigidepsBehat\OrganisationManagement\OrganisationManagementTrait;
+use DigidepsBehat\UserManagement\UserManagementTrait;
 
 /**
  * Behat context class.
@@ -33,7 +37,11 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         ReportTrait,
         SiteNavigationTrait,
         UserTrait,
-        SearchTrait;
+        SearchTrait,
+        OrganisationManagementTrait,
+        UserManagementTrait,
+        ReportTrait,
+        CourtOrderTrait;
 
     protected static $dbName = 'api';
     protected static $sqlPath = 'tests/behat/sql/';

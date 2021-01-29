@@ -1,14 +1,12 @@
 Feature: PA client profile Notes
 
   Scenario: PA view client notes
-    Given I load the application status from "pa-report-completed"
     And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-02100010" region
     Then each text should be present in the corresponding region:
       | No notes    | client-profile-notes |
 
   Scenario: PA adds client notes
-    Given I load the application status from "pa-report-completed"
     And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-02100010" region
     And I click on "add-notes-button" in the "client-profile-notes" region
@@ -77,4 +75,3 @@ Feature: PA client profile Notes
     Then the form should be valid
     Then I go to the URL previously saved as "report-overview"
     And I should not see "test title content" in the "client-profile-notes" region
-

@@ -1,14 +1,12 @@
 Feature: PROF client profile contacts
 
   Scenario: PROF view client contacts
-    Given I load the application status from "prof-users-uploaded"
     And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-31000011" region
     Then each text should be present in the corresponding region:
       | No contacts    | client-profile-contacts |
 
   Scenario: PROF adds client contact
-    Given I load the application status from "prof-users-uploaded"
     And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-31000011" region
     And I save the current URL as "report-overview"
@@ -126,4 +124,3 @@ Scenario: PROF delete client contacts
     And the response status code should be 200
     Then I go to the URL previously saved as "report-overview"
     And I should not see "Doc Brown" in the "client-profile-contacts" region
-
