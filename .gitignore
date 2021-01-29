@@ -10,7 +10,6 @@
 .php_cs.cache
 
 # Common vendor folders
-.terraform/
 bin/
 lib/
 node_modules/
@@ -18,15 +17,18 @@ var/
 vendor/
 !ecs_helper/vendor/
 
+# Terraform
+**/.terraform.lock.hcl
+.terraform/
+**/terraform.output.json
+**/terraform.plan*
+
 # Repo-specific excludes
 docker/log
 terraform/to_import\.sh
-
 .certs
-
-**/terraform.output.json
 log/pact.log
-**/terraform.plan*
+
 
 # Lambda specific
 *lambda*.zip
@@ -38,3 +40,7 @@ lambda_functions/layers/monitoring/python/lib/python3.7/site-packages/
 
 # Code coverage
 api/tests/coverage/
+
+#cache grinds
+client/cachegrind/*/cachegrind*
+api/cachegrind/*/cachegrind*

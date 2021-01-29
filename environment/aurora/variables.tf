@@ -24,3 +24,4 @@ variable "skip_final_snapshot" {}
 variable "storage_encrypted" { default = true }
 variable "vpc_security_group_ids" {}
 variable "replication_source_identifier" {}
+variable "log_group" {}

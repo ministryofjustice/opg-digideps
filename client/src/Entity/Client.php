@@ -132,7 +132,6 @@ class Client
      * @JMS\Groups({"edit", "pa-edit"})
      *
      * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
-     * @Assert\Regex(pattern="/[$&+,:;=?@#|\'<>.^*()%!-]/", match=false, message="BadBADBAD.", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
      * @AppAssert\TextNoSpecialCharacters(groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
