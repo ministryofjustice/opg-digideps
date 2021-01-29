@@ -1,8 +1,12 @@
 {% from '@App/Macros/macros.html.twig' import details %}
 {% trans_default_domain 'admin-checklist' %}
+{% set hideEditLink = true %}
 
-{{ details({
-    summaryText: (page ~ '.revealTitle.giftsSummary') | trans,
-    html: include('@App/Report/Gift/_list.html.twig', { hideEditLink: true }),
-    classes: (collapseMargin is defined and collapseMargin) ? 'govuk-!-margin-bottom-0' : '',
-}) }}
+<details class="govuk-details {{ (collapseMargin is defined and collapseMargin) ? 'govuk-!-margin-bottom-0' : '' }}" data-module="govuk-details">
+    <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.giftsSummary') | trans }}</span>
+    </summary>
+    <div class="govuk-details__text">
+        {% include '@App/Report/Gift/_list.html.twig' %}
+    </div>
+</details>

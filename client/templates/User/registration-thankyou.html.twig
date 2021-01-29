@@ -13,18 +13,18 @@
 
     <h2 class="govuk-heading-m flush--top">{{ 'thankyou.subheading' | trans }}</h2>
 
-    <div class="text">
-
+    <div>
         <p class="govuk-body">
-            {{ 'thankyou.pageDescription1' | trans(transOptions) }}
+            {{ 'thankyou.pageDescription1' | trans }}
             <strong class="bold-small">{{ email }}</strong>
-            {{ 'thankyou.pageDescription2' | trans(transOptions) }}
+            {{ 'thankyou.pageDescription2' | trans }}
         </p>
-        <p class="govuk-body">{{ 'thankyou.pageDescription2' | trans(transOptions) }}</p>
-        <p class="govuk-body">{{ 'thankyou.pageDescription3' | trans(transOptions) }}</p>
+        <p class="govuk-body">{{ 'thankyou.pageDescription3' | trans }}</p>
         <p class="govuk-body">
-            {{ 'thankyou.pageDescription4' | trans(transOptions) }}
-            <a href="{{ path('login') }}">sign in</a>.
+            {{ 'thankyou.pageDescription4' | trans }}
+        </p>
+        <p class="govuk-body">
+            <a href="{{ path('login') }}">Sign in</a>.
         </p>
     </div>
 

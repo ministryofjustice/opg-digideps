@@ -4,15 +4,19 @@
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
 {% set page = 'checklistPage' %}
-
+{% set hideEditLink = true %}
 <h3 class="govuk-heading-m" id="assetsAndDebts">{{ (page ~ '.heading.lodging.assetsAndDebts') | trans }}</h3>
 
 {{ checklist_radios(form.assetsDeclaredAndManaged) }}
 
-{{ details({
-    summaryText: (page ~ '.revealTitle.assetsSummary') | trans,
-    html: include('@App/Report/Asset/_list.html.twig', { hideEditLink: true })
-}) }}
+<details class="govuk-details" data-module="govuk-details">
+    <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.assetsSummary') | trans }}</span>
+    </summary>
+    <div class="govuk-details__text">
+        {% include '@App/Report/Asset/_list.html.twig' %}
+    </div>
+</details>
 
 {{ checklist_radios(form.debtsManaged) }}
 
