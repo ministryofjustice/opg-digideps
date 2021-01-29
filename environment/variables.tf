@@ -55,23 +55,11 @@ module "allow_list" {
   source = "git@github.com:ministryofjustice/terraform-aws-moj-ip-whitelist.git"
 }
 
-data "aws_instance" "bsi" {
-  count       = local.account.name == "development" ? 1 : 0
-  instance_id = "i-03b19c1e198b25ed3"
-}
-
-data "aws_security_group" "bsi-sg" {
-  count = local.account.name == "development" ? 1 : 0
-  name  = "bsi-sg"
-}
-
 locals {
   project = "digideps"
 
-  bsi_external_cidr  = local.account.name == "development" ? ["${data.aws_instance.bsi[0].public_ip}/32"] : []
-  bsi_ipv6_cidr      = ["2001:41d0:800:715::/64"]
   default_allow_list = concat(module.allow_list.moj_sites, formatlist("%s/32", data.aws_nat_gateway.nat[*].public_ip))
-  admin_allow_list   = length(local.account["admin_allow_list"]) > 0 ? concat(local.account["admin_allow_list"], local.default_allow_list, local.bsi_external_cidr) : local.default_allow_list
+  admin_allow_list   = length(local.account["admin_allow_list"]) > 0 ? local.account["admin_allow_list"] : local.default_allow_list
   front_allow_list   = length(local.account["front_allow_list"]) > 0 ? local.account["front_allow_list"] : local.default_allow_list
 
   route53_healthchecker_ips = data.aws_ip_ranges.route53_healthchecks_ips.cidr_blocks

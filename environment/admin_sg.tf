@@ -126,24 +126,3 @@ resource "aws_security_group_rule" "admin_elb_route53_hc_in" {
   security_group_id = module.admin_elb_security_group_route53_hc.id
   cidr_blocks       = local.route53_healthchecker_ips
 }
-
-//Extra IPv6 Addresses for BSI
-resource "aws_security_group_rule" "bsi_route53_hc" {
-  count             = local.account.name == "development" ? 1 : 0
-  type              = "ingress"
-  from_port         = 443
-  to_port           = 443
-  protocol          = "tcp"
-  ipv6_cidr_blocks  = local.bsi_ipv6_cidr
-  security_group_id = module.admin_elb_security_group_route53_hc.id
-}
-
-resource "aws_security_group_rule" "bsi_elb" {
-  count             = local.account.name == "development" ? 1 : 0
-  type              = "ingress"
-  from_port         = 443
-  to_port           = 443
-  protocol          = "tcp"
-  ipv6_cidr_blocks  = local.bsi_ipv6_cidr
-  security_group_id = module.admin_elb_security_group.id
-}
