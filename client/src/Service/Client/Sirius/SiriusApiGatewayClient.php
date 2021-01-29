@@ -64,7 +64,7 @@ class SiriusApiGatewayClient
     public function get(string $endpoint)
     {
         $signedRequest = $this->buildSignedRequest($endpoint, 'GET');
-        return $this->httpClient->send($signedRequest);
+        return $this->httpClient->send($signedRequest, ['connect_timeout' => 2, 'timeout' => 3]);
     }
 
     /**
