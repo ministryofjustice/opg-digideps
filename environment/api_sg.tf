@@ -60,26 +60,6 @@ module "api_service_security_group" {
 }
 
 locals {
-  api_cache_sg_rules = {
-    api_service = {
-      port        = 6379
-      type        = "ingress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = module.api_service_security_group.id
-    }
-  }
-}
-
-module "api_cache_security_group" {
-  source = "./security_group"
-  rules  = local.api_cache_sg_rules
-  name   = "api-cache"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
-}
-
-locals {
   api_rds_sg_rules = {
     api_service = {
       port        = 5432

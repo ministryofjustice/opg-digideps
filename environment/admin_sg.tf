@@ -6,6 +6,13 @@ locals {
     ssm     = local.common_sg_rules.ssm
     ecr_api = local.common_sg_rules.ecr_api
     secrets = local.common_sg_rules.secrets
+    cache = {
+      port        = 6379
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.frontend_cache_security_group.id
+    }
     pdf = {
       port        = 80
       type        = "egress"
@@ -25,7 +32,7 @@ locals {
       type        = "egress"
       protocol    = "tcp"
       target_type = "security_group_id"
-      target      = module.admin_cache_security_group.id
+      target      = module.frontend_cache_security_group.id
     }
     admin_elb = {
       port        = 443
@@ -55,26 +62,6 @@ module "admin_service_security_group" {
   source = "./security_group"
   rules  = local.admin_sg_rules
   name   = "admin-service"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
-}
-
-locals {
-  admin_cache_sg_rules = {
-    admin_service = {
-      port        = 6379
-      type        = "ingress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = module.admin_service_security_group.id
-    }
-  }
-}
-
-module "admin_cache_security_group" {
-  source = "./security_group"
-  rules  = local.admin_cache_sg_rules
-  name   = "admin-cache"
   tags   = local.default_tags
   vpc_id = data.aws_vpc.vpc.id
 }
