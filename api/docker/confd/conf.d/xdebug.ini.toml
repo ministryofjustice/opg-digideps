@@ -5,5 +5,6 @@ keys = [
     "/opg/php/xdebug/enabled",
     "/opg/php/xdebug/remote/port",
     "/opg/php/xdebug/remote/host",
-    "/opg/php/xdebug/idekey"
+    "/opg/php/xdebug/idekey",
+    "/opg/php/xdebug/cachegrind/enabled"
 ]
