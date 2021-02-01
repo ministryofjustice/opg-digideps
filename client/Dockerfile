@@ -115,7 +115,9 @@ RUN wget -q -O /tmp/commonpasswords.txt "https://www.ncsc.gov.uk/static-assets/d
     && chown www-data /tmp/commonpasswords.txt
 
 #Check for security issues
-RUN su-exec www-data php app/console security:check
+RUN wget -q -O local-php-security-checker https://github.com/fabpot/local-php-security-checker/releases/download/v1.0.0/local-php-security-checker_1.0.0_linux_arm64 \
+  && chmod +x local-php-security-checker \
+  && su-exec local-php-security-checker
 
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
