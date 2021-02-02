@@ -18,6 +18,10 @@
 
 {% block pageContent %}
 
+    {% if successUploaded == "true" %}
+        {{ macros.successBanner(page ~ '.successUploaded', translationDomain, page ~ '.successUploadedHeader') }}
+    {% endif %}
+
     <h2 class="govuk-heading-m">{{ (page ~ '.selectHeading') | trans }}</h2>
 
     <p class="govuk-body">{{ (page ~ '.selectHelp') | trans }}</p>

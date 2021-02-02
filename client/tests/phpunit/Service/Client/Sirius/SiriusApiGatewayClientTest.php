@@ -52,7 +52,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
         $signedRequest = $this->buildRequest($this->baseURL, $this->endpoint, 'GET', ['A-Header' => 'value']);
 
         $this->requestSigner->signRequest($expectedRequest, 'execute-api')->shouldBeCalled()->willReturn($signedRequest);
-        $this->httpClient->send($signedRequest)->shouldBeCalled()->willReturn(new Response());
+        $this->httpClient->send($signedRequest, ['connect_timeout' => 2, 'timeout' => 3])->shouldBeCalled()->willReturn(new Response());
 
         $sut = new SiriusApiGatewayClient($this->httpClient->reveal(), $this->requestSigner->reveal(), $this->baseURL, $this->serializer, $this->logger->reveal());
         $sut->get($this->endpoint);
