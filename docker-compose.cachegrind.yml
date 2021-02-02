@@ -1,0 +1,14 @@
+version: "3.2"
+
+#docker-compose.cachegrind.yml
+services:
+
+  frontend:
+    volumes:
+      - ./client/cachegrind/frontend:/var/www/cachegrind
+  admin:
+    volumes:
+      - ./client/cachegrind/admin:/var/www/cachegrind
+  api:
+    volumes:
+      - ./api/cachegrind/api:/var/www/cachegrind
