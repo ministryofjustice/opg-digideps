@@ -18,5 +18,8 @@ form:
     necessary:
         label: Strictly necessary cookies
         description: These essential cookies allow you to log in to the service. They always need to be on.
+    yes: Yes, allow usage cookies
+    no: No, do not allow usage cookies
+    missingChoiceValidation: Please select either 'Yes' or 'No'
     confirm:
         label: Save changes
