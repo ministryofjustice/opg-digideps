@@ -88,6 +88,7 @@ locals {
       { "name": "ROLE", "value": "admin" },
       { "name": "S3_BUCKETNAME", "value": "pa-uploads-${local.environment}" },
       { "name": "SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.frontend_redis.fqdn}" },
+      { "name": "SESSION_PREFIX", "value": "dd_session_admin" },
       { "name": "APP_ENV", "value": "${local.account.app_env}" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
       { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" },

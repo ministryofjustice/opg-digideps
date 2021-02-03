@@ -13,7 +13,7 @@ parameters:
     session_popup_show_after: 3600
     session_cookie_secure: {{ getv "/session/cookie/secure" "true" }}
     redis_dsn:  {{ getv "/session/redis/dsn" }}
-    session_prefix: dd_session
+    session_prefix: {{ getv "/session/prefix" }}
     use_redis: true
     session_engine: redis
     log_level: warning
