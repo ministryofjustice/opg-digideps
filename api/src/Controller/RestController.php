@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity as EntityDir;
 use App\Exception\NotFound;
 use Doctrine\ORM\EntityRepository;
-use App\Service\Formatter\RestFormatter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 abstract class RestController extends Controller
