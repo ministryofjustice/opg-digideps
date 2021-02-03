@@ -14,10 +14,11 @@ class CookiePermissionsType extends AbstractType
     {
         $builder
             ->add('usage', FormTypes\ChoiceType::class, [
-                'choices'            => ['Yes' => true, 'No' => false],
+                'choices'            => ['form.yes' => true, 'form.no' => false],
                 'mapped'             => false,
                 'expanded'           => true,
-                'constraints' => [new Constraints\NotNull(['message' => "Please select either 'Yes' or 'No'"])],
+                'translation_domain' => 'cookies',
+                'constraints' => [new Constraints\NotNull(['message' => "form.missingChoiceValidation"])],
             ])
             ->add('confirm', FormTypes\SubmitType::class);
     }
