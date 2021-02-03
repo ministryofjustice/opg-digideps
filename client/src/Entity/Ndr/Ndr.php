@@ -10,7 +10,6 @@ use DateTime;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use App\Validator\Constraints as AppAssert;
 
 /**
  * @Assert\Callback(callback="debtsValid", groups={"debts"})
@@ -87,7 +86,6 @@ class Ndr implements ReportInterface
      * @Assert\NotBlank(message="ndr.debt.debts-management.notBlank", groups={"ndr-debt-management"})
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"ndr-debt-management"})
      */
     private $debtManagement;
 
@@ -98,7 +96,6 @@ class Ndr implements ReportInterface
      * @Assert\NotBlank(message="ndr.debt.notBlank", groups={"debts"})
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"debts"})
      */
     private $hasDebts;
 
@@ -129,7 +126,6 @@ class Ndr implements ReportInterface
      * @JMS\Type("string")
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $reportTitle;
 

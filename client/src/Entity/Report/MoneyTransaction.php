@@ -6,7 +6,6 @@ use App\Entity\Report\Traits\HasBankAccountTrait;
 use App\Entity\User;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\Constraints as AppAssert;
 
 class MoneyTransaction
 {
@@ -176,7 +175,6 @@ class MoneyTransaction
      * @Assert\NotBlank(message="moneyTransaction.form.description.notBlank", groups={"transaction-description"})
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters(groups={"transaction-description"})
      */
     private $description;
 

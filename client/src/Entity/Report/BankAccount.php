@@ -6,7 +6,6 @@ use App\Entity\BankAccountInterface;
 use App\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\Constraints as AppAssert;
 
 class BankAccount implements BankAccountInterface
 {
@@ -54,7 +53,6 @@ class BankAccount implements BankAccountInterface
      * @JMS\Groups({"account"})
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"bank-account-type"})
      */
     private $accountType;
 
@@ -67,7 +65,6 @@ class BankAccount implements BankAccountInterface
      * @JMS\Groups({"account"})
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"bank-account-name"})
      */
     private $bank;
 
@@ -75,7 +72,6 @@ class BankAccount implements BankAccountInterface
      * @JMS\Type("string")
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $accountTypeText;
 
@@ -87,7 +83,6 @@ class BankAccount implements BankAccountInterface
      * @JMS\Groups({"account"})
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"bank-account-number"})
      */
     private $accountNumber;
 
@@ -97,7 +92,6 @@ class BankAccount implements BankAccountInterface
      * @JMS\Groups({"account"})
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $sortCode;
 
@@ -138,7 +132,6 @@ class BankAccount implements BankAccountInterface
      * @Assert\NotBlank(message="account.isJointAccount.notBlank", groups={"bank-account-is-joint"})
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"bank-account-is-joint"})
      */
     private $isJointAccount;
 
@@ -161,7 +154,6 @@ class BankAccount implements BankAccountInterface
      * @JMS\Groups({"account"})
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $meta;
 
@@ -176,7 +168,6 @@ class BankAccount implements BankAccountInterface
      * @JMS\Groups({"account"})
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $nameOneLine;
 

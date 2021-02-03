@@ -14,7 +14,6 @@ trait ReportDeputyExpenseTrait
      * @JMS\Type("string")
      * @JMS\Groups({"ndr-expenses-paid-anything"})
      * @Assert\NotBlank(message="ndr.expenses.paidForAnything.notBlank", groups={"ndr-expenses-paid-anything"})
-     * @AppAssert\TextNoSpecialCharacters(groups={"ndr-expenses-paid-anything"})
      */
     private $paidForAnything;
 

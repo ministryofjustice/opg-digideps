@@ -4,7 +4,6 @@ namespace App\Entity\Report;
 
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\Constraints as AppAssert;
 
 class MoneyTransactionShort
 {
@@ -42,7 +41,6 @@ class MoneyTransactionShort
      * @JMS\Groups({"moneyTransactionShort"})
      *
      * @Assert\NotBlank(message="moneyTransactionShort.description.notBlank", groups={"money-transaction-short"})
-     * @AppAssert\TextNoSpecialCharacters(groups={"money-transaction-short"})
      */
     private $description;
 
@@ -63,7 +61,6 @@ class MoneyTransactionShort
      *
      * @JMS\Type("string")
      * @JMS\Groups({"moneyTransactionShort"})
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $type;
 

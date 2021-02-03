@@ -23,7 +23,6 @@ trait ReportIncomeBenefitTrait
      * @JMS\Type("string")
      * @JMS\Groups({"ndr-receive-state-pension"})
      * @Assert\NotBlank(message="ndr.incomeBenefit.receiveStatePension.notBlank", groups={"receive-state-pension"})
-     * @AppAssert\TextNoSpecialCharacters(groups={"receive-state-pension"})
      */
     private $receiveStatePension;
 
@@ -33,7 +32,6 @@ trait ReportIncomeBenefitTrait
      * @JMS\Type("string")
      * @JMS\Groups({"ndr-receive-other-income"})
      * @Assert\NotBlank(message="ndr.incomeBenefit.receiveOtherIncome.notBlank", groups={"receive-other-income"})
-     * @AppAssert\TextNoSpecialCharacters(groups={"receive-other-income"})
      */
     private $receiveOtherIncome;
 
@@ -43,7 +41,6 @@ trait ReportIncomeBenefitTrait
      * @JMS\Type("string")
      * @JMS\Groups({"ndr-receive-other-income"})
      * @Assert\NotBlank(message="ndr.incomeBenefit.receiveOtherIncomeDetails.notBlank", groups={"receive-other-income-details"})
-     * @AppAssert\TextNoSpecialCharacters(groups={"receive-other-income-details"})
      */
     private $receiveOtherIncomeDetails;
 
@@ -53,7 +50,6 @@ trait ReportIncomeBenefitTrait
      * @JMS\Type("string")
      * @JMS\Groups({"ndr-income-damages"})
      * @Assert\NotBlank(message="ndr.incomeBenefit.expectCompensationDamages.notBlank", groups={"expect-compensation-damage"})
-     * @AppAssert\TextNoSpecialCharacters(groups={"expect-compensation-damage"})
      */
     private $expectCompensationDamages;
 
@@ -63,7 +59,6 @@ trait ReportIncomeBenefitTrait
      * @JMS\Type("string")
      * @JMS\Groups({"ndr-income-damages"})
      * @Assert\NotBlank(message="ndr.incomeBenefit.expectCompensationDamagesDetails.notBlank", groups={"expect-compensation-damage-details"})
-     * @AppAssert\TextNoSpecialCharacters(groups={"expect-compensation-damage-details"})
      */
     private $expectCompensationDamagesDetails;
 

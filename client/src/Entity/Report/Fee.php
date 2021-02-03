@@ -5,7 +5,6 @@ namespace App\Entity\Report;
 use App\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\Constraints as AppAssert;
 
 class Fee
 {
@@ -30,7 +29,6 @@ class Fee
      * @var string
      * @JMS\Groups({"fee"})
      * @JMS\Type("boolean")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $hasMoreDetails;
 
@@ -40,7 +38,6 @@ class Fee
      * @JMS\Type("string")
      *
      * @Assert\NotBlank(message="fee.moreDetails.notEmpty", groups={"fees-more-details"})
-     * @AppAssert\TextNoSpecialCharacters(groups={"fees-more-details"})
      */
     private $moreDetails;
 

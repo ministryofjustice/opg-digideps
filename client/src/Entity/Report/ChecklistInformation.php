@@ -4,7 +4,6 @@ namespace App\Entity\Report;
 
 use App\Entity\Traits\CreationAudit;
 use JMS\Serializer\Annotation as JMS;
-use App\Validator\Constraints as AppAssert;
 
 /**
  * Checklist Information
@@ -36,7 +35,6 @@ class ChecklistInformation
      *
      * @JMS\Type("string")
      * @JMS\Groups({"checklist-information"})
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $information;
 

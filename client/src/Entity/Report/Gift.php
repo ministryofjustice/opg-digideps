@@ -6,7 +6,6 @@ use App\Entity\Report\Traits\HasBankAccountTrait;
 use App\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\Constraints as AppAssert;
 
 class Gift
 {
@@ -28,7 +27,6 @@ class Gift
      * @JMS\Groups({"gift"})
      *
      * @Assert\NotBlank(message="gifts.explanation.notBlank", groups={"gift"})
-     * @AppAssert\TextNoSpecialCharacters(groups={"gift"})
      */
     private $explanation;
 
@@ -43,7 +41,6 @@ class Gift
      * @Assert\Range(min=0.01, max=100000000000, minMessage = "gifts.amount.minMessage", maxMessage = "gifts.amount.maxMessage", groups={"gift"})
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"gift"})
      */
     private $amount;
 

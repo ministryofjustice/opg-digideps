@@ -4,7 +4,6 @@ namespace App\Entity\Ndr;
 
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\Constraints as AppAssert;
 
 class Debt
 {
@@ -28,7 +27,6 @@ class Debt
      * @var string
      * @JMS\Groups({"debt"})
      * @JMS\Type("boolean")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $hasMoreDetails;
 
@@ -38,7 +36,6 @@ class Debt
      * @JMS\Type("string")
      *
      * @Assert\NotBlank(message="ndr.debt.moreDetails.notEmpty", groups={"debts-more-details"})
-     * @AppAssert\TextNoSpecialCharacters(groups={"debts-more-details"})
      */
     private $moreDetails;
 

@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\Constraints as AppAssert;
 
 class Setting
 {
@@ -12,7 +11,6 @@ class Setting
      * @var string
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $id;
 
@@ -23,7 +21,6 @@ class Setting
      * @Assert\NotBlank( message="adminSetting.content.notBlank", groups={"setting"} )
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters(groups={"setting"})
      */
     private $content;
 

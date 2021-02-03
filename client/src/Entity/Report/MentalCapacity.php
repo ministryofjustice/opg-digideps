@@ -5,7 +5,6 @@ namespace App\Entity\Report;
 use App\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\Constraints as AppAssert;
 
 class MentalCapacity
 {
@@ -25,7 +24,6 @@ class MentalCapacity
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"mental-capacity"})
-     * @AppAssert\TextNoSpecialCharacters(groups={"capacity"})
      * @Assert\NotBlank(message="mentalCapacity.hasCapacityChanged.notBlank", groups={"capacity"})
      */
     private $hasCapacityChanged;
@@ -33,7 +31,6 @@ class MentalCapacity
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"mental-capacity"})
-     * @AppAssert\TextNoSpecialCharacters(groups={"has-capacity-changed-yes"})
      *
      * @Assert\NotBlank(message="mentalCapacity.hasCapacityChangedDetails.notBlank", groups={"has-capacity-changed-yes"})
      */

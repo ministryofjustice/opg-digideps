@@ -9,7 +9,6 @@ use App\Entity\User;
 use App\Model\FullReviewChecklist;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\Constraints as AppAssert;
 
 class ReviewChecklist
 {
@@ -36,7 +35,6 @@ class ReviewChecklist
      *
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.finalDecision.notBlank")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $decision;
 

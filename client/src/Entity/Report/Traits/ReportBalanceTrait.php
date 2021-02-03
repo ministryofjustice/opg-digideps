@@ -4,7 +4,6 @@ namespace App\Entity\Report\Traits;
 
 use App\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
-use App\Validator\Constraints as AppAssert;
 
 trait ReportBalanceTrait
 {
@@ -16,7 +15,6 @@ trait ReportBalanceTrait
      * @Assert\Length( min=10, minMessage="report.balanceMismatchExplanation.length", groups={"balance"})
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"balance"})
      */
     private $balanceMismatchExplanation;
 

@@ -3,7 +3,6 @@
 namespace App\Entity\Ndr;
 
 use JMS\Serializer\Annotation as JMS;
-use App\Validator\Constraints as AppAssert;
 
 class OneOff
 {
@@ -24,7 +23,6 @@ class OneOff
     /**
      * @var string
      * @JMS\Type("boolean")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $hasMoreDetails;
 
@@ -32,7 +30,6 @@ class OneOff
      * @var string
      * @JMS\Groups({"ndr-one-off"})
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $moreDetails;
 

@@ -6,7 +6,6 @@ use App\Entity\Report\Fee;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use App\Validator\Constraints as AppAssert;
 
 trait ReportPaFeeExpensesTrait
 {
@@ -25,7 +24,6 @@ trait ReportPaFeeExpensesTrait
      * @Assert\NotBlank(message="fee.reasonForNoFees.notBlank", groups={"reasonForNoFees"})
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"reasonForNoFees"})
      */
     private $reasonForNoFees;
 
@@ -34,7 +32,6 @@ trait ReportPaFeeExpensesTrait
      * @JMS\Groups({"fee"})
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $hasFees;
 

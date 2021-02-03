@@ -5,7 +5,6 @@ namespace App\Entity;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\User;
-use App\Validator\Constraints as AppAssert;
 
 /**
  * Organisation
@@ -25,7 +24,6 @@ class Organisation
      * @JMS\Type("string")
      * @Assert\NotBlank(message="organisation.name.notBlank")
      * @Assert\Length(max=256, maxMessage="organisation.name.maxLength")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $name;
 
@@ -33,7 +31,6 @@ class Organisation
      * @var string
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $emailIdentifier;
 

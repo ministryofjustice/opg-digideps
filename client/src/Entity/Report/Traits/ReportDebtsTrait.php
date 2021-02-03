@@ -7,7 +7,6 @@ use App\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use App\Validator\Constraints as AppAssert;
 
 trait ReportDebtsTrait
 {
@@ -26,7 +25,6 @@ trait ReportDebtsTrait
      * @Assert\NotBlank(message="report.hasDebts.notBlank", groups={"debts"})
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"debts"})
      */
     private $hasDebts;
 
@@ -37,7 +35,6 @@ trait ReportDebtsTrait
      * @Assert\NotBlank(message="report.debts-management.notBlank", groups={"debt-management"})
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"debt-management"})
      */
     private $debtManagement;
 

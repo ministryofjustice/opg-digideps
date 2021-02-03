@@ -6,7 +6,6 @@ use App\Entity\Report\Fee;
 use App\Entity\Report\ProfServiceFee;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\Constraints as AppAssert;
 
 trait ReportProfServiceFeesTrait
 {
@@ -17,7 +16,6 @@ trait ReportProfServiceFeesTrait
      * @JMS\Type("string")
      * @JMS\Groups({"report", "current-prof-payments-received"})
      * @Assert\NotBlank(message="common.yesnochoice.notBlank", groups={"current-prof-payments-received"})
-     * @AppAssert\TextNoSpecialCharacters(groups={"current-prof-payments-received"})
      */
     private $currentProfPaymentsReceived;
 
@@ -27,7 +25,6 @@ trait ReportProfServiceFeesTrait
      * @JMS\Type("string")
      * @JMS\Groups({"report", "report-prof-estimate-fees"})
      * @Assert\NotBlank(message="profServiceFee.estimates.previousProfFeesEstimateGiven.notBlank", groups={"previous-prof-fees-estimate-choice"})
-     * @AppAssert\TextNoSpecialCharacters(groups={"previous-prof-fees-estimate-choice"})
      */
     private $previousProfFeesEstimateGiven;
 
@@ -36,7 +33,6 @@ trait ReportProfServiceFeesTrait
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report", "report-prof-estimate-fees"})
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $profFeesEstimateSccoReason;
 

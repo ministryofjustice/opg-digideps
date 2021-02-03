@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Entity\Traits\AddressTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use App\Validator\Constraints as AppAssert;
 
 /**
  * Named Deputy.
@@ -24,7 +23,6 @@ class NamedDeputy implements DeputyInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $deputyNo;
 
@@ -32,14 +30,13 @@ class NamedDeputy implements DeputyInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $deputyType;
 
     /**
      * @var string
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters
+     *
      */
     private $firstname;
 
@@ -47,7 +44,6 @@ class NamedDeputy implements DeputyInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $lastname;
 
@@ -55,7 +51,6 @@ class NamedDeputy implements DeputyInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $email1;
 
@@ -63,7 +58,6 @@ class NamedDeputy implements DeputyInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $email2;
 
@@ -71,7 +65,6 @@ class NamedDeputy implements DeputyInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $email3;
 
@@ -79,7 +72,6 @@ class NamedDeputy implements DeputyInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $depAddrNo;
 
@@ -87,7 +79,6 @@ class NamedDeputy implements DeputyInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $address1;
 
@@ -95,7 +86,6 @@ class NamedDeputy implements DeputyInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $address2;
 
@@ -103,7 +93,6 @@ class NamedDeputy implements DeputyInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $address3;
 
@@ -111,7 +100,6 @@ class NamedDeputy implements DeputyInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $address4;
 
@@ -119,7 +107,6 @@ class NamedDeputy implements DeputyInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $address5;
 
@@ -127,7 +114,6 @@ class NamedDeputy implements DeputyInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $addressPostcode;
 
@@ -135,7 +121,6 @@ class NamedDeputy implements DeputyInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $addressCountry;
 
@@ -143,7 +128,6 @@ class NamedDeputy implements DeputyInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $phoneMain;
 
@@ -151,7 +135,6 @@ class NamedDeputy implements DeputyInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $phoneAlternative;
 

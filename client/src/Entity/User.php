@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\Constraints as AppAssert;
 
 /**
  * @codeCoverageIgnore
@@ -83,7 +82,6 @@ class User implements AdvancedUserInterface, DeputyInterface
      *             "org_team_add", "verify-codeputy", "admin_edit_user"} )
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $firstname;
 
@@ -97,7 +95,6 @@ class User implements AdvancedUserInterface, DeputyInterface
      * @Assert\Length(min=2, max=50, minMessage="user.lastname.minLength", maxMessage="user.lastname.maxLength", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_org", "verify-codeputy", "admin_edit_user"} )
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_org", "verify-codeputy", "admin_edit_user"})
      */
     private $lastname;
 
@@ -110,7 +107,6 @@ class User implements AdvancedUserInterface, DeputyInterface
      * @EmailSameDomain( message="user.email.invalidDomain", groups={"email_same_domain"})
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"admin_add_user", "password_reset", "user_details_full", "user_details_org", "org_team_add", "codeputy_invite", "verify-codeputy", "admin_edit_user"})
      */
     private $email;
 
@@ -123,7 +119,6 @@ class User implements AdvancedUserInterface, DeputyInterface
      * @Assert\Regex( pattern="/[0-9]/", message="user.password.noNumber", groups={"user_set_password", "user_change_password"} )
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"user_set_password", "user_change_password"})
      */
     private $password;
 
@@ -131,7 +126,6 @@ class User implements AdvancedUserInterface, DeputyInterface
      * @JMS\Type("string")
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $salt;
 
@@ -149,7 +143,6 @@ class User implements AdvancedUserInterface, DeputyInterface
      * @Assert\NotBlank( message="user.role.notBlankPa", groups={"org_team_role_name"} )
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"org_team_role_name"})
      */
     private $roleName;
 
@@ -173,7 +166,6 @@ class User implements AdvancedUserInterface, DeputyInterface
      * @JMS\Groups({"registrationToken"})
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $registrationToken;
 
@@ -189,7 +181,6 @@ class User implements AdvancedUserInterface, DeputyInterface
      * @JMS\Type("string")
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $gaTrackingId;
 
@@ -200,7 +191,6 @@ class User implements AdvancedUserInterface, DeputyInterface
      * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "verify-codeputy"} )
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"user_details_full", "verify-codeputy"})
      */
     private $address1;
 
@@ -210,7 +200,6 @@ class User implements AdvancedUserInterface, DeputyInterface
      * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_org"} )
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"user_details_full", "profile_org"})
      */
     private $address2;
 
@@ -220,7 +209,6 @@ class User implements AdvancedUserInterface, DeputyInterface
      * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_org"} )
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"user_details_full", "profile_org"})
      */
     private $address3;
 
@@ -231,7 +219,6 @@ class User implements AdvancedUserInterface, DeputyInterface
      * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength", groups={"user_details_full", "profile_org", "verify-codeputy", "admin_edit_user"} )
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"user_details_full", "profile_org", "verify-codeputy", "admin_edit_user"})
      */
     private $addressPostcode;
 
@@ -241,7 +228,6 @@ class User implements AdvancedUserInterface, DeputyInterface
      * @Assert\NotBlank( message="user.addressCountry.notBlank", groups={"user_details_full", "verify-codeputy"} )
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"user_details_full", "verify-codeputy"})
      */
     private $addressCountry;
 
@@ -252,7 +238,6 @@ class User implements AdvancedUserInterface, DeputyInterface
      * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"user_details_full", "user_details_org", "org_team_add", "verify-codeputy"} )
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"user_details_full", "user_details_org", "org_team_add", "verify-codeputy"})
      */
     private $phoneMain;
 
@@ -262,7 +247,6 @@ class User implements AdvancedUserInterface, DeputyInterface
      * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"user_details_full"} )
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"user_details_full"})
      */
     private $phoneAlternative;
 
@@ -278,7 +262,6 @@ class User implements AdvancedUserInterface, DeputyInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $deputyNo;
 
@@ -303,9 +286,9 @@ class User implements AdvancedUserInterface, DeputyInterface
      * @Assert\Length(max=150, maxMessage="user.jobTitle.maxMessage", groups={"user_details_org"} )
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"user_details_org"})
      */
     private $jobTitle;
+
 
     /**
      * @var bool

@@ -4,7 +4,6 @@ namespace App\Entity\Ndr;
 
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\Constraints as AppAssert;
 
 class AssetProperty extends Asset
 {
@@ -18,7 +17,6 @@ class AssetProperty extends Asset
      * @JMS\Type("string")
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"property-address"})
      */
     private $address;
 
@@ -27,7 +25,6 @@ class AssetProperty extends Asset
      * @JMS\Type("string")
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"property-address"})
      */
     private $address2;
 
@@ -36,7 +33,6 @@ class AssetProperty extends Asset
      * @JMS\Type("string")
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"property-address"})
      */
     private $county;
 
@@ -46,7 +42,6 @@ class AssetProperty extends Asset
      * @JMS\Type("string")
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters(groups={"property-address"})
      */
     private $postcode;
 
@@ -57,7 +52,6 @@ class AssetProperty extends Asset
      * @var string
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters(groups={"property-occupants"})
      */
     private $occupants;
 
@@ -66,7 +60,6 @@ class AssetProperty extends Asset
      * @Assert\NotBlank(message="ndr.asset.property.owned.notBlank", groups={"property-owned"})
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters(groups={"property-owned"})
      */
     private $owned;
 
@@ -91,7 +84,6 @@ class AssetProperty extends Asset
      *
      * @var string
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters(groups={"property-mortgage"})
      */
     private $hasMortgage;
 
@@ -102,7 +94,6 @@ class AssetProperty extends Asset
      *
      * @var string
      * @JMS\Type("integer")
-     * @AppAssert\TextNoSpecialCharacters(groups={"property-mortgage-outstanding-amount"})
      */
     private $mortgageOutstandingAmount;
 
@@ -112,7 +103,6 @@ class AssetProperty extends Asset
      * @var string
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters(groups={"property-has-charges"})
      */
     private $hasCharges;
 
@@ -122,7 +112,6 @@ class AssetProperty extends Asset
      * @var string
      *
      * @JMS\Type("string")
-     * @AppAssert\TextNoSpecialCharacters(groups={"property-rented-out"})
      */
     private $isRentedOut;
 

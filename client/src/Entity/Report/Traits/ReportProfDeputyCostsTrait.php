@@ -9,7 +9,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\Report\ProfDeputyPreviousCost;
 use App\Entity\Report\ProfDeputyInterimCost;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use App\Validator\Constraints as AppAssert;
 
 trait ReportProfDeputyCostsTrait
 {
@@ -19,7 +18,6 @@ trait ReportProfDeputyCostsTrait
      * @Assert\NotBlank(message="profDeputyCostsHowCharged.notBlank", groups={"prof-deputy-costs-how-charged"} )
      * @JMS\Type("string")
      * @JMS\Groups({"deputyCostsHowCharged"})
-     * @AppAssert\TextNoSpecialCharacters(groups={"prof-deputy-costs-how-charged"})
      */
     private $profDeputyCostsHowCharged;
 
@@ -28,7 +26,6 @@ trait ReportProfDeputyCostsTrait
      *
      * @JMS\Type("string")
      * @JMS\Groups({"profDeputyCostsHasPrevious"})
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $profDeputyCostsHasPrevious;
 
@@ -67,7 +64,6 @@ trait ReportProfDeputyCostsTrait
      *
      * @JMS\Type("string")
      * @JMS\Groups({"profDeputyCostsHasInterim"})
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $profDeputyCostsHasInterim;
 
@@ -93,7 +89,6 @@ trait ReportProfDeputyCostsTrait
      *
      * @JMS\Type("string")
      * @JMS\Groups({"profDeputyCostsScco"})
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $profDeputyCostsReasonBeyondEstimate;
 

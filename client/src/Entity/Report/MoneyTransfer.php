@@ -4,7 +4,6 @@ namespace App\Entity\Report;
 
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\Constraints as AppAssert;
 
 /**
  * MoneyTransfer.
@@ -25,7 +24,6 @@ class MoneyTransfer
      *
      * @JMS\Type("string")
      * @JMS\Groups({"money-transfer"})
-     * @AppAssert\TextNoSpecialCharacters(groups={"money-transfer-amount"})
      */
     private $amount;
 

@@ -77,7 +77,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * see TYPE_* constant
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $type;
 
@@ -167,7 +166,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @JMS\Exclude
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $period;
 
@@ -221,7 +219,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @Assert\NotBlank( message="contact.reasonForNoContacts.notBlank", groups={"reasonForNoContacts"})
      *
      * @var string|null
-     * @AppAssert\TextNoSpecialCharacters(groups={"reasonForNoContacts"})
      */
     private $reasonForNoContacts;
 
@@ -232,7 +229,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @Assert\NotBlank( message="decision.reasonForNoDecisions.notBlank", groups={"reason-no-decisions"})
      *
      * @var string|null
-     * @AppAssert\TextNoSpecialCharacters(groups={"reason-no-decisions"})
      */
     private $reasonForNoDecisions;
 
@@ -275,7 +271,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @JMS\Groups({"report","submit", "submit_agreed"})
      *
      * @Assert\NotBlank(message="report.agreedBehalfDeputy.notBlank", groups={"declare"} )
-     * @AppAssert\TextNoSpecialCharacters(groups={"declare"})
      */
     private $agreedBehalfDeputy;
 
@@ -286,7 +281,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @JMS\Groups({"report","submit", "submit_agreed"})
      *
      * @Assert\NotBlank(message="report.agreedBehalfDeputyExplanation.notBlank", groups={"declare-explanation"} )
-     * @AppAssert\TextNoSpecialCharacters(groups={"declare-explanation"})
      */
     private $agreedBehalfDeputyExplanation;
 
@@ -361,7 +355,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @JMS\Type("string")
      *
      * @var string
-     * @AppAssert\TextNoSpecialCharacters
      */
     private $reportTitle;
 
