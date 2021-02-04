@@ -128,6 +128,13 @@ default:
             contexts:
                 - DigidepsBehat\ContactDetails\ContactDetailsFeatureContext
 
+        contacts:
+            description: Covering the 'Contacts' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/contacts" ]
+            contexts:
+                - DigidepsBehat\Reporting\ReportingFeatureContext
+                - behatch:context:rest
+
 
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:

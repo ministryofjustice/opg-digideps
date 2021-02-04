@@ -10,9 +10,9 @@ use App\Form\Admin\Fixture\CourtOrderFixtureType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
+use App\Service\DeputyProvider;
 use App\TestHelpers\ClientHelpers;
-use Exception;
-use GuzzleHttp\Psr7\Stream;
+use GuzzleHttp\ClientInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Serializer\Serializer;
+use App\Service\Client\TokenStorage\TokenStorageInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Twig\Environment;
 
@@ -29,33 +29,33 @@ use Twig\Environment;
  */
 class FixtureController extends AbstractController
 {
-    /** @var Environment */
-    private $twig;
-
-    /** @var Serializer */
-    private $serializer;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
+    private Environment $twig;
+    private SerializerInterface $serializer;
+    private RestClient $restClient;
     private ReportApi $reportApi;
-
-    /** @var UserApi */
     private UserApi $userApi;
+    private TokenStorageInterface $tokenStorage;
+    private DeputyProvider $deputyProvider;
+    private ClientInterface $client;
 
     public function __construct(
         Environment $twig,
         SerializerInterface $serializer,
         RestClient $restClient,
         ReportApi $reportApi,
-        UserApi $userApi
+        UserApi $userApi,
+        TokenStorageInterface $tokenStorage,
+        DeputyProvider $deputyProvider,
+        ClientInterface $client
     ) {
         $this->twig = $twig;
         $this->serializer = $serializer;
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
         $this->userApi = $userApi;
+        $this->tokenStorage = $tokenStorage;
+        $this->deputyProvider = $deputyProvider;
+        $this->client = $client;
     }
 
     /**
@@ -469,5 +469,34 @@ class FixtureController extends AbstractController
         } catch (\Throwable $e) {
             return new Response(sprintf('Could not activate %s org: %s', $orgName, $response->getBody()->getContents()), 500);
         }
+    }
+
+    /**
+     * @Route("/auth-as", name="behat_admin_auth_as", methods={"GET"})
+     * @Security("has_role('ROLE_ADMIN')")
+     *
+     * @param string $orgName
+     * @return JsonResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function authAs(Request $request)
+    {
+        $email = $request->query->get('email');
+        $creds = ['email' => $email, 'password' => 'Abcd1234'];
+
+        $response = $this->client->request(
+            'POST',
+            '/auth/login',
+            [
+                'json' => $creds,
+                'headers' => ['ClientSecret' => 'api-frontend-key']
+            ]
+        );
+
+        $token = $response->getHeader('AuthToken')[0];
+        $data = json_decode($response->getBody()->getContents(), true)['data'];
+        $this->tokenStorage->set($data['id'], $token);
+
+        return new JsonResponse(['AuthToken' => $this->tokenStorage->get($data['id']), 'UserId' => $data['id'], 'ActiveReportId' => $data['active_report_id']]);
     }
 }

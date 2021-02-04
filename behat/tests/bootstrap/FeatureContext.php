@@ -76,6 +76,14 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     }
 
     /**
+     * @return string
+     */
+    public function getApiUrl()
+    {
+        return getenv('API_HOST');
+    }
+
+    /**
      * @BeforeSuite
      */
     public static function prepare(\Behat\Testwork\Hook\Scope\BeforeSuiteScope $scope)

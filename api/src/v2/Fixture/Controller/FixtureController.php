@@ -14,14 +14,19 @@ use App\Entity\Repository\OrganisationRepository;
 use App\Entity\Repository\ReportRepository;
 use App\Entity\Repository\UserRepository;
 use App\Entity\User;
+use App\EventListener\RestInputOuputFormatter;
 use App\Factory\OrganisationFactory;
 use App\FixtureFactory\CasRecFactory;
 use App\FixtureFactory\ClientFactory;
 use App\FixtureFactory\ReportFactory;
 use App\FixtureFactory\UserFactory;
+use App\Service\Auth\AuthService;
+use App\Service\Auth\HeaderTokenAuthenticator;
+use App\Service\Auth\UserProvider;
 use App\v2\Controller\ControllerTrait;
 use App\v2\Fixture\ReportSection;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Faker\Factory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -51,6 +56,9 @@ class FixtureController extends AbstractController
     private $ndrRepository;
     private $casRecFactory;
     private string $symfonyEnvironment;
+    private AuthService $authService;
+    private UserProvider $userProvider;
+    private RestInputOuputFormatter $restInputOuputFormatter;
 
     public function __construct(
         EntityManagerInterface $em,
@@ -65,7 +73,10 @@ class FixtureController extends AbstractController
         UserRepository $userRepository,
         NdrRepository $ndrRepository,
         CasRecFactory $casRecFactory,
-        string $symfonyEnvironment
+        string $symfonyEnvironment,
+        AuthService $authService,
+        UserProvider $userProvider,
+        RestInputOuputFormatter $restInputOuputFormatter
     ) {
         $this->em = $em;
         $this->clientFactory = $clientFactory;
@@ -80,6 +91,9 @@ class FixtureController extends AbstractController
         $this->ndrRepository = $ndrRepository;
         $this->casRecFactory = $casRecFactory;
         $this->symfonyEnvironment = $symfonyEnvironment;
+        $this->authService = $authService;
+        $this->userProvider = $userProvider;
+        $this->restInputOuputFormatter = $restInputOuputFormatter;
     }
 
     /**
@@ -631,5 +645,51 @@ class FixtureController extends AbstractController
         } catch (\Throwable $e) {
             $this->buildErrorResponse(sprintf("Organisation '%s' could not be activated: %s", $orgName, $e->getMessage()));
         }
+    }
+
+
+    /**
+     * @Route("/auth-as", name="behat_auth_as", methods={"GET"})
+     * @return JsonResponse
+     */
+    public function authAs(Request $request)
+    {
+        $email = $request->query->get('email');
+        $user = $this->authService->getUserByEmailAndPassword(strtolower($email), 'Abcd1234');
+
+        if (!$user) {
+            throw new Exception(sprintf('User not found with email: %s, password: Abcd1234', $email));
+        }
+
+        // Sets redis token
+        $randomToken = $this->userProvider->generateRandomTokenAndStore($user);
+//        $user->setLastLoggedIn(new \DateTime());
+//        $em->persist($user);
+//        $em->flush();
+
+        // add token into response
+        $this->restInputOuputFormatter->addResponseModifier(function ($response) use ($randomToken) {
+            $response->headers->set(HeaderTokenAuthenticator::HEADER_NAME, $randomToken);
+        });
+
+        return new JsonResponse(['AuthToken' => $randomToken, 'UserId' => $user->getId()]);
+    }
+
+    /**
+     * @Route("/get-active-report-id", name="behat_get_active_report_id", methods={"GET"})
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function getActiveReportIdForLoggedInUser()
+    {
+        /** @var User $user */
+//        $user = $this->getUser();
+        $user = new User();
+
+        if (!$user) {
+            throw new Exception('User is not currently logged in - ensure a user is authenticated before using this step');
+        }
+
+        return new JsonResponse(['ReportId' => $user->getActiveReportId()]);
     }
 }
