@@ -173,7 +173,8 @@ class ClientTransformer
                     'ndr_enabled' => $deputyDto->getNdrEnabled(),
                     'active' => $deputyDto->isActive(),
                     'job_title' => $deputyDto->getJobTitle(),
-                    'phone_main' => $deputyDto->getPhoneMain()
+                    'phone_main' => $deputyDto->getPhoneMain(),
+                    'last_logged_in' => $deputyDto->getLastLoggedIn() instanceof \DateTime ? $deputyDto->getLastLoggedIn()->format('Y-m-d H:i:s') : null
                 ];
                 ;
             }
