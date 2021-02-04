@@ -82,7 +82,7 @@ reset-database: ## Resets the DB schema and runs migrations
 reset-fixtures: ## Resets the DB contents and reloads fixtures
 	docker-compose run --rm api sh scripts/reset_db_fixtures_local.sh
 
-redis-clear: ## Puts app in dev mode and disables debug (so the app runs faster, but no toolbar/profiling)
+redis-clear: ## Clears out all the data from redis (session related tokens)
 	for c in ${REDIS_CONTAINERS} ; do \
 	  docker-compose exec $$c redis-cli flushall; \
 	  echo "$$c: redis cleared." ; \

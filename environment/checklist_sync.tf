@@ -122,7 +122,7 @@ locals {
       { "name": "S3_BUCKETNAME", "value": "pa-uploads-${local.environment}" },
       { "name": "APP_ENV", "value": "${local.account.app_env}" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
-      { "name": "ADMIN_HOST", "value": "https://${aws_route53_record.frontend_redis.fqdn}" },
+      { "name": "ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
       { "name": "NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
       { "name": "SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.frontend_redis.fqdn}" },
       { "name": "SESSION_PREFIX", "value": "dd_session_check" },
