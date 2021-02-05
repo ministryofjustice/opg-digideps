@@ -1,12 +1,8 @@
 <?php
 namespace App\DataFixtures;
 
-use App\Entity\CasRec;
-use App\Entity\Client;
-use App\Entity\Ndr\Ndr;
-use App\Entity\Report\Report;
 use App\Entity\User;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 class TestUserFixtures extends AbstractDataFixture
 {

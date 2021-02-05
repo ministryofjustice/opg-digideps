@@ -62,7 +62,7 @@ class ManageController extends RestController
             if ($e instanceof \PDOException && $e->getCode() === 7) {
                 $returnMessage = 'Database service not reachabe (' . $e->getMessage() . ')';
             }
-            if ($e instanceof \Doctrine\DBAL\DBALException) {
+            if ($e instanceof \Exception) {
                 $returnMessage = 'Migrations table missing.';
             }
 

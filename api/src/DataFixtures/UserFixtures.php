@@ -9,7 +9,7 @@ use App\Entity\Report\Report;
 use App\Entity\Repository\OrganisationRepository;
 use App\Entity\User;
 use App\Factory\OrganisationFactory;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 class UserFixtures extends AbstractDataFixture
 {

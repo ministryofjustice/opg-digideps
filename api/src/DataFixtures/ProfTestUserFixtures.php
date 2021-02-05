@@ -13,7 +13,7 @@ use App\Factory\OrganisationFactory;
 use App\Service\ReportUtils;
 use App\Service\OrgService;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 class ProfTestUserFixtures extends AbstractDataFixture
 {

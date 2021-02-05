@@ -46,7 +46,9 @@ doctrine:
                 enabled: true
 
 doctrine_migrations:
-    table_name: migrations
+    storage:
+        table_storage:
+            table_name: migrations
 
 snc_redis:
     clients:

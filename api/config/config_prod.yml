@@ -1,13 +1,6 @@
 imports:
     - { resource: config.yml }
 
-# works perfectly for all the code, except debt management not being loaded
-doctrine:
-  orm:
-    # https://symfony.com/doc/2.6/reference/configuration/doctrine.html
-    metadata_cache_driver:
-      type: array
-
 # check \JMS\SerializerBundle\DependencyInjection\Configuration for options
 jms_serializer:
   metadata:

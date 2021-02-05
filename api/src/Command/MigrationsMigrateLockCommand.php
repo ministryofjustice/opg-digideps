@@ -25,13 +25,6 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
     protected function configure(): void
     {
         parent::configure();
-
-        $this
-            ->setName('doctrine:migrations:migrate-lock')
-            ->setDescription('Same as doctrine:migrations:migrate, but locking the database.')
-            ->setHelp('')
-            ->addOption('release-lock', null, InputOption::VALUE_NONE, 'Release lock and exit.')
-        ;
     }
 
     /**

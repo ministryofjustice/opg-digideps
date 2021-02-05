@@ -12,7 +12,7 @@ use App\Entity\User;
 use App\Factory\OrganisationFactory;
 use App\Service\OrgService;
 use App\Service\ReportUtils;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 class PATestUserFixtures extends AbstractDataFixture
 {

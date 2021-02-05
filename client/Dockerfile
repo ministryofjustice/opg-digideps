@@ -55,10 +55,10 @@ RUN pecl install pcov && docker-php-ext-enable pcov
 # Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=false
 RUN if [[ $REQUIRE_XDEBUG = true ]] ; then \
-        apk add --no-cache $PHPIZE_DEPS; \
-        pecl install xdebug-2.9.8; \
-        docker-php-ext-enable $PHP_EXT_DIR/xdebug.so; \
-    fi ;
+  apk add --no-cache $PHPIZE_DEPS; \
+  pecl install xdebug-2.9.8; \
+  docker-php-ext-enable $PHP_EXT_DIR/xdebug.so; \
+  fi ;
 
 # Route NGINX logs to stdout/stderr
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
@@ -111,8 +111,8 @@ RUN chown -R www-data scripts
 # Add common passwords file. Two options to combat flakey responses from site.
 COPY docker/extra/commonpasswords.txt /tmp/commonpasswords.txt
 RUN wget -q -O /tmp/commonpasswords.txt "https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt" \
-    || echo 'using local copy of pwnedpasswords' \
-    && chown www-data /tmp/commonpasswords.txt
+  || echo 'using local copy of pwnedpasswords' \
+  && chown www-data /tmp/commonpasswords.txt
 
 #Check for security issues
 RUN wget -q -O local-php-security-checker https://github.com/fabpot/local-php-security-checker/releases/download/v1.0.0/local-php-security-checker_1.0.0_linux_arm64 \
