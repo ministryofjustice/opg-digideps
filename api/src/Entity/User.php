@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Report\Report;
 use App\Entity\Traits\AddressTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -849,6 +850,30 @@ class User implements UserInterface
     public function getNumberOfReports()
     {
         return $this->getFirstClient() ? count($this->getFirstClient()->getReports()) : 0;
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"user"})
+     * @JMS\Type("integer")
+     * @JMS\SerializedName("number_of_submitted_reports")
+     */
+    public function getNumberOfSubmittedReports()
+    {
+        if (!$this->getFirstClient()) {
+            return 0;
+        }
+
+        $isSubmittedClosure = function (Report $report) {
+            return !is_null($report->getSubmitDate());
+        };
+
+        $submittedReports = array_filter(
+            $this->getFirstClient()->getReports()->toArray(),
+            $isSubmittedClosure
+        );
+
+        return count($submittedReports);
     }
 
     /**
