@@ -3,8 +3,6 @@
 
 namespace App\Service\Csv;
 
-use App\Entity\User;
-
 class ActiveLaysCsvGenerator
 {
     /**
@@ -18,7 +16,7 @@ class ActiveLaysCsvGenerator
     }
 
     /**
-     * @param User[] $lays
+     * @param array $lays
      * @return string
      */
     public function generateActiveLaysCsv(array $lays)
@@ -37,13 +35,13 @@ class ActiveLaysCsvGenerator
 
         foreach ($lays as $lay) {
             $rows[] = [
-                $lay->getId(),
-                $lay->getFullName(),
-                $lay->getEmail(),
-                $lay->getPhoneMain(),
-                $lay->getNumberOfSubmittedReports(),
-                $lay->getRegistrationDate()->format('j F Y'),
-                $lay->getFirstClient()->getFullName()
+                $lay['id'],
+                sprintf('%s %s', $lay['user_first_name'], $lay['user_last_name']),
+                $lay['user_email'],
+                $lay['user_phone_number'],
+                $lay['submitted_reports'],
+                $lay['registration_date'],
+                sprintf('%s %s', $lay['client_first_name'], $lay['client_last_name']),
             ];
         }
 

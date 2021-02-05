@@ -467,14 +467,4 @@ class UserController extends RestController
 
         return $requestedUserTeams->first();
     }
-
-    /**
-     * @Route("/activeLays", methods={"GET"})
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
-     */
-    public function getActiveLays()
-    {
-        $this->formatter->setJmsSerialiserGroups(['user', 'user-clients', 'client-name']);
-        return $this->userRepository->findActiveLaysInLastYear();
-    }
 }

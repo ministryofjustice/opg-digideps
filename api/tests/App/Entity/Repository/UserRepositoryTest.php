@@ -4,8 +4,6 @@ namespace Tests\App\Entity\Repository;
 
 use App\Entity\Repository\UserRepository;
 use App\Entity\User;
-
-
 use App\TestHelpers\UserTestHelper;
 use DateTime;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;

@@ -11,6 +11,7 @@ use App\Mapper\ReportSatisfaction\ReportSatisfactionSummaryMapper;
 use App\Mapper\ReportSatisfaction\ReportSatisfactionSummaryQuery;
 use App\Mapper\ReportSubmission\ReportSubmissionSummaryMapper;
 use App\Mapper\ReportSubmission\ReportSubmissionSummaryQuery;
+use App\Service\Client\Internal\StatsApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Csv\ActiveLaysCsvGenerator;
@@ -30,14 +31,18 @@ class StatsController extends AbstractController
 {
     private RestClient $restClient;
     private SatisfactionCsvGenerator $csvGenerator;
-    private UserApi $userApi;
+    private StatsApi $statsApi;
     private ActiveLaysCsvGenerator $activeLaysCsvGenerator;
 
-    public function __construct(RestClient $restClient, SatisfactionCsvGenerator $csvGenerator, UserApi $userApi, ActiveLaysCsvGenerator $activeLaysCsvGenerator)
-    {
+    public function __construct(
+        RestClient $restClient,
+        SatisfactionCsvGenerator $csvGenerator,
+        StatsApi $statsApi,
+        ActiveLaysCsvGenerator $activeLaysCsvGenerator
+    ) {
         $this->restClient = $restClient;
         $this->csvGenerator = $csvGenerator;
-        $this->userApi = $userApi;
+        $this->statsApi = $statsApi;
         $this->activeLaysCsvGenerator = $activeLaysCsvGenerator;
     }
 
@@ -192,8 +197,8 @@ class StatsController extends AbstractController
      */
     public function downloadActiveLayCsv()
     {
-        $activeLays = $this->userApi->getActiveLays();
-        $csv = $this->activeLaysCsvGenerator->generateActiveLaysCsv($activeLays);
+        $activeLaysData = $this->statsApi->getActiveLayReportData();
+        $csv = $this->activeLaysCsvGenerator->generateActiveLaysCsv($activeLaysData);
 
         $response = new Response($csv);
 

@@ -28,7 +28,6 @@ class UserApi
     protected const RECREATE_USER_TOKEN_ENDPOINT = 'user/recreate-token/%s';
     protected const DEPUTY_SELF_REGISTER_ENDPOINT = 'selfregister';
     protected const CREATE_CODEPUTY_ENDPOINT = 'codeputy/add';
-    protected const GET_ACTIVE_LAYS = 'user/activeLays';
 
     /**  @var RestClientInterface */
     protected $restClient;
