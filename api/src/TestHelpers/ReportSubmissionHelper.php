@@ -22,7 +22,7 @@ class ReportSubmissionHelper extends KernelTestCase
     public function generateAndPersistReportSubmission(EntityManager $em)
     {
         $client = new Client();
-        $report = (new ReportTestHelper())->generateReport($client);
+        $report = (new ReportTestHelper())->generateReport($em, $client);
         $client->addReport($report);
         $user = (new UserTestHelper())->createAndPersistUser($em, $client);
         $reportSubmission = new ReportSubmission($report, $user);
@@ -56,6 +56,7 @@ class ReportSubmissionHelper extends KernelTestCase
         $client = $lastSubmission->getReport()->getClient();
 
         $report = (new ReportTestHelper())->generateReport(
+            $em,
             $client,
             $lastSubmission->getReport()->getType(),
             $lastSubmission->getReport()->getSubmitDate()->modify('+366 days')

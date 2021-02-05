@@ -5,15 +5,17 @@ namespace Tests\App\Entity;
 use App\TestHelpers\ReportSubmissionHelper;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Tests\ApiBaseTestCase;
 
 /**
  * User Entity test
  */
-class UserTest extends KernelTestCase
+class UserTest extends ApiBaseTestCase
 {
     /** @test */
     public function getNumberOfSubmittedReports()
     {
+        $this->purgeDatabase();
         $kernel = self::bootKernel();
         $em = $kernel->getContainer()
             ->get('doctrine')
