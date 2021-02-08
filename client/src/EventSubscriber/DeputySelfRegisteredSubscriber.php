@@ -5,11 +5,11 @@ namespace App\EventSubscriber;
 
 use App\Event\DeputySelfRegisteredEvent;
 use App\Service\Mailer\Mailer;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class DeputySelfRegisteredSubscriber
+class DeputySelfRegisteredSubscriber implements EventSubscriberInterface
 {
-    /** @var Mailer */
-    private $mailer;
+    private Mailer $mailer;
 
     public function __construct(Mailer $mailer)
     {

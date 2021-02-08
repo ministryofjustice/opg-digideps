@@ -11,7 +11,9 @@ use App\Mapper\ReportSatisfaction\ReportSatisfactionSummaryMapper;
 use App\Mapper\ReportSatisfaction\ReportSatisfactionSummaryQuery;
 use App\Mapper\ReportSubmission\ReportSubmissionSummaryMapper;
 use App\Mapper\ReportSubmission\ReportSubmissionSummaryQuery;
+use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
+use App\Service\Csv\ActiveLaysCsvGenerator;
 use App\Service\Csv\SatisfactionCsvGenerator;
 use App\Transformer\ReportSubmission\ReportSubmissionBurFixedWidthTransformer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -26,15 +28,17 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class StatsController extends AbstractController
 {
-    /** @var RestClient */
-    private $restClient;
-
+    private RestClient $restClient;
     private SatisfactionCsvGenerator $csvGenerator;
+    private UserApi $userApi;
+    private ActiveLaysCsvGenerator $activeLaysCsvGenerator;
 
-    public function __construct(RestClient $restClient, SatisfactionCsvGenerator $csvGenerator)
+    public function __construct(RestClient $restClient, SatisfactionCsvGenerator $csvGenerator, UserApi $userApi, ActiveLaysCsvGenerator $activeLaysCsvGenerator)
     {
         $this->restClient = $restClient;
         $this->csvGenerator = $csvGenerator;
+        $this->userApi = $userApi;
+        $this->activeLaysCsvGenerator = $activeLaysCsvGenerator;
     }
 
     /**
@@ -178,5 +182,28 @@ class StatsController extends AbstractController
         }
 
         return $resultByDeputyType;
+    }
+
+    /**
+     * @Route("/downloadActiveLaysCsv", name="admin_active_lays_csv")
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     *
+     * @return Response
+     */
+    public function downloadActiveLayCsv()
+    {
+        $activeLays = $this->userApi->getActiveLays();
+        $csv = $this->activeLaysCsvGenerator->generateActiveLaysCsv($activeLays);
+
+        $response = new Response($csv);
+
+        $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+        $disposition = $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            'activeLays.csv'
+        );
+
+        $response->headers->set('Content-Disposition', $disposition);
+        return $response;
     }
 }

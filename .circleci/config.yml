@@ -429,8 +429,8 @@ orbs:
               password: $DOCKER_ACCESS_TOKEN
         resource_class: small
         environment:
-          TF_VERSION: 0.13.5
-          TF_SHA256SUM: f7b7a7b1bfbf5d78151cfe3d1d463140b5fd6a354e71a7de2b5644e652ca5147
+          TF_VERSION: 0.14.5
+          TF_SHA256SUM: 2899f47860b7752e31872e4d57b1c03c99de154f12f0fc84965e231bc50f312f
           TF_CLI_ARGS_plan: -input=false -lock=false
           TF_CLI_ARGS_apply: -input=false -auto-approve
           TF_CLI_ARGS_destroy: -input=false -auto-approve
@@ -768,11 +768,11 @@ jobs:
             CLIENT_CHANGED_FILES=( $(git diff --relative=client --name-only --diff-filter=d $MERGE_BASE_COMMIT | grep .php) ) || [[ $? == 1 ]]
 
             if [ -n "$API_CHANGED_FILES" ]; then
-                docker-compose -f docker-compose.ci.yml run --rm api php bin/phpstan analyse $API_CHANGED_FILES --memory-limit=0 --level=max
+                docker-compose -f docker-compose.ci.yml run --rm api php bin/phpstan analyse $API_CHANGED_FILES --memory-limit=0 --level=max || echo "phpstan failed"
             fi
 
             if [ -n "$CLIENT_CHANGED_FILES" ]; then
-                docker-compose -f docker-compose.ci.yml run --rm client php bin/phpstan analyse $CLIENT_CHANGED_FILES --memory-limit=0 --level=max
+                docker-compose -f docker-compose.ci.yml run --rm client php bin/phpstan analyse $CLIENT_CHANGED_FILES --memory-limit=0 --level=max || echo "phpstan failed"
             fi
       - run:
           name: Archive docker images

@@ -151,7 +151,7 @@ class ReportController extends AbstractController
         $client = array_shift($clients);
 
         //refresh client adding codeputes (another API call to avoid recursion with users)
-        $clientWithCoDeputies = $this->restClient->get('client/' . $client->getId(), 'Client', ['client', 'client-users', 'user']);
+        $clientWithCoDeputies = $this->clientApi->getWithUsersV2($client->getId());
         $coDeputies = $clientWithCoDeputies->getCoDeputies();
 
         return [

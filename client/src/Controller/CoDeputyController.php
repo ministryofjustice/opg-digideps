@@ -79,10 +79,17 @@ class CoDeputyController extends AbstractController
                 $selfRegisterData->setClientLastname($form['clientLastname']->getData());
                 $selfRegisterData->setCaseNumber($form['clientCaseNumber']->getData());
 
+                $clientId = $this->restClient->get('v2/client/case-number/' . $selfRegisterData->getCaseNumber(), 'Client')->getId();
+                $mainClient = $this->restClient->get('client/' . $clientId, 'Client', ['client', 'client-users', 'report-id', 'current-report', 'user']);
+                $mainDeputy = reset($mainClient->getUsers());
+
                 // validate against casRec
                 try {
                     $this->restClient->apiCall('post', 'selfregister/verifycodeputy', $selfRegisterData, 'array', [], false);
                     $user->setCoDeputyClientConfirmed(true);
+                    if ($mainDeputy->isNdrEnabled()) {
+                        $user->setNdrEnabled(true);
+                    }
                     $this->restClient->put('user/' . $user->getId(), $user);
                     return $this->redirect($this->generateUrl('homepage'));
                 } catch (\Throwable $e) {

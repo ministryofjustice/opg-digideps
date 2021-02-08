@@ -46,6 +46,9 @@ class DeputyDto
     /** @var string */
     private $phoneMain;
 
+    /** @var \DateTime */
+    private $lastLoggedIn;
+
     /** @var array */
     private $clients;
 
@@ -130,6 +133,14 @@ class DeputyDto
     }
 
     /**
+     * @return \DateTime
+     */
+    public function getLastLoggedIn(): ?\DateTime
+    {
+        return $this->lastLoggedIn;
+    }
+
+    /**
      * @return array
      */
     public function getClients(): ?array
@@ -144,6 +155,16 @@ class DeputyDto
     public function setId($id): DeputyDto
     {
         $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @param \DateTime $lastLoggedIn
+     * @return DeputyDto
+     */
+    public function setLastLoggedIn($lastLoggedIn)
+    {
+        $this->lastLoggedIn = $lastLoggedIn;
         return $this;
     }
 

@@ -112,6 +112,22 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertEquals(1, $data);
     }
 
+    public function testVerifyCasRec()
+    {
+        $this->buildAndPersistCasRecEntity('12345678', CasRec::CASREC_SOURCE);
+        $this->fixtures()->flush();
+        $this->fixtures()->clear();
+
+        $this->assertJsonRequest('POST', '/casrec/verify', [
+            'data' => [
+                'case_number' => '12345678',
+                'lastname' => 'I should get deleted',
+            ],
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenAdmin,
+        ]);
+    }
+
     /**
      * @param $case
      * @param string $source
@@ -123,7 +139,7 @@ class CasRecControllerTest extends AbstractTestController
             'Case' => $case,
             'Surname' => 'I should get deleted',
             'Deputy No' => 'Deputy No',
-            'Dep Surname' => 'Dep Surname',
+            'Dep Surname' => 'admin',
             'Dep Postcode' => 'SW1',
             'Typeofrep' => 'OPG102',
             'Corref' => 'L2',

@@ -2,5 +2,6 @@ includes:
   - vendor/phpstan/phpstan-mockery/extension.neon
   - vendor/phpstan/phpstan-phpunit/extension.neon
 parameters:
+  checkMissingIterableValueType: false
   autoload_directories:
-    - app/DoctrineMigrations
+    - DoctrineMigrations
