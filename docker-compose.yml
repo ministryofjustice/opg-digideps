@@ -68,7 +68,7 @@ services:
             - 8070:443
         depends_on:
             - api
-            - redisfront
+            - redis-frontend
             - wkhtmltopdf
             - router
             - localstack
@@ -95,7 +95,7 @@ services:
             - 8080:443
         depends_on:
             - api
-            - redisadmin
+            - redis-frontend
             - mock-sirius-integration
         environment:
             VIRTUAL_HOST: admin.digideps.local
@@ -120,7 +120,7 @@ services:
             - 8090:443
         depends_on:
             - postgres
-            - redisapi
+            - redis-api
         environment:
             APP_ENV: ${APP_ENV:-dev}
             APP_DEBUG: ${APP_DEBUG:-0}
@@ -143,15 +143,11 @@ services:
             PGDATA: /var/lib/postgresql96/data
         restart: always
 
-    redisfront:
+    redis-frontend:
         image: redis:2.8.21
         restart: always
 
-    redisadmin:
-        image: redis:2.8.21
-        restart: always
-
-    redisapi:
+    redis-api:
         image: redis:2.8.21
         restart: always
 
