@@ -14,7 +14,6 @@ Feature: admin / admin
     Then I should see "behat-admin-user@publicguardian.gov.uk" in the "users" region
     And the response status code should be 200
 
-
   Scenario: login and add user (admin)
     When I activate the admin user "behat-admin-user@publicguardian.gov.uk" with password "Abcd1234"
     Then I should not see an "#error-summary" element
@@ -34,6 +33,43 @@ Feature: admin / admin
     And I fill in "admin_roleType_1" with "staff"
     Then I should see "Admin"
     And I should see "Super admin"
+
+  Scenario: login and add NDR enabled lay user with co-deputy
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I create a new "NDR-enabled" "Lay Deputy" user "Joe" "Bloggs" with email "joe.bloggs@publicguardian.gov.uk" and postcode "SW1"
+    Then I should see "joe.bloggs@publicguardian.gov.uk" in the "users" region
+    And the response status code should be 200
+    Then I add the following users to CASREC:
+      | Case     | Surname | Deputy No | Dep Surname | Dep Postcode | Typeofrep |
+      | 12345XYZ | Smith   | D003      | Bloggs      | SW1          | OPG102    |
+      | 12345XYZ | Smith   | D004      | Doe         | SW1          | OPG102    |
+    When I activate the user "joe.bloggs@publicguardian.gov.uk" with password "Abcd1234"
+    And I go to "logout"
+    Given I am logged in as "joe.bloggs@publicguardian.gov.uk" with password "Abcd1234"
+    Then the url should match "/user/details"
+    When I fill in the following:
+      | user_details_firstname       | Joe                              |
+      | user_details_lastname        | Bloggs                           |
+      | user_details_address1        | address1                         |
+      | user_details_addressPostcode | sw1                              |
+      | user_details_addressCountry  | GB                               |
+      | user_details_phoneMain       | 0000000000                       |
+      | user_details_email           | joe.bloggs@publicguardian.gov.uk |
+    And I press "user_details_save"
+    Then the url should match "/client/add"
+    Then I fill in the following:
+      | client_firstname       | Fred     |
+      | client_lastname        | Smith    |
+      | client_courtDate_day   | 30       |
+      | client_courtDate_month | 12       |
+      | client_courtDate_year  | 2016     |
+      | client_address         | address1 |
+      | client_country         | GB       |
+      | client_postcode        | SW1      |
+      | client_caseNumber      | 12345XYZ |
+    And I press "client_save"
+    Then the url should match "/ndr"
+    And I should see the "invite-codeputy-button" link
 
   Scenario: Can follow links to lay upload page
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"

@@ -1,5 +1,7 @@
 /* globals $ */
 import { ButtonToggler } from './modules/buttonToggler.js'
+import { MOJButtonMenu } from './modules/buttonMenu'
+
 require('../scss/application.scss')
 require('./modules/bind.js')
 
@@ -94,6 +96,12 @@ $(document).ready(function () {
     nodeListForEach($togglers, function ($el) {
       new ButtonToggler().init($el)
     })
+  }
+
+  const $menuButtons = $('.moj-button-menu')
+
+  if ($menuButtons !== null) {
+    new MOJButtonMenu().init($menuButtons)
   }
 
   const $submitButtons = document.querySelectorAll('[data-module="opg-toggleable-submit"]')

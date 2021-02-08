@@ -35,7 +35,8 @@ class DeputyTransformer
             'ndr_enabled' => $dto->getNdrEnabled(),
             'active' => $dto->isActive(),
             'job_title' => $dto->getJobTitle(),
-            'phone_main' => $dto->getPhoneMain()
+            'phone_main' => $dto->getPhoneMain(),
+            'last_logged_in' => $dto->getLastLoggedIn() instanceof \DateTime ? $dto->getLastLoggedIn()->format('Y-m-d H:i:s') : null
         ];
 
         if (!in_array('clients', $exclude) && $dto->getClients()) {

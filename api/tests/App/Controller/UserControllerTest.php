@@ -2,8 +2,14 @@
 
 namespace Tests\App\Controller;
 
+use App\Entity\Report\Report;
 use App\Entity\Role;
 use App\Entity\User;
+use App\TestHelpers\ReportSubmissionHelper;
+use App\TestHelpers\UserHelpers;
+use App\TestHelpers\UserTestHelper;
+use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 
 class UserControllerTest extends AbstractTestController
 {
@@ -13,6 +19,10 @@ class UserControllerTest extends AbstractTestController
     private static $tokenAdmin = null;
     private static $tokenSuperAdmin = null;
     private static $tokenDeputy = null;
+    /** @var EntityManagerInterface */
+    private $entityManager;
+    /** @var ReportSubmissionHelper */
+    private $submissionHelper;
 
     public static function setUpBeforeClass(): void
     {
@@ -42,6 +52,13 @@ class UserControllerTest extends AbstractTestController
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
         }
+
+        $kernel = self::bootKernel();
+        $this->entityManager = $kernel->getContainer()
+            ->get('doctrine')
+            ->getManager();
+
+        $this->submissionHelper = new ReportSubmissionHelper();
     }
 
     public function testAddAuth()
@@ -526,5 +543,33 @@ class UserControllerTest extends AbstractTestController
         $deputy = self::fixtures()->clear()->getRepo('User')->findOneByEmail('deputy@example.org');
         $this->assertTrue($deputy->getAgreeTermsUse());
         $this->assertEquals(date('Y-m-d'), $deputy->getAgreeTermsUseDate()->format('Y-m-d'));
+    }
+
+    /** @test */
+    public function activeLayDeputies()
+    {
+        $userHelper = new UserTestHelper();
+
+        $activeUserOne = $userHelper->createAndPersistUser($this->entityManager);
+        $activeUserTwo = $userHelper->createAndPersistUser($this->entityManager);
+
+        $inactiveUser = $userHelper->createAndPersistUser($this->entityManager);
+        $inactiveUser->setLastLoggedIn(new DateTime('-380 days'));
+        $this->entityManager->persist($inactiveUser);
+        $this->entityManager->flush();
+
+        $url = sprintf('%s?%s', '/user/activeLays', http_build_query(['groups' => ['user']]));
+        $response = $this->assertJsonRequest(
+            'GET',
+            $url,
+            [
+                'mustSucceed' => true,
+                'AuthToken' => $this->loginAsSuperAdmin(),
+            ]
+        );
+
+        self::assertStringContainsString($activeUserOne->getEmail(), json_encode($response['data']));
+        self::assertStringContainsString($activeUserTwo->getEmail(), json_encode($response['data']));
+        self::assertStringNotContainsString($inactiveUser->getEmail(), json_encode($response['data']));
     }
 }

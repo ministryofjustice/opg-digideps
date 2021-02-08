@@ -50,6 +50,14 @@ class UserHelpers extends KernelTestCase
     }
 
     /**
+     * @return User|array|object
+     */
+    public static function createLayUser()
+    {
+        return (self::createUser())->setRoleName(User::ROLE_LAY_DEPUTY);
+    }
+
+    /**
      * @return User
      */
     public static function createInvitedCoDeputy(): User

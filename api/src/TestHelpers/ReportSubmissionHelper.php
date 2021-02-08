@@ -21,16 +21,10 @@ class ReportSubmissionHelper extends KernelTestCase
      */
     public function generateAndPersistReportSubmission(EntityManager $em)
     {
-        $faker = Factory::create();
-
         $client = new Client();
         $report = (new ReportTestHelper())->generateReport($client);
-        $user = (new User)
-            ->setFirstname($faker->firstName)
-            ->setLastname($faker->lastName)
-            ->setEmail($faker->safeEmail)
-            ->setRoleName(User::ROLE_LAY_DEPUTY);
-
+        $client->addReport($report);
+        $user = (new UserTestHelper())->createAndPersistUser($em, $client);
         $reportSubmission = new ReportSubmission($report, $user);
 
         $em->persist($client);
@@ -55,5 +49,31 @@ class ReportSubmissionHelper extends KernelTestCase
         $em->flush();
 
         return $rs;
+    }
+
+    public function submitAndPersistAdditionalSubmissions(EntityManager $em, ReportSubmission $lastSubmission)
+    {
+        $client = $lastSubmission->getReport()->getClient();
+
+        $report = (new ReportTestHelper())->generateReport(
+            $client,
+            $lastSubmission->getReport()->getType(),
+            $lastSubmission->getReport()->getSubmitDate()->modify('+366 days')
+        );
+
+        $client->addReport($report);
+
+        $reportSubmission = (new ReportSubmission($report, $lastSubmission->getReport()->getClient()->getUsers()[0]));
+
+        $report
+            ->setSubmitDate(new DateTime('tomorrow'))
+            ->setSubmitted(true)
+            ->setClient($client);
+
+        $em->persist($client);
+        $em->persist($report);
+        $em->persist($reportSubmission);
+
+        $em->flush();
     }
 }
