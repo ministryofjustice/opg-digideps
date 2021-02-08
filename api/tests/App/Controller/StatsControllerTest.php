@@ -34,4 +34,26 @@ class StatsControllerTest extends AbstractTestController
 
         self::assertIsArray($response);
     }
+
+    /** @test */
+    public function activeLayDeputies_only_super_admins_can_access()
+    {
+        $unauthorisedUserTokens = [
+            $this->loginAsAdmin(),
+            $this->loginAsDeputy(),
+            $this->loginAsProf(),
+            $this->loginAsPa()
+        ];
+
+        foreach ($unauthorisedUserTokens as $token) {
+            $this->assertJsonRequest(
+                'GET',
+                '/stats/activeLays',
+                [
+                    'mustFail' => true,
+                    'AuthToken' => $token,
+                ]
+            );
+        }
+    }
 }
