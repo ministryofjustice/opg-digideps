@@ -229,7 +229,7 @@ FROM dd_user as u
 LEFT JOIN deputy_case as dc on u.id = dc.user_id
 LEFT JOIN client as c on dc.client_id = c.id
 LEFT JOIN report as r on c.id = r.client_id
-WHERE r.submit_date is not null AND u.role_name = 'ROLE_LAY_DEPUTY' AND u.last_logged_in > :oneYearAgo
+WHERE r.submit_date is not null AND u.role_name = 'ROLE_LAY_DEPUTY' AND u.last_logged_in >= :oneYearAgo
 GROUP BY u.id, u.firstname, u.lastname, u.email, u.registration_date, u.last_logged_in, c.firstname, c.lastname
 SQL;
 
