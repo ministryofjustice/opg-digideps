@@ -11,7 +11,7 @@ locals {
       type        = "egress"
       protocol    = "tcp"
       target_type = "security_group_id"
-      target      = module.front_cache_security_group.id
+      target      = module.frontend_cache_security_group.id
     }
     api = {
       port        = 443
@@ -62,26 +62,6 @@ module "front_service_security_group" {
   source = "./security_group"
   rules  = local.front_sg_rules
   name   = "front-service"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
-}
-
-locals {
-  front_cache_sg_rules = {
-    front_service = {
-      port        = 6379
-      type        = "ingress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = module.front_service_security_group.id
-    }
-  }
-}
-
-module "front_cache_security_group" {
-  source = "./security_group"
-  rules  = local.front_cache_sg_rules
-  name   = "front-cache"
   tags   = local.default_tags
   vpc_id = data.aws_vpc.vpc.id
 }

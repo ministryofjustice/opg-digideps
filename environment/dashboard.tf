@@ -140,8 +140,7 @@ resource "aws_cloudwatch_dashboard" "main" {
         "height" : 9,
         "properties" : {
           "metrics" : [
-            ["AWS/ElastiCache", "CPUUtilization", "CacheClusterId", "${aws_elasticache_replication_group.front.id}-001", { "label" : "Frontend" }],
-            ["AWS/ElastiCache", "CPUUtilization", "CacheClusterId", "${aws_elasticache_replication_group.admin.id}-001", { "label" : "Admin" }],
+            ["AWS/ElastiCache", "CPUUtilization", "CacheClusterId", "${aws_elasticache_replication_group.frontend.id}-001", { "label" : "Frontend" }],
             ["AWS/ElastiCache", "CPUUtilization", "CacheClusterId", "${aws_elasticache_replication_group.api.id}-001", { "label" : "API" }]
           ],
           "view" : "timeSeries",
