@@ -25,7 +25,7 @@ class StatsControllerTest extends AbstractTestController
     {
         $response = $this->assertJsonRequest(
             'GET',
-            '/stats/activeLays',
+            '/stats/deputies/lay/active',
             [
                 'mustSucceed' => true,
                 'AuthToken' => $this->loginAsSuperAdmin(),
@@ -48,7 +48,7 @@ class StatsControllerTest extends AbstractTestController
         foreach ($unauthorisedUserTokens as $token) {
             $this->assertJsonRequest(
                 'GET',
-                '/stats/activeLays',
+                '/stats/deputies/lay/active',
                 [
                     'mustFail' => true,
                     'AuthToken' => $token,

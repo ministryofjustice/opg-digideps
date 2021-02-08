@@ -35,7 +35,7 @@ class StatsController extends RestController
     }
 
     /**
-     * @Route("stats/activeLays", methods={"GET"})
+     * @Route("stats/deputies/lay/active", methods={"GET"})
      * @Security("has_role('ROLE_SUPER_ADMIN')")
      */
     public function getActiveLays()

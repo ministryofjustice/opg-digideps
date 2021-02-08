@@ -7,7 +7,7 @@ use App\Service\Client\RestClientInterface;
 
 class StatsApi
 {
-    protected const GET_ACTIVE_LAY_REPORT_DATA_ENDPOINT = 'stats/activeLays';
+    protected const GET_ACTIVE_LAY_REPORT_DATA_ENDPOINT = 'stats/deputies/lay/active';
 
     private RestClientInterface $restClient;
 
