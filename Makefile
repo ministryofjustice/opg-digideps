@@ -100,6 +100,13 @@ disable-debug: ## Puts app in dev mode and disables debug (so the app runs faste
 	  echo "$$c: debug disabled." ; \
 	done
 
+# Cache clear
+cache-clear:
+	docker-compose exec api sh -c "rm -rf var/cache/*" && \
+	docker-compose exec frontend sh -c "rm -rf var/cache/*" && \
+	docker-compose exec admin sh -c "rm -rf var/cache/*" && \
+	echo "Cache reset"
+
 enable-debug: ## Puts app in dev mode and enables debug (so the app has toolbar/profiling)
 	for c in ${APP_CONTAINERS} ; do \
 	  APP_ENV=dev APP_DEBUG=1 docker-compose up -d --no-deps $$c; \

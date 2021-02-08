@@ -29,7 +29,7 @@ services:
     volumes:
       - ./api/app:/var/www/app
       - ./api/config:/var/www/config
-      - ./api/DoctrineMigrations:/var/www/DoctrineMigrations
+      - ./api/src/Migrations:/var/www/src/Migrations
       - ./api/public:/var/www/public
       - ./api/scripts:/var/www/scripts
       - ./api/src:/var/www/src

@@ -101,7 +101,7 @@ RUN wget -q -O local-php-security-checker https://github.com/fabpot/local-php-se
 
 CMD confd -onetime -backend env \
   && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
-  && su-exec www-data:www-data php app/console doctrine:migrations:migrate --no-interaction \
+  && su-exec www-data:www-data php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
   && su-exec www-data:www-data php app/console doctrine:migrations:up-to-date \
   && php-fpm -D \
   && nginx
