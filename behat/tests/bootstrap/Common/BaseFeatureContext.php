@@ -56,14 +56,20 @@ class BaseFeatureContext extends MinkContext
      */
     public function authAs(string $email)
     {
-        $url = sprintf('%s%s?email=%s', $this->getAdminUrl(), self::BEHAT_FRONT_AUTH_ENDPOINT, $email);
+        $url = sprintf('%s%s?email=%s', $this->getSiteUrl(), self::BEHAT_FRONT_AUTH_ENDPOINT, $email);
         $this->visitPath($url);
 
         $authToken = json_decode($this->getSession()->getPage()->getContent(), true)['AuthToken'];
+        $activeReportId = json_decode($this->getSession()->getPage()->getContent(), true)['ActiveReportId'];
+        $userId = json_decode($this->getSession()->getPage()->getContent(), true)['UserId'];
+
+        var_dump($activeReportId);
+        var_dump($userId);
         var_dump($authToken);
 
         $this->getSession()->setCookie('AuthToken', $authToken);
-        $this->getSession()->setCookie('ActiveReportId', $authToken);
+        $this->getSession()->setCookie('ActiveReportId', $activeReportId);
+        $this->getSession()->setCookie('UserId', $userId);
     }
 
     /**
@@ -73,12 +79,18 @@ class BaseFeatureContext extends MinkContext
     {
         $authToken = $this->getSession()->getCookie('AuthToken');
         $activeReportId = $this->getSession()->getCookie('ActiveReportId');
+        $userId = $this->getSession()->getCookie('UserId');
+        var_dump($activeReportId);
+        var_dump($userId);
         var_dump($authToken);
 
         $this->getSession()->setRequestHeader('AuthToken', $authToken);
 
-        $frontendUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $activeReportId, $sectionName);
+        $frontendUrl = sprintf($this->getSiteUrl() . '/' . self::REPORT_SECTION_ENDPOINT, $activeReportId, $sectionName);
+        var_dump($frontendUrl);
+
         $this->visitPath($frontendUrl);
-        var_dump(json_decode($this->getSession()->getPage()->getContent(), true));
+//        $this->visitPath('/lay');
+//        var_dump(json_decode($this->getSession()->getPage()->getContent(), true));
     }
 }
