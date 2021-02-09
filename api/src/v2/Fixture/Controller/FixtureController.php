@@ -3,7 +3,6 @@
 namespace App\v2\Fixture\Controller;
 
 use App\DataFixtures\DocumentSyncFixtures;
-use App\Entity\CasRec;
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Ndr\NdrRepository;
@@ -21,13 +20,11 @@ use App\FixtureFactory\ClientFactory;
 use App\FixtureFactory\ReportFactory;
 use App\FixtureFactory\UserFactory;
 use App\Service\Auth\AuthService;
-use App\Service\Auth\HeaderTokenAuthenticator;
 use App\Service\Auth\UserProvider;
+use App\TestHelpers\BehatFixtures;
 use App\v2\Controller\ControllerTrait;
 use App\v2\Fixture\ReportSection;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
-use Faker\Factory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,6 +56,7 @@ class FixtureController extends AbstractController
     private AuthService $authService;
     private UserProvider $userProvider;
     private RestInputOuputFormatter $restInputOuputFormatter;
+    private BehatFixtures $behatFixtures;
 
     public function __construct(
         EntityManagerInterface $em,
@@ -76,7 +74,8 @@ class FixtureController extends AbstractController
         string $symfonyEnvironment,
         AuthService $authService,
         UserProvider $userProvider,
-        RestInputOuputFormatter $restInputOuputFormatter
+        RestInputOuputFormatter $restInputOuputFormatter,
+        BehatFixtures $behatFixtures
     ) {
         $this->em = $em;
         $this->clientFactory = $clientFactory;
@@ -94,6 +93,7 @@ class FixtureController extends AbstractController
         $this->authService = $authService;
         $this->userProvider = $userProvider;
         $this->restInputOuputFormatter = $restInputOuputFormatter;
+        $this->behatFixtures = $behatFixtures;
     }
 
     /**
@@ -647,49 +647,18 @@ class FixtureController extends AbstractController
         }
     }
 
-
     /**
-     * @Route("/auth-as", name="behat_auth_as", methods={"GET"})
-     * @return JsonResponse
+     * @Route("/reset-fixtures", name="behat_reset_fixtures", methods={"GET"})
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @return Response
      */
-    public function authAs(Request $request)
+    public function resetFixtures(Request $request)
     {
-        $email = $request->query->get('email');
-        $user = $this->authService->getUserByEmailAndPassword(strtolower($email), 'Abcd1234');
-
-        if (!$user) {
-            throw new Exception(sprintf('User not found with email: %s, password: Abcd1234', $email));
+        try {
+            $this->behatFixtures->loadFixtures();
+            return new Response();
+        } catch (\Throwable $e) {
+            return new Response(Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
         }
-
-        // Sets redis token
-        $randomToken = $this->userProvider->generateRandomTokenAndStore($user);
-//        $user->setLastLoggedIn(new \DateTime());
-//        $em->persist($user);
-//        $em->flush();
-
-        // add token into response
-        $this->restInputOuputFormatter->addResponseModifier(function ($response) use ($randomToken) {
-            $response->headers->set(HeaderTokenAuthenticator::HEADER_NAME, $randomToken);
-        });
-
-        return new JsonResponse(['AuthToken' => $randomToken, 'UserId' => $user->getId()]);
-    }
-
-    /**
-     * @Route("/get-active-report-id", name="behat_get_active_report_id", methods={"GET"})
-     * @return JsonResponse
-     * @throws Exception
-     */
-    public function getActiveReportIdForLoggedInUser()
-    {
-        /** @var User $user */
-//        $user = $this->getUser();
-        $user = new User();
-
-        if (!$user) {
-            throw new Exception('User is not currently logged in - ensure a user is authenticated before using this step');
-        }
-
-        return new JsonResponse(['ReportId' => $user->getActiveReportId()]);
     }
 }
