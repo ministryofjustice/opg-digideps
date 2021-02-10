@@ -8,4 +8,6 @@ use DigidepsBehat\UserTrait;
 
 class ContactDetailsFeatureContext extends BaseFeatureContext
 {
+    use UserTrait;
+    use RegionTrait;
 }
