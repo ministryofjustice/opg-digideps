@@ -20,20 +20,4 @@ class BaseFeatureContext extends MinkContext
     {
         return getenv('ADMIN_HOST');
     }
-
-    /**
-     * @return string
-     */
-    public function getSiteUrl()
-    {
-        return getenv('NONADMIN_HOST');
-    }
-
-    /**
-     * @return string
-     */
-    public function getApiUrl()
-    {
-        return getenv('API_HOST');
-    }
 }
