@@ -12,7 +12,6 @@ use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\DeputyProvider;
 use App\TestHelpers\ClientHelpers;
-use GuzzleHttp\ClientInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,7 +35,6 @@ class FixtureController extends AbstractController
     private UserApi $userApi;
     private TokenStorageInterface $tokenStorage;
     private DeputyProvider $deputyProvider;
-    private ClientInterface $client;
 
     public function __construct(
         Environment $twig,
@@ -45,8 +43,7 @@ class FixtureController extends AbstractController
         ReportApi $reportApi,
         UserApi $userApi,
         TokenStorageInterface $tokenStorage,
-        DeputyProvider $deputyProvider,
-        ClientInterface $client
+        DeputyProvider $deputyProvider
     ) {
         $this->twig = $twig;
         $this->serializer = $serializer;
@@ -55,7 +52,6 @@ class FixtureController extends AbstractController
         $this->userApi = $userApi;
         $this->tokenStorage = $tokenStorage;
         $this->deputyProvider = $deputyProvider;
-        $this->client = $client;
     }
 
     /**
@@ -469,34 +465,5 @@ class FixtureController extends AbstractController
         } catch (\Throwable $e) {
             return new Response(sprintf('Could not activate %s org: %s', $orgName, $response->getBody()->getContents()), 500);
         }
-    }
-
-    /**
-     * @Route("/auth-as", name="behat_admin_auth_as", methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN')")
-     *
-     * @param string $orgName
-     * @return JsonResponse
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function authAs(Request $request)
-    {
-        $email = $request->query->get('email');
-        $creds = ['email' => $email, 'password' => 'Abcd1234'];
-
-        $response = $this->client->request(
-            'POST',
-            '/auth/login',
-            [
-                'json' => $creds,
-                'headers' => ['ClientSecret' => 'api-frontend-key']
-            ]
-        );
-
-        $token = $response->getHeader('AuthToken')[0];
-        $data = json_decode($response->getBody()->getContents(), true)['data'];
-        $this->tokenStorage->set($data['id'], $token);
-
-        return new JsonResponse(['AuthToken' => $this->tokenStorage->get($data['id']), 'UserId' => $data['id'], 'ActiveReportId' => $data['active_report_id']]);
     }
 }

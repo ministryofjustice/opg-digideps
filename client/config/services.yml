@@ -115,12 +115,5 @@ services:
         autowire: true
         autoconfigure: true
 
-    App\Controller\Admin\FixtureController:
-        autowire: true
-        autoconfigure: true
-        arguments:
-            $client: '@GuzzleHttp\Client'
-            $tokenStorage: '@App\Service\Client\TokenStorage\RedisStorage'
-
     League\MimeTypeDetection\FinfoMimeTypeDetector:
         class: League\MimeTypeDetection\FinfoMimeTypeDetector
