@@ -35,6 +35,22 @@ trait DebugTrait
     }
 
     /**
+     * Call debug() when an exception is thrown after a step.
+     *
+     * @AfterStep
+     */
+    public function debugOnException(AfterStepScope $scope)
+    {
+        if (($result = $scope->getTestResult())
+            && $result instanceof ExecutedStepResult
+            && $result->hasException()
+        ) {
+            $feature = basename($scope->getFeature()->getFile());
+            $this->debug($feature);
+        }
+    }
+
+    /**
      * @Then I save the page as :name
      */
     public function debug($name)
@@ -59,21 +75,5 @@ trait DebugTrait
         echo 'Url: ' . $session->getCurrentUrl() . "\n";
         echo "Response saved ({$bytes} bytes):\n";
         echo "$file";
-    }
-
-    /**
-     * Call debug() when an exception is thrown after a step.
-     *
-     * @AfterStep
-     */
-    public function debugOnException(AfterStepScope $scope)
-    {
-        if (($result = $scope->getTestResult())
-            && $result instanceof ExecutedStepResult
-            && $result->hasException()
-        ) {
-            $feature = basename($scope->getFeature()->getFile());
-            $this->debug($feature);
-        }
     }
 }

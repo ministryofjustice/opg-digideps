@@ -132,7 +132,7 @@ default:
             description: Covering the 'Contacts' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/contacts" ]
             contexts:
-                - DigidepsBehat\v2\FixturesContext
+                - DigidepsBehat\v2\Reporting\Sections\ContactsFeatureContext
 
 
     extensions:
