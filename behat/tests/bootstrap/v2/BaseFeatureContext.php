@@ -47,14 +47,6 @@ class BaseFeatureContext extends MinkContext
         return getenv('NONADMIN_HOST');
     }
 
-    /**
-     * @return string
-     */
-    public function getApiUrl()
-    {
-        return getenv('API_HOST');
-    }
-
     public function visitAdminPath(string $path)
     {
         $adminUrl = $this->getAdminUrl();

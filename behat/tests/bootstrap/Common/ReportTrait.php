@@ -32,14 +32,6 @@ trait ReportTrait
     }
 
     /**
-     * @When I am viewing the :routeName page
-     */
-    public function iAmViewingPage($routeName)
-    {
-        // See best way to convert route name to URL
-    }
-
-    /**
      * @When I set the report start date to :endDateDMY
      */
     public function iSetTheReportStartDateToAndEndDateTo($startDateDMY)

@@ -9,11 +9,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class BehatController extends AbstractController
 {
     private UserApi $userApi;
+    private string $symfonyEnvironment;
 
     public function __construct(
-        UserApi $userApi
+        UserApi $userApi,
+        string $symfonyEnvironment
     ) {
         $this->userApi = $userApi;
+        $this->symfonyEnvironment = $symfonyEnvironment;
     }
 
     /**
@@ -24,6 +27,10 @@ class BehatController extends AbstractController
      */
     public function getUserDetails(string $email)
     {
+        if ($this->symfonyEnvironment === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
         $user = $this->userApi->getByEmail($email, ['user-login', 'user-id']);
 
         return new JsonResponse(
