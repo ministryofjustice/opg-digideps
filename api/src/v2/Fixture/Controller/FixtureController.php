@@ -13,14 +13,11 @@ use App\Entity\Repository\OrganisationRepository;
 use App\Entity\Repository\ReportRepository;
 use App\Entity\Repository\UserRepository;
 use App\Entity\User;
-use App\EventListener\RestInputOuputFormatter;
 use App\Factory\OrganisationFactory;
 use App\FixtureFactory\CasRecFactory;
 use App\FixtureFactory\ClientFactory;
 use App\FixtureFactory\ReportFactory;
 use App\FixtureFactory\UserFactory;
-use App\Service\Auth\AuthService;
-use App\Service\Auth\UserProvider;
 use App\TestHelpers\BehatFixtures;
 use App\v2\Controller\ControllerTrait;
 use App\v2\Fixture\ReportSection;
@@ -53,9 +50,6 @@ class FixtureController extends AbstractController
     private $ndrRepository;
     private $casRecFactory;
     private string $symfonyEnvironment;
-    private AuthService $authService;
-    private UserProvider $userProvider;
-    private RestInputOuputFormatter $restInputOuputFormatter;
     private BehatFixtures $behatFixtures;
 
     public function __construct(
@@ -72,9 +66,6 @@ class FixtureController extends AbstractController
         NdrRepository $ndrRepository,
         CasRecFactory $casRecFactory,
         string $symfonyEnvironment,
-        AuthService $authService,
-        UserProvider $userProvider,
-        RestInputOuputFormatter $restInputOuputFormatter,
         BehatFixtures $behatFixtures
     ) {
         $this->em = $em;
@@ -90,9 +81,6 @@ class FixtureController extends AbstractController
         $this->ndrRepository = $ndrRepository;
         $this->casRecFactory = $casRecFactory;
         $this->symfonyEnvironment = $symfonyEnvironment;
-        $this->authService = $authService;
-        $this->userProvider = $userProvider;
-        $this->restInputOuputFormatter = $restInputOuputFormatter;
         $this->behatFixtures = $behatFixtures;
     }
 
