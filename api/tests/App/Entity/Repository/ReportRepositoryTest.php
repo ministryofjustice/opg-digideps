@@ -195,7 +195,7 @@ class ReportRepositoryTest extends ApiBaseTestCase
         $user = (new User())
             ->setFirstname('firstname')
             ->setLastname('lastname')
-            ->setEmail(sprintf('email%s@test.com', rand(1, 1000)))
+            ->setEmail(sprintf('email%s@test.com', rand(1, 100000)))
             ->setPassword('password');
 
         $reportSubmission = new ReportSubmission($report, $user);

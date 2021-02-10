@@ -4,8 +4,8 @@ namespace Tests\App\Entity\Repository;
 
 use App\Entity\Repository\UserRepository;
 use App\Entity\User;
-
-
+use App\TestHelpers\ClientTestHelper;
+use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
 use DateTime;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
@@ -83,40 +83,51 @@ class UserRepositoryTest extends WebTestCase
     /** @test */
     public function findActiveLaysInLastYear()
     {
-        $oneYearAgo = (new \DateTimeImmutable())->modify('-1 Year');
+        $userHelper = new UserTestHelper();
+        $reportHelper = new ReportTestHelper();
+        $clientHelper = new ClientTestHelper();
 
-        $userTestHelper = new UserTestHelper();
+        $clientOne = $clientHelper->createClient($this->em) ;
+        $activeUserOne = ($userHelper->createAndPersistUser($this->em, $clientOne));
+        $reportOne = ($reportHelper->generateReport($this->em, $clientOne))->setSubmitDate(new DateTime());
 
-        $activeLay = ($userTestHelper->createAndPersistUser($this->em, null))
-            ->setLastLoggedIn(
-                DateTime::createFromImmutable($oneYearAgo->modify('+1 day'))
-            );
+        $clientTwo = $clientHelper->createClient($this->em) ;
+        $activeUserTwo = $userHelper->createAndPersistUser($this->em, $clientTwo);
+        $reportTwo = ($reportHelper->generateReport($this->em, $clientTwo))->setSubmitDate(new DateTime());
 
-        $activeLay2 = ($userTestHelper->createAndPersistUser($this->em, null))
-            ->setLastLoggedIn(
-                DateTime::createFromImmutable($oneYearAgo->modify('+1 minute'))
-            );
+        $clientThree = $clientHelper->createClient($this->em) ;
+        $reportThree = ($reportHelper->generateReport($this->em, $clientThree))->setSubmitDate(new DateTime());
+        $inactiveUserOne = $userHelper->createAndPersistUser($this->em, $clientThree);
+        $inactiveUserOne->setLastLoggedIn(new DateTime('-380 days'));
 
-        $inactiveLay = ($userTestHelper->createAndPersistUser($this->em, null))
-            ->setLastLoggedIn(
-                DateTime::createFromImmutable($oneYearAgo->modify('-5 second'))
-            );
+        $clientFour = $clientHelper->createClient($this->em) ;
+        $reportFour = $reportHelper->generateReport($this->em, $clientFour);
+        $inactiveUserTwo = $userHelper->createAndPersistUser($this->em, $clientFour);
+        $inactiveUserTwo->setLastLoggedIn(new DateTime());
 
-        $this->em->persist($activeLay);
-        $this->em->persist($activeLay2);
-        $this->em->persist($inactiveLay);
+        $this->em->persist($inactiveUserOne);
+        $this->em->persist($inactiveUserTwo);
+        $this->em->persist($reportOne);
+        $this->em->persist($reportTwo);
+        $this->em->persist($reportThree);
+        $this->em->persist($reportFour);
+        $this->em->persist($clientOne);
+        $this->em->persist($clientTwo);
+        $this->em->persist($clientThree);
+        $this->em->persist($clientFour);
         $this->em->flush();
 
         $results = $this->sut->findActiveLaysInLastYear();
         $resultsUserIds = [];
 
-        foreach ($results as $user) {
-            $resultsUserIds[] = $user->getId();
+        foreach ($results as $userData) {
+            $resultsUserIds[] = $userData['id'];
         }
 
-        self::assertContains($activeLay->getId(), $resultsUserIds);
-        self::assertContains($activeLay2->getId(), $resultsUserIds);
-        self::assertNotContains($inactiveLay->getId(), $resultsUserIds);
+        self::assertContains($activeUserOne->getId(), $resultsUserIds);
+        self::assertContains($activeUserTwo->getId(), $resultsUserIds);
+        self::assertNotContains($inactiveUserOne->getId(), $resultsUserIds);
+        self::assertNotContains($inactiveUserTwo->getId(), $resultsUserIds);
     }
 
     protected function tearDown(): void

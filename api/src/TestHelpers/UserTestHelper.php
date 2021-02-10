@@ -9,6 +9,7 @@ use DateTime;
 use Doctrine\ORM\EntityManager;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserTestHelper extends TestCase
 {
@@ -27,7 +28,7 @@ class UserTestHelper extends TestCase
         return $user->reveal();
     }
 
-    public function createAndPersistUser(EntityManager $em, ?Client $client = null, ?string $roleName = User::ROLE_LAY_DEPUTY)
+    public function createUser(?Client $client = null, ?string $roleName = User::ROLE_LAY_DEPUTY)
     {
         $faker = Factory::create('en_GB');
 
@@ -41,8 +42,18 @@ class UserTestHelper extends TestCase
             ->setLastLoggedIn(new DateTime());
 
         if (!is_null($client)) {
-            $em->persist($client);
             $user->addClient($client);
+        }
+
+        return $user;
+    }
+
+    public function createAndPersistUser(EntityManager $em, ?Client $client = null, ?string $roleName = User::ROLE_LAY_DEPUTY)
+    {
+        $user = $this->createUser($client, $roleName);
+
+        if (!is_null($client)) {
+            $em->persist($client);
         }
 
         $em->persist($user);
