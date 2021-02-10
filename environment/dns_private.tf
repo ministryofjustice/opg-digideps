@@ -9,19 +9,11 @@ resource "aws_route53_zone" "internal" {
   tags = local.default_tags
 }
 
-resource "aws_route53_record" "front_redis" {
-  name    = "front-redis"
+resource "aws_route53_record" "frontend_redis" {
+  name    = "frontend-redis"
   type    = "CNAME"
   zone_id = aws_route53_zone.internal.id
-  records = [aws_elasticache_replication_group.front.primary_endpoint_address]
-  ttl     = 300
-}
-
-resource "aws_route53_record" "admin_redis" {
-  name    = "admin-redis"
-  type    = "CNAME"
-  zone_id = aws_route53_zone.internal.id
-  records = [aws_elasticache_replication_group.admin.primary_endpoint_address]
+  records = [aws_elasticache_replication_group.frontend.primary_endpoint_address]
   ttl     = 300
 }
 

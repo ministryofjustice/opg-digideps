@@ -75,9 +75,8 @@ dd-cache-clear()
 
 dd-redis-reset()
 {
-    dd-exec redisfront redis-cli flushall
-    dd-exec redisapi redis-cli flushall
-    dd-exec redisadmin redis-cli flushall
+    dd-exec redis-frontend redis-cli flushall
+    dd-exec redis-api redis-cli flushall
     echo "Redis reset"
 }
 
