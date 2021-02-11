@@ -70,10 +70,13 @@ api-unit-tests: reset-database reset-fixtures ## Run the api unit tests
 behat-tests: up-app-integration-tests reset-fixtures
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test
 
+behat-tests-v2: up-app-integration-tests reset-fixtures disable-debug ## Pass in profile and suite name as args e.g. make behat-profile-suite profile=<PROFILE NAME> suite=<SUITE NAME>
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test --profile v2-tests --tags @v2
+
 behat-suite: up-app-integration-tests reset-fixtures ## Pass in suite name as arg e.g. make behat-suite suite=<SUITE NAME>
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test --suite $(suite)
 
-behat-profile-suite: up-app-integration-tests reset-fixtures prod-mode ## Pass in profile and suite name as args e.g. make behat-profile-suite profile=<PROFILE NAME> suite=<SUITE NAME>
+behat-profile-suite: up-app-integration-tests reset-fixtures disable-debug ## Pass in profile and suite name as args e.g. make behat-profile-suite profile=<PROFILE NAME> suite=<SUITE NAME>
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test --profile $(profile) --suite $(suite)
 
 reset-database: ## Resets the DB schema and runs migrations
