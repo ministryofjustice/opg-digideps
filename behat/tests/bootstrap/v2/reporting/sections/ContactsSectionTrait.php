@@ -133,9 +133,9 @@ trait ContactsSectionTrait
     }
 
     /**
-     * @When I enter valid contact information
+     * @When I enter valid contact details
      */
-    public function iEnterValidContactInfo()
+    public function iEnterValidContactDetails()
     {
         $this->setContactFormValues(false);
 
@@ -163,7 +163,7 @@ trait ContactsSectionTrait
 
         $this->iShouldBeOnAddAContactPage();
 
-        $this->iEnterValidContactInfo();
+        $this->iEnterValidContactDetails();
 
         $this->iShouldBeOnContactsAddAnotherPage();
     }
@@ -180,7 +180,7 @@ trait ContactsSectionTrait
     }
 
     /**
-     * @Then the summary page should contain the information I entered
+     * @Then the summary page should contain the details I entered
      */
     public function summaryPageContainsExpectedText()
     {
