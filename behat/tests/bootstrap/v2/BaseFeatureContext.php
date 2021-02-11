@@ -3,6 +3,7 @@
 namespace DigidepsBehat\v2;
 
 use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Driver\GoutteDriver;
 use Behat\MinkExtension\Context\MinkContext;
 use Exception;
 
@@ -23,9 +24,9 @@ class BaseFeatureContext extends MinkContext
     {
         $this->loginToAdminAs(self::SUPER_ADMIN);
         $this->visitAdminPath(self::BEHAT_ADMIN_RESET_FIXTURES);
-        $pageContent = $this->getSession()->getPage()->getContent();
+        $pageContent = $this->getPageContent();
 
-        $fixturesLoaded = preg_match('/^Behat fixtures loaded$/', $pageContent);
+        $fixturesLoaded = preg_match('/Behat fixtures loaded/', $pageContent);
 
         if (!$fixturesLoaded) {
             throw new Exception($pageContent);
@@ -53,6 +54,15 @@ class BaseFeatureContext extends MinkContext
         $this->visitPath($adminUrl . $path);
     }
 
+    public function getPageContent()
+    {
+        if ($this->getSession()->getDriver() instanceof GoutteDriver) {
+            return $this->getSession()->getPage()->getContent();
+        } else {
+            return $this->getSession()->getPage()->getText();
+        }
+    }
+
     /**
      * @Given :email logs in
      */
@@ -66,8 +76,9 @@ class BaseFeatureContext extends MinkContext
 
         $this->visitPath(sprintf(self::BEHAT_FRONT_USER_DETAILS, $email));
 
-        $activeReportId = json_decode($this->getSession()->getPage()->getContent(), true)['ActiveReportId'];
-        $userId = json_decode($this->getSession()->getPage()->getContent(), true)['UserId'];
+        var_dump($this->getSession()->getDriver()->get);
+        $activeReportId = json_decode($this->getPageContent(), true)['ActiveReportId'];
+        $userId = json_decode($this->getPageContent(), true)['UserId'];
 
         $this->getSession()->setCookie('ActiveReportId', $activeReportId);
         $this->getSession()->setCookie('UserId', $userId);

@@ -128,13 +128,6 @@ default:
             contexts:
                 - DigidepsBehat\ContactDetails\ContactDetailsFeatureContext
 
-        contacts:
-            description: Covering the 'Contacts' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/contacts" ]
-            contexts:
-                - DigidepsBehat\v2\Reporting\Sections\ContactsFeatureContext
-
-
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             goutte:
@@ -205,13 +198,26 @@ cross-browser-android-chrome:
                     device: 'Samsung Galaxy S10'
                     build: 'Android'
 
-v2-tests:
+v2-tests-goutte:
     suites:
         contacts:
             description: Covering the 'Contacts' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/contacts" ]
             contexts:
-                - DigidepsBehat\v2\Reporting\Sections\ContactsFeatureContext
+                - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            files_path: '%paths.base%/fixtures/'
+            default_session: goutte
+        Behatch\Extension: ~
+
+v2-tests-browserstack:
+    suites:
+        contacts:
+            description: Covering the 'Contacts' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/contacts" ]
+            contexts:
+                - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             browser_stack:
@@ -220,6 +226,12 @@ v2-tests:
                     browserstack-tunnel: true
                     acceptSslCerts: true
                     project: 'Digideps Cross Browser Test - Manual'
+                    browser: 'chrome'
+                    browserVersion: 'latest'
+                    os: 'Windows'
+                    os_version: '10'
+                    build: 'Chrome'
+                    name: 'v2-tests'
             files_path: '%paths.base%/fixtures/'
-            default_session: goutte
+            default_session: browser_stack
         Behatch\Extension: ~
