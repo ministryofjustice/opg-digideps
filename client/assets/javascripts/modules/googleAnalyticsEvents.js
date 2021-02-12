@@ -1,4 +1,6 @@
 class GoogleAnalyticsEvents {
+  static eventInfo = [];
+
   static init () {
     // - Find element with data-attribute = ga-event
     // - Get values of data-label, data-category, data-action, data-value
@@ -11,10 +13,18 @@ class GoogleAnalyticsEvents {
     //     'value': <value>
     //     });
 
-    const elements = document.querySelectorAll('button[data-attribute="gae"]')
+    const elements = document.querySelectorAll('button[data-attribute="ga-event"]')
 
     elements.forEach(element => {
       element.addEventListener('userStartsURSection', () => {})
+    })
+  }
+
+  static extractEventInfo (eventElement) {
+    this.eventInfo.push({
+        "action": eventElement.dataset.action,
+        "event_category": eventElement.dataset.category,
+        "event_label": eventElement.dataset.label
     })
   }
 }
