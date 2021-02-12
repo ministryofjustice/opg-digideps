@@ -24,8 +24,7 @@
                 {{ form_input(form.hasCapacityChangedDetails, (page ~ '.form.hasCapacityChangedDetails'), {
                     'labelClass': 'required',
                     'labelParameters': transOptions,
-                    'hintText' : (page ~ '.form.hasCapacityChangedDetails.hint') | trans(transOptions, translationDomain),
-                    'labelRaw': true
+                    'hintText' : (page ~ '.form.hasCapacityChangedDetails.hint') | trans(transOptions, translationDomain)
             }) }}
             {% endset %}
 

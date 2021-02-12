@@ -11,7 +11,12 @@
 
     <p class="govuk-body">{{ (page ~ '.checkTheyreCorrect') | trans }}</p>
 
-    {{ macros.notification('info', (page ~ '.informationMessage') | trans(transOptions)) }}
+    {{ macros.notification('info2Part', (
+            {
+                'textbeforemarkup': (page ~ '.informationMessage.beforeMarkupText') | trans(transOptions),
+                'textaftermarkup': (page ~ '.informationMessage.afterMarkupText') | trans(transOptions)
+            }
+        )) }}
 {% endif %}
 
 <dl class="govuk-summary-list">

@@ -26,7 +26,7 @@
                 {{ 'address' | trans({}, 'common' ) }}
             </dt>
             <dd class="govuk-summary-list__value">
-                {{ asset.AddressValidLines | join(', ') | raw  }}
+                {{ asset.AddressValidLines | join(', ') }}
             </dd>
             {% if not hideEditLink  %}
                 <dd class="govuk-summary-list__actions">

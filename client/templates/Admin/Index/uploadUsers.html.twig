@@ -15,7 +15,10 @@
 
     {% if nOfChunks %}
 
-<p class="govuk-body">{{ (page ~ '.uploading') | trans | raw }}</p>
+<p class="govuk-body">
+    {{ (page ~ '.uploading.beforeMarkupText') | trans }}<br>
+    {{ (page ~ '.uploading.afterMarkupText') | trans }}
+</p>
 
 <progress id="uploadProgress" value="0" max="{{ nOfChunks + 1 }}" data-path-casrec-delete-by-source-ajax="{{ path('casrec_delete_by_source_ajax', {'source': source}) }}" data-path-casrec-add-ajax="{{ path('casrec_add_ajax') }}" data-path-casrec-upload="{{ path('casrec_upload') }}" class="js-upload-progress">
 
@@ -33,7 +36,6 @@
         {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
         {{ form_input(form.file, '', {
-            'labelRaw': true,
             'labelText': 'Select CSV file exported from CASREC',
             'hintText': 'Max upload size is ' ~ maxUploadSize,
             'inputClass': 'no-border'

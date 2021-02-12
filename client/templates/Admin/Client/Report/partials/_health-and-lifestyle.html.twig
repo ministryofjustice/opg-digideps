@@ -4,12 +4,17 @@
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
 {% set page = 'checklistPage' %}
+{% set hideEditLink = true %}
 
 <h3 class="govuk-heading-m" id="lifestyle">{{ (page ~ '.heading.lodging.healthAndLifestyle') | trans }}</h3>
 
 {{ checklist_radios(form.satisfiedWithHealthAndLifestyle) }}
 
-{{ details({
-    summaryText: (page ~ '.revealTitle.lifestyleResponses') | trans,
-    html: include('@App/Report/Lifestyle/_answers.html.twig', { hideEditLink: true })
-}) }}
+<details class="govuk-details" data-module="govuk-details">
+    <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.lifestyleResponses') | trans }}</span>
+    </summary>
+    <div class="govuk-details__text">
+        {% include '@App/Report/Lifestyle/_answers.html.twig' %}
+    </div>
+</details>

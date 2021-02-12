@@ -2,10 +2,15 @@
 {% trans_default_domain 'admin-checklist' %}
 
 {% if report.hasSection('deputyExpenses') %}
-    {{ details({
-        summaryText: (page ~ '.revealTitle.deputyExpensesSummary') | trans,
-        html: include('@App/Report/DeputyExpense/_list.html.twig', { hideEditLink: true }),
-    }) }}
+    {% set hideEditLink = true %}
+    <details class="govuk-details" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.deputyExpensesSummary') | trans }}</span>
+        </summary>
+        <div class="govuk-details__text">
+            {% include '@App/Report/DeputyExpense/_list.html.twig' %}
+        </div>
+    </details>
 {% elseif report.hasSection('paDeputyExpenses') %}
     {% set contents %}
         {% include '@App/Report/PaFeeExpense/_yn_questions.html.twig' with {

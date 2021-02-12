@@ -13,7 +13,10 @@
 
 {% block pageContent %}
 
-    <p class="govuk-body">{{ (page ~ '.question') | trans({'%fullName%': user.getFullname()}) | raw }}</p>
+    <p class="govuk-body">
+        {{ (page ~ '.question.beforeMarkupText') | trans }}
+        <strong class="bold">{{ user.getFullname() }}</strong>{{ (page ~ '.question.afterMarkupText') | trans }}
+    </p>
 
     {% include '@App/Components/Link/_link-button.html.twig' with {
         transDomain: 'admin',

@@ -19,7 +19,11 @@
 <div>
     {% if totalRecords <= recordsPerPage %}
         <p data-test-id="pager-summary">
-            {{ messages.singlePage | transchoice(totalRecords) | raw }}
+            {% if totalRecords == 1 %}
+            {{  messages.singlePage.singular | transchoice(totalRecords) }}
+            {% else %}
+            {{  messages.singlePage.plural | transchoice(totalRecords) }}
+            {%  endif %}
         </p>
     {% else %}
         {% set nbPages = (totalRecords / recordsPerPage)|round(0, 'ceil') %}
@@ -71,7 +75,7 @@
         {% set firstRecordDisplayed = currentOffset + 1 %}
         {% set lastRecordDisplayed = (currentOffset + recordsPerPage) > totalRecords ? totalRecords : (currentOffset + recordsPerPage) %}
         <p data-test-id="pager-summary">
-            {{ messages.multiPage | trans({'%from%': firstRecordDisplayed, '%to%': lastRecordDisplayed, '%total%': totalRecords}) | raw }}
+            {{ messages.multiPage | trans({'%from%': firstRecordDisplayed, '%to%': lastRecordDisplayed, '%total%': totalRecords}) }}
         </p>
     {% endif %}
 </div>

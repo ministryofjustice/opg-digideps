@@ -29,8 +29,7 @@
         {{ form_input(form.profDeputyManagementCostAmount, 'amount', {
             'inputPrefix' : '£',
             'inputClass' : 'govuk-label--s-1-4 js-format-currency',
-            'labelText' : (page ~ '.form.profDeputyCostsEstimateManagementCost.label') | trans,
-            'labelRaw': true
+            'labelText' : (page ~ '.form.profDeputyCostsEstimateManagementCost.label') | trans
         }) }}
     </div>
 
@@ -44,8 +43,7 @@
             {{ form_input(profDeputyEstimateCost.amount, 'amount', {
                 'inputPrefix' : '£',
                 'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
-                'labelText': (page ~ '.form.entries.' ~ profDeputyEstimateCost.profDeputyEstimateCostTypeId.vars.value ~ '.label') | trans,
-                'labelRaw': true
+                'labelText': (page ~ '.form.entries.' ~ profDeputyEstimateCost.profDeputyEstimateCostTypeId.vars.value ~ '.label') | trans
             }) }}
 
             {# this is testing the form field is defined. Not the entity property #}
@@ -53,8 +51,7 @@
                 <div class="">
                     {{ form_input(profDeputyEstimateCost.moreDetails, 'moreDetails', {
                         'labelText': (page ~ '.form.entries.' ~ profDeputyEstimateCost.profDeputyEstimateCostTypeId.vars.value ~ '.moreInformation') | trans,
-                        'formGroupClass': 'opg-indented-block',
-                        'labelRaw': true
+                        'formGroupClass': 'opg-indented-block'
                     }) }}
                 </div>
             {% endif %}

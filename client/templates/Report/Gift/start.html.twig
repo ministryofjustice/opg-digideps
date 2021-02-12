@@ -34,14 +34,25 @@
                     <li>{{ 'startPage.hiddenText01.content.listItem04' | trans(transOptions) }}</li>
                     <li>{{ 'startPage.hiddenText01.content.listItem05' | trans(transOptions) }}</li>
                 </ul>
-                <p class="govuk-body">{{ 'startPage.hiddenText01.content.para02' |trans(transOptions)|raw }}</p>
-                <p class="govuk-body">{{ 'startPage.hiddenText01.content.para03' |trans(transOptions)|raw }}</p>
+                <p class="govuk-body">{{ 'startPage.hiddenText01.content.para02' |trans(transOptions) }}</p>
+                <p class="govuk-body">
+                    {{ 'startPage.hiddenText01.content.para03.beforeMarkupText' |trans(transOptions) }}
+                    <a href="{{ 'startPage.hiddenText01.content.para03.link' |trans(transOptions) }}">
+                        {{ 'startPage.hiddenText01.content.para03.linkText' |trans(transOptions) }}
+                    </a>
+                </p>
             </div>
         </details>
 
         {% if report.bankAccounts is empty and report.canLinkToBankAccounts %}
             <h3 class="govuk-heading-s">{{ 'startPage.accountLinksHeading' | trans(transOptions) }}</h3>
-            <p class="govuk-body">{{ 'startPage.accountLinksPara1' | trans(transOptions) | raw }}</p>
+            <p class="govuk-body">
+                {{ 'startPage.accountLinksPara1.beforeMarkupText' | trans(transOptions) }}
+                <a href="{{ path('bank_accounts', {reportId: report.id}) }}">
+                    {{ 'startPage.accountLinksPara1.link' | trans(transOptions) }}
+                </a>
+                {{ 'startPage.accountLinksPara1.afterMarkupText' | trans(transOptions) }}
+            </p>
         {% endif %}
     </div>
 

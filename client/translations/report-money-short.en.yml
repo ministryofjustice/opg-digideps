@@ -48,8 +48,9 @@ addPage:
     supportTitle: Money in
     pageSectionDescription1: |
       List all one-off items of income over £1,000
-    pageSectionDescription2: |
-      You may find it easier to use %client%'s bank statements to find this information.
+    pageSectionDescription2:
+      beforeMarkupText: 'You may find it easier to use '
+      afterMarkupText: '''s bank statements to find this information.'
     pageSectionDescription3: |
       You can add one or more items of income and come back to complete the section later.
   moneyOut:

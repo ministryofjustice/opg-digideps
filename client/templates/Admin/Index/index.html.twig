@@ -25,7 +25,6 @@
 
     <div class="govuk-grid-row">
         {{ form_input(form.q, 'Search', {
-            'labelRaw': true,
             'labelText':'Search',
             'inputClass': 'govuk-!-width-full',
             'formGroupClass': 'govuk-grid-column-one-quarter'}) }}
@@ -62,9 +61,14 @@
             <div class="govuk-grid-column-one-half">
                 <h2 id="users-list-title" class="govuk-heading-m flush--ends">{{ (page ~ '.userTable.heading') | trans }}</h2>
                 {% if users | length  == filters.limit %}
-                    <p class="govuk-body">{{ (page ~ '.userTable.resultsLimited') | trans|raw }}</p>
+                    <p class="govuk-body">
+                        {{ (page ~ '.userTable.resultsLimited.part01') | trans }}<br>
+                        {{ (page ~ '.userTable.resultsLimited.part02') | trans }}
+                    </p>
                 {% else %}
-                    <p class="govuk-body">{{ (page ~ '.userTable.results') | trans({'%numberOfUsers%': users | length }) | raw }}</p>
+                    <p class="govuk-body">
+                        Found {{ users | length }} users
+                    </p>
                 {% endif %}
             </div>
         </div>

@@ -19,8 +19,11 @@ startPage:
       listItem03: |
         apply a high standard of care – this might mean involving other people, for example
         getting advice from relatives and professionals like doctors
-      para03: |
-        OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on how to look after %client%'s financial affairs.
+      para03:
+        beforeMarkupText: "OPG's "
+        afterMarkupText: "booklet gives detailed guidance on how to look after %client%'s financial affairs."
+        link: 'https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties'
+        linkText: "'How to be a deputy' (SD3) "
   startButton: Start actions
 
 stepPage:
@@ -43,10 +46,12 @@ stepPage:
           someone living rent free or at a "friends and family" rate in a property belonging to %client%
         listItem05: giving someone an interest free loan from %client%'s funds
         para02: |
-          There are strict limits on gift-giving as a deputy. These rules help to look
-          after %client%'s best interests.
-        para03: |
-          OPG's <a href="https://www.gov.uk/government/publications/giving-gifts-a-guide-for-deputies-and-attorneys">'Giving gifts for someone else' (OPG2) booklet</a> gives detailed guidance on giving gifts as a deputy.
+          There are strict limits on gift-giving as a deputy. These rules help to look after %client%'s best interests.
+        para03:
+          beforeMarkupText: "OPG's "
+          afterMarkupText: "gives detailed guidance on giving gifts as a deputy."
+          link: https://www.gov.uk/government/publications/giving-gifts-a-guide-for-deputies-and-attorneys
+          linkText: "'Giving gifts for someone else' (OPG2) booklet"
   property:
     pageTitle: Property
     selling:
@@ -62,7 +67,9 @@ stepPage:
           para03: |
             You can also apply to pay less or no fee for an application to the court if the
             client has a small estate (low funds).
-          para04: <a href="https://www.gov.uk/joint-property-ownership">Find out more</a>
+          para04:
+            link: https://www.gov.uk/joint-property-ownership
+            linkText: Find out more
   backLink: Back
 
 summaryPage:

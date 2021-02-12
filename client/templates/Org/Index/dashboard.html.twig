@@ -149,8 +149,11 @@
             'q': filters.q
         },
         messages: {
-            singlePage: '{0} Showing 0 clients|{1} Showing 1 client|]1,Inf[ Showing %count% clients',
-            multiPage: 'Showing %from% &ndash; %to% of %total% clients'
+            singlePage: {
+                singular: 'Showing 1 client',
+                plural: 'Showing %count% clients'
+            },
+            multiPage: 'Showing %from% - %to% of %total% clients'
         }
     } %}
 

@@ -18,13 +18,18 @@ startPage:
       para02: |
         There are strict limits on gift-giving as a deputy. These rules help to look
         after %client%'s best interests.
-      para03: |
-        OPG's <a href="https://www.gov.uk/government/publications/giving-gifts-a-guide-for-deputies-and-attorneys">'Giving gifts for someone else' (OPG2)</a> booklet gives detailed guidance on giving gifts as a deputy.
+      para03:
+        beforeMarkupText: OPG's
+        link: https://www.gov.uk/government/publications/giving-gifts-a-guide-for-deputies-and-attorneys
+        linkText: booklet gives detailed guidance on giving gifts as a deputy.
   accountLinksHeading: Link gifts to %client%'s bank accounts
-  accountLinksPara1: |
-    When you add a gift, you have the option to say which of %client%'s bank accounts it was bought from.
-    If you'd like to do this, you may want to <a href="%accountsPath%">add %client%'s bank accounts</a>
-    before you start this section.
+  accountLinksPara1:
+    beforeMarkupText: |
+      When you add a gift, you have the option to say which of %client%'s bank accounts it was bought from.
+      If you'd like to do this, you may want to
+    link: add %client%'s bank accounts
+    afterMarkupText: before you start this section.
+
   startButton: Start gifts
 
 existPage:

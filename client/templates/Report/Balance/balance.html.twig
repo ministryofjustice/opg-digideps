@@ -54,7 +54,10 @@
         {# If no transactions, don't display download CSV link #}
         {% if report.gifts is not empty or report.expenses is not empty or report.moneyTransactionsIn is not empty or report.moneyTransactionsOut is not empty %}
             <p class="text push--top">
-                {{ 'download-transactions' | trans({ '%transactionsCsvPath%': path('report_transactions_csv', {reportId: report.id})}) | raw }}
+                <a id="transactionsCsv" href="{{ path('report_transactions_csv', {reportId: report.id}) }}" class="behat-link-download-transactions">
+                    {{ 'download-transactions.link' | trans }}
+                </a>
+                {{ 'download-transactions.afterMarkupText' | trans }}
             </p>
         {% endif %}
     {% endif %}
@@ -62,7 +65,7 @@
     <h3 class="govuk-heading-m">{{ 'moreInfo.heading' | trans }}</h3>
 
     <div class="text">
-        <p class="govuk-body">{{ 'moreInfo.para1' | trans(transOptions) | raw }}</p>
+        <p class="govuk-body">{{ 'moreInfo.para1' | trans(transOptions) }}</p>
         <p class="govuk-body">{{ 'moreInfo.para2' | trans }}</p>
         <p class="govuk-body">{{ 'moreInfo.para3' | trans }}</p>
 
@@ -83,7 +86,7 @@
                         {% if app.user and not app.user.isDeputyProf() %}
                             <li>{{ ('moreInfo.whatToDo.listItem4' ~ app.user.getRoleForTrans) | trans }}</li>
                         {% endif %}
-                        <li>{{ 'moreInfo.whatToDo.listItem5' | trans(transOptions) | raw }}</li>
+                        <li>{{ 'moreInfo.whatToDo.listItem5' | trans(transOptions) }}</li>
                     </ul>
                 </div>
             </details>

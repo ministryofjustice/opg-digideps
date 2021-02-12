@@ -6,13 +6,18 @@ startPage:
     savings accounts and ISAs.
   pageSectionDescription2: |
     We will also need to know the balance of each account.
-  pageSectionDescription3: |
-    Interest can be added in the <a href="%moneyInPath%">money in</a> section.
+  pageSectionDescription3:
+    beforeMarkupText: 'Interest can be added in the '
+    link: money in
+    afterMarkupText: section.
   hiddenText01:
     summary: More on how to carry out your duties
     content:
-      para01: |
-        OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on how to look after %client%'s financial affairs.
+      para01:
+        beforeMarkupText: "OPG's "
+        afterMarkupText: booklet gives detailed guidance on how to look after %client%'s financial affairs.
+        link: https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties
+        linkText: "'How to be a deputy' (SD3)"
   startButton: Start accounts
 
 stepPage:

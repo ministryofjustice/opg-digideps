@@ -7,8 +7,9 @@ home:
     upload: Upload users
   userTable:
     heading: User list
-    resultsLimited: Search results are limited to 65 users.<br>Use search to filter the wanted users.
-    results: Found %numberOfUsers% users
+    resultsLimited:
+      part01: Search results are limited to 65 users.
+      part02: Use search to filter the wanted users.
     header:
       name: Name
       email: Email
@@ -76,7 +77,9 @@ deleteConfirm:
   htmlTitle: Administration - Users
   pageTitle: Delete user
   supportTitle: Users
-  question: Are you sure that you want to delete <strong class="bold">%fullName%</strong>? This action cannot be undone.
+  question:
+    beforeMarkupText: 'Are you sure that you want to delete '
+    afterMarkupText: '? This action cannot be undone.'
 
 viewUser:
   htmlTitle: Administration - Users
@@ -191,7 +194,9 @@ uploadUsers:
   supportTitle: Users
   heading: Upload users
   usersInTheDB: users in the database
-  uploading: Uploading... please wait.<br/>Do not refresh this page
+  uploading:
+    beforeMarkupText: Uploading... please wait.
+    afterMarkupText: Do not refresh this page
   incidentsOccurred: "%count% %type% occurred"
   moreDetails: More details
 

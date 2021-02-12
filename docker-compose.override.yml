@@ -22,6 +22,7 @@ services:
       - ./client/frontend.env:/var/www/frontend.env
       - ./client/admin.env:/var/www/admin.env
       - ./client/templates:/var/www/templates
+      - ./client/translations:/var/www/translations
       - ./client/phpstan.neon:/var/www/phpstan.neon
 
   api:
@@ -53,6 +54,7 @@ services:
       - ./client/frontend.env:/var/www/frontend.env
       - ./client/admin.env:/var/www/admin.env
       - ./client/templates:/var/www/templates
+      - ./client/translations:/var/www/translations
       - ./client/phpstan.neon:/var/www/phpstan.neon
 
   wkhtmltopdf:

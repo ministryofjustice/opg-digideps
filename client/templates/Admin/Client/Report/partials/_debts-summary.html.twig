@@ -1,7 +1,12 @@
 {% from '@App/Macros/macros.html.twig' import details %}
 {% trans_default_domain 'admin-checklist' %}
+{%  set hideEditLink = true %}
 
-{{ details({
-    summaryText: (page ~ '.revealTitle.debtsSummary') | trans,
-    html: include('@App/Report/Debt/_answers.html.twig', { hideEditLink: true })
-}) }}
+<details class="govuk-details" data-module="govuk-details">
+    <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.debtsSummary') | trans }}</span>
+    </summary>
+    <div class="govuk-details__text">
+        {% include '@App/Report/Debt/_answers.html.twig' %}
+    </div>
+</details>

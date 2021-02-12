@@ -31,7 +31,13 @@
                 <span class="govuk-details__summary-text">{{ 'startPage.hiddenText01.summary' |trans }}</span>
             </summary>
             <div class="govuk-details__text">
-                <p class="govuk-body">{{ 'startPage.hiddenText01.content.para01' |trans|raw }}</p>
+                <p class="govuk-body">
+                    {{ 'startPage.hiddenText01.content.para01.beforeMarkupText' | trans }}
+                    <a href="{{ 'startPage.hiddenText01.content.para01.link' | trans }}">
+                        {{ 'startPage.hiddenText01.content.para01.linkText' | trans }}
+                    </a>
+                    {{ 'startPage.hiddenText01.content.para01.afterMarkupText' | trans }}
+                </p>
             </div>
         </details>
 
@@ -40,7 +46,13 @@
 
         {% if report.bankAccounts is empty and report.canLinkToBankAccounts %}
             <h3 class="govuk-heading-s">{{ 'startPage.accountLinksHeading' | trans(transOptions) }}</h3>
-            <p class="govuk-body">{{ 'startPage.accountLinksPara1' | trans(transOptions) | raw }}</p>
+            <p class="govuk-body">
+                {{ 'startPage.accountLinksPara1.beforeMarkupText' | trans(transOptions) }}
+                <a href="{{ path('bank_accounts', {reportId: report.id}) }}">
+                    {{ 'startPage.accountLinksPara1.link' | trans(transOptions) }}
+                </a>
+                {{ 'startPage.accountLinksPara1.afterMarkupText' | trans(transOptions) }}
+            </p>
         {% endif %}
 
     </div>

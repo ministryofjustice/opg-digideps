@@ -30,16 +30,14 @@
             {{ form_input(fee.amount, 'amount', {
                 'inputPrefix' : '£',
                 'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
-                'labelText': ('form.entries.' ~ feeId ~ '.label') | trans,
-                'labelRaw': true
+                'labelText': ('form.entries.' ~ feeId ~ '.label') | trans
             }) }}
 
             {% if fee.moreDetails is defined %}
                 <div class="js-hidden">
                     {{ form_input(fee.moreDetails, 'moreDetails', {
                         'labelText': ('form.entries.' ~ feeId ~ '.moreInformations') | trans,
-                        'formGroupClass': 'opg-indented-block hard--top',
-                        'labelRaw': true
+                        'formGroupClass': 'opg-indented-block hard--top'
                     }) }}
                 </div>
             {% endif %}

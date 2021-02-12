@@ -25,7 +25,12 @@
         </summary>
         <div class="govuk-details__text">
             <p class="govuk-body">{{ (page ~ '.whatisMentalCapacityPara1') | trans(transOptions) }}</p>
-            <p class="govuk-body">{{ (page ~ '.whatisMentalCapacityPara2') | trans(transOptions)|raw }}</p>
+            <p class="govuk-body">
+                {{ (page ~ '.whatisMentalCapacityPara2.beforeMarkupText') | trans(transOptions) }}
+                <a href="{{ (page ~ '.whatisMentalCapacityPara2.link') | trans(transOptions) }}">
+                    {{ (page ~ '.whatisMentalCapacityPara2.linkText') | trans(transOptions) }}
+                </a>.
+            </p>
         </div>
     </details>
 

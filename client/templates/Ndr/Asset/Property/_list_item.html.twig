@@ -21,7 +21,7 @@
             {{ 'address' | trans({}, 'common' ) }}
         </dt>
         <dd class="govuk-summary-list__value">
-            {{ asset.AddressValidLines | join(', ') | raw  }}
+            {{ asset.AddressValidLines | join(', ') }}
         </dd>
         <dd class="govuk-summary-list__actions">
             <a

@@ -5,9 +5,9 @@ startPage:
     pageSectionDescription1: |
       In this section, we ask you about money paid into %client%'s accounts between %startDate%
       and %endDate%.
-    pageSectionDescription2: |
-      Transfers between %client%'s accounts should be entered in the
-      <a href="%moneyTransfersPath%">money transfers</a> section.
+    pageSectionDescription2:
+      beforeMarkupText: Transfers between %client%'s accounts should be entered in the
+      afterMarkupText: section.
     pageSectionDescription3: |
       Make sure you only enter each payment in one place, so we do not count it twice.
     totalOrIndividualHeading: |
@@ -17,10 +17,12 @@ startPage:
       received over the reporting period, or you can add 12 items - one for each month's pension
       payment.
     accountLinksHeading: Link payments to %client%'s bank accounts
-    accountLinksPara1: |
-      When you add a payment, you have the option to say which of %client%'s bank accounts it was paid into.
-      If you'd like to do this, you may want to <a href="%accountsPath%">add %client%'s bank accounts</a>
-      before you start this section.
+    accountLinksPara1:
+      beforeMarkupText: |
+        When you add a payment, you have the option to say which of %client%'s bank accounts it was paid into.
+        If you'd like to do this, you may want to
+      link: add %client%'s bank accounts
+      afterMarkupText: before you start this section.
     startButton: Start money in
   moneyOut:
     htmlTitle: "Money out - Complete the deputy report | GOV.UK"
@@ -28,18 +30,27 @@ startPage:
     pageSectionDescription1: |
       In this section, we ask you about money paid out of %client%'s accounts between %startDate%
       and %endDate%.
-    pageSectionDescription2: |
-      There are different sections for you to tell us about <a href="%moneyTransfersPath%">
-      money transfers</a> between %client%'s accounts, your <a href="%deputyExpensesPath%">
-      deputy expenses</a>, and <a href="%giftsPath%">gifts</a>.
-    pageSectionDescription2-PA: |
-      There are different sections for you to tell us about <a href="%moneyTransfersPath%">
-      money transfers</a> between %client%'s accounts, your <a href="%paDeputyExpensesPath%">
-      deputy fees and expenses</a>, and <a href="%giftsPath%">gifts</a>.
-    pageSectionDescription2-PROF: |
-      There are different sections for you to tell us about <a href="%moneyTransfersPath%">
-      money transfers</a> between %client%'s accounts, your <a href="%deputyCostsPath%">
-      deputy costs</a>, and <a href="%giftsPath%">gifts</a>.
+    pageSectionDescription2:
+      part1: There are different sections for you to tell us about
+      link1: money transfers
+      part2: between %client%'s accounts, your
+      link2: deputy expenses
+      part3: and
+      link3: gifts.
+    pageSectionDescription2-PA:
+      part1: There are different sections for you to tell us about
+      link1: money transfers
+      part2: between %client%'s accounts, your
+      link2: deputy fees and expenses
+      part3: and
+      link3: gifts.
+    pageSectionDescription2-PROF:
+      part1: There are different sections for you to tell us about
+      link1: money transfers
+      part2: between %client%'s accounts, your
+      link2: deputy fees and expenses
+      part3: deputy costs
+      link3: gifts.
     #    pageSectionDescription2-PROF: |
     #      There are different sections for you to tell us about <a href="%moneyTransfersPath%">
     #      money transfers</a> between %client%'s accounts, your <a href="%deputyCostsPath%">
@@ -52,10 +63,12 @@ startPage:
       For example, you can add one payment that covers the cost of rent for the whole reporting
       period, or you can add 12 payments - one for each month's rent.
     accountLinksHeading: Link payments to %client%'s bank accounts
-    accountLinksPara1: |
-      When you add a payment, you have the option to say which of %client%'s bank accounts it was paid
-      out from. If you'd like to do this, you may want to <a href="%accountsPath%">add %client%'s
-      bank accounts</a> before you start this section.
+    accountLinksPara1:
+      beforeMarkupText: |
+        When you add a payment, you have the option to say which of %client%'s bank accounts it was paid
+        out from. If you'd like to do this, you may want to
+      link: add %client%'s bank accounts
+      afterMarkupText: before you start this section.
     startButton: Start money out
 
 stepPage:

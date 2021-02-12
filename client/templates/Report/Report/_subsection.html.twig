@@ -20,8 +20,8 @@
 
         {%  if description | default(false) %}
             <div class="opg-overview-section__description">
-                {% if descriptionRaw | default(false)  %}
-                    {{ descriptionRaw | raw }}
+                {% if descriptionLeft | default(false)  %}
+                    {{ descriptionLeft }}{{ report.client.firstname | e }}{{ descriptionRight }}
                 {% else %}
                     {{ (subSection ~ '.subSectionDescription') | trans(transOptions) }}
                 {% endif %}

@@ -10,11 +10,11 @@
 
 {{ checklist_radios(form.nextBillingEstimatesSatisfactory) }}
 
-{{ details({
-    summaryText: (page ~ '.revealTitle.profDeputyCostsEstimate') | trans,
-    html: include('@App/Report/ProfDeputyCostsEstimate/_answers.html.twig', {
-        report: report,
-        hideEditLink : hideEditLink,
-        submittedEstimateCosts: submittedEstimateCosts
-    })
-}) }}
+<details class="govuk-details" data-module="govuk-details">
+    <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.profDeputyCostsEstimate') | trans }}</span>
+    </summary>
+    <div class="govuk-details__text">
+        {% include '@App/Report/ProfDeputyCostsEstimate/_answers.html.twig' %}
+    </div>
+</details>

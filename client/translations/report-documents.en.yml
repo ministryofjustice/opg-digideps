@@ -3,7 +3,7 @@ pageTitle: Supporting documents
 
 form:
   submitButton: Upload
-  file:
+  files:
     label: Attach a file
     hint: ""
   errors:
@@ -48,11 +48,9 @@ startPage:
   htmlTitle: "Supporting documents - Complete the deputy report | GOV.UK"
   pageTitle: Supporting documents
   pageSectionDescription1: |
-    Use this section to attach supporting documents to this deputy report. For example bank
-    statements and benefit statements.
+    Use this section to attach supporting documents to this deputy report. For example bank statements and benefit statements.
   notice: |
-    You do not need to attach a copy of this report. When you submit your report it will be
-    sent to OPG automatically.
+    You do not need to attach a copy of this report. When you submit your report it will be sent to OPG automatically.
   deputyProfNotice: |
     Send your final cost certificate for the previous reporting period.
   startButton: Start

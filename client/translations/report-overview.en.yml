@@ -39,8 +39,8 @@ options:
   reviewReport: Review report
 
 guidanceNotice: |
-  You do not have to fill in all the sections in one go. You can complete the report in any
-  order you want, save it and return to it.
+  You do not have to fill in all the sections in one go.
+  You can complete the report in any order you want, save it and return to it.
 
 incompleteNoticeHeading: More information needed
 incompleteNotice: |
@@ -157,7 +157,9 @@ money_out_short:
 balance:
   subSectionTitle: "Accounts balance check"
   subSectionDescription:
-    default: Check that %client%'s accounts balance
+    default:
+      beforeMarkupText: 'Check that '
+      afterMarkupText: '''s accounts balance'
     addExplanation: "Add explanation"
     editExplanation: "Edit explanation"
   label:
