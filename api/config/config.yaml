@@ -1,0 +1,16 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: services.yml }
+    - { resource: security.yml }
+
+services:
+    logstash_formatter:
+        class: Monolog\Formatter\LogstashFormatter
+        arguments:
+        - application.api
+        - null
+        - null
+        - ""
+        - 1
+    line_formatter:
+        class: Monolog\Formatter\LineFormatter

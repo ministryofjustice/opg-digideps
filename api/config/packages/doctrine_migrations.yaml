@@ -1,0 +1,12 @@
+doctrine_migrations:
+    # A list of namespace/path pairs where to look for migrations.
+    migrations_paths:
+        # Prototype
+        'DoctrineMigrations': '%kernel.project_dir%/src/Migrations'
+
+    # Storage to use for migration status metadata.
+    storage:
+        # The default metadata storage, implemented as a table in the database.
+        table_storage:
+            table_name: 'migrations'
+            version_column_name:  'version'
