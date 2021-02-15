@@ -1,4 +1,5 @@
 import GoogleAnalyticsEvents from '../../modules/googleAnalyticsEvents'
+import { describe, it, jest } from '@jest/globals'
 
 const setDocumentBody = () => {
   document.body.innerHTML = `
@@ -55,8 +56,8 @@ describe('googleAnalyticsEvents', () => {
       GoogleAnalyticsEvents.extractEventInfo(button2)
 
       const expectedEventInfo = [
-        { action: 'form-submitted', event_category: 'user-journeys', event_label: 'button-clicks' },
-        { action: 'back-to-report', event_category: 'user-journeys', event_label: 'button-clicks' }
+        { action: 'form-submitted', event_params: { event_category: 'user-journeys', event_label: 'button-clicks' } },
+        { action: 'back-to-report', event_params: { event_category: 'user-journeys', event_label: 'button-clicks' } }
       ]
 
       expect(GoogleAnalyticsEvents.eventInfo).toEqual(expectedEventInfo)
@@ -64,14 +65,15 @@ describe('googleAnalyticsEvents', () => {
   })
 
   describe('sendEvent', () => {
-    jest.spyOn(global, 'gtag').mockReturnValueOnce(true)
+    it('dispatches Google Analytics event', () => {
+      jest.spyOn(global, 'gtag').mockReturnValueOnce(true)
 
-    const gaEvent = { action: 'form-submitted', event_category: 'user-journeys', event_label: 'button-clicks' }
+      const gaEvent = { action: 'form-submitted', event_params: { event_category: 'user-journeys', event_label: 'button-clicks' } }
 
-    // Look at having an anon function and mocking calling gtag e.g. gtag = function(){}
-    GoogleAnalyticsEvents.sendEvent(gaEvent)
+      GoogleAnalyticsEvents.sendEvent(gaEvent)
 
-    expect(global.gtag).toHaveBeenCalledTimes(1)
-    expect(global.gtag).toHaveBeenCalledWith('event', 'form-submitted', { event_category: 'user-journeys', event_label: 'button-clicks' })
+      expect(global.gtag).toHaveBeenCalledTimes(1)
+      expect(global.gtag).toHaveBeenCalledWith('event', 'form-submitted', { event_category: 'user-journeys', event_label: 'button-clicks' })
+    })
   })
 })
