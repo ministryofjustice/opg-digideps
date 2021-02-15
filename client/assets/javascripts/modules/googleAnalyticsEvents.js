@@ -1,26 +1,28 @@
 class GoogleAnalyticsEvents {
-  static eventInfo = [];
-
-  static init (eventName) {
+  static init () {
     const elements = document.querySelectorAll('button[data-attribute="ga-event"]')
 
     elements.forEach(element => {
-      element.addEventListener(eventName, (e) => { this.extractEventInfo(e) })
+      element.addEventListener('click', (e) => { this.sendEvent(e) })
     })
   }
 
   static extractEventInfo (eventElement) {
-    this.eventInfo.push({
+    return {
       action: eventElement.dataset.action,
-      event_params: {
-        event_category: eventElement.dataset.category,
-        event_label: eventElement.dataset.label
-      }
-    })
+      event_params:
+        {
+          event_category: eventElement.dataset.category,
+          event_label: eventElement.dataset.label
+        }
+    }
   }
 
-  static sendEvent (gaEvent) {
-    global.gtag('event', gaEvent.action, gaEvent.event_params)
+  static sendEvent (event) {
+    const eventElement = event.target
+    const eventInfo = this.extractEventInfo(eventElement)
+
+    global.gtag('event', eventInfo.action, eventInfo.event_params)
   }
 }
 

@@ -22,6 +22,17 @@ const setDocumentBody = () => {
     `
 }
 
+const simulateClick = (elem) => {
+  // Create our event (with options)
+  const event = new MouseEvent('click', {
+    bubbles: true,
+    cancelable: true,
+    view: window
+  })
+
+  elem.dispatchEvent(event)
+}
+
 describe('googleAnalyticsEvents', () => {
   describe('init', () => {
     it('attaches event listeners to elements with data-attributes=ga-event', () => {
@@ -34,11 +45,11 @@ describe('googleAnalyticsEvents', () => {
         spies.push(jest.spyOn(button, 'addEventListener'))
       })
 
-      GoogleAnalyticsEvents.init('userStartsURSection')
+      GoogleAnalyticsEvents.init()
 
       spies.forEach(spy => {
         expect(spy).toHaveBeenCalledTimes(1)
-        expect(spy).toHaveBeenCalledWith('userStartsURSection', expect.any(Function))
+        expect(spy).toHaveBeenCalledWith('click', expect.any(Function))
       })
     })
   })
@@ -50,27 +61,26 @@ describe('googleAnalyticsEvents', () => {
       GoogleAnalyticsEvents.init('userStartsURSection')
 
       const button1 = document.getElementById('button1')
-      const button2 = document.getElementById('button2')
 
-      GoogleAnalyticsEvents.extractEventInfo(button1)
-      GoogleAnalyticsEvents.extractEventInfo(button2)
+      const actualEventInfo = GoogleAnalyticsEvents.extractEventInfo(button1)
 
-      const expectedEventInfo = [
-        { action: 'form-submitted', event_params: { event_category: 'user-journeys', event_label: 'button-clicks' } },
-        { action: 'back-to-report', event_params: { event_category: 'user-journeys', event_label: 'button-clicks' } }
-      ]
+      const expectedEventInfo = {
+        action: 'form-submitted',
+        event_params: { event_category: 'user-journeys', event_label: 'button-clicks' }
+      }
 
-      expect(GoogleAnalyticsEvents.eventInfo).toEqual(expectedEventInfo)
+      expect(actualEventInfo).toEqual(expectedEventInfo)
     })
   })
 
-  describe('sendEvent', () => {
-    it('dispatches Google Analytics event', () => {
+  describe('clicking button', () => {
+    it('dispatches gtag event', () => {
       jest.spyOn(global, 'gtag').mockReturnValueOnce(true)
 
-      const gaEvent = { action: 'form-submitted', event_params: { event_category: 'user-journeys', event_label: 'button-clicks' } }
+      setDocumentBody()
+      GoogleAnalyticsEvents.init()
 
-      GoogleAnalyticsEvents.sendEvent(gaEvent)
+      simulateClick(document.getElementById('button1'))
 
       expect(global.gtag).toHaveBeenCalledTimes(1)
       expect(global.gtag).toHaveBeenCalledWith('event', 'form-submitted', { event_category: 'user-journeys', event_label: 'button-clicks' })
