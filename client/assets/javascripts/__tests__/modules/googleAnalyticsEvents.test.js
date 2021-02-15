@@ -33,7 +33,7 @@ describe('googleAnalyticsEvents', () => {
         spies.push(jest.spyOn(button, 'addEventListener'))
       })
 
-      GoogleAnalyticsEvents.init()
+      GoogleAnalyticsEvents.init('userStartsURSection')
 
       spies.forEach(spy => {
         expect(spy).toHaveBeenCalledTimes(1)
@@ -46,7 +46,7 @@ describe('googleAnalyticsEvents', () => {
     it('extracts event action, event_category and event_label from ga-event element', () => {
       setDocumentBody()
 
-      GoogleAnalyticsEvents.init()
+      GoogleAnalyticsEvents.init('userStartsURSection')
 
       const button1 = document.getElementById('button1')
       const button2 = document.getElementById('button2')
@@ -61,5 +61,17 @@ describe('googleAnalyticsEvents', () => {
 
       expect(GoogleAnalyticsEvents.eventInfo).toEqual(expectedEventInfo)
     })
+  })
+
+  describe('sendEvent', () => {
+    jest.spyOn(global, 'gtag').mockReturnValueOnce(true)
+
+    const gaEvent = { action: 'form-submitted', event_category: 'user-journeys', event_label: 'button-clicks' }
+
+    // Look at having an anon function and mocking calling gtag e.g. gtag = function(){}
+    GoogleAnalyticsEvents.sendEvent(gaEvent)
+
+    expect(global.gtag).toHaveBeenCalledTimes(1)
+    expect(global.gtag).toHaveBeenCalledWith('event', 'form-submitted', { event_category: 'user-journeys', event_label: 'button-clicks' })
   })
 })
