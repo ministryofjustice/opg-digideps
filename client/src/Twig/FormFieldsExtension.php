@@ -298,6 +298,7 @@ class FormFieldsExtension extends AbstractExtension
             'element' => $element,
             'translationDomain' => isset($vars['labelTranslationDomain']) ? $vars['labelTranslationDomain'] : null,
             'buttonClass' => isset($vars['buttonClass']) ? $vars['buttonClass'] : null,
+            'attr' => isset($vars['attr']) ? $vars['attr'] : null
         ];
 
         // deprecated. only kept in order not to break forms that use it
