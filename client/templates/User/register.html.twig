@@ -34,7 +34,19 @@
         {{ form_input(form.clientLastname,'clientLastname') }}
         {{ form_input(form.caseNumber,'caseNumber') }}
 
-        {{ form_submit(form.save,'save') }}
+        {{ form_submit(
+            form.save,
+            'save',
+            {
+                attr:
+                    {
+                        'data-attribute': 'ga-event',
+                        'data-action': "form-submitted",
+                        'data-category': "user-journeys",
+                        'data-label': "button-clicks"
+                    }
+            })
+        }}
 
     {{ form_end(form) }}
 

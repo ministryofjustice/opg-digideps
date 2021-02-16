@@ -26,4 +26,4 @@ class GoogleAnalyticsEvents {
   }
 }
 
-export default GoogleAnalyticsEvents
+export { GoogleAnalyticsEvents }

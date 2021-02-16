@@ -1,4 +1,4 @@
-import GoogleAnalyticsEvents from '../../modules/googleAnalyticsEvents'
+import { GoogleAnalyticsEvents } from '../../modules/googleAnalyticsEvents'
 import { describe, it, jest } from '@jest/globals'
 
 const setDocumentBody = () => {
@@ -22,15 +22,15 @@ const setDocumentBody = () => {
     `
 }
 
-const simulateClick = (elem) => {
+const simulateClick = (element) => {
   // Create our event (with options)
-  const event = new MouseEvent('click', {
+  const event = new global.MouseEvent('click', {
     bubbles: true,
     cancelable: true,
     view: window
   })
 
-  elem.dispatchEvent(event)
+  element.dispatchEvent(event)
 }
 
 describe('googleAnalyticsEvents', () => {

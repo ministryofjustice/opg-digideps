@@ -67,7 +67,9 @@
                 {% endif %}
             }
         </script>
-       {% endif %}
+
+        {% include '@App/Layouts/_google_analytics_events_gtag.html.twig' %}
+      {% endif %}
 
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
