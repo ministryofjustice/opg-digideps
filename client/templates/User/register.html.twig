@@ -34,18 +34,15 @@
         {{ form_input(form.clientLastname,'clientLastname') }}
         {{ form_input(form.caseNumber,'caseNumber') }}
 
-        {{ form_submit(
+        {{ form_submit_ga(
             form.save,
             'save',
-            {
-                attr:
-                    {
-                        'data-attribute': 'ga-event',
-                        'data-action': "form-submitted",
-                        'data-category': "user-journeys",
-                        'data-label': "button-clicks"
-                    }
-            })
+            'Lay Registration Form',
+            'Clicked Sign Up Button',
+            null,
+            null,
+            {}
+        )
         }}
 
     {{ form_end(form) }}
