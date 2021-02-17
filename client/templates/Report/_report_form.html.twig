@@ -14,6 +14,11 @@
 
     {{ form_known_date(form.endDate, 'endDate') }}
 
-    {{ form_submit(form.save, 'saveAndContinue') }}
+    {{ form_submit_ga(
+        form.save,
+        'saveAndContinue',
+        'Add Report Dates',
+        'Clicked Save Report Dates Button')
+    }}
 
 {{ form_end(form) }}

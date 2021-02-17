@@ -32,7 +32,15 @@
         } ) }}
     {% endif %}
 
-    {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}
+    {{ form_submit_ga(
+        form.save,
+        'submit',
+        'Set Password Form',
+        'Clicked Set Password Submit Button',
+        null,
+        null,
+        {'buttonClass': 'behat-link-save'})
+    }}
 
     {{ form_end(form) }}
 

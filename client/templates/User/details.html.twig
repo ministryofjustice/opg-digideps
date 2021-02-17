@@ -24,6 +24,17 @@
 
     {{ form_submit(form.save,'form.editYourDetails.controls.save', {'buttonClass': 'behat-link-save'}) }}
 
+
+    {{ form_submit_ga(
+        form.save,
+        'form.editYourDetails.controls.save',
+        'User Details Form',
+        'Clicked Save User Details Button',
+        null,
+        null,
+        {'buttonClass': 'behat-link-save'})
+    }}
+
     {{ form_end(form) }}
 
 {% endblock %}

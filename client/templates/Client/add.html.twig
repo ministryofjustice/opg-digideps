@@ -57,7 +57,12 @@
 
     {{ form_known_date(form.courtDate, 'courtDate') }}
 
-    {{ form_submit(form.save,'saveAndContinue') }}
+    {{ form_submit_ga(
+        form.save,
+        'saveAndContinue',
+        'Add Client Details Form',
+        'Clicked Save Client Details Button')
+    }}
 
     {{ form_end(form) }}
 
