@@ -28,15 +28,23 @@ In order to be consistent with how we track and categorise events we have a pred
 
 #### Categories
 
-| Category | Description |
-|---|---|
-| Lay Registration Form | Events taking place on the Lay registration form page |
+| Category |
+|---|
+| Lay Registration Form |
+| Add Client Details Form |
+| Add Report Dates |
+| User Details Form |
+| Set Password Form |
 
 #### Actions
 
-| Action | Description |
-|---|---|
-| Clicked Sign Up Button | User clicked the sign up button |
+| Action |
+|---|
+| Clicked Sign Up Button |
+| Clicked Save Client Details Button |
+| Clicked Save Report Dates Button |
+| Clicked Save User Details Button |
+| Clicked Set Password Submit Button |
 
 ### Click Tracking
 In order to add click event tracking to an element on a page, add the following attributes:
@@ -47,7 +55,7 @@ In order to add click event tracking to an element on a page, add the following 
      'data-label': '<GA LABEL VALUE>' (optional)
      'data-value': '<GA VALUE VALUE>' (optional)
 
-If the element we want to track is a form submit button the values above can be provided to the twig `form_submit` helper function:
+If the element we want to track is a form submit button the values above can be provided to the twig `form_submit_ga` [helper function](client/src/Twig/FormFieldsExtension.php):
 
 ```twig
 {{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass } }) }}
@@ -56,5 +64,13 @@ If the element we want to track is a form submit button the values above can be 
     {{ form_input(form.lastname,'lastname') }}
     ...
 
-{{ form_submit(form.save, 'save', {}, 'Form submitted', 'User Journeys', 'Button clicks', 1)
+    {{ form_submit_ga(
+        form.save,
+        'form.editYourDetails.controls.save',
+        'User Details Form',
+        'Clicked Save User Details Button',
+        null,
+        null,
+        {'buttonClass': 'behat-link-save'})
+    }}
 ```
