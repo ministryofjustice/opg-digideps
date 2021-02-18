@@ -637,16 +637,33 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/reset-fixtures", name="behat_reset_fixtures", methods={"GET"})
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
      * @return Response
      */
     public function resetFixtures(Request $request)
     {
         try {
-            $this->behatFixtures->loadFixtures();
-            return new Response();
+            if ($this->symfonyEnvironment === 'prod') {
+                throw $this->createNotFoundException();
+            }
+
+            $testRunId = $request->query->get('testRunId');
+            $users = $this->behatFixtures->loadFixtures($testRunId);
+
+            return new JsonResponse(
+                [
+                    'response' => 'Behat fixtures loaded',
+                    'data' => $users
+                ],
+                Response::HTTP_CREATED
+            );
         } catch (\Throwable $e) {
-            return new Response(Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
+            return new JsonResponse(
+                [
+                    'response' => sprintf('Beaht fixtures not loaded: %s', $e->getMessage()),
+                    'data' => null
+                ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 }

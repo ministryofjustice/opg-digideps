@@ -11,27 +11,33 @@ class BaseFeatureContext extends MinkContext
 {
     use DebugTrait;
 
-    const ADMIN = 'admin@publicguardian.gov.uk';
-    const SUPER_ADMIN = 'super-admin@publicguardian.gov.uk';
-
-    const BEHAT_ADMIN_RESET_FIXTURES = '/admin/behat/reset-fixtures';
+    const BEHAT_FRONT_RESET_FIXTURES = '/behat/frontend/reset-fixtures?testRunId=%s';
     const BEHAT_FRONT_USER_DETAILS = '/behat/frontend/user/%s/details';
+
+    private string $adminEmail = '';
+    private string $superAdminEmail = '';
+    private string $testRunId = '';
 
     /**
      * @BeforeScenario
      */
-    public function clearDataBeforeEachScenario()
+    public function resetFixturesAndDropDatabase()
     {
-        $this->loginToAdminAs(self::SUPER_ADMIN);
-        $this->visitAdminPath(self::BEHAT_ADMIN_RESET_FIXTURES);
-        $pageContent = $this->getPageContent();
+        $this->testRunId = (string) (time() + rand());
+        $this->visitAdminPath(sprintf(self::BEHAT_FRONT_RESET_FIXTURES, $this->testRunId));
 
-        $fixturesLoaded = preg_match('/Behat fixtures loaded/', $pageContent);
+        $responseData = json_decode($this->getPageContent(), true);
+
+        $fixturesLoaded = preg_match('/Behat fixtures loaded/', $responseData['response']);
 
         if (!$fixturesLoaded) {
-            throw new Exception($pageContent);
+            throw new Exception($responseData['response']);
         }
+
+        $this->adminEmail = $responseData['data']['admin'];
+        $this->superAdminEmail = $responseData['data']['super-admin'];
     }
+
     /**
      * @return string
      */
@@ -76,7 +82,6 @@ class BaseFeatureContext extends MinkContext
 
         $this->visitPath(sprintf(self::BEHAT_FRONT_USER_DETAILS, $email));
 
-        var_dump($this->getSession()->getDriver()->get);
         $activeReportId = json_decode($this->getPageContent(), true)['ActiveReportId'];
         $userId = json_decode($this->getPageContent(), true)['UserId'];
 
@@ -103,7 +108,7 @@ class BaseFeatureContext extends MinkContext
      */
     public function theFollowingCourtOrdersExist(TableNode $table)
     {
-        $this->loginToAdminAs('super-admin@publicguardian.gov.uk');
+        $this->loginToAdminAs($this->superAdminEmail);
 
         foreach ($table as $row) {
             $queryString = http_build_query([
