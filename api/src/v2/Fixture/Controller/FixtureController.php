@@ -3,7 +3,6 @@
 namespace App\v2\Fixture\Controller;
 
 use App\DataFixtures\DocumentSyncFixtures;
-use App\Entity\CasRec;
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Ndr\NdrRepository;
@@ -19,10 +18,10 @@ use App\FixtureFactory\CasRecFactory;
 use App\FixtureFactory\ClientFactory;
 use App\FixtureFactory\ReportFactory;
 use App\FixtureFactory\UserFactory;
+use App\TestHelpers\BehatFixtures;
 use App\v2\Controller\ControllerTrait;
 use App\v2\Fixture\ReportSection;
 use Doctrine\ORM\EntityManagerInterface;
-use Faker\Factory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,6 +50,7 @@ class FixtureController extends AbstractController
     private $ndrRepository;
     private $casRecFactory;
     private string $symfonyEnvironment;
+    private BehatFixtures $behatFixtures;
 
     public function __construct(
         EntityManagerInterface $em,
@@ -65,7 +65,8 @@ class FixtureController extends AbstractController
         UserRepository $userRepository,
         NdrRepository $ndrRepository,
         CasRecFactory $casRecFactory,
-        string $symfonyEnvironment
+        string $symfonyEnvironment,
+        BehatFixtures $behatFixtures
     ) {
         $this->em = $em;
         $this->clientFactory = $clientFactory;
@@ -80,6 +81,7 @@ class FixtureController extends AbstractController
         $this->ndrRepository = $ndrRepository;
         $this->casRecFactory = $casRecFactory;
         $this->symfonyEnvironment = $symfonyEnvironment;
+        $this->behatFixtures = $behatFixtures;
     }
 
     /**
@@ -630,6 +632,38 @@ class FixtureController extends AbstractController
             return $this->buildSuccessResponse([json_encode($org, JSON_PRETTY_PRINT)], "Org '$orgName' activated", Response::HTTP_OK);
         } catch (\Throwable $e) {
             $this->buildErrorResponse(sprintf("Organisation '%s' could not be activated: %s", $orgName, $e->getMessage()));
+        }
+    }
+
+    /**
+     * @Route("/reset-fixtures", name="behat_reset_fixtures", methods={"GET"})
+     * @return Response
+     */
+    public function resetFixtures(Request $request)
+    {
+        try {
+            if ($this->symfonyEnvironment === 'prod') {
+                throw $this->createNotFoundException();
+            }
+
+            $testRunId = $request->query->get('testRunId');
+            $users = $this->behatFixtures->loadFixtures($testRunId);
+
+            return new JsonResponse(
+                [
+                    'response' => 'Behat fixtures loaded',
+                    'data' => $users
+                ],
+                Response::HTTP_CREATED
+            );
+        } catch (\Throwable $e) {
+            return new JsonResponse(
+                [
+                    'response' => sprintf('Beaht fixtures not loaded: %s', $e->getMessage()),
+                    'data' => null
+                ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 }

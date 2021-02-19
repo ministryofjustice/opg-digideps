@@ -10,9 +10,8 @@ use App\Form\Admin\Fixture\CourtOrderFixtureType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
+use App\Service\DeputyProvider;
 use App\TestHelpers\ClientHelpers;
-use Exception;
-use GuzzleHttp\Psr7\Stream;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +19,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Serializer\Serializer;
+use App\Service\Client\TokenStorage\TokenStorageInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Twig\Environment;
 
@@ -29,33 +28,30 @@ use Twig\Environment;
  */
 class FixtureController extends AbstractController
 {
-    /** @var Environment */
-    private $twig;
-
-    /** @var Serializer */
-    private $serializer;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
+    private Environment $twig;
+    private SerializerInterface $serializer;
+    private RestClient $restClient;
     private ReportApi $reportApi;
-
-    /** @var UserApi */
     private UserApi $userApi;
+    private TokenStorageInterface $tokenStorage;
+    private DeputyProvider $deputyProvider;
 
     public function __construct(
         Environment $twig,
         SerializerInterface $serializer,
         RestClient $restClient,
         ReportApi $reportApi,
-        UserApi $userApi
+        UserApi $userApi,
+        TokenStorageInterface $tokenStorage,
+        DeputyProvider $deputyProvider
     ) {
         $this->twig = $twig;
         $this->serializer = $serializer;
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
         $this->userApi = $userApi;
+        $this->tokenStorage = $tokenStorage;
+        $this->deputyProvider = $deputyProvider;
     }
 
     /**

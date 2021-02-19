@@ -72,7 +72,7 @@ trait DocumentSynchronisationTrait
      */
     public function iRunTheDocumentSyncCommand()
     {
-        $this->visitAdminPath('/admin/run-document-sync-command');
+        $this->visitAdminPath('/admin/behat/run-document-sync-command');
 
         if ($this->getSession()->getStatusCode() > 299) {
             throw new \Exception("There was an non successful response when running the document-sync command");

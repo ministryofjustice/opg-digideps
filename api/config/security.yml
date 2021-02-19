@@ -115,6 +115,10 @@ security:
            pattern: ^/setting/service-notification
            security: false
            methods: [GET]
+        resetFixtures:
+            pattern: ^/v2/fixture/reset-fixtures
+            security: false
+            methods: [ GET ]
         # keep this one last so that the previous ones bypass the catch-all pattern below
         default:
             pattern: .*

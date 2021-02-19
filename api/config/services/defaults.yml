@@ -4,6 +4,7 @@ services:
         autoconfigure: true
         bind:
             $symfonyEnvironment: "%kernel.environment%"
+            $fixtureParams: '%fixtures%'
 
     App\:
         resource: '../../src/'

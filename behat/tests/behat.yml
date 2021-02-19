@@ -110,9 +110,9 @@ default:
                 - DigidepsBehat\ACL\ACLfeatureContext
 
         # features-v2
-        reporting-v2:
-            description: Coverage of reporting functionality - populating sections, previewing, and submitting
-            paths: [ "%paths.base%/features-v2/reporting" ]
+        reporting-preview:
+            description: Coverage of report preview functionality
+            paths: [ "%paths.base%/features-v2/reporting/preview" ]
             contexts:
                 - DigidepsBehat\Reporting\ReportingFeatureContext
 
@@ -127,7 +127,6 @@ default:
             paths: [ "%paths.base%/features-v2/contact-details" ]
             contexts:
                 - DigidepsBehat\ContactDetails\ContactDetailsFeatureContext
-
 
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
@@ -198,3 +197,41 @@ cross-browser-android-chrome:
                     os_version: '9.0'
                     device: 'Samsung Galaxy S10'
                     build: 'Android'
+
+v2-tests-goutte:
+    suites:
+        contacts:
+            description: Covering the 'Contacts' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/contacts" ]
+            contexts:
+                - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            files_path: '%paths.base%/fixtures/'
+            default_session: goutte
+        Behatch\Extension: ~
+
+v2-tests-browserstack:
+    suites:
+        contacts:
+            description: Covering the 'Contacts' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/contacts" ]
+            contexts:
+                - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            browser_stack:
+                capabilities:
+                    browserstack-debug: true
+                    browserstack-tunnel: true
+                    acceptSslCerts: true
+                    project: 'Digideps Cross Browser Test - Manual'
+                    browser: 'chrome'
+                    browserVersion: 'latest'
+                    os: 'Windows'
+                    os_version: '10'
+                    build: 'Chrome'
+                    name: 'v2-tests'
+            files_path: '%paths.base%/fixtures/'
+            default_session: browser_stack
+        Behatch\Extension: ~

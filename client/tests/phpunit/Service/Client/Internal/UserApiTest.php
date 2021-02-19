@@ -145,7 +145,7 @@ class UserApiTest extends TestCase
         $existingUser = UserHelpers::createUser();
 
         $this->restClient
-            ->get(sprintf('user/get-one-by/email/%s', $existingUser->getEmail()), 'User')
+            ->get(sprintf('user/get-one-by/email/%s', $existingUser->getEmail()), 'User', [])
             ->shouldBeCalled()
             ->willReturn($existingUser);
 
