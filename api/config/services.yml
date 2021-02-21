@@ -9,6 +9,10 @@ imports:
     - { resource: services/security.yml }
     - { resource: services/transformers.yml }
 
+parameters:
+    fixtures:
+        account_password: '%env(FIXTURES_ACCOUNTPASSWORD)%'
+
 services:
     em:
         alias: doctrine.orm.entity_manager
