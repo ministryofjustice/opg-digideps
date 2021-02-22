@@ -26,4 +26,6 @@ suites:
 
 Always extend from `BaseFeatureContext.php` when creating new feature context files as it contains functions that are commonly used across many features and allows us to keep tests state and fixture free by creating data on demand while keeping it accessible throughout the whole feature test. For example, rather than relying on a fixture file we can dynamically create uniquely named users and other objects that are accessible within `BaseFeatureContext` to avoid data collision and allow for parallel test runs.
 
-If the step definition we need to write involves a number of complex actions we should look to break this out into focused functions with a view to enable re-use in other functions and only expose the step definitions we absoultely need. This will ensure there aren't duplicated step definitions and keep surprises when working with the interface to a minimum.
+If the step definition we need to write involves a number of complex actions we should look to break this out into focused functions with a view to enable re-use and only expose the step definitions we absolutely need. This will ensure there aren't duplicated step definitions and keep surprises when working with the interface to a minimum.
+
+Steps defined in a trait or feature context file that later required in unrelated feature tests should be extracted and moved to either BaseFeatureContext.php or a trait that is included in BaseFeatureContext.
