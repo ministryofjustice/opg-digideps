@@ -16,6 +16,12 @@ class BehatFixtures
     private array $fixtureParams;
     private UserPasswordEncoderInterface $encoder;
     private string $symfonyEnvironment;
+    private UserTestHelper $userTestHelper;
+    private ReportTestHelper $reportTestHelper;
+    private ClientTestHelper $clientTestHelper;
+
+    private array $users = [];
+    private string $testRunId = '';
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -27,6 +33,10 @@ class BehatFixtures
         $this->fixtureParams = $fixtureParams;
         $this->encoder = $encoder;
         $this->symfonyEnvironment = $symfonyEnvironment;
+
+        $this->userTestHelper = new UserTestHelper();
+        $this->reportTestHelper = new ReportTestHelper();
+        $this->clientTestHelper = new ClientTestHelper();
     }
 
     /**
@@ -43,30 +53,51 @@ class BehatFixtures
         $purger = new ORMPurger($this->entityManager);
         $purger->purge();
 
-        // Add admin users
-        $adminUser = (new User())
-            ->setFirstname('Admin')
-            ->setLastname('User')
-            ->setEmail(sprintf('admin-%s@publicguardian.gov.uk', $testRunId))
-            ->setActive(true)
-            ->setRoleName('ROLE_ADMIN');
+        $this->testRunId = $testRunId;
 
-        $adminUser->setPassword($this->encoder->encodePassword($adminUser, $this->fixtureParams['account_password']));
+        $this->createUserFixtures();
 
-        $superAdminUser = (new User())
-            ->setFirstname('Super Admin')
-            ->setLastname('User')
-            ->setEmail(sprintf('super-admin-%s@publicguardian.gov.uk', $testRunId))
-            ->setActive(true)
-            ->setRoleName('ROLE_SUPER_ADMIN');
+        return [
+            'admin' => $this->users['admin']->getEmail(),
+            'super-admin' => $this->users['super-admin']->getEmail(),
+            'lay' => $this->users['lay']->getEmail(),
+        ];
+    }
 
-        $superAdminUser->setPassword($this->encoder->encodePassword($superAdminUser, $this->fixtureParams['account_password']));
+    private function createUserFixtures()
+    {
+        $this->createAdminUsers();
+        $this->createDeputies();
 
-        $this->entityManager->persist($adminUser);
-        $this->entityManager->persist($superAdminUser);
+        foreach ($this->users as $user) {
+            $user->setPassword($this->encoder->encodePassword($user, $this->fixtureParams['account_password']));
+            $this->entityManager->persist($user);
+        }
 
         $this->entityManager->flush();
+    }
 
-        return ['admin' => $adminUser->getEmail(), 'super-admin' => $superAdminUser->getEmail()];
+    private function createAdminUsers()
+    {
+        $this->users['admin'] = $this->userTestHelper
+            ->createUser(null, User::ROLE_ADMIN, sprintf('admin-%s@publicguardian.gov.uk', $this->testRunId));
+
+        $this->users['super-admin'] = $this->userTestHelper
+            ->createUser(null, User::ROLE_SUPER_ADMIN, sprintf('super-admin-%s@publicguardian.gov.uk', $this->testRunId));
+    }
+
+    private function createDeputies()
+    {
+        $this->users['lay'] = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-%s@publicguardian.gov.uk', $this->testRunId));
+
+        $client = $this->clientTestHelper->createClient($this->entityManager, $this->users['lay']);
+        $report = $this->reportTestHelper->generateReport($this->entityManager, $client);
+
+        $this->entityManager->persist($this->users['lay']);
+        $this->entityManager->persist($client);
+        $this->entityManager->persist($report);
+
+        $this->users['lay']->addClient($client);
     }
 }
