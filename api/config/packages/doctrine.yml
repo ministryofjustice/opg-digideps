@@ -1,7 +1,7 @@
 # Doctrine Configuration
 doctrine:
     dbal:
-        driver:   "%database_driver%"
+        driver:   pdo_pgsql
         host:     "%database_host%"
         port:     "%database_port%"
         dbname:   "%database_name%"
@@ -10,11 +10,13 @@ doctrine:
         charset:  UTF8
         #options:
             #sslmode: require
-
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
+        proxy_dir:   "%kernel.cache_dir%/doctrine/orm/Proxies"
         auto_mapping: true
-        filters:
-            softdeleteable:
-                class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
-                enabled: true
+        mappings:
+            commonEntities:
+                type: annotation
+                dir: "%kernel.root_dir%/src/Entity"
+                prefix: App\Entity
+                is_bundle: false

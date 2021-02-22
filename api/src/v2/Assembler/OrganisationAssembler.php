@@ -104,7 +104,8 @@ class OrganisationAssembler
             if ($client instanceof Client) {
                 $dtos[] = $this->clientDtoAssembler->assembleFromEntity($client);
             } else {
-                $dtos[] = $this->clientDtoAssembler->assembleFromArray($client);
+                $orgDto = $this->assembleFromArray($client['organisation']);
+                $dtos[] = $this->clientDtoAssembler->assembleFromArray($client, $orgDto);
             }
         }
 

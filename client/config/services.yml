@@ -11,8 +11,6 @@ imports:
 
 services:
     App\Controller\IndexController:
-        autowire: true
-        autoconfigure: true
         class: App\Controller\IndexController
         arguments:
           $environment: '%env(ENVIRONMENT)%'
@@ -49,8 +47,6 @@ services:
             $logger: '@logger'
 
     App\Command\DocumentSyncCommand:
-        autowire: true
-        autoconfigure: true
         class: App\Command\DocumentSyncCommand
         arguments:
             $serializer: '@serializer'
@@ -77,8 +73,6 @@ services:
         arguments: ['@Aws\Ssm\SsmClient', '%env(PARAMETER_PREFIX)%', '%env(FEATURE_FLAG_PREFIX)%']
 
     App\Serializer\SiriusDocumentUploadSerializer:
-        autowire: true
-        autoconfigure: true
         tags: ['serializer.normalizer']
 
     # Make optional availability services pullable
@@ -96,24 +90,10 @@ services:
              $notifyClient: '@Alphagov\Notifications\Client'
 
     App\Service\DocumentSyncService:
-        autowire: true
-        autoconfigure: true
         arguments:
             $storage: '@App\Service\File\Storage\S3Storage'
             $siriusApiGatewayClient: '@App\Service\Client\Sirius\SiriusApiGatewayClient'
             $restClient: '@App\Service\Client\RestClient'
-
-    App\Controller\SettingsController:
-        autowire: true
-        autoconfigure: true
-
-    App\Controller\Org\OrganisationController:
-        autowire: true
-        autoconfigure: true
-
-    App\Controller\Report\ReportController:
-        autowire: true
-        autoconfigure: true
 
     League\MimeTypeDetection\FinfoMimeTypeDetector:
         class: League\MimeTypeDetection\FinfoMimeTypeDetector

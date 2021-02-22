@@ -7,7 +7,6 @@ use App\Controller\RestController;
 use App\Entity\Repository\ClientRepository;
 use App\v2\Assembler\ClientAssembler;
 use App\v2\Transformer\ClientTransformer;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;

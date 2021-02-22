@@ -22,8 +22,3 @@ parameters:
     - 'yahoo.com'
     - 'yahoo.co.uk'
     - 'example.com'
-
-services:
-  App\Factory\OrganisationFactory:
-    class: App\Factory\OrganisationFactory
-    arguments: ['%shared_email_domains%']

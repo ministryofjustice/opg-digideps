@@ -82,7 +82,6 @@ COPY --from=composer /app/composer.lock composer.lock
 COPY --from=composer /app/config/parameters.yml config/parameters.yml
 COPY app app
 COPY config config
-COPY DoctrineMigrations DoctrineMigrations
 COPY public public
 COPY scripts scripts
 COPY src src

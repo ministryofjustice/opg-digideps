@@ -6,10 +6,6 @@ parameters:
         frontend: [ROLE_DEPUTY]
 
 services:
-    # authenticator
-    App\Service\Auth\UserProvider:
-        arguments: [ '@em', "@snc_redis.default", "@logger", { "timeout_seconds": "%user_provider_timeout_seconds%" }, '@App\Entity\Repository\UserRepository' ]
-
     App\Service\Auth\AuthService:
         arguments:
             $encoderFactory: '@security.encoder_factory'

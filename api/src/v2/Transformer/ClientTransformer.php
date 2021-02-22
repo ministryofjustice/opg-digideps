@@ -8,7 +8,6 @@ use App\v2\DTO\NamedDeputyDto;
 use App\v2\DTO\NdrDto;
 use App\v2\DTO\OrganisationDto;
 use App\v2\DTO\ReportDto;
-use Symfony\Component\Intl\Exception\NotImplementedException;
 
 class ClientTransformer
 {
@@ -18,27 +17,21 @@ class ClientTransformer
     /** @var NdrTransformer */
     private $ndrTransformer;
 
-    /** @var OrganisationTransformer */
-    private $organisationTransformer;
-
     /** @var NamedDeputyTransformer */
     private $namedDeputyTransformer;
 
     /**
      * @param ReportTransformer $reportTransformer
      * @param NdrTransformer $ndrTransformer
-     * @param OrganisationTransformer $organisationTransformer
      * @param NamedDeputyTransformer $namedDeputyTransformer
      */
     public function __construct(
         ReportTransformer $reportTransformer,
         NdrTransformer $ndrTransformer,
-        OrganisationTransformer $organisationTransformer,
         NamedDeputyTransformer $namedDeputyTransformer
     ) {
         $this->reportTransformer = $reportTransformer;
         $this->ndrTransformer = $ndrTransformer;
-        $this->organisationTransformer = $organisationTransformer;
         $this->namedDeputyTransformer = $namedDeputyTransformer;
     }
 
@@ -47,7 +40,7 @@ class ClientTransformer
      * @param array $exclude
      * @return array
      */
-    public function transform(ClientDto $dto, array $exclude = [])
+    public function transform(ClientDto $dto, array $exclude = [], ?OrganisationDto $orgDto = null)
     {
         $transformed = [
             'id' => $dto->getId(),
@@ -68,8 +61,8 @@ class ClientTransformer
             $transformed['ndr'] = $this->transformNdr($dto->getNdr());
         }
 
-        if (!in_array('organisation', $exclude) && $dto->getOrganisation() !== null) {
-            $transformed['organisation'] = $this->transformOrganisation($dto->getOrganisation());
+        if (!in_array('organisation', $exclude) && $orgDto !== null) {
+            $transformed['organisation'] = $orgDto;
         }
 
         if (!in_array('namedDeputy', $exclude) && $dto->getNamedDeputy() instanceof NamedDeputyDto) {

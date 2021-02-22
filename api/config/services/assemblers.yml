@@ -18,6 +18,9 @@ services:
   PlainDeputyAssembler:
     class: App\v2\Assembler\DeputyAssembler
 
+  App\v2\Assembler\Report\ReportSummaryAssembler: ~
+  App\v2\Assembler\Report\ReportAssemblerInterface: '@App\v2\Assembler\Report\ReportSummaryAssembler'
+
   PlainOrganisationAssembler:
     class: App\v2\Assembler\OrganisationAssembler
 
