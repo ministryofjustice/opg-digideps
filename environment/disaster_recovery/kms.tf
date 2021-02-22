@@ -1,3 +1,10 @@
+resource "aws_kms_alias" "backup_kms_alias" {
+  name          = "alias/digideps-ca-db-backup"
+  target_key_id = aws_kms_key.db_backup.id
+
+  depends_on = [aws_kms_key.db_backup]
+}
+
 resource "aws_kms_key" "db_backup" {
   description             = "KMS DB secondary backup"
   deletion_window_in_days = 10
