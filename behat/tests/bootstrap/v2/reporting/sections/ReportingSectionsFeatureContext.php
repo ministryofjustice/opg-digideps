@@ -3,7 +3,7 @@
 
 namespace DigidepsBehat\v2\Reporting\Sections;
 
-use DigidepsBehat\v2\BaseFeatureContext;
+use DigidepsBehat\v2\Common\BaseFeatureContext;
 
 class ReportingSectionsFeatureContext extends BaseFeatureContext
 {

@@ -28,4 +28,4 @@ Always extend from `BaseFeatureContext.php` when creating new feature context fi
 
 If the step definition we need to write involves a number of complex actions we should look to break this out into focused functions with a view to enable re-use and only expose the step definitions we absolutely need. This will ensure there aren't duplicated step definitions and keep surprises when working with the interface to a minimum.
 
-Steps defined in a trait or feature context file that later required in unrelated feature tests should be extracted and moved to either BaseFeatureContext.php or a trait that is included in BaseFeatureContext.
+Steps defined in a trait or feature context file that later required in unrelated feature tests should be extracted and moved to `/common` in either `BaseFeatureContext.php or` a trait that is included in BaseFeatureContext.
