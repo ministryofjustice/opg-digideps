@@ -20,7 +20,7 @@ class AppKernel extends Kernel
             new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle::class => ['all', true],
+            new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new App\App(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new Snc\RedisBundle\SncRedisBundle(),

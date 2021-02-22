@@ -27,9 +27,12 @@ final class Version225 extends AbstractMigration implements ContainerAwareInterf
     public function up(Schema $schema) : void
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+    }
 
+    public function postUp(Schema $schema) : void
+    {
         /** @var EntityManager $em */
-        $em = $this->container->get('em');
+        $em = $this->container->get('doctrine.orm.entity_manager');
 
         /** @var OrganisationRepository $orgRepo */
         $orgRepo = $em->getRepository(Organisation::class);
