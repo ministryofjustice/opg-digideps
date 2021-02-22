@@ -24,9 +24,5 @@ parameters:
     locale: en
     secret: {{ getv "/secret" }}
     redis_dsn: '{{getv "/redis/dsn" }}'
-{{ if ls "/fixtures" }}
-    fixtures:
-        account_password: {{ getv "/fixtures/accountpassword" }}
-{{ end }}
     log_level: warning
     log_path: /var/log/app/application.log
