@@ -12,14 +12,16 @@ class BaseFeatureContext extends MinkContext
     use AuthTrait;
     use CourtOrderTrait;
     use DebugTrait;
-    use ReportTrait;
 
     const BEHAT_FRONT_RESET_FIXTURES = '/behat/frontend/reset-fixtures?testRunId=%s';
     const BEHAT_FRONT_USER_DETAILS = '/behat/frontend/user/%s/details';
 
     private string $adminEmail = '';
     private string $superAdminEmail = '';
-    private $layDeputyEmail = '';
+
+    private string $layDeputyNotStartedEmail = '';
+    private string $layDeputyCompletedNotSubmittedEmail = '';
+    private string $layDeputySubmittedEmail = '';
 
     private string $testRunId = '';
 
@@ -41,7 +43,10 @@ class BaseFeatureContext extends MinkContext
 
         $this->adminEmail = $responseData['data']['admin'];
         $this->superAdminEmail = $responseData['data']['super-admin'];
-        $this->layDeputyEmail = $responseData['data']['lay-deputy'];
+
+        $this->layDeputyNotStartedEmail = $responseData['data']['lay-not-started'];
+        $this->layDeputyCompletedNotSubmittedEmail = $responseData['data']['lay-completed-not-submitted'];
+        $this->layDeputySubmittedEmail = $responseData['data']['lay-submitted'];
     }
 
     /**

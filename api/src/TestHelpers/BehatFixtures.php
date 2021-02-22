@@ -20,7 +20,7 @@ class BehatFixtures
     private ReportTestHelper $reportTestHelper;
     private ClientTestHelper $clientTestHelper;
 
-    private array $users = [];
+    private array $users = ['admin-users' => [], 'deputies' => []];
     private string $testRunId = '';
 
     public function __construct(
@@ -57,10 +57,14 @@ class BehatFixtures
 
         $this->createUserFixtures();
 
+        $test = ''
+;
         return [
-            'admin' => $this->users['admin']->getEmail(),
-            'super-admin' => $this->users['super-admin']->getEmail(),
-            'lay' => $this->users['lay']->getEmail(),
+            'admin' => $this->users['admin-users']['admin']->getEmail(),
+            'super-admin' => $this->users['admin-users']['super-admin']->getEmail(),
+            'lay-not-started' => $this->users['deputies']['lay-not-started']->getEmail(),
+            'lay-completed-not-submitted' => $this->users['deputies']['lay-not-started']->getEmail(),
+            'lay-submitted' => $this->users['deputies']['lay-not-started']->getEmail(),
         ];
     }
 
@@ -69,7 +73,7 @@ class BehatFixtures
         $this->createAdminUsers();
         $this->createDeputies();
 
-        foreach ($this->users as $user) {
+        foreach (array_merge($this->users['admin-users'], $this->users['deputies']) as $user) {
             $user->setPassword($this->encoder->encodePassword($user, $this->fixtureParams['account_password']));
             $this->entityManager->persist($user);
         }
@@ -79,25 +83,44 @@ class BehatFixtures
 
     private function createAdminUsers()
     {
-        $this->users['admin'] = $this->userTestHelper
+        $this->users['admin-users']['admin'] = $this->userTestHelper
             ->createUser(null, User::ROLE_ADMIN, sprintf('admin-%s@publicguardian.gov.uk', $this->testRunId));
 
-        $this->users['super-admin'] = $this->userTestHelper
+        $this->users['admin-users']['super-admin'] = $this->userTestHelper
             ->createUser(null, User::ROLE_SUPER_ADMIN, sprintf('super-admin-%s@publicguardian.gov.uk', $this->testRunId));
     }
 
     private function createDeputies()
     {
-        $this->users['lay'] = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-%s@publicguardian.gov.uk', $this->testRunId));
+        $this->users['deputies']['lay-not-started'] = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-not-started-%s@publicguardian.gov.uk', $this->testRunId));
+        $this->addClientsAndReportsToDeputy($this->users['deputies']['lay-not-started'], false, false);
 
-        $client = $this->clientTestHelper->createClient($this->entityManager, $this->users['lay']);
+        $this->users['deputies']['lay-completed-not-submitted'] = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-completed-not-submitted-%s@publicguardian.gov.uk', $this->testRunId));
+        $this->addClientsAndReportsToDeputy($this->users['deputies']['lay-completed-not-submitted'], true, false);
+
+        $this->users['deputies']['lay-submitted'] = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-submitted-%s@publicguardian.gov.uk', $this->testRunId));
+        $this->addClientsAndReportsToDeputy($this->users['deputies']['lay-submitted'], true, true);
+    }
+
+    private function addClientsAndReportsToDeputy(User $deputy, bool $completed = false, bool $submitted = false)
+    {
+        $client = $this->clientTestHelper->createClient($this->entityManager, $deputy);
         $report = $this->reportTestHelper->generateReport($this->entityManager, $client);
 
-        $this->entityManager->persist($this->users['lay']);
+        if ($completed) {
+            $this->reportTestHelper->completeLayReport($report, $this->entityManager);
+        }
+
+        if ($submitted) {
+            $this->reportTestHelper->submitReport($report, $this->entityManager);
+        }
+
         $this->entityManager->persist($client);
         $this->entityManager->persist($report);
 
-        $this->users['lay']->addClient($client);
+        $deputy->addClient($client);
     }
 }
