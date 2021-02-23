@@ -15,7 +15,7 @@
 {% block pageContent %}
 
     {% set gaCategory = 'pageTitle.registration-details' | trans %}
-    {% set gaAction = 'Click : Button : Save User Details' %}
+    {% set gaAction = 'Click: Button: Save User Details' %}
     {% set gaLabel = 'Clicked save user details button on ' ~ app.request.requesturi %}
 
     {{ form_start(form, {attr: {class: 'behat-region-user-details', novalidate: 'novalidate' }}) }}

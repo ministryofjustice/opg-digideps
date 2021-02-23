@@ -15,7 +15,7 @@
 {% block pageContent %}
 
     {% set gaCategory = 'pageTitle' | trans %}
-    {% set gaAction = 'Click : Button : Submit' %}
+    {% set gaAction = 'Click: Button: Submit' %}
     {% set gaLabel = 'Clicked submit button on ' ~ app.request.requesturi %}
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}

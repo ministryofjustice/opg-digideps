@@ -21,7 +21,7 @@
 
 {% block pageContent %}
     {% set gaCategory = 'addClient.pageTitle' | trans %}
-    {% set gaAction = 'Click : Button : Save Client Details' %}
+    {% set gaAction = 'Click: Button: Save Client Details' %}
     {% set gaLabel = 'Clicked save client details button on ' ~ app.request.requesturi %}
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
