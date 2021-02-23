@@ -1,9 +1,10 @@
 class GoogleAnalyticsEvents {
   static init () {
-    const elements = document.querySelectorAll('button[data-attribute="ga-event"]')
-
-    elements.forEach(element => {
-      element.addEventListener('click', (e) => { this.sendEvent(e) })
+    document.addEventListener('click', (e) => {
+      if (e.target && e.target.matches('button[data-attribute="ga-event"]')) {
+        console.log(e)
+        this.sendEvent(e)
+      }
     })
   }
 

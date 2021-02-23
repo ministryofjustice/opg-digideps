@@ -45,6 +45,7 @@
     ]
   },
   "jest": {
+    "clearMocks": true,
     "globals": {},
     "moduleFileExtensions": [
       "js"
@@ -53,6 +54,7 @@
       "node_modules",
       "src"
     ],
+    "resetMocks": true,
     "restoreMocks": true,
     "setupFiles": [
       "<rootDir>/assets/javascripts/__tests__/globals.js"

@@ -1,5 +1,5 @@
 import { GoogleAnalyticsEvents } from '../../modules/googleAnalyticsEvents'
-import { describe, it, jest } from '@jest/globals'
+import { beforeAll, describe, it, jest } from '@jest/globals'
 
 const setDocumentBody = () => {
   document.body.innerHTML = `
@@ -33,33 +33,14 @@ const simulateClick = (element) => {
   element.dispatchEvent(event)
 }
 
+beforeAll(() => {
+  setDocumentBody()
+  GoogleAnalyticsEvents.init()
+})
+
 describe('googleAnalyticsEvents', () => {
-  describe('init', () => {
-    it('attaches event listeners to elements with data-attributes=ga-event', () => {
-      setDocumentBody()
-
-      const buttons = document.querySelectorAll('button[data-attribute="ga-event"]')
-      const spies = []
-
-      buttons.forEach(button => {
-        spies.push(jest.spyOn(button, 'addEventListener'))
-      })
-
-      GoogleAnalyticsEvents.init()
-
-      spies.forEach(spy => {
-        expect(spy).toHaveBeenCalledTimes(1)
-        expect(spy).toHaveBeenCalledWith('click', expect.any(Function))
-      })
-    })
-  })
-
   describe('extractEventInfo', () => {
     it('extracts event action, event_category and event_label from ga-event element', () => {
-      setDocumentBody()
-
-      GoogleAnalyticsEvents.init('userStartsURSection')
-
       const button1 = document.getElementById('button1')
 
       const actualEventInfo = GoogleAnalyticsEvents.extractEventInfo(button1)
@@ -75,14 +56,12 @@ describe('googleAnalyticsEvents', () => {
 
   describe('clicking button', () => {
     it('dispatches gtag event', () => {
-      jest.spyOn(global, 'gtag').mockReturnValueOnce(true)
-
-      setDocumentBody()
-      GoogleAnalyticsEvents.init()
+      global.gtag = jest.fn()
 
       simulateClick(document.getElementById('button1'))
+      simulateClick(document.getElementById('button2'))
 
-      expect(global.gtag).toHaveBeenCalledTimes(1)
+      expect(global.gtag).toHaveBeenCalledTimes(2)
       expect(global.gtag).toHaveBeenCalledWith('event', 'form-submitted', { event_category: 'user-journeys', event_label: 'button-clicks' })
     })
   })
