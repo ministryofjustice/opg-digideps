@@ -56,9 +56,6 @@
     ],
     "resetMocks": true,
     "restoreMocks": true,
-    "setupFiles": [
-      "<rootDir>/assets/javascripts/__tests__/globals.js"
-    ],
     "testRegex": "\\.test\\.js$",
     "transform": {
       "^.+\\.js$": "babel-jest"
