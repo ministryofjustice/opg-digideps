@@ -2,7 +2,6 @@ class GoogleAnalyticsEvents {
   static init () {
     document.addEventListener('click', (e) => {
       if (e.target && e.target.matches('button[data-attribute="ga-event"]')) {
-        console.log(e)
         this.sendEvent(e)
       }
     })
@@ -20,10 +19,12 @@ class GoogleAnalyticsEvents {
   }
 
   static sendEvent (event) {
-    const eventElement = event.target
-    const eventInfo = this.extractEventInfo(eventElement)
+    if (typeof window.globals.gtag === 'function') {
+      const eventElement = event.target
+      const eventInfo = this.extractEventInfo(eventElement)
 
-    global.gtag('event', eventInfo.action, eventInfo.event_params)
+      window.globals.gtag('event', eventInfo.action, eventInfo.event_params)
+    }
   }
 }
 

@@ -1,6 +1,20 @@
 import { GoogleAnalyticsEvents } from '../../modules/googleAnalyticsEvents'
 import { beforeAll, describe, it, jest } from '@jest/globals'
 
+const globals = (() => {
+  window.gtag = jest.fn()
+
+  function gtagWrapper (event, eventName, eventParameters) {
+    window.gtag(event, eventName, eventParameters)
+  }
+
+  return {
+    gtag: gtagWrapper
+  }
+})()
+
+window.globals = globals
+
 const setDocumentBody = () => {
   document.body.innerHTML = `
         <div>
@@ -15,8 +29,8 @@ const setDocumentBody = () => {
               id='button2'
               data-attribute="ga-event"
               data-action="back-to-report"
-              data-category="user-journeys"
-              data-label="button-clicks"
+              data-category="testing"
+              data-label="site-interaction"
             >2</button>
         </div>
     `
@@ -55,14 +69,35 @@ describe('googleAnalyticsEvents', () => {
   })
 
   describe('clicking button', () => {
-    it('dispatches gtag event', () => {
-      global.gtag = jest.fn()
+    describe('when gtag is loaded', () => {
+      it('dispatches gtag event', () => {
+        // global.gtag = jest.fn()
 
-      simulateClick(document.getElementById('button1'))
-      simulateClick(document.getElementById('button2'))
+        simulateClick(document.getElementById('button1'))
+        simulateClick(document.getElementById('button2'))
 
-      expect(global.gtag).toHaveBeenCalledTimes(2)
-      expect(global.gtag).toHaveBeenCalledWith('event', 'form-submitted', { event_category: 'user-journeys', event_label: 'button-clicks' })
+        expect(window.gtag).toHaveBeenCalledWith(
+          'event',
+          'form-submitted',
+          { event_category: 'user-journeys', event_label: 'button-clicks' }
+        )
+
+        expect(window.gtag).toHaveBeenCalledWith(
+          'event',
+          'back-to-report',
+          { event_category: 'testing', event_label: 'site-interaction' })
+      })
+    })
+
+    describe('when gtag is not loaded', () => {
+      it('does not dispatch gtag event', () => {
+        window.globals.gtag = null
+
+        simulateClick(document.getElementById('button1'))
+        simulateClick(document.getElementById('button2'))
+
+        expect(window.gtag).not.toHaveBeenCalled()
+      })
     })
   })
 })

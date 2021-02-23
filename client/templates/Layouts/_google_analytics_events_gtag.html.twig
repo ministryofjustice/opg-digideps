@@ -4,6 +4,15 @@
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
     gtag('config', '{{ga.default}}');
+
+    window.globals = (() => {
+        function gtagWrapper(event, eventName, eventParameters) {
+            gtag(event, eventName, eventParameters)
+        }
+
+        return{
+            gtag:gtagWrapper
+        }
+    })()
 </script>
