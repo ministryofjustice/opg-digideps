@@ -27,6 +27,7 @@ services:
             $fixturesEnabled: "%env(bool:FIXTURES_ENABLED)%"
             $projectDir: '%kernel.project_dir%'
             $yamlFixtureLocation: "%kernel.root_dir%/src/DataFixtures/"
+            $fixtureParams: '%fixtures%'
             $symfonyEnvironment: "%kernel.environment%"
 
     # makes classes in src/ available to be used as services
