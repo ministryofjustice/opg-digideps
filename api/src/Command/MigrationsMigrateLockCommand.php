@@ -2,7 +2,6 @@
 
 namespace App\Command;
 
-use Doctrine\Bundle\MigrationsBundle\Command\MigrationsMigrateDoctrineCommand;
 use Predis\Client;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -74,7 +73,7 @@ class MigrationsMigrateLockCommand extends Command
      * @param OutputInterface $output
      * @return bool true if lock if acquired, false if not (already acquired)
      */
-    private function acquireLock($output): bool
+    private function acquireLock(OutputInterface $output): bool
     {
         $ret = $this->getRedis()->setnx(self::LOCK_KEY, self::LOCK_VALUE) == 1;
         $this->getRedis()->expire(self::LOCK_KEY, self::LOCK_EXPIRES_SECONDS);
@@ -89,7 +88,7 @@ class MigrationsMigrateLockCommand extends Command
      * @param OutputInterface $output
      * @return int
      */
-    private function releaseLock($output): int
+    private function releaseLock(OutputInterface $output): int
     {
         $output->writeln('Lock released.');
 
@@ -108,7 +107,7 @@ class MigrationsMigrateLockCommand extends Command
      * @param string $id
      * @return mixed
      */
-    private function getService($id): mixed
+    private function getService(string $id): mixed
     {
         /** @var Application $application */
         $application = $this->getApplication();
