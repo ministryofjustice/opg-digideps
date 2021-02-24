@@ -39,10 +39,10 @@ e.g. Clicked link to help page /help?from=homepage
 In order to add click event tracking to an element on a page, add the following attributes:
 
      'data-attribute': 'ga-event',
-     'data-action': '<GA ACTION VALUE>',
-     'data-category': '<GA CATEGORY VALUE>',
-     'data-label': '<GA LABEL VALUE>' (optional)
-     'data-value': '<GA VALUE VALUE>' (optional)
+     'data-ga-action': '<GA ACTION VALUE>',
+     'data-ga-category': '<GA CATEGORY VALUE>',
+     'data-ga-label': '<GA LABEL VALUE>'
+     'data-ga-value': '<GA VALUE VALUE>' (optional)
 
 If the element we want to track is a form submit button the values above can be provided to the twig `form_submit_ga` [helper function](client/src/Twig/FormFieldsExtension.php):
 
