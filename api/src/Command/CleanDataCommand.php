@@ -2,11 +2,10 @@
 
 namespace App\Command;
 
-use App\Entity\Client;
 use App\Entity\User;
 use App\Service\CasrecVerificationService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -17,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
  *
  * @codeCoverageIgnore
  */
-class CleanDataCommand extends ContainerAwareCommand
+class CleanDataCommand extends Command
 {
     use ContainerAwareTrait;
 
