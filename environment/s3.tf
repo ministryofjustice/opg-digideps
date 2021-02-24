@@ -6,11 +6,20 @@ locals {
   noncurrent_expiration_days = contains(local.long_expiry_workspaces, local.environment) ? 365 : 7
 }
 
+data "aws_region" "current" {}
+
+// GET DEV REPLICATION BUCKET
 data "aws_s3_bucket" "replication_bucket" {
   bucket   = "pa-uploads-branch-replication"
   provider = aws.development
 }
 
+// DATA SOURCE FOR DEFAULT KEY
+data "aws_kms_alias" "source_default_key" {
+  name = "alias/aws/s3"
+}
+
+// CREATE THE MAIN BUCKET
 resource "aws_s3_bucket" "pa_uploads" {
   bucket        = "pa-uploads-${local.environment}"
   acl           = "private"
@@ -46,10 +55,37 @@ resource "aws_s3_bucket" "pa_uploads" {
   }
 
   replication_configuration {
-    role = aws_iam_role.replication.arn
+    role = aws_iam_role.backup_role.arn
 
     rules {
-      status = local.bucket_replication_status
+      id       = "ReplicationCrossAccount"
+      priority = 1
+      status   = local.account.s3_backup_replication
+
+      filter {}
+
+      destination {
+        account_id         = local.backup_account_id
+        bucket             = "arn:aws:s3:::${local.account.name}.backup.digideps.opg.service.justice.gov.uk"
+        replica_kms_key_id = "arn:aws:kms:eu-west-1:${local.backup_account_id}:key/${local.account.s3_backup_kms_arn}"
+
+        access_control_translation {
+          owner = "Destination"
+        }
+      }
+
+      source_selection_criteria {
+        sse_kms_encrypted_objects {
+          enabled = true
+        }
+      }
+    }
+    rules {
+      id       = "ReplicationLocalDevelopment"
+      priority = 2
+      status   = local.bucket_replication_status
+
+      filter {}
 
       destination {
         bucket        = data.aws_s3_bucket.replication_bucket.arn
@@ -57,10 +93,10 @@ resource "aws_s3_bucket" "pa_uploads" {
       }
     }
   }
-
   tags = local.default_tags
 }
 
+// BLOCK PUBLIC ACCESS ON PA_UPLOADS
 resource "aws_s3_bucket_public_access_block" "pa_uploads" {
   bucket = aws_s3_bucket.pa_uploads.bucket
 
@@ -70,11 +106,7 @@ resource "aws_s3_bucket_public_access_block" "pa_uploads" {
   restrict_public_buckets = true
 }
 
-resource "aws_s3_bucket_policy" "pa_uploads" {
-  bucket = aws_s3_bucket_public_access_block.pa_uploads.bucket
-  policy = data.aws_iam_policy_document.pa_uploads.json
-}
-
+// BASE POLICY FOR PA_UPLOADS
 data "aws_iam_policy_document" "pa_uploads" {
   policy_id = "PutObjPolicy"
 
@@ -96,120 +128,204 @@ data "aws_iam_policy_document" "pa_uploads" {
       variable = "s3:x-amz-server-side-encryption"
     }
   }
-}
 
-resource "aws_iam_role" "replication" {
-  name = "replication-role.${local.environment}"
-  tags = local.default_tags
+  statement {
+    sid    = "DenyNoneSSLRequests"
+    effect = "Deny"
+    actions = [
+    "s3:*"]
+    resources = [
+      aws_s3_bucket.pa_uploads.arn,
+      "${aws_s3_bucket.pa_uploads.arn}/*"
+    ]
 
-  assume_role_policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "s3.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values = [
+      false]
     }
-  ]
-}
-POLICY
-}
 
-resource "aws_iam_policy" "replication" {
-  name = "replication-policy.${local.environment}"
-
-  policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "s3:GetReplicationConfiguration",
-        "s3:ListBucket"
-      ],
-      "Effect": "Allow",
-      "Resource": [
-        "${aws_s3_bucket.pa_uploads.arn}"
-      ]
-    },
-    {
-      "Action": [
-        "s3:GetObjectVersion",
-        "s3:GetObjectVersionAcl"
-      ],
-      "Effect": "Allow",
-      "Resource": [
-        "${aws_s3_bucket.pa_uploads.arn}/*"
-      ]
-    },
-    {
-      "Action": [
-        "s3:ReplicateObject",
-        "s3:ReplicateDelete"
-      ],
-      "Effect": "Allow",
-      "Resource": "${data.aws_s3_bucket.replication_bucket.arn}/*"
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
     }
-  ]
+  }
+
+  statement {
+    sid     = "DelegateS3Access"
+    effect  = "Allow"
+    actions = ["s3:ListBucket", "s3:GetObject"]
+
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${local.backup_account_id}:root"]
+    }
+
+    resources = [
+      aws_s3_bucket.pa_uploads.arn,
+      "${aws_s3_bucket.pa_uploads.arn}/*"
+    ]
+  }
 }
-POLICY
+
+// ATTACH BASE POLICY FOR PA_UPLOADS
+resource "aws_s3_bucket_policy" "pa_uploads" {
+  bucket = aws_s3_bucket_public_access_block.pa_uploads.bucket
+  policy = data.aws_iam_policy_document.pa_uploads.json
+}
+
+//REPLICATION POLICY FOR BACKUP ROLE
+data "aws_iam_policy_document" "replication_policy" {
+
+  statement {
+    sid    = "AllowReplicationConfiguration"
+    effect = "Allow"
+    actions = [
+      "s3:ListBucket",
+      "s3:GetReplicationConfiguration",
+      "s3:GetObjectVersionForReplication",
+      "s3:GetObjectVersionAcl",
+      "s3:GetObjectVersionTagging",
+      "s3:GetObjectRetention",
+      "s3:GetObjectLegalHold"
+    ]
+    resources = [
+      "${aws_s3_bucket.pa_uploads.arn}/*",
+      aws_s3_bucket.pa_uploads.arn
+    ]
+  }
+
+  statement {
+    sid    = "AllowReplication"
+    effect = "Allow"
+    actions = [
+      "s3:ReplicateObject",
+      "s3:ReplicateDelete",
+      "s3:ReplicateTags",
+      "s3:GetObjectVersionTagging",
+      "s3:ObjectOwnerOverrideToBucketOwner"
+    ]
+
+    condition {
+      test     = "StringLikeIfExists"
+      variable = "s3:x-amz-server-side-encryption"
+      values = [
+        "aws:kms",
+        "AES256"
+      ]
+    }
+
+    condition {
+      test     = "StringLikeIfExists"
+      variable = "s3:x-amz-server-side-encryption-aws-kms-key-id"
+      values = [
+        "arn:aws:kms:eu-west-1:${local.backup_account_id}:key/${local.account.s3_backup_kms_arn}"
+      ]
+    }
+    resources = [
+      "arn:aws:s3:::${local.account.name}.backup.digideps.opg.service.justice.gov.uk/*",
+      "${data.aws_s3_bucket.replication_bucket.arn}/*"
+    ]
+  }
+
+  statement {
+    sid    = "Decrypt"
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt"
+    ]
+
+    condition {
+      test     = "StringLike"
+      variable = "kms:ViaService"
+
+      values = [
+        "s3.${data.aws_region.current.name}.amazonaws.com",
+      ]
+    }
+
+    condition {
+      test     = "StringLike"
+      variable = "kms:EncryptionContext:aws:s3:arn"
+
+      values = [
+        "${aws_s3_bucket.pa_uploads.arn}/*",
+      ]
+    }
+
+    resources = [data.aws_kms_alias.source_default_key.target_key_arn]
+  }
+
+  statement {
+    sid    = "Encrypt"
+    effect = "Allow"
+    actions = [
+      "kms:Encrypt"
+    ]
+
+    condition {
+      test     = "StringLike"
+      variable = "kms:ViaService"
+
+      values = [
+        "s3.eu-west-1.amazonaws.com",
+      ]
+    }
+
+    condition {
+      test     = "StringLike"
+      variable = "kms:EncryptionContext:aws:s3:arn"
+
+      values = [
+        "arn:aws:s3:::${local.account.name}.backup.digideps.opg.service.justice.gov.uk/*",
+      ]
+    }
+
+    resources = ["arn:aws:kms:eu-west-1:${local.backup_account_id}:key/${local.account.s3_backup_kms_arn}"]
+  }
+}
+
+// CREATE BACKUP ROLE USED FOR LOCAL AND CROSS ACCOUNT REPLICATION
+resource "aws_iam_role" "backup_role" {
+  name_prefix        = "digideps-backup-role"
+  description        = "IAM Role for s3 replication in ${terraform.workspace}"
+  assume_role_policy = data.aws_iam_policy_document.backup_role_policy.json
+}
+
+// CREATE INSTANCE PROFILE
+resource "aws_iam_instance_profile" "backup" {
+  name = "cross-account-backup-role-${terraform.workspace}"
+  role = aws_iam_role.backup_role.name
+}
+
+// ALLOW ASSUME ROLE ON BACKUP ROLE
+data "aws_iam_policy_document" "backup_role_policy" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["s3.amazonaws.com"]
+    }
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+// ATTACH THE ASSUME ROLE POLICY
+resource "aws_iam_role_policy_attachment" "backup_policy_attachment" {
+  role       = aws_iam_role.backup_role.name
+  policy_arn = aws_iam_policy.backup_policy.arn
+}
+
+// POLICY ATTACHMENT
+resource "aws_iam_policy" "backup_policy" {
+  name_prefix = "digideps-backup-policy"
+  description = "IAM Policy for s3 replication in ${terraform.workspace}"
+  policy      = data.aws_iam_policy_document.replication_policy.json
 }
 
 resource "aws_iam_role_policy_attachment" "replication" {
-  role       = aws_iam_role.replication.name
-  policy_arn = aws_iam_policy.replication.arn
-}
-
-resource "aws_s3_bucket" "s3_access_logs" {
-  bucket        = "s3-access-logs.${local.environment}"
-  acl           = "log-delivery-write"
-  force_destroy = local.account["force_destroy_bucket"]
-
-  versioning {
-    enabled = true
-  }
-
-  lifecycle_rule {
-    transition {
-      days          = 30
-      storage_class = "GLACIER"
-    }
-
-    noncurrent_version_transition {
-      days          = 30
-      storage_class = "GLACIER"
-    }
-
-    noncurrent_version_expiration {
-      days = 180
-    }
-
-    expiration {
-      days                         = 180
-      expired_object_delete_marker = true
-    }
-
-    enabled = true
-  }
-
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
-    }
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "s3_access_logs" {
-  bucket = aws_s3_bucket.s3_access_logs.bucket
-
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
+  role       = aws_iam_role.backup_role.name
+  policy_arn = aws_iam_policy.backup_policy.arn
 }
