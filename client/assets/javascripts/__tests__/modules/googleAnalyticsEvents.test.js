@@ -21,16 +21,16 @@ const setDocumentBody = () => {
             <button
               id='button1'
               data-attribute="ga-event"
-              data-action="form-submitted"
-              data-category="user-journeys"
-              data-label="button-clicks"
+              data-ga-action="form-submitted"
+              data-ga-category="user-journeys"
+              data-ga-label="button-clicks"
             >1</button>
             <button
               id='button2'
               data-attribute="ga-event"
-              data-action="back-to-report"
-              data-category="testing"
-              data-label="site-interaction"
+              data-ga-action="back-to-report"
+              data-ga-category="testing"
+              data-ga-label="site-interaction"
             >2</button>
         </div>
     `
@@ -71,8 +71,6 @@ describe('googleAnalyticsEvents', () => {
   describe('clicking button', () => {
     describe('when gtag is loaded', () => {
       it('dispatches gtag event', () => {
-        // global.gtag = jest.fn()
-
         simulateClick(document.getElementById('button1'))
         simulateClick(document.getElementById('button2'))
 

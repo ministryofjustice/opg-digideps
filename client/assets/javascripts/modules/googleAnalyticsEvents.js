@@ -9,11 +9,11 @@ class GoogleAnalyticsEvents {
 
   static extractEventInfo (eventElement) {
     return {
-      action: eventElement.dataset.action,
+      action: eventElement.dataset.gaAction,
       event_params:
         {
-          event_category: eventElement.dataset.category,
-          event_label: eventElement.dataset.label
+          event_category: eventElement.dataset.gaCategory,
+          event_label: eventElement.dataset.gaLabel
         }
     }
   }

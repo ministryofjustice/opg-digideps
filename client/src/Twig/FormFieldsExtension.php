@@ -322,10 +322,12 @@ class FormFieldsExtension extends AbstractExtension
      * @param mixed $element
      * @param string $elementName used to pick the translation by appending ".label"
      * @param array $vars [buttonClass => additional class. "disabled" supported]
-     * @param string|null $gaTrackingCategory (required) page, module or component the event belongs
-     * @param string|null $gaTrackingAction (required) action taken by a user along with contextual detail
-     * @param string|null $gaTrackingLabel (optional)
-     * @param string|null $gaTrackingValue (optional)
+     * @param string|null $gaTrackingCategory (required) Use the format {Page Title}:{Sub Section i.e. in a form} (sub section optional)
+     * @param string|null $gaTrackingAction (required) Use the format {event}: { Element Type}: {Element Specifics}
+     * @param string|null $gaTrackingLabel (required) Use the format {Human summary and additional detail} {path uri with any query params}
+     * @param int|null $gaTrackingValue (optional) a numerical value that related to the event
+     *
+     * See GOOGLE-ANALYTICS.md for usage
      */
     public function renderGATrackedFormSubmit(
         $element,
@@ -333,7 +335,7 @@ class FormFieldsExtension extends AbstractExtension
         string $gaTrackingCategory,
         string $gaTrackingAction,
         string $gaTrackingLabel = null,
-        string $gaTrackingValue = null,
+        int $gaTrackingValue = null,
         array $vars = []
     ) {
         $vars['attr'] = $this->addGaAttrsToElementAttrs(
@@ -351,25 +353,25 @@ class FormFieldsExtension extends AbstractExtension
      * @param array|null $attrs
      * @param string $gaTrackingCategory
      * @param string $gaTrackingAction
-     * @param string|null $gaTrackingLabel
-     * @param string|null $gaTrackingValue
+     * @param string $gaTrackingLabel
+     * @param int|null $gaTrackingValue
      * @return array
      */
     private function addGaAttrsToElementAttrs(
         string $gaTrackingCategory,
         string $gaTrackingAction,
-        ?string $gaTrackingLabel,
-        ?string $gaTrackingValue,
+        string $gaTrackingLabel,
+        ?int $gaTrackingValue,
         ?array $attrs = []
     ) {
         $attrs = is_null($attrs) ? [] : $attrs;
 
         $gaTrackingAttrs = [
             'data-attribute' => 'ga-event',
-            'data-action' => $gaTrackingAction,
-            'data-category' => $gaTrackingCategory,
-            'data-label' => $gaTrackingLabel,
-            'data-value' => $gaTrackingValue,
+            'data-ga-action' => $gaTrackingAction,
+            'data-ga-category' => $gaTrackingCategory,
+            'data-ga-label' => $gaTrackingLabel,
+            'data-ga-value' => strval($gaTrackingValue),
         ];
 
         return array_merge($attrs, $gaTrackingAttrs);
