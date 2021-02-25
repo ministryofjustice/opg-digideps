@@ -80,8 +80,8 @@ describe('googleAnalyticsEvents', () => {
       it('does not dispatch gtag event', () => {
         window.globals.gtag = null
 
-        simulateClick(document.getElementById('button1'))
-        simulateClick(document.getElementById('button2'))
+        document.getElementById('button1').click()
+        document.getElementById('button2').click()
 
         expect(window.gtag).not.toHaveBeenCalled()
       })
