@@ -37,12 +37,19 @@ class BehatController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $user = $this->userApi->getByEmail($email, ['user-login', 'user-id']);
+        $user = $this->userApi->getByEmail(
+            $email,
+            ['user-login', 'user-id', 'user-email', 'user-clients', 'client', 'current-report', 'client-reports', 'report']
+        );
 
         return new JsonResponse(
             [
-                'UserId' => $user->getId(),
-                'ActiveReportId' => $user->getActiveReportId()
+                'email' => $user->getEmail(),
+                'clientId' => $user->getFirstClient()->getId(),
+                'currentReportId' => $user->getFirstClient()->getCurrentReport()->getId(),
+                'currentReportType' =>$user->getFirstClient()->getCurrentReport()->getType(),
+                'previousReportId' => $user->getFirstClient()->getReports()[0]->getId(),
+                'previousReportType' => $user->getFirstClient()->getReports()[0]->getType(),
             ]
         );
     }

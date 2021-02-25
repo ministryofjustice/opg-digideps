@@ -76,13 +76,17 @@ class BehatFixtures
                     'email' => $this->layNotStarted->getEmail(),
                     'clientId' => $this->layNotStarted->getFirstClient()->getId(),
                     'currentReportId' => $this->layNotStarted->getFirstClient()->getCurrentReport()->getId(),
-                    'currentReportType' =>$this->layNotStarted->getFirstClient()->getCurrentReport()->getType()
+                    'currentReportType' =>$this->layNotStarted->getFirstClient()->getCurrentReport()->getType(),
+                    'previousReportId' => null,
+                    'previousReportType' => null
                 ],
                 'completed-not-submitted' => [
                     'email' => $this->layCompletedNotSubmitted->getEmail(),
                     'clientId' => $this->layCompletedNotSubmitted->getFirstClient()->getId(),
                     'currentReportId' => $this->layCompletedNotSubmitted->getFirstClient()->getCurrentReport()->getId(),
-                    'currentReportType' =>$this->layCompletedNotSubmitted->getFirstClient()->getCurrentReport()->getType()
+                    'currentReportType' =>$this->layCompletedNotSubmitted->getFirstClient()->getCurrentReport()->getType(),
+                    'previousReportId' => null,
+                    'previousReportType' => null
                 ],
                 'submitted' => [
                     'email' => $this->laySubmitted->getEmail(),

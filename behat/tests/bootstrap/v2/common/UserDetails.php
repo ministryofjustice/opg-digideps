@@ -51,8 +51,11 @@ class UserDetails
         $this->setClientId($userDetails['clientId']);
         $this->setCurrentReportId($userDetails['currentReportId']);
         $this->setCurrentReportType($userDetails['currentReportType']);
-        $this->setPreviousReportId($userDetails['previousReportId']);
-        $this->setPreviousReportType($userDetails['previousReportType']);
+
+        if ($userDetails['currentReportId'] !== $userDetails['previousReportId']) {
+            $this->setPreviousReportId($userDetails['previousReportId']);
+            $this->setPreviousReportType($userDetails['previousReportType']);
+        }
     }
 
     private function getProperties(): array

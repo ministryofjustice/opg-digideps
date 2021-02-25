@@ -27,6 +27,10 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $layDeputyCompletedNotSubmittedDetails;
     public UserDetails $layDeputySubmittedDetails;
 
+    public UserDetails $loggedInUserDetails;
+
+    public array $fixtureUsers = [];
+
     public string $testRunId = '';
 
     public Generator $faker;
@@ -49,20 +53,11 @@ class BaseFeatureContext extends MinkContext
             throw new Exception($responseData['response']);
         }
 
-        $this->adminDetails = new UserDetails($responseData['data']['admin-users']['admin']);
-        var_dump($this->adminDetails);
-        $this->superAdminDetails = new UserDetails($responseData['data']['admin-users']['super-admin']);
-        var_dump($this->superAdminDetails);
-
-
-        $this->layDeputyNotStartedDetails = new UserDetails($responseData['data']['lays']['not-started']);
-        var_dump($this->layDeputyNotStartedDetails);
-
-        $this->layDeputyCompletedNotSubmittedDetails = new UserDetails($responseData['data']['lays']['completed-not-submitted']);
-        var_dump($this->layDeputyCompletedNotSubmittedDetails);
-
-        $this->layDeputySubmittedDetails = new UserDetails($responseData['data']['lays']['submitted']);
-        var_dump($this->layDeputySubmittedDetails);
+        $this->fixtureUsers[] = $this->adminDetails = new UserDetails($responseData['data']['admin-users']['admin']);
+        $this->fixtureUsers[] = $this->superAdminDetails = new UserDetails($responseData['data']['admin-users']['super-admin']);
+        $this->fixtureUsers[] = $this->layDeputyNotStartedDetails = new UserDetails($responseData['data']['lays']['not-started']);
+        $this->fixtureUsers[] = $this->layDeputyCompletedNotSubmittedDetails = new UserDetails($responseData['data']['lays']['completed-not-submitted']);
+        $this->fixtureUsers[] = $this->layDeputySubmittedDetails = new UserDetails($responseData['data']['lays']['submitted']);
     }
 
     /**

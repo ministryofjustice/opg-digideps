@@ -6,7 +6,7 @@ Feature: Providing feedback after submitting a report
     Then I should be on the report submitted page
     When I provide some post-submission feedback
     Then I should be on the post-submission user research page
-    When I click on "Your reports"
+    When I press "Your reports"
     Then I should be on the reports overview page
 
   Scenario: A user provides user research feedback
