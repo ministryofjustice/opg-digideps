@@ -19,7 +19,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
         $anchor = $this->getSession()->getPage()->find('named', ['link', "Navigate to previous part"]);
 
         if (!$anchor) {
-            throw new Exception(
+            $this->throwContextualException(
                 'Previous section link is not visible on the page (searched by title = "Navigate to previous part")'
             );
         }
@@ -27,7 +27,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
         $linkTextContainsSectionName = str_contains($anchor->getText(), $sectionName);
 
         if (!$linkTextContainsSectionName) {
-            throw new Exception(
+            $this->throwContextualException(
                 sprintf('Link contained unexpected text. Wanted: %s. Got: %s ', $sectionName, $anchor->getText())
             );
         }
@@ -41,7 +41,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
         $anchor = $this->getSession()->getPage()->find('named', ['link', "Navigate to next part"]);
 
         if (!$anchor) {
-            throw new Exception(
+            $this->throwContextualException(
                 'Next section link is not visible on the page (searched by title = "Navigate to next part")'
             );
         }
@@ -49,7 +49,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
         $linkTextContainsSectionName = str_contains(strtolower($anchor->getText()), strtolower($sectionName));
 
         if (!$linkTextContainsSectionName) {
-            throw new Exception(
+            $this->throwContextualException(
                 sprintf('Link contained unexpected text. Wanted: %s. Got: %s ', $sectionName, $anchor->getText())
             );
         }

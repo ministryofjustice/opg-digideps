@@ -53,7 +53,7 @@ trait ContactsSectionTrait
         $onSummaryPage = preg_match('/report\/.*\/contacts$/', $currentUrl);
 
         if (!$onSummaryPage) {
-            throw new Exception(sprintf('Not on contacts start page. Current URL is: %s', $currentUrl));
+            $this->throwContextualException(sprintf('Not on contacts start page. Current URL is: %s', $currentUrl));
         }
     }
 
@@ -65,30 +65,6 @@ trait ContactsSectionTrait
         $this->iViewContactsSection();
 
         $this->clickLink('Start contacts');
-    }
-
-    /**
-     * @Then I should be on the contacts summary page
-     */
-    public function iShouldBeOnContactsSummaryPage()
-    {
-        $this->iAmOnPage('/report\/.*\/contacts\/summary$/');
-    }
-
-    /**
-     * @Then I should be on the add a contact page
-     */
-    public function iShouldBeOnAddAContactPage()
-    {
-        $this->iAmOnPage('/report\/.*\/contacts\/add/');
-    }
-
-    /**
-     * @Then I should be on the contacts add another page
-     */
-    public function iShouldBeOnContactsAddAnotherPage()
-    {
-        $this->iAmOnPage('/report\/.*\/contacts\/add_another$/');
     }
 
     /**
@@ -172,9 +148,7 @@ trait ContactsSectionTrait
         $descriptionList = $this->getSession()->getPage()->find('css', 'dl');
 
         if (!$table && !$descriptionList) {
-            throw new Exception(
-                'A table or dl element was not found on the page'
-            );
+            $this->throwContextualException('A table or dl element was not found on the page');
         }
 
         $missingText = [];
@@ -191,7 +165,7 @@ trait ContactsSectionTrait
         if (!empty($missingText)) {
             $tableType = $table ? 'table' : 'dl';
 
-            throw new Exception(
+            $this->throwContextualException(
                 sprintf(
                     'A %s was found but the row with the expected text was not found. Missing text: %s. HTML found: %s',
                     $tableType,

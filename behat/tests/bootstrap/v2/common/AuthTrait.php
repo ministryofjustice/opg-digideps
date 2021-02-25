@@ -21,9 +21,9 @@ trait AuthTrait
 
         if (!$this->userDetailsExists($email)) {
             $this->fixtureUsers[] = new UserDetails($userDetailsArray);
-            var_dump($this->fixtureUsers);
-            $this->loggedInUserDetails = $this->getUserDetailsByEmail($email);
         }
+
+        $this->loggedInUserDetails = $this->getUserDetailsByEmail($email);
     }
 
     /**

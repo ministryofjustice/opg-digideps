@@ -76,25 +76,31 @@ class BehatFixtures
                     'email' => $this->layNotStarted->getEmail(),
                     'clientId' => $this->layNotStarted->getFirstClient()->getId(),
                     'currentReportId' => $this->layNotStarted->getFirstClient()->getCurrentReport()->getId(),
-                    'currentReportType' =>$this->layNotStarted->getFirstClient()->getCurrentReport()->getType(),
+                    'currentReportType' => $this->layNotStarted->getFirstClient()->getCurrentReport()->getType(),
+                    'currentReportNdrOrReport' => $this->layNotStarted->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report',
                     'previousReportId' => null,
-                    'previousReportType' => null
+                    'previousReportType' => null,
+                    'previousReportNdrOrReport' => $this->layNotStarted->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report'
                 ],
                 'completed-not-submitted' => [
                     'email' => $this->layCompletedNotSubmitted->getEmail(),
                     'clientId' => $this->layCompletedNotSubmitted->getFirstClient()->getId(),
                     'currentReportId' => $this->layCompletedNotSubmitted->getFirstClient()->getCurrentReport()->getId(),
                     'currentReportType' =>$this->layCompletedNotSubmitted->getFirstClient()->getCurrentReport()->getType(),
+                    'currentReportNdrOrReport' => $this->layCompletedNotSubmitted->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report',
                     'previousReportId' => null,
-                    'previousReportType' => null
+                    'previousReportType' => null,
+                    'previousReportNdrOrReport' => $this->layCompletedNotSubmitted->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report'
                 ],
                 'submitted' => [
                     'email' => $this->laySubmitted->getEmail(),
                     'clientId' => $this->laySubmitted->getFirstClient()->getId(),
                     'currentReportId' => $this->laySubmitted->getFirstClient()->getCurrentReport()->getId(),
                     'currentReportType' =>$this->laySubmitted->getFirstClient()->getCurrentReport()->getType(),
-                    'previousReportId' => $this->laySubmitted->getFirstClient()->getReports()->first()->getId(),
-                    'previousReportType' => $this->laySubmitted->getFirstClient()->getReports()->first()->getType(),
+                    'currentReportNdrOrReport' => $this->laySubmitted->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report',
+                    'previousReportId' => null,
+                    'previousReportType' => null,
+                    'previousReportNdrOrReport' => $this->laySubmitted->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report'
                 ]
             ]
         ];

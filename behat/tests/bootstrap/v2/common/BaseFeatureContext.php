@@ -5,10 +5,10 @@ namespace DigidepsBehat\v2\Common;
 
 use Behat\Mink\Driver\GoutteDriver;
 use Behat\MinkExtension\Context\MinkContext;
+use DigidepsBehat\BehatException;
 use Exception;
 use Faker\Factory;
 use Faker\Generator;
-use Symfony\Component\Serializer\Serializer;
 
 class BaseFeatureContext extends MinkContext
 {
@@ -16,6 +16,7 @@ class BaseFeatureContext extends MinkContext
     use CourtOrderTrait;
     use DebugTrait;
     use ReportTrait;
+    use IShouldBeOnTrait;
 
     const BEHAT_FRONT_RESET_FIXTURES = '/behat/frontend/reset-fixtures?testRunId=%s';
     const BEHAT_FRONT_USER_DETAILS = '/behat/frontend/user/%s/details';
@@ -58,6 +59,7 @@ class BaseFeatureContext extends MinkContext
         $this->fixtureUsers[] = $this->layDeputyNotStartedDetails = new UserDetails($responseData['data']['lays']['not-started']);
         $this->fixtureUsers[] = $this->layDeputyCompletedNotSubmittedDetails = new UserDetails($responseData['data']['lays']['completed-not-submitted']);
         $this->fixtureUsers[] = $this->layDeputySubmittedDetails = new UserDetails($responseData['data']['lays']['submitted']);
+        var_dump($this->fixtureUsers);
     }
 
     /**
@@ -97,7 +99,21 @@ class BaseFeatureContext extends MinkContext
         $onExpectedPage = preg_match($urlRegex, $currentUrl);
 
         if (!$onExpectedPage) {
-            throw new Exception(sprintf('Not on expected page. Current URL is: %s', $currentUrl));
+            $this->throwContextualException(sprintf('Not on expected page. Current URL is: %s', $currentUrl));
         }
+    }
+
+    public function throwContextualException(string $message)
+    {
+        $loggedInEmail = !isset($this->loggedInUserDetails) ? 'Not logged in' : $this->loggedInUserDetails->getEmail();
+
+        $contextMessage = <<<CONTEXT
+$message
+
+Logged in user is: $loggedInEmail
+Test run ID is: $this->testRunId
+CONTEXT;
+
+        throw new BehatException($contextMessage);
     }
 }

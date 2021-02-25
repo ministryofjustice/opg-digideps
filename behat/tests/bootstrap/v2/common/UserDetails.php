@@ -13,8 +13,10 @@ class UserDetails
     private ?int $clientId;
     private ?int $currentReportId;
     private ?string $currentReportType;
+    private ?string $currentReportNdrOrReport;
     private ?int $previousReportId;
     private ?string $previousReportType;
+    private ?string $previousReportNdrOrReport;
 
     public function __construct(array $userDetails)
     {
@@ -47,14 +49,18 @@ class UserDetails
             );
         }
 
+        var_dump($userDetails);
         $this->setEmail($userDetails['email']);
         $this->setClientId($userDetails['clientId']);
+
         $this->setCurrentReportId($userDetails['currentReportId']);
         $this->setCurrentReportType($userDetails['currentReportType']);
+        $this->setCurrentReportNdrOrReport($userDetails['currentReportNdrOrReport']);
 
         if ($userDetails['currentReportId'] !== $userDetails['previousReportId']) {
             $this->setPreviousReportId($userDetails['previousReportId']);
             $this->setPreviousReportType($userDetails['previousReportType']);
+            $this->setPreviousReportNdrOrReport($userDetails['previousReportNdrOrReport']);
         }
     }
 
@@ -176,6 +182,42 @@ class UserDetails
     public function setPreviousReportType(?string $previousReportType): UserDetails
     {
         $this->previousReportType = $previousReportType;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCurrentReportNdrOrReport(): ?string
+    {
+        return $this->currentReportNdrOrReport;
+    }
+
+    /**
+     * @param string|null $currentReportNdrOrReport
+     * @return UserDetails
+     */
+    public function setCurrentReportNdrOrReport(?string $currentReportNdrOrReport): UserDetails
+    {
+        $this->currentReportNdrOrReport = $currentReportNdrOrReport;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPreviousReportNdrOrReport(): ?string
+    {
+        return $this->previousReportNdrOrReport;
+    }
+
+    /**
+     * @param string|null $previousReportNdrOrReport
+     * @return UserDetails
+     */
+    public function setPreviousReportNdrOrReport(?string $previousReportNdrOrReport): UserDetails
+    {
+        $this->previousReportNdrOrReport = $previousReportNdrOrReport;
         return $this;
     }
 }

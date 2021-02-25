@@ -40,7 +40,10 @@ class UserTestHelper extends TestCase
             ->setPhoneMain($faker->phoneNumber)
             ->setRegistrationDate(new DateTime())
             ->setLastLoggedIn(new DateTime())
-            ->setActive(true);
+            ->setActive(true)
+            ->setAddress1($faker->streetAddress)
+            ->setAddressCountry('GB')
+            ->setAddressPostcode($faker->postcode);
 
         if (!is_null($client)) {
             $user->addClient($client);

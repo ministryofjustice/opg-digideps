@@ -3,6 +3,8 @@
 
 namespace DigidepsBehat\v2\Common;
 
+use Exception;
+
 trait ReportTrait
 {
     /**
@@ -10,56 +12,37 @@ trait ReportTrait
      */
     public function iSubmitTheReport()
     {
-        $reportType = $this->layDeputyCompletedNotSubmittedDetails->getReportType();
+        $ndrOrReport = $this->layDeputyCompletedNotSubmittedDetails->getCurrentReportNdrOrReport();
         $reportId = $this->layDeputyCompletedNotSubmittedDetails->getCurrentReportId();
 
-        $this->visit("$reportType/$reportId/overview");
+        $this->visit("$ndrOrReport/$reportId/overview");
 
         try {
             $this->clickLink('Preview and check report');
-        } catch (\Exception $e) {
-            $link = $reportType === 'ndr' ? 'edit-report-review' : 'edit-report_submit';
-            $this->clickOnBehatLink($link);
+        } catch (Exception $e) {
+            // Convert once we start to look at NDRs
+            $this->throwContextualException("Couldn't find link with text 'Preview and check report'");
+//            $link = $reportType === 'ndr' ? 'edit-report-review' : 'edit-report_submit';
+//            $this->clickOnBehatLink($link);
         }
 
-        $this->clickOnBehatLink($reportType === 'report' ? 'declaration-page' : 'ndr-declaration-page');
-        $this->checkOption(sprintf('%s_declaration[agree]', $reportType));
-        $this->selectOption(sprintf('%s_declaration[agreedBehalfDeputy]', $reportType), 'only_deputy');
-        $this->pressButton(sprintf('%s_declaration[save]', $reportType));
+        $this->clickLink('Continue');
+        ;
+        $this->checkOption(sprintf('%s_declaration[agree]', $ndrOrReport));
+        $this->selectOption(sprintf('%s_declaration[agreedBehalfDeputy]', $ndrOrReport), 'only_deputy');
+        $this->pressButton(sprintf('%s_declaration[save]', $ndrOrReport));
     }
 
-    private function enterReport(string $client, ?string $startDate = null, ?string $endDate = null): void
+    /**
+     * @Given a Lay Deputy completes and submits a report
+     */
+    public function aLayDeputyCompletesAndSubmitsAReport()
     {
-        if ($this->getSession()->getPage()->hasContent('Start now')) {
-            $this->clickLink('Start now');
-        } elseif (($startDate && $endDate) && $this->getSession()->getPage()->hasContent($startDate . ' to ' . $endDate . ' report')) {
-            $this->clickLink($startDate . ' to ' . $endDate . ' report');
-        } elseif ($this->getSession()->getPage()->hasContent('Submitted reports')) {
-            $this->clickLink('View');
-        } else {
-            try {
-                $this->clickLink($client.'-Client, John');
-            } catch (\Throwable $e) {
-                $this->fillField('search', $client);
-                $this->pressButton('search_submit');
-                $this->clickLink($client.'-Client, John');
-            }
+        if (empty($this->layDeputyCompletedNotSubmittedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedNotSubmittedDetails');
         }
-    }
 
-    private function setCurrentReportDetails(string $deputyEmail)
-    {
-        $this->loginToFrontendAs($deputyEmail);
-        $this->enterReport($client, $startDate, $endDate);
-        preg_match('/\/(ndr|report)\/(\d+)\//', $this->getSession()->getCurrentUrl(), $match);
-
-        self::$currentReportCache = [
-            'deputy' => $deputy,
-            'client' => $client,
-            'reportId' => $match[2],
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-            'reportType' => $match[1]
-        ];
+        $this->loginToFrontendAs($this->layDeputyCompletedNotSubmittedDetails->getEmail());
+        $this->iSubmitTheReport();
     }
 }
