@@ -24,20 +24,18 @@ trait ContactsSectionTrait
 
     private function setContactFormValues(bool $noContacts)
     {
-        $faker = Factory::create('en_GB');
-
         if ($noContacts) {
-            $this->formValuesEntered[] = $this->reasonForNoContacts = $faker->text(200);
+            $this->formValuesEntered[] = $this->reasonForNoContacts = $this->faker->text(200);
             return;
         }
 
-        $this->formValuesEntered[] = $this->contactName = $faker->name;
-        $this->formValuesEntered[] = $this->contactRelationship = $faker->text(50);
-        $this->formValuesEntered[] = $this->contactExplanation = $faker->text(200);
-        $this->formValuesEntered[] = $this->contactAddress = $faker->streetName;
-        $this->formValuesEntered[] = $this->contactAddress2 = $faker->city;
-        $this->formValuesEntered[] = $this->contactCounty = $faker->county;
-        $this->formValuesEntered[] = $this->contactPostcode = $faker->postcode;
+        $this->formValuesEntered[] = $this->contactName = $this->faker->name;
+        $this->formValuesEntered[] = $this->contactRelationship = $this->faker->text(50);
+        $this->formValuesEntered[] = $this->contactExplanation = $this->faker->text(200);
+        $this->formValuesEntered[] = $this->contactAddress = $this->faker->streetName;
+        $this->formValuesEntered[] = $this->contactAddress2 = $this->faker->city;
+        $this->formValuesEntered[] = $this->contactCounty = $this->faker->county;
+        $this->formValuesEntered[] = $this->contactPostcode = $this->faker->postcode;
         $this->formValuesEntered[] = $this->contactCountry = 'United Kingdom';
     }
 
@@ -74,12 +72,7 @@ trait ContactsSectionTrait
      */
     public function iShouldBeOnContactsSummaryPage()
     {
-        $currentUrl = $this->getSession()->getCurrentUrl();
-        $onSummaryPage = preg_match('/report\/.*\/contacts\/summary$/', $currentUrl);
-
-        if (!$onSummaryPage) {
-            throw new Exception(sprintf('Not on contacts summary page. Current URL is: %s', $currentUrl));
-        }
+        $this->iAmOnPage('/report\/.*\/contacts\/summary$/');
     }
 
     /**
@@ -87,12 +80,7 @@ trait ContactsSectionTrait
      */
     public function iShouldBeOnAddAContactPage()
     {
-        $currentUrl = $this->getSession()->getCurrentUrl();
-        $onSummaryPage = preg_match('/report\/.*\/contacts\/add/', $currentUrl);
-
-        if (!$onSummaryPage) {
-            throw new Exception(sprintf('Not on add a contact. Current URL is: %s', $currentUrl));
-        }
+        $this->iAmOnPage('/report\/.*\/contacts\/add/');
     }
 
     /**
@@ -100,12 +88,7 @@ trait ContactsSectionTrait
      */
     public function iShouldBeOnContactsAddAnotherPage()
     {
-        $currentUrl = $this->getSession()->getCurrentUrl();
-        $onSummaryPage = preg_match('/report\/.*\/contacts\/add_another$/', $currentUrl);
-
-        if (!$onSummaryPage) {
-            throw new Exception(sprintf('Not on contacts add another page page. Current URL is: %s', $currentUrl));
-        }
+        $this->iAmOnPage('/report\/.*\/contacts\/add_another$/');
     }
 
     /**

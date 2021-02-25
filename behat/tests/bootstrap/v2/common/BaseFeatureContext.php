@@ -6,6 +6,8 @@ namespace DigidepsBehat\v2\Common;
 use Behat\Mink\Driver\GoutteDriver;
 use Behat\MinkExtension\Context\MinkContext;
 use Exception;
+use Faker\Factory;
+use Faker\Generator;
 use Symfony\Component\Serializer\Serializer;
 
 class BaseFeatureContext extends MinkContext
@@ -27,11 +29,15 @@ class BaseFeatureContext extends MinkContext
 
     public string $testRunId = '';
 
+    public Generator $faker;
+
     /**
      * @BeforeScenario
      */
     public function resetFixturesAndDropDatabase()
     {
+        $this->faker = Factory::create('en_GB');
+
         $this->testRunId = (string) (time() + rand());
         $this->visitAdminPath(sprintf(self::BEHAT_FRONT_RESET_FIXTURES, $this->testRunId));
 
@@ -87,6 +93,16 @@ class BaseFeatureContext extends MinkContext
             return $this->getSession()->getPage()->getContent();
         } else {
             return $this->getSession()->getPage()->getText();
+        }
+    }
+
+    public function iAmOnPage(string $urlRegex)
+    {
+        $currentUrl = $this->getSession()->getCurrentUrl();
+        $onExpectedPage = preg_match($urlRegex, $currentUrl);
+
+        if (!$onExpectedPage) {
+            throw new Exception(sprintf('Not on expected page. Current URL is: %s', $currentUrl));
         }
     }
 }

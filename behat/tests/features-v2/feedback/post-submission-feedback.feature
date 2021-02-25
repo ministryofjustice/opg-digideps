@@ -3,8 +3,9 @@ Feature: Providing feedback after submitting a report
 
   Scenario: A user provides satisfaction feedback
     Given a Lay Deputy completes and submits a report
+    Then I should be on the report submitted page
     When I provide some post-submission feedback
-    Then I should be on the user research feedback page
+    Then I should be on the post-submission user research page
     When I click on "Your reports"
     Then I should be on the reports overview page
 

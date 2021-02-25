@@ -10,8 +10,8 @@ trait ReportTrait
      */
     public function iSubmitTheReport()
     {
-        $reportType = self::$currentReportCache['reportType'];
-        $reportId = self::$currentReportCache['reportId'];
+        $reportType = $this->layDeputyCompletedNotSubmittedDetails->getReportType();
+        $reportId = $this->layDeputyCompletedNotSubmittedDetails->getCurrentReportId();
 
         $this->visit("$reportType/$reportId/overview");
 
