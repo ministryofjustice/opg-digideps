@@ -36,17 +36,6 @@ const setDocumentBody = () => {
     `
 }
 
-const simulateClick = (element) => {
-  // Create our event (with options)
-  const event = new global.MouseEvent('click', {
-    bubbles: true,
-    cancelable: true,
-    view: window
-  })
-
-  element.dispatchEvent(event)
-}
-
 beforeAll(() => {
   setDocumentBody()
   GoogleAnalyticsEvents.init()
@@ -71,8 +60,8 @@ describe('googleAnalyticsEvents', () => {
   describe('clicking button', () => {
     describe('when gtag is loaded', () => {
       it('dispatches gtag event', () => {
-        simulateClick(document.getElementById('button1'))
-        simulateClick(document.getElementById('button2'))
+        document.getElementById('button1').click()
+        document.getElementById('button2').click()
 
         expect(window.gtag).toHaveBeenCalledWith(
           'event',
