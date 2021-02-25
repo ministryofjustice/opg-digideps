@@ -20,7 +20,12 @@ class BehatFixtures
     private ReportTestHelper $reportTestHelper;
     private ClientTestHelper $clientTestHelper;
 
-    private array $users = ['admin-users' => [], 'deputies' => []];
+    private User $admin;
+    private User $superAdmin;
+    private User $layNotStarted;
+    private User $layCompletedNotSubmitted;
+    private User $laySubmitted;
+
     private string $testRunId = '';
 
     public function __construct(
@@ -57,14 +62,37 @@ class BehatFixtures
 
         $this->createUserFixtures();
 
-        $test = ''
-;
         return [
-            'admin' => $this->users['admin-users']['admin']->getEmail(),
-            'super-admin' => $this->users['admin-users']['super-admin']->getEmail(),
-            'lay-not-started' => $this->users['deputies']['lay-not-started']->getEmail(),
-            'lay-completed-not-submitted' => $this->users['deputies']['lay-not-started']->getEmail(),
-            'lay-submitted' => $this->users['deputies']['lay-not-started']->getEmail(),
+            'admin-users' => [
+                'admin' => [
+                    'email' => $this->admin->getEmail()
+                ],
+                'super-admin' => [
+                    'email' => $this->superAdmin->getEmail()
+                ]
+            ],
+            'lays' => [
+                'not-started' => [
+                    'email' => $this->layNotStarted->getEmail(),
+                    'clientId' => $this->layNotStarted->getFirstClient()->getId(),
+                    'currentReportId' => $this->layNotStarted->getFirstClient()->getCurrentReport()->getId(),
+                    'currentReportType' =>$this->layNotStarted->getFirstClient()->getCurrentReport()->getType()
+                ],
+                'completed-not-submitted' => [
+                    'email' => $this->layCompletedNotSubmitted->getEmail(),
+                    'clientId' => $this->layCompletedNotSubmitted->getFirstClient()->getId(),
+                    'currentReportId' => $this->layCompletedNotSubmitted->getFirstClient()->getCurrentReport()->getId(),
+                    'currentReportType' =>$this->layCompletedNotSubmitted->getFirstClient()->getCurrentReport()->getType()
+                ],
+                'submitted' => [
+                    'email' => $this->laySubmitted->getEmail(),
+                    'clientId' => $this->laySubmitted->getFirstClient()->getId(),
+                    'currentReportId' => $this->laySubmitted->getFirstClient()->getCurrentReport()->getId(),
+                    'currentReportType' =>$this->laySubmitted->getFirstClient()->getCurrentReport()->getType(),
+                    'previousReportId' => $this->laySubmitted->getFirstClient()->getReports()->first()->getId(),
+                    'previousReportType' => $this->laySubmitted->getFirstClient()->getReports()->first()->getType(),
+                ]
+            ]
         ];
     }
 
@@ -73,7 +101,15 @@ class BehatFixtures
         $this->createAdminUsers();
         $this->createDeputies();
 
-        foreach (array_merge($this->users['admin-users'], $this->users['deputies']) as $user) {
+        $users = [
+            $this->admin,
+            $this->superAdmin,
+            $this->layNotStarted,
+            $this->layCompletedNotSubmitted,
+            $this->laySubmitted
+        ];
+
+        foreach ($users as $user) {
             $user->setPassword($this->encoder->encodePassword($user, $this->fixtureParams['account_password']));
             $this->entityManager->persist($user);
         }
@@ -83,32 +119,36 @@ class BehatFixtures
 
     private function createAdminUsers()
     {
-        $this->users['admin-users']['admin'] = $this->userTestHelper
+        $this->admin = $this->userTestHelper
             ->createUser(null, User::ROLE_ADMIN, sprintf('admin-%s@publicguardian.gov.uk', $this->testRunId));
 
-        $this->users['admin-users']['super-admin'] = $this->userTestHelper
+        $this->superAdmin = $this->userTestHelper
             ->createUser(null, User::ROLE_SUPER_ADMIN, sprintf('super-admin-%s@publicguardian.gov.uk', $this->testRunId));
     }
 
     private function createDeputies()
     {
-        $this->users['deputies']['lay-not-started'] = $this->userTestHelper
+        $this->layNotStarted = $this->userTestHelper
             ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-not-started-%s@publicguardian.gov.uk', $this->testRunId));
-        $this->addClientsAndReportsToDeputy($this->users['deputies']['lay-not-started'], false, false);
+        $this->addClientsAndReportsToDeputy($this->layNotStarted, false, false);
 
-        $this->users['deputies']['lay-completed-not-submitted'] = $this->userTestHelper
+        $this->layCompletedNotSubmitted = $this->userTestHelper
             ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-completed-not-submitted-%s@publicguardian.gov.uk', $this->testRunId));
-        $this->addClientsAndReportsToDeputy($this->users['deputies']['lay-completed-not-submitted'], true, false);
+        $this->addClientsAndReportsToDeputy($this->layCompletedNotSubmitted, true, false);
 
-        $this->users['deputies']['lay-submitted'] = $this->userTestHelper
+        $this->laySubmitted = $this->userTestHelper
             ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-submitted-%s@publicguardian.gov.uk', $this->testRunId));
-        $this->addClientsAndReportsToDeputy($this->users['deputies']['lay-submitted'], true, true);
+        $this->addClientsAndReportsToDeputy($this->laySubmitted, true, true);
     }
 
     private function addClientsAndReportsToDeputy(User $deputy, bool $completed = false, bool $submitted = false)
     {
         $client = $this->clientTestHelper->createClient($this->entityManager, $deputy);
         $report = $this->reportTestHelper->generateReport($this->entityManager, $client);
+
+        $client->addReport($report);
+        $report->setClient($client);
+        $deputy->addClient($client);
 
         if ($completed) {
             $this->reportTestHelper->completeLayReport($report, $this->entityManager);
@@ -120,7 +160,5 @@ class BehatFixtures
 
         $this->entityManager->persist($client);
         $this->entityManager->persist($report);
-
-        $deputy->addClient($client);
     }
 }

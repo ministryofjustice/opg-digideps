@@ -6,24 +6,26 @@ namespace DigidepsBehat\v2\Common;
 use Behat\Mink\Driver\GoutteDriver;
 use Behat\MinkExtension\Context\MinkContext;
 use Exception;
+use Symfony\Component\Serializer\Serializer;
 
 class BaseFeatureContext extends MinkContext
 {
     use AuthTrait;
     use CourtOrderTrait;
     use DebugTrait;
+    use ReportTrait;
 
     const BEHAT_FRONT_RESET_FIXTURES = '/behat/frontend/reset-fixtures?testRunId=%s';
     const BEHAT_FRONT_USER_DETAILS = '/behat/frontend/user/%s/details';
 
-    private string $adminEmail = '';
-    private string $superAdminEmail = '';
+    public UserDetails $adminDetails;
+    public UserDetails $superAdminDetails;
 
-    private string $layDeputyNotStartedEmail = '';
-    private string $layDeputyCompletedNotSubmittedEmail = '';
-    private string $layDeputySubmittedEmail = '';
+    public UserDetails $layDeputyNotStartedDetails;
+    public UserDetails $layDeputyCompletedNotSubmittedDetails;
+    public UserDetails $layDeputySubmittedDetails;
 
-    private string $testRunId = '';
+    public string $testRunId = '';
 
     /**
      * @BeforeScenario
@@ -41,12 +43,20 @@ class BaseFeatureContext extends MinkContext
             throw new Exception($responseData['response']);
         }
 
-        $this->adminEmail = $responseData['data']['admin'];
-        $this->superAdminEmail = $responseData['data']['super-admin'];
+        $this->adminDetails = new UserDetails($responseData['data']['admin-users']['admin']);
+        var_dump($this->adminDetails);
+        $this->superAdminDetails = new UserDetails($responseData['data']['admin-users']['super-admin']);
+        var_dump($this->superAdminDetails);
 
-        $this->layDeputyNotStartedEmail = $responseData['data']['lay-not-started'];
-        $this->layDeputyCompletedNotSubmittedEmail = $responseData['data']['lay-completed-not-submitted'];
-        $this->layDeputySubmittedEmail = $responseData['data']['lay-submitted'];
+
+        $this->layDeputyNotStartedDetails = new UserDetails($responseData['data']['lays']['not-started']);
+        var_dump($this->layDeputyNotStartedDetails);
+
+        $this->layDeputyCompletedNotSubmittedDetails = new UserDetails($responseData['data']['lays']['completed-not-submitted']);
+        var_dump($this->layDeputyCompletedNotSubmittedDetails);
+
+        $this->layDeputySubmittedDetails = new UserDetails($responseData['data']['lays']['submitted']);
+        var_dump($this->layDeputySubmittedDetails);
     }
 
     /**

@@ -67,12 +67,30 @@ class ReportTestHelper
             ->setCreatedBy($submittedBy)
             ->setCreatedOn(new DateTime());
 
+        $submitDate = clone $report->getStartDate();
+        $submitDate->modify('+365 day');
+
         $report
-            ->setSubmitDate(new DateTime())
+            ->setSubmitDate($submitDate)
             ->setSubmitted(true);
 
         $em->persist($submission);
         $em->persist($report);
+
+        // Create next report
+        $newReportStartDate = clone $report->getEndDate();
+        $newReportStartDate->modify('+1 day');
+        $newReportEndDate = clone $newReportStartDate;
+        $newReportEndDate->modify('+365 day');
+
+        $client = $report->getClient();
+        $newReport = $this->generateReport($em, $client, $report->getType(), $newReportStartDate, $newReportEndDate);
+
+        $client->addReport($newReport);
+        $newReport->setClient($client);
+
+        $em->persist($client);
+        $em->persist($newReport);
     }
 
     /**

@@ -14,7 +14,7 @@ trait CourtOrderTrait
      */
     public function theFollowingCourtOrdersExist(TableNode $table)
     {
-        $this->loginToAdminAs($this->superAdminEmail);
+        $this->loginToAdminAs($this->superAdminDetails->getEmail());
 
         foreach ($table as $row) {
             $queryString = http_build_query([
