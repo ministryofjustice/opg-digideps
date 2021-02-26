@@ -335,7 +335,7 @@ class FormFieldsExtension extends AbstractExtension
         string $gaTrackingCategory,
         string $gaTrackingAction,
         string $gaTrackingLabel = null,
-        int $gaTrackingValue = null,
+        ?int $gaTrackingValue = null,
         array $vars = []
     ) {
         $vars['attr'] = $this->addGaAttrsToElementAttrs(
