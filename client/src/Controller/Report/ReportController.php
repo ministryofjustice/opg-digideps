@@ -438,7 +438,8 @@ class ReportController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->satisfactionApi->createPostSubmissionFeedback($form->getData(), $report->getType(), $this->getUser());
 
-            return $this->redirect($this->generateUrl('report_submit_feedback', ['reportId' => $reportId]));
+            // REdirect to newly made page
+            return $this->redirect($this->generateUrl('report_post_submission_user_research', ['reportId' => $reportId]));
         }
 
         return [
@@ -448,6 +449,29 @@ class ReportController extends AbstractController
         ];
     }
 
+    /**
+     * @Route("/report/{reportId}/post_submission_user_research", name="report_post_submission_user_research")
+     * @Template("@App/Report/Report/postSubmissionUserResearch.html.twig")
+     * @param $reportId
+     * @return array
+     */
+    public function postSubmissionUserResearch($reportId)
+    {
+        $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
+
+        // check status
+        if (!$report->getSubmitted()) {
+            $message = $this->translator->trans('report.submissionExceptions.submitted', [], 'validators');
+            throw new ReportNotSubmittedException($message);
+        }
+
+        return [
+            'report' => $report,
+        ];
+    }
+
+
+    // @TODO Remove once ticket complete along with view
     /**
      * @Route("/report/{reportId}/submit_feedback", name="report_submit_feedback")
      * @Template("@App/Report/Report/submitFeedback.html.twig")

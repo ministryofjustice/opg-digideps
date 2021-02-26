@@ -1,6 +1,13 @@
 @v2
 Feature: Providing feedback after submitting a report
   @acs
+  Scenario: A user does not provide feedback
+    Given a Lay Deputy completes and submits a report
+    Then I should be on the report submitted page
+    When I press "Your reports"
+    Then I should be on the Lay reports overview page
+
+  @acs
   Scenario: A user provides satisfaction feedback
     Given a Lay Deputy completes and submits a report
     Then I should be on the report submitted page

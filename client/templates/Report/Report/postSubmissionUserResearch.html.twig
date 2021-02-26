@@ -1,0 +1,24 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% set translationDomain = "report-post-submission-user-research" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'thanksForFeedback' %}
+
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.thankYou') | trans }}{% endblock %}
+
+
+{% block pageContent %}
+
+    <div class="text">
+
+        <p class="govuk-body">{{ paragraph1 }}</p>
+
+        <p class="govuk-body">If you have a question that needs a response, please email <a href="mailto:customerservices@publicguardian.gov.uk">customerservices@publicguardian.gov.uk</a> or call the helpline.</p>
+
+        <a class="govuk-button" href="{{ path('lay_home')}}">
+            {{ 'yourReports' | trans({}, 'common') }}
+        </a>
+    </div>
+
+{% endblock %}

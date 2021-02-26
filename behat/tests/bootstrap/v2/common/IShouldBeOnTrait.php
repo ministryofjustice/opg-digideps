@@ -18,7 +18,7 @@ trait IShouldBeOnTrait
      */
     public function iShouldBePostSubmissionUserResearchPage()
     {
-        $this->iAmOnPage('/report\/.*\/user-research/');
+        $this->iAmOnPage('/report\/.*\/post_submission_user_research/');
     }
 
     /**
