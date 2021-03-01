@@ -1,9 +1,10 @@
 {# rendered by FormFieldExtension::renderFormSubmit() #}
 {% set buttonClass = buttonClass | default('') %}
+{% set attr = attr | default({}) %}
 
 {% set options = {
     'label': label ,
-    'attr': {'class': 'govuk-button ' ~ buttonClass, 'data-module': 'govuk-button'},
+    'attr': {'class': 'govuk-button ' ~ buttonClass, 'data-module': 'govuk-button'} | merge(attr),
     'disabled': 'disabled' in buttonClass
 } %}
 

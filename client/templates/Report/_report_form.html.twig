@@ -1,5 +1,9 @@
 {% trans_default_domain "registration" %}
 
+{% set gaCategory = 'pageTitle' | trans %}
+{% set gaAction = 'Click: Button: Save Report Dates' %}
+{% set gaLabel = 'Clicked save report date button on ' ~ app.request.requesturi %}
+
 {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-form' }}) }}
 
     <h2 class="govuk-heading-m">{{ 'form.newReportForm.addStartDate' | trans }}</h2>
@@ -14,6 +18,13 @@
 
     {{ form_known_date(form.endDate, 'endDate') }}
 
-    {{ form_submit(form.save, 'saveAndContinue') }}
+    {{ form_submit_ga(
+         form.save,
+         'saveAndContinue',
+         gaCategory,
+         gaAction,
+         gaLabel
+       )
+    }}
 
 {{ form_end(form) }}
