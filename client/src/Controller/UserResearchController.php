@@ -29,7 +29,7 @@ class UserResearchController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/post_submission_user_research", name="report_post_submission_user_research")
-     * @Template("@App/Report/Report/postSubmissionUserResearch.html.twig")
+     * @Template("@App/UserResearch/postSubmissionUserResearch.html.twig")
      * @param $reportId
      * @return array
      */
