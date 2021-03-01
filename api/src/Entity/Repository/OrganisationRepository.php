@@ -20,6 +20,18 @@ class OrganisationRepository extends EntityRepository
     }
 
     /**
+     * @return array
+     */
+    public function getNonDeletedArray(): array
+    {
+        $query = $this
+            ->getEntityManager()
+            ->createQuery('SELECT o FROM App\Entity\Organisation o WHERE o.deletedAt IS NULL');
+
+        return $query->getArrayResult();
+    }
+
+    /**
      * @param int $id
      * @return array|null
      */

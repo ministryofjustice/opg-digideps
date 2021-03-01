@@ -67,7 +67,7 @@ class OrganisationController extends AbstractController
      */
     public function getAllAction(): JsonResponse
     {
-        $data = $this->repository->getAllArray();
+        $data = $this->repository->getNonDeletedArray();
 
         $organisationDtos = [];
         foreach ($data as $organisationArray) {
@@ -141,8 +141,13 @@ class OrganisationController extends AbstractController
      */
     public function deleteAction(int $id): JsonResponse
     {
-        $deleted = $this->repository->deleteById($id);
-        $message = $deleted ? 'Organisation deleted' : 'Organisation not found. Nothing deleted';
+        $deleted = $this->restHandler->delete($id);
+
+        if (!$deleted) {
+            $message = 'Organisation not found. Nothing deleted';
+        } else {
+            $message = 'Organisation deleted';
+        }
 
         return $this->buildSuccessResponse([], $message);
     }

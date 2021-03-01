@@ -95,7 +95,24 @@ class OrganisationRestHandler
     }
 
     /**
-     * @param array $data
+     * @param int $id
+     * @return bool
+     * @throws OptimisticLockExceptionAlias
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function delete(int $id)
+    {
+        if (null === ($organisation = $this->orgRepository->find($id))) {
+            return false;
+        }
+
+        $organisation->setDeletedAt(new \DateTime());
+        $this->em->flush($organisation);
+
+        return true;
+    }
+
+    /**
      * @param int $id
      * @return Organisation|null
      * @throws OptimisticLockExceptionAlias
