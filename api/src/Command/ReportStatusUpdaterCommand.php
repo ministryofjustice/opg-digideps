@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Entity\Report\Report;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -21,7 +21,7 @@ class ReportStatusUpdaterCommand extends Command
 
     private $entityManager;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
 
@@ -45,7 +45,7 @@ class ReportStatusUpdaterCommand extends Command
 
         $output->write("Updating report status for next $limit reports: ");
         for ($i = 0, $continue = true; $i < $limit && $continue; $i += $chunkSize) {
-            
+
             /* @var $reports Report[] */
             $reports = $em->getRepository(Report::class)
                 ->createQueryBuilder('r')
