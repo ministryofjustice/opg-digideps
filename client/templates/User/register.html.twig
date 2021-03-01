@@ -23,6 +23,10 @@
 
     {% set formClass = 'registration-form' %}
 
+    {% set gaCategory = 'pageTitle' | trans %}
+    {% set gaAction = 'Click: Button: Sign Up' %}
+    {% set gaLabel = 'Clicked sign up button on ' ~ app.request.requesturi %}
+
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass } }) }}
 
         {{ form_input(form.firstname,'firstname') }}
@@ -34,7 +38,15 @@
         {{ form_input(form.clientLastname,'clientLastname') }}
         {{ form_input(form.caseNumber,'caseNumber') }}
 
-        {{ form_submit(form.save,'save') }}
+        {{ form_submit_ga(
+            form.save,
+            'save',
+            gaCategory,
+            gaAction,
+            gaLabel,
+            null,
+            {})
+        }}
 
     {{ form_end(form) }}
 

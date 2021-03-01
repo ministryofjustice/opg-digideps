@@ -1,27 +1,28 @@
 /* globals $ */
 import { ButtonToggler } from './modules/buttonToggler.js'
 import { MOJButtonMenu } from './modules/buttonMenu'
+import { GoogleAnalyticsEvents } from './modules/googleAnalyticsEvents'
 
 require('../scss/application.scss')
 require('./modules/bind.js')
 
-var GOVUKFrontend = require('govuk-frontend')
-var Stickyfill = require('stickyfilljs')
-var limitChars = require('./modules/characterLimiter.js')
-var cookieBanner = require('./modules/cookieBanner.js')
-var detailsExpander = require('./modules/detailsExpander.js')
-var DetachedDetails = require('./modules/detached-details.js')
-var formatCurrency = require('./modules/formatcurrency.js')
-var Ga = require('./modules/ga.js')
-var moneyTransfer = require('./modules/moneyTransfer.js')
-var returnHTML = require('./modules/returnHTML.js')
-var SessionTimeoutDialog = require('./modules/SessionTimeoutDialog.js')
-var ShowHideContent = require('./modules/show-hide-content.js')
-var tableMultiSelect = require('./modules/table-multiselect.js')
-var textAreaAutoSize = require('./modules/textarea-autosize.js')
-var uploadFile = require('./modules/uploadFile.js')
-var uploadProgressPA = require('./modules/uploadProgressPA.js')
-var uploadProgress = require('./modules/uploadProgress.js')
+const cookieBanner = require('./modules/cookieBanner.js')
+const detailsExpander = require('./modules/detailsExpander.js')
+const DetachedDetails = require('./modules/detached-details.js')
+const formatCurrency = require('./modules/formatcurrency.js')
+const Ga = require('./modules/ga.js')
+const GOVUKFrontend = require('govuk-frontend')
+const limitChars = require('./modules/characterLimiter.js')
+const moneyTransfer = require('./modules/moneyTransfer.js')
+const returnHTML = require('./modules/returnHTML.js')
+const SessionTimeoutDialog = require('./modules/SessionTimeoutDialog.js')
+const ShowHideContent = require('./modules/show-hide-content.js')
+const Stickyfill = require('stickyfilljs')
+const tableMultiSelect = require('./modules/table-multiselect.js')
+const textAreaAutoSize = require('./modules/textarea-autosize.js')
+const uploadFile = require('./modules/uploadFile.js')
+const uploadProgressPA = require('./modules/uploadProgressPA.js')
+const uploadProgress = require('./modules/uploadProgress.js')
 
 /**
  * Taken from govuk-frontend. Supports back to IE8
@@ -87,7 +88,7 @@ $(document).ready(function () {
   })
 
   // Initialising the Show Hide Content GOVUK module
-  var showHideContent = new ShowHideContent()
+  const showHideContent = new ShowHideContent()
   showHideContent.init()
 
   const $togglers = document.querySelectorAll('[data-module="opg-button-toggler"]')
@@ -125,6 +126,8 @@ $(document).ready(function () {
       ele.focus()
     })
   }
+
+  GoogleAnalyticsEvents.init()
 })
 
 GOVUKFrontend.initAll()
