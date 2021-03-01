@@ -14,15 +14,27 @@
 
 {% block pageContent %}
 
+    {% set gaCategory = 'pageTitle.registration-details' | trans %}
+    {% set gaAction = 'Click: Button: Save User Details' %}
+    {% set gaLabel = 'Clicked save user details button on ' ~ app.request.requesturi %}
+
     {{ form_start(form, {attr: {class: 'behat-region-user-details', novalidate: 'novalidate' }}) }}
 
-    {% include '@App/User/_form_fields.html.twig'  with {
-        'translationDomain': translationDomain,
-        'user': user,
-        'client_validated': client_validated
-    } %}
+        {% include '@App/User/_form_fields.html.twig'  with {
+            'translationDomain': translationDomain,
+            'user': user,
+            'client_validated': client_validated
+        } %}
 
-    {{ form_submit(form.save,'form.editYourDetails.controls.save', {'buttonClass': 'behat-link-save'}) }}
+        {{ form_submit_ga(
+            form.save,
+            'form.editYourDetails.controls.save',
+            gaCategory,
+            gaAction,
+            gaLabel,
+            null,
+            {'buttonClass': 'behat-link-save'})
+        }}
 
     {{ form_end(form) }}
 
