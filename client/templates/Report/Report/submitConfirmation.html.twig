@@ -44,19 +44,19 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'push--bottom' } }) }}
 
-    {{ form_checkbox_group(form.satisfactionLevel, 'form.satisfactionLevel', {
-        'legendClass' : 'text govuk-label--s',
-        'legend': ['satisfactionLevel']
-    }) }}
+        {{ form_checkbox_group(form.satisfactionLevel, 'form.satisfactionLevel', {
+            'legendClass' : 'text govuk-label--s',
+            'legend': ['satisfactionLevel']
+        }) }}
 
-    {{ form_input(form.comments, 'form.comments', {
-        'labelClass' : 'govuk-label--s'
-    }) }}
+        {{ form_input(form.comments, 'form.comments', {
+            'labelClass' : 'govuk-label--s'
+        }) }}
 
-    <p class="govuk-body">{{ 'page.feedback.limit' | trans }}</p>
-    <p class="govuk-body">{{ 'page.feedback.disclaimer' | trans }}</p>
+        <p class="govuk-body">{{ 'page.feedback.limit' | trans }}</p>
+        <p class="govuk-body">{{ 'page.feedback.disclaimer' | trans }}</p>
 
-    {{ form_submit(form.save, 'form.send') }}
+        {{ form_submit(form.save, 'form.send') }}
 
     {{ form_end(form) }}
     {# end feedback form #}

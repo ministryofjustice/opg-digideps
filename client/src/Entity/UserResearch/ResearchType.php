@@ -3,45 +3,13 @@
 
 namespace App\Entity\UserResearch;
 
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ORM\Entity()
- * @ORM\Table(name="research_type")
- */
 class ResearchType
 {
-    /**
-     * @ORM\OneToOne (targetEntity="UserResearchResponse")
-     * @ORM\Column(name="user_research_submission_id", type="integer", nullable=false)
-     */
     private UserResearchResponse $userResearchSubmission;
-
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
     private int $id;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
     private bool $surveys;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
     private bool $videoCall;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
     private bool $phone;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
     private bool $inPerson;
 
     /**

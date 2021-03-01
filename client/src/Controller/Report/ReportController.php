@@ -13,12 +13,14 @@ use App\Exception\ReportNotSubmittedException;
 use App\Form\FeedbackReportType;
 use App\Form\Report\ReportDeclarationType;
 use App\Form\Report\ReportType;
+use App\Form\UserResearchSubmissionType;
 use App\Model\FeedbackReport;
 use App\Service\Client\Internal\CasrecApi;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\Internal\SatisfactionApi;
 use App\Service\Client\Internal\UserApi;
+use App\Service\Client\Internal\UserResearchApi;
 use App\Service\Client\RestClient;
 use App\Service\Csv\TransactionsCsvGenerator;
 use App\Service\Redirector;
@@ -448,28 +450,6 @@ class ReportController extends AbstractController
             'homePathName' => $this->getUser()->isLayDeputy() ? 'lay_home' : "org_dashboard"
         ];
     }
-
-    /**
-     * @Route("/report/{reportId}/post_submission_user_research", name="report_post_submission_user_research")
-     * @Template("@App/Report/Report/postSubmissionUserResearch.html.twig")
-     * @param $reportId
-     * @return array
-     */
-    public function postSubmissionUserResearch($reportId)
-    {
-        $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
-
-        // check status
-        if (!$report->getSubmitted()) {
-            $message = $this->translator->trans('report.submissionExceptions.submitted', [], 'validators');
-            throw new ReportNotSubmittedException($message);
-        }
-
-        return [
-            'report' => $report,
-        ];
-    }
-
 
     // @TODO Remove once ticket complete along with view
     /**

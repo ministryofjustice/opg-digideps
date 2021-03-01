@@ -1,0 +1,11 @@
+{{ form_start(form, {attr: {novalidate: 'novalidate', class: 'push--bottom' } }) }}
+
+    {{ form_select(form.deputyshipLength, 'form.deputyshipLength') }}
+
+    {{ form_checkbox_group(form.deputyshipLength, 'form.typesOfResearch', ) }}
+
+    {{ form_select(form.deviceAccess, 'form.deviceAccess') }}
+
+    {{ form_submit_ga(form.save, 'form.submitButton') }}
+
+{{ form_end(form) }}

@@ -7,9 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity()
- * @ORM\Table(name="user_research_submission")
+ * @ORM\Table(name="user_research_response")
  */
-class UserResearchSubmission
+class UserResearchResponse
 {
     /**
      * @ORM\OneToOne(targetEntity="ResearchType")
@@ -44,9 +44,9 @@ class UserResearchSubmission
 
     /**
      * @param string $deputyshipLength
-     * @return UserResearchSubmission
+     * @return UserResearchResponse
      */
-    public function setDeputyshipLength(string $deputyshipLength): UserResearchSubmission
+    public function setDeputyshipLength(string $deputyshipLength): UserResearchResponse
     {
         $this->deputyshipLength = $deputyshipLength;
         return $this;
@@ -62,9 +62,9 @@ class UserResearchSubmission
 
     /**
      * @param ResearchType $agreedResearchTypes
-     * @return UserResearchSubmission
+     * @return UserResearchResponse
      */
-    public function setAgreedResearchTypes(ResearchType $agreedResearchTypes): UserResearchSubmission
+    public function setAgreedResearchTypes(ResearchType $agreedResearchTypes): UserResearchResponse
     {
         $this->agreedResearchTypes = $agreedResearchTypes;
         return $this;
@@ -80,9 +80,9 @@ class UserResearchSubmission
 
     /**
      * @param bool $hasAccessToVideoCallDevice
-     * @return UserResearchSubmission
+     * @return UserResearchResponse
      */
-    public function setHasAccessToVideoCallDevice(bool $hasAccessToVideoCallDevice): UserResearchSubmission
+    public function setHasAccessToVideoCallDevice(bool $hasAccessToVideoCallDevice): UserResearchResponse
     {
         $this->hasAccessToVideoCallDevice = $hasAccessToVideoCallDevice;
         return $this;
@@ -98,9 +98,9 @@ class UserResearchSubmission
 
     /**
      * @param int $id
-     * @return UserResearchSubmission
+     * @return UserResearchResponse
      */
-    public function setId(int $id): UserResearchSubmission
+    public function setId(int $id): UserResearchResponse
     {
         $this->id = $id;
         return $this;

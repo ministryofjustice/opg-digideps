@@ -1,0 +1,35 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% set translationDomain = "report-post-submission-user-research" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'thanksForFeedback' %}
+
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.thankYou') | trans }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="text">
+
+        //Thanks banner
+        <div class="govuk-panel govuk-panel--confirmation">
+            <h1 class="govuk-panel__title">
+                {{ 'page.successBannerTitle' | trans }}
+            </h1>
+            <div class="govuk-panel__body">
+                {{ 'page.successBannerBody' | trans }}
+            </div>
+        </div>
+
+        <h1 class="govuk-heading-xl">{{ 'page.getInvolved.heading' | trans }}</h1>
+
+        <p class="govuk-body">{{ 'page.getInvolved.paragraph1' | trans }}</p>
+
+        <p class="govuk-body">{{ 'page.getInvolved.paragraph2' | trans }}</p>
+
+        //form
+        {% include '@App/Report/_userResearchForm.html' %}
+
+    </div>
+
+{% endblock %}
