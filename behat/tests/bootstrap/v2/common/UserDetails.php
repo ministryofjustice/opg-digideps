@@ -9,14 +9,14 @@ use ReflectionProperty;
 
 class UserDetails
 {
-    private ?string $email;
-    private ?int $clientId;
-    private ?int $currentReportId;
-    private ?string $currentReportType;
-    private ?string $currentReportNdrOrReport;
-    private ?int $previousReportId;
-    private ?string $previousReportType;
-    private ?string $previousReportNdrOrReport;
+    private ?string $email = null;
+    private ?int $clientId = null;
+    private ?int $currentReportId = null;
+    private ?string $currentReportType = null;
+    private ?string $currentReportNdrOrReport = null;
+    private ?int $previousReportId = null;
+    private ?string $previousReportType = null;
+    private ?string $previousReportNdrOrReport = null;
 
     public function __construct(array $userDetails)
     {

@@ -98,8 +98,8 @@ class BehatFixtures
                     'currentReportId' => $this->laySubmitted->getFirstClient()->getCurrentReport()->getId(),
                     'currentReportType' =>$this->laySubmitted->getFirstClient()->getCurrentReport()->getType(),
                     'currentReportNdrOrReport' => $this->laySubmitted->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report',
-                    'previousReportId' => null,
-                    'previousReportType' => null,
+                    'previousReportId' => $this->laySubmitted->getFirstClient()->getReports()[0]->getId(),
+                    'previousReportType' => $this->laySubmitted->getFirstClient()->getReports()[0]->getType(),
                     'previousReportNdrOrReport' => $this->laySubmitted->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report'
                 ]
             ]

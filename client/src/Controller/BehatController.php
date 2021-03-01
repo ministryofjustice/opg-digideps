@@ -46,6 +46,7 @@ class BehatController extends AbstractController
         $currentReport = $user->getFirstClient()->getCurrentReport();
         $previousReport = $user->getFirstClient()->getReports()[0];
 
+
         return new JsonResponse(
             [
                 'email' => $user->getEmail(),
