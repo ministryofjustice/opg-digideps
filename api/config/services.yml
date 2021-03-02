@@ -6,10 +6,7 @@ imports:
     - { resource: packages/sensio_framework_extra.yml }
     - { resource: packages/snc_redis.yml }
     - { resource: services/assemblers.yml }
-    - { resource: services/event_listeners.yml }
     - { resource: services/factories.yml }
-    - { resource: services/rest_handlers.yml }
-    - { resource: services/repositories.yml }
 
 parameters:
     fixtures:
@@ -25,7 +22,6 @@ services:
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
             $fixturesEnabled: "%env(bool:FIXTURES_ENABLED)%"
-            $projectDir: '%kernel.project_dir%'
             $yamlFixtureLocation: "%kernel.root_dir%/src/DataFixtures/"
             $fixtureParams: '%fixtures%'
             $symfonyEnvironment: "%kernel.environment%"
@@ -39,6 +35,12 @@ services:
     App\Controller\:
         resource: '../src/Controller/'
         tags: [controller.service_arguments]
+
+    Doctrine\Migrations\Version\DbalMigrationFactory: ~
+    App\Migrations\Factory\MigrationFactoryDecorator:
+        decorates: Doctrine\Migrations\Version\DbalMigrationFactory
+        arguments: ['@App\Migrations\Factory\MigrationFactoryDecorator.inner', '@service_container']
+
 
     monolog.processor.add_request_id:
         class: App\Service\RequestIdLoggerProcessor
@@ -131,3 +133,61 @@ services:
     App\Service\Stats\StatsQueryParameters: ~
 
     Symfony\Component\Security\Core\Role\RoleHierarchyInterface: '@security.role_hierarchy'
+
+  App\Entity\Repository\UserRepository:
+    class: App\Entity\User
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments:
+      - App\Entity\User
+
+  App\Entity\Repository\ReportRepository:
+    class: App\Entity\Report\Report
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments:
+      - App\Entity\Report\Report
+    calls:
+      - [setSearchFilter, ["@App\\Service\\Search\\ClientSearchFilter"]]
+
+    App\Entity\Repository\ClientRepository:
+        class: App\Entity\Client
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - App\Entity\Client
+        calls:
+            - [setSearchFilter, ["@App\\Service\\Search\\ClientSearchFilter"]]
+
+    App\Entity\Repository\OrganisationRepository:
+        class: App\Entity\Organisation
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - App\Entity\Organisation
+
+    App\Entity\Repository\NamedDeputyRepository:
+        class: App\Entity\NamedDeputy
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - App\Entity\NamedDeputy
+
+    App\Entity\Repository\CasRecRepository:
+        class: App\Entity\CasRec
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - App\Entity\CasRec
+
+    App\Entity\Ndr\NdrRepository:
+        class: App\Entity\Ndr\Ndr
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - App\Entity\Ndr\Ndr
+
+    rest_handler.report.deputy_costs_estimate_report_update_handler:
+        class: App\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler
+        arguments: [ '@em' ]
+
+    rest_handler.report.deputy_costs_report_update_handler:
+        class: App\Service\RestHandler\Report\DeputyCostsReportUpdateHandler
+        arguments: [ '@em' ]
+
+    rest_handler.report.pa_fees_expenses_report_update_handler:
+        class: App\Service\RestHandler\Report\PaFeesExpensesReportUpdateHandler
+        arguments: [ '@em' ]

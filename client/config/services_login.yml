@@ -1,9 +1,0 @@
-services:
-    security.validator.d_user_password:
-        class: App\Validator\Constraints\DUserPasswordValidator
-        arguments: [ "@security.token_storage", "@rest_client" ]
-        tags:
-            - { name: validator.constraint_validator, alias: security.validator.d_user_password }
-
-    App\Service\Client\TokenStorage\RedisStorage:
-        arguments: ["@snc_redis.default", "redis_token_storage_dd"]

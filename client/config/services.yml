@@ -1,19 +1,31 @@
-imports:
-    - { resource: services/defaults.yml }
-    - { resource: services/file_uploads.yml }
-    - { resource: services/log_handlers.yml }
-    - { resource: services/twig.yml }
-    - { resource: services_mail.yml }
-    - { resource: services_forms.yml }
-    - { resource: services_api.yml }
-    - { resource: services_listeners.yml }
-    - { resource: services_login.yml }
+parameters:
+    bad_pdf_keywords:
+        - 'AcroForm'
+        - 'JavaScript'
+        - 'Launch'
+        - 'RichMedia'
+        - 'XFA'
+    # To avoid undefined variable errors at build time during clear-cache, we can define default values for env vars
+    # At runtime Symfony will fetch the actual value from the environment
+    env(AUDIT_LOG_GROUP_NAME): 'dummy-build-time-value-overridden-at-runtime'
 
 services:
-    App\Controller\IndexController:
-        class: App\Controller\IndexController
-        arguments:
-          $environment: '%env(ENVIRONMENT)%'
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        bind:
+            $symfonyEnvironment: "%kernel.environment%"
+            $symfonyDebug: "%kernel.debug%"
+            Predis\ClientInterface: '@snc_redis.default'
+            $environment: '%env(ENVIRONMENT)%'
+
+    App\:
+        resource: '../src/'
+        exclude: '../src/{Entity,Event,Kernel.php}'
+
+    App\Controller\:
+        resource: '../src/Controller/'
+        tags: [controller.service_arguments]
 
     App\Service\Redirector:
         class: App\Service\Redirector
@@ -89,11 +101,172 @@ services:
          arguments:
              $notifyClient: '@Alphagov\Notifications\Client'
 
+    Aws\S3\S3ClientInterface:
+        alias: Aws\S3\S3Client
+
+    Aws\S3\S3Client:
+        arguments: ["%s3_client_params%"]
+
+    App\Service\File\Storage\S3Storage:
+        arguments: [ '@Aws\S3\S3Client', "%s3_bucket_name%", "@logger" ]
+
+    guzzle_file_scanner_client:
+        class: GuzzleHttp\Client
+        arguments:
+            $config:
+                base_uri: "%file_scanner_url%"
+                verify: "%file_scanner_sslverify%"
+                proxy: ""
+                debug: false
+                headers:
+                    Content-Type: multipart-form-data
+                version: "1.1"
+                timeout: 10
+                allow_redirects: false
+
+    App\Service\File\Verifier\MultiFileFormUploadVerifier:
+        calls:
+        - [ addVerifier, ['@App\Service\File\Verifier\ConstraintVerifier'] ]
+        - [ addVerifier, ['@App\Service\File\Verifier\ScannerVerifier'] ]
+
+    App\Service\File\Scanner\ClamFileScanner:
+        arguments: [ "@guzzle_file_scanner_client", "@logger", "%bad_pdf_keywords%"]
+
     App\Service\DocumentSyncService:
         arguments:
-            $storage: '@App\Service\File\Storage\S3Storage'
+            $storage: '@Aws\S3\S3Client'
             $siriusApiGatewayClient: '@App\Service\Client\Sirius\SiriusApiGatewayClient'
             $restClient: '@App\Service\Client\RestClient'
 
     League\MimeTypeDetection\FinfoMimeTypeDetector:
         class: League\MimeTypeDetection\FinfoMimeTypeDetector
+
+    Aws\CloudWatchLogs\CloudWatchLogsClient:
+        class: Aws\CloudWatchLogs\CloudWatchLogsClient
+        arguments: ["%cloudwatch_logs_client_params%"]
+
+
+    App\Service\Audit\AwsAuditLogHandler:
+        class: App\Service\Audit\AwsAuditLogHandler
+        arguments:
+        - '@Aws\CloudWatchLogs\CloudWatchLogsClient'
+        - '%env(AUDIT_LOG_GROUP_NAME)%'
+
+    App\Service\Audit\LocalAuditLogHandler:
+        class: App\Service\Audit\LocalAuditLogHandler
+
+    App\Twig\AssetsExtension:
+        public: false
+        arguments: [ "%kernel.root_dir%" ]
+        tags:
+            - { name: twig.extension }
+
+    App\Service\Mailer\MailFactory:
+        arguments:
+            $emailParams: "%email_params%"
+            $baseURLs:
+                front: '%env(NONADMIN_HOST)%'
+                admin: '%env(ADMIN_HOST)%'
+
+    App\Service\Mailer\MailSenderInterface: '@App\Service\Mailer\MailSender'
+
+    Alphagov\Notifications\Client:
+        class: Alphagov\Notifications\Client
+        arguments:
+            $config:
+                httpClient: '@Http\Adapter\Guzzle6\Client'
+                apiKey: '%env(NOTIFY_API_KEY)%'
+
+    App\Service\Mailer\NotifyClientMock:
+        class: App\Service\Mailer\NotifyClientMock
+        arguments:
+            $config:
+                httpClient: '@Http\Adapter\Guzzle6\Client'
+                apiKey: '%env(NOTIFY_API_KEY)%'
+            $logger: '@logger'
+
+    Http\Adapter\Guzzle6\Client:
+        class: Http\Adapter\Guzzle6\Client
+
+    App\Form\Report\Asset\AssetTypeTitle:
+        arguments: ["%asset_dropdown%", "@translator", "report-assets"]
+        tags:
+            - { name: form.type }
+
+    App\Form\Ndr\Asset\AssetTypeTitle:
+        arguments: ["%asset_dropdown%", "@translator", "ndr-assets"]
+        tags:
+            - { name: form.type }
+
+    App\Validator\Constraints\EmailSameDomainValidator:
+        calls:
+            - [ setTokenStorage, ["@security.token_storage"] ]
+        tags:
+            - { name: validator.constraint_validator, alias: email_same_domain }
+
+    GuzzleHttp\Client:
+        arguments:
+          $config:
+            base_uri: "%api_base_url%"
+            verify: false
+            headers:
+                Content-Type: application/json
+            timeout: 20
+            allow_redirects: false
+
+    App\Service\Client\RestClientInterface:
+        alias: App\Service\Client\RestClient
+
+    App\Service\Client\RestClient:
+        arguments:
+            - '@service_container'
+            - '@GuzzleHttp\Client'
+            - '@App\Service\Client\TokenStorage\RedisStorage'
+            - '@jms_serializer'
+            - '@logger'
+            - '%api_client_secret%'
+
+    rest_client:
+        alias: App\Service\Client\RestClient
+
+    App\EventListener\SessionListener:
+        arguments: [ "@router" , "@logger", {idleTimeout: "%session_expire_seconds%"}]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    logout_listener:
+      class:   App\EventListener\LogoutListener
+      arguments: ["@security.token_storage", "@rest_client", "@router"]
+
+    App\EventListener\ResponseNoCacheListener:
+       tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+
+    App\EventListener\AuthTokenExpiredListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
+    App\Service\RequestIdLoggerProcessor:
+        arguments: [ "@service_container" ]
+        tags:
+            - { name: monolog.processor, method: processRecord }
+
+    App\EventListener\LoginEventListener:
+        arguments:
+            - '@event_dispatcher'
+            - '@App\Service\Redirector'
+        tags:
+            - { name: kernel.event_listener, event: security.interactive_login, method: onSecurityInteractiveLogin }
+
+    App\EventListener\ResponseHeadersListener:
+        tags:
+              - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+
+    security.validator.d_user_password:
+        class: App\Validator\Constraints\DUserPasswordValidator
+        arguments: [ "@security.token_storage", "@rest_client" ]
+        tags:
+            - { name: validator.constraint_validator, alias: security.validator.d_user_password }
+
+    App\Service\Client\TokenStorage\RedisStorage:
+        arguments: ["@snc_redis.default", "redis_token_storage_dd"]
