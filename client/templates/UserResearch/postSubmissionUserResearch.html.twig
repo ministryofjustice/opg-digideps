@@ -2,16 +2,14 @@
 
 {% set translationDomain = "report-post-submission-user-research" %}
 {% trans_default_domain translationDomain %}
-{% set page = 'thanksForFeedback' %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ (page ~ '.thankYou') | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
 
 {% block pageContent %}
 
     <div class="text">
 
-        //Thanks banner
         <div class="govuk-panel govuk-panel--confirmation">
             <h1 class="govuk-panel__title">
                 {{ 'page.successBannerTitle' | trans }}
@@ -27,8 +25,10 @@
 
         <p class="govuk-body">{{ 'page.getInvolved.paragraph2' | trans }}</p>
 
-        //form
-        {% include '@App/Report/_userResearchForm.html' %}
+        {% include '@App/UserResearch/_userResearchForm.html.twig' with {
+            'translationDomain': translationDomain,
+            'form': form
+        } %}
 
     </div>
 

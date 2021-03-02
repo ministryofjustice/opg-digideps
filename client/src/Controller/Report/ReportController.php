@@ -13,7 +13,7 @@ use App\Exception\ReportNotSubmittedException;
 use App\Form\FeedbackReportType;
 use App\Form\Report\ReportDeclarationType;
 use App\Form\Report\ReportType;
-use App\Form\UserResearchSubmissionType;
+use App\Form\UserResearchResponseType;
 use App\Model\FeedbackReport;
 use App\Service\Client\Internal\CasrecApi;
 use App\Service\Client\Internal\ClientApi;

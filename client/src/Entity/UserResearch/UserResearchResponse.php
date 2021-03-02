@@ -5,10 +5,10 @@ namespace App\Entity\UserResearch;
 
 class UserResearchResponse
 {
-    private ResearchType $agreedResearchTypes;
-    private int $id;
-    private string $deputyshipLength;
-    private bool $hasAccessToVideoCallDevice;
+    private array $agreedResearchTypes;
+    private ?int $id = null;
+    private string $deputyshipLength = '';
+    private bool $hasAccessToVideoCallDevice = false;
 
     /**
      * @return string
@@ -25,24 +25,6 @@ class UserResearchResponse
     public function setDeputyshipLength(string $deputyshipLength): UserResearchResponse
     {
         $this->deputyshipLength = $deputyshipLength;
-        return $this;
-    }
-
-    /**
-     * @return ResearchType
-     */
-    public function getAgreedResearchTypes(): ResearchType
-    {
-        return $this->agreedResearchTypes;
-    }
-
-    /**
-     * @param ResearchType $agreedResearchTypes
-     * @return UserResearchResponse
-     */
-    public function setAgreedResearchTypes(ResearchType $agreedResearchTypes): UserResearchResponse
-    {
-        $this->agreedResearchTypes = $agreedResearchTypes;
         return $this;
     }
 
@@ -79,6 +61,24 @@ class UserResearchResponse
     public function setId(int $id): UserResearchResponse
     {
         $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAgreedResearchTypes(): array
+    {
+        return $this->agreedResearchTypes;
+    }
+
+    /**
+     * @param array $agreedResearchTypes
+     * @return UserResearchResponse
+     */
+    public function setAgreedResearchTypes(array $agreedResearchTypes): UserResearchResponse
+    {
+        $this->agreedResearchTypes = $agreedResearchTypes;
         return $this;
     }
 }

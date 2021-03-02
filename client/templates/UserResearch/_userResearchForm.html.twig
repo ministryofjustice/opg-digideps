@@ -1,11 +1,29 @@
-{{ form_start(form, {attr: {novalidate: 'novalidate', class: 'push--bottom' } }) }}
+{% from '@App/Macros/macros.html.twig' import checkbox_group, radio_group %}
 
-    {{ form_select(form.deputyshipLength, 'form.deputyshipLength') }}
+{% set gaCategory = 'page.htmlTitle' | trans %}
+{% set gaAction = 'Click: Button: Submit' %}
+{% set gaLabel = 'Clicked submit button on ' ~ app.request.requesturi %}
 
-    {{ form_checkbox_group(form.deputyshipLength, 'form.typesOfResearch', ) }}
+{{ form_start(form, {attr: {novalidate: 'novalidate' } }) }}
 
-    {{ form_select(form.deviceAccess, 'form.deviceAccess') }}
+{#    {{ form_checkbox_group(form.deputyshipLength, 'form.deputyshipLength', {#}
+{#        'legendText' : 'form.deputyshipLength.label' | trans({}, translationDomain),#}
+{#    }) }}#}
 
-    {{ form_submit_ga(form.save, 'form.submitButton') }}
+    {{ radio_group(form.deputyshipLength) }}
+
+    {{ checkbox_group(form.agreedResearchTypes) }}
+
+    {{ radio_group(form.hasAccessToVideoCallDevice) }}
+
+    {{ form_submit_ga(
+        form.submitButton,
+        'form.submitButton',
+        gaCategory,
+        gaAction,
+        gaLabel,
+        null,
+        {'labelText': 'form.submitButton.label' | trans({}, translationDomain)}
+    ) }}
 
 {{ form_end(form) }}

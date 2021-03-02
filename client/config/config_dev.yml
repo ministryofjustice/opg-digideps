@@ -14,6 +14,9 @@ web_profiler:
     toolbar: "%kernel.debug%"
     intercept_redirects: false
 
+twig:
+    cache: false
+
 services:
     data_collector.apiCollectorss:
         class: App\Service\ApiCollector

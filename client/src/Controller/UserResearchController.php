@@ -5,10 +5,14 @@ namespace App\Controller;
 
 use App\Entity\UserResearch\UserResearchResponse;
 use App\Exception\ReportNotSubmittedException;
-use App\Form\UserResearchSubmissionType;
+use App\Form\UserResearchResponseType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\Internal\UserResearchApi;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class UserResearchController extends AbstractController
@@ -16,15 +20,18 @@ class UserResearchController extends AbstractController
     private UserResearchApi $userResearchApi;
     private ReportApi $reportApi;
     private TranslatorInterface $translator;
+    private FormFactoryInterface $formFactory;
 
     public function __construct(
         UserResearchApi $userResearchApi,
         ReportApi $reportApi,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        FormFactoryInterface $formFactory
     ) {
         $this->userResearchApi = $userResearchApi;
         $this->reportApi = $reportApi;
         $this->translator = $translator;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -43,7 +50,7 @@ class UserResearchController extends AbstractController
             throw new ReportNotSubmittedException($message);
         }
 
-        $form = $this->createForm(UserResearchSubmissionType::class, new UserResearchResponse());
+        $form = $this->formFactory->create(UserResearchResponseType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
