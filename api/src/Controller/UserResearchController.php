@@ -5,7 +5,8 @@ namespace App\Controller;
 
 use App\Entity\Repository\UserResearchResponseRepository;
 use App\Factory\UserResearchResponseFactory;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use RuntimeException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,6 +24,7 @@ class UserResearchController extends RestController
 
     /**
      * @Route("/user-research", name="user_research_create", methods={"POST"})
+     * @Security("has_role('ROLE_DEPUTY') or has_role('ROLE_ORG')")
      */
     public function create(Request $request)
     {
@@ -34,11 +36,7 @@ class UserResearchController extends RestController
 
             return 'Created';
         } catch (\Throwable $e) {
-            return sprintf('UserResearchResponse not created: %s', $e->getMessage());
+            throw new RuntimeException(sprintf('UserResearchResponse not created: %s', $e->getMessage()), Response::HTTP_BAD_REQUEST);
         }
-
-//        deputyshipLength => 'underOne',
-//        agreedResearchTypes => ['surveys', 'videoCall', 'phone', 'inPerson']
-//        hasAccessToVideoCallDevice = yes
     }
 }

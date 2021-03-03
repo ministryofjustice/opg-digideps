@@ -4,9 +4,11 @@
 namespace App\Entity\UserResearch;
 
 use Doctrine\ORM\Mapping as ORM;
+
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
+use RuntimeException;
 
 /**
  * @ORM\Entity()
@@ -16,6 +18,10 @@ class ResearchType
 {
     public function __construct(array $formResponses, ?UuidInterface $id = null)
     {
+        if (empty($formResponses)) {
+            throw new RuntimeException('Must select at least one research type', 403);
+        }
+
         $this->id = $id ?? Uuid::uuid4();
 
         $setters = array_map(function ($response) {
@@ -43,22 +49,22 @@ class ResearchType
     /**
      * @ORM\Column(name="surveys", type="boolean", nullable=true)
      */
-    private ?bool $surveys;
+    private ?bool $surveys = null;
 
     /**
      * @ORM\Column(name="video_call", type="boolean", nullable=true)
      */
-    private ?bool $videoCall;
+    private ?bool $videoCall = null;
 
     /**
      * @ORM\Column(name="phone", type="boolean", nullable=true)
      */
-    private ?bool $phone;
+    private ?bool $phone = null;
 
     /**
      * @ORM\Column(name="in_person", type="boolean", nullable=true)
      */
-    private ?bool $inPerson;
+    private ?bool $inPerson = null;
 
     /**
      * @return UserResearchResponse
