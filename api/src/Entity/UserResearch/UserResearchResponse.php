@@ -20,10 +20,9 @@ class UserResearchResponse
     }
 
     /**
-     * @ORM\OneToOne(targetEntity="ResearchType")
-     * @ORM\Column(name="research_type_id", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\ResearchType", inversedBy="userResearchResponse", cascade={"persist", "remove"})
      */
-    private ResearchType $agreedResearchTypes;
+    private ResearchType $researchType;
 
     /**
      * @ORM\Id
@@ -64,18 +63,18 @@ class UserResearchResponse
     /**
      * @return ResearchType
      */
-    public function getAgreedResearchTypes(): ResearchType
+    public function getResearchType(): ResearchType
     {
-        return $this->agreedResearchTypes;
+        return $this->researchType;
     }
 
     /**
-     * @param ResearchType $agreedResearchTypes
+     * @param ResearchType $researchType
      * @return UserResearchResponse
      */
-    public function setAgreedResearchTypes(ResearchType $agreedResearchTypes): UserResearchResponse
+    public function setResearchType(ResearchType $researchType): UserResearchResponse
     {
-        $this->agreedResearchTypes = $agreedResearchTypes;
+        $this->researchType = $researchType;
         return $this;
     }
 
