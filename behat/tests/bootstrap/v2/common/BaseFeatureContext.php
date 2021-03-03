@@ -17,6 +17,7 @@ class BaseFeatureContext extends MinkContext
     use DebugTrait;
     use ReportTrait;
     use IShouldBeOnTrait;
+    use PageUrlsTrait;
 
     const BEHAT_FRONT_RESET_FIXTURES = '/behat/frontend/reset-fixtures?testRunId=%s';
     const BEHAT_FRONT_USER_DETAILS = '/behat/frontend/user/%s/details';
@@ -54,6 +55,8 @@ class BaseFeatureContext extends MinkContext
             throw new Exception($responseData['response']);
         }
 
+        var_dump($responseData);
+
         $this->fixtureUsers[] = $this->adminDetails = new UserDetails($responseData['data']['admin-users']['admin']);
         $this->fixtureUsers[] = $this->superAdminDetails = new UserDetails($responseData['data']['admin-users']['super-admin']);
         $this->fixtureUsers[] = $this->layDeputyNotStartedDetails = new UserDetails($responseData['data']['lays']['not-started']);
@@ -78,6 +81,12 @@ class BaseFeatureContext extends MinkContext
         return getenv('NONADMIN_HOST');
     }
 
+    public function visitFrontendPath(string $path)
+    {
+        $siteUrl = $this->getSiteUrl();
+        $this->visitPath($siteUrl . $path);
+    }
+
     public function visitAdminPath(string $path)
     {
         $adminUrl = $this->getAdminUrl();
@@ -93,16 +102,6 @@ class BaseFeatureContext extends MinkContext
         }
     }
 
-    public function iAmOnPage(string $urlRegex)
-    {
-        $currentUrl = $this->getSession()->getCurrentUrl();
-        $onExpectedPage = preg_match($urlRegex, $currentUrl);
-
-        if (!$onExpectedPage) {
-            $this->throwContextualException(sprintf('Not on expected page. Current URL is: %s', $currentUrl));
-        }
-    }
-
     public function throwContextualException(string $message)
     {
         $loggedInEmail = !isset($this->loggedInUserDetails) ? 'Not logged in' : $this->loggedInUserDetails->getEmail();
@@ -115,5 +114,10 @@ Test run ID is: $this->testRunId
 CONTEXT;
 
         throw new BehatException($contextMessage);
+    }
+
+    public function getCurrentUrl()
+    {
+        return $this->getSession()->getCurrentUrl();
     }
 }

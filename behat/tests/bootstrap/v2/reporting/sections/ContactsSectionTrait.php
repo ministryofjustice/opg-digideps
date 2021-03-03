@@ -49,7 +49,7 @@ trait ContactsSectionTrait
 
         $this->visitPath($reportSectionUrl);
 
-        $currentUrl = $this->getSession()->getCurrentUrl();
+        $currentUrl = $this->getCurrentUrl();
         $onSummaryPage = preg_match('/report\/.*\/contacts$/', $currentUrl);
 
         if (!$onSummaryPage) {
@@ -88,7 +88,7 @@ trait ContactsSectionTrait
         $this->selectOption('contact_exist[hasContacts]', 'yes');
         $this->pressButton('Save and continue');
 
-        $this->iShouldBeOnAddAContactPage();
+        $this->iAmOnAddAContactPage();
     }
 
     /**
@@ -109,7 +109,7 @@ trait ContactsSectionTrait
 
         $this->pressButton('Save and continue');
 
-        $this->iShouldBeOnContactsAddAnotherPage();
+        $this->iAmOnContactsAddAnotherPage();
     }
 
     /**
@@ -120,11 +120,11 @@ trait ContactsSectionTrait
         $this->selectOption('add_another[addAnother]', 'yes');
         $this->pressButton('Continue');
 
-        $this->iShouldBeOnAddAContactPage();
+        $this->iAmOnAddAContactPage();
 
         $this->iEnterValidContactDetails();
 
-        $this->iShouldBeOnContactsAddAnotherPage();
+        $this->iAmOnContactsAddAnotherPage();
     }
 
     /**
@@ -135,7 +135,7 @@ trait ContactsSectionTrait
         $this->selectOption('add_another[addAnother]', 'no');
         $this->pressButton('Continue');
 
-        $this->iShouldBeOnContactsSummaryPage();
+        $this->iAmOnContactsSummaryPage();
     }
 
     /**

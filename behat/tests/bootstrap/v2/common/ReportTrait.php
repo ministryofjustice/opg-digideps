@@ -45,4 +45,12 @@ trait ReportTrait
         $this->loginToFrontendAs($this->layDeputyCompletedNotSubmittedDetails->getEmail());
         $this->iSubmitTheReport();
     }
+
+    /**
+     * @Given a Lay Deputy has submitted a report
+     */
+    public function aLayDeputyHasSubmittedAReport()
+    {
+        $this->loginToFrontendAs($this->layDeputySubmittedDetails->getEmail());
+    }
 }
