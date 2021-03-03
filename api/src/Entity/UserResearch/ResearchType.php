@@ -4,6 +4,9 @@
 namespace App\Entity\UserResearch;
 
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity()
@@ -11,31 +14,45 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ResearchType
 {
+    public function __construct(array $formResponses)
+    {
+        $this->id = $id ?? Uuid::uuid4();
+
+        $setters = array_map(function ($response) {
+            return sprintf('set%s', ucfirst($response));
+        }, $formResponses);
+
+        foreach ($setters as $setter) {
+            $this->$setter(true);
+        }
+    }
+
     /**
      * @ORM\OneToOne (targetEntity="UserResearchResponse")
-     * @ORM\Column(name="user_research_submission_id", type="integer", nullable=false)
+     * @ORM\Column(name="user_research_response_id", type="integer", nullable=false)
      */
-    private UserResearchResponse $userResearchSubmission;
+    private UserResearchResponse $userResearchResponse;
 
     /**
-     * @ORM\Column(type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="id", type="uuid")
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private int $id;
+    private UuidInterface $id;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(name="surveys", type="boolean")
      */
     private bool $surveys;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(name="video_call", type="boolean")
      */
     private bool $videoCall;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(name="phone", type="boolean")
      */
     private bool $phone;
 
@@ -119,33 +136,33 @@ class ResearchType
     /**
      * @return UserResearchResponse
      */
-    public function getUserResearchSubmission(): UserResearchResponse
+    public function getUserResearchResponse(): UserResearchResponse
     {
-        return $this->userResearchSubmission;
+        return $this->userResearchResponse;
     }
 
     /**
-     * @param UserResearchResponse $userResearchSubmission
+     * @param UserResearchResponse $userResearchResponse
      * @return ResearchType
      */
-    public function setUserResearchSubmission(UserResearchResponse $userResearchSubmission): ResearchType
+    public function setUserResearchResponse(UserResearchResponse $userResearchResponse): ResearchType
     {
-        $this->userResearchSubmission = $userResearchSubmission;
+        $this->userResearchResponse = $userResearchResponse;
         return $this;
     }
 
     /**
-     * @return int
+     * @return UuidInterface
      */
-    public function getId(): int
+    public function getId(): UuidInterface
     {
         return $this->id;
     }
 
     /**
-     * @param int $id
+     * @param UuidInterface $id
      */
-    public function setId(int $id): void
+    public function setId(UuidInterface $id): void
     {
         $this->id = $id;
     }

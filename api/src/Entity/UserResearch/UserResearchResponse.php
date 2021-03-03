@@ -4,13 +4,21 @@
 namespace App\Entity\UserResearch;
 
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Entity\Repository\UserResearchResponseRepository")
  * @ORM\Table(name="user_research_response")
  */
 class UserResearchResponse
 {
+    public function __construct(?UuidInterface $id = null)
+    {
+        $this->id = $id ?? Uuid::uuid4();
+    }
+
     /**
      * @ORM\OneToOne(targetEntity="ResearchType")
      * @ORM\Column(name="research_type_id", type="integer", nullable=false)
@@ -18,19 +26,20 @@ class UserResearchResponse
     private ResearchType $agreedResearchTypes;
 
     /**
-     * @ORM\Column(type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="id", type="uuid")
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private int $id;
+    private UuidInterface $id;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(name="deputyship_length", type="string")
      */
     private string $deputyshipLength;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(name="has_access_to_video_call_device", type="boolean")
      */
     private bool $hasAccessToVideoCallDevice;
 
@@ -89,18 +98,18 @@ class UserResearchResponse
     }
 
     /**
-     * @return int
+     * @return UuidInterface
      */
-    public function getId(): int
+    public function getId(): UuidInterface
     {
         return $this->id;
     }
 
     /**
-     * @param int $id
+     * @param UuidInterface $id
      * @return UserResearchResponse
      */
-    public function setId(int $id): UserResearchResponse
+    public function setId(UuidInterface $id): UserResearchResponse
     {
         $this->id = $id;
         return $this;
