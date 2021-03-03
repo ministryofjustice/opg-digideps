@@ -14,7 +14,7 @@ use Ramsey\Uuid\UuidInterface;
  */
 class ResearchType
 {
-    public function __construct(array $formResponses)
+    public function __construct(array $formResponses, ?UuidInterface $id = null)
     {
         $this->id = $id ?? Uuid::uuid4();
 
@@ -28,8 +28,7 @@ class ResearchType
     }
 
     /**
-     * @ORM\OneToOne (targetEntity="UserResearchResponse")
-     * @ORM\Column(name="user_research_response_id", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="researchType", cascade={"persist", "remove"})
      */
     private UserResearchResponse $userResearchResponse;
 
@@ -42,96 +41,24 @@ class ResearchType
     private UuidInterface $id;
 
     /**
-     * @ORM\Column(name="surveys", type="boolean")
+     * @ORM\Column(name="surveys", type="boolean", nullable=true)
      */
-    private bool $surveys;
+    private ?bool $surveys;
 
     /**
-     * @ORM\Column(name="video_call", type="boolean")
+     * @ORM\Column(name="video_call", type="boolean", nullable=true)
      */
-    private bool $videoCall;
+    private ?bool $videoCall;
 
     /**
-     * @ORM\Column(name="phone", type="boolean")
+     * @ORM\Column(name="phone", type="boolean", nullable=true)
      */
-    private bool $phone;
+    private ?bool $phone;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(name="in_person", type="boolean", nullable=true)
      */
-    private bool $inPerson;
-
-    /**
-     * @return bool
-     */
-    public function getSurveys(): bool
-    {
-        return $this->surveys;
-    }
-
-    /**
-     * @param bool $surveys
-     * @return ResearchType
-     */
-    public function setSurveys(bool $surveys): ResearchType
-    {
-        $this->surveys = $surveys;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getVideoCall(): bool
-    {
-        return $this->videoCall;
-    }
-
-    /**
-     * @param bool $videoCall
-     * @return ResearchType
-     */
-    public function setVideoCall(bool $videoCall): ResearchType
-    {
-        $this->videoCall = $videoCall;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getPhone(): bool
-    {
-        return $this->phone;
-    }
-
-    /**
-     * @param bool $phone
-     * @return ResearchType
-     */
-    public function setPhone(bool $phone): ResearchType
-    {
-        $this->phone = $phone;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getInPerson(): bool
-    {
-        return $this->inPerson;
-    }
-
-    /**
-     * @param bool $inPerson
-     * @return ResearchType
-     */
-    public function setInPerson(bool $inPerson): ResearchType
-    {
-        $this->inPerson = $inPerson;
-        return $this;
-    }
+    private ?bool $inPerson;
 
     /**
      * @return UserResearchResponse
@@ -165,5 +92,77 @@ class ResearchType
     public function setId(UuidInterface $id): void
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getSurveys(): ?bool
+    {
+        return $this->surveys;
+    }
+
+    /**
+     * @param bool|null $surveys
+     * @return ResearchType
+     */
+    public function setSurveys(?bool $surveys): ResearchType
+    {
+        $this->surveys = $surveys;
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getVideoCall(): ?bool
+    {
+        return $this->videoCall;
+    }
+
+    /**
+     * @param bool|null $videoCall
+     * @return ResearchType
+     */
+    public function setVideoCall(?bool $videoCall): ResearchType
+    {
+        $this->videoCall = $videoCall;
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getPhone(): ?bool
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @param bool|null $phone
+     * @return ResearchType
+     */
+    public function setPhone(?bool $phone): ResearchType
+    {
+        $this->phone = $phone;
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getInPerson(): ?bool
+    {
+        return $this->inPerson;
+    }
+
+    /**
+     * @param bool|null $inPerson
+     * @return ResearchType
+     */
+    public function setInPerson(?bool $inPerson): ResearchType
+    {
+        $this->inPerson = $inPerson;
+        return $this;
     }
 }
