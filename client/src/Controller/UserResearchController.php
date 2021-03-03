@@ -56,12 +56,32 @@ class UserResearchController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->userResearchApi->createPostSubmissionUserResearch($form->getData());
 
-            // change to thank you page
-            return $this->redirect($this->generateUrl('report_post_submission_user_research', ['reportId' => $reportId]));
+            return $this->redirect($this->generateUrl('user_research_submitted', ['reportId' => $reportId]));
         }
 
         return [
             'form' => $form->createView(),
+        ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/post_submission_user_research/submitted", name="user_research_submitted")
+     * @Template("@App/UserResearch/userResearchSubmitted.html.twig")
+     * @param $reportId
+     * @return array
+     */
+    public function userResearchSubmitted(int $reportId)
+    {
+        $report = $this->reportApi->getReport($reportId, ['report']);
+
+        // check status
+        if (!$report->getSubmitted()) {
+            $message = $this->translator->trans('report.submissionExceptions.submitted', [], 'validators');
+            throw new ReportNotSubmittedException($message);
+        }
+
+        return [
+            'homePageName' => $this->getUser()->isLayDeputy() ? 'lay_home' : 'org_dashboard',
         ];
     }
 }

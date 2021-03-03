@@ -21,7 +21,7 @@ class UserResearchResponseFactory
         $researchType = (new ResearchType($formData['agreedResearchTypes']))
             ->setUserResearchResponse($userResearchResponse);
 
-        $userResearchResponse->setAgreedResearchTypes($researchType);
+        $userResearchResponse->setResearchType($researchType);
 
         return $userResearchResponse;
     }
