@@ -11,6 +11,10 @@
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
 
+{% set gaCategory = 'page.htmlTitle' | trans %}
+{% set gaAction = 'Click: Button: Send feedback' %}
+{% set gaLabel = 'Clicked send feedback button on ' ~ app.request.requesturi %}
+
 {% block pageContent %}
 
     <div class="govuk-panel govuk-panel--confirmation">
@@ -56,7 +60,13 @@
         <p class="govuk-body">{{ 'page.feedback.limit' | trans }}</p>
         <p class="govuk-body">{{ 'page.feedback.disclaimer' | trans }}</p>
 
-        {{ form_submit(form.save, 'form.send') }}
+        {{ form_submit_ga(
+            form.save,
+            'form.send',
+            gaCategory,
+            gaAction,
+            gaLabel,
+        ) }}
 
     {{ form_end(form) }}
     {# end feedback form #}

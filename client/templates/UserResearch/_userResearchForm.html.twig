@@ -6,10 +6,6 @@
 
 {{ form_start(form, {attr: {novalidate: 'novalidate' } }) }}
 
-{#    {{ form_checkbox_group(form.deputyshipLength, 'form.deputyshipLength', {#}
-{#        'legendText' : 'form.deputyshipLength.label' | trans({}, translationDomain),#}
-{#    }) }}#}
-
     {{ radio_group(form.deputyshipLength) }}
 
     {{ checkbox_group(form.agreedResearchTypes) }}
