@@ -3,6 +3,7 @@
 
 namespace App\Entity\UserResearch;
 
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\Uuid;
@@ -23,6 +24,11 @@ class UserResearchResponse
      * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\ResearchType", inversedBy="userResearchResponse", cascade={"persist", "remove"})
      */
     private ResearchType $researchType;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="userResearchResponse", cascade={"persist"})
+     */
+    private User $user;
 
     /**
      * @ORM\Id
@@ -111,6 +117,24 @@ class UserResearchResponse
     public function setId(UuidInterface $id): UserResearchResponse
     {
         $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
+     * @return UserResearchResponse
+     */
+    public function setUser(User $user): UserResearchResponse
+    {
+        $this->user = $user;
         return $this;
     }
 }

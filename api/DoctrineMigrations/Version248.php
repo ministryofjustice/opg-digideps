@@ -24,11 +24,13 @@ final class Version248 extends AbstractMigration
 
         $this->addSql('CREATE TABLE research_type (id UUID NOT NULL, surveys BOOLEAN DEFAULT NULL, video_call BOOLEAN DEFAULT NULL, phone BOOLEAN DEFAULT NULL, in_person BOOLEAN DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('COMMENT ON COLUMN research_type.id IS \'(DC2Type:uuid)\'');
-        $this->addSql('CREATE TABLE user_research_response (id UUID NOT NULL, deputyship_length VARCHAR(255) NOT NULL, has_access_to_video_call_device BOOLEAN NOT NULL, researchType_id UUID DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE user_research_response (id UUID NOT NULL, user_id INT DEFAULT NULL, deputyship_length VARCHAR(255) NOT NULL, has_access_to_video_call_device BOOLEAN NOT NULL, researchType_id UUID DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_3B9FE71A5423F28F ON user_research_response (researchType_id)');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_3B9FE71AA76ED395 ON user_research_response (user_id)');
         $this->addSql('COMMENT ON COLUMN user_research_response.id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN user_research_response.researchType_id IS \'(DC2Type:uuid)\'');
         $this->addSql('ALTER TABLE user_research_response ADD CONSTRAINT FK_3B9FE71A5423F28F FOREIGN KEY (researchType_id) REFERENCES research_type (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE user_research_response ADD CONSTRAINT FK_3B9FE71AA76ED395 FOREIGN KEY (user_id) REFERENCES dd_user (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
     public function down(Schema $schema) : void

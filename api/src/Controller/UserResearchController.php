@@ -32,7 +32,7 @@ class UserResearchController extends RestController
             $formData = json_decode($request->getContent(), true);
 
             $userResearchResponse = $this->factory->generateFromFormData($formData);
-            $this->repository->create($userResearchResponse);
+            $this->repository->create($userResearchResponse, $this->getUser());
 
             return 'Created';
         } catch (\Throwable $e) {
