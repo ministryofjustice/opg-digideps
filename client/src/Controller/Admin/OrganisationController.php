@@ -16,7 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/admin/organisations")
@@ -39,7 +39,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/", name="admin_organisation_homepage")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      * @Template("@App/Admin/Organisation/index.html.twig")
      */
     public function indexAction()
@@ -53,7 +53,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{id}", name="admin_organisation_view", requirements={"id":"\d+"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      * @Template("@App/Admin/Organisation/view.html.twig")
      *
      * @param $id
@@ -74,7 +74,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/add", name="admin_organisation_add")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      * @Template("@App/Admin/Organisation/form.html.twig")
      */
     public function addAction(Request $request)
@@ -111,7 +111,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="admin_organisation_edit", requirements={"id":"\d+"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      * @Template("@App/Admin/Organisation/form.html.twig")
      */
     public function editAction(Request $request, $id = null)
@@ -148,7 +148,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{id}/delete", name="admin_organisation_delete", requirements={"id":"\d+"})
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      * @Template("@App/Common/confirmDelete.html.twig")
      */
     public function deleteAction(Request $request, $id)
@@ -188,7 +188,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{id}/add-user", name="admin_organisation_member_add", requirements={"id":"\d+"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      * @Template("@App/Admin/Organisation/add-user.html.twig")
      */
     public function addUserAction(Request $request, $id, TranslatorInterface $translator)
@@ -243,7 +243,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{id}/delete-user/{userId}", name="admin_organisation_member_delete", requirements={"id":"\d+"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      * @Template("@App/Common/confirmDelete.html.twig")
      */
     public function deleteUserAction(Request $request, $id, $userId)

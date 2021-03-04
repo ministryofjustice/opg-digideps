@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Entity\Repository;
+namespace App\Repository;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * Common repository methods
  */
-abstract class AbstractEntityRepository extends EntityRepository
+abstract class AbstractEntityRepository extends ServiceEntityRepository
 {
     /**
      * Finds a single entity by a set of criteria. Unfiltered, softdelete disabled.

@@ -40,7 +40,7 @@ class SatisfactionController extends RestController
 
     /**
      * @Route("", methods={"POST"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function add(Request $request)
     {
@@ -63,7 +63,7 @@ class SatisfactionController extends RestController
 
     /**
      * @Route("/satisfaction_data", name="satisfaction_data", methods={"GET"})
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
     public function getSatisfactionData(Request $request)
     {

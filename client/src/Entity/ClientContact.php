@@ -71,7 +71,7 @@ class ClientContact
      * @var string
      *
      * @JMS\Type("string")
-     * @Assert\Email( message="clientContact.form.email.invalid", groups={"add_clientcontact", "edit_clientcontact"}, checkMX=false, checkHost=false )
+     * @Assert\Email( message="clientContact.form.email.invalid", groups={"add_clientcontact", "edit_clientcontact"},   )
      * @Assert\Length( max=60, maxMessage="clientContact.form.email.maxLength", groups={"add_clientcontact", "edit_clientcontact"} )
      *
      * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})

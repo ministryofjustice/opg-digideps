@@ -35,7 +35,7 @@ class AdController extends AbstractController
 
     /**
      * @Route("/", name="ad_homepage")
-     * @Security("has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_AD')")
      * @Template("@App/Admin/Ad/index.html.twig")
      *
      * @param Request $request
@@ -95,7 +95,7 @@ class AdController extends AbstractController
 
     /**
      * @Route("/view-user", name="ad_view_user", methods={"GET", "POST"})
-     * @Security("has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_AD')")
      * @Template("@App/Admin/Ad/viewUser.html.twig")
      *
      * @param Request $request
@@ -131,7 +131,7 @@ class AdController extends AbstractController
 
     /**
      * @Route("/login-as-deputy/{deputyId}", name="ad_deputy_login_redirect")
-     * @Security("has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_AD')")
      *
      * @param $deputyId
      *

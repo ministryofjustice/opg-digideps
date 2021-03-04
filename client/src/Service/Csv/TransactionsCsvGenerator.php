@@ -7,7 +7,7 @@ use App\Entity\Report\Expense;
 use App\Entity\Report\Gift;
 use App\Entity\Report\MoneyTransaction;
 use App\Entity\ReportInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TransactionsCsvGenerator
 {

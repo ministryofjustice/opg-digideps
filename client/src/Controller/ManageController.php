@@ -20,11 +20,26 @@ class ManageController extends AbstractController
 {
     private string $symfonyEnvironment;
     private string $symfonyDebug;
+    private SiriusApiAvailability $siriusAvailability;
+    private ClamAvAvailability $clamAvailability;
+    private WkHtmlToPdfAvailability $wkHtmlAvailability;
+    private string $environment;
 
-    public function __construct(string $symfonyEnvironment, string $symfonyDebug)
+    public function __construct(
+        string $symfonyEnvironment,
+        string $symfonyDebug,
+        SiriusApiAvailability $siriusAvailability,
+        ClamAvAvailability $clamAvailability,
+        WkHtmlToPdfAvailability $wkHtmlAvailability,
+        string $environment
+    )
     {
         $this->symfonyEnvironment = $symfonyEnvironment;
         $this->symfonyDebug = $symfonyDebug;
+        $this->siriusAvailability = $siriusAvailability;
+        $this->clamAvailability = $clamAvailability;
+        $this->wkHtmlAvailability = $wkHtmlAvailability;
+        $this->environment = $environment;
     }
 
     /**
@@ -49,10 +64,10 @@ class ManageController extends AbstractController
             $notifyAvailability
         ];
 
-        if ($container->getParameter('env') !== 'admin') {
-            $services[] = $container->get(SiriusApiAvailability::class);
-            $services[] = $container->get(ClamAvAvailability::class);
-            $services[] = $container->get(WkHtmlToPdfAvailability::class);
+        if ($this->environment !== 'admin') {
+            $services[] = $this->siriusAvailability;
+            $services[] = $this->clamAvailability;
+            $services[] = $this->wkHtmlAvailability;
         }
 
         list($healthy, $services, $errors) = $this->servicesHealth($services);

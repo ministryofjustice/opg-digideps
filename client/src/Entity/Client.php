@@ -175,7 +175,7 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"pa-edit", "client-email"})
      *
-     * @Assert\Email( message="client.email.invalid", checkMX=false, checkHost=false, groups={"pa-client"})
+     * @Assert\Email( message="client.email.invalid", groups={"pa-client"})
      * @Assert\Length(max=60, maxMessage="client.email.maxLength", groups={"pa-client"})
      *
      * @var string

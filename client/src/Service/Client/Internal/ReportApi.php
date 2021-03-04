@@ -153,7 +153,7 @@ class ReportApi
         $newYearReportId = $this->restClient->put(sprintf('report/%s/submit', $reportToSubmit->getId()), $reportToSubmit, ['submit']);
 
         $event = new ReportSubmittedEvent($reportToSubmit, $submittedBy, $newYearReportId);
-        $this->eventDispatcher->dispatch(ReportSubmittedEvent::NAME, $event);
+        $this->eventDispatcher->dispatch($event, ReportSubmittedEvent::NAME);
     }
 
     public function unsubmit(Report $report, User $user, string $trigger): void
@@ -170,6 +170,6 @@ class ReportApi
             $trigger
         );
 
-        $this->eventDispatcher->dispatch(ReportUnsubmittedEvent::NAME, $event);
+        $this->eventDispatcher->dispatch($event, ReportUnsubmittedEvent::NAME);
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Form\Traits;
 
 use Symfony\Component\Translation\Translator;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 trait HasTranslatorTrait
 {

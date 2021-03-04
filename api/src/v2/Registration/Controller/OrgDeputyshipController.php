@@ -45,7 +45,7 @@ class OrgDeputyshipController extends AbstractController
 
     /**
      * @Route("/org-deputyships", methods={"POST"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function create(Request $request)
     {

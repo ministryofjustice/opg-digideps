@@ -2,7 +2,7 @@
 
 namespace App\Service\Auth;
 
-use App\Entity\Repository\UserRepository;
+use App\Repository\UserRepository;
 use App\Entity\User;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -139,12 +139,12 @@ class AuthService
     }
 
     /**
-     * @param string  $roleName
+     * @param string $roleName
      * @param Request $request
      *
      * @return bool
      */
-    public function isSecretValidForRole($roleName, Request $request)
+    public function isSecretValidForRole(string $roleName, Request $request): bool
     {
         $clientSecretFromRequest = $request->headers->get(self::HEADER_CLIENT_SECRET);
 
@@ -157,11 +157,10 @@ class AuthService
         $permittedRoles = isset($this->clientPermissions[$clientSource]) ?
             $this->clientPermissions[$clientSource] : [];
 
-        // Get all roles available to this user
-        $availableRoles = $this->roleHierarchy->getReachableRoles([new Role($roleName)]);
-
+        // Get all roles available to this user 
+        $availableRoles = $this->roleHierarchy->getReachableRoleNames([$roleName]);
         foreach ($availableRoles as $role) {
-            if (in_array($role->getRole(), $permittedRoles)) {
+            if (in_array($role, $permittedRoles)) {
                 return true;
             }
         }

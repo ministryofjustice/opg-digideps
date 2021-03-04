@@ -28,7 +28,7 @@ class DecisionController extends RestController
 
     /**
      * @Route("/decision", methods={"POST", "PUT"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function upsertDecision(Request $request)
     {
@@ -78,7 +78,7 @@ class DecisionController extends RestController
 
     /**
      * @Route("/decision/{id}", methods={"GET"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      *
      * @param int $id
      */
@@ -95,7 +95,7 @@ class DecisionController extends RestController
 
     /**
      * @Route("/decision/{id}", methods={"DELETE"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function deleteDecision($id)
     {

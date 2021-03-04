@@ -2,7 +2,7 @@
 
 namespace Tests\App\Service\Auth;
 
-use App\Entity\Repository\UserRepository;
+use App\Repository\UserRepository;
 use App\Service\Auth\AuthService;
 use Mockery;
 use MockeryStub as m;

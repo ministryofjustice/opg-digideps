@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *     },
  *     options={"collate":"utf8_general_ci", "charset":"utf8"}
  *     )
- * @ORM\Entity(repositoryClass="App\Entity\Repository\ClientRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\ClientRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
 class Client implements ClientInterface

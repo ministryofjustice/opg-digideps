@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\App\Entity\Repository;
+namespace Tests\App\Repository;
 
 use App\Entity\Client;
 use App\Entity\ClientInterface;
@@ -8,7 +8,7 @@ use App\Entity\Report\Checklist;
 use App\Entity\Report\Fee;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
-use App\Entity\Repository\ReportRepository;
+use App\Repository\ReportRepository;
 use App\Entity\SynchronisableInterface;
 use App\Entity\User;
 use DateInterval;

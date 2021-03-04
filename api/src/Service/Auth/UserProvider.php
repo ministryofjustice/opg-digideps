@@ -2,7 +2,7 @@
 
 namespace App\Service\Auth;
 
-use App\Entity\Repository\UserRepository;
+use App\Repository\UserRepository;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Predis\Client;

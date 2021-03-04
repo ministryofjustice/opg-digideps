@@ -92,7 +92,7 @@ class AssetProperty extends Asset implements AssetInterface
      * @var string
      * @JMS\Groups({"asset"})
      * @JMS\Type("string")
-     * @ORM\Column(name="has_mortgage",  type="string", length=4)
+     * @ORM\Column(name="has_mortgage", type="string", length=4)
      */
     private $hasMortgage;
 
@@ -108,7 +108,7 @@ class AssetProperty extends Asset implements AssetInterface
      * @var string
      * @JMS\Groups({"asset"})
      * @JMS\Type("string")
-     * @ORM\Column(name="has_charges",  type="string", length=4)
+     * @ORM\Column(name="has_charges", type="string", length=4)
      */
     private $hasCharges;
 
@@ -116,7 +116,7 @@ class AssetProperty extends Asset implements AssetInterface
      * @var string
      * @JMS\Groups({"asset"})
      * @JMS\Type("string")
-     * @ORM\Column(name="is_rented_out",  type="string", length=4)
+     * @ORM\Column(name="is_rented_out", type="string", length=4)
      */
     private $isRentedOut;
 

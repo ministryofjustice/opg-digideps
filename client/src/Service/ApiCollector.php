@@ -21,7 +21,7 @@ class ApiCollector extends DataCollector implements DataCollectorInterface
         $this->restClient = $restClient;
     }
 
-    public function collect(\Symfony\Component\HttpFoundation\Request $request, \Symfony\Component\HttpFoundation\Response $response, \Exception $exception = null)
+    public function collect(\Symfony\Component\HttpFoundation\Request $request, \Symfony\Component\HttpFoundation\Response $response, \Throwable $throwable = null)
     {
         $this->data = [
             'calls' => $this->restClient->getHistory(),

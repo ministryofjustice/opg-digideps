@@ -10,7 +10,7 @@ services:
         arguments:
             $encoderFactory: '@security.encoder_factory'
             $logger: '@logger'
-            $userRepository: '@App\Entity\Repository\UserRepository'
+            $userRepository: '@App\Repository\UserRepository'
             $roleHierarchy: '@security.role_hierarchy'
             $clientPermissions: '%client_permissions%'
 

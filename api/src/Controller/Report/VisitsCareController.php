@@ -27,7 +27,7 @@ class VisitsCareController extends RestController
 
     /**
      * @Route("/visits-care", methods={"POST"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function addAction(Request $request)
     {
@@ -51,7 +51,7 @@ class VisitsCareController extends RestController
 
     /**
      * @Route("/visits-care/{id}", methods={"PUT"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function updateAction(Request $request, $id)
     {
@@ -71,7 +71,7 @@ class VisitsCareController extends RestController
 
     /**
      * @Route("/{reportId}/visits-care", methods={"GET"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      *
      * @param int $reportId
      */
@@ -89,7 +89,7 @@ class VisitsCareController extends RestController
 
     /**
      * @Route("/visits-care/{id}", methods={"GET"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      *
      * @param int $id
      */
@@ -107,7 +107,7 @@ class VisitsCareController extends RestController
 
     /**
      * @Route("/visits-care/{id}", methods={"DELETE"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function deleteVisitsCare($id)
     {

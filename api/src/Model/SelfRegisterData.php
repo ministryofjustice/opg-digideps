@@ -30,7 +30,7 @@ class SelfRegisterData
      * @var string email
      * @JMS\Type("string")
      * @Assert\NotBlank( message="user.email.notBlank", groups={"self_registration", "verify_codeputy"})
-     * @Assert\Email( message="user.email.invalid", checkMX=false, checkHost=false, groups={"self_registration", "verify_codeputy"} )
+     * @Assert\Email( message="user.email.invalid", groups={"self_registration", "verify_codeputy"} )
      * @Assert\Length( max=60, maxMessage="user.email.maxLength", groups={"self_registration", "verify_codeputy"} )
      */
     private $email;

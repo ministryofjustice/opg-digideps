@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Repository\UserRepository;
+use App\Repository\UserRepository;
 use App\Service\Stats\StatsQueryParameters;
 use App\Service\Stats\QueryFactory;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,7 +24,7 @@ class StatsController extends RestController
 
     /**
      * @Route("/stats", methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function getMetric(Request $request)
     {
@@ -36,7 +36,7 @@ class StatsController extends RestController
 
     /**
      * @Route("stats/deputies/lay/active", methods={"GET"})
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
     public function getActiveLays()
     {

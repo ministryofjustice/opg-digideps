@@ -4,8 +4,8 @@ namespace Tests\App\Service;
 
 use App\Entity\Client;
 use App\Entity\Organisation;
-use App\Entity\Repository\ClientRepository;
-use App\Entity\Repository\UserRepository;
+use App\Repository\ClientRepository;
+use App\Repository\UserRepository;
 use App\Entity\User;
 use App\Model\SelfRegisterData;
 use App\Service\CasrecVerificationService;

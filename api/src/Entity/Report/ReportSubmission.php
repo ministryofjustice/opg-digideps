@@ -15,7 +15,7 @@ use JMS\Serializer\Annotation as JMS;
  *     indexes={
  *     @ORM\Index(name="rs_created_on_idx", columns={"created_on"})
  *  })
- * @ORM\Entity(repositoryClass="App\Entity\Repository\ReportSubmissionRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\ReportSubmissionRepository")
  */
 class ReportSubmission
 {

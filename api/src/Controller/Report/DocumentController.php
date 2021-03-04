@@ -38,7 +38,7 @@ class DocumentController extends RestController
      *     "reportId":"\d+",
      *     "reportType" = "(report|ndr)"
      * }, methods={"POST"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function add(Request $request, $reportType, $reportId)
     {
@@ -76,7 +76,7 @@ class DocumentController extends RestController
      * GET document by id
      *
      * @Route("/document/{id}", requirements={"id":"\d+"}, methods={"GET"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function getOneById(Request $request, $id)
     {
@@ -97,7 +97,7 @@ class DocumentController extends RestController
      * Accessible only from deputy area
      *
      * @Route("/document/{id}", methods={"DELETE"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      *
      * @param int $id
      *

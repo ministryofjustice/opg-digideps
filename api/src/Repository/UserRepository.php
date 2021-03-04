@@ -1,18 +1,24 @@
 <?php
 
-namespace App\Entity\Repository;
+namespace App\Repository;
 
 use App\Entity\Client;
 use App\Entity\User;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserRepository extends AbstractEntityRepository
 {
     /** @var QueryBuilder */
     private $qb;
+
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, User::class);
+    }
 
     /**
      * @param int $id

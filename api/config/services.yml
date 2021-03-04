@@ -25,6 +25,7 @@ services:
             $yamlFixtureLocation: "%kernel.root_dir%/src/DataFixtures/"
             $fixtureParams: '%fixtures%'
             $symfonyEnvironment: "%kernel.environment%"
+            $rootDir: "%kernel.root_dir%"
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -46,14 +47,14 @@ services:
         class: App\Service\RequestIdLoggerProcessor
         arguments:  [ "@service_container" ]
         tags:
-              - { name: monolog.processor, method: processRecord }
+            - { name: monolog.processor, method: processRecord }
 
     gedmo.listener.softdeleteable:
-      class: Gedmo\SoftDeleteable\SoftDeleteableListener
-      tags:
-        - { name: doctrine.event_subscriber, connection: default }
-      calls:
-        - [ setAnnotationReader, [ "@annotation_reader" ] ]
+        class: Gedmo\SoftDeleteable\SoftDeleteableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ "@annotation_reader" ] ]
 
     gedmo.listener.timestampable:
         class: Gedmo\Timestampable\TimestampableListener
@@ -103,13 +104,13 @@ services:
         arguments:
             - '@em'
             - '@validator'
-            - '@App\Entity\Repository\OrganisationRepository'
-            - '@App\Entity\Repository\UserRepository'
+            - '@App\Repository\OrganisationRepository'
+            - '@App\Repository\UserRepository'
             - '@App\Factory\OrganisationFactory'
             - '%shared_email_domains%'
 
     App\Service\Auth\UserProvider:
-        arguments: [ '@em', "@snc_redis.default", "@logger", { "timeout_seconds": "%user_provider_timeout_seconds%" }, '@App\Entity\Repository\UserRepository' ]
+        arguments: [ '@em', "@snc_redis.default", "@logger", { "timeout_seconds": "%user_provider_timeout_seconds%" }, '@App\Repository\UserRepository' ]
 
     App\Security\OrganisationVoter:
         class: App\Security\OrganisationVoter
@@ -134,51 +135,51 @@ services:
 
     Symfony\Component\Security\Core\Role\RoleHierarchyInterface: '@security.role_hierarchy'
 
-  App\Entity\Repository\UserRepository:
-    class: App\Entity\User
-    factory: ["@doctrine.orm.entity_manager", getRepository]
-    arguments:
-      - App\Entity\User
+    # App\Entity\Repository\UserRepository:
+    #     class: App\Entity\User
+    #     factory: ["@doctrine.orm.entity_manager", getRepository]
+    #     arguments:
+    #     - App\Entity\User
 
-  App\Entity\Repository\ReportRepository:
-    class: App\Entity\Report\Report
-    factory: ["@doctrine.orm.entity_manager", getRepository]
-    arguments:
-      - App\Entity\Report\Report
-    calls:
-      - [setSearchFilter, ["@App\\Service\\Search\\ClientSearchFilter"]]
+    # App\Entity\Repository\ReportRepository:
+    #     class: App\Entity\Report\Report
+    #     factory: ["@doctrine.orm.entity_manager", getRepository]
+    #     arguments:
+    #         - App\Entity\Report\Report
+    #     calls:
+    #         - setSearchFilter: ['@App\Service\Search\ClientSearchFilter']
 
-    App\Entity\Repository\ClientRepository:
-        class: App\Entity\Client
-        factory: ["@doctrine.orm.entity_manager", getRepository]
-        arguments:
-            - App\Entity\Client
-        calls:
-            - [setSearchFilter, ["@App\\Service\\Search\\ClientSearchFilter"]]
+    # App\Entity\Repository\ClientRepository:
+    #     class: App\Entity\Client
+    #     factory: ["@doctrine.orm.entity_manager", getRepository]
+    #     arguments:
+    #         - App\Entity\Client
+    #     calls:
+    #         - setSearchFilter: ['@App\Service\Search\ClientSearchFilter']
 
-    App\Entity\Repository\OrganisationRepository:
-        class: App\Entity\Organisation
-        factory: ["@doctrine.orm.entity_manager", getRepository]
-        arguments:
-            - App\Entity\Organisation
+    # App\Entity\Repository\OrganisationRepository:
+    #     class: App\Entity\Organisation
+    #     factory: ["@doctrine.orm.entity_manager", getRepository]
+    #     arguments:
+    #         - App\Entity\Organisation
 
-    App\Entity\Repository\NamedDeputyRepository:
-        class: App\Entity\NamedDeputy
-        factory: ["@doctrine.orm.entity_manager", getRepository]
-        arguments:
-            - App\Entity\NamedDeputy
+    # App\Entity\Repository\NamedDeputyRepository:
+    #     class: App\Entity\NamedDeputy
+    #     factory: ["@doctrine.orm.entity_manager", getRepository]
+    #     arguments:
+    #         - App\Entity\NamedDeputy
 
-    App\Entity\Repository\CasRecRepository:
-        class: App\Entity\CasRec
-        factory: ["@doctrine.orm.entity_manager", getRepository]
-        arguments:
-            - App\Entity\CasRec
+    # App\Entity\Repository\CasRecRepository:
+    #     class: App\Entity\CasRec
+    #     factory: ["@doctrine.orm.entity_manager", getRepository]
+    #     arguments:
+    #         - App\Entity\CasRec
 
-    App\Entity\Ndr\NdrRepository:
-        class: App\Entity\Ndr\Ndr
-        factory: ["@doctrine.orm.entity_manager", getRepository]
-        arguments:
-            - App\Entity\Ndr\Ndr
+    # App\Entity\Ndr\NdrRepository:
+    #     class: App\Entity\Ndr\Ndr
+    #     factory: ["@doctrine.orm.entity_manager", getRepository]
+    #     arguments:
+    #         - App\Entity\Ndr\Ndr
 
     rest_handler.report.deputy_costs_estimate_report_update_handler:
         class: App\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler

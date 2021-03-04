@@ -2,16 +2,16 @@
 
 namespace App\EventListener;
 
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class ResponseHeadersListener
 {
     /**
      * Sets additional headers following PEN test results.
      *
-     * @param FilterResponseEvent $event
+     * @param ResponseEvent $event
      */
-    public function onKernelResponse(FilterResponseEvent $event)
+    public function onKernelResponse(ResponseEvent $event)
     {
         $responseHeaders = $event->getResponse()->headers;
 

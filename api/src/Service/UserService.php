@@ -4,7 +4,7 @@ namespace App\Service;
 
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
-use App\Entity\Repository\UserRepository;
+use App\Repository\UserRepository;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 

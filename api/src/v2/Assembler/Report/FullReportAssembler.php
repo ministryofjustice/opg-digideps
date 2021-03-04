@@ -3,7 +3,7 @@
 namespace App\v2\Assembler\Report;
 
 use App\Entity\Report\Report;
-use App\Entity\Repository\ReportRepository;
+use App\Repository\ReportRepository;
 use App\v2\Assembler\StatusAssembler;
 use App\v2\DTO\StatusDto;
 

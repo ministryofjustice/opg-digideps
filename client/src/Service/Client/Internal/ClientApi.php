@@ -172,7 +172,7 @@ class ClientApi
 
         $this->restClient->delete(sprintf(self::DELETE_CLIENT_BY_ID, $id));
 
-        $this->eventDispatcher->dispatch(ClientDeletedEvent::NAME, $clientDeletedEvent);
+        $this->eventDispatcher->dispatch($clientDeletedEvent, ClientDeletedEvent::NAME);
     }
 
     /**
@@ -187,7 +187,7 @@ class ClientApi
 
         $clientUpdatedEvent = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $currentUser, $trigger);
 
-        $this->eventDispatcher->dispatch(ClientUpdatedEvent::NAME, $clientUpdatedEvent);
+        $this->eventDispatcher->dispatch($clientUpdatedEvent, ClientUpdatedEvent::NAME);
     }
 
     /**

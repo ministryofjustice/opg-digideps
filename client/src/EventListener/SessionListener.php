@@ -4,7 +4,7 @@ namespace App\EventListener;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -46,7 +46,7 @@ class SessionListener
         }
     }
 
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
         // Only operate on the master request and when there is a session
         if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType()) {
@@ -65,7 +65,7 @@ class SessionListener
         return 'no-timeout';
     }
 
-    private function hasReachedTimeout(GetResponseEvent $event)
+    private function hasReachedTimeout(RequestEvent $event)
     {
         $session = $event->getRequest()->getSession();
         $lastUsed = (int) $session->getMetadataBag()->getLastUsed();
@@ -77,7 +77,7 @@ class SessionListener
         return $idleTime > $this->idleTimeout;
     }
 
-    private function handleTimeout(GetResponseEvent $event)
+    private function handleTimeout(RequestEvent $event)
     {
         $session = $event->getRequest()->getSession();
         //Invalidate the current session and throw an exception

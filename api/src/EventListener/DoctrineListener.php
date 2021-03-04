@@ -25,7 +25,7 @@ class DoctrineListener
 
         if ($entity instanceof EntityDir\Ndr\Ndr && !$entity->getId()) {
             $ndrRepo = $entityManager->getRepository('App\Entity\Ndr\Ndr');
-            /* @var $ndrRepo EntityDir\Ndr\NdrRepository */
+            /* @var $ndrRepo App\Repository\NdrRepository */
             $ndrRepo->addDebtsToNdrIfMissing($entity);
             $ndrRepo->addIncomeBenefitsToNdrIfMissing($entity);
         }

@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use Symfony\Component\Intl\Countries;
 use Symfony\Component\Intl\Intl;
 
 class IntlService
@@ -12,6 +13,6 @@ class IntlService
      */
     public function getCountryNameByCountryCode(?string $countryCode) : ?string
     {
-        return Intl::getRegionBundle()->getCountryName($countryCode);
+        return Countries::getName($countryCode);
     }
 }

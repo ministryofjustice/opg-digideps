@@ -17,7 +17,7 @@ use JMS\Serializer\Annotation as JMS;
  *     @ORM\Index(name="odr_submitted_idx", columns={"submitted"}),
  *     @ORM\Index(name="odr_submit_date_idx", columns={"submit_date"})
  *  })
- * @ORM\Entity(repositoryClass="App\Entity\Ndr\NdrRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\NdrRepository")
  */
 class Ndr implements ReportInterface
 {

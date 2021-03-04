@@ -25,7 +25,7 @@ class ProfDeputyPrevCostController extends RestController
 
     /**
      * @Route("/report/{reportId}/prof-deputy-previous-cost", methods={"POST"})
-     * @Security("has_role('ROLE_PROF')")
+     * @Security("is_granted('ROLE_PROF')")
      */
     public function addAction(Request $request, $reportId)
     {
@@ -52,7 +52,7 @@ class ProfDeputyPrevCostController extends RestController
 
     /**
      * @Route("/prof-deputy-previous-cost/{id}", methods={"PUT"})
-     * @Security("has_role('ROLE_PROF')")
+     * @Security("is_granted('ROLE_PROF')")
      */
     public function updateAction(Request $request, $id)
     {
@@ -73,7 +73,7 @@ class ProfDeputyPrevCostController extends RestController
 
     /**
      * @Route("/prof-deputy-previous-cost/{id}", methods={"GET"})
-     * @Security("has_role('ROLE_PROF')")
+     * @Security("is_granted('ROLE_PROF')")
 
      * @param Request $request
      * @param $id
@@ -94,7 +94,7 @@ class ProfDeputyPrevCostController extends RestController
 
     /**
      * @Route("/report/{reportId}/prof-deputy-previous-cost/{id}", methods={"DELETE"})
-     * @Security("has_role('ROLE_PROF')")
+     * @Security("is_granted('ROLE_PROF')")
      */
     public function deleteProfDeputyPreviousCost($id)
     {

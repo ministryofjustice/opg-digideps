@@ -13,7 +13,7 @@ use JMS\Serializer\Annotation as JMS;
  *     @ORM\Index(name="ix_clientcontact_client_id", columns={"client_id"}),
  *     @ORM\Index(name="ix_clientcontact_created_by", columns={"created_by"})
  *     })
- * @ORM\Entity(repositoryClass="App\Entity\Repository\ClientContactRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\ClientContactRepository")
  *
  */
 class ClientContact

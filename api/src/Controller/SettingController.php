@@ -37,7 +37,7 @@ class SettingController extends RestController
 
     /**
      * @Route("/{id}", methods={"PUT"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function upsertSetting(Request $request, $id)
     {

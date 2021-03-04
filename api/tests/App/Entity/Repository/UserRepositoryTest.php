@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\App\Entity\Repository;
+namespace Tests\App\Repository;
 
-use App\Entity\Repository\UserRepository;
+use App\Repository\UserRepository;
 use App\Entity\User;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;

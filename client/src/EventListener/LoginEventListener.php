@@ -5,7 +5,7 @@ namespace App\EventListener;
 //use Symfony\Component\EventDispatcher\EventDispatcher;
 use App\Service\Redirector;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
@@ -44,9 +44,9 @@ class LoginEventListener
     /**
      * On login determine user role and redirect appropiately.
      *
-     * @param FilterResponseEvent $event
+     * @param ResponseEvent $event
      */
-    public function onKernelResponse(FilterResponseEvent $event)
+    public function onKernelResponse(ResponseEvent $event)
     {
         $redirectUrl = $this->redirector->getFirstPageAfterLogin($event->getRequest()->getSession());
 

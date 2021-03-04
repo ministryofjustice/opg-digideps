@@ -29,7 +29,7 @@ class AjaxController extends AbstractController
 
     /**
      * @Route("/casrec-delete-by-source/{source}", name="casrec_delete_by_source_ajax")
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      *
      * @param $source
      * @return JsonResponse
@@ -49,7 +49,7 @@ class AjaxController extends AbstractController
 
     /**
      * @Route("/casrec-add", name="casrec_add_ajax")
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      *
      * @param Request $request
      * @param ClientInterface $redisClient

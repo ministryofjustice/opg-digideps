@@ -46,7 +46,7 @@ class NdrController extends RestController
 
     /**
      * @Route("/ndr/{id}/submit", methods={"PUT"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function submit(Request $request, $id, ReportService $reportService)
     {

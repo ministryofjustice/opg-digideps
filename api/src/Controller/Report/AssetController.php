@@ -25,7 +25,7 @@ class AssetController extends RestController
 
     /**
      * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"}, methods={"GET"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function getOneById(Request $request, $reportId, $assetId)
     {
@@ -44,7 +44,7 @@ class AssetController extends RestController
 
     /**
      * @Route("/report/{reportId}/asset", requirements={"reportId":"\d+"}, methods={"POST"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function add(Request $request, $reportId)
     {
@@ -72,7 +72,7 @@ class AssetController extends RestController
 
     /**
      * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"}, methods={"PUT"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function edit(Request $request, $reportId, $assetId)
     {
@@ -95,7 +95,7 @@ class AssetController extends RestController
 
     /**
      * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"}, methods={"DELETE"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function delete($reportId, $assetId)
     {

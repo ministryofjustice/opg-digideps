@@ -28,7 +28,7 @@ class LifestyleController extends RestController
 
     /**
      * @Route("/lifestyle", methods={"POST"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function addAction(Request $request)
     {
@@ -52,7 +52,7 @@ class LifestyleController extends RestController
 
     /**
      * @Route("/lifestyle/{id}", methods={"PUT"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function updateAction(Request $request, $id)
     {
@@ -72,7 +72,7 @@ class LifestyleController extends RestController
 
     /**
      * @Route("/{reportId}/lifestyle", methods={"GET"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      *
      * @param int $reportId
      */
@@ -88,7 +88,7 @@ class LifestyleController extends RestController
 
     /**
      * @Route("/lifestyle/{id}", methods={"GET"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      *
      * @param int $id
      */
@@ -106,7 +106,7 @@ class LifestyleController extends RestController
 
     /**
      * @Route("/lifestyle/{id}", methods={"DELETE"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function deleteLifestyle($id)
     {

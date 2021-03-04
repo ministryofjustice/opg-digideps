@@ -3,8 +3,8 @@
 namespace App\Service\RestHandler;
 
 use App\Entity\Organisation;
-use App\Entity\Repository\OrganisationRepository;
-use App\Entity\Repository\UserRepository;
+use App\Repository\OrganisationRepository;
+use App\Repository\UserRepository;
 use App\Entity\User;
 use App\Factory\OrganisationFactory;
 use Doctrine\ORM\EntityManager;

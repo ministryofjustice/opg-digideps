@@ -6,7 +6,7 @@ use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
-use App\Entity\Repository\DocumentRepository;
+use App\Repository\DocumentRepository;
 use DateTime;
 
 class DocumentControllerTest extends AbstractTestController

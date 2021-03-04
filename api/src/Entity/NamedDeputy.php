@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation as JMS;
  * Named Deputy.
  *
  * @ORM\Table(name="named_deputy", indexes={@ORM\Index(name="named_deputy_no_idx", columns={"deputy_no"})})
- * @ORM\Entity(repositoryClass="App\Entity\Repository\NamedDeputyRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\NamedDeputyRepository")
  */
 class NamedDeputy
 {

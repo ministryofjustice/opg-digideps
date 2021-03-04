@@ -12,7 +12,7 @@ use DateTime;
  *
  * @ORM\Table(name="satisfaction")
  * @ORM\Entity()
- * @ORM\Entity(repositoryClass="App\Entity\Repository\SatisfactionRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\SatisfactionRepository")
  */
 class Satisfaction
 {

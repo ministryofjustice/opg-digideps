@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="organisation")
- * @ORM\Entity(repositoryClass="App\Entity\Repository\OrganisationRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\OrganisationRepository")
  */
 class Organisation implements OrganisationInterface
 {

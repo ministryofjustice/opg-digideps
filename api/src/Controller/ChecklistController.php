@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Report\Checklist;
-use App\Entity\Repository\ChecklistRepository;
+use App\Repository\ChecklistRepository;
 use App\Exception\UnauthorisedException;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;

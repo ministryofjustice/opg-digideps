@@ -5,7 +5,7 @@ namespace App\Event;
 
 use App\Entity\Client;
 use App\Entity\User;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class ClientUpdatedEvent extends Event
 {

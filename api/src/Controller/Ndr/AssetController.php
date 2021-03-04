@@ -23,7 +23,7 @@ class AssetController extends RestController
 
     /**
      * @Route("/ndr/{ndrId}/assets", requirements={"ndrId":"\d+"}, methods={"GET"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function getAll($ndrId)
     {
@@ -43,7 +43,7 @@ class AssetController extends RestController
 
     /**
      * @Route("/ndr/{ndrId}/asset/{assetId}", requirements={"ndrId":"\d+", "assetId":"\d+"}, methods={"GET"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function getOneById($ndrId, $assetId)
     {
@@ -60,7 +60,7 @@ class AssetController extends RestController
 
     /**
      * @Route("/ndr/{ndrId}/asset", requirements={"ndrId":"\d+"}, methods={"POST"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function add(Request $request, $ndrId)
     {
@@ -85,7 +85,7 @@ class AssetController extends RestController
 
     /**
      * @Route("/ndr/{ndrId}/asset/{assetId}", requirements={"ndrId":"\d+", "assetId":"\d+"}, methods={"PUT"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function edit(Request $request, $ndrId, $assetId)
     {
@@ -106,7 +106,7 @@ class AssetController extends RestController
 
     /**
      * @Route("/ndr/{ndrId}/asset/{assetId}", requirements={"ndrId":"\d+", "assetId":"\d+"}, methods={"DELETE"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function delete($ndrId, $assetId)
     {

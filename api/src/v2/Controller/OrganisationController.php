@@ -3,7 +3,7 @@
 namespace App\v2\Controller;
 
 use App\Entity\Organisation;
-use App\Entity\Repository\OrganisationRepository;
+use App\Repository\OrganisationRepository;
 use App\Entity\User;
 use App\Service\Formatter\RestFormatter;
 use App\Service\RestHandler\OrganisationRestHandler;
@@ -61,7 +61,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/list", methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      *
      * @return JsonResponse
      */
@@ -99,7 +99,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("", methods={"POST"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      *
      * @param Request $request
      * @return JsonResponse
@@ -116,7 +116,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"PUT"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      *
      * @param Request $request
      * @param int $id
@@ -132,7 +132,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"DELETE"})
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
      * @param $int id
      * @return JsonResponse
@@ -188,7 +188,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/members", methods={"GET"})
-     * @Security("has_role('ROLE_ORG')")
+     * @Security("is_granted('ROLE_ORG')")
      */
     public function getMembers(Request $request)
     {
@@ -196,7 +196,7 @@ class OrganisationController extends AbstractController
     }
     /**
      * @Route("/member/{id}", requirements={"id":"\d+"}, methods={"GET"})
-     * @Security("has_role('ROLE_ORG')")
+     * @Security("is_granted('ROLE_ORG')")
      */
     public function getMemberById(string $id)
     {

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\EventListener\RestInputOuputFormatter;
 use App\Exception as AppException;
 use App\Service\Auth\AuthService;
@@ -38,17 +39,16 @@ class AuthController extends RestController
      * @param UserProvider $userProvider
      * @param AttemptsInTimeChecker $attemptsInTimechecker
      * @param AttemptsIncrementalWaitingChecker $incrementalWaitingTimechecker
-     * @param RestInputOuputFormatter $restInputOuputFormatter
+     * @param RestInputOuputFormatter $restInputOutputFormatter
      * @param EntityManagerInterface $em
-     * @param AuthService $authService
-     * @return \App\Entity\User|bool|null
+     * @return User|bool|null
      */
     public function login(
         Request $request,
         UserProvider $userProvider,
         AttemptsInTimeChecker $attemptsInTimechecker,
         AttemptsIncrementalWaitingChecker $incrementalWaitingTimechecker,
-        RestInputOuputFormatter $restInputOuputFormatter,
+        RestInputOuputFormatter $restInputOutputFormatter,
         EntityManagerInterface $em
     ) {
         if (!$this->authService->isSecretValid($request)) {
@@ -102,7 +102,7 @@ class AuthController extends RestController
         $em->flush();
 
         // add token into response
-        $restInputOuputFormatter->addResponseModifier(function ($response) use ($randomToken) {
+        $restInputOutputFormatter->addResponseModifier(function ($response) use ($randomToken) {
             $response->headers->set(HeaderTokenAuthenticator::HEADER_NAME, $randomToken);
         });
 

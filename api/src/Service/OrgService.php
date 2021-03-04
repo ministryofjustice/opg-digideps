@@ -4,9 +4,9 @@ namespace App\Service;
 
 use App\Entity as EntityDir;
 use App\Entity\NamedDeputy;
-use App\Entity\Repository\ClientRepository;
-use App\Entity\Repository\UserRepository;
-use App\Entity\Repository\NamedDeputyRepository;
+use App\Repository\ClientRepository;
+use App\Repository\UserRepository;
+use App\Repository\NamedDeputyRepository;
 use App\Entity\User;
 use App\Factory\NamedDeputyFactory;
 use Doctrine\ORM\EntityManagerInterface;

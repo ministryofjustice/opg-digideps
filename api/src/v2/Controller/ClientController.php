@@ -4,7 +4,7 @@ namespace App\v2\Controller;
 
 use App\Entity\Client;
 use App\Controller\RestController;
-use App\Entity\Repository\ClientRepository;
+use App\Repository\ClientRepository;
 use App\v2\Assembler\ClientAssembler;
 use App\v2\Transformer\ClientTransformer;
 use Symfony\Component\Routing\Annotation\Route;
@@ -42,7 +42,7 @@ class ClientController extends RestController
 
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_DEPUTY')")
      *
      * @param $id
      * @return JsonResponse
@@ -73,7 +73,7 @@ class ClientController extends RestController
 
     /**
      * @Route("/case-number/{caseNumber}", methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_DEPUTY')")
      *
      * @param string $caseNumber
      * @return JsonResponse

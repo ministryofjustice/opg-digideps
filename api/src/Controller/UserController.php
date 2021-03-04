@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Client;
-use App\Entity\Repository\ClientRepository;
-use App\Entity\Repository\UserRepository;
+use App\Repository\ClientRepository;
+use App\Repository\UserRepository;
 use App\Entity\User;
 use App\Security\UserVoter;
 use App\Service\Auth\AuthService;
@@ -63,7 +63,7 @@ class UserController extends RestController
 
     /**
      * @Route("", methods={"POST"})
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_ORG_NAMED') or has_role('ROLE_ORG_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_ORG_NAMED') or has_role('ROLE_ORG_ADMIN')")
      */
     public function add(Request $request)
     {
@@ -250,7 +250,7 @@ class UserController extends RestController
      * Returns empty if user doesn't exist
      *
      * @Route("/get-team-names-by-email/{email}", methods={"GET"})
-     * @Security("has_role('ROLE_ORG_NAMED') or has_role('ROLE_ORG_ADMIN')")
+     * @Security("is_granted('ROLE_ORG_NAMED') or has_role('ROLE_ORG_ADMIN')")
      */
     public function getUserTeamNames(Request $request, $email)
     {
@@ -265,7 +265,7 @@ class UserController extends RestController
      * Delete user with clients.
      *
      * @Route("/{id}", methods={"DELETE"})
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
      * @param int $id
      * @return array
@@ -300,7 +300,7 @@ class UserController extends RestController
 
     /**
      * @Route("/get-all", methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      */
     public function getAll(Request $request)
     {
@@ -436,7 +436,7 @@ class UserController extends RestController
 
     /**
      * @Route("/{id}/team", requirements={"id":"\d+"}, methods={"GET"})
-     * @Security("has_role('ROLE_ORG')")
+     * @Security("is_granted('ROLE_ORG')")
      */
     public function getTeamByUserId(Request $request, $id)
     {

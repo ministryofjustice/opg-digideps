@@ -41,7 +41,7 @@ class OrganisationApi
             $trigger
         );
 
-        $this->eventDispatcher->dispatch(UserAddedToOrganisationEvent::NAME, $event);
+        $this->eventDispatcher->dispatch($event, UserAddedToOrganisationEvent::NAME);
     }
 
     /**
@@ -61,6 +61,6 @@ class OrganisationApi
             $trigger
         );
 
-        $this->eventDispatcher->dispatch(UserRemovedFromOrganisationEvent::NAME, $event);
+        $this->eventDispatcher->dispatch($event, UserRemovedFromOrganisationEvent::NAME);
     }
 }

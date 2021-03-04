@@ -38,7 +38,7 @@ class SatisfactionApi
         );
 
         $event = (new GeneralFeedbackSubmittedEvent())->setFeedbackFormResponse($formResponse);
-        $this->eventDispatcher->dispatch(GeneralFeedbackSubmittedEvent::NAME, $event);
+        $this->eventDispatcher->dispatch($event, GeneralFeedbackSubmittedEvent::NAME);
     }
 
     /**
@@ -55,6 +55,6 @@ class SatisfactionApi
         $this->restClient->post(self::CREATE_POST_SUBMISSION_FEEDBACK_ENDPOINT, $feedbackData);
 
         $event = (new PostSubmissionFeedbackSubmittedEvent($formResponse, $submittedByUser));
-        $this->eventDispatcher->dispatch(PostSubmissionFeedbackSubmittedEvent::NAME, $event);
+        $this->eventDispatcher->dispatch($event, PostSubmissionFeedbackSubmittedEvent::NAME);
     }
 }

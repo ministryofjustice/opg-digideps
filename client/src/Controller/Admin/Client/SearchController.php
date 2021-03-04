@@ -27,7 +27,7 @@ class SearchController extends AbstractController
 
     /**
      * @Route("/search", name="admin_client_search")
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("@App/Admin/Client/Search/search.html.twig")
      *
      * @param Request $request

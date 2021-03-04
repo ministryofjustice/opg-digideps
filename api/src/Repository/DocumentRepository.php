@@ -1,17 +1,20 @@
 <?php declare(strict_types=1);
 
-namespace App\Entity\Repository;
+namespace App\Repository;
 
 use App\Entity\Report\Document;
 use DateTime;
 use Doctrine\DBAL\Connection;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping;
+use Doctrine\Persistence\ManagerRegistry;
 use PDO;
-use Psr\Log\LoggerInterface;
 
 class DocumentRepository extends AbstractEntityRepository
 {
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Document::class);
+    }
+
     /**
      * Get soft-deleted documents
      *

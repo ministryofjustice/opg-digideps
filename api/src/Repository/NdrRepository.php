@@ -1,14 +1,24 @@
 <?php
 
-namespace App\Entity\Ndr;
+namespace App\Repository;
 
-use Doctrine\ORM\EntityRepository;
+use App\Entity\Ndr\Debt;
+use App\Entity\Ndr\Ndr;
+use App\Entity\Ndr\OneOff;
+use App\Entity\Ndr\StateBenefit;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * NdrRepository.
  */
-class NdrRepository extends EntityRepository
+class NdrRepository extends ServiceEntityRepository
 {
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Ndr::class);
+    }
+
     /**
      * add empty Debts to Ndr.
      * Called from doctrine listener.
