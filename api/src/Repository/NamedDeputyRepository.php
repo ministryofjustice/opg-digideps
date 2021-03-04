@@ -2,14 +2,8 @@
 
 namespace App\Repository;
 
-use App\Entity\NamedDeputy;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityRepository;
 
-class NamedDeputyRepository extends ServiceEntityRepository
+class NamedDeputyRepository extends EntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, NamedDeputy::class);
-    }
 }

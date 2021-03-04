@@ -419,7 +419,7 @@ class RestClient implements RestClientInterface
      */
     private function arrayToEntity($class, array $data)
     {
-        $fullClassName = (strpos($class, 'App') !== false) ? $class : 'App\\Entity\\' . $class;
+        $fullClassName = (str_contains($class, 'App')) ? $class : 'App\Entity\\' . $class;
 
         /** @var string */
         $data = json_encode($data);

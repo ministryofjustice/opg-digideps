@@ -3,17 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\CasRec;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
-class CasRecRepository extends ServiceEntityRepository
+class CasRecRepository extends EntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, CasRec::class);
-    }
-
     /**
      * @param string $source
      * @return mixed

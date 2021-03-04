@@ -6,7 +6,7 @@ jms_serializer:
     # not clear if loaded (buggy library ?)
     # cache: jms_redis_cache_doctrine_adapter
     cache: file
-    debug: false
+    debug: "%kernel.debug%"
 
 monolog:
   handlers:

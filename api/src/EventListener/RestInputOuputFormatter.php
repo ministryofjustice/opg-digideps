@@ -10,6 +10,7 @@ use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -114,7 +115,7 @@ class RestInputOuputFormatter
         }
 
         // if data is defined,
-        if ($groupsCheck && !empty($data['data']) && $this->containsEntity($data['data']) && $context->getAttribute('groups')->isEmpty()) {
+        if ($groupsCheck && !empty($data['data']) && $this->containsEntity($data['data']) && empty($context->getAttribute('groups'))) {
             throw new \RuntimeException($request->getMethod() . ' ' . $request->getUri() . ' missing JMS group');
         }
 
@@ -163,9 +164,9 @@ class RestInputOuputFormatter
     /**
      * Attach the following with.
      */
-    public function onKernelException(ViewEvent $event)
+    public function onKernelException(ExceptionEvent $event)
     {
-        $e = $event->getRequest()->getex;
+        $e = $event->getThrowable();
         $message = $e->getMessage();
         $code = (int) $e->getCode();
         $level = 'warning'; //defeault exception level, unless override

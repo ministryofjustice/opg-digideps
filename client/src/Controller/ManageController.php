@@ -45,7 +45,6 @@ class ManageController extends AbstractController
     /**
      * @Route("/availability", methods={"GET"})
      *
-     * @param ContainerInterface $container
      * @param ApiAvailability $apiAvailability
      * @param NotifyAvailability $notifyAvailability
      * @param RedisAvailability $redisAvailability
@@ -53,7 +52,6 @@ class ManageController extends AbstractController
      * @return Response|null
      */
     public function availabilityAction(
-        ContainerInterface $container,
         ApiAvailability $apiAvailability,
         NotifyAvailability $notifyAvailability,
         RedisAvailability $redisAvailability

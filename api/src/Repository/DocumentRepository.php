@@ -5,15 +5,11 @@ namespace App\Repository;
 use App\Entity\Report\Document;
 use DateTime;
 use Doctrine\DBAL\Connection;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityRepository;
 use PDO;
 
-class DocumentRepository extends AbstractEntityRepository
+class DocumentRepository extends EntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Document::class);
-    }
 
     /**
      * Get soft-deleted documents
