@@ -143,11 +143,7 @@ class OrganisationController extends AbstractController
     {
         $deleted = $this->restHandler->delete($id);
 
-        if (!$deleted) {
-            $message = 'Organisation not found. Nothing deleted';
-        } else {
-            $message = 'Organisation deleted';
-        }
+        $message = $deleted ? 'Organisation deleted' : 'Organisation not found. Nothing deleted';
 
         return $this->buildSuccessResponse([], $message);
     }

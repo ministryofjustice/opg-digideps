@@ -11,6 +11,8 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException as OptimisticLockExceptionAlias;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+use function Amp\Promise\rethrow;
+
 class OrganisationRestHandler
 {
     /** @var EntityManager */
@@ -104,6 +106,10 @@ class OrganisationRestHandler
     {
         if (null === ($organisation = $this->orgRepository->find($id))) {
             return false;
+        }
+
+        if ($this->orgRepository->hasActiveEntities($id)) {
+            throw new \Doctrine\ORM\ORMException();
         }
 
         $organisation->setDeletedAt(new \DateTime());

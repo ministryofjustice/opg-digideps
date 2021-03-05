@@ -50,19 +50,37 @@ class OrganisationRepository extends EntityRepository
     /**
      * @param int $id
      * @return bool
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function deleteById(int $id): bool
+    public function hasActiveEntities(int $id): bool
     {
-        if (null === ($organisation = $this->find($id))) {
-            return false;
+        $query = $this
+            ->getEntityManager()
+            ->createQuery('SELECT o, u FROM App\Entity\Organisation o
+            INNER JOIN o.users u
+            WHERE o.id = ?1')
+            ->setParameter(1, $id);
+
+        $result = $query->getArrayResult();
+
+        if (count($result) > 0) {
+            return true;
         }
 
-        $this->getEntityManager()->remove($organisation);
-        $this->getEntityManager()->flush();
+        $query = $this
+            ->getEntityManager()
+            ->createQuery('SELECT o, c FROM App\Entity\Organisation o
+            INNER JOIN o.clients c
+            WHERE o.id = ?1
+            AND (c.deletedAt is null OR c.archivedAt is null)')
+            ->setParameter(1, $id);
 
-        return true;
+        $result = $query->getArrayResult();
+
+        if (count($result) > 0) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
