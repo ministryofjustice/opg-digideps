@@ -20,44 +20,54 @@
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}
+    {% set gaCategory = 'addClient.pageTitle' | trans %}
+    {% set gaAction = 'Click: Button: Save Client Details' %}
+    {% set gaLabel = 'Clicked save client details button on ' ~ app.request.requesturi %}
+
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {% if client_validated %}
+        {% if client_validated %}
 
-        <h3 class="govuk-heading-m">{{ 'form.editYourDetails.detailsEntered' | trans({}, 'settings') }}</h3>
+            <h3 class="govuk-heading-m">{{ 'form.editYourDetails.detailsEntered' | trans({}, 'settings') }}</h3>
 
-        {{ form_widget(form.firstname, {'type': 'hidden'}) }}
-        {{ form_widget(form.lastname, {'type': 'hidden'}) }}
-        {{ form_widget(form.caseNumber, {'type': 'hidden'}) }}
+            {{ form_widget(form.firstname, {'type': 'hidden'}) }}
+            {{ form_widget(form.lastname, {'type': 'hidden'}) }}
+            {{ form_widget(form.caseNumber, {'type': 'hidden'}) }}
 
-        <p class="flush--bottom">
-            <strong class="govuk-!-font-weight-bold">{{ 'name' | trans({}, 'common' ) }}: </strong>
-            {{ client.fullName }}
-        </p>
+            <p class="flush--bottom">
+                <strong class="govuk-!-font-weight-bold">{{ 'name' | trans({}, 'common' ) }}: </strong>
+                {{ client.fullName }}
+            </p>
 
-        <p class="push--bottom">
-            <strong class="govuk-!-font-weight-bold">{{ 'caseNumber' | trans({}, 'common' ) }}: </strong>
-            {{ client.caseNumber }}
-        </p>
+            <p class="push--bottom">
+                <strong class="govuk-!-font-weight-bold">{{ 'caseNumber' | trans({}, 'common' ) }}: </strong>
+                {{ client.caseNumber }}
+            </p>
 
-    {% else %}
-        {{ form_input(form.firstname, 'firstname') }}
-        {{ form_input(form.lastname, 'lastname') }}
-    {% endif %}
+        {% else %}
+            {{ form_input(form.firstname, 'firstname') }}
+            {{ form_input(form.lastname, 'lastname') }}
+        {% endif %}
 
-    {% if client_validated %}
-        <h3 class="govuk-heading-m">{{ 'form.editYourDetails.furtherDetailsNeeded' | trans({}, 'settings') }}</h3>
-    {% endif %}
-    {{ macros.addressFields(form, translationDomain) }}
-    {{ form_input(form.phone, 'phone') }}
+        {% if client_validated %}
+            <h3 class="govuk-heading-m">{{ 'form.editYourDetails.furtherDetailsNeeded' | trans({}, 'settings') }}</h3>
+        {% endif %}
+        {{ macros.addressFields(form, translationDomain) }}
+        {{ form_input(form.phone, 'phone') }}
 
-    {% if not client_validated %}
-        {{ form_input(form.caseNumber, 'caseNumber') }}
-    {% endif %}
+        {% if not client_validated %}
+            {{ form_input(form.caseNumber, 'caseNumber') }}
+        {% endif %}
 
-    {{ form_known_date(form.courtDate, 'courtDate') }}
+        {{ form_known_date(form.courtDate, 'courtDate') }}
 
-    {{ form_submit(form.save,'saveAndContinue') }}
+        {{ form_submit_ga(
+            form.save,
+            'saveAndContinue',
+            gaCategory,
+            gaAction,
+            gaLabel)
+        }}
 
     {{ form_end(form) }}
 

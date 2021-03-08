@@ -20,3 +20,4 @@ _Any tips and tricks, blog posts or tools which helped you. Plus anything notabl
 - [ ] There are no deprecated CSS classes noted in the profiler
 - [ ] Translations are used and the profiler doesn't identify any missing
 - [ ] Any links or buttons added are screen reader friendly and contextually complete
+- [ ] If adding GA events, I have updated or [checked](docs/runbooks/GOOGLE-ANALYTICS.md) the existing category or label values
