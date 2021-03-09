@@ -12,7 +12,7 @@ trait ContactTrait
 
     /**
      * @JMS\Groups({"contact"})
-     * @JMS\Type("array<App\Entity\Report\Contact>")
+     * @JMS\Type("ArrayCollection<App\Entity\Report\Contact>")
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Contact", mappedBy="report", cascade={"persist", "remove"})
      */
     private $contacts;

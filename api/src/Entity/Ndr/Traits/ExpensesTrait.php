@@ -19,7 +19,7 @@ trait ExpensesTrait
     private $paidForAnything;
 
     /**
-     * @JMS\Type("array<App\Entity\Ndr\Expense>")
+     * @JMS\Type("ArrayCollection<App\Entity\Ndr\Expense>")
      * @JMS\Groups({"ndr-expenses"})
      * @ORM\OneToMany(targetEntity="App\Entity\Ndr\Expense", mappedBy="ndr", cascade={"persist"})
      *

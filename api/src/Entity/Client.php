@@ -45,7 +45,7 @@ class Client implements ClientInterface
 
     /**
      * @JMS\Groups({"client-users"})
-     * @JMS\Type("array")
+     * @JMS\Type("ArrayCollection<App\Entity\Users>")
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="clients", fetch="EXTRA_LAZY")
      * @ORM\JoinTable(name="deputy_case",
      *         joinColumns={@ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")},
@@ -56,7 +56,7 @@ class Client implements ClientInterface
 
     /**
      * @JMS\Groups({"client-reports"})
-     * @JMS\Type("array")
+     * @JMS\Type("ArrayCollection<App\Entity\Report\Report>")
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Report", mappedBy="client", cascade={"persist", "remove"})
      */
     private $reports;

@@ -63,7 +63,7 @@ class ReportSubmission
     /**
      * @var ArrayCollection<int, Document>
      *
-     * @JMS\Type("array<App\Entity\Report\Document>")
+     * @JMS\Type("ArrayCollection<App\Entity\Report\Document>")
      * @JMS\Groups({"report-submission", "report-submission-documents"})
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Document", mappedBy="reportSubmission")

@@ -45,7 +45,7 @@ trait FeeExpensesTrait
      *
      * @var Expense[]
      *
-     * @JMS\Type("array<App\Entity\Report\Expense>")
+     * @JMS\Type("ArrayCollection<App\Entity\Report\Expense>")
      * @JMS\Groups({"expenses"})
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Expense", mappedBy="report", cascade={"persist", "remove"})
      *

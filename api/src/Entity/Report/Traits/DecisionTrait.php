@@ -12,7 +12,7 @@ trait DecisionTrait
      * @var Decision[]
      *
      * @JMS\Groups({"decision"})
-     * @JMS\Type("array<App\Entity\Report\Decision>")
+     * @JMS\Type("ArrayCollection<App\Entity\Report\Decision>")
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Decision", mappedBy="report", cascade={"persist", "remove"})
      */
     private $decisions;

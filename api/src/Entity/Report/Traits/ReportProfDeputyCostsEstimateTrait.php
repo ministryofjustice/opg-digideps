@@ -21,7 +21,7 @@ trait ReportProfDeputyCostsEstimateTrait
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("array<App\Entity\Report\ProfDeputyEstimateCost>")
+     * @JMS\Type("ArrayCollection<App\Entity\Report\ProfDeputyEstimateCost>")
      * @JMS\Groups({"prof-deputy-estimate-costs"})
      * @ORM\OneToMany(targetEntity="App\Entity\Report\ProfDeputyEstimateCost", mappedBy="report", cascade={"persist", "remove"})
      * @ORM\OrderBy({"id" = "ASC"})

@@ -363,7 +363,7 @@ class Report implements ReportInterface
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("array<App\Entity\Report\Document>")
+     * @JMS\Type("ArrayCollection<App\Entity\Report\Document>")
      * @JMS\Groups({"report-documents"})
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Document", mappedBy="report", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"createdOn"="DESC"})
@@ -371,7 +371,7 @@ class Report implements ReportInterface
     private $documents;
 
     /**
-     * @JMS\Type("array<App\Entity\Report\ReportSubmission>")
+     * @JMS\Type("ArrayCollection<App\Entity\Report\ReportSubmission>")
      * @JMS\Groups({"document-sync"})
      * @ORM\OneToMany(targetEntity="App\Entity\Report\ReportSubmission", mappedBy="report", fetch="EXTRA_LAZY")
      */
@@ -1023,7 +1023,7 @@ class Report implements ReportInterface
      * @JMS\VirtualProperty("submittedDocuments")
      * @JMS\SerializedName("submitted_documents")
      * @JMS\Groups({"documents"})
-     * @JMS\Type("array<App\Entity\Report\Document>")
+     * @JMS\Type("ArrayCollection<App\Entity\Report\Document>")
      *
      * @return ArrayCollection|Document[]
      */

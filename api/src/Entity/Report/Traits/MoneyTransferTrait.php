@@ -11,7 +11,7 @@ trait MoneyTransferTrait
 {
     /**
      * @JMS\Groups({"money-transfer"})
-     * @JMS\Type("array<App\Entity\Report\MoneyTransfer>")
+     * @JMS\Type("ArrayCollection<App\Entity\Report\MoneyTransfer>")
      * @ORM\OneToMany(targetEntity="App\Entity\Report\MoneyTransfer", mappedBy="report", cascade={"persist"})
      */
     private $moneyTransfers;
