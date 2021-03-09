@@ -80,7 +80,7 @@ class CoDeputyController extends AbstractController
                 $selfRegisterData->setCaseNumber($form['clientCaseNumber']->getData());
 
                 $clientId = $this->restClient->get('v2/client/case-number/' . $selfRegisterData->getCaseNumber(), 'Client')->getId();
-                $mainClient = $this->restClient->get('client/' . $clientId, 'Client', ['client', 'client-users', 'report-id', 'current-report', 'user']);
+                $mainClient = $this->clientApi->getWithUsersV2($clientId);
                 $mainDeputy = reset($mainClient->getUsers());
 
                 // validate against casRec

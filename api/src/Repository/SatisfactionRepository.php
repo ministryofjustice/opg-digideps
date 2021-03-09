@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 
 class SatisfactionRepository extends EntityRepository
 {

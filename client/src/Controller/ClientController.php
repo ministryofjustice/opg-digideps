@@ -139,7 +139,7 @@ class ClientController extends AbstractController
         $client = $this->clientApi->getFirstClient();
         if (!empty($client)) {
             // update existing client
-            $client = $this->restClient->get('client/' . $client->getId(), 'Client', ['client', 'report-id', 'current-report']);
+            $client = $this->clientApi->getWithUsersV2($client->getId());
             $method = 'put';
             $client_validated = true;
         } else {

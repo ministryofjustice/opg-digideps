@@ -49,7 +49,7 @@ class ClientContactController extends AbstractController
         $clientId = $request->get('clientId');
 
         /** @var $client EntityDir\Client */
-        $client = $this->restClient->get('client/' . $clientId, 'Client', ['client', 'client-users', 'report-id', 'current-report', 'user']);
+        $client = $this->clientApi->getWithUsersV2($clientId);
         if (!isset($clientId) || !($client instanceof EntityDir\Client)) {
             throw $this->createNotFoundException('Client not found');
         }

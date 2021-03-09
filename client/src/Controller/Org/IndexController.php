@@ -108,7 +108,7 @@ class IndexController extends AbstractController
     {
         try {
             /** @var Client $client */
-            $client = $this->restClient->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report']);
+            $client = $this->clientApi->getWithUsersV2($clientId);
         } catch (RestClientException $e) {
             throw $this->createNotFoundException();
         }
@@ -149,7 +149,7 @@ class IndexController extends AbstractController
     public function clientArchiveAction(Request $request, $clientId, TranslatorInterface $translator)
     {
         /** @var Client $client */
-        $client = $this->restClient->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report']);
+        $client = $this->clientApi->getWithUsersV2($clientId);
 
         // PA client profile is ATM relying on report ID, this is a working until next refactor
         $returnLink = $this->generateUrl('report_overview', ['reportId'=>$client->getCurrentReport()->getId()]);
