@@ -15,7 +15,7 @@ trait DbTrait
         $sqlFile = self::getSnapshotPath($status);
         // truncate cascade + insert. faster than drop + table recreate
         exec('echo "SET client_min_messages TO WARNING; truncate dd_user, satisfaction, dd_team, named_deputy, organisation, casrec, setting, user_team, client cascade;" > ' . $sqlFile);
-        exec('pg_dump ' . self::$dbName . "  --data-only  --inserts --exclude-table='migrations' | sed '/EXTENSION/d' >> {$sqlFile}", $output, $return);
+        exec('pg_dump ' . self::$dbName . "  --data-only  --inserts --exclude-table='migration_versions' | sed '/EXTENSION/d' >> {$sqlFile}", $output, $return);
         if (!file_exists($sqlFile) || filesize($sqlFile) < 100) {
             throw new \RuntimeException("SQL snapshot $sqlFile not created or not valid");
         }
@@ -31,7 +31,8 @@ trait DbTrait
             $error = "File $sqlFile not found. Re-run the full behat suite to recreate the missing snapshots.";
             throw new \RuntimeException($error);
         }
-        exec('psql ' . self::$dbName . " --quiet < {$sqlFile}");
+
+        exec(sprintf('psql %s --quiet < %s', self::$dbName, $sqlFile));
     }
 
     /**
@@ -52,9 +53,9 @@ trait DbTrait
     public function deleteBehatSnapshots()
     {
         foreach (glob('/tmp/sql/behat-snapshot-*.sql') as $file) { // iterate files
-          if (is_file($file)) {
-              unlink($file);
-          }
+            if (is_file($file)) {
+                unlink($file);
+            }
         }
     }
 
