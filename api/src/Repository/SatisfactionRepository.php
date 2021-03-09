@@ -2,10 +2,17 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\EntityRepository;
+use App\Entity\Satisfaction;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 
-class SatisfactionRepository extends EntityRepository
+class SatisfactionRepository extends ServiceEntityRepository
 {
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Satisfaction::class);
+    }
+
     /**
      * @param $offset
      * @param $limit

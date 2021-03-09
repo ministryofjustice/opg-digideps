@@ -6,11 +6,17 @@ use App\Entity\Client;
 use App\Entity\Report\Document;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\User;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 
-class ReportSubmissionRepository extends EntityRepository
+class ReportSubmissionRepository extends ServiceEntityRepository
 {
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, ReportSubmission::class);
+    }
+
     /**
      * @param string $status        string new|archived
      * @param string $q             serach string

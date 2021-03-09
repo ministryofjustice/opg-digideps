@@ -135,47 +135,53 @@ services:
 
     Symfony\Component\Security\Core\Role\RoleHierarchyInterface: '@security.role_hierarchy'
 
-    App\Repository\UserRepository:
-        class: App\Entity\User
-        factory: ["@doctrine.orm.entity_manager", getRepository]
-        arguments:
-            - App\Entity\User
+    App\Repository\CasRecRepository:
+        class: App\Repository\CasRecRepository
+        tags: ['doctrine.repository_service']
 
-    App\Repository\ReportRepository:
-        class: App\Entity\Report\Report
-        factory: ["@doctrine.orm.entity_manager", getRepository]
-        arguments:
-            - App\Entity\Report\Report
+    App\Repository\ClientContactRepository:
+        class: App\Repository\ClientContactRepository
+        tags: [ 'doctrine.repository_service' ]
 
     App\Repository\ClientRepository:
-        class: App\Entity\Client
-        factory: ["@doctrine.orm.entity_manager", getRepository]
-        arguments:
-            - App\Entity\Client
+        class: App\Repository\ClientRepository
+        tags: [ 'doctrine.repository_service' ]
 
-    App\Repository\OrganisationRepository:
-        class: App\Entity\Organisation
-        factory: ["@doctrine.orm.entity_manager", getRepository]
-        arguments:
-            - App\Entity\Organisation
+    App\Repository\DocumentRepository:
+        class: App\Repository\DocumentRepository
+        tags: [ 'doctrine.repository_service' ]
 
     App\Repository\NamedDeputyRepository:
-        class: App\Entity\NamedDeputy
-        factory: ["@doctrine.orm.entity_manager", getRepository]
-        arguments:
-            - App\Entity\NamedDeputy
-
-    App\Repository\CasRecRepository:
-        class: App\Entity\CasRec
-        factory: ["@doctrine.orm.entity_manager", getRepository]
-        arguments:
-            - App\Entity\CasRec
+        class: App\Repository\NamedDeputyRepository
+        tags: [ 'doctrine.repository_service' ]
 
     App\Repository\NdrRepository:
-        class: App\Entity\Ndr\Ndr
-        factory: ["@doctrine.orm.entity_manager", getRepository]
-        arguments:
-            - App\Entity\Ndr\Ndr
+        class: App\Repository\NdrRepository
+        tags: [ 'doctrine.repository_service' ]
+
+    App\Repository\NoteRepository:
+        class: App\Repository\NoteRepository
+        tags: [ 'doctrine.repository_service' ]
+
+    App\Repository\OrganisationRepository:
+        class: App\Repository\OrganisationRepository
+        tags: [ 'doctrine.repository_service' ]
+
+    App\Repository\ReportRepository:
+        class: App\Repository\ReportRepository
+        tags: [ 'doctrine.repository_service' ]
+
+    App\Repository\ReportSubmissionRepository:
+        class: App\Repository\ReportSubmissionRepository
+        tags: [ 'doctrine.repository_service' ]
+
+    App\Repository\SatisfactionRepository:
+        class: App\Repository\SatisfactionRepository
+        tags: [ 'doctrine.repository_service' ]
+
+    App\Repository\UserRepository:
+        class: App\Repository\UserRepository
+        tags: ['doctrine.repository_service']
 
     rest_handler.report.deputy_costs_estimate_report_update_handler:
         class: App\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler
