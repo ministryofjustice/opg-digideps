@@ -1,7 +1,7 @@
 Feature: PROF user edits 102-5 report sections common to ALL report types
 
   Scenario: PROF-102-5 sections check
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000010" region
     Then I should see a "#edit-contacts" element
     And I should see a "#edit-decisions" element
@@ -20,7 +20,7 @@ Feature: PROF user edits 102-5 report sections common to ALL report types
     And I should see a "#edit-documents" element
 
   Scenario: PROF 102-5 user edit decisions section
-    And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000010" region
     Then the response status code should be 200
     And the URL should match "report/\d+/overview"
@@ -38,7 +38,7 @@ Feature: PROF user edits 102-5 report sections common to ALL report types
       | decision_exist_reasonForNoDecisions | rfnd |
 
   Scenario: PROF 102-5 saves a contact
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-contacts, start"
         # chose "no records"
@@ -49,7 +49,7 @@ Feature: PROF user edits 102-5 report sections common to ALL report types
 
 
   Scenario: PROF 102-5 visits and care steps
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-visits_care, start"
     # step 1 empty
@@ -78,7 +78,7 @@ Feature: PROF user edits 102-5 report sections common to ALL report types
       | visits_care_whenWasCarePlanLastReviewed_year  | 2015 |
 
   Scenario: PROF 102-5 report actions
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-actions, start"
       # step 1
@@ -93,7 +93,7 @@ Feature: PROF user edits 102-5 report sections common to ALL report types
       | action_doYouHaveConcernsDetails | dyhcd |
 
   Scenario: PROF 102-5 any other info
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-other_info, start"
      # step 1
@@ -103,7 +103,7 @@ Feature: PROF user edits 102-5 report sections common to ALL report types
       | more_info_actionMoreInfoDetails | amid |
 
   Scenario: PROF adds documents to 102-5
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000010" region
     # Check report is not submittable until documents section complete
     And the PROF report should not be submittable
@@ -135,7 +135,7 @@ Feature: PROF user edits 102-5 report sections common to ALL report types
       | report_document_upload_files   |
 
   Scenario: PROF deletes document from 102-5
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-documents"
     # chose "yes documents"

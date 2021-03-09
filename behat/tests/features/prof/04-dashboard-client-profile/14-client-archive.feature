@@ -1,7 +1,7 @@
 Feature: PROF client archive
 
   Scenario: PROF archives a client
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234!!"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234!!"
     And I fill in "search" with "31000016"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-31000016" region

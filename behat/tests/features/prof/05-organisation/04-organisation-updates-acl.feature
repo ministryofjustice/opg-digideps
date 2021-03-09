@@ -1,7 +1,7 @@
 Feature: Organisation deputyship updates
 
   Scenario: Apply deputyship updates via CSV
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And the following users exist:
       | ndr      | deputyType | firstName | lastName | email                                 | postCode | activated |
       | disabled | PROF       | New Dep1  | Surname1 | new-behat-prof1@publicguardian.gov.uk | SW1      | true      |
@@ -21,10 +21,10 @@ Feature: Organisation deputyship updates
   # Client has different deputy in the same org. Old deputy left org - dont delete client
   Scenario: Professional deputy leaves organisation, clients appointed a new deputy within the same organisation
     # Assert new deputy can see client
-    Given I am logged in as "new-behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "new-behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     Then I should see the "client-01000010" region
     # Assert client still associated with same org
-    Then I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    Then I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I visit the client page for "01000010"
     # Assert same organisation
     And I should see "PA OPG" in the "assigned-organisation" region
@@ -34,10 +34,10 @@ Feature: Organisation deputyship updates
   # Client has different deputy in different org. Client remains with current org and deputy
   Scenario: Professional deputy leaves organisation, clients appointed a new deputy within the same organisation
     # Assert new deputy can see client
-    Given I am logged in as "new-behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "new-behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     Then I should see the "client-01000010" region
     # Assert client still associated with same org
-    Then I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    Then I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I visit the client page for "01000010"
     # Assert same organisation
     And I should see "PA OPG" in the "assigned-organisation" region
@@ -48,10 +48,10 @@ Feature: Organisation deputyship updates
   # Client has new deputy and new org - delete client and expect new one created
   Scenario: Clients appointed to a new organisation
     #  (deputy number changes, org identifier changes to deputy of new organisation - example.com2)
-    Given I am logged in as "behat-prof1@example.com2" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@example.com2" with password "DigidepsPass1234"
     And I should not see the "client-11498120" region
     # Assert client still associated with previous org
-    Then I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    Then I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I search in admin for a client with the term "11498120"
     Then I should see "Found 1 clients"
     # Assert old client has not been discharged

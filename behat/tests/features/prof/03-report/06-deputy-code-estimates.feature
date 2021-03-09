@@ -3,13 +3,13 @@ Feature: Prof deputy costs estimate
 
   # Happy paths and Overview status checks
   Scenario: Status of section is reported on Report overview when section is not started
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000010" region
     Then I should see a "#edit-prof_deputy_costs_estimate" element
     And I should see the "prof_deputy_costs_estimate-state-not-started" region
 
   Scenario: Completing the Fixed Costs route and viewing the status overview
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-prof_deputy_costs_estimate"
     Then the URL should match "/report/\d+/prof-deputy-costs-estimate"
@@ -38,7 +38,7 @@ Feature: Prof deputy costs estimate
     Then I should see the "prof_deputy_costs_estimate-state-done" region
 
   Scenario: Partially completed Assessed Costs route
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000011" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
@@ -48,7 +48,7 @@ Feature: Prof deputy costs estimate
     Then I should see the "prof_deputy_costs_estimate-state-incomplete" region
 
   Scenario: Partially completed Both Costs route
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000012" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
@@ -58,7 +58,7 @@ Feature: Prof deputy costs estimate
     Then I should see the "prof_deputy_costs_estimate-state-incomplete" region
 
   Scenario: Completing the Assessed Costs route with only management cost and viewing the status overview
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000013" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
@@ -87,7 +87,7 @@ Feature: Prof deputy costs estimate
     Then I should see the "prof_deputy_costs_estimate-state-done" region
 
   Scenario: Completing the Assessed Costs route with costs and more info and viewing the status overview
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000014" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
@@ -121,7 +121,7 @@ Feature: Prof deputy costs estimate
     Then I should see the "prof_deputy_costs_estimate-state-done" region
 
   Scenario: Selecting the Both Costs route directs towards Assessed Costs route
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000015" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
@@ -131,7 +131,7 @@ Feature: Prof deputy costs estimate
 
   # Editing non Fixed Costs route answers
   Scenario: Editing the answers for the Assessed Cost route
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000016" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
@@ -163,7 +163,7 @@ Feature: Prof deputy costs estimate
 
   # Switching between Fixed Costs and non Fixed Costs
   Scenario: Switching from Fixed Costs selection to non Fixed Costs selection
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000017" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
@@ -194,7 +194,7 @@ Feature: Prof deputy costs estimate
     And I should see "Extra text" in the "more-info" region
 
   Scenario: Switching from non Fixed Costs selection to Fixed Costs selection
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000018" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
@@ -224,7 +224,7 @@ Feature: Prof deputy costs estimate
 
   # Entering a completed section
   Scenario: Entering a completed Fixed Cost route takes me to summary
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000019" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
@@ -235,7 +235,7 @@ Feature: Prof deputy costs estimate
     Then the URL should match "/report/\d+/prof-deputy-costs-estimate/summary"
 
   Scenario: Entering a completed Assessed Cost route takes me to summary
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000020" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
@@ -251,7 +251,7 @@ Feature: Prof deputy costs estimate
 
   # Entering a partially completed section
   Scenario: Entering a partially completed non Fixed Costs route up to breakdown takes me to breakdown page
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000021" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
@@ -262,7 +262,7 @@ Feature: Prof deputy costs estimate
     And the URL should match "/report/\d+/prof-deputy-costs-estimate/breakdown"
 
   Scenario: Entering a partially completed non Fixed Costs route up to more info takes me to more info page
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000022" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
@@ -276,7 +276,7 @@ Feature: Prof deputy costs estimate
 
   # Form validation
   Scenario: Submitting form with missing data
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000023" region
     And I click on "edit-prof_deputy_costs_estimate"
     When I click on "start"
@@ -293,4 +293,3 @@ Feature: Prof deputy costs estimate
       | deputy_costs_estimate_profDeputyCostsEstimateMoreInfoDetails |         |
     And the step with the following values CAN be submitted:
       | deputy_costs_estimate_profDeputyCostsEstimateHasMoreInfo_0   | no      |
-

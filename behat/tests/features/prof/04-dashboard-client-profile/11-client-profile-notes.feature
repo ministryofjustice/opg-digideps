@@ -1,13 +1,13 @@
 Feature: PROF client profile Notes
 
   Scenario: PROF view client notes
-    And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000011" region
     Then each text should be present in the corresponding region:
       | No notes    | client-profile-notes |
 
   Scenario: PROF adds client notes
-    And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000011" region
     And I click on "add-notes-button" in the "client-profile-notes" region
     # empty form
@@ -40,7 +40,7 @@ Feature: PROF client profile Notes
       | test content | client-profile-notes |
 
   Scenario: PROF edit client notes
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000011" region
     And I click on "edit-notes-button" in the "client-profile-notes" region
     Then the following fields should have the corresponding values:
@@ -61,7 +61,7 @@ Feature: PROF client profile Notes
       | test content edit | client-profile-notes |
 
   Scenario: PROF delete client notes
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000011" region
     And I save the current URL as "report-overview"
     And I click on "delete-notes-button" in the "client-profile-notes" region

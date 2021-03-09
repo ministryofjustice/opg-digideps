@@ -229,6 +229,15 @@ trait UserTrait
     }
 
     /**
+     * @When I fill in the reset password fields with :password
+     */
+    public function iFillTheResetPasswordFieldsWith($password)
+    {
+        $this->fillField('reset_password_password_first', $password);
+        $this->fillField('reset_password_password_second', $password);
+    }
+
+    /**
      * @When I set the user details to:
      */
     public function iSetTheUserDetailsTo(TableNode $table)

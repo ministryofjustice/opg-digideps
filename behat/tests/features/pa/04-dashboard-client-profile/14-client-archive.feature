@@ -1,7 +1,7 @@
 Feature: PA client archive
 
   Scenario: PA archives a client
-    And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234!!"
+    And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "DigidepsPass1234!!"
     And I fill in "search" with "00900009"
     And I press "search_submit"
     When I click on "pa-report-open" in the "client-00900009" region
@@ -27,14 +27,14 @@ Feature: PA client archive
     But I should not see the "client-00900009" region
 
   Scenario: CSV re-upload
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
       # upload PA users
     When I go to admin page "/admin/org-csv-upload"
     And I attach the file "behat-pa.csv" to "admin_upload_file"
     And I press "admin_upload_upload"
     Then the form should be valid
       # assert archived is shown in PA dashboard
-    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234!!"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "DigidepsPass1234!!"
     And I fill in "search" with "00900009"
     And I press "search_submit"
     Then I should not see the "client-00900009" region

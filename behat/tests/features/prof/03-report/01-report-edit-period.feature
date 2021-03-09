@@ -1,7 +1,7 @@
 Feature: PROF report 102-5
 
   Scenario: Setup data
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     Given the following users exist:
       | ndr      | deputyType       | firstName | lastName | email                               | postCode | activated |
       | disabled | PROF_TEAM_MEMBER | Caroline  | Polachek | CarolinePolachekTeamMember@prof.opg | HA4      | true      |
@@ -13,7 +13,7 @@ Feature: PROF report 102-5
 
   @102-5
   Scenario: PROF does not see unsubmitted reports in the submitted reports section
-    And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "31000010"
     And I press "search_submit"
     When I click on "pa-report-open" in the "client-31000010" region
@@ -23,7 +23,7 @@ Feature: PROF report 102-5
   # Logic will evolve differently therefore better to have regression test on this
   @102-5
   Scenario: PROF edit 102-5 report dates
-    And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "31000010"
     And I press "search_submit"
     When I click on "pa-report-open" in the "client-31000010" region
@@ -75,7 +75,7 @@ Feature: PROF report 102-5
 
   @102-5
   Scenario: PROF admin has access to edit 102-5 report dates
-    And I am logged in as "CarolinePolachekTeamMember@prof.opg" with password "Abcd1234"
+    And I am logged in as "CarolinePolachekTeamMember@prof.opg" with password "DigidepsPass1234"
     And I fill in "search" with "31000014"
     And I press "search_submit"
     When I click on "pa-report-open" in the "client-31000014" region

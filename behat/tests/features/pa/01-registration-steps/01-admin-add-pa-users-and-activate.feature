@@ -1,6 +1,6 @@
 Feature: Add PA users and activate PA user (journey)
   Scenario: Activate PA user
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
       # upload PA users
     When I go to admin page "/admin/org-csv-upload"
     When I attach the file "behat-pa.csv" to "admin_upload_file"
@@ -21,13 +21,13 @@ Feature: Add PA users and activate PA user (journey)
     And I press "agree_terms_save"
     Then the form should be valid
     # password step
-    When I fill in the password fields with "Abcd1234"
+    When I fill in the password fields with "DigidepsPass1234"
     And I check "set_password_showTermsAndConditions"
     And I click on "save"
     Then the form should be valid
     And the url should match "/login"
     And I should see "Sign in to your new account"
-    When I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    When I am logged in as "behat-pa1@publicguardian.gov.uk" with password "DigidepsPass1234"
     # assert pre-fill
     Then the url should match "/user/details"
     And the following fields should have the corresponding values:
@@ -55,11 +55,11 @@ Feature: Add PA users and activate PA user (journey)
     And I should see the "client-02100010" region
 
   Scenario: Activation link is removed
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     Then I should not see "send-activation-email" in the "user-behat-pa1publicguardiangovuk" region
 
   Scenario: Register PA2 user
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "send-activation-email" in the "user-behat-pa2publicguardiangovuk" region
     And I go to "/logout"
     When I open the activation page for "behat-pa2@publicguardian.gov.uk"
@@ -68,11 +68,11 @@ Feature: Add PA users and activate PA user (journey)
     And I press "agree_terms_save"
     Then the form should be valid
     # password step
-    When I fill in the password fields with "Abcd1234"
+    When I fill in the password fields with "DigidepsPass1234"
     And I check "set_password_showTermsAndConditions"
     And I click on "save"
     Then the form should be valid
-    When I am logged in as "behat-pa2@publicguardian.gov.uk" with password "Abcd1234"
+    When I am logged in as "behat-pa2@publicguardian.gov.uk" with password "DigidepsPass1234"
     # correct
     And I fill in the following:
       | user_details_firstname  | Pa User     |
@@ -85,7 +85,7 @@ Feature: Add PA users and activate PA user (journey)
     And I should see the "client-02200001" region
 
   Scenario: Register PA3 user
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "send-activation-email" in the "user-behat-pa3publicguardiangovuk" region
     And I go to "/logout"
     When I open the activation page for "behat-pa3@publicguardian.gov.uk"
@@ -94,11 +94,11 @@ Feature: Add PA users and activate PA user (journey)
     And I press "agree_terms_save"
     Then the form should be valid
     # password step
-    When I fill in the password fields with "Abcd1234"
+    When I fill in the password fields with "DigidepsPass1234"
     And I check "set_password_showTermsAndConditions"
     When I click on "save"
     Then the form should be valid
-    When I am logged in as "behat-pa3@publicguardian.gov.uk" with password "Abcd1234"
+    When I am logged in as "behat-pa3@publicguardian.gov.uk" with password "DigidepsPass1234"
     # correct
     And I fill in the following:
       | user_details_firstname  | Pa User     |
@@ -111,7 +111,7 @@ Feature: Add PA users and activate PA user (journey)
     And I should see the "client-02300001" region
 
   Scenario: Edit PA2 user
-    When I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    When I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "user-behat-pa2publicguardiangovuk" in the "user-behat-pa2publicguardiangovuk" region
     And I press "Edit user"
     Then the following fields should have the corresponding values:

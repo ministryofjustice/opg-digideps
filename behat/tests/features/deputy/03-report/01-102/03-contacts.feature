@@ -2,7 +2,7 @@ Feature: Report contacts
 
     @deputy
     Scenario: contacts
-        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "DigidepsPass1234"
         And I click on "report-start, edit-contacts, start"
         # chose "no records"
         Given the step cannot be submitted without making a selection
@@ -86,5 +86,3 @@ Feature: Report contacts
             | France | contact-n2-aw2 |
             | my GP | contact-n2-aw2 |
             | he takes care of my health | contact-n2-aw2 |
-
-
