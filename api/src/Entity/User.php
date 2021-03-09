@@ -80,7 +80,7 @@ class User implements UserInterface
 
     /**
      * @JMS\Groups({"user-clients"})
-     * @JMS\Type("ArrayCollection<App/Entity/Client>")
+     * @JMS\Type("ArrayCollection<App\Entity\Client>")
      * @ORM\ManyToMany(targetEntity="App\Entity\Client", mappedBy="users", cascade={"persist"}, fetch="EXTRA_LAZY")
      */
     private $clients;

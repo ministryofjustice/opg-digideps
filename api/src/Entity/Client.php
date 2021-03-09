@@ -45,7 +45,7 @@ class Client implements ClientInterface
 
     /**
      * @JMS\Groups({"client-users"})
-     * @JMS\Type("ArrayCollection<App\Entity\Users>")
+     * @JMS\Type("ArrayCollection<App\Entity\User>")
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="clients", fetch="EXTRA_LAZY")
      * @ORM\JoinTable(name="deputy_case",
      *         joinColumns={@ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")},
