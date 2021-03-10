@@ -9,7 +9,7 @@ trait CourtOrderManagementTrait
      */
     public function aSuperAdminDischargesDeputyFromClient($caseNumber)
     {
-        $this->iAmLoggedInToAdminAsWithPassword('super-admin@publicguardian.gov.uk', 'Abcd1234');
+        $this->iAmLoggedInToAdminAsWithPassword('super-admin@publicguardian.gov.uk', 'DigidepsPass1234');
         $this->visitAdminPath("/admin/client/case-number/$caseNumber/details");
         $this->clickLink('Discharge deputy');
         $this->clickLink('Discharge deputy');
@@ -23,8 +23,8 @@ trait CourtOrderManagementTrait
         $result = null;
 
         $query = "
-SELECT count(co.id) 
-FROM court_order co 
+SELECT count(co.id)
+FROM court_order co
 JOIN court_order_deputy cod on cod.court_order_id = co.id
 WHERE cod.email = '$deputy'
 AND co.case_number = '$caseNumber'
@@ -37,5 +37,4 @@ AND co.case_number = '$caseNumber'
             throw new \Exception('Expected court order to exist but it does not');
         }
     }
-
 }

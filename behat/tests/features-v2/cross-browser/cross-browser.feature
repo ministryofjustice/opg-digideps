@@ -13,18 +13,18 @@ Feature: Preview a summary of the report
 
   @mink:browser_stack @chrome
   Scenario: Accessing the report preview for an active report
-    Given I am logged in as "deputy127@behat-test.com" with password "Abcd1234"
+    Given I am logged in as "deputy127@behat-test.com" with password "DigidepsPass1234"
     And I am viewing the "2018" to "2019" report for "48520098"
     When I click on "edit-report-review"
 
   @mink:browser_stack @ie11
   Scenario: Accessing the report preview for an active report
-    Given I am logged in as "deputy128@behat-test.com" with password "Abcd1234"
+    Given I am logged in as "deputy128@behat-test.com" with password "DigidepsPass1234"
     And I am viewing the "2018" to "2019" report for "48520099"
     When I click on "edit-report-review"
 
   @mink:browser_stack @android-chrome
   Scenario: Accessing the report preview for an active report
-    Given I am logged in as "deputy129@behat-test.com" with password "Abcd1234"
+    Given I am logged in as "deputy129@behat-test.com" with password "DigidepsPass1234"
     And I am viewing the "2018" to "2019" report for "48520100"
     When I click on "edit-report-review"

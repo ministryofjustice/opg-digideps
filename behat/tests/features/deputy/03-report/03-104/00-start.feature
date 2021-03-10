@@ -2,7 +2,7 @@ Feature: Report 104 start
 
   @deputy @deputy-104
   Scenario: test tabs for 104
-    Given I am logged in as "behat-lay-deputy-104@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-104@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I set the report start date to "1/1/2016"
     And I set the report end date to "31/12/2016"
     And I click on "report-start"
@@ -27,7 +27,7 @@ Feature: Report 104 start
 
   @deputy @deputy-104
   Scenario: Complete previously tested report sections
-    Given I am logged in as "behat-lay-deputy-104@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-104@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I click on "report-start"
     # Decisions
     When I click on "edit-decisions, start"

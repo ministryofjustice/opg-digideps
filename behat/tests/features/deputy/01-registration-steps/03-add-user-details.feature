@@ -2,7 +2,7 @@ Feature: deputy / user / add details
 
   @deputy
   Scenario: add user details (deputy)
-    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "DigidepsPass1234"
     Then I should be on "/user/details"
       # wrong form
     Then the following hidden fields should have the corresponding values:
@@ -50,7 +50,7 @@ Feature: deputy / user / add details
 
   @ndr
   Scenario: add user details (deputy ndr)
-    Given I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "DigidepsPass1234"
     Then I should be on "/user/details"
     When I set the user details to:
       | name    | John NDR         | Doe NDR       |        |          |    |
@@ -68,6 +68,3 @@ Feature: deputy / user / add details
       | user_details_addressCountry   | GB               |
       | user_details_phoneMain        | 020 3334 3555    |
       | user_details_phoneAlternative | 020 1234 5678    |
-
-    
-        

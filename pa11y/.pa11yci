@@ -16,7 +16,7 @@
          "url": "https://digideps.local/login",
          "actions": [
             "set field #login_email to bobby.blue@example.com",
-            "set field #login_password to Abcd1234",
+            "set field #login_password to DigidepsPass1234",
             "click element #login_login"
          ],
          "screenCapture": "screenshots/login.png"
@@ -30,7 +30,7 @@
          "actions": [
             "navigate to https://digideps.local/login",
             "set field #login_email to behat-prof1@publicguardian.gov.uk",
-            "set field #login_password to Abcd1234",
+            "set field #login_password to DigidepsPass1234",
             "click element #login_login",
             "wait for path to be /org/",
             "wait for element .behat-link-pa-report-open to be visible",
@@ -43,7 +43,7 @@
          "actions": [
             "navigate to https://digideps.local/login",
             "set field #login_email to behat-prof1@publicguardian.gov.uk",
-            "set field #login_password to Abcd1234",
+            "set field #login_password to DigidepsPass1234",
             "click element #login_login",
             "wait for path to be /org/",
             "click element .behat-link-pa-report-open",
@@ -71,7 +71,7 @@
          "actions": [
             "navigate to https://digideps.local/login",
             "set field #login_email to behat-lay-deputy-102@publicguardian.gov.uk",
-            "set field #login_password to Abcd1234",
+            "set field #login_password to DigidepsPass1234",
             "click element #login_login",
             "set field #report_startDate_day to 01",
             "set field #report_startDate_month to 01",

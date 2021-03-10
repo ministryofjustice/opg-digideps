@@ -2,14 +2,14 @@ Feature: Administration of organisations
 
   @admin
   Scenario: Navbar works
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     Then I should see "Organisations" in the "navbar" region
     When I click on "admin-organisations" in the "navbar" region
     Then I should be on "/admin/organisations/"
 
   @admin
   Scenario: Admin can create organisation
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I am on admin page "/admin/organisations"
     When I follow "Add a new organisation"
     Then I should be on "/admin/organisations/add"
@@ -32,7 +32,7 @@ Feature: Administration of organisations
 
   @admin
   Scenario: Admin can choose email identifier when creating an organisation
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I am on admin page "/admin/organisations/add"
     # Check domain value is not carried across
     When I fill in "organisation_emailIdentifierType_0" with "domain"
@@ -52,7 +52,7 @@ Feature: Administration of organisations
 
   @admin
   Scenario: API errors are reported back to user
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I am on admin page "/admin/organisations/add"
     And I fill in "organisation_name" with "Duplicate organisation"
     And I fill in "organisation_isActivated_0" with "0"
@@ -63,7 +63,7 @@ Feature: Administration of organisations
 
   @admin
   Scenario: Organisations cannot be created as known public email domains
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I am on admin page "/admin/organisations/add"
     And I fill in "organisation_name" with "Gmail organisation"
     And I fill in "organisation_isActivated_0" with "0"
@@ -77,7 +77,7 @@ Feature: Administration of organisations
 
   @admin
   Scenario: Admin can edit an organisation's name and activate them
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I am on admin page "/admin/organisations"
     When I click on "edit" in the "org-email-address-owning-organisation" region
     # Data should be prefilled
@@ -95,13 +95,13 @@ Feature: Administration of organisations
 
   @admin
   Scenario: Admin cannot delete an organisation
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I am on admin page "/admin/organisations"
     Then I should not see "Remove" in the "org-somesolicitorsorg" region
 
   @admin
   Scenario: Super admin can delete an organisation
-    Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I am on admin page "/admin/organisations"
     When I click on "delete" in the "org-somesolicitorsorg" region
     Then I should see "Are you sure you want to remove this organisation?"

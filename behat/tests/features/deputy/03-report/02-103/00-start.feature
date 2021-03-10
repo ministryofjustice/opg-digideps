@@ -2,7 +2,7 @@ Feature: Report 103 start
 
   @deputy @deputy-103
   Scenario: Check 103 report not initially submittable
-    Given I am logged in as "behat-lay-deputy-103@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-103@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I set the report start date to "1/1/2016"
     And I set the report end date to "31/12/2016"
     And I click on "report-start"
@@ -26,7 +26,7 @@ Feature: Report 103 start
 
   @deputy @deputy-103
   Scenario: Complete previously tested report sections
-    Given I am logged in as "behat-lay-deputy-103@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-103@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I click on "report-start"
     # Decisions
     When I click on "edit-decisions, start"
@@ -101,4 +101,3 @@ Feature: Report 103 start
     And I click on "save-and-continue, breadcrumbs-report-overview"
     # Assert that more info is still needed
     Then the lay report should not be submittable
-

@@ -15,7 +15,7 @@ parameters:
         ad@publicguardian.gsi.gov.uk:
             firstname: "AD user"
             lastname: "AD surname"
-            password: Abcd1234
+            password: DigidepsPass1234
             roleName: ROLE_AD
             activated: true
             ndrEnabled: false
@@ -29,7 +29,7 @@ parameters:
         admin@publicguardian.gsi.gov.uk:
             firstname: Admin
             lastname: User
-            password: Abcd1234
+            password: DigidepsPass1234
             roleName: ROLE_ADMIN
             activated: true
             ndrEnabled: false
@@ -37,7 +37,7 @@ parameters:
         laydeputy@publicguardian.gsi.gov.uk:
             firstname: "Lay Deputy"
             lastname: User
-            password: Abcd1234
+            password: DigidepsPass1234
             roleName: ROLE_LAY_DEPUTY
             activated: true
             ndrEnabled: false
@@ -51,7 +51,7 @@ parameters:
         laydeputyndr@publicguardian.gsi.gov.uk:
             firstname: "Lay Deputy NDR"
             lastname: User
-            password: Abcd1234
+            password: DigidepsPass1234
             roleName: ROLE_LAY_DEPUTY
             activated: true
             ndrEnabled: true
@@ -65,7 +65,7 @@ parameters:
         laydeputy102@publicguardian.gsi.gov.uk:
             firstname: "Lay Deputy 102"
             lastname: User
-            password: Abcd1234
+            password: DigidepsPass1234
             roleName: ROLE_LAY_DEPUTY
             activated: true
             ndrEnabled: false
@@ -79,7 +79,7 @@ parameters:
         laydeputy103@publicguardian.gsi.gov.uk:
             firstname: "Lay Deputy 103"
             lastname: User
-            password: Abcd1234
+            password: DigidepsPass1234
             roleName: ROLE_LAY_DEPUTY
             activated: true
             ndrEnabled: false
@@ -93,7 +93,7 @@ parameters:
         laydeputy104@publicguardian.gsi.gov.uk:
             firstname: "Lay Deputy 104"
             lastname: User
-            password: Abcd1234
+            password: DigidepsPass1234
             roleName: ROLE_LAY_DEPUTY
             activated: true
             ndrEnabled: false
@@ -107,7 +107,7 @@ parameters:
         laydeputy102-4@publicguardian.gsi.gov.uk:
             firstname: "Lay Deputy 102-4"
             lastname: User
-            password: Abcd1234
+            password: DigidepsPass1234
             roleName: ROLE_LAY_DEPUTY
             activated: true
             ndrEnabled: false
@@ -121,7 +121,7 @@ parameters:
         laydeputy103-4@publicguardian.gsi.gov.uk:
             firstname: "Lay Deputy 103-4"
             lastname: User
-            password: Abcd1234
+            password: DigidepsPass1234
             roleName: ROLE_LAY_DEPUTY
             activated: true
             ndrEnabled: false
