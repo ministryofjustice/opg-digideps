@@ -123,8 +123,6 @@ class UserVoter extends Voter
             default:
                 return false;
         }
-
-        return false;
     }
 
     /**
