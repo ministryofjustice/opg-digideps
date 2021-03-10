@@ -3,12 +3,20 @@
 namespace App\Security;
 
 use App\Entity\User;
-use PHPUnit\Framework\TestCase;
+use Doctrine\ORM\EntityManager;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use App\TestHelpers\UserTestHelper;
 
-class UserVoterTest extends TestCase
+class UserVoterTest extends KernelTestCase
 {
+    private EntityManager $em;
+
+    public function setUp(): void
+    {
+        $kernel = self::bootKernel();
+        $this->em = $kernel->getContainer()->get('em');
+    }
     /**
      * @dataProvider deleteUserProvider
      * @test
@@ -208,6 +216,68 @@ class UserVoterTest extends TestCase
             'Super Admin deletes Admin user' => [$superAdmin, $admin, 1],
             'Super Admin deletes Super Admin user' => [$superAdmin, $superAdminTwo, 1],
             'Super Admin deletes self' => [$superAdmin, $superAdmin, -1],
+        ];
+    }
+
+    /**
+     * @dataProvider deleteUserProvider
+     * @test
+     */
+    public function determineEditPermission(User $deletor, User $deletee, int $expectedPermission)
+    {
+        /** @var UserVoter $sut */
+        $sut = new UserVoter();
+
+        $token = new UsernamePasswordToken($deletor, 'credentials', 'memory');
+
+        self::assertEquals($expectedPermission, $sut->vote($token, $deletee, [UserVoter::DELETE_USER]));
+    }
+
+    public function editUserProvider()
+    {
+        $userTestHelper = new UserTestHelper();
+
+        $admin = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_ADMIN);
+        $admin2 = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_ADMIN);
+        $superAdmin = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_SUPER_ADMIN);
+        $superAdmin2 = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_SUPER_ADMIN);
+        $elevatedAdmin = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_ELEVATED_ADMIN);
+        $elevatedAdmin2 = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_ELEVATED_ADMIN);
+
+        $lay = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_LAY_DEPUTY);
+        $lay2 = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_LAY_DEPUTY);
+
+        $pa = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_PA);
+        $pa2 = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_PA);
+        $paNamed = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_PA_NAMED);
+        $paNamed2 = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_PA_NAMED);
+        $paAdmin = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_PA_ADMIN);
+        $paAdmin2 = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_PA_ADMIN);
+        $paTeamMember = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_PA_TEAM_MEMBER);
+        $paTeamMember2 = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_PA_TEAM_MEMBER);
+
+        $prof = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_PROF);
+        $prof2 = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_PROF);
+        $profNamed = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_PROF_NAMED);
+        $profNamed2 = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_PROF_NAMED);
+        $profAdmin = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_PROF_ADMIN);
+        $profAdmin2 = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_PROF_ADMIN);
+        $profTeamMember = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_PROF_TEAM_MEMBER);
+        $profTeamMember2 = $userTestHelper->createAndPersistUser($this->em, null, User::ROLE_PROF_TEAM_MEMBER);
+
+        return [
+            'Admin edits Lay Deputy' => [$admin, $lay, -1],
+            'Admin edits PA Deputy' => [$admin, $pa, -1],
+            'Admin edits PA Team Member' => [$admin, $paTeamMember, -1],
+            'Admin edits PA Named Deputy' => [$admin, $paNamed, -1],
+            'Admin edits PA Admin Deputy' => [$admin, $paAdmin, -1],
+            'Admin edits Prof Deputy' => [$admin, $prof, -1],
+            'Admin edits Prof Team Member' => [$admin, $profTeamMember, -1],
+            'Admin edits Prof Named Deputy' => [$admin, $profNamed, -1],
+            'Admin edits Prof Admin Deputy' => [$admin, $profAdmin, -1],
+            'Admin edits Admin user' => [$admin, $admin2, -1],
+            'Admin edits Super Admin user' => [$admin, $superAdmin, -1],
+            'Admin edits self' => [$admin, $admin, 1],
         ];
     }
 }

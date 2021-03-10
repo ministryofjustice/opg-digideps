@@ -109,6 +109,7 @@ class UserVoter extends Voter
             case User::ROLE_PA_NAMED:
             case User::ROLE_PROF_NAMED:
             case User::ROLE_ADMIN:
+            case User::ROLE_SUPER_ADMIN:
             case User::ROLE_AD:
                 // Admin, Assisted and Named Deputies can always edit everyone. Replicated from populate user.
                 return true;
