@@ -71,7 +71,8 @@ class OrganisationRepository extends EntityRepository
             ->createQuery('SELECT o, c FROM App\Entity\Organisation o
             INNER JOIN o.clients c
             WHERE o.id = ?1
-            AND (c.deletedAt is null OR c.archivedAt is null)')
+            AND c.deletedAt is null
+            AND c.archivedAt is null')
             ->setParameter(1, $id);
 
         $result = $query->getArrayResult();
