@@ -21,6 +21,7 @@ class ProfDeputyEstimateCostsType extends AbstractType
             ])
             ->add('profDeputyEstimateCosts', FormTypes\CollectionType::class, [
                 'entry_type' => ProfDeputyEstimateCostSingleType::class,
+                'entry_options' => ['constraints' => new Valid()],
                 'constraints' => new Valid(),
             ])
             ->add('save', FormTypes\SubmitType::class);

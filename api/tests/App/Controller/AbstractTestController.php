@@ -74,14 +74,6 @@ abstract class AbstractTestController extends WebTestCase
     }
 
     /**
-     * @return Client
-     */
-    public function getClient()
-    {
-        return self::$frameworkBundleClient;
-    }
-
-    /**
      * @param array $options with keys method, uri, data, mustSucceed, mustFail, assertId
      *
      * @return array

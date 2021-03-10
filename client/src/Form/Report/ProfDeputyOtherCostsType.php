@@ -15,6 +15,7 @@ class ProfDeputyOtherCostsType extends AbstractType
         $builder
             ->add('profDeputyOtherCosts', FormTypes\CollectionType::class, [
                 'entry_type' => ProfDeputyOtherCostSingleType::class,
+                'entry_options' => ['constraints' => new Valid()],
                 'constraints' => new Valid(),
             ])
             ->add('save', FormTypes\SubmitType::class);
