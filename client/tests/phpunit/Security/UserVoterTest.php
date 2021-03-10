@@ -5,6 +5,7 @@ namespace App\Security;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -216,6 +217,221 @@ class UserVoterTest extends TestCase
             'Super Admin deletes Admin user' => [$superAdmin, $admin, 1],
             'Super Admin deletes Super Admin user' => [$superAdmin, $superAdminTwo, 1],
             'Super Admin deletes self' => [$superAdmin, $superAdmin, -1],
+        ];
+    }
+
+    /**
+     * @dataProvider editAddUserProvider
+     * @test
+     */
+    public function determineEditPermission(User $actor, User $subject, int $expectedPermission)
+    {
+        /** @var UserVoter $sut */
+        $sut = new UserVoter();
+
+        $token = new UsernamePasswordToken($actor, 'credentials', 'memory');
+
+        self::assertEquals($expectedPermission, $sut->vote($token, $subject, [UserVoter::EDIT_USER]));
+    }
+
+    public function editAddUserProvider()
+    {
+        $admin = UserHelpers::createAdminUser();
+        $admin2 = UserHelpers::createAdminUser();
+        $superAdmin = UserHelpers::createSuperAdminUser();
+        $superAdmin2 = UserHelpers::createSuperAdminUser();
+        $elevatedAdmin = UserHelpers::createElevatedAdminUser();
+        $elevatedAdmin2 = UserHelpers::createElevatedAdminUser();
+
+        $lay = UserHelpers::createLayUser();
+        $lay2 = UserHelpers::createLayUser();
+
+        $pa = UserHelpers::createPaDeputyUser();
+        $pa2 = UserHelpers::createPaDeputyUser();
+        $paNamed = UserHelpers::createPaNamedDeputyUser();
+        $paNamed2 = UserHelpers::createPaNamedDeputyUser();
+        $paAdmin = UserHelpers::createPaAdminUser();
+        $paAdmin2 = UserHelpers::createPaAdminUser();
+        $paTeamMember = UserHelpers::createPaTeamMemberUser();
+        $paTeamMember2 = UserHelpers::createPaTeamMemberUser();
+
+        $prof = UserHelpers::createProfDeputyUser();
+        $prof2 = UserHelpers::createProfDeputyUser();
+        $profNamed = UserHelpers::createProfNamedDeputyUser();
+        $profNamed2 = UserHelpers::createProfNamedDeputyUser();
+        $profAdmin = UserHelpers::createProfAdminUser();
+        $profAdmin2 = UserHelpers::createProfAdminUser();
+        $profTeamMember = UserHelpers::createProfTeamMemberUser();
+        $profTeamMember2 = UserHelpers::createProfTeamMemberUser();
+
+        return [
+            'Super Admin edits Lay Deputy' => [$superAdmin, $lay, 1],
+            'Super Admin edits PA Deputy' => [$superAdmin, $pa, 1],
+            'Super Admin edits PA Named Deputy' => [$superAdmin, $paNamed, 1],
+            'Super Admin edits PA Admin Deputy' => [$superAdmin, $paAdmin, 1],
+            'Super Admin edits PA Team Member' => [$superAdmin, $paTeamMember, 1],
+            'Super Admin edits Prof Deputy' => [$superAdmin, $prof, 1],
+            'Super Admin edits Prof Named Deputy' => [$superAdmin, $profNamed, 1],
+            'Super Admin edits Prof Admin Deputy' => [$superAdmin, $profAdmin, 1],
+            'Super Admin edits Prof Team Member' => [$superAdmin, $profTeamMember, 1],
+            'Super Admin edits Admin user' => [$superAdmin, $admin, 1],
+            'Super Admin edits Super Admin user' => [$superAdmin, $superAdmin2, 1],
+            'Super Admin edits Elevated Admin user' => [$superAdmin, $elevatedAdmin, 1],
+            'Super Admin edits self' => [$superAdmin, $superAdmin, 1],
+
+            'Elevated Admin edits Lay Deputy' => [$elevatedAdmin, $lay, 1],
+            'Elevated Admin edits PA Deputy' => [$elevatedAdmin, $pa, 1],
+            'Elevated Admin edits PA Named Deputy' => [$elevatedAdmin, $paNamed, 1],
+            'Elevated Admin edits PA Admin Deputy' => [$elevatedAdmin, $paAdmin, 1],
+            'Elevated Admin edits PA Team Member' => [$elevatedAdmin, $paTeamMember, 1],
+            'Elevated Admin edits Prof Deputy' => [$elevatedAdmin, $prof, 1],
+            'Elevated Admin edits Prof Named Deputy' => [$elevatedAdmin, $profNamed, 1],
+            'Elevated Admin edits Prof Admin Deputy' => [$elevatedAdmin, $profAdmin, 1],
+            'Elevated Admin edits Admin user' => [$elevatedAdmin, $admin, 1],
+            'Elevated Admin edits Super Admin user' => [$elevatedAdmin, $superAdmin, -1],
+            'Elevated Admin edits Prof Team Member' => [$elevatedAdmin, $profTeamMember, 1],
+            'Elevated Admin edits Elevated Admin user' => [$elevatedAdmin, $elevatedAdmin2, 1],
+            'Elevated Admin edits self' => [$elevatedAdmin, $elevatedAdmin, 1],
+
+            'Admin edits Lay Deputy' => [$admin, $lay, 1],
+            'Admin edits PA Deputy' => [$admin, $pa, 1],
+            'Admin edits PA Named Deputy' => [$admin, $paNamed, 1],
+            'Admin edits PA Admin Deputy' => [$admin, $paAdmin, 1],
+            'Admin edits PA Team Member' => [$admin, $paTeamMember, 1],
+            'Admin edits Prof Deputy' => [$admin, $prof, 1],
+            'Admin edits Prof Named Deputy' => [$admin, $profNamed, 1],
+            'Admin edits Prof Admin Deputy' => [$admin, $profAdmin, 1],
+            'Admin edits Prof Team Member' => [$admin, $profTeamMember, 1],
+            'Admin edits Admin user' => [$admin, $admin2, 1],
+            'Admin edits Super Admin user' => [$admin, $superAdmin, -1],
+            'Admin edits Elevated Admin user' => [$admin, $elevatedAdmin, -1],
+            'Admin edits self' => [$admin, $admin, 1],
+
+            'Lay edits Lay Deputy' => [$lay, $lay2, -1],
+            'Lay edits PA Deputy' => [$lay, $pa, -1],
+            'Lay edits PA Named Deputy' => [$lay, $paNamed, -1],
+            'Lay edits PA Admin Deputy' => [$lay, $paAdmin, -1],
+            'Lay edits PA Team Member' => [$lay, $paTeamMember, -1],
+            'Lay edits Prof Deputy' => [$lay, $prof, -1],
+            'Lay edits Prof Named Deputy' => [$lay, $profNamed, -1],
+            'Lay edits Prof Admin Deputy' => [$lay, $profAdmin, -1],
+            'Lay edits Prof Team Member' => [$lay, $profTeamMember, -1],
+            'Lay edits Admin user' => [$lay, $admin, -1],
+            'Lay edits Super Admin user' => [$lay, $superAdmin, -1],
+            'Lay edits Elevated Admin user' => [$lay, $elevatedAdmin, -1],
+            'Lay edits self' => [$lay, $lay, 1],
+
+            'PA Deputy edits Lay Deputy' => [$pa, $lay, -1],
+            'PA Deputy edits PA Deputy' => [$pa, $pa2, 1],
+            'PA Deputy edits PA Named Deputy' => [$pa, $paNamed, 1],
+            'PA Deputy edits PA Admin Deputy' => [$pa, $paAdmin, 1],
+            'PA Deputy edits PA Team Member' => [$pa, $paTeamMember, 1],
+            'PA Deputy edits Prof Deputy' => [$pa, $prof, -1],
+            'PA Deputy edits Prof Named Deputy' => [$pa, $profNamed, -1],
+            'PA Deputy edits Prof Admin Deputy' => [$pa, $profAdmin, -1],
+            'PA Deputy edits Prof Team Member' => [$pa, $profTeamMember, -1],
+            'PA Deputy edits Admin user' => [$pa, $admin, -1],
+            'PA Deputy edits Super Admin user' => [$pa, $superAdmin, -1],
+            'PA Deputy edits Elevated Admin user' => [$pa, $elevatedAdmin, -1],
+            'PA Deputy edits self' => [$pa, $pa, 1],
+
+            'PA Named Deputy edits Lay Deputy' => [$paNamed, $lay, -1],
+            'PA Named Deputy edits PA Deputy' => [$paNamed, $pa, 1],
+            'PA Named Deputy edits PA Named Deputy' => [$paNamed, $paNamed2, 1],
+            'PA Named Deputy edits PA Admin Deputy' => [$paNamed, $paAdmin, 1],
+            'PA Named Deputy edits PA Team Member' => [$paNamed, $paTeamMember, 1],
+            'PA Named Deputy edits Prof Deputy' => [$paNamed, $prof, -1],
+            'PA Named Deputy edits Prof Named Deputy' => [$paNamed, $profNamed, -1],
+            'PA Named Deputy edits Prof Admin Deputy' => [$paNamed, $profAdmin, -1],
+            'PA Named Deputy edits Prof Team Member' => [$paNamed, $profTeamMember, -1],
+            'PA Named Deputy edits Admin user' => [$paNamed, $admin, -1],
+            'PA Named Deputy edits Super Admin user' => [$paNamed, $superAdmin, -1],
+            'PA Named Deputy edits Elevated Admin user' => [$paNamed, $elevatedAdmin, -1],
+            'PA Named Deputy edits self' => [$paNamed, $paNamed, 1],
+
+            'PA Admin edits Lay Deputy' => [$paAdmin, $lay, -1],
+            'PA Admin edits PA Deputy' => [$paAdmin, $pa, -1],
+            'PA Admin edits PA Named Deputy' => [$paAdmin, $paNamed, -1],
+            'PA Admin edits PA Admin Deputy' => [$paAdmin, $paAdmin2, 1],
+            'PA Admin edits PA Team Member' => [$paAdmin, $paTeamMember, 1],
+            'PA Admin edits Prof Deputy' => [$paAdmin, $prof, -1],
+            'PA Admin edits Prof Named Deputy' => [$paAdmin, $profNamed, -1],
+            'PA Admin edits Prof Admin Deputy' => [$paAdmin, $profAdmin, -1],
+            'PA Admin edits Prof Team Member' => [$paAdmin, $profTeamMember, -1],
+            'PA Admin edits Admin user' => [$paAdmin, $admin, -1],
+            'PA Admin edits Super Admin user' => [$paAdmin, $superAdmin, -1],
+            'PA Admin edits Elevated Admin user' => [$paAdmin, $elevatedAdmin, -1],
+            'PA Admin edits self' => [$paAdmin, $paAdmin, 1],
+
+            'PA Team Member edits Lay Deputy' => [$paTeamMember, $lay, -1],
+            'PA Team Member edits PA Deputy' => [$paTeamMember, $pa, -1],
+            'PA Team Member edits PA Named Deputy' => [$paTeamMember, $paNamed, -1],
+            'PA Team Member edits PA Admin Deputy' => [$paTeamMember, $paAdmin, -1],
+            'PA Team Member edits PA Team Member' => [$paTeamMember, $paTeamMember2, -1],
+            'PA Team Member edits Prof Deputy' => [$paTeamMember, $prof, -1],
+            'PA Team Member edits Prof Named Deputy' => [$paTeamMember, $profNamed, -1],
+            'PA Team Member edits Prof Admin Deputy' => [$paTeamMember, $profAdmin, -1],
+            'PA Team Member edits Prof Team Member' => [$paTeamMember, $profTeamMember, -1],
+            'PA Team Member edits Admin user' => [$paTeamMember, $admin, -1],
+            'PA Team Member edits Super Admin user' => [$paTeamMember, $superAdmin, -1],
+            'PA Team Member edits Elevated Admin user' => [$paTeamMember, $elevatedAdmin, -1],
+            'PA Team Member edits self' => [$paTeamMember, $paTeamMember, 1],
+
+            'Prof Deputy edits Lay Deputy' => [$prof, $lay, -1],
+            'Prof Deputy edits PA Deputy' => [$prof, $pa, -1],
+            'Prof Deputy edits PA Named Deputy' => [$prof, $paNamed, -1],
+            'Prof Deputy edits PA Admin Deputy' => [$prof, $paAdmin, -1],
+            'Prof Deputy edits PA Team Member' => [$prof, $paTeamMember, -1],
+            'Prof Deputy edits Prof Deputy' => [$prof, $prof2, 1],
+            'Prof Deputy edits Prof Named Deputy' => [$prof, $profNamed, 1],
+            'Prof Deputy edits Prof Admin Deputy' => [$prof, $profAdmin, 1],
+            'Prof Deputy edits Prof Team Member' => [$prof, $profTeamMember, 1],
+            'Prof Deputy edits Admin user' => [$prof, $admin, -1],
+            'Prof Deputy edits Super Admin user' => [$prof, $superAdmin, -1],
+            'Prof Deputy edits Elevated Admin user' => [$prof, $elevatedAdmin, -1],
+            'Prof Deputy edits self' => [$prof, $prof, 1],
+
+            'Prof Named Deputy edits Lay Deputy' => [$profNamed, $lay, -1],
+            'Prof Named Deputy edits PA Deputy' => [$profNamed, $pa, -1],
+            'Prof Named Deputy edits PA Named Deputy' => [$profNamed, $paNamed2, -1],
+            'Prof Named Deputy edits PA Admin Deputy' => [$profNamed, $paAdmin, -1],
+            'Prof Named Deputy edits PA Team Member' => [$profNamed, $paTeamMember, -1],
+            'Prof Named Deputy edits Prof Deputy' => [$profNamed, $prof, 1],
+            'Prof Named Deputy edits Prof Named Deputy' => [$profNamed, $profNamed2, 1],
+            'Prof Named Deputy edits Prof Admin Deputy' => [$profNamed, $profAdmin, 1],
+            'Prof Named Deputy edits Prof Team Member' => [$profNamed, $profTeamMember, 1],
+            'Prof Named Deputy edits Admin user' => [$profNamed, $admin, -1],
+            'Prof Named Deputy edits Super Admin user' => [$profNamed, $superAdmin, -1],
+            'Prof Named Deputy edits Elevated Admin user' => [$profNamed, $elevatedAdmin, -1],
+            'Prof Named Deputy edits self' => [$profNamed, $profNamed, 1],
+
+            'Prof Admin edits Lay Deputy' => [$profAdmin, $lay, -1],
+            'Prof Admin edits PA Deputy' => [$profAdmin, $pa, -1],
+            'Prof Admin edits PA Named Deputy' => [$profAdmin, $paNamed, -1],
+            'Prof Admin edits PA Admin Deputy' => [$profAdmin, $paAdmin2, -1],
+            'Prof Admin edits PA Team Member' => [$profAdmin, $paTeamMember, -1],
+            'Prof Admin edits Prof Deputy' => [$profAdmin, $prof, -1],
+            'Prof Admin edits Prof Named Deputy' => [$profAdmin, $profNamed, -1],
+            'Prof Admin edits Prof Admin Deputy' => [$profAdmin, $profAdmin2, 1],
+            'Prof Admin edits Prof Team Member' => [$profAdmin, $profTeamMember, 1],
+            'Prof Admin edits Admin user' => [$profAdmin, $admin, -1],
+            'Prof Admin edits Super Admin user' => [$profAdmin, $superAdmin, -1],
+            'Prof Admin edits Elevated Admin user' => [$profAdmin, $elevatedAdmin, -1],
+            'Prof Admin edits self' => [$profAdmin, $profAdmin, 1],
+
+            'Prof Team Member edits Lay Deputy' => [$profTeamMember, $lay, -1],
+            'Prof Team Member edits PA Deputy' => [$profTeamMember, $pa, -1],
+            'Prof Team Member edits PA Named Deputy' => [$profTeamMember, $paNamed, -1],
+            'Prof Team Member edits PA Admin Deputy' => [$profTeamMember, $paAdmin, -1],
+            'Prof Team Member edits PA Team Member' => [$profTeamMember, $paTeamMember2, -1],
+            'Prof Team Member edits Prof Deputy' => [$profTeamMember, $prof, -1],
+            'Prof Team Member edits Prof Named Deputy' => [$profTeamMember, $profNamed, -1],
+            'Prof Team Member edits Prof Admin Deputy' => [$profTeamMember, $profAdmin, -1],
+            'Prof Team Member edits Prof Team Member' => [$profTeamMember, $profTeamMember2, -1],
+            'Prof Team Member edits Admin user' => [$profTeamMember, $admin, -1],
+            'Prof Team Member edits Super Admin user' => [$profTeamMember, $superAdmin, -1],
+            'Prof Team Member edits Elevated Admin user' => [$profTeamMember, $elevatedAdmin, -1],
+            'Prof Team Member edits self' => [$profTeamMember, $profTeamMember, 1],
         ];
     }
 }
