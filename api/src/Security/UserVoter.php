@@ -11,6 +11,7 @@ class UserVoter extends Voter
 {
     const DELETE_USER = 'delete-user';
     const EDIT_USER = 'edit-user';
+    const ADD_USER = 'add-user';
 
     /**
      * Does this voter support the attribute?
@@ -24,6 +25,7 @@ class UserVoter extends Voter
         switch ($attribute) {
             case self::DELETE_USER:
             case self::EDIT_USER:
+            case self::ADD_USER:
                 return true;
         }
 
@@ -46,12 +48,12 @@ class UserVoter extends Voter
             return false;
         }
 
-        if ($attribute === self::DELETE_USER) {
-            return $this->determineDeletePermission($loggedInUser, $subject);
-        }
-
-        if ($attribute === self::EDIT_USER) {
-            return $this->determineEditPermission($loggedInUser, $subject);
+        switch ($attribute) {
+            case self::ADD_USER:
+            case self::EDIT_USER:
+                return $this->determineAddEditPermission($loggedInUser, $subject);
+            case self::DELETE_USER:
+                return $this->determineDeletePermission($loggedInUser, $subject);
         }
 
         return false;
@@ -124,7 +126,7 @@ class UserVoter extends Voter
      * @param User $deletee
      * @return bool
      */
-    private function determineEditPermission(User $editor, User $editee)
+    private function determineAddEditPermission(User $editor, User $editee)
     {
         if ($editor->getId() === $editee->getId()) {
             return true;
