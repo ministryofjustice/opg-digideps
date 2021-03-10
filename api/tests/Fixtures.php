@@ -425,6 +425,18 @@ class Fixtures
         $client->setOrganisation($org);
     }
 
+    /**
+     * @param int $orgId
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function deleteOrganisation(int $orgId): void
+    {
+        /** @var Organisation $org */
+        $org = $this->em->getRepository(Organisation::class)->find($orgId);
+
+        $org->setDeletedAt(new \DateTime('now'));
+    }
+
     public function flush()
     {
         $args = func_get_args();
