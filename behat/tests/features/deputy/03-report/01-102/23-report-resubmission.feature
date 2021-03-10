@@ -2,7 +2,7 @@ Feature: Admin unsubmit report (from client page)
 
   @deputy
   Scenario: Admin unsubmits report and changes report due date and reporting period
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I visit the client page for "102"
     # reports page
     Then the URL should match "/admin/client/\d+/details"
@@ -70,7 +70,7 @@ Feature: Admin unsubmit report (from client page)
 
   @deputy
   Scenario: Deputy resubmit report
-    Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "DigidepsPass1234"
     Then I should see "30 April 2022" in the "report-unsubmitted" region
     And I should see the "report-active" region
     But I should not see the "submitted-reports" region
@@ -98,7 +98,7 @@ Feature: Admin unsubmit report (from client page)
 
   @deputy
   Scenario: admin sees new submission and client page updated
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     # check report being resubmitted
     When I visit the client page for "102"
     Then I should see the "report-2016" region in the "report-group-submitted" region

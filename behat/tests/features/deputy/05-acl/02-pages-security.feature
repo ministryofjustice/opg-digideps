@@ -7,11 +7,11 @@ Feature: deputy / acl / security on pages
     And I add the following users to CASREC:
       | Case     | Surname | Deputy No | Dep Surname | Dep Postcode | Typeofrep |
       | 12345ABC | Client  | D003      | User        | SW1H 9AJ     | OPG102    |
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And the following users exist:
       | ndr | deputyType | firstName | lastName | email | postCode | activated |
       | disabled | LAY | Malicious | User | behat-malicious@publicguardian.gov.uk | SW1H 9AJ | true |
-    Given I am logged in as "behat-malicious@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-malicious@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I set the user details to:
       | name    | Malicious        | User          |        |          |    |
       | address | 102 Petty France | MOJ           | London | SW1H 9AJ | GB |
@@ -39,7 +39,7 @@ Feature: deputy / acl / security on pages
   @deputy
   Scenario: Malicious User cannot access other's pages
     # behat-lay-deputy-102 can access report n.2
-    Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "DigidepsPass1234"
     Then the following "102 report" report pages should return the following status:
       | overview         | 200 |
       # decisions
@@ -53,7 +53,7 @@ Feature: deputy / acl / security on pages
       # accounts
       | bank-accounts    | 200 |
     # behat-malicious CANNOT access the same URLs
-    Given I am logged in as "behat-malicious@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-malicious@publicguardian.gov.uk" with password "DigidepsPass1234"
     # reload the status (as some URLs calls might have deleted data)
     Then the following "102 report" report pages should return the following status:
       | overview                | 404 |

@@ -2,7 +2,7 @@ Feature: Admin NDR submitted
 
   @ndr
   Scenario: Admin client search returns NDR client
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "admin-client-search, search_clients_search"
     Then each text should be present in the corresponding region:
     | Cly3 Hent3 | client-33333333 |
@@ -26,7 +26,7 @@ Feature: Admin NDR submitted
 
   @ndr
   Scenario: Admin client page shows NDR report complete
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I visit the client page for "ndr"
     Then I should see the "report-ndr" region in the "report-group-submitted" region
     And I should see "NDR" in the "report-ndr" region

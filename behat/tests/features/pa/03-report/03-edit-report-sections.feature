@@ -1,7 +1,7 @@
 Feature: PA user edits report sections
 
   Scenario: PA 102 deputy expenses (with fees)
-    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "02100014"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region
@@ -32,7 +32,7 @@ Feature: PA user edits report sections
       | £14.00                        | expense-some-expense |
 
   Scenario: PA 102 gifts
-    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "02100014"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region
@@ -43,7 +43,7 @@ Feature: PA user edits report sections
       | yes_no_giftsExist_1 | no |
 
   Scenario: PA 102 assets
-    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "02100014"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region
@@ -53,7 +53,7 @@ Feature: PA user edits report sections
       | yes_no_noAssetToAdd_1 | 1 |
 
   Scenario: PA 102 debts
-    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "02100014"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region
@@ -64,7 +64,7 @@ Feature: PA user edits report sections
       | yes_no_hasDebts_1 | no |
 
   Scenario: PA 102 add current account
-    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "02100014"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region
@@ -91,7 +91,7 @@ Feature: PA user edits report sections
     And I choose "no" when asked for adding another record
 
   Scenario: PA 102 add postoffice account (no sort code, no bank name)
-    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "02100014"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region
@@ -114,7 +114,7 @@ Feature: PA user edits report sections
     And I choose "no" when asked for adding another record
 
   Scenario: PA 102 add no sortcode account (still requires bank name)
-    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "02100014"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region
@@ -138,7 +138,7 @@ Feature: PA user edits report sections
     And I choose "no" when asked for adding another record
 
   Scenario: PA 102 deletes bank account
-    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "02100014"
     And I press "search_submit"
     When I click on "pa-report-open" in the "client-02100014" region
@@ -151,7 +151,7 @@ Feature: PA user edits report sections
     Then I should see "Bank account deleted"
 
   Scenario: PA 102 money in
-    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "02100014"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region
@@ -170,7 +170,7 @@ Feature: PA user edits report sections
       | HSBC - main account - Current account (****01ca) | transaction-pension-received |
 
   Scenario: PA 102 money out
-    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "02100014"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region
@@ -190,7 +190,7 @@ Feature: PA user edits report sections
 
 
   Scenario: PA 102 Report should be submittable
-    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "02100014"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region

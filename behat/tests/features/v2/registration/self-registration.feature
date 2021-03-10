@@ -11,7 +11,7 @@ Feature: Self registration
     When these deputies register to deputise the following court orders:
       | deputySurname | deputyEmail      | deputyPostCode | clientSurname | caseNumber |
       | Parker        | peter@parker.com | SW10 1AA       | Davies        | T5001034   |
-    And I am logged in as "peter@parker.com" with password "Abcd1234"
+    And I am logged in as "peter@parker.com" with password "DigidepsPass1234"
     Then I should be on "/lay"
     And I should see "Davies"
 
@@ -20,6 +20,6 @@ Feature: Self registration
     When these deputies register to deputise the following court orders:
       | deputySurname | deputyEmail    | deputyPostCode | clientSurname | caseNumber |
       | Wayne        | bruce@wayne.com | SW1 2SA        | Hendry        | T5001041   |
-    And I am logged in as "bruce@wayne.com" with password "Abcd1234"
+    And I am logged in as "bruce@wayne.com" with password "DigidepsPass1234"
     Then I should be on "/lay"
     And I should see "Hendry"

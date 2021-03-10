@@ -2,7 +2,7 @@ Feature: Report 104 health welfare
 
   @deputy @deputy-104
   Scenario: test HW section
-    Given I am logged in as "behat-lay-deputy-104@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-104@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "report-start, edit-lifestyle, start"
     Then the URL should match "report/\d+/lifestyle/step/1"
     Given the step with the following values CANNOT be submitted:
@@ -28,11 +28,3 @@ Feature: Report 104 health welfare
       | care appointments with physio     | care-appointments         |
       | No     | does-client-undertake-social-activities |
       | The client is immobile    | activity-details                     |
-
-
-
-
-
-
-
-

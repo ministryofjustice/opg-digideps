@@ -13,14 +13,14 @@ Feature: deputy / user / add user
       # test user email in caps
     When I fill in the following:
       | login_email    | admin@publicguardian.gov.uk |
-      | login_password | Abcd1234                        |
+      | login_password | DigidepsPass1234                        |
     And I click on "login"
     Then I should see "admin@publicguardian.gov.uk" in the "users" region
     Given I go to "/logout"
       # test right credentials
     When I fill in the following:
       | login_email    | admin@publicguardian.gov.uk |
-      | login_password | Abcd1234                        |
+      | login_password | DigidepsPass1234                        |
     And I click on "login"
       #When I go to "/admin"
     Then I am on admin page "/admin"
@@ -45,7 +45,7 @@ Feature: deputy / user / add user
 
   @ndr
   Scenario: add deputy user (ndr)
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
       # assert form OK
     When I create a new "NDR-enabled" "Lay Deputy" user "John NDR" "Doe NDR" with email "behat-user-ndr@publicguardian.gov.uk" and postcode "AB12CD"
     Then I should see "behat-user-ndr@publicguardian.gov.uk" in the "users" region

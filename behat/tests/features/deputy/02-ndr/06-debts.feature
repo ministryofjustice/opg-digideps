@@ -2,7 +2,7 @@ Feature: NDR debts
 
   @ndr
   Scenario: NDR debts
-    Given I am logged in as "behat-lay-deputy-ndr@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-ndr@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "ndr-start, edit-debts, start"
     # chose "no records"
     Given the step cannot be submitted without making a selection
@@ -80,4 +80,3 @@ Feature: NDR debts
         # check record in summary page
     And each text should be present in the corresponding region:
       | 200 per month payment plan    | debt-management-details |
-

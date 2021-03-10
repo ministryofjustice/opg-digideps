@@ -3,7 +3,7 @@ Feature: Admin report checklist
 
   Scenario: Case manager submits empty PA checklist for the report
     Given I load the application status from "pa-report-submitted"
-    And I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    And I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I open the "2016-to-2017" checklist for client "02100014"
     Then the URL should match "/admin/report/\d+/checklist"
     And I should see the "court-date" region
@@ -73,7 +73,7 @@ Feature: Admin report checklist
     And the URL should match "/admin/report/\d+/checklist"
 
   Scenario: Case manager saves further information on PA checklist
-    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I open the "2016-to-2017" checklist for client "02100014"
     Then each text should be present in the corresponding region:
       | Not saved yet | lodging-last-saved-by |
@@ -103,7 +103,7 @@ Feature: Admin report checklist
 
 
   Scenario: Admin completes PA checklist
-    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I open the "2016-to-2017" checklist for client "02100014"
     Then each text should be present in the corresponding region:
       | Case Manager1, Admin | lodging-last-saved-by |
@@ -153,7 +153,7 @@ Feature: Admin report checklist
     And the form should be valid
 
   Scenario: Admin marked as submitted
-    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I open the "2016-to-2017" checklist for client "02100014"
     Then each text should be present in the corresponding region:
       | Case Manager1, Admin | lodging-last-saved-by     |

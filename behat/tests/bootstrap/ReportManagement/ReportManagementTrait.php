@@ -19,7 +19,7 @@ trait ReportManagementTrait
 
         $reportId = self::$currentReportCache['reportId'];
 
-        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
+        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'DigidepsPass1234');
         $this->visitAdminPath("/admin/report/$reportId/manage");
         $this->selectOption('manage_report[type]', $type);
         $this->selectOption('manage_report[dueDateChoice]', 'keep');
@@ -40,7 +40,7 @@ trait ReportManagementTrait
 
         $reportId = self::$currentReportCache['reportId'];
 
-        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
+        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'DigidepsPass1234');
         $this->visitAdminPath("/admin/report/$reportId/manage");
         $this->selectOption('manage_report[type]', $type);
         $this->selectOption('manage_report[dueDateChoice]', 'keep');
@@ -62,7 +62,6 @@ trait ReportManagementTrait
         try {
             $this->selectOption('manage_report_confirm[confirm]', 'yes');
         } catch (ElementNotFoundException $e) {
-
         }
 
         $this->pressButton('manage_report_confirm[save]');
@@ -78,12 +77,11 @@ trait ReportManagementTrait
         // Only log in and reload the session if we're not already on the management page.
         $currentUrl = $this->getSession()->getCurrentUrl();
         if (strpos($currentUrl, "/admin/report/$reportId/manage") === false) {
-            $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
+            $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'DigidepsPass1234');
             $this->visitAdminPath("/admin/report/$reportId/manage");
         }
 
         foreach ($table as $inputs) {
-
             if (isset($inputs['type'])) {
                 $this->selectOption('manage_report[type]', $inputs['type']);
             }
@@ -125,7 +123,7 @@ trait ReportManagementTrait
         $adjustment = intval($adjustment);
         $reportId = self::$currentReportCache['reportId'];
 
-        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
+        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'DigidepsPass1234');
         $this->visitAdminPath("/admin/report/$reportId/manage");
         $this->selectOption('manage_report[dueDateChoice]', $adjustment);
         $this->pressButton('manage_report[save]');
@@ -140,7 +138,7 @@ trait ReportManagementTrait
         $reportId = self::$currentReportCache['reportId'];
         $adjustment = explode('-', $adjustment);
 
-        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
+        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'DigidepsPass1234');
         $this->visitAdminPath("/admin/report/$reportId/manage");
         $this->selectOption('manage_report[dueDateChoice]', 'custom');
         $this->fillField('manage_report_dueDateCustom_day', $adjustment[2]);
@@ -159,7 +157,7 @@ trait ReportManagementTrait
         $startDate = self::$currentReportCache['startDate'];
         $endDate = self::$currentReportCache['endDate'];
 
-        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
+        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'DigidepsPass1234');
         $this->visitAdminPath("/admin/client/case-number/$client/details");
 
         $adjustment = intval($adjustment);
@@ -176,7 +174,7 @@ trait ReportManagementTrait
         $startDate = self::$currentReportCache['startDate'];
         $endDate = self::$currentReportCache['endDate'];
 
-        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
+        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'DigidepsPass1234');
         $this->visitAdminPath("/admin/client/case-number/$client/details");
 
         $expectedDueDate = new \DateTime($adjustment);
@@ -199,7 +197,7 @@ trait ReportManagementTrait
     {
         $reportId = self::$currentReportCache['reportId'];
 
-        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
+        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'DigidepsPass1234');
         $this->visitAdminPath("/admin/report/$reportId/manage");
     }
 
@@ -210,7 +208,7 @@ trait ReportManagementTrait
     {
         $reportId = self::$currentReportCache['reportId'];
 
-        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
+        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'DigidepsPass1234');
         $this->visitAdminPath("/admin/report/$reportId/manage");
         $this->checkOption('manage_report_close[agreeCloseReport]');
         $this->pressButton('manage_report_close[save]');

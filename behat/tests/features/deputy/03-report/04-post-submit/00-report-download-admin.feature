@@ -2,13 +2,13 @@ Feature: As an admin user, in order to ensure correct report PDFs can always be 
 
   @deputy @download-reports
   Scenario: Non super user cannot download a report that has been submitted
-    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I visit the client page for "102"
     Then I should not see "Download"
 
   @deputy @download-reports
   Scenario: Super user can download a report that has been submitted
-    Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I visit the client page for "102"
     And I follow "Download"
     Then the response status code should be 200
@@ -17,6 +17,6 @@ Feature: As an admin user, in order to ensure correct report PDFs can always be 
 
   @deputy @download-reports
   Scenario: Case manager cannot download a non submitted report
-    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I visit the client page for "103-5"
     Then I should not see "Download"

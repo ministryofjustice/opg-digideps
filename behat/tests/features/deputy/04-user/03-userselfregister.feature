@@ -99,7 +99,7 @@ Feature: User Self Registration
     Then I am on admin login page
     And I fill in the following:
       | login_email    | admin@publicguardian.gov.uk |
-      | login_password | Abcd1234                        |
+      | login_password | DigidepsPass1234                        |
     Then I click on "login"
     Then I should see "behat-zac.tolley@digital.justice.gov.uk" in the "users" region
 
@@ -164,9 +164,9 @@ Feature: User Self Registration
     And I press "self_registration_save"
     Then I should see "Please check your email"
     And I should see "We've sent you a link to behat-jenny.lens@digital.justice.gov.uk"
-    When I activate the user "behat-jenny.lens@digital.justice.gov.uk" with password "Abcd1234"
+    When I activate the user "behat-jenny.lens@digital.justice.gov.uk" with password "DigidepsPass1234"
     Then the URL should match "/login"
-    When I am logged in as "behat-jenny.lens@digital.justice.gov.uk" with password "Abcd1234"
+    When I am logged in as "behat-jenny.lens@digital.justice.gov.uk" with password "DigidepsPass1234"
     Then the URL should match "/user/details"
     When I fill in the following:
       | user_details_address1       | Address1     |
@@ -189,5 +189,5 @@ Feature: User Self Registration
     And I set the report end date to "1/1/2016"
     Then the URL should match "/lay"
     Then I go to "/logout"
-    And I am logged in as "behat-jenny.lens@digital.justice.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-jenny.lens@digital.justice.gov.uk" with password "DigidepsPass1234"
     Then the URL should match "/lay"

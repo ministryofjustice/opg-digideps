@@ -101,7 +101,7 @@ locals {
       { "name": "DATABASE_NAME", "value": "${local.db.name}" },
       { "name": "DATABASE_PORT", "value": "${local.db.port}" },
       { "name": "DATABASE_USERNAME", "value": "${local.db.username}" },
-      { "name": "FIXTURES_ACCOUNTPASSWORD", "value": "Abcd1234" },
+      { "name": "FIXTURES_ACCOUNTPASSWORD", "value": "DigidepsPass1234" },
       { "name": "NGINX_APP_NAME", "value": "api" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
       { "name": "REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" }
