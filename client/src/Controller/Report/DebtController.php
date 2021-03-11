@@ -5,7 +5,6 @@ namespace App\Controller\Report;
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
 use App\Form as FormDir;
-
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -111,8 +110,10 @@ class DebtController extends AbstractController
     public function editAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
         $form = $this->createForm(FormDir\Report\Debt\DebtsType::class, $report);
         $form->handleRequest($request);
+
         $fromPage = $request->get('from');
 
         if ($form->isSubmitted() && $form->isValid()) {
