@@ -23,7 +23,7 @@ class ClientTestHelper extends TestCase
         return $client->reveal();
     }
 
-    public function createClient(EntityManager $em, ?User $user = null)
+    public function generateClient(EntityManager $em, ?User $user = null)
     {
         $faker = Factory::create('en_GB');
 

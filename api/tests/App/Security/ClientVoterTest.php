@@ -6,12 +6,15 @@ use App\Entity\Client;
 use App\Entity\Organisation;
 use App\Entity\User;
 use App\Security\ClientVoter;
+use App\TestHelpers\ClientTestHelper;
+use App\TestHelpers\UserTestHelper;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Security;
 
-class ClientVoterTest extends TestCase
+class ClientVoterTest extends KernelTestCase
 {
     /** @var ClientVoter */
     private $voter;
@@ -281,5 +284,65 @@ class ClientVoterTest extends TestCase
     private function assertDecisionIs(int $expectedDecision): void
     {
         $this->assertEquals($expectedDecision, $this->decision);
+    }
+
+    /**
+     * @dataProvider deleteClientProvider
+     * @test
+     */
+    public function determineDeletePermission(User $user, Client $client, int $expectedPermission)
+    {
+        $security =  self::prophesize(Security::class);
+
+        /** @var ClientVoter() $sut */
+        $sut = new ClientVoter($security->reveal());
+
+        $token = new UsernamePasswordToken($user, 'credentials', 'memory');
+
+        self::assertEquals($expectedPermission, $sut->vote($token, $client, [ClientVoter::DELETE]));
+    }
+
+    public function deleteClientProvider()
+    {
+        $userTestHelper = new UserTestHelper();
+        $clientTestHelp = new ClientTestHelper();
+
+        $kernel = self::bootKernel();
+        $em = $kernel->getContainer()->get('em');
+
+        $client = $clientTestHelp->generateClient($em);
+        $em->persist($client);
+        $em->flush();
+
+        $lay = $userTestHelper->createAndPersistUser($em, $client, User::ROLE_LAY_DEPUTY);
+
+        $admin = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ADMIN);
+        $superAdmin = $userTestHelper->createAndPersistUser($em, null, User::ROLE_SUPER_ADMIN);
+        $elevatedAdmin = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ELEVATED_ADMIN);
+
+        $pa = $userTestHelper->createAndPersistUser($em, null, User::ROLE_PA);
+        $paNamed = $userTestHelper->createAndPersistUser($em, null, User::ROLE_PA_NAMED);
+        $paAdmin = $userTestHelper->createAndPersistUser($em, null, User::ROLE_PA_ADMIN);
+        $paTeamMember = $userTestHelper->createAndPersistUser($em, null, User::ROLE_PA_TEAM_MEMBER);
+
+        $prof = $userTestHelper->createAndPersistUser($em, null, User::ROLE_PROF);
+        $profNamed = $userTestHelper->createAndPersistUser($em, null, User::ROLE_PROF_NAMED);
+        $profAdmin = $userTestHelper->createAndPersistUser($em, null, User::ROLE_PROF_ADMIN);
+        $profTeamMember = $userTestHelper->createAndPersistUser($em, null, User::ROLE_PROF_TEAM_MEMBER);
+
+        return [
+            'Lay Deputy deletes Client' => [$lay, $client, -1],
+            'PA Deputy deletes Client' => [$pa, $client, -1],
+            'PA Team Member deletes Client' => [$paTeamMember, $client, -1],
+            'PA Named Deputy deletes Client' => [$paNamed, $client, -1],
+            'PA Admin Deputy deletes Client' => [$paAdmin, $client, -1],
+            'Prof Deputy deletes Client' => [$prof, $client, -1],
+            'Prof Team Member deletes Client' => [$profTeamMember, $client, -1],
+            'Prof Named Deputy deletes Client' => [$profNamed, $client, -1],
+            'Prof Admin Deputy deletes Client' => [$profAdmin, $client, -1],
+            'Admin deletes Client' => [$admin, $client, -1],
+            'Elevated Admin deletes Client' => [$elevatedAdmin, $client, 1],
+            'Super Admin deletes Client' => [$superAdmin, $client, 1],
+        ];
     }
 }

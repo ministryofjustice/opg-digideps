@@ -80,18 +80,25 @@ class UserVoter extends Voter
             case User::ROLE_PROF_NAMED:
             case User::ROLE_PROF_ADMIN:
                 return $this->paProfNamedAdminDeletePermissions($deletee);
+            case User::ROLE_ELEVATED_ADMIN:
+                return $this->elevatedAdminDeletePermissions($deletee);
             case User::ROLE_SUPER_ADMIN:
-                return $this->superAdminDeletePermissions($deletor, $deletee);
+                return true;
         }
 
         return false;
     }
 
+    /**
+     * @param User $deletee
+     * @return bool
+     */
     private function paProfNamedAdminDeletePermissions(User $deletee): bool
     {
         switch ($deletee->getRoleName()) {
             case User::ROLE_LAY_DEPUTY:
             case User::ROLE_ADMIN:
+            case User::ROLE_ELEVATED_ADMIN:
             case User::ROLE_SUPER_ADMIN:
                 return false;
         }
@@ -99,22 +106,17 @@ class UserVoter extends Voter
         return true;
     }
 
-    private function superAdminDeletePermissions(User $deletor, User $deletee): bool
+    /**
+     * @param User $deletee
+     * @return bool
+     */
+    private function elevatedAdminDeletePermissions(User $deletee): bool
     {
-        switch ($deletee->getRoleName()) {
-            case User::ROLE_LAY_DEPUTY:
-            case User::ROLE_PA:
-            case User::ROLE_PA_TEAM_MEMBER:
-            case User::ROLE_PA_NAMED:
-            case User::ROLE_PA_ADMIN:
-            case User::ROLE_PROF:
-            case User::ROLE_PROF_TEAM_MEMBER:
-            case User::ROLE_PROF_NAMED:
-            case User::ROLE_PROF_ADMIN:
-                return true;
+        if ($deletee->isElevatedAdmin()) {
+            return true;
         }
 
-        return $deletor->getRoleName() === User::ROLE_SUPER_ADMIN ? true : false;
+        return false;
     }
 
     /**
@@ -135,20 +137,13 @@ class UserVoter extends Voter
         switch ($editor->getRoleName()) {
             case User::ROLE_SUPER_ADMIN:
                 return true;
+            case User::ROLE_ADMIN:
+            case User::ROLE_AD:
             case User::ROLE_ELEVATED_ADMIN:
-               if ($editee->isSuperAdmin()) {
+               if ($editee->isSuperAdmin() || $editee->isElevatedAdmin()) {
                    return false;
                }
                return true;
-            case User::ROLE_ADMIN:
-            case User::ROLE_AD:
-                if (
-                    $editee->isSuperAdmin() ||
-                    $editee->isElevatedAdmin()
-                ) {
-                    return false;
-                }
-                return true;
             case User::ROLE_PA:
             case User::ROLE_PA_NAMED:
                 if (

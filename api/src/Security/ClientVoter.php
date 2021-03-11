@@ -16,6 +16,9 @@ class ClientVoter extends Voter
     /** @var string */
     const EDIT = 'edit';
 
+    /** @var string */
+    const DELETE = 'delete';
+
     /** @var Security  */
     private $security;
 
@@ -34,7 +37,7 @@ class ClientVoter extends Voter
      */
     protected function supports($attribute, $subject)
     {
-        return in_array($attribute, [self::VIEW, self::EDIT]) && $subject instanceof Client;
+        return in_array($attribute, [self::VIEW, self::EDIT, self::DELETE]) && $subject instanceof Client;
     }
 
     /**
@@ -57,6 +60,8 @@ class ClientVoter extends Voter
             case self::VIEW:
             case self::EDIT:
                 return $this->canManage($client, $user);
+            case self::DELETE:
+                return $this->canDelete($user);
 
             default:
                 throw new \LogicException('This code should not be reached!');
@@ -84,6 +89,19 @@ class ClientVoter extends Voter
 
         // todo-aie remove post DDPB-3050, when all access should be denied if ! userBelongsToClientsOrganisation
         if (!$this->clientsOrganisationActive($client) && in_array($user->getId(), $client->getUserIds())) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    private function canDelete(User $user): bool
+    {
+        if ($user->isElevatedAdmin() || $user->isSuperAdmin()) {
             return true;
         }
 
