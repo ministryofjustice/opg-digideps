@@ -11,7 +11,7 @@ trait OrganisationManagementTrait
      */
     public function organisationsExist(TableNode $table)
     {
-        $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'Abcd1234');
+        $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'DigidepsPass1234');
 
         foreach ($table as $inputs) {
             $this->visitAdminPath('/admin/organisations/add');
@@ -38,7 +38,7 @@ trait OrganisationManagementTrait
      */
     public function usersAreInOrgs(TableNode $table)
     {
-        $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'Abcd1234');
+        $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'DigidepsPass1234');
 
         foreach ($table as $inputs) {
             $this->visitAdminPath('/admin/organisations');
@@ -59,7 +59,7 @@ trait OrganisationManagementTrait
      */
     public function usersClientsAreInUsersOrg(TableNode $table)
     {
-        $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'Abcd1234');
+        $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'DigidepsPass1234');
 
         foreach ($table as $inputs) {
             $this->visitAdminPath(sprintf("/admin/fixtures/move-users-clients-to-users-org/%s", $inputs['userEmail']));
@@ -75,7 +75,7 @@ trait OrganisationManagementTrait
      */
     public function theOrgIsActivated(string $orgName)
     {
-        $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'Abcd1234');
+        $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'DigidepsPass1234');
 
         $this->visitAdminPath(sprintf("/admin/fixtures/activateOrg/%s", $orgName));
 

@@ -2,7 +2,7 @@ Feature: ndr / report submit
 
     @ndr
     Scenario: NDR review page
-        Given I am logged in as "behat-lay-deputy-ndr@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-ndr@publicguardian.gov.uk" with password "DigidepsPass1234"
         # go to review page
         When I click on "ndr-start, ndr-submit"
         Then the URL should match "/ndr/\d+/review"
@@ -18,7 +18,7 @@ Feature: ndr / report submit
 
     @ndr
     Scenario: NDR declaration and submission
-        Given I am logged in as "behat-lay-deputy-ndr@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-ndr@publicguardian.gov.uk" with password "DigidepsPass1234"
         And I click on "ndr-start, ndr-submit, ndr-declaration-page"
         Then the URL should match "/ndr/\d+/declaration"
         #
@@ -63,7 +63,7 @@ Feature: ndr / report submit
 
     @ndr
     Scenario: admin area check submission ZIP file
-        Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
         And I click on "admin-documents"
         Then I should be on "/admin/documents/list"
         And I click on "tab-pending"
@@ -87,7 +87,7 @@ Feature: ndr / report submit
 
     @ndr
     Scenario: assert 2nd year report has been created
-        Given I am logged in as "behat-lay-deputy-ndr@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-ndr@publicguardian.gov.uk" with password "DigidepsPass1234"
         And I click on "report-start"
         Then I should see a "#edit-contacts" element
         And I should see a "#edit-decisions" element
@@ -115,7 +115,7 @@ Feature: ndr / report submit
 
     @ndr
     Scenario: NDR homepage and create new report
-        Given I am logged in as "behat-lay-deputy-ndr@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-ndr@publicguardian.gov.uk" with password "DigidepsPass1234"
         Then I should be on "/ndr"
         And I should see the "reports-history" region
         # edit report period

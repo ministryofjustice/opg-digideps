@@ -9,7 +9,7 @@ Feature: Preview a summary of the report
       | 48520098 | Deputy127 | LAY         | Property and Financial Affairs High Assets | 2018-01-30 |
 
   Scenario: Accessing the report preview for an active report
-    Given I am logged in as "deputy127@behat-test.com" with password "Abcd1234"
+    Given I am logged in as "deputy127@behat-test.com" with password "DigidepsPass1234"
     And I am viewing the "2018" to "2019" report for "48520098"
     When I follow "edit-report-preview"
     Then the response status code should be 200
@@ -20,9 +20,8 @@ Feature: Preview a summary of the report
     And a case manager makes the following changes to the report:
       | incompleteSection     |
       | Any other information |
-    When I am logged in as "deputy127@behat-test.com" with password "Abcd1234"
+    When I am logged in as "deputy127@behat-test.com" with password "DigidepsPass1234"
     And I am viewing the "2018" to "2019" report for "48520098"
     When I check "confirmReview"
     And I follow "edit-report-review"
     Then the response status code should be 200
-

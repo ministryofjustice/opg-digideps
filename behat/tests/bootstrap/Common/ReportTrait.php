@@ -132,7 +132,7 @@ trait ReportTrait
      */
     public function iHaveTheReportBetweenDeputyAndClient($startDate, $endDate, $deputy, $client)
     {
-        $this->iAmLoggedInAsWithPassword($deputy.'@behat-test.com', 'Abcd1234');
+        $this->iAmLoggedInAsWithPassword($deputy.'@behat-test.com', 'DigidepsPass1234');
         $this->enterReport($client, $startDate, $endDate);
         preg_match('/\/(ndr|report)\/(\d+)\//', $this->getSession()->getCurrentUrl(), $match);
 
@@ -218,7 +218,7 @@ trait ReportTrait
      */
     public function theReportHasBeenUnsubmitted()
     {
-        $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'Abcd1234');
+        $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'DigidepsPass1234');
 
         $reportId = self::$currentReportCache['reportId'];
         $this->visitAdminPath("/admin/fixtures/unsubmit-report/$reportId");
@@ -229,7 +229,7 @@ trait ReportTrait
      */
     public function theReportShouldBeUnsubmitted()
     {
-        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'Abcd1234');
+        $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'DigidepsPass1234');
 
         $client = self::$currentReportCache['client'];
         $startDate = self::$currentReportCache['startDate'];
@@ -353,7 +353,7 @@ trait ReportTrait
 
     private function completeSections(string $sections, string $reportType='report')
     {
-        $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'Abcd1234');
+        $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'DigidepsPass1234');
 
         $reportId = self::$currentReportCache['reportId'];
         $url = sprintf('/admin/fixtures/complete-sections/%s/%s?sections=%s', $reportType, $reportId, $sections);
@@ -381,7 +381,7 @@ trait ReportTrait
 
     private function logInAndEnterReport(): void
     {
-        $this->iAmLoggedInAsWithPassword(self::$currentReportCache['deputy'] . '@behat-test.com', 'Abcd1234');
+        $this->iAmLoggedInAsWithPassword(self::$currentReportCache['deputy'] . '@behat-test.com', 'DigidepsPass1234');
         $reportId = self::$currentReportCache['reportId'];
         $reportType = self::$currentReportCache['reportType'];
         $this->visit("$reportType/$reportId/overview");

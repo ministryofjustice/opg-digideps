@@ -20,7 +20,7 @@ Feature: Synchronising Documents with Sirius
     And the report has been completed
     And I attached a supporting document "test-image.png" to the completed report
     And I submit the report
-    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I view the submissions page
     And I click on "tab-pending"
     Then I should see "<case_number>"
@@ -39,7 +39,7 @@ Feature: Synchronising Documents with Sirius
     Given I have the "2018" to "2019" report between "DeputyDocsC" and "34343434"
     And the report has been completed
     And I submit the report
-    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I view the submissions page
     And I click on "tab-pending"
     Then I should see "34343434"
@@ -47,9 +47,9 @@ Feature: Synchronising Documents with Sirius
 
     Scenario Outline: Submitting supporting documents after a report submission sets the synchronisation status to queued
       Given I have the "2018" to "2019" report between "<deputy>" and "<case_number>"
-      Given I am logged in as "<emailAddress>" with password "Abcd1234"
+      Given I am logged in as "<emailAddress>" with password "DigidepsPass1234"
       And I attached a supporting document "test-image.png" to the submitted report
-      And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+      And I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
       When I view the submissions page
       And I click on "tab-pending"
       Then I should see "<case_number>"
@@ -64,7 +64,7 @@ Feature: Synchronising Documents with Sirius
         | 78787878    | DeputyDocsG@behat-test.com | DeputyDocsG |
 
   Scenario: Running the document-sync command syncs queued Report PDF documents with Sirius
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I run the document-sync command
     When I view the submissions page
     And I click on "tab-pending"
@@ -73,7 +73,7 @@ Feature: Synchronising Documents with Sirius
     And the document "test-image.png" should be queued
 
   Scenario: Running the document-sync command syncs queued supporting documents with Sirius when the related report PDF document has been synced
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I run the document-sync command
     When I view the submissions page
     And I click on "tab-archived"

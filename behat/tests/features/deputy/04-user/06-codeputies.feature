@@ -24,8 +24,8 @@ Feature: Codeputy Self Registration
       | self_registration_clientLastname  | Jones                                             |
       | self_registration_caseNumber      | 00000000                                          |
     And I press "self_registration_save"
-    And I activate the user "behat-jack.goodby-noncodep@digital.justice.gov.uk" with password "Abcd1234"
-    And I am logged in as "behat-jack.goodby-noncodep@digital.justice.gov.uk" with password "Abcd1234"
+    And I activate the user "behat-jack.goodby-noncodep@digital.justice.gov.uk" with password "DigidepsPass1234"
+    And I am logged in as "behat-jack.goodby-noncodep@digital.justice.gov.uk" with password "DigidepsPass1234"
     Then the URL should match "/user/details"
     When I fill in the following:
       | user_details_address1       | Address1     |
@@ -45,7 +45,7 @@ Feature: Codeputy Self Registration
     And I set the report end date to "31/12/2016"
     Then the URL should match "/lay"
     Then I go to "/logout"
-    Given I am logged in as "behat-jack.goodby-noncodep@digital.justice.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-jack.goodby-noncodep@digital.justice.gov.uk" with password "DigidepsPass1234"
     Then the URL should match "/lay"
     And I should not see the "codeputies" region
 
@@ -103,8 +103,8 @@ Feature: Codeputy Self Registration
     And I should see "We've sent you a link to behat-jack.goodby-mld1@digital.justice.gov.uk"
 
     # 1st codep registers fully
-    When I activate the user "behat-jack.goodby-mld1@digital.justice.gov.uk" with password "Abcd1234"
-    And I am logged in as "behat-jack.goodby-mld1@digital.justice.gov.uk" with password "Abcd1234"
+    When I activate the user "behat-jack.goodby-mld1@digital.justice.gov.uk" with password "DigidepsPass1234"
+    And I am logged in as "behat-jack.goodby-mld1@digital.justice.gov.uk" with password "DigidepsPass1234"
     Then the URL should match "/user/details"
     When I fill in the following:
       | user_details_address1       | Address1     |
@@ -130,7 +130,7 @@ Feature: Codeputy Self Registration
 
   @deputy
   Scenario: The first co-deputy logs in and sees the deputy area and invites a codeputy
-    Given I am logged in as "behat-jack.goodby-mld1@digital.justice.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-jack.goodby-mld1@digital.justice.gov.uk" with password "DigidepsPass1234"
     Then the URL should match "/lay"
     And I should see the "codeputies" region
     And I click on "invite-codeputy-button"
@@ -144,7 +144,7 @@ Feature: Codeputy Self Registration
 
   @deputy
   Scenario: Admin logs in and sees placeholder text for the nameless invited codeputy
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     Then I should see "Invited co-deputy" in the "users" region
 
   @deputy @ndr
@@ -167,11 +167,11 @@ Feature: Codeputy Self Registration
       | self_registration_caseNumber      | 22222222                                   |
     And I press "self_registration_save"
     # Activate the deputy
-    And I activate the user "behat-user-ndr-codep@publicguardian.gov.uk" with password "Abcd1234"
+    And I activate the user "behat-user-ndr-codep@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I go to "/login"
     And I fill in the following:
       | login_email     | behat-user-ndr-codep@publicguardian.gov.uk |
-      | login_password  | Abcd1234 |
+      | login_password  | DigidepsPass1234 |
     And I press "login_login"
     When I set the user details to:
       | name    | Peter         | NDR           |        |         |    |

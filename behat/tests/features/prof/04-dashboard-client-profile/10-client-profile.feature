@@ -1,7 +1,7 @@
 Feature: PROF client profile
 
   Scenario: PROF view client details
-    And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "pa-report-open" in the "client-31000011" region
     Then each text should be present in the corresponding region:
       | Cly4 Hent4    | client-profile-details |

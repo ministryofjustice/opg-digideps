@@ -1,7 +1,7 @@
 Feature: Admin report checklist
 
   Scenario: Case manager submits empty Prof checklist for the report
-    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I open the "2015-to-2016" checklist for client "31000010"
     Then the URL should match "/admin/report/\d+/checklist"
     And I should see the "court-date" region
@@ -76,7 +76,7 @@ Feature: Admin report checklist
     And the URL should match "/admin/report/\d+/checklist"
 
   Scenario: Case manager saves further information on Prof checklist
-    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I open the "2015-to-2016" checklist for client "31000010"
     Then each text should be present in the corresponding region:
       | Not saved yet | lodging-last-saved-by |
@@ -108,7 +108,7 @@ Feature: Admin report checklist
 
 
   Scenario: Admin completes Prof checklist
-    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I open the "2015-to-2016" checklist for client "31000010"
     Then each text should be present in the corresponding region:
       | Case Manager1, Admin | lodging-last-saved-by |
@@ -167,7 +167,7 @@ Feature: Admin report checklist
 
 
   Scenario: Admin marked as submitted
-    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I open the "2015-to-2016" checklist for client "31000010"
     Then each text should be present in the corresponding region:
       | Case Manager1, Admin | lodging-last-saved-by     |

@@ -4,14 +4,14 @@ Feature: deputy / acl / cross domain (admin and deputy) checks
     Scenario: A deputy cannot login into admin area
         # check deputy can login into deputy site
         Given I load the application status from "report-submit-pre"
-        And I am logged in as "behat-lay-deputy-ndr@publicguardian.gov.uk" with password "Abcd1234"
+        And I am logged in as "behat-lay-deputy-ndr@publicguardian.gov.uk" with password "DigidepsPass1234"
         #Then the response status code should be 200
         # check deputy CANNOT login into ADMIN site
         Given I go to "/logout"
         And I am on admin login page
         When I fill in the following:
             | login_email     | behat-lay-deputy-ndr@publicguardian.gov.ukk |
-            | login_password  | Abcd1234 |
+            | login_password  | DigidepsPass1234 |
         And I click on "login"
         Then I should see an "#error-summary" element
         And I should be on "/login"

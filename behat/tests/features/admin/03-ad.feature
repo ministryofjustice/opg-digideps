@@ -2,7 +2,7 @@ Feature: admin / AD
 
   @ad
   Scenario: Add new assisted Lay and login on behalf
-    Given I am logged in to admin as "behat-ad@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "behat-ad@publicguardian.gov.uk" with password "DigidepsPass1234"
     Then I should be on "/ad/"
     # add assisted Lay
     When I press "ad_save"
@@ -27,11 +27,11 @@ Feature: admin / AD
 
   @ad
   Scenario: Login on behalf of a newly created (not activated) Lay deputy
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And the following users exist:
       | ndr | deputyType | firstName | lastName | email | postCode | activated |
       | enabled | LAY | Assis | Ted | behat-lay-assisted@publicguardian.gov.uk | HA4 | false |
-    Given I am logged in to admin as "behat-ad@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "behat-ad@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I am on admin page "/admin"
     And I click on "view" in the "user-behat-lay-assistedpublicguardiangovuk" region
     And I click on "login-as"

@@ -1,7 +1,7 @@
 Feature: Add PROF users and activate PROF user (journey)
 
   Scenario: Activate Prof user
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
        # upload PROF users
     When I go to admin page "/admin/org-csv-upload"
     When I attach the file "behat-prof.csv" to "admin_upload_file"
@@ -24,13 +24,13 @@ Feature: Add PROF users and activate PROF user (journey)
     And I press "agree_terms_save"
     Then the form should be valid
     # password step
-    When I fill in the password fields with "Abcd1234"
+    When I fill in the password fields with "DigidepsPass1234"
     And I check "set_password_showTermsAndConditions"
     And I click on "save"
     Then the form should be valid
     And the url should match "/login"
     And I should see "Sign in to your new account"
-    When I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    When I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     # assert pre-fill
     Then the following fields should have the corresponding values:
       | user_details_firstname | DEP1     |
@@ -48,11 +48,11 @@ Feature: Add PROF users and activate PROF user (journey)
     And I should see the "client-31000010" region
 
   Scenario: Activation link is removed
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     Then I should not see "send-activation-email" in the "user-behat-prof1publicguardiangovuk" region
 
   Scenario: Register PROF2 user
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "send-activation-email" in the "user-behat-prof2publicguardiangovuk" region
     And I go to "/logout"
     When I open the activation page for "behat-prof2@publicguardian.gov.uk"
@@ -61,11 +61,11 @@ Feature: Add PROF users and activate PROF user (journey)
     And I press "agree_terms_save"
     Then the form should be valid
     # password step
-    When I fill in the password fields with "Abcd1234"
+    When I fill in the password fields with "DigidepsPass1234"
     And I check "set_password_showTermsAndConditions"
     And I click on "save"
     Then the form should be valid
-    When I am logged in as "behat-prof2@publicguardian.gov.uk" with password "Abcd1234"
+    When I am logged in as "behat-prof2@publicguardian.gov.uk" with password "DigidepsPass1234"
     # correct
     When I fill in the following:
       | user_details_firstname  | Pa User     |
@@ -78,7 +78,7 @@ Feature: Add PROF users and activate PROF user (journey)
     And I should see the "client-32000001" region
 
   Scenario: Register PROF3 user
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "send-activation-email" in the "user-behat-prof3publicguardiangovuk" region
     And I go to "/logout"
     When I open the activation page for "behat-prof3@publicguardian.gov.uk"
@@ -87,11 +87,11 @@ Feature: Add PROF users and activate PROF user (journey)
     And I press "agree_terms_save"
     Then the form should be valid
     # password step
-    When I fill in the password fields with "Abcd1234"
+    When I fill in the password fields with "DigidepsPass1234"
     And I check "set_password_showTermsAndConditions"
     When I click on "save"
     Then the form should be valid
-    When I am logged in as "behat-prof3@publicguardian.gov.uk" with password "Abcd1234"
+    When I am logged in as "behat-prof3@publicguardian.gov.uk" with password "DigidepsPass1234"
     # correct
     And I fill in the following:
       | user_details_firstname  | Pa User     |
@@ -104,7 +104,7 @@ Feature: Add PROF users and activate PROF user (journey)
     And I should see the "client-33000001" region
 
   Scenario: Register PROF4 user
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I create a new "NDR-disabled" "Prof Named" user "ABC org" "Administrator" with email "behat-prof-org-1@org-1.co.uk" and postcode "SW1"
     And "behat-prof-org-1@org-1.co.uk" has been added to the "org-1.co.uk" organisation
     And I add the client with case number "03000025" to be deputised by email "behat-prof-org-1@org-1.co.uk"
@@ -113,11 +113,11 @@ Feature: Add PROF users and activate PROF user (journey)
     When I check "agree_terms_agreeTermsUse"
     And I press "agree_terms_save"
     Then the form should be valid
-    When I fill in the password fields with "Abcd1234"
+    When I fill in the password fields with "DigidepsPass1234"
     And I check "set_password_showTermsAndConditions"
     When I click on "save"
     Then the form should be valid
-    When I am logged in as "behat-prof-org-1@org-1.co.uk" with password "Abcd1234"
+    When I am logged in as "behat-prof-org-1@org-1.co.uk" with password "DigidepsPass1234"
     And I fill in the following:
       | user_details_firstname  | Prof User   |
       | user_details_lastname   | Three       |
@@ -127,7 +127,7 @@ Feature: Add PROF users and activate PROF user (journey)
     Then the form should be valid
 
   Scenario: Register PROF5 user
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I create a new "NDR-disabled" "Prof Named" user "ABC org" "Administrator" with email "behat-prof-org-2@org-1.co.uk" and postcode "SW1"
     And I add the client with case number "03000026" to be deputised by email "behat-prof-org-2@org-1.co.uk"
     And I click on "send-activation-email" in the "user-behat-prof-org-2org-1couk" region
@@ -136,11 +136,11 @@ Feature: Add PROF users and activate PROF user (journey)
     And I check "agree_terms_agreeTermsUse"
     And I press "agree_terms_save"
     Then the form should be valid
-    When I fill in the password fields with "Abcd1234"
+    When I fill in the password fields with "DigidepsPass1234"
     And I check "set_password_showTermsAndConditions"
     When I click on "save"
     Then the form should be valid
-    When I am logged in as "behat-prof-org-2@org-1.co.uk" with password "Abcd1234"
+    When I am logged in as "behat-prof-org-2@org-1.co.uk" with password "DigidepsPass1234"
     And I fill in the following:
       | user_details_firstname  | Prof User   |
       | user_details_lastname   | Three       |
@@ -150,7 +150,7 @@ Feature: Add PROF users and activate PROF user (journey)
     Then the form should be valid
 
   Scenario: Register PROF6 user
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I create a new "NDR-disabled" "Prof Named" user "ABC org" "Administrator" with email "behat-prof-org-3@org-2.co.uk" and postcode "SW1"
     And I add the client with case number "03000027" to be deputised by email "behat-prof-org-3@org-2.co.uk"
     And I add the client with case number "03000028" to be deputised by email "behat-prof-org-3@org-2.co.uk"
@@ -160,11 +160,11 @@ Feature: Add PROF users and activate PROF user (journey)
     And I check "agree_terms_agreeTermsUse"
     And I press "agree_terms_save"
     Then the form should be valid
-    When I fill in the password fields with "Abcd1234"
+    When I fill in the password fields with "DigidepsPass1234"
     And I check "set_password_showTermsAndConditions"
     When I click on "save"
     Then the form should be valid
-    When I am logged in as "behat-prof-org-3@org-2.co.uk" with password "Abcd1234"
+    When I am logged in as "behat-prof-org-3@org-2.co.uk" with password "DigidepsPass1234"
     And I fill in the following:
       | user_details_firstname  | Prof User   |
       | user_details_lastname   | Three       |
@@ -175,7 +175,7 @@ Feature: Add PROF users and activate PROF user (journey)
 
   Scenario: Edit PROF2 user
     Given I save the application status into "prof-users-uploaded"
-    When I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    When I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "user-behat-prof2publicguardiangovuk" in the "user-behat-prof2publicguardiangovuk" region
     And I press "Edit user"
     Then the following fields should have the corresponding values:

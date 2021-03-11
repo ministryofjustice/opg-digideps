@@ -1,7 +1,7 @@
 Feature: Organisation membership
 
   Scenario: Set up organisation fixture
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And the following users exist:
       | ndr | deputyType | firstName | lastName | email | postCode |
       | disabled | PROF | Main | ERZ Contact | main.contact@erz.example | HA4 |
@@ -16,7 +16,7 @@ Feature: Organisation membership
 
   @admin
   Scenario: Admin can add members to an organisation
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I am on admin page "/admin/organisations"
     And I follow "ERZ Solicitors"
     When I follow "Add user"
@@ -31,7 +31,7 @@ Feature: Organisation membership
 
   @admin
   Scenario: Admin cannot add non-registered users to an organisation
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I am on admin page "/admin/organisations"
     And I follow "ERZ Solicitors"
     And I follow "Add user"
@@ -41,7 +41,7 @@ Feature: Organisation membership
 
   @admin
   Scenario: Admin cannot add lay or admin users to an organisation
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I am on admin page "/admin/organisations"
     And I follow "ERZ Solicitors"
     And I follow "Add user"
@@ -51,7 +51,7 @@ Feature: Organisation membership
 
   @admin
   Scenario: Admin cannot add duplicate users to an organisation
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I am on admin page "/admin/organisations"
     And I follow "ERZ Solicitors"
     And I follow "Add user"
@@ -64,7 +64,7 @@ Feature: Organisation membership
 
   @admin
   Scenario: Public domains: Admin can add users from different domains
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And the following users exist:
       | ndr | deputyType | firstName | lastName | email | postCode |
       | disabled | PROF | Rana | Kossak | rana.kossak@example.com | HA4 |
@@ -79,7 +79,7 @@ Feature: Organisation membership
 
   @admin
   Scenario: Public domains: Admin can add initial user to a public domain organisation
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I am on admin page "/admin/organisations"
     And I follow "jo.brown@example.com"
     And I follow "Add user"
@@ -94,7 +94,7 @@ Feature: Organisation membership
 
   @admin
   Scenario: Public domains: Admin can add additional users to a public domain organisation
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I am on admin page "/admin/organisations"
     And I follow "jo.brown@example.com"
     And I follow "Add user"
@@ -106,7 +106,7 @@ Feature: Organisation membership
 
   @admin
   Scenario: Admin can remove users from an organisation
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I am on admin page "/admin/organisations"
     And I follow "ERZ Solicitors"
     When I click on "delete" in the "org-main-erz-contact" region

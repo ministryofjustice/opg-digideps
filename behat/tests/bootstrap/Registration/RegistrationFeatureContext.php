@@ -25,7 +25,7 @@ class RegistrationFeatureContext extends BaseFeatureContext
      */
     public function anAdminUserUploadsTheFileIntoTheLayCsvUploader($file)
     {
-        $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'Abcd1234');
+        $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'DigidepsPass1234');
         $this->visitAdminPath("/admin/casrec-upload");
         $this->attachFileToField("admin_upload_file", $file);
         $this->pressButton("admin_upload_upload");
@@ -49,14 +49,14 @@ class RegistrationFeatureContext extends BaseFeatureContext
             $this->pressButton('self_registration_save');
 
             $this->openActivationOrPasswordResetPage('', 'activation', $courtOrder['deputyEmail']);
-            $this->fillField('set_password_password_first', 'Abcd1234');
-            $this->fillField('set_password_password_second', 'Abcd1234');
+            $this->fillField('set_password_password_first', 'DigidepsPass1234');
+            $this->fillField('set_password_password_second', 'DigidepsPass1234');
             $this->checkOption('set_password_showTermsAndConditions');
             $this->pressButton('set_password_save');
 
             $this->assertPageContainsText('Sign in to your new account');
             $this->fillField('login_email', $courtOrder['deputyEmail']);
-            $this->fillField('login_password', 'Abcd1234');
+            $this->fillField('login_password', 'DigidepsPass1234');
             $this->pressButton('login_login');
 
             $this->fillField('user_details_address1', '102 Petty France');

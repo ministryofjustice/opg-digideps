@@ -2,7 +2,7 @@ Feature: Full review checklist
 
   @deputy
   Scenario: Full review checklist contains logic summary
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I open the "2016" checklist for client "102"
     Then I should see the "lodging-summary" region
     And I should see "I am not satisfied" in the "lodging-summary" region
@@ -12,7 +12,7 @@ Feature: Full review checklist
 
   @deputy
   Scenario: Full review checklist requires validation on submission
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I open the "2016" checklist for client "102"
     And I click on "submit-and-continue" in the "full-review-checklist" region
     Then the following fields should have an error:
@@ -48,7 +48,7 @@ Feature: Full review checklist
 
   @deputy
   Scenario: Can add details to the full review checklist
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I open the "2016" checklist for client "102"
     And I fill in the following:
         | full-review_answers_fullBankStatementsExist_0 | yes                         |
@@ -77,7 +77,7 @@ Feature: Full review checklist
 
   @deputy
   Scenario: Can submit full review checklist
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I open the "2016" checklist for client "102"
     And I click on "submit-and-continue" in the "full-review-checklist" region
     Then the form should be valid

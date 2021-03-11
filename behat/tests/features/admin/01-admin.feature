@@ -1,13 +1,13 @@
 Feature: admin / admin
   @infra
   Scenario: login as admin
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     Then I should be on "/admin/"
 
   Scenario: login and add admin user
     Given I am on admin page "/"
     Then I should be on "/login"
-    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     Given I am on admin page "/"
     Then I should be on "/admin/"
     And I create a new "NDR-disabled" "Admin" user "John" "Doe" with email "behat-admin-user@publicguardian.gov.uk" and postcode "AB12CD"
@@ -15,27 +15,27 @@ Feature: admin / admin
     And the response status code should be 200
 
   Scenario: login and add user (admin)
-    When I activate the admin user "behat-admin-user@publicguardian.gov.uk" with password "Abcd1234"
+    When I activate the admin user "behat-admin-user@publicguardian.gov.uk" with password "DigidepsPass1234"
     Then I should not see an "#error-summary" element
     And I should be on "/login"
     And I should see "Sign in to your new account"
 
   Scenario: Admins cannot add super admins
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I follow "Add new user"
     And I fill in "admin_roleType_1" with "staff"
     Then I should see "Admin"
     And I should not see "Super admin"
 
   Scenario: Super admins can add super admins
-    Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I follow "Add new user"
     And I fill in "admin_roleType_1" with "staff"
     Then I should see "Admin"
     And I should see "Super admin"
 
   Scenario: login and add NDR enabled lay user with co-deputy
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I create a new "NDR-enabled" "Lay Deputy" user "Joe" "Bloggs" with email "joe.bloggs@publicguardian.gov.uk" and postcode "SW1"
     Then I should see "joe.bloggs@publicguardian.gov.uk" in the "users" region
     And the response status code should be 200
@@ -43,9 +43,9 @@ Feature: admin / admin
       | Case     | Surname | Deputy No | Dep Surname | Dep Postcode | Typeofrep |
       | 12345XYZ | Smith   | D003      | Bloggs      | SW1          | OPG102    |
       | 12345XYZ | Smith   | D004      | Doe         | SW1          | OPG102    |
-    When I activate the user "joe.bloggs@publicguardian.gov.uk" with password "Abcd1234"
+    When I activate the user "joe.bloggs@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I go to "logout"
-    Given I am logged in as "joe.bloggs@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "joe.bloggs@publicguardian.gov.uk" with password "DigidepsPass1234"
     Then the url should match "/user/details"
     When I fill in the following:
       | user_details_firstname       | Joe                              |
@@ -72,7 +72,7 @@ Feature: admin / admin
     And I should see the "invite-codeputy-button" link
 
   Scenario: Can follow links to lay upload page
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I am on admin page "/admin"
     And I follow "Upload users"
     And I fill in "form_type_0" with "lay"
@@ -80,7 +80,7 @@ Feature: admin / admin
     Then I should be on "/admin/casrec-upload"
 
   Scenario: Can follow links to org upload page
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I am on admin page "/admin"
     And I follow "Upload users"
     And I fill in "form_type_1" with "org"
@@ -88,7 +88,7 @@ Feature: admin / admin
     Then I should be on "/admin/org-csv-upload"
 
   Scenario: Report submissions CSV download No dates
-    Given I am logged in to admin as "behat-admin-user@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "behat-admin-user@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I go to admin page "/admin/stats"
     And I click on "submit-and-download"
     And the response status code should be 200
@@ -97,7 +97,7 @@ Feature: admin / admin
     And the response should have the "Content-Disposition" header containing ".dat"
 
   Scenario Outline: Downloading Report Submissions with start and end dates
-    Given I am logged in to admin as "behat-admin-user@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "behat-admin-user@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I go to admin page "/admin/stats"
     And I fill in "admin_startDate_day" with "<from_day>"
     And I fill in "admin_startDate_month" with "<from_month>"
@@ -115,7 +115,7 @@ Feature: admin / admin
       | 12       | 12         | 2018      | 13     | 12       | 2018    |
 
   Scenario: Attempting to download Report Submissions with an end date earlier than the start date
-    Given I am logged in to admin as "behat-admin-user@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "behat-admin-user@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I go to admin page "/admin/stats"
     And I fill in "admin_startDate_day" with "12"
     And I fill in "admin_startDate_month" with "12"
@@ -127,7 +127,7 @@ Feature: admin / admin
     Then I should see "Check the end date: it cannot be before the start date"
 
   Scenario: Can access metrics and set a period
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I go to admin page "/admin/stats/metrics"
     Then the response status code should be 200
     When I fill in "admin_period_1" with "this-year"
@@ -135,7 +135,7 @@ Feature: admin / admin
     Then the response status code should be 200
 
   Scenario: change user password on admin area
-    Given I am logged in to admin as "behat-admin-user@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "behat-admin-user@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "user-account"
     Then the response status code should be 200
     And I click on "password-edit"
@@ -145,55 +145,55 @@ Feature: admin / admin
     And I press "change_password_save"
     Then the following fields should have an error:
       | change_password_current_password     |
-      | change_password_plain_password_first |
+      | change_password_password_first |
     # invalid new password
     When I fill in the following:
-      | change_password_current_password      | Abcd1234 |
-      | change_password_plain_password_first  | 1        |
-      | change_password_plain_password_second | 2        |
+      | change_password_current_password      | DigidepsPass1234 |
+      | change_password_password_first  | 1        |
+      | change_password_password_second | 2        |
     And I press "change_password_save"
     Then the following fields should have an error:
-      | change_password_plain_password_first |
+      | change_password_password_first |
     # unmatching new passwords
     When I fill in the following:
-      | change_password_current_password      | Abcd1234  |
-      | change_password_plain_password_first  | Abcd1234  |
-      | change_password_plain_password_second | Abcd12345 |
+      | change_password_current_password      | DigidepsPass1234  |
+      | change_password_password_first  | DigidepsPass1234  |
+      | change_password_password_second | DigidepsPass12345 |
     And I press "change_password_save"
     Then the following fields should have an error:
-      | change_password_plain_password_first |
+      | change_password_password_first |
     #empty password
     When I fill in the following:
-      | change_password_current_password      | Abcd1234 |
-      | change_password_plain_password_first  |          |
-      | change_password_plain_password_second |          |
+      | change_password_current_password      | DigidepsPass1234 |
+      | change_password_password_first  |          |
+      | change_password_password_second |          |
     And I press "change_password_save"
     Then the following fields should have an error:
-      | change_password_plain_password_first |
+      | change_password_password_first |
     # too common password
     When I fill in the following:
-      | change_password_current_password      | Abcd1234 |
-      | change_password_plain_password_first  | Password123 |
-      | change_password_plain_password_second | Password123 |
+      | change_password_current_password      | DigidepsPass1234 |
+      | change_password_password_first  | Password123 |
+      | change_password_password_second | Password123 |
     And I press "change_password_save"
     Then the following fields should have an error:
-      | change_password_plain_password_first |
+      | change_password_password_first |
     # valid new password
     When I fill in the following:
-      | change_password_current_password      | Abcd1234  |
-      | change_password_plain_password_first  | Abcd12345 |
-      | change_password_plain_password_second | Abcd12345 |
+      | change_password_current_password      | DigidepsPass1234  |
+      | change_password_password_first  | DigidepsPass12345 |
+      | change_password_password_second | DigidepsPass12345 |
     And I press "change_password_save"
     Then the form should be valid
     And I should be on "/login"
     And I should see "Sign in with your new password"
       # restore old password (and assert the current password can be used as old password)
-    When I am logged in to admin as "behat-admin-user@publicguardian.gov.uk" with password "Abcd12345"
+    When I am logged in to admin as "behat-admin-user@publicguardian.gov.uk" with password "DigidepsPass12345"
     And I click on "user-account, password-edit"
     And I fill in the following:
-      | change_password_current_password      | Abcd12345 |
-      | change_password_plain_password_first  | Abcd1234! |
-      | change_password_plain_password_second | Abcd1234! |
+      | change_password_current_password      | DigidepsPass12345 |
+      | change_password_password_first  | DigidepsPass1234! |
+      | change_password_password_second | DigidepsPass1234! |
     And I press "change_password_save"
     Then the form should be valid
 
@@ -203,7 +203,7 @@ Feature: admin / admin
     And I go to "/login"
     Then I should not see the "service-notification-behat" region
     # go to admin page
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I am on admin page "/admin/settings/service-notification"
     Then the following fields should have the corresponding values:
       | setting_content   |  |

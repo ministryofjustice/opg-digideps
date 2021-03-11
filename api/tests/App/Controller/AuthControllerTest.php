@@ -76,7 +76,7 @@ class AuthControllerTest extends AbstractTestController
             'mustFail' => true,
             'data' => [
                 'email' => 'admin@example.org',
-                'password' => 'Abcd1234',
+                'password' => 'DigidepsPass1234',
             ],
             'ClientSecret' => API_TOKEN_DEPUTY,
             'assertCode' => 403,
@@ -92,7 +92,7 @@ class AuthControllerTest extends AbstractTestController
 
     public function testFailWrongAuthToken()
     {
-        $authToken = $this->login('deputy@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
+        $authToken = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
         $this->assertTrue(strlen($authToken) > 5, "Token $authToken not valid");
 
@@ -114,7 +114,7 @@ class AuthControllerTest extends AbstractTestController
 
     public function testLoginSuccess()
     {
-        $authToken = $this->login('deputy@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
+        $authToken = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
         // assert succeed with token
         $data = $this->assertJsonRequest('GET', '/auth/get-logged-user', [
@@ -150,8 +150,8 @@ class AuthControllerTest extends AbstractTestController
         $this->resetAttempts('email' . 'deputy@example.org');
         $this->resetAttempts('email' . 'admin@example.org');
 
-        $authTokenDeputy = $this->login('deputy@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
-        $authTokenAdmin = $this->login('admin@example.org', 'Abcd1234', API_TOKEN_ADMIN);
+        $authTokenDeputy = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+        $authTokenAdmin = $this->login('admin@example.org', 'DigidepsPass1234', API_TOKEN_ADMIN);
 
         // assert deputy can access
         $data = $this->assertJsonRequest('GET', '/auth/get-logged-user', [
@@ -185,7 +185,7 @@ class AuthControllerTest extends AbstractTestController
 
     public function testLoginTimeout()
     {
-        $authToken = $this->login('deputy@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
+        $authToken = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
         // manually expire token in REDIS
         self::$frameworkBundleClient->getContainer()->get('snc_redis.default')->expire($authToken, 0);
@@ -230,7 +230,7 @@ class AuthControllerTest extends AbstractTestController
             'mustFail' => false,
             'data' => [
                 'email' => 'deputy@example.org',
-                'password' => 'Abcd1234',
+                'password' => 'DigidepsPass1234',
             ],
             'ClientSecret' => API_TOKEN_DEPUTY,
             'assertResponseCode' => 200,
@@ -263,7 +263,7 @@ class AuthControllerTest extends AbstractTestController
                 'mustFail' => true,
                 'data' => [
                     'email' => 'deputy@example.org',
-                    'password' => 'Abcd1234',
+                    'password' => 'DigidepsPass1234',
                 ],
                 'ClientSecret' => API_TOKEN_DEPUTY,
                 'assertCode' => 423,
