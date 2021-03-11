@@ -291,7 +291,7 @@ class UserVoterTest extends TestCase
             'Elevated Admin adds/edits Admin user' => [$elevatedAdmin, $admin, 1],
             'Elevated Admin adds/edits Super Admin user' => [$elevatedAdmin, $superAdmin, -1],
             'Elevated Admin adds/edits Prof Team Member' => [$elevatedAdmin, $profTeamMember, 1],
-            'Elevated Admin adds/edits Elevated Admin user' => [$elevatedAdmin, $elevatedAdmin2, 1],
+            'Elevated Admin adds/edits Elevated Admin user' => [$elevatedAdmin, $elevatedAdmin2, -1],
             'Elevated Admin adds/edits self' => [$elevatedAdmin, $elevatedAdmin, 1],
 
             'Admin adds/edits Lay Deputy' => [$admin, $lay, 1],
