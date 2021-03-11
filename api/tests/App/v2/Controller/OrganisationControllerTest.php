@@ -337,7 +337,6 @@ class OrganisationControllerTest extends AbstractTestController
             ->getRepository(Organisation::class)
             ->findOneBy(['id' => $orgId]);
 
-        $this->assertNotNull($organisation);
         $this->assertTrue($organisation->isDeleted());
     }
 
