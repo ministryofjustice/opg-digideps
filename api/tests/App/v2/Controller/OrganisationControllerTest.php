@@ -308,7 +308,15 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function deleteActionDeletesOrganisation()
     {
-        $orgId = self::$orgs[1]->getId();
+        $orgId = self::$orgs[2]->getId();
+
+        $organisation = self::$em
+            ->getRepository(Organisation::class)
+            ->findOneBy(['id' => $orgId]);
+
+        $this->assertNotNull($organisation);
+
+
         self::$frameworkBundleClient->request(
             'DELETE',
             '/v2/organisation/' . $orgId,

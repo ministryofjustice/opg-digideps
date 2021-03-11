@@ -105,7 +105,7 @@ class OrganisationRestHandler
     public function delete(int $id)
     {
         if (null === ($organisation = $this->orgRepository->find($id))) {
-            return false;
+            throw new \Doctrine\ORM\ORMException();
         }
 
         if ($this->orgRepository->hasActiveEntities($id)) {
