@@ -70,6 +70,28 @@ class ManageController extends AbstractController
     }
 
     /**
+     * @Route("/badlongresponse", methods={"GET"})
+     */
+    public function badLongResponse()
+    {
+        sleep(4);
+        return new Response(
+            '<html><body>Long response</body></html>'
+        );
+    }
+
+    /**
+     * @Route("/goodlongresponse", methods={"GET"})
+     */
+    public function goodLongResponse()
+    {
+        sleep(4);
+        return new Response(
+            '<html><body>Long response</body></html>'
+        );
+    }
+
+    /**
      * @Route("/availability/pingdom", methods={"GET"})
      *
      * @param ApiAvailability $apiAvailability

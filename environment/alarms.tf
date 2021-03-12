@@ -319,7 +319,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time_orig" {
 
 resource "aws_cloudwatch_log_metric_filter" "casrec_add_in_progress" {
   name           = "AdminCSVUploadInProgressFilter.${local.environment}"
-  pattern        = "{ ($.service_name like 'admin') && ($.request_uri like '/admin/ajax/casrec-add') }"
+  pattern        = "{ ($.service_name = \"admin\") && ($.request_uri = \"/manage/goodlongresponse*\") }"
   log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
 
   metric_transformation {
@@ -355,7 +355,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
     metric {
       metric_name = "TargetResponseTime"
       namespace   = "AWS/ApplicationELB"
-      period      = "30"
+      period      = "60"
       stat        = "Maximum"
       unit        = "Count"
 
@@ -371,7 +371,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
     metric {
       metric_name = aws_cloudwatch_log_metric_filter.casrec_add_in_progress.metric_transformation[0].name
       namespace   = aws_cloudwatch_log_metric_filter.casrec_add_in_progress.metric_transformation[0].namespace
-      period      = "30"
+      period      = "60"
       stat        = "Maximum"
       unit        = "Count"
     }
