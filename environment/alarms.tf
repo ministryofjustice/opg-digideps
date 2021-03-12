@@ -296,11 +296,11 @@ resource "aws_cloudwatch_metric_alarm" "frontend_alb_average_response_time" {
   tags                      = local.default_tags
 }
 
-resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
+resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time_orig" {
   actions_enabled     = local.account.alarms_active
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
   alarm_description   = "Response Time for Admin ALB in ${local.environment}"
-  alarm_name          = "AdminALBAverageResponseTime.${local.environment}"
+  alarm_name          = "AdminALBAverageResponseTimeOrig.${local.environment}"
   comparison_operator = "GreaterThanThreshold"
   dimensions = {
     "LoadBalancer" = trimprefix(split(":", aws_lb.admin.arn)[5], "loadbalancer/")
@@ -315,4 +315,65 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
   insufficient_data_actions = []
   treat_missing_data        = "notBreaching"
   tags                      = local.default_tags
+}
+
+resource "aws_cloudwatch_log_metric_filter" "casrec_add_in_progress" {
+  name           = "AdminCSVUploadInProgressFilter.${local.environment}"
+  pattern        = "{ ($.service_name like 'admin') && ($.request_uri like '/admin/ajax/casrec-add') }"
+  log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
+
+  metric_transformation {
+    name          = "AdminCSVUploadInProgress.${local.environment}"
+    namespace     = "DigiDeps/Error"
+    value         = "1"
+    default_value = "0"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
+  alarm_name                = "AdminALBAverageResponseTimeOrig.${local.environment}"
+  alarm_actions             = [data.aws_sns_topic.alerts.arn]
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
+  alarm_description         = "Response Time for Admin ALB in ${local.environment} (ignoring csv upload)"
+  datapoints_to_alarm       = 3
+  evaluation_periods        = 3
+  threshold                 = 1
+  insufficient_data_actions = []
+  treat_missing_data        = "notBreaching"
+  tags                      = local.default_tags
+
+  metric_query {
+    id          = "real_long_response"
+    expression  = "IF((alb_response_times > 1 AND casrec_csv < 1), 1, 0)"
+    label       = "LongResponseTime"
+    return_data = "true"
+  }
+
+  metric_query {
+    id = "alb_response_times"
+
+    metric {
+      metric_name = "TargetResponseTime"
+      namespace   = "AWS/ApplicationELB"
+      period      = "30"
+      stat        = "Maximum"
+      unit        = "Count"
+
+      dimensions = {
+        "LoadBalancer" = trimprefix(split(":", aws_lb.admin.arn)[5], "loadbalancer/")
+      }
+    }
+  }
+
+  metric_query {
+    id = "casrec_csv"
+
+    metric {
+      metric_name = aws_cloudwatch_log_metric_filter.casrec_add_in_progress.metric_transformation[0].name
+      namespace   = aws_cloudwatch_log_metric_filter.casrec_add_in_progress.metric_transformation[0].namespace
+      period      = "30"
+      stat        = "Maximum"
+      unit        = "Count"
+    }
+  }
 }
