@@ -3,7 +3,7 @@ Feature: deputy / report / edit client
     @deputy
     Scenario: edit client details
         Given I load the application status from "report-submit-pre"
-        And I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
+        And I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "DigidepsPass1234"
         And I click on "user-account, client-show, client-edit"
         Then the following fields should have the corresponding values:
             | client_firstname | John |
@@ -61,7 +61,7 @@ Feature: deputy / report / edit client
     # @deputy
     # Scenario: edit client details
     #     Given emails are sent from "deputy" area
-    #     And I am logged in as "laydeputy@publicguardian.gov.uk" with password "Abcd1234"
+    #     And I am logged in as "laydeputy@publicguardian.gov.uk" with password "DigidepsPass1234"
     #     And I click on "user-account, client-show, client-edit"
     #     When I fill in the following:
     #         | client_firstname | Ulrich |

@@ -1,7 +1,7 @@
 Feature: Editing Deputy and Client details
 
   Scenario: Creating users to edit
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
 
     Given the following users exist:
       | ndr      | deputyType | firstName | lastName    | email                 | postCode | activated |
@@ -12,7 +12,7 @@ Feature: Editing Deputy and Client details
       | Jory      | Dunkeld  | 01215552222 | 1 Fake Road | Fakeville | Faketon | B4 6HQ   | JD123456   |  hena.mercia@test.com  |
 
   Scenario: edit client details
-    And I am logged in as "hena.mercia@test.com" with password "Abcd1234"
+    And I am logged in as "hena.mercia@test.com" with password "DigidepsPass1234"
     And I click on "user-account, client-show, client-edit"
     Then the following fields should have the corresponding values:
       | client_firstname | Jory |

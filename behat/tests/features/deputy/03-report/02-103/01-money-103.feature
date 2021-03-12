@@ -2,7 +2,7 @@ Feature: Report money 103
 
   @deputy @deputy-103
   Scenario: money in 103
-    Given I am logged in as "behat-lay-deputy-103@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-103@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "report-start, edit-money_in_short, start"
     # categories
     And the step with the following values CAN be submitted:
@@ -70,7 +70,7 @@ Feature: Report money 103
 
   @deputy @deputy-103
   Scenario: money out 103
-    Given I am logged in as "behat-lay-deputy-103@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-103@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "report-start, edit-money_out_short, start"
     # categories
     And the step with the following values CAN be submitted:
@@ -134,11 +134,3 @@ Feature: Report money 103
       | money_short_transaction_amount      | 1,451.00      |
     And each text should be present in the corresponding region:
       | 1,451.00 | transaction-november-rent |
-
-
-
-
-
-
-
-

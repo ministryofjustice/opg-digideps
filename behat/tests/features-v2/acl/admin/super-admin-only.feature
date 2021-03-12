@@ -4,21 +4,21 @@ Feature: Limiting access to sections of the app to super admins
   I need to limit access to certain areas of the app to Super Admins
 
   Scenario: Super admin can access satisfaction and active lay reports
-    Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I am on admin page "/admin/stats/metrics"
     And I should see "Download DAT file"
     And I should see "Download satisfaction report"
     And I should see "Download active lays report"
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I am on admin page "/admin/stats/metrics"
     And I should see "Download DAT file"
     And I should not see "Download satisfaction report"
     And I should not see "Download active lays report"
 
   Scenario: Super admin can access fixture endpoints in navigation bar
-    Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     Then I should see "Fixtures" in the "navbar" region
     When I follow "Fixtures"
     Then I should be on "/admin/fixtures/"
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     Then I should not see "Fixtures" in the "navbar" region

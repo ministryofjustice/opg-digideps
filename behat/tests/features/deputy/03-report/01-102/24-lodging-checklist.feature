@@ -2,7 +2,7 @@ Feature: Admin report checklist
 
   @deputy
   Scenario: Case manager submits empty checklist for the report 102
-    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I visit the client page for "102"
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
@@ -88,7 +88,7 @@ Feature: Admin report checklist
 
   @deputy
   Scenario: Case manager saves further information on checklist
-    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I open the "2016" checklist for client "102"
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
@@ -120,7 +120,7 @@ Feature: Admin report checklist
 
   @deputy
   Scenario: Admin completes checklist
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     # Navigate to checklist via search
     When I open the "2016" checklist for client "102"
     Then the URL should match "/admin/report/\d+/checklist"
@@ -177,7 +177,7 @@ Feature: Admin report checklist
 
   @deputy
   Scenario: Admin marked as submitted
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     # Navigate to checklist via search
     When I open the "2016" checklist for client "102"
     Then the URL should match "/admin/report/\d+/checklist"

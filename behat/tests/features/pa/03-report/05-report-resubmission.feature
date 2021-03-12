@@ -3,7 +3,7 @@ Feature: Admin unsubmit and client re-submit
   @deputy
   Scenario: Admin unsubmits report for client 02100014
     Given I load the application status from "pa-report-submitted"
-    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I visit the client page for "02100014"
     Then I should see the "report-2016-to-2017" region in the "report-group-submitted" region
     And I click on "manage" in the "report-2016-to-2017" region
@@ -19,7 +19,7 @@ Feature: Admin unsubmit and client re-submit
 
   @deputy
   Scenario: PA resubmit report
-    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "02100014"
     And I press "search_submit"
     Then I should see the "client" region exactly 2 times
@@ -37,7 +37,7 @@ Feature: Admin unsubmit and client re-submit
 
   @deputy
   Scenario: Admin checks report was re-submitted
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I visit the client page for "02100014"
     Then I should see the "report-2016-to-2017" region in the "report-group-submitted" region
     # restore previous status

@@ -1,7 +1,7 @@
 Feature: Report submit (client 31000010)
 
     Scenario: balance check and fix
-        Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
         And I click on "pa-report-open" in the "client-31000010" region
         Then the prof report should not be submittable
           # check balance mismatch difference
@@ -15,12 +15,12 @@ Feature: Report submit (client 31000010)
         Then the prof report should be submittable
 
     Scenario: PROF 102-5 Report should be submittable
-        Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
         And I click on "pa-report-open" in the "client-31000010" region
         Then the PROF report should be submittable
 
     Scenario: 102-5 report declaration page
-        Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
         And I click on "tab-ready"
         And I click on "pa-report-open" in the "client-31000010" region
         Then I should not see the "download-2016-report" link
@@ -42,7 +42,7 @@ Feature: Report submit (client 31000010)
         And I should not see the link "edit-deputy-contact"
 
     Scenario: 102-5 report submission
-        Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
         And I click on "pa-report-open" in the "client-31000010" region
         And I click on "edit-report_submit"
         Then each text should be present in the corresponding region:
@@ -66,7 +66,7 @@ Feature: Report submit (client 31000010)
         And the response status code should be 200
 
     Scenario: 102-5 assert submitted report displays correctly in client profile page
-        Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
         And I click on "tab-in-progress"
         And I click on "pa-report-open" in the "client-31000010" region
         And I should see the "view-report" link
@@ -78,7 +78,7 @@ Feature: Report submit (client 31000010)
         Then the current URL should match with the URL previously saved as "client-31000010-profile"
 
     Scenario: 102-5 assert 2nd year report has been created and displays correctly
-        Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
         And I click on "tab-in-progress"
         And I click on "pa-report-open" in the "client-31000010" region
         Then I should see a "#edit-contacts" element

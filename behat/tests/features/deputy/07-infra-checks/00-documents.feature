@@ -2,7 +2,7 @@ Feature: Infrastructure document tests
 
   @infra
   Scenario: Can upload documents
-    Given I am logged in as "behat-lay-deputy-103-4@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-103-4@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I set the report start date to "1/1/2016"
     And I set the report end date to "31/12/2016"
     And I click on "report-start, edit-documents, start"
@@ -20,7 +20,7 @@ Feature: Infrastructure document tests
 
   @infra
   Scenario: Can generate report PDF
-    Given I am logged in as "behat-lay-deputy-103-4@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-103-4@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I click on "report-start"
     And I follow "Preview and check report"
     And I click on "download-pdf"
@@ -31,7 +31,7 @@ Feature: Infrastructure document tests
 
   @infra
   Scenario: Complete and submit report
-    Given I am logged in as "behat-lay-deputy-103-4@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-103-4@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "report-start"
     # Decisions
     When I click on "edit-decisions, start"
@@ -124,7 +124,7 @@ Feature: Infrastructure document tests
 
   @infra
   Scenario: Can download submitted documents
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I click on "admin-documents"
     And I click on "tab-pending"
     And I check "Select 103-4"

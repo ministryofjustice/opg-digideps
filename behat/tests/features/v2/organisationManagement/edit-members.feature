@@ -16,7 +16,7 @@ Feature: Organisation admins can edit members of their organisation
       | guscioraonline@gmail.example | Rey Gusciora       |
 
   Scenario: Org admins can add existing users to their organisation
-    Given I am logged in as "l.degroot@malvern.example" with password "Abcd1234"
+    Given I am logged in as "l.degroot@malvern.example" with password "DigidepsPass1234"
     When I go to "/org/settings/organisation"
     And I follow "Add user"
     And I follow "Cancel"
@@ -33,7 +33,7 @@ Feature: Organisation admins can edit members of their organisation
     And I should see "l.swayzer@outsource.example"
 
   Scenario: Org admins can add new users to their organisation
-    Given I am logged in as "l.degroot@malvern.example" with password "Abcd1234"
+    Given I am logged in as "l.degroot@malvern.example" with password "DigidepsPass1234"
     When I go to "/org/settings/organisation"
     And I follow "Add user"
     And I fill in the following:
@@ -47,7 +47,7 @@ Feature: Organisation admins can edit members of their organisation
     And I should see "y.lacasse@malvern.example"
 
   Scenario: Admins of orgs with an email address identifier can add users to their organisation
-    Given I am logged in as "guscioraonline@gmail.example" with password "Abcd1234"
+    Given I am logged in as "guscioraonline@gmail.example" with password "DigidepsPass1234"
     When I go to "/org/settings/organisation"
     And I follow "Add user"
     And I fill in the following:
@@ -61,7 +61,7 @@ Feature: Organisation admins can edit members of their organisation
 
 #    TODO: uncomment once DDPB-3356 is merged
 #  Scenario: Org admins can edit non-activated users
-#    Given I am logged in as "l.degroot@malvern.example" with password "Abcd1234"
+#    Given I am logged in as "l.degroot@malvern.example" with password "DigidepsPass1234"
 #    When I go to "/org/settings/organisation"
 #    And I click on "edit" in the "team-user-yvonnelacassemalvernexample" region
 #    Then the "organisation_member_firstname" field should contain "Yvonne"
@@ -77,7 +77,7 @@ Feature: Organisation admins can edit members of their organisation
 #    And I should see "y.lacasse@malvern.example"
 
   Scenario: Org admins can resend activation emails to non-activated users
-    Given I am logged in as "l.degroot@malvern.example" with password "Abcd1234"
+    Given I am logged in as "l.degroot@malvern.example" with password "DigidepsPass1234"
     When I go to "/org/settings/organisation"
     And I click on "send-activation-email" in the "team-user-ylacassemalvernexample" region
     Then the form should be valid
@@ -85,23 +85,23 @@ Feature: Organisation admins can edit members of their organisation
   Scenario: Org admins cannot resend email to activated users
     Given I open the activation page for "y.lacasse@malvern.example"
     And I fill in the following:
-        | set_password_password_first  | Abcd1234 |
-        | set_password_password_second | Abcd1234 |
+        | set_password_password_first  | DigidepsPass1234 |
+        | set_password_password_second | DigidepsPass1234 |
     And I check "set_password_showTermsAndConditions"
     And I press "Submit"
-    When I am logged in as "l.degroot@malvern.example" with password "Abcd1234"
+    When I am logged in as "l.degroot@malvern.example" with password "DigidepsPass1234"
     And I go to "/org/settings/organisation"
     Then I should see "Edit" in the "team-user-ylacassemalvernexample" region
     And I should not see "Resend activation email" in the "team-user-ylacassemalvernexample" region
 
   Scenario: Org team members can edit themselves
-    Given I am logged in as "y.lacasse@malvern.example" with password "Abcd1234"
+    Given I am logged in as "y.lacasse@malvern.example" with password "DigidepsPass1234"
     When I go to "/org/settings/organisation"
     And I click on "edit" in the "team-user-ylacassemalvernexample" region
     Then I should be on "/org/settings/your-details/edit"
 
   Scenario: Org team members cannot edit or remove other users
-    Given I am logged in as "y.lacasse@malvern.example" with password "Abcd1234"
+    Given I am logged in as "y.lacasse@malvern.example" with password "DigidepsPass1234"
     When I go to "/org/settings/organisation"
     Then I should not see "Add user"
     And I should not see "Edit" in the "team-user-ldegrootmalvernexample" region
@@ -109,13 +109,13 @@ Feature: Organisation admins can edit members of their organisation
     And I should not see the "send-activation-email" link
 
   Scenario: Org admins can edit themselves from the organisation page
-    Given I am logged in as "l.degroot@malvern.example" with password "Abcd1234"
+    Given I am logged in as "l.degroot@malvern.example" with password "DigidepsPass1234"
     When I go to "/org/settings/organisation"
     And I click on "edit" in the "team-user-ldegrootmalvernexample" region
     Then I should be on "/org/settings/your-details/edit"
 
   Scenario: Org admins can add other admins
-    Given I am logged in as "l.degroot@malvern.example" with password "Abcd1234"
+    Given I am logged in as "l.degroot@malvern.example" with password "DigidepsPass1234"
     When I go to "/org/settings/organisation"
     And I follow "Add user"
     And I fill in the following:
@@ -129,18 +129,18 @@ Feature: Organisation admins can edit members of their organisation
   Scenario: Additional org admins can edit and remove users
     Given I open the activation page for "k.damore@malvern.example"
     And I fill in the following:
-        | set_password_password_first  | Abcd1234 |
-        | set_password_password_second | Abcd1234 |
+        | set_password_password_first  | DigidepsPass1234 |
+        | set_password_password_second | DigidepsPass1234 |
     And I check "set_password_showTermsAndConditions"
     And I press "Submit"
-    When I am logged in as "k.damore@malvern.example" with password "Abcd1234"
+    When I am logged in as "k.damore@malvern.example" with password "DigidepsPass1234"
     And I go to "/org/settings/organisation"
     Then I should see "Add user"
     And I should see "Edit" in the "team-user-ylacassemalvernexample" region
     And I should see "Remove" in the "team-user-ylacassemalvernexample" region
 
   Scenario: Org admins can delete colleagues in their organisation
-    Given I am logged in as "l.degroot@malvern.example" with password "Abcd1234"
+    Given I am logged in as "l.degroot@malvern.example" with password "DigidepsPass1234"
     When I go to "/org/settings/organisation"
     And I click on "delete" in the "team-user-ylacassemalvernexample" region
     Then I should see "Are you sure you want to remove this user from this organisation?"

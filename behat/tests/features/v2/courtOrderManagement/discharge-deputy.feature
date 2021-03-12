@@ -12,7 +12,7 @@ Feature: Manually discharge deputies from a court order
       | client   | deputy    | deputy_type | report_type                                | court_date |
       | 32163425 | Deputy432 | LAY         | Property and Financial Affairs High Assets | 2018-01-30 |
     When a super admin discharges the deputy from "32163425"
-    And I am logged in as "deputy432@behat-test.com" with password "Abcd1234"
+    And I am logged in as "deputy432@behat-test.com" with password "DigidepsPass1234"
     Then I should be on "/client/add"
 
   Scenario: Super admin user manually discharges an org based named deputy from their client
@@ -21,7 +21,7 @@ Feature: Manually discharge deputies from a court order
       | 43853417 | Deputy043 | PROF        | Health and Welfare | 2018-01-30 |
       | 43853418 | Deputy043 | PROF        | Health and Welfare | 2018-01-31 |
     When a super admin discharges the deputy from "43853417"
-    And I am logged in as "deputy043@behat-test.com" with password "Abcd1234"
+    And I am logged in as "deputy043@behat-test.com" with password "DigidepsPass1234"
     Then I should see "43853418"
     And I should not see "43853417"
 
@@ -30,6 +30,6 @@ Feature: Manually discharge deputies from a court order
     Given the following court orders exist:
       | client   | deputy    | deputy_type | report_type        | court_date |
       | 84775409 | Deputy329 | PA          | Health and Welfare | 2017-03-30 |
-    When I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    When I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I visit the client page for "84775409"
     Then I should not see "Discharge deputy"

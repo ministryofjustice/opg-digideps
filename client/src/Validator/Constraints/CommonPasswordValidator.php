@@ -44,9 +44,8 @@ class CommonPasswordValidator extends ConstraintValidator
     protected function passwordMatchesCommonPasswords(string $searchTerm, string $filePath)
     {
         $matches = array();
-
         $handle = @fopen($filePath, "r");
-        if ($handle) {
+        if ($handle && strlen($searchTerm) > 0) {
             while (!feof($handle)) {
                 $buffer = fgets($handle);
                 if (strpos($buffer, $searchTerm) !== false) {

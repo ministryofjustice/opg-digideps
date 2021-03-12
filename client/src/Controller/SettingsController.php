@@ -109,13 +109,13 @@ class SettingsController extends AbstractController
         $user = $this->userApi->getUserWithData();
 
         $form = $this->createForm(FormDir\ChangePasswordType::class, $user, [
-            'mapped' => false,
+            'mapped' => true,
             'error_bubbling' => true
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $plainPassword = $request->request->get('change_password')['plain_password']['first'];
+            $plainPassword = $request->request->get('change_password')['password']['first'];
             $this->restClient->put('user/' . $user->getId() . '/set-password', json_encode([
                 'password_plain' => $plainPassword,
             ]));

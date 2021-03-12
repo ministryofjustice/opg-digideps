@@ -2,7 +2,7 @@ Feature: Report submit
 
     @deputy
     Scenario: report declaration page
-        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "DigidepsPass1234"
         And I click on "report-start"
         Then I should not see the "report-review" link
         # if not found, it means that the report is not submittable
@@ -14,7 +14,7 @@ Feature: Report submit
 
     @deputy
     Scenario: Can see and edit deputy information
-        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "DigidepsPass1234"
         And I click on "report-start, report-submit, declaration-page"
         Then each text should be present in the corresponding region:
             | John 102-Client                            | client-contact |
@@ -33,7 +33,7 @@ Feature: Report submit
 
     @deputy
     Scenario: report submission
-        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "DigidepsPass1234"
         And I click on "report-start"
         And I save the report as "102 report"
         # assert I cannot access the submitted page directly
@@ -94,7 +94,7 @@ Feature: Report submit
     @deputy
     Scenario: deputy gives feedback after submitting report
         Given I load the application status from "report-submit-pre"
-        And I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
+        And I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "DigidepsPass1234"
         And I click on "report-start"
         And I click on "report-submit"
         And I click on "declaration-page"
@@ -125,7 +125,7 @@ Feature: Report submit
 
     @deputy
     Scenario: admin area check filters, submission and ZIP file content
-        Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
         And I click on "admin-documents"
         Then I should be on "/admin/documents/list"
         And I save the current URL as "admin-documents-list-new"
@@ -151,7 +151,7 @@ Feature: Report submit
 
     @deputy
     Scenario: admin can download individual report flies
-        Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
         And I click on "admin-documents"
         And I click on "tab-pending"
         When I follow "Download"
@@ -162,7 +162,7 @@ Feature: Report submit
 
     @deputy
     Scenario: admin can download zips of a report's files
-        Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
         And I click on "admin-documents"
         And I click on "tab-pending"
         When I check "Select 102"
@@ -187,7 +187,7 @@ Feature: Report submit
 
     @deputy
     Scenario: assert 2nd year report has been created
-        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "DigidepsPass1234"
         And I click on "report-start"
         Then I should see a "#edit-contacts" element
         And I should see a "#edit-decisions" element
@@ -203,7 +203,7 @@ Feature: Report submit
 
     @deputy
     Scenario: deputy report download
-        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "DigidepsPass1234"
         When I click on "report-review"
         Then the URL should match "report/\d+/review"
         And the response should contain "102"
