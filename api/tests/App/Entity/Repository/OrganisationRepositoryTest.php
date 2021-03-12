@@ -11,8 +11,6 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Tests\Fixtures;
 
-use function Symfony\Component\String\s;
-
 class OrganisationRepositoryTest extends WebTestCase
 {
     /**
@@ -68,67 +66,106 @@ class OrganisationRepositoryTest extends WebTestCase
     }
 
     /** @test */
-    public function testHasActiveEntities()
+    public function testHasActiveEntities_no_entities_in_org_returns_false()
     {
-        $orgs = $this->fixtures->createOrganisations(3);
-        $user = $this->fixtures->createUser()->setRoleName(\App\Entity\User::ROLE_PA);
-        $clientActive = $this->fixtures->createClient($user);
-        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new \DateTime()]);
-        $clientArchived2 = $this->fixtures->createClient($user, ['setArchivedAt' => new \DateTime()]);
-        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new \DateTime()]);
-        $clientDeleted2 = $this->fixtures->createClient($user, ['setDeletedAt' => new \DateTime()]);
-
-
+        $orgs = $this->fixtures->createOrganisations(1);
         $this->em->flush();
 
-        //Org1 with no entities should have no active entities.
         $result = $this->sut->hasActiveEntities($orgs[0]->getId());
         self::assertFalse($result);
+    }
 
-        //Org1 with 1 soft deleted client should have no active entities.
+    /** @test */
+    public function testHasActiveEntities_soft_deleted_client_in_org_returns_false()
+    {
+        $orgs = $this->fixtures->createOrganisations(1);
+        $user = $this->fixtures->createUser()->setRoleName(\App\Entity\User::ROLE_PA);
+        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new \DateTime()]);
+        $this->em->flush();
+
         $this->fixtures->addClientToOrganisation($clientDeleted->getId(), $orgs[0]->getId());
         $this->em->flush();
         $result = $this->sut->hasActiveEntities($orgs[0]->getId());
         self::assertFalse($result);
+    }
 
-        //Org1 with 1 soft deleted client
-        //And 1 archived client
-        //Should have no active entities.
+    /** @test */
+    public function testHasActiveEntities_archived_client_in_org_returns_false()
+    {
+        $orgs = $this->fixtures->createOrganisations(1);
+        $user = $this->fixtures->createUser()->setRoleName(\App\Entity\User::ROLE_PA);
+        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new \DateTime()]);
+        $this->em->flush();
+
         $this->fixtures->addClientToOrganisation($clientArchived->getId(), $orgs[0]->getId());
         $this->em->flush();
         $result = $this->sut->hasActiveEntities($orgs[0]->getId());
         self::assertFalse($result);
+    }
 
-        //Org1 with 1 soft deleted client
-        //And 1 archived client
-        //And 1 active client
-        //Should have active entities.
+    /** @test */
+    public function testHasActiveEntities_archived_and_soft_deleted_clients_in_org_returns_false()
+    {
+        $orgs = $this->fixtures->createOrganisations(1);
+        $user = $this->fixtures->createUser()->setRoleName(\App\Entity\User::ROLE_PA);
+        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new \DateTime()]);
+        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new \DateTime()]);
+        $this->em->flush();
+
+        $this->fixtures->addClientToOrganisation($clientDeleted->getId(), $orgs[0]->getId());
+        $this->fixtures->addClientToOrganisation($clientArchived->getId(), $orgs[0]->getId());
+        $this->em->flush();
+        $result = $this->sut->hasActiveEntities($orgs[0]->getId());
+        self::assertFalse($result);
+    }
+
+    /** @test */
+    public function testHasActiveEntities_archived_and_soft_deleted_and_active_clients_in_org_returns_true()
+    {
+        $orgs = $this->fixtures->createOrganisations(1);
+        $user = $this->fixtures->createUser()->setRoleName(\App\Entity\User::ROLE_PA);
+        $clientActive = $this->fixtures->createClient($user);
+        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new \DateTime()]);
+        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new \DateTime()]);
+        $this->em->flush();
+
         $this->fixtures->addClientToOrganisation($clientActive->getId(), $orgs[0]->getId());
+        $this->fixtures->addClientToOrganisation($clientDeleted->getId(), $orgs[0]->getId());
+        $this->fixtures->addClientToOrganisation($clientArchived->getId(), $orgs[0]->getId());
         $this->em->flush();
         $result = $this->sut->hasActiveEntities($orgs[0]->getId());
         self::assertTrue($result);
+    }
 
-        //Org2 with 1 user should have active entities.
-        $this->fixtures->addUserToOrganisation($user->getId(), $orgs[1]->getId());
+    /** @test */
+    public function testHasActiveEntities_archived_and_soft_deleted_clients_and_user_in_org_returns_true()
+    {
+        $orgs = $this->fixtures->createOrganisations(1);
+        $user = $this->fixtures->createUser()->setRoleName(\App\Entity\User::ROLE_PA);
+        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new \DateTime()]);
+        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new \DateTime()]);
         $this->em->flush();
-        $result = $this->sut->hasActiveEntities($orgs[1]->getId());
+
+        $this->fixtures->addUserToOrganisation($user->getId(), $orgs[0]->getId());
+        $this->fixtures->addClientToOrganisation($clientDeleted->getId(), $orgs[0]->getId());
+        $this->fixtures->addClientToOrganisation($clientArchived->getId(), $orgs[0]->getId());
+        $this->em->flush();
+        $result = $this->sut->hasActiveEntities($orgs[0]->getId());
         self::assertTrue($result);
+    }
 
-        //Org2 with 1 user
-        //And 1 soft deleted client
-        //should have active entities.
-        $this->fixtures->addClientToOrganisation($clientDeleted2->getId(), $orgs[1]->getId());
+    /** @test */
+    public function testHasActiveEntities_active_client_and_user_in_org_returns_true()
+    {
+        $orgs = $this->fixtures->createOrganisations(1);
+        $user = $this->fixtures->createUser()->setRoleName(\App\Entity\User::ROLE_PA);
+        $clientActive = $this->fixtures->createClient($user);
         $this->em->flush();
-        $result = $this->sut->hasActiveEntities($orgs[1]->getId());
-        self::assertTrue($result);
 
-        //Org2 with 1 user
-        //And 1 soft deleted client
-        //And 1 archived client
-        //should have active entities.
-        $this->fixtures->addClientToOrganisation($clientArchived2->getId(), $orgs[1]->getId());
+        $this->fixtures->addUserToOrganisation($user->getId(), $orgs[0]->getId());
+        $this->fixtures->addClientToOrganisation($clientActive->getId(), $orgs[0]->getId());
         $this->em->flush();
-        $result = $this->sut->hasActiveEntities($orgs[1]->getId());
+        $result = $this->sut->hasActiveEntities($orgs[0]->getId());
         self::assertTrue($result);
     }
 
