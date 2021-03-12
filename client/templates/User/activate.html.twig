@@ -36,6 +36,7 @@
             } ) }}
         {% endif %}
 
+        <div style="clear:both;display:inline-block;height:0px;" data-module="opg-toggleable-submit">
         {{ form_submit_ga(
             form.save,
             'submit',
@@ -45,6 +46,7 @@
             null,
             {'buttonClass': 'behat-link-save'})
         }}
+        </div>
 
     {{ form_end(form) }}
 
