@@ -312,10 +312,7 @@ class OrganisationControllerTest extends AbstractTestController
 
         $organisation = self::$em
             ->getRepository(Organisation::class)
-            ->findOneBy(['id' => $orgId]);
-
-        $this->assertNotNull($organisation);
-
+            ->find($orgId);
 
         self::$frameworkBundleClient->request(
             'DELETE',
@@ -335,9 +332,9 @@ class OrganisationControllerTest extends AbstractTestController
 
         $organisation = self::$em
             ->getRepository(Organisation::class)
-            ->findOneBy(['id' => $orgId]);
+            ->find($orgId);
 
-        $this->assertTrue($organisation->isDeleted());
+        $this->assertNotNull($organisation);
     }
 
     /**
