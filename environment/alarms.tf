@@ -296,30 +296,9 @@ resource "aws_cloudwatch_metric_alarm" "frontend_alb_average_response_time" {
   tags                      = local.default_tags
 }
 
-resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time_orig" {
-  actions_enabled     = local.account.alarms_active
-  alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  alarm_description   = "Response Time for Admin ALB in ${local.environment}"
-  alarm_name          = "AdminALBAverageResponseTimeOrig.${local.environment}"
-  comparison_operator = "GreaterThanThreshold"
-  dimensions = {
-    "LoadBalancer" = trimprefix(split(":", aws_lb.admin.arn)[5], "loadbalancer/")
-  }
-  datapoints_to_alarm       = 3
-  evaluation_periods        = 3
-  threshold                 = 1
-  period                    = 60
-  namespace                 = "AWS/ApplicationELB"
-  metric_name               = "TargetResponseTime"
-  statistic                 = "Average"
-  insufficient_data_actions = []
-  treat_missing_data        = "notBreaching"
-  tags                      = local.default_tags
-}
-
 resource "aws_cloudwatch_log_metric_filter" "casrec_add_in_progress" {
   name           = "AdminCSVUploadInProgressFilter.${local.environment}"
-  pattern        = "{ ($.service_name = \"admin\") && ($.request_uri = \"/manage/goodlongresponse*\") }"
+  pattern        = "{ ($.service_name = \"admin\") && ($.request_uri = \"/admin/ajax/casrec-add*\") }"
   log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
 
   metric_transformation {
@@ -331,7 +310,7 @@ resource "aws_cloudwatch_log_metric_filter" "casrec_add_in_progress" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
-  alarm_name                = "AdminALBAverageResponseTimeOrig.${local.environment}"
+  alarm_name                = "AdminALBAverageResponseTime.${local.environment}"
   alarm_actions             = [data.aws_sns_topic.alerts.arn]
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   alarm_description         = "Response Time for Admin ALB in ${local.environment} (ignoring csv upload)"
@@ -356,8 +335,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
       metric_name = "TargetResponseTime"
       namespace   = "AWS/ApplicationELB"
       period      = "60"
-      stat        = "Maximum"
-      unit        = "Count"
+      stat        = "Average"
 
       dimensions = {
         "LoadBalancer" = trimprefix(split(":", aws_lb.admin.arn)[5], "loadbalancer/")
@@ -373,7 +351,6 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
       namespace   = aws_cloudwatch_log_metric_filter.casrec_add_in_progress.metric_transformation[0].namespace
       period      = "60"
       stat        = "Maximum"
-      unit        = "Count"
     }
   }
 }
