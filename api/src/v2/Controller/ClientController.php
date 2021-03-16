@@ -35,6 +35,7 @@ class ClientController extends RestController
     /**
      * @param ClientRepository $repository
      * @param ClientAssembler $clientAssembler
+     * @param OrganisationAssembler $orgAssembler
      * @param ClientTransformer $transformer
      */
     public function __construct(ClientRepository $repository, ClientAssembler $clientAssembler, OrganisationAssembler $orgAssembler, ClientTransformer $transformer)

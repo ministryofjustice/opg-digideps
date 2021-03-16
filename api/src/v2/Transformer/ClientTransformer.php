@@ -38,6 +38,7 @@ class ClientTransformer
     /**
      * @param ClientDto $dto
      * @param array $exclude
+     * @param OrganisationDto|null $orgDto
      * @return array
      */
     public function transform(ClientDto $dto, array $exclude = [], ?OrganisationDto $orgDto = null)
