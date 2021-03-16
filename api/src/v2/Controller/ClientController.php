@@ -6,6 +6,7 @@ use App\Entity\Client;
 use App\Controller\RestController;
 use App\Repository\ClientRepository;
 use App\v2\Assembler\ClientAssembler;
+use App\v2\Assembler\OrganisationAssembler;
 use App\v2\Transformer\ClientTransformer;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -23,26 +24,30 @@ class ClientController extends RestController
     private $repository;
 
     /** @var ClientAssembler */
-    private $assembler;
+    private $clientAssembler;
+
+    /** @var OrganisationAssembler */
+    private $orgAssembler;
 
     /** @var ClientTransformer */
     private $transformer;
 
     /**
      * @param ClientRepository $repository
-     * @param ClientAssembler $assembler
+     * @param ClientAssembler $clientAssembler
      * @param ClientTransformer $transformer
      */
-    public function __construct(ClientRepository $repository, ClientAssembler $assembler, ClientTransformer $transformer)
+    public function __construct(ClientRepository $repository, ClientAssembler $clientAssembler, OrganisationAssembler $orgAssembler, ClientTransformer $transformer)
     {
         $this->repository = $repository;
-        $this->assembler = $assembler;
+        $this->clientAssembler = $clientAssembler;
+        $this->orgAssembler = $orgAssembler;
         $this->transformer = $transformer;
     }
 
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or is_granted('ROLE_DEPUTY')")
      *
      * @param $id
      * @return JsonResponse
@@ -53,17 +58,22 @@ class ClientController extends RestController
             throw new NotFoundHttpException(sprintf('Client id %s not found', $id));
         }
 
-        $dto = $this->assembler->assembleFromArray($data);
+        $dto = $this->clientAssembler->assembleFromArray($data);
+        
+        $orgDto = null;
+        if (isset($data['organisation'])) {
+            $orgDto = $this->orgAssembler->assembleFromArray($data['organisation']);
+        }
 
-        $transformedDto = $this->transformer->transform($dto);
+        $transformedDto = $this->transformer->transform($dto, [], $orgDto);
 
         if ($transformedDto['archived_at']) {
             throw $this->createAccessDeniedException('Cannot access archived reports');
         };
 
-        /* @var $client Client */
+        /* @var Client $client */
         $client = $this->findEntityBy(Client::class, $transformedDto['id']);
-
+        
         if (!$this->isGranted('view', $client)) {
             throw $this->createAccessDeniedException('Client does not belong to user');
         }
@@ -84,7 +94,7 @@ class ClientController extends RestController
             throw new NotFoundHttpException(sprintf('Client with case number %s not found', $caseNumber));
         }
 
-        $dto = $this->assembler->assembleFromArray($data);
+        $dto = $this->clientAssembler->assembleFromArray($data);
 
         $transformedDto = $this->transformer->transform($dto, ['reports', 'ndr', 'organisation', 'namedDeputy']);
 

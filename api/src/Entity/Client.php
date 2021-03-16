@@ -242,6 +242,7 @@ class Client implements ClientInterface
     /**
      * @var Organisation|null
      *
+     * @JMS\Type("App\Entity\Organisation")
      * @JMS\Groups({"client-organisations"})
      *
      * @ORM\ManyToOne(targetEntity="Organisation", inversedBy="clients")

@@ -59,7 +59,7 @@ class ClientAssembler
             $dto->setReportCount(count($data['reports']));
         }
 
-        if ($orgDto !== null) {
+        if (isset($data['organisation']) && is_array($data['organisation'])) {
             $dto->setOrganisation($orgDto);
         }
 

@@ -4,29 +4,30 @@ namespace App\Controller;
 
 use App\Entity as EntityDir;
 use App\Exception\NotFound;
-use Doctrine\ORM\EntityRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Doctrine\Persistence\ObjectRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-abstract class RestController extends Controller
+abstract class RestController extends AbstractController
 {
     /**
      * @param $entityClass string
      *
-     * @return EntityRepository
+     * @return ObjectRepository
      */
-    protected function getRepository($entityClass)
+    protected function getRepository(string $entityClass): ObjectRepository
     {
         return $this->getDoctrine()->getManager()->getRepository($entityClass);
     }
 
     /**
-     * @param string    $entityClass
+     * @param string $entityClass
      * @param array|int $criteriaOrId
-     * @param string    $errorMessage
+     * @param null $errorMessage
      *
+     * @return object
      * @throws NotFound
      */
-    protected function findEntityBy($entityClass, $criteriaOrId, $errorMessage = null)
+    protected function findEntityBy(string $entityClass, $criteriaOrId, $errorMessage = null): object
     {
         $repo = $this->getRepository($entityClass);
         $entity = is_array($criteriaOrId) ? $repo->findOneBy($criteriaOrId) : $repo->find($criteriaOrId);
