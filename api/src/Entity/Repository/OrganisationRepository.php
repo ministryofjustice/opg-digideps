@@ -12,6 +12,9 @@ class OrganisationRepository extends EntityRepository
      */
     public function getAllArray(): array
     {
+        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter->disableForEntity(Organisation::class);
+
         $query = $this
             ->getEntityManager()
             ->createQuery('SELECT o FROM App\Entity\Organisation o');
@@ -91,6 +94,9 @@ class OrganisationRepository extends EntityRepository
      */
     public function organisationExists(string $email): bool
     {
+        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter->disableForEntity(Organisation::class);
+
         $email = strtolower($email);
         $queryString = 'SELECT COUNT(o.id) FROM App\Entity\Organisation o WHERE o.emailIdentifier = ?1';
         $queryParams = [1 => $email];
@@ -117,6 +123,9 @@ class OrganisationRepository extends EntityRepository
      */
     public function findByEmailIdentifier(string $email): ?Organisation
     {
+        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter->disableForEntity(Organisation::class);
+
         $email = strtolower($email);
         $queryString = 'SELECT o FROM App\Entity\Organisation o WHERE o.emailIdentifier = ?1';
         $queryParams = [1 => $email];
