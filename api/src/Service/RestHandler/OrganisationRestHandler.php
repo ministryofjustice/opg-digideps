@@ -10,6 +10,7 @@ use App\Factory\OrganisationFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException as OptimisticLockExceptionAlias;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Exception;
 
 class OrganisationRestHandler
 {
@@ -93,6 +94,31 @@ class OrganisationRestHandler
 
         return $organisation;
     }
+
+    /**
+     * @param int $id
+     * @return bool
+     * @throws OptimisticLockExceptionAlias
+     * @throws Exception
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function delete(int $id)
+    {
+        if (null === ($organisation = $this->orgRepository->find($id))) {
+            throw new Exception();
+        }
+
+        if ($this->orgRepository->hasActiveEntities($id)) {
+            throw new Exception();
+        }
+
+        $organisation->setDeletedAt(new \DateTime());
+        $this->em->flush($organisation);
+
+        return true;
+    }
+
+    /**
 
     /**
      * @param array $data

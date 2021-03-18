@@ -10,26 +10,24 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version224 extends AbstractMigration
+final class Version248 extends AbstractMigration
 {
     public function getDescription() : string
     {
-        return 'Update lay reports ending after 13/11/19 new due date of 21 days';
+        return '';
     }
 
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql("UPDATE report SET due_date = end_date + INTERVAL '21 days' WHERE end_date > '2019-11-12' AND
-                       type IN ('102', '103', '104', '102-4', '103-4')");
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
         $this->addSql('ALTER TABLE organisation ADD deleted_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
     }
 
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql("UPDATE report SET due_date = end_date + INTERVAL '56 days' WHERE end_date > '2019-11-12' AND
-                       type IN ('102', '103', '104', '102-4', '103-4')");
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
         $this->addSql('ALTER TABLE organisation DROP deleted_at');
     }
 }

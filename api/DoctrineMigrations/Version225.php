@@ -28,13 +28,14 @@ final class Version225 extends AbstractMigration implements ContainerAwareInterf
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
+
         /** @var EntityManager $em */
         $em = $this->container->get('em');
 
         /** @var OrganisationRepository $orgRepo */
         $orgRepo = $em->getRepository(Organisation::class);
 
-        foreach ($orgRepo->findAll() as $org) {
+        foreach ($orgRepo->getAllArray() as $org) {
             if (strpos($org->getName(), "@") !== false) {
                 $org->setName('Your Organisation');
                 $em->persist($org);
@@ -42,9 +43,12 @@ final class Version225 extends AbstractMigration implements ContainerAwareInterf
         }
 
         $em->flush();
+
+        $this->addSql('ALTER TABLE organisation DROP deleted_at');
     }
 
     public function down(Schema $schema) : void
     {
+        $this->addSql('ALTER TABLE organisation ADD deleted_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
     }
 }

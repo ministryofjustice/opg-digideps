@@ -54,6 +54,7 @@ class OrganisationControllerTest extends AbstractTestController
         self::fixtures()->flush()->clear();
 
         self::$em = self::$frameworkBundleClient->getContainer()->get('em');
+        self::$em->getFilters()->disable('softdeleteable');
     }
 
     /**
@@ -308,7 +309,7 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function deleteActionDeletesOrganisation()
     {
-        $orgId = self::$orgs[1]->getId();
+        $orgId = self::$orgs[2]->getId();
         self::$frameworkBundleClient->request(
             'DELETE',
             '/v2/organisation/' . $orgId,
@@ -327,9 +328,11 @@ class OrganisationControllerTest extends AbstractTestController
 
         $organisation = self::$em
             ->getRepository(Organisation::class)
-            ->findOneBy(['id' => $orgId]);
+            ->find($orgId);
 
-        $this->assertNull($organisation);
+        $this->assertNotNull($organisation);
+        $this->assertNotNull($organisation->getDeletedAt());
+        $this->assertTrue($organisation->isDeleted());
     }
 
     /**
