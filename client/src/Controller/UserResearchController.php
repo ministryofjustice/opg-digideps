@@ -6,6 +6,7 @@ namespace App\Controller;
 use App\Entity\UserResearch\UserResearchResponse;
 use App\Exception\ReportNotSubmittedException;
 use App\Form\UserResearchResponseType;
+use App\Service\Client\Internal\NdrApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\Internal\UserResearchApi;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -21,28 +22,32 @@ class UserResearchController extends AbstractController
     private ReportApi $reportApi;
     private TranslatorInterface $translator;
     private FormFactoryInterface $formFactory;
+    private NdrApi $ndrApi;
 
     public function __construct(
         UserResearchApi $userResearchApi,
         ReportApi $reportApi,
         TranslatorInterface $translator,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        NdrApi $ndrApi
     ) {
         $this->userResearchApi = $userResearchApi;
         $this->reportApi = $reportApi;
         $this->translator = $translator;
         $this->formFactory = $formFactory;
+        $this->ndrApi = $ndrApi;
     }
 
     /**
      * @Route("/report/{reportId}/post_submission_user_research", name="report_post_submission_user_research")
+     * @Route("/ndr/{ndrId}/post_submission_user_research", name="ndr_post_submission_user_research")
      * @Template("@App/UserResearch/postSubmissionUserResearch.html.twig")
      * @param $reportId
      * @return array
      */
-    public function postSubmissionUserResearch(Request $request, int $reportId)
+    public function postSubmissionUserResearch(Request $request, ?int $reportId = null, ?int $ndrId = null)
     {
-        $report = $this->reportApi->getReport($reportId, ['report']);
+        $report = !is_null($reportId) ? $this->reportApi->getReport($reportId, ['report']) : $this->ndrApi->getNdr($ndrId, ['ndr']);
 
         // check status
         if (!$report->getSubmitted()) {
@@ -55,8 +60,10 @@ class UserResearchController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->userResearchApi->createPostSubmissionUserResearch($form->getData());
+            $routeName = sprintf('%s_user_research_submitted', $reportId ? 'report' : 'ndr');
+            $routeParams = $reportId ? ['reportId' => $reportId] : ['ndrId' => $ndrId];
 
-            return $this->redirect($this->generateUrl('user_research_submitted', ['reportId' => $reportId]));
+            return $this->redirect($this->generateUrl($routeName, $routeParams));
         }
 
         return [
@@ -65,14 +72,15 @@ class UserResearchController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/post_submission_user_research/submitted", name="user_research_submitted")
+     * @Route("/report/{reportId}/post_submission_user_research/submitted", name="report_user_research_submitted")
+     * @Route("/ndr/{ndrId}/post_submission_user_research/submitted", name="ndr_user_research_submitted")
      * @Template("@App/UserResearch/userResearchSubmitted.html.twig")
      * @param $reportId
      * @return array
      */
-    public function userResearchSubmitted(int $reportId)
+    public function userResearchSubmitted(?int $reportId = null, ?int $ndrId = null)
     {
-        $report = $this->reportApi->getReport($reportId, ['report']);
+        $report = !is_null($reportId) ? $this->reportApi->getReport($reportId, ['report']) : $this->ndrApi->getNdr($ndrId, ['ndr']);
 
         // check status
         if (!$report->getSubmitted()) {

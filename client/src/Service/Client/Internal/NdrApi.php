@@ -9,11 +9,14 @@ use App\Entity\Report\Document;
 use App\Entity\User;
 use App\Event\NdrSubmittedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
+use App\Exception\RestClientException;
 use App\Service\Client\RestClient;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class NdrApi
 {
     private const SUBMIT_NDR_ENDPOINT = 'ndr/%s/submit?documentId=%s';
+    private const GET_NDR_ENDPOINT = 'ndr/%s';
 
     /** @var RestClient */
     private $restClient;
@@ -46,5 +49,35 @@ class NdrApi
 
         $ndrSubmittedEvent = new NdrSubmittedEvent($submittedByWithClientsAndReports, $ndrToSubmit, $client->getActiveReport());
         $this->eventDispatcher->dispatch(NdrSubmittedEvent::NAME, $ndrSubmittedEvent);
+    }
+
+    /**
+     * @param int   $reportId
+     * @param array $groups
+     *
+     * @return Report
+     */
+    public function getNdr(int $reportId, array $groups = [])
+    {
+        $groups[] = 'ndr';
+
+        $groups = array_unique($groups);
+        sort($groups); // helps HTTP caching
+
+        try {
+            $ndr = $this->restClient->get(
+                sprintf(self::GET_NDR_ENDPOINT, $reportId),
+                'Ndr\\Ndr',
+                $groups
+            );
+        } catch (RestClientException $e) {
+            if ($e->getStatusCode() === 403 || $e->getStatusCode() === 404) {
+                throw new NotFoundHttpException($e->getData()['message']);
+            } else {
+                throw $e;
+            }
+        }
+
+        return $ndr;
     }
 }

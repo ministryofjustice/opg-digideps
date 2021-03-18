@@ -440,7 +440,6 @@ class ReportController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->satisfactionApi->createPostSubmissionFeedback($form->getData(), $report->getType(), $this->getUser());
 
-            // REdirect to newly made page
             return $this->redirect($this->generateUrl('report_post_submission_user_research', ['reportId' => $reportId]));
         }
 
