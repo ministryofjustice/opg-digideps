@@ -22,6 +22,10 @@ class UserVoter extends Voter
      */
     protected function supports($attribute, $subject)
     {
+        if (!$subject instanceof User) {
+            return false;
+        }
+
         switch ($attribute) {
             case self::DELETE_USER:
             case self::EDIT_USER:
