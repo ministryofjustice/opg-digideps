@@ -35,20 +35,18 @@ final class Version225 extends AbstractMigration implements ContainerAwareInterf
         /** @var OrganisationRepository $orgRepo */
         $orgRepo = $em->getRepository(Organisation::class);
 
-        foreach ($orgRepo->getAllArray() as $org) {
-            if (strpos($org->getName(), "@") !== false) {
+        foreach ($orgRepo->getOrgIdAndNames() as $key => $value) {
+            if (strpos($value, "@") !== false) {
+                $org = $orgRepo->find($key);
                 $org->setName('Your Organisation');
                 $em->persist($org);
             }
         }
 
         $em->flush();
-
-        $this->addSql('ALTER TABLE organisation DROP deleted_at');
     }
 
     public function down(Schema $schema) : void
     {
-        $this->addSql('ALTER TABLE organisation ADD deleted_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
     }
 }

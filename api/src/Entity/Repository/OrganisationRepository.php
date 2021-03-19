@@ -35,6 +35,21 @@ class OrganisationRepository extends EntityRepository
     }
 
     /**
+     * @return array
+     */
+    public function getOrgIdAndNames(): array
+    {
+        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter->disableForEntity(Organisation::class);
+
+        $query = $this
+            ->getEntityManager()
+            ->createQuery('SELECT o.id, o.name FROM App\Entity\Organisation o');
+
+        return $query->getArrayResult();
+    }
+
+    /**
      * @param int $id
      * @return array|null
      */
