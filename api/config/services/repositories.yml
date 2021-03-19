@@ -45,3 +45,9 @@ services:
       factory: ["@doctrine.orm.entity_manager", getRepository]
       arguments:
           - App\Entity\Ndr\Ndr
+
+  App\Entity\Repository\UserResearchResponseRepository:
+      class: App\Entity\UserResearch\UserResearchResponse
+      factory: [ "@doctrine.orm.entity_manager", getRepository ]
+      arguments:
+          - App\Entity\UserResearch\UserResearchResponse

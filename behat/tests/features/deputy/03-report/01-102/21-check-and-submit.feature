@@ -118,10 +118,7 @@ Feature: Report submit
             | feedback_report_comments | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. |
         And I press "feedback_report_save"
         Then the form should be valid
-        And the URL should match "/report/\d+/submit_feedback"
-        When I click on "return-to-reports-page"
-        Then the URL should match "/lay"
-        And the response status code should be 200
+        And the URL should match "/report/\d+/post_submission_user_research"
 
     @deputy
     Scenario: admin area check filters, submission and ZIP file content
