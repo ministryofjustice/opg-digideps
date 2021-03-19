@@ -10,11 +10,11 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version248 extends AbstractMigration
+final class Version249 extends AbstractMigration
 {
     public function getDescription() : string
     {
-        return '';
+        return 'Adding deleted_at field to Organisation to allow for soft deletion of organisations';
     }
 
     public function up(Schema $schema) : void
