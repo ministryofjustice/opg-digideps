@@ -28,7 +28,6 @@ final class Version225 extends AbstractMigration implements ContainerAwareInterf
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-
         /** @var EntityManager $em */
         $em = $this->container->get('em');
 

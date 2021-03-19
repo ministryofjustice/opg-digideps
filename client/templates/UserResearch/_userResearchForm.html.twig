@@ -1,0 +1,25 @@
+{% from '@App/Macros/macros.html.twig' import checkbox_group, radio_group %}
+
+{% set gaCategory = 'page.htmlTitle' | trans %}
+{% set gaAction = 'Click: Button: Submit' %}
+{% set gaLabel = 'Clicked submit button on ' ~ app.request.requesturi %}
+
+{{ form_start(form, {attr: {novalidate: 'novalidate' } }) }}
+
+    {{ radio_group(form.deputyshipLength) }}
+
+    {{ checkbox_group(form.agreedResearchTypes) }}
+
+    {{ radio_group(form.hasAccessToVideoCallDevice) }}
+
+    {{ form_submit_ga(
+        form.submitButton,
+        'form.submitButton',
+        gaCategory,
+        gaAction,
+        gaLabel,
+        null,
+        {'labelText': 'form.submitButton.label' | trans({}, translationDomain)}
+    ) }}
+
+{{ form_end(form) }}

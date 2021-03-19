@@ -9,7 +9,12 @@
     '%reportName%' : report.getPeriod()
 } %}
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
+{% block pageHeader %}
+{% endblock %}
+
+{% set gaCategory = 'page.htmlTitle' | trans %}
+{% set gaAction = 'Click: Button: Send feedback' %}
+{% set gaLabel = 'Clicked send feedback button on ' ~ app.request.requesturi %}
 
 {% block pageContent %}
 
@@ -44,19 +49,25 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'push--bottom' } }) }}
 
-    {{ form_checkbox_group(form.satisfactionLevel, 'form.satisfactionLevel', {
-        'legendClass' : 'text govuk-label--s',
-        'legend': ['satisfactionLevel']
-    }) }}
+        {{ form_checkbox_group(form.satisfactionLevel, 'form.satisfactionLevel', {
+            'legendClass' : 'text govuk-label--s',
+            'legend': ['satisfactionLevel']
+        }) }}
 
-    {{ form_input(form.comments, 'form.comments', {
-        'labelClass' : 'govuk-label--s'
-    }) }}
+        {{ form_input(form.comments, 'form.comments', {
+            'labelClass' : 'govuk-label--s'
+        }) }}
 
-    <p class="govuk-body">{{ 'page.feedback.limit' | trans }}</p>
-    <p class="govuk-body">{{ 'page.feedback.disclaimer' | trans }}</p>
+        <p class="govuk-body">{{ 'page.feedback.limit' | trans }}</p>
+        <p class="govuk-body">{{ 'page.feedback.disclaimer' | trans }}</p>
 
-    {{ form_submit(form.save, 'form.send') }}
+        {{ form_submit_ga(
+            form.save,
+            'form.send',
+            gaCategory,
+            gaAction,
+            gaLabel,
+        ) }}
 
     {{ form_end(form) }}
     {# end feedback form #}

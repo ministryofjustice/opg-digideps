@@ -1,0 +1,26 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% set translationDomain = "user-research-submitted" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+
+{% block pageHeader %}
+{% endblock %}
+
+{% block pageContent %}
+
+    <div class="govuk-panel govuk-panel--confirmation">
+        <h1 class="govuk-panel__title">
+            {{ 'page.successBannerTitle' | trans }}
+        </h1>
+        <div class="govuk-panel__body">
+            {{ 'page.successBannerBody' | trans }}
+        </div>
+    </div>
+
+    <a href="{{ path(homePageName) }}" role="button" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary govuk-!-margin-bottom-7 behat-link-return-to-reports-page" data-module="govuk-button">
+        {{ 'page.yourReportsButton' | trans }}
+    </a>
+
+{% endblock %}
