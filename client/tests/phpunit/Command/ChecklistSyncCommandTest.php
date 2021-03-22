@@ -27,11 +27,13 @@ class ChecklistSyncCommandTest extends KernelTestCase
     private $restClient;
     private $pdfGenerator;
 
-    /** @var ContainerInterface */
-    private $container;
-
     /** @var CommandTester */
     private $commandTester;
+
+    /**
+     * @var ContainerInterface
+     */
+    protected static $container;
 
     public function setUp(): void
     {
