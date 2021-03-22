@@ -45,7 +45,7 @@ class ReportApiTest extends TestCase
             ->willReturn($reportId);
 
         $this->eventDispatcher
-            ->dispatch('report.submitted', $event)
+            ->dispatch($event, 'report.submitted')
             ->shouldBeCalled();
 
         $this->sut->submit($reportToBeSubmitted, $submittedBy);
@@ -69,7 +69,7 @@ class ReportApiTest extends TestCase
         );
 
         $this->eventDispatcher
-            ->dispatch('report.unsubmitted', $reportUnsubmittedEvent)
+            ->dispatch($reportUnsubmittedEvent, 'report.unsubmitted')
             ->shouldBeCalled();
 
         $this->sut->unsubmit($submittedReport, $currentUser, $trigger);

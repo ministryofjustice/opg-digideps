@@ -79,11 +79,6 @@ services:
             $serializer: '@serializer'
             $logger: '@logger'
 
-    App\Command\DocumentSyncCommand:
-        class: App\Command\DocumentSyncCommand
-        arguments:
-            $serializer: '@serializer'
-
     App\Service\AWS\RequestSigner:
         class: App\Service\AWS\RequestSigner
         arguments:

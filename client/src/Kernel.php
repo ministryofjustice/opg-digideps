@@ -15,6 +15,15 @@ class Kernel extends BaseKernel
 
     private const CONFIG_EXTS = '.{php,xml,yaml,yml}';
 
+    public function __construct($environment, $debug)
+    {
+        date_default_timezone_set('Europe/London');
+        ini_set('session.hash_function', 'sha256');
+        ini_set('session.entropy_length', '32');
+
+        parent::__construct($environment, $debug);
+    }
+
     public function registerBundles(): iterable
     {
         $contents = require $this->getProjectDir().'/config/bundles.php';

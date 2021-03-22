@@ -46,7 +46,7 @@ class OrganisationApiTest extends TestCase
         );
 
         $this->eventDispatcher
-            ->dispatch('user.added.to.organisation', $userAddedToOrgEvent)
+            ->dispatch($userAddedToOrgEvent, 'user.added.to.organisation')
             ->shouldBeCalled();
 
         $this->sut->addUserToOrganisation($organisation, $userToAdd, $currentUser, $trigger);
@@ -72,7 +72,7 @@ class OrganisationApiTest extends TestCase
         );
 
         $this->eventDispatcher
-            ->dispatch('user.removed.from.organisation', $userRemovedFromOrgEvent)
+            ->dispatch($userRemovedFromOrgEvent, 'user.removed.from.organisation')
             ->shouldBeCalled();
 
         $this->sut->removeUserFromOrganisation($organisation, $userToRemove, $currentUser, $trigger);

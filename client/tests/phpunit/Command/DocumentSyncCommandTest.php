@@ -1,21 +1,70 @@
 <?php
 namespace App\Tests\Command;
 
+use App\Command\DocumentSyncCommand;
 use App\Model\Sirius\QueuedDocumentData;
 use App\Service\Client\RestClient;
 use App\Service\DocumentSyncService;
 use App\Service\ParameterStoreService;
 use DateTime;
 use DateTimeZone;
+use PHPUnit\Framework\MockObject\MockObject;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class DocumentSyncCommandTest extends KernelTestCase
 {
+    /**
+     * @var DocumentSyncService
+     */
+    private $syncService;
+
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    /**
+     * @var ParameterStoreService
+     */
+    private $parameterStore;
+
+    /**
+     * @var CommandTester
+     */
+    private $commandTester;
+
+    /**
+     * @var ContainerInterface
+     */
+    protected static $container;
+
+    public function setUp(): void
+    {
+        $kernel = static::createKernel();
+        $app = new Application($kernel);
+
+        $this->syncService = self::prophesize(DocumentSyncService::class);
+        $this->restClient = self::prophesize(RestClient::class);
+        $this->serializer = self::bootKernel()->getContainer()->get('serializer');
+        $this->parameterStore = self::prophesize(ParameterStoreService::class);
+
+        $app->add(new DocumentSyncCommand($this->syncService->reveal(), $this->restClient->reveal(), $this->serializer, $this->parameterStore->reveal()));
+
+        $command = $app->find(DocumentSyncCommand::$defaultName);
+        $this->commandTester = new CommandTester($command);
+    }
+
     public function testExecute(): void
     {
         $rawQueuedDocumentData = json_encode([
@@ -47,155 +96,106 @@ class DocumentSyncCommandTest extends KernelTestCase
             ->setReportSubmitDate(new DateTime('2020-04-29 15:05:23', new DateTimeZone('Europe/London')))
             ->setReportType('104');
 
-        /** @var ParameterStoreService|ObjectProphecy $parameterStoreService */
-        $parameterStoreService = self::prophesize(ParameterStoreService::class);
-        $parameterStoreService
+        $this->parameterStore
             ->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC)
             ->shouldBeCalled()
             ->willReturn('1');
 
-        $parameterStoreService
+        $this->parameterStore
             ->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT)
             ->shouldBeCalled()
             ->willReturn('100');
 
-        /** @var RestClient|ObjectProphecy $restClient */
-        $restClient = self::prophesize(RestClient::class);
-        $restClient
+        $this->restClient
             ->apiCall('get', 'document/queued', ['row_limit' => '100'], 'array', Argument::type('array'), false)
             ->shouldBeCalled()
             ->willReturn($rawQueuedDocumentData);
 
-        /** @var DocumentSyncService|ObjectProphecy $documentSyncService */
-        $documentSyncService = self::prophesize(DocumentSyncService::class);
-        $documentSyncService
+        $this->syncService
             ->syncDocument($queuedDocumentData)
             ->shouldBeCalled();
 
-        $documentSyncService
+        $this->syncService
             ->getDocsNotSyncedCount()
             ->shouldBeCalled()
             ->willReturn(0);
 
-        $documentSyncService
+        $this->syncService
             ->getSyncErrorSubmissionIds()
             ->shouldBeCalled()
             ->willReturn([]);
 
-        $kernel = static::bootKernel([ 'debug' => false ]);
-        $application = new Application($kernel);
+        $this->commandTester->execute([]);
 
-        /** @var ContainerInterface */
-        $container = $kernel->getContainer();
-        $container->set(DocumentSyncService::class, $documentSyncService->reveal());
-        $container->set(RestClient::class, $restClient->reveal());
-        $container->set(ParameterStoreService::class, $parameterStoreService->reveal());
-
-        $command = $application->find('digideps:document-sync');
-        $commandTester = new CommandTester($command);
-        $commandTester->execute([]);
-
-        $output = $commandTester->getDisplay();
+        $output = $this->commandTester->getDisplay();
         $this->assertStringContainsString('1 documents to upload', $output);
     }
 
     public function testSleepsWhenTurnedOff()
     {
-        /** @var ParameterStoreService|ObjectProphecy $parameterStore */
-        $parameterStore = self::prophesize(ParameterStoreService::class);
-        $parameterStore
+        $this->parameterStore
             ->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC)
             ->shouldBeCalled()
             ->willReturn('0');
 
-        /** @var RestClient|ObjectProphecy $restClient */
-        $restClient = self::prophesize(RestClient::class);
-        $restClient
+        $this->restClient
             ->apiCall(Argument::cetera())
             ->shouldNotBeCalled();
 
-        /** @var DocumentSyncService|ObjectProphecy $documentSyncService */
-        $documentSyncService = self::prophesize(DocumentSyncService::class);
-        $documentSyncService
+        $this->syncService
             ->syncDocument(Argument::cetera())
             ->shouldNotBeCalled();
 
-        $kernel = static::bootKernel([ 'debug' => false ]);
-        $application = new Application($kernel);
+        $this->commandTester->execute([]);
 
-        /** @var ContainerInterface */
-        $container = $kernel->getContainer();
-        $container->set(DocumentSyncService::class, $documentSyncService->reveal());
-        $container->set(RestClient::class, $restClient->reveal());
-        $container->set(ParameterStoreService::class, $parameterStore->reveal());
-
-        $command = $application->find('digideps:document-sync');
-        $commandTester = new CommandTester($command);
-        $commandTester->execute([]);
-
-        $output = $commandTester->getDisplay();
+        $output = $this->commandTester->getDisplay();
         $this->assertStringContainsString('Feature disabled, sleeping', $output);
     }
 
     public function testExecute_with_sync_error_submission_ids(): void
     {
-        /** @var FeatureFlagService|ObjectProphecy $featureFlags */
-        $parameterStore = self::prophesize(ParameterStoreService::class);
-        $parameterStore
+        $this->parameterStore
            ->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC)
            ->shouldBeCalled()
            ->willReturn('1');
 
-        $parameterStore
+        $this->parameterStore
            ->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT)
            ->shouldBeCalled()
            ->willReturn('100');
 
-        /** @var RestClient|ObjectProphecy $restClient */
-        $restClient = self::prophesize(RestClient::class);
-        $restClient
+        $this->restClient
            ->apiCall('get', 'document/queued', ['row_limit' => '100'], 'array', Argument::type('array'), false)
            ->shouldBeCalled()
            ->willReturn(json_encode([]));
 
         /** @var DocumentSyncService|ObjectProphecy $documentSyncService */
-        $documentSyncService = self::prophesize(DocumentSyncService::class);
-        $documentSyncService
+        $this->syncService
            ->getSyncErrorSubmissionIds()
            ->shouldBeCalled()
            ->willReturn([1]);
 
-        $documentSyncService
+        $this->syncService
            ->setSubmissionsDocumentsToPermanentError()
            ->shouldBeCalled();
 
-        $documentSyncService
+        $this->syncService
            ->getDocsNotSyncedCount()
            ->shouldBeCalled()
            ->willReturn(6);
 
-        $documentSyncService
+        $this->syncService
            ->setSyncErrorSubmissionIds([])
            ->shouldBeCalled();
 
-        $documentSyncService
+        $this->syncService
            ->setDocsNotSyncedCount(0)
            ->shouldBeCalled();
 
-        $kernel = static::bootKernel([ 'debug' => false ]);
-        $application = new Application($kernel);
 
-        /** @var ContainerInterface */
-        $container = $kernel->getContainer();
-        $container->set(DocumentSyncService::class, $documentSyncService->reveal());
-        $container->set(RestClient::class, $restClient->reveal());
-        $container->set(ParameterStoreService::class, $parameterStore->reveal());
+        $this->commandTester->execute([]);
 
-        $command = $application->find('digideps:document-sync');
-        $commandTester = new CommandTester($command);
-        $commandTester->execute([]);
-
-        $output = $commandTester->getDisplay();
+        $output = $this->commandTester->getDisplay();
         $this->assertStringContainsString('0 documents to upload', $output);
         $this->assertStringContainsString('6 documents failed to sync', $output);
     }

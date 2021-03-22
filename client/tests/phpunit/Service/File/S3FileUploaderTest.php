@@ -27,7 +27,7 @@ class S3FileUploaderTest extends KernelTestCase
 
     public function setUp(): void
     {
-        $this->projectDir = sprintf('%s/..', (self::bootKernel())->getProjectDir());
+        $this->projectDir = self::bootKernel()->getProjectDir();
 
         $this->storage = self::prophesize(S3Storage::class);
         $this->restClient = self::prophesize(RestClient::class);

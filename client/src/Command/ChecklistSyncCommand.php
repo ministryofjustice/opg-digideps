@@ -14,8 +14,6 @@ use App\Service\ParameterStoreService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class ChecklistSyncCommand extends Command
 {
@@ -23,7 +21,7 @@ class ChecklistSyncCommand extends Command
     const FALLBACK_ROW_LIMITS = '30';
 
     /** @var string */
-    protected static $defaultName = 'digideps:checklist-sync';
+    public static $defaultName = 'digideps:checklist-sync';
 
     /** @var ChecklistPdfGenerator */
     private $pdfGenerator;
@@ -33,9 +31,6 @@ class ChecklistSyncCommand extends Command
 
     /** @var RestClient */
     private $restClient;
-
-    /** @var Serializer  */
-    private $serializer;
 
     /** @var ParameterStoreService */
     private $parameterStore;
@@ -47,7 +42,6 @@ class ChecklistSyncCommand extends Command
      * @param ChecklistPdfGenerator $pdfGenerator
      * @param ChecklistSyncService $syncService
      * @param RestClient $restClient
-     * @param SerializerInterface $serializer
      * @param ParameterStoreService $parameterStore
      * @param null $name
      */
@@ -55,14 +49,12 @@ class ChecklistSyncCommand extends Command
         ChecklistPdfGenerator $pdfGenerator,
         ChecklistSyncService $syncService,
         RestClient $restClient,
-        SerializerInterface $serializer,
         ParameterStoreService $parameterStore,
         $name = null
     ) {
         $this->pdfGenerator = $pdfGenerator;
         $this->syncService = $syncService;
         $this->restClient = $restClient;
-        $this->serializer = $serializer;
         $this->parameterStore = $parameterStore;
 
         parent::__construct($name);

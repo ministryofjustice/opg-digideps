@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use Symfony\Component\Intl\Countries;
-use Symfony\Component\Intl\Intl;
 
 class IntlService
 {
@@ -13,6 +12,10 @@ class IntlService
      */
     public function getCountryNameByCountryCode(?string $countryCode) : ?string
     {
+        if ($countryCode === null) {
+            return 'Country not provided';
+        }
+
         return Countries::getName($countryCode);
     }
 }

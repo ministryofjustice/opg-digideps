@@ -98,7 +98,7 @@ class ClientApiTest extends TestCase
 
         $trigger = 'A_TRIGGER';
         $clientDeletedEvent = new ClientDeletedEvent($clientWithUsers, $currentUser, $trigger);
-        $this->eventDispatcher->dispatch('client.deleted', $clientDeletedEvent)->shouldBeCalled();
+        $this->eventDispatcher->dispatch($clientDeletedEvent, 'client.deleted')->shouldBeCalled();
 
         $this->sut->delete($clientWithUsers->getId(), $trigger);
     }
@@ -118,7 +118,7 @@ class ClientApiTest extends TestCase
 
         $clientUpdatedEvent = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $currentUser, $trigger);
 
-        $this->eventDispatcher->dispatch('client.updated', $clientUpdatedEvent)->shouldBeCalled();
+        $this->eventDispatcher->dispatch($clientUpdatedEvent, 'client.updated')->shouldBeCalled();
 
         $this->sut->update($preUpdateClient, $postUpdateClient, $trigger);
     }
