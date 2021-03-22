@@ -43,7 +43,7 @@ class OrganisationTransformer
         }
 
         if (!in_array('clients', $exclude) && $dto->getClients()) {
-            $data['clients'] = $this->transformClients($dto);
+            $data['clients'] = $this->transformClients($dto->getClients());
         }
 
         return $data;
@@ -74,18 +74,15 @@ class OrganisationTransformer
      * @param array $clients
      * @return array
      */
-    private function transformClients(OrganisationDto $orgDto): array
+    private function transformClients(array $clients, ?array $transformedOrg = null): array
     {
-        $clients = $orgDto->getClients();
         if (empty($clients)) {
             return [];
         }
 
-        $transformed = [];
-
         foreach ($clients as $client) {
             if ($client instanceof ClientDto) {
-                $transformed[] = $this->clientTransformer->transform($client, ['reports', 'ndr', 'organisation'], $orgDto);
+                $transformed[] = $this->clientTransformer->transform($client, ['reports', 'ndr', 'organisation']);
             }
         }
 

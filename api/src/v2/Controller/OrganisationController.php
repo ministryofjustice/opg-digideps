@@ -67,19 +67,40 @@ class OrganisationController extends AbstractController
      */
     public function getAllAction(): JsonResponse
     {
+        // Fetch all data from db
         $data = $this->repository->getAllArray();
+        
+        $data = $this->snakeCase($data);
 
-        $organisationDtos = [];
-        foreach ($data as $organisationArray) {
-            $organisationDtos[] = $this->assembler->assembleFromArray($organisationArray);
+        // Pass transformed org data to repsonse
+        return $this->buildSuccessResponse($data);
+    }
+
+    private function snakeCase(array $array): array
+    {
+        return array_map(
+            function($item) {
+                if (is_array($item)) {
+                    $item = $this->snakeCase($item);
+                }
+
+                return $item;
+            },
+            $this->doSnakeCase($array)
+        );
+    }
+
+    private function doSnakeCase(array $array): array
+    {
+        $result = [];
+
+        foreach ($array as $key => $value) {
+            $key = strtolower(preg_replace('~(?<=\\w)([A-Z])~', '_$1', $key));
+
+            $result[$key] = $value;
         }
 
-        $transformedDtos = [];
-        foreach ($organisationDtos as $organisationDto) {
-            $transformedDtos[] = $this->transformer->transform($organisationDto, ['users', 'clients']);
-        }
-
-        return $this->buildSuccessResponse($transformedDtos);
+        return $result;
     }
 
     /**

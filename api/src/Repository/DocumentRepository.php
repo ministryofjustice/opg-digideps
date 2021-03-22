@@ -6,6 +6,7 @@ use App\Entity\Report\Document;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 use PDO;
 
@@ -71,8 +72,8 @@ LIMIT $limit;";
         $documents = [];
 
         // Get all queued documents
-        $results = $docStmt->fetchAll(PDO::FETCH_ASSOC);
-
+        $results = $docStmt->fetchAllAssociative();
+        var_dump($results);
         foreach ($results as $row) {
             $documents[$row['document_id']] = [
                 'document_id' => $row['document_id'],

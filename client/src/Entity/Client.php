@@ -218,7 +218,7 @@ class Client
     private $totalReportCount;
 
     /**
-     * @JMS\Type("ArrayCollection<App\Entity\Organisation>")
+     * @JMS\Type("App\Entity\Organisation")
      *
      * @var Organisation
      */

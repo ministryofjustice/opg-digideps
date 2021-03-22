@@ -38,10 +38,10 @@ class ClientTransformer
     /**
      * @param ClientDto $dto
      * @param array $exclude
-     * @param OrganisationDto|null $orgDto
+     * @param array|null $org
      * @return array
      */
-    public function transform(ClientDto $dto, array $exclude = [], ?OrganisationDto $orgDto = null)
+    public function transform(ClientDto $dto, array $exclude = [], ?array $org = null)
     {
         $transformed = [
             'id' => $dto->getId(),
@@ -62,8 +62,8 @@ class ClientTransformer
             $transformed['ndr'] = $this->transformNdr($dto->getNdr());
         }
 
-        if (!in_array('organisation', $exclude) && $orgDto !== null) {
-            $transformed['organisation'] = $orgDto;
+        if (!in_array('organisation', $exclude) && $org !== null) {
+            $transformed['organisation'] = $org;
         }
 
         if (!in_array('namedDeputy', $exclude) && $dto->getNamedDeputy() instanceof NamedDeputyDto) {
@@ -114,15 +114,6 @@ class ClientTransformer
         }
 
         return $transformed;
-    }
-
-    /**
-     * @param OrganisationDto $organisation
-     * @return array
-     */
-    private function transformOrganisation(OrganisationDto $organisation)
-    {
-        return $this->organisationTransformer->transform($organisation, ['users']);
     }
 
     /**

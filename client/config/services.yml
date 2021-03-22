@@ -140,7 +140,7 @@ services:
 
     App\Service\DocumentSyncService:
         arguments:
-            $storage: '@Aws\S3\S3Client'
+            $storage: '@App\Service\File\Storage\S3Storage'
             $siriusApiGatewayClient: '@App\Service\Client\Sirius\SiriusApiGatewayClient'
             $restClient: '@App\Service\Client\RestClient'
 
@@ -150,7 +150,6 @@ services:
     Aws\CloudWatchLogs\CloudWatchLogsClient:
         class: Aws\CloudWatchLogs\CloudWatchLogsClient
         arguments: ["%cloudwatch_logs_client_params%"]
-
 
     App\Service\Audit\AwsAuditLogHandler:
         class: App\Service\Audit\AwsAuditLogHandler

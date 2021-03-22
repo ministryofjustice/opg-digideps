@@ -37,6 +37,14 @@ services:
         resource: '../src/Controller/'
         tags: [controller.service_arguments]
 
+    App\v2\Controller\:
+        resource: '../src/v2/Controller'
+        tags: [controller.service_arguments]
+
+    App\v2\Registration\Controller\:
+        resource: '../src/v2/Registration/Controller'
+        tags: [controller.service_arguments]
+
     Doctrine\Migrations\Version\DbalMigrationFactory: ~
     App\Migrations\Factory\MigrationFactoryDecorator:
         decorates: Doctrine\Migrations\Version\DbalMigrationFactory

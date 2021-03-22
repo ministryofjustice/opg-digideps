@@ -5,6 +5,7 @@ namespace App\Entity;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Organisation
@@ -43,18 +44,18 @@ class Organisation
     private $isActivated;
 
     /**
-     * @var User[]
+     * @var ArrayCollection
      *
-     * @JMS\Type("array<App\Entity\User>")
+     * @JMS\Type("ArrayCollection<App\Entity\User>")
      */
-    private $users = [];
+    private $users;
 
     /**
-     * @var Client[]
+     * @var ArrayCollection
      *
-     * @JMS\Type("array<App\Entity\Client>")
+     * @JMS\Type("ArrayCollection<App\Entity\Client>")
      */
-    private $clients = [];
+    private $clients;
 
     /**
      * @return int

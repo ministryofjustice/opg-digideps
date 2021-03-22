@@ -8,6 +8,7 @@ use App\Repository\ClientRepository;
 use App\v2\Assembler\ClientAssembler;
 use App\v2\Assembler\OrganisationAssembler;
 use App\v2\Transformer\ClientTransformer;
+use App\v2\Transformer\OrganisationTransformer;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,20 +31,31 @@ class ClientController extends RestController
     private $orgAssembler;
 
     /** @var ClientTransformer */
-    private $transformer;
+    private $clientTransformer;
+    
+    /** @var OrganisationTransformer */
+    private $orgTransformer;
 
     /**
      * @param ClientRepository $repository
      * @param ClientAssembler $clientAssembler
      * @param OrganisationAssembler $orgAssembler
-     * @param ClientTransformer $transformer
+     * @param ClientTransformer $clientTransformer
+     * @param OrganisationTransformer $orgTransformer
      */
-    public function __construct(ClientRepository $repository, ClientAssembler $clientAssembler, OrganisationAssembler $orgAssembler, ClientTransformer $transformer)
+    public function __construct(
+        ClientRepository $repository, 
+        ClientAssembler $clientAssembler, 
+        OrganisationAssembler $orgAssembler, 
+        ClientTransformer $clientTransformer,
+        OrganisationTransformer $orgTransformer
+    )
     {
         $this->repository = $repository;
         $this->clientAssembler = $clientAssembler;
         $this->orgAssembler = $orgAssembler;
-        $this->transformer = $transformer;
+        $this->clientTransformer = $clientTransformer;
+        $this->orgTransformer = $orgTransformer;
     }
 
     /**
@@ -62,11 +74,13 @@ class ClientController extends RestController
         $dto = $this->clientAssembler->assembleFromArray($data);
         
         $orgDto = null;
+        $transformedOrg = null;
         if (isset($data['organisation'])) {
             $orgDto = $this->orgAssembler->assembleFromArray($data['organisation']);
+            $transformedOrg = $this->orgTransformer->transform($orgDto); 
         }
 
-        $transformedDto = $this->transformer->transform($dto, [], $orgDto);
+        $transformedDto = $this->clientTransformer->transform($dto, [], $transformedOrg);
 
         if ($transformedDto['archived_at']) {
             throw $this->createAccessDeniedException('Cannot access archived reports');
@@ -97,7 +111,7 @@ class ClientController extends RestController
 
         $dto = $this->clientAssembler->assembleFromArray($data);
 
-        $transformedDto = $this->transformer->transform($dto, ['reports', 'ndr', 'organisation', 'namedDeputy']);
+        $transformedDto = $this->clientTransformer->transform($dto, ['reports', 'ndr', 'organisation', 'namedDeputy']);
 
         if ($transformedDto['archived_at']) {
             throw $this->createAccessDeniedException('Cannot access archived reports');
