@@ -43,11 +43,11 @@ class ChecklistSyncCommandTest extends KernelTestCase
         $this->pdfGenerator = $this->getMockBuilder(ChecklistPdfGenerator::class)->disableOriginalConstructor()->getMock();
 
         $kernel = static::bootKernel([ 'debug' => false ]);
-        $this->container = $kernel->getContainer();
-        $this->container->set(ChecklistSyncService::class, $this->syncService);
-        $this->container->set(RestClient::class, $this->restClient);
-        $this->container->set(ParameterStoreService::class, $this->parameterStore);
-        $this->container->set(ChecklistPdfGenerator::class, $this->pdfGenerator);
+        $this->appContainer = $kernel->getContainer();
+        $this->appContainer->set(ChecklistSyncService::class, $this->syncService);
+        $this->appContainer->set(RestClient::class, $this->restClient);
+        $this->appContainer->set(ParameterStoreService::class, $this->parameterStore);
+        $this->appContainer->set(ChecklistPdfGenerator::class, $this->pdfGenerator);
         $application = new Application($kernel);
 
         $command = $application->find('digideps:checklist-sync');
