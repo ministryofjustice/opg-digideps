@@ -38,6 +38,7 @@ class DocumentRepository extends ServiceEntityRepository
     {
         $queuedDocumentsQuery = "
 SELECT d.id as document_id,
+d.created_on as document_created_on,
 d.report_submission_id as report_submission_id,
 d.is_report_pdf as is_report_pdf,
 d.filename as filename,
@@ -73,7 +74,6 @@ LIMIT $limit;";
 
         // Get all queued documents
         $results = $docStmt->fetchAllAssociative();
-        var_dump($results);
         foreach ($results as $row) {
             $documents[$row['document_id']] = [
                 'document_id' => $row['document_id'],
