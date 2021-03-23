@@ -1,19 +1,19 @@
 app:
-    resource: "../src/Controller/"
+    resource: "../../src/Controller/"
     type:     annotation
     prefix:   /
 
 app_v2:
-    resource: "../src/v2/Controller/"
+    resource: "../../src/v2/Controller/"
     type:     annotation
     prefix:   /v2
 
 app_v2_registration:
-    resource: "../src/v2/Registration/Controller/"
+    resource: "../../src/v2/Registration/Controller/"
     type:     annotation
     prefix:   /v2
 
 app_v2_fixture:
-    resource: "../src/v2/Fixture/Controller/"
+    resource: "../../src/v2/Fixture/Controller/"
     type:     annotation
     prefix:   /v2

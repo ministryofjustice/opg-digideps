@@ -1,16 +1,39 @@
 imports:
-    - { resource: packages/doctrine_migrations.yml }
-    - { resource: packages/doctrine.yml }
-    - { resource: packages/framework.yml }
-    - { resource: packages/monolog.yml }
-    - { resource: packages/sensio_framework_extra.yml }
-    - { resource: packages/snc_redis.yml }
     - { resource: services/assemblers.yml }
-    - { resource: services/factories.yml }
 
 parameters:
     fixtures:
         account_password: '%env(FIXTURES_ACCOUNTPASSWORD)%'
+
+    # set this param to a higher value than session_expire_seconds on the client
+    user_provider_timeout_seconds: 3901
+    client_permissions:
+        admin: [ROLE_AD, ROLE_ADMIN]
+        frontend: [ROLE_DEPUTY]
+
+    shared_email_domains:
+        - 'aol.com'
+        - 'aol.co.uk'
+        - 'btconnect.com'
+        - 'btinternet.com'
+        - 'gmail.com'
+        - 'googlemail.com'
+        - 'hotmail.com'
+        - 'hotmail.co.uk'
+        - 'icloud.com'
+        - 'live.co.uk'
+        - 'live.com'
+        - 'mac.com'
+        - 'me.com'
+        - 'msn.com'
+        - 'nhs.net'
+        - 'ntlworld.com'
+        - 'outlook.com'
+        - 'sky.com'
+        - 'talktalk.net'
+        - 'yahoo.com'
+        - 'yahoo.co.uk'
+        - 'example.com'
 
 services:
     em:
@@ -190,6 +213,43 @@ services:
     App\Repository\UserRepository:
         class: App\Repository\UserRepository
         tags: ['doctrine.repository_service']
+
+    App\Service\Auth\AuthService:
+        arguments:
+            $encoderFactory: '@security.encoder_factory'
+            $logger: '@logger'
+            $userRepository: '@App\Repository\UserRepository'
+            $roleHierarchy: '@security.role_hierarchy'
+            $clientPermissions: '%client_permissions%'
+
+    App\Service\BruteForce\AttemptsInTimeChecker:
+        arguments: [ "@snc_redis.default" ]
+        calls:
+            - [ setRedisPrefix, ["ac_ret_code"] ]
+            # after 5 attempts in the last 10 minutes, return a different return code (activate captcha)
+            - [ addTrigger, [  5, 600 ] ]
+
+    App\Service\BruteForce\AttemptsIncrementalWaitingChecker:
+        arguments: [ "@snc_redis.default" ]
+        calls:
+            - [ setRedisPrefix, ["ac_exception"] ]
+            # after 10 attempts, freeze for 30 minutes
+            - [ addFreezingRule, [  10, 1800 ] ]
+            # after further 10 attempts. freeze for 1h
+            - [ addFreezingRule, [  20, 3600 ] ]
+            # after further 10 attempts. freeze for 2h
+            - [ addFreezingRule, [  30, 7200 ] ]
+
+    logstash_formatter:
+        class: Monolog\Formatter\LogstashFormatter
+        arguments:
+        - application.api
+        - null
+        - null
+        - ""
+        - 1
+    line_formatter:
+        class: Monolog\Formatter\LineFormatter
 
     rest_handler.report.deputy_costs_estimate_report_update_handler:
         class: App\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler

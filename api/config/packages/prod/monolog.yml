@@ -1,0 +1,8 @@
+monolog:
+    handlers:
+        main:
+            type: stream
+            path: php://stderr
+            level: "%log_level%"
+            formatter: logstash_formatter
+            bubble: false

@@ -14,14 +14,10 @@ use Tests\Fixtures;
 
 abstract class AbstractTestController extends WebTestCase
 {
-    /**
-     * @var Fixtures
-     */
+    /** @var Fixtuers */
     protected static $fixtures;
 
-    /**
-     * @var Client
-     */
+    /** @var Client */
     protected static $frameworkBundleClient;
 
     /** @var string|false $deputySecret */
@@ -42,10 +38,8 @@ abstract class AbstractTestController extends WebTestCase
 
         self::$frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false, ]);
 
-        /** @var Container $container */
-        $container = self::$frameworkBundleClient->getContainer();
         /** @var EntityManager $em */
-        $em = $container->get('em');
+        $em = self::$container->get('em');
 
         self::$fixtures = new Fixtures($em);
 

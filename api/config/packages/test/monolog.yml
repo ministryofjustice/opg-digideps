@@ -1,0 +1,7 @@
+monolog:
+   handlers:
+       main:
+            type: stream
+            path: "%log_path%"
+            level: warning
+            formatter: line_formatter

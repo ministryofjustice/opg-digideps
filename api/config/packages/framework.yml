@@ -1,16 +1,18 @@
+imports:
+    - { resource: ../parameters.yml }
+
 framework:
     #esi:             ~
     translator:
-      enabled: false
-    secret:          "%secret%"
+        enabled: false
+    secret: "%secret%"
     router:
-        resource: "%kernel.root_dir%/config/routing.yml"
         strict_requirements: ~
     form:            ~
     csrf_protection: ~
     validation:      { enable_annotations: true }
     templating:
-      engines: ['php']
+        engines: ['php']
     default_locale:  "%locale%"
     session:         ~
     fragments:       ~
