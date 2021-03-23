@@ -435,10 +435,6 @@ class Fixtures
             $this->em->flush();
         }
 
-        foreach ($args as $e) {
-            $this->em->flush($e);
-        }
-
         return $this;
     }
 
@@ -452,9 +448,18 @@ class Fixtures
         return $this;
     }
 
+    public function detach($entity)
+    {
+        $this->em->detach($entity);
+
+        return $this;
+    }
+
     public function merge($entity)
     {
-        return $this->em->merge($entity);
+        $this->em->merge($entity);
+
+        return $this;
     }
 
     public function persist()

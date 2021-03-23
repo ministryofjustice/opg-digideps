@@ -165,13 +165,12 @@ class NoteControllerTest extends AbstractTestController
         $note = self::fixtures()->getRepo('Note')->find($noteId);
         $note->setCreatedBy($user);
 
-        $noteEntity = self::fixtures()->merge($user);
-        self::fixtures()->persist($noteEntity, $user);
+        self::fixtures()->persist($note, $user);
 
         // delete it (soft delete)
-        self::fixtures()->merge($user);
-//        self::fixtures()->remove($userEntity);
+        self::fixtures()->remove($user);
         self::fixtures()->flush();
+        self::fixtures()->clear();
 
         // and assert createdBy is now null
         $data = $this->assertJsonRequest('GET', $url, [
