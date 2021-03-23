@@ -78,8 +78,10 @@ class Fixtures
         }
 
         $user->addClient($client);
+        $client->addUser($user);
 
         $this->em->persist($client);
+        $this->em->persist($user);
 
         return $client;
     }
@@ -147,6 +149,7 @@ class Fixtures
         }
 
         $submission = new ReportSubmission($report, $user);
+        $submission->setDownloadable(true);
 
         $this->em->persist($submission);
 
@@ -447,6 +450,11 @@ class Fixtures
         }
 
         return $this;
+    }
+
+    public function merge($entity)
+    {
+        return $this->em->merge($entity);
     }
 
     public function persist()

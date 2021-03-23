@@ -48,7 +48,7 @@ class NoteControllerTest extends AbstractTestController
         self::$pa3 = self::fixtures()->getRepo('User')->findOneByEmail('pa_team_member@example.org');
         self::$pa3Client1 = self::fixtures()->createClient(self::$pa3, ['setFirstname' => 'pa2Client1']);
 
-        $org = self::fixtures()->createOrganisation('Example', 'example4324.org', true);
+        $org = self::fixtures()->createOrganisation('Example', rand(1, 999999) . 'example.org', true);
         self::fixtures()->flush();
         self::fixtures()->addClientToOrganisation(self::$pa1Client1->getId(), $org->getId());
         self::fixtures()->addUserToOrganisation(self::$pa1->getId(), $org->getId());
@@ -164,10 +164,14 @@ class NoteControllerTest extends AbstractTestController
         self::$pa1Client1->addUser($user);
         $note = self::fixtures()->getRepo('Note')->find($noteId);
         $note->setCreatedBy($user);
-        self::fixtures()->flush($note, $user);
+
+        $noteEntity = self::fixtures()->merge($user);
+        self::fixtures()->persist($noteEntity, $user);
 
         // delete it (soft delete)
-        self::fixtures()->remove($user)->flush();
+        self::fixtures()->merge($user);
+//        self::fixtures()->remove($userEntity);
+        self::fixtures()->flush();
 
         // and assert createdBy is now null
         $data = $this->assertJsonRequest('GET', $url, [

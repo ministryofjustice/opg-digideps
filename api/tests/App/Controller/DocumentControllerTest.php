@@ -19,6 +19,7 @@ class DocumentControllerTest extends AbstractTestController
     private static $document1;
     private static $document2;
     private static $document3;
+    private static $document4;
 
     /** @var DocumentRepository */
     private $repo;
@@ -41,6 +42,34 @@ class DocumentControllerTest extends AbstractTestController
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
+
+        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
+
+        self::$report1 = self::fixtures()->createReport(self::$client1);
+        self::$report2 = self::fixtures()->createReport(self::$client1);
+
+        self::$ndr1 = self::fixtures()->createNdr(self::$client1);
+
+        self::$document1 = self::fixtures()->createDocument(self::$report1, 'file_name.pdf');
+        self::$document2 = self::fixtures()->createDocument(self::$report1, 'another_file_name.pdf', false);
+        self::$document3 = self::fixtures()->createDocument(self::$report2, 'and_another_file_name.pdf');
+        self::$document4 = self::fixtures()->createDocument(self::$report1, 'queued_doc.pdf')->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
+
+        self::$document4->incrementSyncAttempts();
+        self::$document4->incrementSyncAttempts();
+        self::$document4->incrementSyncAttempts();
+        self::$document4->incrementSyncAttempts();
+
+        self::$reportSubmission1 = self::fixtures()->createReportSubmission(self::$report1);
+        self::$reportSubmission2 = self::fixtures()->createReportSubmission(self::$report1);
+
+        self::$document1->setReportSubmission(self::$reportSubmission1);
+        self::$document2->setReportSubmission(self::$reportSubmission1);
+        self::$document3->setReportSubmission(self::$reportSubmission2);
+        self::$document4->setReportSubmission(self::$reportSubmission1);
+
+        self::fixtures()->flush();
     }
 
     /**
@@ -55,27 +84,6 @@ class DocumentControllerTest extends AbstractTestController
 
     public function setUp(): void
     {
-        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
-        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
-
-        self::$report1 = self::fixtures()->createReport(self::$client1);
-        self::$report2 = self::fixtures()->createReport(self::$client1);
-
-        self::$ndr1 = self::fixtures()->createNdr(self::$client1);
-
-        self::$document1 = self::fixtures()->createDocument(self::$report1, 'file_name.pdf');
-        self::$document2 = self::fixtures()->createDocument(self::$report1, 'another_file_name.pdf', false);
-        self::$document3 = self::fixtures()->createDocument(self::$report2, 'and_another_file_name.pdf');
-
-        self::$reportSubmission1 = self::fixtures()->createReportSubmission(self::$report1);
-        self::$reportSubmission2 = self::fixtures()->createReportSubmission(self::$report1);
-
-        self::$document1->setReportSubmission(self::$reportSubmission1);
-        self::$document2->setReportSubmission(self::$reportSubmission1);
-        self::$document3->setReportSubmission(self::$reportSubmission2);
-
-        self::fixtures()->flush();
-
         $this->repo = self::fixtures()->getRepo('Report\Document');
         self::$tokenDeputy = $this->loginAsDeputy();
     }
@@ -142,7 +150,7 @@ class DocumentControllerTest extends AbstractTestController
         $this->assertEquals('ndr.pdf', $document->getFilename());
         $this->assertEquals(true, $document->isReportPdf());
 
-        self::fixtures()->remove($document)->flush();
+//        self::fixtures()->remove($document)->flush();
     }
 
     /** @test */
@@ -157,25 +165,6 @@ class DocumentControllerTest extends AbstractTestController
         ]);
 
         $this->assertStringContainsString('client secret not accepted', $return['message']);
-
-        $return = $this->assertJsonRequest('GET', '/document/queued', [
-            'mustSucceed' => true,
-            'ClientSecret' => API_TOKEN_DEPUTY,
-            'data' => ['row_limit' => 100]
-        ]);
-
-        self::assertCount(0, json_decode($return['data'], true));
-    }
-
-    /** @test */
-    public function getQueuedDocuments(): void
-    {
-        // Queue a document
-        $document = $this->repo->find(self::$document1->getId());
-        self::assertInstanceOf(Document::class, $document);
-
-        $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
-        self::fixtures()->flush();
 
         $return = $this->assertJsonRequest('GET', '/document/queued', [
             'mustSucceed' => true,
@@ -240,13 +229,14 @@ class DocumentControllerTest extends AbstractTestController
     {
         $url = sprintf('/document/%s', self::$document1->getId());
 
-        for ($i = 1; $i < 3; $i++) {
+        for ($i = 2; $i < 3; $i++) {
             $response = $this->assertJsonRequest('PUT', $url, [
                 'mustSucceed' => true,
                 'ClientSecret' => API_TOKEN_DEPUTY,
                 'data' => ['syncStatus' => Document::SYNC_STATUS_TEMPORARY_ERROR, 'syncError' => 'Temp error occurred']
             ]);
 
+            $this->repo->clear();
             self::assertEquals($i, $response['data']['sync_attempts']);
             self::assertEquals(Document::SYNC_STATUS_QUEUED, $response['data']['synchronisation_status']);
         }
@@ -257,15 +247,10 @@ class DocumentControllerTest extends AbstractTestController
      */
     public function updateDocument_perm_error_returns_after_4_attempts(): void
     {
-        $document = $this->repo->find(self::$document1->getId());
+        $document = $this->repo->find(self::$document4->getId());
         self::assertInstanceOf(Document::class, $document);
 
-        $document->incrementSyncAttempts();
-        $document->incrementSyncAttempts();
-        $document->incrementSyncAttempts();
-        $document->incrementSyncAttempts();
-
-        self::fixtures()->flush();
+        $this->repo->clear();
 
         $url = sprintf('/document/%s', $document->getId());
         $response = $this->assertJsonRequest('PUT', $url, [
