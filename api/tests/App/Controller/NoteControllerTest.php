@@ -2,8 +2,10 @@
 
 namespace Tests\App\Controller;
 
+use App\Entity\Client;
 use App\Entity\Note;
-use Symfony\Bridge\Doctrine\Tests\Fixtures\User;
+use App\Entity\User;
+use App\TestHelpers\UserTestHelper;
 
 class NoteControllerTest extends AbstractTestController
 {
@@ -156,27 +158,50 @@ class NoteControllerTest extends AbstractTestController
      */
     public function testDeleteCreator()
     {
-        $noteId = self::$pa1Client1Note1->getId();
-        $url = '/note/' . $noteId;
+        self::bootKernel();
+        $em = self::$container->get('em');
 
-        // create a new user and assign to note
-        $user = self::fixtures()->createUser()->setRoleName(\App\Entity\User::ROLE_PA_NAMED);
-        self::$pa1Client1->addUser($user);
-        $note = self::fixtures()->getRepo('Note')->find($noteId);
-        $note->setCreatedBy($user);
+        $paUser = $em->getRepository(User::class)->findOneBy(['email' => 'pa@example.org']);
 
-        self::fixtures()->persist($note, $user);
+        $newUserEmail = rand(1, 99999) . 'user-to-be-deleted@example.org';
+        $newUser = (new User())
+            ->setEmail($newUserEmail)
+            ->setFirstname('Art')
+            ->setLastname('Work')
+            ->setRoleName(User::ROLE_PA_NAMED);
 
-        // delete it (soft delete)
-        self::fixtures()->remove($user);
-        self::fixtures()->flush();
-        self::fixtures()->clear();
+        $client = (new Client())
+            ->addUser($paUser)
+            ->addUser($newUser)
+            ->setFirstname('Mona')
+            ->setLastname('Lisa');
 
-        // and assert createdBy is now null
+        $note = (new Note($client, 'fake-category', 'fake-title', 'fake-content'))
+            ->setClient($client)
+            ->setCreatedBy($newUser);
+
+        $em->persist($note);
+        $em->persist($client);
+        $em->persist($newUser);
+        $em->flush();
+
+        $url = '/note/' . $note->getId();
+
         $data = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenPa,
         ])['data'];
-        $this->assertNull($data['created_by']);
+
+        self::assertEquals($newUserEmail, $data['created_by']['email']);
+
+        $em->remove($newUser);
+        $em->flush();
+
+        $data = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenPa,
+        ])['data'];
+
+        self::assertNull($data['created_by']);
     }
 }

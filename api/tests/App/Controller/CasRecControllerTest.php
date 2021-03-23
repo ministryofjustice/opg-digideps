@@ -40,18 +40,6 @@ class CasRecControllerTest extends AbstractTestController
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
         }
-
-        $this->c1 = new CasRec([
-            'Case' => '12345678',
-            'Surname' => 'jones',
-            'Deputy No' => 'd1',
-            'Dep Surname' => 'white',
-            'Dep Postcode' => 'SW1',
-            'Typeofrep'=>'OPG102',
-            'Corref'=>'L2',
-            'custom' => 'c1',
-            'custom 2' => 'c1',
-        ]);
     }
 
     public function testDeleteBySourceVerifiesSourceInput()
@@ -100,10 +88,22 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
 
         Fixtures::deleteReportsData(['casrec']);
-        $this->fixtures()->persist($this->c1)->flush($this->c1);
+
+        $casRec = new CasRec([
+            'Case' => '12345678',
+            'Surname' => 'jones',
+            'Deputy No' => 'd1',
+            'Dep Surname' => 'white',
+            'Dep Postcode' => 'SW1',
+            'Typeofrep'=>'OPG102',
+            'Corref'=>'L2',
+            'custom' => 'c1',
+            'custom 2' => 'c1',
+        ]);
+
+        $this->fixtures()->persist($casRec)->flush();
 
         // check count
-
         $data = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenAdmin,
