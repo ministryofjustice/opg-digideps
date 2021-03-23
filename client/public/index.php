@@ -5,7 +5,7 @@ use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
 require dirname(__DIR__).'/vendor/autoload.php';
-require dirname(__DIR__) . '../Kernel.php';
+require dirname(__DIR__) . '/src/Kernel.php';
 
 if ($_SERVER['APP_DEBUG']) {
     umask(0000);
