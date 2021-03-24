@@ -373,7 +373,7 @@ class Fixtures
     {
         $orgs = [];
         for ($i = 1; $i <= $amount; $i++) {
-            $orgs[] = $this->createOrganisation(sprintf('Org %d', $i), sprintf('org_email_%d', $i), true);
+            $orgs[] = $this->createOrganisation(sprintf('Org %d', $i), sprintf(rand(1, 99999) . 'org_email_%d', $i), true);
         }
 
         return $orgs;

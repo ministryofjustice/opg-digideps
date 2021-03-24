@@ -40,10 +40,13 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
     public function setUp(): void
     {
-        self::bootKernel();
-        $container = self::$kernel->getContainer();
+        self::bootKernel(['environment' => 'test', 'debug' => false]);
 
-        $this->em = $container->get('em');
+        $container = self::$container;
+        $this->em = $container
+            ->get('doctrine')
+            ->getManager();
+
         $this->namedDeputyRepository = $this->em->getRepository(NamedDeputy::class);
         $this->orgRepository = $this->em->getRepository(Organisation::class);
         $this->clientRepository = $this->em->getRepository(Client::class);

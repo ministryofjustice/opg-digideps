@@ -8,15 +8,18 @@ use App\Entity\CasRec;
 use App\Entity\Client;
 use App\Entity\NamedDeputy;
 use App\Entity\Report\Asset;
+use App\Entity\Report\AssetProperty;
 use App\Entity\Report\BankAccount;
+use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use App\Repository\DocumentRepository;
+use App\Repository\ReportRepository;
 use App\Service\ReportService;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Exception;
+use Doctrine\Persistence\ObjectRepository;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -43,16 +46,16 @@ class ReportServiceTest extends TestCase
 
     public function setUp(): void
     {
-        $this->user = new EntityDir\User();
-        $client = new EntityDir\Client();
+        $this->user = new User();
+        $client = new Client();
         $client->addUser($this->user);
         $client->setCaseNumber('12345678');
         $client->setCourtDate(new \DateTime('2014-06-06'));
 
         $this->bank1 = (new BankAccount())->setAccountNumber('1234');
-        $this->asset1 = (new EntityDir\Report\AssetProperty())
+        $this->asset1 = (new AssetProperty())
             ->setAddress('SW1')
-            ->setOwned(EntityDir\Report\AssetProperty::OWNED_FULLY);
+            ->setOwned(AssetProperty::OWNED_FULLY);
         $this->report = new Report($client, Report::TYPE_102, new \DateTime('2015-01-01'), new \DateTime('2015-12-31'));
         $this->report
             ->setNoAssetToAdd(false)
@@ -60,18 +63,18 @@ class ReportServiceTest extends TestCase
             ->addAccount($this->bank1)
             ->setSubmittedBy($this->user);
 
-        $this->document1 = (new EntityDir\Report\Document($this->report))->setFileName('file1.pdf');
+        $this->document1 = (new Document($this->report))->setFileName('file1.pdf');
         $this->report->addDocument($this->document1);
         $this->ndr = new EntityDir\Ndr\Ndr($client);
 
         // mock em
-        $this->reportRepo = m::mock(EntityDir\Repository\ReportRepository::class);
+        $this->reportRepo = m::mock(ReportRepository::class);
         $this->casrecRepo = m::mock(EntityRepository::class);
         $this->assetRepo = m::mock();
         $this->bankAccount = m::mock();
 
         $this->em = m::mock(EntityManager::class);
-        $this->mockNdrDocument = (new EntityDir\Report\Document($this->ndr))->setFileName('NdrRep-file2.pdf')->setId(999);
+        $this->mockNdrDocument = (new Document($this->ndr))->setFileName('NdrRep-file2.pdf')->setId(999);
 
         $this->em->shouldReceive('getRepository')->andReturnUsing(function ($arg) use ($client) {
             switch ($arg) {
@@ -81,13 +84,13 @@ class ReportServiceTest extends TestCase
                         ->andReturn(null)
                         ->getMock();
                 case Report::class:
-                    return m::mock(EntityDir\Repository\ReportRepository::class);
+                    return m::mock(ReportRepository::class);
                 case Asset::class:
                     return m::mock(EntityRepository::class);
                 case BankAccount::class:
                     return m::mock(BankAccount::class);
-                case EntityDir\Report\Document::class:
-                    return m::mock(EntityDir\Repository\DocumentRepository::class)
+                case Document::class:
+                    return m::mock(DocumentRepository::class)
                         ->shouldReceive('find')
                         ->zeroOrMoreTimes()
                         ->with(999)

@@ -139,13 +139,17 @@ class AuthService
     }
 
     /**
-     * @param string $roleName
+     * @param string|null $roleName
      * @param Request $request
      *
      * @return bool
      */
-    public function isSecretValidForRole(string $roleName, Request $request): bool
+    public function isSecretValidForRole(?string $roleName, Request $request): bool
     {
+        if (is_null($roleName)) {
+            return false;
+        }
+
         $clientSecretFromRequest = $request->headers->get(self::HEADER_CLIENT_SECRET);
 
         if (!is_string($clientSecretFromRequest)) {
@@ -157,7 +161,7 @@ class AuthService
         $permittedRoles = isset($this->clientPermissions[$clientSource]) ?
             $this->clientPermissions[$clientSource] : [];
 
-        // Get all roles available to this user 
+        // Get all roles available to this user
         $availableRoles = $this->roleHierarchy->getReachableRoleNames([$roleName]);
         foreach ($availableRoles as $role) {
             if (in_array($role, $permittedRoles)) {

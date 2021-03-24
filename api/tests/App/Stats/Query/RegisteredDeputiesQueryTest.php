@@ -15,8 +15,11 @@ class RegisteredDeputiesQueryTest extends WebTestCase
 
     public static function setUpBeforeClass(): void
     {
-        $frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false]);
-        self::$em = $frameworkBundleClient->getContainer()->get('em');
+        $kernel = self::bootKernel(['environment' => 'test', 'debug' => false]);
+
+        self::$em = $kernel->getContainer()
+            ->get('doctrine')
+            ->getManager();
 
         // Remove existing test data
         $deputies = self::$em
