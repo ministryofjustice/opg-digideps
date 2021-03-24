@@ -3,6 +3,7 @@
 namespace Tests\App\Controller\Ndr;
 
 use App\Entity\Ndr\Expense;
+use App\Entity\Ndr\Ndr;
 use Tests\App\Controller\AbstractTestController;
 
 class ExpenseControllerTest extends AbstractTestController
@@ -17,7 +18,6 @@ class ExpenseControllerTest extends AbstractTestController
     /**
      * @var Expense
      */
-
     private static $expense2;
     private static $deputy2;
     private static $client2;
@@ -25,9 +25,14 @@ class ExpenseControllerTest extends AbstractTestController
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
 
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
+
+        if (null === self::$tokenAdmin) {
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenDeputy = $this->loginAsDeputy();
+        }
 
         //deputy1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
@@ -52,14 +57,6 @@ class ExpenseControllerTest extends AbstractTestController
         parent::tearDownAfterClass();
 
         self::fixtures()->clear();
-    }
-
-    public function setUp(): void
-    {
-        if (null === self::$tokenAdmin) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
     }
 
     public function testgetOneByIdAuth()
@@ -202,12 +199,27 @@ class ExpenseControllerTest extends AbstractTestController
         $this->assertTrue(null === self::fixtures()->getRepo('Ndr\Expense')->find(self::$expense1->getId()));
     }
 
-    /**
-     * @depends testDelete
-     */
     public function testPaidAnything()
     {
+        $url = '/ndr/' . self::$ndr1->getId() . '/expense/' . self::$expense1->getId();
+        $this->assertJsonRequest('DELETE', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenDeputy,
+        ]);
+
+        $url = '/ndr/' . self::$ndr1->getId() . '/expense';
+        $this->assertJsonRequest('POST', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenDeputy,
+            'data'        => [
+                'amount'          => 3.3,
+                'explanation'    => 'e3',
+            ],
+        ]);
+
+        /** @var Ndr $ndr */
         $ndr = self::fixtures()->getRepo('Ndr\Ndr')->find(self::$ndr1->getId());
+
         $this->assertCount(1, $ndr->getExpenses());
         $this->assertEquals('yes', $ndr->getPaidForAnything());
 

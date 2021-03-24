@@ -22,6 +22,8 @@ class VisitsCareControllerTest extends AbstractTestController
     {
         parent::setUp();
 
+        self::$fixtures::deleteReportsData(['safeguarding']);
+
         //deputy1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
@@ -226,6 +228,14 @@ class VisitsCareControllerTest extends AbstractTestController
      */
     public function testAdd()
     {
+        $id = self::$visitsCare1->getId();
+        $url = '/report/visits-care/' . $id;
+
+        $this->assertJsonRequest('DELETE', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ]);
+
         $url = '/report/visits-care';
 
         $return = $this->assertJsonRequest('POST', $url, [
@@ -243,6 +253,5 @@ class VisitsCareControllerTest extends AbstractTestController
         $visitsCare = self::fixtures()->getRepo('Report\VisitsCare')->find($return['data']['id']); /* @var $visitsCare \App\Entity\Report\VisitsCare */
         $this->assertEquals('y-m', $visitsCare->getDoYouLiveWithClient());
         $this->assertEquals(self::$report1->getId(), $visitsCare->getReport()->getId());
-        // TODO assert other fields
     }
 }

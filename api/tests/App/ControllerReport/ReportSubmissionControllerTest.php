@@ -18,8 +18,6 @@ class ReportSubmissionControllerTest extends AbstractTestController
     private static $tokenSuperAdmin = null;
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
-    /** @var EntityManager|null */
-    private $em;
 
     public function setUp(): void
     {
@@ -61,9 +59,6 @@ class ReportSubmissionControllerTest extends AbstractTestController
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
         }
-
-        $kernel = self::bootKernel();
-        $this->em = $kernel->getContainer()->get('em');
     }
 
     public function testGetAllWithFiltersGetOneArchive()
@@ -252,7 +247,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
      */
     public function updatePersistsUuidWhenProvided()
     {
-        $reportSubmission = (new ReportSubmissionHelper())->generateAndPersistReportSubmission($this->em);
+        $reportSubmission = (new ReportSubmissionHelper())->generateAndPersistReportSubmission(self::fixtures()->getEntityManager());
 
         $uuid = '5a8b1a26-8296-4373-ae61-f8d0b250e773';
 

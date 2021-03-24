@@ -850,7 +850,7 @@ class ReportControllerTest extends AbstractTestController
     {
         $reportId = self::$report1->getId();
         $url = '/report/' . $reportId . '/checked';
-        
+
         // submit
         $urlSubmit = '/report/' . $reportId . '/submit';
         $this->assertJsonRequest('PUT', $urlSubmit, [
@@ -862,7 +862,6 @@ class ReportControllerTest extends AbstractTestController
                 'agreed_behalf_deputy_explanation' => 'should not be saved',
             ],
         ]);
-        
 
         // add new report checklist
         $this->assertJsonRequest('POST', $url, [
@@ -873,6 +872,7 @@ class ReportControllerTest extends AbstractTestController
                 'reporting_period_accurate' => 'yes',
                 'contact_details_upto_date' => 1,
                 'deputy_full_name_accurate_in_casrec' => 1,
+                'further_information_received' => 'Some more info',
                 'decisions_satisfactory' => 'yes',
                 'consultations_satisfactory' => 'yes',
                 'care_arrangements' => 'yes',
@@ -891,6 +891,7 @@ class ReportControllerTest extends AbstractTestController
 
         // assert submit fails due to missing fields
         $report = self::fixtures()->getReportById($reportId);
+
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => false,
             'AuthToken'   => self::$tokenAdmin,
@@ -943,7 +944,6 @@ class ReportControllerTest extends AbstractTestController
 
         // assert checklist information created
         /* @var $checklist \App\Entity\Report\Checklist */
-        $report = self::fixtures()->getReportById($reportId);
         $checklist = $report->getChecklist();
         $checklistInfo = $checklist->getChecklistInformation();
         $this->assertCount(1, $checklistInfo);
