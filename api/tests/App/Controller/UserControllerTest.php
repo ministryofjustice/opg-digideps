@@ -15,9 +15,15 @@ class UserControllerTest extends AbstractTestController
     private static $tokenSuperAdmin = null;
     private static $tokenDeputy = null;
 
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
+
+        if (null === self::$tokenAdmin) {
+            self::$tokenSuperAdmin = $this->loginAsSuperAdmin();
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenDeputy = $this->loginAsDeputy();
+        }
 
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$admin1 = self::fixtures()->getRepo('User')->findOneByEmail('admin@example.org');
@@ -34,15 +40,6 @@ class UserControllerTest extends AbstractTestController
         parent::tearDownAfterClass();
 
         self::fixtures()->clear();
-    }
-
-    public function setUp(): void
-    {
-        if (null === self::$tokenAdmin) {
-            self::$tokenSuperAdmin = $this->loginAsSuperAdmin();
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
     }
 
     public function testAddAuth()

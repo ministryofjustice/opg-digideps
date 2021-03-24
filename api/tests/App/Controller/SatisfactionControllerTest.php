@@ -14,6 +14,8 @@ class SatisfactionControllerTest extends AbstractTestController
 
     public function setUp(): void
     {
+        parent::setUp();
+
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
@@ -88,8 +90,7 @@ class SatisfactionControllerTest extends AbstractTestController
             'data' => $data,
         ]);
 
-        $em = self::$frameworkBundleClient->getContainer()->get('em');
-        $persistedEntity = $em->getRepository('App\Entity\Satisfaction')->find($response['data']);
+        $persistedEntity = self::fixtures()->getRepo('App\Entity\Satisfaction')->find($response['data']);
 
         $this->assertEquals($data['score'], $persistedEntity->getScore());
 
