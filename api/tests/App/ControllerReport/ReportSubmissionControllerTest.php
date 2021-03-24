@@ -21,9 +21,9 @@ class ReportSubmissionControllerTest extends AbstractTestController
     /** @var EntityManager|null */
     private $em;
 
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
         self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
         self::$pa2 = self::fixtures()->getRepo('User')->findOneByEmail('pa_admin@example.org');
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
@@ -55,10 +55,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         }
 
         self::fixtures()->flush()->clear();
-    }
 
-    public function setUp(): void
-    {
         if (null === self::$tokenAdmin) {
             self::$tokenSuperAdmin = $this->loginAsSuperAdmin();
             self::$tokenAdmin = $this->loginAsAdmin();

@@ -26,9 +26,9 @@ class GiftControllerTest extends AbstractTestController
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
 
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         //deputy1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
@@ -43,6 +43,11 @@ class GiftControllerTest extends AbstractTestController
         self::$gift2 = (new Gift(self::$report2))->setExplanation('e2')->setAmount("2.20");
 
         self::fixtures()->persist(self::$gift1, self::$gift2)->flush()->clear();
+
+        if (null === self::$tokenAdmin) {
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenDeputy = $this->loginAsDeputy();
+        }
     }
 
     /**
@@ -53,14 +58,6 @@ class GiftControllerTest extends AbstractTestController
         parent::tearDownAfterClass();
 
         self::fixtures()->clear();
-    }
-
-    public function setUp(): void
-    {
-        if (null === self::$tokenAdmin) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
     }
 
     public function testgetOneByIdAuth()
@@ -84,7 +81,7 @@ class GiftControllerTest extends AbstractTestController
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
-            'AuthToken'   => self::$tokenDeputy,
+            'AuthToken' => self::$tokenDeputy,
         ])['data'];
 
         $this->assertEquals(self::$gift1->getId(), $data['id']);
@@ -121,10 +118,10 @@ class GiftControllerTest extends AbstractTestController
         $url = '/report/' . self::$report1->getId() . '/gift';
         $return = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
-            'AuthToken'   => self::$tokenDeputy,
-            'data'        => [
-                'amount'          => 3.3,
-                'explanation'    => 'e3',
+            'AuthToken' => self::$tokenDeputy,
+            'data' => [
+                'amount' => 3.3,
+                'explanation' => 'e3',
             ],
         ]);
         $giftId = $return['data']['id'];
@@ -143,10 +140,10 @@ class GiftControllerTest extends AbstractTestController
         $url = '/report/' . self::$report1->getId() . '/gift/' . $giftId;
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
-            'AuthToken'   => self::$tokenDeputy,
-            'data'        => [
-                'amount'          => 3.31,
-                'explanation'    => 'e3.1',
+            'AuthToken' => self::$tokenDeputy,
+            'data' => [
+                'amount' => 3.31,
+                'explanation' => 'e3.1',
             ],
         ]);
         self::fixtures()->clear();
@@ -166,10 +163,10 @@ class GiftControllerTest extends AbstractTestController
         ])['data'];
 
         $this->assertCount(2, $data['gifts']);
-        $this->assertTrue($data['gifts'][0]['id']>0);
+        $this->assertTrue($data['gifts'][0]['id'] > 0);
         $this->assertEquals('e1', $data['gifts'][0]['explanation']);
         $this->assertEquals(1.1, $data['gifts'][0]['amount']);
-        $this->assertTrue($data['gifts'][1]['id']>0);
+        $this->assertTrue($data['gifts'][1]['id'] > 0);
         $this->assertEquals('e3.1', $data['gifts'][1]['explanation']);
         $this->assertEquals(3.31, $data['gifts'][1]['amount']);
     }
@@ -199,7 +196,7 @@ class GiftControllerTest extends AbstractTestController
         $url = '/report/' . self::$report1->getId() . '/gift/' . self::$gift1->getId();
         $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,
-            'AuthToken'   => self::$tokenDeputy,
+            'AuthToken' => self::$tokenDeputy,
         ]);
 
         $this->assertTrue(null === self::fixtures()->getRepo('Report\Gift')->find(self::$gift1->getId()));
@@ -211,16 +208,21 @@ class GiftControllerTest extends AbstractTestController
     public function testGiftsExist()
     {
         $report = self::fixtures()->getReportById(self::$report1->getId());
+        $report->setGiftsExist('yes');
+
+        self::fixtures()->persist($report);
+        self::fixtures()->flush();
+
         $this->assertCount(1, $report->getGifts());
         $this->assertEquals('yes', $report->getGiftsExist());
 
-        $url = '/report/' . self::$report1->getId() ;
+        $url = '/report/' . self::$report1->getId();
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
-            'AuthToken'   => self::$tokenDeputy,
+            'AuthToken' => self::$tokenDeputy,
             'data' => [
-                'gifts_exist' => 'no'
-            ]
+                'gifts_exist' => 'no',
+            ],
         ]);
 
         self::fixtures()->clear();

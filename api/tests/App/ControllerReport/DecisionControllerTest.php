@@ -18,9 +18,9 @@ class DecisionControllerTest extends AbstractTestController
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
 
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         //deputy1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
@@ -35,6 +35,11 @@ class DecisionControllerTest extends AbstractTestController
         self::$decision2 = self::fixtures()->createDecision(self::$report2);
 
         self::fixtures()->flush()->clear();
+
+        if (null === self::$tokenAdmin) {
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenDeputy = $this->loginAsDeputy();
+        }
     }
 
     /**
@@ -52,14 +57,6 @@ class DecisionControllerTest extends AbstractTestController
         'client_involved_boolean' => true,
         'client_involved_details' => 'client_involved_details-changed',
     ];
-
-    public function setUp(): void
-    {
-        if (null === self::$tokenAdmin) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
-    }
 
     public function testgetOneByIdAuth()
     {

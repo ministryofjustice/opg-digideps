@@ -18,9 +18,9 @@ class ContactControllerTest extends AbstractTestController
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
 
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         //deputy1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
@@ -35,6 +35,11 @@ class ContactControllerTest extends AbstractTestController
         self::$contact2 = self::fixtures()->createContact(self::$report2);
 
         self::fixtures()->flush()->clear();
+
+        if (null === self::$tokenAdmin) {
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenDeputy = $this->loginAsDeputy();
+        }
     }
 
     /**
@@ -57,14 +62,6 @@ class ContactControllerTest extends AbstractTestController
         'explanation' => 'explanation-changed',
         'relationship' => 'relationship-changed',
     ];
-
-    public function setUp(): void
-    {
-        if (null === self::$tokenAdmin) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
-    }
 
     public function testgetOneByIdAuth()
     {

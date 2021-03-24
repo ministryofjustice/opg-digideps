@@ -90,7 +90,7 @@ class ClientController extends RestController
 
     /**
      * @Route("/{id}", name="client_find_by_id", requirements={"id":"\d+"}, methods={"GET"})
-     * @Security("is_granted('ROLE_DEPUTY') or has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")
      *
      * @param Request $request
      * @param int $id
