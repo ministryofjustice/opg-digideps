@@ -2,8 +2,9 @@
 
 namespace Tests\App\Controller;
 
+use App\Entity\Client;
 use App\Entity\Note;
-use Symfony\Bridge\Doctrine\Tests\Fixtures\User;
+use App\Entity\User;
 
 class NoteControllerTest extends AbstractTestController
 {
@@ -28,9 +29,17 @@ class NoteControllerTest extends AbstractTestController
     private static $pa3;
     private static $pa3Client1;
 
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
+
+        if (null === self::$tokenAdmin) {
+            self::$tokenDeputy = $this->loginAsDeputy();
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenPa = $this->loginAsPa();
+            self::$tokenPa2 = $this->loginAsPaAdmin();
+            self::$tokenPa3 = $this->loginAsPaTeamMember();
+        }
 
         //deputy1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
@@ -48,7 +57,7 @@ class NoteControllerTest extends AbstractTestController
         self::$pa3 = self::fixtures()->getRepo('User')->findOneByEmail('pa_team_member@example.org');
         self::$pa3Client1 = self::fixtures()->createClient(self::$pa3, ['setFirstname' => 'pa2Client1']);
 
-        $org = self::fixtures()->createOrganisation('Example', 'example4324.org', true);
+        $org = self::fixtures()->createOrganisation('Example', rand(1, 999999) . 'example.org', true);
         self::fixtures()->flush();
         self::fixtures()->addClientToOrganisation(self::$pa1Client1->getId(), $org->getId());
         self::fixtures()->addUserToOrganisation(self::$pa1->getId(), $org->getId());
@@ -65,17 +74,6 @@ class NoteControllerTest extends AbstractTestController
         parent::tearDownAfterClass();
 
         self::fixtures()->clear();
-    }
-
-    public function setUp(): void
-    {
-        if (null === self::$tokenAdmin) {
-            self::$tokenDeputy = $this->loginAsDeputy();
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenPa = $this->loginAsPa();
-            self::$tokenPa2 = $this->loginAsPaAdmin();
-            self::$tokenPa3 = $this->loginAsPaTeamMember();
-        }
     }
 
     public function testAdd()
@@ -156,24 +154,46 @@ class NoteControllerTest extends AbstractTestController
      */
     public function testDeleteCreator()
     {
-        $noteId = self::$pa1Client1Note1->getId();
-        $url = '/note/' . $noteId;
+        $paUser = self::fixtures()->getRepo(User::class)->findOneBy(['email' => 'pa@example.org']);
+        $newUserEmail = rand(1, 99999) . 'user-to-be-deleted@example.org';
 
-        // create a new user and assign to note
-        $user = self::fixtures()->createUser()->setRoleName(\App\Entity\User::ROLE_PA_NAMED);
-        self::$pa1Client1->addUser($user);
-        $note = self::fixtures()->getRepo('Note')->find($noteId);
-        $note->setCreatedBy($user);
-        self::fixtures()->flush($note, $user);
+        $newUser = (new User())
+            ->setEmail($newUserEmail)
+            ->setFirstname('Art')
+            ->setLastname('Work')
+            ->setRoleName(User::ROLE_PA_NAMED);
 
-        // delete it (soft delete)
-        self::fixtures()->remove($user)->flush();
+        $client = (new Client())
+            ->addUser($paUser)
+            ->addUser($newUser)
+            ->setFirstname('Mona')
+            ->setLastname('Lisa');
 
-        // and assert createdBy is now null
+        $note = (new Note($client, 'fake-category', 'fake-title', 'fake-content'))
+            ->setClient($client)
+            ->setCreatedBy($newUser);
+
+        self::fixtures()->persist($note);
+        self::fixtures()->persist($client);
+        self::fixtures()->persist($newUser);
+        self::fixtures()->flush();
+
+        $url = '/note/' . $note->getId();
         $data = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenPa,
         ])['data'];
-        $this->assertNull($data['created_by']);
+
+        self::assertEquals($newUserEmail, $data['created_by']['email']);
+
+        self::fixtures()->remove($newUser);
+        self::fixtures()->flush();
+
+        $data = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenPa,
+        ])['data'];
+
+        self::assertNull($data['created_by']);
     }
 }

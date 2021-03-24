@@ -14,7 +14,7 @@ use Tests\Fixtures;
 
 abstract class AbstractTestController extends WebTestCase
 {
-    /** @var Fixtuers */
+    /** @var Fixtures */
     protected static $fixtures;
 
     /** @var Client */
@@ -29,7 +29,7 @@ abstract class AbstractTestController extends WebTestCase
     /**
      * Create static client and fixtures.
      */
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
         // each test restores the db before launching the entire suite,
         // help to cleanup records created from previously-executed tests

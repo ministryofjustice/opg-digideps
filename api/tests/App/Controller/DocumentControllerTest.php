@@ -55,6 +55,8 @@ class DocumentControllerTest extends AbstractTestController
 
     public function setUp(): void
     {
+        parent::setUp();
+
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
 

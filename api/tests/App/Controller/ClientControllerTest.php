@@ -51,9 +51,18 @@ class ClientControllerTest extends AbstractTestController
         'date_of_birth' => '1947-1-31',
     ];
 
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
+
+        self::$fixtures::deleteReportsData(['client']);
+
+        if (null === self::$tokenAdmin) {
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenDeputy = $this->loginAsDeputy();
+            self::$tokenPa = $this->loginAsPa();
+            self::$tokenProf = $this->loginAsProf();
+        }
 
         // deputy 1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
@@ -73,22 +82,12 @@ class ClientControllerTest extends AbstractTestController
         // prof
         self::$prof1 = self::fixtures()->getRepo('User')->findOneByEmail('prof@example.org');
 
-        $org = self::fixtures()->createOrganisation('Example', 'example9543.org', true);
+        $org = self::fixtures()->createOrganisation('Example', rand(1, 999999) . 'example.org', true);
         self::fixtures()->flush();
         self::fixtures()->addClientToOrganisation(self::$pa1Client1->getId(), $org->getId());
         self::fixtures()->addUserToOrganisation(self::$pa1->getId(), $org->getId());
 
         self::fixtures()->flush()->clear();
-    }
-
-    public function setUp(): void
-    {
-        if (null === self::$tokenAdmin) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-            self::$tokenPa = $this->loginAsPa();
-            self::$tokenProf = $this->loginAsProf();
-        }
     }
 
     /**
@@ -219,7 +218,7 @@ class ClientControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
         $this->assertEquals(self::$client1->getId(), $data['id']);
-        $this->assertEquals('Firstname', $data['firstname']);
+        $this->assertEquals('deputy1Client1', $data['firstname']);
 
         // PA
         $url = '/client/' . self::$pa1Client1->getId() . '?' . http_build_query(['groups' => ['client', 'report-id', 'current-report']]);
@@ -228,7 +227,7 @@ class ClientControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenPa,
         ])['data'];
         $this->assertEquals(self::$pa1Client1->getId(), $data['id']);
-        $this->assertEquals('f', $data['firstname']);
+        $this->assertEquals('pa1Client1', $data['firstname']);
         $this->assertEquals(self::$pa1Client1Report1->getId(), $data['current_report']['id']);
     }
 
@@ -276,7 +275,7 @@ class ClientControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenAdmin,
         ])['data'];
 
-        $this->assertEquals('Firstname', $data['firstname']);
+        $this->assertEquals('deputy1Client1', $data['firstname']);
         $this->assertCount(1, $data['users']);
         $this->assertCount(1, $data['reports']);
     }
@@ -300,6 +299,6 @@ class ClientControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenAdmin,
         ])['data'];
 
-        $this->assertCount(8, $data);
+        $this->assertCount(3, $data);
     }
 }
