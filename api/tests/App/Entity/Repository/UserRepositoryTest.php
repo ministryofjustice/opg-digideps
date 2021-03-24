@@ -10,7 +10,6 @@ use App\TestHelpers\UserTestHelper;
 use DateTime;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Tests\Fixtures;
 
@@ -29,13 +28,10 @@ class UserRepositoryTest extends WebTestCase
     protected function setUp(): void
     {
         $kernel = self::bootKernel();
-        $this->em = $kernel->getContainer()->get('em');
+        $this->em = $kernel->getContainer()->get('doctrine')->getManager();
         $this->fixtures = new Fixtures($this->em);
 
-        $metaClass = self::prophesize(ClassMetadata::class);
-        $metaClass->name = User::class;
-
-        $this->sut = new UserRepository($this->em, $metaClass->reveal());
+        $this->sut = $this->em->getRepository(User::class);
 
         $purger = new ORMPurger($this->em);
         $purger->purge();
@@ -95,7 +91,7 @@ class UserRepositoryTest extends WebTestCase
         $activeUserTwo = $userHelper->createAndPersistUser($this->em, $clientTwo);
         $reportTwo = ($reportHelper->generateReport($this->em, $clientTwo))->setSubmitDate(new DateTime());
 
-        $clientThree = $clientHelper->createClient($this->em) ;
+        $clientThree = $clientHelper->createClient($this->em);
         $reportThree = ($reportHelper->generateReport($this->em, $clientThree))->setSubmitDate(new DateTime());
         $inactiveUserOne = $userHelper->createAndPersistUser($this->em, $clientThree);
         $inactiveUserOne->setLastLoggedIn(new DateTime('-380 days'));
