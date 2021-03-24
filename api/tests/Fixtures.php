@@ -78,10 +78,8 @@ class Fixtures
         }
 
         $user->addClient($client);
-        $client->addUser($user);
 
         $this->em->persist($client);
-        $this->em->persist($user);
 
         return $client;
     }
@@ -149,7 +147,6 @@ class Fixtures
         }
 
         $submission = new ReportSubmission($report, $user);
-        $submission->setDownloadable(true);
 
         $this->em->persist($submission);
 
@@ -435,6 +432,10 @@ class Fixtures
             $this->em->flush();
         }
 
+        foreach ($args as $e) {
+            $this->em->flush($e);
+        }
+
         return $this;
     }
 
@@ -444,20 +445,6 @@ class Fixtures
         foreach ($args as $e) {
             $this->em->remove($e);
         }
-
-        return $this;
-    }
-
-    public function detach($entity)
-    {
-        $this->em->detach($entity);
-
-        return $this;
-    }
-
-    public function merge($entity)
-    {
-        $this->em->merge($entity);
 
         return $this;
     }

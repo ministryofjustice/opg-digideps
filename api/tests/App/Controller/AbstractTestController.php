@@ -8,14 +8,13 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\Fixtures;
 
 abstract class AbstractTestController extends WebTestCase
 {
-    /** @var Fixtures */
+    /** @var Fixtuers */
     protected static $fixtures;
 
     /** @var Client */
@@ -39,6 +38,7 @@ abstract class AbstractTestController extends WebTestCase
 
         self::$frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false, ]);
 
+        /** @var EntityManager $em */
         $em = self::$container->get('em');
 
         self::$fixtures = new Fixtures($em);

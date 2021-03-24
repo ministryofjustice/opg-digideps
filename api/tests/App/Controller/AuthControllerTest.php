@@ -16,11 +16,6 @@ class AuthControllerTest extends AbstractTestController
 
     private function resetAttempts($key)
     {
-        self::$frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false, ]);
-
-        /** @var EntityManager $em */
-        $em = self::$container->get('em');
-
         self::$container->get(AttemptsInTimeChecker::class)->resetAttempts($key);
         self::$container->get(AttemptsIncrementalWaitingChecker::class)->resetAttempts($key);
     }

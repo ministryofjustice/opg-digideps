@@ -24,8 +24,6 @@ class ClientControllerTest extends AbstractTestController
     private static $pa1Client1;
     private static $pa1Client1Report1;
 
-    private static $clientRepo;
-
 
     private $updateDataLay = [
         'firstname' => 'Firstname',
@@ -75,15 +73,12 @@ class ClientControllerTest extends AbstractTestController
         // prof
         self::$prof1 = self::fixtures()->getRepo('User')->findOneByEmail('prof@example.org');
 
-        $org = self::fixtures()->createOrganisation('Example', rand(1, 99999) . 'example.org', true);
+        $org = self::fixtures()->createOrganisation('Example', 'example9543.org', true);
         self::fixtures()->flush();
         self::fixtures()->addClientToOrganisation(self::$pa1Client1->getId(), $org->getId());
         self::fixtures()->addUserToOrganisation(self::$pa1->getId(), $org->getId());
 
         self::fixtures()->flush()->clear();
-
-        self::$clientRepo = self::fixtures()->getRepo('Client');
-        self::$clientRepo->clear();
     }
 
     public function setUp(): void
@@ -125,9 +120,9 @@ class ClientControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
             'data' => ['users' => [0 => self::$deputy1->getId()]] + $this->updateDataLay,
         ]);
-        self::$clientRepo->clear();
+        self::fixtures()->clear();
 
-        $client = self::$clientRepo->find($return['data']['id']); /* @var $client \App\Entity\Client */
+        $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client \App\Entity\Client */
         $this->assertEquals('Firstname', $client->getFirstname());
         $this->assertCount(1, $client->getUsers());
         $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
@@ -145,11 +140,8 @@ class ClientControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
             'data' => ['id' => self::$client1->getId()] + $this->updateDataLay,
         ]);
-
-        self::$clientRepo->clear();
-
-        $client = self::$clientRepo->find($return['data']['id']); /* @var $client \App\Entity\Client */
-
+        self::fixtures()->clear();
+        $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client \App\Entity\Client */
         $this->assertEquals('Firstname', $client->getFirstname());
         $this->assertEquals('Lastname', $client->getLastname());
         $this->assertEquals('Address', $client->getAddress());
@@ -174,10 +166,8 @@ class ClientControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
             'data' => ['id' => self::$client1->getId(), 'ndr_enabled' => true] + $this->updateDataLay,
         ]);
-
-        self::$clientRepo->clear();
-
-        $client = self::$clientRepo->find($return['data']['id']); /* @var $client \App\Entity\Client */
+        self::fixtures()->clear();
+        $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client \App\Entity\Client */
         $this->assertInstanceOf(Ndr::class, $client->getNdr());
     }
 
@@ -193,10 +183,8 @@ class ClientControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenPa,
             'data' => ['id' => self::$pa1Client1->getId()] + $this->updateDataPa,
         ]);
-
-        self::$clientRepo->clear();
-
-        $client = self::$clientRepo->find($return['data']['id']); /* @var $client \App\Entity\Client */
+        self::fixtures()->clear();
+        $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client \App\Entity\Client */
         $this->assertEquals('f', $client->getFirstname());
         $this->assertEquals('l', $client->getLastname());
         $this->assertEquals('a1', $client->getAddress());
@@ -262,10 +250,7 @@ class ClientControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenPa,
             'data' => [],
         ]);
-
-        self::$clientRepo->clear();
-
-        $client = self::$clientRepo->find($return['data']['id']);
+        $client = self::fixtures()->clear()->getRepo('Client')->find($return['data']['id']);
 
         $this->assertInstanceOf('App\Entity\Client', $client);
         $this->assertEquals(1, count($client->getUsers()));
@@ -315,8 +300,6 @@ class ClientControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenAdmin,
         ])['data'];
 
-        self::$clientRepo->clear();
-
-        $this->assertCount(5, $data);
+        $this->assertCount(8, $data);
     }
 }

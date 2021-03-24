@@ -4,7 +4,6 @@ namespace Tests\App\Controller;
 
 use App\Entity\Report\Checklist;
 use DateTime;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 
 class ChecklistControllerTest extends AbstractTestController
 {
@@ -13,9 +12,8 @@ class ChecklistControllerTest extends AbstractTestController
     private static $report;
     private static $checklist;
 
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
         self::$deputy = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client = self::fixtures()->createClient(self::$deputy, ['setFirstname' => 'CL']);
         self::$report = self::fixtures()->createReport(self::$client);

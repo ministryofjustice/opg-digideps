@@ -108,8 +108,7 @@ LIMIT $limit;";
             $submissionStmt->execute();
             $submissions = $submissionStmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $reportPdfFlaggedSubmissions = $this->
-            flagSubmissionsContainingReportPdfs($submissions, $conn);
+            $reportPdfFlaggedSubmissions = $this->flagSubmissionsContainingReportPdfs($submissions, $conn);
             $groupedSubmissions = $this->groupSubmissionsByReportId($reportPdfFlaggedSubmissions);
             $groupedSubmissionsWithUuids = $this->assignUuidsToAdditionalDocumentSubmissions($groupedSubmissions);
             $documentsWithUuids = $this->extractUuidsFromSubmissionsAndAssignToDocuments($documents, $groupedSubmissionsWithUuids);

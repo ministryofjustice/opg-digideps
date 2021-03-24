@@ -2,10 +2,8 @@
 
 namespace Tests\App\Controller;
 
-use App\Entity\Client;
 use App\Entity\Note;
-use App\Entity\User;
-use App\TestHelpers\UserTestHelper;
+use Symfony\Bridge\Doctrine\Tests\Fixtures\User;
 
 class NoteControllerTest extends AbstractTestController
 {
@@ -50,7 +48,7 @@ class NoteControllerTest extends AbstractTestController
         self::$pa3 = self::fixtures()->getRepo('User')->findOneByEmail('pa_team_member@example.org');
         self::$pa3Client1 = self::fixtures()->createClient(self::$pa3, ['setFirstname' => 'pa2Client1']);
 
-        $org = self::fixtures()->createOrganisation('Example', rand(1, 999999) . 'example.org', true);
+        $org = self::fixtures()->createOrganisation('Example', 'example4324.org', true);
         self::fixtures()->flush();
         self::fixtures()->addClientToOrganisation(self::$pa1Client1->getId(), $org->getId());
         self::fixtures()->addUserToOrganisation(self::$pa1->getId(), $org->getId());
@@ -158,50 +156,24 @@ class NoteControllerTest extends AbstractTestController
      */
     public function testDeleteCreator()
     {
-        self::bootKernel();
-        $em = self::$container->get('em');
+        $noteId = self::$pa1Client1Note1->getId();
+        $url = '/note/' . $noteId;
 
-        $paUser = $em->getRepository(User::class)->findOneBy(['email' => 'pa@example.org']);
+        // create a new user and assign to note
+        $user = self::fixtures()->createUser()->setRoleName(\App\Entity\User::ROLE_PA_NAMED);
+        self::$pa1Client1->addUser($user);
+        $note = self::fixtures()->getRepo('Note')->find($noteId);
+        $note->setCreatedBy($user);
+        self::fixtures()->flush($note, $user);
 
-        $newUserEmail = rand(1, 99999) . 'user-to-be-deleted@example.org';
-        $newUser = (new User())
-            ->setEmail($newUserEmail)
-            ->setFirstname('Art')
-            ->setLastname('Work')
-            ->setRoleName(User::ROLE_PA_NAMED);
+        // delete it (soft delete)
+        self::fixtures()->remove($user)->flush();
 
-        $client = (new Client())
-            ->addUser($paUser)
-            ->addUser($newUser)
-            ->setFirstname('Mona')
-            ->setLastname('Lisa');
-
-        $note = (new Note($client, 'fake-category', 'fake-title', 'fake-content'))
-            ->setClient($client)
-            ->setCreatedBy($newUser);
-
-        $em->persist($note);
-        $em->persist($client);
-        $em->persist($newUser);
-        $em->flush();
-
-        $url = '/note/' . $note->getId();
-
+        // and assert createdBy is now null
         $data = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenPa,
         ])['data'];
-
-        self::assertEquals($newUserEmail, $data['created_by']['email']);
-
-        $em->remove($newUser);
-        $em->flush();
-
-        $data = $this->assertJsonRequest('GET', $url, [
-            'mustSucceed' => true,
-            'AuthToken'   => self::$tokenPa,
-        ])['data'];
-
-        self::assertNull($data['created_by']);
+        $this->assertNull($data['created_by']);
     }
 }

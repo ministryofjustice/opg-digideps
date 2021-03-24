@@ -61,7 +61,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'NDR' => 1
         ]);
         $this->fixtures()->persist($casRec);
-        $this->fixtures()->flush();
+        $this->fixtures()->flush($casRec);
 
         $token = $this->login('deputy@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
 
