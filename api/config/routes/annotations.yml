@@ -17,3 +17,7 @@ app_v2_fixture:
     resource: "../../src/v2/Fixture/Controller/"
     type:     annotation
     prefix:   /v2
+
+kernel:
+    resource: ../../src/Kernel.php
+    type: annotation
