@@ -8,6 +8,7 @@ use DigidepsBehat\v2\Common\BaseFeatureContext;
 class ReportingSectionsFeatureContext extends BaseFeatureContext
 {
     use ContactsSectionTrait;
+    use AdditionalInformationSectionTrait;
 
     const REPORT_SECTION_ENDPOINT = 'report/%s/%s';
 

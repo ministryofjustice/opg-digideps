@@ -64,6 +64,14 @@ trait IShouldBeOnTrait
     }
 
     /**
+     * @Then I should be on the additional information summary page
+     */
+    public function iAmOnAdditionalInformationSummaryPage()
+    {
+        $this->iAmOnPage('/report\/.*\/any-other-info\/summary$/');
+    }
+
+    /**
      * @Then I should be on the Lay reports overview page
      */
     public function iAmOnReportsOverviewPage()
