@@ -53,7 +53,7 @@ class ManageController extends RestController
     private function dbInfo()
     {
         try {
-            $this->getDoctrine()->getConnection()->query('select * from migration_versions LIMIT 1')->fetchAll();
+            $this->getDoctrine()->getConnection()->query('select * from migrations LIMIT 1')->fetchAll();
 
             return [true, ''];
         } catch (\Throwable $e) {

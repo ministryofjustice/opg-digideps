@@ -19,7 +19,7 @@ class Version185 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
 
-        $this->addSql("DELETE from migration_versions where version IN ('".implode("','", range(157, 180))."');");
+        $this->addSql("DELETE from migrations where version IN ('".implode("','", range(157, 180))."');");
     }
 
     /**
