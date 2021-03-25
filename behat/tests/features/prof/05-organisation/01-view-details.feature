@@ -2,17 +2,17 @@ Feature: Users can view their organisations
 
   @prof
   Scenario: Without organisation, user cannot access settings pages
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     Given the following users exist:
       | ndr      | deputyType | firstName | lastName  | email                                    | postCode | activated |
       | disabled | PROF_ADMIN | Lorely    | Rodriguez | LorelyRodriguezAdminNoOrg@behat-test.com | HA4      | true      |
-    Given I am logged in as "LorelyRodriguezAdminNoOrg@behat-test.com" with password "Abcd1234"
+    Given I am logged in as "LorelyRodriguezAdminNoOrg@behat-test.com" with password "DigidepsPass1234"
     When I go to "/org/settings"
     Then I should not see "User Accounts"
 
   @prof
   Scenario: Set up organisation
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I go to admin page "/admin/organisations/add"
     And I fill in "organisation_name" with "Leever Partners"
     And I fill in "organisation_emailIdentifierType_0" with "domain"
@@ -22,8 +22,8 @@ Feature: Users can view their organisations
     # Add user manually due to fixtures auto creating the organisation
     And I go to admin page "/admin"
     And I create a new "NDR-disabled" "prof named" user "Main" "Leever Contact" with email "main.contact@leever.example" and postcode "HA4"
-    And I activate the named deputy "main.contact@leever.example" with password "Abcd1234"
-    When I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I activate the named deputy "main.contact@leever.example" with password "DigidepsPass1234"
+    When I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I go to admin page "/admin/organisations"
     And I follow "Leever Partners"
     And I follow "Add user"
@@ -36,7 +36,7 @@ Feature: Users can view their organisations
 
   @prof
   Scenario: When organisation is not active, user cannot access settings pages
-    Given I am logged in as "main.contact@leever.example" with password "Abcd1234"
+    Given I am logged in as "main.contact@leever.example" with password "DigidepsPass1234"
     When I go to "/org/settings"
     Then I should not see "User Accounts"
     When I go to "/org/settings/organisation"
@@ -44,12 +44,12 @@ Feature: Users can view their organisations
 
   @prof
   Scenario: User can view their active organisation
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I go to admin page "/admin/organisations"
     When I click on "edit" in the "org-leever-partners" region
     And I fill in "organisation_isActivated_0" with "1"
     And I press "Save organisation"
-    When I am logged in as "main.contact@leever.example" with password "Abcd1234"
+    When I am logged in as "main.contact@leever.example" with password "DigidepsPass1234"
     When I go to "/org/settings"
     And I follow "User accounts"
     Then the URL should match "/org/settings/organisation/\d+"
@@ -59,7 +59,7 @@ Feature: Users can view their organisations
 
   @prof
   Scenario: Super admin removes organisation
-    Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I am on admin page "/admin/organisations"
     When I click on "delete" in the "org-leever-partners" region
     And I click on "confirm"

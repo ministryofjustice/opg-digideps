@@ -1,7 +1,7 @@
 Feature: PA user edits common report sections common to ALL report types
   @102 @103-6 @104
   Scenario: PA 102 user edit decisions section
-    And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "02100014"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region
@@ -22,7 +22,7 @@ Feature: PA user edits common report sections common to ALL report types
 
   @102 @103-6 @104
   Scenario: PA 102 saves a contact
-    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "02100014"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region
@@ -35,7 +35,7 @@ Feature: PA user edits common report sections common to ALL report types
 
   @102 @103-6 @104
   Scenario: PA 102 visits and care steps
-    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "02100014"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region
@@ -67,7 +67,7 @@ Feature: PA user edits common report sections common to ALL report types
 
   @102 @103-6 @104
   Scenario: PA 102 report actions
-    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "02100014"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region
@@ -85,7 +85,7 @@ Feature: PA user edits common report sections common to ALL report types
 
   @102 @103-6 @104
   Scenario: PA 102 any other info
-    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "02100014"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region
@@ -98,7 +98,7 @@ Feature: PA user edits common report sections common to ALL report types
 
   @102 @103-6 @104
   Scenario: PA adds documents to 102
-    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "02100014"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region
@@ -134,7 +134,7 @@ Feature: PA user edits common report sections common to ALL report types
 
   @102 @103-6 @104
   Scenario: PA deletes document from 102
-    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "02100014"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-02100014" region

@@ -202,7 +202,7 @@ abstract class AbstractTestController extends WebTestCase
      */
     protected function loginAsDeputy()
     {
-        return $this->login('deputy@example.org', 'Abcd1234', self::$deputySecret);
+        return $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
     }
 
     /**
@@ -210,7 +210,7 @@ abstract class AbstractTestController extends WebTestCase
      */
     protected function loginAsPa()
     {
-        return $this->login('pa@example.org', 'Abcd1234', self::$deputySecret);
+        return $this->login('pa@example.org', 'DigidepsPass1234', self::$deputySecret);
     }
 
     /**
@@ -218,7 +218,7 @@ abstract class AbstractTestController extends WebTestCase
      */
     protected function loginAsPaAdmin()
     {
-        return $this->login('pa_admin@example.org', 'Abcd1234', self::$deputySecret);
+        return $this->login('pa_admin@example.org', 'DigidepsPass1234', self::$deputySecret);
     }
 
     /**
@@ -226,7 +226,7 @@ abstract class AbstractTestController extends WebTestCase
      */
     protected function loginAsPaTeamMember()
     {
-        return $this->login('pa_team_member@example.org', 'Abcd1234', self::$deputySecret);
+        return $this->login('pa_team_member@example.org', 'DigidepsPass1234', self::$deputySecret);
     }
 
     /**
@@ -234,7 +234,7 @@ abstract class AbstractTestController extends WebTestCase
      */
     protected function loginAsProf()
     {
-        return $this->login('prof@example.org', 'Abcd1234', self::$deputySecret);
+        return $this->login('prof@example.org', 'DigidepsPass1234', self::$deputySecret);
     }
 
     /**
@@ -242,7 +242,7 @@ abstract class AbstractTestController extends WebTestCase
      */
     protected function loginAsAdmin()
     {
-        return $this->login('admin@example.org', 'Abcd1234', self::$adminSecret);
+        return $this->login('admin@example.org', 'DigidepsPass1234', self::$adminSecret);
     }
 
     /**
@@ -250,7 +250,7 @@ abstract class AbstractTestController extends WebTestCase
      */
     protected function loginAsSuperAdmin()
     {
-        return $this->login('super_admin@example.org', 'Abcd1234', self::$adminSecret);
+        return $this->login('super_admin@example.org', 'DigidepsPass1234', self::$adminSecret);
     }
 
     protected function tearDown(): void

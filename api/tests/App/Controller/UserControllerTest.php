@@ -212,11 +212,11 @@ class UserControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
             'data' => [
-                'password_plain' => 'Abcd1234ne',
+                'password_plain' => 'DigidepsPass1234ne',
             ],
         ]);
 
-        $this->login('deputy@example.org', 'Abcd1234ne', API_TOKEN_DEPUTY);
+        $this->login('deputy@example.org', 'DigidepsPass1234ne', API_TOKEN_DEPUTY);
     }
 
     /**
@@ -230,13 +230,13 @@ class UserControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
             'data' => [
-                'password_plain' => 'Abcd1234pa',
+                'password_plain' => 'DigidepsPass1234pa',
                 'send_email' => 'activate',
 
             ],
         ]);
 
-        $this->login('deputy@example.org', 'Abcd1234pa', API_TOKEN_DEPUTY);
+        $this->login('deputy@example.org', 'DigidepsPass1234pa', API_TOKEN_DEPUTY);
     }
 
     /**
@@ -250,7 +250,7 @@ class UserControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
             'data' => [
-                'password_plain' => 'Abcd1234', //restore password for subsequent logins
+                'password_plain' => 'DigidepsPass1234', //restore password for subsequent logins
                 'send_email' => 'password-reset',
             ],
         ]);

@@ -3,37 +3,40 @@
 namespace App\Twig;
 
 use Symfony\Component\Form\FormView;
+use Twig\Environment;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 use Twig_Environment;
 
 class FormFieldsExtension extends AbstractExtension
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private TranslatorInterface $translator;
+    private Environment $environment;
 
     /**
      * @param TranslatorInterface $translator
+     * @param Environment $environment
      */
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, Environment $environment)
     {
         $this->translator = $translator;
+        $this->environment = $environment;
     }
 
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('form_input', [$this, 'renderFormInput'], ['needs_environment' => true]),
-            new \Twig_SimpleFunction('form_submit', [$this, 'renderFormSubmit'], ['needs_environment' => true]),
-            new \Twig_SimpleFunction('form_errors', [$this, 'renderFormErrors'], ['needs_environment' => true]),
-            new \Twig_SimpleFunction('form_errors_list', [$this, 'renderFormErrorsList'], ['needs_environment' => true]),
-            new \Twig_SimpleFunction('form_select', [$this, 'renderFormDropDown'], ['needs_environment' => true]),
-            new \Twig_SimpleFunction('form_known_date', [$this, 'renderFormKnownDate'], ['needs_environment' => true]),
-            new \Twig_SimpleFunction('form_sort_code', [$this, 'renderFormSortCode'], ['needs_environment' => true]),
-            new \Twig_SimpleFunction('form_checkbox_group', [$this, 'renderCheckboxGroup'], ['needs_environment' => true]),
-            new \Twig_SimpleFunction('form_checkbox', [$this, 'renderCheckboxInput'], ['needs_environment' => true]),
+            new TwigFunction('form_input', [$this, 'renderFormInput']),
+            new TwigFunction('form_submit', [$this, 'renderFormSubmit']),
+            new TwigFunction('form_submit_ga', [$this, 'renderGATrackedFormSubmit']),
+            new TwigFunction('form_errors', [$this, 'renderFormErrors']),
+            new TwigFunction('form_errors_list', [$this, 'renderFormErrorsList']),
+            new TwigFunction('form_select', [$this, 'renderFormDropDown']),
+            new TwigFunction('form_known_date', [$this, 'renderFormKnownDate']),
+            new TwigFunction('form_sort_code', [$this, 'renderFormSortCode']),
+            new TwigFunction('form_checkbox_group', [$this, 'renderCheckboxGroup']),
+            new TwigFunction('form_checkbox', [$this, 'renderCheckboxInput']),
         ];
     }
 
@@ -46,10 +49,10 @@ class FormFieldsExtension extends AbstractExtension
      * @param int    $transIndex
      * @param array  $vars
      */
-    public function renderFormInput(Twig_Environment $env, $element, $elementName, array $vars = [], $transIndex = null)
+    public function renderFormInput($element, $elementName, array $vars = [], $transIndex = null)
     {
         //generate input field html using variables supplied
-        echo $env->render(
+        echo $this->environment->render(
             '@App/Components/Form/_input.html.twig',
             array_merge(
                 $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex),
@@ -66,9 +69,9 @@ class FormFieldsExtension extends AbstractExtension
      * @param int    $transIndex
      * @param array  $vars
      */
-    public function renderCheckboxInput(Twig_Environment $env, $element, $elementName, array $vars = [], $transIndex = null)
+    public function renderCheckboxInput($element, $elementName, array $vars = [], $transIndex = null)
     {
-        echo $env->render(
+        echo $this->environment->render(
             '@App/Components/Form/_checkbox.html.twig',
             array_merge(
                 $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex),
@@ -82,7 +85,7 @@ class FormFieldsExtension extends AbstractExtension
      *
      * //TODO consider refactor using getFormComponentTwigVariables
      */
-    public function renderCheckboxGroup(Twig_Environment $env, FormView $element, $elementName, $vars, $transIndex = null)
+    public function renderCheckboxGroup(FormView $element, $elementName, $vars, $transIndex = null)
     {
         //lets get the translation for hintText, labelClass and labelText
         $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
@@ -117,7 +120,7 @@ class FormFieldsExtension extends AbstractExtension
         }
 
         //generate input field html using variables supplied
-        echo $env->render('@App/Components/Form/_checkboxgroup.html.twig', [
+        echo $this->environment->render('@App/Components/Form/_checkboxgroup.html.twig', [
             'classes' => isset($vars['classes']) ? $vars['classes'] : null,
             'disabled' => isset($vars['disabled']) ? $vars['disabled'] : false,
             'fieldSetClass' => isset($vars['fieldSetClass']) ? $vars['fieldSetClass'] : null,
@@ -141,7 +144,7 @@ class FormFieldsExtension extends AbstractExtension
      * @DEPRECATED
      *
      */
-    public function renderCheckboxGroupNew(Twig_Environment $env, FormView $element, $elementName, $vars, $transIndex = null)
+    public function renderCheckboxGroupNew(FormView $element, $elementName, $vars, $transIndex = null)
     {
         //lets get the translation for hintText, labelClass and labelText
         $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
@@ -176,7 +179,7 @@ class FormFieldsExtension extends AbstractExtension
         }
 
         //generate input field html using variables supplied
-        echo $env->render('@App/Components/Form/_checkboxgroup_new.html.twig', [
+        echo $this->environment->render('@App/Components/Form/_checkboxgroup_new.html.twig', [
             'fieldSetClass' => isset($vars['fieldSetClass']) ? $vars['fieldSetClass'] : null,
             'legendText' => $legendText,
             'legendClass' => isset($vars['legendClass']) ? $vars['legendClass'] : null,
@@ -196,16 +199,16 @@ class FormFieldsExtension extends AbstractExtension
      * @param int    $transIndex
      * @param array  $vars
      */
-    public function renderFormDropDown(Twig_Environment $env, $element, $elementName, array $vars = [], $transIndex = null)
+    public function renderFormDropDown($element, $elementName, array $vars = [], $transIndex = null)
     {
         //generate input field html using variables supplied
-        echo $env->render(
+        echo $this->environment->render(
             '@App/Components/Form/_select.html.twig',
             $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex)
         );
     }
 
-    public function renderFormKnownDate(Twig_Environment $env, $element, $elementName, array $vars = [], $transIndex = null)
+    public function renderFormKnownDate($element, $elementName, array $vars = [], $transIndex = null)
     {
         //lets get the translation for class and labelText
         $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
@@ -244,7 +247,7 @@ class FormFieldsExtension extends AbstractExtension
             }
         }
 
-        $html = $env->render('@App/Components/Form/_known-date.html.twig', [
+        $html = $this->environment->render('@App/Components/Form/_known-date.html.twig', [
             'legend' => array_merge([
                 'text' => $legendText,
                 'isPageHeading' => false,
@@ -257,7 +260,7 @@ class FormFieldsExtension extends AbstractExtension
         echo $html;
     }
 
-    public function renderFormSortCode(Twig_Environment $env, $element, $elementName, array $vars = [], $transIndex = null)
+    public function renderFormSortCode($element, $elementName, array $vars = [], $transIndex = null)
     {
         //lets get the translation for class and labelText
         $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
@@ -273,7 +276,7 @@ class FormFieldsExtension extends AbstractExtension
 
         $legendText = ($legendTextTrans != $translationKey . '.legend') ? $legendTextTrans : null;
 
-        $html = $env->render('@App/Components/Form/_sort-code.html.twig', [
+        $html = $this->environment->render('@App/Components/Form/_sort-code.html.twig', [
             'legend' => array_merge([
                 'text' => $legendText,
                 'isPageHeading' => false,
@@ -286,18 +289,22 @@ class FormFieldsExtension extends AbstractExtension
     }
 
     /**
-     * @param mixed  $element
+     * @param mixed $element
      * @param string $elementName used to pick the translation by appending ".label"
-     * @param array  $vars        [buttonClass => additional class. "disabled" supported]
+     * @param array $vars [buttonClass => additional class. "disabled" supported]
      */
-    public function renderFormSubmit(Twig_Environment $env, $element, $elementName, array $vars = [])
-    {
+    public function renderFormSubmit(
+        $element,
+        $elementName,
+        array $vars = []
+    ) {
         $options = [
             // label comes from labelText (if defined, but throws warning) ,or elementname.label from the form translation domain
             'label' => $elementName . '.label',
             'element' => $element,
             'translationDomain' => isset($vars['labelTranslationDomain']) ? $vars['labelTranslationDomain'] : null,
             'buttonClass' => isset($vars['buttonClass']) ? $vars['buttonClass'] : null,
+            'attr' => isset($vars['attr']) ? $vars['attr'] : null
         ];
 
         // deprecated. only kept in order not to break forms that use it
@@ -305,9 +312,69 @@ class FormFieldsExtension extends AbstractExtension
             $options['label'] = $vars['labelText'];
         }
 
-        $html = $env->render('@App/Components/Form/_button.html.twig', $options);
+
+        $html = $this->environment->render('@App/Components/Form/_button.html.twig', $options);
 
         echo $html;
+    }
+
+    /**
+     * @param mixed $element
+     * @param string $elementName used to pick the translation by appending ".label"
+     * @param array $vars [buttonClass => additional class. "disabled" supported]
+     * @param string|null $gaTrackingCategory (required) Use the format {Page Title}:{Sub Section i.e. in a form} (sub section optional)
+     * @param string|null $gaTrackingAction (required) Use the format {event}: { Element Type}: {Element Specifics}
+     * @param string|null $gaTrackingLabel (required) Use the format {Human summary and additional detail} {path uri with any query params}
+     * @param int|null $gaTrackingValue (optional) a numerical value that related to the event
+     *
+     * See GOOGLE-ANALYTICS.md for usage
+     */
+    public function renderGATrackedFormSubmit(
+        $element,
+        $elementName,
+        string $gaTrackingCategory,
+        string $gaTrackingAction,
+        string $gaTrackingLabel = null,
+        ?int $gaTrackingValue = null,
+        array $vars = []
+    ) {
+        $vars['attr'] = $this->addGaAttrsToElementAttrs(
+            $gaTrackingCategory,
+            $gaTrackingAction,
+            $gaTrackingLabel,
+            $gaTrackingValue,
+            $vars['attr']
+        );
+
+        return $this->renderFormSubmit($element, $elementName, $vars);
+    }
+
+    /**
+     * @param array|null $attrs
+     * @param string $gaTrackingCategory
+     * @param string $gaTrackingAction
+     * @param string $gaTrackingLabel
+     * @param int|null $gaTrackingValue
+     * @return array
+     */
+    private function addGaAttrsToElementAttrs(
+        string $gaTrackingCategory,
+        string $gaTrackingAction,
+        string $gaTrackingLabel,
+        ?int $gaTrackingValue,
+        ?array $attrs = []
+    ) {
+        $attrs = is_null($attrs) ? [] : $attrs;
+
+        $gaTrackingAttrs = [
+            'data-attribute' => 'ga-event',
+            'data-ga-action' => $gaTrackingAction,
+            'data-ga-category' => $gaTrackingCategory,
+            'data-ga-label' => $gaTrackingLabel,
+            'data-ga-value' => strval($gaTrackingValue),
+        ];
+
+        return array_merge($attrs, $gaTrackingAttrs);
     }
 
     /**
@@ -316,9 +383,9 @@ class FormFieldsExtension extends AbstractExtension
      *
      * @param $element
      */
-    public function renderFormErrors(Twig_Environment $env, $element)
+    public function renderFormErrors($element)
     {
-        $html = $env->render('@App/Components/Form/_errors.html.twig', [
+        $html = $this->environment->render('@App/Components/Form/_errors.html.twig', [
             'element' => $element,
         ]);
 
@@ -331,11 +398,11 @@ class FormFieldsExtension extends AbstractExtension
      *
      * @param FormView $form
      */
-    public function renderFormErrorsList(Twig_Environment $env, FormView $form)
+    public function renderFormErrorsList(FormView $form)
     {
         $formErrorMessages = $this->getErrorsFromFormViewRecursive($form);
 
-        $html = $env->render('@App/Components/Alerts/_validation-summary.html.twig', [
+        $html = $this->environment->render('@App/Components/Alerts/_validation-summary.html.twig', [
             'formErrorMessages' => $formErrorMessages,
             'formUncaughtErrors' => empty($form->vars['errors']) ? [] : $form->vars['errors'],
         ]);

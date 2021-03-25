@@ -97,8 +97,7 @@ class UserController extends AbstractController
             $form = $this->createForm(
                 FormDir\SetPasswordType::class,
                 $user,
-                [ 'passwordMismatchMessage' => $passwordMismatchMessage, 'showTermsAndConditions'  => $user->isDeputy()
-                                       ]
+                [ 'passwordMismatchMessage' => $passwordMismatchMessage, 'showTermsAndConditions'  => $user->isDeputy()]
             );
             $template = '@App/User/activate.html.twig';
         } else { // 'password-reset'

@@ -14,6 +14,7 @@
 {% block htmlTitle %}Deputy Report{% endblock %}
 
 {% block proposition_content %}
+
     <a href="{{ (app.user and app.user.isDeputyOrg()) ? path('org_dashboard') : '/' }}" class="govuk-header__link govuk-header__link--service-name">
         {% block proposition_title %}Complete the deputy report{% endblock %}
     </a>
@@ -104,6 +105,7 @@
                 {% if block("supportTitleTop") is defined and block("supportTitleTop") != "" %}
                     <span class="govuk-caption-xl">{% block supportTitleTop %}{% endblock %}</span>
                 {% endif %}
+
                 <h1 class="govuk-heading-xl">
                     {% block pageTitle %} Deputy report {% endblock %}
                 </h1>

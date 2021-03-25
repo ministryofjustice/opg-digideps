@@ -1,7 +1,7 @@
 Feature: PROF user edits 102-5 report sections
 
   Scenario: PROF 102-5 gifts
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "31000010"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-31000010" region
@@ -12,7 +12,7 @@ Feature: PROF user edits 102-5 report sections
       | yes_no_giftsExist_1 | no |
 
   Scenario: PROF 102-5 assets
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "31000010"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-31000010" region
@@ -22,7 +22,7 @@ Feature: PROF user edits 102-5 report sections
       | yes_no_noAssetToAdd_1 | 1 |
 
   Scenario: PROF 102-5  debts
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "31000010"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-31000010" region
@@ -33,7 +33,7 @@ Feature: PROF user edits 102-5 report sections
       | yes_no_hasDebts_1 | no |
 
   Scenario: PROF 102-5 add current account
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "31000010"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-31000010" region
@@ -60,7 +60,7 @@ Feature: PROF user edits 102-5 report sections
     And I choose "no" when asked for adding another record
 
   Scenario: PROF 102-5 add postoffice account (no sort code, no bank name)
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "31000010"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-31000010" region
@@ -83,7 +83,7 @@ Feature: PROF user edits 102-5 report sections
     And I choose "no" when asked for adding another record
 
   Scenario: PROF 102-5 add no sortcode account (still requires bank name)
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "31000010"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-31000010" region
@@ -107,7 +107,7 @@ Feature: PROF user edits 102-5 report sections
     And I choose "no" when asked for adding another record
 
   Scenario: PROF 102-5 deletes bank account
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "31000010"
     And I press "search_submit"
     When I click on "pa-report-open" in the "client-31000010" region
@@ -120,7 +120,7 @@ Feature: PROF user edits 102-5 report sections
     Then I should see "Bank account deleted"
 
   Scenario: PROF 102-5 money in
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "31000010"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-31000010" region
@@ -139,7 +139,7 @@ Feature: PROF user edits 102-5 report sections
       | HSBC - main account - Current account (****01ca) | transaction-pension-received |
 
   Scenario: PROF 102-5 money out
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I fill in "search" with "31000010"
     And I press "search_submit"
     And I click on "pa-report-open" in the "client-31000010" region

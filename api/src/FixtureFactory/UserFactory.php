@@ -45,7 +45,7 @@ class UserFactory
             ->setRoleName($roleName);
 
         if ($data['activated'] === 'true' || $data['activated'] === true) {
-            $user->setPassword($this->encoder->encodePassword($user, 'Abcd1234'));
+            $user->setPassword($this->encoder->encodePassword($user, 'DigidepsPass1234'));
         } else {
             $user->setActive(false);
         }
@@ -68,7 +68,7 @@ class UserFactory
             ->setRoleName($data['adminType']);
 
         if ($data['activated'] === 'true') {
-            $user->setPassword($this->encoder->encodePassword($user, 'Abcd1234'))->setActive(true);
+            $user->setPassword($this->encoder->encodePassword($user, 'DigidepsPass1234'))->setActive(true);
         }
 
         return $user;
@@ -95,7 +95,7 @@ class UserFactory
             ->setAddressCountry('GB')
             ->setRoleName('ROLE_PROF_TEAM_MEMBER');
 
-        $user->setPassword($this->encoder->encodePassword($user, 'Abcd1234'));
+        $user->setPassword($this->encoder->encodePassword($user, 'DigidepsPass1234'));
 
         return $user;
     }
@@ -140,7 +140,7 @@ class UserFactory
             ->setActive(true);
 
         if ($data['activated'] === 'true' || $data['activated'] === true) {
-            $user2->setPassword($this->encoder->encodePassword($user2, 'Abcd1234'));
+            $user2->setPassword($this->encoder->encodePassword($user2, 'DigidepsPass1234'));
         } else {
             $user2->setActive(false);
         }

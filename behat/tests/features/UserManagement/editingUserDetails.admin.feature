@@ -4,14 +4,14 @@ Feature: Editing Deputy details as an admin user
   I need to view and edit details about each deputy
 
   Scenario: Create user for editing
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And the following users exist:
       | ndr      | deputyType | firstName | lastName    | email                   | postCode | activated |
       | disabled | LAY        | Jenny     | Ferguson    | jenny.ferguson@test.com | HA4      | true      |
       | disabled | LAY        | Tom       | Aikens      | tom.aikens@test.com     | HA9      | true      |
 
   Scenario: Super admin user edits a deputy
-    Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "user-jennyfergusontestcom"
     Then the following fields should have the corresponding values:
       | admin_firstname       | Jenny                   |
@@ -44,7 +44,7 @@ Feature: Editing Deputy details as an admin user
       | admin_addressPostcode | LN3                  |
 
   Scenario: Regular admin user edits a deputy
-    Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "user-tomaikenstestcom"
     Then I should not see "tom.aikens@test.com"
     And the following fields should have the corresponding values:
@@ -71,5 +71,3 @@ Feature: Editing Deputy details as an admin user
       | admin_firstname       | Paula                |
       | admin_lastname        | Jones                |
       | admin_addressPostcode | LN3                  |
-
-

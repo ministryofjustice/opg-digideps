@@ -13,7 +13,7 @@ trait CourtOrderTrait
      */
     public function theFollowingCourtOrdersExist(TableNode $table)
     {
-        $this->iAmLoggedInToAdminAsWithPassword('super-admin@publicguardian.gov.uk', 'Abcd1234');
+        $this->iAmLoggedInToAdminAsWithPassword('super-admin@publicguardian.gov.uk', 'DigidepsPass1234');
 
         foreach ($table as $row) {
             $queryString = http_build_query([

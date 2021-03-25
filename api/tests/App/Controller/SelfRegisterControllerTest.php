@@ -25,7 +25,7 @@ class SelfRegisterControllerTest extends AbstractTestController
     /** @test */
     public function dontSaveUnvalidUserToDB()
     {
-        $token = $this->login('deputy@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
         $this->assertJsonRequest('POST', '/selfregister', [
             'mustFail' => true,
@@ -64,7 +64,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->fixtures()->persist($casRec);
         $this->fixtures()->flush($casRec);
 
-        $token = $this->login('deputy@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
         $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
             'mustSucceed' => true,
@@ -104,7 +104,7 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function userNotFoundinCasRec()
     {
-        $token = $this->login('deputy@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
         $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
             'mustFail' => true,
@@ -144,7 +144,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->fixtures()->persist($casRec);
         $this->fixtures()->flush($casRec);
 
-        $token = $this->login('deputy@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
         $this->assertJsonRequest('POST', '/selfregister', [
             'mustSucceed' => true,
@@ -161,7 +161,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
 
-        $token = $this->login('deputy@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
         $this->assertJsonRequest('POST', '/selfregister', [
             'mustFail' => true,

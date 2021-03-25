@@ -8,8 +8,8 @@ doctrine:
         user:     "%database_user%"
         password: "%database_password%"
         charset:  UTF8
-        #options:
-            #sslmode: require
+        types:
+            uuid: Ramsey\Uuid\Doctrine\UuidType
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
         proxy_dir:   "%kernel.cache_dir%/doctrine/orm/Proxies"

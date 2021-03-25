@@ -15,9 +15,12 @@ module "reset_database" {
 
 locals {
   reset_database_sg_rules = {
-    ecr  = local.common_sg_rules.ecr
-    logs = local.common_sg_rules.logs
-    s3   = local.common_sg_rules.s3
+    ecr     = local.common_sg_rules.ecr
+    logs    = local.common_sg_rules.logs
+    s3      = local.common_sg_rules.s3
+    ssm     = local.common_sg_rules.ssm
+    ecr_api = local.common_sg_rules.ecr_api
+    secrets = local.common_sg_rules.secrets
     rds = {
       port        = 5432
       protocol    = "tcp"
@@ -59,7 +62,7 @@ locals {
       { "name": "DATABASE_NAME", "value": "${local.db.name}" },
       { "name": "DATABASE_PORT", "value": "${local.db.port}" },
       { "name": "DATABASE_USERNAME", "value": "${local.db.username}" },
-      { "name": "FIXTURES_ACCOUNTPASSWORD", "value": "Abcd1234" },
+      { "name": "FIXTURES_ACCOUNTPASSWORD", "value": "DigidepsPass1234" },
       { "name": "REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" }
     ]
   }

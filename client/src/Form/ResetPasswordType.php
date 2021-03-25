@@ -9,12 +9,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ResetPasswordType extends AbstractType
 {
+    const VALIDATION_GROUP = 'user_set_password';
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
                 ->add('password', FormTypes\RepeatedType::class, [
                     'type' => FormTypes\PasswordType::class,
-                    'invalid_message' => $options['passwordMismatchMessage']
+                    'invalid_message' => $options['passwordMismatchMessage'],
                 ])
                 ->add('save', FormTypes\SubmitType::class);
     }
@@ -23,7 +25,7 @@ class ResetPasswordType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'password-reset',
-             'validation_groups' => ['user_set_password'],
+            'validation_groups' => [self::VALIDATION_GROUP],
         ])
         ->setRequired(['passwordMismatchMessage']);
     }

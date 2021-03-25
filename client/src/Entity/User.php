@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Traits\LoginInfoTrait;
+use App\Validator\Constraints\CommonPassword;
 use App\Validator\Constraints\EmailSameDomain;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
@@ -112,11 +113,12 @@ class User implements UserInterface, DeputyInterface
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank( message="user.password.notBlank", groups={"user_set_password"} )
-     * @Assert\Length( min=8, max=50, minMessage="user.password.minLength", maxMessage="user.password.maxLength", groups={"user_set_password", "user_change_password"} )
+     * @Assert\NotBlank( message="user.password.notBlank", groups={"user_set_password", "user_change_password"} )
+     * @Assert\Length( min=14, max=50, minMessage="user.password.minLength", maxMessage="user.password.maxLength", groups={"user_set_password", "user_change_password"} )
      * @Assert\Regex( pattern="/[a-z]/" , message="user.password.noLowerCaseChars", groups={"user_set_password", "user_change_password" } )
      * @Assert\Regex( pattern="/[A-Z]/" , message="user.password.noUpperCaseChars", groups={"user_set_password", "user_change_password" } )
      * @Assert\Regex( pattern="/[0-9]/", message="user.password.noNumber", groups={"user_set_password", "user_change_password"} )
+     * @CommonPassword(message="user.password.notCommonPassword", groups={"user_set_password", "user_change_password"})
      *
      * @var string
      */

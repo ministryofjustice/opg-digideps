@@ -14,25 +14,39 @@
 
 {% block pageContent %}
 
+    {% set gaCategory = 'pageTitle' | trans %}
+    {% set gaAction = 'Click: Button: Submit' %}
+    {% set gaLabel = 'Clicked submit button on ' ~ app.request.requesturi %}
+
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_input(form.password.first,'password', { 'hasHintList': true } ) }}
+        {{ form_input(form.password.first,'password', { 'hasHintList': true } ) }}
 
-    {{ form_input(form.password.second,'password_confirm' ) }}
+        {{ form_input(form.password.second,'password_confirm' ) }}
 
-    {% if form.showTermsAndConditions is defined %}
-        {{ form_checkbox(form.showTermsAndConditions, '', {
-            'labelText': {
-                'left': 'I have read and understood the ',
-                'url': path('terms'),
-                'link': 'terms of use',
-                'right': ''
-            },
-            'labelLink': true
-        } ) }}
-    {% endif %}
+        {% if form.showTermsAndConditions is defined %}
+            {{ form_checkbox(form.showTermsAndConditions, '', {
+                'labelText': {
+                    'beforeMarkupText': 'I have read and understood the ',
+                    'url': path('terms'),
+                    'link': 'terms of use',
+                    'afterMarkupText': ''
+                },
+                'labelLink': true
+            } ) }}
+        {% endif %}
 
-    {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}
+        <div style="clear:both;display:inline-block;height:0px;" data-module="opg-toggleable-submit">
+        {{ form_submit_ga(
+            form.save,
+            'submit',
+            gaCategory,
+            gaAction,
+            gaLabel,
+            null,
+            {'buttonClass': 'behat-link-save'})
+        }}
+        </div>
 
     {{ form_end(form) }}
 
