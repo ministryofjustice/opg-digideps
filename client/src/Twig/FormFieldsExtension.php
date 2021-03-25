@@ -3,11 +3,10 @@
 namespace App\Twig;
 
 use Symfony\Component\Form\FormView;
-use Twig\Environment;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
-use Twig_Environment;
 
 class FormFieldsExtension extends AbstractExtension
 {

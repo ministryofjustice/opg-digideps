@@ -68,6 +68,6 @@
         "phpunit/phpcov": "6.0.1",
         "symfony/phpunit-bridge": "^5.2",
         "symfony/maker-bundle": "^1.29",
-        "symfony/var-dumper": "^4.0",
+        "symfony/var-dumper": "^4.0"
     }
 }

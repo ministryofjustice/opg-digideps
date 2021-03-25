@@ -321,3 +321,8 @@ services:
             - { name: security.voter }
         # small performance boost
         public: false
+
+    App\Twig\FormFieldsExtension:
+        class: App\Twig\FormFieldsExtension
+        arguments:
+            $environment: '@twig'

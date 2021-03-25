@@ -215,7 +215,7 @@ services:
         tags: ['doctrine.repository_service']
 
     App\Repository\UserResearchResponseRepository:
-        class: App\UserResearch\UserResearchResponse
+        class: App\Repository\UserResearchResponseRepository
         tags: ['doctrine.repository_service']
 
     App\Service\Auth\AuthService:
