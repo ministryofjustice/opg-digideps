@@ -72,8 +72,6 @@ trait AdditionalInformationSectionTrait
     {
         $this->selectOption('more_info[actionMoreInfo]', 'no');
         $this->pressButton('Save and continue');
-
-        $this->iAmOnAdditionalInformationSummaryPage();
     }
 
     /**

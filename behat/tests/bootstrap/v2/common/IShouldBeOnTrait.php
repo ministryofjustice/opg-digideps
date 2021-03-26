@@ -13,6 +13,8 @@ trait IShouldBeOnTrait
         if (!$onExpectedPage) {
             $this->throwContextualException(sprintf('Not on expected page. Current URL is: %s', $currentUrl));
         }
+
+        return true;
     }
 
     /**
@@ -20,7 +22,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnReportSubmittedPage()
     {
-        $this->iAmOnPage('/report\/.*\/submitted$/');
+        return $this->iAmOnPage('/report\/.*\/submitted$/');
     }
 
     /**
@@ -28,7 +30,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnPostSubmissionUserResearchPage()
     {
-        $this->iAmOnPage('/report\/.*\/post_submission_user_research$/');
+        return $this->iAmOnPage('/report\/.*\/post_submission_user_research$/');
     }
 
     /**
@@ -36,7 +38,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnUserResearchSubmittedPage()
     {
-        $this->iAmOnPage('/report\/.*\/post_submission_user_research\/submitted$/');
+        return $this->iAmOnPage('/report\/.*\/post_submission_user_research\/submitted$/');
     }
 
     /**
@@ -44,7 +46,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnContactsSummaryPage()
     {
-        $this->iAmOnPage('/report\/.*\/contacts\/summary$/');
+        return $this->iAmOnPage('/report\/.*\/contacts\/summary$/');
     }
 
     /**
@@ -52,7 +54,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnAddAContactPage()
     {
-        $this->iAmOnPage('/report\/.*\/contacts\/add/');
+        return $this->iAmOnPage('/report\/.*\/contacts\/add/');
     }
 
     /**
@@ -60,7 +62,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnContactsAddAnotherPage()
     {
-        $this->iAmOnPage('/report\/.*\/contacts\/add_another$/');
+        return $this->iAmOnPage('/report\/.*\/contacts\/add_another$/');
     }
 
     /**
@@ -68,7 +70,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnAdditionalInformationSummaryPage()
     {
-        $this->iAmOnPage('/report\/.*\/any-other-info\/summary$/');
+        return $this->iAmOnPage('/report\/.*\/any-other-info\/summary\?from=last-step/');
     }
 
     /**
@@ -76,6 +78,6 @@ trait IShouldBeOnTrait
      */
     public function iAmOnReportsOverviewPage()
     {
-        $this->iAmOnPage('/lay$/');
+        return $this->iAmOnPage('/lay$/');
     }
 }
