@@ -37,7 +37,7 @@ services:
             $symfonyEnvironment: "%kernel.environment%"
             $symfonyDebug: "%kernel.debug%"
             Predis\ClientInterface: '@snc_redis.default'
-            $environment: '%env(ENVIRONMENT)%'
+            $environment: '%env(ROLE)%'
             $rootDir: "%kernel.root_dir%"
 
     App\:
