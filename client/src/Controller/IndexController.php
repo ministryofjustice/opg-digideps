@@ -96,7 +96,7 @@ class IndexController extends AbstractController
         ]);
         $form->handleRequest($request);
         $vars = [
-            'isAdmin' => $this->container->getParameter('env') === 'admin',
+            'isAdmin' => $this->environment === 'admin',
         ];
 
         if ($form->isSubmitted() && $form->isValid()) {
