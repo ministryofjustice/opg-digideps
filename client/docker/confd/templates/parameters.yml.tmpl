@@ -8,7 +8,6 @@ parameters:
     client_base_urls:
         front: {{ getv "/nonadmin/host" }}
         admin: {{ getv "/admin/host" }}
-    env:  {{ getv "/role" }}
     session_expire_seconds: 3900
     session_popup_show_after: 3600
     session_cookie_secure: {{ getv "/session/cookie/secure" "true" }}

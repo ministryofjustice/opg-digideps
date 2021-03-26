@@ -50,7 +50,7 @@ services:
 
     App\Service\Redirector:
         class: App\Service\Redirector
-        arguments: [ "@security.token_storage", "@security.authorization_checker", "@router", "@session", "%env%" ]
+        arguments: [ "@security.token_storage", "@security.authorization_checker", "@router", "@session", '%env(ROLE)%' ]
 
     App\Service\WkHtmlToPdfGenerator:
         arguments: [ "%wkhtmltopdf_address%", 30]
