@@ -55,14 +55,11 @@ class BaseFeatureContext extends MinkContext
             throw new Exception($responseData['response']);
         }
 
-        var_dump($responseData);
-
         $this->fixtureUsers[] = $this->adminDetails = new UserDetails($responseData['data']['admin-users']['admin']);
         $this->fixtureUsers[] = $this->superAdminDetails = new UserDetails($responseData['data']['admin-users']['super-admin']);
         $this->fixtureUsers[] = $this->layDeputyNotStartedDetails = new UserDetails($responseData['data']['lays']['not-started']);
         $this->fixtureUsers[] = $this->layDeputyCompletedNotSubmittedDetails = new UserDetails($responseData['data']['lays']['completed-not-submitted']);
         $this->fixtureUsers[] = $this->layDeputySubmittedDetails = new UserDetails($responseData['data']['lays']['submitted']);
-        var_dump($this->fixtureUsers);
     }
 
     /**

@@ -64,10 +64,50 @@ trait IShouldBeOnTrait
     }
 
     /**
+     * @Then I should be on the financial decision actions page
+     */
+    public function iAmOnActionsPage1()
+    {
+        $this->iAmOnPage('/report\/.*\/actions\/step\/1$/');
+    }
+
+    /**
+     * @Then I should be on the concerns actions page
+     */
+    public function iAmOnActionsPage2()
+    {
+        $this->iAmOnPage('/report\/.*\/actions\/step\/2$/');
+    }
+
+    /**
+     * @Then I should be on the actions report last step page
+     */
+    public function iAmOnActionsLastStepPage()
+    {
+        $this->iAmOnPage('/report\/.*\/actions\/summary\?from\=last\-step$/');
+    }
+
+    /**
+     * @Then I should be on the actions report summary page
+     */
+    public function iAmOnActionsSummaryPage()
+    {
+        $this->iAmOnPage('/report\/.*\/actions\/summary/');
+    }
+
+    /**
+     * @Then I should be on the Lay main overview page
+     */
+    public function iAmOnLayMainPage()
+    {
+        $this->iAmOnPage('/lay$/');
+    }
+
+    /**
      * @Then I should be on the Lay reports overview page
      */
     public function iAmOnReportsOverviewPage()
     {
-        $this->iAmOnPage('/lay$/');
+        $this->iAmOnPage('/report\/.*\/overview$/');
     }
 }

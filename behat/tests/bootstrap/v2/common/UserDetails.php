@@ -49,7 +49,6 @@ class UserDetails
             );
         }
 
-        var_dump($userDetails);
         $this->setEmail($userDetails['email']);
         $this->setClientId($userDetails['clientId']);
 

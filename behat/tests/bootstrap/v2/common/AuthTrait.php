@@ -13,7 +13,7 @@ trait AuthTrait
         $this->visitPath('/logout');
         $this->visitPath('/login');
         $this->fillField('login_email', $email);
-        $this->fillField('login_password', 'Abcd1234');
+        $this->fillField('login_password', 'DigidepsPass1234');
         $this->pressButton('login_login');
 
         $this->visitPath(sprintf(self::BEHAT_FRONT_USER_DETAILS, $email));
@@ -34,7 +34,7 @@ trait AuthTrait
         $this->visitAdminPath('/logout');
         $this->visitAdminPath('/login');
         $this->fillField('login_email', $email);
-        $this->fillField('login_password', 'Abcd1234');
+        $this->fillField('login_password', 'DigidepsPass1234');
         $this->pressButton('login_login');
 
         $this->loggedInUserDetails = $this->getUserDetailsByEmail($email);
