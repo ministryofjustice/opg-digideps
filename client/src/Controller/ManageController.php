@@ -20,25 +20,15 @@ class ManageController extends AbstractController
 {
     private string $symfonyEnvironment;
     private string $symfonyDebug;
-    private SiriusApiAvailability $siriusAvailability;
-    private ClamAvAvailability $clamAvailability;
-    private WkHtmlToPdfAvailability $wkHtmlAvailability;
     private string $environment;
 
     public function __construct(
         string $symfonyEnvironment,
         string $symfonyDebug,
-        SiriusApiAvailability $siriusAvailability,
-        ClamAvAvailability $clamAvailability,
-        WkHtmlToPdfAvailability $wkHtmlAvailability,
         string $environment
-    )
-    {
+    ) {
         $this->symfonyEnvironment = $symfonyEnvironment;
         $this->symfonyDebug = $symfonyDebug;
-        $this->siriusAvailability = $siriusAvailability;
-        $this->clamAvailability = $clamAvailability;
-        $this->wkHtmlAvailability = $wkHtmlAvailability;
         $this->environment = $environment;
     }
 
@@ -48,13 +38,18 @@ class ManageController extends AbstractController
      * @param ApiAvailability $apiAvailability
      * @param NotifyAvailability $notifyAvailability
      * @param RedisAvailability $redisAvailability
-
+     * @param SiriusApiAvailability $siriusAvailability
+     * @param ClamAvAvailability $clamAvailability
+     * @param WkHtmlToPdfAvailability $wkHtmlAvailability
      * @return Response|null
      */
     public function availabilityAction(
         ApiAvailability $apiAvailability,
         NotifyAvailability $notifyAvailability,
-        RedisAvailability $redisAvailability
+        RedisAvailability $redisAvailability,
+        SiriusApiAvailability $siriusAvailability,
+        ClamAvAvailability $clamAvailability,
+        WkHtmlToPdfAvailability $wkHtmlAvailability
     ) {
         $services = [
             $apiAvailability,
@@ -63,9 +58,9 @@ class ManageController extends AbstractController
         ];
 
         if ($this->environment !== 'admin') {
-            $services[] = $this->siriusAvailability;
-            $services[] = $this->clamAvailability;
-            $services[] = $this->wkHtmlAvailability;
+            $services[] = $siriusAvailability;
+            $services[] = $clamAvailability;
+            $services[] = $wkHtmlAvailability;
         }
 
         list($healthy, $services, $errors) = $this->servicesHealth($services);
