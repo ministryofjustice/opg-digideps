@@ -1,9 +1,0 @@
-#imports:
-#    - { resource: config_prod.yml }
-#
-#framework:
-#    test: ~
-#    session:
-#        handler_id: ~
-#        storage_id: session.storage.mock_file
-#    csrf_protection: false
