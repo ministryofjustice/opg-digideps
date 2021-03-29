@@ -80,23 +80,15 @@ trait IShouldBeOnTrait
     }
 
     /**
-     * @Then I should be on the actions report last step page
-     */
-    public function iAmOnActionsLastStepPage()
-    {
-        $this->iAmOnPage('/report\/.*\/actions\/summary\?from\=last\-step$/');
-    }
-
-    /**
      * @Then I should be on the actions report summary page
      */
     public function iAmOnActionsSummaryPage()
     {
-        $this->iAmOnPage('/report\/.*\/actions\/summary/');
+        $this->iAmOnPage('/report\/.*\/actions\/summary.*/');
     }
 
     /**
-     * @Then I should be on the Lay main overview page
+     * @Then I should be on the Lay homepage
      */
     public function iAmOnLayMainPage()
     {

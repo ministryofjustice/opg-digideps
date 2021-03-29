@@ -77,6 +77,7 @@ trait ActionsSectionTrait
     public function fillInActionsForm($answer, $actionName, $comment = null, $commentName = null)
     {
         $this->selectOption($actionName, $answer);
+
         if ($answer === "no") {
             $this->answeredNo += 1;
         } elseif ($answer === "yes") {
@@ -86,24 +87,30 @@ trait ActionsSectionTrait
             $this->fillField($commentName, $comment);
             array_push($this->comments, $comment);
         }
+
         $this->pressButton('Save and continue');
     }
 
     /**
-     * @When I should see the expected action report section responses
+     * @Then I should see the expected action report section responses
      */
     public function iSeeExpectedActionSectionResponses()
     {
         $table = $this->getSession()->getPage()->find('css', 'dl');
+
         if (!$table) {
             $this->throwContextualException('A dl element was not found on the page');
         }
+
         $tableEntry = $table->findAll('css', 'dd');
+
         if (!$tableEntry) {
             $this->throwContextualException('A dd element was not found on the page');
         }
+
         $countNegativeReponse = 0;
         $countPositiveReponse = 0;
+
         foreach ($tableEntry as $entry) {
             if (trim(strtolower($entry->getHtml())) === "no") {
                 $countNegativeReponse += 1;
@@ -111,6 +118,7 @@ trait ActionsSectionTrait
                 $countPositiveReponse += 1;
             }
         }
+
         assert($countNegativeReponse == $this->answeredNo);
         assert($countPositiveReponse == $this->answeredYes);
     }
@@ -121,6 +129,7 @@ trait ActionsSectionTrait
     public function iShouldSeeTheExpectedActionComments()
     {
         $table = $this->getSession()->getPage()->find('css', 'dl');
+
         if (!$table) {
             $this->throwContextualException('A dl element was not found on the page');
         }

@@ -1,31 +1,31 @@
-@v2
+@v2 @jim
 Feature: Actions
 
-  Scenario: I complete the actions section with negative responses
+  Scenario: A user has made no financial decisions and has no concerns
     Given a Lay Deputy logs in and has a new report
     And I view and start the actions report section
     Then I should be on the financial decision actions page
     When I choose no and save on financial decision actions section
     Then I should be on the concerns actions page
     When I choose no and save on concerns actions section
-    Then I should be on the actions report last step page
+    Then I should be on the actions report summary page
     And I should see the expected action report section responses
     When I follow link back to report overview page
     Then I should be on the Lay reports overview page
     And I should see "actions" as "finished"
 
-  Scenario: I complete the actions section with positive responses
+  Scenario: A user has made financial decisions and has concerns
     Given a Lay Deputy logs in and has a new report
     And I view and start the actions report section
     Then I should be on the financial decision actions page
     When I choose yes and save on financial decision actions section
     Then I should be on the concerns actions page
     When I choose yes and save on concerns actions section
-    Then I should be on the actions report last step page
+    Then I should be on the actions report summary page
     And I should see the expected action report section responses
     And I should see the expected action comments
 
-  Scenario: I half fill in responses and come back and edit them
+  Scenario: A user partially completes the section and then edits their responses
     Given a Lay Deputy logs in and has a new report
     And I go to the url for the report overview page
     Then I should see "actions" as "not started"

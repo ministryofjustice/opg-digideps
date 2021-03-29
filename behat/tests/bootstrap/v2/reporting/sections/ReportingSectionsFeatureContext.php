@@ -89,11 +89,14 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     public function iShouldSeeSectionAs($section, $status)
     {
         $divs = $this->getSession()->getPage()->findAll('css', 'div');
+
         if (!$divs) {
             $this->throwContextualException('A div element was not found on the page');
         }
+
         $sectionFormatted = '/report/' . $this->loggedInUserDetails->getCurrentReportId() . '/' . $section;
         $statusCorrect = false;
+
         foreach ($divs as $div) {
             if ($div->getAttribute('href') === $sectionFormatted) {
                 $statuses = $div->findAll('css', 'span');
@@ -104,6 +107,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
                 }
             }
         }
+
         if (!$statusCorrect) {
             $this->throwContextualException(
                 sprintf('Report section status not as expected. Status: %s not found. ', $status)
@@ -117,19 +121,25 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     public function iSeeTextRequestingToAnswerQuestion()
     {
         $table = $this->getSession()->getPage()->find('css', 'dl');
+
         if (!$table) {
             $this->throwContextualException('A dl element was not found on the page');
         }
+
         $tableEntry = $table->findAll('css', 'dd');
+
         if (!$tableEntry) {
             $this->throwContextualException('A dd element was not found on the page');
         }
+
         $furtherInfoNeeded = false;
+
         foreach ($tableEntry as $entry) {
             if (str_contains(trim(strtolower($entry->getHtml())), "please answer this question")) {
                 $furtherInfoNeeded = true;
             }
         }
+
         assert($furtherInfoNeeded);
     }
 }
