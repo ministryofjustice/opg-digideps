@@ -53,7 +53,7 @@ locals {
     "healthCheck": {
       "command": [
         "CMD-SHELL",
-        "curl -f -k https://localhost:443/manage/elb || exit 1"
+        "curl -f -k https://localhost:443/manage/elb"
       ],
       "interval": 30,
       "timeout": 10,
@@ -75,6 +75,7 @@ locals {
     ],
     "environment": [
       { "name": "ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
+      { "name": "APP_DEBUG", "value": "1" },
       { "name": "API_URL", "value": "https://${local.api_service_fqdn}" },
       { "name": "AUDIT_LOG_GROUP_NAME", "value": "audit-${local.environment}" },
       { "name": "EMAIL_SEND_INTERNAL", "value": "${local.account.is_production == 1 ? "true" : "false"}" },
