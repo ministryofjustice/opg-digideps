@@ -1,4 +1,4 @@
-FROM python:rc-slim-buster
+FROM python:3.9-rc-slim-buster
 
 # Download and install wkhtmltopdf and bash (because executor can't use 'sh')
 RUN apt-get update \
@@ -9,7 +9,7 @@ RUN apt-get update \
     && dpkg -i wkhtmltox_0.12.6-1.stretch_amd64.deb
 
 # Install dependencies for running web service
-RUN pip install werkzeug executor gunicorn
+RUN pip install werkzeug==1.0.1 executor==23.2 gunicorn==20.0.4
 
 ADD docker-entrypoint.sh /docker-entrypoint.sh
 ADD app.py /app.py
