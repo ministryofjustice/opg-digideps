@@ -1,48 +1,48 @@
-imports:
-    - { resource: config.yml }
+#imports:
+#    - { resource: config.yml }
 
-framework:
-    router:
-        resource: "%kernel.root_dir%/config/routing_dev.yml"
-        strict_requirements: true
-    profiler:
-        only_exceptions: false
-        enabled: "%kernel.debug%"
-    ide: 'phpstorm://open?file=%%f&line=%%l'
+#framework:
+#    router:
+#        resource: "%kernel.root_dir%/config/routing_dev.yml"
+#        strict_requirements: true
+#    profiler:
+#        only_exceptions: false
+#        enabled: "%kernel.debug%"
+#    ide: 'phpstorm://open?file=%%f&line=%%l'
 
-web_profiler:
-    toolbar: "%kernel.debug%"
-    intercept_redirects: false
+#web_profiler:
+#    toolbar: "%kernel.debug%"
+#    intercept_redirects: false
 
-services:
-    data_collector.apiCollectorss:
-        class: App\Service\ApiCollector
-        arguments: ["@rest_client"]
-        tags:
-            - { name: data_collector, template: "@App/Manage/api-collector", id: "api-collector" }
-    data_collector.CssClassCollector:
-      class: App\Service\CssClassCollector
-      tags:
-        - { name: data_collector, template: '@App/Manage/css-class-collector', id: 'css-class-collector' }
-      public: false
+#services:
+#    data_collector.apiCollectorss:
+#        class: App\Service\ApiCollector
+#        arguments: ["@rest_client"]
+#        tags:
+#            - { name: data_collector, template: "@App/Manage/api-collector", id: "api-collector" }
+#    data_collector.CssClassCollector:
+#      class: App\Service\CssClassCollector
+#      tags:
+#        - { name: data_collector, template: '@App/Manage/css-class-collector', id: 'css-class-collector' }
+#      public: false
+#
+#    Alphagov\Notifications\Client:
+#        alias: App\Service\Mailer\NotifyClientMock
 
-    Alphagov\Notifications\Client:
-        alias: App\Service\Mailer\NotifyClientMock
+#monolog:
+#   handlers:
+#       main:
+#           type: stream
+#           path: php://stderr
+#           level: warning
+#           formatter: line_formatter
+#           channels: [ "!translation" ]
+#           bubble: false
+#       audit:
+#           type: service
+#           id: App\Service\Audit\AwsAuditLogHandler
 
-monolog:
-   handlers:
-       main:
-           type: stream
-           path: php://stderr
-           level: warning
-           formatter: line_formatter
-           channels: [ "!translation" ]
-           bubble: false
-       audit:
-           type: service
-           id: App\Service\Audit\AwsAuditLogHandler
-
-jms_serializer:
-    metadata:
-        cache: none
-        debug: true
+#jms_serializer:
+#    metadata:
+#        cache: none
+#        debug: true

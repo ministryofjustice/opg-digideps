@@ -1,21 +1,21 @@
-imports:
-    - { resource: config.yml }
-
-jms_serializer:
-  metadata:
-    # not clear if loaded (buggy library ?)
-    # cache: jms_redis_cache_doctrine_adapter
-    cache: file
-    debug: "%kernel.debug%"
-
-monolog:
-  handlers:
-    main:
-      type: stream
-      path: php://stderr
-      level: "%log_level%"
-      formatter: logstash_formatter
-      bubble: false
-    audit:
-      type: service
-      id: App\Service\Audit\AwsAuditLogHandler
+#imports:
+#    - { resource: config.yml }
+#
+#jms_serializer:
+#  metadata:
+#    # not clear if loaded (buggy library ?)
+#    # cache: jms_redis_cache_doctrine_adapter
+#    cache: file
+#    debug: "%kernel.debug%"
+#
+#monolog:
+#  handlers:
+#    main:
+#      type: stream
+#      path: php://stderr
+#      level: "%log_level%"
+#      formatter: logstash_formatter
+#      bubble: false
+#    audit:
+#      type: service
+#      id: App\Service\Audit\AwsAuditLogHandler

@@ -1,0 +1,15 @@
+services:
+    App\Service\Client\RestClientMock:
+        class: App\Service\Client\RestClientMock
+
+    Alphagov\Notifications\Client:
+        alias: App\Service\Mailer\NotifyClientMock
+
+    App\Service\Client\RestClientInterface:
+        alias: App\Service\Client\RestClientMock
+
+    App\Service\Mailer\MailSender:
+        class: App\Service\Mailer\MailSender
+        arguments:
+            $logger: '@logger'
+            $notifyClient: '@App\Service\Mailer\NotifyClientMock'
