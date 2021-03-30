@@ -1,6 +1,3 @@
-imports:
-    - { resource: services/assemblers.yml }
-
 parameters:
     fixtures:
         account_password: '%env(FIXTURES_ACCOUNTPASSWORD)%'
@@ -266,3 +263,15 @@ services:
     rest_handler.report.pa_fees_expenses_report_update_handler:
         class: App\Service\RestHandler\Report\PaFeesExpensesReportUpdateHandler
         arguments: [ '@em' ]
+
+    PlainDeputyAssembler:
+        class: App\v2\Assembler\DeputyAssembler
+
+    App\v2\Assembler\Report\ReportSummaryAssembler: ~
+    App\v2\Assembler\Report\ReportAssemblerInterface: '@App\v2\Assembler\Report\ReportSummaryAssembler'
+
+    PlainOrganisationAssembler:
+        class: App\v2\Assembler\OrganisationAssembler
+
+    App\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler: ~
+    App\v2\Registration\Assembler\LayDeputyshipDtoAssemblerInterface: '@App\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler'
