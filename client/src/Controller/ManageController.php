@@ -128,6 +128,8 @@ class ManageController extends AbstractController
         $errors = [];
 
         foreach ($services as $service) {
+            $service->ping();
+
             if (!$service->isHealthy()) {
                 if ($service->getName() != 'Sirius') {
                     $healthy = false;

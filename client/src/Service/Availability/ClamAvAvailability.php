@@ -10,10 +10,20 @@ use GuzzleHttp\ClientInterface;
  */
 class ClamAvAvailability extends ServiceAvailabilityAbstract
 {
+    /**
+     * @var ClientInterface
+     */
+    private ClientInterface $fileScannerClient;
+
     public function __construct(ClientInterface $fileScannerClient)
     {
+        $this->fileScannerClient = $fileScannerClient;
+    }
+
+    public function ping()
+    {
         try {
-            $response = $fileScannerClient->get('/');
+            $response = $this->fileScannerClient->get('/');
             if (200 !== $response->getStatusCode()) {
                 throw new \RuntimeException('returned HTTP code ' . $response->getStatusCode());
             }
