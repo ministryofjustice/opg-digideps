@@ -24,7 +24,7 @@ use JMS\Serializer\Annotation as JMS;
  *     @ORM\Index(name="submitted_idx", columns={"submitted"}),
  *     @ORM\Index(name="report_status_cached_idx", columns={"report_status_cached"})
  *  })
- * @ORM\Entity(repositoryClass="App\Entity\Repository\ReportRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\ReportRepository")
  */
 class Report implements ReportInterface
 {
@@ -227,7 +227,7 @@ class Report implements ReportInterface
      *
      * @JMS\Groups({"visits-care"})
      * @JMS\Type("App\Entity\Report\VisitsCare")
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\VisitsCare",  mappedBy="report", cascade={"persist", "remove"}, fetch="LAZY")
+     * @ORM\OneToOne(targetEntity="App\Entity\Report\VisitsCare", mappedBy="report", cascade={"persist", "remove"}, fetch="LAZY")
      **/
     private $visitsCare;
 
@@ -236,7 +236,7 @@ class Report implements ReportInterface
      *
      * @JMS\Groups({"lifestyle"})
      * @JMS\Type("App\Entity\Report\Lifestyle")
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\Lifestyle",  mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Report\Lifestyle", mappedBy="report", cascade={"persist", "remove"})
      **/
     private $lifestyle;
 
@@ -245,7 +245,7 @@ class Report implements ReportInterface
      *
      * @JMS\Groups({"action"})
      * @JMS\Type("App\Entity\Report\Action")
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\Action",  mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Report\Action", mappedBy="report", cascade={"persist", "remove"})
      **/
     private $action;
 
@@ -254,7 +254,7 @@ class Report implements ReportInterface
      *
      * @JMS\Groups({ "mental-capacity"})
      * @JMS\Type("App\Entity\Report\MentalCapacity")
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\MentalCapacity",  mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Report\MentalCapacity", mappedBy="report", cascade={"persist", "remove"})
      **/
     private $mentalCapacity;
 
@@ -363,7 +363,7 @@ class Report implements ReportInterface
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("array<App\Entity\Report\Document>")
+     * @JMS\Type("ArrayCollection<App\Entity\Report\Document>")
      * @JMS\Groups({"report-documents"})
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Document", mappedBy="report", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"createdOn"="DESC"})
@@ -371,7 +371,7 @@ class Report implements ReportInterface
     private $documents;
 
     /**
-     * @JMS\Type("array<App\Entity\Report\ReportSubmission>")
+     * @JMS\Type("ArrayCollection<App\Entity\Report\ReportSubmission>")
      * @JMS\Groups({"document-sync"})
      * @ORM\OneToMany(targetEntity="App\Entity\Report\ReportSubmission", mappedBy="report", fetch="EXTRA_LAZY")
      */
@@ -1023,7 +1023,7 @@ class Report implements ReportInterface
      * @JMS\VirtualProperty("submittedDocuments")
      * @JMS\SerializedName("submitted_documents")
      * @JMS\Groups({"documents"})
-     * @JMS\Type("array<App\Entity\Report\Document>")
+     * @JMS\Type("ArrayCollection<App\Entity\Report\Document>")
      *
      * @return ArrayCollection|Document[]
      */

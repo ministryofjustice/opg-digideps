@@ -60,6 +60,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'Corref'=>'L2',
             'NDR' => 1
         ]);
+
         $this->fixtures()->persist($casRec);
         $this->fixtures()->flush($casRec);
 
@@ -129,6 +130,37 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function throwErrorForDuplicate()
     {
+        $casRec = new CasRec([
+            'Case' => '12345678',
+            'Surname' => 'Cross-Tolley',
+            'Deputy No' => 'DEP0011',
+            'Dep Surname' => 'Tolley',
+            'Dep Postcode' => 'SW1',
+            'Typeofrep'=>'OPG102',
+            'Corref'=>'L2',
+            'NDR' => 1
+        ]);
+
+        $this->fixtures()->persist($casRec);
+        $this->fixtures()->flush($casRec);
+
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+
+        $this->assertJsonRequest('POST', '/selfregister', [
+            'mustSucceed' => true,
+            'AuthToken' => $token,
+            'data' => [
+                'firstname' => 'Zac',
+                'lastname' => 'Tolley',
+                'email' => 'gooduser@gov.abc',
+                'postcode' => 'SW1',
+                'client_firstname' => 'John',
+                'client_lastname' => 'Cross-Tolley',
+                'case_number' => '12345678',
+            ],
+            'ClientSecret' => API_TOKEN_DEPUTY,
+        ]);
+
         $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
         $this->assertJsonRequest('POST', '/selfregister', [
@@ -140,7 +172,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'data' => [
                 'firstname' => 'Zac',
                 'lastname' => 'Tolley',
-                'email' => 'gooduser1@gov.zzz',
+                'email' => 'gooduser1@gov.abc',
                 'postcode' => 'SW1',
                 'client_firstname' => 'Jonh',
                 'client_lastname' => 'Cross-Tolley',

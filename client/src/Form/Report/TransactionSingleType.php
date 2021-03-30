@@ -9,6 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class TransactionSingleType extends AbstractType
 {
@@ -21,10 +22,11 @@ class TransactionSingleType extends AbstractType
                       'entry_type' => FormTypes\NumberType::class,
                       'allow_add' => true, //allow new fields added with JS
                       'entry_options' => [
-                         'error_bubbling' => false,
-                         'scale' => 2,
-                         'grouping' => true,
-                         'invalid_message' => 'account.moneyInOut.amount.notNumeric',
+                          'error_bubbling' => false,
+                          'scale' => 2,
+                          'grouping' => true,
+                          'constraints' => new Valid(),
+                          'invalid_message' => 'account.moneyInOut.amount.notNumeric',
                       ],
                  ]);
 

@@ -8,13 +8,13 @@ use App\Service\DocumentSyncService;
 use App\Service\ParameterStoreService;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class DocumentSyncCommand extends DaemonableCommand
 {
     const FALLBACK_ROW_LIMITS = '100';
 
-    protected static $defaultName = 'digideps:document-sync';
+    public static $defaultName = 'digideps:document-sync';
 
     /** @var DocumentSyncService */
     private $documentSyncService;
@@ -22,7 +22,7 @@ class DocumentSyncCommand extends DaemonableCommand
     /** @var RestClient */
     private $restClient;
 
-    /** @var Serializer  */
+    /** @var SerializerInterface  */
     private $serializer;
 
     /** @var ParameterStoreService */
@@ -31,7 +31,7 @@ class DocumentSyncCommand extends DaemonableCommand
     public function __construct(
         DocumentSyncService $documentSyncService,
         RestClient $restClient,
-        Serializer $serializer,
+        SerializerInterface $serializer,
         ParameterStoreService $parameterStore
     ) {
         $this->documentSyncService = $documentSyncService;

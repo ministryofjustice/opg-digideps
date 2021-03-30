@@ -3,7 +3,7 @@
 namespace App\v2\Controller;
 
 use App\Entity\Organisation;
-use App\Entity\Repository\OrganisationRepository;
+use App\Repository\OrganisationRepository;
 use App\Entity\User;
 use App\Service\Formatter\RestFormatter;
 use App\Service\RestHandler\OrganisationRestHandler;
@@ -61,25 +61,46 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/list", methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      *
      * @return JsonResponse
      */
     public function getAllAction(): JsonResponse
     {
+        // Fetch all data from db
         $data = $this->repository->getAllArray();
 
-        $organisationDtos = [];
-        foreach ($data as $organisationArray) {
-            $organisationDtos[] = $this->assembler->assembleFromArray($organisationArray);
+        $data = $this->snakeCase($data);
+
+        // Pass transformed org data to repsonse
+        return $this->buildSuccessResponse($data);
+    }
+
+    private function snakeCase(array $array): array
+    {
+        return array_map(
+            function ($item) {
+                if (is_array($item)) {
+                    $item = $this->snakeCase($item);
+                }
+
+                return $item;
+            },
+            $this->doSnakeCase($array)
+        );
+    }
+
+    private function doSnakeCase(array $array): array
+    {
+        $result = [];
+
+        foreach ($array as $key => $value) {
+            $key = strtolower(preg_replace('~(?<=\\w)([A-Z])~', '_$1', $key));
+
+            $result[$key] = $value;
         }
 
-        $transformedDtos = [];
-        foreach ($organisationDtos as $organisationDto) {
-            $transformedDtos[] = $this->transformer->transform($organisationDto, ['users', 'clients']);
-        }
-
-        return $this->buildSuccessResponse($transformedDtos);
+        return $result;
     }
 
     /**
@@ -99,7 +120,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("", methods={"POST"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      *
      * @param Request $request
      * @return JsonResponse
@@ -116,7 +137,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"PUT"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      *
      * @param Request $request
      * @param int $id
@@ -132,7 +153,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"DELETE"})
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
      * @param $int id
      * @return JsonResponse
@@ -188,7 +209,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/members", methods={"GET"})
-     * @Security("has_role('ROLE_ORG')")
+     * @Security("is_granted('ROLE_ORG')")
      */
     public function getMembers(Request $request)
     {
@@ -196,7 +217,7 @@ class OrganisationController extends AbstractController
     }
     /**
      * @Route("/member/{id}", requirements={"id":"\d+"}, methods={"GET"})
-     * @Security("has_role('ROLE_ORG')")
+     * @Security("is_granted('ROLE_ORG')")
      */
     public function getMemberById(string $id)
     {

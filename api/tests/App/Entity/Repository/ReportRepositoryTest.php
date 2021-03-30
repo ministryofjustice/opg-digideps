@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\App\Entity\Repository;
+namespace Tests\App\Repository;
 
 use App\Entity\Client;
 use App\Entity\ClientInterface;
@@ -8,13 +8,16 @@ use App\Entity\Report\Checklist;
 use App\Entity\Report\Fee;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
-use App\Entity\Repository\ReportRepository;
+use App\Repository\ReportRepository;
 use App\Entity\SynchronisableInterface;
 use App\Entity\User;
+use App\Service\Search\ClientSearchFilter;
 use DateInterval;
 use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use Mockery\MockInterface;
 use Tests\ApiBaseTestCase;
 use Mockery as m;
@@ -27,13 +30,11 @@ class ReportRepositoryTest extends ApiBaseTestCase
     /** @var Report | MockInterface */
     private $mockReport;
 
-    /** @var EntityManagerInterface | MockInterface */
-    private $mockEm;
+    /** @var ManagerRegistry | MockInterface */
+    private $mockManagerRegistry;
 
     /** @var ClientInterface | MockInterface */
     private $mockClient;
-
-    private $mockMetaClass;
 
     /** @var ReportRepository */
     private $repository;
@@ -47,6 +48,21 @@ class ReportRepositoryTest extends ApiBaseTestCase
     /** @var int */
     const QUERY_LIMIT = 2;
 
+    /**
+     * @var ClientSearchFilter|m\LegacyMockInterface|MockInterface
+     */
+    private $clientSearchFilter;
+
+    /**
+     * @var ClassMetadata|m\LegacyMockInterface|MockInterface
+     */
+    private $mockMetaClass;
+
+    /**
+     * @var EntityManagerInterface|m\LegacyMockInterface|MockInterface
+     */
+    private $mockEm;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -54,7 +70,13 @@ class ReportRepositoryTest extends ApiBaseTestCase
         $this->purgeDatabase();
 
         $this->mockEm = m::mock(EntityManagerInterface::class);
+        $this->mockManagerRegistry = m::mock(ManagerRegistry::class);
         $this->mockMetaClass = m::mock(ClassMetadata::class);
+
+        $this->mockManagerRegistry->shouldReceive('getManagerForClass')->andReturn($this->mockEm);
+        $this->mockEm->shouldReceive('getClassMetadata')->andReturn($this->mockMetaClass);
+
+        $this->clientSearchFilter = m::mock(ClientSearchFilter::class);
         $this->mockReport = m::mock(Report::class);
         $this->mockClient = m::mock(ClientInterface::class);
 
@@ -62,7 +84,7 @@ class ReportRepositoryTest extends ApiBaseTestCase
             ->zeroOrMoreTimes()
             ->andReturn($this->mockClient);
 
-        $this->sut = new ReportRepository($this->mockEm, $this->mockMetaClass);
+        $this->sut = new ReportRepository($this->mockManagerRegistry, $this->clientSearchFilter);
         $this->repository = $this->entityManager->getRepository(Report::class);
     }
 

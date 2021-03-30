@@ -1,10 +1,11 @@
 <?php
 
-use Symfony\Component\Debug\Debug;
+use App\Kernel;
+use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
-require dirname(__DIR__).'/vendor/autoload.php';
-require dirname(__DIR__) . '/app/AppKernel.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
+require dirname(__DIR__) . '/src/Kernel.php';
 
 if ($_SERVER['APP_DEBUG']) {
     umask(0000);
@@ -37,7 +38,7 @@ if (!empty($_ENV['APP_ENV'])) {
 
 $_SERVER['APP_DEBUG'] = $_SERVER['APP_DEBUG'] ?? $_ENV['APP_DEBUG'] ?? false;
 
-$kernel = new AppKernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
+$kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();

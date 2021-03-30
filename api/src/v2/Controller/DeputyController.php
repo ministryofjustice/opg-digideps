@@ -2,7 +2,7 @@
 
 namespace App\v2\Controller;
 
-use App\Entity\Repository\UserRepository;
+use App\Repository\UserRepository;
 use App\v2\Assembler\DeputyAssembler;
 use App\v2\Transformer\DeputyTransformer;
 use Symfony\Component\Routing\Annotation\Route;

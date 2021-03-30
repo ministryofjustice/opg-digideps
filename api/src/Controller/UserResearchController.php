@@ -3,7 +3,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Repository\UserResearchResponseRepository;
+use App\Repository\UserResearchResponseRepository;
 use App\Factory\UserResearchResponseFactory;
 use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;

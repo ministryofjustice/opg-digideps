@@ -16,7 +16,7 @@ use JMS\Serializer\Annotation as JMS;
  *     @ORM\Index(name="ix_note_created_by", columns={"created_by"}),
  *     @ORM\Index(name="ix_note_last_modified_by", columns={"last_modified_by"})
  *     })
- * @ORM\Entity(repositoryClass="App\Entity\Repository\NoteRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\NoteRepository")
  *
  */
 class Note

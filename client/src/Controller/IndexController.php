@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class IndexController extends AbstractController
 {
@@ -96,7 +96,7 @@ class IndexController extends AbstractController
         ]);
         $form->handleRequest($request);
         $vars = [
-            'isAdmin' => $this->container->getParameter('env') === 'admin',
+            'isAdmin' => $this->environment === 'admin',
         ];
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -206,7 +206,7 @@ class IndexController extends AbstractController
         $session->migrate();
 
         $event = new InteractiveLoginEvent($request, $token);
-        $this->eventDispatcher->dispatch('security.interactive_login', $event);
+        $this->eventDispatcher->dispatch($event, 'security.interactive_login');
 
         $session->set('lastLoggedIn', $user->getLastLoggedIn());
     }

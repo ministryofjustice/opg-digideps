@@ -3,7 +3,6 @@ src = "parameters.yml.tmpl"
 dest = "/var/www/config/parameters.yml"
 keys = [
     "/opg/docker/tag",
-    "/role",
     "/session",
     "/ga",
     "/secret",

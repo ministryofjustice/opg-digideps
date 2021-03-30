@@ -12,6 +12,7 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
 {
     private static $deputy1;
     private static $transaction1;
+    private static $transaction2;
     private static $transaction3;
     private static $report1;
     private static $deputy2;
@@ -19,9 +20,9 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
 
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
 
@@ -38,7 +39,7 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
         // transactions. 2 in, 1 out. one out for report 2
         self::$transaction1 = $t1 = new MoneyTransactionShortIn(self::$report1);
         $t1->setAmount(123.45)->setDescription('d1')->setDate(new \DateTime('2015-12-31'));
-        $t2 = new MoneyTransactionShortIn(self::$report1);
+        self::$transaction2 = $t2 = new MoneyTransactionShortIn(self::$report1);
         $t2->setAmount(789.12)->setDescription('d2');
         self::$transaction3 = $t3 = new MoneyTransactionShortOut(self::$report1);
         $t3->setAmount(5000.59)->setDescription('d3');
@@ -47,6 +48,11 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
         self::fixtures()->persist($t1, $t2, $t3, $t4);
 
         self::fixtures()->flush()->clear();
+
+        if (null === self::$tokenAdmin) {
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenDeputy = $this->loginAsDeputy();
+        }
     }
 
     /**
@@ -57,14 +63,6 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
         parent::tearDownAfterClass();
 
         self::fixtures()->clear();
-    }
-
-    public function setUp(): void
-    {
-        if (null === self::$tokenAdmin) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
     }
 
     public function testGetTransactions()
@@ -119,17 +117,12 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
         $this->assertEquals(123.45, $t->getAmount());
         $this->assertEquals('d', $t->getDescription());
         $this->assertEquals('2014-04-05', $t->getDate()->format('Y-m-d'));
-
-        return $t->getId();
     }
 
-    /**
-     * @depends testAddEditTransaction
-     */
-    public function testEditTransaction($transactionId)
+    public function testEditTransaction()
     {
-        $url = '/report/' . self::$report1->getId() . '/money-transaction-short/' . $transactionId;
-        $url2 = '/report/' . self::$report2->getId() . '/money-transaction-short/' . $transactionId;
+        $url = '/report/' . self::$report1->getId() . '/money-transaction-short/' . self::$transaction1->getId();
+        $url2 = '/report/' . self::$report2->getId() . '/money-transaction-short/' . self::$transaction2->getId();
 
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);

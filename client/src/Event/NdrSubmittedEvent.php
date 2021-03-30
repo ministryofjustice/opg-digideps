@@ -6,7 +6,7 @@ namespace App\Event;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\User;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class NdrSubmittedEvent extends Event
 {

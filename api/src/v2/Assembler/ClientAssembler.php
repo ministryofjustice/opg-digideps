@@ -7,6 +7,7 @@ use App\v2\DTO\ClientDto;
 use App\v2\DTO\DeputyDto;
 use App\v2\DTO\DtoPropertySetterTrait;
 use App\Entity\Client;
+use App\v2\DTO\OrganisationDto;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 
 class ClientAssembler
@@ -19,9 +20,6 @@ class ClientAssembler
     /** @var NdrAssembler */
     private $ndrDtoAssembler;
 
-    /** @var OrganisationAssembler */
-    private $organisationDtoAssembler;
-
     /** @var NamedDeputyAssembler  */
     private $namedDeputyAssembler;
 
@@ -29,18 +27,15 @@ class ClientAssembler
      * ClientAssembler constructor.
      * @param ReportAssemblerInterface $reportDtoAssembler
      * @param NdrAssembler $ndrDtoAssembler
-     * @param OrganisationAssembler $organisationDtoAssembler
      * @param NamedDeputyAssembler $namedDeputyDtoAssembler
      */
     public function __construct(
         ReportAssemblerInterface $reportDtoAssembler,
         NdrAssembler $ndrDtoAssembler,
-        OrganisationAssembler $organisationDtoAssembler,
         NamedDeputyAssembler $namedDeputyDtoAssembler
     ) {
         $this->reportDtoAssembler = $reportDtoAssembler;
         $this->ndrDtoAssembler = $ndrDtoAssembler;
-        $this->organisationDtoAssembler = $organisationDtoAssembler;
         $this->namedDeputyAssembler = $namedDeputyDtoAssembler;
     }
 
@@ -48,7 +43,7 @@ class ClientAssembler
      * @param array $data
      * @return ClientDto
      */
-    public function assembleFromArray(array $data)
+    public function assembleFromArray(array $data, ?OrganisationDto $orgDto = null)
     {
         $dto = new ClientDto();
 
@@ -65,7 +60,7 @@ class ClientAssembler
         }
 
         if (isset($data['organisation']) && is_array($data['organisation'])) {
-            $dto->setOrganisation($this->assembleClientOrganisation($data['organisation']));
+            $dto->setOrganisation($orgDto);
         }
 
         if (isset($data['namedDeputy']) && is_array($data['namedDeputy'])) {

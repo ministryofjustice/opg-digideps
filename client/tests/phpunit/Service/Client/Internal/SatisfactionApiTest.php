@@ -60,7 +60,7 @@ class SatisfactionApiTest extends TestCase
         ];
 
         $event = (new GeneralFeedbackSubmittedEvent())->setFeedbackFormResponse($formData);
-        $this->eventDisaptcher->dispatch('general.feedback.submitted', $event)->shouldBeCalled();
+        $this->eventDisaptcher->dispatch($event, 'general.feedback.submitted')->shouldBeCalled();
 
         $this->sut->createGeneralFeedback($formData);
     }
@@ -92,7 +92,7 @@ class SatisfactionApiTest extends TestCase
             ->setSatisfactionLevel($score);
 
         $event = new PostSubmissionFeedbackSubmittedEvent($feedbackReportObject, $submittedByUser);
-        $this->eventDisaptcher->dispatch('post.submission.feedback.submitted', $event)->shouldBeCalled();
+        $this->eventDisaptcher->dispatch($event, 'post.submission.feedback.submitted')->shouldBeCalled();
 
         $this->sut->createPostSubmissionFeedback($feedbackReportObject, $reportType, $submittedByUser);
     }

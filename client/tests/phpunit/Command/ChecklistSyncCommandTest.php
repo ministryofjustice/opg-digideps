@@ -16,6 +16,7 @@ use App\Service\ParameterStoreService;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -27,28 +28,23 @@ class ChecklistSyncCommandTest extends KernelTestCase
     private $restClient;
     private $pdfGenerator;
 
-    /** @var ContainerInterface */
-    private $container;
-
     /** @var CommandTester */
     private $commandTester;
 
+
     public function setUp(): void
     {
+        $kernel = static::createKernel();
+        $app = new Application($kernel);
+
         $this->syncService = $this->createMock(ChecklistSyncService::class);
         $this->parameterStore = $this->getMockBuilder(ParameterStoreService::class)->disableOriginalConstructor()->getMock();
         $this->restClient = $this->getMockBuilder(RestClient::class)->disableOriginalConstructor()->getMock();
         $this->pdfGenerator = $this->getMockBuilder(ChecklistPdfGenerator::class)->disableOriginalConstructor()->getMock();
 
-        $kernel = static::bootKernel([ 'debug' => false ]);
-        $this->container = $kernel->getContainer();
-        $this->container->set(ChecklistSyncService::class, $this->syncService);
-        $this->container->set(RestClient::class, $this->restClient);
-        $this->container->set(ParameterStoreService::class, $this->parameterStore);
-        $this->container->set(ChecklistPdfGenerator::class, $this->pdfGenerator);
-        $application = new Application($kernel);
+        $app->add(new ChecklistSyncCommand($this->pdfGenerator, $this->syncService, $this->restClient, $this->parameterStore));
 
-        $command = $application->find('digideps:checklist-sync');
+        $command = $app->find(ChecklistSyncCommand::$defaultName);
         $this->commandTester = new CommandTester($command);
     }
 

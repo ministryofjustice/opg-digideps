@@ -15,7 +15,7 @@ use JMS\Serializer\Annotation as JMS;
  *     indexes={
  *     @ORM\Index(name="rs_created_on_idx", columns={"created_on"})
  *  })
- * @ORM\Entity(repositoryClass="App\Entity\Repository\ReportSubmissionRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\ReportSubmissionRepository")
  */
 class ReportSubmission
 {
@@ -63,7 +63,7 @@ class ReportSubmission
     /**
      * @var ArrayCollection<int, Document>
      *
-     * @JMS\Type("array<App\Entity\Report\Document>")
+     * @JMS\Type("ArrayCollection<App\Entity\Report\Document>")
      * @JMS\Groups({"report-submission", "report-submission-documents"})
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Document", mappedBy="reportSubmission")

@@ -74,13 +74,11 @@ class OrganisationTransformer
      * @param array $clients
      * @return array
      */
-    private function transformClients(array $clients): array
+    private function transformClients(array $clients, ?array $transformedOrg = null): array
     {
         if (empty($clients)) {
             return [];
         }
-
-        $transformed = [];
 
         foreach ($clients as $client) {
             if ($client instanceof ClientDto) {

@@ -53,7 +53,7 @@ class UserApi
         $createdUser = $this->restClient->post(self::USER_ENDPOINT, $userToCreate, $jmsGroups, 'User');
 
         $userCreatedEvent = new AdminUserCreatedEvent($createdUser);
-        $this->eventDispatcher->dispatch(AdminUserCreatedEvent::NAME, $userCreatedEvent);
+        $this->eventDispatcher->dispatch($userCreatedEvent, AdminUserCreatedEvent::NAME);
 
         return $createdUser;
     }
@@ -63,7 +63,7 @@ class UserApi
         $createdUser = $this->restClient->post(self::USER_ENDPOINT, $userToCreate, $jmsGroups, 'User');
 
         $userCreatedEvent = new OrgUserCreatedEvent($createdUser);
-        $this->eventDispatcher->dispatch(OrgUserCreatedEvent::NAME, $userCreatedEvent);
+        $this->eventDispatcher->dispatch($userCreatedEvent, OrgUserCreatedEvent::NAME);
 
         return $createdUser;
     }
@@ -147,7 +147,7 @@ class UserApi
             $trigger
         );
 
-        $this->eventDispatcher->dispatch(UserUpdatedEvent::NAME, $userUpdatedEvent);
+        $this->eventDispatcher->dispatch($userUpdatedEvent, UserUpdatedEvent::NAME);
 
         return $userIdArray;
     }
@@ -164,7 +164,7 @@ class UserApi
         $deletedBy = $this->tokenStorage->getToken()->getUser();
 
         $userDeletedEvent = new UserDeletedEvent($userToDelete, $deletedBy, $trigger);
-        $this->eventDispatcher->dispatch(UserDeletedEvent::NAME, $userDeletedEvent);
+        $this->eventDispatcher->dispatch($userDeletedEvent, UserDeletedEvent::NAME);
     }
 
     /**
@@ -192,7 +192,7 @@ class UserApi
         $activatedUser = $this->recreateToken($email);
 
         $userActivatedEvent = new UserActivatedEvent($activatedUser);
-        $this->eventDispatcher->dispatch(UserActivatedEvent::NAME, $userActivatedEvent);
+        $this->eventDispatcher->dispatch($userActivatedEvent, UserActivatedEvent::NAME);
     }
 
     /**
@@ -204,7 +204,7 @@ class UserApi
         $invitedCoDeputy = $this->recreateToken($email);
 
         $CoDeputyInvitedEvent = new CoDeputyInvitedEvent($invitedCoDeputy, $loggedInUser);
-        $this->eventDispatcher->dispatch(CoDeputyInvitedEvent::NAME, $CoDeputyInvitedEvent);
+        $this->eventDispatcher->dispatch($CoDeputyInvitedEvent, CoDeputyInvitedEvent::NAME);
     }
 
     /**
@@ -215,7 +215,7 @@ class UserApi
         $invitedDeputy = $this->recreateToken($email);
 
         $deputyInvitedEvent = new DeputyInvitedEvent($invitedDeputy);
-        $this->eventDispatcher->dispatch(DeputyInvitedEvent::NAME, $deputyInvitedEvent);
+        $this->eventDispatcher->dispatch($deputyInvitedEvent, DeputyInvitedEvent::NAME);
     }
 
     /**
@@ -226,7 +226,7 @@ class UserApi
         $passwordResetUser = $this->recreateToken($email);
 
         $passwordResetEvent = new UserPasswordResetEvent($passwordResetUser);
-        $this->eventDispatcher->dispatch(UserPasswordResetEvent::NAME, $passwordResetEvent);
+        $this->eventDispatcher->dispatch($passwordResetEvent, UserPasswordResetEvent::NAME);
     }
 
     /**
@@ -244,7 +244,7 @@ class UserApi
         );
 
         $deputySelfRegisteredEvent = new DeputySelfRegisteredEvent($registeredDeputy);
-        $this->eventDispatcher->dispatch(DeputySelfRegisteredEvent::NAME, $deputySelfRegisteredEvent);
+        $this->eventDispatcher->dispatch($deputySelfRegisteredEvent, DeputySelfRegisteredEvent::NAME);
     }
 
     /**
@@ -262,7 +262,7 @@ class UserApi
         );
 
         $coDeputyCreatedEvent = new CoDeputyCreatedEvent($createdCoDeputy, $invitedByDeputyName);
-        $this->eventDispatcher->dispatch(CoDeputyCreatedEvent::NAME, $coDeputyCreatedEvent);
+        $this->eventDispatcher->dispatch($coDeputyCreatedEvent, CoDeputyCreatedEvent::NAME);
 
         return $createdCoDeputy;
     }

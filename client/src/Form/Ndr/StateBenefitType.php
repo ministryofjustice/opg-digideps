@@ -32,7 +32,7 @@ class StateBenefitType extends AbstractType
     {
         $resolver->setDefaults([
              'data_class' => StateBenefit::class,
-             'validation_groups' => ['ndr-one-off'],
+             'validation_groups' => ['ndr-state-benefits'],
              'translation_domain' => 'ndr-income-benefits',
         ]);
     }

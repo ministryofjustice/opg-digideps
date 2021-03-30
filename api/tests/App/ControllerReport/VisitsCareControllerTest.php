@@ -18,9 +18,11 @@ class VisitsCareControllerTest extends AbstractTestController
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
 
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
+
+        self::$fixtures::deleteReportsData(['safeguarding']);
 
         //deputy1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
@@ -35,6 +37,11 @@ class VisitsCareControllerTest extends AbstractTestController
         self::$visitsCare2 = self::fixtures()->createVisitsCare(self::$report2);
 
         self::fixtures()->flush()->clear();
+
+        if (null === self::$tokenAdmin) {
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenDeputy = $this->loginAsDeputy();
+        }
     }
 
     /**
@@ -52,14 +59,6 @@ class VisitsCareControllerTest extends AbstractTestController
         'how_often_do_you_visit' => 'ho-m',
         'how_often_do_you_contact_client' => 'hodycc',
     ];
-
-    public function setUp(): void
-    {
-        if (null === self::$tokenAdmin) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
-    }
 
     public function testgetOneByIdAuth()
     {
@@ -229,6 +228,14 @@ class VisitsCareControllerTest extends AbstractTestController
      */
     public function testAdd()
     {
+        $id = self::$visitsCare1->getId();
+        $url = '/report/visits-care/' . $id;
+
+        $this->assertJsonRequest('DELETE', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ]);
+
         $url = '/report/visits-care';
 
         $return = $this->assertJsonRequest('POST', $url, [
@@ -246,6 +253,5 @@ class VisitsCareControllerTest extends AbstractTestController
         $visitsCare = self::fixtures()->getRepo('Report\VisitsCare')->find($return['data']['id']); /* @var $visitsCare \App\Entity\Report\VisitsCare */
         $this->assertEquals('y-m', $visitsCare->getDoYouLiveWithClient());
         $this->assertEquals(self::$report1->getId(), $visitsCare->getReport()->getId());
-        // TODO assert other fields
     }
 }

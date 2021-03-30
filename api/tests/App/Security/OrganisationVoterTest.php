@@ -7,61 +7,56 @@ use App\Entity\User;
 use App\Security\OrganisationVoter;
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;
 
-class OrganisationVoterTest extends TestCase
+class OrganisationVoterTest extends KernelTestCase
 {
+    public function setUp(): void
+    {
+        $this->user = new User();
+        $this->subject = new Organisation();
+
+        $this->security = self::prophesize(Security::class);
+        $this->security->isGranted('ROLE_ADMIN')->willReturn(false);
+
+        $this->sut = new OrganisationVoter($this->security->reveal());
+    }
+
     public function testOrganisationContainsLoggedInUser()
     {
-        $orgMemberUser = new User();
-        $subject = new Organisation();
-        $subject->addUser($orgMemberUser);
+        $this->subject->addUser($this->user);
 
         $token = self::prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($orgMemberUser);
+        $token->getUser()->willReturn($this->user);
 
-        $security = self::prophesize(Security::class);
-        $sut = new OrganisationVoter($security->reveal());
+        $attributes = [$this->sut::VIEW];
+        $voteResult = $this->sut->vote($token->reveal(), $this->subject, $attributes);
 
-        $attributes = [$sut::VIEW];
-        $voteResult = $sut->vote($token->reveal(), $subject, $attributes);
-
-        self::assertEquals($sut::ACCESS_GRANTED, $voteResult);
+        self::assertEquals($this->sut::ACCESS_GRANTED, $voteResult);
     }
 
     public function testOrganisationDoesNotContainsLoggedInUser()
     {
-        $user = new User();
-        $subject = new Organisation();
-
         $token = self::prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($user);
+        $token->getUser()->willReturn($this->user);
 
-        $security = self::prophesize(Security::class);
-        $sut = new OrganisationVoter($security->reveal());
+        $attributes = [$this->sut::VIEW, $this->sut::EDIT];
+        $voteResult = $this->sut->vote($token->reveal(), $this->subject, $attributes);
 
-        $attributes = [$sut::VIEW, $sut::EDIT];
-        $voteResult = $sut->vote($token->reveal(), $subject, $attributes);
-
-        self::assertEquals($sut::ACCESS_DENIED, $voteResult);
+        self::assertEquals($this->sut::ACCESS_DENIED, $voteResult);
     }
 
     public function testUnrecognisedAttribute()
     {
-        $user = new User();
-        $subject = new Organisation();
-
         $token = self::prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($user);
-
-        $security = self::prophesize(Security::class);
-        $sut = new OrganisationVoter($security->reveal());
+        $token->getUser()->willReturn($this->user);
 
         $attributes = ['some-other-attribute'];
-        $voteResult = $sut->vote($token->reveal(), $subject, $attributes);
+        $voteResult = $this->sut->vote($token->reveal(), $this->subject, $attributes);
 
-        self::assertEquals($sut::ACCESS_ABSTAIN, $voteResult);
+        self::assertEquals($this->sut::ACCESS_ABSTAIN, $voteResult);
     }
 
     public function testSubjectIsNotOrganisation()
@@ -70,12 +65,9 @@ class OrganisationVoterTest extends TestCase
 
         $token = self::prophesize(TokenInterface::class);
 
-        $security = self::prophesize(Security::class);
-        $sut = new OrganisationVoter($security->reveal());
+        $attributes = [$this->sut::VIEW, $this->sut::EDIT];
+        $voteResult = $this->sut->vote($token->reveal(), $subject, $attributes);
 
-        $attributes = [$sut::VIEW, $sut::EDIT];
-        $voteResult = $sut->vote($token->reveal(), $subject, $attributes);
-
-        self::assertEquals($sut::ACCESS_ABSTAIN, $voteResult);
+        self::assertEquals($this->sut::ACCESS_ABSTAIN, $voteResult);
     }
 }

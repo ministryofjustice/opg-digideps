@@ -24,14 +24,14 @@ ENV TIMEOUT=20
 ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20190902
 
 RUN apk --no-cache add \
-postgresql-dev \
-postgresql-client \
-openssl \
-nginx \
-nginx-mod-http-headers-more \
-su-exec \
-php7-igbinary \
-php7-pecl-redis
+  postgresql-dev \
+  postgresql-client \
+  openssl \
+  nginx \
+  nginx-mod-http-headers-more \
+  su-exec \
+  php7-igbinary \
+  php7-pecl-redis
 
 RUN docker-php-ext-install pdo pdo_pgsql opcache
 RUN docker-php-ext-enable opcache
@@ -43,10 +43,10 @@ RUN pecl install pcov && docker-php-ext-enable pcov
 # Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=false
 RUN if [[ $REQUIRE_XDEBUG = true ]] ; then \
-        apk add --no-cache $PHPIZE_DEPS; \
-        pecl install xdebug-2.9.8; \
-        docker-php-ext-enable $PHP_EXT_DIR/xdebug.so; \
-    fi ;
+  apk add --no-cache $PHPIZE_DEPS; \
+  pecl install xdebug-2.9.8; \
+  docker-php-ext-enable $PHP_EXT_DIR/xdebug.so; \
+  fi ;
 
 # Route NGINX logs to stdout/stderr
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
@@ -82,7 +82,6 @@ COPY --from=composer /app/composer.lock composer.lock
 COPY --from=composer /app/config/parameters.yml config/parameters.yml
 COPY app app
 COPY config config
-COPY DoctrineMigrations DoctrineMigrations
 COPY public public
 COPY scripts scripts
 COPY src src
@@ -101,7 +100,7 @@ RUN wget -q -O local-php-security-checker https://github.com/fabpot/local-php-se
 
 CMD confd -onetime -backend env \
   && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
-  && su-exec www-data:www-data php app/console doctrine:migrations:migrate-lock --no-interaction \
+  && su-exec www-data:www-data php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
   && su-exec www-data:www-data php app/console doctrine:migrations:up-to-date \
   && php-fpm -D \
   && nginx

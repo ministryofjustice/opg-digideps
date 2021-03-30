@@ -26,7 +26,7 @@ class NoteController extends RestController
 
     /**
      * @Route("{clientId}", requirements={"clientId":"\d+"}, methods={"POST"})
-     * @Security("has_role('ROLE_ORG')")
+     * @Security("is_granted('ROLE_ORG')")
      */
     public function add(Request $request, $clientId)
     {
@@ -55,7 +55,7 @@ class NoteController extends RestController
      * Add "user" group if needed
      *
      * @Route("{id}", methods={"GET"})
-     * @Security("has_role('ROLE_ORG')")
+     * @Security("is_granted('ROLE_ORG')")
      */
     public function getOneById(Request $request, $id)
     {
@@ -74,7 +74,7 @@ class NoteController extends RestController
      * Only the creator can update the note
      *
      * @Route("{id}", methods={"PUT"})
-     * @Security("has_role('ROLE_ORG')")
+     * @Security("is_granted('ROLE_ORG')")
      */
     public function updateNote(Request $request, $id)
     {
@@ -101,7 +101,7 @@ class NoteController extends RestController
      * Delete note.
      *
      * @Route("{id}", methods={"DELETE"})
-     * @Security("has_role('ROLE_ORG')")
+     * @Security("is_granted('ROLE_ORG')")
      *
      * @param int $id
      *

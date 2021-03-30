@@ -18,7 +18,7 @@ use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\ReportInterface;
-use App\Entity\Repository\ReportRepository;
+use App\Repository\ReportRepository;
 use App\Entity\User;
 use DateTime;
 use Doctrine\Common\Collections\Collection;

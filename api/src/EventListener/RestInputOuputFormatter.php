@@ -5,17 +5,15 @@ namespace App\EventListener;
 use App\Exception\BusinessRulesException;
 use App\Exception\HasDataInterface;
 use Closure;
-use http\Exception\BadConversionException;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class RestInputOuputFormatter
@@ -117,7 +115,7 @@ class RestInputOuputFormatter
         }
 
         // if data is defined,
-        if ($groupsCheck && !empty($data['data']) && $this->containsEntity($data['data']) && $context->attributes->get('groups')->isEmpty()) {
+        if ($groupsCheck && !empty($data['data']) && $this->containsEntity($data['data']) && empty($context->getAttribute('groups'))) {
             throw new \RuntimeException($request->getMethod() . ' ' . $request->getUri() . ' missing JMS group');
         }
 
@@ -150,7 +148,7 @@ class RestInputOuputFormatter
      * Attach the following with
      * services:.
      */
-    public function onKernelView(GetResponseForControllerResultEvent $event)
+    public function onKernelView(ViewEvent $event)
     {
         $data = [
             'success' => true,
@@ -166,9 +164,9 @@ class RestInputOuputFormatter
     /**
      * Attach the following with.
      */
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    public function onKernelException(ExceptionEvent $event)
     {
-        $e = $event->getException();
+        $e = $event->getThrowable();
         $message = $e->getMessage();
         $code = (int) $e->getCode();
         $level = 'warning'; //defeault exception level, unless override
@@ -215,7 +213,7 @@ class RestInputOuputFormatter
         $event->setResponse($response);
     }
 
-    public static function onKernelRequest(GetResponseEvent $event)
+    public static function onKernelRequest(RequestEvent $event)
     {
         if (function_exists('xdebug_disable')) {
             xdebug_disable();

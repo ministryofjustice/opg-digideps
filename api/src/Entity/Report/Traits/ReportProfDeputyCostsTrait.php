@@ -31,7 +31,7 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyCostsHasPrevious;
 
     /**
-     * @JMS\Type("array<App\Entity\Report\ProfDeputyPreviousCost>")
+     * @JMS\Type("ArrayCollection<App\Entity\Report\ProfDeputyPreviousCost>")
      * @JMS\Groups({"report-prof-deputy-costs-prev"})
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Report\ProfDeputyPreviousCost", mappedBy="report", cascade={"persist", "remove"})
@@ -49,7 +49,7 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyCostsHasInterim;
 
     /**
-     * @JMS\Type("array<App\Entity\Report\ProfDeputyInterimCost>")
+     * @JMS\Type("ArrayCollection<App\Entity\Report\ProfDeputyInterimCost>")
      * @JMS\Groups({"report-prof-deputy-costs-interim"})
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Report\ProfDeputyInterimCost", mappedBy="report", cascade={"persist", "remove"})
@@ -85,7 +85,7 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyCostsReasonBeyondEstimate;
 
     /**
-     * @JMS\Type("array<App\Entity\Report\ProfDeputyOtherCost>")
+     * @JMS\Type("ArrayCollection<App\Entity\Report\ProfDeputyOtherCost>")
      * @JMS\Groups({"prof-deputy-other-costs"})
      * @ORM\OneToMany(targetEntity="App\Entity\Report\ProfDeputyOtherCost", mappedBy="report", cascade={"persist", "remove"})
      * @ORM\OrderBy({"id" = "ASC"})
