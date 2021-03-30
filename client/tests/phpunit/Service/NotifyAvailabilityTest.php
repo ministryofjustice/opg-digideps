@@ -21,6 +21,7 @@ class NotifyAvailabilityTest extends TestCase
         $notifyClient->listTemplates()->shouldBeCalled()->willReturn('[{"some valid JSON": "true"}]');
 
         $sut = new NotifyAvailability($notifyClient->reveal());
+        $sut->ping();
 
         self::assertEquals(true, $sut->isHealthy());
         self::assertEquals(null, $sut->getErrors());
@@ -33,10 +34,10 @@ class NotifyAvailabilityTest extends TestCase
     {
         /** @var NotifyClient&ObjectProphecy $notifyClient */
         $notifyClient = self::prophesize(NotifyClient::class);
-
         $notifyClient->listTemplates()->shouldBeCalled()->willThrow($this->generateNotfyAPIException());
 
         $sut = new NotifyAvailability($notifyClient->reveal());
+        $sut->ping();
 
         self::assertEquals(false, $sut->isHealthy());
         self::assertEquals('Notify - 502: "Not available"', $sut->getErrors());
