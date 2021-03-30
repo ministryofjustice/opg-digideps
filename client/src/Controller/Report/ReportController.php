@@ -13,12 +13,14 @@ use App\Exception\ReportNotSubmittedException;
 use App\Form\FeedbackReportType;
 use App\Form\Report\ReportDeclarationType;
 use App\Form\Report\ReportType;
+use App\Form\UserResearchResponseType;
 use App\Model\FeedbackReport;
 use App\Service\Client\Internal\CasrecApi;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\Internal\SatisfactionApi;
 use App\Service\Client\Internal\UserApi;
+use App\Service\Client\Internal\UserResearchApi;
 use App\Service\Client\RestClient;
 use App\Service\Csv\TransactionsCsvGenerator;
 use App\Service\Redirector;
@@ -438,7 +440,7 @@ class ReportController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->satisfactionApi->createPostSubmissionFeedback($form->getData(), $report->getType(), $this->getUser());
 
-            return $this->redirect($this->generateUrl('report_submit_feedback', ['reportId' => $reportId]));
+            return $this->redirect($this->generateUrl('report_post_submission_user_research', ['reportId' => $reportId]));
         }
 
         return [
@@ -448,6 +450,7 @@ class ReportController extends AbstractController
         ];
     }
 
+    // @TODO Remove once ticket complete along with view
     /**
      * @Route("/report/{reportId}/submit_feedback", name="report_submit_feedback")
      * @Template("@App/Report/Report/submitFeedback.html.twig")

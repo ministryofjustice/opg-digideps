@@ -14,7 +14,7 @@ services:
             - ./behat/.env
 
     npm:
-        image: node:8-alpine
+        image: node:14.8.0-alpine
         working_dir: /app
         volumes:
             - ./client/:/app

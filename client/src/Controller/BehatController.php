@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Ndr\Ndr;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -37,12 +38,25 @@ class BehatController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $user = $this->userApi->getByEmail($email, ['user-login', 'user-id']);
+        $user = $this->userApi->getByEmail(
+            $email,
+            ['user-login', 'user-id', 'user-email', 'user-clients', 'client', 'current-report', 'client-reports', 'report']
+        );
+
+        $currentReport = $user->getFirstClient()->getCurrentReport();
+        $previousReport = $user->getFirstClient()->getReports()[0];
+
 
         return new JsonResponse(
             [
-                'UserId' => $user->getId(),
-                'ActiveReportId' => $user->getActiveReportId()
+                'email' => $user->getEmail(),
+                'clientId' => $user->getFirstClient()->getId(),
+                'currentReportId' => $currentReport->getId(),
+                'currentReportType' => $currentReport->getType(),
+                'currentReportNdrOrReport' => $currentReport instanceof Ndr ? 'ndr' : 'report',
+                'previousReportId' => $previousReport->getId(),
+                'previousReportType' => $previousReport->getType(),
+                'previousReportNdrOrReport' => $previousReport instanceof Ndr ? 'ndr' : 'report'
             ]
         );
     }

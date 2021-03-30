@@ -284,6 +284,11 @@ class User implements UserInterface
     private $coDeputyClientConfirmed;
 
     /**
+     * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="user", cascade={"persist"})
+     */
+    private $userResearchResponse;
+
+    /**
      * Constructor.
      */
     public function __construct($coDeputyClientConfirmed = false)

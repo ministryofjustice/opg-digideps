@@ -4,7 +4,9 @@
     "type": "project",
     "description": "Feature tests for Complete the deputy report service",
     "autoload": {
-        "psr-4": {"DigidepsBehat\\": "tests/bootstrap" }
+        "psr-4": {
+            "DigidepsBehat\\": "tests/bootstrap"
+        }
     },
     "require": {
         "php": ">=7.4",

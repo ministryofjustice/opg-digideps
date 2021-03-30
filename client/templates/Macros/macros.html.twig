@@ -546,3 +546,71 @@ C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.
 
     </fieldset>
 {% endmacro %}
+
+{%- macro checkbox_group(formElement, options) -%}
+    <div
+        id="form-group-{{ formElement.vars.id }}"
+        class="govuk-form-group {% if not formElement.vars.valid %}govuk-form-group--error{% endif %}"
+    >
+        <fieldset class="govuk-fieldset" aria-describedby="hint-{{ formElement.vars.id }}">
+
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h1 class="govuk-fieldset__heading">
+                    {{ ('form.' ~ formElement.vars.name ~ '.label') | trans({}, formElement.vars.translation_domain) }}
+                </h1>
+            </legend>
+
+            <div class="govuk-checkboxes">
+                {% set translatedHint = ('form.' ~ formElement.vars.name ~ '.hint') | trans({}, formElement.vars.translation_domain) %}
+                {% if translatedHint != ('form.' ~ formElement.vars.name ~ '.hint') %}
+                    <div id="hint-{{ formElement.vars.id }}" class="govuk-hint">
+                        {{ ('form.' ~ formElement.vars.name ~ '.hint') | trans({}, formElement.vars.translation_domain) }}
+                    </div>
+                {% endif %}
+
+                {{ form_errors(formElement) }}
+
+                {% for child in formElement %}
+                    <div class="govuk-checkboxes__item">
+                        {{ form_widget(child, {'attr': {'class': 'govuk-checkboxes__input'}}) }}
+                        {{ form_label(child, null, {'label_attr': {'class': 'govuk-label govuk-checkboxes__label'}}) }}
+                    </div>
+                {% endfor %}
+            </div>
+        </fieldset>
+    </div>
+{%- endmacro -%}
+
+{%- macro radio_group(formElement, options) -%}
+    <div
+        id="form-group-{{ formElement.vars.id }}"
+        class="govuk-form-group {% if not formElement.vars.valid %}govuk-form-group--error{% endif %}"
+    >
+        <fieldset class="govuk-fieldset" aria-describedby="hint-{{ formElement.vars.id }}">
+
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h1 class="govuk-fieldset__heading">
+                    {{ ('form.' ~ formElement.vars.name ~ '.label') | trans({}, formElement.vars.translation_domain) }}
+                </h1>
+            </legend>
+
+            <div class="govuk-radios {% if formElement.children < 3 %} govuk-radios--inline {% endif %}">
+                {% set translatedHint = ('form.' ~ formElement.vars.name ~ '.hint') | trans({}, formElement.vars.translation_domain) %}
+                {% if translatedHint != ('form.' ~ formElement.vars.name ~ '.hint') %}
+                    <div id="hint-{{ formElement.vars.id }}" class="govuk-hint">
+                        {{ ('form.' ~ formElement.vars.name ~ '.hint') | trans({}, formElement.vars.translation_domain) }}
+                    </div>
+                {% endif %}
+
+                {{ form_errors(formElement) }}
+
+                {% for child in formElement %}
+                    <div class="govuk-radios__item">
+                        {{ form_widget(child, {'attr': {'class': 'govuk-radios__input'}}) }}
+                        {{ form_label(child, null, {'label_attr': {'class': 'govuk-label govuk-radios__label'}}) }}
+                    </div>
+                {% endfor %}
+            </div>
+        </fieldset>
+    </div>
+{%- endmacro -%}

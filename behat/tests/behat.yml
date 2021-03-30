@@ -200,11 +200,23 @@ cross-browser-android-chrome:
 
 v2-tests-goutte:
     suites:
-        contacts:
+        section-contacts:
             description: Covering the 'Contacts' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/contacts" ]
             contexts:
                 - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        section-actions:
+            description: Covering the 'Actions' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/actions" ]
+            contexts:
+                - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        feedback:
+            description: Covering features that allow users to give us feedback
+            paths: [ "%paths.base%/features-v2/feedback" ]
+            contexts:
+                - DigidepsBehat\v2\feedback\FeedbackFeatureContext
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             files_path: '%paths.base%/fixtures/'

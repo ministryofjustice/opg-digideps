@@ -76,6 +76,7 @@
         "phpstan/phpstan-mockery": "^0.12.0",
         "phpstan/phpstan-phpunit": "^0.12.0",
         "phpunit/phpcov": "6.0.1",
+        "symfony/maker-bundle": "^1.29",
         "symfony/var-dumper": "^3.4"
     }
 }
