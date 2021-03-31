@@ -37,7 +37,6 @@ services:
       - ./api/api.env:/var/www/api.env
       - ./api/postgres.env:/var/www/postgres.env
       - ./api/phpstan.neon:/var/www/phpstan.neon
-      - ./api/var:/var/www/var
 
   frontend:
     volumes:
