@@ -18,9 +18,39 @@ class OrganisationRepository extends ServiceEntityRepository
      */
     public function getAllArray(): array
     {
+        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter->disableForEntity(Organisation::class);
+
         $query = $this
             ->getEntityManager()
             ->createQuery('SELECT o FROM App\Entity\Organisation o');
+
+        return $query->getArrayResult();
+    }
+
+    /**
+     * @return array
+     */
+    public function getNonDeletedArray(): array
+    {
+        $query = $this
+            ->getEntityManager()
+            ->createQuery('SELECT o FROM App\Entity\Organisation o WHERE o.deletedAt IS NULL');
+
+        return $query->getArrayResult();
+    }
+
+    /**
+     * @return array
+     */
+    public function getOrgIdAndNames(): array
+    {
+        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter->disableForEntity(Organisation::class);
+
+        $query = $this
+            ->getEntityManager()
+            ->createQuery('SELECT o.id, o.name FROM App\Entity\Organisation o');
 
         return $query->getArrayResult();
     }
@@ -44,19 +74,38 @@ class OrganisationRepository extends ServiceEntityRepository
     /**
      * @param int $id
      * @return bool
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function deleteById(int $id): bool
+    public function hasActiveEntities(int $id): bool
     {
-        if (null === ($organisation = $this->find($id))) {
-            return false;
+        $query = $this
+            ->getEntityManager()
+            ->createQuery('SELECT o, u FROM App\Entity\Organisation o
+            INNER JOIN o.users u
+            WHERE o.id = ?1')
+            ->setParameter(1, $id);
+
+        $result = $query->getArrayResult();
+
+        if (count($result) > 0) {
+            return true;
         }
 
-        $this->getEntityManager()->remove($organisation);
-        $this->getEntityManager()->flush();
+        $query = $this
+            ->getEntityManager()
+            ->createQuery('SELECT o, c FROM App\Entity\Organisation o
+            INNER JOIN o.clients c
+            WHERE o.id = ?1
+            AND c.deletedAt is null
+            AND c.archivedAt is null')
+            ->setParameter(1, $id);
 
-        return true;
+        $result = $query->getArrayResult();
+
+        if (count($result) > 0) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -66,6 +115,9 @@ class OrganisationRepository extends ServiceEntityRepository
      */
     public function organisationExists(string $email): bool
     {
+        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter->disableForEntity(Organisation::class);
+
         $email = strtolower($email);
         $queryString = 'SELECT COUNT(o.id) FROM App\Entity\Organisation o WHERE o.emailIdentifier = ?1';
         $queryParams = [1 => $email];
@@ -92,6 +144,9 @@ class OrganisationRepository extends ServiceEntityRepository
      */
     public function findByEmailIdentifier(string $email): ?Organisation
     {
+        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter->disableForEntity(Organisation::class);
+
         $email = strtolower($email);
         $queryString = 'SELECT o FROM App\Entity\Organisation o WHERE o.emailIdentifier = ?1';
         $queryParams = [1 => $email];

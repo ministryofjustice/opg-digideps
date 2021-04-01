@@ -38,8 +38,9 @@ final class Version225 extends AbstractMigration implements ContainerAwareInterf
         /** @var OrganisationRepository $orgRepo */
         $orgRepo = $em->getRepository(Organisation::class);
 
-        foreach ($orgRepo->findAll() as $org) {
-            if (strpos($org->getName(), "@") !== false) {
+        foreach ($orgRepo->getOrgIdAndNames() as $key => $value) {
+            if (strpos($value, "@") !== false) {
+                $org = $orgRepo->find($key);
                 $org->setName('Your Organisation');
                 $em->persist($org);
             }

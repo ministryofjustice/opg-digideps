@@ -68,8 +68,8 @@ class OrganisationController extends AbstractController
     public function getAllAction(): JsonResponse
     {
         // Fetch all data from db
-        $data = $this->repository->getAllArray();
-        
+        $data = $this->repository->getNonDeletedArray();
+
         $data = $this->snakeCase($data);
 
         // Pass transformed org data to repsonse
@@ -79,7 +79,7 @@ class OrganisationController extends AbstractController
     private function snakeCase(array $array): array
     {
         return array_map(
-            function($item) {
+            function ($item) {
                 if (is_array($item)) {
                     $item = $this->snakeCase($item);
                 }
@@ -162,7 +162,7 @@ class OrganisationController extends AbstractController
      */
     public function deleteAction(int $id): JsonResponse
     {
-        $deleted = $this->repository->deleteById($id);
+        $deleted = $this->restHandler->delete($id);
         $message = $deleted ? 'Organisation deleted' : 'Organisation not found. Nothing deleted';
 
         return $this->buildSuccessResponse([], $message);

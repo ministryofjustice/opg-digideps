@@ -7,13 +7,18 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\Traits\IsSoftDeleteableEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Table(name="organisation")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @ORM\Entity(repositoryClass="App\Repository\OrganisationRepository")
  */
 class Organisation implements OrganisationInterface
 {
+    use IsSoftDeleteableEntity;
+
     /**
      * @var int
      *

@@ -34,6 +34,18 @@ trait ReportTrait
     }
 
     /**
+     * @Given a Lay Deputy logs in and has a new report
+     */
+    public function aLayDeputyLogsInAndHasNewReport()
+    {
+        if (empty($this->layDeputyNotStartedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedDetails');
+        }
+
+        $this->loginToFrontendAs($this->layDeputyNotStartedDetails->getEmail());
+    }
+
+    /**
      * @Given a Lay Deputy completes and submits a report
      */
     public function aLayDeputyCompletesAndSubmitsAReport()
