@@ -212,6 +212,12 @@ v2-tests-goutte:
             contexts:
                 - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
+        section-additional-information:
+            description: Covering the 'Additional Information' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/additional-information" ]
+            contexts:
+                - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
         feedback:
             description: Covering features that allow users to give us feedback
             paths: [ "%paths.base%/features-v2/feedback" ]
