@@ -9,6 +9,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
 {
     use ContactsSectionTrait;
     use ActionsSectionTrait;
+    use GiftsSectionTrait;
 
     const REPORT_SECTION_ENDPOINT = 'report/%s/%s';
 
@@ -100,6 +101,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
         foreach ($divs as $div) {
             if ($div->getAttribute('href') === $sectionFormatted) {
                 $statuses = $div->findAll('css', 'span');
+
                 foreach ($statuses as $sts) {
                     if (str_contains(strtolower($sts->getHtml()), $status)) {
                         $statusCorrect = true;
@@ -141,5 +143,21 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
         }
 
         assert($furtherInfoNeeded);
+    }
+
+    /**
+     * @When I choose to save and add another
+     */
+    public function iChooseToSaveAndAddAnother()
+    {
+        $this->pressButton('Save and add another');
+    }
+
+    /**
+     * @When I choose to save and continue
+     */
+    public function iChooseToSaveAndContinue()
+    {
+        $this->pressButton('Save and continue');
     }
 }

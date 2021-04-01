@@ -18,6 +18,7 @@ class BaseFeatureContext extends MinkContext
     use ReportTrait;
     use IShouldBeOnTrait;
     use PageUrlsTrait;
+    use ElementSelectionTrait;
 
     const BEHAT_FRONT_RESET_FIXTURES = '/behat/frontend/reset-fixtures?testRunId=%s';
     const BEHAT_FRONT_USER_DETAILS = '/behat/frontend/user/%s/details';
