@@ -139,9 +139,9 @@ trait ContactsSectionTrait
     }
 
     /**
-     * @Then the summary page should contain the details I entered
+     * @Then the contacts summary page should contain the details I entered
      */
-    public function summaryPageContainsExpectedText()
+    public function contactSummaryPageContainsExpectedText()
     {
         // We use a table for displaying contact details and a dl for no contacts
         $table = $this->getSession()->getPage()->find('css', 'table');

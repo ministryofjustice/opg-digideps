@@ -1,4 +1,4 @@
-@v2 @jim
+@v2 @actions
 Feature: Actions
 
   Scenario: A user has made no financial decisions and has no concerns

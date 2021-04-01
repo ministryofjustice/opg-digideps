@@ -23,7 +23,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnReportSubmittedPage()
     {
-        $this->iAmOnPage('/report\/.*\/submitted$/');
+        return $this->iAmOnPage('/report\/.*\/submitted$/');
     }
 
     /**
@@ -31,7 +31,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnPostSubmissionUserResearchPage()
     {
-        $this->iAmOnPage('/report\/.*\/post_submission_user_research$/');
+        return $this->iAmOnPage('/report\/.*\/post_submission_user_research$/');
     }
 
     /**
@@ -39,7 +39,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnUserResearchSubmittedPage()
     {
-        $this->iAmOnPage('/report\/.*\/post_submission_user_research\/submitted$/');
+        return $this->iAmOnPage('/report\/.*\/post_submission_user_research\/submitted$/');
     }
 
     /**
@@ -47,7 +47,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnContactsSummaryPage()
     {
-        $this->iAmOnPage('/report\/.*\/contacts\/summary$/');
+        return $this->iAmOnPage('/report\/.*\/contacts\/summary$/');
     }
 
     /**
@@ -55,7 +55,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnAddAContactPage()
     {
-        $this->iAmOnPage('/report\/.*\/contacts\/add/');
+        return $this->iAmOnPage('/report\/.*\/contacts\/add/');
     }
 
     /**
@@ -63,7 +63,15 @@ trait IShouldBeOnTrait
      */
     public function iAmOnContactsAddAnotherPage()
     {
-        $this->iAmOnPage('/report\/.*\/contacts\/add_another$/');
+        return $this->iAmOnPage('/report\/.*\/contacts\/add_another$/');
+    }
+
+    /**
+     * @Then I should be on the additional information summary page
+     */
+    public function iAmOnAdditionalInformationSummaryPage()
+    {
+        return $this->iAmOnPage('/report\/.*\/any-other-info\/summary\?from=last-step/');
     }
 
     /**
