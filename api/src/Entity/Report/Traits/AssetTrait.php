@@ -16,7 +16,7 @@ trait AssetTrait
      * @var AssetInterface[]
      *
      * @JMS\Groups({"asset"})
-     * @JMS\Type("array<App\Entity\Report\Asset>")
+     * @JMS\Type("ArrayCollection<App\Entity\Report\Asset>")
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Asset", mappedBy="report", cascade={"persist", "remove"})
      */
     private $assets;

@@ -14,10 +14,12 @@ class MoneyTransactionControllerTest extends AbstractTestController
     private static $report2;
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
+    private static $t1;
+    private static $t2;
 
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
 
@@ -32,17 +34,22 @@ class MoneyTransactionControllerTest extends AbstractTestController
         self::$report2 = self::fixtures()->createReport($client2);
 
         // transactions
-        $t1 = new MoneyTransaction(self::$report1);
-        $t1->setCategory('dividends')->setAmount(123.45)->setDescription('d1');
-        $t2 = new MoneyTransaction(self::$report1);
-        $t2->setCategory('dividends')->setAmount(789.12)->setDescription('d2');
+        self::$t1 = new MoneyTransaction(self::$report1);
+        self::$t1->setCategory('dividends')->setAmount(123.45)->setDescription('d1');
+        self::$t2 = new MoneyTransaction(self::$report1);
+        self::$t2->setCategory('dividends')->setAmount(789.12)->setDescription('d2');
         $t3 = new MoneyTransaction(self::$report1);
         $t3->setCategory('loans')->setAmount(5000.59)->setDescription('d3');
         $t4 = new MoneyTransaction(self::$report2);
         $t4->setCategory('loans')->setAmount(123)->setDescription('belongs to report2');
-        self::fixtures()->persist($t1, $t2, $t3, $t4);
 
+        self::fixtures()->persist(self::$t1, self::$t2, $t3, $t4);
         self::fixtures()->flush()->clear();
+
+        if (null === self::$tokenAdmin) {
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenDeputy = $this->loginAsDeputy();
+        }
     }
 
     /**
@@ -53,14 +60,6 @@ class MoneyTransactionControllerTest extends AbstractTestController
         parent::tearDownAfterClass();
 
         self::fixtures()->clear();
-    }
-
-    public function setUp(): void
-    {
-        if (null === self::$tokenAdmin) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
     }
 
     public function testGetTransactions()
@@ -117,17 +116,12 @@ class MoneyTransactionControllerTest extends AbstractTestController
         $this->assertEquals(123.45, $t->getAmount());
         $this->assertEquals('d', $t->getDescription());
         $this->assertEquals('dividends', $t->getCategory());
-
-        return $t->getId();
     }
 
-    /**
-     * @depends testAddEditTransaction
-     */
-    public function testEditTransaction($transactionId)
+    public function testEditTransaction()
     {
-        $url = '/report/' . self::$report1->getId() . '/money-transaction/' . $transactionId;
-        $url2 = '/report/' . self::$report2->getId() . '/money-transaction/' . $transactionId;
+        $url = '/report/' . self::$report1->getId() . '/money-transaction/' . self::$t1->getId();
+        $url2 = '/report/' . self::$report2->getId() . '/money-transaction/' . self::$t2->getId();
 
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);

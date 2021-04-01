@@ -48,7 +48,7 @@ class NdrApi
         $client = $submittedByWithClientsAndReports->getClients()[0];
 
         $ndrSubmittedEvent = new NdrSubmittedEvent($submittedByWithClientsAndReports, $ndrToSubmit, $client->getActiveReport());
-        $this->eventDispatcher->dispatch(NdrSubmittedEvent::NAME, $ndrSubmittedEvent);
+        $this->eventDispatcher->dispatch($ndrSubmittedEvent, NdrSubmittedEvent::NAME);
     }
 
     /**

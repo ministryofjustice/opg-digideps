@@ -6,10 +6,20 @@ use App\Service\Client\RestClient;
 
 class ApiAvailability extends ServiceAvailabilityAbstract
 {
+    /**
+     * @var RestClient
+     */
+    private RestClient $restClient;
+
     public function __construct(RestClient $restClient)
     {
+        $this->restClient = $restClient;
+    }
+
+    public function ping()
+    {
         try {
-            $data = $restClient->get('manage/availability', 'array');
+            $data = $this->restClient->get('manage/availability', 'array');
             // API not healtyh
             if (json_last_error() !== JSON_ERROR_NONE || !isset($data['healthy'])) {
                 $this->isHealthy = false;

@@ -1,16 +1,19 @@
 <?php
 
-namespace Tests\App\Entity\Repository;
+namespace Tests\App\Repository;
 
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
-use App\Entity\Repository\ReportSubmissionRepository;
+use App\Repository\ReportSubmissionRepository;
+use App\TestHelpers\DocumentHelpers;
 use App\TestHelpers\ReportSubmissionHelper;
+use App\TestHelpers\ReportTestHelper;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Prophecy\Argument;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -36,39 +39,72 @@ class ReportSubmissionRepositoryTest extends WebTestCase
      */
     public function testUpdateArchivedStatus($isArchived, $docStatuses, $shouldArchive)
     {
-        $em = self::prophesize(EntityManagerInterface::class);
-        $metaClass = self::prophesize(ClassMetadata::class);
+        $submission = $this->reportSubmissionHelper->generateAndPersistReportSubmission($this->entityManager);
+        $submission->setArchived($isArchived);
 
-        $docs = array_map(function ($status) {
-            $doc = self::prophesize(Document::class);
-            $doc->getSynchronisationStatus()->willReturn($status);
-            return $doc;
+        $reportHelper = new ReportTestHelper();
+
+        $docs = array_map(function ($status) use ($reportHelper) {
+            $report = $reportHelper->generateReport($this->entityManager);
+            $this->entityManager->persist($report);
+            $this->entityManager->persist($report->getClient());
+
+            return ( new Document($report))
+                ->setSynchronisationStatus($status)
+                ->setFileName('a file.pdf');
         }, $docStatuses);
 
-        $reportSubmission = self::prophesize(ReportSubmission::class);
-        $reportSubmission->getDocuments()->shouldBeCalled()->willReturn($docs);
-        $reportSubmission->getArchived()->shouldBeCalled()->willReturn($isArchived);
-
-        if ($shouldArchive) {
-            $reportSubmission->setArchived(true)->shouldBeCalled();
-        } else {
-            $reportSubmission->setArchived(Argument::any())->shouldNotBeCalled();
+        foreach ($docs as $doc) {
+            $submission->addDocument($doc);
+            $this->entityManager->persist($doc);
         }
 
-        $sut = new ReportSubmissionRepository($em->reveal(), $metaClass->reveal());
+        $this->entityManager->flush();
 
-        $sut->updateArchivedStatus($reportSubmission->reveal());
+        $sut = $this->entityManager->getRepository(ReportSubmission::class);
+
+        $sut->updateArchivedStatus($submission);
+        self::assertEquals($shouldArchive, $submission->getArchived());
     }
 
     public function updateArchivedStatusDataProvider()
     {
         return [
-            'Manual documents' => [false, [null, null], false],
             'One synced document' => [false, [Document::SYNC_STATUS_SUCCESS], true],
             'Two documents, one synced' => [false, [Document::SYNC_STATUS_SUCCESS, DOCUMENT::SYNC_STATUS_PERMANENT_ERROR], false],
             'Two synced documents' => [false, [Document::SYNC_STATUS_SUCCESS, Document::SYNC_STATUS_SUCCESS], true],
-            'Two synced documents, already archived' => [true, [Document::SYNC_STATUS_SUCCESS, Document::SYNC_STATUS_SUCCESS], false],
+            'Two synced documents, already archived' => [true, [Document::SYNC_STATUS_SUCCESS, Document::SYNC_STATUS_SUCCESS], true],
         ];
+    }
+
+    public function testUpdateArchivedStatus_manually_archived()
+    {
+        $submission = $this->reportSubmissionHelper->generateAndPersistReportSubmission($this->entityManager);
+        $submission->setArchived(false);
+
+        $reportHelper = new ReportTestHelper();
+
+        $statuses = [null, null];
+        $docs = array_map(function ($status) use ($reportHelper) {
+            $report = $reportHelper->generateReport($this->entityManager);
+            $this->entityManager->persist($report);
+            $this->entityManager->persist($report->getClient());
+
+            return ( new Document($report))
+                ->setFileName('a file.pdf');
+        }, $statuses);
+
+        foreach ($docs as $doc) {
+            $submission->addDocument($doc);
+            $this->entityManager->persist($doc);
+        }
+
+        $this->entityManager->flush();
+
+        $sut = $this->entityManager->getRepository(ReportSubmission::class);
+
+        $sut->updateArchivedStatus($submission);
+        self::assertEquals(false, $submission->getArchived());
     }
 
     /** @test */

@@ -68,7 +68,7 @@ class UserApiTest extends TestCase
         $this->tokenStorage->getToken()->willReturn($usernamePasswordToken);
 
         $userUpdatedEvent = new UserUpdatedEvent($preUpdateUser, $postUpdateUser, $currentUser, $trigger);
-        $this->eventDispatcher->dispatch('user.updated', $userUpdatedEvent)->shouldBeCalled();
+        $this->eventDispatcher->dispatch($userUpdatedEvent, 'user.updated')->shouldBeCalled();
 
         $this->sut->update($preUpdateUser, $postUpdateUser, $trigger, $jmsGroups);
     }
@@ -86,7 +86,7 @@ class UserApiTest extends TestCase
         $this->tokenStorage->getToken()->willReturn($usernamePasswordToken);
 
         $userUpdatedEvent = new UserDeletedEvent($userToDelete, $deletedBy, $trigger);
-        $this->eventDispatcher->dispatch('user.deleted', $userUpdatedEvent)->shouldBeCalled();
+        $this->eventDispatcher->dispatch($userUpdatedEvent, 'user.deleted')->shouldBeCalled();
 
         $this->sut->delete($userToDelete, $trigger);
     }
@@ -99,7 +99,7 @@ class UserApiTest extends TestCase
         $this->restClient->post('user', $userToCreate, ["admin_add_user"], 'User')->shouldBeCalled()->willReturn($userToCreate);
 
         $userCreatedEvent = new AdminUserCreatedEvent($userToCreate);
-        $this->eventDispatcher->dispatch('admin.user.created', $userCreatedEvent)->shouldBeCalled();
+        $this->eventDispatcher->dispatch($userCreatedEvent, 'admin.user.created')->shouldBeCalled();
 
         $this->sut->createAdminUser($userToCreate);
     }
@@ -116,7 +116,7 @@ class UserApiTest extends TestCase
             ->willReturn($userToResetPassword);
 
         $passwordResetEvent = new UserPasswordResetEvent($userToResetPassword);
-        $this->eventDispatcher->dispatch('password.reset', $passwordResetEvent)->shouldBeCalled();
+        $this->eventDispatcher->dispatch($passwordResetEvent, 'password.reset')->shouldBeCalled();
 
         $this->sut->resetPassword($email);
     }
@@ -134,7 +134,7 @@ class UserApiTest extends TestCase
             ->willReturn($invitedCoDeputy);
 
         $coDeputyInvitedEvent = new CoDeputyInvitedEvent($invitedCoDeputy, $inviterDeputy);
-        $this->eventDispatcher->dispatch('codeputy.invited', $coDeputyInvitedEvent)->shouldBeCalled();
+        $this->eventDispatcher->dispatch($coDeputyInvitedEvent, 'codeputy.invited')->shouldBeCalled();
 
         $this->sut->reInviteCoDeputy($email, $inviterDeputy);
     }
@@ -166,7 +166,7 @@ class UserApiTest extends TestCase
             ->willReturn($invitedDeputy);
 
         $deputyInvitedEvent = new DeputyInvitedEvent($invitedDeputy);
-        $this->eventDispatcher->dispatch('deputy.invited', $deputyInvitedEvent)->shouldBeCalled();
+        $this->eventDispatcher->dispatch($deputyInvitedEvent, 'deputy.invited')->shouldBeCalled();
 
         $this->sut->reInviteDeputy($email);
     }
@@ -190,7 +190,7 @@ class UserApiTest extends TestCase
             ->willReturn($selfRegisteredDeputy);
 
         $deputySelfRegisteredEvent = new DeputySelfRegisteredEvent($selfRegisteredDeputy);
-        $this->eventDispatcher->dispatch('deputy.self.registered', $deputySelfRegisteredEvent)->shouldBeCalled();
+        $this->eventDispatcher->dispatch($deputySelfRegisteredEvent, 'deputy.self.registered')->shouldBeCalled();
 
         $this->sut->selfRegister($selfRegisterData);
     }
@@ -208,7 +208,7 @@ class UserApiTest extends TestCase
             ->willReturn($createdCoDeputy);
 
         $coDeputyCreatedEvent = new CoDeputyCreatedEvent($createdCoDeputy, $invitedByDeputy);
-        $this->eventDispatcher->dispatch('codeputy.created', $coDeputyCreatedEvent)->shouldBeCalled();
+        $this->eventDispatcher->dispatch($coDeputyCreatedEvent, 'codeputy.created')->shouldBeCalled();
 
         $this->sut->createCoDeputy($invitedCoDeputy, $invitedByDeputy);
     }
@@ -221,7 +221,7 @@ class UserApiTest extends TestCase
         $this->restClient->post('user', $userToCreate, ["org_team_add"], 'User')->shouldBeCalled()->willReturn($userToCreate);
 
         $userCreatedEvent = new OrgUserCreatedEvent($userToCreate);
-        $this->eventDispatcher->dispatch('org.user.created', $userCreatedEvent)->shouldBeCalled();
+        $this->eventDispatcher->dispatch($userCreatedEvent, 'org.user.created')->shouldBeCalled();
 
         $this->sut->createOrgUser($userToCreate);
     }

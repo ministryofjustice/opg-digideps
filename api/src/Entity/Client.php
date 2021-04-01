@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *     },
  *     options={"collate":"utf8_general_ci", "charset":"utf8"}
  *     )
- * @ORM\Entity(repositoryClass="App\Entity\Repository\ClientRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\ClientRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
 class Client implements ClientInterface
@@ -45,7 +45,7 @@ class Client implements ClientInterface
 
     /**
      * @JMS\Groups({"client-users"})
-     * @JMS\Type("array")
+     * @JMS\Type("ArrayCollection<App\Entity\User>")
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="clients", fetch="EXTRA_LAZY")
      * @ORM\JoinTable(name="deputy_case",
      *         joinColumns={@ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")},
@@ -56,7 +56,7 @@ class Client implements ClientInterface
 
     /**
      * @JMS\Groups({"client-reports"})
-     * @JMS\Type("array")
+     * @JMS\Type("ArrayCollection<App\Entity\Report\Report>")
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Report", mappedBy="client", cascade={"persist", "remove"})
      */
     private $reports;
@@ -242,6 +242,7 @@ class Client implements ClientInterface
     /**
      * @var Organisation|null
      *
+     * @JMS\Type("App\Entity\Organisation")
      * @JMS\Groups({"client-organisations"})
      *
      * @ORM\ManyToOne(targetEntity="Organisation", inversedBy="clients")

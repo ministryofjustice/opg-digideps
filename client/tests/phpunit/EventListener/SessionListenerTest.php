@@ -13,7 +13,7 @@ class SessionListenerTest extends TestCase
 {
     public function setUp(): void
     {
-        $this->event = m::mock('Symfony\Component\HttpKernel\Event\GetResponseEvent');
+        $this->event = m::mock('Symfony\Component\HttpKernel\Event\RequestEvent');
         $this->router = m::mock('Symfony\Bundle\FrameworkBundle\Routing\Router');
         $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
     }
@@ -45,7 +45,7 @@ class SessionListenerTest extends TestCase
     {
         $object = new SessionListener($this->router, $this->logger, ['idleTimeout' => 600]);
 
-        $event = m::mock('Symfony\Component\HttpKernel\Event\GetResponseEvent');
+        $event = m::mock('Symfony\Component\HttpKernel\Event\RequestEvent');
         $event->shouldReceive('getRequestType')->andReturn(HttpKernelInterface::MASTER_REQUEST);
         $event->shouldReceive('getRequest->hasSession')->andReturn(false);
         $this->assertEquals('no-session', $object->onKernelRequest($event));
@@ -58,7 +58,7 @@ class SessionListenerTest extends TestCase
     {
         $object = new SessionListener($this->router, $this->logger, ['idleTimeout' => 600]);
 
-        $event = m::mock('Symfony\Component\HttpKernel\Event\GetResponseEvent');
+        $event = m::mock('Symfony\Component\HttpKernel\Event\RequestEvent');
 
         $event->shouldReceive('getRequestType')->andReturn(HttpKernelInterface::MASTER_REQUEST);
         $event->shouldReceive('getRequest->hasSession')->andReturn(true);

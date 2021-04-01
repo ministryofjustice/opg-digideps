@@ -110,7 +110,7 @@ class ReportController extends AbstractController
 
     /**
      * @Route("checklist", name="admin_report_checklist")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      * @param Request $request
      * @param string $id
      *
@@ -226,7 +226,7 @@ class ReportController extends AbstractController
 
     /**
      * @Route("checklist-submitted", name="admin_report_checklist_submitted")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      * @param int $id
      *
      * @return array
@@ -262,7 +262,7 @@ class ReportController extends AbstractController
      * Generate and return Checklist as Response object
      *
      * @Route("checklist.pdf", name="admin_checklist_pdf")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      *
      * @param int $id
      * @return Response
@@ -296,7 +296,7 @@ class ReportController extends AbstractController
 
     /**
      * @Route("manage", name="admin_report_manage")
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @param Request $request
      * @param string $id
      *
@@ -411,7 +411,7 @@ class ReportController extends AbstractController
 
     /**
      * @Route("manage-confirm", name="admin_report_manage_confirm")
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @param Request $request
      *
      * @param $id
@@ -500,7 +500,7 @@ class ReportController extends AbstractController
 
     /**
      * @Route("manage-close-report-confirm", name="admin_report_manage_close_report_confirm")
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      *
      * @param Request $request
      * @param $id

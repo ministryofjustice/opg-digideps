@@ -169,7 +169,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      */
     private $period;
 
-
     /**
      * @JMS\Type("array<App\Entity\Report\Contact>")
      *

@@ -2,12 +2,28 @@
 
 namespace App\Command;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class ValidationCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand
+class ValidationCommand extends Command
 {
+    /** @var ValidatorInterface */
+    private $validator;
+
+    /** @var string */
+    private $rootDir;
+
+    public function __construct(ValidatorInterface $validator, string $rootDir)
+    {
+        $this->validator = $validator;
+        $this->rootDir = $rootDir;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this
@@ -19,8 +35,7 @@ class ValidationCommand extends \Symfony\Bundle\FrameworkBundle\Command\Containe
 
     private function getClassValidationRules($entity)
     {
-        $validator = $this->getContainer()->get('validator');
-        $data = $validator->getMetadataFor($entity); /* @var $data \Symfony\Component\Validator\Mapping\ClassMetadata */
+        $data = $this->validator->getMetadataFor($entity); /* @var $data \Symfony\Component\Validator\Mapping\ClassMetadata */
 
         $ret = [];
         foreach ($data->getConstrainedProperties() as $property) {
@@ -34,7 +49,7 @@ class ValidationCommand extends \Symfony\Bundle\FrameworkBundle\Command\Containe
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $ret = [];
-        foreach (glob($this->getContainer()->get('kernel')->getRootDir() . '/src/App/Entity/*.php') as $entity) {
+        foreach (glob($this->rootDir . '/src/App/Entity/*.php') as $entity) {
             if (preg_match('/([A-Z][a-z]+)\.php$/', $entity, $matches)) {
                 $className = '\\App\\Entity\\' . $matches[1];
                 if (class_exists($className)) {

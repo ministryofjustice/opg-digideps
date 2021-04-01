@@ -48,7 +48,7 @@ class StatsController extends AbstractController
 
     /**
      * @Route("", name="admin_stats")
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("@App/Admin/Stats/stats.html.twig")
      *
      * @param Request $request
@@ -80,7 +80,7 @@ class StatsController extends AbstractController
 
     /**
      * @Route("/satisfaction", name="admin_satisfaction")
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      * @Template("@App/Admin/Stats/satisfaction.html.twig")
      * @param Request $request
      * @param ReportSatisfactionSummaryMapper $mapper
@@ -135,7 +135,7 @@ class StatsController extends AbstractController
 
     /**
      * @Route("/metrics", name="admin_metrics")
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("@App/Admin/Stats/metrics.html.twig")
      * @param Request $request
      * @return array|Response
@@ -191,7 +191,7 @@ class StatsController extends AbstractController
 
     /**
      * @Route("/downloadActiveLaysCsv", name="admin_active_lays_csv")
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
      * @return Response
      */

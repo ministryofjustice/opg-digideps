@@ -6,7 +6,7 @@ use App\Entity\Report\Document;
 use App\Service\File\Scanner\ClamFileScanner;
 use App\Service\File\Scanner\Exception\VirusFoundException;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ScannerVerifier implements VerifierInterface
 {

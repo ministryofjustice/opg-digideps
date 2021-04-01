@@ -49,7 +49,6 @@ class ProfServiceFeeType extends AbstractType
                 ])
                 ->add('amountCharged', FormTypes\NumberType::class, [
                     'scale' => 2,
-                    'placeholder' => null,
                     'grouping' => true,
                     'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
                     'invalid_message' => 'profServiceFee.amountCharged.type'
@@ -66,7 +65,6 @@ class ProfServiceFeeType extends AbstractType
                     'invalid_message' => 'profServiceFee.amountReceived.type'
                 ])
                 ->add('paymentReceivedDate', FormTypes\DateType::class, ['widget' => 'text',
-                    'placeholder' => null,
                     'input' => 'datetime',
                     'format' => 'yyyy-MM-dd',
                     'invalid_message' => 'profServiceFee.paymentReceivedDate.invalidMessage',]);

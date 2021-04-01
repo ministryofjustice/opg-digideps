@@ -10,7 +10,7 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 /**
- * @ORM\Entity(repositoryClass="App\Entity\Repository\UserResearchResponseRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\UserResearchResponseRepository")
  * @ORM\Table(name="user_research_response")
  */
 class UserResearchResponse

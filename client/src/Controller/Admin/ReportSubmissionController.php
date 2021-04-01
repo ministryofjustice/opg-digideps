@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
 /**
@@ -61,7 +61,7 @@ class ReportSubmissionController extends AbstractController
 
     /**
      * @Route("/documents/list", name="admin_documents", methods={"GET", "POST"})
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("@App/Admin/ReportSubmission/index.html.twig")
      *
      * @return array<mixed>|Response
@@ -114,7 +114,7 @@ class ReportSubmissionController extends AbstractController
 
     /**
      * @Route("/documents/list/download", name="admin_documents_download", methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      */
     public function downloadDocuments(Request $request): Response
     {
@@ -140,7 +140,7 @@ class ReportSubmissionController extends AbstractController
 
     /**
      * @Route("/documents/{submissionId}/{documentId}/download", name="admin_document_download", methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      */
     public function downloadIndividualDocument(int $submissionId, int $documentId): Response
     {
@@ -177,7 +177,7 @@ class ReportSubmissionController extends AbstractController
 
     /**
      * @Route("/documents/list/download_ready", name="admin_documents_download_ready", methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("@App/Admin/ReportSubmission/download-ready.html.twig")
      *
      * @return array<mixed>

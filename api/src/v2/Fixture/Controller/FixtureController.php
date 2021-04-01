@@ -5,13 +5,13 @@ namespace App\v2\Fixture\Controller;
 use App\DataFixtures\DocumentSyncFixtures;
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
-use App\Entity\Ndr\NdrRepository;
+use App\Repository\NdrRepository;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\NamedDeputy;
-use App\Entity\Repository\OrganisationRepository;
-use App\Entity\Repository\ReportRepository;
-use App\Entity\Repository\UserRepository;
+use App\Repository\OrganisationRepository;
+use App\Repository\ReportRepository;
+use App\Repository\UserRepository;
 use App\Entity\User;
 use App\Factory\OrganisationFactory;
 use App\FixtureFactory\CasRecFactory;
@@ -86,7 +86,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/court-order", methods={"POST"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      *
      * @param Request $request
      * @return JsonResponse
@@ -286,7 +286,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/complete-sections/{reportType}/{reportId}", requirements={"id":"\d+"}, methods={"PUT"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      *
      * @param Request $request
      * @param $id
@@ -324,7 +324,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/createAdmin", methods={"POST"})
-     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      */
     public function createAdmin(Request $request)
     {
@@ -351,7 +351,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/getUserIDByEmail/{email}", methods={"GET"})
-     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      */
     public function getUserIDByEmail(string $email)
     {
@@ -372,7 +372,7 @@ class FixtureController extends AbstractController
      * Used for creating non-prof/pa users only as Org ID is required for those types
      *
      * @Route("/createUser", methods={"POST"})
-     * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
      */
     public function createUser(Request $request)
     {
@@ -403,7 +403,7 @@ class FixtureController extends AbstractController
      * Used for deleting users to clean up after tests
      *
      * @Route("/deleteUser", methods={"POST"})
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
     public function deleteUser(Request $request)
     {
@@ -425,7 +425,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/createClientAttachDeputy", methods={"POST"})
-     * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
      */
     public function createClientAndAttachToDeputy(Request $request)
     {
@@ -463,7 +463,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/createClientAttachOrgs", methods={"POST"})
-     * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
      */
     public function createClientAndAttachToOrgs(Request $request)
     {
@@ -537,7 +537,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/createCasrec", methods={"POST"})
-     * @Security("has_role('ROLE_ADMIN', 'ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
      */
     public function createCasrec(Request $request)
     {
@@ -572,7 +572,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/move-users-clients-to-users-org/{userEmail}", name="move_users_clients_to_org", methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      * @param string $userEmail
      * @return JsonResponse
      */
@@ -607,7 +607,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/activateOrg/{orgName}", name="activate_org", methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      * @param string $orgName
      * @return JsonResponse
      */

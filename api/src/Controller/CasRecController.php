@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\CasRec;
-use App\Entity\Repository\CasRecRepository;
+use App\Repository\CasRecRepository;
 use App\Service\CasrecVerificationService;
 use App\Service\Formatter\RestFormatter;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,7 +27,7 @@ class CasRecController extends RestController
 
     /**
      * @Route("/delete-by-source/{source}", methods={"DELETE"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      *
      * @param CasRecRepository $casRecRepository
      * @param $source
@@ -67,7 +67,7 @@ class CasRecController extends RestController
 
     /**
      * @Route("/count", methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function userCount()
     {

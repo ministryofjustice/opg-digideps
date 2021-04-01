@@ -39,7 +39,7 @@ class DebtSingleType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'App\Entity\Report\Debt',
+            'data_class' => Debt::class,
             'validation_groups' => function (FormInterface $form) {
                 $data = $form->getData();
                 /* @var $data \App\Entity\Report\Debt */

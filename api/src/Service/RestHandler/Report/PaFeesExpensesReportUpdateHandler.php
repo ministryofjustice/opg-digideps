@@ -3,7 +3,7 @@
 namespace App\Service\RestHandler\Report;
 
 use App\Entity\Report\Report;
-use App\Entity\Repository\ReportRepository;
+use App\Repository\ReportRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class PaFeesExpensesReportUpdateHandler implements ReportUpdateHandlerInterface

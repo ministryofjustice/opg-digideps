@@ -14,6 +14,8 @@ class ChecklistControllerTest extends AbstractTestController
 
     public function setUp(): void
     {
+        parent::setUp();
+
         self::$deputy = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client = self::fixtures()->createClient(self::$deputy, ['setFirstname' => 'CL']);
         self::$report = self::fixtures()->createReport(self::$client);

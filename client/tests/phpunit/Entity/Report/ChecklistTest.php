@@ -7,6 +7,7 @@ use App\Entity\Report\Checklist;
 use App\Entity\Report\Report;
 use DigidepsTests\Helpers\ValidatorTestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ChecklistTest extends KernelTestCase
@@ -16,8 +17,9 @@ class ChecklistTest extends KernelTestCase
 
     public function setUp(): void
     {
-        self::bootKernel();
-        $this->validator = self::$kernel->getContainer()->get('validator.builder')->enableAnnotationMapping()->getValidator();
+        $this->validator = Validation::createValidatorBuilder()
+            ->enableAnnotationMapping()
+            ->getValidator();
     }
 
     /**

@@ -20,6 +20,7 @@ class MoneyShortType extends AbstractType
             ->add('id', FormTypes\HiddenType::class)
             ->add($this->field, FormTypes\CollectionType::class, [
                 'entry_type' => MoneyShortCategoryType::class,
+                'entry_options' => ['constraints' => new Valid()]
             ])
         ;
 

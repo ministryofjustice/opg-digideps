@@ -11,6 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Constraints;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class ManageSubmittedReportType extends AbstractType
 {
@@ -27,6 +28,7 @@ class ManageSubmittedReportType extends AbstractType
             ->addEventSubscriber(new ReportTypeChoicesSubscriber($this->translator))
             ->add('unsubmittedSection', FormTypes\CollectionType::class, [
                 'entry_type' => UnsubmittedSectionType::class,
+                'entry_options' => ['constraints' => new Valid()],
             ])
             ->add('startDate', DateType::class, [
                 'invalid_message' => 'report.startDate.invalidMessage',
