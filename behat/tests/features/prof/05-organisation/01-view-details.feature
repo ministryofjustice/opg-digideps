@@ -58,6 +58,20 @@ Feature: Users can view their organisations
     And I should see "Main org contact"
 
   @prof
+  Scenario: Super admin removes user from organisation
+    Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "DigidepsPass1234"
+    And I am on admin page "/admin/organisations"
+    And I follow "Leever Partners"
+    When I click on "delete" in the "org-main-leever-contact" region
+    Then I should see "Are you sure you want to remove this user from this organisation?"
+    And I should see "Leever Partners"
+    And I should see "Main Leever Contact"
+    And I should see "main.contact@leever.example"
+    When I press "Yes, remove user from this organisation"
+    Then the URL should match "admin/organisations/\d+"
+    And I should not see "Main Leever Contact"
+
+  @prof
   Scenario: Super admin removes organisation
     Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I am on admin page "/admin/organisations"
