@@ -2,8 +2,8 @@
 
 namespace Tests\App\Entity\Repository;
 
-use App\Entity\Repository\OrganisationRepository;
 use App\Entity\Organisation;
+use App\Repository\OrganisationRepository;
 use DateTime;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,13 +26,17 @@ class OrganisationRepositoryTest extends WebTestCase
     protected function setUp(): void
     {
         $kernel = self::bootKernel();
-        $this->em = $kernel->getContainer()->get('em');
+
+        $this->em = $kernel->getContainer()
+            ->get('doctrine')
+            ->getManager();
+
         $this->fixtures = new Fixtures($this->em);
 
         $metaClass = self::prophesize(ClassMetadata::class);
         $metaClass->name = Organisation::class;
 
-        $this->sut = new OrganisationRepository($this->em, $metaClass->reveal());
+        $this->sut = $this->em->getRepository(Organisation::class);
 
         $purger = new ORMPurger($this->em);
         $purger->purge();

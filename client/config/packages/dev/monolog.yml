@@ -1,0 +1,12 @@
+monolog:
+    handlers:
+        main:
+            type: stream
+            path: php://stderr
+            level: warning
+            formatter: line_formatter
+            channels: [ "!translation" ]
+            bubble: false
+        audit:
+            type: service
+            id: App\Service\Audit\AwsAuditLogHandler

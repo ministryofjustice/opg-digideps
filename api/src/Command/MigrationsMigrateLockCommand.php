@@ -2,10 +2,10 @@
 
 namespace App\Command;
 
-use Doctrine\Bundle\MigrationsBundle\Command\MigrationsMigrateDoctrineCommand;
 use Predis\Client;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -16,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @codeCoverageIgnore
  */
-class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
+class MigrationsMigrateLockCommand extends Command
 {
     const LOCK_KEY = 'migration_status';
     const LOCK_VALUE = 'locked';
@@ -73,7 +73,7 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
      * @param OutputInterface $output
      * @return bool true if lock if acquired, false if not (already acquired)
      */
-    private function acquireLock($output)
+    private function acquireLock(OutputInterface $output): bool
     {
         $ret = $this->getRedis()->setnx(self::LOCK_KEY, self::LOCK_VALUE) == 1;
         $this->getRedis()->expire(self::LOCK_KEY, self::LOCK_EXPIRES_SECONDS);
@@ -88,7 +88,7 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
      * @param OutputInterface $output
      * @return int
      */
-    private function releaseLock($output)
+    private function releaseLock(OutputInterface $output): int
     {
         $output->writeln('Lock released.');
 
@@ -98,7 +98,7 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
     /**
      * @return Client
      */
-    private function getRedis()
+    private function getRedis(): Client
     {
         return $this->getService('snc_redis.default');
     }
@@ -107,7 +107,7 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
      * @param string $id
      * @return mixed
      */
-    private function getService($id)
+    private function getService(string $id): mixed
     {
         /** @var Application $application */
         $application = $this->getApplication();

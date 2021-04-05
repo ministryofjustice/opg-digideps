@@ -9,7 +9,7 @@ Feature: Contacts
     When I view and start the contacts report section
     And there are no contacts to add
     Then I should be on the contacts summary page
-    And the summary page should contain the details I entered
+    And the contacts summary page should contain the details I entered
 
   Scenario: The section navigation links are correctly displayed
     Given the following court orders exist:
@@ -29,7 +29,7 @@ Feature: Contacts
     And there are contacts to add
     And I enter valid contact details
     And there are no further contacts to add
-    Then the summary page should contain the details I entered
+    Then the contacts summary page should contain the details I entered
 
   Scenario: Adding multiple contacts
     Given the following court orders exist:
@@ -41,4 +41,4 @@ Feature: Contacts
     And I enter valid contact details
     And I enter another contacts details
     And there are no further contacts to add
-    Then the summary page should contain the details I entered
+    Then the contacts summary page should contain the details I entered

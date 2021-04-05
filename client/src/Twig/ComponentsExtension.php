@@ -4,7 +4,7 @@ namespace App\Twig;
 
 use App\Entity\User;
 use App\Service\ReportSectionsLinkService;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 use Twig_Environment;

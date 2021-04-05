@@ -59,7 +59,7 @@ class ReportSubmissionController extends RestController
 
     /**
      * @Route("", methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function getAll(Request $request)
     {
@@ -82,7 +82,7 @@ class ReportSubmissionController extends RestController
 
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function getOneById(Request $request, $id)
     {
@@ -98,7 +98,7 @@ class ReportSubmissionController extends RestController
      * return array of storage references, for admin area to delete if needed
      *
      * @Route("/{reportSubmissionId}", requirements={"reportSubmissionId":"\d+"}, methods={"PUT"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function update(Request $request, $reportSubmissionId)
     {
@@ -192,7 +192,7 @@ class ReportSubmissionController extends RestController
      * Queue submission documents which have been synced yet
      *
      * @Route("/{id}/queue-documents", requirements={"id":"\d+"}, methods={"PUT"})
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
     public function queueDocuments($id)
     {
@@ -218,7 +218,7 @@ class ReportSubmissionController extends RestController
 
     /**
      * @Route("/casrec_data", name="casrec_data", methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      *
      * @param Request $request
      * @param ReportSubmissionSummaryTransformer $reportSubmissionSummaryTransformer

@@ -7,7 +7,6 @@ parameters:
     api_base_url: http://api.digideps.local/
     # START variables different for admin area, using the same codebase but running on a different container
     api_client_secret: setme
-    env:    setme
     redis_dsn: redis://setme
     # END
     non_admin_host: https://digideps.local

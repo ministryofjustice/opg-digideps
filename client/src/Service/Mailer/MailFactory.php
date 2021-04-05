@@ -11,7 +11,7 @@ use App\Model\Email;
 use App\Model\FeedbackReport;
 use App\Service\IntlService;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 
 class MailFactory
@@ -295,7 +295,7 @@ class MailFactory
           ->setToEmail($this->emailParams['update_send_to_address'])
           ->setTemplate(self::CLIENT_DETAILS_CHANGE_TEMPLATE_ID);
 
-        $countryName = $this->intlService->getCountryNameByCountryCode($client->getCountry()) ?? 'Country not provided';
+        $countryName = $this->intlService->getCountryNameByCountryCode($client->getCountry());
 
         $notifyParams = [
             'caseNumber' => $client->getCaseNumber(),
@@ -323,7 +323,7 @@ class MailFactory
             ->setTemplate(self::DEPUTY_DETAILS_CHANGE_TEMPLATE_ID);
 
         $countryName =
-            $this->intlService->getCountryNameByCountryCode($deputy->getAddressCountry()) ?? 'Country not provided';
+            $this->intlService->getCountryNameByCountryCode($deputy->getAddressCountry());
 
         $notifyParams = [
             'caseNumber' => $deputy->getFirstClient()->getCaseNumber(),

@@ -1,0 +1,26 @@
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver:   pdo_pgsql
+        host:     "%database_host%"
+        port:     "%database_port%"
+        dbname:   "%database_name%"
+        user:     "%database_user%"
+        password: "%database_password%"
+        charset:  UTF8
+        types:
+            uuid: Ramsey\Uuid\Doctrine\UuidType
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        proxy_dir:   "%kernel.cache_dir%/doctrine/orm/Proxies"
+        auto_mapping: true
+        filters:
+            softdeleteable:
+                class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
+                enabled: true
+        mappings:
+            commonEntities:
+                type: annotation
+                dir: "%kernel.root_dir%/src/Entity"
+                prefix: App\Entity
+                is_bundle: false

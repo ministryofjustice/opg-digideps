@@ -419,7 +419,7 @@ class RestClient implements RestClientInterface
      */
     private function arrayToEntity($class, array $data)
     {
-        $fullClassName = (strpos($class, 'App') !== false) ? $class : 'App\\Entity\\' . $class;
+        $fullClassName = (str_contains($class, 'App')) ? $class : 'App\\Entity\\' . $class;
 
         /** @var string */
         $data = json_encode($data);
@@ -428,11 +428,11 @@ class RestClient implements RestClientInterface
 
     /**
      * @param string $class full class name of the class to deserialise to
-     * @param array  $data  "data" returned from the RESTful server
+     * @param array $data "data" returned from the RESTful server
      *
      * @return array of type $class
      */
-    public function arrayToEntities($class, array $data)
+    public function arrayToEntities(string $class, array $data)
     {
         $expectedResponseType = substr($class, 0, -2);
         $ret = [];

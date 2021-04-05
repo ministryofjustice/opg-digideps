@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity as EntityDir;
-use App\Entity\Repository\ClientRepository;
+use App\Repository\ClientRepository;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,7 +31,7 @@ class ClientController extends RestController
      * When added, the current logged used will be added
      *
      * @Route("/upsert", methods={"POST", "PUT"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function upsertAction(Request $request)
     {
@@ -90,7 +90,7 @@ class ClientController extends RestController
 
     /**
      * @Route("/{id}", name="client_find_by_id", requirements={"id":"\d+"}, methods={"GET"})
-     * @Security("has_role('ROLE_DEPUTY') or has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")
      *
      * @param Request $request
      * @param int $id
@@ -116,7 +116,7 @@ class ClientController extends RestController
 
     /**
      * @Route("/{id}/details", name="client_details", requirements={"id":"\d+"}, methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      *
      * @param Request $request
      * @param int $id
@@ -152,7 +152,7 @@ class ClientController extends RestController
 
     /**
      * @Route("/{id}/archive", name="client_archive", requirements={"id":"\d+"}, methods={"PUT"})
-     * @Security("has_role('ROLE_ORG')")
+     * @Security("is_granted('ROLE_ORG')")
      *
      * @param int $id
      */
@@ -175,7 +175,7 @@ class ClientController extends RestController
 
     /**
      * @Route("/get-all", defaults={"order_by" = "lastname", "sort_order" = "ASC"}, methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function getAllAction(Request $request)
     {
@@ -192,7 +192,7 @@ class ClientController extends RestController
 
     /**
      * @Route("/{id}/delete", name="client_delete", requirements={"id":"\d+"}, methods={"DELETE"})
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
     public function deleteAction(Request $request, $id)
     {

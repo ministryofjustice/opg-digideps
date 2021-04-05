@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Entity\Repository\UserRepository;
+use App\Repository\UserRepository;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;

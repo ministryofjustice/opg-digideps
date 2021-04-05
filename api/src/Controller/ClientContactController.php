@@ -26,7 +26,7 @@ class ClientContactController extends RestController
 
     /**
      * @Route("/clients/{clientId}/clientcontacts", name="clientcontact_add", methods={"POST"})
-     * @Security("has_role('ROLE_ORG')")
+     * @Security("is_granted('ROLE_ORG')")
      */
     public function add(Request $request, $clientId)
     {
@@ -63,7 +63,7 @@ class ClientContactController extends RestController
      * Only the creator can update the note
      *
      * @Route("/clientcontacts/{id}", methods={"PUT"})
-     * @Security("has_role('ROLE_ORG')")
+     * @Security("is_granted('ROLE_ORG')")
      */
     public function update(Request $request, $id)
     {
@@ -90,7 +90,7 @@ class ClientContactController extends RestController
 
     /**
      * @Route("/clientcontacts/{id}", methods={"GET"})
-     * @Security("has_role('ROLE_ORG')")
+     * @Security("is_granted('ROLE_ORG')")
      */
     public function getOneById(Request $request, $id)
     {
@@ -110,7 +110,7 @@ class ClientContactController extends RestController
      * Only the creator can delete the note
      *
      * @Route("/clientcontacts/{id}", methods={"DELETE"})
-     * @Security("has_role('ROLE_ORG')")
+     * @Security("is_granted('ROLE_ORG')")
      */
     public function delete($id, LoggerInterface $logger)
     {

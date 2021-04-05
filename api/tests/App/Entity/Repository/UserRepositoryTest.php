@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\App\Entity\Repository;
+namespace Tests\App\Repository;
 
-use App\Entity\Repository\UserRepository;
+use App\Repository\UserRepository;
 use App\Entity\User;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
@@ -10,7 +10,6 @@ use App\TestHelpers\UserTestHelper;
 use DateTime;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Tests\Fixtures;
 
@@ -29,13 +28,10 @@ class UserRepositoryTest extends WebTestCase
     protected function setUp(): void
     {
         $kernel = self::bootKernel();
-        $this->em = $kernel->getContainer()->get('em');
+        $this->em = $kernel->getContainer()->get('doctrine')->getManager();
         $this->fixtures = new Fixtures($this->em);
 
-        $metaClass = self::prophesize(ClassMetadata::class);
-        $metaClass->name = User::class;
-
-        $this->sut = new UserRepository($this->em, $metaClass->reveal());
+        $this->sut = $this->em->getRepository(User::class);
 
         $purger = new ORMPurger($this->em);
         $purger->purge();

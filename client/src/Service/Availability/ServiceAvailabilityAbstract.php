@@ -60,4 +60,6 @@ abstract class ServiceAvailabilityAbstract
      * @return string
      */
     abstract public function getName();
+
+    abstract public function ping();
 }

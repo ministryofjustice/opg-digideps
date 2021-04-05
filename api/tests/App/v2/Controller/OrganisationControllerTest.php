@@ -42,9 +42,11 @@ class OrganisationControllerTest extends AbstractTestController
     /**
      * {@inheritDoc}
      */
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
+        self::$fixtures::deleteReportsData(['organisation']);
+
         self::$orgs = self::fixtures()->createOrganisations(4);
 
         self::fixtures()->flush()->clear();
@@ -53,15 +55,9 @@ class OrganisationControllerTest extends AbstractTestController
         self::fixtures()->addUserToOrganisation(self::$profUser->getId(), end(self::$orgs)->getId());
         self::fixtures()->flush()->clear();
 
-        self::$em = self::$frameworkBundleClient->getContainer()->get('em');
+        self::$em = self::fixtures()->getEntityManager();
         self::$em->getFilters()->disable('softdeleteable');
-    }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function setUp(): void
-    {
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
         }
@@ -219,6 +215,15 @@ class OrganisationControllerTest extends AbstractTestController
             '{"name": "Org Name", "email_identifier": "email_id", "is_activated": true}'
         );
 
+        self::$frameworkBundleClient->request(
+            'POST',
+            '/v2/organisation',
+            [],
+            [],
+            $this->headers,
+            '{"name": "Org Name", "email_identifier": "email_id", "is_activated": true}'
+        );
+
         $response = self::$frameworkBundleClient->getResponse();
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
@@ -290,7 +295,17 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function updateActionReturnsBadRequestIfGivenExistingEmailIdentifier()
     {
+        self::$frameworkBundleClient->request(
+            'POST',
+            '/v2/organisation',
+            [],
+            [],
+            $this->headers,
+            '{"name": "Org Name", "email_identifier": "org_email_3", "is_activated": true}'
+        );
+
         $orgId = self::$orgs[1]->getId();
+
         self::$frameworkBundleClient->request(
             'PUT',
             '/v2/organisation/' . $orgId,

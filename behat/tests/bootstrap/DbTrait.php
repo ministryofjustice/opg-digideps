@@ -31,7 +31,8 @@ trait DbTrait
             $error = "File $sqlFile not found. Re-run the full behat suite to recreate the missing snapshots.";
             throw new \RuntimeException($error);
         }
-        exec('psql ' . self::$dbName . " --quiet < {$sqlFile}");
+
+        exec(sprintf('psql %s --quiet < %s', self::$dbName, $sqlFile));
     }
 
     /**
@@ -52,9 +53,9 @@ trait DbTrait
     public function deleteBehatSnapshots()
     {
         foreach (glob('/tmp/sql/behat-snapshot-*.sql') as $file) { // iterate files
-          if (is_file($file)) {
-              unlink($file);
-          }
+            if (is_file($file)) {
+                unlink($file);
+            }
         }
     }
 

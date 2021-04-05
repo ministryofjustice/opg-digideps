@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Tests\App\Entity\Repository;
+namespace Tests\App\Repository;
 
 use App\Tests\ApiWebTestCase;
 use App\Entity\Client;
@@ -9,7 +9,7 @@ use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\ReportInterface;
-use App\Entity\Repository\DocumentRepository;
+use App\Repository\DocumentRepository;
 use App\Entity\User;
 use DateInterval;
 use DateTime;

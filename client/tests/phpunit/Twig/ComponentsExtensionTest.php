@@ -10,7 +10,7 @@ class ComponentsExtensionTest extends TestCase
 {
     public function setUp(): void
     {
-        $this->translator = m::mock('Symfony\Component\Translation\TranslatorInterface');
+        $this->translator = m::mock('Symfony\Contracts\Translation\TranslatorInterface');
         $this->reportSectionsLinkService = m::mock('App\Service\ReportSectionsLinkService');
         $this->object = new \App\Twig\ComponentsExtension($this->translator, $this->reportSectionsLinkService);
     }

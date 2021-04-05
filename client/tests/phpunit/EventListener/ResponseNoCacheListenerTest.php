@@ -24,7 +24,7 @@ class ResponseNoCacheListenerTest extends TestCase
         $response = m::mock('Symfony\Component\HttpFoundation\Response');
         $response->headers = $headers;
 
-        $event = m::mock('Symfony\Component\HttpKernel\Event\FilterResponseEvent');
+        $event = m::mock('Symfony\Component\HttpKernel\Event\ResponseEvent');
         $event->shouldReceive('getResponse')->andReturn($response);
 
         $object = new ResponseNoCacheListener();

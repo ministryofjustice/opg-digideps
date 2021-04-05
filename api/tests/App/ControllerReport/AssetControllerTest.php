@@ -19,9 +19,9 @@ class AssetControllerTest extends AbstractTestController
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
 
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         //deputy1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
@@ -37,6 +37,11 @@ class AssetControllerTest extends AbstractTestController
         self::$asset2 = self::fixtures()->createAsset('other', self::$report2, ['setTitle' => 'asset2']);
 
         self::fixtures()->flush()->clear();
+
+        if (null === self::$tokenAdmin) {
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenDeputy = $this->loginAsDeputy();
+        }
     }
 
     /**
@@ -49,13 +54,6 @@ class AssetControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    public function setUp(): void
-    {
-        if (null === self::$tokenAdmin) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
-    }
 
     public function testgetAssets()
     {

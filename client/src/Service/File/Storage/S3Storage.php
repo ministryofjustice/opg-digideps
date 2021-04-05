@@ -47,7 +47,7 @@ class S3Storage implements StorageInterface
      * @param $bucketName S3 bucket name
      * @param LoggerInterface $logger
      */
-    public function __construct(S3ClientInterface $s3Client, $bucketName, LoggerInterface $logger)
+    public function __construct(S3ClientInterface $s3Client, string $bucketName, LoggerInterface $logger)
     {
         $this->s3Client = $s3Client;
         $this->bucketName = $bucketName;

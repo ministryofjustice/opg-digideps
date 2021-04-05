@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * Users.
  *
  * @ORM\Table(name="dd_user", indexes={@ORM\Index(name="deputy_no_idx", columns={"deputy_no"})})
- * @ORM\Entity(repositoryClass="App\Entity\Repository\UserRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
 class User implements UserInterface
 {
@@ -81,7 +81,7 @@ class User implements UserInterface
 
     /**
      * @JMS\Groups({"user-clients"})
-     * @JMS\Type("array")
+     * @JMS\Type("ArrayCollection<App\Entity\Client>")
      * @ORM\ManyToMany(targetEntity="App\Entity\Client", mappedBy="users", cascade={"persist"}, fetch="EXTRA_LAZY")
      */
     private $clients;

@@ -16,6 +16,7 @@ class ProfDeputyCostInterimType extends AbstractType
         $builder
             ->add('profDeputyInterimCosts', FormTypes\CollectionType::class, [
                 'entry_type' => ProfDeputyCostInterimSingleType::class,
+                'entry_options' => ['constraints' => new Valid()],
                 'constraints' => new Valid(),
             ])
             ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label'])

@@ -271,7 +271,7 @@ class Checklist implements SynchronisableInterface
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("array<App\Entity\Report\ChecklistInformation>")
+     * @JMS\Type("ArrayCollection<App\Entity\Report\ChecklistInformation>")
      * @JMS\Groups({"checklist-information"})
      * @ORM\OneToMany(targetEntity="App\Entity\Report\ChecklistInformation", mappedBy="checklist", cascade={"persist", "remove"})
      * @ORM\OrderBy({"createdOn"="DESC"})
