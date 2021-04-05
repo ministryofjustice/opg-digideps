@@ -12,6 +12,7 @@ class UserVoter extends Voter
     const DELETE_USER = 'delete-user';
     const EDIT_USER = 'edit-user';
     const ADD_USER = 'add-user';
+    const CAN_ADD_USER = 'can-add-user';
 
     /**
      * Does this voter support the attribute?
@@ -22,13 +23,10 @@ class UserVoter extends Voter
      */
     protected function supports($attribute, $subject)
     {
-        if (!$subject instanceof User) {
-            return false;
-        }
-
         switch ($attribute) {
             case self::DELETE_USER:
             case self::EDIT_USER:
+            case self::CAN_ADD_USER:
             case self::ADD_USER:
                 return true;
         }
@@ -47,12 +45,15 @@ class UserVoter extends Voter
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
         $loggedInUser= $token->getUser();
+
         if (!$loggedInUser instanceof User) {
             // the loggedUSer must be logged in; if not, deny access
             return false;
         }
 
         switch ($attribute) {
+            case self::CAN_ADD_USER:
+                return $this->determineCanAddPermission($loggedInUser);
             case self::ADD_USER:
             case self::EDIT_USER:
                 return $this->determineAddEditPermission($loggedInUser, $subject);
@@ -74,7 +75,7 @@ class UserVoter extends Voter
      */
     private function determineDeletePermission(User $deletor, User $deletee)
     {
-        if ($deletor->getId() === $deletee->getId()) {
+        if (!$deletee instanceof User || $deletor->getId() === $deletee->getId()) {
             return false;
         }
 
@@ -124,36 +125,40 @@ class UserVoter extends Voter
     }
 
     /**
-     * Determine whether logged in user can edit a subject user.
+     * Determine whether logged in user can add or edit a subject user.
      *
      * Ensure any changes are mirrored in API/Client version of this class.
      *
-     * @param User $deletor
-     * @param User $deletee
+     * @param User $actor
+     * @param User|null $subject
      * @return bool
      */
-    private function determineAddEditPermission(User $editor, User $editee)
+    private function determineAddEditPermission(User $actor, ?User $subject)
     {
-        if ($editor->getId() === $editee->getId()) {
+        if (!$subject instanceof User) {
+            return false;
+        }
+
+        if ($actor->getId() === $subject->getId()) {
             return true;
         }
 
-        switch ($editor->getRoleName()) {
+        switch ($actor->getRoleName()) {
             case User::ROLE_SUPER_ADMIN:
                 return true;
             case User::ROLE_ADMIN:
             case User::ROLE_AD:
             case User::ROLE_ELEVATED_ADMIN:
-                if ($editee->isSuperAdmin() || $editee->isElevatedAdmin()) {
+                if ($subject->isSuperAdmin() || $subject->isElevatedAdmin()) {
                     return false;
                 }
                 return true;
             case User::ROLE_PA:
             case User::ROLE_PA_NAMED:
                 if (
-                    $editee->hasAdminRole() ||
-                    $editee->isLayDeputy() ||
-                    $editee->isDeputyProf()
+                    $subject->hasAdminRole() ||
+                    $subject->isLayDeputy() ||
+                    $subject->isDeputyProf()
                 ) {
                     return false;
                 }
@@ -161,34 +166,53 @@ class UserVoter extends Voter
             case User::ROLE_PROF:
             case User::ROLE_PROF_NAMED:
                 if (
-                    $editee->hasAdminRole() ||
-                    $editee->isLayDeputy() ||
-                    $editee->isDeputyPa()
+                    $subject->hasAdminRole() ||
+                    $subject->isLayDeputy() ||
+                    $subject->isDeputyPa()
                 ) {
                     return false;
                 }
                 return true;
             case User::ROLE_PA_ADMIN:
                 if (
-                    $editee->hasAdminRole() ||
-                    $editee->isLayDeputy() ||
-                    $editee->isPaNamedDeputy() ||
-                    $editee->isPaTopRole() ||
-                    $editee->isDeputyProf()
+                    $subject->hasAdminRole() ||
+                    $subject->isLayDeputy() ||
+                    $subject->isPaNamedDeputy() ||
+                    $subject->isPaTopRole() ||
+                    $subject->isDeputyProf()
                 ) {
                     return false;
                 }
                 return true;
             case User::ROLE_PROF_ADMIN:
                 if (
-                    $editee->hasAdminRole() ||
-                    $editee->isLayDeputy() ||
-                    $editee->isProfNamedDeputy() ||
-                    $editee->isProfTopRole() ||
-                    $editee->isDeputyPa()
+                    $subject->hasAdminRole() ||
+                    $subject->isLayDeputy() ||
+                    $subject->isProfNamedDeputy() ||
+                    $subject->isProfTopRole() ||
+                    $subject->isDeputyPa()
                 ) {
                     return false;
                 }
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private function determineCanAddPermission(User $actor)
+    {
+        switch ($actor->getRoleName()) {
+            case User::ROLE_SUPER_ADMIN:
+            case User::ROLE_ADMIN:
+            case User::ROLE_AD:
+            case User::ROLE_ELEVATED_ADMIN:
+            case User::ROLE_PA:
+            case User::ROLE_PA_NAMED:
+            case User::ROLE_PROF:
+            case User::ROLE_PROF_NAMED:
+            case User::ROLE_PA_ADMIN:
+            case User::ROLE_PROF_ADMIN:
                 return true;
             default:
                 return false;

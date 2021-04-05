@@ -221,7 +221,7 @@ class UserVoterTest extends TestCase
     }
 
     /**
-     * @dataProvider addEditAddUserProvider
+     * @dataProvider addEditUserProvider
      * @test
      */
     public function determineAddEditPermission(User $actor, User $subject, int $expectedPermission)
@@ -235,7 +235,7 @@ class UserVoterTest extends TestCase
         self::assertEquals($expectedPermission, $sut->vote($token, $subject, [UserVoter::ADD_USER]));
     }
 
-    public function addEditAddUserProvider()
+    public function addEditUserProvider()
     {
         $admin = UserHelpers::createAdminUser();
         $admin2 = UserHelpers::createAdminUser();
@@ -433,6 +433,54 @@ class UserVoterTest extends TestCase
             'Prof Team Member adds/edits Super Admin user' => [$profTeamMember, $superAdmin, -1],
             'Prof Team Member adds/edits Elevated Admin user' => [$profTeamMember, $elevatedAdmin, -1],
             'Prof Team Member adds/edits self' => [$profTeamMember, $profTeamMember, 1],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider canAddUserProvider
+     */
+    public function determineCanAddPermission(User $actor, int $expectedPermission)
+    {
+        /** @var UserVoter $sut */
+        $sut = new UserVoter();
+
+        $token = new UsernamePasswordToken($actor, 'credentials', 'memory');
+
+        self::assertEquals($expectedPermission, $sut->vote($token, null, [UserVoter::CAN_ADD_USER]));
+    }
+
+    public function canAddUserProvider()
+    {
+        $admin = UserHelpers::createAdminUser();
+        $superAdmin = UserHelpers::createSuperAdminUser();
+        $elevatedAdmin = UserHelpers::createElevatedAdminUser();
+
+        $lay = UserHelpers::createLayUser();
+
+        $pa = UserHelpers::createPaDeputyUser();
+        $paNamed = UserHelpers::createPaNamedDeputyUser();
+        $paAdmin = UserHelpers::createPaAdminUser();
+        $paTeamMember = UserHelpers::createPaTeamMemberUser();
+
+        $prof = UserHelpers::createProfDeputyUser();
+        $profNamed = UserHelpers::createProfNamedDeputyUser();
+        $profAdmin = UserHelpers::createProfAdminUser();
+        $profTeamMember = UserHelpers::createProfTeamMemberUser();
+
+        return [
+            'Super Admin checks if they can add a user' => [$superAdmin, 1],
+            'Elevated Admin checks if they can add a user' => [$elevatedAdmin, 1],
+            'Admin checks if they can add a user' => [$admin, 1],
+            'Lay checks if they can add a user' => [$lay, -1],
+            'PA Deputy checks if they can add a user' => [$pa, 1],
+            'PA Named Deputy checks if they can add a user' => [$paNamed, 1],
+            'PA Admin checks if they can add a user' => [$paAdmin, 1],
+            'PA Team Member checks if they can add a user' => [$paTeamMember, -1],
+            'Prof Deputy checks if they can add a user' => [$prof, 1],
+            'Prof Named Deputy checks if they can add a user' => [$profNamed, 1],
+            'Prof Admin checks if they can add a user' => [$profAdmin, 1],
+            'Prof Team Member checks if they can add a user' => [$profTeamMember, -1],
         ];
     }
 }

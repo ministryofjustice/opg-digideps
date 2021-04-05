@@ -28,7 +28,7 @@
                 <div class="govuk-grid-column-one-half">
                     {{ 'viewPage.tableHeading' | trans }}
                 </div>
-                {% if is_granted('add-user') %}
+                {% if is_granted('can-add-user') %}
                 <div class="govuk-grid-column-one-half text--right">
                     <a href="{{ path('org_organisation_add_member', { id: organisation.id }) }}" class="behat-link-add">
                         <strong>
