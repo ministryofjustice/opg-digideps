@@ -11,7 +11,7 @@ trait IShouldBeOnTrait
         $onExpectedPage = preg_match($urlRegex, $currentUrl);
 
         if (!$onExpectedPage) {
-            $this->throwContextualException(sprintf('Not on expected page. Current URL is: %s', $currentUrl));
+            $this->throwContextualException(sprintf('Not on expected page. Current URL is: %s but expected URL regex is %s', $currentUrl, $urlRegex));
         }
 
         return true;
@@ -118,6 +118,6 @@ trait IShouldBeOnTrait
      */
     public function iAmOnDocumentsSummaryPage()
     {
-        return $this->iAmOnPage('/report\/.*\/documents\/summary$/');
+        return $this->iAmOnPage('/report\/.*\/documents\/summary/');
     }
 }

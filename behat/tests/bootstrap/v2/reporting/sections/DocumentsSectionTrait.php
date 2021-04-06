@@ -9,6 +9,12 @@ use Faker\Factory;
 
 trait DocumentsSectionTrait
 {
+    private string $validJpegFilename = 'good.jpg';
+    private string $validPngFilename = 'good.png';
+    private string $validPdfFilename = 'good.pdf';
+
+    private array $uploadedDocumentFilenames = [];
+
     /**
      * @Given I view the documents report section
      */
@@ -48,6 +54,16 @@ trait DocumentsSectionTrait
     }
 
     /**
+     * @Given I have documents to upload
+     */
+    public function iHaveDocumentsToUpload()
+    {
+        $this->fillField('document_wishToProvideDocumentation_0', 'yes');
+
+        $this->pressButton('Save and continue');
+    }
+
+    /**
      * @Then the documents summary page should not contain any documents
      */
     public function theDocumentsSummaryPageShouldNotContainDocuments()
@@ -61,35 +77,52 @@ trait DocumentsSectionTrait
 
     /**
      * @Then the documents summary page should contain the documents I uploaded
+     * @Then the documents uploads page should contain the documents I uploaded
      */
     public function theDocumentsSummaryPageShouldContainDocumentsIUploaded()
     {
+        if (empty($this->uploadedDocumentFilenames)) {
+            $this->throwContextualException(
+                '$this->uploadedDocumentFilenames is empty. This suggests no documents were uploaded.'
+            );
+        }
+
         $descriptionLists = $this->getSession()->getPage()->findAll('css', 'dl');
 
         if (count($descriptionLists) === 0) {
             $this->throwContextualException('A dl element was not found on the page - make sure the current url is as expected');
         }
 
+        $this->findFileNamesInDls($descriptionLists);
+    }
+
+    private function findFileNamesInDls(array $descriptionLists)
+    {
         $missingText = [];
+        $foundAllFiles = true;
 
         foreach ($descriptionLists as $descriptionList) {
             $html = $descriptionList->getHtml();
-            $found = false;
+            $foundFile = false;
 
-            foreach ($this->formValuesEntered as $documentFormValues) {
-                $textVisible = str_contains($html, $documentFormValues);
+            foreach ($this->uploadedDocumentFilenames as $uploadedDocumentFilename) {
+                $textVisible = str_contains($html, $uploadedDocumentFilename);
 
                 if (!$textVisible) {
-                    $missingText[] = $documentFormValues;
+                    $missingText[] = $uploadedDocumentFilename;
+                    $foundAllFiles = false;
+                } else {
+                    $foundFile = true;
                 }
             }
 
-            if ($found) {
+
+            if ($foundFile) {
                 $missingText = [];
             }
         }
 
-        if (!empty($missingText)) {
+        if (!$foundAllFiles && !empty($missingText)) {
             $this->throwContextualException(
                 sprintf(
                     'A dl was found but the row with the expected text was not found. Missing text: %s. HTML found: %s',
@@ -98,5 +131,31 @@ trait DocumentsSectionTrait
                 )
             );
         }
+    }
+
+    /**
+     * @When I upload one valid document
+     */
+    public function iUploadOneValidDocument()
+    {
+        $this->uploadFiles([$this->validJpegFilename]);
+    }
+
+    private function uploadFiles(array $filenames)
+    {
+        $this->uploadedDocumentFilenames = $filenames;
+
+        foreach ($filenames as $filename) {
+            $this->attachFileToField('report_document_upload_files', $filename);
+            $this->pressButton('Upload');
+        }
+    }
+
+    /**
+     * @When I have no further documents to upload
+     */
+    public function whenIHaveNoFurtherDocumentsToUpload()
+    {
+        $this->clickLink('Continue');
     }
 }
