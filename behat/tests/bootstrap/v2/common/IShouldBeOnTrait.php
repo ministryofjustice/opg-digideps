@@ -112,4 +112,12 @@ trait IShouldBeOnTrait
     {
         return $this->iAmOnPage('/report\/.*\/overview$/');
     }
+
+    /**
+     * @Then I should be on the documents summary page
+     */
+    public function iAmOnDocumentsSummaryPage()
+    {
+        return $this->iAmOnPage('/report\/.*\/documents\/summary$/');
+    }
 }
