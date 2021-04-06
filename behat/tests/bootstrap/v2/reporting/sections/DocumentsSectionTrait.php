@@ -99,30 +99,28 @@ trait DocumentsSectionTrait
     private function findFileNamesInDls(array $descriptionLists)
     {
         $missingText = [];
-        $foundAllFiles = true;
 
-        foreach ($descriptionLists as $descriptionList) {
-            $html = $descriptionList->getHtml();
+        foreach ($this->uploadedDocumentFilenames as $uploadedDocumentFilename) {
             $foundFile = false;
 
-            foreach ($this->uploadedDocumentFilenames as $uploadedDocumentFilename) {
+            foreach ($descriptionLists as $descriptionList) {
+                $html = $descriptionList->getHtml();
                 $textVisible = str_contains($html, $uploadedDocumentFilename);
 
                 if (!$textVisible) {
                     $missingText[] = $uploadedDocumentFilename;
-                    $foundAllFiles = false;
                 } else {
                     $foundFile = true;
+                    break;
                 }
             }
-
 
             if ($foundFile) {
                 $missingText = [];
             }
         }
 
-        if (!$foundAllFiles && !empty($missingText)) {
+        if (!empty($missingText)) {
             $this->throwContextualException(
                 sprintf(
                     'A dl was found but the row with the expected text was not found. Missing text: %s. HTML found: %s',
@@ -139,6 +137,14 @@ trait DocumentsSectionTrait
     public function iUploadOneValidDocument()
     {
         $this->uploadFiles([$this->validJpegFilename]);
+    }
+
+    /**
+     * @When I upload multiple valid documents
+     */
+    public function iUploadMultipleValidDocuments()
+    {
+        $this->uploadFiles([$this->validJpegFilename, $this->validPdfFilename, $this->validPngFilename]);
     }
 
     private function uploadFiles(array $filenames)
