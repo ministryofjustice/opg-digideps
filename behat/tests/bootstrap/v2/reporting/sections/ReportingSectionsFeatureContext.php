@@ -64,7 +64,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     public function iNavigateBackToReportSection()
     {
         $this->clickLink('Deputy report overview');
-        $this->iAmOnReportsOverviewPage($this->getCurrentUrl());
+        assert($this->iAmOnReportsOverviewPage());
     }
 
     /**
@@ -76,7 +76,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     }
 
     /**
-     * @When I go to the url for the report overview page
+     * @When I view the report overview page
      */
     public function iGoToReportOverviewUrl()
     {

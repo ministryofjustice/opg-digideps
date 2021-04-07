@@ -156,6 +156,101 @@ trait GiftsSectionTrait
     }
 
     /**
+     * @When I have not given any gifts
+     */
+    public function iHaveNotGivenAnyGifts()
+    {
+        assert($this->iAmOnGiftsExistPage());
+        $this->iChooseNoOnGiftsExistSection();
+
+        assert($this->iAmOnGiftsSummaryPage());
+    }
+
+    /**
+     * @When I have given multiple gifts
+     */
+    public function iHaveGivenMultipleGifts()
+    {
+        assert($this->iAmOnGiftsExistPage());
+        $this->iChooseYesOnGiftsExistSection();
+
+        // Fill in details for first gift
+        assert($this->iAmOnGiftsAddPage());
+        $this->iFillGiftDescriptionAndAmount();
+        $this->iChooseToSaveAndAddAnother();
+
+        // Fill in details for second gift
+        assert($this->iAmOnGiftsAddPage());
+        $this->iFillGiftDescriptionAndAmount();
+        $this->iChooseToSaveAndContinue();
+
+        assert($this->iAmOnGiftsSummaryPage());
+    }
+
+    /**
+     * @When I change my mind and declare a gift
+     */
+    public function iChangeMyMindAndDeclareGift()
+    {
+        $this->iViewGiftsSection();
+        assert($this->iAmOnGiftsSummaryPage());
+
+        $this->iFollowEditExistsLink();
+        assert($this->iAmOnGiftsExistPage());
+
+        $this->iChooseYesOnGiftsExistSection();
+        assert($this->iAmOnGiftsAddPage());
+
+        $this->iFillGiftDescriptionAndAmount();
+        $this->iChooseToSaveAndContinue();
+        assert($this->iAmOnGiftsSummaryPage());
+    }
+
+    /**
+     * @When I edit an existing gift
+     */
+    public function iEditAnExistingGift()
+    {
+        // add a gift
+        $this->iViewGiftsSection();
+        $this->iFollowEditExistsLink();
+        $this->iChooseYesOnGiftsExistSection();
+        $this->iFillGiftDescriptionAndAmount();
+        $this->iChooseToSaveAndContinue();
+
+        // edit the gift
+        $this->iGoToReportOverviewUrl();
+        $this->iFollowEditLinkForGifts();
+        assert($this->iAmOnGiftsSummaryPage());
+        $this->iFollowEditLinkOnFirstGift();
+        assert($this->iAmOnGiftsEditPage());
+        $this->iEditGiftDescriptionAndAmount();
+        $this->iChooseToSaveAndContinue();
+    }
+
+    /**
+     * @When I remove the second gift
+     */
+    public function iRemoveTheSecondGift()
+    {
+        $this->iFollowRemoveAGiftLinkOnSecondGift();
+        assert($this->iAmOnGiftsDeletionPage());
+        $this->iChooseToRemoveGift();
+        assert($this->iAmOnGiftsSummaryPage());
+    }
+
+    /**
+     * @When I remove the first gift
+     */
+    public function iRemoveTheFirstGift()
+    {
+        $this->iFollowRemoveAGiftLinkOnFirstGift();
+        assert($this->iAmOnGiftsDeletionPage());
+        $this->iChooseToRemoveGift();
+        assert($this->iAmOnGiftsStartPage());
+    }
+
+    /**
      * @Then I should see the expected gifts report section responses
      */
     public function iSeeExpectedGiftsSectionResponses()

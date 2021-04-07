@@ -4,6 +4,7 @@ namespace DigidepsBehat\v2\Common;
 
 trait ElementSelectionTrait
 {
+    // Click on a specified occurrence of an href based on a regex you specify
     public function iClickOnNthElementBasedOnRegex(string $regex, int $elementIndex)
     {
         $linksArray = [];
@@ -33,6 +34,7 @@ trait ElementSelectionTrait
         $element->click();
     }
 
+    // Click on a link (a or button css ref for example) based on the value of it's id.
     public function iClickBasedOnElementId(string $elementType, string $attributeValue)
     {
         $xpath = sprintf("//%s[@id='%s']", $elementType, $attributeValue);
@@ -49,6 +51,7 @@ trait ElementSelectionTrait
         $element->click();
     }
 
+    // Returns True if a particular element exists on a page based on parameters we pass in
     public function elementExistsOnPage(string $elementType, string $attributeType, string $attributeValue)
     {
         $xpath = sprintf("//%s[@%s='%s']", $elementType, $attributeType, $attributeValue);
@@ -65,6 +68,7 @@ trait ElementSelectionTrait
         return true;
     }
 
+    // Find a particular radio dialogue on a page and select the Nth option from it based on parameters we pass
     public function iSelectBasedOnChoiceNumber(string $elementType, string $attributeType, string $attributeValue, int $choiceNumber)
     {
         $xpath = sprintf("//%s[@%s='%s']", $elementType, $attributeType, $attributeValue);

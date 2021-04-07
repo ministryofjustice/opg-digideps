@@ -29,7 +29,7 @@ Feature: Actions
 
   Scenario: A user partially completes the section and then edits their responses
     Given a Lay Deputy has a new report
-    And I go to the url for the report overview page
+    And I view the report overview page
     Then I should see "actions" as "not started"
     When I view and start the actions report section
     Then I choose no and save on financial decision actions section
