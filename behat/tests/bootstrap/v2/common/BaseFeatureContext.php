@@ -18,6 +18,8 @@ class BaseFeatureContext extends MinkContext
     use ReportTrait;
     use IShouldBeOnTrait;
     use PageUrlsTrait;
+    use ErrorsTrait;
+    use AlertsTrait;
 
     const BEHAT_FRONT_RESET_FIXTURES = '/behat/frontend/reset-fixtures?testRunId=%s';
     const BEHAT_FRONT_USER_DETAILS = '/behat/frontend/user/%s/details';
@@ -26,8 +28,12 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $superAdminDetails;
 
     public UserDetails $layDeputyNotStartedDetails;
-    public UserDetails $layDeputyCompletedNotSubmittedDetails;
+    public UserDetails $layDeputyCompletedDetails;
     public UserDetails $layDeputySubmittedDetails;
+
+    public UserDetails $profAdminDeputyNotStartedDetails;
+    public UserDetails $profAdminDeputyCompletedDetails;
+    public UserDetails $profAdminDeputySubmittedDetails;
 
     public UserDetails $loggedInUserDetails;
 
@@ -55,12 +61,14 @@ class BaseFeatureContext extends MinkContext
             throw new Exception($responseData['response']);
         }
 
-
         $this->fixtureUsers[] = $this->adminDetails = new UserDetails($responseData['data']['admin-users']['admin']);
         $this->fixtureUsers[] = $this->superAdminDetails = new UserDetails($responseData['data']['admin-users']['super-admin']);
         $this->fixtureUsers[] = $this->layDeputyNotStartedDetails = new UserDetails($responseData['data']['lays']['not-started']);
-        $this->fixtureUsers[] = $this->layDeputyCompletedNotSubmittedDetails = new UserDetails($responseData['data']['lays']['completed-not-submitted']);
+        $this->fixtureUsers[] = $this->layDeputyCompletedDetails = new UserDetails($responseData['data']['lays']['completed']);
         $this->fixtureUsers[] = $this->layDeputySubmittedDetails = new UserDetails($responseData['data']['lays']['submitted']);
+        $this->fixtureUsers[] = $this->profAdminDeputyNotStartedDetails = new UserDetails($responseData['data']['professionals']['admin']['not-started']);
+        $this->fixtureUsers[] = $this->profAdminDeputyCompletedDetails = new UserDetails($responseData['data']['professionals']['admin']['completed']);
+        $this->fixtureUsers[] = $this->profAdminDeputySubmittedDetails = new UserDetails($responseData['data']['professionals']['admin']['submitted']);
     }
 
     /**

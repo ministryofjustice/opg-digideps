@@ -12,8 +12,8 @@ trait ReportTrait
      */
     public function iSubmitTheReport()
     {
-        $ndrOrReport = $this->layDeputyCompletedNotSubmittedDetails->getCurrentReportNdrOrReport();
-        $reportId = $this->layDeputyCompletedNotSubmittedDetails->getCurrentReportId();
+        $ndrOrReport = $this->layDeputyCompletedDetails->getCurrentReportNdrOrReport();
+        $reportId = $this->layDeputyCompletedDetails->getCurrentReportId();
 
         $this->visit("$ndrOrReport/$reportId/overview");
 
@@ -50,11 +50,11 @@ trait ReportTrait
      */
     public function aLayDeputyCompletesAndSubmitsAReport()
     {
-        if (empty($this->layDeputyCompletedNotSubmittedDetails)) {
+        if (empty($this->layDeputyCompletedDetails)) {
             throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedNotSubmittedDetails');
         }
 
-        $this->loginToFrontendAs($this->layDeputyCompletedNotSubmittedDetails->getEmail());
+        $this->loginToFrontendAs($this->layDeputyCompletedDetails->getEmail());
         $this->iSubmitTheReport();
     }
 
@@ -75,6 +75,22 @@ trait ReportTrait
      */
     public function aLayDeputyHasSubmittedAReport()
     {
+        if (empty($this->layDeputySubmittedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputySubmittedDetails');
+        }
+
         $this->loginToFrontendAs($this->layDeputySubmittedDetails->getEmail());
+    }
+
+    /**
+     * @Given a Professional Admin Deputy has not started a report
+     */
+    public function aProfessionalAdminDeputyHasNotStartedAReport()
+    {
+        if (empty($this->profAdminDeputyNotStartedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $profAdminDeputyNotStartedDetails');
+        }
+
+        $this->loginToFrontendAs($this->profAdminDeputyNotStartedDetails->getEmail());
     }
 }

@@ -2,16 +2,23 @@
 
 namespace DigidepsBehat\v2\Reporting\Sections;
 
-use Behat\Behat\Hook\Scope\AfterStepScope;
-use Behat\Behat\Tester\Result\ExecutedStepResult;
-use Exception;
-use Faker\Factory;
-
 trait DocumentsSectionTrait
 {
+    // Valid files
     private string $validJpegFilename = 'good.jpg';
     private string $validPngFilename = 'good.png';
     private string $validPdfFilename = 'good.pdf';
+
+    // Invalid files
+    private string $tooLargeFilename = 'too-big.jpg';
+    private string $txtFilename = 'eicar.txt';
+    private string $csvFilename = 'behat-pa.csv';
+
+    // Expected validation errors
+    private string $invalidFileTypeErrorMessage = 'Please upload a valid file type';
+    private string $fileTooBigErrorMessage = 'The file you selected to upload is too big';
+    private string $answerNotUpdatedErrorMessage = "Your answer could not be updated to 'No' because you have attached documents";
+    private string $orgCostCertificateMessage = "Send your final cost certificate for the previous reporting period";
 
     private array $uploadedDocumentFilenames = [];
 
@@ -148,6 +155,22 @@ trait DocumentsSectionTrait
         $this->uploadFiles([$this->validJpegFilename, $this->validPdfFilename, $this->validPngFilename]);
     }
 
+    /**
+     * @When I upload one document with an unsupported file type
+     */
+    public function iUploadOneDocumentWithUnsupportedFileType()
+    {
+        $this->uploadFiles([$this->txtFilename]);
+    }
+
+    /**
+     * @When I upload one document that is too large
+     */
+    public function iUploadOneDocumentThatIsTooLarge()
+    {
+        $this->uploadFiles([$this->tooLargeFilename]);
+    }
+
     private function uploadFiles(array $filenames)
     {
         $this->uploadedDocumentFilenames = $filenames;
@@ -195,5 +218,47 @@ trait DocumentsSectionTrait
         $this->pressButton('confirm_delete_confirm');
 
         $this->uploadedDocumentFilenames = $filenames;
+    }
+
+    /**
+     * @Then I should see an 'invalid file type' error
+     */
+    public function iShouldSeeInvalidFileTypeError()
+    {
+        $this->assertOnErrorMessage($this->invalidFileTypeErrorMessage);
+    }
+
+    /**
+     * @Then I should see a 'file too large' error
+     */
+    public function iShouldSeeFileTooLargeError()
+    {
+        $this->assertOnErrorMessage($this->fileTooBigErrorMessage);
+    }
+
+    /**
+     * @Then I should see an 'answer could not be updated' error
+     */
+    public function iShouldSeeAnswerCouldNotBeUpdatedError()
+    {
+        $this->assertOnErrorMessage($this->answerNotUpdatedErrorMessage);
+    }
+
+
+    /**
+     * @When I change my mind and confirm I have no documents to upload
+     */
+    public function changeMindNoDocumentsToUpload()
+    {
+        $this->clickLink('Edit');
+        $this->iHaveNoDocumentsToUpload();
+    }
+
+    /**
+     * @Then I should see guidance on providing the final cost certificate for the previous reporting period
+     */
+    public function iShouldSeeFeeGuidance()
+    {
+        $this->assertOnAlertMessage($this->orgCostCertificateMessage);
     }
 }

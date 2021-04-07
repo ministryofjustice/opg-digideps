@@ -62,7 +62,12 @@ class ReportTestHelper
 
     public function submitReport(ReportInterface $report, EntityManager $em): void
     {
-        $submittedBy = $report->getClient()->getUsers()->first();
+        if ($report->getClient()->getOrganisation()) {
+            $submittedBy = $report->getClient()->getOrganisation()->getUsers()[0];
+        } else {
+            $submittedBy = $report->getClient()->getUsers()->first();
+        }
+
         $submission = (new ReportSubmission($report, $submittedBy))
             ->setCreatedBy($submittedBy)
             ->setCreatedOn(new DateTime());

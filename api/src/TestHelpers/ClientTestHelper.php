@@ -4,6 +4,7 @@
 namespace App\TestHelpers;
 
 use App\Entity\Client;
+use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use Doctrine\ORM\EntityManager;
@@ -23,12 +24,11 @@ class ClientTestHelper extends TestCase
         return $client->reveal();
     }
 
-    public function createClient(EntityManager $em, ?User $user = null)
+    public function createClient(EntityManager $em, ?User $user = null, ?Organisation $organisation = null)
     {
         $faker = Factory::create('en_GB');
 
-        return (new Client())
-            ->addUser($user ? $user : (new UserTestHelper())->createAndPersistUser($em))
+        $client =  (new Client())
             ->setFirstname($faker->firstName)
             ->setLastname($faker->lastName)
             ->setCaseNumber(self::createValidCaseNumber())
@@ -36,6 +36,14 @@ class ClientTestHelper extends TestCase
             ->setCourtDate(new \DateTime())
             ->setAddress($faker->streetAddress)
             ->setPostcode($faker->postcode);
+
+        if ($user->getRoleName() === User::ROLE_LAY_DEPUTY) {
+            return $client->addUser($user ? $user : (new UserTestHelper())->createAndPersistUser($em));
+        }
+
+        if ($organisation) {
+            return $client->setOrganisation($organisation);
+        }
     }
 
     /**
