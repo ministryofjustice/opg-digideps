@@ -27,28 +27,26 @@ Feature: Documents - All User Roles
     When I have no further documents to upload
     Then I should be on the documents summary page
     And the documents summary page should contain the documents I uploaded
-#
-#  Scenario: A user deletes one supporting document that they uploaded from the uploads page
-#    Given a Lay Deputy has not started a report
-#    When I view and start the documents report section
-#    And I have documents to upload
-#    And I upload one valid document
-#    And I remove the document I uploaded
-#    When I have no further documents to upload
-#    Then I should be on the documents summary page
-#    When I delete the document I uploaded
-#    Then I should be on the documents start page
-#
-#  Scenario: A user deletes one supporting document that they uploaded from the summary page
-#    Given a Lay Deputy has not started a report
-#    When I view and start the documents report section
-#    And I have documents to upload
-#    And I upload one valid document
-#    And I remove the document I uploaded
-#    When I have no further documents to upload
-#    Then I should be on the documents summary page
-#    When I delete the document I uploaded
-#    Then I should be on the documents start page
+
+  Scenario: A user deletes one supporting document that they uploaded from the uploads page
+    Given a Lay Deputy has not started a report
+    When I view and start the documents report section
+    And I have documents to upload
+    And I upload multiple valid documents
+    And I remove one document I uploaded
+    When I have no further documents to upload
+    Then I should be on the documents summary page
+    And the documents summary page should contain the documents I uploaded
+
+  Scenario: A user deletes one supporting document that they uploaded from the summary page
+    Given a Lay Deputy has not started a report
+    When I view and start the documents report section
+    And I have documents to upload
+    And I upload multiple valid documents
+    When I have no further documents to upload
+    Then I should be on the documents summary page
+    When I remove one document I uploaded
+    Then the documents summary page should contain the documents I uploaded
 #
 #  Scenario: A user uploads one supporting document that has an invalid file type
 #    Given a Lay Deputy has not started a report

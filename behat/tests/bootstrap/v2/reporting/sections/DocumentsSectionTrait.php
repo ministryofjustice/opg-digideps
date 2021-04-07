@@ -98,33 +98,34 @@ trait DocumentsSectionTrait
 
     private function findFileNamesInDls(array $descriptionLists)
     {
-        $missingText = [];
+        $missingFilenames = [];
 
         foreach ($this->uploadedDocumentFilenames as $uploadedDocumentFilename) {
-            $foundFile = false;
+            $foundFilename = false;
 
             foreach ($descriptionLists as $descriptionList) {
                 $html = $descriptionList->getHtml();
                 $textVisible = str_contains($html, $uploadedDocumentFilename);
 
                 if (!$textVisible) {
-                    $missingText[] = $uploadedDocumentFilename;
+                    $missingFilenames[] = $uploadedDocumentFilename;
                 } else {
-                    $foundFile = true;
+                    $foundFilename = true;
                     break;
                 }
             }
 
-            if ($foundFile) {
-                $missingText = [];
+            if ($foundFilename) {
+                $key = array_search($uploadedDocumentFilename, $missingFilenames);
+                unset($missingFilenames[$key]);
             }
         }
 
-        if (!empty($missingText)) {
+        if (!empty($missingFilenames)) {
             $this->throwContextualException(
                 sprintf(
                     'A dl was found but the row with the expected text was not found. Missing text: %s. HTML found: %s',
-                    implode(', ', $missingText),
+                    implode(', ', array_unique($missingFilenames)),
                     $html
                 )
             );
@@ -160,8 +161,39 @@ trait DocumentsSectionTrait
     /**
      * @When I have no further documents to upload
      */
-    public function whenIHaveNoFurtherDocumentsToUpload()
+    public function iHaveNoFurtherDocumentsToUpload()
     {
         $this->clickLink('Continue');
+    }
+
+    /**
+     * @When I remove one document I uploaded
+     */
+    public function iRemoveOneDocumentIUploaded()
+    {
+        $filenames = $this->uploadedDocumentFilenames;
+        $documentToPop = $filenames[0];
+        unset($filenames[0]);
+
+        $parentOfDtWithTextSelector = sprintf('//dt[contains(text(),"%s")]/..', $documentToPop);
+        $documentRowDiv = $this->getSession()->getPage()->find('xpath', $parentOfDtWithTextSelector);
+
+        if (is_null($documentRowDiv)) {
+            $this->throwContextualException(
+                sprintf('An element containing a dt with the text %s was not found', $documentToPop)
+            );
+        }
+
+        $removeLinkSelector = '//a[contains(text(),"Remove")]';
+        $removeLink = $documentRowDiv->find('xpath', $removeLinkSelector);
+
+        if (is_null($removeLink)) {
+            $this->throwContextualException('A link with the text remove was not found in the document row');
+        }
+
+        $removeLink->click();
+        $this->pressButton('confirm_delete_confirm');
+
+        $this->uploadedDocumentFilenames = $filenames;
     }
 }
