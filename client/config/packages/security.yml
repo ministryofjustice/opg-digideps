@@ -1,6 +1,37 @@
+services:
+  # Voter on User, used by PA area
+  # http://symfony.com/doc/2.8/security/voters.html
+  app.user_voter:
+    class: App\Security\UserVoter
+    tags:
+        - { name: security.voter }
+    # small performance boost
+    public: false
+  app.note_voter:
+    class: App\Security\NoteVoter
+    arguments: ['@security.access.decision_manager']
+    tags:
+        - { name: security.voter }
+    # small performance boost
+    public: false
+  app.client_contact_voter:
+    class: App\Security\ClientContactVoter
+    arguments: ['@security.access.decision_manager']
+    tags:
+        - { name: security.voter }
+    # small performance boost
+    public: false
+  app.document_voter:
+    class: App\Security\DocumentVoter
+    arguments: ['@security.access.decision_manager']
+    tags:
+        - { name: security.voter }
+    # small performance boost
+    public: false
+
 security:
     role_hierarchy:
-        ROLE_SUPER_ADMIN :    [ ROLE_ADMIN ]
+        ROLE_SUPER_ADMIN :    [ ROLE_ADMIN, ROLE_ELEVATED_ADMIN ]
 
         ROLE_PA:              ROLE_ORG
         ROLE_PROF:            ROLE_ORG
@@ -66,7 +97,6 @@ security:
         - { path: ^/ad, roles: [ROLE_AD] }
         - { path: ^/pa/team/add, roles: [ROLE_ORG_NAMED, ROLE_ORG_ADMIN] }
         - { path: ^/pa/team/edit, roles: [ROLE_ORG] }
-        #        - { path: ^/pa/team, roles: [ROLE_ORG] } # inherited. delete if test pass
         - { path: ^/pa/, roles: [ROLE_ORG] }
         # report expenses section access for Lay and PA
         - { path: ^/report/\d+/pa-fee-expense, roles: [ROLE_ORG] }

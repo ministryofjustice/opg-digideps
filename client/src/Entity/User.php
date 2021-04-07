@@ -19,6 +19,7 @@ class User implements UserInterface, DeputyInterface
 
     const ROLE_ADMIN = 'ROLE_ADMIN';
     const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
+    const ROLE_ELEVATED_ADMIN = 'ROLE_ELEVATED_ADMIN';
 
     const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
     const ROLE_AD = 'ROLE_AD';
@@ -949,6 +950,7 @@ class User implements UserInterface, DeputyInterface
     public function isDeputyPa()
     {
         return in_array($this->roleName, [
+            self::ROLE_PA,
             self::ROLE_PA_NAMED,
             self::ROLE_PA_ADMIN,
             self::ROLE_PA_TEAM_MEMBER
@@ -963,6 +965,7 @@ class User implements UserInterface, DeputyInterface
     public function isDeputyProf()
     {
         return in_array($this->roleName, [
+            self::ROLE_PROF,
             self::ROLE_PROF_NAMED,
             self::ROLE_PROF_ADMIN,
             self::ROLE_PROF_TEAM_MEMBER
@@ -1092,6 +1095,54 @@ class User implements UserInterface, DeputyInterface
     public function hasRoleOrgAdmin()
     {
         return in_array($this->roleName, [User::ROLE_PA_ADMIN, User::ROLE_PROF_ADMIN]);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPaTopRole()
+    {
+        return $this->getRoleName() === self::ROLE_PA;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProfTopRole()
+    {
+        return $this->getRoleName() === self::ROLE_PROF;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->getRoleName() === self::ROLE_ADMIN;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->getRoleName() === self::ROLE_SUPER_ADMIN;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isElevatedAdmin(): bool
+    {
+        return $this->getRoleName() === self::ROLE_ELEVATED_ADMIN;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAdminRole(): bool
+    {
+        return $this->isAdmin() || $this->isSuperAdmin() || $this->isElevatedAdmin();
     }
 
     /**
