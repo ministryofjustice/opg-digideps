@@ -1,4 +1,4 @@
-@v2
+@v2 @documents
 Feature: Documents - All User Roles
 
   Scenario: A user has no supporting documents to add

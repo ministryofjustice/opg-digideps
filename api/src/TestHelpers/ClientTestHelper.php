@@ -28,7 +28,7 @@ class ClientTestHelper extends TestCase
     {
         $faker = Factory::create('en_GB');
 
-        $client =  (new Client())
+        $client = (new Client())
             ->setFirstname($faker->firstName)
             ->setLastname($faker->lastName)
             ->setCaseNumber(self::createValidCaseNumber())
@@ -37,13 +37,15 @@ class ClientTestHelper extends TestCase
             ->setAddress($faker->streetAddress)
             ->setPostcode($faker->postcode);
 
-        if ($user->getRoleName() === User::ROLE_LAY_DEPUTY) {
+        if (!is_null($user) && $user->getRoleName() === User::ROLE_LAY_DEPUTY) {
             return $client->addUser($user ? $user : (new UserTestHelper())->createAndPersistUser($em));
         }
 
         if ($organisation) {
             return $client->setOrganisation($organisation);
         }
+
+        return $client;
     }
 
     /**

@@ -1,4 +1,4 @@
-@v2
+@v2 @documents
 Feature: Documents - Org User Roles
 
   Scenario: Organisation users should see guidance on sending the previous years cost certificate
