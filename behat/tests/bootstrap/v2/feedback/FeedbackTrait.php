@@ -12,11 +12,14 @@ trait FeedbackTrait
      */
     public function iProvidePostSubmissionFeedback()
     {
-        if (!$this->iAmOnReportSubmittedPage()) {
-            $loggedInUserCurrentReportId = $this->loggedInUserDetails->getCurrentReportId();
-            $this->visitFrontendPath($this->getReportSubmittedUrl($loggedInUserCurrentReportId));
+        try {
+            $this->iAmOnReportSubmittedPage();
+        } catch (\Throwable $e) {
+            $loggedInUserPreviousReportId = $this->loggedInUserDetails->getPreviousReportId();
+            $reportSubmittedUrl = $this->getReportSubmittedUrl($loggedInUserPreviousReportId);
+            $this->visitFrontendPath($reportSubmittedUrl);
 
-            if (str_contains($this->getCurrentUrl(), $this->getReportSubmittedUrl($loggedInUserCurrentReportId))) {
+            if (!str_contains($this->getCurrentUrl(), $reportSubmittedUrl)) {
                 $this->throwContextualException(sprintf("Couldn't access report submitted page for current user. Current url: %s", $this->getCurrentUrl()));
             }
         }
@@ -36,9 +39,10 @@ trait FeedbackTrait
             $this->iAmOnPostSubmissionUserResearchPage();
         } catch (\Throwable $e) {
             $submittedReportId = $this->loggedInUserDetails->getPreviousReportId();
-            $this->visitFrontendPath($this->getPostSubmissionUserResearchUrl($submittedReportId));
+            $postSubmissionURUrl = $this->getPostSubmissionUserResearchUrl($submittedReportId);
+            $this->visitFrontendPath($postSubmissionURUrl);
 
-            if (!str_contains($this->getCurrentUrl(), $this->getPostSubmissionUserResearchUrl($submittedReportId))) {
+            if (!str_contains($this->getCurrentUrl(), $postSubmissionURUrl)) {
                 $this->throwContextualException(sprintf("Couldn't access post submission user research page for current user. Current url: %s", $this->getCurrentUrl()));
             }
         }

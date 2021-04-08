@@ -34,19 +34,9 @@ trait ReportTrait
     }
 
     /**
-     * @Given a Lay Deputy completes and submits a report
-     * @throws Exception
+     * @Given a Lay Deputy has not started a report
      */
-    public function aLayDeputyCompletesAndSubmitsAReport()
-    {
-        $this->aLayDeputyHasCompletedReport();
-        $this->iSubmitTheReport();
-    }
-
-    /**
-     * @Given a Lay Deputy has a new report
-     */
-    public function aLayDeputyHasNewReport()
+    public function aLayDeputyHasNotStartedAReport()
     {
         if (empty($this->layDeputyNotStartedDetails)) {
             throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedDetails');
@@ -66,19 +56,6 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layDeputyCompletedDetails->getEmail());
-        $this->iSubmitTheReport();
-    }
-
-    /**
-     * @Given a Lay Deputy has not started a report
-     */
-    public function aLayDeputyHasNotStartedAReport()
-    {
-        if (empty($this->layDeputyNotStartedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedDetails');
-        }
-
-        $this->loginToFrontendAs($this->layDeputyNotStartedDetails->getEmail());
     }
 
     /**

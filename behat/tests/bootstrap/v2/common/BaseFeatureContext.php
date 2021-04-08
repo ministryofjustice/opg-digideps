@@ -21,6 +21,7 @@ class BaseFeatureContext extends MinkContext
     use ElementSelectionTrait;
     use ErrorsTrait;
     use AlertsTrait;
+    use IVisitTrait;
 
     const BEHAT_FRONT_RESET_FIXTURES = '/behat/frontend/reset-fixtures?testRunId=%s';
     const BEHAT_FRONT_USER_DETAILS = '/behat/frontend/user/%s/details';

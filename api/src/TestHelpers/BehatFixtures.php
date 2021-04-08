@@ -227,7 +227,7 @@ class BehatFixtures
 
     private function addClientsAndReportsToLayDeputy(User $deputy, bool $completed = false, bool $submitted = false)
     {
-        $client = $this->clientTestHelper->createClient($this->entityManager, $deputy);
+        $client = $this->clientTestHelper->generateClient($this->entityManager, $deputy);
         $report = $this->reportTestHelper->generateReport($this->entityManager, $client);
 
         $client->addReport($report);
@@ -248,7 +248,7 @@ class BehatFixtures
 
     private function addOrgClientsAndReportsToOrgDeputy(User $deputy, Organisation $organisation, bool $completed = false, bool $submitted = false)
     {
-        $client = $this->clientTestHelper->createClient($this->entityManager, $deputy, $organisation);
+        $client = $this->clientTestHelper->generateClient($this->entityManager, $deputy, $organisation);
         $report = $this->reportTestHelper->generateReport($this->entityManager, $client);
 
         $client->addReport($report);
