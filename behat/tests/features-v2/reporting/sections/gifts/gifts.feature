@@ -2,7 +2,7 @@
 Feature: Gifts
 
   Scenario: A user has not donated any gifts
-    Given a Lay Deputy has a new report
+    Given a Lay Deputy has not started a report
     When I view and start the gifts report section
     And I have not given any gifts
     Then I should see the expected gifts report section responses
@@ -10,7 +10,7 @@ Feature: Gifts
     Then I should see "gifts" as "no gifts"
 
   Scenario: A user has donated multiple gifts
-    Given a Lay Deputy has a new report
+    Given a Lay Deputy has not started a report
     When I view and start the gifts report section
     And I have given multiple gifts
     Then I should see the expected gifts report section responses
@@ -32,7 +32,7 @@ Feature: Gifts
     Then I should see the expected gifts report section responses
 
   Scenario: A user adds and deletes gifts
-    Given a Lay Deputy has a new report
+    Given a Lay Deputy has not started a report
     When I view and start the gifts report section
     And I have given multiple gifts
     Then I should see the expected gifts report section responses
