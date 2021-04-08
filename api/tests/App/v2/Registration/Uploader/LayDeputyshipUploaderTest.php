@@ -5,7 +5,7 @@ namespace Tests\App\v2\Registration\Uploader;
 use App\Entity\CasRec;
 use App\Entity\Client;
 use App\Entity\Report\Report;
-use App\Entity\Repository\ReportRepository;
+use App\Repository\ReportRepository;
 use App\Entity\User;
 use App\Service\ReportService;
 use App\v2\Registration\DTO\LayDeputyshipDto;

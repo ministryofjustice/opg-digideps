@@ -1,0 +1,7 @@
+framework:
+    router:
+        strict_requirements: true
+    profiler:
+        only_exceptions: false
+        enabled: "%kernel.debug%"
+    ide: 'phpstorm://open?file=%%f&line=%%l'

@@ -11,7 +11,7 @@ class FeedbackTypeTest extends TypeTestCase
 
     public function setUp(): void
     {
-        $this->translator = m::mock('Symfony\Component\Translation\TranslatorInterface');
+        $this->translator = m::mock('Symfony\Contracts\Translation\TranslatorInterface');
         $this->translator->shouldReceive('trans')->with(m::any(), [], 'feedback')->andReturnUsing(function ($a) {
             return range(5, 1);
         });

@@ -18,9 +18,14 @@ class VisitsCareControllerTest extends AbstractTestController
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
 
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
+
+        if (null === self::$tokenAdmin) {
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenDeputy = $this->loginAsDeputy();
+        }
 
         //deputy1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
@@ -54,14 +59,6 @@ class VisitsCareControllerTest extends AbstractTestController
         'plan_move_new_residence' => 'yes',
         'plan_move_new_residence_details' => "Toscany\nItaly",
     ];
-
-    public function setUp(): void
-    {
-        if (null === self::$tokenAdmin) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
-    }
 
     public function testGetOneByIdAuth()
     {
@@ -221,13 +218,16 @@ class VisitsCareControllerTest extends AbstractTestController
         $this->assertTrue(null === self::fixtures()->clear()->getRepo('Report\VisitsCare')->find($id));
     }
 
-    /**
-     * need the record to be deleted first.
-     *
-     * @depends testDelete
-     */
     public function testAdd()
     {
+        $id = self::$visitsCare1->getId();
+        $url = '/ndr/visits-care/' . $id;
+
+        $this->assertJsonRequest('DELETE', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ]);
+
         $url = '/ndr/visits-care';
 
         $return = $this->assertJsonRequest('POST', $url, [

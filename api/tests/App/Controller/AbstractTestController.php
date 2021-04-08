@@ -14,14 +14,10 @@ use Tests\Fixtures;
 
 abstract class AbstractTestController extends WebTestCase
 {
-    /**
-     * @var Fixtures
-     */
+    /** @var Fixtures */
     protected static $fixtures;
 
-    /**
-     * @var Client
-     */
+    /** @var Client */
     protected static $frameworkBundleClient;
 
     /** @var string|false $deputySecret */
@@ -33,7 +29,7 @@ abstract class AbstractTestController extends WebTestCase
     /**
      * Create static client and fixtures.
      */
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
         // each test restores the db before launching the entire suite,
         // help to cleanup records created from previously-executed tests
@@ -42,10 +38,8 @@ abstract class AbstractTestController extends WebTestCase
 
         self::$frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false, ]);
 
-        /** @var Container $container */
-        $container = self::$frameworkBundleClient->getContainer();
         /** @var EntityManager $em */
-        $em = $container->get('em');
+        $em = self::$container->get('em');
 
         self::$fixtures = new Fixtures($em);
 
@@ -71,14 +65,6 @@ abstract class AbstractTestController extends WebTestCase
     public static function fixtures()
     {
         return self::$fixtures;
-    }
-
-    /**
-     * @return Client
-     */
-    public function getClient()
-    {
-        return self::$frameworkBundleClient;
     }
 
     /**

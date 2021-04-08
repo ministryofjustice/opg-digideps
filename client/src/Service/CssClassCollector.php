@@ -7,7 +7,7 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 class CssClassCollector extends DataCollector
 {
-    public function collect(Request $request, Response $response, \Exception $exception = null)
+    public function collect(Request $request, Response $response, \Throwable $throwable = null)
     {
         $appClasses = [];
         $govukClasses = [];

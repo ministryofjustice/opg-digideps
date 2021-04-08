@@ -17,7 +17,7 @@ use JMS\Serializer\Annotation as JMS;
  *     @ORM\Index(name="odr_submitted_idx", columns={"submitted"}),
  *     @ORM\Index(name="odr_submit_date_idx", columns={"submit_date"})
  *  })
- * @ORM\Entity(repositoryClass="App\Entity\Ndr\NdrRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\NdrRepository")
  */
 class Ndr implements ReportInterface
 {
@@ -64,7 +64,7 @@ class Ndr implements ReportInterface
      * @var BankAccount[]
      *
      * @JMS\Groups({"ndr-account"})
-     * @JMS\Type("array<App\Entity\Ndr\BankAccount>")
+     * @JMS\Type("ArrayCollection<App\Entity\Ndr\BankAccount>")
      * @ORM\OneToMany(targetEntity="App\Entity\Ndr\BankAccount", mappedBy="ndr", cascade={"persist", "remove"})
      */
     private $bankAccounts;
@@ -103,7 +103,7 @@ class Ndr implements ReportInterface
      * @var AssetInterface[]
      *
      * @JMS\Groups({"ndr-asset"})
-     * @JMS\Type("array<App\Entity\Ndr\Asset>")
+     * @JMS\Type("ArrayCollection<App\Entity\Ndr\Asset>")
      * @ORM\OneToMany(targetEntity="App\Entity\Ndr\Asset", mappedBy="ndr", cascade={"persist", "remove"})
      */
     private $assets;

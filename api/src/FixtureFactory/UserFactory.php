@@ -82,10 +82,13 @@ class UserFactory
     {
         $faker = Factory::create();
 
+        $email = sprintf('%s.%s@%s', $faker->firstName, $faker->lastName, $organisation->getEmailIdentifier());
+        $trimmedEmail = substr($email, 0, 59);
+
         $user = (new User())
             ->setFirstname($faker->firstName)
             ->setLastname($faker->lastName)
-            ->setEmail(sprintf('%s.%s@%s', $faker->firstName, $faker->lastName, $organisation->getEmailIdentifier()))
+            ->setEmail($trimmedEmail)
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
             ->setNdrEnabled(false)
@@ -130,7 +133,7 @@ class UserFactory
                 sprintf(
                     'co-%s-deputy-%d@fixture.com',
                     strtolower($data['deputyType']),
-                    mt_rand(1000, 9999)
+                    mt_rand(1000, 99999)
                 )
             )
             ->addClient($client)

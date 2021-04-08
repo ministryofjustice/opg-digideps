@@ -29,7 +29,7 @@ class CoDeputyController extends RestController
 
     /**
      * @Route("{count}", methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function countMld(Request $request)
     {
@@ -44,7 +44,7 @@ class CoDeputyController extends RestController
 
     /**
      * @Route("add", methods={"POST"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function add(Request $request)
     {
@@ -71,7 +71,7 @@ class CoDeputyController extends RestController
 
     /**
      * @Route("{id}", methods={"PUT"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function update(Request $request, $id)
     {
@@ -99,7 +99,7 @@ class CoDeputyController extends RestController
      * Borrows heavily from CasRecController:addBulk
      *
      * @Route("{mldupgrade}", methods={"POST"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function upgradeToMld(Request $request)
     {

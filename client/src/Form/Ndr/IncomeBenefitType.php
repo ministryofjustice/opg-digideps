@@ -8,7 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Valid;
 
 class IncomeBenefitType extends AbstractType
@@ -39,6 +39,7 @@ class IncomeBenefitType extends AbstractType
                 ->add('id', FormTypes\HiddenType::class)
                 ->add('stateBenefits', FormTypes\CollectionType::class, [
                     'entry_type' => StateBenefitType::class,
+                    'entry_options' => ['constraints' => new Valid()],
                     'constraints' => new Valid(),
                 ]);
         }
@@ -70,6 +71,7 @@ class IncomeBenefitType extends AbstractType
         if ($this->step === 5) {
             $builder->add('oneOff', FormTypes\CollectionType::class, [
                 'entry_type' => OneOffType::class,
+                'entry_options' => ['constraints' => new Valid()],
                 'constraints' => new Valid(),
             ]);
         }

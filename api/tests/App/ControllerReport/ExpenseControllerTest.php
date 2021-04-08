@@ -11,6 +11,7 @@ class ExpenseControllerTest extends AbstractTestController
     private static $deputy1;
     private static $client1;
     private static $report1;
+
     /**
      * @var Expense
      */
@@ -26,9 +27,9 @@ class ExpenseControllerTest extends AbstractTestController
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
 
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         //deputy1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
@@ -43,6 +44,11 @@ class ExpenseControllerTest extends AbstractTestController
         self::$expense2 = self::fixtures()->createReportExpense('other', self::$report2, ['setExplanation' => 'e2', 'setAmount' => 2.2]);
 
         self::fixtures()->flush()->clear();
+
+        if (null === self::$tokenAdmin) {
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenDeputy = $this->loginAsDeputy();
+        }
     }
 
     /**
@@ -53,14 +59,6 @@ class ExpenseControllerTest extends AbstractTestController
         parent::tearDownAfterClass();
 
         self::fixtures()->clear();
-    }
-
-    public function setUp(): void
-    {
-        if (null === self::$tokenAdmin) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
     }
 
     public function testgetOneByIdAuth()
@@ -212,6 +210,11 @@ class ExpenseControllerTest extends AbstractTestController
     public function testPaidAnything()
     {
         $report = self::fixtures()->getReportById(self::$report1->getId());
+        $report->setPaidForAnything('yes');
+
+        self::fixtures()->persist($report);
+        self::fixtures()->flush();
+
         $this->assertCount(1, $report->getExpenses());
         $this->assertEquals('yes', $report->getPaidForAnything());
 

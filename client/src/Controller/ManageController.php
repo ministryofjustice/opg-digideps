@@ -20,28 +20,36 @@ class ManageController extends AbstractController
 {
     private string $symfonyEnvironment;
     private string $symfonyDebug;
+    private string $environment;
 
-    public function __construct(string $symfonyEnvironment, string $symfonyDebug)
-    {
+    public function __construct(
+        string $symfonyEnvironment,
+        string $symfonyDebug,
+        string $environment
+    ) {
         $this->symfonyEnvironment = $symfonyEnvironment;
         $this->symfonyDebug = $symfonyDebug;
+        $this->environment = $environment;
     }
 
     /**
      * @Route("/availability", methods={"GET"})
      *
-     * @param ContainerInterface $container
      * @param ApiAvailability $apiAvailability
      * @param NotifyAvailability $notifyAvailability
      * @param RedisAvailability $redisAvailability
-
+     * @param SiriusApiAvailability $siriusAvailability
+     * @param ClamAvAvailability $clamAvailability
+     * @param WkHtmlToPdfAvailability $wkHtmlAvailability
      * @return Response|null
      */
     public function availabilityAction(
-        ContainerInterface $container,
         ApiAvailability $apiAvailability,
         NotifyAvailability $notifyAvailability,
-        RedisAvailability $redisAvailability
+        RedisAvailability $redisAvailability,
+        SiriusApiAvailability $siriusAvailability,
+        ClamAvAvailability $clamAvailability,
+        WkHtmlToPdfAvailability $wkHtmlAvailability
     ) {
         $services = [
             $apiAvailability,
@@ -49,10 +57,10 @@ class ManageController extends AbstractController
             $notifyAvailability
         ];
 
-        if ($container->getParameter('env') !== 'admin') {
-            $services[] = $container->get(SiriusApiAvailability::class);
-            $services[] = $container->get(ClamAvAvailability::class);
-            $services[] = $container->get(WkHtmlToPdfAvailability::class);
+        if ($this->environment !== 'admin') {
+            $services[] = $siriusAvailability;
+            $services[] = $clamAvailability;
+            $services[] = $wkHtmlAvailability;
         }
 
         list($healthy, $services, $errors) = $this->servicesHealth($services);
@@ -120,6 +128,8 @@ class ManageController extends AbstractController
         $errors = [];
 
         foreach ($services as $service) {
+            $service->ping();
+
             if (!$service->isHealthy()) {
                 if ($service->getName() != 'Sirius') {
                     $healthy = false;

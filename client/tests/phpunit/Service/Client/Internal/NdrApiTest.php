@@ -43,7 +43,7 @@ class NdrApiTest extends TestCase
 
         $event = new NdrSubmittedEvent($submittedByWithClientsAndReports, $ndr, $activeReport);
         $eventDispatcher
-            ->dispatch('ndr.submitted', $event)
+            ->dispatch($event, 'ndr.submitted')
             ->shouldBeCalled();
 
         $sut->submit($ndr, $document);

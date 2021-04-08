@@ -12,8 +12,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Table(name="organisation")
- * @ORM\Entity(repositoryClass="App\Entity\Repository\OrganisationRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
+ * @ORM\Entity(repositoryClass="App\Repository\OrganisationRepository")
  */
 class Organisation implements OrganisationInterface
 {
@@ -43,7 +43,8 @@ class Organisation implements OrganisationInterface
      * @var string
      *
      * @JMS\Groups({"user-organisations", "organisation"})
-     *
+     * @JMS\Type("string")
+     * @JMS\SerializedName("email_identifier")
      * @Assert\NotBlank()
      * @ORM\Column(name="email_identifier", type="string", length=256, nullable=false, unique=true)
      */
@@ -53,21 +54,22 @@ class Organisation implements OrganisationInterface
      * @var bool
      *
      * @JMS\Groups({"organisation", "user-organisations", "client-organisations"})
-     *
+     * @JMS\Type("boolean")
+     * @JMS\SerializedName("is_activated")
      * @ORM\Column(name="is_activated", type="boolean", options={ "default": false}, nullable=false)
      */
     private $isActivated;
 
     /**
      * @var ArrayCollection
-     *
+     * @JMS\Type("ArrayCollection<App\Entity\User>")
      * @ORM\ManyToMany(targetEntity="User", inversedBy="organisations")
      */
     private $users;
 
     /**
      * @var ArrayCollection
-     *
+     * @JMS\Type("ArrayCollection<App\Entity\Clients>")
      * @ORM\OneToMany(targetEntity="Client", mappedBy="organisation")
      */
     private $clients;

@@ -1,0 +1,4 @@
+jms_serializer:
+    metadata:
+        cache: none
+        debug: true

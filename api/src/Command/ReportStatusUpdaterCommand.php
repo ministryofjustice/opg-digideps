@@ -2,10 +2,9 @@
 
 namespace App\Command;
 
-use App\Entity\Client;
 use App\Entity\Report\Report;
-use App\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -16,9 +15,18 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
  *
  * @codeCoverageIgnore
  */
-class ReportStatusUpdaterCommand extends ContainerAwareCommand
+class ReportStatusUpdaterCommand extends Command
 {
     use ContainerAwareTrait;
+
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+
+        parent::__construct();
+    }
 
     protected function configure()
     {
@@ -31,12 +39,13 @@ class ReportStatusUpdaterCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $limit = $input->getOption('limit');
-        $em = $this->getContainer()->get('em'); /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->entityManager; /* @var $em EntityManager */
 
         $chunkSize = 10;
 
         $output->write("Updating report status for next $limit reports: ");
         for ($i = 0, $continue = true; $i < $limit && $continue; $i += $chunkSize) {
+
             /* @var $reports Report[] */
             $reports = $em->getRepository(Report::class)
                 ->createQueryBuilder('r')

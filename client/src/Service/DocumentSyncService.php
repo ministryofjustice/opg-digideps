@@ -84,7 +84,7 @@ class DocumentSyncService
         $this->syncErrorSubmissionIds[] = $submissionId;
     }
 
-    public function getDocsNotSyncedCount()
+    public function getDocsNotSyncedCount(): int
     {
         return $this->docsNotSyncedCount;
     }

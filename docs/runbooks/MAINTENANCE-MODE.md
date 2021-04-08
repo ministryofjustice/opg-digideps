@@ -4,6 +4,13 @@ Each environment, and each subsite (i.e. admin or frontend), can manually be put
 
 Every load balancer is set up with two actions. The default action is to forward all requests to the related ECS service. The other action shows the maintenance page when requests are made to a matching path (by default this is `/dd-maintenance`).
 
-To enable maintenance mode, identify the appropriate load balancer's rules and change the rule for the fixed-response maintenance page so it is enabled for the path `*`. This will forward _all_ requests to that load balancer to the maintenance page.
+### Enabling maintenance mode
+- First login to **AWS**
+- Then click **EC2** (make sure you are on the **breakglass role**)
+- Next go to **Load Balancers**
+- Select the relevant environment we want to change the **Load Balancer** for
+- Hit the **Listeners** tab and then update the HTTPS setting
+- Change `dd-maintenance` to `*`
 
-To disable maintenance mode, return the fixed-response rule for the load balancer to `/dd-maintenance`.
+That should be it. To disable maintenance mode, return to the same load balancer and edit the same listener and change the rule back to `/dd-maintenance` from `*`.
+

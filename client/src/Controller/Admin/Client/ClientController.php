@@ -33,7 +33,7 @@ class ClientController extends AbstractController
     /**
      * @Route("/{id}/details", name="admin_client_details", requirements={"id":"\d+"})
      * //TODO define Security group (AD to remove?)
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @param string $id
      *
      * @Template("@App/Admin/Client/Client/details.html.twig")
@@ -52,7 +52,7 @@ class ClientController extends AbstractController
 
     /**
      * @Route("/case-number/{caseNumber}/details", name="admin_client_by_case_number_details")
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @param string $caseNumber
      *
      * @return RedirectResponse
@@ -66,7 +66,7 @@ class ClientController extends AbstractController
 
     /**
      * @Route("/{id}/discharge", name="admin_client_discharge", requirements={"id":"\d+"})
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      * @param $id
      *
      * @Template("@App/Admin/Client/Client/discharge.html.twig")
@@ -85,7 +85,7 @@ class ClientController extends AbstractController
 
     /**
      * @Route("/{id}/discharge-confirm", name="admin_client_discharge_confirm", requirements={"id":"\d+"})
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
      * @param $id
      * @param AuditEvents $auditEvents

@@ -39,7 +39,7 @@ class LoadTestFactory
 
             $user->setEmail($user->getEmail() . rand(1, 100000));
 
-            $client = $clientTestHelper->createClient($this->em, $user);
+            $client = $clientTestHelper->generateClient($this->em, $user);
             $user->addClient($client);
 
             $report = $reportTestHelper->generateReport($this->em, $user->getFirstClient());

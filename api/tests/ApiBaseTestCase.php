@@ -9,9 +9,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ApiBaseTestCase extends WebTestCase
 {
-    /** @var ContainerInterface|null  */
-    protected $container;
-
     /** @var \Doctrine\ORM\EntityManagerInterface|null */
     protected $entityManager;
 
@@ -19,8 +16,8 @@ class ApiBaseTestCase extends WebTestCase
     {
         $kernel = self::bootKernel(['environment' => 'test']);
 
-        $this->container = $kernel->getContainer();
-        $this->entityManager = $this->container->get('doctrine')->getManager();
+        $container = $kernel->getContainer();
+        $this->entityManager = $container->get('doctrine')->getManager();
     }
 
     protected function purgeDatabase()

@@ -4,18 +4,18 @@ namespace App\EventListener;
 
 use App\Service\Client\RestClient;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 
 class AuthTokenExpiredListener
 {
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    public function onKernelException(ExceptionEvent $exceptionEvent)
     {
-        $exception = $event->getException();
+        $exception = $exceptionEvent->getThrowable();
 
         if (RestClient::HTTP_CODE_AUTHTOKEN_EXPIRED == (int) $exception->getCode()) {
             $response = new RedirectResponse('/login?from=api');
-            $event->setResponse($response);
-            $event->stopPropagation();
+            $exceptionEvent->setResponse($response);
+            $exceptionEvent->stopPropagation();
         }
     }
 }

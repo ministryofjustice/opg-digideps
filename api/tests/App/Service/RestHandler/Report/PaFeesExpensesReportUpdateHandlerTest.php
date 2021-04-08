@@ -5,7 +5,7 @@ namespace Tests\App\Service\RestHandler\Report;
 use App\Entity\Client;
 use App\Entity\Report\ProfDeputyEstimateCost;
 use App\Entity\Report\Report;
-use App\Entity\Repository\ReportRepository;
+use App\Repository\ReportRepository;
 use App\Service\RestHandler\Report\PaFeesExpensesReportUpdateHandler;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;

@@ -19,9 +19,14 @@ class AccountControllerTest extends AbstractTestController
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
 
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
+
+        if (null === self::$tokenAdmin) {
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenDeputy = $this->loginAsDeputy();
+        }
 
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
 
@@ -61,14 +66,6 @@ class AccountControllerTest extends AbstractTestController
         parent::tearDownAfterClass();
 
         self::fixtures()->clear();
-    }
-
-    public function setUp(): void
-    {
-        if (null === self::$tokenAdmin) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
     }
 
     public function testaddAccount()
@@ -119,7 +116,7 @@ class AccountControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ])['data']['bank_accounts'];
 
-        $this->assertCount(3, $data);
+        $this->assertCount(2, $data);
         $this->assertTrue($data[0]['id'] != $data[1]['id']);
         $this->assertArrayHasKey('bank', $data[0]);
         $this->assertArrayHasKey('bank', $data[1]);

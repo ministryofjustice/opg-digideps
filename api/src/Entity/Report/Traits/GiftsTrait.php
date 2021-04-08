@@ -21,7 +21,7 @@ trait GiftsTrait
     /**
      * @var Gift[]
      *
-     * @JMS\Type("array<App\Entity\Report\Gift>")
+     * @JMS\Type("ArrayCollection<App\Entity\Report\Gift>")
      * @JMS\Groups({"gifts"})
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Gift", mappedBy="report", cascade={"persist", "remove"})
      *

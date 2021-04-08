@@ -99,6 +99,7 @@ class VisitsCare
      *
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
+     * @JMS\SerializedName("does_client_have_a_care_plan")
      * @ORM\Column( name="does_client_have_a_care_plan", type="string", length=4, nullable=true)
      */
     private $doesClientHaveACarePlan;

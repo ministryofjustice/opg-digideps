@@ -18,12 +18,10 @@ class ReportSubmissionControllerTest extends AbstractTestController
     private static $tokenSuperAdmin = null;
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
-    /** @var EntityManager|null */
-    private $em;
 
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
         self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
         self::$pa2 = self::fixtures()->getRepo('User')->findOneByEmail('pa_admin@example.org');
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
@@ -55,18 +53,12 @@ class ReportSubmissionControllerTest extends AbstractTestController
         }
 
         self::fixtures()->flush()->clear();
-    }
 
-    public function setUp(): void
-    {
         if (null === self::$tokenAdmin) {
             self::$tokenSuperAdmin = $this->loginAsSuperAdmin();
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
         }
-
-        $kernel = self::bootKernel();
-        $this->em = $kernel->getContainer()->get('em');
     }
 
     public function testGetAllWithFiltersGetOneArchive()
@@ -255,7 +247,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
      */
     public function updatePersistsUuidWhenProvided()
     {
-        $reportSubmission = (new ReportSubmissionHelper())->generateAndPersistReportSubmission($this->em);
+        $reportSubmission = (new ReportSubmissionHelper())->generateAndPersistReportSubmission(self::fixtures()->getEntityManager());
 
         $uuid = '5a8b1a26-8296-4373-ae61-f8d0b250e773';
 

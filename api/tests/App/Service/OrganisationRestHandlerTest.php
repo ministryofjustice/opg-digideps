@@ -3,8 +3,8 @@
 namespace Tests\App\Service\RestHandler;
 
 use App\Entity\Organisation;
-use App\Entity\Repository\OrganisationRepository;
-use App\Entity\Repository\UserRepository;
+use App\Repository\OrganisationRepository;
+use App\Repository\UserRepository;
 use App\Factory\OrganisationFactory;
 use App\Service\RestHandler\OrganisationCreationException;
 use App\Service\RestHandler\OrganisationRestHandler;

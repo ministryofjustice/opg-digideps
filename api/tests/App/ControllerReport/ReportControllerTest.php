@@ -40,9 +40,13 @@ class ReportControllerTest extends AbstractTestController
     private static $pa3Client1;
     private static $pa3Client1Report1;
 
-    public static function setUpBeforeClass(): void
+    // new
+    private static $clientEdit;
+    private static $reportEdit;
+
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         // create deputy 1, with 2 submitted reports
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
@@ -50,12 +54,22 @@ class ReportControllerTest extends AbstractTestController
             self::$deputy1,
             ['setFirstname' => 'c1', 'setLastname' => 'l1', 'setCaseNumber' => '101010101']
         );
+        self::$clientEdit = self::fixtures()->createClient(
+            self::$deputy1,
+            ['setFirstname' => 'cEdit1', 'setLastname' => 'l1', 'setCaseNumber' => '010101010']
+        );
         self::fixtures()->flush();
         self::$report1 = self::fixtures()->createReport(self::$client1, [
             'setStartDate'   => new \DateTime('2014-01-01'),
             'setEndDate'     => new \DateTime('2014-12-31'),
             'setSubmitted'   => true,
             'setSubmittedBy' => self::$deputy1,
+        ]);
+        self::$reportEdit = self::fixtures()->createReport(self::$clientEdit, [
+            'setStartDate'   => new \DateTime('2014-01-01'),
+            'setEndDate'     => new \DateTime('2014-12-31'),
+            'setSubmitted'   => false,
+            'setSubmittedBy' => null,
         ]);
         self::$report103 = self::fixtures()->createReport(self::$client1, [
             'setStartDate'   => new \DateTime('2015-01-01'),
@@ -89,9 +103,9 @@ class ReportControllerTest extends AbstractTestController
         self::$pa3Client1 = self::fixtures()->createClient(self::$pa3TeamMember, ['setFirstname' => 'pa3Client1']);
         self::$pa3Client1Report1 = self::fixtures()->createReport(self::$pa3Client1);
 
-        $pa1Org = self::fixtures()->createOrganisation('Example', 'example3941.org', true);
-        $pa2Org = self::fixtures()->createOrganisation('Example', 'example4032.org', true);
-        $pa3Org = self::fixtures()->createOrganisation('Example', 'example1194.org', true);
+        $pa1Org = self::fixtures()->createOrganisation('Example', rand(1, 9999999) . 'example.org', true);
+        $pa2Org = self::fixtures()->createOrganisation('Example', rand(1, 9999999) . 'example.org', true);
+        $pa3Org = self::fixtures()->createOrganisation('Example', rand(1, 9999999) . 'example.org', true);
         self::fixtures()->flush();
         self::fixtures()->addClientToOrganisation(self::$pa1Client1->getId(), $pa1Org->getId());
         self::fixtures()->addUserToOrganisation(self::$pa1->getId(), $pa1Org->getId());
@@ -101,6 +115,14 @@ class ReportControllerTest extends AbstractTestController
         self::fixtures()->addUserToOrganisation(self::$pa3TeamMember->getId(), $pa3Org->getId());
 
         self::fixtures()->flush()->clear();
+
+        if (null === self::$tokenAdmin) {
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenDeputy = $this->loginAsDeputy();
+            self::$tokenPa = $this->loginAsPa();
+            self::$tokenPaAdmin = $this->loginAsPaAdmin();
+            self::$tokenPaTeamMember = $this->loginAsPaTeamMember();
+        }
     }
 
     /**
@@ -111,17 +133,6 @@ class ReportControllerTest extends AbstractTestController
         parent::tearDownAfterClass();
 
         self::fixtures()->clear();
-    }
-
-    public function setUp(): void
-    {
-        if (null === self::$tokenAdmin) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-            self::$tokenPa = $this->loginAsPa();
-            self::$tokenPaAdmin = $this->loginAsPaAdmin();
-            self::$tokenPaTeamMember = $this->loginAsPaTeamMember();
-        }
     }
 
     public function testAddAuth()
@@ -166,8 +177,6 @@ class ReportControllerTest extends AbstractTestController
 
 
         self::fixtures()->flush();
-
-        return $report->getId();
     }
 
     public function testGetByIdAuth()
@@ -287,17 +296,14 @@ class ReportControllerTest extends AbstractTestController
         $this->assertArrayHasKey('status', $data);
     }
 
-    /**
-     * @depends testAdd
-     */
-    public function testSubmit($reportId)
+    public function testSubmit()
     {
-        $url = '/report/' . self::$report1->getId() . '/submit';
+        $url = '/report/' . self::$reportEdit->getId() . '/submit';
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
         $this->assertEndpointNotAllowedFor('PUT', '/report/' . self::$report2->getId() . '/submit', self::$tokenDeputy);
 
-        $report = self::fixtures()->clear()->getReportById($reportId);
+        $report = self::fixtures()->clear()->getReportById(self::$reportEdit->getId());
 
         // add one document
         $document = new Document($report);
@@ -305,7 +311,7 @@ class ReportControllerTest extends AbstractTestController
         self::fixtures()->persist($document)->flush();
         $this->assertEquals(false, $report->getSubmitted());
 
-        $url = '/report/' . $reportId . '/submit';
+        $url = '/report/' . self::$reportEdit->getId() . '/submit';
 
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -318,7 +324,7 @@ class ReportControllerTest extends AbstractTestController
         ]);
 
         // assert account created with transactions
-        $report = self::fixtures()->clear()->getReportById($reportId);
+        $report = self::fixtures()->clear()->getReportById(self::$reportEdit->getId());
         /* @var $report \App\Entity\Report\Report */
         $this->assertEquals(true, $report->getSubmitted());
         $this->assertEquals(self::$deputy1->getId(), $report->getSubmittedBy()->getId());
@@ -333,16 +339,24 @@ class ReportControllerTest extends AbstractTestController
         ])['data'];
         $this->assertEquals(['new' => 0, 'pending' => 1, 'archived' => 0], $data['counts']);
         $this->assertEquals('file2.pdf', $data['records'][0]['documents'][0]['file_name']);
-
-        return $report->getId();
     }
 
-    /**
-     * @depends testAdd
-     */
-    public function testUnsubmit($reportId)
+    public function testUnsubmit()
     {
-        $url = '/report/' . $reportId . '/unsubmit';
+        $urlSubmit = '/report/' . self::$reportEdit->getId() . '/submit';
+
+        // submit
+        $this->assertJsonRequest('PUT', $urlSubmit, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenDeputy,
+            'data'        => [
+                'submit_date'                      => '2015-12-30',
+                'agreed_behalf_deputy'             => 'only_deputy',
+                'agreed_behalf_deputy_explanation' => 'should not be saved',
+            ],
+        ]);
+
+        $url = '/report/' . self::$reportEdit->getId() . '/unsubmit';
 
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenDeputy);
@@ -363,7 +377,7 @@ class ReportControllerTest extends AbstractTestController
         // both
         $q = http_build_query(['groups' => ['report']]);
         //assert both groups (quick)
-        $data = $this->assertJsonRequest('GET', '/report/' . $reportId . '?' . $q, [
+        $data = $this->assertJsonRequest('GET', '/report/' . self::$reportEdit->getId() . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
         ])['data'];
@@ -390,12 +404,9 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
     }
 
-    /**
-     * @depends testAdd
-     */
-    public function testUpdate($reportId)
+    public function testUpdate()
     {
-        //        $reportId = self::$report1->getId();
+        $reportId = self::$report1->getId();
         $url = '/report/' . $reportId;
 
         self::fixtures()->getReportById($reportId)->setDueDate(new \DateTime('2016-11-30'));
@@ -665,6 +676,18 @@ class ReportControllerTest extends AbstractTestController
         $reportId = self::$report1->getId();
         $url = '/report/' . $reportId . '/checked';
 
+        $urlSubmit = '/report/' . self::$report1->getId() . '/submit';
+        // submit
+        $this->assertJsonRequest('PUT', $urlSubmit, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenDeputy,
+            'data'        => [
+                'submit_date'                      => '2015-12-30',
+                'agreed_behalf_deputy'             => 'only_deputy',
+                'agreed_behalf_deputy_explanation' => 'should not be saved',
+            ],
+        ]);
+
         // add new report checklist
         $checklistId = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
@@ -718,9 +741,46 @@ class ReportControllerTest extends AbstractTestController
     {
         $reportId = self::$report1->getId();
         $url = '/report/' . $reportId . '/checked';
-        $report = self::fixtures()->getReportById($reportId);
+
+        $urlSubmit = '/report/' . $reportId . '/submit';
+        // submit
+        $this->assertJsonRequest('PUT', $urlSubmit, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenDeputy,
+            'data'        => [
+                'submit_date'                      => '2015-12-30',
+                'agreed_behalf_deputy'             => 'only_deputy',
+                'agreed_behalf_deputy_explanation' => 'should not be saved',
+            ],
+        ]);
 
         // add new report checklist
+        $this->assertJsonRequest('POST', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenAdmin,
+            'data'        => [
+                'button_clicked' => 'save', // Save further information
+                'reporting_period_accurate' => 'yes',
+                'contact_details_upto_date' => 1,
+                'deputy_full_name_accurate_in_casrec' => 1,
+                'decisions_satisfactory' => 'yes',
+                'consultations_satisfactory' => 'yes',
+                'care_arrangements' => 'yes',
+                'assets_declared_and_managed' => 'na',
+                'debts_managed' => 'yes',
+                'open_closing_balances_match' => 'yes',
+                'accounts_balance' => 'yes',
+                'money_movements_acceptable' => 'yes',
+                'bond_adequate' => 'yes',
+                'bond_order_match_casrec' => 'yes',
+                'future_significant_decisions' => 'yes',
+                'has_deputy_raised_concerns' => 'no',
+                'case_worker_satisified' => 'yes',
+            ],
+        ])['data']['checklist'];
+
+        // add new report checklist
+        $report = self::fixtures()->getReportById($reportId);
         $checklistId = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenAdmin,
@@ -790,9 +850,48 @@ class ReportControllerTest extends AbstractTestController
     {
         $reportId = self::$report1->getId();
         $url = '/report/' . $reportId . '/checked';
-        $report = self::fixtures()->getReportById($reportId);
+
+        // submit
+        $urlSubmit = '/report/' . $reportId . '/submit';
+        $this->assertJsonRequest('PUT', $urlSubmit, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenDeputy,
+            'data'        => [
+                'submit_date'                      => '2015-12-30',
+                'agreed_behalf_deputy'             => 'only_deputy',
+                'agreed_behalf_deputy_explanation' => 'should not be saved',
+            ],
+        ]);
+
+        // add new report checklist
+        $this->assertJsonRequest('POST', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenAdmin,
+            'data'        => [
+                'button_clicked' => 'save', // Save further information
+                'reporting_period_accurate' => 'yes',
+                'contact_details_upto_date' => 1,
+                'deputy_full_name_accurate_in_casrec' => 1,
+                'further_information_received' => 'Some more info',
+                'decisions_satisfactory' => 'yes',
+                'consultations_satisfactory' => 'yes',
+                'care_arrangements' => 'yes',
+                'assets_declared_and_managed' => 'na',
+                'debts_managed' => 'yes',
+                'open_closing_balances_match' => 'yes',
+                'accounts_balance' => 'yes',
+                'money_movements_acceptable' => 'yes',
+                'bond_adequate' => 'yes',
+                'bond_order_match_casrec' => 'yes',
+                'future_significant_decisions' => 'yes',
+                'has_deputy_raised_concerns' => 'no',
+                'case_worker_satisified' => 'yes',
+            ],
+        ])['data']['checklist'];
 
         // assert submit fails due to missing fields
+        $report = self::fixtures()->getReportById($reportId);
+
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => false,
             'AuthToken'   => self::$tokenAdmin,

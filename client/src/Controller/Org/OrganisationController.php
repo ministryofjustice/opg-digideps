@@ -18,7 +18,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/org/settings/organisation")
@@ -91,7 +91,7 @@ class OrganisationController extends AbstractController
      */
     public function addAction(Request $request, int $id)
     {
-        $this->denyAccessUnlessGranted('add-user');
+        $this->denyAccessUnlessGranted('can-add-user');
 
         try {
             $organisation = $this->restClient->get('v2/organisation/' . $id, 'Organisation');
@@ -120,6 +120,8 @@ class OrganisationController extends AbstractController
             try {
                 $email = $form->getData()->getEmail();
                 $user = $this->userApi->getByEmailOrgAdmins($email);
+
+                $this->denyAccessUnlessGranted('add-user', $user);
 
                 if (!$user->getId()) {
                     /** @var EntityDir\User $formData */

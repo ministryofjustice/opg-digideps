@@ -28,7 +28,7 @@ class ContactController extends RestController
 
     /**
      * @Route("/contact/{id}", methods={"GET"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function getOneById(Request $request, $id)
     {
@@ -44,7 +44,7 @@ class ContactController extends RestController
 
     /**
      * @Route("/contact/{id}", methods={"DELETE"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function deleteContact($id)
     {
@@ -63,7 +63,7 @@ class ContactController extends RestController
 
     /**
      * @Route("/contact", methods={"POST", "PUT"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      **/
     public function upsertContact(Request $request)
     {
@@ -121,7 +121,7 @@ class ContactController extends RestController
 
     /**
      * @Route("/{id}/contacts", methods={"GET"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function getContacts($id)
     {

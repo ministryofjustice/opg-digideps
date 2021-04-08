@@ -9,7 +9,7 @@ class AssetTypeTitleTest extends TestCase
 {
     public function setUp(): void
     {
-        $this->translator = m::mock('Symfony\Component\Translation\TranslatorInterface');
+        $this->translator = m::mock('Symfony\Contracts\Translation\TranslatorInterface');
         $this->translator->shouldReceive('trans')->with(m::any(), [], 'domain')->andReturnUsing(function ($a) {
             return $a . '-TRANSLATED';
         });

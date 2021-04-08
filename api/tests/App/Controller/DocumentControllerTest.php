@@ -6,7 +6,7 @@ use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
-use App\Entity\Repository\DocumentRepository;
+use App\Repository\DocumentRepository;
 use DateTime;
 
 class DocumentControllerTest extends AbstractTestController
@@ -55,6 +55,8 @@ class DocumentControllerTest extends AbstractTestController
 
     public function setUp(): void
     {
+        parent::setUp();
+
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
 

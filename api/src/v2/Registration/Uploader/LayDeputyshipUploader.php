@@ -3,7 +3,7 @@
 namespace App\v2\Registration\Uploader;
 
 use App\Entity\CasRec;
-use App\Entity\Repository\ReportRepository;
+use App\Repository\ReportRepository;
 use App\Entity\User;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use App\v2\Registration\DTO\LayDeputyshipDtoCollection;

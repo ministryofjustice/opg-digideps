@@ -5,8 +5,8 @@ namespace App\Controller\Report;
 use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Entity\Report\Report;
-use App\Entity\Repository\ChecklistRepository;
-use App\Entity\Repository\ReportRepository;
+use App\Repository\ChecklistRepository;
+use App\Repository\ReportRepository;
 use App\Entity\User;
 use App\Exception\UnauthorisedException;
 use App\Service\Auth\AuthService;
@@ -73,7 +73,7 @@ class ReportController extends RestController
      * Pa report are instead created via OrgService::createReport()
      *
      * @Route("", methods={"POST"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function addAction(Request $request)
     {
@@ -105,7 +105,7 @@ class ReportController extends RestController
 
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
-     * @Security("has_role('ROLE_DEPUTY') or has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_DEPUTY') or has_role('ROLE_ADMIN')")
      *
      * @param int $id
      *
@@ -136,7 +136,7 @@ class ReportController extends RestController
 
     /**
      * @Route("/{id}/submit", requirements={"id":"\d+"}, methods={"PUT"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function submit(Request $request, $id)
     {
@@ -176,7 +176,7 @@ class ReportController extends RestController
 
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"PUT"})
-     * @Security("has_role('ROLE_DEPUTY') or has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_DEPUTY') or has_role('ROLE_ADMIN')")
      */
     public function update(Request $request, $id)
     {
@@ -522,7 +522,7 @@ class ReportController extends RestController
 
     /**
      * @Route("/{id}/unsubmit", requirements={"id":"\d+"}, methods={"PUT"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function unsubmit(Request $request, $id)
     {
@@ -587,7 +587,7 @@ class ReportController extends RestController
 
     /**
      * @Route("/get-all-by-user", methods={"GET"})
-     * @Security("has_role('ROLE_ORG')")
+     * @Security("is_granted('ROLE_ORG')")
      *
      * @param Request $request
      * @return array
@@ -603,7 +603,7 @@ class ReportController extends RestController
 
     /**
      * @Route("/get-all-by-orgs", methods={"GET"})
-     * @Security("has_role('ROLE_ORG')")
+     * @Security("is_granted('ROLE_ORG')")
      *
      * @param Request $request
      * @return array
@@ -716,7 +716,7 @@ class ReportController extends RestController
 
     /**
      * @Route("/{id}/submit-documents", requirements={"id":"\d+"}, methods={"PUT"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function submitDocuments($id)
     {
@@ -736,7 +736,7 @@ class ReportController extends RestController
      * Add a checklist for the report
      *
      * @Route("/{report_id}/checked", requirements={"report_id":"\d+"}, methods={"POST"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function insertChecklist(Request $request, $report_id)
     {
@@ -774,7 +774,7 @@ class ReportController extends RestController
      * Update a checklist for the report
      *
      * @Route("/{report_id}/checked", requirements={"report_id":"\d+"}, methods={"PUT"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function updateChecklist(Request $request, $report_id)
     {
@@ -848,7 +848,7 @@ class ReportController extends RestController
     /**
      * Get a checklist for the report
      * @Route("/{report_id}/checklist", requirements={"report_id":"\d+"}, methods={"GET"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function getChecklist(Request $request, $report_id)
     {
@@ -865,7 +865,7 @@ class ReportController extends RestController
      * Update a checklist for the report
      *
      * @Route("/{report_id}/checklist", requirements={"report_id":"\d+"}, methods={"POST", "PUT"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function upsertChecklist(Request $request, $report_id)
     {
