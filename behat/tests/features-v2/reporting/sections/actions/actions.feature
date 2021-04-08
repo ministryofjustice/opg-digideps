@@ -1,8 +1,8 @@
-@v2 @jim
+@v2 @actions
 Feature: Actions
 
   Scenario: A user has made no financial decisions and has no concerns
-    Given a Lay Deputy logs in and has a new report
+    Given a Lay Deputy has a new report
     And I view and start the actions report section
     Then I should be on the financial decision actions page
     When I choose no and save on financial decision actions section
@@ -10,12 +10,14 @@ Feature: Actions
     When I choose no and save on concerns actions section
     Then I should be on the actions report summary page
     And I should see the expected action report section responses
+    And the previous section should be "Debts"
+    And the next section should be "Any other information"
     When I follow link back to report overview page
     Then I should be on the Lay reports overview page
     And I should see "actions" as "finished"
 
   Scenario: A user has made financial decisions and has concerns
-    Given a Lay Deputy logs in and has a new report
+    Given a Lay Deputy has a new report
     And I view and start the actions report section
     Then I should be on the financial decision actions page
     When I choose yes and save on financial decision actions section
@@ -26,8 +28,8 @@ Feature: Actions
     And I should see the expected action comments
 
   Scenario: A user partially completes the section and then edits their responses
-    Given a Lay Deputy logs in and has a new report
-    And I go to the url for the report overview page
+    Given a Lay Deputy has a new report
+    And I view the report overview page
     Then I should see "actions" as "not started"
     When I view and start the actions report section
     Then I choose no and save on financial decision actions section

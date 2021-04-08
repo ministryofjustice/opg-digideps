@@ -74,6 +74,7 @@ trait ActionsSectionTrait
             'action[doYouHaveConcernsDetails]'
         );
     }
+
     public function fillInActionsForm($answer, $actionName, $comment = null, $commentName = null)
     {
         $this->selectOption($actionName, $answer);
