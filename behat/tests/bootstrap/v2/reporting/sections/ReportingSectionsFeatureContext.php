@@ -9,6 +9,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
 {
     use ContactsSectionTrait;
     use ActionsSectionTrait;
+    use GiftsSectionTrait;
     use AdditionalInformationSectionTrait;
     use DocumentsSectionTrait;
 
@@ -64,7 +65,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     public function iNavigateBackToReportSection()
     {
         $this->clickLink('Deputy report overview');
-        $this->iAmOnReportsOverviewPage($this->getCurrentUrl());
+        assert($this->iAmOnReportsOverviewPage());
     }
 
     /**
@@ -76,7 +77,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     }
 
     /**
-     * @When I go to the url for the report overview page
+     * @When I view the report overview page
      */
     public function iGoToReportOverviewUrl()
     {
@@ -102,6 +103,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
         foreach ($divs as $div) {
             if ($div->getAttribute('href') === $sectionFormatted) {
                 $statuses = $div->findAll('css', 'span');
+
                 foreach ($statuses as $sts) {
                     if (str_contains(strtolower($sts->getHtml()), $status)) {
                         $statusCorrect = true;
@@ -143,5 +145,21 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
         }
 
         assert($furtherInfoNeeded);
+    }
+
+    /**
+     * @When I choose to save and add another
+     */
+    public function iChooseToSaveAndAddAnother()
+    {
+        $this->pressButton('Save and add another');
+    }
+
+    /**
+     * @When I choose to save and continue
+     */
+    public function iChooseToSaveAndContinue()
+    {
+        $this->pressButton('Save and continue');
     }
 }

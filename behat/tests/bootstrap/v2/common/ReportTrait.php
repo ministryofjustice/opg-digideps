@@ -34,9 +34,19 @@ trait ReportTrait
     }
 
     /**
-     * @Given a Lay Deputy logs in and has a new report
+     * @Given a Lay Deputy completes and submits a report
+     * @throws Exception
      */
-    public function aLayDeputyLogsInAndHasNewReport()
+    public function aLayDeputyCompletesAndSubmitsAReport()
+    {
+        $this->aLayDeputyHasCompletedReport();
+        $this->iSubmitTheReport();
+    }
+
+    /**
+     * @Given a Lay Deputy has a new report
+     */
+    public function aLayDeputyHasNewReport()
     {
         if (empty($this->layDeputyNotStartedDetails)) {
             throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedDetails');
@@ -46,12 +56,13 @@ trait ReportTrait
     }
 
     /**
-     * @Given a Lay Deputy completes and submits a report
+     * @Given a Lay Deputy has a completed report
+     * @throws Exception
      */
-    public function aLayDeputyCompletesAndSubmitsAReport()
+    public function aLayDeputyHasCompletedReport()
     {
         if (empty($this->layDeputyCompletedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedNotSubmittedDetails');
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedDetails');
         }
 
         $this->loginToFrontendAs($this->layDeputyCompletedDetails->getEmail());
@@ -72,6 +83,7 @@ trait ReportTrait
 
     /**
      * @Given a Lay Deputy has submitted a report
+     * @throws Exception
      */
     public function aLayDeputyHasSubmittedAReport()
     {

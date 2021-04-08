@@ -83,20 +83,20 @@ class UserRepositoryTest extends WebTestCase
         $reportHelper = new ReportTestHelper();
         $clientHelper = new ClientTestHelper();
 
-        $clientOne = $clientHelper->createClient($this->em) ;
+        $clientOne = $clientHelper->generateClient($this->em) ;
         $activeUserOne = ($userHelper->createAndPersistUser($this->em, $clientOne));
         $reportOne = ($reportHelper->generateReport($this->em, $clientOne))->setSubmitDate(new DateTime());
 
-        $clientTwo = $clientHelper->createClient($this->em) ;
+        $clientTwo = $clientHelper->generateClient($this->em) ;
         $activeUserTwo = $userHelper->createAndPersistUser($this->em, $clientTwo);
         $reportTwo = ($reportHelper->generateReport($this->em, $clientTwo))->setSubmitDate(new DateTime());
 
-        $clientThree = $clientHelper->createClient($this->em);
+        $clientThree = $clientHelper->generateClient($this->em) ;
         $reportThree = ($reportHelper->generateReport($this->em, $clientThree))->setSubmitDate(new DateTime());
         $inactiveUserOne = $userHelper->createAndPersistUser($this->em, $clientThree);
         $inactiveUserOne->setLastLoggedIn(new DateTime('-380 days'));
 
-        $clientFour = $clientHelper->createClient($this->em) ;
+        $clientFour = $clientHelper->generateClient($this->em) ;
         $reportFour = $reportHelper->generateReport($this->em, $clientFour);
         $inactiveUserTwo = $userHelper->createAndPersistUser($this->em, $clientFour);
         $inactiveUserTwo->setLastLoggedIn(new DateTime());

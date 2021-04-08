@@ -212,6 +212,12 @@ v2-tests-goutte:
             contexts:
                 - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
+        section-gifts:
+            description: Covering the 'Gifts' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/gifts" ]
+            contexts:
+                - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
         section-additional-information:
             description: Covering the 'Additional Information' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/additional-information" ]

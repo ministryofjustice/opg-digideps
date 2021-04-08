@@ -102,7 +102,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnLayMainPage()
     {
-        $this->iAmOnPage('/lay$/');
+        return $this->iAmOnPage('/lay$/');
     }
 
     /**
@@ -119,5 +119,53 @@ trait IShouldBeOnTrait
     public function iAmOnDocumentsSummaryPage()
     {
         return $this->iAmOnPage('/report\/.*\/documents\/summary/');
+    }
+
+    /**
+     * @Then I should be on the gifts exist page
+     */
+    public function iAmOnGiftsExistPage()
+    {
+        return $this->iAmOnPage('/report\/.*\/gifts\/exist.*$/');
+    }
+
+    /**
+     * @Then I should be on the gifts summary page
+     */
+    public function iAmOnGiftsSummaryPage()
+    {
+        return $this->iAmOnPage('/report\/.*\/gifts\/summary$/');
+    }
+
+    /**
+     * @Then I should be on the add a gift page
+     */
+    public function iAmOnGiftsAddPage()
+    {
+        return $this->iAmOnPage('/report\/.*\/gifts\/add.*$/');
+    }
+
+    /**
+     * @Then I should be on the edit a gift page
+     */
+    public function iAmOnGiftsEditPage()
+    {
+        return $this->iAmOnPage('/report\/.*\/gifts\/edit\/.*$/');
+    }
+
+    /**
+     * @Then I should be on the delete a gift page
+     */
+    public function iAmOnGiftsDeletionPage()
+    {
+        return $this->iAmOnPage('/report\/.*\/gifts\/.*\/delete$/');
+    }
+
+    /**
+     * @Then I should be on the gifts start page
+     */
+    public function iAmOnGiftsStartPage()
+    {
+        return $this->iAmOnPage('/report\/.*\/gifts$/');
     }
 }

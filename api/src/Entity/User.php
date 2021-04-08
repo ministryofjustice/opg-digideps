@@ -22,6 +22,7 @@ class User implements UserInterface
     const TOKEN_EXPIRE_HOURS = 48;
 
     const ROLE_ADMIN = 'ROLE_ADMIN';
+    const ROLE_ELEVATED_ADMIN = 'ROLE_ELEVATED_ADMIN';
     const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
 
     const ROLE_DEPUTY = 'ROLE_DEPUTY';
@@ -1019,7 +1020,7 @@ class User implements UserInterface
      */
     public function isPaDeputy()
     {
-        return $this->isPaNamedDeputy() ||$this->isPaAdministrator() || $this->isPaTeamMember();
+        return $this->isPaNamedDeputy() ||$this->isPaAdministrator() || $this->isPaTeamMember() || $this->isPaTopRole();
     }
 
     /**
@@ -1029,7 +1030,7 @@ class User implements UserInterface
      */
     public function isProfDeputy()
     {
-        return $this->isProfNamedDeputy() || $this->isProfAdministrator() || $this->isProfTeamMember();
+        return $this->isProfNamedDeputy() || $this->isProfAdministrator() || $this->isProfTeamMember() || $this->isProfTopRole();
     }
 
     /**
@@ -1123,6 +1124,22 @@ class User implements UserInterface
     /**
      * @return bool
      */
+    public function isPaTopRole()
+    {
+        return $this->getRoleName() === self::ROLE_PA;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProfTopRole()
+    {
+        return $this->getRoleName() === self::ROLE_PROF;
+    }
+
+    /**
+     * @return bool
+     */
     public function isOrgNamedOrAdmin()
     {
         return $this->isOrgNamedDeputy() || $this->isOrgAdministrator();
@@ -1146,6 +1163,38 @@ class User implements UserInterface
     public function isDeputyOrg()
     {
         return $this->isOrgNamedDeputy() || $this->isOrgAdministrator() || $this->isOrgTeamMember();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->getRoleName() === self::ROLE_ADMIN;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->getRoleName() === self::ROLE_SUPER_ADMIN;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isElevatedAdmin(): bool
+    {
+        return $this->getRoleName() === self::ROLE_ELEVATED_ADMIN;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAdminRole(): bool
+    {
+        return $this->isAdmin() || $this->isSuperAdmin() || $this->isElevatedAdmin();
     }
 
     /**

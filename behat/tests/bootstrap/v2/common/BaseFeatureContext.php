@@ -18,6 +18,7 @@ class BaseFeatureContext extends MinkContext
     use ReportTrait;
     use IShouldBeOnTrait;
     use PageUrlsTrait;
+    use ElementSelectionTrait;
     use ErrorsTrait;
     use AlertsTrait;
 

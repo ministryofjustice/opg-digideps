@@ -32,7 +32,7 @@ class ReportTestHelper
      */
     public function generateReport(EntityManager $em, ?Client $client = null, ?string $type = null, ?DateTime $startDate = null, ?DateTime $endDate = null)
     {
-        $client = $client ? $client : (new ClientTestHelper())->createClient($em);
+        $client = $client ? $client : (new ClientTestHelper())->generateClient($em);
         $type = $type ? $type : Report::TYPE_102;
         $startDate = $startDate ? $startDate : new \DateTime('2 years ago');
         $endDate = $endDate ? $endDate : (clone $startDate)->add(new DateInterval('P1Y'));
