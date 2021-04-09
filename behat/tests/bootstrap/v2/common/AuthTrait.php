@@ -40,6 +40,30 @@ trait AuthTrait
         $this->loggedInUserDetails = $this->getUserDetailsByEmail($email);
     }
 
+    /**
+     * @Given an admin user accesses the admin app
+     */
+    public function adminUsersAccessesAdmin()
+    {
+        if (empty($this->adminDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $this->adminDetails');
+        }
+
+        $this->loginToAdminAs($this->adminDetails->getEmail());
+    }
+
+    /**
+     * @Given a super admin user accesses the admin app
+     */
+    public function superAdminUsersAccessesAdmin()
+    {
+        if (empty($this->superAdminDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $this->superAdminDetails');
+        }
+
+        $this->loginToAdminAs($this->superAdminDetails->getEmail());
+    }
+
     private function userDetailsExists(string $email)
     {
         foreach ($this->fixtureUsers as $fixtureUser) {

@@ -12,16 +12,17 @@ use Faker\Generator;
 
 class BaseFeatureContext extends MinkContext
 {
+    use AlertsTrait;
     use AuthTrait;
     use CourtOrderTrait;
     use DebugTrait;
-    use ReportTrait;
-    use IShouldBeOnTrait;
-    use PageUrlsTrait;
     use ElementSelectionTrait;
     use ErrorsTrait;
-    use AlertsTrait;
+    use IShouldBeOnTrait;
+    use INavigateToTrait;
     use IVisitTrait;
+    use PageUrlsTrait;
+    use ReportTrait;
 
     const BEHAT_FRONT_RESET_FIXTURES = '/behat/frontend/reset-fixtures?testRunId=%s';
     const BEHAT_FRONT_USER_DETAILS = '/behat/frontend/user/%s/details';
@@ -33,11 +34,13 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $layDeputyCompletedDetails;
     public UserDetails $layDeputySubmittedDetails;
 
+    /** @var UserDetails $profAdminDeputyNotStartedDetails */
     public UserDetails $profAdminDeputyNotStartedDetails;
     public UserDetails $profAdminDeputyCompletedDetails;
     public UserDetails $profAdminDeputySubmittedDetails;
 
     public UserDetails $loggedInUserDetails;
+    public UserDetails $interactingWithUserDetails;
 
     public array $fixtureUsers = [];
 

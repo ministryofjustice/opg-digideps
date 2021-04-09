@@ -22,6 +22,7 @@ class UserDetails
 
     public function __construct(array $userDetails)
     {
+        var_dump($userDetails);
         $this->initialize($userDetails);
     }
 
@@ -52,7 +53,10 @@ class UserDetails
         }
 
         $this->setEmail($userDetails['email']);
+
         $this->setClientId($userDetails['clientId']);
+        $this->setClientFirstName($userDetails['clientFirstName']);
+        $this->setClientLastName($userDetails['clientLastName']);
 
         $this->setCurrentReportId($userDetails['currentReportId']);
         $this->setCurrentReportType($userDetails['currentReportType']);

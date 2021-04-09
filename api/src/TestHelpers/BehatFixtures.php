@@ -3,6 +3,7 @@
 
 namespace App\TestHelpers;
 
+use App\Entity\Ndr\Ndr;
 use App\Entity\Organisation;
 use App\Entity\User;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;

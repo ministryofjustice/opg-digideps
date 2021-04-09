@@ -236,6 +236,12 @@ v2-tests-goutte:
             contexts:
                 - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
+        client-management:
+            description: Covering the client management features of the app (frontend and admin)
+            paths: [ "%paths.base%/features-v2/client-management" ]
+            contexts:
+                - DigidepsBehat\v2\ClientManagement\ClientManagementFeatureContext
+
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             files_path: '%paths.base%/fixtures/'
