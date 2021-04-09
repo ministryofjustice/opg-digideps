@@ -11,6 +11,8 @@ class UserDetails
 {
     private ?string $email = null;
     private ?int $clientId = null;
+    private ?string $clientFirstName = null;
+    private ?string $clientLastName = null;
     private ?int $currentReportId = null;
     private ?string $currentReportType = null;
     private ?string $currentReportNdrOrReport = null;
@@ -217,6 +219,42 @@ class UserDetails
     public function setPreviousReportNdrOrReport(?string $previousReportNdrOrReport): UserDetails
     {
         $this->previousReportNdrOrReport = $previousReportNdrOrReport;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getClientFirstName(): ?string
+    {
+        return $this->clientFirstName;
+    }
+
+    /**
+     * @param string|null $clientFirstName
+     * @return UserDetails
+     */
+    public function setClientFirstName(?string $clientFirstName): UserDetails
+    {
+        $this->clientFirstName = $clientFirstName;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getClientLastName(): ?string
+    {
+        return $this->clientLastName;
+    }
+
+    /**
+     * @param string|null $clientLastName
+     * @return UserDetails
+     */
+    public function setClientLastName(?string $clientLastName): UserDetails
+    {
+        $this->clientLastName = $clientLastName;
         return $this;
     }
 }

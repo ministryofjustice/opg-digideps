@@ -82,71 +82,49 @@ class BehatFixtures
                 ]
             ],
             'lays' => [
-                'not-started' => [
-                    'email' => $this->layNotStarted->getEmail(),
-                    'clientId' => $this->layNotStarted->getFirstClient()->getId(),
-                    'currentReportId' => $this->layNotStarted->getFirstClient()->getCurrentReport()->getId(),
-                    'currentReportType' => $this->layNotStarted->getFirstClient()->getCurrentReport()->getType(),
-                    'currentReportNdrOrReport' => $this->layNotStarted->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report',
-                    'previousReportId' => null,
-                    'previousReportType' => null,
-                    'previousReportNdrOrReport' => $this->layNotStarted->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report'
-                ],
-                'completed' => [
-                    'email' => $this->layCompleted->getEmail(),
-                    'clientId' => $this->layCompleted->getFirstClient()->getId(),
-                    'currentReportId' => $this->layCompleted->getFirstClient()->getCurrentReport()->getId(),
-                    'currentReportType' =>$this->layCompleted->getFirstClient()->getCurrentReport()->getType(),
-                    'currentReportNdrOrReport' => $this->layCompleted->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report',
-                    'previousReportId' => null,
-                    'previousReportType' => null,
-                    'previousReportNdrOrReport' => $this->layCompleted->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report'
-                ],
-                'submitted' => [
-                    'email' => $this->laySubmitted->getEmail(),
-                    'clientId' => $this->laySubmitted->getFirstClient()->getId(),
-                    'currentReportId' => $this->laySubmitted->getFirstClient()->getCurrentReport()->getId(),
-                    'currentReportType' =>$this->laySubmitted->getFirstClient()->getCurrentReport()->getType(),
-                    'currentReportNdrOrReport' => $this->laySubmitted->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report',
-                    'previousReportId' => $this->laySubmitted->getFirstClient()->getReports()[0]->getId(),
-                    'previousReportType' => $this->laySubmitted->getFirstClient()->getReports()[0]->getType(),
-                    'previousReportNdrOrReport' => $this->laySubmitted->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report'
-                ]
+                'not-started' => $this->buildLayUserDetails($this->layNotStarted),
+                'completed' => $this->buildLayUserDetails($this->layCompleted),
+                'submitted' => $this->buildLayUserDetails($this->laySubmitted),
             ],
             'professionals' => [
                 'admin' => [
-                    'not-started' => [
-                        'email' => $this->profAdminNotStarted->getEmail(),
-                        'clientId' => $this->profAdminNotStarted->getOrganisations()[0]->getClients()[0]->getId(),
-                        'currentReportId' => $this->profAdminNotStarted->getOrganisations()[0]->getClients()[0]->getCurrentReport()->getId(),
-                        'currentReportType' => $this->profAdminNotStarted->getOrganisations()[0]->getClients()[0]->getCurrentReport()->getType(),
-                        'currentReportNdrOrReport' => $this->profAdminNotStarted->getOrganisations()[0]->getClients()[0]->getCurrentReport() instanceof Ndr ? 'ndr' : 'report',
-                        'previousReportId' => null,
-                        'previousReportType' => null,
-                        'previousReportNdrOrReport' => $this->profAdminNotStarted->getOrganisations()[0]->getClients()[0]->getCurrentReport() instanceof Ndr ? 'ndr' : 'report'
-                    ],
-                    'completed' => [
-                        'email' => $this->profAdminCompleted->getEmail(),
-                        'clientId' => $this->profAdminCompleted->getOrganisations()[0]->getClients()[0]->getId(),
-                        'currentReportId' => $this->profAdminCompleted->getOrganisations()[0]->getClients()[0]->getCurrentReport()->getId(),
-                        'currentReportType' =>$this->profAdminCompleted->getOrganisations()[0]->getClients()[0]->getCurrentReport()->getType(),
-                        'currentReportNdrOrReport' => $this->profAdminCompleted->getOrganisations()[0]->getClients()[0]->getCurrentReport() instanceof Ndr ? 'ndr' : 'report',
-                        'previousReportId' => null,
-                        'previousReportType' => null,
-                        'previousReportNdrOrReport' => $this->profAdminCompleted->getOrganisations()[0]->getClients()[0]->getCurrentReport() instanceof Ndr ? 'ndr' : 'report'
-                    ],
-                    'submitted' => [
-                        'email' => $this->profAdminSubmitted->getEmail(),
-                        'clientId' => $this->profAdminSubmitted->getOrganisations()[0]->getClients()[0]->getId(),
-                        'currentReportId' => $this->profAdminSubmitted->getOrganisations()[0]->getClients()[0]->getCurrentReport()->getId(),
-                        'currentReportType' =>$this->profAdminSubmitted->getOrganisations()[0]->getClients()[0]->getCurrentReport()->getType(),
-                        'currentReportNdrOrReport' => $this->profAdminSubmitted->getOrganisations()[0]->getClients()[0]->getCurrentReport() instanceof Ndr ? 'ndr' : 'report',
-                        'previousReportId' => $this->profAdminSubmitted->getOrganisations()[0]->getClients()[0]->getReports()[0]->getId(),
-                        'previousReportType' => $this->profAdminSubmitted->getOrganisations()[0]->getClients()[0]->getReports()[0]->getType(),
-                        'previousReportNdrOrReport' => $this->profAdminSubmitted->getOrganisations()[0]->getClients()[0]->getCurrentReport() instanceof Ndr ? 'ndr' : 'report'
-                    ]
+                    'not-started' => $this->buildOrgUserDetails($this->profAdminNotStarted),
+                    'completed' => $this->buildOrgUserDetails($this->profAdminCompleted),
+                    'submitted' => $this->buildOrgUserDetails($this->profAdminSubmitted),
                 ]
             ]
+        ];
+    }
+
+    private function buildLayUserDetails(User $user)
+    {
+        return [
+            'email' => $user->getEmail(),
+            'clientId' => $user->getFirstClient()->getId(),
+            'clientFirstName' => $user->getFirstClient()->getFirstname(),
+            'clientLastName' => $user->getFirstClient()->getLastname(),
+            'currentReportId' => $user->getFirstClient()->getCurrentReport()->getId(),
+            'currentReportType' =>$user->getFirstClient()->getCurrentReport()->getType(),
+            'currentReportNdrOrReport' => $user->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report',
+            'previousReportId' => $user->getFirstClient()->getReports()[0]->getId(),
+            'previousReportType' => $user->getFirstClient()->getReports()[0]->getType(),
+            'previousReportNdrOrReport' => $user->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report'
+        ];
+    }
+
+    private function buildOrgUserDetails(User $user)
+    {
+        return [
+            'email' => $user->getEmail(),
+            'clientId' => $user->getOrganisations()[0]->getClients()[0]->getId(),
+            'clientFirstName' => $user->getOrganisations()[0]->getClients()[0]->getFirstname(),
+            'clientLastName' => $user->getOrganisations()[0]->getClients()[0]->getLastname(),
+            'currentReportId' => $user->getOrganisations()[0]->getClients()[0]->getCurrentReport()->getId(),
+            'currentReportType' =>$user->getOrganisations()[0]->getClients()[0]->getCurrentReport()->getType(),
+            'currentReportNdrOrReport' => $user->getOrganisations()[0]->getClients()[0]->getCurrentReport() instanceof Ndr ? 'ndr' : 'report',
+            'previousReportId' => $user->getOrganisations()[0]->getClients()[0]->getReports()[0]->getId(),
+            'previousReportType' => $user->getOrganisations()[0]->getClients()[0]->getReports()[0]->getType(),
+            'previousReportNdrOrReport' => $user->getOrganisations()[0]->getClients()[0]->getCurrentReport() instanceof Ndr ? 'ndr' : 'report'
         ];
     }
 
