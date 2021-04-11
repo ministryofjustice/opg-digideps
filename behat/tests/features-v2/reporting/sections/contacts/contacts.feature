@@ -1,4 +1,4 @@
-@v2
+@v2 @contacts
 Feature: Contacts
 
   Scenario: A user has no contacts

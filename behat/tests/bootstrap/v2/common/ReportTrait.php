@@ -12,8 +12,8 @@ trait ReportTrait
      */
     public function iSubmitTheReport()
     {
-        $ndrOrReport = $this->layDeputyCompletedNotSubmittedDetails->getCurrentReportNdrOrReport();
-        $reportId = $this->layDeputyCompletedNotSubmittedDetails->getCurrentReportId();
+        $ndrOrReport = $this->layDeputyCompletedDetails->getCurrentReportNdrOrReport();
+        $reportId = $this->layDeputyCompletedDetails->getCurrentReportId();
 
         $this->visit("$ndrOrReport/$reportId/overview");
 
@@ -34,19 +34,9 @@ trait ReportTrait
     }
 
     /**
-     * @Given a Lay Deputy completes and submits a report
-     * @throws Exception
+     * @Given a Lay Deputy has not started a report
      */
-    public function aLayDeputyCompletesAndSubmitsAReport()
-    {
-        $this->aLayDeputyHasCompletedReport();
-        $this->iSubmitTheReport();
-    }
-
-    /**
-     * @Given a Lay Deputy has a new report
-     */
-    public function aLayDeputyHasNewReport()
+    public function aLayDeputyHasNotStartedAReport()
     {
         if (empty($this->layDeputyNotStartedDetails)) {
             throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedDetails');
@@ -61,23 +51,11 @@ trait ReportTrait
      */
     public function aLayDeputyHasCompletedReport()
     {
-        if (empty($this->layDeputyCompletedNotSubmittedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedNotSubmittedDetails');
+        if (empty($this->layDeputyCompletedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedDetails');
         }
 
-        $this->loginToFrontendAs($this->layDeputyCompletedNotSubmittedDetails->getEmail());
-    }
-
-    /**
-     * @Given a Lay Deputy has not started a report
-     */
-    public function aLayDeputyHasNotStartedAReport()
-    {
-        if (empty($this->layDeputyNotStartedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedDetails');
-        }
-
-        $this->loginToFrontendAs($this->layDeputyNotStartedDetails->getEmail());
+        $this->loginToFrontendAs($this->layDeputyCompletedDetails->getEmail());
     }
 
     /**
@@ -91,5 +69,17 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layDeputySubmittedDetails->getEmail());
+    }
+
+    /**
+     * @Given a Professional Admin Deputy has not started a report
+     */
+    public function aProfessionalAdminDeputyHasNotStartedAReport()
+    {
+        if (empty($this->profAdminDeputyNotStartedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $profAdminDeputyNotStartedDetails');
+        }
+
+        $this->loginToFrontendAs($this->profAdminDeputyNotStartedDetails->getEmail());
     }
 }

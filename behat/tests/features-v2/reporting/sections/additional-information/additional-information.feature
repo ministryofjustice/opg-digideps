@@ -1,4 +1,4 @@
-@v2
+@v2 @additional-information
 Feature: Additional Information
 
   Scenario: A user has no additional information to add

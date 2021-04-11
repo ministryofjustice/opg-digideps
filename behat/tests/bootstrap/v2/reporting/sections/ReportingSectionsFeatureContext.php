@@ -11,6 +11,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use ActionsSectionTrait;
     use AdditionalInformationSectionTrait;
     use ContactsSectionTrait;
+    use DocumentsSectionTrait;
     use GiftsSectionTrait;
 
     const REPORT_SECTION_ENDPOINT = 'report/%s/%s';
