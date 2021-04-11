@@ -287,7 +287,7 @@ trait GiftsSectionTrait
             $tableRows = $tableBody->findAll('css', 'tr');
 
             if (!$tableRows) {
-                $this->throwContextualException('A tbody element was not found on the page');
+                $this->throwContextualException('A tr element was not found on the page');
             }
 
             foreach ($tableRows as $tableRow) {

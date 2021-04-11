@@ -161,4 +161,28 @@ trait IShouldBeOnTrait
     {
         return $this->iAmOnPage('/report\/.*\/gifts$/');
     }
+
+    /**
+     * @Then I should be on the accounts summary page
+     */
+    public function iAmOnAccountsSummaryPage()
+    {
+        return $this->iAmOnPage('/report\/.*\/bank-accounts\/summary$/');
+    }
+
+    /**
+     * @Then I should be on the add another accounts page
+     */
+    public function iAmOnAccountsAddAnotherPage()
+    {
+        return $this->iAmOnPage('/report\/.*\/bank-accounts\/add_another$/');
+    }
+
+    /**
+     * @Then I should be on add initial account page
+     */
+    public function iAmOnAccountsAddInitialPage()
+    {
+        return $this->iAmOnPage('/report\/.*\/bank-account\/step1$/');
+    }
 }

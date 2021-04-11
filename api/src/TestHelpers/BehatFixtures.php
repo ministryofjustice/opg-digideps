@@ -153,7 +153,8 @@ class BehatFixtures
 
     private function addClientsAndReportsToDeputy(User $deputy, bool $completed = false, bool $submitted = false)
     {
-        $client = $this->clientTestHelper->createClient($this->entityManager, $deputy);
+        $client = $this->clientTestHelper->generateClient($this->entityManager, $deputy);
+
         $report = $this->reportTestHelper->generateReport($this->entityManager, $client);
 
         $client->addReport($report);

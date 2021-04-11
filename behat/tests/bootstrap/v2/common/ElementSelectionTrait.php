@@ -94,4 +94,34 @@ trait ElementSelectionTrait
 
         return $choices[$choiceNumber];
     }
+
+    // Select radio dialogue based on name
+    public function iSelectRadioBasedOnName(string $elementType, string $attributeType, string $attributeValue, string $name)
+    {
+        $xpath = sprintf("//%s[@%s='%s']", $elementType, $attributeType, $attributeValue);
+        $session = $this->getSession();
+        $element = $session->getPage()->find(
+            'xpath',
+            $session->getSelectorsHandler()->selectorToXpath('xpath', $xpath)
+        );
+
+        if (null === $element) {
+            throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
+        }
+
+        $values = $element->findAll('css', 'input');
+
+        foreach ($values as $value) {
+//            var_dump($value->getAttribute('name'));
+//            var_dump($value->getAttribute('value'));
+            if ($value->getAttribute('value') == $name) {
+                $select = trim($value->getAttribute('name'));
+                $option = trim($value->getAttribute('value'));
+            }
+        }
+
+        $page = $this->getSession()->getPage();
+        $page->selectFieldOption($select, $option);
+//        $page->selectFieldOption('account[accountType]', 'current');
+    }
 }

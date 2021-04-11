@@ -200,9 +200,9 @@ cross-browser-android-chrome:
 
 v2-tests-goutte:
     suites:
-        section-contacts:
-            description: Covering the 'Contacts' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/contacts" ]
+        section-accounts:
+            description: Covering the 'Accounts' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/accounts" ]
             contexts:
                 - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
@@ -212,15 +212,21 @@ v2-tests-goutte:
             contexts:
                 - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
-        section-gifts:
-            description: Covering the 'Gifts' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/gifts" ]
-            contexts:
-                - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
-
         section-additional-information:
             description: Covering the 'Additional Information' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/additional-information" ]
+            contexts:
+                - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        section-contacts:
+            description: Covering the 'Contacts' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/contacts" ]
+            contexts:
+                - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        section-gifts:
+            description: Covering the 'Gifts' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/gifts" ]
             contexts:
                 - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 

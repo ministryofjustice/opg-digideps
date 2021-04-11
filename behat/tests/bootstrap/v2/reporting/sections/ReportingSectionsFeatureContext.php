@@ -7,10 +7,11 @@ use DigidepsBehat\v2\Common\BaseFeatureContext;
 
 class ReportingSectionsFeatureContext extends BaseFeatureContext
 {
-    use ContactsSectionTrait;
+    use AccountsSectionTrait;
     use ActionsSectionTrait;
-    use GiftsSectionTrait;
     use AdditionalInformationSectionTrait;
+    use ContactsSectionTrait;
+    use GiftsSectionTrait;
 
     const REPORT_SECTION_ENDPOINT = 'report/%s/%s';
 

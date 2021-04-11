@@ -11,6 +11,7 @@ trait PageUrlsTrait
     private string $contactsSummaryUrl = '/report/%s/contacts/summary';
     private string $contactsAddUrl = '/report/%s/contacts/add';
     private string $contactsAddAnotherUrl = '/report/%s/contacts/add_another';
+    private string $accountsAddAnAccountUrl = 'report/%s/bank-account/step1';
     private string $layReportsOverviewUrl = '/lay';
 
     /**
@@ -19,6 +20,14 @@ trait PageUrlsTrait
     public function getReportSubmittedUrl(int $reportId): string
     {
         return sprintf($this->reportSubmittedUrl, $reportId);
+    }
+
+    /**
+     * @return string
+     */
+    public function getAccountsAddAnAccountUrl(int $reportId): string
+    {
+        return sprintf($this->accountsAddAnAccountUrl, $reportId);
     }
 
     /**
