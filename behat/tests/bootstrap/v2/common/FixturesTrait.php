@@ -1,10 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 
-namespace DigidepsBehat\Common;
+
+namespace DigidepsBehat\v2\Common;
 
 use Behat\Gherkin\Node\TableNode;
 
-trait CourtOrderTrait
+trait FixturesTrait
 {
     /**
      * @Given the following court orders exist:
@@ -13,7 +14,7 @@ trait CourtOrderTrait
      */
     public function theFollowingCourtOrdersExist(TableNode $table)
     {
-        $this->iAmLoggedInToAdminAsWithPassword('super-admin@publicguardian.gov.uk', 'DigidepsPass1234');
+        $this->loginToAdminAs($this->superAdminDetails->getEmail());
 
         foreach ($table as $row) {
             $queryString = http_build_query([
@@ -61,5 +62,19 @@ trait CourtOrderTrait
             default:
                 return '102';
         }
+    }
+
+    /**
+     * @Given two clients have the same first name
+     * @Given two clients have the same last name
+     */
+    public function twoClientsHaveSameNames()
+    {
+        $this->loginToAdminAs($this->superAdminDetails->getEmail());
+
+        $duplicateClientUrl = $this->getDuplicateClientFixtureUrl($this->layDeputyNotStartedDetails->getClientId());
+        $this->visitAdminPath($duplicateClientUrl);
+
+        $this->interactingWithUserDetails = $this->layDeputyNotStartedDetails;
     }
 }

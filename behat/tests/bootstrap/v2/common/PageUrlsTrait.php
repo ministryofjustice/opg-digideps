@@ -14,8 +14,12 @@ trait PageUrlsTrait
     private string $contactsAddAnotherUrl = '/report/%s/contacts/add_another';
     private string $layReportsOverviewUrl = '/lay';
 
-    //Admin
+    // Admin
     private string $adminClientSearchUrl = '/admin/client/search';
+
+    // Fixtures
+    private string $duplicateClientFixtureUrl = '/admin/fixture/duplicate-client/%s';
+    private string $courtOrdersFixtureUrl = '/admin/fixture/court-orders?%s';
 
     /**
      * @return string
@@ -79,5 +83,21 @@ trait PageUrlsTrait
     public function getAdminClientSearchUrl(): string
     {
         return $this->adminClientSearchUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCourtOrdersFixtureUrl(string $queryString): string
+    {
+        return sprintf($this->courtOrdersFixtureUrl, $queryString);
+    }
+
+    /**
+     * @return string
+     */
+    public function getDuplicateClientFixtureUrl(int $clientId): string
+    {
+        return sprintf($this->duplicateClientFixtureUrl, $clientId);
     }
 }

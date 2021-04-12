@@ -56,6 +56,7 @@ class BehatController extends AbstractController
                 'clientId' => $client->getId(),
                 'clientFirstName' =>  $client->getFirstname(),
                 'clientLastName' => $client->getLastname(),
+                'clientCaseNumber' => $client->getCaseNumber(),
                 'currentReportId' => $currentReport->getId(),
                 'currentReportType' => $currentReport->getType(),
                 'currentReportNdrOrReport' => $currentReport instanceof Ndr ? 'ndr' : 'report',

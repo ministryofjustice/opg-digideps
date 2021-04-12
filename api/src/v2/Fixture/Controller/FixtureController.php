@@ -19,6 +19,7 @@ use App\FixtureFactory\ClientFactory;
 use App\FixtureFactory\ReportFactory;
 use App\FixtureFactory\UserFactory;
 use App\TestHelpers\BehatFixtures;
+use App\TestHelpers\ClientTestHelper;
 use App\v2\Controller\ControllerTrait;
 use App\v2\Fixture\ReportSection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,6 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Tests\App\Entity\ClientTest;
 
 /**
  * @Route("/fixture")
@@ -661,6 +663,40 @@ class FixtureController extends AbstractController
                 [
                     'response' => sprintf('Beaht fixtures not loaded: %s', $e->getMessage()),
                     'data' => null
+                ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    /**
+     * @Route("/duplicate-client/{clientId}", name="behat_duplicate_client", methods={"GET"})
+     * @return Response
+     */
+    public function duplicateClient(string $clientId)
+    {
+        try {
+            if ($this->symfonyEnvironment === 'prod') {
+                throw $this->createNotFoundException();
+            }
+
+            $client = clone ($this->em->getRepository(Client::class)->find($clientId));
+            $client->setCaseNumber(ClientTestHelper::createValidCaseNumber());
+//            $client->setId(null);
+
+            $this->em->persist($client);
+            $this->em->flush();
+
+            return new JsonResponse(
+                [
+                    'response' => 'Client details duplicated (except for case number)'
+                ],
+                Response::HTTP_CREATED
+            );
+        } catch (\Throwable $e) {
+            return new JsonResponse(
+                [
+                    'response' => sprintf('Client not duplicated: %s', $e->getMessage()),
                 ],
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );

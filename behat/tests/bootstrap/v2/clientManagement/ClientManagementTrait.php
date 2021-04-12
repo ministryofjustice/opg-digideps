@@ -12,10 +12,8 @@ trait ClientManagementTrait
      */
     public function iSearchForExistingClientByFirstName()
     {
-        $this->searchForClientBy(
-            $this->profAdminDeputyNotStartedDetails->getClientFirstName(),
-            $this->profAdminDeputyNotStartedDetails
-        );
+        $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyNotStartedDetails : $this->interactingWithUserDetails;
+        $this->searchForClientBy($user->getClientFirstName(), $user);
     }
 
     /**
@@ -23,10 +21,17 @@ trait ClientManagementTrait
      */
     public function iSearchForExistingClientByLastName()
     {
-        $this->searchForClientBy(
-            $this->profAdminDeputyNotStartedDetails->getClientLastName(),
-            $this->profAdminDeputyNotStartedDetails
-        );
+        $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyNotStartedDetails : $this->interactingWithUserDetails;
+        $this->searchForClientBy($user->getClientLastName(), $user);
+    }
+
+    /**
+     * @When I search for an existing client by their case number
+     */
+    public function iSearchForExistingClientByCaseNumber()
+    {
+        $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyNotStartedDetails : $this->interactingWithUserDetails;
+        $this->searchForClientBy($user->getClientCaseNumber(), $user);
     }
 
     private function searchForClientBy(string $searchTerm, UserDetails $userDetailsInteractingWith)
@@ -41,6 +46,19 @@ trait ClientManagementTrait
      * @Then I should see the clients details in the client list results
      */
     public function iShouldSeeClientDetailsInResults()
+    {
+        $this->iShouldSeeNClientsWithSameName(1);
+    }
+
+    /**
+     * @Then I should see both the clients details in the client list results
+     */
+    public function iShouldSeeBothClientDetailsInResults()
+    {
+        $this->iShouldSeeNClientsWithSameName(2);
+    }
+
+    private function iShouldSeeNClientsWithSameName(int $numberClients)
     {
         $searchResultsDiv = $this->getSession()->getPage()->find('css', 'div.client-list');
 
@@ -63,17 +81,14 @@ MESSAGE;
             $this->interactingWithUserDetails->getClientLastName()
         );
 
-        var_dump($this->interactingWithUserDetails->getClientFirstName());
-        var_dump($this->interactingWithUserDetails->getClientLastName());
-        var_dump($fullClientName);
+        $clientNameFound = substr_count($searchResultsHtml, $fullClientName);
 
-        $clientNameFound = str_contains($searchResultsHtml, $fullClientName);
-
-        if (!$clientNameFound) {
+        if ($clientNameFound < $numberClients) {
             $this->throwContextualException(
                 sprintf(
-                    'The client search results list did not contain the clients full name. Expected: "%s", got (full HTML): %s',
+                    'The client search results list did not contain the required occurrences of the clients full name. Expected: "%s" (at least %s times), got (full HTML): %s',
                     $fullClientName,
+                    $numberClients,
                     $searchResultsHtml
                 )
             );

@@ -221,7 +221,7 @@ trait ReportTrait
         $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'DigidepsPass1234');
 
         $reportId = self::$currentReportCache['reportId'];
-        $this->visitAdminPath("/admin/fixtures/unsubmit-report/$reportId");
+        $this->visitAdminPath("/admin/fixture/unsubmit-report/$reportId");
     }
 
     /**
@@ -356,7 +356,7 @@ trait ReportTrait
         $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'DigidepsPass1234');
 
         $reportId = self::$currentReportCache['reportId'];
-        $url = sprintf('/admin/fixtures/complete-sections/%s/%s?sections=%s', $reportType, $reportId, $sections);
+        $url = sprintf('/admin/fixture/complete-sections/%s/%s?sections=%s', $reportType, $reportId, $sections);
         $this->visitAdminPath($url);
     }
 

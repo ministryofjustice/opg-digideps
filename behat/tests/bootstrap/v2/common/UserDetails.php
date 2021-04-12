@@ -16,6 +16,7 @@ class UserDetails
     private ?int $clientId = null;
     private ?string $clientFirstName = null;
     private ?string $clientLastName = null;
+    private ?string $clientCaseNumber = null;
     private ?int $currentReportId = null;
     private ?string $currentReportType = null;
     private ?string $currentReportNdrOrReport = null;
@@ -60,6 +61,7 @@ class UserDetails
         $this->setClientId($userDetails['clientId']);
         $this->setClientFirstName($userDetails['clientFirstName']);
         $this->setClientLastName($userDetails['clientLastName']);
+        $this->setClientCaseNumber($userDetails['clientCaseNumber']);
 
         $this->setCurrentReportId($userDetails['currentReportId']);
         $this->setCurrentReportType($userDetails['currentReportType']);
@@ -280,6 +282,24 @@ class UserDetails
     public function setUserRole(?string $userRole): UserDetails
     {
         $this->userRole = $userRole;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getClientCaseNumber(): ?string
+    {
+        return $this->clientCaseNumber;
+    }
+
+    /**
+     * @param string|null $clientCaseNumber
+     * @return UserDetails
+     */
+    public function setClientCaseNumber(?string $clientCaseNumber): UserDetails
+    {
+        $this->clientCaseNumber = $clientCaseNumber;
         return $this;
     }
 }

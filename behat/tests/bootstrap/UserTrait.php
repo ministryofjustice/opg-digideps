@@ -30,7 +30,7 @@ trait UserTrait
 
             $query = http_build_query($inputs);
 
-            $this->visitAdminPath("/admin/fixtures/createAdmin?$query");
+            $this->visitAdminPath("/admin/fixture/createAdmin?$query");
         }
     }
 
@@ -76,7 +76,7 @@ trait UserTrait
 
             $query = "ndr=$ndr&deputyType=$deputyType&firstName=$firstName&lastName=$lastName&email=$email&postCode=$postCode&activated=$activated";
 
-            $this->visitAdminPath("/admin/fixtures/createUser?$query");
+            $this->visitAdminPath("/admin/fixture/createUser?$query");
         }
     }
 
@@ -90,7 +90,7 @@ trait UserTrait
         foreach ($table as $inputs) {
             $email = $inputs['email'];
             try {
-                $this->visitAdminPath("/admin/fixtures/deleteUser?email=$email");
+                $this->visitAdminPath("/admin/fixture/deleteUser?email=$email");
             } catch (\Throwable $e) {
                 throw new \Exception(sprintf('Error deleting user: %s', $e->getMessage()));
             }

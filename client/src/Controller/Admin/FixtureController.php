@@ -24,7 +24,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Twig\Environment;
 
 /**
- * @Route("/admin/fixtures")
+ * @Route("/admin/fixture")
  */
 class FixtureController extends AbstractController
 {
@@ -479,6 +479,36 @@ class FixtureController extends AbstractController
             return new Response('Org activated');
         } catch (\Throwable $e) {
             return new Response(sprintf('Could not activate %s org: %s', $orgName, $response->getBody()->getContents()), 500);
+        }
+    }
+
+    /**
+     * @Route("/duplicate-client/{clientId}", name="admin_fixture_duplicate_client", methods={"GET"})
+     * @Security("is_granted('ROLE_ADMIN')")
+     *
+     * @param string $clientId
+     * @return Response
+     */
+    public function duplicateClient(string $clientId)
+    {
+        var_dump($this->symfonyEnvironment);
+        if ($this->symfonyEnvironment === 'prod') {
+            throw $this->createNotFoundException();
+        }
+
+        try {
+            /** @var \GuzzleHttp\Psr7\Response $response */
+            $response = $this
+                ->restClient
+                ->get("v2/fixture/duplicate-client/$clientId", 'response');
+
+            if ($response->getStatusCode() > 399) {
+                return new Response(sprintf('Could not duplicate client with ID %s: %s', $clientId, $response->getBody()->getContents()), 500);
+            }
+
+            return new Response('Client duplicated');
+        } catch (\Throwable $e) {
+            return new Response(sprintf('Could not duplicate client with ID %s: %s', $clientId, $response->getBody()->getContents()), 500);
         }
     }
 }

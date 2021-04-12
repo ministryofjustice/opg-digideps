@@ -14,10 +14,10 @@ class BaseFeatureContext extends MinkContext
 {
     use AlertsTrait;
     use AuthTrait;
-    use CourtOrderTrait;
     use DebugTrait;
     use ElementSelectionTrait;
     use ErrorsTrait;
+    use FixturesTrait;
     use IShouldBeOnTrait;
     use INavigateToTrait;
     use IVisitTrait;
@@ -40,7 +40,7 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $profAdminDeputySubmittedDetails;
 
     public UserDetails $loggedInUserDetails;
-    public UserDetails $interactingWithUserDetails;
+    public ?UserDetails $interactingWithUserDetails = null;
 
     public array $fixtureUsers = [];
 

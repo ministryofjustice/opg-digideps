@@ -27,7 +27,7 @@ trait ReportTrait
         }
 
         $this->clickLink('Continue');
-        ;
+
         $this->checkOption(sprintf('%s_declaration[agree]', $ndrOrReport));
         $this->selectOption(sprintf('%s_declaration[agreedBehalfDeputy]', $ndrOrReport), 'only_deputy');
         $this->pressButton(sprintf('%s_declaration[save]', $ndrOrReport));
