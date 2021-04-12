@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Ndr\Ndr;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
+use App\TestHelpers\BehatFixtures;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,12 +46,16 @@ class BehatController extends AbstractController
 
         $currentReport = $user->getFirstClient()->getCurrentReport();
         $previousReport = $user->getFirstClient()->getReports()[0];
-
+        $isLay = $user->getRoleName() === User::ROLE_LAY;
+        $client = $isLay ? $user->getFirstClient() : $user->getOrganisations()[0]->getClients()[0];
 
         return new JsonResponse(
             [
                 'email' => $user->getEmail(),
-                'clientId' => $user->getFirstClient()->getId(),
+                'userRole' => $user->getRoleName(),
+                'clientId' => $client->getId(),
+                'clientFirstName' =>  $client->getFirstname(),
+                'clientLastName' => $client->getLastname(),
                 'currentReportId' => $currentReport->getId(),
                 'currentReportType' => $currentReport->getType(),
                 'currentReportNdrOrReport' => $currentReport instanceof Ndr ? 'ndr' : 'report',

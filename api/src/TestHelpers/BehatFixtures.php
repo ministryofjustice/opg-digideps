@@ -75,32 +75,29 @@ class BehatFixtures
 
         return [
             'admin-users' => [
-                'admin' => [
-                    'email' => $this->admin->getEmail()
-                ],
-                'super-admin' => [
-                    'email' => $this->superAdmin->getEmail()
-                ]
+                'admin' => self::buildAdminUserDetails($this->admin),
+                'super-admin' => self::buildAdminUserDetails($this->superAdmin),
             ],
             'lays' => [
-                'not-started' => $this->buildLayUserDetails($this->layNotStarted),
-                'completed' => $this->buildLayUserDetails($this->layCompleted),
-                'submitted' => $this->buildLayUserDetails($this->laySubmitted),
+                'not-started' => self::buildLayUserDetails($this->layNotStarted),
+                'completed' => self::buildLayUserDetails($this->layCompleted),
+                'submitted' => self::buildLayUserDetails($this->laySubmitted),
             ],
             'professionals' => [
                 'admin' => [
-                    'not-started' => $this->buildOrgUserDetails($this->profAdminNotStarted),
-                    'completed' => $this->buildOrgUserDetails($this->profAdminCompleted),
-                    'submitted' => $this->buildOrgUserDetails($this->profAdminSubmitted),
+                    'not-started' => self::buildOrgUserDetails($this->profAdminNotStarted),
+                    'completed' => self::buildOrgUserDetails($this->profAdminCompleted),
+                    'submitted' => self::buildOrgUserDetails($this->profAdminSubmitted),
                 ]
             ]
         ];
     }
 
-    private function buildLayUserDetails(User $user)
+    public static function buildLayUserDetails(User $user)
     {
         return [
             'email' => $user->getEmail(),
+            'userRole' => $user->getRoleName(),
             'clientId' => $user->getFirstClient()->getId(),
             'clientFirstName' => $user->getFirstClient()->getFirstname(),
             'clientLastName' => $user->getFirstClient()->getLastname(),
@@ -113,10 +110,11 @@ class BehatFixtures
         ];
     }
 
-    private function buildOrgUserDetails(User $user)
+    public static function buildOrgUserDetails(User $user)
     {
         return [
             'email' => $user->getEmail(),
+            'userRole' => $user->getRoleName(),
             'clientId' => $user->getOrganisations()[0]->getClients()[0]->getId(),
             'clientFirstName' => $user->getOrganisations()[0]->getClients()[0]->getFirstname(),
             'clientLastName' => $user->getOrganisations()[0]->getClients()[0]->getLastname(),
@@ -126,6 +124,14 @@ class BehatFixtures
             'previousReportId' => $user->getOrganisations()[0]->getClients()[0]->getReports()[0]->getId(),
             'previousReportType' => $user->getOrganisations()[0]->getClients()[0]->getReports()[0]->getType(),
             'previousReportNdrOrReport' => $user->getOrganisations()[0]->getClients()[0]->getCurrentReport() instanceof Ndr ? 'ndr' : 'report'
+        ];
+    }
+
+    public static function buildAdminUserDetails(User $user)
+    {
+        return [
+            'email' => $user->getEmail(),
+            'userRole' => $user->getRoleName(),
         ];
     }
 

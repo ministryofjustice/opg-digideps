@@ -5,6 +5,7 @@ namespace DigidepsBehat\v2\Common;
 
 trait PageUrlsTrait
 {
+    // Frontend
     private string $reportSubmittedUrl = '/report/%s/submitted';
     private string $postSubmissionUserResearchUrl = '/report/%s/post_submission_user_research';
     private string $userResearchSubmittedUrl = '/report/%s/post_submission_user_research/submitted';
@@ -12,6 +13,9 @@ trait PageUrlsTrait
     private string $contactsAddUrl = '/report/%s/contacts/add';
     private string $contactsAddAnotherUrl = '/report/%s/contacts/add_another';
     private string $layReportsOverviewUrl = '/lay';
+
+    //Admin
+    private string $adminClientSearchUrl = '/admin/client/search';
 
     /**
      * @return string
@@ -67,5 +71,13 @@ trait PageUrlsTrait
     public function getLayReportsOverviewUrl(): string
     {
         return $this->layReportsOverviewUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAdminClientSearchUrl(): string
+    {
+        return $this->adminClientSearchUrl;
     }
 }

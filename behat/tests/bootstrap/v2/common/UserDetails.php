@@ -9,7 +9,10 @@ use ReflectionProperty;
 
 class UserDetails
 {
+    public const ADMIN_ROLES = ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ELEVATED_ADMIN'];
+
     private ?string $email = null;
+    private ?string $userRole = null;
     private ?int $clientId = null;
     private ?string $clientFirstName = null;
     private ?string $clientLastName = null;
@@ -22,7 +25,6 @@ class UserDetails
 
     public function __construct(array $userDetails)
     {
-        var_dump($userDetails);
         $this->initialize($userDetails);
     }
 
@@ -53,6 +55,7 @@ class UserDetails
         }
 
         $this->setEmail($userDetails['email']);
+        $this->setUserRole($userDetails['userRole']);
 
         $this->setClientId($userDetails['clientId']);
         $this->setClientFirstName($userDetails['clientFirstName']);
@@ -259,6 +262,24 @@ class UserDetails
     public function setClientLastName(?string $clientLastName): UserDetails
     {
         $this->clientLastName = $clientLastName;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getUserRole(): ?string
+    {
+        return $this->userRole;
+    }
+
+    /**
+     * @param string|null $userRole
+     * @return UserDetails
+     */
+    public function setUserRole(?string $userRole): UserDetails
+    {
+        $this->userRole = $userRole;
         return $this;
     }
 }

@@ -3,6 +3,8 @@
 
 namespace DigidepsBehat\v2\ClientManagement;
 
+use DigidepsBehat\v2\Common\UserDetails;
+
 trait ClientManagementTrait
 {
     /**
@@ -10,11 +12,29 @@ trait ClientManagementTrait
      */
     public function iSearchForExistingClientByFirstName()
     {
-        $existingClientFirstName = $this->profAdminDeputyNotStartedDetails->getClientFirstName();
-        $this->fillField('search_clients_q', $existingClientFirstName);
+        $this->searchForClientBy(
+            $this->profAdminDeputyNotStartedDetails->getClientFirstName(),
+            $this->profAdminDeputyNotStartedDetails
+        );
+    }
+
+    /**
+     * @When I search for an existing client by their last name
+     */
+    public function iSearchForExistingClientByLastName()
+    {
+        $this->searchForClientBy(
+            $this->profAdminDeputyNotStartedDetails->getClientLastName(),
+            $this->profAdminDeputyNotStartedDetails
+        );
+    }
+
+    private function searchForClientBy(string $searchTerm, UserDetails $userDetailsInteractingWith)
+    {
+        $this->fillField('search_clients_q', $searchTerm);
         $this->pressButton('Search');
 
-        $this->interactingWithUserDetails = $this->profAdminDeputyNotStartedDetails;
+        $this->interactingWithUserDetails = $userDetailsInteractingWith;
     }
 
     /**
