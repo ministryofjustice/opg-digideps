@@ -11,23 +11,22 @@ Feature: Accounts
 #    When I follow link back to report overview page
 #    Then I should see "bank-accounts" as "7 accounts"
 
-  Scenario: A user incorrectly enters an account before correctly entering it
-    Given a Lay Deputy has a new report
-#    And I view and start the accounts report section
-    When I go to add a new current account
-    And I miss one of the fields
-#    Then I get the correct validation response
+#  Scenario: A user incorrectly enters an account before correctly entering it
+#    Given a Lay Deputy has not started a report
+#    When I go to add a new current account
+#    And I miss one of the fields
+#    Then I get the correct validation responses
 #    When I try to enter letters where it should be digits
-#    Then I get the correct validation response
+#    Then I get the correct validation responses
 #    When I correctly enter account details
 #    Then I should see the expected accounts on the summary page
 #
-#  Scenario: A user edits an existing account
-#    Given a Lay Deputy has a completed report
-#    And I view and start the accounts report section
-#    Then I should be on accounts summary page
-#    When I need to update my current account to a different one
-#    Then I should see the expected account on the summary page
+  Scenario: A user edits an existing account
+    Given a Lay Deputy has a completed report
+    And I view the accounts report section
+    Then I should be on the accounts summary page
+    When I need to update my current account to a different one
+    Then I should see the expected accounts on the summary page
 #
 #  Scenario: A user adds accounts and then changes their mind and deletes them
 #    Given a Lay Deputy has a completed report

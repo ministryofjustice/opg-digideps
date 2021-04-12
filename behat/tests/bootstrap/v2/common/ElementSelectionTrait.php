@@ -20,7 +20,9 @@ trait ElementSelectionTrait
             }
         }
 
+        var_dump($linksArray[$elementIndex]);
         $xpath = sprintf("//a[@href='%s']", $linksArray[$elementIndex]);
+        var_dump($xpath);
         $session = $this->getSession();
         $element = $session->getPage()->find(
             'xpath',

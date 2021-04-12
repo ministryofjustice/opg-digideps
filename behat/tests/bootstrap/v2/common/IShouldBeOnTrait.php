@@ -192,4 +192,12 @@ trait IShouldBeOnTrait
     {
         return $this->iAmOnPage('/report\/.*\/bank-account\/step1$/');
     }
+
+    /**
+     * @Then I should be on add account details page
+     */
+    public function iAmOnAccountsDetailsPage()
+    {
+        return $this->iAmOnPage('/report\/.*\/bank-account\/step2.*$/');
+    }
 }

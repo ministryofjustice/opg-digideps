@@ -53,11 +53,145 @@ trait AccountsSectionTrait
     public function iMissOneOfTheFields()
     {
         $this->iFillInAccountDetails(
+            '1111',
+            '01-01-01',
+            '',
+            'account-1'
+        );
+
+        $this->assertOnErrorMessage('Please select either \'Yes\' or \'No\'');
+
+        $this->iFillInAccountDetails(
             '',
             '01-01-01',
             'no',
             'account-1'
         );
+
+        $this->assertOnErrorMessage('Enter the last 4 numbers of the account number');
+
+        $this->iFillInAccountDetails(
+            '1111',
+            '',
+            'no',
+            'account-1'
+        );
+
+        $this->assertOnErrorMessage('The sort code should only contain numbers');
+        $this->assertOnErrorMessage('The sort code must be 6 numbers long');
+
+        $this->iFillInAccountDetails(
+            '1111',
+            '01-01-01',
+            'no',
+            ''
+        );
+
+        $this->assertOnErrorMessage('Enter the bank or building society name');
+    }
+
+    /**
+     * @When I get the correct validation responses
+     */
+    public function iGetTheCorrectValidationResponses()
+    {
+        $this->iAmOnAccountsDetailsPage();
+    }
+
+    /**
+     * @When I try to enter letters where it should be digits
+     */
+    public function iTryToEnterLettersInsteadOfDigits()
+    {
+        $this->iFillInAccountDetails(
+            '1111',
+            'AA-BB-CC',
+            'no',
+            'account-1'
+        );
+
+        $this->assertOnErrorMessage('The sort code should only contain numbers');
+    }
+
+    /**
+     * @When I correctly enter account details
+     */
+    public function iCorrectlyEnterAccountDetails()
+    {
+        $this->accountList[] =
+            [
+                'account' => 'current',
+                'accountType' => 'current account',
+                'name' => 'account-1',
+                'accountNumber' => '1111',
+                'sortCode' => '01-01-01',
+                'joint' => 'no',
+                'openingBalance' => '101',
+                'closingBalance' => '201'
+            ];
+
+        $this->iFillInAccountDetails(
+            $this->accountList[0]['accountNumber'],
+            $this->accountList[0]['sortCode'],
+            $this->accountList[0]['joint'],
+            $this->accountList[0]['name']
+        );
+
+        $this->iFillInAccountBalance(
+            $this->accountList[0]['openingBalance'],
+            $this->accountList[0]['closingBalance']
+        );
+
+        $this->iAmOnAccountsAddAnotherPage();
+        $this->selectOption('add_another[addAnother]', 'no');
+        $this->pressButton('Continue');
+    }
+
+    /**
+     * @When I need to update my current account to a different one
+     */
+    public function iUpdateCurrentAccountToDifferentOne()
+    {
+        $this->accountList[] =
+            [
+                'account' => 'current',
+                'accountType' => 'current account',
+                'name' => 'account-2',
+                'accountNumber' => '2222',
+                'sortCode' => '02-02-02',
+                'joint' => 'no',
+                'openingBalance' => '102',
+                'closingBalance' => '202'
+            ];
+
+        $urlRegex = '/report\/.*\/bank-account\/step1\/[0-9].*$/';
+//        /report/482/bank-account/step1/357
+        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+
+        $this->iAddAnAccount(
+            $this->accountList[0]['account'],
+            $this->accountList[0]['name'],
+            $this->accountList[0]['accountNumber'],
+            $this->accountList[0]['sortCode'],
+            $this->accountList[0]['joint'],
+            $this->accountList[0]['openingBalance'],
+            $this->accountList[0]['closingBalance'],
+        );
+//        $this->iFillInAccountDetails(
+//            $this->accountList[0]['accountNumber'],
+//            $this->accountList[0]['sortCode'],
+//            $this->accountList[0]['joint'],
+//            $this->accountList[0]['name']
+//        );
+//
+//        $this->iFillInAccountBalance(
+//            $this->accountList[0]['openingBalance'],
+//            $this->accountList[0]['closingBalance']
+//        );
+
+        $this->iAmOnAccountsAddAnotherPage();
+        $this->selectOption('add_another[addAnother]', 'no');
+        $this->pressButton('Continue');
     }
 
     /**
@@ -252,7 +386,10 @@ trait AccountsSectionTrait
             $this->fillField('account[sortCode][sort_code_part_3]', explode('-', $sortCode)[2]);
         }
 
-        $this->iSelectRadioBasedOnName('div', 'data-module', 'govuk-radios', $joint);
+        if (strlen($joint) > 0) {
+            $this->iSelectRadioBasedOnName('div', 'data-module', 'govuk-radios', $joint);
+        }
+
         $this->pressButton('Save and continue');
     }
 
