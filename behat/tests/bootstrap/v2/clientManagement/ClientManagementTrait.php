@@ -106,7 +106,7 @@ MESSAGE;
             );
         }
 
-        $pageContent = $searchResultsDiv = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
+        $pageContent = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
         $courtOrderNumber = $this->interactingWithUserDetails->getCourtOrderNumber();
         $courtOrderNumberPresent = str_contains($pageContent, $courtOrderNumber);
 
@@ -122,9 +122,9 @@ MESSAGE;
     }
 
     /**
-     * @Then I should see the deputies name, address and contact details
+     * @Then I should see the Lay deputies name, address and contact details
      */
-    public function iShouldSeeDeputyDetails()
+    public function iShouldSeeLayDeputyDetails()
     {
         if (is_null($this->interactingWithUserDetails)) {
             $this->throwContextualException(
@@ -132,7 +132,7 @@ MESSAGE;
             );
         }
 
-        $pageContent = $searchResultsDiv = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
+        $pageContent = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
 
         $detailsToAssertOn[] = $this->interactingWithUserDetails->getUserFullname();
         $detailsToAssertOn[] = $this->interactingWithUserDetails->getUserPhone();
@@ -179,9 +179,7 @@ MESSAGE;
             );
         }
 
-        var_dump($this->interactingWithUserDetails);
-
-        $pageContent = $searchResultsDiv = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
+        $pageContent = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
 
         $currentReportDueDateVisible = str_contains($pageContent, $this->interactingWithUserDetails->getCurrentReportDueDate());
 
@@ -207,6 +205,68 @@ MESSAGE;
                     )
                 );
             }
+        }
+    }
+
+    /**
+     * @Then I should see the organisation the deputy belongs to
+     */
+    public function iShouldSeeDeputyOrganisation()
+    {
+        if (is_null($this->interactingWithUserDetails)) {
+            $this->throwContextualException(
+                'An $interactingWithUserDetails has not been set. Ensure a previous step in the scenario has set this User and try again.'
+            );
+        }
+
+        $xpathSelector = sprintf("//a[text() = '%s']", $this->interactingWithUserDetails->getOrganisationName());
+        $linkHtml = $this->getSession()->getPage()->find('xpath', $xpathSelector)->getHtml();
+
+        $orgNameLinkVisible = str_contains($linkHtml, $this->interactingWithUserDetails->getOrganisationName());
+
+        if (!$orgNameLinkVisible) {
+            $this->throwContextualException(
+                sprintf(
+                    'Expected to find a link with the text "%s" visible but it does not appear on the page. Got (full HTML): %s',
+                    $this->interactingWithUserDetails->getCurrentReportDueDate(),
+                    $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml()
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then I should see the name and email of the named deputy
+     */
+    public function iShouldSeeNamedDeputyNameAndEmail()
+    {
+        if (is_null($this->interactingWithUserDetails)) {
+            $this->throwContextualException(
+                'An $interactingWithUserDetails has not been set. Ensure a previous step in the scenario has set this User and try again.'
+            );
+        }
+        $namedDeputyName = $this->interactingWithUserDetails->getNamedDeputyName();
+        $namedDeputyEmail = $this->interactingWithUserDetails->getNamedDeputyEmail();
+
+        $nameXpathSelector = sprintf("//dt[normalize-space() = '%s']/..", 'Named deputy');
+        $namedDeputyNameDivHtml = $this->getSession()->getPage()->find('xpath', $nameXpathSelector)->getHtml();
+
+        $namedDeputyNameVisible = str_contains($namedDeputyNameDivHtml, $namedDeputyName);
+
+        $emailXpathSelector = sprintf("//h3[normalize-space() = '%s']/..", 'Named deputy contact details');
+        $namedDeputyNameDivHtml = $this->getSession()->getPage()->find('xpath', $emailXpathSelector)->getHtml();
+
+        $namedDeputyEmailVisible = str_contains($namedDeputyNameDivHtml, $namedDeputyEmail);
+
+        if (!$namedDeputyNameVisible || !$namedDeputyEmailVisible) {
+            $this->throwContextualException(
+                sprintf(
+                    'Expected to find the named deputy details (Name: "%s", Email: "%s") but they does not appear on the page. Got (full HTML): %s',
+                    $namedDeputyName,
+                    $namedDeputyEmail,
+                    $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml()
+                )
+            );
         }
     }
 }

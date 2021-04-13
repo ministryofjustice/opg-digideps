@@ -18,6 +18,9 @@ class UserDetails
     private ?string $userFullName = null;
     private ?array $userFullAddressArray = null;
     private ?string $userPhone = null;
+    private ?string $namedDeputyName = null;
+    private ?string $namedDeputyEmail = null;
+    private ?string $organisationName = null;
     private ?string $courtOrderNumber = null;
     private ?int $clientId = null;
     private ?string $clientFirstName = null;
@@ -72,7 +75,11 @@ class UserDetails
         $this->setUserPhone($userDetails['userPhone']);
         $this->setUserEmail($userDetails['userEmail']);
 
+        $this->setNamedDeputyName($userDetails['namedDeputyName']);
+        $this->setNamedDeputyEmail($userDetails['namedDeputyEmail']);
+        $this->setOrganisationName($userDetails['organisationName']);
         $this->setCourtOrderNumber($userDetails['courtOrderNumber']);
+
         $this->setClientId($userDetails['clientId']);
         $this->setClientFirstName($userDetails['clientFirstName']);
         $this->setClientLastName($userDetails['clientLastName']);
@@ -461,6 +468,60 @@ class UserDetails
     public function setPreviousReportDueDate(?string $previousReportDueDate): UserDetails
     {
         $this->previousReportDueDate = $previousReportDueDate;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getOrganisationName(): ?string
+    {
+        return $this->organisationName;
+    }
+
+    /**
+     * @param string|null $organisationName
+     * @return UserDetails
+     */
+    public function setOrganisationName(?string $organisationName): UserDetails
+    {
+        $this->organisationName = $organisationName;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getNamedDeputyName(): ?string
+    {
+        return $this->namedDeputyName;
+    }
+
+    /**
+     * @param string|null $namedDeputyName
+     * @return UserDetails
+     */
+    public function setNamedDeputyName(?string $namedDeputyName): UserDetails
+    {
+        $this->namedDeputyName = $namedDeputyName;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getNamedDeputyEmail(): ?string
+    {
+        return $this->namedDeputyEmail;
+    }
+
+    /**
+     * @param string|null $namedDeputyEmail
+     * @return UserDetails
+     */
+    public function setNamedDeputyEmail(?string $namedDeputyEmail): UserDetails
+    {
+        $this->namedDeputyEmail = $namedDeputyEmail;
         return $this;
     }
 }

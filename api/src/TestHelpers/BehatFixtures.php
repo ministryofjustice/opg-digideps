@@ -22,6 +22,7 @@ class BehatFixtures
     private ReportTestHelper $reportTestHelper;
     private ClientTestHelper $clientTestHelper;
     private OrganisationTestHelper $organisationTestHelper;
+    private NamedDeputyTestHelper $namedDeputyTestHelper;
 
     private User $admin;
     private User $superAdmin;
@@ -53,6 +54,7 @@ class BehatFixtures
         $this->reportTestHelper = new ReportTestHelper();
         $this->clientTestHelper = new ClientTestHelper();
         $this->organisationTestHelper = new OrganisationTestHelper();
+        $this->namedDeputyTestHelper = new NamedDeputyTestHelper();
     }
 
     /**
@@ -85,9 +87,9 @@ class BehatFixtures
             ],
             'professionals' => [
                 'admin' => [
-                    'not-started' => self::buildUserDetails($this->profAdminNotStarted),
-                    'completed' => self::buildUserDetails($this->profAdminCompleted),
-                    'submitted' => self::buildUserDetails($this->profAdminSubmitted),
+                    'not-started' => self::buildOrgUserDetails($this->profAdminNotStarted),
+                    'completed' => self::buildOrgUserDetails($this->profAdminCompleted),
+                    'submitted' => self::buildOrgUserDetails($this->profAdminSubmitted),
                 ]
             ]
         ];
@@ -125,8 +127,26 @@ class BehatFixtures
             'previousReportId' => $previousReport->getId(),
             'previousReportType' => $previousReport->getType(),
             'previousReportNdrOrReport' => $previousReport instanceof Ndr ? 'ndr' : 'report',
-            'previousReportDueDate' => $previousReport->getDueDate()->format('j F Y')
+            'previousReportDueDate' => $previousReport->getDueDate()->format('j F Y'),
         ];
+    }
+
+    public static function buildOrgUserDetails(User $user)
+    {
+        $organisation = $user->getOrganisations()->first();
+        $namedDeputy = $organisation->getClients()[0]->getNamedDeputy();
+
+        $details = [
+            'organisationName' => $organisation->getName(),
+            'namedDeputyName' => sprintf(
+                '%s %s',
+                $namedDeputy->getFirstname(),
+                $namedDeputy->getLastName()
+            ),
+            'namedDeputyEmail' => $namedDeputy->getEmail1(),
+        ];
+
+        return array_merge(self::buildUserDetails($user), $details);
     }
 
     public static function buildAdminUserDetails(User $user)
@@ -201,15 +221,15 @@ class BehatFixtures
 
         $this->profAdminNotStarted = $this->userTestHelper
             ->createUser(null, User::ROLE_PROF_ADMIN, sprintf('prof-admin-not-started-%s@t.uk', $this->testRunId));
-        $this->addOrgClientsAndReportsToOrgDeputy($this->profAdminNotStarted, $organisation, false, false);
+        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($this->profAdminNotStarted, $organisation, false, false);
 
         $this->profAdminCompleted = $this->userTestHelper
             ->createUser(null, User::ROLE_PROF_ADMIN, sprintf('prof-admin-completed-%s@t.uk', $this->testRunId));
-        $this->addOrgClientsAndReportsToOrgDeputy($this->profAdminCompleted, $organisation, true, false);
+        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($this->profAdminCompleted, $organisation, true, false);
 
         $this->profAdminSubmitted = $this->userTestHelper
             ->createUser(null, User::ROLE_PROF_ADMIN, sprintf('prof-admin-submitted-%s@t.uk', $this->testRunId));
-        $this->addOrgClientsAndReportsToOrgDeputy($this->profAdminSubmitted, $organisation, true, true);
+        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($this->profAdminSubmitted, $organisation, true, true);
     }
 
     private function addClientsAndReportsToLayDeputy(User $deputy, bool $completed = false, bool $submitted = false)
@@ -233,13 +253,15 @@ class BehatFixtures
         $this->entityManager->persist($report);
     }
 
-    private function addOrgClientsAndReportsToOrgDeputy(User $deputy, Organisation $organisation, bool $completed = false, bool $submitted = false)
+    private function addOrgClientsNamedDeputyAndReportsToOrgDeputy(User $deputy, Organisation $organisation, bool $completed = false, bool $submitted = false)
     {
         $client = $this->clientTestHelper->generateClient($this->entityManager, $deputy, $organisation);
         $report = $this->reportTestHelper->generateReport($this->entityManager, $client);
+        $namedDeputy = $this->namedDeputyTestHelper->generatenamedDeputy();
 
         $client->addReport($report);
         $client->setOrganisation($organisation);
+        $client->setNamedDeputy($namedDeputy);
 
         $organisation->addClient($client);
         $organisation->addUser($deputy);
@@ -256,6 +278,7 @@ class BehatFixtures
             $this->reportTestHelper->submitReport($report, $this->entityManager);
         }
 
+        $this->entityManager->persist($namedDeputy);
         $this->entityManager->persist($deputy);
         $this->entityManager->persist($client);
         $this->entityManager->persist($report);
