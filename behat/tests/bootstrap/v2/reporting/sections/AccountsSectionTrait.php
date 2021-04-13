@@ -12,8 +12,16 @@ trait AccountsSectionTrait
     public function iViewAccountsSection()
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $activeReportId, 'bank-accounts');
+        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'bank-accounts');
         $this->visitPath($reportSectionUrl);
+    }
+
+    /**
+     * @When I view the accounts summary section
+     */
+    public function iViewAccountsSummarySection()
+    {
+        $this->visitPath($this->getAccountsSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 
     /**
@@ -68,7 +76,7 @@ trait AccountsSectionTrait
             'account-1'
         );
 
-        $this->assertOnErrorMessage('Enter the last 4 numbers of the account number');
+        $this->assertOnErrorMessage('Enter the last 4 digits of the account number');
 
         $this->iFillInAccountDetails(
             '1111',
@@ -164,7 +172,7 @@ trait AccountsSectionTrait
                 'closingBalance' => '202'
             ];
 
-        $urlRegex = '/report\/.*\/bank-account\/step1\/[0-9].*$/';
+        $urlRegex = sprintf('/%s\/.*\/bank-account\/step1\/[0-9].*$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
         $this->iAmOnAccountsAddInitialPage();
         $this->iAddAnAccount(
@@ -176,7 +184,6 @@ trait AccountsSectionTrait
             $this->accountList[0]['openingBalance'],
             $this->accountList[0]['closingBalance'],
         );
-
         $this->iAmOnAccountsSummaryPage();
     }
 
@@ -280,22 +287,35 @@ trait AccountsSectionTrait
      */
     public function iShouldSeeTheExpectedAccountsOnSummaryPage()
     {
+        $isNdr = $this->reportUrlPrefix == 'ndr' ? true : false;
+        $accountSummaryElems = [
+          'tableBody' => $isNdr ? 'dl' : 'tbody',
+          'row' => $isNdr ? 'div.govuk-summary-list__row' : 'tr',
+          'head' => $isNdr ? 'dt' : 'th',
+          'data' => $isNdr ? 'dd' : 'td'
+        ];
+
         $this->iAmOnAccountsSummaryPage();
 
-        $tableBody = $this->getSession()->getPage()->find('css', 'tbody');
+        $tableBody = $this->getSession()->getPage()->find('css', $accountSummaryElems['tableBody']);
 
         if (!$tableBody) {
             $this->throwContextualException('A tbody element was not found on the page');
         }
 
-        $tableRows = $tableBody->findAll('css', 'tr');
+        $tableRows = $tableBody->findAll('css', $accountSummaryElems['row']);
 
         if (!$tableRows) {
             $this->throwContextualException('A tr element was not found on the page');
         }
 
+        if ($isNdr) {
+            unset($tableRows[0]);
+            $tableRows = array_values($tableRows);
+        }
+
         foreach ($tableRows as $tRowKey=>$tableRow) {
-            $tableHeader = $tableRow->find('css', 'th');
+            $tableHeader = $tableRow->find('css', $accountSummaryElems['head']);
             $headHtml = trim(strtolower($tableHeader->getHtml()));
             assert(
                 str_contains($headHtml, $this->accountList[$tRowKey]['accountType']),
@@ -319,7 +339,7 @@ trait AccountsSectionTrait
                 sprintf('matching sort code %s ', $this->accountList[$tRowKey]['joint'])
             );
 
-            $tableFields = $tableRow->findAll('css', 'td');
+            $tableFields = $tableRow->findAll('css', $accountSummaryElems['data']);
 
             foreach ($tableFields as $tFieldKey=>$tableField) {
                 $balanceItem = trim(strtolower($tableField->getHtml()));
@@ -328,7 +348,7 @@ trait AccountsSectionTrait
                         str_contains($balanceItem, $this->accountList[$tRowKey]['openingBalance']),
                         $this->accountList[$tRowKey]['openingBalance']
                     );
-                } elseif ($tFieldKey == 1) {
+                } elseif ($tFieldKey == 1 and $this->reportUrlPrefix != 'ndr') {
                     assert(
                         str_contains($balanceItem, $this->accountList[$tRowKey]['closingBalance']),
                         $this->accountList[$tRowKey]['closingBalance']
@@ -442,8 +462,13 @@ trait AccountsSectionTrait
 
     public function iFillInAccountBalance(string $openingBalance, string $closingBalance)
     {
-        $this->fillField('account[openingBalance]', $openingBalance);
-        $this->fillField('account[closingBalance]', $closingBalance);
+        if ($this->reportUrlPrefix == 'ndr') {
+            $this->fillField('account[balanceOnCourtOrderDate]', $openingBalance);
+        } else {
+            $this->fillField('account[openingBalance]', $openingBalance);
+            $this->fillField('account[closingBalance]', $closingBalance);
+        }
+
         $this->pressButton('Save and continue');
     }
 
@@ -456,7 +481,7 @@ trait AccountsSectionTrait
         $this->accountList = array_values($this->accountList);
 
         // Remove the account from the app
-        $urlRegex = '/report\/.*\/bank-account\/.*\/delete$/';
+        $urlRegex = sprintf('/%s\/.*\/bank-account\/.*\/delete$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, $accountOccurrence);
 
         $this->iAmOnAccountsDeletePage();

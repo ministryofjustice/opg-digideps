@@ -30,7 +30,7 @@ trait AdditionalInformationSectionTrait
     public function iViewAdditionalInformationSection()
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $activeReportId, 'any-other-info');
+        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'any-other-info');
 
         $this->visitPath($reportSectionUrl);
 

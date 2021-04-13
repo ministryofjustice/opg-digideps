@@ -99,18 +99,16 @@ trait ElementSelectionTrait
     // Select radio dialogue based on name
     public function iSelectRadioBasedOnName(string $elementType, string $attributeType, string $attributeValue, string $name)
     {
-        $xpath = sprintf("//%s[@%s='%s']", $elementType, $attributeType, $attributeValue);
+        $xpath = sprintf("//%s[@%s='%s']//input", $elementType, $attributeType, $attributeValue);
         $session = $this->getSession();
-        $element = $session->getPage()->find(
+        $values = $session->getPage()->findAll(
             'xpath',
             $session->getSelectorsHandler()->selectorToXpath('xpath', $xpath)
         );
 
-        if (null === $element) {
+        if (null === $values) {
             throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
         }
-
-        $values = $element->findAll('css', 'input');
 
         foreach ($values as $value) {
             if ($value->getAttribute('value') == $name) {
@@ -119,8 +117,6 @@ trait ElementSelectionTrait
             }
         }
 
-        $page = $this->getSession()->getPage();
-        $page->selectFieldOption($select, $option);
-//        $page->selectFieldOption('account[accountType]', 'current');
+        $this->getSession()->getPage()->selectFieldOption($select, $option);
     }
 }

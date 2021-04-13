@@ -110,7 +110,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnReportsOverviewPage()
     {
-        return $this->iAmOnPage('/report\/.*\/overview$/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/overview$/', $this->reportUrlPrefix));
     }
 
     /**
@@ -174,7 +174,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnAccountsSummaryPage()
     {
-        return $this->iAmOnPage('/report\/.*\/bank-accounts\/summary$/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account.*\/summary$/', $this->reportUrlPrefix));
     }
 
     /**
@@ -182,7 +182,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnAccountsAddAnotherPage()
     {
-        return $this->iAmOnPage('/report\/.*\/bank-accounts\/add_another$/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account.*\/add_another$/', $this->reportUrlPrefix));
     }
 
     /**
@@ -190,7 +190,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnAccountsAddInitialPage()
     {
-        return $this->iAmOnPage('/report\/.*\/bank-account\/step1.*$/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account\/step1.*$/', $this->reportUrlPrefix));
     }
 
     /**
@@ -198,7 +198,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnAccountsDetailsPage()
     {
-        return $this->iAmOnPage('/report\/.*\/bank-account\/step2.*$/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account\/step2.*$/', $this->reportUrlPrefix));
     }
 
     /**
@@ -206,7 +206,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnAccountsDeletePage()
     {
-        return $this->iAmOnPage('/report\/.*\/bank-account\/.*\/delete$/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account\/.*\/delete$/', $this->reportUrlPrefix));
     }
 
     /**
@@ -214,6 +214,6 @@ trait IShouldBeOnTrait
      */
     public function iAmOnAccountsStartPage()
     {
-        return $this->iAmOnPage('/report\/.*\/bank-accounts$/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/bank-accounts$/', $this->reportUrlPrefix));
     }
 }

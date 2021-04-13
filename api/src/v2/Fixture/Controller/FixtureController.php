@@ -659,7 +659,7 @@ class FixtureController extends AbstractController
         } catch (\Throwable $e) {
             return new JsonResponse(
                 [
-                    'response' => sprintf('Beaht fixtures not loaded: %s', $e->getMessage()),
+                    'response' => sprintf('Behat fixtures not loaded: %s', $e->getMessage()),
                     'data' => null
                 ],
                 Response::HTTP_INTERNAL_SERVER_ERROR
