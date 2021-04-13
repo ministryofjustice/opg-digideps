@@ -20,9 +20,8 @@ trait ElementSelectionTrait
             }
         }
 
-        var_dump($linksArray[$elementIndex]);
         $xpath = sprintf("//a[@href='%s']", $linksArray[$elementIndex]);
-        var_dump($xpath);
+
         $session = $this->getSession();
         $element = $session->getPage()->find(
             'xpath',
@@ -114,8 +113,6 @@ trait ElementSelectionTrait
         $values = $element->findAll('css', 'input');
 
         foreach ($values as $value) {
-//            var_dump($value->getAttribute('name'));
-//            var_dump($value->getAttribute('value'));
             if ($value->getAttribute('value') == $name) {
                 $select = trim($value->getAttribute('name'));
                 $option = trim($value->getAttribute('value'));

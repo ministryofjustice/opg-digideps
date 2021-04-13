@@ -190,7 +190,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnAccountsAddInitialPage()
     {
-        return $this->iAmOnPage('/report\/.*\/bank-account\/step1$/');
+        return $this->iAmOnPage('/report\/.*\/bank-account\/step1.*$/');
     }
 
     /**
@@ -199,5 +199,21 @@ trait IShouldBeOnTrait
     public function iAmOnAccountsDetailsPage()
     {
         return $this->iAmOnPage('/report\/.*\/bank-account\/step2.*$/');
+    }
+
+    /**
+     * @Then I should be on delete account details page
+     */
+    public function iAmOnAccountsDeletePage()
+    {
+        return $this->iAmOnPage('/report\/.*\/bank-account\/.*\/delete$/');
+    }
+
+    /**
+     * @Then I should be on account start page
+     */
+    public function iAmOnAccountsStartPage()
+    {
+        return $this->iAmOnPage('/report\/.*\/bank-accounts$/');
     }
 }

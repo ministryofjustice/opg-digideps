@@ -165,9 +165,8 @@ trait AccountsSectionTrait
             ];
 
         $urlRegex = '/report\/.*\/bank-account\/step1\/[0-9].*$/';
-//        /report/482/bank-account/step1/357
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
-
+        $this->iAmOnAccountsAddInitialPage();
         $this->iAddAnAccount(
             $this->accountList[0]['account'],
             $this->accountList[0]['name'],
@@ -177,21 +176,8 @@ trait AccountsSectionTrait
             $this->accountList[0]['openingBalance'],
             $this->accountList[0]['closingBalance'],
         );
-//        $this->iFillInAccountDetails(
-//            $this->accountList[0]['accountNumber'],
-//            $this->accountList[0]['sortCode'],
-//            $this->accountList[0]['joint'],
-//            $this->accountList[0]['name']
-//        );
-//
-//        $this->iFillInAccountBalance(
-//            $this->accountList[0]['openingBalance'],
-//            $this->accountList[0]['closingBalance']
-//        );
 
-        $this->iAmOnAccountsAddAnotherPage();
-        $this->selectOption('add_another[addAnother]', 'no');
-        $this->pressButton('Continue');
+        $this->iAmOnAccountsSummaryPage();
     }
 
     /**
@@ -273,6 +259,7 @@ trait AccountsSectionTrait
         ];
 
         foreach ($this->accountList as $account) {
+            $this->visitPath($this->getAccountsAddAnAccountUrl($this->loggedInUserDetails->getCurrentReportId()));
             $this->iAddAnAccount(
                 $account['account'],
                 $account['name'],
@@ -351,6 +338,67 @@ trait AccountsSectionTrait
         }
     }
 
+    /**
+     * @When I add a couple of new accounts
+     */
+    public function iAddANewAccount()
+    {
+        $this->accountList = [
+            [
+                'account' => 'current',
+                'accountType' => 'current account',
+                'name' => 'account-1',
+                'accountNumber' => '1111',
+                'sortCode' => '01-01-01',
+                'joint' => 'no',
+                'openingBalance' => '101',
+                'closingBalance' => '201'
+            ],
+            [
+                'account' => 'current',
+                'accountType' => 'current account',
+                'name' => 'account-2',
+                'accountNumber' => '2222',
+                'sortCode' => '02-02-02',
+                'joint' => 'yes',
+                'openingBalance' => '102',
+                'closingBalance' => '202'
+            ]
+        ];
+        foreach ($this->accountList as $account) {
+            $this->visitPath($this->getAccountsAddAnAccountUrl($this->loggedInUserDetails->getCurrentReportId()));
+            $this->iAddAnAccount(
+                $account['account'],
+                $account['name'],
+                $account['accountNumber'],
+                $account['sortCode'],
+                $account['joint'],
+                $account['openingBalance'],
+                $account['closingBalance'],
+            );
+        }
+
+        $this->iAmOnAccountsAddAnotherPage();
+        $this->selectOption('add_another[addAnother]', 'no');
+        $this->pressButton('Continue');
+    }
+
+    /**
+     * @When I remove the second account
+     */
+    public function iRemoveTheSecondAccount()
+    {
+        $this->iRemoveAnAccount(1);
+    }
+
+    /**
+     * @When I remove the remaining account
+     */
+    public function iRemoveTheRemainingAccount()
+    {
+        $this->iRemoveAnAccount(0);
+    }
+
     public function iAddAnAccount(
         string $account,
         string $name,
@@ -361,13 +409,12 @@ trait AccountsSectionTrait
         string $closingBalance
     ) {
         $this->iChooseAccountType($account);
-        $this->iFillInAccountDetails($name, $accountNumber, $sortCode, $joint);
+        $this->iFillInAccountDetails($accountNumber, $sortCode, $joint, $name);
         $this->iFillInAccountBalance($openingBalance, $closingBalance);
     }
 
     public function iChooseAccountType(string $account)
     {
-        $this->visitPath($this->getAccountsAddAnAccountUrl($this->loggedInUserDetails->getCurrentReportId()));
         $this->iSelectRadioBasedOnName('div', 'data-module', 'govuk-radios', $account);
         $this->pressButton('Save and continue');
     }
@@ -398,5 +445,21 @@ trait AccountsSectionTrait
         $this->fillField('account[openingBalance]', $openingBalance);
         $this->fillField('account[closingBalance]', $closingBalance);
         $this->pressButton('Save and continue');
+    }
+
+    public function iRemoveAnAccount($accountOccurrence)
+    {
+        $this->iAmOnAccountsSummaryPage();
+
+        // Remove the account from our array
+        unset($this->accountList[$accountOccurrence]);
+        $this->accountList = array_values($this->accountList);
+
+        // Remove the account from the app
+        $urlRegex = '/report\/.*\/bank-account\/.*\/delete$/';
+        $this->iClickOnNthElementBasedOnRegex($urlRegex, $accountOccurrence);
+
+        $this->iAmOnAccountsDeletePage();
+        $this->pressButton('Yes, remove account');
     }
 }
