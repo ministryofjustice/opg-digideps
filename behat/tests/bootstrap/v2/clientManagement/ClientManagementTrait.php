@@ -94,4 +94,119 @@ MESSAGE;
             );
         }
     }
+
+    /**
+     * @Then I should see the clients court order number
+     */
+    public function iShouldSeeCourtOrderNumber()
+    {
+        if (is_null($this->interactingWithUserDetails)) {
+            $this->throwContextualException(
+                'An interacting with User has not been set. Ensure a previous step in the scenario has set this User and try again.'
+            );
+        }
+
+        $pageContent = $searchResultsDiv = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
+        $courtOrderNumber = $this->interactingWithUserDetails->getCourtOrderNumber();
+        $courtOrderNumberPresent = str_contains($pageContent, $courtOrderNumber);
+
+        if (!$courtOrderNumberPresent) {
+            $this->throwContextualException(
+                sprintf(
+                    'Expected court order number not found. Wanted: %s, got (full HTML): %s',
+                    $courtOrderNumber,
+                    $pageContent
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then I should see the deputies name, address and contact details
+     */
+    public function iShouldSeeDeputyDetails()
+    {
+        if (is_null($this->interactingWithUserDetails)) {
+            $this->throwContextualException(
+                'An $interactingWithUserDetails has not been set. Ensure a previous step in the scenario has set this User and try again.'
+            );
+        }
+
+        $pageContent = $searchResultsDiv = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
+
+        $detailsToAssertOn[] = $this->interactingWithUserDetails->getUserFullname();
+        $detailsToAssertOn[] = $this->interactingWithUserDetails->getUserPhone();
+        $detailsToAssertOn[] = $this->interactingWithUserDetails->getUserEmail();
+        $detailsToAssertOn = array_merge(
+            $detailsToAssertOn,
+            $this->interactingWithUserDetails->getUserFullAddressArray()
+        );
+
+        $missingDetails = [];
+
+        foreach ($detailsToAssertOn as $detail) {
+            $detailPresent = str_contains($pageContent, $detail);
+
+            if (!$detailPresent) {
+                $missingDetails[] = $detail;
+            }
+        }
+
+        if (!empty($missingDetails)) {
+            $missingDetailsString = implode(', ', $missingDetails);
+            $detailsToAssertOnString = implode(', ', $detailsToAssertOn);
+
+            $this->throwContextualException(
+                sprintf(
+                    'Some client details were missing: %s. Wanted: %s, got (full HTML): %s',
+                    $missingDetailsString,
+                    $detailsToAssertOnString,
+                    $pageContent
+                )
+            );
+        }
+    }
+
+
+    /**
+     * @Then I should see the reports associated with the client
+     */
+    public function iShouldSeeDeputyReports()
+    {
+        if (is_null($this->interactingWithUserDetails)) {
+            $this->throwContextualException(
+                'An $interactingWithUserDetails has not been set. Ensure a previous step in the scenario has set this User and try again.'
+            );
+        }
+
+        var_dump($this->interactingWithUserDetails);
+
+        $pageContent = $searchResultsDiv = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
+
+        $currentReportDueDateVisible = str_contains($pageContent, $this->interactingWithUserDetails->getCurrentReportDueDate());
+
+        if (!$currentReportDueDateVisible) {
+            $this->throwContextualException(
+                sprintf(
+                    'Expected to find report with a due date of "%s" visible but it does not appear on the page. Got (full HTML): %s',
+                    $this->interactingWithUserDetails->getCurrentReportDueDate(),
+                    $pageContent
+                )
+            );
+        }
+
+        if (!is_null($this->interactingWithUserDetails->getPreviousReportDueDate())) {
+            $previousReportDueDateVisible = str_contains($pageContent, $this->interactingWithUserDetails->getPreviousReportDueDate());
+
+            if (!$previousReportDueDateVisible) {
+                $this->throwContextualException(
+                    sprintf(
+                        'Expected to find report with a due date of "%s" visible but it does not appear on the page. Got (full HTML): %s',
+                        $this->interactingWithUserDetails->getPreviousReportDueDate(),
+                        $pageContent
+                    )
+                );
+            }
+        }
+    }
 }

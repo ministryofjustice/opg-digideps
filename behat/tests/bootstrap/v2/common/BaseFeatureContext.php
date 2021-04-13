@@ -20,7 +20,8 @@ class BaseFeatureContext extends MinkContext
     use FixturesTrait;
     use IShouldBeOnTrait;
     use INavigateToTrait;
-    use IVisitTrait;
+    use IVisitAdminTrait;
+    use IVisitFrontendTrait;
     use PageUrlsTrait;
     use ReportTrait;
 
@@ -39,7 +40,7 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $profAdminDeputyCompletedDetails;
     public UserDetails $profAdminDeputySubmittedDetails;
 
-    public UserDetails $loggedInUserDetails;
+    public ?UserDetails $loggedInUserDetails = null;
     public ?UserDetails $interactingWithUserDetails = null;
 
     public array $fixtureUsers = [];
@@ -74,6 +75,9 @@ class BaseFeatureContext extends MinkContext
         $this->fixtureUsers[] = $this->profAdminDeputyNotStartedDetails = new UserDetails($responseData['data']['professionals']['admin']['not-started']);
         $this->fixtureUsers[] = $this->profAdminDeputyCompletedDetails = new UserDetails($responseData['data']['professionals']['admin']['completed']);
         $this->fixtureUsers[] = $this->profAdminDeputySubmittedDetails = new UserDetails($responseData['data']['professionals']['admin']['submitted']);
+
+        $this->loggedInUserDetails = null;
+        $this->interactingWithUserDetails = null;
     }
 
     /**
@@ -115,7 +119,7 @@ class BaseFeatureContext extends MinkContext
 
     public function throwContextualException(string $message)
     {
-        $loggedInEmail = !isset($this->loggedInUserDetails) ? 'Not logged in' : $this->loggedInUserDetails->getEmail();
+        $loggedInEmail = !isset($this->loggedInUserDetails) ? 'Not logged in' : $this->loggedInUserDetails->getUserEmail();
 
         $contextMessage = <<<CONTEXT
 $message

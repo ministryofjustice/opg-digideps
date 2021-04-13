@@ -3,7 +3,7 @@
 
 namespace DigidepsBehat\v2\Common;
 
-trait IVisitTrait
+trait IVisitFrontendTrait
 {
     /**
      * @When I visit the report submitted page
@@ -18,19 +18,5 @@ trait IVisitTrait
 
         $submittedReportUrl = $this->getReportSubmittedUrl($this->loggedInUserDetails->getPreviousReportId());
         $this->visitFrontendPath($submittedReportUrl);
-    }
-
-    /**
-     * @When I visit the clients search page
-     */
-    public function iVisitClientSearchPage()
-    {
-        if (!in_array($this->loggedInUserDetails->getUserRole(), $this->loggedInUserDetails::ADMIN_ROLES)) {
-            $this->throwContextualException(
-                "Attempting to access an admin page as a non-admin user. Try logging in as an admin user instead"
-            );
-        }
-
-        $this->visitAdminPath($this->getAdminClientSearchUrl());
     }
 }

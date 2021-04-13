@@ -79,60 +79,60 @@ class BehatFixtures
                 'super-admin' => self::buildAdminUserDetails($this->superAdmin),
             ],
             'lays' => [
-                'not-started' => self::buildLayUserDetails($this->layNotStarted),
-                'completed' => self::buildLayUserDetails($this->layCompleted),
-                'submitted' => self::buildLayUserDetails($this->laySubmitted),
+                'not-started' => self::buildUserDetails($this->layNotStarted),
+                'completed' => self::buildUserDetails($this->layCompleted),
+                'submitted' => self::buildUserDetails($this->laySubmitted),
             ],
             'professionals' => [
                 'admin' => [
-                    'not-started' => self::buildOrgUserDetails($this->profAdminNotStarted),
-                    'completed' => self::buildOrgUserDetails($this->profAdminCompleted),
-                    'submitted' => self::buildOrgUserDetails($this->profAdminSubmitted),
+                    'not-started' => self::buildUserDetails($this->profAdminNotStarted),
+                    'completed' => self::buildUserDetails($this->profAdminCompleted),
+                    'submitted' => self::buildUserDetails($this->profAdminSubmitted),
                 ]
             ]
         ];
     }
 
-    public static function buildLayUserDetails(User $user)
+    public static function buildUserDetails(User $user)
     {
-        return [
-            'email' => $user->getEmail(),
-            'userRole' => $user->getRoleName(),
-            'clientId' => $user->getFirstClient()->getId(),
-            'clientFirstName' => $user->getFirstClient()->getFirstname(),
-            'clientLastName' => $user->getFirstClient()->getLastname(),
-            'clientCaseNumber' => $user->getFirstClient()->getCaseNumber(),
-            'currentReportId' => $user->getFirstClient()->getCurrentReport()->getId(),
-            'currentReportType' =>$user->getFirstClient()->getCurrentReport()->getType(),
-            'currentReportNdrOrReport' => $user->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report',
-            'previousReportId' => $user->getFirstClient()->getReports()[0]->getId(),
-            'previousReportType' => $user->getFirstClient()->getReports()[0]->getType(),
-            'previousReportNdrOrReport' => $user->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report'
-        ];
-    }
+        $client = $user->isLayDeputy() ? $user->getFirstClient() : $user->getOrganisations()[0]->getClients()[0];
+        $currentReport = $client->getCurrentReport();
+        $previousReport = $client->getReports()[0];
 
-    public static function buildOrgUserDetails(User $user)
-    {
         return [
-            'email' => $user->getEmail(),
+            'userEmail' => $user->getEmail(),
             'userRole' => $user->getRoleName(),
-            'clientId' => $user->getOrganisations()[0]->getClients()[0]->getId(),
-            'clientFirstName' => $user->getOrganisations()[0]->getClients()[0]->getFirstname(),
-            'clientLastName' => $user->getOrganisations()[0]->getClients()[0]->getLastname(),
-            'clientCaseNumber' => $user->getOrganisations()[0]->getClients()[0]->getCaseNumber(),
-            'currentReportId' => $user->getOrganisations()[0]->getClients()[0]->getCurrentReport()->getId(),
-            'currentReportType' =>$user->getOrganisations()[0]->getClients()[0]->getCurrentReport()->getType(),
-            'currentReportNdrOrReport' => $user->getOrganisations()[0]->getClients()[0]->getCurrentReport() instanceof Ndr ? 'ndr' : 'report',
-            'previousReportId' => $user->getOrganisations()[0]->getClients()[0]->getReports()[0]->getId(),
-            'previousReportType' => $user->getOrganisations()[0]->getClients()[0]->getReports()[0]->getType(),
-            'previousReportNdrOrReport' => $user->getOrganisations()[0]->getClients()[0]->getCurrentReport() instanceof Ndr ? 'ndr' : 'report'
+            'userFirstName' => $user->getFirstname(),
+            'userLastName' => $user->getLastname(),
+            'userFullName' => $user->getFullName(),
+            'userFullAddressArray' => array_filter([
+                $user->getAddress1(),
+                $user->getAddress2(),
+                $user->getAddress3(),
+                $user->getAddressPostcode(),
+                $user->getAddressCountry()
+            ]),
+            'userPhone' => $user->getPhoneMain(),
+            'courtOrderNumber' => $client->getCaseNumber(),
+            'clientId' => $client->getId(),
+            'clientFirstName' => $client->getFirstname(),
+            'clientLastName' => $client->getLastname(),
+            'clientCaseNumber' => $client->getCaseNumber(),
+            'currentReportId' => $currentReport->getId(),
+            'currentReportType' =>$currentReport->getType(),
+            'currentReportNdrOrReport' => $currentReport instanceof Ndr ? 'ndr' : 'report',
+            'currentReportDueDate' => $currentReport->getDueDate()->format('j F Y'),
+            'previousReportId' => $previousReport->getId(),
+            'previousReportType' => $previousReport->getType(),
+            'previousReportNdrOrReport' => $previousReport instanceof Ndr ? 'ndr' : 'report',
+            'previousReportDueDate' => $previousReport->getDueDate()->format('j F Y')
         ];
     }
 
     public static function buildAdminUserDetails(User $user)
     {
         return [
-            'email' => $user->getEmail(),
+            'userEmail' => $user->getEmail(),
             'userRole' => $user->getRoleName(),
         ];
     }

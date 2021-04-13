@@ -49,7 +49,7 @@ trait AuthTrait
             throw new Exception('It looks like fixtures are not loaded - missing $this->adminDetails');
         }
 
-        $this->loginToAdminAs($this->adminDetails->getEmail());
+        $this->loginToAdminAs($this->adminDetails->getUserEmail());
     }
 
     /**
@@ -61,13 +61,13 @@ trait AuthTrait
             throw new Exception('It looks like fixtures are not loaded - missing $this->superAdminDetails');
         }
 
-        $this->loginToAdminAs($this->superAdminDetails->getEmail());
+        $this->loginToAdminAs($this->superAdminDetails->getUserEmail());
     }
 
     private function userDetailsExists(string $email)
     {
         foreach ($this->fixtureUsers as $fixtureUser) {
-            if ($fixtureUser->getEmail() === $email) {
+            if ($fixtureUser->getUserEmail() === $email) {
                 return true;
             }
         }
@@ -81,7 +81,7 @@ trait AuthTrait
         $users = array_merge($this->fixtureUsers);
 
         $filteredUsers = array_filter($users, function ($user) use ($email) {
-            return strtolower($user->getEmail()) === strtolower($email);
+            return strtolower($user->getUserEmail()) === strtolower($email);
         });
 
         // Returns the value of the user (so we don't need to know the key) or false if an empty array

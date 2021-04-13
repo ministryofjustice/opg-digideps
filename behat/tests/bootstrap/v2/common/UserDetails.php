@@ -11,8 +11,14 @@ class UserDetails
 {
     public const ADMIN_ROLES = ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ELEVATED_ADMIN'];
 
-    private ?string $email = null;
+    private ?string $userEmail = null;
     private ?string $userRole = null;
+    private ?string $userFirstName = null;
+    private ?string $userLastName = null;
+    private ?string $userFullName = null;
+    private ?array $userFullAddressArray = null;
+    private ?string $userPhone = null;
+    private ?string $courtOrderNumber = null;
     private ?int $clientId = null;
     private ?string $clientFirstName = null;
     private ?string $clientLastName = null;
@@ -20,9 +26,11 @@ class UserDetails
     private ?int $currentReportId = null;
     private ?string $currentReportType = null;
     private ?string $currentReportNdrOrReport = null;
+    private ?string $currentReportDueDate = null;
     private ?int $previousReportId = null;
     private ?string $previousReportType = null;
     private ?string $previousReportNdrOrReport = null;
+    private ?string $previousReportDueDate = null;
 
     public function __construct(array $userDetails)
     {
@@ -55,9 +63,16 @@ class UserDetails
             );
         }
 
-        $this->setEmail($userDetails['email']);
+        $this->setUserEmail($userDetails['userEmail']);
         $this->setUserRole($userDetails['userRole']);
+        $this->setUserFirstName($userDetails['userFirstName']);
+        $this->setUserLastName($userDetails['userLastName']);
+        $this->setUserFullName($userDetails['userFullName']);
+        $this->setUserFullAddressArray($userDetails['userFullAddressArray']);
+        $this->setUserPhone($userDetails['userPhone']);
+        $this->setUserEmail($userDetails['userEmail']);
 
+        $this->setCourtOrderNumber($userDetails['courtOrderNumber']);
         $this->setClientId($userDetails['clientId']);
         $this->setClientFirstName($userDetails['clientFirstName']);
         $this->setClientLastName($userDetails['clientLastName']);
@@ -66,11 +81,13 @@ class UserDetails
         $this->setCurrentReportId($userDetails['currentReportId']);
         $this->setCurrentReportType($userDetails['currentReportType']);
         $this->setCurrentReportNdrOrReport($userDetails['currentReportNdrOrReport']);
+        $this->setCurrentReportDueDate($userDetails['currentReportDueDate']);
 
         if ($userDetails['currentReportId'] !== $userDetails['previousReportId']) {
             $this->setPreviousReportId($userDetails['previousReportId']);
             $this->setPreviousReportType($userDetails['previousReportType']);
             $this->setPreviousReportNdrOrReport($userDetails['previousReportNdrOrReport']);
+            $this->setPreviousReportDueDate($userDetails['previousReportDueDate']);
         }
     }
 
@@ -90,18 +107,18 @@ class UserDetails
     /**
      * @return null|string
      */
-    public function getEmail(): ?string
+    public function getUserEmail(): ?string
     {
-        return $this->email;
+        return $this->userEmail;
     }
 
     /**
      * @param null|string $email
      * @return UserDetails
      */
-    public function setEmail(?string $email): UserDetails
+    public function setUserEmail(?string $email): UserDetails
     {
-        $this->email = $email;
+        $this->userEmail = $email;
         return $this;
     }
 
@@ -300,6 +317,150 @@ class UserDetails
     public function setClientCaseNumber(?string $clientCaseNumber): UserDetails
     {
         $this->clientCaseNumber = $clientCaseNumber;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCourtOrderNumber(): ?string
+    {
+        return $this->courtOrderNumber;
+    }
+
+    /**
+     * @param string|null $courtOrderNumber
+     * @return UserDetails
+     */
+    public function setCourtOrderNumber(?string $courtOrderNumber): UserDetails
+    {
+        $this->courtOrderNumber = $courtOrderNumber;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getUserFirstName(): ?string
+    {
+        return $this->userFirstName;
+    }
+
+    /**
+     * @param string|null $userFirstName
+     * @return UserDetails
+     */
+    public function setUserFirstName(?string $userFirstName): UserDetails
+    {
+        $this->userFirstName = $userFirstName;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getUserLastName(): ?string
+    {
+        return $this->userLastName;
+    }
+
+    /**
+     * @param string|null $userLastName
+     * @return UserDetails
+     */
+    public function setUserLastName(?string $userLastName): UserDetails
+    {
+        $this->userLastName = $userLastName;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getUserFullName(): ?string
+    {
+        return $this->userFullName;
+    }
+
+    /**
+     * @param string|null $userFullName
+     * @return UserDetails
+     */
+    public function setUserFullName(?string $userFullName): UserDetails
+    {
+        $this->userFullName = $userFullName;
+        return $this;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getUserFullAddressArray(): ?array
+    {
+        return $this->userFullAddressArray;
+    }
+
+    /**
+     * @param array|null $userFullAddressArray
+     * @return UserDetails
+     */
+    public function setUserFullAddressArray(?array $userFullAddressArray): UserDetails
+    {
+        $this->userFullAddressArray = $userFullAddressArray;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getUserPhone(): ?string
+    {
+        return $this->userPhone;
+    }
+
+    /**
+     * @param string|null $userPhone
+     * @return UserDetails
+     */
+    public function setUserPhone(?string $userPhone): UserDetails
+    {
+        $this->userPhone = $userPhone;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCurrentReportDueDate(): ?string
+    {
+        return $this->currentReportDueDate;
+    }
+
+    /**
+     * @param string|null $currentReportDueDate
+     * @return UserDetails
+     */
+    public function setCurrentReportDueDate(?string $currentReportDueDate): UserDetails
+    {
+        $this->currentReportDueDate = $currentReportDueDate;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPreviousReportDueDate(): ?string
+    {
+        return $this->previousReportDueDate;
+    }
+
+    /**
+     * @param string|null $previousReportDueDate
+     * @return UserDetails
+     */
+    public function setPreviousReportDueDate(?string $previousReportDueDate): UserDetails
+    {
+        $this->previousReportDueDate = $previousReportDueDate;
         return $this;
     }
 }

@@ -14,7 +14,7 @@ trait FixturesTrait
      */
     public function theFollowingCourtOrdersExist(TableNode $table)
     {
-        $this->loginToAdminAs($this->superAdminDetails->getEmail());
+        $this->loginToAdminAs($this->superAdminDetails->getUserEmail());
 
         foreach ($table as $row) {
             $queryString = http_build_query([
@@ -70,7 +70,7 @@ trait FixturesTrait
      */
     public function twoClientsHaveSameNames()
     {
-        $this->loginToAdminAs($this->superAdminDetails->getEmail());
+        $this->loginToAdminAs($this->superAdminDetails->getUserEmail());
 
         $duplicateClientUrl = $this->getDuplicateClientFixtureUrl($this->layDeputyNotStartedDetails->getClientId());
         $this->visitAdminPath($duplicateClientUrl);

@@ -16,12 +16,14 @@ trait PageUrlsTrait
 
     // Admin
     private string $adminClientSearchUrl = '/admin/client/search';
+    private string $adminClientDetailsUrl = '/admin/client/%s/details';
 
     // Fixtures
     private string $duplicateClientFixtureUrl = '/admin/fixture/duplicate-client/%s';
     private string $courtOrdersFixtureUrl = '/admin/fixture/court-orders?%s';
 
     /**
+     * @param int $reportId
      * @return string
      */
     public function getReportSubmittedUrl(int $reportId): string
@@ -30,6 +32,7 @@ trait PageUrlsTrait
     }
 
     /**
+     * @param int $reportId
      * @return string
      */
     public function getPostSubmissionUserResearchUrl(int $reportId): string
@@ -38,6 +41,7 @@ trait PageUrlsTrait
     }
 
     /**
+     * @param int $reportId
      * @return string
      */
     public function getUserResearchSubmittedUrl(int $reportId): string
@@ -46,6 +50,7 @@ trait PageUrlsTrait
     }
 
     /**
+     * @param int $reportId
      * @return string
      */
     public function getContactsSummaryUrl(int $reportId): string
@@ -54,6 +59,7 @@ trait PageUrlsTrait
     }
 
     /**
+     * @param int $reportId
      * @return string
      */
     public function getContactsAddUrl(int $reportId): string
@@ -62,6 +68,7 @@ trait PageUrlsTrait
     }
 
     /**
+     * @param int $reportId
      * @return string
      */
     public function getContactsAddAnotherUrl(int $reportId): string
@@ -86,6 +93,16 @@ trait PageUrlsTrait
     }
 
     /**
+     * @param int $clientId
+     * @return string
+     */
+    public function getAdminClientDetailsUrl(int $clientId): string
+    {
+        return sprintf($this->adminClientDetailsUrl, $clientId);
+    }
+
+    /**
+     * @param string $queryString
      * @return string
      */
     public function getCourtOrdersFixtureUrl(string $queryString): string
@@ -94,6 +111,7 @@ trait PageUrlsTrait
     }
 
     /**
+     * @param int $clientId
      * @return string
      */
     public function getDuplicateClientFixtureUrl(int $clientId): string
