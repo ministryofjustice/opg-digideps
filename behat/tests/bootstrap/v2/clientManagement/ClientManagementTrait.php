@@ -3,6 +3,7 @@
 
 namespace DigidepsBehat\v2\ClientManagement;
 
+use DateTime;
 use DigidepsBehat\v2\Common\UserDetails;
 
 trait ClientManagementTrait
@@ -128,7 +129,7 @@ MESSAGE;
     {
         if (is_null($this->interactingWithUserDetails)) {
             $this->throwContextualException(
-                'An $interactingWithUserDetails has not been set. Ensure a previous step in the scenario has set this User and try again.'
+                '$interactingWithUserDetails has not been set. Ensure a previous step in the scenario has set this User and try again.'
             );
         }
 
@@ -175,7 +176,7 @@ MESSAGE;
     {
         if (is_null($this->interactingWithUserDetails)) {
             $this->throwContextualException(
-                'An $interactingWithUserDetails has not been set. Ensure a previous step in the scenario has set this User and try again.'
+                '$interactingWithUserDetails has not been set. Ensure a previous step in the scenario has set this User and try again.'
             );
         }
 
@@ -215,7 +216,7 @@ MESSAGE;
     {
         if (is_null($this->interactingWithUserDetails)) {
             $this->throwContextualException(
-                'An $interactingWithUserDetails has not been set. Ensure a previous step in the scenario has set this User and try again.'
+                '$interactingWithUserDetails has not been set. Ensure a previous step in the scenario has set this User and try again.'
             );
         }
 
@@ -242,18 +243,19 @@ MESSAGE;
     {
         if (is_null($this->interactingWithUserDetails)) {
             $this->throwContextualException(
-                'An $interactingWithUserDetails has not been set. Ensure a previous step in the scenario has set this User and try again.'
+                '$interactingWithUserDetails has not been set. Ensure a previous step in the scenario has set this User and try again.'
             );
         }
+
         $namedDeputyName = $this->interactingWithUserDetails->getNamedDeputyName();
         $namedDeputyEmail = $this->interactingWithUserDetails->getNamedDeputyEmail();
 
-        $nameXpathSelector = sprintf("//dt[normalize-space() = '%s']/..", 'Named deputy');
+        $nameXpathSelector = "//dt[normalize-space() = 'Named deputy']/..";
         $namedDeputyNameDivHtml = $this->getSession()->getPage()->find('xpath', $nameXpathSelector)->getHtml();
 
         $namedDeputyNameVisible = str_contains($namedDeputyNameDivHtml, $namedDeputyName);
 
-        $emailXpathSelector = sprintf("//h3[normalize-space() = '%s']/..", 'Named deputy contact details');
+        $emailXpathSelector = "//h3[normalize-space() = 'Named deputy contact details']/..";
         $namedDeputyNameDivHtml = $this->getSession()->getPage()->find('xpath', $emailXpathSelector)->getHtml();
 
         $namedDeputyEmailVisible = str_contains($namedDeputyNameDivHtml, $namedDeputyEmail);
@@ -261,11 +263,80 @@ MESSAGE;
         if (!$namedDeputyNameVisible || !$namedDeputyEmailVisible) {
             $this->throwContextualException(
                 sprintf(
-                    'Expected to find the named deputy details (Name: "%s", Email: "%s") but they does not appear on the page. Got (full HTML): %s',
+                    'Expected to find the named deputy details (Name: "%s", Email: "%s") but they do not appear on the page. Got (full HTML): %s',
                     $namedDeputyName,
                     $namedDeputyEmail,
                     $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml()
                 )
+            );
+        }
+    }
+
+    /**
+     * @When I attempt to discharge the client
+     */
+    public function iAttemptToDischargeTheClient()
+    {
+        if (is_null($this->interactingWithUserDetails)) {
+            $this->throwContextualException(
+                '$interactingWithUserDetails has not been set. Ensure a previous step in the scenario has set this User and try again.'
+            );
+        }
+
+        try {
+            $this->clickLink('Discharge deputy');
+            $this->iAmOnAdminClientDischargePage();
+            $this->clickLink('Discharge deputy');
+        } catch (\Throwable $e) {
+            // This step is used as part of testing the discharge button isnt here so swallow errors and assert on following step
+        }
+    }
+
+    /**
+     * @Then the client should be discharged
+     */
+    public function theClientShouldBeDischarged()
+    {
+        if (is_null($this->interactingWithUserDetails)) {
+            $this->throwContextualException(
+                '$interactingWithUserDetails has not been set. Ensure a previous step in the scenario has set this User and try again.'
+            );
+        }
+
+        $this->iVisitLayClientDetailsPage();
+
+        $dischargedOnSelector = "//dt[normalize-space() = 'Discharged on']/..";
+        $clientDtHtml = $this->getSession()->getPage()->find('xpath', $dischargedOnSelector)->getHtml();
+        $todayString = (new DateTime())->format('j M Y');
+
+        $clientIsDischarged = str_contains($clientDtHtml, $todayString);
+
+        if (!$clientIsDischarged) {
+            $this->throwContextualException(
+                sprintf('The client does not appear to be discharged. Expected: %s, got (HTML of discharged dt): %s', $todayString, $clientDtHtml)
+            );
+        }
+    }
+
+    /**
+     * @Then the client should not be discharged
+     */
+    public function theClientShouldNotBeDischarged()
+    {
+        if (is_null($this->interactingWithUserDetails)) {
+            $this->throwContextualException(
+                '$interactingWithUserDetails has not been set. Ensure a previous step in the scenario has set this User and try again.'
+            );
+        }
+
+        $this->iVisitLayClientDetailsPage();
+
+        $dischargedOnSelector = "//dt[normalize-space() = 'Discharged on']/..";
+        $dischargedOnVisible = $this->getSession()->getPage()->find('xpath', $dischargedOnSelector);
+
+        if (!is_null($dischargedOnVisible)) {
+            $this->throwContextualException(
+                sprintf('The client does not appear to be discharged. Expected: %s, got (HTML of discharged dt): %s', $todayString, $clientDtHtml)
             );
         }
     }

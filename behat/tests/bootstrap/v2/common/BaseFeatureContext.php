@@ -29,6 +29,7 @@ class BaseFeatureContext extends MinkContext
     const BEHAT_FRONT_USER_DETAILS = '/behat/frontend/user/%s/details';
 
     public UserDetails $adminDetails;
+    public UserDetails $elevatedAdminDetails;
     public UserDetails $superAdminDetails;
 
     public UserDetails $layDeputyNotStartedDetails;
@@ -68,6 +69,7 @@ class BaseFeatureContext extends MinkContext
         }
 
         $this->fixtureUsers[] = $this->adminDetails = new UserDetails($responseData['data']['admin-users']['admin']);
+        $this->fixtureUsers[] = $this->elevatedAdminDetails = new UserDetails($responseData['data']['admin-users']['elevated-admin']);
         $this->fixtureUsers[] = $this->superAdminDetails = new UserDetails($responseData['data']['admin-users']['super-admin']);
         $this->fixtureUsers[] = $this->layDeputyNotStartedDetails = new UserDetails($responseData['data']['lays']['not-started']);
         $this->fixtureUsers[] = $this->layDeputyCompletedDetails = new UserDetails($responseData['data']['lays']['completed']);

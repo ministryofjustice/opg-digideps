@@ -25,6 +25,7 @@ class BehatFixtures
     private NamedDeputyTestHelper $namedDeputyTestHelper;
 
     private User $admin;
+    private User $elevatedAdmin;
     private User $superAdmin;
 
     private User $layNotStarted;
@@ -78,6 +79,7 @@ class BehatFixtures
         return [
             'admin-users' => [
                 'admin' => self::buildAdminUserDetails($this->admin),
+                'elevated-admin' => self::buildAdminUserDetails($this->elevatedAdmin),
                 'super-admin' => self::buildAdminUserDetails($this->superAdmin),
             ],
             'lays' => [
@@ -164,6 +166,7 @@ class BehatFixtures
 
         $users = [
             $this->admin,
+            $this->elevatedAdmin,
             $this->superAdmin,
             $this->layNotStarted,
             $this->layCompleted,
@@ -184,10 +187,13 @@ class BehatFixtures
     private function createAdminUsers()
     {
         $this->admin = $this->userTestHelper
-            ->createUser(null, User::ROLE_ADMIN, sprintf('admin-%s@publicguardian.gov.uk', $this->testRunId));
+            ->createUser(null, User::ROLE_ADMIN, sprintf('admin-%s@t.uk', $this->testRunId));
+
+        $this->elevatedAdmin = $this->userTestHelper
+            ->createUser(null, User::ROLE_ELEVATED_ADMIN, sprintf('elevated-admin-%s@t.uk', $this->testRunId));
 
         $this->superAdmin = $this->userTestHelper
-            ->createUser(null, User::ROLE_SUPER_ADMIN, sprintf('super-admin-%s@publicguardian.gov.uk', $this->testRunId));
+            ->createUser(null, User::ROLE_SUPER_ADMIN, sprintf('super-admin-%s@t.uk', $this->testRunId));
     }
 
     private function createDeputies()

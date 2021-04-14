@@ -53,6 +53,18 @@ trait AuthTrait
     }
 
     /**
+     * @Given an elevated admin user accesses the admin app
+     */
+    public function elevatedAdminUsersAccessesAdmin()
+    {
+        if (empty($this->elevatedAdminDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $this->elevatedAdminDetails');
+        }
+
+        $this->loginToAdminAs($this->elevatedAdminDetails->getUserEmail());
+    }
+
+    /**
      * @Given a super admin user accesses the admin app
      */
     public function superAdminUsersAccessesAdmin()
