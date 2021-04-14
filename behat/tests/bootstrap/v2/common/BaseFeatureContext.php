@@ -19,7 +19,6 @@ class BaseFeatureContext extends MinkContext
     use ErrorsTrait;
     use FixturesTrait;
     use IShouldBeOnTrait;
-    use INavigateToTrait;
     use IVisitAdminTrait;
     use IVisitFrontendTrait;
     use PageUrlsTrait;
