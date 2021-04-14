@@ -97,7 +97,7 @@ trait GiftsSectionTrait
      */
     public function iFollowEditLinkForGifts()
     {
-        $this->iClickBasedOnElementId('a', 'edit-gifts');
+        $this->iClickBasedOnElementId('a', 'id', 'edit-gifts');
     }
 
     /**
@@ -152,7 +152,7 @@ trait GiftsSectionTrait
      */
     public function iChooseToRemoveGift()
     {
-        $this->iClickBasedOnElementId('button', 'confirm_delete_confirm');
+        $this->iClickBasedOnElementId('button', 'id', 'confirm_delete_confirm');
     }
 
     /**

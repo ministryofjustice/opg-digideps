@@ -65,8 +65,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
      */
     public function iNavigateBackToReportSection()
     {
-        $linkText = $this->reportUrlPrefix == 'ndr' ? 'New deputy report overview' : 'Deputy report overview';
-        $this->clickLink($linkText);
+        $this->iClickBasedOnElementId('a', 'data-action', 'report.overview');
         assert($this->iAmOnReportsOverviewPage());
     }
 

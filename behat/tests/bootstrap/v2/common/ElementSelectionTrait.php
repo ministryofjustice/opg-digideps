@@ -35,10 +35,10 @@ trait ElementSelectionTrait
         $element->click();
     }
 
-    // Click on a link (a or button css ref for example) based on the value of it's id.
-    public function iClickBasedOnElementId(string $elementType, string $attributeValue)
+    // Click on a link (a or button css ref for example) based on the value of it's attribute type.
+    public function iClickBasedOnElementId(string $elementType, string $attributeType, string $attributeValue)
     {
-        $xpath = sprintf("//%s[@id='%s']", $elementType, $attributeValue);
+        $xpath = sprintf("//%s[@%s='%s']", $elementType, $attributeType, $attributeValue);
         $session = $this->getSession();
         $element = $session->getPage()->find(
             'xpath',

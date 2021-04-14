@@ -297,7 +297,6 @@ class BehatFixtures
         $client = $this->clientTestHelper->generateClient($this->entityManager, $deputy);
 
         $ndr = new Ndr($client);
-        $this->entityManager->persist($ndr);
         $deputy->setNdrEnabled(true);
         $client->setNdr($ndr);
 

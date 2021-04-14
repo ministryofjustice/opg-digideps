@@ -99,7 +99,7 @@ trait AccountsSectionTrait
     }
 
     /**
-     * @When I get the correct validation responses
+     * @When I get the correct validation warnings
      */
     public function iGetTheCorrectValidationResponses()
     {
@@ -156,7 +156,7 @@ trait AccountsSectionTrait
     }
 
     /**
-     * @When I need to update my current account to a different one
+     * @When I update my current account to a different one
      */
     public function iUpdateCurrentAccountToDifferentOne()
     {
@@ -188,7 +188,7 @@ trait AccountsSectionTrait
     }
 
     /**
-     * @When I add one of each account type with a mixture of responses
+     * @When I add one of each account type with valid details
      */
     public function iAddOneOfEachTypeOfAccounts()
     {
@@ -361,7 +361,7 @@ trait AccountsSectionTrait
     /**
      * @When I add a couple of new accounts
      */
-    public function iAddANewAccount()
+    public function iAddACoupleOfNewAccounts()
     {
         $this->accountList = [
             [
