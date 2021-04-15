@@ -170,9 +170,7 @@ trait VisitsCareSectionTrait
      */
     public function iFollowEditLinkClientReceivePaidCarePage()
     {
-        //this should be replaced with actual link click but could not identify it properly
-        $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportReceivePaidCare = 'report/' . $activeReportId . '/visits-care/step/2?from=summary';
-        $this->visitPath($reportReceivePaidCare);
+        $editLink = $this->getSession()->getPage()->find('css', '.behat-link-receive-paid-care-edit');
+        $editLink->click();
     }
 }

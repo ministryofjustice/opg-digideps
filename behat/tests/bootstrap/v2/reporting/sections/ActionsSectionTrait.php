@@ -109,19 +109,19 @@ trait ActionsSectionTrait
             $this->throwContextualException('A dd element was not found on the page');
         }
 
-        $countNegativeReponse = 0;
-        $countPositiveReponse = 0;
+        $countNegativeResponse = 0;
+        $countPositiveResponse = 0;
 
         foreach ($tableEntry as $entry) {
             if (trim(strtolower($entry->getHtml())) === "no") {
-                $countNegativeReponse += 1;
+                $countNegativeResponse += 1;
             } elseif (strtolower(trim($entry->getHtml())) === "yes") {
-                $countPositiveReponse += 1;
+                $countPositiveResponse += 1;
             }
         }
 
-        assert($countNegativeReponse == $this->answeredNo);
-        assert($countPositiveReponse == $this->answeredYes);
+        assert($countNegativeResponse == $this->answeredNo);
+        assert($countPositiveResponse == $this->answeredYes);
     }
 
     /**

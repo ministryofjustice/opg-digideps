@@ -200,12 +200,6 @@ cross-browser-android-chrome:
 
 v2-tests-goutte:
     suites:
-        section-visits-care:
-            description: Covering the 'Visits and Care' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/visits-care" ]
-            contexts:
-                - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
-
         feedback:
             description: Covering features that allow users to give us feedback
             paths: [ "%paths.base%/features-v2/feedback" ]
@@ -239,6 +233,12 @@ v2-tests-goutte:
         section-documents:
             description: Covering the 'Documents' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/documents" ]
+            contexts:
+                - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        section-visits-care:
+            description: Covering the 'Visits and Care' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/visits-care" ]
             contexts:
                 - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
