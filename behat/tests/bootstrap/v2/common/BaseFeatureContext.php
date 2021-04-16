@@ -26,6 +26,7 @@ class BaseFeatureContext extends MinkContext
 
     const BEHAT_FRONT_RESET_FIXTURES = '/behat/frontend/reset-fixtures?testRunId=%s';
     const BEHAT_FRONT_USER_DETAILS = '/behat/frontend/user/%s/details';
+    const REPORT_SECTION_ENDPOINT = '%s/%s/%s';
 
     public UserDetails $adminDetails;
     public UserDetails $elevatedAdminDetails;

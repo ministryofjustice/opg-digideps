@@ -14,8 +14,6 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use DocumentsSectionTrait;
     use GiftsSectionTrait;
 
-    const REPORT_SECTION_ENDPOINT = '%s/%s/%s';
-
     /**
      * @Then the previous section should be :sectionName
      */
