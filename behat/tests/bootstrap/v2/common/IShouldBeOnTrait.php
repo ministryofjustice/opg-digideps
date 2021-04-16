@@ -176,4 +176,12 @@ trait IShouldBeOnTrait
     {
         return $this->iAmOnPage('/report\/.*\/visits-care\/step\/1$/');
     }
+
+    /**
+     * @Then I should be on the visits and care second step page
+     */
+    public function iAmOnVisitsAndCareStep2Page()
+    {
+        return $this->iAmOnPage('/report\/.*\/visits-care\/step\/2$/');
+    }
 }

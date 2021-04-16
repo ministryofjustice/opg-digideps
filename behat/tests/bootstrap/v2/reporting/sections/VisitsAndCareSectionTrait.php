@@ -19,6 +19,7 @@ trait VisitsAndCareSectionTrait
      */
     public function iViewAndStartVisitsAndCareSection()
     {
+        $this->getSession()->maximizeWindow();
         $this->iViewVisitsAndCareSection();
         $this->clickLink('Start visits and care');
     }
@@ -28,37 +29,16 @@ trait VisitsAndCareSectionTrait
      */
     public function iDoNotLiveWithClientVisitsAndCareSection()
     {
-//        $this->getSession()->getDriver()->manage()->window()->maximize();
+        $this->iFillFieldForCrossBrowser('visits_care_doYouLiveWithClient_1', 'no');
+    }
 
-//        $xpath = sprintf("//%s[@%s='%s']//input", 'div', 'data-module', 'govuk-radios');
-//        $session = $this->getSession();
-//        $value = $session->getPage()->find(
-//            'xpath',
-//            $session->getSelectorsHandler()->selectorToXpath('xpath', $xpath)
-//        );
-//        $this->getSession()->wait(60, '(0 === jQuery.active)');
-        $this->pressButton('Accept cookies');
-        $value = '#how-often-contact-client-wrapper';
-        $javascript =
-            "var el = $('$value');"
-            . 'var elOffset = el.offset().top;'
-            . 'var elHeight = el.height();'
-            . 'var windowHeight = $(window).height();'
-            . 'var offset;'
-            . 'if (elHeight < windowHeight) {'
-            . '  offset = elOffset - ((windowHeight / 2) - (elHeight / 2));'
-            . '} else {'
-            . '  offset = elOffset;'
-            . '}'
-            . 'window.scrollTo(0, offset);';
-
-        $this->getSession()->executeScript($javascript);
-
-        $this->iSelectRadioBasedOnName('div', 'data-module', 'govuk-radios', 'no');
-//        var_dump($this->getCurrentUrl());
-        //        var_dump($this->getSession()->getPage()->getHtml());
-        assert($this->elementExistsOnPage('textarea', 'id', 'visits_care_howOftenDoYouContactClient'));
+    /**
+     * @When I can fill in a text box with how often I visit client
+     */
+    public function iCanFillInVisitsTextBox()
+    {
+        $this->iFillFieldForCrossBrowser('visits_care_howOftenDoYouContactClient', 'daily');
         $this->pressButton('Save and continue');
-        var_dump($this->getCurrentUrl());
+        assert($this->iAmOnVisitsAndCareStep2Page());
     }
 }

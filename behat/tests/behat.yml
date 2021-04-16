@@ -190,6 +190,7 @@ cross-browser-android-chrome:
                 tags: "@android-chrome"
             contexts:
                 - DigidepsBehat\CrossBrowser\CrossBrowserFeatureContext
+                - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             browser_stack:
@@ -284,20 +285,42 @@ v2-tests-browserstack-ie11:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             browser_stack:
                 capabilities:
-                    marionette: true
                     browserstack-debug: true
                     browserstack-tunnel: true
                     acceptSslCerts: true
-                    project: 'Digideps Cross Browser Test - IE10'
+                    project: 'Digideps Cross Browser Test - IE11'
                     browser: 'ie'
                     browserVersion: '11'
                     os: 'Windows'
                     os_version: '10'
                     build: 'Internet Explorer'
                     name: 'v2-tests'
-                    nativeEvents: true
-                    ignoreZoomSetting: true
-                    resolution: '1920x1080'
+            files_path: '%paths.base%/fixtures/'
+            default_session: browser_stack
+        Behatch\Extension: ~
+
+v2-tests-browserstack-firefox:
+    suites:
+        cross-browser:
+            description: Covering the cross browser tests we want to run
+            paths: [ "%paths.base%/features-v2/cross-browser" ]
+            contexts:
+                - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            browser_stack:
+                capabilities:
+                    browserstack-debug: true
+                    browserstack-tunnel: true
+                    acceptSslCerts: true
+                    project: 'Digideps Cross Browser Test - Firefox'
+                    browser: 'firefox'
+                    browserVersion: 'latest'
+                    os: 'Windows'
+                    os_version: '10'
+                    build: 'Firefox'
+                    name: 'v2-tests'
+                    resolution: '2048x1536'
             files_path: '%paths.base%/fixtures/'
             default_session: browser_stack
         Behatch\Extension: ~
