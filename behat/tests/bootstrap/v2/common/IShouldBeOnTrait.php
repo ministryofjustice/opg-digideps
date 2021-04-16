@@ -110,7 +110,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnReportsOverviewPage()
     {
-        return $this->iAmOnPage('/report\/.*\/overview$/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/overview$/', $this->reportUrlPrefix));
     }
 
     /**
@@ -170,42 +170,50 @@ trait IShouldBeOnTrait
     }
 
     /**
-     * @Then I should be on the live with client page
+     * @Then I should be on the accounts summary page
      */
-    public function iAmOnVisitsCarePage1()
+    public function iAmOnAccountsSummaryPage()
     {
-        $this->iAmOnPage('/report\/.*\/visits-care\/step\/1$/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account.*\/summary$/', $this->reportUrlPrefix));
     }
 
     /**
-     * @Then I should be on the client receive paid care page
+     * @Then I should be on the add another accounts page
      */
-    public function iAmOnVisitsCarePage2()
+    public function iAmOnAccountsAddAnotherPage()
     {
-        $this->iAmOnPage('/report\/.*\/visits-care\/step\/2$/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account.*\/add_another$/', $this->reportUrlPrefix));
     }
 
     /**
-     * @Then I should be on the who is doing the caring page
+     * @Then I should be on add initial account page
      */
-    public function iAmOnVisitsCarePage3()
+    public function iAmOnAccountsAddInitialPage()
     {
-        $this->iAmOnPage('/report\/.*\/visits-care\/step\/3$/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account\/step1.*$/', $this->reportUrlPrefix));
     }
 
     /**
-     * @Then I should be on the does the client have a care plan page
+     * @Then I should be on add account details page
      */
-    public function iAmOnVisitsCarePage4()
+    public function iAmOnAccountsDetailsPage()
     {
-        $this->iAmOnPage('/report\/.*\/visits-care\/step\/4$/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account\/step2.*$/', $this->reportUrlPrefix));
     }
 
     /**
-     * @Then I should be on the visits and care report summary page
+     * @Then I should be on delete account details page
      */
-    public function iAmOnVisitsCareSummaryPage()
+    public function iAmOnAccountsDeletePage()
     {
-        $this->iAmOnPage('/report\/.*\/visits-care\/summary.*/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account\/.*\/delete$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on account start page
+     */
+    public function iAmOnAccountsStartPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/bank-accounts$/', $this->reportUrlPrefix));
     }
 }

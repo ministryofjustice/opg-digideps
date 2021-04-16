@@ -206,15 +206,15 @@ v2-tests-goutte:
             contexts:
                 - DigidepsBehat\v2\feedback\FeedbackFeatureContext
 
-        section-actions:
-            description: Covering the 'Actions' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/actions" ]
+        section-accounts:
+            description: Covering the 'Accounts' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/accounts" ]
             contexts:
                 - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
-        section-gifts:
-            description: Covering the 'Gifts' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/gifts" ]
+        section-actions:
+            description: Covering the 'Actions' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/actions" ]
             contexts:
                 - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
@@ -236,9 +236,9 @@ v2-tests-goutte:
             contexts:
                 - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
-        section-visits-care:
-            description: Covering the 'Visits and Care' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/visits-care" ]
+        section-gifts:
+            description: Covering the 'Gifts' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/gifts" ]
             contexts:
                 - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 

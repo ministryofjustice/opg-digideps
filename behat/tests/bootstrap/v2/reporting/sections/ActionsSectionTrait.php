@@ -14,7 +14,7 @@ trait ActionsSectionTrait
     public function iViewActionsSection()
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $activeReportId, 'actions');
+        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'actions');
         $this->visitPath($reportSectionUrl);
     }
 

@@ -41,9 +41,3 @@ Feature: Gifts
     When I remove the first gift
     And I follow link back to report overview page
     Then I should see "gifts" as "not started"
-
-  Scenario: A user navigates to previous and next section
-    Given a Lay Deputy has a completed report
-    When I view the gifts report section
-    Then the previous section should be "Deputy expenses"
-    And the next section should be "Money transfers"

@@ -13,7 +13,7 @@ trait GiftsSectionTrait
     public function iViewGiftsSection()
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $activeReportId, 'gifts');
+        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'gifts');
         $this->visitPath($reportSectionUrl);
     }
 
@@ -97,7 +97,7 @@ trait GiftsSectionTrait
      */
     public function iFollowEditLinkForGifts()
     {
-        $this->iClickBasedOnElementId('a', 'edit-gifts');
+        $this->iClickBasedOnElementId('a', 'id', 'edit-gifts');
     }
 
     /**
@@ -152,7 +152,7 @@ trait GiftsSectionTrait
      */
     public function iChooseToRemoveGift()
     {
-        $this->iClickBasedOnElementId('button', 'confirm_delete_confirm');
+        $this->iClickBasedOnElementId('button', 'id', 'confirm_delete_confirm');
     }
 
     /**
@@ -287,7 +287,7 @@ trait GiftsSectionTrait
             $tableRows = $tableBody->findAll('css', 'tr');
 
             if (!$tableRows) {
-                $this->throwContextualException('A tbody element was not found on the page');
+                $this->throwContextualException('A tr element was not found on the page');
             }
 
             foreach ($tableRows as $tableRow) {
