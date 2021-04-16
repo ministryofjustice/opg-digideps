@@ -31,7 +31,9 @@ RUN apk --no-cache add \
   nginx-mod-http-headers-more \
   su-exec \
   php7-igbinary \
-  php7-pecl-redis
+  php7-pecl-redis \
+  libzip-dev \
+  unzip
 
 RUN docker-php-ext-install pdo pdo_pgsql opcache
 RUN docker-php-ext-enable opcache
@@ -69,7 +71,11 @@ RUN openssl req -newkey rsa:4096 -x509 -nodes -keyout /etc/nginx/certs/app.key -
 RUN mkdir -p var/cache \
   && mkdir -p var/logs \
   && mkdir -p /var/log/app \
+  && mkdir -p /tmp/html \
+  && mkdir -p /tmp/sql \
   && chown -R www-data var \
+  && chown -R www-data /tmp/html \
+  && chown -R www-data /tmp/sql \
   && chown -R www-data /var/log/app
 
 # See this page for directories required
@@ -89,6 +95,13 @@ COPY tests tests
 COPY api.env api.env
 COPY postgres.env postgres.env
 COPY phpstan.neon .
+
+# Behat
+COPY behat/tests behat/tests
+COPY behat/docker-entrypoint.sh behat/
+COPY behat/docker-smoke-test-entrypoint.sh behat/
+RUN ["chmod", "+x", "behat/docker-entrypoint.sh"]
+RUN ["chmod", "+x", "behat/docker-smoke-test-entrypoint.sh"]
 
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
