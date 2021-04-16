@@ -1,7 +1,12 @@
 includes:
-  - vendor/phpstan/phpstan-mockery/extension.neon
-  - vendor/phpstan/phpstan-phpunit/extension.neon
-  - vendor/jangregor/phpstan-prophecy/src/extension.neon
+  - client/vendor/phpstan/phpstan-mockery/extension.neon
+  - client/vendor/phpstan/phpstan-phpunit/extension.neon
+  - client/vendor/jangregor/phpstan-prophecy/src/extension.neon
 parameters:
   autoload_directories:
-    - tests/phpunit
+    - client/tests/phpunit
+    - api/tests
+    - api/src/Migrations
+  bootstrapFiles:
+    - client/vendor/autoload.php
+    - api/vendor/autoload.php
