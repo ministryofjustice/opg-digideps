@@ -110,10 +110,12 @@ class BehatFixtures
     public static function buildUserDetails(User $user)
     {
         $client = $user->isLayDeputy() ? $user->getFirstClient() : $user->getOrganisations()[0]->getClients()[0];
-        $currentReport = $client->getCurrentReport();
-        $previousReport = $client->getReports()[0];
 
-        return [
+        $currentReport = $user->getNdrEnabled() ? $client->getNdr() : $client->getCurrentReport();
+        $currentReportType = $user->getNdrEnabled() ? null : $currentReport->getType();
+        $previousReport = $user->getNdrEnabled() ? null : $client->getReports()[0];
+
+        $userDetails =  [
             'userEmail' => $user->getEmail(),
             'userRole' => $user->getRoleName(),
             'userFirstName' => $user->getFirstname(),
@@ -133,14 +135,24 @@ class BehatFixtures
             'clientLastName' => $client->getLastname(),
             'clientCaseNumber' => $client->getCaseNumber(),
             'currentReportId' => $currentReport->getId(),
-            'currentReportType' =>$currentReport->getType(),
+            'currentReportType' => $currentReportType,
             'currentReportNdrOrReport' => $currentReport instanceof Ndr ? 'ndr' : 'report',
-            'currentReportDueDate' => $currentReport->getDueDate()->format('j F Y'),
-            'previousReportId' => $previousReport->getId(),
-            'previousReportType' => $previousReport->getType(),
-            'previousReportNdrOrReport' => $previousReport instanceof Ndr ? 'ndr' : 'report',
-            'previousReportDueDate' => $previousReport->getDueDate()->format('j F Y'),
+            'currentReportDueDate' => $currentReport->getDueDate()->format('j F Y')
         ];
+
+        if ($previousReport) {
+            $userDetails = array_merge(
+                $userDetails,
+                [
+                    'previousReportId' => $previousReport->getId(),
+                    'previousReportType' => $previousReport->getType(),
+                    'previousReportNdrOrReport' => $previousReport instanceof Ndr ? 'ndr' : 'report',
+                    'previousReportDueDate' => $previousReport->getDueDate()->format('j F Y')
+                ]
+            );
+        }
+
+        return $userDetails;
     }
 
     public static function buildOrgUserDetails(User $user)

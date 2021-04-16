@@ -18,6 +18,7 @@ class BaseFeatureContext extends MinkContext
     use ElementSelectionTrait;
     use ErrorsTrait;
     use FixturesTrait;
+    use INavigateToAdminTrait;
     use IShouldBeOnTrait;
     use IVisitAdminTrait;
     use IVisitFrontendTrait;
