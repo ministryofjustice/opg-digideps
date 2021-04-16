@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Common;
 
@@ -24,9 +26,9 @@ class BaseFeatureContext extends MinkContext
     use PageUrlsTrait;
     use ReportTrait;
 
-    const BEHAT_FRONT_RESET_FIXTURES = '/behat/frontend/reset-fixtures?testRunId=%s';
-    const BEHAT_FRONT_USER_DETAILS = '/behat/frontend/user/%s/details';
-    const REPORT_SECTION_ENDPOINT = '%s/%s/%s';
+    public const BEHAT_FRONT_RESET_FIXTURES = '/behat/frontend/reset-fixtures?testRunId=%s';
+    public const BEHAT_FRONT_USER_DETAILS = '/behat/frontend/user/%s/details';
+    public const REPORT_SECTION_ENDPOINT = '%s/%s/%s ';
 
     public UserDetails $adminDetails;
     public UserDetails $elevatedAdminDetails;
