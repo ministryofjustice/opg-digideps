@@ -116,3 +116,9 @@ enable-debug: ## Puts app in dev mode and enables debug (so the app has toolbar/
 	  APP_ENV=dev APP_DEBUG=1 docker-compose up -d --no-deps $$c; \
 	  echo "$$c: debug enabled." ; \
 	done
+
+phpstan-api:
+	docker-compose run --rm api vendor/phpstan/phpstan/phpstan analyse src --memory-limit=0 --level=max
+
+phpstan-frontend:
+	docker-compose run --rm frontend vendor/phpstan/phpstan/phpstan analyse src --memory-limit=0 --level=max

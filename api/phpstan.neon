@@ -3,5 +3,3 @@ includes:
   - vendor/phpstan/phpstan-phpunit/extension.neon
 parameters:
   checkMissingIterableValueType: false
-  autoload_directories:
-    - DoctrineMigrations
