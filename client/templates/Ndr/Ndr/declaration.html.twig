@@ -15,12 +15,14 @@
                 <a href="{{ path('homepage') }}">{{ 'yourReports' | trans({}, 'common' ) }}</a>
             </li>
             <li>
-                <a href="{{ path('ndr_overview', {'ndrId': ndr.id}) }}" class="behat-link-breadcrumbs-ndr-overview">
+                <a href="{{ path('ndr_overview', {'ndrId': ndr.id}) }}"
+                   class="behat-link-breadcrumbs-ndr-overview" data-action="report.overview">
                     {{ 'newDeputyReportOverview' | trans({}, 'common' ) }}
                 </a>
             </li>
             <li>
-                <a href="{{ path('ndr_review', {'ndrId': ndr.id}) }}" class="behat-link-breadcrumbs-ndr-review">
+                <a href="{{ path('ndr_review', {'ndrId': ndr.id}) }}"
+                   class="behat-link-breadcrumbs-ndr-review" data-action="report.overview">
                     {{ 'reviewReport' | trans({}, 'common' ) }}
                 </a>
             </li>

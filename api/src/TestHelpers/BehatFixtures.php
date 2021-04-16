@@ -4,7 +4,9 @@
 namespace App\TestHelpers;
 
 use App\Entity\Organisation;
+use App\Entity\Report\Report;
 use App\Entity\User;
+use App\Entity\Ndr\Ndr;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -28,6 +30,10 @@ class BehatFixtures
     private User $layNotStarted;
     private User $layCompleted;
     private User $laySubmitted;
+
+    private User $ndrLayNotStarted;
+    private User $ndrLayCompleted;
+    private User $ndrLaySubmitted;
 
     private User $profAdminNotStarted;
     private User $profAdminCompleted;
@@ -113,6 +119,26 @@ class BehatFixtures
                     'previousReportNdrOrReport' => $this->laySubmitted->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report'
                 ]
             ],
+            'lays-ndr' => [
+                'not-started' => [
+                    'email' => $this->ndrLayNotStarted->getEmail(),
+                    'clientId' => $this->ndrLayNotStarted->getFirstClient()->getId(),
+                    'currentReportId' => $this->ndrLayNotStarted->getFirstClient()->getNdr()->getId(),
+                    'currentReportNdrOrReport' => 'ndr'
+                ],
+                'completed' => [
+                    'email' => $this->ndrLayCompleted->getEmail(),
+                    'clientId' => $this->ndrLayCompleted->getFirstClient()->getId(),
+                    'currentReportId' => $this->ndrLayCompleted->getFirstClient()->getNdr()->getId(),
+                    'currentReportNdrOrReport' => 'ndr'
+                ],
+                'submitted' => [
+                    'email' => $this->ndrLaySubmitted->getEmail(),
+                    'clientId' => $this->ndrLaySubmitted->getFirstClient()->getId(),
+                    'currentReportId' => $this->ndrLaySubmitted->getFirstClient()->getNdr()->getId(),
+                    'currentReportNdrOrReport' => 'ndr'
+                ]
+            ],
             'professionals' => [
                 'admin' => [
                     'not-started' => [
@@ -161,6 +187,9 @@ class BehatFixtures
             $this->layNotStarted,
             $this->layCompleted,
             $this->laySubmitted,
+            $this->ndrLayNotStarted,
+            $this->ndrLayCompleted,
+            $this->ndrLaySubmitted,
             $this->profAdminNotStarted,
             $this->profAdminCompleted,
             $this->profAdminSubmitted,
@@ -186,6 +215,7 @@ class BehatFixtures
     private function createDeputies()
     {
         $this->createLays();
+        $this->createNdrLays();
         $this->createProfs();
     }
 
@@ -202,6 +232,21 @@ class BehatFixtures
         $this->laySubmitted = $this->userTestHelper
             ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-submitted-%s@t.uk', $this->testRunId));
         $this->addClientsAndReportsToLayDeputy($this->laySubmitted, true, true);
+    }
+
+    private function createNdrLays()
+    {
+        $this->ndrLayNotStarted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-ndr-not-started-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToNdrLayDeputy($this->ndrLayNotStarted, false, false);
+
+        $this->ndrLayCompleted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-ndr-completed-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToNdrLayDeputy($this->ndrLayCompleted, true, false);
+
+        $this->ndrLaySubmitted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-ndr-submitted-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToNdrLayDeputy($this->ndrLaySubmitted, true, true);
     }
 
     private function createProfs()
@@ -228,6 +273,7 @@ class BehatFixtures
     private function addClientsAndReportsToLayDeputy(User $deputy, bool $completed = false, bool $submitted = false)
     {
         $client = $this->clientTestHelper->generateClient($this->entityManager, $deputy);
+
         $report = $this->reportTestHelper->generateReport($this->entityManager, $client);
 
         $client->addReport($report);
@@ -244,6 +290,28 @@ class BehatFixtures
 
         $this->entityManager->persist($client);
         $this->entityManager->persist($report);
+    }
+
+    private function addClientsAndReportsToNdrLayDeputy(User $deputy, bool $completed = false, bool $submitted = false)
+    {
+        $client = $this->clientTestHelper->generateClient($this->entityManager, $deputy);
+
+        $ndr = new Ndr($client);
+        $deputy->setNdrEnabled(true);
+        $client->setNdr($ndr);
+
+        $deputy->addClient($client);
+
+        if ($completed) {
+            $this->reportTestHelper->completeNdrLayReport($ndr, $this->entityManager);
+        }
+
+//        if ($submitted) {
+//            placeholder for when submitted version needed...
+//        }
+
+        $this->entityManager->persist($ndr);
+        $this->entityManager->persist($client);
     }
 
     private function addOrgClientsAndReportsToOrgDeputy(User $deputy, Organisation $organisation, bool $completed = false, bool $submitted = false)

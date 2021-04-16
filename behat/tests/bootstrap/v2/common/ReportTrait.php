@@ -7,6 +7,8 @@ use Exception;
 
 trait ReportTrait
 {
+    public string $reportUrlPrefix = 'report';
+
     /**
      * @Given /^I submit the report$/
      */
@@ -56,6 +58,33 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layDeputyCompletedDetails->getEmail());
+    }
+
+    /**
+     * @Given a Lay Deputy has not started an NDR report
+     */
+    public function aNdrLayDeputyHasNotStartedAReport()
+    {
+        if (empty($this->ndrLayDeputyNotStartedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $ndrLayDeputyNotStartedDetails');
+        }
+
+        $this->loginToFrontendAs($this->ndrLayDeputyNotStartedDetails->getEmail());
+        $this->reportUrlPrefix = $this->ndrLayDeputyNotStartedDetails->getCurrentReportNdrOrReport();
+    }
+
+    /**
+     * @Given a Lay Deputy has a completed NDR report
+     * @throws Exception
+     */
+    public function aNdrLayDeputyHasCompletedReport()
+    {
+        if (empty($this->ndrLayDeputyCompletedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $ndrLayDeputyCompletedDetails');
+        }
+
+        $this->loginToFrontendAs($this->ndrLayDeputyCompletedDetails->getEmail());
+        $this->reportUrlPrefix = $this->ndrLayDeputyCompletedDetails->getCurrentReportNdrOrReport();
     }
 
     /**

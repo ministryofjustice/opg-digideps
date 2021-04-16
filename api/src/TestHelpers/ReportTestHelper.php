@@ -60,6 +60,18 @@ class ReportTestHelper
         $this->completeLifestyle($report);
     }
 
+    public function completeNdrLayReport(ReportInterface $report, EntityManager $em): void
+    {
+        $this->completeVisitsCare($report);
+        $this->completeActions($report);
+        $this->completeOtherInfo($report);
+        $this->completeDeputyExpenses($report);
+        $this->completeIncomeBenefits($report);
+        $this->completeBankAccounts($report, $em);
+        $this->completeAssets($report);
+        $this->completeDebts($report);
+    }
+
     public function submitReport(ReportInterface $report, EntityManager $em): void
     {
         if ($report->getClient()->getOrganisation()) {
@@ -200,6 +212,7 @@ class ReportTestHelper
     {
         if ($report instanceof Ndr\Ndr) {
             $ba = (new Ndr\BankAccount())->setNdr($report);
+            $report->addAccount($ba);
             $em->persist($ba);
         } else {
             $ba = (new BankAccount())->setReport($report)->setClosingBalance(1000);
