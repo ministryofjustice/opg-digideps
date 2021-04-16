@@ -7,14 +7,15 @@ use DigidepsBehat\v2\Common\BaseFeatureContext;
 
 class ReportingSectionsFeatureContext extends BaseFeatureContext
 {
-    use ContactsSectionTrait;
+    use AccountsSectionTrait;
     use ActionsSectionTrait;
-    use GiftsSectionTrait;
     use AdditionalInformationSectionTrait;
+    use ContactsSectionTrait;
     use DocumentsSectionTrait;
+    use GiftsSectionTrait;
     use VisitsAndCareSectionTrait;
 
-    const REPORT_SECTION_ENDPOINT = 'report/%s/%s';
+    const REPORT_SECTION_ENDPOINT = '%s/%s/%s';
 
     /**
      * @Then the previous section should be :sectionName
@@ -65,7 +66,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
      */
     public function iNavigateBackToReportSection()
     {
-        $this->clickLink('Deputy report overview');
+        $this->iClickBasedOnAttributeTypeAndValue('a', 'data-action', 'report.overview');
         assert($this->iAmOnReportsOverviewPage());
     }
 
@@ -83,7 +84,17 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     public function iGoToReportOverviewUrl()
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportOverviewUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $activeReportId, 'overview');
+        $reportOverviewUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'overview');
+        $this->visitPath($reportOverviewUrl);
+    }
+
+    /**
+     * @When I view the NDR overview page
+     */
+    public function iGoToNDROverviewUrl()
+    {
+        $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
+        $reportOverviewUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'overview');
         $this->visitPath($reportOverviewUrl);
     }
 
@@ -92,17 +103,18 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
      */
     public function iShouldSeeSectionAs($section, $status)
     {
-        $divs = $this->getSession()->getPage()->findAll('css', 'div');
+        $divs = $this->getSession()->getPage()->findAll('css', 'div.opg-overview-section');
 
         if (!$divs) {
             $this->throwContextualException('A div element was not found on the page');
         }
 
-        $sectionFormatted = '/report/' . $this->loggedInUserDetails->getCurrentReportId() . '/' . $section;
+        $sectionFormatted = sprintf('/%s/%s/%s', $this->reportUrlPrefix, $this->loggedInUserDetails->getCurrentReportId(), $section);
+
         $statusCorrect = false;
 
         foreach ($divs as $div) {
-            if ($div->getAttribute('href') === $sectionFormatted) {
+            if ($div->find('css', 'a')->getAttribute('href') === $sectionFormatted) {
                 $statuses = $div->findAll('css', 'span');
 
                 foreach ($statuses as $sts) {
@@ -115,7 +127,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
 
         if (!$statusCorrect) {
             $this->throwContextualException(
-                sprintf('Report section status not as expected. Status: %s not found. ', $status)
+                sprintf('Report section status not as expected. Status "%s" not found. ', $status)
             );
         }
     }
@@ -145,7 +157,10 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
             }
         }
 
-        assert($furtherInfoNeeded);
+        assert(
+            $furtherInfoNeeded,
+            $this->formatAssertResponse('please answer this question', 'Not found', 'Summary validation', $this->getCurrentUrl())
+        );
     }
 
     /**

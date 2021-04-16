@@ -190,7 +190,6 @@ cross-browser-android-chrome:
                 tags: "@android-chrome"
             contexts:
                 - DigidepsBehat\CrossBrowser\CrossBrowserFeatureContext
-                - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             browser_stack:
@@ -207,15 +206,15 @@ v2-tests-goutte:
             contexts:
                 - DigidepsBehat\v2\feedback\FeedbackFeatureContext
 
-        section-actions:
-            description: Covering the 'Actions' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/actions" ]
+        section-accounts:
+            description: Covering the 'Accounts' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/accounts" ]
             contexts:
                 - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
-        section-gifts:
-            description: Covering the 'Gifts' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/gifts" ]
+        section-actions:
+            description: Covering the 'Actions' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/actions" ]
             contexts:
                 - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
@@ -237,9 +236,9 @@ v2-tests-goutte:
             contexts:
                 - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
-        cross-browser:
-            description: Covering the cross browser tests we want to run
-            paths: [ "%paths.base%/features-v2/cross-browser" ]
+        section-gifts:
+            description: Covering the 'Gifts' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/gifts" ]
             contexts:
                 - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 

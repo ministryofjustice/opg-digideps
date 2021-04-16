@@ -76,4 +76,26 @@ trait DebugTrait
         echo "Response saved ({$bytes} bytes):\n";
         echo "$file";
     }
+
+
+    public function formatAssertResponse(
+        $expecting,
+        $found,
+        string $comparisonSubject,
+        string $url
+    ) {
+        $message = <<<MESSAGE
+
+============================
+Expecting: %s
+Found: %s
+
+Subject of Comparison: %s
+Page URL: %s
+============================
+
+MESSAGE;
+
+        return sprintf($message, strval($expecting), strval($found), $comparisonSubject, $url);
+    }
 }

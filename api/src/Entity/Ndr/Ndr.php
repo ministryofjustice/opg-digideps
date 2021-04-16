@@ -437,6 +437,20 @@ class Ndr implements ReportInterface
     }
 
     /**
+     * Add accounts.
+     *
+     * @param BankAccount $accounts
+     *
+     * @return Ndr
+     */
+    public function addAccount(BankAccount $accounts)
+    {
+        $this->bankAccounts[] = $accounts;
+
+        return $this;
+    }
+
+    /**
      * Remove assets.
      *
      * @param Asset $assets

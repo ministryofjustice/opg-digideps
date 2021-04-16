@@ -14,7 +14,7 @@ trait ActionsSectionTrait
     public function iViewActionsSection()
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $activeReportId, 'actions');
+        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'actions');
         $this->visitPath($reportSectionUrl);
     }
 
@@ -120,8 +120,14 @@ trait ActionsSectionTrait
             }
         }
 
-        assert($countNegativeReponse == $this->answeredNo);
-        assert($countPositiveReponse == $this->answeredYes);
+        assert(
+            $countNegativeReponse == $this->answeredNo,
+            $this->formatAssertResponse($countNegativeReponse, $this->answeredNo, 'Actions Page "No" Counts', $this->getCurrentUrl())
+        );
+        assert(
+            $countPositiveReponse == $this->answeredYes,
+            $this->formatAssertResponse($countPositiveReponse, $this->answeredYes, 'Actions "Yes" Counts', $this->getCurrentUrl())
+        );
     }
 
     /**
@@ -136,7 +142,10 @@ trait ActionsSectionTrait
         }
 
         foreach ($this->comments as $comment) {
-            assert(str_contains($table->getHtml(), $comment));
+            assert(
+                str_contains($table->getHtml(), $comment),
+                $this->formatAssertResponse($comment, 'Not Found', 'Actions Page Comments', $this->getCurrentUrl())
+            );
         }
     }
 

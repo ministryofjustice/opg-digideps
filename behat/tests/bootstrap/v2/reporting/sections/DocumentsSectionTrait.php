@@ -28,7 +28,7 @@ trait DocumentsSectionTrait
     public function iViewDocumentsSection()
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $activeReportId, 'documents');
+        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'documents');
 
         $this->visitPath($reportSectionUrl);
 

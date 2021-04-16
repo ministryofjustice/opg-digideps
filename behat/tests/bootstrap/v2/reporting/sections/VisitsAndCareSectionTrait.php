@@ -39,6 +39,6 @@ trait VisitsAndCareSectionTrait
     {
         $this->iFillFieldForCrossBrowser('visits_care_howOftenDoYouContactClient', 'daily');
         $this->pressButton('Save and continue');
-        assert($this->iAmOnVisitsAndCareStep2Page());
+        $this->iAmOnVisitsAndCareStep2Page();
     }
 }
