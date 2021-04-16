@@ -45,7 +45,7 @@ trait ContactsSectionTrait
     public function iViewContactsSection()
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $activeReportId, 'contacts');
+        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'contacts');
 
         $this->visitPath($reportSectionUrl);
 

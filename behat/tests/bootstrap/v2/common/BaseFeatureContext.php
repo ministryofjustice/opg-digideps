@@ -40,6 +40,10 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $profAdminDeputyCompletedDetails;
     public UserDetails $profAdminDeputySubmittedDetails;
 
+    public UserDetails $ndrLayDeputyNotStartedDetails;
+    public UserDetails $ndrLayDeputyCompletedDetails;
+    public UserDetails $ndrLayDeputySubmittedDetails;
+
     public ?UserDetails $loggedInUserDetails = null;
     public ?UserDetails $interactingWithUserDetails = null;
 
@@ -73,6 +77,9 @@ class BaseFeatureContext extends MinkContext
         $this->fixtureUsers[] = $this->layDeputyNotStartedDetails = new UserDetails($responseData['data']['lays']['not-started']);
         $this->fixtureUsers[] = $this->layDeputyCompletedDetails = new UserDetails($responseData['data']['lays']['completed']);
         $this->fixtureUsers[] = $this->layDeputySubmittedDetails = new UserDetails($responseData['data']['lays']['submitted']);
+        $this->fixtureUsers[] = $this->ndrLayDeputyNotStartedDetails = new UserDetails($responseData['data']['lays-ndr']['not-started']);
+        $this->fixtureUsers[] = $this->ndrLayDeputyCompletedDetails = new UserDetails($responseData['data']['lays-ndr']['completed']);
+        $this->fixtureUsers[] = $this->ndrLayDeputySubmittedDetails = new UserDetails($responseData['data']['lays-ndr']['submitted']);
         $this->fixtureUsers[] = $this->profAdminDeputyNotStartedDetails = new UserDetails($responseData['data']['professionals']['admin']['not-started']);
         $this->fixtureUsers[] = $this->profAdminDeputyCompletedDetails = new UserDetails($responseData['data']['professionals']['admin']['completed']);
         $this->fixtureUsers[] = $this->profAdminDeputySubmittedDetails = new UserDetails($responseData['data']['professionals']['admin']['submitted']);

@@ -21,6 +21,7 @@ trait ElementSelectionTrait
         }
 
         $xpath = sprintf("//a[@href='%s']", $linksArray[$elementIndex]);
+
         $session = $this->getSession();
         $element = $session->getPage()->find(
             'xpath',
@@ -34,10 +35,10 @@ trait ElementSelectionTrait
         $element->click();
     }
 
-    // Click on a link (a or button css ref for example) based on the value of it's id.
-    public function iClickBasedOnElementId(string $elementType, string $attributeValue)
+    // Click on a link (a or button css ref for example) based on the value of it's attribute type.
+    public function iClickBasedOnElementId(string $elementType, string $attributeType, string $attributeValue)
     {
-        $xpath = sprintf("//%s[@id='%s']", $elementType, $attributeValue);
+        $xpath = sprintf("//%s[@%s='%s']", $elementType, $attributeType, $attributeValue);
         $session = $this->getSession();
         $element = $session->getPage()->find(
             'xpath',
@@ -93,5 +94,29 @@ trait ElementSelectionTrait
         $element->selectOption(trim($choices[$choiceNumber]));
 
         return $choices[$choiceNumber];
+    }
+
+    // Select radio dialogue based on name
+    public function iSelectRadioBasedOnName(string $elementType, string $attributeType, string $attributeValue, string $name)
+    {
+        $xpath = sprintf("//%s[@%s='%s']//input", $elementType, $attributeType, $attributeValue);
+        $session = $this->getSession();
+        $values = $session->getPage()->findAll(
+            'xpath',
+            $session->getSelectorsHandler()->selectorToXpath('xpath', $xpath)
+        );
+
+        if (null === $values) {
+            throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
+        }
+
+        foreach ($values as $value) {
+            if ($value->getAttribute('value') == $name) {
+                $select = trim($value->getAttribute('name'));
+                $option = trim($value->getAttribute('value'));
+            }
+        }
+
+        $this->getSession()->getPage()->selectFieldOption($select, $option);
     }
 }
