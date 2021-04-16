@@ -77,8 +77,8 @@ MESSAGE;
         }
 
         $searchResultsHtml = $searchResultsDiv->getHtml();
-        $fullClientName =sprintf(
-            "%s %s",
+        $fullClientName = sprintf(
+            '%s %s',
             $this->interactingWithUserDetails->getClientFirstName(),
             $this->interactingWithUserDetails->getClientLastName()
         );
@@ -168,7 +168,6 @@ MESSAGE;
             );
         }
     }
-
 
     /**
      * @Then I should see the reports associated with the client
