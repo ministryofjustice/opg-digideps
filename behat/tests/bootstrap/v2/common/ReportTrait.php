@@ -69,7 +69,7 @@ trait ReportTrait
             throw new Exception('It looks like fixtures are not loaded - missing $ndrLayDeputyNotStartedDetails');
         }
 
-        $this->loginToFrontendAs($this->ndrLayDeputyNotStartedDetails->getEmail());
+        $this->loginToFrontendAs($this->ndrLayDeputyNotStartedDetails->getUserEmail());
         $this->reportUrlPrefix = $this->ndrLayDeputyNotStartedDetails->getCurrentReportNdrOrReport();
     }
 
@@ -83,7 +83,7 @@ trait ReportTrait
             throw new Exception('It looks like fixtures are not loaded - missing $ndrLayDeputyCompletedDetails');
         }
 
-        $this->loginToFrontendAs($this->ndrLayDeputyCompletedDetails->getEmail());
+        $this->loginToFrontendAs($this->ndrLayDeputyCompletedDetails->getUserEmail());
         $this->reportUrlPrefix = $this->ndrLayDeputyCompletedDetails->getCurrentReportNdrOrReport();
     }
 

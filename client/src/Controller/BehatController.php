@@ -41,30 +41,52 @@ class BehatController extends AbstractController
 
         $user = $this->userApi->getByEmail(
             $email,
-            ['user-login', 'user-id', 'user-email', 'user-clients', 'client', 'current-report', 'client-reports', 'report']
+            ['user-login', 'user-id', 'user-email', 'user-clients', 'user-rolename', 'client', 'current-report', 'client-reports', 'report', 'ndr']
         );
 
-        $currentReport = $user->getFirstClient()->getCurrentReport();
-        $previousReport = $user->getFirstClient()->getReports()[0];
-        $isLay = $user->getRoleName() === User::ROLE_LAY;
-        $client = $isLay ? $user->getFirstClient() : $user->getOrganisations()[0]->getClients()[0];
+        $client = $user->isLayDeputy() ? $user->getFirstClient() : $user->getOrganisations()[0]->getClients()[0];
+        $currentReport = $user->isNdrEnabled() ? $client->getNdr() : $client->getCurrentReport();
+        $currentReportType = $user->isNdrEnabled() ? null : $currentReport->getType();
+        $previousReport = $user->isNdrEnabled() ? null : $client->getReports()[0];
 
-        return new JsonResponse(
-            [
-                'email' => $user->getEmail(),
-                'userRole' => $user->getRoleName(),
-                'clientId' => $client->getId(),
-                'clientFirstName' =>  $client->getFirstname(),
-                'clientLastName' => $client->getLastname(),
-                'clientCaseNumber' => $client->getCaseNumber(),
-                'currentReportId' => $currentReport->getId(),
-                'currentReportType' => $currentReport->getType(),
-                'currentReportNdrOrReport' => $currentReport instanceof Ndr ? 'ndr' : 'report',
-                'previousReportId' => $previousReport->getId(),
-                'previousReportType' => $previousReport->getType(),
-                'previousReportNdrOrReport' => $previousReport instanceof Ndr ? 'ndr' : 'report'
-            ]
-        );
+        $userDetails = [
+            'userEmail' => $user->getEmail(),
+            'userRole' => $user->getRoleName(),
+            'userFirstName' => $user->getFirstname(),
+            'userLastName' => $user->getLastname(),
+            'userFullName' => $user->getFullName(),
+            'userFullAddressArray' => array_filter([
+                $user->getAddress1(),
+                $user->getAddress2(),
+                $user->getAddress3(),
+                $user->getAddressPostcode(),
+                $user->getAddressCountry()
+            ]),
+            'userPhone' => $user->getPhoneMain(),
+            'courtOrderNumber' => $client->getCaseNumber(),
+            'clientId' => $client->getId(),
+            'clientFirstName' => $client->getFirstname(),
+            'clientLastName' => $client->getLastname(),
+            'clientCaseNumber' => $client->getCaseNumber(),
+            'currentReportId' => $currentReport->getId(),
+            'currentReportType' => $currentReportType,
+            'currentReportNdrOrReport' => $currentReport instanceof Ndr ? 'ndr' : 'report',
+            'currentReportDueDate' => $currentReport->getDueDate()->format('j F Y')
+        ];
+
+        if ($previousReport) {
+            $userDetails = array_merge(
+                $userDetails,
+                [
+                    'previousReportId' => $previousReport->getId(),
+                    'previousReportType' => $previousReport->getType(),
+                    'previousReportNdrOrReport' => $previousReport instanceof Ndr ? 'ndr' : 'report',
+                    'previousReportDueDate' => $previousReport->getDueDate()->format('j F Y')
+                ]
+            );
+        }
+
+        return new JsonResponse($userDetails);
     }
 
     /**
