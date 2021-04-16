@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 
-namespace DigidepsBehat\v2\Common;
+namespace DigidepsBehat\v2\Common ;
 
 use Behat\Mink\Driver\GoutteDriver;
 use Behat\MinkExtension\Context\MinkContext;
