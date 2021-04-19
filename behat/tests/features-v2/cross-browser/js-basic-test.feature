@@ -1,4 +1,4 @@
-@v2 @js-basic-check
+@v2 @js-basic-check @js
 Feature: Javascript basic checks
 
   Scenario: A user checks some basic java script functionality

@@ -33,9 +33,9 @@ trait VisitsAndCareSectionTrait
     }
 
     /**
-     * @When I can fill in a text box with how often I visit client
+     * @When I can see and fill in a text box with how often I visit client
      */
-    public function iCanFillInVisitsTextBox()
+    public function iCanSeeAndFillInVisitsTextBox()
     {
         $this->iFillFieldForCrossBrowser('visits_care_howOftenDoYouContactClient', 'daily');
         $this->pressButton('Save and continue');

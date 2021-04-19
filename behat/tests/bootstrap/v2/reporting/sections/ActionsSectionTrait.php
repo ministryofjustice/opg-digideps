@@ -120,14 +120,8 @@ trait ActionsSectionTrait
             }
         }
 
-        assert(
-            $countNegativeReponse == $this->answeredNo,
-            $this->formatAssertResponse($countNegativeReponse, $this->answeredNo, 'Actions Page "No" Counts', $this->getCurrentUrl())
-        );
-        assert(
-            $countPositiveReponse == $this->answeredYes,
-            $this->formatAssertResponse($countPositiveReponse, $this->answeredYes, 'Actions "Yes" Counts', $this->getCurrentUrl())
-        );
+        $this->bespokeAssert($countNegativeReponse, $this->answeredNo, 'Actions "No" Counts', true);
+        $this->bespokeAssert($countPositiveReponse, $this->answeredYes, 'Actions "Yes" Counts', true);
     }
 
     /**
@@ -142,10 +136,7 @@ trait ActionsSectionTrait
         }
 
         foreach ($this->comments as $comment) {
-            assert(
-                str_contains($table->getHtml(), $comment),
-                $this->formatAssertResponse($comment, 'Not Found', 'Actions Page Comments', $this->getCurrentUrl())
-            );
+            $this->bespokeAssert($comment, $table->getHtml(), 'Actions Comments', false);
         }
     }
 

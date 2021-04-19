@@ -306,18 +306,12 @@ trait GiftsSectionTrait
             $expectedResponse = 'no';
         }
 
-        assert(
-            $expectedResponse == $actualResponse,
-            $this->formatAssertResponse($expectedResponse, $actualResponse, 'Gift user answers', $this->getCurrentUrl())
-        );
+        $this->bespokeAssert($expectedResponse, $actualResponse, 'Gift user answers', true);
 
         foreach ($this->giftDetails as $key=>$gift) {
             $summaryGift = $summaryGifts[$key];
             foreach ($gift as $fkey=>$giftField) {
-                assert(
-                    trim(strtolower($giftField)) == trim(strtolower($summaryGift[$fkey])),
-                    $this->formatAssertResponse($giftField, $summaryGift[$fkey], 'Gift names', $this->getCurrentUrl())
-                );
+                $this->bespokeAssert($giftField, $summaryGift[$fkey], 'Gift names', true);
             }
         }
     }

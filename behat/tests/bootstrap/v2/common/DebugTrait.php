@@ -77,12 +77,11 @@ trait DebugTrait
         echo "$file";
     }
 
-
-    public function formatAssertResponse(
-        $expecting,
+    public function bespokeAssert(
+        $expected,
         $found,
         string $comparisonSubject,
-        string $url
+        bool $exactMatch
     ) {
         $message = <<<MESSAGE
 
@@ -95,7 +94,18 @@ Page URL: %s
 ============================
 
 MESSAGE;
-
-        return sprintf($message, strval($expecting), strval($found), $comparisonSubject, $url);
+        $foundFormatted = strval(trim(strtolower($found)));
+        $expectedFormatted = strval(trim(strtolower($expected)));
+        assert(
+            $exactMatch ? $foundFormatted == $expectedFormatted : str_contains($foundFormatted, $expectedFormatted),
+            sprintf(
+                $message,
+                $expectedFormatted,
+                $exactMatch ? $foundFormatted : 'Not Found',
+                $comparisonSubject,
+                $this->getCurrentUrl()
+            )
+        );
+//        return sprintf($message, strval($expecting), strval($found), $comparisonSubject, $url);
     }
 }

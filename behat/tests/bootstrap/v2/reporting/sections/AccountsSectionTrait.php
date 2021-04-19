@@ -317,42 +317,22 @@ trait AccountsSectionTrait
         foreach ($tableRows as $tRowKey=>$tableRow) {
             $tableHeader = $tableRow->find('css', $accountSummaryElems['head']);
             $headHtml = trim(strtolower($tableHeader->getHtml()));
-            assert(
-                str_contains($headHtml, $this->accountList[$tRowKey]['accountType']),
-                $this->formatAssertResponse($this->accountList[$tRowKey]['accountType'], 'Not found', 'Accounts Type', $this->getCurrentUrl())
-            );
-            assert(
-                str_contains($headHtml, $this->accountList[$tRowKey]['name']),
-                $this->formatAssertResponse($this->accountList[$tRowKey]['name'], 'Not found', 'Accounts Name', $this->getCurrentUrl())
-            );
-            assert(
-                str_contains($headHtml, $this->accountList[$tRowKey]['accountNumber']),
-                $this->formatAssertResponse($this->accountList[$tRowKey]['accountNumber'], 'Not found', 'Accounts Number', $this->getCurrentUrl())
-            );
+            $this->bespokeAssert($this->accountList[$tRowKey]['accountType'], $headHtml, 'Accounts Type', false);
+            $this->bespokeAssert($this->accountList[$tRowKey]['name'], $headHtml, 'Accounts Name', false);
+            $this->bespokeAssert($this->accountList[$tRowKey]['accountNumber'], $headHtml, 'Accounts Number', false);
+
             $sortCode = str_replace('-', '', $this->accountList[$tRowKey]['sortCode']);
-            assert(
-                str_contains($headHtml, $sortCode),
-                $this->formatAssertResponse($sortCode, 'Not found', 'Accounts Sort Code', $this->getCurrentUrl())
-            );
-            assert(
-                str_contains($headHtml, $this->accountList[$tRowKey]['joint']),
-                $this->formatAssertResponse($this->accountList[$tRowKey]['joint'], 'Not found', 'Accounts Joint', $this->getCurrentUrl())
-            );
+            $this->bespokeAssert($sortCode, $headHtml, 'Accounts Sort Code', false);
+            $this->bespokeAssert($this->accountList[$tRowKey]['joint'], $headHtml, 'Accounts Joint', false);
 
             $tableFields = $tableRow->findAll('css', $accountSummaryElems['data']);
 
             foreach ($tableFields as $tFieldKey=>$tableField) {
                 $balanceItem = trim(strtolower($tableField->getHtml()));
                 if ($tFieldKey == 0) {
-                    assert(
-                        str_contains($balanceItem, $this->accountList[$tRowKey]['openingBalance']),
-                        $this->formatAssertResponse($this->accountList[$tRowKey]['openingBalance'], $balanceItem, 'Accounts Opening Balance', $this->getCurrentUrl())
-                    );
+                    $this->bespokeAssert($this->accountList[$tRowKey]['openingBalance'], $balanceItem, 'Accounts Opening Balance', false);
                 } elseif ($tFieldKey == 1 and $this->reportUrlPrefix != 'ndr') {
-                    assert(
-                        str_contains($balanceItem, $this->accountList[$tRowKey]['closingBalance']),
-                        $this->formatAssertResponse($this->accountList[$tRowKey]['closingBalance'], $balanceItem, 'Accounts Closing Balance', $this->getCurrentUrl())
-                    );
+                    $this->bespokeAssert($this->accountList[$tRowKey]['closingBalance'], $balanceItem, 'Accounts Closing Balance', false);
                 }
             }
         }

@@ -67,7 +67,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     public function iNavigateBackToReportSection()
     {
         $this->iClickBasedOnAttributeTypeAndValue('a', 'data-action', 'report.overview');
-        assert($this->iAmOnReportsOverviewPage());
+        $this->iAmOnReportsOverviewPage();
     }
 
     /**
@@ -159,7 +159,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
 
         assert(
             $furtherInfoNeeded,
-            $this->formatAssertResponse('please answer this question', 'Not found', 'Summary validation', $this->getCurrentUrl())
+            'The text: "please answer this question" not found'
         );
     }
 
