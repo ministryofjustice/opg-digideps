@@ -9,6 +9,8 @@ use DigidepsBehat\v2\Common\UserDetails;
 
 trait ClientManagementTrait
 {
+    private ?int $clientCount = null;
+
     /**
      * @When I search for an existing client by their first name
      */
@@ -36,6 +38,15 @@ trait ClientManagementTrait
         $this->searchForClientBy($user->getClientCaseNumber(), $user);
     }
 
+    /**
+     * @When I search for an non-existent client
+     */
+    public function iSearchForNonExistentClient()
+    {
+        $user = $this->adminDetails;
+        $this->searchForClientBy('Björk Guðmundsdóttir', $user);
+    }
+
     private function searchForClientBy(string $searchTerm, UserDetails $userDetailsInteractingWith)
     {
         $this->fillField('search_clients_q', $searchTerm);
@@ -49,7 +60,8 @@ trait ClientManagementTrait
      */
     public function iShouldSeeClientDetailsInResults()
     {
-        $this->iShouldSeeNClientsWithSameName(1);
+        $this->clientCount = 1;
+        $this->iShouldSeeNClientsWithSameName();
     }
 
     /**
@@ -57,10 +69,92 @@ trait ClientManagementTrait
      */
     public function iShouldSeeBothClientDetailsInResults()
     {
-        $this->iShouldSeeNClientsWithSameName(2);
+        $this->clientCount = 2;
+        $this->iShouldSeeNClientsWithSameName();
     }
 
-    private function iShouldSeeNClientsWithSameName(int $numberClients)
+    private function iShouldSeeNClientsWithSameName()
+    {
+        $this->assertClientCountSet();
+
+        $searchResultsHtml = $this->getSearchResultHtml();
+
+        $fullClientName = sprintf(
+            '%s %s',
+            $this->interactingWithUserDetails->getClientFirstName(),
+            $this->interactingWithUserDetails->getClientLastName()
+        );
+
+        $clientNameFoundCount = substr_count($searchResultsHtml, $fullClientName);
+
+        if ($clientNameFoundCount < $this->clientCount) {
+            $this->throwContextualException(
+                sprintf(
+                    'The client search results list did not contain the required occurrences of the clients full name. Expected: "%s" (at least %s times), got (full HTML): %s',
+                    $fullClientName,
+                    $this->clientCount,
+                    $searchResultsHtml
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then I should see the correct count of clients in the client list results
+     */
+    public function iShouldSeeCorrectCountOfClients()
+    {
+        $this->assertClientCountSet();
+
+        $searchResultsHtml = $this->getSearchResultHtml();
+
+        $searchString = $this->clientCount > 1 ? sprintf('Found %d clients', $this->clientCount) : 'Found 1 client';
+        $foundNClients = str_contains($searchResultsHtml, $searchString);
+
+        if (!$foundNClients) {
+            $this->throwContextualException(
+                sprintf(
+                    'The client search results list did not count the correct number of clients found. Expected: "%s", got (full HTML): %s',
+                    $searchString,
+                    $searchResultsHtml
+                )
+            );
+        }
+    }
+
+    private function assertClientCountSet()
+    {
+        if (is_null($this->clientCount)) {
+            $this->throwContextualException(
+                sprintf(
+                    "You're attempting to run a step definition that requires this->clientCount to be set but its null. Set it and try again."
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then I should see No Clients Found in the client list results
+     */
+    public function iShouldSeeNoClientsFound()
+    {
+        $searchResultsHtml = $this->getSearchResultHtml();
+        $noClientsFound = str_contains($searchResultsHtml, 'No clients found');
+
+        if (!$noClientsFound) {
+            $this->throwContextualException(
+                sprintf(
+                    'The client search results list did not display "No clients found". Expected: "No clients found", got (full HTML): %s',
+                    $searchResultsHtml
+                )
+            );
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getSearchResultHtml()
     {
         $searchResultsDiv = $this->getSession()->getPage()->find('css', 'div.client-list');
 
@@ -76,25 +170,7 @@ MESSAGE;
             $this->throwContextualException($missingDivMessage);
         }
 
-        $searchResultsHtml = $searchResultsDiv->getHtml();
-        $fullClientName = sprintf(
-            '%s %s',
-            $this->interactingWithUserDetails->getClientFirstName(),
-            $this->interactingWithUserDetails->getClientLastName()
-        );
-
-        $clientNameFound = substr_count($searchResultsHtml, $fullClientName);
-
-        if ($clientNameFound < $numberClients) {
-            $this->throwContextualException(
-                sprintf(
-                    'The client search results list did not contain the required occurrences of the clients full name. Expected: "%s" (at least %s times), got (full HTML): %s',
-                    $fullClientName,
-                    $numberClients,
-                    $searchResultsHtml
-                )
-            );
-        }
+        return $searchResultsDiv->getHtml();
     }
 
     /**
@@ -102,11 +178,7 @@ MESSAGE;
      */
     public function iShouldSeeCourtOrderNumber()
     {
-        if (is_null($this->interactingWithUserDetails)) {
-            $this->throwContextualException(
-                'An interacting with User has not been set. Ensure a previous step in the scenario has set this User and try again.'
-            );
-        }
+        $this->assertInteractingWithUserIsSet();
 
         $pageContent = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
         $courtOrderNumber = $this->interactingWithUserDetails->getCourtOrderNumber();
@@ -128,11 +200,7 @@ MESSAGE;
      */
     public function iShouldSeeLayDeputyDetails()
     {
-        if (is_null($this->interactingWithUserDetails)) {
-            $this->throwContextualException(
-                '$interactingWithUserDetails has not been set. Ensure a previous step in the scenario has set this User and try again.'
-            );
-        }
+        $this->assertInteractingWithUserIsSet();
 
         $pageContent = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
 
@@ -174,11 +242,7 @@ MESSAGE;
      */
     public function iShouldSeeDeputyReports()
     {
-        if (is_null($this->interactingWithUserDetails)) {
-            $this->throwContextualException(
-                '$interactingWithUserDetails has not been set. Ensure a previous step in the scenario has set this User and try again.'
-            );
-        }
+        $this->assertInteractingWithUserIsSet();
 
         $pageContent = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
 
@@ -214,11 +278,7 @@ MESSAGE;
      */
     public function iShouldSeeDeputyOrganisation()
     {
-        if (is_null($this->interactingWithUserDetails)) {
-            $this->throwContextualException(
-                '$interactingWithUserDetails has not been set. Ensure a previous step in the scenario has set this User and try again.'
-            );
-        }
+        $this->assertInteractingWithUserIsSet();
 
         $xpathSelector = sprintf("//a[text() = '%s']", $this->interactingWithUserDetails->getOrganisationName());
         $linkHtml = $this->getSession()->getPage()->find('xpath', $xpathSelector)->getHtml();
@@ -241,11 +301,7 @@ MESSAGE;
      */
     public function iShouldSeeNamedDeputyNameAndEmail()
     {
-        if (is_null($this->interactingWithUserDetails)) {
-            $this->throwContextualException(
-                '$interactingWithUserDetails has not been set. Ensure a previous step in the scenario has set this User and try again.'
-            );
-        }
+        $this->assertInteractingWithUserIsSet();
 
         $namedDeputyName = $this->interactingWithUserDetails->getNamedDeputyName();
         $namedDeputyEmail = $this->interactingWithUserDetails->getNamedDeputyEmail();
@@ -277,11 +333,7 @@ MESSAGE;
      */
     public function iAttemptToDischargeTheClient()
     {
-        if (is_null($this->interactingWithUserDetails)) {
-            $this->throwContextualException(
-                '$interactingWithUserDetails has not been set. Ensure a previous step in the scenario has set this User and try again.'
-            );
-        }
+        $this->assertInteractingWithUserIsSet();
 
         try {
             $this->clickLink('Discharge deputy');
@@ -297,11 +349,7 @@ MESSAGE;
      */
     public function theClientShouldBeDischarged()
     {
-        if (is_null($this->interactingWithUserDetails)) {
-            $this->throwContextualException(
-                '$interactingWithUserDetails has not been set. Ensure a previous step in the scenario has set this User and try again.'
-            );
-        }
+        $this->assertInteractingWithUserIsSet();
 
         $this->iVisitLayClientDetailsPage();
 
@@ -323,11 +371,7 @@ MESSAGE;
      */
     public function theClientShouldNotBeDischarged()
     {
-        if (is_null($this->interactingWithUserDetails)) {
-            $this->throwContextualException(
-                '$interactingWithUserDetails has not been set. Ensure a previous step in the scenario has set this User and try again.'
-            );
-        }
+        $this->assertInteractingWithUserIsSet();
 
         $this->iVisitLayClientDetailsPage();
 
@@ -335,8 +379,10 @@ MESSAGE;
         $dischargedOnVisible = $this->getSession()->getPage()->find('xpath', $dischargedOnSelector);
 
         if (!is_null($dischargedOnVisible)) {
+            $clientDtHtml = $this->getSession()->getPage()->find('xpath', $dischargedOnSelector)->getHtml();
+
             $this->throwContextualException(
-                sprintf('The client does not appear to be discharged. Expected: %s, got (HTML of discharged dt): %s', $todayString, $clientDtHtml)
+                sprintf('The client appears to be discharged. Expected "Discharged on" not to appear, got (HTML of discharged dt): %s', $clientDtHtml)
             );
         }
     }
