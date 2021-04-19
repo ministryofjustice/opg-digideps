@@ -259,6 +259,13 @@ v2-tests-goutte:
             paths: [ "%paths.base%/features-v2/reporting/sections/money-out" ]
             contexts:
                 - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        section-money-in-high-assets:
+            description: Covering the 'Money in High Assets' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/money-in-high-assets" ]
+            contexts:
+                - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             files_path: '%paths.base%/fixtures/'
