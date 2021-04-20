@@ -3,12 +3,17 @@
 
 namespace App\Entity\UserResearch;
 
+use App\Entity\User;
+use DateTime;
+
 class UserResearchResponse
 {
     private array $agreedResearchTypes;
     private ?int $id = null;
     private string $deputyshipLength = '';
     private bool $hasAccessToVideoCallDevice = false;
+    private ?User $user = null;
+    private ?DateTime $created = null;
 
     /**
      * @return string
@@ -79,6 +84,42 @@ class UserResearchResponse
     public function setAgreedResearchTypes(array $agreedResearchTypes): UserResearchResponse
     {
         $this->agreedResearchTypes = $agreedResearchTypes;
+        return $this;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User|null $user
+     * @return UserResearchResponse
+     */
+    public function setUser(?User $user): UserResearchResponse
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getCreated(): ?DateTime
+    {
+        return $this->created;
+    }
+
+    /**
+     * @param DateTime|null $created
+     * @return UserResearchResponse
+     */
+    public function setCreated(?DateTime $created): UserResearchResponse
+    {
+        $this->created = $created;
         return $this;
     }
 }
