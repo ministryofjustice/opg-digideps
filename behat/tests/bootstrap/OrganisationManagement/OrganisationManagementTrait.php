@@ -62,7 +62,7 @@ trait OrganisationManagementTrait
         $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'DigidepsPass1234');
 
         foreach ($table as $inputs) {
-            $this->visitAdminPath(sprintf("/admin/fixtures/move-users-clients-to-users-org/%s", $inputs['userEmail']));
+            $this->visitAdminPath(sprintf("/admin/fixture/move-users-clients-to-users-org/%s", $inputs['userEmail']));
 
             if ($this->getSession()->getStatusCode() > 399) {
                 throw new \Exception($this->getSession()->getPage()->getContent());
@@ -77,7 +77,7 @@ trait OrganisationManagementTrait
     {
         $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'DigidepsPass1234');
 
-        $this->visitAdminPath(sprintf("/admin/fixtures/activateOrg/%s", $orgName));
+        $this->visitAdminPath(sprintf("/admin/fixture/activateOrg/%s", $orgName));
 
         if ($this->getSession()->getStatusCode() > 399) {
             throw new \Exception($this->getSession()->getPage()->getContent());

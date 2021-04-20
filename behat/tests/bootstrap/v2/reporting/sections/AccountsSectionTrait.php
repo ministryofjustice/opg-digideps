@@ -7,24 +7,6 @@ trait AccountsSectionTrait
     private array $accountList = [];
 
     /**
-     * @When I view the accounts report section
-     */
-    public function iViewAccountsSection()
-    {
-        $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'bank-accounts');
-        $this->visitPath($reportSectionUrl);
-    }
-
-    /**
-     * @When I view the accounts summary section
-     */
-    public function iViewAccountsSummarySection()
-    {
-        $this->visitPath($this->getAccountsSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
-    }
-
-    /**
      * @When I view and start the accounts report section
      */
     public function iViewAndStartAccountsSection()

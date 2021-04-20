@@ -232,4 +232,28 @@ trait IShouldBeOnTrait
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/bank-accounts$/', $this->reportUrlPrefix));
     }
+
+    /**
+     * @Then I should be on the admin clients search page
+     */
+    public function iAmOnAdminClientsSearchPage()
+    {
+        return $this->iAmOnPage('/admin\/client\/se\arch$/');
+    }
+
+    /**
+     * @Then I should be on the admin client details page
+     */
+    public function iAmOnAdminClientDetailsPage()
+    {
+        return $this->iAmOnPage('/admin\/client\/.*\/details$/');
+    }
+
+    /**
+     * @Then I should be on the admin client discharge page
+     */
+    public function iAmOnAdminClientDischargePage()
+    {
+        return $this->iAmOnPage('/admin\/client\/.*\/discharge/');
+    }
 }

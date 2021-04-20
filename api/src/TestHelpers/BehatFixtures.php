@@ -1,12 +1,10 @@
 <?php declare(strict_types=1);
 
-
 namespace App\TestHelpers;
 
-use App\Entity\Organisation;
-use App\Entity\Report\Report;
-use App\Entity\User;
 use App\Entity\Ndr\Ndr;
+use App\Entity\Organisation;
+use App\Entity\User;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -23,8 +21,10 @@ class BehatFixtures
     private ReportTestHelper $reportTestHelper;
     private ClientTestHelper $clientTestHelper;
     private OrganisationTestHelper $organisationTestHelper;
+    private NamedDeputyTestHelper $namedDeputyTestHelper;
 
     private User $admin;
+    private User $elevatedAdmin;
     private User $superAdmin;
 
     private User $layNotStarted;
@@ -58,6 +58,7 @@ class BehatFixtures
         $this->reportTestHelper = new ReportTestHelper();
         $this->clientTestHelper = new ClientTestHelper();
         $this->organisationTestHelper = new OrganisationTestHelper();
+        $this->namedDeputyTestHelper = new NamedDeputyTestHelper();
     }
 
     /**
@@ -80,99 +81,101 @@ class BehatFixtures
 
         return [
             'admin-users' => [
-                'admin' => [
-                    'email' => $this->admin->getEmail()
-                ],
-                'super-admin' => [
-                    'email' => $this->superAdmin->getEmail()
-                ]
+                'admin' => self::buildAdminUserDetails($this->admin),
+                'elevated-admin' => self::buildAdminUserDetails($this->elevatedAdmin),
+                'super-admin' => self::buildAdminUserDetails($this->superAdmin),
             ],
             'lays' => [
-                'not-started' => [
-                    'email' => $this->layNotStarted->getEmail(),
-                    'clientId' => $this->layNotStarted->getFirstClient()->getId(),
-                    'currentReportId' => $this->layNotStarted->getFirstClient()->getCurrentReport()->getId(),
-                    'currentReportType' => $this->layNotStarted->getFirstClient()->getCurrentReport()->getType(),
-                    'currentReportNdrOrReport' => $this->layNotStarted->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report',
-                    'previousReportId' => null,
-                    'previousReportType' => null,
-                    'previousReportNdrOrReport' => $this->layNotStarted->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report'
-                ],
-                'completed' => [
-                    'email' => $this->layCompleted->getEmail(),
-                    'clientId' => $this->layCompleted->getFirstClient()->getId(),
-                    'currentReportId' => $this->layCompleted->getFirstClient()->getCurrentReport()->getId(),
-                    'currentReportType' =>$this->layCompleted->getFirstClient()->getCurrentReport()->getType(),
-                    'currentReportNdrOrReport' => $this->layCompleted->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report',
-                    'previousReportId' => null,
-                    'previousReportType' => null,
-                    'previousReportNdrOrReport' => $this->layCompleted->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report'
-                ],
-                'submitted' => [
-                    'email' => $this->laySubmitted->getEmail(),
-                    'clientId' => $this->laySubmitted->getFirstClient()->getId(),
-                    'currentReportId' => $this->laySubmitted->getFirstClient()->getCurrentReport()->getId(),
-                    'currentReportType' =>$this->laySubmitted->getFirstClient()->getCurrentReport()->getType(),
-                    'currentReportNdrOrReport' => $this->laySubmitted->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report',
-                    'previousReportId' => $this->laySubmitted->getFirstClient()->getReports()[0]->getId(),
-                    'previousReportType' => $this->laySubmitted->getFirstClient()->getReports()[0]->getType(),
-                    'previousReportNdrOrReport' => $this->laySubmitted->getFirstClient()->getCurrentReport() instanceof Ndr ? 'ndr' : 'report'
-                ]
+                'not-started' => self::buildUserDetails($this->layNotStarted),
+                'completed' => self::buildUserDetails($this->layCompleted),
+                'submitted' => self::buildUserDetails($this->laySubmitted),
             ],
             'lays-ndr' => [
-                'not-started' => [
-                    'email' => $this->ndrLayNotStarted->getEmail(),
-                    'clientId' => $this->ndrLayNotStarted->getFirstClient()->getId(),
-                    'currentReportId' => $this->ndrLayNotStarted->getFirstClient()->getNdr()->getId(),
-                    'currentReportNdrOrReport' => 'ndr'
-                ],
-                'completed' => [
-                    'email' => $this->ndrLayCompleted->getEmail(),
-                    'clientId' => $this->ndrLayCompleted->getFirstClient()->getId(),
-                    'currentReportId' => $this->ndrLayCompleted->getFirstClient()->getNdr()->getId(),
-                    'currentReportNdrOrReport' => 'ndr'
-                ],
-                'submitted' => [
-                    'email' => $this->ndrLaySubmitted->getEmail(),
-                    'clientId' => $this->ndrLaySubmitted->getFirstClient()->getId(),
-                    'currentReportId' => $this->ndrLaySubmitted->getFirstClient()->getNdr()->getId(),
-                    'currentReportNdrOrReport' => 'ndr'
-                ]
+                'not-started' => self::buildUserDetails($this->ndrLayNotStarted),
+                'completed' => self::buildUserDetails($this->ndrLayCompleted),
+                'submitted' => self::buildUserDetails($this->ndrLaySubmitted)
             ],
             'professionals' => [
                 'admin' => [
-                    'not-started' => [
-                        'email' => $this->profAdminNotStarted->getEmail(),
-                        'clientId' => $this->profAdminNotStarted->getOrganisations()[0]->getClients()[0]->getId(),
-                        'currentReportId' => $this->profAdminNotStarted->getOrganisations()[0]->getClients()[0]->getCurrentReport()->getId(),
-                        'currentReportType' => $this->profAdminNotStarted->getOrganisations()[0]->getClients()[0]->getCurrentReport()->getType(),
-                        'currentReportNdrOrReport' => $this->profAdminNotStarted->getOrganisations()[0]->getClients()[0]->getCurrentReport() instanceof Ndr ? 'ndr' : 'report',
-                        'previousReportId' => null,
-                        'previousReportType' => null,
-                        'previousReportNdrOrReport' => $this->profAdminNotStarted->getOrganisations()[0]->getClients()[0]->getCurrentReport() instanceof Ndr ? 'ndr' : 'report'
-                    ],
-                    'completed' => [
-                        'email' => $this->profAdminCompleted->getEmail(),
-                        'clientId' => $this->profAdminCompleted->getOrganisations()[0]->getClients()[0]->getId(),
-                        'currentReportId' => $this->profAdminCompleted->getOrganisations()[0]->getClients()[0]->getCurrentReport()->getId(),
-                        'currentReportType' =>$this->profAdminCompleted->getOrganisations()[0]->getClients()[0]->getCurrentReport()->getType(),
-                        'currentReportNdrOrReport' => $this->profAdminCompleted->getOrganisations()[0]->getClients()[0]->getCurrentReport() instanceof Ndr ? 'ndr' : 'report',
-                        'previousReportId' => null,
-                        'previousReportType' => null,
-                        'previousReportNdrOrReport' => $this->profAdminCompleted->getOrganisations()[0]->getClients()[0]->getCurrentReport() instanceof Ndr ? 'ndr' : 'report'
-                    ],
-                    'submitted' => [
-                        'email' => $this->profAdminSubmitted->getEmail(),
-                        'clientId' => $this->profAdminSubmitted->getOrganisations()[0]->getClients()[0]->getId(),
-                        'currentReportId' => $this->profAdminSubmitted->getOrganisations()[0]->getClients()[0]->getCurrentReport()->getId(),
-                        'currentReportType' =>$this->profAdminSubmitted->getOrganisations()[0]->getClients()[0]->getCurrentReport()->getType(),
-                        'currentReportNdrOrReport' => $this->profAdminSubmitted->getOrganisations()[0]->getClients()[0]->getCurrentReport() instanceof Ndr ? 'ndr' : 'report',
-                        'previousReportId' => $this->profAdminSubmitted->getOrganisations()[0]->getClients()[0]->getReports()[0]->getId(),
-                        'previousReportType' => $this->profAdminSubmitted->getOrganisations()[0]->getClients()[0]->getReports()[0]->getType(),
-                        'previousReportNdrOrReport' => $this->profAdminSubmitted->getOrganisations()[0]->getClients()[0]->getCurrentReport() instanceof Ndr ? 'ndr' : 'report'
-                    ]
+                    'not-started' => self::buildOrgUserDetails($this->profAdminNotStarted),
+                    'completed' => self::buildOrgUserDetails($this->profAdminCompleted),
+                    'submitted' => self::buildOrgUserDetails($this->profAdminSubmitted),
                 ]
             ]
+        ];
+    }
+
+    public static function buildUserDetails(User $user)
+    {
+        $client = $user->isLayDeputy() ? $user->getFirstClient() : $user->getOrganisations()[0]->getClients()[0];
+
+        $currentReport = $user->getNdrEnabled() ? $client->getNdr() : $client->getCurrentReport();
+        $currentReportType = $user->getNdrEnabled() ? null : $currentReport->getType();
+        $previousReport = $user->getNdrEnabled() ? null : $client->getReports()[0];
+
+        $userDetails =  [
+            'userEmail' => $user->getEmail(),
+            'userRole' => $user->getRoleName(),
+            'userFirstName' => $user->getFirstname(),
+            'userLastName' => $user->getLastname(),
+            'userFullName' => $user->getFullName(),
+            'userFullAddressArray' => array_filter([
+                $user->getAddress1(),
+                $user->getAddress2(),
+                $user->getAddress3(),
+                $user->getAddressPostcode(),
+                $user->getAddressCountry()
+            ]),
+            'userPhone' => $user->getPhoneMain(),
+            'courtOrderNumber' => $client->getCaseNumber(),
+            'clientId' => $client->getId(),
+            'clientFirstName' => $client->getFirstname(),
+            'clientLastName' => $client->getLastname(),
+            'clientCaseNumber' => $client->getCaseNumber(),
+            'currentReportId' => $currentReport->getId(),
+            'currentReportType' => $currentReportType,
+            'currentReportNdrOrReport' => $currentReport instanceof Ndr ? 'ndr' : 'report',
+            'currentReportDueDate' => $currentReport->getDueDate()->format('j F Y')
+        ];
+
+        if ($previousReport) {
+            $userDetails = array_merge(
+                $userDetails,
+                [
+                    'previousReportId' => $previousReport->getId(),
+                    'previousReportType' => $previousReport->getType(),
+                    'previousReportNdrOrReport' => $previousReport instanceof Ndr ? 'ndr' : 'report',
+                    'previousReportDueDate' => $previousReport->getDueDate()->format('j F Y')
+                ]
+            );
+        }
+
+        return $userDetails;
+    }
+
+    public static function buildOrgUserDetails(User $user)
+    {
+        $organisation = $user->getOrganisations()->first();
+        $namedDeputy = $organisation->getClients()[0]->getNamedDeputy();
+
+        $details = [
+            'organisationName' => $organisation->getName(),
+            'namedDeputyName' => sprintf(
+                '%s %s',
+                $namedDeputy->getFirstname(),
+                $namedDeputy->getLastName()
+            ),
+            'namedDeputyEmail' => $namedDeputy->getEmail1(),
+        ];
+
+        return array_merge(self::buildUserDetails($user), $details);
+    }
+
+    public static function buildAdminUserDetails(User $user)
+    {
+        return [
+            'userEmail' => $user->getEmail(),
+            'userRole' => $user->getRoleName(),
         ];
     }
 
@@ -183,6 +186,7 @@ class BehatFixtures
 
         $users = [
             $this->admin,
+            $this->elevatedAdmin,
             $this->superAdmin,
             $this->layNotStarted,
             $this->layCompleted,
@@ -206,10 +210,13 @@ class BehatFixtures
     private function createAdminUsers()
     {
         $this->admin = $this->userTestHelper
-            ->createUser(null, User::ROLE_ADMIN, sprintf('admin-%s@publicguardian.gov.uk', $this->testRunId));
+            ->createUser(null, User::ROLE_ADMIN, sprintf('admin-%s@t.uk', $this->testRunId));
+
+        $this->elevatedAdmin = $this->userTestHelper
+            ->createUser(null, User::ROLE_ELEVATED_ADMIN, sprintf('elevated-admin-%s@t.uk', $this->testRunId));
 
         $this->superAdmin = $this->userTestHelper
-            ->createUser(null, User::ROLE_SUPER_ADMIN, sprintf('super-admin-%s@publicguardian.gov.uk', $this->testRunId));
+            ->createUser(null, User::ROLE_SUPER_ADMIN, sprintf('super-admin-%s@t.uk', $this->testRunId));
     }
 
     private function createDeputies()
@@ -259,21 +266,20 @@ class BehatFixtures
 
         $this->profAdminNotStarted = $this->userTestHelper
             ->createUser(null, User::ROLE_PROF_ADMIN, sprintf('prof-admin-not-started-%s@t.uk', $this->testRunId));
-        $this->addOrgClientsAndReportsToOrgDeputy($this->profAdminNotStarted, $organisation, false, false);
+        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($this->profAdminNotStarted, $organisation, false, false);
 
         $this->profAdminCompleted = $this->userTestHelper
             ->createUser(null, User::ROLE_PROF_ADMIN, sprintf('prof-admin-completed-%s@t.uk', $this->testRunId));
-        $this->addOrgClientsAndReportsToOrgDeputy($this->profAdminCompleted, $organisation, true, false);
+        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($this->profAdminCompleted, $organisation, true, false);
 
         $this->profAdminSubmitted = $this->userTestHelper
             ->createUser(null, User::ROLE_PROF_ADMIN, sprintf('prof-admin-submitted-%s@t.uk', $this->testRunId));
-        $this->addOrgClientsAndReportsToOrgDeputy($this->profAdminSubmitted, $organisation, true, true);
+        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($this->profAdminSubmitted, $organisation, true, true);
     }
 
     private function addClientsAndReportsToLayDeputy(User $deputy, bool $completed = false, bool $submitted = false)
     {
         $client = $this->clientTestHelper->generateClient($this->entityManager, $deputy);
-
         $report = $this->reportTestHelper->generateReport($this->entityManager, $client);
 
         $client->addReport($report);
@@ -314,13 +320,15 @@ class BehatFixtures
         $this->entityManager->persist($client);
     }
 
-    private function addOrgClientsAndReportsToOrgDeputy(User $deputy, Organisation $organisation, bool $completed = false, bool $submitted = false)
+    private function addOrgClientsNamedDeputyAndReportsToOrgDeputy(User $deputy, Organisation $organisation, bool $completed = false, bool $submitted = false)
     {
         $client = $this->clientTestHelper->generateClient($this->entityManager, $deputy, $organisation);
         $report = $this->reportTestHelper->generateReport($this->entityManager, $client);
+        $namedDeputy = $this->namedDeputyTestHelper->generatenamedDeputy();
 
         $client->addReport($report);
         $client->setOrganisation($organisation);
+        $client->setNamedDeputy($namedDeputy);
 
         $organisation->addClient($client);
         $organisation->addUser($deputy);
@@ -337,6 +345,7 @@ class BehatFixtures
             $this->reportTestHelper->submitReport($report, $this->entityManager);
         }
 
+        $this->entityManager->persist($namedDeputy);
         $this->entityManager->persist($deputy);
         $this->entityManager->persist($client);
         $this->entityManager->persist($report);
