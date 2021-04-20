@@ -18,7 +18,7 @@ trait UserManagementTrait
     {
         foreach ($table as $inputs) {
             $query = build_query($inputs);
-            $this->visitAdminPath("/admin/fixtures/createClientAttachDeputy?$query");
+            $this->visitAdminPath("/admin/fixture/createClientAttachDeputy?$query");
         }
     }
 
@@ -31,7 +31,7 @@ trait UserManagementTrait
     {
         foreach ($table as $inputs) {
             $query = build_query($inputs);
-            $this->visitAdminPath("/admin/fixtures/createClientAttachOrgs?$query");
+            $this->visitAdminPath("/admin/fixture/createClientAttachOrgs?$query");
         }
     }
 
@@ -42,7 +42,7 @@ trait UserManagementTrait
      */
     public function viewEditUserPageFor($userEmail)
     {
-        $this->visitAdminPath("/admin/fixtures/getUserIDByEmail/" . strtolower($userEmail));
+        $this->visitAdminPath("/admin/fixture/getUserIDByEmail/" . strtolower($userEmail));
 
         /** @var Session $session */
         $session = $this->getSession();
@@ -62,7 +62,7 @@ trait UserManagementTrait
      */
     public function userShouldBeDeleted($userEmail)
     {
-        $this->visitAdminPath("/admin/fixtures/getUserIDByEmail/" . strtolower($userEmail));
+        $this->visitAdminPath("/admin/fixture/getUserIDByEmail/" . strtolower($userEmail));
 
         /** @var Session $session */
         $session = $this->getSession();

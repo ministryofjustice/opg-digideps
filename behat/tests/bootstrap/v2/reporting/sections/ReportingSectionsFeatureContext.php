@@ -1,6 +1,5 @@
 <?php declare(strict_types=1);
 
-
 namespace DigidepsBehat\v2\Reporting\Sections;
 
 use DigidepsBehat\v2\Common\BaseFeatureContext;
@@ -13,8 +12,6 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use ContactsSectionTrait;
     use DocumentsSectionTrait;
     use GiftsSectionTrait;
-
-    const REPORT_SECTION_ENDPOINT = '%s/%s/%s';
 
     /**
      * @Then the previous section should be :sectionName

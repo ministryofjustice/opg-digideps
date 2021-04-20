@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Common;
 
@@ -12,27 +13,32 @@ use Faker\Generator;
 
 class BaseFeatureContext extends MinkContext
 {
+    use AlertsTrait;
     use AuthTrait;
-    use CourtOrderTrait;
     use DebugTrait;
-    use ReportTrait;
-    use IShouldBeOnTrait;
-    use PageUrlsTrait;
     use ElementSelectionTrait;
     use ErrorsTrait;
-    use AlertsTrait;
-    use IVisitTrait;
+    use FixturesTrait;
+    use INavigateToAdminTrait;
+    use IShouldBeOnTrait;
+    use IVisitAdminTrait;
+    use IVisitFrontendTrait;
+    use PageUrlsTrait;
+    use ReportTrait;
 
-    const BEHAT_FRONT_RESET_FIXTURES = '/behat/frontend/reset-fixtures?testRunId=%s';
-    const BEHAT_FRONT_USER_DETAILS = '/behat/frontend/user/%s/details';
+    public const BEHAT_FRONT_RESET_FIXTURES = '/behat/frontend/reset-fixtures?testRunId=%s';
+    public const BEHAT_FRONT_USER_DETAILS = '/behat/frontend/user/%s/details';
+    public const REPORT_SECTION_ENDPOINT = '%s/%s/%s ';
 
     public UserDetails $adminDetails;
+    public UserDetails $elevatedAdminDetails;
     public UserDetails $superAdminDetails;
 
     public UserDetails $layDeputyNotStartedDetails;
     public UserDetails $layDeputyCompletedDetails;
     public UserDetails $layDeputySubmittedDetails;
 
+    /** @var UserDetails $profAdminDeputyNotStartedDetails */
     public UserDetails $profAdminDeputyNotStartedDetails;
     public UserDetails $profAdminDeputyCompletedDetails;
     public UserDetails $profAdminDeputySubmittedDetails;
@@ -41,7 +47,8 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $ndrLayDeputyCompletedDetails;
     public UserDetails $ndrLayDeputySubmittedDetails;
 
-    public UserDetails $loggedInUserDetails;
+    public ?UserDetails $loggedInUserDetails = null;
+    public ?UserDetails $interactingWithUserDetails = null;
 
     public array $fixtureUsers = [];
 
@@ -68,6 +75,7 @@ class BaseFeatureContext extends MinkContext
         }
 
         $this->fixtureUsers[] = $this->adminDetails = new UserDetails($responseData['data']['admin-users']['admin']);
+        $this->fixtureUsers[] = $this->elevatedAdminDetails = new UserDetails($responseData['data']['admin-users']['elevated-admin']);
         $this->fixtureUsers[] = $this->superAdminDetails = new UserDetails($responseData['data']['admin-users']['super-admin']);
         $this->fixtureUsers[] = $this->layDeputyNotStartedDetails = new UserDetails($responseData['data']['lays']['not-started']);
         $this->fixtureUsers[] = $this->layDeputyCompletedDetails = new UserDetails($responseData['data']['lays']['completed']);
@@ -78,6 +86,9 @@ class BaseFeatureContext extends MinkContext
         $this->fixtureUsers[] = $this->profAdminDeputyNotStartedDetails = new UserDetails($responseData['data']['professionals']['admin']['not-started']);
         $this->fixtureUsers[] = $this->profAdminDeputyCompletedDetails = new UserDetails($responseData['data']['professionals']['admin']['completed']);
         $this->fixtureUsers[] = $this->profAdminDeputySubmittedDetails = new UserDetails($responseData['data']['professionals']['admin']['submitted']);
+
+        $this->loggedInUserDetails = null;
+        $this->interactingWithUserDetails = null;
     }
 
     /**
@@ -119,7 +130,7 @@ class BaseFeatureContext extends MinkContext
 
     public function throwContextualException(string $message)
     {
-        $loggedInEmail = !isset($this->loggedInUserDetails) ? 'Not logged in' : $this->loggedInUserDetails->getEmail();
+        $loggedInEmail = !isset($this->loggedInUserDetails) ? 'Not logged in' : $this->loggedInUserDetails->getUserEmail();
 
         $contextMessage = <<<CONTEXT
 $message
