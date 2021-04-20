@@ -75,6 +75,14 @@ class Satisfaction
     private $created;
 
     /**
+     * @JMS\Type("App/Entity/User")
+     * @JMS\Groups({"satisfaction"})
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="satisfaction", cascade={"persist"})
+     */
+    private User $user;
+
+    /**
      * @return int
      */
     public function getId(): int
@@ -179,6 +187,24 @@ class Satisfaction
     public function setCreated(DateTime $created): Satisfaction
     {
         $this->created = $created;
+        return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
+     * @return Satisfaction
+     */
+    public function setUser(User $user): Satisfaction
+    {
+        $this->user = $user;
         return $this;
     }
 }

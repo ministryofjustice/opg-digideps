@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Report\Report;
 use App\Entity\Traits\AddressTrait;
+use App\Entity\UserResearch\UserResearchResponse;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -284,9 +285,22 @@ class User implements UserInterface
     private $coDeputyClientConfirmed;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="user", cascade={"persist"})
+     * @var UserResearchResponse|null
+     * @JMS\Type("App\Entity\UserResearch\UserResearchResponse")
+     * @JMS\Groups({"user", "satisfaction", "user-research"})
+     *
+     * @ORM\OneToMany(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="user", cascade={"persist"})
      */
     private $userResearchResponse;
+
+    /**
+     * @var Satisfaction|null
+     * @JMS\Type("App\Entity\UserResearch\UserResearchResponse")
+     * @JMS\Groups({"user", "satisfaction", "user-research"})
+     *
+     * @ORM\OneToMany(targetEntity="App\Entity\Satisfaction", mappedBy="user", cascade={"persist"})
+     */
+    private $satisfaction;
 
     /**
      * Constructor.
@@ -1241,5 +1255,41 @@ class User implements UserInterface
         }
 
         return false;
+    }
+
+    /**
+     * @return Satisfaction|null
+     */
+    public function getSatisfaction(): ?Satisfaction
+    {
+        return $this->satisfaction;
+    }
+
+    /**
+     * @param Satisfaction|null $satisfaction
+     * @return User
+     */
+    public function setSatisfaction(?Satisfaction $satisfaction): User
+    {
+        $this->satisfaction = $satisfaction;
+        return $this;
+    }
+
+    /**
+     * @return UserResearchResponse|null
+     */
+    public function getUserResearchResponse(): ?UserResearchResponse
+    {
+        return $this->userResearchResponse;
+    }
+
+    /**
+     * @param UserResearchResponse|null $userResearchResponse
+     * @return User
+     */
+    public function setUserResearchResponse(?UserResearchResponse $userResearchResponse): User
+    {
+        $this->userResearchResponse = $userResearchResponse;
+        return $this;
     }
 }

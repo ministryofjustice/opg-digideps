@@ -4,7 +4,10 @@
 namespace App\Entity\UserResearch;
 
 use App\Entity\User;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as JMS;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
@@ -22,11 +25,17 @@ class UserResearchResponse
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\ResearchType", inversedBy="userResearchResponse", cascade={"persist", "remove"})
+     *
+     * @JMS\Type("App\Entity\ResearchType")
+     * @JMS\Groups({"user-research", "satisfaction"})
      */
     private ResearchType $researchType;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="userResearchResponse", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="userResearchResponse", cascade={"persist"})
+     *
+     * @JMS\Type("App\Entity\User")
+     * @JMS\Groups({"user-research", "satisfaction"})
      */
     private User $user;
 
@@ -35,18 +44,36 @@ class UserResearchResponse
      * @ORM\Column(name="id", type="uuid")
      * @ORM\GeneratedValue(strategy="NONE")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
+     * @JMS\Type("string")
+     * @JMS\Groups({"user-research", "satisfaction"})
      */
     private UuidInterface $id;
 
     /**
      * @ORM\Column(name="deputyship_length", type="string")
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"user-research", "satisfaction"})
      */
     private string $deputyshipLength;
 
     /**
      * @ORM\Column(name="has_access_to_video_call_device", type="boolean")
+     *
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"user-research", "satisfaction"})
      */
     private bool $hasAccessToVideoCallDevice;
+
+    /**
+     * @var DateTime
+     * @JMS\Type("DateTime")
+     * @JMS\Groups({"user-research", "satisfaction"})
+     *
+     * @ORM\Column(name="created_at", type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $created;
 
     /**
      * @return string
@@ -135,6 +162,24 @@ class UserResearchResponse
     public function setUser(User $user): UserResearchResponse
     {
         $this->user = $user;
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getCreated(): DateTime
+    {
+        return $this->created;
+    }
+
+    /**
+     * @param DateTime $created
+     * @return UserResearchResponse
+     */
+    public function setCreated(DateTime $created): UserResearchResponse
+    {
+        $this->created = $created;
         return $this;
     }
 }
