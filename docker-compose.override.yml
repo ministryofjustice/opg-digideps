@@ -24,6 +24,7 @@ services:
       - ./client/templates:/var/www/templates
       - ./client/translations:/var/www/translations
       - ./client/phpstan.neon:/var/www/phpstan.neon
+      - ./client/bin:/var/www/vendor/bin
 
   api:
     volumes:
@@ -37,6 +38,7 @@ services:
       - ./api/api.env:/var/www/api.env
       - ./api/postgres.env:/var/www/postgres.env
       - ./api/phpstan.neon:/var/www/phpstan.neon
+      - ./api/bin:/var/www/vendor/bin
 
   frontend:
     volumes:
@@ -55,6 +57,7 @@ services:
       - ./client/templates:/var/www/templates
       - ./client/translations:/var/www/translations
       - ./client/phpstan.neon:/var/www/phpstan.neon
+      - ./client/bin:/var/www/vendor/bin
 
   wkhtmltopdf:
     volumes:

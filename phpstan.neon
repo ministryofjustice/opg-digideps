@@ -1,0 +1,8 @@
+includes:
+  - client/vendor/phpstan/phpstan-mockery/extension.neon
+  - client/vendor/phpstan/phpstan-phpunit/extension.neon
+  - client/vendor/jangregor/phpstan-prophecy/src/extension.neon
+parameters:
+  bootstrapFiles:
+    - client/vendor/autoload.php
+    - api/vendor/autoload.php
