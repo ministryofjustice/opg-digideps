@@ -317,22 +317,22 @@ trait AccountsSectionTrait
         foreach ($tableRows as $tRowKey=>$tableRow) {
             $tableHeader = $tableRow->find('css', $accountSummaryElems['head']);
             $headHtml = trim(strtolower($tableHeader->getHtml()));
-            $this->bespokeAssert($this->accountList[$tRowKey]['accountType'], $headHtml, 'Accounts Type', false);
-            $this->bespokeAssert($this->accountList[$tRowKey]['name'], $headHtml, 'Accounts Name', false);
-            $this->bespokeAssert($this->accountList[$tRowKey]['accountNumber'], $headHtml, 'Accounts Number', false);
+            $this->assertStringContainsString($this->accountList[$tRowKey]['accountType'], $headHtml, 'Accounts Type');
+            $this->assertStringContainsString($this->accountList[$tRowKey]['name'], $headHtml, 'Accounts Name');
+            $this->assertStringContainsString($this->accountList[$tRowKey]['accountNumber'], $headHtml, 'Accounts Number');
 
             $sortCode = str_replace('-', '', $this->accountList[$tRowKey]['sortCode']);
-            $this->bespokeAssert($sortCode, $headHtml, 'Accounts Sort Code', false);
-            $this->bespokeAssert($this->accountList[$tRowKey]['joint'], $headHtml, 'Accounts Joint', false);
+            $this->assertStringContainsString($sortCode, $headHtml, 'Accounts Sort Code');
+            $this->assertStringContainsString($this->accountList[$tRowKey]['joint'], $headHtml, 'Accounts Joint');
 
             $tableFields = $tableRow->findAll('css', $accountSummaryElems['data']);
 
             foreach ($tableFields as $tFieldKey=>$tableField) {
                 $balanceItem = trim(strtolower($tableField->getHtml()));
                 if ($tFieldKey == 0) {
-                    $this->bespokeAssert($this->accountList[$tRowKey]['openingBalance'], $balanceItem, 'Accounts Opening Balance', false);
+                    $this->assertStringContainsString($this->accountList[$tRowKey]['openingBalance'], $balanceItem, 'Accounts Opening Balance');
                 } elseif ($tFieldKey == 1 and $this->reportUrlPrefix != 'ndr') {
-                    $this->bespokeAssert($this->accountList[$tRowKey]['closingBalance'], $balanceItem, 'Accounts Closing Balance', false);
+                    $this->assertStringContainsString($this->accountList[$tRowKey]['closingBalance'], $balanceItem, 'Accounts Closing Balance');
                 }
             }
         }

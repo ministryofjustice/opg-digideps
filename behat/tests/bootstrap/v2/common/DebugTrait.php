@@ -76,36 +76,4 @@ trait DebugTrait
         echo "Response saved ({$bytes} bytes):\n";
         echo "$file";
     }
-
-    public function bespokeAssert(
-        $expected,
-        $found,
-        string $comparisonSubject,
-        bool $exactMatch
-    ) {
-        $message = <<<MESSAGE
-
-============================
-Expecting: %s
-Found: %s
-
-Subject of Comparison: %s
-Page URL: %s
-============================
-
-MESSAGE;
-        $foundFormatted = strval(trim(strtolower($found)));
-        $expectedFormatted = strval(trim(strtolower($expected)));
-        assert(
-            $exactMatch ? $foundFormatted == $expectedFormatted : str_contains($foundFormatted, $expectedFormatted),
-            sprintf(
-                $message,
-                $expectedFormatted,
-                $exactMatch ? $foundFormatted : 'Not Found',
-                $comparisonSubject,
-                $this->getCurrentUrl()
-            )
-        );
-//        return sprintf($message, strval($expecting), strval($found), $comparisonSubject, $url);
-    }
 }

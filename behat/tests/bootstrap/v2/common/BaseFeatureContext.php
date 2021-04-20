@@ -13,6 +13,7 @@ use Faker\Generator;
 class BaseFeatureContext extends MinkContext
 {
     use AuthTrait;
+    use AssertTrait;
     use CourtOrderTrait;
     use DebugTrait;
     use ReportTrait;

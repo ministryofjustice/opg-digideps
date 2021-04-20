@@ -120,8 +120,8 @@ trait ActionsSectionTrait
             }
         }
 
-        $this->bespokeAssert($countNegativeReponse, $this->answeredNo, 'Actions "No" Counts', true);
-        $this->bespokeAssert($countPositiveReponse, $this->answeredYes, 'Actions "Yes" Counts', true);
+        $this->assertStringEqualsString($countNegativeReponse, $this->answeredNo, 'Actions "No" Counts');
+        $this->assertStringEqualsString($countPositiveReponse, $this->answeredYes, 'Actions "Yes" Counts');
     }
 
     /**
@@ -136,7 +136,7 @@ trait ActionsSectionTrait
         }
 
         foreach ($this->comments as $comment) {
-            $this->bespokeAssert($comment, $table->getHtml(), 'Actions Comments', false);
+            $this->assertStringContainsString($comment, $table->getHtml(), 'Actions Comments');
         }
     }
 
