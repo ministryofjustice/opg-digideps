@@ -97,7 +97,7 @@ trait GiftsSectionTrait
      */
     public function iFollowEditLinkForGifts()
     {
-        $this->iClickBasedOnElementId('a', 'id', 'edit-gifts');
+        $this->iClickBasedOnAttributeTypeAndValue('a', 'id', 'edit-gifts');
     }
 
     /**
@@ -152,7 +152,7 @@ trait GiftsSectionTrait
      */
     public function iChooseToRemoveGift()
     {
-        $this->iClickBasedOnElementId('button', 'id', 'confirm_delete_confirm');
+        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'confirm_delete_confirm');
     }
 
     /**
@@ -160,10 +160,10 @@ trait GiftsSectionTrait
      */
     public function iHaveNotGivenAnyGifts()
     {
-        assert($this->iAmOnGiftsExistPage());
+        $this->iAmOnGiftsExistPage();
         $this->iChooseNoOnGiftsExistSection();
 
-        assert($this->iAmOnGiftsSummaryPage());
+        $this->iAmOnGiftsSummaryPage();
     }
 
     /**
@@ -171,20 +171,20 @@ trait GiftsSectionTrait
      */
     public function iHaveGivenMultipleGifts()
     {
-        assert($this->iAmOnGiftsExistPage());
+        $this->iAmOnGiftsExistPage();
         $this->iChooseYesOnGiftsExistSection();
 
         // Fill in details for first gift
-        assert($this->iAmOnGiftsAddPage());
+        $this->iAmOnGiftsAddPage();
         $this->iFillGiftDescriptionAndAmount();
         $this->iChooseToSaveAndAddAnother();
 
         // Fill in details for second gift
-        assert($this->iAmOnGiftsAddPage());
+        $this->iAmOnGiftsAddPage();
         $this->iFillGiftDescriptionAndAmount();
         $this->iChooseToSaveAndContinue();
 
-        assert($this->iAmOnGiftsSummaryPage());
+        $this->iAmOnGiftsSummaryPage();
     }
 
     /**
@@ -193,17 +193,17 @@ trait GiftsSectionTrait
     public function iChangeMyMindAndDeclareGift()
     {
         $this->iViewGiftsSection();
-        assert($this->iAmOnGiftsSummaryPage());
+        $this->iAmOnGiftsSummaryPage();
 
         $this->iFollowEditExistsLink();
-        assert($this->iAmOnGiftsExistPage());
+        $this->iAmOnGiftsExistPage();
 
         $this->iChooseYesOnGiftsExistSection();
-        assert($this->iAmOnGiftsAddPage());
+        $this->iAmOnGiftsAddPage();
 
         $this->iFillGiftDescriptionAndAmount();
         $this->iChooseToSaveAndContinue();
-        assert($this->iAmOnGiftsSummaryPage());
+        $this->iAmOnGiftsSummaryPage();
     }
 
     /**
@@ -221,9 +221,9 @@ trait GiftsSectionTrait
         // edit the gift
         $this->iGoToReportOverviewUrl();
         $this->iFollowEditLinkForGifts();
-        assert($this->iAmOnGiftsSummaryPage());
+        $this->iAmOnGiftsSummaryPage();
         $this->iFollowEditLinkOnFirstGift();
-        assert($this->iAmOnGiftsEditPage());
+        $this->iAmOnGiftsEditPage();
         $this->iEditGiftDescriptionAndAmount();
         $this->iChooseToSaveAndContinue();
     }
@@ -234,9 +234,9 @@ trait GiftsSectionTrait
     public function iRemoveTheSecondGift()
     {
         $this->iFollowRemoveAGiftLinkOnSecondGift();
-        assert($this->iAmOnGiftsDeletionPage());
+        $this->iAmOnGiftsDeletionPage();
         $this->iChooseToRemoveGift();
-        assert($this->iAmOnGiftsSummaryPage());
+        $this->iAmOnGiftsSummaryPage();
     }
 
     /**
@@ -245,9 +245,9 @@ trait GiftsSectionTrait
     public function iRemoveTheFirstGift()
     {
         $this->iFollowRemoveAGiftLinkOnFirstGift();
-        assert($this->iAmOnGiftsDeletionPage());
+        $this->iAmOnGiftsDeletionPage();
         $this->iChooseToRemoveGift();
-        assert($this->iAmOnGiftsStartPage());
+        $this->iAmOnGiftsStartPage();
     }
 
     /**
@@ -306,20 +306,12 @@ trait GiftsSectionTrait
             $expectedResponse = 'no';
         }
 
-        assert($expectedResponse == $actualResponse);
+        $this->assertStringEqualsString($expectedResponse, $actualResponse, 'Gift user answers');
 
         foreach ($this->giftDetails as $key=>$gift) {
             $summaryGift = $summaryGifts[$key];
             foreach ($gift as $fkey=>$giftField) {
-                assert(
-                    trim(strtolower($giftField)) == trim(strtolower($summaryGift[$fkey])),
-                    sprintf(
-                        '%s is not equal to %s in array element %s',
-                        trim(strtolower($giftField)),
-                        trim(strtolower($summaryGift[$fkey])),
-                        $key
-                    )
-                );
+                $this->assertStringEqualsString($giftField, $summaryGift[$fkey], 'Gift names');
             }
         }
     }

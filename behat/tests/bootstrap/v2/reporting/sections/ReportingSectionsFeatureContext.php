@@ -12,6 +12,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use ContactsSectionTrait;
     use DocumentsSectionTrait;
     use GiftsSectionTrait;
+    use VisitsAndCareSectionTrait;
 
     /**
      * @Then the previous section should be :sectionName
@@ -62,8 +63,8 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
      */
     public function iNavigateBackToReportSection()
     {
-        $this->iClickBasedOnElementId('a', 'data-action', 'report.overview');
-        assert($this->iAmOnReportsOverviewPage());
+        $this->iClickBasedOnAttributeTypeAndValue('a', 'data-action', 'report.overview');
+        $this->iAmOnReportsOverviewPage();
     }
 
     /**
@@ -153,7 +154,10 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
             }
         }
 
-        assert($furtherInfoNeeded);
+        assert(
+            $furtherInfoNeeded,
+            'The text: "please answer this question" not found'
+        );
     }
 
     /**
