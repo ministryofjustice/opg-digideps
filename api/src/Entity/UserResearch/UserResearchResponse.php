@@ -3,6 +3,7 @@
 
 namespace App\Entity\UserResearch;
 
+use App\Entity\Satisfaction;
 use App\Entity\User;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -73,7 +74,12 @@ class UserResearchResponse
      * @ORM\Column(name="created_at", type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
-    private $created;
+    private DateTime $created;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Satisfaction", mappedBy="satisfaction", cascade={"persist", "remove"})
+     */
+    private Satisfaction $satisfaction;
 
     /**
      * @return string
@@ -180,6 +186,24 @@ class UserResearchResponse
     public function setCreated(DateTime $created): UserResearchResponse
     {
         $this->created = $created;
+        return $this;
+    }
+
+    /**
+     * @return Satisfaction
+     */
+    public function getSatisfaction(): Satisfaction
+    {
+        return $this->satisfaction;
+    }
+
+    /**
+     * @param Satisfaction $satisfaction
+     * @return UserResearchResponse
+     */
+    public function setSatisfaction(Satisfaction $satisfaction): UserResearchResponse
+    {
+        $this->satisfaction = $satisfaction;
         return $this;
     }
 }

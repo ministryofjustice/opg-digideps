@@ -294,15 +294,6 @@ class User implements UserInterface
     private $userResearchResponse;
 
     /**
-     * @var Satisfaction|null
-     * @JMS\Type("App\Entity\UserResearch\UserResearchResponse")
-     * @JMS\Groups({"user", "satisfaction", "user-research"})
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Satisfaction", mappedBy="user", cascade={"persist"})
-     */
-    private $satisfaction;
-
-    /**
      * Constructor.
      */
     public function __construct($coDeputyClientConfirmed = false)
@@ -1255,24 +1246,6 @@ class User implements UserInterface
         }
 
         return false;
-    }
-
-    /**
-     * @return Satisfaction|null
-     */
-    public function getSatisfaction(): ?Satisfaction
-    {
-        return $this->satisfaction;
-    }
-
-    /**
-     * @param Satisfaction|null $satisfaction
-     * @return User
-     */
-    public function setSatisfaction(?Satisfaction $satisfaction): User
-    {
-        $this->satisfaction = $satisfaction;
-        return $this;
     }
 
     /**

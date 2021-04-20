@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\UserResearch\ResearchType;
+use App\Entity\UserResearch\UserResearchResponse;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
@@ -72,15 +74,15 @@ class Satisfaction
      * @ORM\Column(name="created_at", type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
-    private $created;
+    private DateTime $created;
 
     /**
-     * @JMS\Type("App/Entity/User")
-     * @JMS\Groups({"satisfaction"})
+     * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\UserResearchResponse", inversedBy="userResearchResponse", cascade={"persist", "remove"})
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="satisfaction", cascade={"persist"})
+     * @JMS\Type("App\Entity\UserResearchResponse")
+     * @JMS\Groups({"user-research", "satisfaction"})
      */
-    private User $user;
+    private UserResearchResponse $userResearchResponse;
 
     /**
      * @return int
@@ -191,20 +193,20 @@ class Satisfaction
     }
 
     /**
-     * @return User
+     * @return UserResearchResponse
      */
-    public function getUser(): User
+    public function getUserResearchResponse(): UserResearchResponse
     {
-        return $this->user;
+        return $this->userResearchResponse;
     }
 
     /**
-     * @param User $user
+     * @param UserResearchResponse $userResearchResponse
      * @return Satisfaction
      */
-    public function setUser(User $user): Satisfaction
+    public function setUserResearchResponse(UserResearchResponse $userResearchResponse): Satisfaction
     {
-        $this->user = $user;
+        $this->userResearchResponse = $userResearchResponse;
         return $this;
     }
 }
