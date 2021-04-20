@@ -21,6 +21,8 @@ repos:
     hooks:
     - id: php-cs-fixer
       files: \.(php)$
+    - id: php-stan
+      files: \.(php)$
 -   repo: https://github.com/ministryofjustice/opg-pre-commit-hooks.git
     rev: v0.1.0
     hooks:

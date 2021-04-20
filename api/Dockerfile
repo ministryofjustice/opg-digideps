@@ -76,7 +76,7 @@ RUN mkdir -p var/cache \
 # https://symfony.com/doc/3.4/quick_tour/the_architecture.html
 COPY docker/confd /etc/confd
 COPY --from=composer /app/app app
-COPY --from=composer /app/bin bin
+COPY --from=composer /app/vendor/bin bin
 COPY --from=composer /app/vendor vendor
 COPY --from=composer /app/composer.lock composer.lock
 COPY --from=composer /app/config/parameters.yml config/parameters.yml
