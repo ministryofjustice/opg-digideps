@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Reporting\Sections;
 
@@ -79,12 +81,12 @@ trait ActionsSectionTrait
     {
         $this->selectOption($actionName, $answer);
 
-        if ($answer === "no") {
-            $this->answeredNo += 1;
-        } elseif ($answer === "yes") {
-            $this->answeredYes += 1;
+        if ('no' === $answer) {
+            ++$this->answeredNo;
+        } elseif ('yes' === $answer) {
+            ++$this->answeredYes;
         }
-        if ($comment != null) {
+        if (null != $comment) {
             $this->fillField($commentName, $comment);
             array_push($this->comments, $comment);
         }
@@ -109,19 +111,19 @@ trait ActionsSectionTrait
             $this->throwContextualException('A dd element was not found on the page');
         }
 
-        $countNegativeResponse = 0;
-        $countPositiveResponse = 0;
+        $countNegativeReponse = 0;
+        $countPositiveReponse = 0;
 
         foreach ($tableEntry as $entry) {
-            if (trim(strtolower($entry->getHtml())) === "no") {
-                $countNegativeResponse += 1;
-            } elseif (strtolower(trim($entry->getHtml())) === "yes") {
-                $countPositiveResponse += 1;
+            if ('no' === trim(strtolower($entry->getHtml()))) {
+                ++$countNegativeReponse;
+            } elseif ('yes' === strtolower(trim($entry->getHtml()))) {
+                ++$countPositiveReponse;
             }
         }
 
-        assert($countNegativeResponse == $this->answeredNo);
-        assert($countPositiveResponse == $this->answeredYes);
+        $this->assertStringEqualsString($countNegativeReponse, $this->answeredNo, 'Actions "No" Counts');
+        $this->assertStringEqualsString($countPositiveReponse, $this->answeredYes, 'Actions "Yes" Counts');
     }
 
     /**
@@ -136,7 +138,7 @@ trait ActionsSectionTrait
         }
 
         foreach ($this->comments as $comment) {
-            assert(str_contains($table->getHtml(), $comment));
+            $this->assertStringContainsString($comment, $table->getHtml(), 'Actions Comments');
         }
     }
 
@@ -147,7 +149,7 @@ trait ActionsSectionTrait
     {
         //this should be replaced with actual link click but could not identify it properly
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportConcernsUrl = 'report/' . $activeReportId . '/actions/step/2?from=summary';
+        $reportConcernsUrl = 'report/'.$activeReportId.'/actions/step/2?from=summary';
         $this->visitPath($reportConcernsUrl);
     }
 }

@@ -87,7 +87,7 @@ RUN mkdir -p var/cache \
 # See this page for directories required
 # https://symfony.com/doc/3.4/quick_tour/the_architecture.html
 COPY --from=composer /app/app app
-COPY --from=composer /app/bin bin
+COPY --from=composer /app/vendor/bin bin
 COPY --from=composer /app/vendor vendor
 COPY --from=composer /app/composer.lock composer.lock
 COPY --from=composer /app/config/parameters.yml config/parameters.yml

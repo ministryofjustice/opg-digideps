@@ -22,7 +22,7 @@ trait CourtOrderTrait
                 'deputy-email' => $row['deputy'] . '@behat-test.com'
             ]);
 
-            $url = sprintf('/admin/fixtures/court-orders?%s', $queryString);
+            $url = sprintf('/admin/fixture/court-orders?%s', $queryString);
             $this->visitAdminPath($url);
 
             $activated = is_null($row['activated']) || $row['activated'] == 'true';

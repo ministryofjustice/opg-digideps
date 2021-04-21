@@ -242,17 +242,23 @@ v2-tests-goutte:
             contexts:
                 - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
+        client-management:
+            description: Covering the client management features of the app (frontend and admin)
+            paths: [ "%paths.base%/features-v2/client-management" ]
+            contexts:
+                - DigidepsBehat\v2\ClientManagement\ClientManagementFeatureContext
+
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             files_path: '%paths.base%/fixtures/'
             default_session: goutte
         Behatch\Extension: ~
 
-v2-tests-browserstack:
+v2-tests-browserstack-chrome:
     suites:
-        contacts:
-            description: Covering the 'Contacts' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/contacts" ]
+        cross-browser:
+            description: Covering the cross browser tests we want to run
+            paths: [ "%paths.base%/features-v2/cross-browser" ]
             contexts:
                 - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
     extensions:
@@ -262,13 +268,64 @@ v2-tests-browserstack:
                     browserstack-debug: true
                     browserstack-tunnel: true
                     acceptSslCerts: true
-                    project: 'Digideps Cross Browser Test - Manual'
+                    project: 'Digideps Cross Browser Test - Chrome'
                     browser: 'chrome'
                     browserVersion: 'latest'
                     os: 'Windows'
                     os_version: '10'
                     build: 'Chrome'
                     name: 'v2-tests'
+            files_path: '%paths.base%/fixtures/'
+            default_session: browser_stack
+        Behatch\Extension: ~
+
+v2-tests-browserstack-ie11:
+    suites:
+        cross-browser:
+            description: Covering the cross browser tests we want to run
+            paths: [ "%paths.base%/features-v2/cross-browser" ]
+            contexts:
+                - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            browser_stack:
+                capabilities:
+                    browserstack-debug: true
+                    browserstack-tunnel: true
+                    acceptSslCerts: true
+                    project: 'Digideps Cross Browser Test - IE11'
+                    browser: 'ie'
+                    browserVersion: '11'
+                    os: 'Windows'
+                    os_version: '10'
+                    build: 'Internet Explorer'
+                    name: 'v2-tests'
+            files_path: '%paths.base%/fixtures/'
+            default_session: browser_stack
+        Behatch\Extension: ~
+
+v2-tests-browserstack-firefox:
+    suites:
+        cross-browser:
+            description: Covering the cross browser tests we want to run
+            paths: [ "%paths.base%/features-v2/cross-browser" ]
+            contexts:
+                - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            browser_stack:
+                capabilities:
+                    browserstack-debug: true
+                    browserstack-tunnel: true
+                    acceptSslCerts: true
+                    project: 'Digideps Cross Browser Test - Firefox'
+                    browser: 'firefox'
+                    browserVersion: 'latest'
+                    os: 'Windows'
+                    os_version: '10'
+                    build: 'Firefox'
+                    name: 'v2-tests'
+                    resolution: '2048x1536'
             files_path: '%paths.base%/fixtures/'
             default_session: browser_stack
         Behatch\Extension: ~

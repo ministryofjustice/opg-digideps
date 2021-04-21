@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Common;
 
@@ -170,6 +171,22 @@ trait IShouldBeOnTrait
     }
 
     /**
+     * @Then I should be on the visits and care first step page
+     */
+    public function iAmOnVisitsAndCareStep1Page()
+    {
+        return $this->iAmOnPage('/report\/.*\/visits-care\/step\/1$/');
+    }
+
+    /**
+     * @Then I should be on the visits and care second step page
+     */
+    public function iAmOnVisitsAndCareStep2Page()
+    {
+        return $this->iAmOnPage('/report\/.*\/visits-care\/step\/2$/');
+    }
+
+    /**
      * @Then I should be on the accounts summary page
      */
     public function iAmOnAccountsSummaryPage()
@@ -218,42 +235,26 @@ trait IShouldBeOnTrait
     }
 
     /**
-    * @Then I should be on the live with client page
-    */
-    public function iAmOnVisitsCarePage1()
+     * @Then I should be on the admin clients search page
+     */
+    public function iAmOnAdminClientsSearchPage()
     {
-        $this->iAmOnPage('/report\/.*\/visits-care\/step\/1$/');
+        return $this->iAmOnPage('/admin\/client\/se\arch$/');
     }
 
     /**
-     * @Then I should be on the client receive paid care page
+     * @Then I should be on the admin client details page
      */
-    public function iAmOnVisitsCarePage2()
+    public function iAmOnAdminClientDetailsPage()
     {
-        $this->iAmOnPage('/report\/.*\/visits-care\/step\/2$/');
+        return $this->iAmOnPage('/admin\/client\/.*\/details$/');
     }
 
     /**
-     * @Then I should be on the who is doing the caring page
+     * @Then I should be on the admin client discharge page
      */
-    public function iAmOnVisitsCarePage3()
+    public function iAmOnAdminClientDischargePage()
     {
-        $this->iAmOnPage('/report\/.*\/visits-care\/step\/3$/');
-    }
-
-    /**
-     * @Then I should be on the does the client have a care plan page
-     */
-    public function iAmOnVisitsCarePage4()
-    {
-        $this->iAmOnPage('/report\/.*\/visits-care\/step\/4$/');
-    }
-
-    /**
-     * @Then I should be on the visits and care report summary page
-     */
-    public function iAmOnVisitsCareSummaryPage()
-    {
-        $this->iAmOnPage('/report\/.*\/visits-care\/summary.*/');
+        return $this->iAmOnPage('/admin\/client\/.*\/discharge/');
     }
 }

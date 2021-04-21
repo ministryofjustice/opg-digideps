@@ -40,10 +40,46 @@ trait AuthTrait
         $this->loggedInUserDetails = $this->getUserDetailsByEmail($email);
     }
 
+    /**
+     * @Given an admin user accesses the admin app
+     */
+    public function adminUsersAccessesAdmin()
+    {
+        if (empty($this->adminDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $this->adminDetails');
+        }
+
+        $this->loginToAdminAs($this->adminDetails->getUserEmail());
+    }
+
+    /**
+     * @Given an elevated admin user accesses the admin app
+     */
+    public function elevatedAdminUsersAccessesAdmin()
+    {
+        if (empty($this->elevatedAdminDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $this->elevatedAdminDetails');
+        }
+
+        $this->loginToAdminAs($this->elevatedAdminDetails->getUserEmail());
+    }
+
+    /**
+     * @Given a super admin user accesses the admin app
+     */
+    public function superAdminUsersAccessesAdmin()
+    {
+        if (empty($this->superAdminDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $this->superAdminDetails');
+        }
+
+        $this->loginToAdminAs($this->superAdminDetails->getUserEmail());
+    }
+
     private function userDetailsExists(string $email)
     {
         foreach ($this->fixtureUsers as $fixtureUser) {
-            if ($fixtureUser->getEmail() === $email) {
+            if ($fixtureUser->getUserEmail() === $email) {
                 return true;
             }
         }
@@ -57,7 +93,7 @@ trait AuthTrait
         $users = array_merge($this->fixtureUsers);
 
         $filteredUsers = array_filter($users, function ($user) use ($email) {
-            return strtolower($user->getEmail()) === strtolower($email);
+            return strtolower($user->getUserEmail()) === strtolower($email);
         });
 
         // Returns the value of the user (so we don't need to know the key) or false if an empty array

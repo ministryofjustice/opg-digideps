@@ -23,7 +23,7 @@ Feature: Accounts (NDR)
 
   Scenario: A user edits an existing account
     Given a Lay Deputy has a completed NDR report
-    And I view the accounts report section
+    And I visit the accounts report section
     Then I should be on the accounts summary page
     When I update my current account to a different one
     Then I should see the expected accounts on the summary page

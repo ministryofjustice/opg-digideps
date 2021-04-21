@@ -7,24 +7,6 @@ trait AccountsSectionTrait
     private array $accountList = [];
 
     /**
-     * @When I view the accounts report section
-     */
-    public function iViewAccountsSection()
-    {
-        $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'bank-accounts');
-        $this->visitPath($reportSectionUrl);
-    }
-
-    /**
-     * @When I view the accounts summary section
-     */
-    public function iViewAccountsSummarySection()
-    {
-        $this->visitPath($this->getAccountsSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
-    }
-
-    /**
      * @When I view and start the accounts report section
      */
     public function iViewAndStartAccountsSection()
@@ -317,42 +299,22 @@ trait AccountsSectionTrait
         foreach ($tableRows as $tRowKey=>$tableRow) {
             $tableHeader = $tableRow->find('css', $accountSummaryElems['head']);
             $headHtml = trim(strtolower($tableHeader->getHtml()));
-            assert(
-                str_contains($headHtml, $this->accountList[$tRowKey]['accountType']),
-                sprintf('matching account %s ', $this->accountList[$tRowKey]['accountType'])
-            );
-            assert(
-                str_contains($headHtml, $this->accountList[$tRowKey]['name']),
-                sprintf('matching name %s ', $this->accountList[$tRowKey]['name'])
-            );
-            assert(
-                str_contains($headHtml, $this->accountList[$tRowKey]['accountNumber']),
-                sprintf('matching account number %s ', $this->accountList[$tRowKey]['accountNumber'])
-            );
+            $this->assertStringContainsString($this->accountList[$tRowKey]['accountType'], $headHtml, 'Accounts Type');
+            $this->assertStringContainsString($this->accountList[$tRowKey]['name'], $headHtml, 'Accounts Name');
+            $this->assertStringContainsString($this->accountList[$tRowKey]['accountNumber'], $headHtml, 'Accounts Number');
+
             $sortCode = str_replace('-', '', $this->accountList[$tRowKey]['sortCode']);
-            assert(
-                str_contains($headHtml, $sortCode),
-                sprintf('matching sort code %s ', $sortCode)
-            );
-            assert(
-                str_contains($headHtml, $this->accountList[$tRowKey]['joint']),
-                sprintf('matching sort code %s ', $this->accountList[$tRowKey]['joint'])
-            );
+            $this->assertStringContainsString($sortCode, $headHtml, 'Accounts Sort Code');
+            $this->assertStringContainsString($this->accountList[$tRowKey]['joint'], $headHtml, 'Accounts Joint');
 
             $tableFields = $tableRow->findAll('css', $accountSummaryElems['data']);
 
             foreach ($tableFields as $tFieldKey=>$tableField) {
                 $balanceItem = trim(strtolower($tableField->getHtml()));
                 if ($tFieldKey == 0) {
-                    assert(
-                        str_contains($balanceItem, $this->accountList[$tRowKey]['openingBalance']),
-                        $this->accountList[$tRowKey]['openingBalance']
-                    );
+                    $this->assertStringContainsString($this->accountList[$tRowKey]['openingBalance'], $balanceItem, 'Accounts Opening Balance');
                 } elseif ($tFieldKey == 1 and $this->reportUrlPrefix != 'ndr') {
-                    assert(
-                        str_contains($balanceItem, $this->accountList[$tRowKey]['closingBalance']),
-                        $this->accountList[$tRowKey]['closingBalance']
-                    );
+                    $this->assertStringContainsString($this->accountList[$tRowKey]['closingBalance'], $balanceItem, 'Accounts Closing Balance');
                 }
             }
         }

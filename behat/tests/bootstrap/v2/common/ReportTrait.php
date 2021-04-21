@@ -29,7 +29,7 @@ trait ReportTrait
         }
 
         $this->clickLink('Continue');
-        ;
+
         $this->checkOption(sprintf('%s_declaration[agree]', $ndrOrReport));
         $this->selectOption(sprintf('%s_declaration[agreedBehalfDeputy]', $ndrOrReport), 'only_deputy');
         $this->pressButton(sprintf('%s_declaration[save]', $ndrOrReport));
@@ -44,7 +44,7 @@ trait ReportTrait
             throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedDetails');
         }
 
-        $this->loginToFrontendAs($this->layDeputyNotStartedDetails->getEmail());
+        $this->loginToFrontendAs($this->layDeputyNotStartedDetails->getUserEmail());
     }
 
     /**
@@ -57,7 +57,7 @@ trait ReportTrait
             throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedDetails');
         }
 
-        $this->loginToFrontendAs($this->layDeputyCompletedDetails->getEmail());
+        $this->loginToFrontendAs($this->layDeputyCompletedDetails->getUserEmail());
     }
 
     /**
@@ -69,7 +69,7 @@ trait ReportTrait
             throw new Exception('It looks like fixtures are not loaded - missing $ndrLayDeputyNotStartedDetails');
         }
 
-        $this->loginToFrontendAs($this->ndrLayDeputyNotStartedDetails->getEmail());
+        $this->loginToFrontendAs($this->ndrLayDeputyNotStartedDetails->getUserEmail());
         $this->reportUrlPrefix = $this->ndrLayDeputyNotStartedDetails->getCurrentReportNdrOrReport();
     }
 
@@ -83,7 +83,7 @@ trait ReportTrait
             throw new Exception('It looks like fixtures are not loaded - missing $ndrLayDeputyCompletedDetails');
         }
 
-        $this->loginToFrontendAs($this->ndrLayDeputyCompletedDetails->getEmail());
+        $this->loginToFrontendAs($this->ndrLayDeputyCompletedDetails->getUserEmail());
         $this->reportUrlPrefix = $this->ndrLayDeputyCompletedDetails->getCurrentReportNdrOrReport();
     }
 
@@ -97,7 +97,7 @@ trait ReportTrait
             throw new Exception('It looks like fixtures are not loaded - missing $layDeputySubmittedDetails');
         }
 
-        $this->loginToFrontendAs($this->layDeputySubmittedDetails->getEmail());
+        $this->loginToFrontendAs($this->layDeputySubmittedDetails->getUserEmail());
     }
 
     /**
@@ -109,6 +109,6 @@ trait ReportTrait
             throw new Exception('It looks like fixtures are not loaded - missing $profAdminDeputyNotStartedDetails');
         }
 
-        $this->loginToFrontendAs($this->profAdminDeputyNotStartedDetails->getEmail());
+        $this->loginToFrontendAs($this->profAdminDeputyNotStartedDetails->getUserEmail());
     }
 }

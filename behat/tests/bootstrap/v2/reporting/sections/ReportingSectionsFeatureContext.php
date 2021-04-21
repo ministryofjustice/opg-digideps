@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Reporting\Sections;
 
@@ -13,16 +14,14 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use ContactsSectionTrait;
     use DocumentsSectionTrait;
     use GiftsSectionTrait;
-    use VisitsCareSectionTrait;
-
-    const REPORT_SECTION_ENDPOINT = '%s/%s/%s';
+    use VisitsAndCareSectionTrait;
 
     /**
      * @Then the previous section should be :sectionName
      */
     public function previousSectionShouldBe(string $sectionName)
     {
-        $anchor = $this->getSession()->getPage()->find('named', ['link', "Navigate to previous part"]);
+        $anchor = $this->getSession()->getPage()->find('named', ['link', 'Navigate to previous part']);
 
         if (!$anchor) {
             $this->throwContextualException(
@@ -44,7 +43,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
      */
     public function nextSectionShouldBe(string $sectionName)
     {
-        $anchor = $this->getSession()->getPage()->find('named', ['link', "Navigate to next part"]);
+        $anchor = $this->getSession()->getPage()->find('named', ['link', 'Navigate to next part']);
 
         if (!$anchor) {
             $this->throwContextualException(
@@ -66,8 +65,8 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
      */
     public function iNavigateBackToReportSection()
     {
-        $this->iClickBasedOnElementId('a', 'data-action', 'report.overview');
-        assert($this->iAmOnReportsOverviewPage());
+        $this->iClickBasedOnAttributeTypeAndValue('a', 'data-action', 'report.overview');
+        $this->iAmOnReportsOverviewPage();
     }
 
     /**
@@ -152,12 +151,15 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
         $furtherInfoNeeded = false;
 
         foreach ($tableEntry as $entry) {
-            if (str_contains(trim(strtolower($entry->getHtml())), "please answer this question")) {
+            if (str_contains(trim(strtolower($entry->getHtml())), 'please answer this question')) {
                 $furtherInfoNeeded = true;
             }
         }
 
-        assert($furtherInfoNeeded);
+        assert(
+            $furtherInfoNeeded,
+            'The text: "please answer this question" not found'
+        );
     }
 
     /**
