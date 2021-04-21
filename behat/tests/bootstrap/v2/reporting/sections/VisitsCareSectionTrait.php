@@ -160,12 +160,33 @@ trait VisitsCareSectionTrait
     }
 
     /**
+     * @Given I choose no and save on the plans to move client to a new residence section
+     */
+    public function iChooseNoOnPlansToMoveClient()
+    {
+        $this->selectOption('visits_care[planMoveNewResidence]', 'no');
+        ++$this->answeredNo;
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @Given I choose yes and save on the plans to move client to a new residence section
+     */
+    public function iChooseYesOnPlansToMoveClient()
+    {
+        $this->selectOption('visits_care[planMoveNewResidence]', 'yes');
+        ++$this->answeredYes;
+
+        $info = 'The third set of information';
+        $this->fillField('visits_care[planMoveNewResidenceDetails]', $info);
+        array_push($this->additionalInfo, $info);
+    }
+
+    /**
      * @Then I should see the expected visits and care report section responses
      */
     public function iSeeExpectedVisitCareSectionResponses()
     {
-        $isNdr = 'ndr' == $this->reportUrlPrefix ? true : false;
-
         $table = $this->getSession()->getPage()->find('css', 'dl');
 
         if (!$table) {
@@ -187,19 +208,16 @@ trait VisitsCareSectionTrait
                     str_contains($entry, 'pays for all the care'),
                     sprintf('matching care funding explanation %s ', 'Client pays for all the care')
                 );
-                var_dump('Care Funded Choice 1');
             } elseif (1 == $this->careFundedChoice) {
                 assert(
                     str_contains($entry, 'gets some financial help'),
                     sprintf('matching care funding explanation %s ', 'Client gets some financial help')
                 );
-                var_dump('Care Funded Choice 2');
             } elseif (1 == $this->careFundedChoice) {
                 assert(
                     str_contains($entry, 'care is paid for by someone else'),
                     sprintf('matching care funding explanation %s ', 'Client\'s care is paid for by someone else')
                 );
-                var_dump('Care Funded Choice 3');
             }
 
             if ('no' === strtolower(trim($entry->getHtml()))) {
@@ -243,6 +261,34 @@ trait VisitsCareSectionTrait
         $urlRegex = sprintf('/%s\/.*\/visits-care\/step\/2\?from\=summary$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 1);
 
+        $this->iAmOnVisitsCarePage2();
+    }
+
+    /**
+     * @Given I view and start visits and care section
+     */
+    public function iViewAndStartVisitsAndCareSectionCrossBrowser()
+    {
+        $this->getSession()->maximizeWindow();
+        $this->iViewVisitsAndCareSection();
+        $this->clickLink('Start visits and care');
+    }
+
+    /**
+     * @When I enter that I do not live with client
+     */
+    public function iDoNotLiveWithClientVisitsAndCareSectionCrossBrowser()
+    {
+        $this->iFillFieldForCrossBrowser('visits_care_doYouLiveWithClient_1', 'no');
+    }
+
+    /**
+     * @When I can see and fill in a text box with how often I visit client
+     */
+    public function iCanSeeAndFillInVisitsTextBoxCrossBrowser()
+    {
+        $this->iFillFieldForCrossBrowser('visits_care_howOftenDoYouContactClient', 'daily');
+        $this->pressButton('Save and continue');
         $this->iAmOnVisitsCarePage2();
     }
 }

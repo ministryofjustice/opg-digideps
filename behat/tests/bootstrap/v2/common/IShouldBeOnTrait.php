@@ -175,7 +175,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnVisitsCarePage1()
     {
-        $this->iAmOnPage('/report\/.*\/visits-care\/step\/1.*$/');
+        return $this->iAmOnPage('/report\/.*\/visits-care\/step\/1.*$/');
     }
 
     /**
@@ -183,7 +183,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnVisitsCarePage2()
     {
-        $this->iAmOnPage('/report\/.*\/visits-care\/step\/2.*$/');
+        return $this->iAmOnPage('/report\/.*\/visits-care\/step\/2.*$/');
     }
 
     /**
@@ -191,7 +191,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnVisitsCarePage3()
     {
-        $this->iAmOnPage('/report\/.*\/visits-care\/step\/3.*$/');
+        return $this->iAmOnPage('/report\/.*\/visits-care\/step\/3.*$/');
     }
 
     /**
@@ -199,7 +199,15 @@ trait IShouldBeOnTrait
      */
     public function iAmOnVisitsCarePage4()
     {
-        $this->iAmOnPage('/report\/.*\/visits-care\/step\/4.*$/');
+        return $this->iAmOnPage('/report\/.*\/visits-care\/step\/4.*$/');
+    }
+
+    /**
+     * @Then I should be on the plans to move client page
+     */
+    public function iAmOnVisitsCarePage5()
+    {
+        return $this->iAmOnPage('/report\/.*\/visits-care\/step\/5.*$/');
     }
 
     /**
@@ -207,7 +215,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnVisitsCareSummaryPage()
     {
-        $this->iAmOnPage('/report\/.*\/visits-care\/summary.*/');
+        return $this->iAmOnPage('/report\/.*\/visits-care\/summary.*/');
     }
 
     /**
