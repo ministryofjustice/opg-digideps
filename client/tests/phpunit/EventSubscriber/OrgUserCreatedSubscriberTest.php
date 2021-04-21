@@ -6,7 +6,7 @@ namespace Tests\App\EventListener;
 use App\Event\OrgUserCreatedEvent;
 use App\EventSubscriber\OrgUserCreatedSubscriber;
 use App\Service\Mailer\Mailer;
-use App\TestHelpers\UserHelpers;
+use App\TestHelpers\UserHelper;
 use PHPUnit\Framework\TestCase;
 
 class OrgUserCreatedSubscriberTest extends TestCase
@@ -23,7 +23,7 @@ class OrgUserCreatedSubscriberTest extends TestCase
     /** @test */
     public function sendEmail()
     {
-        $createdUser = UserHelpers::createUser();
+        $createdUser = UserHelper::createUser();
         $userCreatedEvent = new OrgUserCreatedEvent($createdUser);
 
         $mailer = self::prophesize(Mailer::class);

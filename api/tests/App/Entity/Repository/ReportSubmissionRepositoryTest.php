@@ -6,7 +6,7 @@ use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Repository\ReportSubmissionRepository;
-use App\TestHelpers\DocumentHelpers;
+use App\TestHelpers\DocumentHelper;
 use App\TestHelpers\ReportSubmissionHelper;
 use App\TestHelpers\ReportTestHelper;
 use DateTime;

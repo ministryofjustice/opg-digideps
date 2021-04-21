@@ -3,6 +3,7 @@
 
 namespace App\Form;
 
+use App\Entity\UserResearch\UserResearchResponse;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -22,7 +23,13 @@ class UserResearchResponseType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $deputyshipLengthTransKeys = ['underOne', 'oneToFive', 'sixToTen', 'overTen'];
+        $deputyshipLengthTransKeys = [
+            UserResearchResponse::UNDER_ONE,
+            UserResearchResponse::ONE_TO_FIVE,
+            UserResearchResponse::SIX_TO_TEN,
+            UserResearchResponse::OVER_TEN
+        ];
+
         $deputyshipLengthLabels = array_map(function ($length) {
             return $this->translator->trans('form.deputyshipLength.choices.' . $length, [], 'report-post-submission-user-research');
         }, $deputyshipLengthTransKeys);

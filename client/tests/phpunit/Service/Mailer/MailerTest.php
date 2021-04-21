@@ -7,12 +7,12 @@ use App\Model\FeedbackReport;
 use App\Service\Mailer\Mailer;
 use App\Service\Mailer\MailFactory;
 use App\Service\Mailer\MailSender;
-use App\TestHelpers\ClientHelpers;
-use App\TestHelpers\EmailHelpers;
-use App\TestHelpers\NdrHelpers;
-use App\TestHelpers\ReportHelpers;
+use App\TestHelpers\ClientHelper;
+use App\TestHelpers\EmailHelper;
+use App\TestHelpers\NdrHelper;
+use App\TestHelpers\ReportHelper;
 use App\TestHelpers\ReportTestHelper;
-use App\TestHelpers\UserHelpers;
+use App\TestHelpers\UserHelper;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 
@@ -37,8 +37,8 @@ class MailerTest extends TestCase
     /** @test */
     public function sendActivationEmail()
     {
-        $activatedUser = UserHelpers::createUser();
-        $activationEmail = EmailHelpers::createEmail();
+        $activatedUser = UserHelper::createUser();
+        $activationEmail = EmailHelper::createEmail();
 
         $this->mailFactory->createActivationEmail($activatedUser)->shouldBeCalled()->willReturn($activationEmail);
         $this->mailSender->send($activationEmail)->shouldBeCalled();
@@ -52,8 +52,8 @@ class MailerTest extends TestCase
      */
     public function sendInvitationEmail(?string $deputyName)
     {
-        $invitedUser = UserHelpers::createUser();
-        $invitationEmail = EmailHelpers::createEmail();
+        $invitedUser = UserHelper::createUser();
+        $invitationEmail = EmailHelper::createEmail();
 
         $this->mailFactory->createInvitationEmail($invitedUser, $deputyName)->shouldBeCalled()->willReturn($invitationEmail);
         $this->mailSender->send($invitationEmail)->shouldBeCalled();
@@ -72,8 +72,8 @@ class MailerTest extends TestCase
     /** @test */
     public function sendResetPasswordEmail()
     {
-        $passwordResetUser = UserHelpers::createUser();
-        $passwordResetEmail = EmailHelpers::createEmail();
+        $passwordResetUser = UserHelper::createUser();
+        $passwordResetEmail = EmailHelper::createEmail();
 
         $this->mailFactory->createResetPasswordEmail($passwordResetUser)->shouldBeCalled()->willReturn($passwordResetEmail);
         $this->mailSender->send($passwordResetEmail)->shouldBeCalled();
@@ -93,7 +93,7 @@ class MailerTest extends TestCase
             'phone' => "01211234567",
             'satisfactionLevel' => 5
         ];
-        $generalFeedbackEmail = EmailHelpers::createEmail();
+        $generalFeedbackEmail = EmailHelper::createEmail();
 
         $this->mailFactory->createGeneralFeedbackEmail($formResponse)->shouldBeCalled()->willReturn($generalFeedbackEmail);
         $this->mailSender->send($generalFeedbackEmail)->shouldBeCalled();
@@ -108,8 +108,8 @@ class MailerTest extends TestCase
             ->setSatisfactionLevel(5)
             ->setComments('Some comments');
 
-        $submittedByDeputy = UserHelpers::createUser();
-        $postSubmissionFeedbackEmail = EmailHelpers::createEmail();
+        $submittedByDeputy = UserHelper::createUser();
+        $postSubmissionFeedbackEmail = EmailHelper::createEmail();
 
         $this->mailFactory
             ->createPostSubmissionFeedbackEmail($submittedFeedbackReport, $submittedByDeputy)
@@ -124,8 +124,8 @@ class MailerTest extends TestCase
     /** @test */
     public function sendUpdateClientDetailsEmail()
     {
-        $updatedClient = ClientHelpers::createClient();
-        $updatedClientDetailsEmail = EmailHelpers::createEmail();
+        $updatedClient = ClientHelper::createClient();
+        $updatedClientDetailsEmail = EmailHelper::createEmail();
 
         $this->mailFactory
             ->createUpdateClientDetailsEmail($updatedClient)
@@ -140,8 +140,8 @@ class MailerTest extends TestCase
     /** @test */
     public function sendUpdateDeputyDetailsEmail()
     {
-        $updatedDeputy = UserHelpers::createUser();
-        $updatedDeputyDetailsEmail = EmailHelpers::createEmail();
+        $updatedDeputy = UserHelper::createUser();
+        $updatedDeputyDetailsEmail = EmailHelper::createEmail();
 
         $this->mailFactory
             ->createUpdateDeputyDetailsEmail($updatedDeputy)
@@ -156,10 +156,10 @@ class MailerTest extends TestCase
     /** @test */
     public function sendReportSubmissionConfirmationEmail()
     {
-        $submittedByDeputy = UserHelpers::createUser();
-        $submittedReport = ReportHelpers::createSubmittedReport();
-        $newReport = ReportHelpers::createReport();
-        $submittedReportConfirmationEmail = EmailHelpers::createEmail();
+        $submittedByDeputy = UserHelper::createUser();
+        $submittedReport = ReportHelper::createSubmittedReport();
+        $newReport = ReportHelper::createReport();
+        $submittedReportConfirmationEmail = EmailHelper::createEmail();
 
         $this->mailFactory
             ->createReportSubmissionConfirmationEmail($submittedByDeputy, $submittedReport, $newReport)
@@ -174,10 +174,10 @@ class MailerTest extends TestCase
     /** @test */
     public function sendNdrSubmissionConfirmationEmail()
     {
-        $submittedByDeputy = UserHelpers::createUser();
-        $submittedNdr = NdrHelpers::createSubmittedNdr();
-        $newReport = ReportHelpers::createReport();
-        $submittedNdrConfirmationEmail = EmailHelpers::createEmail();
+        $submittedByDeputy = UserHelper::createUser();
+        $submittedNdr = NdrHelper::createSubmittedNdr();
+        $newReport = ReportHelper::createReport();
+        $submittedNdrConfirmationEmail = EmailHelper::createEmail();
 
         $this->mailFactory
             ->createNdrSubmissionConfirmationEmail($submittedByDeputy, $submittedNdr, $newReport)

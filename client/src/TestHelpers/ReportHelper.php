@@ -7,14 +7,14 @@ use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use DateTime;
 
-class ReportHelpers
+class ReportHelper
 {
     /**
      * @return Report
      */
     public static function createReport(): Report
     {
-        $client = ClientHelpers::createClient();
+        $client = ClientHelper::createClient();
         $startDate = new DateTime('now');
         $endDate = new DateTime('+1 year');
 
@@ -35,7 +35,7 @@ class ReportHelpers
     public static function createSubmittedReport(): Report
     {
         $submittedDate = new DateTime();
-        $submittedBy = UserHelpers::createUser();
+        $submittedBy = UserHelper::createUser();
         $documents = [new Document(), new Document()];
 
         return (self::createReport())

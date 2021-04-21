@@ -7,7 +7,7 @@ use App\Event\UserUpdatedEvent;
 use App\EventSubscriber\UserUpdatedSubscriber;
 use App\Service\Mailer\Mailer;
 use App\Service\Time\DateTimeProvider;
-use App\TestHelpers\UserHelpers;
+use App\TestHelpers\UserHelper;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -16,7 +16,7 @@ use Psr\Log\LoggerInterface;
 
 class UserUpdatedSubscriberTest extends TestCase
 {
-    /** @var UserHelpers */
+    /** @var UserHelper */
     private $userHelpers;
 
     /** @var ObjectProphecy */
@@ -33,7 +33,7 @@ class UserUpdatedSubscriberTest extends TestCase
 
     public function setUp(): void
     {
-        $this->userHelpers = new UserHelpers();
+        $this->userHelpers = new UserHelper();
         $this->dateTimeProvider = self::prophesize(DateTimeProvider::class);
         $this->logger = self::prophesize(LoggerInterface::class);
         $this->mailer = self::prophesize(Mailer::class);

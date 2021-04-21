@@ -9,8 +9,8 @@ use App\EventSubscriber\ClientUpdatedSubscriber;
 use App\Service\Audit\AuditEvents;
 use App\Service\Mailer\Mailer;
 use App\Service\Time\DateTimeProvider;
-use App\TestHelpers\ClientHelpers;
-use App\TestHelpers\UserHelpers;
+use App\TestHelpers\ClientHelper;
+use App\TestHelpers\UserHelper;
 use DateTime;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
@@ -63,8 +63,8 @@ class ClientUpdatedSubscriberTest extends TestCase
         $now = new DateTime();
         $this->dateTimeProvider->getDateTime()->willReturn($now);
 
-        $preUpdateClient = ClientHelpers::createClient();
-        $changedBy = UserHelpers::createUser();
+        $preUpdateClient = ClientHelper::createClient();
+        $changedBy = UserHelper::createUser();
         $trigger = 'A_TRIGGER';
 
         $event = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $changedBy, $trigger);
@@ -87,7 +87,7 @@ class ClientUpdatedSubscriberTest extends TestCase
 
     public function clientProvider_logEvent()
     {
-        $postUpdateClient = ClientHelpers::createClient();
+        $postUpdateClient = ClientHelper::createClient();
 
         return [
             'Email changed' => [clone $postUpdateClient, ''],
@@ -98,9 +98,9 @@ class ClientUpdatedSubscriberTest extends TestCase
     /** @test */
     public function logEvent_only_logs_on_email_change()
     {
-        $preUpdateClient = ClientHelpers::createClient();
-        $postUpdateClient = (ClientHelpers::createClient())->setEmail($preUpdateClient->getEmail());
-        $changedBy = UserHelpers::createUser();
+        $preUpdateClient = ClientHelper::createClient();
+        $postUpdateClient = (ClientHelper::createClient())->setEmail($preUpdateClient->getEmail());
+        $changedBy = UserHelper::createUser();
         $trigger = 'A_TRIGGER';
 
         $event = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $changedBy, $trigger);
@@ -115,7 +115,7 @@ class ClientUpdatedSubscriberTest extends TestCase
      */
     public function sendEmail(Client $preUpdateClient, Client $postUpdateClient)
     {
-        $changedBy = (UserHelpers::createUser())->setRoleName(User::ROLE_LAY_DEPUTY);
+        $changedBy = (UserHelper::createUser())->setRoleName(User::ROLE_LAY_DEPUTY);
         $trigger = 'A_TRIGGER';
 
         $event = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $changedBy, $trigger);
@@ -128,7 +128,7 @@ class ClientUpdatedSubscriberTest extends TestCase
     {
         $faker = Factory::create('GB_en');
 
-        $preUpdateClient = ClientHelpers::createClient();
+        $preUpdateClient = ClientHelper::createClient();
 
         return [
             'Firstname changed' => [$preUpdateClient, (clone $preUpdateClient)->setFirstname($faker->firstName)],
@@ -147,9 +147,9 @@ class ClientUpdatedSubscriberTest extends TestCase
     /** @test */
     public function sendEmail_client_details_not_changed()
     {
-        $preUpdateClient = ClientHelpers::createClient();
+        $preUpdateClient = ClientHelper::createClient();
         $postUpdateClient = clone $preUpdateClient;
-        $changedBy = (UserHelpers::createUser())->setRoleName(User::ROLE_LAY_DEPUTY);
+        $changedBy = (UserHelper::createUser())->setRoleName(User::ROLE_LAY_DEPUTY);
         $trigger = 'A_TRIGGER';
 
         $event = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $changedBy, $trigger);
@@ -161,9 +161,9 @@ class ClientUpdatedSubscriberTest extends TestCase
     /** @test */
     public function sendEmail_email_not_sent_when_details_changed_but_clients_are_different()
     {
-        $preUpdateClient = ClientHelpers::createClient();
-        $postUpdateClient = (ClientHelpers::createClient())->setId(12345);
-        $changedBy = (UserHelpers::createUser())->setRoleName(User::ROLE_LAY_DEPUTY);
+        $preUpdateClient = ClientHelper::createClient();
+        $postUpdateClient = (ClientHelper::createClient())->setId(12345);
+        $changedBy = (UserHelper::createUser())->setRoleName(User::ROLE_LAY_DEPUTY);
         $trigger = 'A_TRIGGER';
 
         $event = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $changedBy, $trigger);

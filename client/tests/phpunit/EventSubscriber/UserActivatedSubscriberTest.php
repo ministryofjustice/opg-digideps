@@ -7,8 +7,8 @@ use App\EventSubscriber\UserActivatedSubscriber;
 use App\Service\Mailer\Mailer;
 use App\Service\Mailer\MailFactory;
 use App\Service\Mailer\MailSender;
-use App\TestHelpers\EmailHelpers;
-use App\TestHelpers\UserHelpers;
+use App\TestHelpers\EmailHelper;
+use App\TestHelpers\UserHelper;
 use PHPUnit\Framework\TestCase;
 
 class UserActivatedSubscriberTest extends TestCase
@@ -25,7 +25,7 @@ class UserActivatedSubscriberTest extends TestCase
     /** @test */
     public function sendEmail()
     {
-        $activatedUser = UserHelpers::createUser();
+        $activatedUser = UserHelper::createUser();
         $userActivatedEvent = new UserActivatedEvent($activatedUser);
 
         $mailer = self::prophesize(Mailer::class);

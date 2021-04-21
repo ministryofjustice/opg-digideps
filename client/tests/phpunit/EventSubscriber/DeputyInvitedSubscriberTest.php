@@ -6,7 +6,7 @@ namespace Tests\App\EventListener;
 use App\Event\DeputyInvitedEvent;
 use App\EventSubscriber\DeputyInvitedSubscriber;
 use App\Service\Mailer\Mailer;
-use App\TestHelpers\UserHelpers;
+use App\TestHelpers\UserHelper;
 use PHPUnit\Framework\TestCase;
 
 class DeputyInvitedSubscriberTest extends TestCase
@@ -23,7 +23,7 @@ class DeputyInvitedSubscriberTest extends TestCase
     /** @test */
     public function sendEmail()
     {
-        $invitedDeputy = UserHelpers::createUser();
+        $invitedDeputy = UserHelper::createUser();
         $deputyInvitedEvent = new DeputyInvitedEvent($invitedDeputy);
 
         $mailer = self::prophesize(Mailer::class);

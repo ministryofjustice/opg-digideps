@@ -8,7 +8,7 @@ use App\Event\PostSubmissionFeedbackSubmittedEvent;
 use App\EventSubscriber\FeedbackSubmittedSubscriber;
 use App\Model\FeedbackReport;
 use App\Service\Mailer\Mailer;
-use App\TestHelpers\UserHelpers;
+use App\TestHelpers\UserHelper;
 use PHPUnit\Framework\TestCase;
 
 class FeedbackSubmittedSubscriberTest extends TestCase
@@ -45,7 +45,7 @@ class FeedbackSubmittedSubscriberTest extends TestCase
             ->setComments('Some comments')
             ->setSatisfactionLevel(5);
 
-        $submittedByUser = UserHelpers::createUser();
+        $submittedByUser = UserHelper::createUser();
 
         $event = new PostSubmissionFeedbackSubmittedEvent($feedbackReportObject, $submittedByUser);
 

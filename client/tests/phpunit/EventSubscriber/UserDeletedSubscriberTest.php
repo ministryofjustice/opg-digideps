@@ -8,7 +8,7 @@ use App\Event\UserDeletedEvent;
 use App\EventSubscriber\UserDeletedSubscriber;
 use App\Service\Audit\AuditEvents;
 use App\Service\Time\DateTimeProvider;
-use App\TestHelpers\UserHelpers;
+use App\TestHelpers\UserHelper;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -37,7 +37,7 @@ class UserDeletedSubscriberTest extends TestCase
         $dateTimeProvider->getDateTime()->willReturn($now);
         $sut = new UserDeletedSubscriber($logger->reveal(), $dateTimeProvider->reveal());
 
-        $deletedBy = UserHelpers::createUser();
+        $deletedBy = UserHelper::createUser();
         $trigger = 'A_TRIGGER';
 
         $event = new UserDeletedEvent($deletedUser, $deletedBy, $trigger);
@@ -59,7 +59,7 @@ class UserDeletedSubscriberTest extends TestCase
 
     public function userProvider()
     {
-        $deletedUser = UserHelpers::createUser();
+        $deletedUser = UserHelper::createUser();
 
         return [
             'Admin User' => [(clone $deletedUser)->setRoleName('ROLE_ADMIN'), AuditEvents::EVENT_ADMIN_DELETED],

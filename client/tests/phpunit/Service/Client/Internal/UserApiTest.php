@@ -15,7 +15,7 @@ use App\EventDispatcher\ObservableEventDispatcher;
 use App\Model\SelfRegisterData;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
-use App\TestHelpers\UserHelpers;
+use App\TestHelpers\UserHelper;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -56,9 +56,9 @@ class UserApiTest extends TestCase
     /** @test */
     public function update()
     {
-        $preUpdateUser = UserHelpers::createUser();
-        $postUpdateUser = UserHelpers::createUser();
-        $currentUser = UserHelpers::createUser();
+        $preUpdateUser = UserHelper::createUser();
+        $postUpdateUser = UserHelper::createUser();
+        $currentUser = UserHelper::createUser();
         $trigger = 'SOME_TRIGGER';
         $jmsGroups = ['group1'];
 
@@ -76,8 +76,8 @@ class UserApiTest extends TestCase
     /** @test */
     public function delete()
     {
-        $userToDelete = UserHelpers::createUser();
-        $deletedBy = UserHelpers::createUser();
+        $userToDelete = UserHelper::createUser();
+        $deletedBy = UserHelper::createUser();
         $trigger = 'SOME_TRIGGER';
 
         $this->restClient->delete(sprintf('user/%s', $userToDelete->getId()))->shouldBeCalled();
@@ -94,7 +94,7 @@ class UserApiTest extends TestCase
     /** @test */
     public function createAdminUser()
     {
-        $userToCreate = UserHelpers::createUser();
+        $userToCreate = UserHelper::createUser();
 
         $this->restClient->post('user', $userToCreate, ["admin_add_user"], 'User')->shouldBeCalled()->willReturn($userToCreate);
 
@@ -107,7 +107,7 @@ class UserApiTest extends TestCase
     /** @test */
     public function resetPassword()
     {
-        $userToResetPassword = UserHelpers::createUser();
+        $userToResetPassword = UserHelper::createUser();
         $email = $this->faker->safeEmail;
 
         $this->restClient
@@ -124,8 +124,8 @@ class UserApiTest extends TestCase
     /** @test */
     public function reInviteCoDeputy()
     {
-        $invitedCoDeputy = UserHelpers::createUser();
-        $inviterDeputy = UserHelpers::createUser();
+        $invitedCoDeputy = UserHelper::createUser();
+        $inviterDeputy = UserHelper::createUser();
         $email = $this->faker->safeEmail;
 
         $this->restClient
@@ -142,7 +142,7 @@ class UserApiTest extends TestCase
     /** @test */
     public function getByEmail()
     {
-        $existingUser = UserHelpers::createUser();
+        $existingUser = UserHelper::createUser();
 
         $this->restClient
             ->get(sprintf('user/get-one-by/email/%s', $existingUser->getEmail()), 'User', [])
@@ -157,7 +157,7 @@ class UserApiTest extends TestCase
     /** @test */
     public function reInviteDeputy()
     {
-        $invitedDeputy = UserHelpers::createUser();
+        $invitedDeputy = UserHelper::createUser();
         $email = $this->faker->safeEmail;
 
         $this->restClient
@@ -174,7 +174,7 @@ class UserApiTest extends TestCase
     /** @test */
     public function selfRegister()
     {
-        $selfRegisteredDeputy = UserHelpers::createUser();
+        $selfRegisteredDeputy = UserHelper::createUser();
         $selfRegisterData = (new SelfRegisterData())
             ->setFirstname('Denis')
             ->setLastname('Brauchla')
@@ -198,9 +198,9 @@ class UserApiTest extends TestCase
     /** @test */
     public function createCoDeputy()
     {
-        $invitedCoDeputy = UserHelpers::createInvitedCoDeputy();
+        $invitedCoDeputy = UserHelper::createInvitedCoDeputy();
         $createdCoDeputy = $invitedCoDeputy->setRegistrationDate(new DateTime());
-        $invitedByDeputy = UserHelpers::createInvitedCoDeputy();
+        $invitedByDeputy = UserHelper::createInvitedCoDeputy();
 
         $this->restClient
             ->post('codeputy/add', $invitedCoDeputy, ['codeputy'], 'User')
@@ -216,7 +216,7 @@ class UserApiTest extends TestCase
     /** @test */
     public function createOrgUser()
     {
-        $userToCreate = UserHelpers::createUser();
+        $userToCreate = UserHelper::createUser();
 
         $this->restClient->post('user', $userToCreate, ["org_team_add"], 'User')->shouldBeCalled()->willReturn($userToCreate);
 

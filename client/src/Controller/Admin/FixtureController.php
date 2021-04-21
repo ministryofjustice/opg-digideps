@@ -11,7 +11,7 @@ use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\DeputyProvider;
-use App\TestHelpers\ClientHelpers;
+use App\TestHelpers\ClientHelper;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -90,7 +90,7 @@ class FixtureController extends AbstractController
             $submitted = $form->getData();
             $courtDate = $request->get('court-date') ? new \DateTime($request->get('court-date')) : new \DateTime('2017-02-01');
             $deputyEmail = $request->query->get('deputy-email', sprintf('original-%s-deputy-%s@fixture.com', strtolower($submitted['deputyType']), mt_rand(1000, 9999)));
-            $caseNumber = $request->get('case-number', ClientHelpers::createValidCaseNumber());
+            $caseNumber = $request->get('case-number', ClientHelper::createValidCaseNumber());
 
             $response = $this->restClient->post('v2/fixture/court-order', json_encode([
                 'deputyType' => $submitted['deputyType'],

@@ -2,7 +2,7 @@
 
 namespace App\Event;
 
-use App\TestHelpers\UserHelpers;
+use App\TestHelpers\UserHelper;
 use PHPUnit\Framework\TestCase;
 
 class UserUpdatedEventTest extends TestCase
@@ -10,9 +10,9 @@ class UserUpdatedEventTest extends TestCase
     /** @test */
     public function event_is_initialised_correctly()
     {
-        $preUpdateUser = UserHelpers::createUser();
-        $postUpdateUser = UserHelpers::createUser();
-        $currentUser = UserHelpers::createUser();
+        $preUpdateUser = UserHelper::createUser();
+        $postUpdateUser = UserHelper::createUser();
+        $currentUser = UserHelper::createUser();
         $trigger = 'A_TRIGGER';
 
         $event = new UserUpdatedEvent($preUpdateUser, $postUpdateUser, $currentUser, $trigger);

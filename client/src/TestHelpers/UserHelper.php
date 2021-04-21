@@ -7,7 +7,7 @@ use App\Entity\User;
 use Faker;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class UserHelpers extends KernelTestCase
+class UserHelper extends KernelTestCase
 {
     /**
      * @param array|null $data

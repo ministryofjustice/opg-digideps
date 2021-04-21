@@ -8,8 +8,8 @@ use App\Event\UserRemovedFromOrganisationEvent;
 use App\EventSubscriber\OrgUserMembershipSubscriber;
 use App\Service\Audit\AuditEvents;
 use App\Service\Time\DateTimeProvider;
-use App\TestHelpers\OrganisationHelpers;
-use App\TestHelpers\UserHelpers;
+use App\TestHelpers\OrganisationHelper;
+use App\TestHelpers\UserHelper;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -31,9 +31,9 @@ class OrgUserMembershipSubscriberTest extends TestCase
     /** @test */
     public function logUserAddedEvent()
     {
-        $organisation = OrganisationHelpers::createActivatedOrganisation();
-        $addedUser = UserHelpers::createUser();
-        $currentUser = UserHelpers::createUser();
+        $organisation = OrganisationHelper::createActivatedOrganisation();
+        $addedUser = UserHelper::createUser();
+        $currentUser = UserHelper::createUser();
         $trigger = 'A_TRIGGER';
         $expectedEventName = 'USER_ADDED_TO_ORG';
 
@@ -66,9 +66,9 @@ class OrgUserMembershipSubscriberTest extends TestCase
     /** @test */
     public function logUserRemovedEvent()
     {
-        $organisation = OrganisationHelpers::createActivatedOrganisation();
-        $userToRemove = UserHelpers::createUser();
-        $currentUser = UserHelpers::createUser();
+        $organisation = OrganisationHelper::createActivatedOrganisation();
+        $userToRemove = UserHelper::createUser();
+        $currentUser = UserHelper::createUser();
         $trigger = 'A_TRIGGER';
         $expectedEventName = 'USER_REMOVED_FROM_ORG';
 

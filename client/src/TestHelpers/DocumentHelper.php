@@ -8,13 +8,13 @@ use App\Entity\Report\Report;
 use Faker\Factory;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class DocumentHelpers
+class DocumentHelper
 {
-    public static function generateReportPdfDocument()
+    public static function createReportPdfDocument()
     {
         $faker = Factory::create('GB_en');
 
-        $report = ReportHelpers::createReport();
+        $report = ReportHelper::createReport();
         $document = new Document($report);
 
         return $document
@@ -23,9 +23,9 @@ class DocumentHelpers
             ->setId(1);
     }
 
-    public static function generateSupportingDocument()
+    public static function createSupportingDocument()
     {
-        return (self::generateReportPdfDocument())
+        return (self::createReportPdfDocument())
             ->setIsReportPdf(false)
             ->setFileName('supporting-document.pdf');
     }

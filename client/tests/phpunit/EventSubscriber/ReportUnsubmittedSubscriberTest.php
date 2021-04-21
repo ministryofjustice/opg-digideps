@@ -7,8 +7,8 @@ use App\Event\ReportUnsubmittedEvent;
 use App\EventSubscriber\ReportUnsubmittedSubscriber;
 use App\Service\Audit\AuditEvents;
 use App\Service\Time\DateTimeProvider;
-use App\TestHelpers\ReportHelpers;
-use App\TestHelpers\UserHelpers;
+use App\TestHelpers\ReportHelper;
+use App\TestHelpers\UserHelper;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -38,11 +38,11 @@ class ReportUnsubmittedSubscriberTest extends TestCase
 
         $now = new DateTime();
         $dateTimeProvider->getDateTime()->willReturn($now);
-        $currentUser = UserHelpers::createUser();
+        $currentUser = UserHelper::createUser();
         $trigger = 'UNSUBMIT_REPORT';
 
 
-        $submittedReport = ReportHelpers::createSubmittedReport();
+        $submittedReport = ReportHelper::createSubmittedReport();
 
         $sut = new ReportUnsubmittedSubscriber($logger->reveal(), $dateTimeProvider->reveal());
 

@@ -6,9 +6,9 @@ use App\Event\ClientDeletedEvent;
 use App\EventSubscriber\ClientDeletedSubscriber;
 use App\Service\Audit\AuditEvents;
 use App\Service\Time\DateTimeProvider;
-use App\TestHelpers\ClientHelpers;
+use App\TestHelpers\ClientHelper;
 use App\TestHelpers\NamedDeputyHelper;
-use App\TestHelpers\UserHelpers;
+use App\TestHelpers\UserHelper;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -35,7 +35,7 @@ class ClientDeletedSubscriberTest extends TestCase
         $dateTimeProvider->getDateTime()->willReturn($now);
         $sut = new ClientDeletedSubscriber($logger->reveal(), $dateTimeProvider->reveal());
 
-        $currentUser = UserHelpers::createUser();
+        $currentUser = UserHelper::createUser();
         $trigger = 'A_TRIGGER';
 
         $clientDeletedEvent = new ClientDeletedEvent($clientWithUsers, $currentUser, $trigger);
@@ -58,8 +58,8 @@ class ClientDeletedSubscriberTest extends TestCase
 
     public function deputyProvider()
     {
-        $clientWithUsers = ClientHelpers::createClient();
-        $layDeputy = (UserHelpers::createUser())->setRoleName('ROLE_LAY_DEPUTY');
+        $clientWithUsers = ClientHelper::createClient();
+        $layDeputy = (UserHelper::createUser())->setRoleName('ROLE_LAY_DEPUTY');
         $namedDeputy = NamedDeputyHelper::createNamedDeputy();
 
         return [

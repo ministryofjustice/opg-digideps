@@ -6,7 +6,7 @@ namespace Tests\App\EventListener;
 use App\Event\DeputySelfRegisteredEvent;
 use App\EventSubscriber\DeputySelfRegisteredSubscriber;
 use App\Service\Mailer\Mailer;
-use App\TestHelpers\UserHelpers;
+use App\TestHelpers\UserHelper;
 use PHPUnit\Framework\TestCase;
 
 class DeputySelfRegisteredSubscriberTest extends TestCase
@@ -23,7 +23,7 @@ class DeputySelfRegisteredSubscriberTest extends TestCase
     /** @test */
     public function sendEmail()
     {
-        $selfRegisteredDeputy = UserHelpers::createUser();
+        $selfRegisteredDeputy = UserHelper::createUser();
         $deputyRegisteredEvent = new DeputySelfRegisteredEvent($selfRegisteredDeputy);
 
         $mailer = self::prophesize(Mailer::class);

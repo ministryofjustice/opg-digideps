@@ -4,7 +4,7 @@ namespace Tests\App\v2\Controller;
 
 use App\Entity\Organisation;
 use App\Entity\User;
-use App\TestHelpers\UserHelpers;
+use App\TestHelpers\UserHelper;
 use App\TestHelpers\UserTestHelper;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Response;

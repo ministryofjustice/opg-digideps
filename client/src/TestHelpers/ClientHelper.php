@@ -8,7 +8,7 @@ use App\Entity\Report\Report;
 use DateTime;
 use Faker;
 
-class ClientHelpers
+class ClientHelper
 {
     /**
      * @param Report|null $report
@@ -39,7 +39,7 @@ class ClientHelpers
      */
     public static function createClientWithUsers(?Report $report = null): Client
     {
-        $user = UserHelpers::createUser();
+        $user = UserHelper::createUser();
         return (self::createClient($report))->addUser($user);
     }
 
