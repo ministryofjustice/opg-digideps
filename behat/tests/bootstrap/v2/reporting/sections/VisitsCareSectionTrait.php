@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Reporting\Sections;
 
@@ -6,8 +8,8 @@ trait VisitsCareSectionTrait
 {
     private int $answeredYes = 0;
     private int $answeredNo = 0;
+    private int $careFundedChoice = 0;
     private array $additionalInfo = [];
-
 
     /**
      * @Given I view the visits and care report section
@@ -15,7 +17,7 @@ trait VisitsCareSectionTrait
     public function iViewVisitsCareSection()
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $activeReportId, 'visits-care');
+        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'visits-care');
         $this->visitPath($reportSectionUrl);
     }
 
@@ -34,7 +36,7 @@ trait VisitsCareSectionTrait
     public function iChooseYesOnLiveWithTheClientSection()
     {
         $this->selectOption('visits_care[doYouLiveWithClient]', 'yes');
-        $this->answeredYes += 1;
+        ++$this->answeredYes;
         $this->pressButton('Save and continue');
     }
 
@@ -44,7 +46,7 @@ trait VisitsCareSectionTrait
     public function iChooseNoOnLiveWithTheClientSection()
     {
         $this->selectOption('visits_care[doYouLiveWithClient]', 'no');
-        $this->answeredNo += 1;
+        ++$this->answeredNo;
 
         $info = 'The first set of information';
         $this->fillField('visits_care[howOftenDoYouContactClient]', $info);
@@ -59,7 +61,7 @@ trait VisitsCareSectionTrait
     public function iChooseNoOnReceivePaidCareSection()
     {
         $this->selectOption('visits_care[doesClientReceivePaidCare]', 'no');
-        $this->answeredNo += 1;
+        ++$this->answeredNo;
         $this->pressButton('Save and continue');
     }
 
@@ -69,9 +71,49 @@ trait VisitsCareSectionTrait
     public function iChooseYesOnReceivePaidCareSection()
     {
         $this->selectOption('visits_care[doesClientReceivePaidCare]', 'yes');
-        $this->answeredYes += 1;
+        ++$this->answeredYes;
 
         $this->selectOption('visits_care[howIsCareFunded]', 'client_pays_for_all');
+        $this->careFundedChoice = 1;
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @Given I choose yes and client pays for all care and then save on the receive paid care section
+     */
+    public function iChooseYesAndOptionOneOnReceivePaidCareSection()
+    {
+        $this->selectOption('visits_care[doesClientReceivePaidCare]', 'yes');
+        ++$this->answeredYes;
+
+        $this->selectOption('visits_care[howIsCareFunded]', 'client_pays_for_all');
+        $this->careFundedChoice = 1;
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @Given I choose yes and client gets some financial help and then save on the receive paid care section
+     */
+    public function iChooseYesAndOptionTwoOnReceivePaidCareSection()
+    {
+        $this->selectOption('visits_care[doesClientReceivePaidCare]', 'yes');
+        ++$this->answeredYes;
+
+        $this->selectOption('visits_care[howIsCareFunded]', 'client_pays_for_all');
+        $this->careFundedChoice = 2;
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @Given I choose yes and all care is paid for by someone else and then save on the receive paid care section
+     */
+    public function iChooseYesAndOptionThreeOnReceivePaidCareSection()
+    {
+        $this->selectOption('visits_care[doesClientReceivePaidCare]', 'yes');
+        ++$this->answeredYes;
+
+        $this->selectOption('visits_care[howIsCareFunded]', 'client_pays_for_all');
+        $this->careFundedChoice = 3;
         $this->pressButton('Save and continue');
     }
 
@@ -93,7 +135,7 @@ trait VisitsCareSectionTrait
     public function iChooseNoOnHasCarePlanSection()
     {
         $this->selectOption('visits_care[doesClientHaveACarePlan]', 'no');
-        $this->answeredNo += 1;
+        ++$this->answeredNo;
         $this->pressButton('Save and continue');
     }
 
@@ -103,7 +145,7 @@ trait VisitsCareSectionTrait
     public function iChooseYesOnHasCarePlanSection()
     {
         $this->selectOption('visits_care[doesClientHaveACarePlan]', 'yes');
-        $this->answeredYes += 1;
+        ++$this->answeredYes;
 
         $monthNumber = '12';
         $monthName = 'December';
@@ -122,6 +164,8 @@ trait VisitsCareSectionTrait
      */
     public function iSeeExpectedVisitCareSectionResponses()
     {
+        $isNdr = 'ndr' == $this->reportUrlPrefix ? true : false;
+
         $table = $this->getSession()->getPage()->find('css', 'dl');
 
         if (!$table) {
@@ -138,12 +182,37 @@ trait VisitsCareSectionTrait
         $countPositiveResponse = 0;
 
         foreach ($tableEntry as $entry) {
-            if (trim(strtolower($entry->getHtml())) === "no") {
-                $countNegativeResponse += 1;
-            } elseif (strtolower(trim($entry->getHtml())) === "yes") {
-                $countPositiveResponse += 1;
+            if (1 == $this->careFundedChoice) {
+                assert(
+                    str_contains($entry, 'pays for all the care'),
+                    sprintf('matching care funding explanation %s ', 'Client pays for all the care')
+                );
+                var_dump('Care Funded Choice 1');
+            } elseif (1 == $this->careFundedChoice) {
+                assert(
+                    str_contains($entry, 'gets some financial help'),
+                    sprintf('matching care funding explanation %s ', 'Client gets some financial help')
+                );
+                var_dump('Care Funded Choice 2');
+            } elseif (1 == $this->careFundedChoice) {
+                assert(
+                    str_contains($entry, 'care is paid for by someone else'),
+                    sprintf('matching care funding explanation %s ', 'Client\'s care is paid for by someone else')
+                );
+                var_dump('Care Funded Choice 3');
+            }
+
+            if ('no' === strtolower(trim($entry->getHtml()))) {
+                ++$countNegativeResponse;
+            } elseif ('yes' === strtolower(trim($entry->getHtml()))) {
+                ++$countPositiveResponse;
             }
         }
+
+        assert(
+            $countNegativeResponse == $this->answeredNo,
+            sprintf('Expected %d No responses, actual was %d', $this->answeredNo, $countNegativeResponse)
+        );
 
         assert($countNegativeResponse == $this->answeredNo);
         assert($countPositiveResponse == $this->answeredYes);
@@ -170,7 +239,10 @@ trait VisitsCareSectionTrait
      */
     public function iFollowEditLinkClientReceivePaidCarePage()
     {
-        $editLink = $this->getSession()->getPage()->find('css', '.behat-link-receive-paid-care-edit');
-        $editLink->click();
+        // Click on the edit button for the client receive paid care page
+        $urlRegex = sprintf('/%s\/.*\/visits-care\/step\/2\?from\=summary$/', $this->reportUrlPrefix);
+        $this->iClickOnNthElementBasedOnRegex($urlRegex, 1);
+
+        $this->iAmOnVisitsCarePage2();
     }
 }
