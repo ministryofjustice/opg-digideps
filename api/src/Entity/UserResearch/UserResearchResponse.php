@@ -22,6 +22,7 @@ class UserResearchResponse
     public function __construct(?UuidInterface $id = null)
     {
         $this->id = $id ?? Uuid::uuid4();
+        $this->created = new DateTime();
     }
 
     /**
@@ -45,6 +46,7 @@ class UserResearchResponse
      * @ORM\Column(name="id", type="uuid")
      * @ORM\GeneratedValue(strategy="NONE")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"user-research", "satisfaction"})
      */
@@ -77,7 +79,7 @@ class UserResearchResponse
     private DateTime $created;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Satisfaction", mappedBy="satisfaction", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Satisfaction", inversedBy="userResearchResponse", cascade={"persist", "remove"})
      */
     private Satisfaction $satisfaction;
 

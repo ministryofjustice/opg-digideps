@@ -44,7 +44,7 @@ class SatisfactionApi
     /**
      * @param array $formResponse
      */
-    public function createPostSubmissionFeedback(FeedbackReport $formResponse, string $reportType, User $submittedByUser): void
+    public function createPostSubmissionFeedback(FeedbackReport $formResponse, string $reportType, User $submittedByUser): int
     {
         $feedbackData = [
             'score' => $formResponse->getSatisfactionLevel(),
@@ -52,9 +52,11 @@ class SatisfactionApi
             'reportType' => $reportType,
         ];
 
-        $this->restClient->post(self::CREATE_POST_SUBMISSION_FEEDBACK_ENDPOINT, $feedbackData);
+        $satisfactionId = $this->restClient->post(self::CREATE_POST_SUBMISSION_FEEDBACK_ENDPOINT, $feedbackData);
 
         $event = (new PostSubmissionFeedbackSubmittedEvent($formResponse, $submittedByUser));
         $this->eventDispatcher->dispatch($event, PostSubmissionFeedbackSubmittedEvent::NAME);
+
+        return $satisfactionId;
     }
 }

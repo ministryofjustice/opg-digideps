@@ -16,7 +16,8 @@ class UserResearchResponseFactory
     {
         $userResearchResponse = (new UserResearchResponse())
             ->setDeputyshipLength($formData['deputyshipLength'])
-            ->setHasAccessToVideoCallDevice($formData['hasAccessToVideoCallDevice']);
+            ->setHasAccessToVideoCallDevice($formData['hasAccessToVideoCallDevice'])
+            ->setSatisfaction($formData['satisfaction']);
 
         $researchType = (new ResearchType($formData['agreedResearchTypes']))
             ->setUserResearchResponse($userResearchResponse);

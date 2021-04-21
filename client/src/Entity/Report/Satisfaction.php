@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity\Report;
 
-use App\Entity\User;
 use DateTime;
 use JMS\Serializer\Annotation as JMS;
 
@@ -39,11 +38,6 @@ class Satisfaction
      * @JMS\Type("DateTime")
      */
     private $created;
-
-    /**
-     * @JMS\Type("User")
-     */
-    private User $user;
 
     /**
      * @return int
@@ -150,24 +144,6 @@ class Satisfaction
     public function setCreated($created): Satisfaction
     {
         $this->created = $created;
-        return $this;
-    }
-
-    /**
-     * @return User
-     */
-    public function getUser(): User
-    {
-        return $this->user;
-    }
-
-    /**
-     * @param User $user
-     * @return Satisfaction
-     */
-    public function setUser(User $user): Satisfaction
-    {
-        $this->user = $user;
         return $this;
     }
 }

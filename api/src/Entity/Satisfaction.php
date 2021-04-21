@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\UserResearch\ResearchType;
 use App\Entity\UserResearch\UserResearchResponse;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -77,7 +76,7 @@ class Satisfaction
     private DateTime $created;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\UserResearchResponse", inversedBy="userResearchResponse", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="satisfaction", cascade={"persist", "remove"})
      *
      * @JMS\Type("App\Entity\UserResearchResponse")
      * @JMS\Groups({"user-research", "satisfaction"})

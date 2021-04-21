@@ -12,7 +12,6 @@ class UserResearchResponse
     private ?int $id = null;
     private string $deputyshipLength = '';
     private bool $hasAccessToVideoCallDevice = false;
-    private ?User $user = null;
     private ?DateTime $created = null;
 
     /**

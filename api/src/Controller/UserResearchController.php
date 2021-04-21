@@ -3,6 +3,7 @@
 
 namespace App\Controller;
 
+use App\Repository\SatisfactionRepository;
 use App\Repository\UserResearchResponseRepository;
 use App\Factory\UserResearchResponseFactory;
 use RuntimeException;
@@ -15,11 +16,13 @@ class UserResearchController extends RestController
 {
     private UserResearchResponseFactory $factory;
     private UserResearchResponseRepository $repository;
+    private SatisfactionRepository $satisfactionRepository;
 
-    public function __construct(UserResearchResponseFactory $factory, UserResearchResponseRepository $repository)
+    public function __construct(UserResearchResponseFactory $factory, UserResearchResponseRepository $repository, SatisfactionRepository $satisfactionRepository)
     {
         $this->factory = $factory;
         $this->repository = $repository;
+        $this->satisfactionRepository = $satisfactionRepository;
     }
 
     /**
@@ -31,6 +34,7 @@ class UserResearchController extends RestController
         try {
             $formData = json_decode($request->getContent(), true);
 
+            $formData['satisfaction'] = $this->satisfactionRepository->find($formData['satisfaction']);
             $userResearchResponse = $this->factory->generateFromFormData($formData);
             $this->repository->create($userResearchResponse, $this->getUser());
 
