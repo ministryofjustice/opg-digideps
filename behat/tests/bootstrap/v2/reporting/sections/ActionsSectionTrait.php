@@ -111,19 +111,19 @@ trait ActionsSectionTrait
             $this->throwContextualException('A dd element was not found on the page');
         }
 
-        $countNegativeReponse = 0;
-        $countPositiveReponse = 0;
+        $countNegativeResponse = 0;
+        $countPositiveResponse = 0;
 
         foreach ($tableEntry as $entry) {
             if ('no' === trim(strtolower($entry->getHtml()))) {
-                ++$countNegativeReponse;
+                ++$countNegativeResponse;
             } elseif ('yes' === strtolower(trim($entry->getHtml()))) {
-                ++$countPositiveReponse;
+                ++$countPositiveResponse;
             }
         }
 
-        $this->assertStringEqualsString($countNegativeReponse, $this->answeredNo, 'Actions "No" Counts');
-        $this->assertStringEqualsString($countPositiveReponse, $this->answeredYes, 'Actions "Yes" Counts');
+        $this->assertStringEqualsString($countNegativeResponse, $this->answeredNo, 'Actions "No" Counts');
+        $this->assertStringEqualsString($countPositiveResponse, $this->answeredYes, 'Actions "Yes" Counts');
     }
 
     /**
