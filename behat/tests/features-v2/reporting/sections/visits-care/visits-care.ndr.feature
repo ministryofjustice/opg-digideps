@@ -17,8 +17,8 @@ Feature: Visits and Care (NDR)
     Then I should be on the visits and care report summary page
     And I should see the expected visits and care report section responses
     And I should see all the additional information I gave for visit and care
-    And the previous section should be "Contacts"
-    And the next section should be "Bank accounts"
+    And the previous section should be "Report overview"
+    And the next section should be "Deputy Expenses"
     When I follow link back to report overview page
     Then I should be on the Lay reports overview page
     And I should see "visits-care" as "finished"
@@ -39,8 +39,8 @@ Feature: Visits and Care (NDR)
     Then I should be on the visits and care report summary page
     And I should see the expected visits and care report section responses
     And I should see all the additional information I gave for visit and care
-    And the previous section should be "Contacts"
-    And the next section should be "Bank accounts"
+    And the previous section should be "Report overview"
+    And the next section should be "Deputy Expenses"
     When I follow link back to report overview page
     Then I should be on the Lay reports overview page
     And I should see "visits-care" as "finished"

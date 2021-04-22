@@ -37,6 +37,7 @@ trait VisitsCareSectionTrait
     {
         $this->selectOption('visits_care[doYouLiveWithClient]', 'yes');
         ++$this->answeredYes;
+
         $this->pressButton('Save and continue');
     }
 
@@ -62,6 +63,7 @@ trait VisitsCareSectionTrait
     {
         $this->selectOption('visits_care[doesClientReceivePaidCare]', 'no');
         ++$this->answeredNo;
+
         $this->pressButton('Save and continue');
     }
 
@@ -75,6 +77,7 @@ trait VisitsCareSectionTrait
 
         $this->selectOption('visits_care[howIsCareFunded]', 'client_pays_for_all');
         $this->careFundedChoice = 1;
+
         $this->pressButton('Save and continue');
     }
 
@@ -88,6 +91,7 @@ trait VisitsCareSectionTrait
 
         $this->selectOption('visits_care[howIsCareFunded]', 'client_pays_for_all');
         $this->careFundedChoice = 1;
+
         $this->pressButton('Save and continue');
     }
 
@@ -101,6 +105,7 @@ trait VisitsCareSectionTrait
 
         $this->selectOption('visits_care[howIsCareFunded]', 'client_pays_for_all');
         $this->careFundedChoice = 2;
+
         $this->pressButton('Save and continue');
     }
 
@@ -114,6 +119,7 @@ trait VisitsCareSectionTrait
 
         $this->selectOption('visits_care[howIsCareFunded]', 'client_pays_for_all');
         $this->careFundedChoice = 3;
+
         $this->pressButton('Save and continue');
     }
 
@@ -136,6 +142,7 @@ trait VisitsCareSectionTrait
     {
         $this->selectOption('visits_care[doesClientHaveACarePlan]', 'no');
         ++$this->answeredNo;
+
         $this->pressButton('Save and continue');
     }
 
@@ -166,6 +173,7 @@ trait VisitsCareSectionTrait
     {
         $this->selectOption('visits_care[planMoveNewResidence]', 'no');
         ++$this->answeredNo;
+
         $this->pressButton('Save and continue');
     }
 
@@ -180,6 +188,8 @@ trait VisitsCareSectionTrait
         $info = 'The third set of information';
         $this->fillField('visits_care[planMoveNewResidenceDetails]', $info);
         array_push($this->additionalInfo, $info);
+
+        $this->pressButton('Save and continue');
     }
 
     /**

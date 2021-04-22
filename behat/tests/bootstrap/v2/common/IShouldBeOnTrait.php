@@ -175,7 +175,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnVisitsCarePage1()
     {
-        return $this->iAmOnPage('/report\/.*\/visits-care\/step\/1.*$/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/visits-care\/step\/1.*$/', $this->reportUrlPrefix));
     }
 
     /**
@@ -183,7 +183,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnVisitsCarePage2()
     {
-        return $this->iAmOnPage('/report\/.*\/visits-care\/step\/2.*$/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/visits-care\/step\/2.*$/', $this->reportUrlPrefix));
     }
 
     /**
@@ -191,7 +191,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnVisitsCarePage3()
     {
-        return $this->iAmOnPage('/report\/.*\/visits-care\/step\/3.*$/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/visits-care\/step\/3.*$/', $this->reportUrlPrefix));
     }
 
     /**
@@ -199,7 +199,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnVisitsCarePage4()
     {
-        return $this->iAmOnPage('/report\/.*\/visits-care\/step\/4.*$/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/visits-care\/step\/4.*$/', $this->reportUrlPrefix));
     }
 
     /**
@@ -207,7 +207,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnVisitsCarePage5()
     {
-        return $this->iAmOnPage('/report\/.*\/visits-care\/step\/5.*$/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/visits-care\/step\/5.*$/', $this->reportUrlPrefix));
     }
 
     /**
@@ -215,7 +215,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnVisitsCareSummaryPage()
     {
-        return $this->iAmOnPage('/report\/.*\/visits-care\/summary.*/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/visits-care\/summary.*$/', $this->reportUrlPrefix));
     }
 
     /**
