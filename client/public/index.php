@@ -17,7 +17,7 @@ if ($_SERVER['APP_DEBUG']) {
      *
      * Trying to access $ary['test'] would throw a notice error and app error
      */
-    Debug::enable(E_ALL & ~E_NOTICE);
+    Debug::enable();
 }
 
 if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? $_ENV['TRUSTED_PROXIES'] ?? false) {

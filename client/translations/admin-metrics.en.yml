@@ -3,6 +3,7 @@ indexPage:
     pageTitle: Analytics
     downloadDAT: Download DAT file
     downloadSatisfaction: Download satisfaction report
+    downloadUserResearch: Download user research report
     downloadActiveLays: Download active lays report
 
 form:

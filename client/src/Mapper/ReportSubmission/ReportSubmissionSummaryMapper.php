@@ -2,6 +2,7 @@
 
 namespace App\Mapper\ReportSubmission;
 
+use App\Mapper\DateRangeQuery;
 use App\Service\Client\RestClient;
 
 class ReportSubmissionSummaryMapper
@@ -21,19 +22,19 @@ class ReportSubmissionSummaryMapper
     }
 
     /**
-     * @param ReportSubmissionSummaryQuery $query
+     * @param DateRangeQuery $query
      * @return mixed
      */
-    public function getBy(ReportSubmissionSummaryQuery $query)
+    public function getBy(DateRangeQuery $query)
     {
         return $this->restClient->get($this->generateApiUrl($query), 'Report\ReportSubmissionSummary[]');
     }
 
     /**
-     * @param ReportSubmissionSummaryQuery $query
+     * @param DateRangeQuery $query
      * @return string
      */
-    private function generateApiUrl(ReportSubmissionSummaryQuery $query)
+    private function generateApiUrl(DateRangeQuery $query)
     {
         $queryStringArray = [
             'orderBy' => $query->getOrderBy(),

@@ -39,6 +39,10 @@ class UserResearchResponseCsvGenerator
         $rows = [];
 
         foreach ($userResearchResponses as $response) {
+            if (is_null($response->getSatisfaction())) {
+                continue;
+            }
+
             $satisfaction = $response->getSatisfaction();
 
             $rows[] = [

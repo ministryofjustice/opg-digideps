@@ -10,7 +10,7 @@ class ReportSatisfactionSummaryMapperTest extends TestCase
     /** @var ReportSatisfactionSummaryMapper */
     private $sut;
 
-    /** @var ReportSatisfactionSummaryQuery */
+    /** @var DateRangeQuery */
     private $query;
 
     /** @var RestClient | \PHPUnit_Framework_MockObject_MockObject */
@@ -30,7 +30,7 @@ class ReportSatisfactionSummaryMapperTest extends TestCase
 
     public function testReturnsReportSatisfactionsByDefaultParameters()
     {
-        $this->query = new ReportSatisfactionSummaryQuery();
+        $this->query = new DateRangeQuery();
 
         $this->assertRestClientIsCalledWithDefaultQueryParameters();
         $this->assertRestClientPopulatesAnArrayOfExpectedEntities();
@@ -40,7 +40,7 @@ class ReportSatisfactionSummaryMapperTest extends TestCase
 
     public function testReturnsReportSatisfactionsByCustomParameters()
     {
-        $this->query = (new ReportSatisfactionSummaryQuery())
+        $this->query = (new DateRangeQuery())
             ->setStartDate(new \DateTime('01-01-2001'))
             ->setEndDate(new \DateTime('02-01-2001'))
             ->setOrderBy('foo')

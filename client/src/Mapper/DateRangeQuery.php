@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Mapper\ReportSatisfaction;
+namespace App\Mapper;
 
 use App\Validator\Constraints as AppAssert;
 use App\Validator\Constraints\StartEndDateComparableInterface;
@@ -9,7 +9,7 @@ use DateTime;
 /**
  * @AppAssert\EndDateNotBeforeStartDate
  */
-class ReportSatisfactionSummaryQuery implements StartEndDateComparableInterface
+class DateRangeQuery implements StartEndDateComparableInterface
 {
     /** @var DateTime|null */
     private $startDate;
@@ -41,7 +41,7 @@ class ReportSatisfactionSummaryQuery implements StartEndDateComparableInterface
 
     /**
      * @param DateTime|null $startDate
-     * @return ReportSatisfactionSummaryQuery
+     * @return DateRangeQuery
      */
     public function setStartDate(?DateTime $startDate)
     {
@@ -52,7 +52,7 @@ class ReportSatisfactionSummaryQuery implements StartEndDateComparableInterface
 
     /**
      * @param DateTime|null $endDate
-     * @return ReportSatisfactionSummaryQuery
+     * @return DateRangeQuery
      */
     public function setEndDate(?DateTime $endDate)
     {
@@ -71,7 +71,7 @@ class ReportSatisfactionSummaryQuery implements StartEndDateComparableInterface
 
     /**
      * @param mixed $orderBy
-     * @return ReportSatisfactionSummaryQuery
+     * @return DateRangeQuery
      */
     public function setOrderBy($orderBy)
     {
@@ -90,7 +90,7 @@ class ReportSatisfactionSummaryQuery implements StartEndDateComparableInterface
 
     /**
      * @param mixed $sortOrder
-     * @return ReportSatisfactionSummaryQuery
+     * @return DateRangeQuery
      */
     public function setSortOrder($sortOrder)
     {
