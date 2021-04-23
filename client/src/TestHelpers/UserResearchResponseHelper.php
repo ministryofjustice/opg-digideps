@@ -40,7 +40,7 @@ class UserResearchResponseHelper
         return (new UserResearchResponse())
             ->setSatisfaction($satisfaction)
             ->setDeputyshipLength($faker->randomKey(['underOne', 'oneToFive', 'sixToTen', 'overTen']))
-            ->setAgreedResearchTypes($researchType)
+            ->setResearchType($researchType)
             ->setUser($user)
             ->setHasAccessToVideoCallDevice(true)
             ->setCreated($faker->dateTime);

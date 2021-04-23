@@ -40,6 +40,16 @@ class Satisfaction
     private $created;
 
     /**
+     * @JMS\Type("App\Entity\UserResearch\UserResearchResponse")
+     */
+    private UserResearchResponse $userResearchResponse;
+
+    /**
+     * @JMS\Type("App\Entity\Report\Report")
+     */
+    private Report $report;
+
+    /**
      * @return int
      */
     public function getId(): int
@@ -144,6 +154,42 @@ class Satisfaction
     public function setCreated($created): Satisfaction
     {
         $this->created = $created;
+        return $this;
+    }
+
+    /**
+     * @return UserResearchResponse
+     */
+    public function getUserResearchResponse(): UserResearchResponse
+    {
+        return $this->userResearchResponse;
+    }
+
+    /**
+     * @param UserResearchResponse $userResearchResponse
+     * @return Satisfaction
+     */
+    public function setUserResearchResponse(UserResearchResponse $userResearchResponse): Satisfaction
+    {
+        $this->userResearchResponse = $userResearchResponse;
+        return $this;
+    }
+
+    /**
+     * @return Report
+     */
+    public function getReport(): Report
+    {
+        return $this->report;
+    }
+
+    /**
+     * @param Report $report
+     * @return Satisfaction
+     */
+    public function setReport(Report $report): Satisfaction
+    {
+        $this->report = $report;
         return $this;
     }
 }

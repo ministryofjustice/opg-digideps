@@ -4,7 +4,7 @@
 namespace App\Entity\UserResearch;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use JMS\Serializer\Annotation as JMS;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
@@ -34,11 +34,17 @@ class ResearchType
     }
 
     /**
+     * @JMS\Type("App\Entity\UserResearch\UserResearchResponse")
+     * @JMS\Groups({"user-research", "satisfaction"})
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="researchType", cascade={"persist", "remove"})
      */
     private UserResearchResponse $userResearchResponse;
 
     /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"user-research", "satisfaction"})
+     *
      * @ORM\Id
      * @ORM\Column(name="id", type="uuid")
      * @ORM\GeneratedValue(strategy="NONE")
@@ -47,21 +53,33 @@ class ResearchType
     private UuidInterface $id;
 
     /**
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"user-research", "satisfaction"})
+     *
      * @ORM\Column(name="surveys", type="boolean", nullable=true)
      */
     private ?bool $surveys = null;
 
     /**
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"user-research", "satisfaction"})
+     *
      * @ORM\Column(name="video_call", type="boolean", nullable=true)
      */
     private ?bool $videoCall = null;
 
     /**
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"user-research", "satisfaction"})
+     *
      * @ORM\Column(name="phone", type="boolean", nullable=true)
      */
     private ?bool $phone = null;
 
     /**
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"user-research", "satisfaction"})
+     *
      * @ORM\Column(name="in_person", type="boolean", nullable=true)
      */
     private ?bool $inPerson = null;

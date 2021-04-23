@@ -6,6 +6,7 @@ namespace App\Entity\UserResearch;
 use App\Entity\Report\Satisfaction;
 use App\Entity\User;
 use DateTime;
+use JMS\Serializer\Annotation as JMS;
 
 class UserResearchResponse
 {
@@ -14,12 +15,40 @@ class UserResearchResponse
     const SIX_TO_TEN = 'sixToTen';
     const OVER_TEN = 'overTen';
 
-    private ResearchType $agreedResearchTypes;
-    private ?int $id = null;
-    private string $deputyshipLength = '';
-    private bool $hasAccessToVideoCallDevice = false;
-    private ?DateTime $created = null;
-    private Satisfaction $satisfaction;
+    /**
+     * @JMS\Type("App\Entity\UserResearch\ResearchType")
+     */
+    private $researchType;
+
+    /**
+     * @JMS\Type("App\Entity\User")
+     */
+    private User $user;
+
+    /**
+     * @JMS\Type("int")
+     */
+    private int $id;
+
+    /**
+     * @JMS\Type("string")
+     */
+    private string $deputyshipLength;
+
+    /**
+     * @JMS\Type("boolean")
+     */
+    private bool $hasAccessToVideoCallDevice;
+
+    /**
+     * @JMS\Type("DateTime")
+     */
+    private $created;
+
+    /**
+     * @JMS\Type("App\Entity\Report\Satisfaction")
+     */
+    private $satisfaction;
 
     /**
      * @return string
@@ -114,18 +143,18 @@ class UserResearchResponse
     /**
      * @return ResearchType
      */
-    public function getAgreedResearchTypes(): ResearchType
+    public function getResearchType(): ResearchType
     {
-        return $this->agreedResearchTypes;
+        return $this->researchType;
     }
 
     /**
-     * @param ResearchType $agreedResearchTypes
+     * @param ResearchType $researchType
      * @return UserResearchResponse
      */
-    public function setAgreedResearchTypes(ResearchType $agreedResearchTypes): UserResearchResponse
+    public function setResearchType(ResearchType $researchType): UserResearchResponse
     {
-        $this->agreedResearchTypes = $agreedResearchTypes;
+        $this->researchType = $researchType;
         return $this;
     }
 

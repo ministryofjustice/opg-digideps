@@ -42,14 +42,19 @@ class SatisfactionApi
     }
 
     /**
-     * @param array $formResponse
+     * @param FeedbackReport $formResponse
+     * @param string $reportType
+     * @param int $reportId
+     * @param User $submittedByUser
+     * @return int
      */
-    public function createPostSubmissionFeedback(FeedbackReport $formResponse, string $reportType, User $submittedByUser): int
+    public function createPostSubmissionFeedback(FeedbackReport $formResponse, string $reportType, int $reportId, User $submittedByUser): int
     {
         $feedbackData = [
             'score' => $formResponse->getSatisfactionLevel(),
             'comments' => empty($formResponse->getComments()) ? 'Not provided' : $formResponse->getComments(),
             'reportType' => $reportType,
+            'reportId' => $reportId,
         ];
 
         $satisfactionId = $this->restClient->post(self::CREATE_POST_SUBMISSION_FEEDBACK_ENDPOINT, $feedbackData);

@@ -11,17 +11,20 @@ final class Version251 extends AbstractMigration
 {
     public function getDescription() : string
     {
-        return 'Linking UserResearchResponses to Satisfaction';
+        return 'Linking UserResearchResponses to Satisfaction and Satisfaction to Report';
     }
 
     public function up(Schema $schema) : void
     {
         $this->addSql('DROP INDEX uniq_3b9fe71aa76ed395');
+        $this->addSql('ALTER TABLE satisfaction ADD report_id INT DEFAULT NULL');
         $this->addSql('ALTER TABLE user_research_response ADD satisfaction_id INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE user_research_response ADD created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL');
+        $this->addSql('ALTER TABLE user_research_response ADD created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
         $this->addSql('ALTER TABLE user_research_response ADD CONSTRAINT FK_3B9FE71ADE9439B8 FOREIGN KEY (satisfaction_id) REFERENCES satisfaction (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('CREATE INDEX IDX_3B9FE71AA76ED395 ON user_research_response (user_id)');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_3B9FE71ADE9439B8 ON user_research_response (satisfaction_id)');
+        $this->addSql('ALTER TABLE satisfaction ADD CONSTRAINT FK_8A8E0C134BD2A4C0 FOREIGN KEY (report_id) REFERENCES report (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_8A8E0C134BD2A4C0 ON satisfaction (report_id)');
     }
 
     public function down(Schema $schema) : void
@@ -32,5 +35,8 @@ final class Version251 extends AbstractMigration
         $this->addSql('ALTER TABLE user_research_response DROP satisfaction_id');
         $this->addSql('ALTER TABLE user_research_response DROP created_at');
         $this->addSql('CREATE UNIQUE INDEX uniq_3b9fe71aa76ed395 ON user_research_response (user_id)');
+        $this->addSql('ALTER TABLE satisfaction DROP CONSTRAINT FK_8A8E0C134BD2A4C0');
+        $this->addSql('DROP INDEX UNIQ_8A8E0C134BD2A4C0');
+        $this->addSql('ALTER TABLE satisfaction DROP report_id');
     }
 }

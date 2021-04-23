@@ -7,24 +7,32 @@ use App\Entity\UserResearch\UserResearchResponse;
 use App\Repository\SatisfactionRepository;
 use App\Repository\UserResearchResponseRepository;
 use App\Factory\UserResearchResponseFactory;
+use App\Service\Formatter\RestFormatter;
 use DateTime;
 use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Throwable;
 
 class UserResearchController extends RestController
 {
     private UserResearchResponseFactory $factory;
     private UserResearchResponseRepository $userResearchResponseRepository;
     private SatisfactionRepository $satisfactionRepository;
+    private RestFormatter $formatter;
 
-    public function __construct(UserResearchResponseFactory $factory, UserResearchResponseRepository $userResearchResponseRepository, SatisfactionRepository $satisfactionRepository)
-    {
+    public function __construct(
+        UserResearchResponseFactory $factory,
+        UserResearchResponseRepository $userResearchResponseRepository,
+        SatisfactionRepository $satisfactionRepository,
+        RestFormatter $formatter
+    ) {
         $this->factory = $factory;
         $this->userResearchResponseRepository = $userResearchResponseRepository;
         $this->satisfactionRepository = $satisfactionRepository;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -40,8 +48,10 @@ class UserResearchController extends RestController
             $userResearchResponse = $this->factory->generateFromFormData($formData);
             $this->userResearchResponseRepository->create($userResearchResponse, $this->getUser());
 
+            $groups = $request->get('groups') ? $request->get('groups') : ['satisfaction', 'user-research', 'user'];
+            $this->formatter->setJmsSerialiserGroups($groups);
             return 'Created';
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new RuntimeException(sprintf('UserResearchResponse not created: %s', $e->getMessage()), Response::HTTP_BAD_REQUEST);
         }
     }
@@ -52,14 +62,21 @@ class UserResearchController extends RestController
      */
     public function getAll(Request $request)
     {
-        $fromDateString = $request->get('fromDate', '');
-        $fromDate = empty($fromDateString) ?
-            (new DateTime('-5 years'))->setTime(0, 0, 1) : (new DateTime($fromDateString))->setTime(0, 0, 1);
+        try {
+            $fromDateString = $request->get('fromDate', '');
+            $fromDate = empty($fromDateString) ?
+                (new DateTime('-5 years'))->setTime(0, 0, 1) : (new DateTime($fromDateString))->setTime(0, 0, 1);
 
-        $toDateString = $request->get('toDate', '');
-        $toDate = empty($toDateString) ?
-            (new DateTime())->setTime(23, 59, 59) : (new DateTime($toDateString))->setTime(23, 59, 59);
+            $toDateString = $request->get('toDate', '');
+            $toDate = empty($toDateString) ?
+                (new DateTime())->setTime(23, 59, 59) : (new DateTime($toDateString))->setTime(23, 59, 59);
 
-        return $this->userResearchResponseRepository->getAllFilteredByDate($fromDate, $toDate);
+            $groups = $request->get('groups') ? $request->get('groups') : ['satisfaction', 'user-research', 'user'];
+            $this->formatter->setJmsSerialiserGroups($groups);
+
+            return $this->userResearchResponseRepository->getAllFilteredByDate($fromDate, $toDate);
+        } catch (Throwable $e) {
+            throw new RuntimeException(sprintf('There was a problem getting user research responses: %s', $e->getMessage()), Response::HTTP_BAD_REQUEST);
+        }
     }
 }

@@ -43,7 +43,7 @@ class UserResearchResponseCsvGeneratorTest extends TestCase
             (new UserResearchResponse())
                 ->setSatisfaction($satisfaction1)
                 ->setDeputyshipLength('underOne')
-                ->setAgreedResearchTypes(
+                ->setResearchType(
                     (new ResearchType())
                         ->setPhone(true)
                         ->setInPerson(true)
@@ -54,7 +54,7 @@ class UserResearchResponseCsvGeneratorTest extends TestCase
             (new UserResearchResponse())
                 ->setSatisfaction($satisfaction2)
                 ->setDeputyshipLength('sixToTen')
-                ->setAgreedResearchTypes(
+                ->setResearchType(
                     (new ResearchType())
                         ->setSurveys(true)
                         ->setVideoCall(true)

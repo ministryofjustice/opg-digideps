@@ -52,7 +52,7 @@ class UserResearchResponseCsvGenerator
                 $satisfaction->getReporttype(),
                 $satisfaction->getCreated()->format('Y-m-d'),
                 $this->transformDeputyshipLength($response->getDeputyShipLength()),
-                $response->getAgreedResearchTypes()->getCommaSeparatedTypesAgreed(),
+                $response->getResearchType()->getCommaSeparatedTypesAgreed(),
                 $response->GetHasAccessToVideoCallDevice() ? 'Yes' : 'No',
                 $response->getUser()->getEmail(),
                 $response->getUser()->getPhoneMain()

@@ -42,7 +42,6 @@ class UserResearchResponseRepository extends ServiceEntityRepository
             ->where('urr.created > :from')->setParameter('from', $from)
             ->andWhere('urr.created < :to')->setParameter('to', $to);
 
-
         return $qb->getQuery()->getResult();
     }
 }

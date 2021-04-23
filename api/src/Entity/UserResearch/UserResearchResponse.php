@@ -28,7 +28,7 @@ class UserResearchResponse
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\ResearchType", inversedBy="userResearchResponse", cascade={"persist", "remove"})
      *
-     * @JMS\Type("App\Entity\ResearchType")
+     * @JMS\Type("App\Entity\UserResearch\ResearchType")
      * @JMS\Groups({"user-research", "satisfaction"})
      */
     private ResearchType $researchType;
@@ -73,12 +73,16 @@ class UserResearchResponse
      * @JMS\Type("DateTime")
      * @JMS\Groups({"user-research", "satisfaction"})
      *
-     * @ORM\Column(name="created_at", type="datetime")
+     * @ORM\Column(name="created_at", type="datetime",nullable=true)
      * @Gedmo\Timestampable(on="create")
      */
     private DateTime $created;
 
     /**
+     * @var DateTime
+     * @JMS\Type("App\Entity\Satisfaction")
+     * @JMS\Groups({"user-research", "satisfaction"})
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\Satisfaction", inversedBy="userResearchResponse", cascade={"persist", "remove"})
      */
     private Satisfaction $satisfaction;

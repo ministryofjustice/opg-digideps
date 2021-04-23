@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Report\Report;
 use App\Entity\UserResearch\UserResearchResponse;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -78,10 +79,19 @@ class Satisfaction
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="satisfaction", cascade={"persist", "remove"})
      *
-     * @JMS\Type("App\Entity\UserResearchResponse")
+     * @JMS\Type("App\Entity\UserResearch\UserResearchResponse")
      * @JMS\Groups({"user-research", "satisfaction"})
      */
     private UserResearchResponse $userResearchResponse;
+
+    /**
+     * @var Report
+     * @JMS\Type("App\Entity\Report\Report")
+     * @JMS\Groups({"user-research", "satisfaction"})
+     *
+     * @ORM\OneToOne(targetEntity="App\Entity\Report\Report", inversedBy="satisfaction", cascade={"persist"})
+     */
+    private Report $report;
 
     /**
      * @return int
@@ -206,6 +216,24 @@ class Satisfaction
     public function setUserResearchResponse(UserResearchResponse $userResearchResponse): Satisfaction
     {
         $this->userResearchResponse = $userResearchResponse;
+        return $this;
+    }
+
+    /**
+     * @return Report
+     */
+    public function getReport(): Report
+    {
+        return $this->report;
+    }
+
+    /**
+     * @param Report $report
+     * @return Satisfaction
+     */
+    public function setReport(Report $report): Satisfaction
+    {
+        $this->report = $report;
         return $this;
     }
 }

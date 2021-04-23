@@ -3,15 +3,39 @@
 
 namespace App\Entity\UserResearch;
 
+use JMS\Serializer\Annotation as JMS;
 use Ramsey\Uuid\UuidInterface;
 
 class ResearchType
 {
-    private UserResearchResponse $userResearchResponse;
-    private UuidInterface $id;
+    /**
+     * @JMS\Type("App\Entity\UserResearch\UserResearchResponse")
+     */
+    private $userResearchResponse;
+
+    /**
+     * @JMS\Type("string")
+     */
+    private $id;
+
+    /**
+     * @JMS\Type("bool")
+     */
     private ?bool $surveys = null;
+
+    /**
+     * @JMS\Type("bool")
+     */
     private ?bool $videoCall = null;
+
+    /**
+     * @JMS\Type("bool")
+     */
     private ?bool $phone = null;
+
+    /**
+     * @JMS\Type("bool")
+     */
     private ?bool $inPerson = null;
 
     /**
