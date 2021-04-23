@@ -69,7 +69,7 @@ class SatisfactionApiTest extends TestCase
      * @test
      * @dataProvider commentsProvider
      */
-    public function createPostSubmissionFeedback(?string $comments, string $expectedCommentsInPostRequest)
+    public function createPostSubmissionFeedback(?string $comments, string $expectedCommentsInPostRequest, ?int $reportId, ?int $ndrId)
     {
         $score = $this->faker->randomElement([1,2,3,4,5]);
         $submittedByUser = UserHelpers::createUser();
@@ -84,7 +84,13 @@ class SatisfactionApiTest extends TestCase
 
         $this->restClient->post(
             'satisfaction',
-            ['score' => $score, 'comments' => $expectedCommentsInPostRequest, 'reportType' => $reportType, 'reportId' => 222]
+            [
+                'score' => $score,
+                'comments' => $expectedCommentsInPostRequest,
+                'reportType' => $reportType,
+                'reportId' => $reportId,
+                'ndrId' => $ndrId
+            ]
         )
             ->shouldBeCalled()
             ->willReturn(1);
@@ -96,14 +102,15 @@ class SatisfactionApiTest extends TestCase
         $event = new PostSubmissionFeedbackSubmittedEvent($feedbackReportObject, $submittedByUser);
         $this->eventDisaptcher->dispatch($event, 'post.submission.feedback.submitted')->shouldBeCalled();
 
-        $this->sut->createPostSubmissionFeedback($feedbackReportObject, $reportType, 222, $submittedByUser);
+        $this->sut->createPostSubmissionFeedback($feedbackReportObject, $reportType, $submittedByUser, $reportId, $ndrId);
     }
 
     public function commentsProvider()
     {
         return [
-            'Comments included' => ['Its greeeeat', 'Its greeeeat'],
-            'Empty string comments' => ['', 'Not provided'],
+            'Comments included - Report' => ['Its greeeeat', 'Its greeeeat', 222, null],
+            'Comments included - NDR' => ['Its greeeeat', 'Its greeeeat', null, 333],
+            'Empty string comments' => ['', 'Not provided', null, 333],
         ];
     }
 }
