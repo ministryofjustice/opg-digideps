@@ -7,7 +7,7 @@ use App\EventSubscriber\ClientDeletedSubscriber;
 use App\Service\Audit\AuditEvents;
 use App\Service\Time\DateTimeProvider;
 use App\TestHelpers\ClientHelpers;
-use App\TestHelpers\NamedDeputyHelpers;
+use App\TestHelpers\NamedDeputyHelper;
 use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -60,7 +60,7 @@ class ClientDeletedSubscriberTest extends TestCase
     {
         $clientWithUsers = ClientHelpers::createClient();
         $layDeputy = (UserHelpers::createUser())->setRoleName('ROLE_LAY_DEPUTY');
-        $namedDeputy = NamedDeputyHelpers::createNamedDeputy();
+        $namedDeputy = NamedDeputyHelper::createNamedDeputy();
 
         return [
             'Lay deputy' => [(clone $clientWithUsers)->addUser($layDeputy), $layDeputy],
