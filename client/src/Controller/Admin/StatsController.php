@@ -11,7 +11,6 @@ use App\Form\Admin\UserResearchResponseFilterType;
 use App\Mapper\DateRangeQuery;
 use App\Mapper\ReportSatisfaction\ReportSatisfactionSummaryMapper;
 use App\Mapper\ReportSubmission\ReportSubmissionSummaryMapper;
-use App\Mapper\ReportSubmission\ReportSubmissionSummaryQuery;
 use App\Mapper\UserResearchResponse\UserResearchResponseSummaryMapper;
 use App\Service\Client\Internal\StatsApi;
 use App\Service\Client\RestClient;
@@ -64,7 +63,7 @@ class StatsController extends AbstractController
      */
     public function stats(Request $request, ReportSubmissionSummaryMapper $mapper, ReportSubmissionBurFixedWidthTransformer $transformer)
     {
-        $form = $this->createForm(ReportSubmissionDownloadFilterType::class, new ReportSubmissionSummaryQuery());
+        $form = $this->createForm(ReportSubmissionDownloadFilterType::class, new DateRangeQuery());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

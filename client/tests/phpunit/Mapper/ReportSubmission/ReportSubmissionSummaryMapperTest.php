@@ -3,8 +3,6 @@
 namespace App\Mapper\ReportSubmission;
 
 use App\Mapper\DateRangeQuery;
-use App\Mapper\ReportSubmission\ReportSubmissionSummaryMapper;
-use App\Mapper\ReportSubmission\ReportSubmissionSummaryQuery;
 use App\Service\Client\RestClient;
 use PHPUnit\Framework\TestCase;
 
@@ -13,7 +11,7 @@ class ReportSubmissionSummaryMapperTest extends TestCase
     /** @var ReportSubmissionSummaryMapper */
     private $sut;
 
-    /** @var ReportSubmissionSummaryQuery */
+    /** @var DateRangeQuery */
     private $query;
 
     /** @var RestClient | \PHPUnit_Framework_MockObject_MockObject */
