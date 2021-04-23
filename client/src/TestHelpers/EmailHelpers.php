@@ -6,7 +6,7 @@ namespace App\TestHelpers;
 use App\Model\Email;
 use Faker\Factory;
 
-class EmailHelper
+class EmailHelpers
 {
     /**
      * @return Email

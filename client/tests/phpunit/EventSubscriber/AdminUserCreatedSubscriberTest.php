@@ -6,7 +6,7 @@ namespace Tests\App\EventListener;
 use App\Event\AdminUserCreatedEvent;
 use App\EventSubscriber\AdminUserCreatedSubscriber;
 use App\Service\Mailer\Mailer;
-use App\TestHelpers\UserHelper;
+use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 
 class AdminUserCreatedSubscriberTest extends TestCase
@@ -23,7 +23,7 @@ class AdminUserCreatedSubscriberTest extends TestCase
     /** @test */
     public function sendEmail()
     {
-        $createdUser = UserHelper::createUser();
+        $createdUser = UserHelpers::createUser();
         $userCreatedEvent = new AdminUserCreatedEvent($createdUser);
 
         $mailer = self::prophesize(Mailer::class);

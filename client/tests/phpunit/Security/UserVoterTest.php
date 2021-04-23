@@ -5,7 +5,7 @@ namespace App\Security;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\User;
-use App\TestHelpers\UserHelper;
+use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -237,33 +237,33 @@ class UserVoterTest extends TestCase
 
     public function addEditUserProvider()
     {
-        $admin = UserHelper::createAdminUser();
-        $admin2 = UserHelper::createAdminUser();
-        $superAdmin = UserHelper::createSuperAdminUser();
-        $superAdmin2 = UserHelper::createSuperAdminUser();
-        $elevatedAdmin = UserHelper::createElevatedAdminUser();
-        $elevatedAdmin2 = UserHelper::createElevatedAdminUser();
+        $admin = UserHelpers::createAdminUser();
+        $admin2 = UserHelpers::createAdminUser();
+        $superAdmin = UserHelpers::createSuperAdminUser();
+        $superAdmin2 = UserHelpers::createSuperAdminUser();
+        $elevatedAdmin = UserHelpers::createElevatedAdminUser();
+        $elevatedAdmin2 = UserHelpers::createElevatedAdminUser();
 
-        $lay = UserHelper::createLayUser();
-        $lay2 = UserHelper::createLayUser();
+        $lay = UserHelpers::createLayUser();
+        $lay2 = UserHelpers::createLayUser();
 
-        $pa = UserHelper::createPaDeputyUser();
-        $pa2 = UserHelper::createPaDeputyUser();
-        $paNamed = UserHelper::createPaNamedDeputyUser();
-        $paNamed2 = UserHelper::createPaNamedDeputyUser();
-        $paAdmin = UserHelper::createPaAdminUser();
-        $paAdmin2 = UserHelper::createPaAdminUser();
-        $paTeamMember = UserHelper::createPaTeamMemberUser();
-        $paTeamMember2 = UserHelper::createPaTeamMemberUser();
+        $pa = UserHelpers::createPaDeputyUser();
+        $pa2 = UserHelpers::createPaDeputyUser();
+        $paNamed = UserHelpers::createPaNamedDeputyUser();
+        $paNamed2 = UserHelpers::createPaNamedDeputyUser();
+        $paAdmin = UserHelpers::createPaAdminUser();
+        $paAdmin2 = UserHelpers::createPaAdminUser();
+        $paTeamMember = UserHelpers::createPaTeamMemberUser();
+        $paTeamMember2 = UserHelpers::createPaTeamMemberUser();
 
-        $prof = UserHelper::createProfDeputyUser();
-        $prof2 = UserHelper::createProfDeputyUser();
-        $profNamed = UserHelper::createProfNamedDeputyUser();
-        $profNamed2 = UserHelper::createProfNamedDeputyUser();
-        $profAdmin = UserHelper::createProfAdminUser();
-        $profAdmin2 = UserHelper::createProfAdminUser();
-        $profTeamMember = UserHelper::createProfTeamMemberUser();
-        $profTeamMember2 = UserHelper::createProfTeamMemberUser();
+        $prof = UserHelpers::createProfDeputyUser();
+        $prof2 = UserHelpers::createProfDeputyUser();
+        $profNamed = UserHelpers::createProfNamedDeputyUser();
+        $profNamed2 = UserHelpers::createProfNamedDeputyUser();
+        $profAdmin = UserHelpers::createProfAdminUser();
+        $profAdmin2 = UserHelpers::createProfAdminUser();
+        $profTeamMember = UserHelpers::createProfTeamMemberUser();
+        $profTeamMember2 = UserHelpers::createProfTeamMemberUser();
 
         return [
             'Super Admin adds/edits Lay Deputy' => [$superAdmin, $lay, 1],
@@ -452,21 +452,21 @@ class UserVoterTest extends TestCase
 
     public function canAddUserProvider()
     {
-        $admin = UserHelper::createAdminUser();
-        $superAdmin = UserHelper::createSuperAdminUser();
-        $elevatedAdmin = UserHelper::createElevatedAdminUser();
+        $admin = UserHelpers::createAdminUser();
+        $superAdmin = UserHelpers::createSuperAdminUser();
+        $elevatedAdmin = UserHelpers::createElevatedAdminUser();
 
-        $lay = UserHelper::createLayUser();
+        $lay = UserHelpers::createLayUser();
 
-        $pa = UserHelper::createPaDeputyUser();
-        $paNamed = UserHelper::createPaNamedDeputyUser();
-        $paAdmin = UserHelper::createPaAdminUser();
-        $paTeamMember = UserHelper::createPaTeamMemberUser();
+        $pa = UserHelpers::createPaDeputyUser();
+        $paNamed = UserHelpers::createPaNamedDeputyUser();
+        $paAdmin = UserHelpers::createPaAdminUser();
+        $paTeamMember = UserHelpers::createPaTeamMemberUser();
 
-        $prof = UserHelper::createProfDeputyUser();
-        $profNamed = UserHelper::createProfNamedDeputyUser();
-        $profAdmin = UserHelper::createProfAdminUser();
-        $profTeamMember = UserHelper::createProfTeamMemberUser();
+        $prof = UserHelpers::createProfDeputyUser();
+        $profNamed = UserHelpers::createProfNamedDeputyUser();
+        $profAdmin = UserHelpers::createProfAdminUser();
+        $profTeamMember = UserHelpers::createProfTeamMemberUser();
 
         return [
             'Super Admin checks if they can add a user' => [$superAdmin, 1],

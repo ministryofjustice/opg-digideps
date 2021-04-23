@@ -7,7 +7,7 @@ use App\Entity\Organisation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Faker\Factory;
 
-class OrganisationHelper
+class OrganisationHelpers
 {
     /**
      * @return Organisation
@@ -25,13 +25,13 @@ class OrganisationHelper
             ->setIsActivated(true);
 
         $orgUsers = [
-            (UserHelper::createUser())->setOrganisations(new ArrayCollection([$organisation])),
-            (UserHelper::createUser())->setOrganisations(new ArrayCollection([$organisation]))
+            (UserHelpers::createUser())->setOrganisations(new ArrayCollection([$organisation])),
+            (UserHelpers::createUser())->setOrganisations(new ArrayCollection([$organisation]))
         ];
 
         $orgClients = [
-            (ClientHelper::createClient())->addUser($orgUsers[0]),
-            (ClientHelper::createClient())->addUser($orgUsers[1])
+            (ClientHelpers::createClient())->addUser($orgUsers[0]),
+            (ClientHelpers::createClient())->addUser($orgUsers[1])
         ];
 
         return $organisation

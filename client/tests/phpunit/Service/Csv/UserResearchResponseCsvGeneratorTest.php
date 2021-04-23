@@ -7,8 +7,8 @@ use App\Entity\Report\Satisfaction;
 use App\Entity\User;
 use App\Entity\UserResearch\ResearchType;
 use App\Entity\UserResearch\UserResearchResponse;
-use App\TestHelpers\UserHelper;
-use App\TestHelpers\UserResearchResponseHelper;
+use App\TestHelpers\UserHelpers;
+use App\TestHelpers\UserResearchResponseHelpers;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 

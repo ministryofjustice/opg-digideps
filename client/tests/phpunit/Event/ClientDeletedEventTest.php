@@ -3,8 +3,8 @@
 namespace Tests\App\Event;
 
 use App\Event\ClientDeletedEvent;
-use App\TestHelpers\ClientHelper;
-use App\TestHelpers\UserHelper;
+use App\TestHelpers\ClientHelpers;
+use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 
 class ClientDeletedEventTest extends TestCase
@@ -12,9 +12,9 @@ class ClientDeletedEventTest extends TestCase
     /** @test */
     public function event_is_initialised_correctly()
     {
-        $client = ClientHelper::createClient();
-        $currentUser = UserHelper::createUser();
-        $deletedDeputy = UserHelper::createUser();
+        $client = ClientHelpers::createClient();
+        $currentUser = UserHelpers::createUser();
+        $deletedDeputy = UserHelpers::createUser();
         $trigger = 'A_TRIGGER';
 
         $event = new ClientDeletedEvent($client, $currentUser, $deletedDeputy, $trigger);

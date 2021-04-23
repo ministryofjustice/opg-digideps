@@ -5,7 +5,7 @@ namespace Tests\App\EventListener;
 use App\Event\UserPasswordResetEvent;
 use App\EventSubscriber\UserPasswordResetSubscriber;
 use App\Service\Mailer\Mailer;
-use App\TestHelpers\UserHelper;
+use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 
 class UserPasswordResetSubscriberTest extends TestCase
@@ -22,7 +22,7 @@ class UserPasswordResetSubscriberTest extends TestCase
     /** @test */
     public function sendEmail()
     {
-        $passwordResetUser = UserHelper::createUser();
+        $passwordResetUser = UserHelpers::createUser();
         $passwordResetEvent = new UserPasswordResetEvent($passwordResetUser);
 
         $mailer = self::prophesize(Mailer::class);

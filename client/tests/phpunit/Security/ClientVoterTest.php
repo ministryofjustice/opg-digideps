@@ -4,8 +4,8 @@ namespace App\Security;
 
 use App\Entity\Client;
 use App\Entity\User;
-use App\TestHelpers\ClientHelper;
-use App\TestHelpers\UserHelper;
+use App\TestHelpers\ClientHelpers;
+use App\TestHelpers\UserHelpers;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Security;
@@ -30,23 +30,23 @@ class ClientVoterTest extends KernelTestCase
 
     public function deleteClientProvider()
     {
-        $client = ClientHelper::createClient();
+        $client = ClientHelpers::createClient();
 
-        $admin = UserHelper::createAdminUser();
-        $superAdmin = UserHelper::createSuperAdminUser();
-        $elevatedAdmin = UserHelper::createElevatedAdminUser();
+        $admin = UserHelpers::createAdminUser();
+        $superAdmin = UserHelpers::createSuperAdminUser();
+        $elevatedAdmin = UserHelpers::createElevatedAdminUser();
 
-        $lay = UserHelper::createLayUser();
+        $lay = UserHelpers::createLayUser();
 
-        $pa = UserHelper::createPaDeputyUser();
-        $paNamed = UserHelper::createPaNamedDeputyUser();
-        $paAdmin = UserHelper::createPaAdminUser();
-        $paTeamMember = UserHelper::createPaTeamMemberUser();
+        $pa = UserHelpers::createPaDeputyUser();
+        $paNamed = UserHelpers::createPaNamedDeputyUser();
+        $paAdmin = UserHelpers::createPaAdminUser();
+        $paTeamMember = UserHelpers::createPaTeamMemberUser();
 
-        $prof = UserHelper::createProfDeputyUser();
-        $profNamed = UserHelper::createProfNamedDeputyUser();
-        $profAdmin = UserHelper::createProfAdminUser();
-        $profTeamMember = UserHelper::createProfTeamMemberUser();
+        $prof = UserHelpers::createProfDeputyUser();
+        $profNamed = UserHelpers::createProfNamedDeputyUser();
+        $profAdmin = UserHelpers::createProfAdminUser();
+        $profTeamMember = UserHelpers::createProfTeamMemberUser();
 
         return [
             'Lay Deputy deletes Client' => [$lay, $client, -1],

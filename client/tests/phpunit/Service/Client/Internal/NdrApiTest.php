@@ -8,11 +8,11 @@ use App\EventDispatcher\ObservableEventDispatcher;
 use App\Service\Client\Internal\NdrApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
-use App\TestHelpers\ClientHelper;
-use App\TestHelpers\DocumentHelper;
-use App\TestHelpers\NdrHelper;
-use App\TestHelpers\ReportHelper;
-use App\TestHelpers\UserHelper;
+use App\TestHelpers\ClientHelpers;
+use App\TestHelpers\DocumentHelpers;
+use App\TestHelpers\NdrHelpers;
+use App\TestHelpers\ReportHelpers;
+use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 
 class NdrApiTest extends TestCase
@@ -24,11 +24,11 @@ class NdrApiTest extends TestCase
         $eventDispatcher = self::prophesize(ObservableEventDispatcher::class);
         $userApi = self::prophesize(UserApi::class);
 
-        $ndr = NdrHelper::createNdr();
-        $document = DocumentHelper::createReportPdfDocument();
-        $activeReport = ReportHelper::createReport();
-        $client = (ClientHelper::createClient($activeReport));
-        $submittedByWithClientsAndReports = (UserHelper::createUser())->setClients([$client]);
+        $ndr = NdrHelpers::createNdr();
+        $document = DocumentHelpers::createReportPdfDocument();
+        $activeReport = ReportHelpers::createReport();
+        $client = (ClientHelpers::createClient($activeReport));
+        $submittedByWithClientsAndReports = (UserHelpers::createUser())->setClients([$client]);
 
         $sut = new NdrApi($restClient->reveal(), $eventDispatcher->reveal(), $userApi->reveal());
 

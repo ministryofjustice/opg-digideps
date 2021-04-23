@@ -3,7 +3,7 @@
 
 namespace App\Event;
 
-use App\TestHelpers\UserHelper;
+use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 
 class UserDeletedEventTest extends TestCase
@@ -11,8 +11,8 @@ class UserDeletedEventTest extends TestCase
     /** @test */
     public function event_is_initialised_correctly()
     {
-        $deletedUser = UserHelper::createUser();
-        $deletedBy = UserHelper::createUser();
+        $deletedUser = UserHelpers::createUser();
+        $deletedBy = UserHelpers::createUser();
         $trigger = 'A_TRIGGER';
 
         $event = new UserDeletedEvent($deletedUser, $deletedBy, $trigger);

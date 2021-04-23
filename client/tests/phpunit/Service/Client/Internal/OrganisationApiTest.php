@@ -7,8 +7,8 @@ use App\Event\UserRemovedFromOrganisationEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Service\Client\Internal\OrganisationApi;
 use App\Service\Client\RestClient;
-use App\TestHelpers\OrganisationHelper;
-use App\TestHelpers\UserHelper;
+use App\TestHelpers\OrganisationHelpers;
+use App\TestHelpers\UserHelpers;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -29,9 +29,9 @@ class OrganisationApiTest extends TestCase
     /** @test */
     public function addUserToOrganisation()
     {
-        $organisation = OrganisationHelper::createActivatedOrganisation();
-        $userToAdd = (UserHelper::createUser())->setOrganisations(new ArrayCollection([$organisation]));
-        $currentUser = UserHelper::createUser();
+        $organisation = OrganisationHelpers::createActivatedOrganisation();
+        $userToAdd = (UserHelpers::createUser())->setOrganisations(new ArrayCollection([$organisation]));
+        $currentUser = UserHelpers::createUser();
         $trigger = 'A_TRIGGER';
 
         $this->restClient
@@ -55,9 +55,9 @@ class OrganisationApiTest extends TestCase
     /** @test */
     public function removeUserFromOrganisation()
     {
-        $organisation = OrganisationHelper::createActivatedOrganisation();
-        $userToRemove = (UserHelper::createUser())->setOrganisations(new ArrayCollection([$organisation]));
-        $currentUser = UserHelper::createUser();
+        $organisation = OrganisationHelpers::createActivatedOrganisation();
+        $userToRemove = (UserHelpers::createUser())->setOrganisations(new ArrayCollection([$organisation]));
+        $currentUser = UserHelpers::createUser();
         $trigger = 'A_TRIGGER';
 
         $this->restClient

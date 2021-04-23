@@ -10,7 +10,7 @@ use App\EventDispatcher\ObservableEventDispatcher;
 use App\Model\FeedbackReport;
 use App\Service\Client\Internal\SatisfactionApi;
 use App\Service\Client\RestClient;
-use App\TestHelpers\UserHelper;
+use App\TestHelpers\UserHelpers;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -72,7 +72,7 @@ class SatisfactionApiTest extends TestCase
     public function createPostSubmissionFeedback(?string $comments, string $expectedCommentsInPostRequest)
     {
         $score = $this->faker->randomElement([1,2,3,4,5]);
-        $submittedByUser = UserHelper::createUser();
+        $submittedByUser = UserHelpers::createUser();
         $reportType = $this->faker->randomElement([
             Report::TYPE_COMBINED_HIGH_ASSETS,
             Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,

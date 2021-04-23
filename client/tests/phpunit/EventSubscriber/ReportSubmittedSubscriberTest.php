@@ -9,8 +9,8 @@ use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Time\DateTimeProvider;
 use App\Service\Mailer\Mailer;
-use App\TestHelpers\ReportHelper;
-use App\TestHelpers\UserHelper;
+use App\TestHelpers\ReportHelpers;
+use App\TestHelpers\UserHelpers;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -38,9 +38,9 @@ class ReportSubmittedSubscriberTest extends TestCase
         $mailer = self::prophesize(Mailer::class);
         $logger = self::prophesize(LoggerInterface::class);
         $dateTimeProvider = self::prophesize(DateTimeProvider::class);
-        $submittedBy = UserHelper::createUser();
-        $submittedReport = ReportHelper::createReport();
-        $nextYearReport = ReportHelper::createReport();
+        $submittedBy = UserHelpers::createUser();
+        $submittedReport = ReportHelpers::createReport();
+        $nextYearReport = ReportHelpers::createReport();
         $nextYearReportId = '5';
 
         $reportApi
@@ -67,8 +67,8 @@ class ReportSubmittedSubscriberTest extends TestCase
         $mailer = self::prophesize(Mailer::class);
         $logger = self::prophesize(LoggerInterface::class);
         $dateTimeProvider = self::prophesize(DateTimeProvider::class);
-        $submittedBy = UserHelper::createUser();
-        $submittedReport = ReportHelper::createReport();
+        $submittedBy = UserHelpers::createUser();
+        $submittedReport = ReportHelpers::createReport();
         $nextYearReportId = null;
 
         $reportApi
@@ -94,12 +94,12 @@ class ReportSubmittedSubscriberTest extends TestCase
         $dateTimeProvider = self::prophesize(DateTimeProvider::class);
         $reportApi = self::prophesize(ReportApi::class);
         $mailer = self::prophesize(Mailer::class);
-        $submittedReport = ReportHelper::createReport();
-        $nextYearReport = ReportHelper::createReport();
+        $submittedReport = ReportHelpers::createReport();
+        $nextYearReport = ReportHelpers::createReport();
 
         $now = new DateTime();
         $dateTimeProvider->getDateTime()->willReturn($now);
-        $submittedBy = UserHelper::createUser();
+        $submittedBy = UserHelpers::createUser();
         $trigger = 'RESUBMIT_REPORT';
 
         $sut = new ReportSubmittedSubscriber($reportApi->reveal(), $mailer->reveal(), $logger->reveal(), $dateTimeProvider->reveal());

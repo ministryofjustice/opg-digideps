@@ -6,7 +6,7 @@ namespace App\TestHelpers;
 use App\Entity\NamedDeputy;
 use Faker;
 
-class NamedDeputyHelper
+class NamedDeputyHelpers
 {
     public static function createNamedDeputy()
     {

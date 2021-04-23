@@ -6,8 +6,8 @@ use App\Event\ReportSubmittedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
-use App\TestHelpers\ReportHelper;
-use App\TestHelpers\UserHelper;
+use App\TestHelpers\ReportHelpers;
+use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use App\Event\ReportUnsubmittedEvent;
@@ -35,8 +35,8 @@ class ReportApiTest extends TestCase
      */
     public function submit(?string $reportId)
     {
-        $reportToBeSubmitted = ReportHelper::createReport();
-        $submittedBy = UserHelper::createUser();
+        $reportToBeSubmitted = ReportHelpers::createReport();
+        $submittedBy = UserHelpers::createUser();
         $event = new ReportSubmittedEvent($reportToBeSubmitted, $submittedBy, $reportId);
 
         $this->restClient
@@ -55,8 +55,8 @@ class ReportApiTest extends TestCase
     public function unsubmit()
     {
         $trigger = 'A_TRIGGER';
-        $currentUser = UserHelper::createUser();
-        $submittedReport = ReportHelper::createSubmittedReport();
+        $currentUser = UserHelpers::createUser();
+        $submittedReport = ReportHelpers::createSubmittedReport();
 
         $this->restClient
             ->put('report/' . $submittedReport->getId() . '/unsubmit', $submittedReport, ['submitted', 'unsubmit_date', 'report_unsubmitted_sections_list', 'startEndDates', 'report_due_date'])

@@ -6,7 +6,7 @@ use App\Event\CoDeputyCreatedEvent;
 use App\Event\CoDeputyInvitedEvent;
 use App\EventSubscriber\CoDeputyCreationSubscriber;
 use App\Service\Mailer\Mailer;
-use App\TestHelpers\UserHelper;
+use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 
 class CoDeputyCreationSubscriberTest extends TestCase
@@ -23,8 +23,8 @@ class CoDeputyCreationSubscriberTest extends TestCase
     /** @test */
     public function sendEmail()
     {
-        $invitedCoDeputy = UserHelper::createUser();
-        $inviterDeputy = UserHelper::createUser();
+        $invitedCoDeputy = UserHelpers::createUser();
+        $inviterDeputy = UserHelpers::createUser();
         $coDeputyInvitedEvent = new CoDeputyInvitedEvent($invitedCoDeputy, $inviterDeputy);
 
         $mailer = self::prophesize(Mailer::class);

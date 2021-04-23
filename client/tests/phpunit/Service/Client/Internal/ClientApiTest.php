@@ -9,8 +9,8 @@ use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Time\DateTimeProvider;
-use App\TestHelpers\ClientHelper;
-use App\TestHelpers\UserHelper;
+use App\TestHelpers\ClientHelpers;
+use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
@@ -84,8 +84,8 @@ class ClientApiTest extends TestCase
     /** @test */
     public function delete()
     {
-        $clientWithUsers = ClientHelper::createClientWithUsers();
-        $currentUser = UserHelper::createUser();
+        $clientWithUsers = ClientHelpers::createClientWithUsers();
+        $currentUser = UserHelpers::createUser();
 
         $this->restClient->get(sprintf('v2/client/%s', $clientWithUsers->getId()), Argument::cetera())
             ->shouldBeCalled()
@@ -106,9 +106,9 @@ class ClientApiTest extends TestCase
     /** @test */
     public function update()
     {
-        $preUpdateClient = ClientHelper::createClient();
-        $postUpdateClient = ClientHelper::createClient();
-        $currentUser = UserHelper::createUser();
+        $preUpdateClient = ClientHelpers::createClient();
+        $postUpdateClient = ClientHelpers::createClient();
+        $currentUser = UserHelpers::createUser();
         $trigger = 'SOME_TRIGGER';
 
         $this->restClient->put('client/upsert', $postUpdateClient, Argument::cetera())->shouldBeCalled();

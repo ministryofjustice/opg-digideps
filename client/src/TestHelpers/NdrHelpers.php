@@ -6,14 +6,14 @@ namespace App\TestHelpers;
 use App\Entity\Ndr\Ndr;
 use DateTime;
 
-class NdrHelper
+class NdrHelpers
 {
     /**
      * @return Ndr
      */
     public static function createNdr(): Ndr
     {
-        $client = ClientHelper::createClient();
+        $client = ClientHelpers::createClient();
         $startDate = new DateTime('now');
 
         return (new Ndr())

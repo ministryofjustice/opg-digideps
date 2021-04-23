@@ -7,7 +7,7 @@ namespace App\TestHelpers;
 use App\Entity\Report\Satisfaction;
 use Faker\Factory;
 
-class SatisfactionHelper
+class SatisfactionHelpers
 {
     /**
      * @return Satisfaction

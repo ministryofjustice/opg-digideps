@@ -7,8 +7,8 @@ use App\Entity\Report\Document;
 use App\Service\Client\RestClient;
 use App\Service\File\Storage\S3Storage;
 use App\Service\Time\DateTimeProvider;
-use App\TestHelpers\DocumentHelper;
-use App\TestHelpers\ReportHelper;
+use App\TestHelpers\DocumentHelpers;
+use App\TestHelpers\ReportHelpers;
 use DateTime;
 use Exception;
 use Prophecy\Argument;
@@ -48,7 +48,7 @@ class S3FileUploaderTest extends KernelTestCase
         $fileName = 'dd_fileuploadertest.pdf';
         $fileContent = 'testcontent';
         $now = new DateTime();
-        $report = ReportHelper::createReport();
+        $report = ReportHelpers::createReport();
         $expectedStorageRef = sprintf('dd_doc_%s_%s%s', $report->getId(), $now->format('U'), $now->format('v'));
 
         $this->dateTimeProvider->getDateTime()->willReturn($now);
@@ -74,7 +74,7 @@ class S3FileUploaderTest extends KernelTestCase
         $uploadedFile = new UploadedFile($filePath, 'good-jpeg');
         $files = [$uploadedFile];
 
-        $report = ReportHelper::createReport();
+        $report = ReportHelpers::createReport();
         $now = new DateTime();
 
         $this->fileNameFixer->addMissingFileExtension($uploadedFile, $fileBody)->shouldBeCalled()->willReturn('good-jpeg.jpeg');
@@ -94,7 +94,7 @@ class S3FileUploaderTest extends KernelTestCase
         $pdf = new UploadedFile(sprintf('%s/tests/phpunit/TestData/good-pdf', $this->projectDir), 'good-pdf');
         $files = [$jpeg, $png, $pdf];
 
-        $report = ReportHelper::createReport();
+        $report = ReportHelpers::createReport();
         $now = new DateTime();
 
         $this->fileNameFixer->addMissingFileExtension(Argument::cetera())->shouldBeCalledTimes(3)->willReturn('the-fixed-file-name');
@@ -110,7 +110,7 @@ class S3FileUploaderTest extends KernelTestCase
     /** @test */
     public function removeFileFromS3()
     {
-        $reportPdf = DocumentHelper::createReportPdfDocument();
+        $reportPdf = DocumentHelpers::createReportPdfDocument();
 
         $this->storage->removeFromS3($reportPdf->getStorageReference())->shouldBeCalled();
 
@@ -122,7 +122,7 @@ class S3FileUploaderTest extends KernelTestCase
     {
         self::expectException(Exception::class);
 
-        $reportPdf = DocumentHelper::createReportPdfDocument();
+        $reportPdf = DocumentHelpers::createReportPdfDocument();
         $reportPdf->setStorageReference(null);
 
         $this->storage->removeFromS3($reportPdf->getStorageReference())->shouldNotBeCalled();

@@ -9,7 +9,7 @@ use App\Entity\UserResearch\ResearchType;
 use App\Entity\UserResearch\UserResearchResponse;
 use Faker\Factory;
 
-class UserResearchResponseHelper
+class UserResearchResponseHelpers
 {
     /**
      * @return UserResearchResponse
@@ -21,20 +21,20 @@ class UserResearchResponseHelper
         $researchType = (new ResearchType())
             ->setPhone(true);
 
-        $satisfaction = SatisfactionHelper::createSatisfaction();
+        $satisfaction = SatisfactionHelpers::createSatisfaction();
 
         switch ($satisfaction->getDeputyRole()) {
             case User::ROLE_LAY_DEPUTY:
-                $user = UserHelper::createLayUser();
+                $user = UserHelpers::createLayUser();
                 break;
             case User::ROLE_PROF_ADMIN:
-                $user = UserHelper::createProfAdminUser();
+                $user = UserHelpers::createProfAdminUser();
                 break;
             case User::ROLE_PA_NAMED:
-                $user = UserHelper::createPaNamedDeputyUser();
+                $user = UserHelpers::createPaNamedDeputyUser();
                 break;
             default:
-                $user = UserHelper::createLayUser();
+                $user = UserHelpers::createLayUser();
         }
 
         return (new UserResearchResponse())

@@ -6,9 +6,9 @@ namespace Tests\App\EventListener;
 use App\Event\NdrSubmittedEvent;
 use App\EventSubscriber\NdrSubmittedSubscriber;
 use App\Service\Mailer\Mailer;
-use App\TestHelpers\NdrHelper;
-use App\TestHelpers\ReportHelper;
-use App\TestHelpers\UserHelper;
+use App\TestHelpers\NdrHelpers;
+use App\TestHelpers\ReportHelpers;
+use App\TestHelpers\UserHelpers;
 use PHPStan\Testing\TestCase;
 
 class NdrSubmittedSubscriberTest extends TestCase
@@ -25,9 +25,9 @@ class NdrSubmittedSubscriberTest extends TestCase
     /** @test */
     public function sendEmail()
     {
-        $submittedBy = UserHelper::createUser();
-        $submittedNdr = NdrHelper::createNdr();
-        $newReport = ReportHelper::createReport();
+        $submittedBy = UserHelpers::createUser();
+        $submittedNdr = NdrHelpers::createNdr();
+        $newReport = ReportHelpers::createReport();
 
         $mailer = self::prophesize(Mailer::class);
         $mailer
