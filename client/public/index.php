@@ -11,11 +11,14 @@ if ($_SERVER['APP_DEBUG']) {
     umask(0000);
 
     /**
-     * Excluding notices as they include array undefined index errors which we rely on, e.g. :
+     * Debug mode will throw an error anytime a notice is triggered in the app e.g. undefined index errors
+     * which we rely on throughout the app:
      *
      * $ary['test'] = null;
      *
-     * Trying to access $ary['test'] would throw a notice error and app error
+     * Trying to access $ary['test'] throws a notice error and app error (but in prod mode this is ignored).
+     *
+     * @TODO fix any instance in app we attempt to access an undefined index of an array
      */
     Debug::enable();
 }
