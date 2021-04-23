@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Report;
 
+use App\Entity\Ndr\Ndr;
 use DateTime;
 use JMS\Serializer\Annotation as JMS;
 
@@ -47,7 +48,12 @@ class Satisfaction
     /**
      * @JMS\Type("App\Entity\Report\Report")
      */
-    private Report $report;
+    private ?Report $report = null;
+
+    /**
+     * @JMS\Type("App\Entity\Ndr\Ndr")
+     */
+    private ?Ndr $ndr = null;
 
     /**
      * @return int
@@ -176,20 +182,38 @@ class Satisfaction
     }
 
     /**
-     * @return Report
+     * @return Report|null
      */
-    public function getReport(): Report
+    public function getReport(): ?Report
     {
         return $this->report;
     }
 
     /**
-     * @param Report $report
+     * @param Report|null $report
      * @return Satisfaction
      */
-    public function setReport(Report $report): Satisfaction
+    public function setReport(?Report $report): Satisfaction
     {
         $this->report = $report;
+        return $this;
+    }
+
+    /**
+     * @return Ndr|null
+     */
+    public function getNdr(): ?Ndr
+    {
+        return $this->ndr;
+    }
+
+    /**
+     * @param Ndr|null $ndr
+     * @return Satisfaction
+     */
+    public function setNdr(?Ndr $ndr): Satisfaction
+    {
+        $this->ndr = $ndr;
         return $this;
     }
 }

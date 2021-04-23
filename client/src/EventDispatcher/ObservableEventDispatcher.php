@@ -3,7 +3,7 @@
 
 namespace App\EventDispatcher;
 
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class ObservableEventDispatcher

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\UserResearch\UserResearchResponse;
 use Doctrine\ORM\Mapping as ORM;
@@ -85,13 +86,22 @@ class Satisfaction
     private UserResearchResponse $userResearchResponse;
 
     /**
-     * @var Report
+     * @var Report|null
      * @JMS\Type("App\Entity\Report\Report")
      * @JMS\Groups({"user-research", "satisfaction"})
      *
      * @ORM\OneToOne(targetEntity="App\Entity\Report\Report", inversedBy="satisfaction", cascade={"persist"})
      */
-    private Report $report;
+    private ?Report $report = null;
+
+    /**
+     * @var Ndr|null
+     * @JMS\Type("App\Entity\Ndr\Ndr")
+     * @JMS\Groups({"user-research", "satisfaction"})
+     *
+     * @ORM\OneToOne(targetEntity="App\Entity\Ndr\Ndr", inversedBy="satisfaction", cascade={"persist"})
+     */
+    private ?Ndr $ndr = null;
 
     /**
      * @return int
@@ -222,18 +232,36 @@ class Satisfaction
     /**
      * @return Report
      */
-    public function getReport(): Report
+    public function getReport(): ?Report
     {
         return $this->report;
     }
 
     /**
-     * @param Report $report
+     * @param Report|null $report
      * @return Satisfaction
      */
-    public function setReport(Report $report): Satisfaction
+    public function setReport(?Report $report): Satisfaction
     {
         $this->report = $report;
+        return $this;
+    }
+
+    /**
+     * @return Ndr
+     */
+    public function getNdr(): ?Ndr
+    {
+        return $this->ndr;
+    }
+
+    /**
+     * @param Ndr|null $ndr
+     * @return Satisfaction
+     */
+    public function setNdr(?Ndr $ndr): Satisfaction
+    {
+        $this->ndr = $ndr;
         return $this;
     }
 }

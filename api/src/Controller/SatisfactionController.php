@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Satisfaction;
+use App\Repository\NdrRepository;
 use App\Repository\ReportRepository;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,13 +21,15 @@ class SatisfactionController extends RestController
 {
     private EntityManagerInterface $em;
     private RestFormatter $formatter;
-    private ReportRepository $repository;
+    private ReportRepository $reportRepository;
+    private NdrRepository $ndrRepository;
 
-    public function __construct(EntityManagerInterface $em, RestFormatter $formatter, ReportRepository $repository)
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter, ReportRepository $reportRepository, NdrRepository $ndrRepository)
     {
         $this->em = $em;
         $this->formatter = $formatter;
-        $this->repository = $repository;
+        $this->reportRepository = $reportRepository;
+        $this->ndrRepository = $ndrRepository;
     }
 
     /**
@@ -56,13 +59,18 @@ class SatisfactionController extends RestController
             'score' => 'notEmpty',
             'comments' => 'mustExist',
             'reportType' => 'notEmpty',
-            'reportId' => 'notEmpty'
         ]);
 
-        $report = $this->repository->find($data['reportId']);
-
         $satisfaction = $this->addSatisfactionScore($data['score'], $data['comments']);
-        $satisfaction->setReport($report);
+
+        if ('ndr' === $data['reportType']) {
+            $ndr = $this->ndrRepository->find($data['ndrId']);
+            $satisfaction->setNdr($ndr);
+        } else {
+            $report = $this->reportRepository->find($data['reportId']);
+            $satisfaction->setReport($report);
+        }
+
         $satisfaction->setReportType($data['reportType']);
         $satisfaction->setDeputyRole($this->getUser()->getRoleName());
 
