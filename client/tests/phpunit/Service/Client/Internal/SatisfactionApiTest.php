@@ -84,8 +84,10 @@ class SatisfactionApiTest extends TestCase
 
         $this->restClient->post(
             'satisfaction',
-            ['score' => $score, 'comments' => $expectedCommentsInPostRequest, 'reportType' => $reportType]
-        )->shouldBeCalled();
+            ['score' => $score, 'comments' => $expectedCommentsInPostRequest, 'reportType' => $reportType, 'reportId' => 222]
+        )
+            ->shouldBeCalled()
+            ->willReturn(1);
 
         $feedbackReportObject = (new FeedbackReport())
             ->setComments($comments)
@@ -94,7 +96,7 @@ class SatisfactionApiTest extends TestCase
         $event = new PostSubmissionFeedbackSubmittedEvent($feedbackReportObject, $submittedByUser);
         $this->eventDisaptcher->dispatch($event, 'post.submission.feedback.submitted')->shouldBeCalled();
 
-        $this->sut->createPostSubmissionFeedback($feedbackReportObject, $reportType, $submittedByUser);
+        $this->sut->createPostSubmissionFeedback($feedbackReportObject, $reportType, 222, $submittedByUser);
     }
 
     public function commentsProvider()

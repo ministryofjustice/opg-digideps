@@ -2,6 +2,7 @@
 
 namespace App\Mapper\ReportSatisfaction;
 
+use App\Mapper\DateRangeQuery;
 use App\Service\Client\RestClient;
 use PHPUnit\Framework\TestCase;
 

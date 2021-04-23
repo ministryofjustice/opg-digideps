@@ -2,6 +2,7 @@
 
 namespace App\Mapper\ReportSubmission;
 
+use App\Mapper\DateRangeQuery;
 use App\Mapper\ReportSubmission\ReportSubmissionSummaryMapper;
 use App\Mapper\ReportSubmission\ReportSubmissionSummaryQuery;
 use App\Service\Client\RestClient;
@@ -32,7 +33,7 @@ class ReportSubmissionSummaryMapperTest extends TestCase
 
     public function testReturnsReportSubmissionsByDefaultParameters()
     {
-        $this->query = new ReportSubmissionSummaryQuery();
+        $this->query = new DateRangeQuery();
 
         $this->assertRestClientIsCalledWithDefaultQueryParameters();
         $this->assertRestClientPopulatesAnArrayOfExpectedEntities();
@@ -42,7 +43,7 @@ class ReportSubmissionSummaryMapperTest extends TestCase
 
     public function testReturnsReportSubmissionsByCustomParameters()
     {
-        $this->query = (new ReportSubmissionSummaryQuery())
+        $this->query = (new DateRangeQuery())
             ->setStartDate(new \DateTime('01-01-2001'))
             ->setEndDate(new \DateTime('02-01-2001'))
             ->setOrderBy('foo')
