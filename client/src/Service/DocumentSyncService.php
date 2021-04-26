@@ -15,6 +15,7 @@ use App\Service\Client\RestClient;
 use App\Service\Client\Sirius\SiriusApiGatewayClient;
 use App\Service\File\FileNameFixer;
 use App\Service\File\Storage\S3Storage;
+use Exception;
 use GuzzleHttp\Psr7\MimeType;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,6 +27,9 @@ class DocumentSyncService
         Response::HTTP_REQUEST_ENTITY_TOO_LARGE,
         Response::HTTP_UNSUPPORTED_MEDIA_TYPE,
     ];
+
+    const MISSING_FILE_EXTENSION_ERROR =
+        'File extension is missing from filename. This file will need to be manually synced with Sirius';
 
     /** @var S3Storage */
     private $storage;
@@ -95,7 +99,7 @@ class DocumentSyncService
     }
 
     /**
-     * @return QueuedDocumentData|\Exception|mixed|Throwable|null
+     * @return QueuedDocumentData|Exception|mixed|Throwable|null
      */
     public function syncDocument(QueuedDocumentData $documentData)
     {
@@ -147,6 +151,18 @@ class DocumentSyncService
 
     private function buildUpload(QueuedDocumentData $documentData)
     {
+        $fileName = $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension($documentData->getFileName());
+        $mimeType = MimeType::fromFilename($fileName);
+
+        if (is_null($mimeType)) {
+            throw (new Exception(self::MISSING_FILE_EXTENSION_ERROR, 400));
+        }
+
+        $file = (new SiriusDocumentFile())
+            ->setName($fileName)
+            ->setMimetype($mimeType)
+            ->setS3Reference($documentData->getStorageReference());
+
         if ($documentData->isReportPdf()) {
             $siriusDocumentMetadata = (new SiriusReportPdfDocumentMetadata())
                 ->setReportingPeriodFrom($documentData->getReportStartDate())
@@ -164,12 +180,6 @@ class DocumentSyncService
 
             $type = 'supportingdocuments';
         }
-
-        $fileName = $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension($documentData->getFileName());
-        $file = (new SiriusDocumentFile())
-            ->setName($fileName)
-            ->setMimetype(MimeType::fromFilename($documentData->getFileName()))
-            ->setS3Reference($documentData->getStorageReference());
 
         return (new SiriusDocumentUpload())
             ->setType($type)
@@ -214,8 +224,10 @@ class DocumentSyncService
                 strtoupper($documentData->getCaseNumber())
             );
         } else {
+            $upload = $this->buildUpload($documentData);
+
             return $this->siriusApiGatewayClient->sendSupportingDocument(
-                $this->buildUpload($documentData),
+                $upload,
                 $documentData->getReportSubmissionUuid(),
                 strtoupper($documentData->getCaseNumber())
             );
@@ -235,7 +247,7 @@ class DocumentSyncService
     }
 
     /**
-     * @return \Exception|mixed|Throwable
+     * @return Exception|mixed|Throwable
      */
     private function handleDocumentStatusUpdate(QueuedDocumentData $documentData, string $status, ?string $errorMessage = null)
     {

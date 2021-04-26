@@ -637,4 +637,65 @@ class DocumentSyncServiceTest extends KernelTestCase
 
         $sut->syncDocument($queuedDocumentData);
     }
+
+    /**
+     * @test
+     */
+    public function sendDocumentMissingFileExtensionThrowsError()
+    {
+        $fileNameFixer = self::prophesize(FileNameFixer::class);
+        $fileNameFixer
+            ->removeWhiteSpaceBeforeFileExtension('filename-with-no-extension')
+            ->willReturn('filename-with-no-extension');
+
+        $document = (new Document())->setId(6789);
+
+        $expectedUuidUsedToSyncDoc = 'report-pdf-submission-uuid';
+        $expectedSubmissionIdUsedForSync = 1234;
+
+        $queuedDocumentData = (new QueuedDocumentData())
+            ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
+            ->setDocumentId($document->getId())
+            ->setReportSubmissionId($expectedSubmissionIdUsedForSync)
+            ->setReportSubmissionUuid($expectedUuidUsedToSyncDoc)
+            ->setReportStartDate($this->reportStartDate)
+            ->setReportEndDate($this->reportEndDate)
+            ->setReportSubmitDate($this->reportSubmittedDate)
+            ->setFilename('filename-with-no-extension')
+            ->setIsReportPdf(false)
+            ->setCaseNumber('1234567t')
+            ->setNdrId(null)
+            ->setStorageReference($this->s3Reference);
+
+        $this->siriusApiGatewayClient
+            ->sendSupportingDocument(Argument::cetera())
+            ->shouldNotBeCalled();
+
+        $this->restClient
+            ->apiCall(
+                'put',
+                'document/6789',
+                json_encode(
+                    [
+                        'syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR,
+                        'syncError' => 'File extension is missing from filename. This file will need to be manually synced with Sirius',
+                    ]
+                ),
+                'Report\\Document',
+                [],
+                false
+            )
+            ->shouldBeCalled()
+            ->willReturn($this->serializer->serialize(new Document(), 'json'));
+
+        $sut = new DocumentSyncService(
+            $this->s3Storage->reveal(),
+            $this->siriusApiGatewayClient->reveal(),
+            $this->restClient->reveal(),
+            $this->errorTranslator->reveal(),
+            $fileNameFixer->reveal()
+        );
+
+        $sut->syncDocument($queuedDocumentData);
+    }
 }
