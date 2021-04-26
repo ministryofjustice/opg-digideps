@@ -5,8 +5,7 @@
   "description": "The \"Symfony Standard Edition\" distribution",
   "autoload": {
     "psr-4": {
-      "App\\": "src",
-      "DigidepsBehat\\": "behat/tests/bootstrap"
+      "App\\": "src"
     }
   },
   "autoload-dev": {
