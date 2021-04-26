@@ -16,7 +16,6 @@ use App\Service\Client\Sirius\SiriusApiGatewayClient;
 use App\Service\File\FileNameFixer;
 use App\Service\File\Storage\S3Storage;
 use GuzzleHttp\Psr7\MimeType;
-use function GuzzleHttp\Psr7\mimetype_from_filename;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -100,7 +99,7 @@ class DocumentSyncService
      */
     public function syncDocument(QueuedDocumentData $documentData)
     {
-        if ($documentData->isReportPdf() && 'application/pdf' == mimetype_from_filename($documentData->getFileName())) {
+        if ($documentData->isReportPdf() && 'application/pdf' == MimeType::fromFilename($documentData->getFileName())) {
             return $this->syncReportDocument($documentData);
         } else {
             if (!$documentData->supportingDocumentCanBeSynced()) {
