@@ -8,8 +8,9 @@ COPY composer.lock .
 RUN composer install --prefer-dist --no-interaction --no-scripts
 RUN composer dump-autoload --optimize
 
-
-FROM php:7.4-alpine
+ARG AWS_REGISTRY
+ARG VERSION
+FROM opg-digideps_test
 WORKDIR /var/www
 
 # Install dependencies
@@ -22,6 +23,8 @@ COPY --from=composer /app/vendor vendor
 COPY --from=composer /app/composer.json composer.json
 COPY --from=composer /app/composer.lock composer.lock
 COPY tests tests
+
+RUN export $(egrep -v '^#' ./api/api.env | xargs)
 
 COPY docker-entrypoint.sh /usr/local/bin/
 COPY docker-smoke-test-entrypoint.sh /usr/local/bin/
