@@ -2,16 +2,17 @@ version: '3.2'
 
 services:
     test:
-        build: ./behat
+        build: ./api
         depends_on:
             - localstack-init
             - mock-sirius-integration
         volumes:
-            - ./behat/tests:/var/www/tests
-            - ./behat/snapshots:/tmp/html
+            - ./api/behat/tests:/var/www/tests
+            - ./api/behat/snapshots:/tmp/html
         env_file:
-            - ./behat/test.env
-            - ./behat/.env
+            - ./api/api.env
+            - ./api/behat/test.env
+            - ./api/behat/.env
 
     npm:
         image: node:14.8.0-alpine
