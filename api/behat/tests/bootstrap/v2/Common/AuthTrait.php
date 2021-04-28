@@ -16,8 +16,10 @@ trait AuthTrait
         $this->fillField('login_password', 'DigidepsPass1234');
         $this->pressButton('login_login');
 
-        $this->visitPath(sprintf(self::BEHAT_FRONT_USER_DETAILS, $email));
-        $userDetailsArray = json_decode($this->getPageContent(), true);
+        $userDetailsArray = $this->fixtureHelper->getLoggedInUserDetails($email);
+
+//        $this->visitPath(sprintf(self::BEHAT_FRONT_USER_DETAILS, $email));
+//        $userDetailsArray = json_decode($this->getPageContent(), true);
 
         if (!$this->userDetailsExists($email)) {
             $this->fixtureUsers[] = new UserDetails($userDetailsArray);

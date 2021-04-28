@@ -7,7 +7,7 @@ services:
             - localstack-init
             - mock-sirius-integration
         volumes:
-            - ./api/behat/tests:/var/www/tests
+            - ./api/behat/tests:/var/www/behat/tests
             - ./api/behat/snapshots:/tmp/html
         env_file:
             - ./api/api.env
@@ -35,10 +35,10 @@ services:
 
     frontend:
         env_file:
-            - ./behat/test.env
+            - ./api/behat/test.env
             - .env
 
     admin:
         env_file:
-            - ./behat/test.env
+            - ./api/behat/test.env
             - .env

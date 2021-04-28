@@ -204,7 +204,7 @@ v2-tests-goutte:
             description: Covering features that allow users to give us feedback
             paths: [ "%paths.base%/features-v2/feedback" ]
             contexts:
-                - DigidepsBehat\v2\feedback\FeedbackFeatureContext
+                - DigidepsBehat\v2\Feedback\FeedbackFeatureContext
 
         section-actions:
             description: Covering the 'Actions' section of the report
@@ -235,12 +235,6 @@ v2-tests-goutte:
             paths: [ "%paths.base%/features-v2/reporting/sections/documents" ]
             contexts:
                 - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
-
-        kernel:
-            description: Covering the kernel
-            paths: [ "%paths.base%/features-v2/kernel-test" ]
-            contexts:
-                - DigidepsBehat\v2\KernelContext
 
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:

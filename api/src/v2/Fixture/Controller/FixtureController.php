@@ -634,36 +634,4 @@ class FixtureController extends AbstractController
             $this->buildErrorResponse(sprintf("Organisation '%s' could not be activated: %s", $orgName, $e->getMessage()));
         }
     }
-
-    /**
-     * @Route("/reset-fixtures", name="behat_reset_fixtures", methods={"GET"})
-     * @return Response
-     */
-    public function resetFixtures(Request $request)
-    {
-        try {
-            if ($this->symfonyEnvironment === 'prod') {
-                throw $this->createNotFoundException();
-            }
-
-            $testRunId = $request->query->get('testRunId');
-            $users = $this->behatFixtures->loadFixtures($testRunId);
-
-            return new JsonResponse(
-                [
-                    'response' => 'Behat fixtures loaded',
-                    'data' => $users
-                ],
-                Response::HTTP_CREATED
-            );
-        } catch (\Throwable $e) {
-            return new JsonResponse(
-                [
-                    'response' => sprintf('Beaht fixtures not loaded: %s', $e->getMessage()),
-                    'data' => null
-                ],
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            );
-        }
-    }
 }

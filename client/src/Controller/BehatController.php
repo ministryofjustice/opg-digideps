@@ -46,7 +46,6 @@ class BehatController extends AbstractController
         $currentReport = $user->getFirstClient()->getCurrentReport();
         $previousReport = $user->getFirstClient()->getReports()[0];
 
-
         return new JsonResponse(
             [
                 'email' => $user->getEmail(),
@@ -59,43 +58,5 @@ class BehatController extends AbstractController
                 'previousReportNdrOrReport' => $previousReport instanceof Ndr ? 'ndr' : 'report'
             ]
         );
-    }
-
-    /**
-     * @Route("/behat/frontend/reset-fixtures", name="behat_front_reset-fixtures", methods={"GET"})
-     *
-     * @param string $email
-     * @return JsonResponse
-     */
-    public function resetFixtures(Request $request)
-    {
-        try {
-            if ($this->symfonyEnvironment === 'prod') {
-                throw $this->createNotFoundException();
-            }
-
-            $testRunId = $request->query->get('testRunId');
-
-            $response = $this->restClient->get(
-                sprintf('/v2/fixture/reset-fixtures?testRunId=%s', $testRunId),
-                'response'
-            );
-
-            $users = json_decode($response->getBody()->getContents(), true)['data'];
-
-            return new JsonResponse(
-                [
-                    'response' => 'Behat fixtures loaded', 'data' => $users
-                ]
-            );
-        } catch (\Throwable $e) {
-            return new JsonResponse(
-                [
-                    'response' => sprintf('Behat fixtures not loaded: %s', $e->getMessage()),
-                    'data' => null
-                ],
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            );
-        }
     }
 }

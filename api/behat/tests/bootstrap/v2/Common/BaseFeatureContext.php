@@ -6,9 +6,11 @@ namespace DigidepsBehat\v2\Common;
 use Behat\Mink\Driver\GoutteDriver;
 use Behat\MinkExtension\Context\MinkContext;
 use DigidepsBehat\BehatException;
+use DigidepsBehat\v2\Helpers\FixtureHelper;
 use Exception;
 use Faker\Factory;
 use Faker\Generator;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class BaseFeatureContext extends MinkContext
 {
@@ -45,6 +47,23 @@ class BaseFeatureContext extends MinkContext
 
     public Generator $faker;
 
+    private KernelInterface $symfonyKernel;
+    /**
+     * @var FixtureHelper
+     */
+    private FixtureHelper $fixtureHelper;
+
+    public function __construct(KernelInterface $symfonyKernel, FixtureHelper $fixtureHelper)
+    {
+        $this->symfonyKernel = $symfonyKernel;
+
+        if ($this->symfonyKernel->getEnvironment() === 'prod') {
+            throw new Exception('Unable to run behat tests in prod mode. Change the apps mode to dev or test and try again');
+        }
+
+        $this->fixtureHelper = $fixtureHelper;
+    }
+
     /**
      * @BeforeScenario
      */
@@ -53,24 +72,16 @@ class BaseFeatureContext extends MinkContext
         $this->faker = Factory::create('en_GB');
 
         $this->testRunId = (string) (time() + rand());
-        $this->visitAdminPath(sprintf(self::BEHAT_FRONT_RESET_FIXTURES, $this->testRunId));
+        $userDetails = $this->fixtureHelper->resetFixtures($this->testRunId);
 
-        $responseData = json_decode($this->getPageContent(), true);
-
-        $fixturesLoaded = preg_match('/Behat fixtures loaded/', $responseData['response']);
-
-        if (!$fixturesLoaded) {
-            throw new Exception($responseData['response']);
-        }
-
-        $this->fixtureUsers[] = $this->adminDetails = new UserDetails($responseData['data']['admin-users']['admin']);
-        $this->fixtureUsers[] = $this->superAdminDetails = new UserDetails($responseData['data']['admin-users']['super-admin']);
-        $this->fixtureUsers[] = $this->layDeputyNotStartedDetails = new UserDetails($responseData['data']['lays']['not-started']);
-        $this->fixtureUsers[] = $this->layDeputyCompletedDetails = new UserDetails($responseData['data']['lays']['completed']);
-        $this->fixtureUsers[] = $this->layDeputySubmittedDetails = new UserDetails($responseData['data']['lays']['submitted']);
-        $this->fixtureUsers[] = $this->profAdminDeputyNotStartedDetails = new UserDetails($responseData['data']['professionals']['admin']['not-started']);
-        $this->fixtureUsers[] = $this->profAdminDeputyCompletedDetails = new UserDetails($responseData['data']['professionals']['admin']['completed']);
-        $this->fixtureUsers[] = $this->profAdminDeputySubmittedDetails = new UserDetails($responseData['data']['professionals']['admin']['submitted']);
+        $this->fixtureUsers[] = $this->adminDetails = new UserDetails($userDetails['admin-users']['admin']);
+        $this->fixtureUsers[] = $this->superAdminDetails = new UserDetails($userDetails['admin-users']['super-admin']);
+        $this->fixtureUsers[] = $this->layDeputyNotStartedDetails = new UserDetails($userDetails['lays']['not-started']);
+        $this->fixtureUsers[] = $this->layDeputyCompletedDetails = new UserDetails($userDetails['lays']['completed']);
+        $this->fixtureUsers[] = $this->layDeputySubmittedDetails = new UserDetails($userDetails['lays']['submitted']);
+        $this->fixtureUsers[] = $this->profAdminDeputyNotStartedDetails = new UserDetails($userDetails['professionals']['admin']['not-started']);
+        $this->fixtureUsers[] = $this->profAdminDeputyCompletedDetails = new UserDetails($userDetails['professionals']['admin']['completed']);
+        $this->fixtureUsers[] = $this->profAdminDeputySubmittedDetails = new UserDetails($userDetails['professionals']['admin']['submitted']);
     }
 
     /**
