@@ -19,9 +19,6 @@ trait AuthTrait
 
         $userDetailsArray = $this->fixtureHelper->getLoggedInUserDetails($email);
 
-//        $this->visitPath(sprintf(self::BEHAT_FRONT_USER_DETAILS, $email));
-//        $userDetailsArray = json_decode($this->getPageContent(), true);
-
         if (!$this->userDetailsExists($email)) {
             $this->fixtureUsers[] = new UserDetails($userDetailsArray);
         }

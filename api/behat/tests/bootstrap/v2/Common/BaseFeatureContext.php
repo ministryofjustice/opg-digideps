@@ -31,7 +31,7 @@ class BaseFeatureContext extends MinkContext
 
     public const BEHAT_FRONT_RESET_FIXTURES = '/behat/frontend/reset-fixtures?testRunId=%s';
     public const BEHAT_FRONT_USER_DETAILS = '/behat/frontend/user/%s/details';
-    public const REPORT_SECTION_ENDPOINT = '%s/%s/%s ';
+    public const REPORT_SECTION_ENDPOINT = '/%s/%s/%s';
 
     public UserDetails $adminDetails;
     public UserDetails $elevatedAdminDetails;
@@ -81,7 +81,7 @@ class BaseFeatureContext extends MinkContext
         $this->faker = Factory::create('en_GB');
 
         $this->testRunId = (string) (time() + rand());
-        $userDetails = $this->fixtureHelper->resetFixtures($this->testRunId);
+        $userDetails = $this->fixtureHelper->loadFixtures($this->testRunId);
 
         $this->fixtureUsers[] = $this->adminDetails = new UserDetails($userDetails['admin-users']['admin']);
         $this->fixtureUsers[] = $this->elevatedAdminDetails = new UserDetails($userDetails['admin-users']['elevated-admin']);

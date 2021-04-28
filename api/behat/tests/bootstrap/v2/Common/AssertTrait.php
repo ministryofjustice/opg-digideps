@@ -24,8 +24,8 @@ trait AssertTrait
         $found,
         string $comparisonSubject
     ) {
-        $foundFormatted = strval(trim(strtolower($found)));
-        $expectedFormatted = strval(trim(strtolower($expected)));
+        $foundFormatted = strval(trim(strtolower((string) $found)));
+        $expectedFormatted = strval(trim(strtolower((string) $expected)));
         assert(
             $foundFormatted == $expectedFormatted,
             $this->getAssertMessage($expectedFormatted, $foundFormatted, $comparisonSubject)

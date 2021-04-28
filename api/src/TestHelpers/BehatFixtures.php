@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\TestHelpers;
 
@@ -62,13 +64,13 @@ class BehatFixtures
     }
 
     /**
-     * @param string $testRunId
      * @return array
+     *
      * @throws Exception
      */
     public function loadFixtures(string $testRunId)
     {
-        if ($this->symfonyEnvironment === 'prod') {
+        if ('prod' === $this->symfonyEnvironment) {
             throw new Exception('Prod mode enabled - cannot purge database');
         }
 
@@ -93,15 +95,15 @@ class BehatFixtures
             'lays-ndr' => [
                 'not-started' => self::buildUserDetails($this->ndrLayNotStarted),
                 'completed' => self::buildUserDetails($this->ndrLayCompleted),
-                'submitted' => self::buildUserDetails($this->ndrLaySubmitted)
+                'submitted' => self::buildUserDetails($this->ndrLaySubmitted),
             ],
             'professionals' => [
                 'admin' => [
                     'not-started' => self::buildOrgUserDetails($this->profAdminNotStarted),
                     'completed' => self::buildOrgUserDetails($this->profAdminCompleted),
                     'submitted' => self::buildOrgUserDetails($this->profAdminSubmitted),
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
@@ -113,7 +115,7 @@ class BehatFixtures
         $currentReportType = $user->getNdrEnabled() ? null : $currentReport->getType();
         $previousReport = $user->getNdrEnabled() ? null : $client->getReports()[0];
 
-        $userDetails =  [
+        $userDetails = [
             'userEmail' => $user->getEmail(),
             'userRole' => $user->getRoleName(),
             'userFirstName' => $user->getFirstname(),
@@ -124,7 +126,7 @@ class BehatFixtures
                 $user->getAddress2(),
                 $user->getAddress3(),
                 $user->getAddressPostcode(),
-                $user->getAddressCountry()
+                $user->getAddressCountry(),
             ]),
             'userPhone' => $user->getPhoneMain(),
             'courtOrderNumber' => $client->getCaseNumber(),
@@ -135,7 +137,7 @@ class BehatFixtures
             'currentReportId' => $currentReport->getId(),
             'currentReportType' => $currentReportType,
             'currentReportNdrOrReport' => $currentReport instanceof Ndr ? 'ndr' : 'report',
-            'currentReportDueDate' => $currentReport->getDueDate()->format('j F Y')
+            'currentReportDueDate' => $currentReport->getDueDate()->format('j F Y'),
         ];
 
         if ($previousReport) {
@@ -145,7 +147,7 @@ class BehatFixtures
                     'previousReportId' => $previousReport->getId(),
                     'previousReportType' => $previousReport->getType(),
                     'previousReportNdrOrReport' => $previousReport instanceof Ndr ? 'ndr' : 'report',
-                    'previousReportDueDate' => $previousReport->getDueDate()->format('j F Y')
+                    'previousReportDueDate' => $previousReport->getDueDate()->format('j F Y'),
                 ]
             );
         }
